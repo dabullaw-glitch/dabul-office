@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>מעקב אחרי העסקה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--bg:#F2F6F7;--panel:#fff;--ink:#0E2226;--muted:#62797A;--line:#E3E7E5;--accent:#12A096;--accent-soft:#DCF3F1;--teal:#0B7F6B;--teal-soft:#D5F0E9;--warn:#A86A06;--warn-soft:#FBEFD5;--side:#13968E;--r:18px;--shadow:0 1px 2px rgba(14,34,38,.05),0 12px 30px -16px rgba(14,34,38,.25)}
+@media (prefers-color-scheme:dark){:root{--bg:#081517;--panel:#0F2225;--ink:#E7EEEC;--muted:#8FA6A4;--line:#1E363A;--accent:#3CC7BB;--accent-soft:#123A38;--teal:#5FD8C0;--teal-soft:#0F3531;--warn:#E6B04A;--warn-soft:#382A0E;--side:#0B4F4B}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Heebo","Arial Hebrew",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.top{background:linear-gradient(160deg,#1DB3A8,#0F857E);color:#E7EEEC;padding:22px 16px 70px}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:42px;height:42px;border-radius:12px;background:#fff;color:#12A096!important;display:grid;place-items:center;font:900 22px "Heebo",sans-serif;color:#fff;flex:none}
+.brand b{display:block;font-size:16px}.brand small{color:rgba(255,255,255,.8);font-size:13px}
+h1{font:900 30px/1.2 "Heebo",sans-serif;margin:26px 0 4px}
+.hello{color:rgba(255,255,255,.88);margin:0}
+.main{margin-top:-50px;display:grid;gap:14px;padding-bottom:40px}
+.card{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);padding:20px;border:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:700;font-size:13.5px;background:var(--teal-soft);color:var(--teal)}
+.prog{flex:1;min-width:200px}
+.bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),#2BB69A);border-radius:99px;transition:width 1s}
+.pct{font:800 34px "Heebo";color:var(--teal);line-height:1}
+.next{background:var(--accent-soft);border-color:transparent}
+.next small{color:var(--muted);font-weight:700;letter-spacing:.02em}
+.next b{display:block;font-size:20px;margin-top:2px}
+.dates{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.date small{color:var(--muted);font-weight:700;font-size:13px}.date b{display:block;font-size:24px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}.date span{color:var(--muted);font-size:13.5px}
+h2{font:700 19px "Heebo";margin:0 0 14px}
+.steps{list-style:none;margin:0;padding:0;position:relative}
+.steps li{display:flex;gap:14px;padding:0 0 18px;position:relative}
+.steps li:not(:last-child)::after{content:"";position:absolute;right:15px;top:32px;bottom:2px;width:2px;background:var(--line)}
+.steps li.done:not(:last-child)::after{background:var(--teal)}
+.dot{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex:none;font-weight:800;font-size:14px;background:var(--line);color:var(--muted);position:relative;z-index:1}
+.done .dot{background:var(--teal);color:#fff}
+.cur .dot{background:var(--accent);color:#fff;box-shadow:0 0 0 5px var(--accent-soft)}
+.steps b{display:block;font-size:16px}.steps small{color:var(--muted);font-size:14px}
+.cur b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:10px 6px;border-bottom:1px solid var(--line);text-align:right}th{color:var(--muted);font-size:13px;font-weight:700}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}.ok{color:var(--teal);font-weight:700}.wait{color:var(--muted)}
+.contact{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:12px;font-weight:800;text-decoration:none;font-size:16px;border:1px solid var(--line);color:var(--ink);background:var(--panel)}
+.btn.wa{background:#1FA855;color:#fff;border-color:#1FA855}
+.foot{text-align:center;color:var(--muted);font-size:13px;margin-top:6px}
+.center{text-align:center;padding:40px 20px}
+.spin{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:s 1s linear infinite;margin:0 auto 12px}@keyframes s{to{transform:rotate(360deg)}}
+@media (max-width:480px){h1{font-size:25px}.dates{grid-template-columns:1fr}.contact{grid-template-columns:1fr}.card{padding:16px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><div class="brand"><span class="mark">ד</span><div><b id="oname">משרד עו״ד יקיר דבול</b><small>מעקב אחרי העסקה שלך</small></div></div><h1 id="addr">&nbsp;</h1><p class="hello" id="hello"></p></div></header>
+<main class="wrap main" id="main"><div class="card center"><div class="spin"></div>טוען את פרטי העסקה...</div></main>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/config.js?v=f291dc1cb3"></script>
+<script>
+(function(){
+const C = window.OFFICE_CONFIG || {};
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2, '0');
+const parse = s => { if (!s) return null; const [y, m, d] = String(s).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); };
+const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
+const days = s => { const d = parse(s); return d ? Math.round((d - today()) / 864e5) : null; };
+const fmt = s => { const d = parse(s); return d ? `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}` : '-'; };
+const long = s => { const d = parse(s); return d ? d.toLocaleDateString('he-IL', { weekday:'long', day:'numeric', month:'long' }) : ''; };
+const rel = s => { const n = days(s); if (n == null) return ''; if (n === 0) return 'היום'; if (n === 1) return 'מחר'; if (n === -1) return 'אתמול'; return n > 0 ? `בעוד ${n} ימים` : `לפני ${-n} ימים`; };
+const money = n => '₪' + Math.round(+n || 0).toLocaleString('he-IL');
+const phoneDigits = p => { let x = String(p || '').replace(/\D/g, ''); if (x.startsWith('972')) x = '0' + x.slice(3); return x; };
+const main = document.getElementById('main');
+window.addEventListener('hashchange', () => location.reload());
+const fail = t => { main.innerHTML = `<div class="card center"><b style="font-size:19px">${esc(t)}</b><p style="color:var(--muted)">אם קיבלת את הקישור מהמשרד, פנה אלינו ונשלח קישור מעודכן.</p></div>`; document.getElementById('addr').textContent = ''; };
+const token = (location.hash || '').slice(1).replace(/[^A-Za-z0-9]/g, '');
+if (!token || !C.functions) return fail('הקישור לא תקין');
+fetch(`${C.functions}/portal?t=${encodeURIComponent(token)}`).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(render).catch(e => fail(e === 404 ? 'הקישור לא נמצא או שבוטל' : 'לא הצלחנו לטעון את הפרטים כרגע. נסה שוב בעוד כמה דקות.'));
+function render(x){
+  const o = x.office || {}, d = x.deal || {};
+  document.getElementById('oname').textContent = o.name || '';
+  document.getElementById('addr').textContent = d.address || '';
+  document.getElementById('hello').textContent = (x.names && x.names.length ? `שלום ${x.names.join(' ו')}, ` : '') + `כאן רואים בכל רגע איפה העסקה עומדת.`;
+  document.title = `${d.address || 'העסקה שלך'} · מעקב`;
+  const cur = x.steps.findIndex(s => !s.done);
+  const stepHtml = x.steps.map((s, i) => { const cls = s.done ? 'done' : i === cur ? 'cur' : '';
+    const sub = s.done ? `הושלם${s.date ? ' ב-' + fmt(s.date) : ''}` : i === cur ? (s.expected && days(s.expected) >= 0 ? `בטיפול עכשיו · יעד: ${fmt(s.expected)}` : 'בטיפול עכשיו') : s.expected && days(s.expected) >= 0 ? `צפוי בערך ב-${fmt(s.expected)}` : 'בהמשך';
+    return `<li class="${cls}"><span class="dot">${s.done ? '✓' : i + 1}</span><div><b>${esc(s.label)}</b><small>${sub}</small></div></li>`; }).join('');
+  const dateCard = (label, s) => `<div class="card date"><small>${label}</small><b>${s ? fmt(s) : 'טרם נקבע'}</b><span>${s ? `${long(s)} · ${rel(s)}` : 'נעדכן ברגע שייקבע'}</span></div>`;
+  const pays = (x.payments || []);
+  const wa = phoneDigits(o.whatsapp), tel = phoneDigits(o.phone);
+  main.innerHTML = `
+  <div class="card"><div class="row"><span class="pill">${esc(d.status || '')}</span><span style="color:var(--muted)">${esc(d.side === 'מוכר' ? 'ייצוג המוכר' : 'ייצוג הקונה')}</span></div>
+    <div class="row" style="margin-top:14px"><span class="pct">${x.progress}%</span><div class="prog"><div class="bar"><i style="width:0"></i></div><small style="color:var(--muted)">${x.steps.filter(s => s.done).length} מתוך ${x.steps.length} שלבים הושלמו</small></div></div></div>
+  ${x.next ? `<div class="card next"><small>השלב הבא</small><b>${esc(x.next.label)}</b>${x.next.expected && days(x.next.expected) >= 0 ? `<span style="color:var(--muted)">יעד משוער: ${fmt(x.next.expected)}</span>` : '<span style="color:var(--muted)">אנחנו מטפלים בזה עכשיו</span>'}</div>` : `<div class="card next"><small>סטטוס</small><b>כל השלבים הושלמו 🎉</b></div>`}
+  <div class="dates">${dateCard('מועד החתימה', d.signDate)}${dateCard('מועד המסירה', d.handDate)}</div>
+  <div class="card"><h2>שלבי העסקה</h2><ol class="steps">${stepHtml}</ol></div>
+  ${pays.length ? `<div class="card"><h2>לוח התשלומים לפי החוזה</h2><table><thead><tr><th>מועד</th><th>סכום</th><th>תיאור</th><th></th></tr></thead><tbody>${pays.map(p => `<tr><td class="n">${fmt(p.date)}</td><td class="n">${money(p.amount)}</td><td>${esc(p.desc)}</td><td class="${p.paid ? 'ok' : 'wait'}">${p.paid ? '✓ שולם' : days(p.date) >= 0 ? rel(p.date) : 'ממתין לעדכון'}</td></tr>`).join('')}</tbody></table></div>` : ''}
+  <div class="card"><h2>יש שאלה? אנחנו כאן</h2><div class="contact">${wa ? `<a class="btn wa" href="https://wa.me/972${wa.slice(1)}?text=${encodeURIComponent('שלום, לגבי העסקה ב' + (d.address || '') + ':')}" target="_blank" rel="noopener">וואטסאפ</a>` : ''}${tel ? `<a class="btn" href="tel:${tel}">חיוג ${esc(o.phone)}</a>` : ''}</div><p style="color:var(--muted);font-size:14px;margin:12px 0 0">${esc(o.lawyer || '')}${o.address ? ' · ' + esc(o.address) : ''}</p></div>
+  <p class="foot">הדף מתעדכן אוטומטית מתוך תיק העסקה במשרד · נכון ל-${fmt(new Date().toISOString())}</p>`;
+  requestAnimationFrame(() => setTimeout(() => { const b = main.querySelector('.bar i'); if (b) b.style.width = x.progress + '%'; }, 60));
+}
+})();
+</script>
+</body>
+</html>
