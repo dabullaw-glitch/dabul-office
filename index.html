@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0B1D20">
+<title>משרד דבול - ניהול</title>
+<link rel="manifest" href="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/manifest.json?v=72efae2823">
+<link rel="icon" href="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/icon.svg?v=4bedcc98ff">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Assistant:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/app.css?v=5ef7f6e571">
+<style>
+#auth{position:fixed;inset:0;z-index:100;background:var(--side);display:grid;place-items:center;padding:16px}
+.auth-card{background:var(--panel);color:var(--ink);border-radius:20px;padding:30px 26px;width:100%;max-width:380px;box-shadow:var(--shadow-lg);text-align:center}
+.auth-card h1{font-size:24px;margin:0 0 4px}
+.auth-card form{display:grid;gap:12px;text-align:right;margin-top:16px}
+.auth-card label{display:grid;gap:5px;font-weight:700;font-size:14px}
+.auth-card input{border:1px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;background:var(--panel2);color:var(--ink)}
+.auth-err{color:var(--bad);margin:0;font-size:14px}
+.auth-note{background:var(--teal-soft);color:var(--ink);border-radius:10px;padding:10px 12px;font-size:14px;margin-top:12px;text-align:right}
+.auth-links{display:flex;justify-content:space-between;gap:10px;margin-top:14px;font-size:14px}
+.auth-links a{color:var(--accent);font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<div id="app" dir="rtl" lang="he"><div style="display:grid;place-items:center;height:100vh;font-family:sans-serif;color:#62797A">טוען...</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.0/dist/umd/supabase.js"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/config.js?v=f291dc1cb3"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/platform.js?v=69ab99bcaf"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/core.js?v=1f29f8c07c"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/engine.js?v=286d7376d2"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/shell.js?v=b8f500c871"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/views-main.js?v=e0e4dd2b12"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/views-work.js?v=c130b6af6c"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/views-tools.js?v=50d3e23879"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/auto.js?v=560a64f174"></script>
+<script src="https://cdn.jsdelivr.net/npm/pizzip@3.3.0/dist/pizzip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docxtemplater@3.71.0/build/docxtemplater.min.js"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/remind.js?v=9a9766e7bb"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/sales.js?v=ce2a29a397"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/mytemplates.js?v=8f4eb5240f"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/docpack.js?v=a4bae19974"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/dates.js?v=0ef987bffa"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/folders.js?v=ee73e2f9ef"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/remote-sign.js?v=3c1a44790e"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/extras.js?v=11dabb54a3"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/connect.js?v=5283adf9ec"></script>
+<script>
+(function(){
+  try { if (window.pdfjsLib && window.pdfjsWorker) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; } catch(e) {}
+  const h = (location.hash || '').slice(1);
+  if (h && O.V[h]) O.R.view = h;
+  O.render();
+  O.connect().then(O.render);
+})();
+</script>
+</body>
+</html>
