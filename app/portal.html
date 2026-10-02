@@ -47,6 +47,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}.ok{color:var(--teal);
 .contact{display:grid;gap:10px;grid-template-columns:1fr 1fr}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:12px;font-weight:800;text-decoration:none;font-size:16px;border:1px solid var(--line);color:var(--ink);background:var(--panel)}
 .btn.wa{background:#1FA855;color:#fff;border-color:#1FA855}
+.files{display:grid;gap:10px}.file{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink);min-height:56px}.file:active{background:var(--accent-soft)}.file .fi{width:40px;height:40px;border-radius:10px;background:var(--accent-soft);color:var(--teal);display:grid;place-items:center;flex:none;font-weight:800;font-size:12px}.file b{display:block;font-size:15.5px;line-height:1.3}.file small{color:var(--muted);font-size:13px}.file .dl{margin-inline-start:auto;color:var(--teal);font-weight:800;font-size:14px;white-space:nowrap}
 .foot{text-align:center;color:var(--muted);font-size:13px;margin-top:6px}
 .center{text-align:center;padding:40px 20px}
 .spin{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:s 1s linear infinite;margin:0 auto 12px}@keyframes s{to{transform:rotate(360deg)}}
@@ -60,6 +61,8 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}.ok{color:var(--teal);
 <script>
 (function(){
 const C = window.OFFICE_CONFIG || {};
+// the insolvency report link (portal.html#r=TOKEN) opens the report page
+if (/^#r=/.test(location.hash) && C.functions) { fetch(C.functions + '/app/report.html?t=' + Date.now(), { cache:'no-store' }).then(r => r.ok ? r.text() : Promise.reject(r.status)).then(t => { document.open(); document.write(t); document.close(); }).catch(() => { document.getElementById('main').innerHTML = '<div class="card center"><b>לא הצלחנו לטעון את הדף. נסה שוב בעוד כמה דקות.</b></div>'; }); return; }
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
 const parse = s => { if (!s) return null; const [y, m, d] = String(s).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); };
@@ -95,6 +98,7 @@ function render(x){
   ${x.next ? `<div class="card next"><small>השלב הבא</small><b>${esc(x.next.label)}</b>${x.next.expected && days(x.next.expected) >= 0 ? `<span style="color:var(--muted)">יעד משוער: ${fmt(x.next.expected)}</span>` : '<span style="color:var(--muted)">אנחנו מטפלים בזה עכשיו</span>'}</div>` : `<div class="card next"><small>סטטוס</small><b>כל השלבים הושלמו 🎉</b></div>`}
   <div class="dates">${dateCard('מועד החתימה', d.signDate)}${dateCard('מועד המסירה', d.handDate)}</div>
   <div class="card"><h2>שלבי העסקה</h2><ol class="steps">${stepHtml}</ol></div>
+  ${(x.files || []).length ? `<div class="card"><h2>המסמכים שלך</h2><div class="files">${x.files.map(f => `<a class="file" href="${esc(f.url)}" target="_blank" rel="noopener" download><span class="fi">${esc((String(f.name).split('.').pop() || 'PDF').slice(0, 4).toUpperCase())}</span><div><b>${esc(f.title)}</b><small>${esc(f.kind)}${f.date ? ' · ' + fmt(f.date) : ''}</small></div><span class="dl">הורדה ↓</span></a>`).join('')}</div></div>` : ''}
   ${pays.length ? `<div class="card"><h2>לוח התשלומים לפי החוזה</h2><table><thead><tr><th>מועד</th><th>סכום</th><th>תיאור</th><th></th></tr></thead><tbody>${pays.map(p => `<tr><td class="n">${fmt(p.date)}</td><td class="n">${money(p.amount)}</td><td>${esc(p.desc)}</td><td class="${p.paid ? 'ok' : 'wait'}">${p.paid ? '✓ שולם' : days(p.date) >= 0 ? rel(p.date) : 'ממתין לעדכון'}</td></tr>`).join('')}</tbody></table></div>` : ''}
   <div class="card"><h2>יש שאלה? אנחנו כאן</h2><div class="contact">${wa ? `<a class="btn wa" href="https://wa.me/972${wa.slice(1)}?text=${encodeURIComponent('שלום, לגבי העסקה ב' + (d.address || '') + ':')}" target="_blank" rel="noopener">וואטסאפ</a>` : ''}${tel ? `<a class="btn" href="tel:${tel}">חיוג ${esc(o.phone)}</a>` : ''}</div><p style="color:var(--muted);font-size:14px;margin:12px 0 0">${esc(o.lawyer || '')}${o.address ? ' · ' + esc(o.address) : ''}</p></div>
   <p class="foot">הדף מתעדכן אוטומטית מתוך תיק העסקה במשרד · נכון ל-${fmt(new Date().toISOString())}</p>`;

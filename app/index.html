@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Assistant:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/app.css?v=5ef7f6e571">
+<link rel="stylesheet" href="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/app.css?v=e25bb7df88">
 <style>
 #auth{position:fixed;inset:0;z-index:100;background:var(--side);display:grid;place-items:center;padding:16px}
 .auth-card{background:var(--panel);color:var(--ink);border-radius:20px;padding:30px 26px;width:100%;max-width:380px;box-shadow:var(--shadow-lg);text-align:center}
@@ -32,26 +32,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.0/dist/umd/supabase.js"></script>
 <script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/config.js?v=f291dc1cb3"></script>
 <script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/platform.js?v=69ab99bcaf"></script>
-<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/core.js?v=1f29f8c07c"></script>
-<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/engine.js?v=286d7376d2"></script>
-<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/shell.js?v=b8f500c871"></script>
-<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/views-main.js?v=e0e4dd2b12"></script>
-<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/views-work.js?v=c130b6af6c"></script>
-<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/views-tools.js?v=50d3e23879"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/core.js?v=bc5d30e4cd"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/engine.js?v=d094d0d956"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/shell.js?v=b92e5426f1"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/views-main.js?v=1309c22d73"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/views-work.js?v=23fa6da4fa"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/views-tools.js?v=290a1124ce"></script>
 <script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/auto.js?v=560a64f174"></script>
 <script src="https://cdn.jsdelivr.net/npm/pizzip@3.3.0/dist/pizzip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docxtemplater@3.71.0/build/docxtemplater.min.js"></script>
 <script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/remind.js?v=9a9766e7bb"></script>
-<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/sales.js?v=ce2a29a397"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/sales.js?v=df72134f62"></script>
 <script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/mytemplates.js?v=8f4eb5240f"></script>
 <script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/docpack.js?v=a4bae19974"></script>
 <script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/dates.js?v=0ef987bffa"></script>
-<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/folders.js?v=ee73e2f9ef"></script>
-<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/remote-sign.js?v=3c1a44790e"></script>
-<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/extras.js?v=11dabb54a3"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/folders.js?v=5bbc3fdb9f"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/insolv.js?v=d06e48acf3"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/company.js?v=5a1a434d3d"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/ux.js?v=efb2dd953c"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/remote-sign.js?v=5a1ac36fa9"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/extras.js?v=7e4b39cbb2"></script>
 <script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/connect.js?v=5283adf9ec"></script>
 <script>
 (function(){
