@@ -1,0 +1,21 @@
+<!doctype html><html lang="he" dir="rtl"><head>{{HEAD}}
+<title>הקורס שלי | הקורסים של עו״ד יקיר דבול</title>
+<meta name="robots" content="noindex">
+</head><body>
+{{TOP}}
+<div id="app">
+<div class="gate" id="gate">
+<h2 style="font-size:32px">כניסה לקורס שלי</h2>
+<p style="color:var(--muted)">הקורס נפתח מהקישור האישי שנשלח אליכם במייל. לא מוצאים אותו? הקלידו את המייל שאיתו נרשמתם, ונשלח אותו שוב.</p>
+<form id="resend" novalidate><input type="email" name="email" placeholder="המייל שלכם" required autocomplete="email"><button class="btn btn-ink" type="submit" style="width:100%">שלחו לי את הקישור</button><p class="msg" role="status"></p></form>
+<p style="margin-top:28px"><a href="learn.html?preview=1">לקריאת השיעור הפתוח</a> · <a href="first-home.html">לפרטים על הקורס</a></p>
+</div>
+<div class="player" id="player" hidden>
+<aside><h3 id="ctitle"></h3><div class="prog"><i id="pbar"></i></div><nav id="toc" aria-label="שיעורי הקורס"></nav></aside>
+<main><h1 id="ltitle"></h1><div class="meta" id="lmeta"></div><div class="video" id="lvideo" hidden></div><div class="lessonbody" id="lbody"></div>
+<div class="navbtns"><button class="btn btn-line" style="color:var(--text);border-color:#cfccc3" id="prev" type="button">השיעור הקודם</button><button class="btn btn-gold" id="next" type="button">סיימתי, לשיעור הבא</button></div></main>
+</div>
+</div>
+{{FOOT}}
+<script src="academy.js"></script>
+</body></html>
