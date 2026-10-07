@@ -13,6 +13,7 @@
 .nle h3{margin:22px 0 0;font-size:16px;border-top:1px solid var(--line2,var(--line));padding-top:14px}`;
   document.head.appendChild(st);
   const PFX = /^פרסומת:\s*/;
+  const BANNED = /הטוב(?:ים|ה|ות)? ביותר|הכי טוב|מקסימלי|מומחה|מומחים|חינם|ללא עלות|ללא תשלום|הנחה של|הנחות|מבצע מיוחד|מבצעים|אחוזי הצלחה|מבטיח|מובטח|מוביל(?:ים|ה)? בתחום|מספר 1|שכר טרחה|שכ[״"]ט|ייעוץ ראשוני/;
   const rows = v => Math.min(26, Math.max(3, Math.ceil(String(v || '').length / 70) + String(v || '').split('\n').length));
   const inp = (k, label, v, hint) => `<label>${n(label)}${hint ? `<span class="hint">${n(hint)}</span>` : ''}</label><input data-k="${k}" value="${n(v || '')}">`;
   const area = (k, label, v, hint) => `<label>${n(label)}${hint ? `<span class="hint">${n(hint)}</span>` : ''}</label><textarea data-k="${k}" rows="${rows(v)}">${n(v || '')}</textarea>`;
@@ -72,6 +73,9 @@
     const { c, subject } = collect(ov, o);
     if (!c.subject) { s.toast('חסר נושא למייל'); return; }
     if (!(c.feature.paras || []).length) { s.toast('הנושא של החודש ריק. צריך לפחות פסקה אחת'); return; }
+    // the same bar-rules check the server runs on every issue: an edit must not bring in a forbidden phrase
+    const hit = (JSON.stringify(c) + ' ' + subject).match(BANNED);
+    if (hit) { s.toast(`לפי כללי הלשכה אי אפשר לכתוב "${hit[0]}" בניוזלטר. צריך לנסח אחרת ולשמור שוב`); return; }
     const patch = { content: c, subject, editedAt: new Date().toISOString(), editedIn: 'office' };
     if (o.status === 'held') { patch.status = 'draft'; patch.flags = []; }
     b.disabled = true;
