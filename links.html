@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>קישורים פנימיים לאישור</title>
+<style>
+body{margin:0;background:#f4f3ef;font:16px/1.6 Arial,sans-serif;color:#1c1b19}
+main{max-width:760px;margin:0 auto;padding:18px 14px 110px}
+h1{font-size:21px;margin:0 0 6px}
+p.lead{color:#555;margin:0 0 14px}
+.it{background:#fff;border-radius:10px;padding:12px 14px;margin:0 0 10px;display:flex;gap:12px;align-items:flex-start;border-right:4px solid #a8873f}
+.it input{width:22px;height:22px;margin-top:4px;flex:0 0 22px}
+.it small{color:#777;display:block}
+.it .ctx{margin-top:4px}
+mark{background:#f3e5b8;padding:0 2px}
+.ok{color:#1e7b45;font-weight:bold}.bad{color:#b4442f;font-weight:bold}
+.bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;padding:12px;text-align:center}
+button{background:#1c1b19;color:#e4d19c;border:0;border-radius:8px;padding:12px 22px;font:700 16px Arial;cursor:pointer}
+button.link{background:none;color:#1d6fd6;padding:0;font:14px Arial;text-decoration:underline}
+#msg{margin:10px 0;font-weight:bold}
+</style>
+</head>
+<body>
+<main>
+<h1>קישורים פנימיים לאישור</h1>
+<p class="lead">בכל שורה: המאמר שבו יתווסף הקישור, המאמר שאליו הוא מוביל, והמשפט שבו המילים המסומנות יהפכו לקישור. מורידים סימון ממה שלא מתאים ולוחצים "אישור והוספה לאתר".</p>
+<div id="msg"></div>
+<div id="list">טוען...</div>
+</main>
+<div class="bar" id="bar" hidden><button id="go">אישור והוספה לאתר</button></div>
+<script>
+const FN = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/linkq';
+const t = (location.hash.match(/t=([a-f0-9]+)/) || [])[1] || '';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const ST = { added: '<span class="ok">נוסף לאתר ✓</span>', skipped: 'לא נוסף (הורדת את הסימון)', undone: 'בוטל', elementor: 'דילגתי: עמוד שבנוי באלמנטור', 'already linked': 'כבר מקושר', 'anchor not found': 'המשפט השתנה, דילגתי' };
+async function load() {
+  const r = await fetch(`${FN}?a=data&t=${t}`).then(x => x.json()).catch(() => null);
+  if (!r || !r.ok) { document.getElementById('list').innerHTML = '<p class="bad">הקישור לא תקף או שפג תוקפו.</p>'; return; }
+  let open = false;
+  document.getElementById('list').innerHTML = r.items.map((x, i) => {
+    const ctx = esc(x.context).replace(esc(x.anchor), '<mark>' + esc(x.anchor) + '</mark>');
+    if (!x.status) open = true;
+    const st = x.status ? (ST[x.status] || '<span class="bad">' + esc(x.status) + '</span>') + (x.status === 'added' ? ' · <button class="link" data-undo="' + i + '">ביטול הקישור</button>' : '') : '';
+    return `<label class="it">${x.status ? '' : `<input type="checkbox" value="${i}" checked>`}<div><b>${esc(x.sourceTitle)}</b><small>קישור אל: ${esc(x.targetTitle)}</small><div class="ctx">…${ctx}…</div>${st}</div></label>`;
+  }).join('');
+  document.getElementById('bar').hidden = !open;
+}
+document.getElementById('go').onclick = async (e) => {
+  const idx = [...document.querySelectorAll('input[type=checkbox]:checked')].map(x => Number(x.value));
+  e.target.disabled = true; e.target.textContent = 'מוסיף לאתר...';
+  const r = await fetch(`${FN}?a=apply&t=${t}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ idx }) }).then(x => x.json()).catch(() => null);
+  document.getElementById('msg').innerHTML = r && r.ok ? `<span class="ok">נוספו ${r.added} קישורים לאתר.</span>` : '<span class="bad">משהו השתבש, נסה שוב.</span>';
+  e.target.disabled = false; e.target.textContent = 'אישור והוספה לאתר';
+  load();
+};
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-undo]'); if (!b) return; e.preventDefault();
+  b.disabled = true;
+  await fetch(`${FN}?a=undo&t=${t}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ i: Number(b.dataset.undo) }) }).catch(() => null);
+  load();
+});
+load();
+</script>
+</body>
+</html>
