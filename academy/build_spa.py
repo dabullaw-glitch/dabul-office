@@ -6,6 +6,7 @@ R = pathlib.Path(__file__).parent
 S = R / 'src'
 css = (R / 'academy.css').read_text()
 js = (R / 'academy.js').read_text()
+deck = (R / 'deck.js').read_text()
 journey = (S / 'journey.svg.html').read_text()
 # the gold gradient is defined once, outside the views (a gradient inside a hidden view would not paint in the other view)
 import re as _re
@@ -89,6 +90,7 @@ html = f'''<!doctype html><html lang="he" dir="rtl"><head>
 {''.join(f'<div data-view="{v}"{"" if v == "home" else " hidden"}>' + links(b) + '</div>' + chr(10) for v, b in views.items())}
 {links(foot)}
 <script>{router}</script>
+<script>{deck}</script>
 <script>{pjs}</script>
 </body></html>
 '''
