@@ -232,6 +232,54 @@ p{margin:0 0 1em}
 .lessonbody .note{color:var(--muted);font-size:14.5px;margin-top:26px}
 @media(max-width:640px){.lessonbody{font-size:16.5px}.lessonbody .lead{font-size:18px}.lessonbody ol.steps>li{padding-right:56px}}
 
+/* ---- lesson video (deck.js) ---- */
+.video.dk{margin:0 0 30px}
+.dk-frame{position:relative;width:100%;overflow:hidden;border-radius:14px;background:#0f0e0c;box-shadow:0 18px 50px rgba(0,0,0,.25)}
+.dk-frame:fullscreen{border-radius:0;display:flex;align-items:center}
+.dk-stage{position:absolute;top:0;left:0;width:1280px;height:720px;transform-origin:0 0;direction:rtl;color:#fff;font-family:var(--sans);
+  background:radial-gradient(900px 600px at 50% 15%,#2a251c 0%,#15130f 60%,#0b0a08 100%);overflow:hidden;cursor:pointer}
+.dk-stage:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(228,209,156,.03) 0 2px,transparent 2px 110px);pointer-events:none}
+.dk-brand{position:absolute;top:26px;right:40px;font-size:20px;color:var(--gold);letter-spacing:.04em;opacity:.85}
+.dk-scene{position:absolute;inset:70px 70px 70px 70px;display:flex;flex-direction:column;justify-content:center}
+.dk-scene .rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.dk-scene .rv.in{opacity:1;transform:none}
+.dk-title{text-align:center}.dk-title .k{color:var(--gold-line);font-size:26px;font-weight:700;letter-spacing:.05em;margin-bottom:14px}
+.dk-title h2{font-family:var(--serif);font-weight:900;font-size:76px;line-height:1.1;color:#fff}.dk-title p{font-size:30px;color:#d9d1bf;margin-top:18px}
+.dk-big{text-align:center}.dk-big p{font-family:var(--serif);font-weight:900;font-size:62px;line-height:1.2;margin:0}.dk-big p b{color:var(--gold)}.dk-big small{display:block;margin-top:22px;font-size:28px;color:#d9d1bf}
+.dk-pad h3{font-family:var(--serif);font-weight:900;font-size:48px;color:var(--gold);margin:0 0 26px}
+.dk-bul,.dk-chk,.dk-steps,.dk-story{list-style:none;padding:0;margin:0}
+.dk-bul li{position:relative;font-size:33px;line-height:1.35;margin:0 0 20px;padding-right:46px}
+.dk-bul li:before{content:'';position:absolute;right:6px;top:15px;width:16px;height:16px;border-radius:50%;background:var(--gold)}
+.dk-bul li b,.dk-chk li b,.dk-story li b{color:var(--gold)}
+.dk-steps{counter-reset:k}.dk-steps li{counter-increment:k;position:relative;padding-right:78px;margin:0 0 22px;font-size:28px;line-height:1.35}
+.dk-steps li:before{content:counter(k);position:absolute;right:0;top:0;width:56px;height:56px;border-radius:50%;background:linear-gradient(#f3e5b8,#a8873f);color:#161616;font-family:var(--serif);font-weight:900;font-size:28px;display:grid;place-items:center}
+.dk-steps li b{display:block;font-size:32px;color:#fff}.dk-steps li span{color:#cfc6b2}
+.dk-call{align-items:flex-start;padding:50px 60px;border-radius:26px;border-right:10px solid}
+.dk-call .lab,.dk-ex .lab{display:inline-block;font-size:24px;font-weight:700;padding:6px 18px;border-radius:999px;margin-bottom:22px}
+.dk-call p{font-size:42px;line-height:1.4;margin:0}.dk-call p b{color:var(--gold)}
+.dk-call.key{background:rgba(228,209,156,.08);border-color:var(--gold)}.dk-call.key .lab{background:var(--gold);color:#161616}
+.dk-call.warn{background:rgba(180,68,47,.12);border-color:#d0654d}.dk-call.warn .lab{background:#d0654d;color:#fff}
+.dk-call.tip{background:rgba(79,150,104,.12);border-color:#5aa877}.dk-call.tip .lab{background:#5aa877;color:#fff}
+.dk-ex .lab{background:#fff;color:#161616}.dk-ex h3{color:#fff}
+.dk-story li{font-size:30px;line-height:1.4;margin:0 0 16px;padding:14px 22px;border-right:4px solid var(--gold-line);background:rgba(255,255,255,.04);border-radius:8px}
+.dk-chk li{position:relative;font-size:31px;line-height:1.35;margin:0 0 16px;padding:12px 70px 12px 18px;border:2px solid rgba(228,209,156,.35);border-radius:14px}
+.dk-chk li:before{content:'✓';position:absolute;right:16px;top:12px;width:38px;height:38px;border-radius:8px;background:var(--gold);color:#161616;font-weight:900;display:grid;place-items:center}
+.dk-tbl{width:100%;border-collapse:collapse;font-size:25px}.dk-tbl th{background:var(--gold);color:#161616;padding:14px 18px;text-align:right}
+.dk-tbl td{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.12);vertical-align:top;line-height:1.35}.dk-tbl td:first-child{color:var(--gold);font-weight:700}
+.dk-fig .fig svg{width:100%;height:auto;max-height:520px}
+.dk-sum{background:rgba(228,209,156,.07);border-radius:26px;padding:40px 50px}
+.dk-photo{align-items:center}.dk-photo img{max-height:520px;border-radius:16px;margin:0 auto}.dk-photo p{text-align:center;font-size:26px;color:#d9d1bf;margin-top:14px}
+.dk-cap{position:absolute;left:120px;right:120px;bottom:22px;text-align:center;font-size:24px;line-height:1.45;background:rgba(0,0,0,.72);padding:10px 18px;border-radius:10px}
+.dk-big-play{position:absolute;inset:0;margin:auto;width:280px;height:200px;border:0;border-radius:24px;background:rgba(15,14,12,.78);color:var(--gold);font:700 26px var(--sans);display:grid;place-items:center;align-content:center;gap:10px;cursor:pointer}
+.dk-big-play[hidden]{display:none}
+.dk-bar{display:flex;align-items:center;gap:12px;margin-top:10px;direction:rtl}
+.dk-bar button{border:1px solid #dcdad3;background:#fff;border-radius:8px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.dk-bar .dk-pp{min-width:46px;font-size:16px;background:var(--ink);color:var(--gold);border-color:var(--ink)}
+.dk-bar .dk-cc[aria-pressed=true]{background:var(--gold);border-color:var(--gold)}
+.dk-seg{flex:1;display:flex;gap:3px;height:10px;cursor:pointer}.dk-seg i{flex:1;background:#e3e1da;border-radius:3px;overflow:hidden;position:relative}
+.dk-seg i b{position:absolute;top:0;bottom:0;right:0;width:0;background:var(--gold-deep)}
+.dk-time{font-size:13px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e5b8"/><stop offset="1" stop-color="#a8873f"/></linearGradient></defs></svg>
 <header class="top"><div class="wrap">
@@ -461,6 +509,94 @@ p{margin:0 0 1em}
   go();
 })();
 </script>
+<script>// The lesson video: an explainer that plays like a video (narration, animated visuals, captions, seek),
+// built from lesson.deck = { scenes: [{ kind, audio?, say, ...visual data }] }. Each scene has its own narration file;
+// without one (or before the narration is ready) the scene is timed by its text and shown with captions.
+(() => {
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const rich = s => esc(s).replace(/&lt;(\/?)b&gt;/g, '<$1b>').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  const list = (a, cls = '') => (a || []).map((x, i) => `<li class="rv ${cls}" data-i="${i}">${typeof x === 'string' ? rich(x) : `<b>${rich(x.t)}</b>${x.d ? `<span>${rich(x.d)}</span>` : ''}`}</li>`).join('');
+  const T = {
+    title: s => `<div class="dk-title"><div class="k rv">${esc(s.kicker || '')}</div><h2 class="rv">${rich(s.title)}</h2>${s.sub ? `<p class="rv">${rich(s.sub)}</p>` : ''}</div>`,
+    big: s => `<div class="dk-big"><p class="rv">${rich(s.text)}</p>${s.sub ? `<small class="rv">${rich(s.sub)}</small>` : ''}</div>`,
+    bullets: s => `<div class="dk-pad"><h3>${rich(s.title)}</h3><ul class="dk-bul">${list(s.items)}</ul></div>`,
+    steps: s => `<div class="dk-pad"><h3>${rich(s.title)}</h3><ol class="dk-steps">${list(s.items)}</ol></div>`,
+    key: s => `<div class="dk-call key"><span class="lab rv">${esc(s.label || 'הכי חשוב לזכור')}</span><p class="rv">${rich(s.text)}</p></div>`,
+    warn: s => `<div class="dk-call warn"><span class="lab rv">${esc(s.label || 'טעות נפוצה')}</span><p class="rv">${rich(s.text)}</p></div>`,
+    tip: s => `<div class="dk-call tip"><span class="lab rv">${esc(s.label || 'טיפ')}</span><p class="rv">${rich(s.text)}</p></div>`,
+    example: s => `<div class="dk-pad dk-ex"><span class="lab">${esc(s.label || 'דוגמה מהחיים')}</span><h3>${rich(s.title || '')}</h3><ol class="dk-story">${list(s.items)}</ol></div>`,
+    compare: s => `<div class="dk-pad"><h3>${rich(s.title)}</h3><table class="dk-tbl"><tr>${(s.cols || []).map(c => `<th>${esc(c)}</th>`).join('')}</tr>${(s.rows || []).map((r, i) => `<tr class="rv" data-i="${i}">${r.map(c => `<td>${rich(c)}</td>`).join('')}</tr>`).join('')}</table></div>`,
+    svg: s => `<div class="dk-pad dk-fig">${s.title ? `<h3>${rich(s.title)}</h3>` : ''}<div class="fig rv">${s.svg || ''}</div></div>`,
+    checklist: s => `<div class="dk-pad"><h3>${rich(s.title || 'מה עושים עכשיו')}</h3><ul class="dk-chk">${list(s.items)}</ul></div>`,
+    summary: s => `<div class="dk-pad dk-sum"><h3>${rich(s.title || 'בקיצור')}</h3><ul class="dk-bul">${list(s.items)}</ul></div>`,
+    photo: s => `<div class="dk-photo"><img class="rv" src="${esc(s.img)}" alt="${esc(s.caption || '')}">${s.caption ? `<p class="rv">${rich(s.caption)}</p>` : ''}</div>`,
+  };
+  const textDur = s => Math.max(4, String(s.say || '').length / 13 + 1.2); // seconds, when there is no narration file
+
+  function mount(box, lesson) {
+    const sc = (lesson.deck && lesson.deck.scenes) || [];
+    if (!sc.length) { box.hidden = true; return; }
+    box.hidden = false;
+    box.className = 'video dk';
+    box.innerHTML = `<div class="dk-frame"><div class="dk-stage"><div class="dk-brand">עו״ד יקיר דבול · קונים דירה ראשונה</div><div class="dk-scene"></div><div class="dk-cap" hidden></div>
+      <button class="dk-big-play" aria-label="הפעלה"><svg viewBox="0 0 24 24" width="54" height="54"><path d="M8 5v14l11-7z" fill="currentColor"/></svg><span>צפייה בשיעור</span></button></div></div>
+      <div class="dk-bar"><button class="dk-pp" aria-label="הפעלה">▶</button><div class="dk-seg">${sc.map((_, i) => `<i data-i="${i}"><b></b></i>`).join('')}</div><span class="dk-time">0:00</span>
+      <button class="dk-cc" aria-pressed="false" title="כתוביות">כתוביות</button><button class="dk-fs" title="מסך מלא">⛶</button></div>`;
+    const $ = q => box.querySelector(q);
+    const stage = $('.dk-stage'), scene = $('.dk-scene'), cap = $('.dk-cap'), pp = $('.dk-pp'), segs = [...box.querySelectorAll('.dk-seg i')];
+    const audio = new Audio(); audio.preload = 'auto';
+    let cur = -1, playing = false, t0 = 0, elapsed = 0, timer = 0, dur = 0, raf = 0, cc = false;
+    const fit = () => { const f = $('.dk-frame'), w = f.clientWidth, h = document.fullscreenElement === f ? f.clientHeight : w * 720 / 1280; const k = Math.min(w / 1280, h / 720); stage.style.transform = `translate(${(w - 1280 * k) / 2}px, ${(h - 720 * k) / 2}px) scale(${k})`; if (document.fullscreenElement !== f) f.style.height = h + 'px'; };
+    window.addEventListener('resize', fit); setTimeout(fit, 0);
+    const ro = 'ResizeObserver' in window ? new ResizeObserver(fit) : null; if (ro) ro.observe($('.dk-frame'));
+    const reveal = (p) => { // items appear in turn across the scene
+      const it = [...scene.querySelectorAll('.rv')]; const n = it.length;
+      it.forEach((el, i) => { const at = n <= 1 ? 0 : (i / n) * 0.85; el.classList.toggle('in', p >= at); });
+    };
+    const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+    const tick = () => {
+      const pos = sc[cur].audio && audio.src ? audio.currentTime : elapsed + (playing ? (performance.now() - t0) / 1000 : 0);
+      const p = window.__dkPreview ? 1 : dur ? Math.min(1, pos / dur) : 0;
+      reveal(p);
+      segs.forEach((g, i) => { g.firstChild.style.width = i < cur ? '100%' : i > cur ? '0' : (p * 100) + '%'; });
+      $('.dk-time').textContent = `${cur + 1}/${sc.length} · ${fmt(pos)}`;
+      if (playing && !sc[cur].audio && pos >= dur) return next();
+      raf = requestAnimationFrame(tick);
+    };
+    function load(i, autoplay) {
+      cancelAnimationFrame(raf); clearTimeout(timer); audio.pause();
+      cur = Math.max(0, Math.min(sc.length - 1, i)); const s = sc[cur];
+      scene.className = 'dk-scene k-' + (s.kind || 'big'); scene.innerHTML = (T[s.kind] || T.big)(s);
+      cap.textContent = s.say || ''; elapsed = 0; dur = textDur(s);
+      if (s.audio) { audio.src = s.audio; audio.onloadedmetadata = () => { if (isFinite(audio.duration)) dur = audio.duration; }; audio.onended = () => next(); }
+      else audio.removeAttribute('src');
+      if (autoplay) play(); else { playing = false; pp.textContent = '▶'; }
+      raf = requestAnimationFrame(tick);
+    }
+    function play() {
+      playing = true; pp.textContent = '❚❚'; $('.dk-big-play').hidden = true; t0 = performance.now();
+      if (sc[cur].audio) audio.play().catch(() => {});
+      cancelAnimationFrame(raf); raf = requestAnimationFrame(tick);
+    }
+    function pause() {
+      if (!sc[cur].audio) elapsed += (performance.now() - t0) / 1000;
+      playing = false; pp.textContent = '▶'; audio.pause();
+    }
+    function next() { if (cur < sc.length - 1) load(cur + 1, true); else { pause(); $('.dk-big-play').hidden = false; $('.dk-big-play span').textContent = 'לצפות שוב'; cur = -1; segs.forEach(g => (g.firstChild.style.width = '100%')); } }
+    pp.onclick = () => (cur < 0 ? load(0, true) : playing ? pause() : play());
+    $('.dk-big-play').onclick = () => load(cur < 0 ? 0 : cur, true);
+    segs.forEach((g, i) => (g.onclick = () => load(i, playing || cur >= 0)));
+    $('.dk-cc').onclick = e => { cc = !cc; cap.hidden = !cc; e.currentTarget.setAttribute('aria-pressed', cc); };
+    $('.dk-fs').onclick = () => { const f = $('.dk-frame'); (document.fullscreenElement ? document.exitFullscreen() : (f.requestFullscreen || f.webkitRequestFullscreen || (() => {})).call(f)); setTimeout(fit, 200); };
+    document.addEventListener('fullscreenchange', () => setTimeout(fit, 100));
+    stage.onclick = e => { if (e.target.closest('.dk-big-play')) return; if (cur >= 0) (playing ? pause() : play()); };
+    load(0, false); cur = 0;
+    // stop when the reader moves to another lesson
+    return () => { pause(); cancelAnimationFrame(raf); window.removeEventListener('resize', fit); if (ro) ro.disconnect(); };
+  }
+  window.DabulDeck = { mount };
+})();
+</script>
 <script>// Courses site: purchase button, wait-list form, and the course player (personal link #t=<token>).
 (() => {
   const API = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/academy';
@@ -525,7 +661,9 @@ p{margin:0 0 1em}
       const l = r.lessons[cur];
       $('#ltitle').textContent = l.title;
       $('#lmeta').textContent = `שיעור ${l.n} מתוך ${r.lessons.length}${l.minutes ? ` · כ-${l.minutes} דקות קריאה` : ''}`;
-      const v = $('#lvideo'); v.hidden = !l.video; v.innerHTML = l.video ? `<iframe src="${l.video}" allow="fullscreen; picture-in-picture" title="${l.title}"></iframe>` : '';
+      const v = $('#lvideo'); if (window.__deckStop) { window.__deckStop(); window.__deckStop = null; }
+      if (!l.locked && l.deck && window.DabulDeck) { window.__deckStop = window.DabulDeck.mount(v, l); }
+      else { v.className = 'video'; v.hidden = !l.video; v.innerHTML = l.video ? `<iframe src="${l.video}" allow="fullscreen; picture-in-picture" title="${l.title}"></iframe>` : ''; }
       $('#lbody').innerHTML = l.locked ? `<div class="box gold"><p><b>השיעור הזה פתוח למי שנרשם לקורס.</b></p><p>${l.summary || ''}</p><p><a class="btn btn-ink" href="#academy/first-home/buy">להרשמה לקורס</a></p></div>` : l.html;
       // checklists in a lesson: tap to tick, remembered on this device
       const ck = 'dabul-ck-' + l.n; let marks = {}; try { marks = JSON.parse(localStorage.getItem(ck) || '{}'); } catch (_) {}
