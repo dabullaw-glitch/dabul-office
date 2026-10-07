@@ -2,7 +2,7 @@
    what goes out, when, on which channel, and who publishes it (Grok Bot or the office system).
    Grok Bot reads the same calendar from the public page (settings/pub.key). Here you can see it, and cancel or restore an item. */
 (function (s) {
-  if (!s || s.PUB) return; s.PUB = '20261007a';
+  if (!s || s.PUB) return; s.PUB = '20261007b';
   const n = s.esc;
   const bump = () => (s.bump ? s.bump() : s.render());
   ['pub', 'settings'].forEach(c => { s.S.data[c] = s.S.data[c] || {}; });
@@ -46,15 +46,27 @@
         : r.status === 'planned' ? `<button class="btn sm ghost" data-a="pb-set" data-op="skipped" data-id="${n(r.id)}">לבטל</button>` : ''}</div></div>`;
     }).join('');
     const link = cfg.key ? `https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/pubcal?k=${encodeURIComponent(cfg.key)}` : '';
-    return `<div class="card card-b"><p class="muted" style="margin-top:0">לוח אחד לכל מה שמתפרסם: מה, מתי, באיזה ערוץ ומי מפרסם. <b>גרוק בוט</b> מפרסם בפייסבוק, ביוטיוב, בלינקדאין, ב-X ובגוגל עסקי, ו<b>המערכת</b> מפרסמת באינסטגרם, בטיקטוק ובקבוצת הוואטסאפ. גרוק קורא את הלוח הזה כל יום, כך ששניהם מסונכרנים. פריט שמבטלים כאן לא יוצא.</p>
+    const ig = cfg.ig || {};
+    const conn = `<div class="card card-b" style="margin-bottom:12px"><b>חיבור אינסטגרם</b> ${ig.ok ? '<span class="pill p-ok">מחובר</span>' : '<span class="pill p-warn">לא מחובר</span>'}
+      <p class="muted small" style="margin:6px 0">${ig.ok ? 'המערכת מפרסמת באינסטגרם לפי הלוח.' : 'מדביקים כאן את קוד הגישה של אינסטגרם (לפי ההוראות שקיבלת בצ׳אט). הקוד נשמר מוצפן ולא מוצג שוב.'}</p>
+      ${ig.ok ? '' : `<div style="display:flex;gap:8px;flex-wrap:wrap"><input id="pb_ig" type="password" dir="ltr" placeholder="IGAA..." style="flex:1;min-width:200px"><button class="btn sm" data-a="pb-ig">שמירה</button></div>`}</div>`;
+    return conn + `<div class="card card-b"><p class="muted" style="margin-top:0">לוח אחד לכל מה שמתפרסם: מה, מתי, באיזה ערוץ ומי מפרסם. <b>גרוק בוט</b> מפרסם בפייסבוק, ביוטיוב, בלינקדאין, ב-X ובגוגל עסקי, ו<b>המערכת</b> מפרסמת באינסטגרם, בטיקטוק ובקבוצת הוואטסאפ. גרוק קורא את הלוח הזה כל יום, כך ששניהם מסונכרנים. פריט שמבטלים כאן לא יוצא.</p>
       <div class="pb-legend"><span><span class="pb-own" style="background:#1d6fd6">גרוק בוט</span></span><span><span class="pb-own" style="background:#a8873f">המערכת</span></span>${link ? `<a href="${n(link)}" target="_blank" rel="noopener">הלוח כפי שגרוק רואה אותו</a>` : ''}
       <a href="#" data-a="pb-past">${showPast ? 'להסתיר פריטים שעברו' : 'להציג גם פריטים שעברו'}</a></div>
       ${list || s.empty('הלוח ריק', 'פריטים חדשים נכנסים לכאן כל שבוע.')}</div>`;
   }
   s.pubView = pubView;
   document.addEventListener('click', async e => {
-    const b = e.target.closest('[data-a="pb-set"],[data-a="pb-past"]'); if (!b) return;
+    const b = e.target.closest('[data-a="pb-set"],[data-a="pb-past"],[data-a="pb-ig"]'); if (!b) return;
     e.preventDefault();
+    if (b.dataset.a === 'pb-ig') {
+      const v = (document.getElementById('pb_ig') || {}).value || ''; const t = v.trim();
+      if (t.length < 40 || /\s/.test(t)) { s.toast('הקוד לא נראה תקין. מעתיקים את כל הקוד, בלי רווחים', 'bad'); return; }
+      try { const { error } = await window.SB.rpc('set_secret', { p_key: 'IG_TOKEN', p_value: t }); if (error) throw error;
+        await s.patch('settings', 'pub', { ig: { saved: new Date().toISOString(), ok: false, check: 'pending' } }); s.toast('נשמר. המערכת תבדוק את החיבור ותעדכן בטלגרם.'); }
+      catch { s.toast('השמירה נכשלה, נסה שוב', 'bad'); }
+      return;
+    }
     if (b.dataset.a === 'pb-past') { s.setUi ? s.setUi('mkt', 'pubpast', s.ui('mkt', 'pubpast', '') === '1' ? '' : '1') : null; bump(); return; }
     try { await s.patch('pub', b.dataset.id, { status: b.dataset.op, changedAt: new Date().toISOString(), changedBy: 'office' }); s.toast(b.dataset.op === 'skipped' ? 'בוטל. הפריט לא יתפרסם.' : 'הוחזר ללוח'); }
     catch { s.toast('לא נשמר, נסה שוב'); }
