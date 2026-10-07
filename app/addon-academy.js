@@ -2,7 +2,7 @@
    Buyers, payments, course visits and progress, lesson and video status, and the reels queue for Grok Bot.
    Read-only view of collections the server writes: enroll, payhook, course, reel. */
 (function (s) {
-  if (!s || s.ACAD) return; s.ACAD = '20261007b';
+  if (!s || s.ACAD) return; s.ACAD = '20261007c';
   const n = s.esc, ic = s.icon, fd = s.fmtDate;
   const SITE = 'https://dabullaw-glitch.github.io/dabul-office/portal.html';
   const API = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/academy';
@@ -88,13 +88,14 @@
     const R = all('reel').sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
     return `<div class="card card-b"><p class="muted" style="margin-top:0">רילסים ערוכים: מאשרים בטלגרם, וגרוק בוט מפרסם סרטון אחד בשבוע בפייסבוק וביוטיוב, ביום שלישי ב-19:00. אינסטגרם וטיקטוק אתה מעלה בעצמך.</p>${R.map(r => `<div class="ac-row"><div class="grow"><div><b>${n(r.name || '')}</b></div><small class="muted">${r.publishAt ? 'מתוזמן ל-' + when(r.publishAt) : 'נוצר ' + when(r.created)}</small>${r.link ? `<div><a class="small" href="${n(r.link)}" target="_blank" rel="noopener">לצפייה</a></div>` : ''}</div>${pill(r.status)}</div>`).join('') || s.empty('עוד אין רילסים', 'רילסים חדשים יופיעו כאן אחרי שהמחשב במשרד יערוך אותם.')}</div>`;
   }
+  s.reelsView = reelsView; // shown in שיווק > רילסים
   s.V.academy = {
     title: 'קורסים',
     render(el) {
       const t = s.ui('academy', 't', 'home');
-      const body = t === 'buyers' ? buyersView() : t === 'pay' ? paymentsView() : t === 'lessons' ? lessonsView() : t === 'photos' ? photosView() : t === 'reels' ? reelsView() : overview();
+      const body = t === 'buyers' ? buyersView() : t === 'pay' ? paymentsView() : t === 'lessons' ? lessonsView() : t === 'photos' ? photosView() : overview();
       el.innerHTML = `<div>${s.pageHead('קורסים', 'הקורסים שלנו: רוכשים, תשלומים, כניסות והתקדמות, מצב השיעורים והתמונות.', '')}
-        <div class="toolbar">${s.segs ? s.segs('t', [['home', 'סקירה'], ['buyers', 'רוכשים'], ['pay', 'תשלומים'], ['lessons', 'שיעורים'], ['photos', 'תמונות'], ['reels', 'רילסים']], t) : ''}</div>${body}</div>`;
+        <div class="toolbar">${s.segs ? s.segs('t', [['home', 'סקירה'], ['buyers', 'רוכשים'], ['pay', 'תשלומים'], ['lessons', 'שיעורים'], ['photos', 'תמונות']], t) : ''}</div>${body}</div>`;
     }
   };
   try { const a = (s.AREAS || []).find(x => x[0] === 'money'); if (a && !a[3].some(x => x[0] === 'academy')) a[3].push(['academy', 'קורסים']); } catch { /* menu stays as is */ }
