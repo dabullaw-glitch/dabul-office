@@ -6,7 +6,9 @@
 // and reports to Telegram. Grok Bot's rows are never touched here.
 export function start(createClient) {
   const sb = createClient(Deno.env.get('SUPABASE_URL'), Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'));
-  const IG = 'https://graph.instagram.com/v21.0';
+  const IG = 'https://graph.instagram.com/v21.0', FB = 'https://graph.facebook.com/v21.0';
+  // two ways to connect: Instagram login (token IGAA..., calls graph.instagram.com/me/...) or
+  // Facebook login (user token EAA... -> the page token of the page linked to Instagram, calls graph.facebook.com/<ig-id>/...)
   const merge = (coll, id, patch) => sb.rpc('docs_merge', { p_coll: coll, p_id: id, p_patch: patch });
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   // "2026-10-14T12:30" Israel time -> epoch ms
@@ -17,29 +19,29 @@ export function start(createClient) {
     return guess - h * 3600e3;
   };
   async function secrets() {
-    const { data } = await sb.from('app_secrets').select('k,v').in('k', ['CRON_SECRET', 'IG_TOKEN', 'TIKTOK_TOKEN', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID']);
+    const { data } = await sb.from('app_secrets').select('k,v').in('k', ['CRON_SECRET', 'IG_TOKEN', 'IG_PAGE_TOKEN', 'TIKTOK_TOKEN', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID']);
     return Object.fromEntries((data || []).map((r) => [r.k, r.v]));
   }
   async function tg(S, text) {
     if (!S.TELEGRAM_BOT_TOKEN || !S.TELEGRAM_CHAT_ID) return;
     await fetch(`https://api.telegram.org/bot${S.TELEGRAM_BOT_TOKEN}/sendMessage`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ chat_id: S.TELEGRAM_CHAT_ID, text, disable_web_page_preview: true }) }).catch(() => null);
   }
-  async function ig(path, params, token, method = 'POST') {
-    const u = new URL(IG + path); Object.entries(params || {}).forEach(([k, v]) => u.searchParams.set(k, String(v))); u.searchParams.set('access_token', token);
+  async function ig(path, params, token, method = 'POST', base = IG) {
+    const u = new URL(base + path); Object.entries(params || {}).forEach(([k, v]) => u.searchParams.set(k, String(v))); u.searchParams.set('access_token', token);
     const r = await fetch(u, { method }); const j = await r.json().catch(() => ({}));
     if (!r.ok || j.error) throw new Error(j.error?.message || ('HTTP ' + r.status));
     return j;
   }
-  async function igWait(id, token) {
+  async function igWait(id, C) {
     for (let i = 0; i < 40; i++) {
-      const s = await ig('/' + id, { fields: 'status_code' }, token, 'GET');
+      const s = await ig('/' + id, { fields: 'status_code' }, C.token, 'GET', C.base);
       if (s.status_code === 'FINISHED') return;
       if (s.status_code === 'ERROR' || s.status_code === 'EXPIRED') throw new Error('Instagram could not process the file (' + s.status_code + ')');
       await sleep(5000);
     }
     throw new Error('Instagram is still processing the video');
   }
-  async function igPublish(row, cfg, token) {
+  async function igPublish(row, cfg, C) {
     const fill = (s) => String(s || '').split('{SITE}').join(cfg.site || '').split('{MEDIA}').join(cfg.media || '');
     const media = (row.media || []).map(fill);
     const caption = fill(row.text).slice(0, 2150);
@@ -48,16 +50,16 @@ export function start(createClient) {
     const stories = media.filter((m) => /story/i.test(m.split('/').pop()));
     if (feed) {
       const isVideo = /\.(mp4|mov)$/i.test(feed);
-      const c = await ig('/me/media', isVideo ? { media_type: 'REELS', video_url: feed, caption, share_to_feed: true } : { image_url: feed, caption }, token);
-      if (isVideo) await igWait(c.id, token);
-      const p = await ig('/me/media_publish', { creation_id: c.id }, token);
+      const c = await ig(C.who + '/media', isVideo ? { media_type: 'REELS', video_url: feed, caption, share_to_feed: true } : { image_url: feed, caption }, C.token, 'POST', C.base);
+      if (isVideo) await igWait(c.id, C);
+      const p = await ig(C.who + '/media_publish', { creation_id: c.id }, C.token, 'POST', C.base);
       done.push({ kind: isVideo ? 'reel' : 'post', id: p.id });
     }
     for (const s of stories) {
       const isVideo = /\.(mp4|mov)$/i.test(s);
-      const c = await ig('/me/media', isVideo ? { media_type: 'STORIES', video_url: s } : { media_type: 'STORIES', image_url: s }, token);
-      if (isVideo) await igWait(c.id, token);
-      const p = await ig('/me/media_publish', { creation_id: c.id }, token);
+      const c = await ig(C.who + '/media', isVideo ? { media_type: 'STORIES', video_url: s } : { media_type: 'STORIES', image_url: s }, C.token, 'POST', C.base);
+      if (isVideo) await igWait(c.id, C);
+      const p = await ig(C.who + '/media_publish', { creation_id: c.id }, C.token, 'POST', C.base);
       done.push({ kind: 'story', id: p.id });
     }
     if (!done.length) throw new Error('no media file in the row');
@@ -71,23 +73,34 @@ export function start(createClient) {
     // 1) a new Instagram token: check it once and report
     if (S.IG_TOKEN && igc.check === 'pending') {
       try {
-        const me = await ig('/me', { fields: 'user_id,username,account_type' }, S.IG_TOKEN, 'GET');
-        await merge('settings', 'pub', { ig: { ok: true, check: 'done', username: me.username || '', type: me.account_type || '', saved: igc.saved || new Date().toISOString(), refreshed: new Date().toISOString() } });
-        await tg(S, `✅ אינסטגרם מחובר (@${me.username || ''}). מעכשיו המערכת מפרסמת באינסטגרם לפי לוח הפרסום.`);
-        igc.ok = true;
+        if (/^EAA/.test(S.IG_TOKEN)) {
+          const acc = await ig('/me/accounts', { fields: 'name,access_token,instagram_business_account{id,username}', limit: 50 }, S.IG_TOKEN, 'GET', FB);
+          const pg = (acc.data || []).find((p) => p.instagram_business_account);
+          if (!pg) throw new Error('לא נמצא עמוד פייסבוק שמקושר לחשבון אינסטגרם מקצועי. צריך לקשר את האינסטגרם לעמוד הפייסבוק של המשרד ולבחור את שניהם באישור.');
+          const { error } = await sb.from('app_secrets').upsert({ k: 'IG_PAGE_TOKEN', v: pg.access_token }, { onConflict: 'k' }); if (error) throw new Error(error.message);
+          S.IG_PAGE_TOKEN = pg.access_token;
+          const nig = { ok: true, mode: 'fb', check: 'done', igId: pg.instagram_business_account.id, username: pg.instagram_business_account.username || '', pageId: pg.id, pageName: pg.name || '', saved: igc.saved || new Date().toISOString() };
+          await merge('settings', 'pub', { ig: nig }); Object.assign(igc, nig);
+          await tg(S, `✅ אינסטגרם מחובר (@${nig.username}) דרך עמוד הפייסבוק "${nig.pageName}". מעכשיו המערכת מפרסמת באינסטגרם לפי לוח הפרסום, ובודקת מה עלה בעמוד הפייסבוק.`);
+        } else {
+          const me = await ig('/me', { fields: 'user_id,username,account_type' }, S.IG_TOKEN, 'GET');
+          const nig = { ok: true, mode: 'ig', check: 'done', username: me.username || '', type: me.account_type || '', saved: igc.saved || new Date().toISOString(), refreshed: new Date().toISOString() };
+          await merge('settings', 'pub', { ig: nig }); Object.assign(igc, nig);
+          await tg(S, `✅ אינסטגרם מחובר (@${me.username || ''}). מעכשיו המערכת מפרסמת באינסטגרם לפי לוח הפרסום.`);
+        }
       } catch (e) {
         await merge('settings', 'pub', { ig: { ok: false, check: 'failed', error: String(e.message || e).slice(0, 200), saved: igc.saved || '' } });
         await tg(S, `⚠️ קוד הגישה של אינסטגרם לא עבד: ${String(e.message || e).slice(0, 150)}. צריך ליצור קוד חדש ולהדביק שוב (שיווק > לוח פרסום).`);
       }
     }
     // 2) refresh the long-lived token every 30 days (it lives 60)
-    if (S.IG_TOKEN && igc.ok && Date.now() - Date.parse(igc.refreshed || igc.saved || 0) > 30 * 864e5) {
+    if (S.IG_TOKEN && igc.ok && igc.mode !== 'fb' && Date.now() - Date.parse(igc.refreshed || igc.saved || 0) > 30 * 864e5) {
       try {
         const r = await ig('/refresh_access_token', { grant_type: 'ig_refresh_token' }, S.IG_TOKEN, 'GET').catch(async () => {
           const u = new URL('https://graph.instagram.com/refresh_access_token'); u.searchParams.set('grant_type', 'ig_refresh_token'); u.searchParams.set('access_token', S.IG_TOKEN);
           const x = await fetch(u); return x.json();
         });
-        if (r.access_token) { await sb.rpc('set_secret', { p_key: 'IG_TOKEN', p_value: r.access_token }); S.IG_TOKEN = r.access_token; await merge('settings', 'pub', { ig: { ...igc, refreshed: new Date().toISOString() } }); log.push('ig token refreshed'); }
+        if (r.access_token) { await sb.from('app_secrets').upsert({ k: 'IG_TOKEN', v: r.access_token }, { onConflict: 'k' }); S.IG_TOKEN = r.access_token; await merge('settings', 'pub', { ig: { ...igc, refreshed: new Date().toISOString() } }); log.push('ig token refreshed'); }
       } catch (e) { log.push('ig refresh failed: ' + (e.message || e)); }
     }
     // 3) due rows of the system: from 2 hours ago until now
@@ -100,9 +113,10 @@ export function start(createClient) {
       const ch = row.channels || [];
       const res = { ...(row.result || {}) };
       if (ch.includes('instagram') && !res.instagram) {
-        if (!S.IG_TOKEN || !igc.ok) { res.instagram = { skipped: 'not connected' }; }
+        const C = igc.mode === 'fb' ? { base: FB, who: '/' + igc.igId, token: S.IG_PAGE_TOKEN } : { base: IG, who: '/me', token: S.IG_TOKEN };
+        if (!C.token || !igc.ok) { res.instagram = { skipped: 'not connected' }; }
         else {
-          try { res.instagram = { ok: true, at: new Date().toISOString(), items: await igPublish(row, cfg, S.IG_TOKEN) }; }
+          try { res.instagram = { ok: true, at: new Date().toISOString(), items: await igPublish(row, cfg, C) }; }
           catch (e) { res.instagram = { ok: false, error: String(e.message || e).slice(0, 300) }; await tg(S, `⚠️ פרסום באינסטגרם נכשל: ${row.title}\n${res.instagram.error}`); }
         }
       }
