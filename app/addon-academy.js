@@ -2,7 +2,7 @@
    Buyers, payments, course visits and progress, lesson and video status, and the reels queue for Grok Bot.
    Read-only view of collections the server writes: enroll, payhook, course, reel. */
 (function (s) {
-  if (!s || s.ACAD) return; s.ACAD = '20261007a';
+  if (!s || s.ACAD) return; s.ACAD = '20261007b';
   const n = s.esc, ic = s.icon, fd = s.fmtDate;
   const SITE = 'https://dabullaw-glitch.github.io/dabul-office/portal.html';
   const API = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/academy';
@@ -22,7 +22,7 @@
   const all = c => s.all(c);
   const when = a => a ? `${fd(String(a).slice(0, 10))} ${new Date(a).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jerusalem' })}` : '';
   const nis = v => '₪' + Math.round(Number(v) || 0).toLocaleString('he-IL');
-  const PILL = { active: ['פעיל', 'p-ok'], awaiting: ['ממתין לאישור שלך', 'p-warn'], approved: ['אושר, ממתין להעברה', 'p-info'], handed: ['אצל גרוק בוט', 'p-info'], published: ['פורסם', 'p-ok'], rejected: ['לא לפרסם', 'p-mute'] };
+  const PILL = { active: ['פעיל', 'p-ok'], awaiting: ['ממתין', 'p-warn'], approved: ['אושר, ממתין להעברה', 'p-info'], handed: ['אצל גרוק בוט', 'p-info'], published: ['פורסם', 'p-ok'], rejected: ['לא לפרסם', 'p-mute'], ready: ['מוכן', 'p-ok'], got: ['התקבלה', 'p-ok'] };
   const pill = k => { const [t, c] = PILL[k] || [k || '', 'p-mute']; return `<span class="pill ${c}">${n(t)}</span>`; };
   const course = () => s.get('course', 'first-home') || {};
   const lessonsN = () => (course().lessons || []).length || 10;
@@ -42,7 +42,7 @@
     const revenue = B.reduce((a, e) => a + paid(e), 0);
     const seen = B.filter(e => e.lastSeen && Date.parse(e.lastSeen) > wk).length;
     const avg = B.length ? Math.round(B.reduce((a, e) => a + (e.done || []).length, 0) / B.length / lessonsN() * 100) : 0;
-    const written = L.filter(l => l.html).length, videos = L.filter(l => l.video).length;
+    const written = L.filter(l => l.html).length, photos = photoList().length;
     const sale = c.sale || {};
     return `<div class="ac-kpi">
       <div class="card"><b>${B.length}</b><span>רוכשים</span></div>
@@ -50,7 +50,7 @@
       <div class="card"><b>${seen}</b><span>נכנסו לקורס השבוע</span></div>
       <div class="card"><b>${avg}%</b><span>התקדמות ממוצעת</span></div>
       <div class="card"><b>${written}/${L.length || 10}</b><span>שיעורים כתובים</span></div>
-      <div class="card"><b>${videos}/${L.length || 10}</b><span>שיעורים עם סרטון</span></div>
+      <div class="card"><b>${photos}</b><span>תמונות שצריך ממך</span></div>
     </div>
     <div class="card card-b" style="margin-top:12px"><div class="ac-row"><div class="grow"><b>${n(c.title || 'קונים דירה ראשונה, בלי הפתעות')}</b><div class="small muted">מחיר ${nis(sale.price || 390)} · ${sale.open ? 'המכירה פתוחה' : 'המכירה סגורה עד חיבור מערכת התשלום'}</div></div><span class="pill ${sale.open ? 'p-ok' : 'p-warn'}">${sale.open ? 'פתוח' : 'סגור'}</span></div></div>
     <div class="card card-b ac-links" style="margin-top:12px"><b>קישורים</b>
@@ -74,9 +74,15 @@
     const flat = p => Object.assign({}, p.body || {}, (p.body || {}).data || {}, (p.body || {}).customer || {});
     return `<div class="card card-b">${P.map(p => { const f = flat(p); return `<div class="ac-row"><div class="grow"><div><b>${n(f.fullName || f.full_name || f.name || f.email || 'תשלום')}</b> · ${nis(f.sum || f.amount || f.total || 0)}</div><small class="muted">${when(p.at)} · קורס ${n(p.course || '')}${f.transactionId || f.asmachta ? ' · אסמכתא ' + n(f.transactionId || f.asmachta) : ''}</small></div></div>`; }).join('') || s.empty('עוד אין תשלומים', 'אחרי חיבור מערכת התשלום, כל תשלום יירשם כאן מיד, והרוכש יקבל את הקישור לקורס למייל.')}</div>`;
   }
+  // photos Yakir can add from real life (documents with details blacked out, places, the office), listed per lesson by the course writer
+  const photoList = () => (course().lessons || []).flatMap(l => (l.photoNeeds || []).map(p => Object.assign({ n: l.n, lesson: l.title }, p)));
   function lessonsView() {
     const L = course().lessons || [];
-    return `<div class="card card-b">${L.map(l => `<div class="ac-row"><div class="grow"><div><b>${n(l.n)}. ${n(l.title)}</b>${l.free ? ' <span class="pill p-info">פתוח לכולם</span>' : ''}</div><small class="muted">${l.html ? 'שיעור כתוב' + (l.minutes ? ' · ' + l.minutes + ' דק׳ קריאה' : '') : 'בכתיבה'} · ${l.script ? 'תסריט מוכן' : 'אין תסריט עדיין'} · ${l.video ? 'יש סרטון' : 'אין סרטון עדיין'}</small>${l.video ? `<div><a class="small" href="${n(String(l.video).replace('/preview', '/view'))}" target="_blank" rel="noopener">לצפייה בסרטון</a></div>` : ''}</div>${pill(l.html && l.video ? 'published' : l.html ? 'approved' : 'awaiting')}</div>`).join('')}</div>`;
+    return `<div class="card card-b"><p class="muted" style="margin-top:0">כל שיעור נכתב ומעוצב מאפס: הסברים, דגשים, טעויות נפוצות, דוגמאות, תרשימים, רשימות לסימון ושאלות לבדיקה עצמית. בלי סרטונים.</p>${L.map(l => `<div class="ac-row"><div class="grow"><div><b>${n(l.n)}. ${n(l.title)}</b>${l.free ? ' <span class="pill p-info">פתוח לכולם</span>' : ''}</div><small class="muted">${l.html ? 'מוכן' + (l.minutes ? ' · כ-' + l.minutes + ' דק׳ קריאה' : '') : 'בכתיבה'}${(l.photoNeeds || []).length ? ' · ' + l.photoNeeds.length + ' תמונות מבוקשות' : ''}</small></div>${pill(l.html ? 'ready' : 'awaiting')}</div>`).join('')}</div>`;
+  }
+  function photosView() {
+    const P = photoList();
+    return `<div class="card card-b"><p class="muted" style="margin-top:0">תמונות אמיתיות שיחזקו את השיעורים. לא חובה: בלי תמונה השיעור מוצג עם תרשים. מסמכים מצלמים רק אחרי שמשחירים שמות, תעודות זהות, כתובות ומספרי גוש וחלקה. מעלים לדרייב לתיקייה "קורס קונים דירה ראשונה/תמונות", בשם שמופיע כאן.</p>${P.map((p, i) => `<div class="ac-row"><div class="grow"><div><b>${n(p.what)}</b>${p.must ? ' <span class="pill p-warn">חשוב</span>' : ''}</div><small class="muted">שיעור ${n(p.n)}: ${n(p.lesson)}${p.why ? ' · ' + n(p.why) : ''} · שם הקובץ: <span dir="ltr">${n(p.file || ('lesson' + String(p.n).padStart(2, '0') + '-' + (i + 1) + '.jpg'))}</span></small></div>${pill(p.have ? 'got' : 'awaiting')}</div>`).join('') || s.empty('עוד אין בקשות לתמונות', 'בקשות יופיעו כאן תוך כדי כתיבת השיעורים.')}</div>`;
   }
   function reelsView() {
     const R = all('reel').sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
@@ -86,9 +92,9 @@
     title: 'קורסים',
     render(el) {
       const t = s.ui('academy', 't', 'home');
-      const body = t === 'buyers' ? buyersView() : t === 'pay' ? paymentsView() : t === 'lessons' ? lessonsView() : t === 'reels' ? reelsView() : overview();
-      el.innerHTML = `<div>${s.pageHead('קורסים', 'הקורסים שלנו: רוכשים, תשלומים, כניסות והתקדמות, מצב השיעורים והסרטונים.', '')}
-        <div class="toolbar">${s.segs ? s.segs('t', [['home', 'סקירה'], ['buyers', 'רוכשים'], ['pay', 'תשלומים'], ['lessons', 'שיעורים'], ['reels', 'רילסים']], t) : ''}</div>${body}</div>`;
+      const body = t === 'buyers' ? buyersView() : t === 'pay' ? paymentsView() : t === 'lessons' ? lessonsView() : t === 'photos' ? photosView() : t === 'reels' ? reelsView() : overview();
+      el.innerHTML = `<div>${s.pageHead('קורסים', 'הקורסים שלנו: רוכשים, תשלומים, כניסות והתקדמות, מצב השיעורים והתמונות.', '')}
+        <div class="toolbar">${s.segs ? s.segs('t', [['home', 'סקירה'], ['buyers', 'רוכשים'], ['pay', 'תשלומים'], ['lessons', 'שיעורים'], ['photos', 'תמונות'], ['reels', 'רילסים']], t) : ''}</div>${body}</div>`;
     }
   };
   try { const a = (s.AREAS || []).find(x => x[0] === 'money'); if (a && !a[3].some(x => x[0] === 'academy')) a[3].push(['academy', 'קורסים']); } catch { /* menu stays as is */ }

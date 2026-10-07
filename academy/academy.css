@@ -180,3 +180,48 @@ p{margin:0 0 1em}
   .sec{padding:68px 0}
   .course .side,.course .list{padding:28px 24px}
 }
+
+/* ---- lesson building blocks (the course writer uses only these) ---- */
+.lessonbody{font-size:17.5px}
+.lessonbody .lead{font-size:20px;line-height:1.75;color:var(--ink-2);margin:0 0 26px;padding-right:18px;border-right:4px solid var(--gold-line)}
+.lessonbody .callout{position:relative;border-radius:12px;padding:20px 24px 16px;margin:24px 0;background:var(--stone);border-right:5px solid var(--muted-dark)}
+.lessonbody .callout>.cl{display:inline-block;font-size:13.5px;font-weight:700;letter-spacing:.03em;margin-bottom:6px;padding:2px 10px;border-radius:999px;background:#fff}
+.lessonbody .callout p:last-child,.lessonbody .callout ul:last-child{margin-bottom:0}
+.lessonbody .callout.key{background:#f6f0de;border-right-color:var(--gold-deep)}.lessonbody .callout.key>.cl{color:var(--gold-deep)}
+.lessonbody .callout.warn{background:#fbeeec;border-right-color:#b4442f}.lessonbody .callout.warn>.cl{color:#9a3523}
+.lessonbody .callout.tip{background:#eef4ef;border-right-color:#3f7a52}.lessonbody .callout.tip>.cl{color:#2f6440}
+.lessonbody .callout.example{background:#fff;border:1px solid #dcdad3;border-right:5px solid var(--ink)}.lessonbody .callout.example>.cl{background:var(--ink);color:var(--gold)}
+.lessonbody ol.steps{list-style:none;padding:0;margin:22px 0;counter-reset:st}
+.lessonbody ol.steps>li{position:relative;padding:0 64px 22px 0;counter-increment:st}
+.lessonbody ol.steps>li:before{content:counter(st);position:absolute;right:0;top:0;width:42px;height:42px;border-radius:50%;background:var(--ink);color:var(--gold);font-family:var(--serif);font-weight:900;font-size:20px;display:grid;place-items:center}
+.lessonbody ol.steps>li:after{content:'';position:absolute;right:20px;top:46px;bottom:4px;width:2px;background:#dcdad3}
+.lessonbody ol.steps>li:last-child:after{display:none}
+.lessonbody ol.steps>li>b{display:block;font-size:18.5px;margin:6px 0 2px}
+.lessonbody ul.checklist{list-style:none;padding:0;margin:18px 0}
+.lessonbody ul.checklist>li{position:relative;padding:12px 52px 12px 14px;margin:0 0 8px;border:1px solid #dcdad3;border-radius:10px;background:#fff;cursor:pointer;user-select:none}
+.lessonbody ul.checklist>li:before{content:'';position:absolute;right:14px;top:13px;width:24px;height:24px;border-radius:6px;border:2px solid var(--gold-line);background:#fff}
+.lessonbody ul.checklist>li.on{background:#f6f0de;border-color:var(--gold-line)}
+.lessonbody ul.checklist>li.on:before{background:var(--gold-deep);border-color:var(--gold-deep)}
+.lessonbody ul.checklist>li.on:after{content:'✓';position:absolute;right:19px;top:10px;color:#fff;font-weight:700}
+.lessonbody dl.terms{display:grid;gap:10px;margin:18px 0}
+.lessonbody dl.terms>div{border:1px solid #dcdad3;border-radius:10px;padding:12px 16px;background:#fff}
+.lessonbody dl.terms dt{font-weight:700;color:var(--ink)}.lessonbody dl.terms dd{margin:2px 0 0;color:var(--muted)}
+.lessonbody table.compare{width:100%;border-collapse:separate;border-spacing:0;margin:20px 0;font-size:16px;border:1px solid #dcdad3;border-radius:12px;overflow:hidden}
+.lessonbody table.compare th{background:var(--ink);color:var(--gold);font-weight:700;text-align:right;padding:12px 14px}
+.lessonbody table.compare td{padding:12px 14px;border-top:1px solid #e7e5df;vertical-align:top;background:#fff}
+.lessonbody table.compare tr:nth-child(even) td{background:#faf9f6}
+.lessonbody .tablewrap{overflow-x:auto}
+.lessonbody details.quiz{border:1px solid #dcdad3;border-radius:12px;margin:10px 0;background:#fff}
+.lessonbody details.quiz summary{cursor:pointer;padding:14px 18px;font-weight:700;list-style:none}
+.lessonbody details.quiz summary::-webkit-details-marker{display:none}
+.lessonbody details.quiz summary:before{content:'?';display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--gold);color:var(--ink);margin-left:10px;font-size:15px}
+.lessonbody details.quiz[open] summary{border-bottom:1px solid #eee}
+.lessonbody details.quiz>div{padding:14px 18px}
+.lessonbody figure.fig{margin:26px 0;padding:22px;border-radius:14px;background:var(--ink);color:#fff}
+.lessonbody figure.fig svg{width:100%;height:auto}
+.lessonbody figure.fig figcaption{margin-top:12px;font-size:14.5px;color:var(--muted-dark);text-align:center}
+.lessonbody .summary{margin:30px 0 10px;padding:22px 26px;border-radius:14px;background:var(--ink);color:#fff}
+.lessonbody .summary h2{color:var(--gold);margin:0 0 10px;font-size:22px}
+.lessonbody .summary ul{margin:0}
+.lessonbody .note{color:var(--muted);font-size:14.5px;margin-top:26px}
+@media(max-width:640px){.lessonbody{font-size:16.5px}.lessonbody .lead{font-size:18px}.lessonbody ol.steps>li{padding-right:56px}}
