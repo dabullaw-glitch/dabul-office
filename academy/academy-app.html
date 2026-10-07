@@ -1,0 +1,500 @@
+<!doctype html><html lang="he" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#161616"><title>הקורסים של עו״ד יקיר דבול</title>
+<style>
+/* Dabul academy - courses site. Brand: the office site (black, champagne gold, white, stone). */
+[hidden]{display:none!important}
+:root{
+  --ink:#161616; --ink-2:#232220; --stone:#ecedf2; --paper:#ffffff;
+  --gold:#e4d19c; --gold-deep:#a8873f; --gold-line:#c9ad6b;
+  --text:#1c1b19; --muted:#66645f; --muted-dark:#a9a59c;
+  --serif:"Frank Ruhl Libre",Georgia,serif; --sans:"Heebo",Arial,sans-serif;
+  --wrap:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);color:var(--text);background:var(--paper);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold-deep);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.15;margin:0}
+p{margin:0 0 1em}
+
+/* header */
+.top{position:sticky;top:0;z-index:20;background:rgba(22,22,22,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(228,209,156,.18)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:72px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:#fff}
+.brand .d{font-family:var(--serif);font-size:40px;font-weight:900;line-height:1;background:linear-gradient(#f3e5b8,#a8873f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand .nm{border-right:1.5px solid #fff;padding-right:12px;font-size:14px;line-height:1.35}
+.brand .nm b{display:block;font-size:16px}
+.top nav{display:flex;gap:26px;font-size:15px;color:#e9e6de}
+.top nav a{text-decoration:none}
+.top nav a:hover{color:var(--gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--sans);font-weight:500;font-size:17px;border-radius:6px;padding:14px 30px;text-decoration:none;cursor:pointer;border:0;transition:background .2s,transform .2s,box-shadow .2s}
+.btn-gold{background:var(--gold);color:#1a1a1a}
+.btn-gold:hover{background:#ecdcae;box-shadow:0 10px 30px rgba(228,209,156,.25);transform:translateY(-1px)}
+.btn-line{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}
+.btn-line:hover{border-color:var(--gold);color:var(--gold)}
+.btn-ink{background:var(--ink);color:#fff}
+.btn-ink:hover{background:#000}
+.top .btn{padding:10px 20px;font-size:15px}
+
+/* hero: the deal journey */
+.hero{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center;padding-top:84px;padding-bottom:96px}
+.hero h1{font-size:clamp(40px,5.6vw,72px);font-weight:900;letter-spacing:-.01em}
+.hero .lead{color:#d6d2c8;font-size:19px;max-width:30em;margin:22px 0 34px}
+.hero .ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero .by{margin-top:34px;color:var(--muted-dark);font-size:14.5px}
+.journey{position:relative}
+.journey svg{width:100%;height:auto;overflow:visible}
+.journey .track{fill:none;stroke:rgba(228,209,156,.16);stroke-width:2}
+.journey .path{fill:none;stroke:url(#gl);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 3.6s cubic-bezier(.6,.1,.2,1) .3s forwards}
+.journey .stop circle{fill:var(--ink);stroke:var(--gold-line);stroke-width:2}
+.journey .stop text{font-family:var(--sans);font-size:17px;fill:#efe9db}
+.journey .stop .n{font-size:13px;fill:var(--gold);font-weight:500}
+.journey .stop{opacity:0;animation:pop .5s ease forwards}
+.journey .key{opacity:0;animation:pop .7s ease 3.7s forwards}
+.journey .key path,.journey .key circle{fill:none;stroke:var(--gold);stroke-width:2.4;stroke-linecap:round}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.journey .path{animation:none;stroke-dashoffset:0}.journey .stop,.journey .key{animation:none;opacity:1}}
+
+/* sections */
+.sec{padding:96px 0}
+.sec.stone{background:var(--stone)}
+.sec.ink{background:var(--ink);color:#fff}
+.sec h2{font-size:clamp(30px,3.6vw,44px);margin-bottom:14px}
+.sec .intro{color:var(--muted);font-size:18px;max-width:40em;margin-bottom:46px}
+.sec.ink .intro{color:#cfcabe}
+
+/* featured course */
+.course{display:grid;grid-template-columns:1fr 1.15fr;background:var(--paper);border-radius:14px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(22,22,22,.35)}
+.course .side{background:var(--ink);color:#fff;padding:44px;display:flex;flex-direction:column;gap:18px}
+.course .side h3{font-size:34px}
+.course .side p{color:#d6d2c8;margin:0}
+.course .facts{display:flex;flex-wrap:wrap;gap:10px 22px;color:var(--gold);font-size:15px}
+.course .price{font-family:var(--serif);font-size:44px;font-weight:700;color:#fff;margin-top:auto}
+.course .price small{font-family:var(--sans);font-size:14px;color:var(--muted-dark);font-weight:400;margin-right:8px}
+.course .list{padding:36px 40px}
+.course .list ol{list-style:none;margin:0;padding:0;counter-reset:l}
+.course .list li{counter-increment:l;display:grid;grid-template-columns:38px 1fr;gap:10px;padding:13px 0;border-bottom:1px solid #ecebe6}
+.course .list li:last-child{border:0}
+.course .list li:before{content:counter(l);font-family:var(--serif);font-weight:700;color:var(--gold-deep);font-size:20px;line-height:1.4}
+.course .list b{display:block;font-weight:500}
+.course .list span{color:var(--muted);font-size:15px}
+.tag{display:inline-block;font-size:12.5px;padding:2px 10px;border-radius:999px;background:#f3ead2;color:#6d5626;margin-right:6px;vertical-align:middle}
+
+.soon{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:26px}
+.soon div{border:1px solid #d9d6cd;border-radius:10px;padding:26px 28px;background:transparent}
+.soon h4{font-family:var(--serif);font-size:22px;margin:0 0 6px}
+.soon p{color:var(--muted);margin:0;font-size:15.5px}
+.soon em{font-style:normal;color:var(--gold-deep);font-size:14px}
+
+/* steps (real sequence) */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;counter-reset:s}
+.steps div{counter-increment:s;border-top:1px solid rgba(228,209,156,.35);padding-top:22px}
+.steps div:before{content:counter(s);font-family:var(--serif);font-size:46px;font-weight:900;color:var(--gold);display:block;line-height:1;margin-bottom:12px}
+.steps h4{font-size:19px;margin:0 0 6px;font-weight:500}
+.steps p{color:#cfcabe;margin:0;font-size:15.5px}
+
+/* teacher */
+.teacher{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px;align-items:center}
+.teacher .card{background:var(--ink);color:#fff;border-radius:14px;padding:38px;position:relative}
+.teacher .card .d{font-family:var(--serif);font-size:120px;font-weight:900;line-height:.9;background:linear-gradient(#f3e5b8,#a8873f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.teacher .card b{display:block;font-size:22px;margin-top:10px}
+.teacher .card span{color:var(--muted-dark)}
+.teacher ul{margin:0;padding:0;list-style:none}
+.teacher li{padding:10px 0;border-bottom:1px solid #e3e1da}
+.teacher li:last-child{border:0}
+
+/* faq */
+.faq details{border-bottom:1px solid #dcdad3;padding:18px 0}
+.faq summary{cursor:pointer;font-weight:500;font-size:18px;list-style:none;display:flex;justify-content:space-between;gap:20px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";color:var(--gold-deep);font-size:24px;line-height:1;transition:transform .25s}
+.faq details[open] summary:after{transform:rotate(45deg)}
+.faq details p{color:var(--muted);margin:12px 0 0;max-width:46em}
+
+/* footer */
+.foot{background:var(--ink);color:#cfcabe;padding:54px 0 36px;font-size:14.5px}
+.foot .wrap{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
+.foot .legal{max-width:44em;color:#8f8b82;font-size:13px;margin-top:16px}
+.foot a{color:var(--gold);text-decoration:none}
+.goldline{height:1px;background:linear-gradient(90deg,transparent,#8c7646 20%,#e4d19c 50%,#8c7646 80%,transparent)}
+
+/* sales page */
+.buybox{background:var(--paper);color:var(--text);border-radius:14px;padding:34px;box-shadow:0 30px 70px -30px rgba(0,0,0,.6)}
+.buybox .price{font-family:var(--serif);font-size:54px;font-weight:700;line-height:1}
+.buybox .price small{font-family:var(--sans);font-size:15px;color:var(--muted);font-weight:400}
+.buybox ul{list-style:none;padding:0;margin:20px 0 24px}
+.buybox li{padding:7px 0 7px 0;display:flex;gap:10px}
+.buybox li:before{content:"";flex:0 0 18px;height:18px;margin-top:5px;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--gold-deep) 0 3px,transparent 4px),#f3ead2}
+.buybox .btn{width:100%}
+.buybox .fine{font-size:13px;color:var(--muted);margin-top:12px;text-align:center}
+.wait{display:none;margin-top:14px}
+.wait.on{display:block}
+.wait input[type=email],.wait input[type=text]{width:100%;padding:12px 14px;border:1px solid #d6d3ca;border-radius:6px;font:inherit;margin-bottom:8px}
+.wait label{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start;margin:4px 0 10px}
+.msg{font-size:14.5px;margin-top:8px}
+.lessons{display:grid;gap:0}
+.lesson-row{display:grid;grid-template-columns:70px 1fr auto;gap:18px;align-items:baseline;padding:20px 0;border-bottom:1px solid #dcdad3}
+.lesson-row .n{font-family:var(--serif);font-size:30px;font-weight:900;color:var(--gold-deep)}
+.lesson-row h4{margin:0;font-size:19px;font-weight:500}
+.lesson-row p{margin:4px 0 0;color:var(--muted);font-size:15.5px}
+.lesson-row .m{color:var(--muted);font-size:14px;white-space:nowrap}
+.note{background:#f6f3ea;border-right:3px solid var(--gold-deep);padding:16px 20px;border-radius:6px;color:#4c4a45;font-size:15.5px}
+
+/* player */
+.player{display:grid;grid-template-columns:320px 1fr;min-height:calc(100vh - 72px)}
+.player aside{background:var(--ink);color:#e9e6de;padding:26px 18px;position:sticky;top:72px;height:calc(100vh - 72px);overflow:auto}
+.player aside h3{font-size:20px;color:#fff;margin:0 8px 6px}
+.player .prog{margin:6px 8px 18px;height:4px;border-radius:4px;background:#2e2c29;overflow:hidden}
+.player .prog i{display:block;height:100%;background:var(--gold);width:0;transition:width .4s}
+.player aside button{display:grid;grid-template-columns:30px 1fr 18px;gap:8px;width:100%;text-align:right;background:transparent;border:0;color:inherit;font:inherit;font-size:15px;padding:11px 8px;border-radius:8px;cursor:pointer;align-items:center}
+.player aside button:hover{background:#232220}
+.player aside button[aria-current=true]{background:#2a2824;color:#fff}
+.player aside button .n{font-family:var(--serif);color:var(--gold);font-weight:700}
+.player aside button .ok{color:var(--gold);font-size:14px}
+.player main{padding:48px 56px;max-width:860px}
+.player main h1{font-size:38px;margin-bottom:8px}
+.player .meta{color:var(--muted);font-size:14.5px;margin-bottom:26px}
+.video{aspect-ratio:16/9;background:var(--ink);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted-dark);margin-bottom:30px;overflow:hidden}
+.video iframe,.video video{width:100%;height:100%;border:0}
+.lessonbody h2{font-size:26px;margin:34px 0 10px}
+.lessonbody h3{font-size:20px;margin:26px 0 8px}
+.lessonbody ul,.lessonbody ol{padding-right:22px}
+.lessonbody .box{background:var(--stone);border-radius:10px;padding:20px 24px;margin:22px 0}
+.lessonbody .box.gold{background:#f6f0de}
+.navbtns{display:flex;justify-content:space-between;gap:12px;margin-top:44px;padding-top:24px;border-top:1px solid #e3e1da}
+.gate{max-width:520px;margin:90px auto;padding:0 24px;text-align:center}
+.gate input{width:100%;padding:13px 14px;border:1px solid #d6d3ca;border-radius:6px;font:inherit;margin:14px 0 10px}
+
+@media (max-width:960px){
+  .hero .wrap,.course,.teacher{grid-template-columns:1fr}
+  .hero .wrap{padding-top:56px;padding-bottom:64px;gap:40px}
+  .steps,.soon{grid-template-columns:1fr}
+  .top nav{display:none}
+  .player{grid-template-columns:1fr}
+  .player aside{position:static;height:auto}
+  .player main{padding:30px 20px}
+  .lesson-row{grid-template-columns:48px 1fr}
+  .lesson-row .m{grid-column:2}
+  .sec{padding:68px 0}
+  .course .side,.course .list{padding:28px 24px}
+}
+
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e5b8"/><stop offset="1" stop-color="#a8873f"/></linearGradient></defs></svg>
+<header class="top"><div class="wrap">
+<a class="brand" href="#academy" aria-label="הקורסים של עו״ד יקיר דבול, לדף הבית"><span class="d" aria-hidden="true">D</span><span class="nm"><b>הקורסים</b>עו״ד יקיר דבול</span></a>
+<nav aria-label="ניווט ראשי"><a href="#academy/home/courses">הקורסים</a><a href="#academy/home/how">איך זה עובד</a><a href="#academy/home/teacher">מי מלמד</a><a href="#academy/learn">כניסה לקורס שלי</a></nav>
+<a class="btn btn-gold" href="#academy/first-home">לקורס הראשון</a>
+</div></header>
+
+<div data-view="home"><section class="hero"><div class="wrap">
+<div>
+<h1>לקנות דירה בלי לנחש מה השלב הבא</h1>
+<p class="lead">קורסים קצרים וברורים, מעורך דין שמלווה עסקאות דירה כל שבוע. מה בודקים, על מה חותמים, ומה שואלים את הבנק, המתווך ועורך הדין. בקצב שלכם, עם גישה לכל החיים.</p>
+<div class="ctas"><a class="btn btn-gold" href="#academy/first-home">הקורס לקונים דירה ראשונה</a><a class="btn btn-line" href="#how">איך זה עובד</a></div>
+<p class="by">עו״ד יקיר דבול · מקרקעין ומיסוי מקרקעין · נתניה</p>
+</div>
+<div class="journey"><svg viewBox="0 0 660 600" role="img" aria-label="שמונת השלבים של עסקת דירה, מהחיפוש ועד הרישום בטאבו">
+
+<path class="track" d="M470 40 C 470 75.0, 190 75.0, 190 110 C 190 145.0, 470 145.0, 470 180 C 470 215.0, 190 215.0, 190 250 C 190 285.0, 470 285.0, 470 320 C 470 355.0, 190 355.0, 190 390 C 190 425.0, 470 425.0, 470 460 C 470 495.0, 190 495.0, 190 530"/><path class="path" pathLength="1" d="M470 40 C 470 75.0, 190 75.0, 190 110 C 190 145.0, 470 145.0, 470 180 C 470 215.0, 190 215.0, 190 250 C 190 285.0, 470 285.0, 470 320 C 470 355.0, 190 355.0, 190 390 C 190 425.0, 470 425.0, 470 460 C 470 495.0, 190 495.0, 190 530"/>
+<g class="stop" style="animation-delay:0.35s"><circle cx="470" cy="40" r="9"/><text class="n" x="492" y="31" text-anchor="end">שלב 1</text><text x="492" y="53" text-anchor="end">מחפשים דירה</text></g><g class="stop" style="animation-delay:0.77s"><circle cx="190" cy="110" r="9"/><text class="n" x="168" y="101" text-anchor="start">שלב 2</text><text x="168" y="123" text-anchor="start">נסח טאבו ובדיקות</text></g><g class="stop" style="animation-delay:1.19s"><circle cx="470" cy="180" r="9"/><text class="n" x="492" y="171" text-anchor="end">שלב 3</text><text x="492" y="193" text-anchor="end">העירייה והוועדה</text></g><g class="stop" style="animation-delay:1.61s"><circle cx="190" cy="250" r="9"/><text class="n" x="168" y="241" text-anchor="start">שלב 4</text><text x="168" y="263" text-anchor="start">זיכרון דברים</text></g><g class="stop" style="animation-delay:2.03s"><circle cx="470" cy="320" r="9"/><text class="n" x="492" y="311" text-anchor="end">שלב 5</text><text x="492" y="333" text-anchor="end">משכנתא</text></g><g class="stop" style="animation-delay:2.45s"><circle cx="190" cy="390" r="9"/><text class="n" x="168" y="381" text-anchor="start">שלב 6</text><text x="168" y="403" text-anchor="start">החוזה</text></g><g class="stop" style="animation-delay:2.87s"><circle cx="470" cy="460" r="9"/><text class="n" x="492" y="451" text-anchor="end">שלב 7</text><text x="492" y="473" text-anchor="end">מס רכישה</text></g><g class="stop" style="animation-delay:3.29s"><circle cx="190" cy="530" r="9"/><text class="n" x="168" y="521" text-anchor="start">שלב 8</text><text x="168" y="543" text-anchor="start">מפתח ורישום בטאבו</text></g>
+<g class="key"><g transform="translate(250 512)"><circle cx="14" cy="18" r="12"/><circle cx="14" cy="18" r="4"/><path d="M26 18 H64 M54 18 V28 M62 18 V26"/></g></g>
+</svg></div>
+</div></section>
+
+<section class="sec stone" id="courses"><div class="wrap">
+<h2>הקורס הפתוח עכשיו</h2>
+<p class="intro">עשרה שיעורים שעוברים על כל העסקה לפי הסדר שבו היא קורית באמת. כל שיעור נגמר במה לעשות עכשיו, ובשאלות שכדאי לשאול.</p>
+<article class="course">
+<div class="side">
+<h3>קונים דירה ראשונה, בלי הפתעות</h3>
+<p>מהרגע שמצאתם דירה שאהבתם ועד שהיא רשומה על שמכם. לזוגות, לצעירים ולהורים שעוזרים לילדים לקנות.</p>
+<div class="facts"><span>10 שיעורים</span><span>סיכום לכל שיעור</span><span>גישה לכל החיים</span></div>
+<div class="price">390 ₪<small>כולל מע״מ, תשלום אחד</small></div>
+<a class="btn btn-gold" href="#academy/first-home">לפרטים ולהרשמה</a>
+</div>
+<div class="list"><ol>
+<li><div><b>מפת הדרכים של עסקת דירה <span class="tag">שיעור פתוח</span></b><span>השלבים מהחיפוש ועד הטאבו, ואיפה נופלים בדרך כלל</span></div></li>
+<li><div><b>לפני שמתאהבים בדירה</b><span>נסח טאבו, סוגי רישום, הערות ושעבודים</span></div></li>
+<li><div><b>העירייה והוועדה המקומית</b><span>תיק בניין, היתרים, חריגות בנייה והיטל השבחה</span></div></li>
+<li><div><b>זיכרון דברים</b><span>מתי הוא כבר חוזה מחייב, ומה לא חותמים אצל המתווך</span></div></li>
+<li><div><b>משכנתא ומשפטים</b><span>אישור עקרוני, מכתב כוונות ורישום המשכנתא</span></div></li>
+<li><div><b>החוזה עצמו</b><span>תשלומים, בטוחות, פיצוי מוסכם ומועד מסירה</span></div></li>
+<li><div><b>מס רכישה</b><span>דירה יחידה, מדרגות המס ומתי מדווחים</span></div></li>
+<li><div><b>קונים יחד</b><span>בני זוג, עזרה מההורים ורישום החלקים</span></div></li>
+<li><div><b>דירה מקבלן</b><span>חוק המכר, ערבויות, הצמדה ואיחור במסירה</span></div></li>
+<li><div><b>מהמפתח ועד הטאבו</b><span>מסירה, רישום, ומה עושים כשמשהו משתבש</span></div></li>
+</ol></div>
+</article>
+<div class="soon">
+<div><h4>הנציגות שלנו</h4><p>לחברי נציגות בבית משותף: אסיפות, גבייה, ספקים ורכוש משותף.</p><em>בהכנה</em></div>
+<div><h4>מוכרים דירה נכון</h4><p>מס שבח, מסמכים, החוזה ומה קורה עד המסירה.</p><em>בהכנה</em></div>
+</div>
+</div></section>
+
+<section class="sec ink" id="how"><div class="wrap">
+<h2>איך זה עובד</h2>
+<p class="intro">בלי סיסמאות ובלי אפליקציה. קישור אישי אחד, שנשאר שלכם.</p>
+<div class="steps">
+<div><h4>משלמים בדף תשלום מאובטח</h4><p>בכרטיס אשראי. מיד אחרי התשלום מגיעה קבלה למייל.</p></div>
+<div><h4>מקבלים קישור אישי למייל</h4><p>הקישור פותח את הקורס בכל מכשיר. אם הוא הלך לאיבוד, שולחים אותו מחדש בלחיצה.</p></div>
+<div><h4>לומדים בקצב שלכם, לכל החיים</h4><p>כל שיעור נשמר כשסיימתם אותו. כשהקורס מתעדכן, העדכונים נכנסים אצלכם.</p></div>
+</div>
+</div></section>
+
+<section class="sec" id="teacher"><div class="wrap teacher">
+<div class="card"><div class="d" aria-hidden="true">D</div><b>עו״ד יקיר דבול</b><span>משרד עורכי דין, נתניה</span></div>
+<div>
+<h2>מי מלמד</h2>
+<p class="intro" style="margin-bottom:20px">הקורסים נכתבו מתוך העבודה היומיומית במשרד, ולא מתוך ספר.</p>
+<ul>
+<li>מלווה יותר מ-100 עסקאות מקרקעין בשנה באזור השרון</li>
+<li>עוסק בעסקאות דירה, מיסוי מקרקעין, התחדשות עירונית וירושות</li>
+<li>חבר בוועדות בלשכת עורכי הדין, ומשמש ממונה מטעם בית המשפט לרישום בתים משותפים</li>
+<li>התראיין בחדשות 13, בישראל היום, בוואלה נדל״ן ובביזפורטל</li>
+</ul>
+</div>
+</div></section>
+
+<section class="sec stone"><div class="wrap faq">
+<h2 style="margin-bottom:20px">שאלות לפני שנרשמים</h2>
+<details><summary>הקורס מחליף עורך דין בעסקה?</summary><p>לא. הקורס מסביר איך העסקה בנויה, מה בודקים ואילו שאלות לשאול, כדי שתגיעו מוכנים ותבינו כל שלב. הבדיקה של העסקה שלכם, החוזה והדיווחים נעשים על ידי עורך הדין שמייצג אתכם.</p></details>
+<details><summary>כמה זמן יש לי גישה?</summary><p>לכל החיים. הקישור האישי שלכם ממשיך לעבוד, וכל עדכון בקורס נכנס אצלכם בלי תשלום נוסף.</p></details>
+<details><summary>אפשר לשאול שאלות על המקרה שלי?</summary><p>בתוך הקורס לא עונים על שאלות אישיות, כי תשובה נכונה דורשת לראות את המסמכים. מי שרוצה בדיקה של העסקה שלו יכול לקבוע פגישה במשרד.</p></details>
+<details><summary>מה אם הקורס לא מתאים לי?</summary><p>אפשר לבטל לפי תנאי הרכישה והביטול שבאתר. הפרטים המלאים מופיעים בעמוד תנאי רכישה וביטול.</p></details>
+</div></section></div>
+<div data-view="first-home" hidden><section class="hero"><div class="wrap">
+<div>
+<h1>קונים דירה ראשונה, בלי הפתעות</h1>
+<p class="lead">עשרה שיעורים קצרים שמלווים אתכם מהרגע שמצאתם דירה ועד שהיא רשומה על שמכם. מה בודקים לפני שמתחייבים, מה חשוב בחוזה, איך מתנהלים מול הבנק, וכמה מס תשלמו.</p>
+<div class="buybox" id="buy">
+<div class="price">390 ₪ <small>כולל מע״מ, תשלום אחד</small></div>
+<ul>
+<li>10 שיעורים לפי סדר העסקה</li>
+<li>סיכום מעשי ושאלות לשאול בסוף כל שיעור</li>
+<li>גישה לכל החיים, כולל עדכונים</li>
+<li>קישור אישי למייל, נפתח בכל מכשיר</li>
+</ul>
+<button class="btn btn-ink" type="button" data-buy="first-home">להרשמה ותשלום</button>
+<form class="wait" id="wait" novalidate>
+<p style="margin:0 0 10px">ההרשמה לקורס נפתחת בימים הקרובים. השאירו מייל, ונשלח לכם הודעה כשהיא נפתחת.</p>
+<input type="text" name="name" placeholder="שם" autocomplete="name">
+<input type="email" name="email" placeholder="מייל" required autocomplete="email">
+<label><input type="checkbox" name="consent" value="1"> אני מאשר/ת לקבל ממשרד יקיר דבול עדכונים ותוכן שיווקי במייל. אפשר להסיר בכל עת.</label>
+<input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+<button class="btn btn-gold" type="submit" style="width:100%">עדכנו אותי כשנפתח</button>
+<p class="msg" role="status"></p>
+</form>
+<p class="fine">תשלום מאובטח · קבלה למייל · <a href="#academy/terms">תנאי רכישה וביטול</a></p>
+</div>
+</div>
+<div class="journey"><svg viewBox="0 0 660 600" role="img" aria-label="שמונת השלבים של עסקת דירה, מהחיפוש ועד הרישום בטאבו">
+
+<path class="track" d="M470 40 C 470 75.0, 190 75.0, 190 110 C 190 145.0, 470 145.0, 470 180 C 470 215.0, 190 215.0, 190 250 C 190 285.0, 470 285.0, 470 320 C 470 355.0, 190 355.0, 190 390 C 190 425.0, 470 425.0, 470 460 C 470 495.0, 190 495.0, 190 530"/><path class="path" pathLength="1" d="M470 40 C 470 75.0, 190 75.0, 190 110 C 190 145.0, 470 145.0, 470 180 C 470 215.0, 190 215.0, 190 250 C 190 285.0, 470 285.0, 470 320 C 470 355.0, 190 355.0, 190 390 C 190 425.0, 470 425.0, 470 460 C 470 495.0, 190 495.0, 190 530"/>
+<g class="stop" style="animation-delay:0.35s"><circle cx="470" cy="40" r="9"/><text class="n" x="492" y="31" text-anchor="end">שלב 1</text><text x="492" y="53" text-anchor="end">מחפשים דירה</text></g><g class="stop" style="animation-delay:0.77s"><circle cx="190" cy="110" r="9"/><text class="n" x="168" y="101" text-anchor="start">שלב 2</text><text x="168" y="123" text-anchor="start">נסח טאבו ובדיקות</text></g><g class="stop" style="animation-delay:1.19s"><circle cx="470" cy="180" r="9"/><text class="n" x="492" y="171" text-anchor="end">שלב 3</text><text x="492" y="193" text-anchor="end">העירייה והוועדה</text></g><g class="stop" style="animation-delay:1.61s"><circle cx="190" cy="250" r="9"/><text class="n" x="168" y="241" text-anchor="start">שלב 4</text><text x="168" y="263" text-anchor="start">זיכרון דברים</text></g><g class="stop" style="animation-delay:2.03s"><circle cx="470" cy="320" r="9"/><text class="n" x="492" y="311" text-anchor="end">שלב 5</text><text x="492" y="333" text-anchor="end">משכנתא</text></g><g class="stop" style="animation-delay:2.45s"><circle cx="190" cy="390" r="9"/><text class="n" x="168" y="381" text-anchor="start">שלב 6</text><text x="168" y="403" text-anchor="start">החוזה</text></g><g class="stop" style="animation-delay:2.87s"><circle cx="470" cy="460" r="9"/><text class="n" x="492" y="451" text-anchor="end">שלב 7</text><text x="492" y="473" text-anchor="end">מס רכישה</text></g><g class="stop" style="animation-delay:3.29s"><circle cx="190" cy="530" r="9"/><text class="n" x="168" y="521" text-anchor="start">שלב 8</text><text x="168" y="543" text-anchor="start">מפתח ורישום בטאבו</text></g>
+<g class="key"><g transform="translate(250 512)"><circle cx="14" cy="18" r="12"/><circle cx="14" cy="18" r="4"/><path d="M26 18 H64 M54 18 V28 M62 18 V26"/></g></g>
+</svg></div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+<h2>למי הקורס מתאים</h2>
+<p class="intro">למי שקונה דירה ראשונה, או מתכנן לקנות בשנה הקרובה, ורוצה להבין מה קורה בכל שלב לפני שהוא חותם. גם להורים שעוזרים לילדים לקנות.</p>
+<div class="note">הקורס מסביר. הוא לא מחליף עורך דין שבודק את העסקה שלכם, ולא עונה על שאלות אישיות. המטרה: שתגיעו לכל פגישה מוכנים, עם השאלות הנכונות.</div>
+</div></section>
+
+<section class="sec stone"><div class="wrap">
+<h2>מה לומדים</h2>
+<p class="intro">השיעורים בנויים לפי הסדר שבו העסקה קורית. את השיעור הראשון אפשר לקרוא עכשיו.</p>
+<div class="lessons">
+<div class="lesson-row"><span class="n">1</span><div><h4>מפת הדרכים של עסקת דירה <span class="tag">פתוח לכולם</span></h4><p>השלבים מהחיפוש ועד הטאבו, מה קורה בכל אחד, ואיפה נופלים בדרך כלל.</p></div><a class="m" href="#academy/learn/preview">לקריאה</a></div>
+<div class="lesson-row"><span class="n">2</span><div><h4>לפני שמתאהבים בדירה</h4><p>נסח טאבו, טאבו או רמ״י או חברה משכנת, הערות אזהרה ומשכנתאות קיימות.</p></div><span class="m">שיעור 2</span></div>
+<div class="lesson-row"><span class="n">3</span><div><h4>העירייה והוועדה המקומית</h4><p>תיק בניין, היתרים, חריגות בנייה, היטל השבחה וחובות ארנונה.</p></div><span class="m">שיעור 3</span></div>
+<div class="lesson-row"><span class="n">4</span><div><h4>זיכרון דברים: מתי הוא כבר חוזה</h4><p>מה מחייב ומה לא, למה לא חותמים במשרד התיווך, ודמי התיווך.</p></div><span class="m">שיעור 4</span></div>
+<div class="lesson-row"><span class="n">5</span><div><h4>משכנתא ומשפטים</h4><p>אישור עקרוני, מה הבנק בודק, מכתב כוונות ורישום המשכנתא.</p></div><span class="m">שיעור 5</span></div>
+<div class="lesson-row"><span class="n">6</span><div><h4>החוזה עצמו</h4><p>לוח התשלומים, בטוחות לכסף שלכם, פיצוי מוסכם, מועד מסירה ותכולה.</p></div><span class="m">שיעור 6</span></div>
+<div class="lesson-row"><span class="n">7</span><div><h4>מס רכישה</h4><p>דירה יחידה, איך מחשבים, מתי מדווחים ומתי משלמים.</p></div><span class="m">שיעור 7</span></div>
+<div class="lesson-row"><span class="n">8</span><div><h4>קונים יחד</h4><p>בני זוג לא נשואים, עזרה מההורים כמתנה או כהלוואה, ורישום החלקים.</p></div><span class="m">שיעור 8</span></div>
+<div class="lesson-row"><span class="n">9</span><div><h4>דירה מקבלן: מה שונה</h4><p>ערבות חוק המכר, הצמדה למדד, המפרט, איחור במסירה ותקופת הבדק.</p></div><span class="m">שיעור 9</span></div>
+<div class="lesson-row"><span class="n">10</span><div><h4>מהמפתח ועד הטאבו</h4><p>פרוטוקול מסירה, רישום הזכויות, ומה עושים כשמשהו משתבש.</p></div><span class="m">שיעור 10</span></div>
+</div>
+</div></section>
+
+<section class="sec ink"><div class="wrap">
+<h2>איך מקבלים את הקורס</h2>
+<div class="steps" style="margin-top:34px">
+<div><h4>משלמים בדף תשלום מאובטח</h4><p>בכרטיס אשראי. קבלה נשלחת אוטומטית למייל.</p></div>
+<div><h4>מקבלים קישור אישי</h4><p>תוך דקה מגיע מייל עם הקישור לקורס. שמרו אותו, הוא שלכם.</p></div>
+<div><h4>לומדים בקצב שלכם</h4><p>כל שיעור שסיימתם מסומן. אפשר לחזור לכל שיעור מתי שרוצים.</p></div>
+</div>
+</div></section>
+
+<section class="sec" id="teacher"><div class="wrap teacher">
+<div class="card"><div class="d" aria-hidden="true">D</div><b>עו״ד יקיר דבול</b><span>משרד עורכי דין, נתניה</span></div>
+<div>
+<h2>מי מלמד</h2>
+<ul style="margin-top:18px">
+<li>מלווה יותר מ-100 עסקאות מקרקעין בשנה באזור השרון</li>
+<li>עוסק בעסקאות דירה, מיסוי מקרקעין, התחדשות עירונית וירושות</li>
+<li>ממונה מטעם בית המשפט לרישום בתים משותפים</li>
+<li>התראיין בחדשות 13, בישראל היום, בוואלה נדל״ן ובביזפורטל</li>
+</ul>
+</div>
+</div></section>
+
+<section class="sec stone"><div class="wrap faq">
+<h2 style="margin-bottom:20px">שאלות נפוצות</h2>
+<details><summary>כמה זמן לוקח לעבור את הקורס?</summary><p>כל שיעור לוקח בערך 10 עד 15 דקות קריאה. אפשר לעבור את כולו בערב אחד, או שיעור לפני כל שלב בעסקה.</p></details>
+<details><summary>יש בקורס סרטונים?</summary><p>השיעורים כתובים, עם סיכום ושאלות בסוף כל אחד. סרטונים נכנסים לשיעורים בהדרגה, ומי שרכש מקבל אותם בלי תשלום נוסף.</p></details>
+<details><summary>מה אם איבדתי את הקישור?</summary><p>בעמוד "כניסה לקורס שלי" מקלידים את המייל שאיתו נרשמתם, והקישור נשלח שוב.</p></details>
+<details><summary>אפשר לבטל?</summary><p>כן, לפי תנאי הרכישה והביטול. הפרטים בעמוד תנאי רכישה וביטול.</p></details>
+<details><summary>הקורס מתאים גם למי שקונה דירה מקבלן?</summary><p>כן. שיעור 9 מוקדש כולו לדירה מקבלן, ורוב השיעורים האחרים רלוונטיים לשני סוגי העסקאות.</p></details>
+</div></section></div>
+<div data-view="learn" hidden><div id="app">
+<div class="gate" id="gate">
+<h2 style="font-size:32px">כניסה לקורס שלי</h2>
+<p style="color:var(--muted)">הקורס נפתח מהקישור האישי שנשלח אליכם במייל. לא מוצאים אותו? הקלידו את המייל שאיתו נרשמתם, ונשלח אותו שוב.</p>
+<form id="resend" novalidate><input type="email" name="email" placeholder="המייל שלכם" required autocomplete="email"><button class="btn btn-ink" type="submit" style="width:100%">שלחו לי את הקישור</button><p class="msg" role="status"></p></form>
+<p style="margin-top:28px"><a href="#academy/learn/preview">לקריאת השיעור הפתוח</a> · <a href="#academy/first-home">לפרטים על הקורס</a></p>
+</div>
+<div class="player" id="player" hidden>
+<aside><h3 id="ctitle"></h3><div class="prog"><i id="pbar"></i></div><nav id="toc" aria-label="שיעורי הקורס"></nav></aside>
+<main><h1 id="ltitle"></h1><div class="meta" id="lmeta"></div><div class="video" id="lvideo" hidden></div><div class="lessonbody" id="lbody"></div>
+<div class="navbtns"><button class="btn btn-line" style="color:var(--text);border-color:#cfccc3" id="prev" type="button">השיעור הקודם</button><button class="btn btn-gold" id="next" type="button">סיימתי, לשיעור הבא</button></div></main>
+</div>
+</div></div>
+<div data-view="terms" hidden><section class="sec"><div class="wrap" style="max-width:820px">
+<h2>תנאי רכישה וביטול</h2>
+<p class="intro">טיוטה. הנוסח הסופי ייקבע על ידי עו״ד יקיר דבול לפני פתיחת ההרשמה.</p>
+<h3 style="margin:26px 0 8px">המוכר</h3><p>יקיר דבול, משרד עורכי דין, רזיאל 1 נתניה, טלפון 09-8613413, dabullaw@gmail.com.</p>
+<h3 style="margin:26px 0 8px">מה נרכש</h3><p>גישה אישית לקורס מקוון, שנשלחת במייל מיד לאחר התשלום, ללא הגבלת זמן. התוכן הוא מידע כללי בלבד ואינו ייעוץ משפטי.</p>
+<h3 style="margin:26px 0 8px">מחיר ותשלום</h3><p>המחיר כולל מע״מ ומשולם בכרטיס אשראי בדף תשלום מאובטח של חברת הסליקה. קבלה נשלחת למייל.</p>
+<h3 style="margin:26px 0 8px">ביטול</h3><p>ביטול עסקה לפי חוק הגנת הצרכן והתקנות שלו. בקשת ביטול נשלחת במייל או בטלפון.</p>
+<h3 style="margin:26px 0 8px">פרטיות</h3><p>המייל והשם משמשים לשליחת הקישור לקורס ולעדכונים עליו. דיוור שיווקי נשלח רק למי שאישר זאת במפורש, ואפשר להסיר בכל עת.</p>
+</div></section></div>
+
+<footer class="foot"><div class="wrap">
+<div><a class="brand" href="#academy"><span class="d" aria-hidden="true">D</span><span class="nm"><b>יקיר דבול</b>משרד עורכי דין</span></a>
+<p class="legal">הקורסים מוסרים מידע כללי בלבד. הם אינם ייעוץ משפטי לעניין מסוים, ואינם יוצרים יחסי עורך דין ולקוח. לבדיקה של עסקה מסוימת, פנו לעורך דין.</p></div>
+<div>רזיאל 1, נתניה<br><a href="tel:09-8613413">09-8613413</a><br><a href="https://dabullaw.co.il/">dabullaw.co.il</a><br><a href="#academy/terms">תנאי רכישה וביטול</a></div>
+</div></footer>
+
+<script>
+// ---- router: one page, several views, chosen by the address after the # ----
+(() => {
+  const T = {"home": "הקורסים של עו״ד יקיר דבול", "first-home": "קונים דירה ראשונה, בלי הפתעות | הקורסים של עו״ד יקיר דבול", "learn": "הקורס שלי | הקורסים של עו״ד יקיר דבול", "terms": "תנאי רכישה וביטול | הקורסים של עו״ד יקיר דבול"};
+  const parse = () => { const h = location.hash.slice(1).split('&'); const p = h[0].split('/'); const q = new URLSearchParams(h.slice(1).join('&'));
+    return { view: T[p[1]] ? p[1] : 'home', sub: p[2] || '', q }; };
+  let shown = '';
+  const go = () => {
+    const r = parse();
+    document.querySelectorAll('[data-view]').forEach(v => { v.hidden = v.dataset.view !== r.view; });
+    document.title = T[r.view];
+    document.querySelectorAll('.top nav a').forEach(a => a.removeAttribute('aria-current'));
+    if (r.view !== shown) { window.scrollTo(0, 0); shown = r.view; document.dispatchEvent(new CustomEvent('academy:view', { detail: r })); }
+    const el = r.sub && r.sub !== 'preview' && document.querySelector(`[data-view="${r.view}"] #${CSS.escape(r.sub)}`);
+    if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+    document.querySelectorAll(`[data-view="${r.view}"] .reveal:not(.in)`).forEach(e => io && io.observe(e));
+  };
+  // links like href="#how" inside a view scroll inside that view instead of leaving the courses site
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a) return;
+    const h = a.getAttribute('href'); if (/^#academy/.test(h)) return;
+    const el = document.querySelector(`[data-view="${parse().view}"] ${h.length > 1 ? '#' + CSS.escape(h.slice(1)) : 'body'}`);
+    if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } }), { threshold: .12 }) : null;
+  window.addEventListener('hashchange', go);
+  window.__academyRoute = parse;
+  go();
+})();
+</script>
+<script>// Courses site: purchase button, wait-list form, and the course player (personal link #t=<token>).
+(() => {
+  const API = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/academy';
+  const GROWTH = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/growth';
+  const $ = (s, el = document) => el.querySelector(s);
+  const post = (u, body) => fetch(u, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }).then(r => r.json()).catch(() => ({ ok: false }));
+
+  // buy: the payment page address comes from the server, so the price and provider can change without a new site version
+  document.querySelectorAll('[data-buy]').forEach(b => b.addEventListener('click', async () => {
+    b.disabled = true;
+    const r = await fetch(`${API}?a=buy&c=${encodeURIComponent(b.dataset.buy)}`).then(x => x.json()).catch(() => ({}));
+    b.disabled = false;
+    if (r.url) { location.href = r.url; return; }
+    const w = $('#wait'); if (w) { w.classList.add('on'); b.hidden = true; $('input[name=email]', w).focus(); }
+  }));
+  const wait = $('#wait');
+  if (wait) wait.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(wait)); const m = $('.msg', wait);
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(f.email || '')) { m.textContent = 'בדקו את כתובת המייל.'; return; }
+    if (!f.consent) { m.textContent = 'כדי שנוכל לעדכן אתכם, צריך לסמן את תיבת האישור.'; return; }
+    const r = await post(`${GROWTH}?a=sub`, { ...f, magnet: 'buyer-checklist', source: 'academy-first-home' });
+    m.textContent = r.msg || (r.ok ? 'נרשמתם. נעדכן אתכם כשההרשמה תיפתח.' : 'משהו לא עבד. נסו שוב בעוד דקה.');
+  });
+
+  // player
+  const startPlayer = () => {
+  if (startPlayer.done) return; startPlayer.done = true;
+  const rt = window.__academyRoute(); const hashTok = (rt.q.get('t') || '').replace(/[^a-f0-9]/g, '') || null;
+  if (hashTok) { try { localStorage.setItem('dabul-course-t', hashTok); } catch (_) {} history.replaceState(null, '', location.pathname + location.search + '#academy/learn'); }
+  let tok = hashTok; try { tok = tok || localStorage.getItem('dabul-course-t'); } catch (_) {}
+  const preview = rt.sub === 'preview';
+  const resend = $('#resend');
+  resend.addEventListener('submit', async e => {
+    e.preventDefault(); const m = $('.msg', resend); const email = resend.email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) { m.textContent = 'בדקו את כתובת המייל.'; return; }
+    await post(`${API}?a=resend`, { email });
+    m.textContent = 'אם הכתובת רשומה לקורס, הקישור בדרך אליה. בדקו גם בספאם.';
+  });
+  if (!tok && !preview) return;
+  (async () => {
+    const r = await fetch(`${API}?a=course&c=first-home${tok ? '&t=' + tok : '&preview=1'}`).then(x => x.json()).catch(() => ({}));
+    if (!r.ok) { if (tok) { $('.msg', resend).textContent = 'הקישור הזה לא פעיל. הקלידו את המייל ונשלח קישור חדש.'; } return; }
+    $('#gate').hidden = true; $('#player').hidden = false;
+    $('#ctitle').textContent = r.title;
+    const done = new Set(r.done || []);
+    const toc = $('#toc');
+    let cur = Math.max(0, r.lessons.findIndex(l => !done.has(l.n) && !l.locked));
+    const paint = () => {
+      toc.innerHTML = '';
+      r.lessons.forEach((l, i) => {
+        const b = document.createElement('button'); b.type = 'button';
+        b.innerHTML = `<span class="n">${l.n}</span><span></span><span class="ok">${done.has(l.n) ? '✓' : l.locked ? '🔒' : ''}</span>`;
+        b.children[1].textContent = l.title;
+        b.setAttribute('aria-current', i === cur ? 'true' : 'false');
+        b.addEventListener('click', () => { cur = i; show(); });
+        toc.appendChild(b);
+      });
+      $('#pbar').style.width = Math.round(100 * done.size / r.lessons.length) + '%';
+    };
+    const show = () => {
+      const l = r.lessons[cur];
+      $('#ltitle').textContent = l.title;
+      $('#lmeta').textContent = `שיעור ${l.n} מתוך ${r.lessons.length}${l.minutes ? ` · כ-${l.minutes} דקות קריאה` : ''}`;
+      const v = $('#lvideo'); v.hidden = !l.video; v.innerHTML = l.video ? `<iframe src="${l.video}" allow="fullscreen; picture-in-picture" title="${l.title}"></iframe>` : '';
+      $('#lbody').innerHTML = l.locked ? `<div class="box gold"><p><b>השיעור הזה פתוח למי שנרשם לקורס.</b></p><p>${l.summary || ''}</p><p><a class="btn btn-ink" href="#academy/first-home/buy">להרשמה לקורס</a></p></div>` : l.html;
+      $('#prev').disabled = cur === 0; $('#next').textContent = cur === r.lessons.length - 1 ? 'סיימתי את הקורס' : 'סיימתי, לשיעור הבא';
+      paint(); window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    $('#prev').addEventListener('click', () => { if (cur > 0) { cur--; show(); } });
+    $('#next').addEventListener('click', async () => {
+      const l = r.lessons[cur];
+      if (!l.locked && tok && !done.has(l.n)) { done.add(l.n); post(`${API}?a=done`, { t: tok, c: 'first-home', n: l.n }); }
+      if (cur < r.lessons.length - 1) { cur++; show(); } else paint();
+    });
+    show();
+  })();
+};
+  document.addEventListener('academy:view', e => { if (e.detail.view === 'learn') startPlayer(); });
+  if (window.__academyRoute && window.__academyRoute().view === 'learn') startPlayer();
+})();</script>
+</body></html>
