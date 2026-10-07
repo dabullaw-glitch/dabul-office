@@ -4,6 +4,13 @@
 <title>משרד דבול</title><link rel="icon" href="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/icon.svg"></head>
 <body style="margin:0;background:#0B1D20"><div id="ld" style="display:grid;place-items:center;height:100vh;font:16px Arial,sans-serif;color:#9DB5B2">טוען...</div>
 <script>
+// links to the courses site, newsletter pages, previews and approvals: a light, neutral loading circle instead of the office screen
+if (/^#(r|s|q|g|v|p)=|^#join|^#academy/.test(location.hash)) {
+  document.body.style.background = '#f4f4f6';
+  document.getElementById('ld').innerHTML = '<span style="width:34px;height:34px;border:3px solid #e2e0da;border-top-color:#a8873f;border-radius:50%;display:block;animation:dsp .8s linear infinite"></span><style>@keyframes dsp{to{transform:rotate(360deg)}}</style>';
+}
+</script>
+<script>
 (function(){
   var F = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/', page = (location.pathname.split('/').pop() || 'index.html');
   if (!/\.html$/.test(page)) page = 'index.html';
