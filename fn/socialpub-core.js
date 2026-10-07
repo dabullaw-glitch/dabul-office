@@ -65,6 +65,55 @@ export function start(createClient) {
     if (!done.length) throw new Error('no media file in the row');
     return done;
   }
+
+  // ---- verification of Grok Bot's rows: did it really go out? (YouTube by the public channel feed, Facebook by the page token)
+  async function ytFeed(channelId) {
+    const r = await fetch('https://www.youtube.com/feeds/videos.xml?channel_id=' + encodeURIComponent(channelId));
+    const x = await r.text(); const out = [];
+    for (const e of x.split('<entry>').slice(1)) {
+      const g = (re) => (e.match(re) || [])[1] || '';
+      out.push({ id: g(/<yt:videoId>([^<]+)</), title: g(/<title>([^<]*)</), at: g(/<published>([^<]+)</) });
+    }
+    return out;
+  }
+  async function fbPosts(cfg, S) {
+    const ig = cfg.ig || {}; if (ig.mode !== 'fb' || !ig.pageId || !S.IG_PAGE_TOKEN) return null;
+    const j = await ig_('/' + ig.pageId + '/posts', { fields: 'message,created_time,permalink_url', limit: 30 }, S.IG_PAGE_TOKEN);
+    return (j.data || []).map((p) => ({ id: p.id, at: p.created_time, text: p.message || '', url: p.permalink_url || '' }));
+  }
+  async function ig_(path, params, token) { return ig(path, params, token, 'GET', FB); }
+  async function verifyGrok(S, cfg, log) {
+    const now = Date.now();
+    const from = new Date(now - 3 * 864e5).toISOString().slice(0, 10);
+    const { data } = await sb.from('docs').select('id,data').eq('coll', 'pub').eq('data->>owner', 'grok').eq('data->>status', 'planned').gte('data->>at', from);
+    const due = (data || []).filter((r) => { const t = ilToMs(r.data.at); return now - t > 2 * 3600e3; });
+    if (!due.length) return;
+    const yt = cfg.youtube?.channelId ? await ytFeed(cfg.youtube.channelId).catch(() => null) : null;
+    const fb = await fbPosts(cfg, S).catch(() => null);
+    const checks = { at: new Date().toISOString(), youtube: yt ? yt.slice(0, 10) : null, facebook: fb ? fb.slice(0, 10).map((p) => ({ id: p.id, at: p.at, url: p.url, text: p.text.slice(0, 80) })) : null };
+    await merge('settings', 'pub', { checks });
+    const missed = [];
+    for (const r of due) {
+      const row = r.data, t = ilToMs(row.at), ch = row.channels || [], v = {};
+      const near = (iso) => { const x = Date.parse(iso); return x >= t - 3600e3 && x <= t + 8 * 3600e3; };
+      if (ch.includes('youtube') && yt) { const hit = yt.find((e) => near(e.at)); v.youtube = hit ? { ok: true, id: hit.id, title: hit.title } : { ok: false }; }
+      if (ch.includes('facebook') && fb) {
+        const key = String(row.text || '').replace(/\s+/g, ' ').slice(0, 40);
+        const hit = fb.find((p) => near(p.at) && (!key || p.text.replace(/\s+/g, ' ').includes(key.slice(0, 25)))) || fb.find((p) => near(p.at));
+        v.facebook = hit ? { ok: true, id: hit.id, url: hit.url } : { ok: false };
+      }
+      const checked = Object.values(v), late = now - t > 8 * 3600e3;
+      let status = 'planned';
+      if (checked.length && checked.every((x) => x.ok)) status = 'published';
+      else if (late) {
+        if (row.kind === 'own-video' || row.kind === 'community') status = 'unverified';
+        else if (checked.some((x) => !x.ok)) { status = 'missed'; missed.push(row); }
+        else status = 'unverified';
+      }
+      if (status !== 'planned') { await merge('pub', r.id, { status, verify: v, verifiedAt: new Date().toISOString() }); log.push(r.id + ' -> ' + status); }
+    }
+    if (missed.length) await tg(S, '⚠️ גרוק בוט לא פרסם לפי הלוח:\n' + missed.map((m) => `• ${m.at.replace('T', ' ')} ${m.title}`).join('\n') + '\nאני בודק ומעדכן את הלוח.');
+  }
   Deno.serve(async (req) => {
     const S = await secrets();
     if (!S.CRON_SECRET || req.headers.get('x-cron-secret') !== S.CRON_SECRET) return new Response('unauthorized', { status: 401 });
@@ -127,6 +176,8 @@ export function start(createClient) {
       await merge('pub', r.id, { result: res, status: anyOk ? 'published' : allSkipped ? 'waiting' : 'planned', handledAt: new Date().toISOString() });
       log.push(r.id + ': ' + JSON.stringify(res).slice(0, 200));
     }
+    // once an hour: check what Grok Bot published
+    if (new Date().getUTCMinutes() < 10) { try { await verifyGrok(S, cfg, log); } catch (e) { log.push('verify failed: ' + (e.message || e)); } }
     return Response.json({ ok: true, log });
   });
 }

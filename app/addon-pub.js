@@ -21,7 +21,7 @@
   document.head.appendChild(st);
   const CH = { facebook: 'פייסבוק', youtube: 'יוטיוב', linkedin: 'לינקדאין', x: 'X', gbp: 'גוגל עסקי', instagram: 'אינסטגרם', tiktok: 'טיקטוק', whatsapp: 'קבוצת וואטסאפ', newsletter: 'ניוזלטר', internal: 'פנימי' };
   const OWN = { grok: 'גרוק בוט', system: 'המערכת', yakir: 'יקיר' };
-  const ST = { planned: 'מתוכנן', published: 'פורסם', skipped: 'בוטל', waiting: 'מחכה לחיבור' };
+  const ST = { planned: 'מתוכנן', published: 'פורסם ✓', skipped: 'בוטל', waiting: 'מחכה לחיבור', missed: 'לא פורסם ⚠️', unverified: 'עבר (אין דרך לבדוק)' };
   const DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
   const MEDIA = 'https://dabullaw-glitch.github.io/dabul-office/media/';
   const day = at => { const d = new Date(at.slice(0, 10) + 'T12:00:00Z'); return `יום ${DAYS[d.getUTCDay()]} ${at.slice(8, 10)}/${at.slice(5, 7)}`; };
