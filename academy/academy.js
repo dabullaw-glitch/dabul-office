@@ -63,6 +63,12 @@
       $('#lmeta').textContent = `שיעור ${l.n} מתוך ${r.lessons.length}${l.minutes ? ` · כ-${l.minutes} דקות קריאה` : ''}`;
       const v = $('#lvideo'); v.hidden = !l.video; v.innerHTML = l.video ? `<iframe src="${l.video}" allow="fullscreen; picture-in-picture" title="${l.title}"></iframe>` : '';
       $('#lbody').innerHTML = l.locked ? `<div class="box gold"><p><b>השיעור הזה פתוח למי שנרשם לקורס.</b></p><p>${l.summary || ''}</p><p><a class="btn btn-ink" href="first-home.html#buy">להרשמה לקורס</a></p></div>` : l.html;
+      // checklists in a lesson: tap to tick, remembered on this device
+      const ck = 'dabul-ck-' + l.n; let marks = {}; try { marks = JSON.parse(localStorage.getItem(ck) || '{}'); } catch (_) {}
+      $('#lbody').querySelectorAll('ul.checklist').forEach((ul, ui) => ul.querySelectorAll(':scope>li').forEach((li, i) => {
+        const k = ui + '.' + i; if (marks[k]) li.classList.add('on');
+        li.addEventListener('click', () => { li.classList.toggle('on'); marks[k] = li.classList.contains('on'); try { localStorage.setItem(ck, JSON.stringify(marks)); } catch (_) {} });
+      }));
       $('#prev').disabled = cur === 0; $('#next').textContent = cur === r.lessons.length - 1 ? 'סיימתי את הקורס' : 'סיימתי, לשיעור הבא';
       paint(); window.scrollTo({ top: 0, behavior: 'smooth' });
     };
