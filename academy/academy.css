@@ -1,0 +1,182 @@
+/* Dabul academy - courses site. Brand: the office site (black, champagne gold, white, stone). */
+[hidden]{display:none!important}
+:root{
+  --ink:#161616; --ink-2:#232220; --stone:#ecedf2; --paper:#ffffff;
+  --gold:#e4d19c; --gold-deep:#a8873f; --gold-line:#c9ad6b;
+  --text:#1c1b19; --muted:#66645f; --muted-dark:#a9a59c;
+  --serif:"Frank Ruhl Libre",Georgia,serif; --sans:"Heebo",Arial,sans-serif;
+  --wrap:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);color:var(--text);background:var(--paper);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold-deep);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.15;margin:0}
+p{margin:0 0 1em}
+
+/* header */
+.top{position:sticky;top:0;z-index:20;background:rgba(22,22,22,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(228,209,156,.18)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:72px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:#fff}
+.brand .d{font-family:var(--serif);font-size:40px;font-weight:900;line-height:1;background:linear-gradient(#f3e5b8,#a8873f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand .nm{border-right:1.5px solid #fff;padding-right:12px;font-size:14px;line-height:1.35}
+.brand .nm b{display:block;font-size:16px}
+.top nav{display:flex;gap:26px;font-size:15px;color:#e9e6de}
+.top nav a{text-decoration:none}
+.top nav a:hover{color:var(--gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--sans);font-weight:500;font-size:17px;border-radius:6px;padding:14px 30px;text-decoration:none;cursor:pointer;border:0;transition:background .2s,transform .2s,box-shadow .2s}
+.btn-gold{background:var(--gold);color:#1a1a1a}
+.btn-gold:hover{background:#ecdcae;box-shadow:0 10px 30px rgba(228,209,156,.25);transform:translateY(-1px)}
+.btn-line{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}
+.btn-line:hover{border-color:var(--gold);color:var(--gold)}
+.btn-ink{background:var(--ink);color:#fff}
+.btn-ink:hover{background:#000}
+.top .btn{padding:10px 20px;font-size:15px}
+
+/* hero: the deal journey */
+.hero{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center;padding-top:84px;padding-bottom:96px}
+.hero h1{font-size:clamp(40px,5.6vw,72px);font-weight:900;letter-spacing:-.01em}
+.hero .lead{color:#d6d2c8;font-size:19px;max-width:30em;margin:22px 0 34px}
+.hero .ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero .by{margin-top:34px;color:var(--muted-dark);font-size:14.5px}
+.journey{position:relative}
+.journey svg{width:100%;height:auto;overflow:visible}
+.journey .track{fill:none;stroke:rgba(228,209,156,.16);stroke-width:2}
+.journey .path{fill:none;stroke:url(#gl);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 3.6s cubic-bezier(.6,.1,.2,1) .3s forwards}
+.journey .stop circle{fill:var(--ink);stroke:var(--gold-line);stroke-width:2}
+.journey .stop text{font-family:var(--sans);font-size:17px;fill:#efe9db}
+.journey .stop .n{font-size:13px;fill:var(--gold);font-weight:500}
+.journey .stop{opacity:0;animation:pop .5s ease forwards}
+.journey .key{opacity:0;animation:pop .7s ease 3.7s forwards}
+.journey .key path,.journey .key circle{fill:none;stroke:var(--gold);stroke-width:2.4;stroke-linecap:round}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.journey .path{animation:none;stroke-dashoffset:0}.journey .stop,.journey .key{animation:none;opacity:1}}
+
+/* sections */
+.sec{padding:96px 0}
+.sec.stone{background:var(--stone)}
+.sec.ink{background:var(--ink);color:#fff}
+.sec h2{font-size:clamp(30px,3.6vw,44px);margin-bottom:14px}
+.sec .intro{color:var(--muted);font-size:18px;max-width:40em;margin-bottom:46px}
+.sec.ink .intro{color:#cfcabe}
+
+/* featured course */
+.course{display:grid;grid-template-columns:1fr 1.15fr;background:var(--paper);border-radius:14px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(22,22,22,.35)}
+.course .side{background:var(--ink);color:#fff;padding:44px;display:flex;flex-direction:column;gap:18px}
+.course .side h3{font-size:34px}
+.course .side p{color:#d6d2c8;margin:0}
+.course .facts{display:flex;flex-wrap:wrap;gap:10px 22px;color:var(--gold);font-size:15px}
+.course .price{font-family:var(--serif);font-size:44px;font-weight:700;color:#fff;margin-top:auto}
+.course .price small{font-family:var(--sans);font-size:14px;color:var(--muted-dark);font-weight:400;margin-right:8px}
+.course .list{padding:36px 40px}
+.course .list ol{list-style:none;margin:0;padding:0;counter-reset:l}
+.course .list li{counter-increment:l;display:grid;grid-template-columns:38px 1fr;gap:10px;padding:13px 0;border-bottom:1px solid #ecebe6}
+.course .list li:last-child{border:0}
+.course .list li:before{content:counter(l);font-family:var(--serif);font-weight:700;color:var(--gold-deep);font-size:20px;line-height:1.4}
+.course .list b{display:block;font-weight:500}
+.course .list span{color:var(--muted);font-size:15px}
+.tag{display:inline-block;font-size:12.5px;padding:2px 10px;border-radius:999px;background:#f3ead2;color:#6d5626;margin-right:6px;vertical-align:middle}
+
+.soon{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:26px}
+.soon div{border:1px solid #d9d6cd;border-radius:10px;padding:26px 28px;background:transparent}
+.soon h4{font-family:var(--serif);font-size:22px;margin:0 0 6px}
+.soon p{color:var(--muted);margin:0;font-size:15.5px}
+.soon em{font-style:normal;color:var(--gold-deep);font-size:14px}
+
+/* steps (real sequence) */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;counter-reset:s}
+.steps div{counter-increment:s;border-top:1px solid rgba(228,209,156,.35);padding-top:22px}
+.steps div:before{content:counter(s);font-family:var(--serif);font-size:46px;font-weight:900;color:var(--gold);display:block;line-height:1;margin-bottom:12px}
+.steps h4{font-size:19px;margin:0 0 6px;font-weight:500}
+.steps p{color:#cfcabe;margin:0;font-size:15.5px}
+
+/* teacher */
+.teacher{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px;align-items:center}
+.teacher .card{background:var(--ink);color:#fff;border-radius:14px;padding:38px;position:relative}
+.teacher .card .d{font-family:var(--serif);font-size:120px;font-weight:900;line-height:.9;background:linear-gradient(#f3e5b8,#a8873f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.teacher .card b{display:block;font-size:22px;margin-top:10px}
+.teacher .card span{color:var(--muted-dark)}
+.teacher ul{margin:0;padding:0;list-style:none}
+.teacher li{padding:10px 0;border-bottom:1px solid #e3e1da}
+.teacher li:last-child{border:0}
+
+/* faq */
+.faq details{border-bottom:1px solid #dcdad3;padding:18px 0}
+.faq summary{cursor:pointer;font-weight:500;font-size:18px;list-style:none;display:flex;justify-content:space-between;gap:20px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";color:var(--gold-deep);font-size:24px;line-height:1;transition:transform .25s}
+.faq details[open] summary:after{transform:rotate(45deg)}
+.faq details p{color:var(--muted);margin:12px 0 0;max-width:46em}
+
+/* footer */
+.foot{background:var(--ink);color:#cfcabe;padding:54px 0 36px;font-size:14.5px}
+.foot .wrap{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
+.foot .legal{max-width:44em;color:#8f8b82;font-size:13px;margin-top:16px}
+.foot a{color:var(--gold);text-decoration:none}
+.goldline{height:1px;background:linear-gradient(90deg,transparent,#8c7646 20%,#e4d19c 50%,#8c7646 80%,transparent)}
+
+/* sales page */
+.buybox{background:var(--paper);color:var(--text);border-radius:14px;padding:34px;box-shadow:0 30px 70px -30px rgba(0,0,0,.6)}
+.buybox .price{font-family:var(--serif);font-size:54px;font-weight:700;line-height:1}
+.buybox .price small{font-family:var(--sans);font-size:15px;color:var(--muted);font-weight:400}
+.buybox ul{list-style:none;padding:0;margin:20px 0 24px}
+.buybox li{padding:7px 0 7px 0;display:flex;gap:10px}
+.buybox li:before{content:"";flex:0 0 18px;height:18px;margin-top:5px;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--gold-deep) 0 3px,transparent 4px),#f3ead2}
+.buybox .btn{width:100%}
+.buybox .fine{font-size:13px;color:var(--muted);margin-top:12px;text-align:center}
+.wait{display:none;margin-top:14px}
+.wait.on{display:block}
+.wait input[type=email],.wait input[type=text]{width:100%;padding:12px 14px;border:1px solid #d6d3ca;border-radius:6px;font:inherit;margin-bottom:8px}
+.wait label{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start;margin:4px 0 10px}
+.msg{font-size:14.5px;margin-top:8px}
+.lessons{display:grid;gap:0}
+.lesson-row{display:grid;grid-template-columns:70px 1fr auto;gap:18px;align-items:baseline;padding:20px 0;border-bottom:1px solid #dcdad3}
+.lesson-row .n{font-family:var(--serif);font-size:30px;font-weight:900;color:var(--gold-deep)}
+.lesson-row h4{margin:0;font-size:19px;font-weight:500}
+.lesson-row p{margin:4px 0 0;color:var(--muted);font-size:15.5px}
+.lesson-row .m{color:var(--muted);font-size:14px;white-space:nowrap}
+.note{background:#f6f3ea;border-right:3px solid var(--gold-deep);padding:16px 20px;border-radius:6px;color:#4c4a45;font-size:15.5px}
+
+/* player */
+.player{display:grid;grid-template-columns:320px 1fr;min-height:calc(100vh - 72px)}
+.player aside{background:var(--ink);color:#e9e6de;padding:26px 18px;position:sticky;top:72px;height:calc(100vh - 72px);overflow:auto}
+.player aside h3{font-size:20px;color:#fff;margin:0 8px 6px}
+.player .prog{margin:6px 8px 18px;height:4px;border-radius:4px;background:#2e2c29;overflow:hidden}
+.player .prog i{display:block;height:100%;background:var(--gold);width:0;transition:width .4s}
+.player aside button{display:grid;grid-template-columns:30px 1fr 18px;gap:8px;width:100%;text-align:right;background:transparent;border:0;color:inherit;font:inherit;font-size:15px;padding:11px 8px;border-radius:8px;cursor:pointer;align-items:center}
+.player aside button:hover{background:#232220}
+.player aside button[aria-current=true]{background:#2a2824;color:#fff}
+.player aside button .n{font-family:var(--serif);color:var(--gold);font-weight:700}
+.player aside button .ok{color:var(--gold);font-size:14px}
+.player main{padding:48px 56px;max-width:860px}
+.player main h1{font-size:38px;margin-bottom:8px}
+.player .meta{color:var(--muted);font-size:14.5px;margin-bottom:26px}
+.video{aspect-ratio:16/9;background:var(--ink);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted-dark);margin-bottom:30px;overflow:hidden}
+.video iframe,.video video{width:100%;height:100%;border:0}
+.lessonbody h2{font-size:26px;margin:34px 0 10px}
+.lessonbody h3{font-size:20px;margin:26px 0 8px}
+.lessonbody ul,.lessonbody ol{padding-right:22px}
+.lessonbody .box{background:var(--stone);border-radius:10px;padding:20px 24px;margin:22px 0}
+.lessonbody .box.gold{background:#f6f0de}
+.navbtns{display:flex;justify-content:space-between;gap:12px;margin-top:44px;padding-top:24px;border-top:1px solid #e3e1da}
+.gate{max-width:520px;margin:90px auto;padding:0 24px;text-align:center}
+.gate input{width:100%;padding:13px 14px;border:1px solid #d6d3ca;border-radius:6px;font:inherit;margin:14px 0 10px}
+
+@media (max-width:960px){
+  .hero .wrap,.course,.teacher{grid-template-columns:1fr}
+  .hero .wrap{padding-top:56px;padding-bottom:64px;gap:40px}
+  .steps,.soon{grid-template-columns:1fr}
+  .top nav{display:none}
+  .player{grid-template-columns:1fr}
+  .player aside{position:static;height:auto}
+  .player main{padding:30px 20px}
+  .lesson-row{grid-template-columns:48px 1fr}
+  .lesson-row .m{grid-column:2}
+  .sec{padding:68px 0}
+  .course .side,.course .list{padding:28px 24px}
+}
