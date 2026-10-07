@@ -59,7 +59,8 @@
     const stage = $('.dk-stage'), scene = $('.dk-scene'), cap = $('.dk-cap'), pp = $('.dk-pp'), segs = [...box.querySelectorAll('.dk-seg i')];
     const audio = new Audio(); audio.preload = 'auto';
     let cur = -1, playing = false, t0 = 0, elapsed = 0, timer = 0, dur = 0, raf = 0, cc = false;
-    const fit = () => { const f = $('.dk-frame'), w = f.clientWidth, h = document.fullscreenElement === f ? f.clientHeight : w * 720 / 1280; const k = Math.min(w / 1280, h / 720); stage.style.transform = `translate(${(w - 1280 * k) / 2}px, ${(h - 720 * k) / 2}px) scale(${k})`; if (document.fullscreenElement !== f) f.style.height = h + 'px'; };
+    const full = () => document.fullscreenElement === $('.dk-frame') || $('.dk-frame').classList.contains('dk-full');
+    const fit = () => { const f = $('.dk-frame'); f.classList.toggle('dk-rot', f.classList.contains('dk-full') && innerHeight > innerWidth); const w = f.clientWidth, h = full() ? f.clientHeight : w * 720 / 1280; const k = Math.min(w / 1280, h / 720); stage.style.transform = `translate(${(w - 1280 * k) / 2}px, ${(h - 720 * k) / 2}px) scale(${k})`; if (!full()) f.style.height = h + 'px'; };
     window.addEventListener('resize', fit); setTimeout(fit, 0);
     const ro = 'ResizeObserver' in window ? new ResizeObserver(fit) : null; if (ro) ro.observe($('.dk-frame'));
     const reveal = (p) => { // items appear in turn across the scene
@@ -100,12 +101,23 @@
     $('.dk-big-play').onclick = () => load(cur < 0 ? 0 : cur, true);
     segs.forEach((g, i) => (g.onclick = () => load(i, playing || cur >= 0)));
     $('.dk-cc').onclick = e => { cc = !cc; cap.hidden = !cc; e.currentTarget.setAttribute('aria-pressed', cc); };
-    $('.dk-fs').onclick = () => { const f = $('.dk-frame'); (document.fullscreenElement ? document.exitFullscreen() : (f.requestFullscreen || f.webkitRequestFullscreen || (() => {})).call(f)); setTimeout(fit, 200); };
+    $('.dk-fs').onclick = () => {
+      const f = $('.dk-frame');
+      if (document.fullscreenElement) { document.exitFullscreen(); setTimeout(fit, 200); return; }
+      if (f.requestFullscreen && document.fullscreenEnabled) { f.requestFullscreen().catch(() => pseudo(f)); setTimeout(fit, 200); return; }
+      pseudo(f);
+    };
+    const pseudo = (f) => {
+      if (f.classList.contains('dk-full')) { f.classList.remove('dk-full', 'dk-rot'); const x = document.querySelector('.dk-full-exit'); if (x) x.remove(); document.body.style.overflow = ''; f.style.height = ''; setTimeout(fit, 50); return; }
+      f.classList.add('dk-full'); f.style.height = ''; document.body.style.overflow = 'hidden';
+      const x = document.createElement('button'); x.className = 'dk-full-exit'; x.textContent = '✕'; x.setAttribute('aria-label', 'יציאה ממסך מלא'); x.onclick = () => pseudo(f); document.body.appendChild(x);
+      setTimeout(fit, 50);
+    };
     document.addEventListener('fullscreenchange', () => setTimeout(fit, 100));
     stage.onclick = e => { if (e.target.closest('.dk-big-play')) return; if (cur >= 0) (playing ? pause() : play()); };
     load(0, false); cur = 0;
     // stop when the reader moves to another lesson
-    return () => { pause(); cancelAnimationFrame(raf); window.removeEventListener('resize', fit); if (ro) ro.disconnect(); };
+    return () => { pause(); cancelAnimationFrame(raf); window.removeEventListener('resize', fit); if (ro) ro.disconnect(); const x = document.querySelector('.dk-full-exit'); if (x) x.remove(); document.body.style.overflow = ''; };
   }
   window.DabulDeck = { mount };
 })();
