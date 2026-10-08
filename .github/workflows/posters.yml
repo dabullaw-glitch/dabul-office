@@ -1,0 +1,26 @@
+name: video-posters
+on:
+  push:
+    branches: [audit-run]
+    paths: ['posters/**', '.github/workflows/posters.yml']
+permissions:
+  contents: write
+jobs:
+  posters:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+          pip install -q -U yt-dlp
+      - name: Frames
+        run: bash posters/run.sh
+      - name: Commit
+        run: |
+          git config user.name "audit-bot"
+          git config user.email "audit-bot@users.noreply.github.com"
+          git add posters-out
+          git commit -m "video posters $(date -u +%FT%TZ)" || echo nothing
+          for i in 1 2 3 4 5; do git pull --rebase -q origin audit-run && git push origin HEAD:audit-run && break; sleep 5; done
