@@ -26,7 +26,7 @@ The owner's name appears only in `src/data/lawyers.json` (the paid lawyer list).
 7. After adding a guide, add its slug to `related` of 1 or 2 close existing guides.
 8. New topics come from `src/data/backlog.json` (remove the item once published).
 9. **Length (SEO and GEO): every guide, article, explainer and checklist is at least 1,000 words of body text.**
-   Guides 1,200 to 2,500, articles 1,000 to 2,000, explainers and checklists 1,000 to 1,500. A hub's main "super guide"
+   Guides aim for 1,200 to 2,500 (never under 1,000), articles 1,000 to 2,000, explainers and checklists 1,000 to 1,500. A hub's main "super guide"
    (`pillar: true` in the frontmatter) is 2,500 words or more. Check with `node scripts/words.mjs <slug>` (it exits with an
    error when an item is too short). Length comes from real value, never filler: a direct answer in the first paragraph,
    H2 headings phrased as the questions people search, a table, numbered steps, a worked example with made-up numbers

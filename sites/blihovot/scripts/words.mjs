@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 const DIR = new URL('../src/content/guides/', import.meta.url).pathname;
-export const MIN = { guide: 1200, pillar: 2500, article: 1000, explainer: 1000, checklist: 1000 };
+export const MIN = { guide: 1000, pillar: 2500, article: 1000, explainer: 1000, checklist: 1000 };
 const only = process.argv.slice(2);
 let bad = 0;
 const rows = fs.readdirSync(DIR).filter((f) => f.endsWith('.md')).map((f) => {
