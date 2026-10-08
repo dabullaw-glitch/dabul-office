@@ -2,12 +2,12 @@
 // (2) press: desktop article crops (like the existing press screenshots) and outlet logos
 import { chromium, devices } from 'playwright';
 import fs from 'node:fs';
-const OUT = 'diag-results/check21'; fs.mkdirSync(OUT, { recursive: true });
+const OUT = 'diag-results/check21b'; fs.mkdirSync(OUT, { recursive: true });
 const S = 'https://dabullaw.co.il/'; const rep = {};
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
 const b = await chromium.launch({ args: ['--disable-blink-features=AutomationControlled', '--autoplay-policy=no-user-gesture-required'] });
 const HIDE = '.elementor-popup-modal,.onetap-container-toggle,.dabul-gbadge{display:none!important}';
-for (const [w, h] of [[1440, 900], [1920, 1080]]) {
+for (const [w, h] of []) {
   const p = await (await b.newContext({ viewport: { width: w, height: h }, locale: 'he-IL' })).newPage();
   await p.goto(S + '?dblprev=1&c21=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(3000);
   await p.addStyleTag({ content: HIDE });
@@ -19,7 +19,7 @@ for (const [w, h] of [[1440, 900], [1920, 1080]]) {
   await nl.screenshot({ path: `${OUT}/nl-${w}.jpg`, type: 'jpeg', quality: 84 });
   await p.context().close();
 }
-{
+if (false) {
   const p = await (await b.newContext({ ...devices['iPhone 13'], locale: 'he-IL' })).newPage();
   await p.goto(S + '?dblprev=1&c21p=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(3000);
   rep.phone = await p.evaluate(() => ({ nlBuilt: document.getElementById('dbl-nl')?.classList.contains('dbl-nlv'), video: !!document.querySelector('#dbl-nl video') }));
@@ -31,12 +31,12 @@ for (const [k, u] of Object.entries(A)) {
     const ctx = await b.newContext({ viewport: { width: 1366, height: 2400 }, locale: 'he-IL', userAgent: UA });
     await ctx.addInitScript(() => { Object.defineProperty(navigator, 'webdriver', { get: () => undefined }); });
     const p = await ctx.newPage(); await p.goto(u, { waitUntil: 'domcontentloaded', timeout: 60000 }); await p.waitForTimeout(8000);
-    await p.evaluate(() => { document.querySelectorAll('*').forEach((e) => { const cs = getComputedStyle(e); if ((cs.position === 'fixed' || cs.position === 'sticky') && e.tagName !== 'HTML' && e.tagName !== 'BODY') e.style.setProperty('display', 'none', 'important'); }); document.querySelectorAll('iframe,[id*=google_ads],[class*=adunit],[class*=banner],ins').forEach((e) => { const r = e.getBoundingClientRect(); if (r.width > 200) e.style.setProperty('visibility', 'hidden', 'important'); }); });
+    await p.evaluate(() => { document.querySelectorAll('*').forEach((e) => { const cs = getComputedStyle(e); if ((cs.position === 'fixed' || cs.position === 'sticky') && e.tagName !== 'HTML' && e.tagName !== 'BODY') e.style.setProperty('display', 'none', 'important'); }); document.querySelectorAll('iframe,[id*=google_ads],ins').forEach((e) => { const r = e.getBoundingClientRect(); if (r.width > 200) e.style.setProperty('visibility', 'hidden', 'important'); }); });
     const box = await p.evaluate(() => {
       const h1 = document.querySelector('h1'); const r = h1.getBoundingClientRect();
       let c = h1; for (let i = 0; i < 6 && c.parentElement; i++) { const pr = c.parentElement.getBoundingClientRect(); if (pr.width > 900) break; c = c.parentElement; }
       const cr = c.getBoundingClientRect();
-      return { x: Math.max(0, cr.left - 12), y: Math.max(0, r.top + scrollY - 30), w: Math.min(cr.width + 24, 720) };
+      return { x: Math.max(0, cr.left - 16), y: Math.max(0, r.top + scrollY - 30), w: Math.min(cr.width + 32, 1300 - Math.max(0, cr.left - 16)) };
     });
     rep[k] = box;
     await p.screenshot({ path: `${OUT}/press-${k}.jpg`, type: 'jpeg', quality: 88, clip: { x: box.x, y: box.y, width: box.w, height: Math.round(box.w * 1.57) }, fullPage: true });
