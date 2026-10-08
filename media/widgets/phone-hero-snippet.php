@@ -1,5 +1,5 @@
 /* dabul: the new home hero on the phone (Yakir chose option 4 on 8.10.2026: a round studio portrait with a gold ring,
-   the name next to it, and the four points in a glass card; with more space between the parts; more space again on 8.10.2026 17:35 as Yakir asked).
+   the name next to it, and the four points in a glass card; with more space between the parts; more space again on 8.10.2026 17:35 as Yakir asked; the city behind is brighter so the buildings show, level 2 that Yakir chose on 8.10.2026).
    Only on phones (up to 767px). The computer hero does not change. The old phone hero stays in the page, hidden on phones.
    Checked on a preview address and approved by Yakir on 8.10.2026, now live. To undo: deactivate this snippet. */
 define('DABUL_HPH_LIVE', 1);
@@ -11,7 +11,7 @@ function dabul_hph_on() {
 }
 function dabul_hph_imgs() {
 	return array(
-		'city' => 'https://dabullaw.co.il/wp-content/uploads/2026/10/netanya-city-night-mobile.webp',
+		'city' => 'https://dabullaw.co.il/wp-content/uploads/2026/10/netanya-city-night-mobile-bright.webp',
 		'face' => get_option('dabul_hph_face', ''),
 	);
 }
@@ -25,7 +25,7 @@ add_action('wp_head', function () {
 		. '@media (max-width:767px){.elementor-element-9056c3a{display:none!important}'
 		. '.dbl-ph{display:block;position:relative;direction:rtl;font-family:"Noto Local",sans-serif;color:#fff;overflow:hidden;background:#0a1226 url(' . esc_url($im['city']) . ') center bottom/cover no-repeat;isolation:isolate;padding:28px 20px 72px}'
 		. '.dbl-ph *{box-sizing:border-box;font-family:inherit}'
-		. '.dbl-ph:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(8,13,30,.9) 0%,rgba(8,13,30,.72) 42%,rgba(8,13,30,.42) 100%)}'
+		. '.dbl-ph:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(8,13,30,.75) 0%,rgba(8,13,30,.5) 42%,rgba(8,13,30,.2) 100%)}'
 		. '.dbl-ph .top{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:16px;align-items:center}'
 		. '.dbl-ph .nm{margin:0;line-height:1}.dbl-ph .nm b{display:block;font-size:41px;font-weight:800;letter-spacing:-.5px}.dbl-ph .nm span{display:block;font-size:23px;font-weight:300;margin-top:8px;white-space:nowrap;color:#f1efe9}'
 		. '.dbl-ph .ln{width:46px;height:2px;background:linear-gradient(90deg,#f0d9a0,#b8913f);margin:15px 0 12px}'
