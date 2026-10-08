@@ -50,7 +50,9 @@ async function callback(url: URL) {
   const st = (await getDoc('settings', 'fbauth')) || {};
   if (!code || !state || state !== st.state || Date.now() - Date.parse(st.stateAt || 0) > 20 * 60e3) return page('הקישור פג', '<p>צריך ללחוץ שוב על "התחבר עם פייסבוק" במערכת המשרד.</p>', false, 400);
   await merge('settings', 'fbauth', { state: '', usedAt: new Date().toISOString() });
-  const id = env('META_APP_ID'), secret = env('META_APP_SECRET');
+  const { data: cs } = await admin().from('app_secrets').select('k,v').in('k', ['META_APP_ID', 'META_APP_SECRET']);
+  const cm: Record<string, string> = Object.fromEntries((cs || []).map((r: Any) => [r.k, r.v]));
+  const id = cm.META_APP_ID || '', secret = cm.META_APP_SECRET || '';
   try {
     const short = await graph('/oauth/access_token', { client_id: id, client_secret: secret, redirect_uri: redirect(), code });
     const long = await graph('/oauth/access_token', { grant_type: 'fb_exchange_token', client_id: id, client_secret: secret, fb_exchange_token: short.access_token });
@@ -81,24 +83,37 @@ Deno.serve(async (req) => {
     const b = await req.json().catch(() => ({}));
     if (b.action === 'status') {
       const cfg = (await getDoc('settings', 'pub')) || {};
-      return json({ hasApp: !!(env('META_APP_ID') && env('META_APP_SECRET')), appId: env('META_APP_ID'), config: !!env('META_LOGIN_CONFIG_ID'), redirect: redirect(), ig: cfg.ig || {} });
+      const { data: rows } = await admin().from('app_secrets').select('k,v').in('k', ['META_APP_ID', 'META_APP_SECRET', 'META_LOGIN_CONFIG_ID']);
+      const v: Record<string, string> = Object.fromEntries((rows || []).map((r: Any) => [r.k, r.v]));
+      return json({ hasApp: !!(v.META_APP_ID && v.META_APP_SECRET), appId: v.META_APP_ID || '', hasSecret: !!v.META_APP_SECRET, configId: v.META_LOGIN_CONFIG_ID || '', redirect: redirect(), ig: cfg.ig || {} });
     }
     if (b.action === 'save-app') {
+      // each field can be saved on its own (App ID and Configuration ID are not secret; the App Secret only by Yakir)
       const appId = String(b.appId || '').trim(), sec = String(b.appSecret || '').trim(), conf = String(b.configId || '').trim();
-      if (!/^\d{6,20}$/.test(appId)) return json({ error: 'מזהה האפליקציה (App ID) הוא מספר בלבד' }, 400);
-      if (!/^[a-f0-9]{32}$/i.test(sec)) return json({ error: 'הסוד (App Secret) הוא 32 תווים של ספרות ואותיות a עד f' }, 400);
+      if (!appId && !sec && !conf) return json({ error: 'לא מולא אף שדה' }, 400);
+      if (appId && !/^\d{6,20}$/.test(appId)) return json({ error: 'מזהה האפליקציה (App ID) הוא מספר בלבד' }, 400);
+      if (sec && !/^[a-f0-9]{32}$/i.test(sec)) return json({ error: 'הסוד (App Secret) הוא 32 תווים של ספרות ואותיות a עד f' }, 400);
       if (conf && !/^\d{6,20}$/.test(conf)) return json({ error: 'מזהה התצורה (Configuration ID) הוא מספר בלבד' }, 400);
-      await graph('/oauth/access_token', { client_id: appId, client_secret: sec, grant_type: 'client_credentials' }).catch(() => { throw new Error('פייסבוק לא אישר את מזהה האפליקציה והסוד. כדאי לבדוק שהועתקו במלואם'); });
-      await setSecret('META_APP_ID', appId); await setSecret('META_APP_SECRET', sec); if (conf) await setSecret('META_LOGIN_CONFIG_ID', conf);
+      const { data: cur } = await admin().from('app_secrets').select('v').eq('k', 'META_APP_ID').maybeSingle();
+      const id = appId || (cur && cur.v) || '';
+      if (sec) {
+        if (!id) return json({ error: 'קודם שומרים את מזהה האפליקציה (App ID)' }, 400);
+        await graph('/oauth/access_token', { client_id: id, client_secret: sec, grant_type: 'client_credentials' }).catch(() => { throw new Error('פייסבוק לא אישר את הסוד מול מזהה האפליקציה. כדאי לבדוק שהועתק במלואו ושזו אותה אפליקציה'); });
+      }
+      if (appId) await setSecret('META_APP_ID', appId);
+      if (sec) await setSecret('META_APP_SECRET', sec);
+      if (conf) await setSecret('META_LOGIN_CONFIG_ID', conf);
       await merge('settings', 'fbauth', { appSavedAt: new Date().toISOString(), appSavedBy: who });
       return json({ ok: true });
     }
     if (b.action === 'start') {
-      if (!env('META_APP_ID') || !env('META_APP_SECRET')) return json({ error: 'קודם שומרים את פרטי האפליקציה' }, 400);
+      const { data: rs } = await admin().from('app_secrets').select('k,v').in('k', ['META_APP_ID', 'META_APP_SECRET', 'META_LOGIN_CONFIG_ID']);
+      const m: Record<string, string> = Object.fromEntries((rs || []).map((r: Any) => [r.k, r.v]));
+      if (!m.META_APP_ID || !m.META_APP_SECRET) return json({ error: 'קודם שומרים את פרטי האפליקציה' }, 400);
       const state = rnd(); await merge('settings', 'fbauth', { state, stateAt: new Date().toISOString(), by: who });
       const u = new URL('https://www.facebook.com/v21.0/dialog/oauth');
-      u.searchParams.set('client_id', env('META_APP_ID')); u.searchParams.set('redirect_uri', redirect()); u.searchParams.set('state', state); u.searchParams.set('response_type', 'code');
-      if (env('META_LOGIN_CONFIG_ID')) { u.searchParams.set('config_id', env('META_LOGIN_CONFIG_ID')); u.searchParams.set('override_default_response_type', 'true'); }
+      u.searchParams.set('client_id', m.META_APP_ID); u.searchParams.set('redirect_uri', redirect()); u.searchParams.set('state', state); u.searchParams.set('response_type', 'code');
+      if (m.META_LOGIN_CONFIG_ID) { u.searchParams.set('config_id', m.META_LOGIN_CONFIG_ID); u.searchParams.set('override_default_response_type', 'true'); }
       else u.searchParams.set('scope', SCOPES);
       return json({ url: u.toString() });
     }
