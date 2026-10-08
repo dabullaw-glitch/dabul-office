@@ -1,0 +1,50 @@
+{
+ "edges": [
+  1406,
+  1406,
+  1406
+ ],
+ "nl": {
+  "built": true,
+  "video": true
+ },
+ "press": [
+  {
+   "t": "התחדשות עירונית בנתניה: מה זכויות הדיירים, מה מותר ליזם, ואיך לא נופלי",
+   "href": "https://www.emess.co.il/rec/1916011",
+   "logo": true,
+   "imgs": [
+    "logo-emess.jpg",
+    "emess-yakir-dabul.jpg"
+   ]
+  },
+  {
+   "t": "מעבר לחתימה על החוזה: המשרד שמגדיר מחדש את חוקי המשחק בעסקאות הנדל\"ן ש",
+   "href": "https://www.bizportal.co.il/bizpoint-sponsored/news/article/20035319",
+   "logo": true,
+   "imgs": [
+    "logo-bizportal.jpg",
+    "bizportal-yakir-dabul.jpg"
+   ]
+  },
+  {
+   "t": "הסוד לעסקת נדל\"ן בטוחה: ליווי משפטי שמדבר בגובה העיניים",
+   "href": "https://13tv.co.il/item/special/artices/promoted/qyqyi-905188952/#",
+   "logo": true,
+   "imgs": [
+    "%D7%A8%D7%A9%D7%AA-13.jpg.webp",
+    "Screenshot_35-652x1024.jpg.webp"
+   ]
+  },
+  {
+   "t": "צעד אחר צעד: כך תעברו את תהליך רכישת דירה מקבלן בראש שקט",
+   "href": "https://www.bhol.co.il/news/1724007",
+   "logo": true,
+   "imgs": [
+    "Screenshot_13.jpg.webp",
+    "Screenshot_1.jpg.webp"
+   ]
+  }
+ ],
+ "phoneNl": false
+}
