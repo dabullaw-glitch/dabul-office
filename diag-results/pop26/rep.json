@@ -1,0 +1,192 @@
+[
+ {
+  "i": 0,
+  "ev": [
+   "2488 SHIFT 0.0182 div.elementor-element.elementor-element-ca99b79.elementor-widget",
+   "3360 SHIFT 0.0045 img,ul#menu-1-b175daa.elementor-nav-menu,a.elementor-button.elementor-button-link.elementor-size-sm",
+   "3734 focus() on a opts=null     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978",
+   "3735 focus a sy=0     at HTMLElement.focus (<anonymous>:12:271) /     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978"
+  ],
+  "sy": 0,
+  "html": {
+   "ov": "hidden auto",
+   "cls": ""
+  },
+  "body": {
+   "ov": "hidden auto",
+   "cls": [
+    "dialog-body",
+    "dialog-lightbox-body",
+    "dialog-container",
+    "dialog-lightbox-container"
+   ]
+  },
+  "pop": {
+   "pos": "fixed",
+   "disp": "flex",
+   "rect": "{\"x\":0,\"y\":0,\"width\":1350,\"height\":940,\"top\":0,\"right\":1350,\"bottom\":940,\"left\":0}",
+   "msg": "static",
+   "html": "<div class=\"dialog-widget dialog-lightbox-widget dialog-type-buttons dialog-type-lightbox elementor-popup-modal\" id=\"elementor-popup-modal-1023\" aria-modal=\"true\" role=\"document\" tabindex=\"0\" style=\"\"><div class=\"dialog-widget-content dialog-lightbox-widget-content animated\"><a role=\"button\" tabindex=\"0\" aria-label=\"Close\" href=\"#\" class=\"dialog-close-button dialog-lightbox-close-button\"><svg class=\"e-font-icon-svg e-eicon-close eicon-close\"><use xlink:href=\"#eicon-close\"></use></svg></a><div class=\"dialog-header dialog-lightbox-header\"></div><div class=\"dialog-message dialog-lightbox-message\"",
+   "settings": "{\"a11y_navigation\":\"yes\",\"triggers\":{\"page_load\":\"yes\",\"page_load_delay\":0},\"timing\":[]}"
+  }
+ },
+ {
+  "i": 1,
+  "ev": [
+   "2090 SHIFT 0.0003 div.elementor-element.elementor-element-ca99b79.elementor-widget",
+   "3435 SHIFT 0.0045 img,ul#menu-1-b175daa.elementor-nav-menu,a.elementor-button.elementor-button-link.elementor-size-sm",
+   "3710 focus() on a opts=null     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978",
+   "3711 focus a sy=0     at HTMLElement.focus (<anonymous>:12:271) /     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978"
+  ],
+  "sy": 0,
+  "html": {
+   "ov": "hidden auto",
+   "cls": ""
+  },
+  "body": {
+   "ov": "hidden auto",
+   "cls": [
+    "dialog-body",
+    "dialog-lightbox-body",
+    "dialog-container",
+    "dialog-lightbox-container"
+   ]
+  },
+  "pop": {
+   "pos": "fixed",
+   "disp": "flex",
+   "rect": "{\"x\":0,\"y\":0,\"width\":1350,\"height\":940,\"top\":0,\"right\":1350,\"bottom\":940,\"left\":0}",
+   "msg": "static",
+   "html": "<div class=\"dialog-widget dialog-lightbox-widget dialog-type-buttons dialog-type-lightbox elementor-popup-modal\" id=\"elementor-popup-modal-1023\" aria-modal=\"true\" role=\"document\" tabindex=\"0\" style=\"\"><div class=\"dialog-widget-content dialog-lightbox-widget-content animated\"><a role=\"button\" tabindex=\"0\" aria-label=\"Close\" href=\"#\" class=\"dialog-close-button dialog-lightbox-close-button\"><svg class=\"e-font-icon-svg e-eicon-close eicon-close\"><use xlink:href=\"#eicon-close\"></use></svg></a><div class=\"dialog-header dialog-lightbox-header\"></div><div class=\"dialog-message dialog-lightbox-message\"",
+   "settings": "{\"a11y_navigation\":\"yes\",\"triggers\":{\"page_load\":\"yes\",\"page_load_delay\":0},\"timing\":[]}"
+  }
+ },
+ {
+  "i": 2,
+  "ev": [
+   "1638 SHIFT 0.0052 div.elementor-element.elementor-element-94c4b61.e-con-full,div.elementor-element.elementor-element-ce116af.elementor-widget,div.elementor-element.elementor-element-62c1a11.elementor-widget",
+   "1850 SHIFT 0.0003 div.elementor-element.elementor-element-ca99b79.elementor-widget",
+   "2864 SHIFT 0.0045 img,ul#menu-1-b175daa.elementor-nav-menu,a.elementor-button.elementor-button-link.elementor-size-sm",
+   "3281 focus() on a opts=null     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978",
+   "3283 focus a sy=0     at HTMLElement.focus (<anonymous>:12:271) /     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978"
+  ],
+  "sy": 0,
+  "html": {
+   "ov": "hidden auto",
+   "cls": ""
+  },
+  "body": {
+   "ov": "hidden auto",
+   "cls": [
+    "dialog-body",
+    "dialog-lightbox-body",
+    "dialog-container",
+    "dialog-lightbox-container"
+   ]
+  },
+  "pop": {
+   "pos": "fixed",
+   "disp": "flex",
+   "rect": "{\"x\":0,\"y\":0,\"width\":1350,\"height\":940,\"top\":0,\"right\":1350,\"bottom\":940,\"left\":0}",
+   "msg": "static",
+   "html": "<div class=\"dialog-widget dialog-lightbox-widget dialog-type-buttons dialog-type-lightbox elementor-popup-modal\" id=\"elementor-popup-modal-1023\" aria-modal=\"true\" role=\"document\" tabindex=\"0\" style=\"\"><div class=\"dialog-widget-content dialog-lightbox-widget-content animated\"><a role=\"button\" tabindex=\"0\" aria-label=\"Close\" href=\"#\" class=\"dialog-close-button dialog-lightbox-close-button\"><svg class=\"e-font-icon-svg e-eicon-close eicon-close\"><use xlink:href=\"#eicon-close\"></use></svg></a><div class=\"dialog-header dialog-lightbox-header\"></div><div class=\"dialog-message dialog-lightbox-message\"",
+   "settings": "{\"a11y_navigation\":\"yes\",\"triggers\":{\"page_load\":\"yes\",\"page_load_delay\":0},\"timing\":[]}"
+  }
+ },
+ {
+  "i": 3,
+  "ev": [
+   "2098 SHIFT 0.0007 div.elementor-element.elementor-element-94c4b61.e-con-full,div.elementor-element.elementor-element-c162b4d.elementor-widget",
+   "2227 SHIFT 0.0003 div.elementor-element.elementor-element-ca99b79.elementor-widget",
+   "3224 SHIFT 0.0045 img,ul#menu-1-b175daa.elementor-nav-menu,a.elementor-button.elementor-button-link.elementor-size-sm",
+   "3575 focus() on a opts=null     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978",
+   "3575 focus a sy=0     at HTMLElement.focus (<anonymous>:12:271) /     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978"
+  ],
+  "sy": 0,
+  "html": {
+   "ov": "hidden auto",
+   "cls": ""
+  },
+  "body": {
+   "ov": "hidden auto",
+   "cls": [
+    "dialog-body",
+    "dialog-lightbox-body",
+    "dialog-container",
+    "dialog-lightbox-container"
+   ]
+  },
+  "pop": {
+   "pos": "fixed",
+   "disp": "flex",
+   "rect": "{\"x\":0,\"y\":0,\"width\":1350,\"height\":940,\"top\":0,\"right\":1350,\"bottom\":940,\"left\":0}",
+   "msg": "static",
+   "html": "<div class=\"dialog-widget dialog-lightbox-widget dialog-type-buttons dialog-type-lightbox elementor-popup-modal\" id=\"elementor-popup-modal-1023\" aria-modal=\"true\" role=\"document\" tabindex=\"0\" style=\"\"><div class=\"dialog-widget-content dialog-lightbox-widget-content animated\"><a role=\"button\" tabindex=\"0\" aria-label=\"Close\" href=\"#\" class=\"dialog-close-button dialog-lightbox-close-button\"><svg class=\"e-font-icon-svg e-eicon-close eicon-close\"><use xlink:href=\"#eicon-close\"></use></svg></a><div class=\"dialog-header dialog-lightbox-header\"></div><div class=\"dialog-message dialog-lightbox-message\"",
+   "settings": "{\"a11y_navigation\":\"yes\",\"triggers\":{\"page_load\":\"yes\",\"page_load_delay\":0},\"timing\":[]}"
+  }
+ },
+ {
+  "i": 4,
+  "ev": [
+   "1790 SHIFT 0.0003 div.elementor-element.elementor-element-ca99b79.elementor-widget",
+   "2849 SHIFT 0.0045 img,ul#menu-1-b175daa.elementor-nav-menu,a.elementor-button.elementor-button-link.elementor-size-sm",
+   "3072 focus() on a opts=null     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978",
+   "3074 focus a sy=0     at HTMLElement.focus (<anonymous>:12:271) /     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978"
+  ],
+  "sy": 0,
+  "html": {
+   "ov": "hidden auto",
+   "cls": ""
+  },
+  "body": {
+   "ov": "hidden auto",
+   "cls": [
+    "dialog-body",
+    "dialog-lightbox-body",
+    "dialog-container",
+    "dialog-lightbox-container"
+   ]
+  },
+  "pop": {
+   "pos": "fixed",
+   "disp": "flex",
+   "rect": "{\"x\":0,\"y\":0,\"width\":1350,\"height\":940,\"top\":0,\"right\":1350,\"bottom\":940,\"left\":0}",
+   "msg": "static",
+   "html": "<div class=\"dialog-widget dialog-lightbox-widget dialog-type-buttons dialog-type-lightbox elementor-popup-modal\" id=\"elementor-popup-modal-1023\" aria-modal=\"true\" role=\"document\" tabindex=\"0\" style=\"\"><div class=\"dialog-widget-content dialog-lightbox-widget-content animated\"><a role=\"button\" tabindex=\"0\" aria-label=\"Close\" href=\"#\" class=\"dialog-close-button dialog-lightbox-close-button\"><svg class=\"e-font-icon-svg e-eicon-close eicon-close\"><use xlink:href=\"#eicon-close\"></use></svg></a><div class=\"dialog-header dialog-lightbox-header\"></div><div class=\"dialog-message dialog-lightbox-message\"",
+   "settings": "{\"a11y_navigation\":\"yes\",\"triggers\":{\"page_load\":\"yes\",\"page_load_delay\":0},\"timing\":[]}"
+  }
+ },
+ {
+  "i": 5,
+  "ev": [
+   "2051 SHIFT 0.0002 ul#menu-1-b175daa.elementor-nav-menu,div.elementor-element.elementor-element-d8c5ab4.elementor-hidden-mobile",
+   "2116 SHIFT 0.0000 svg",
+   "2236 SHIFT 0.0003 div.elementor-element.elementor-element-ca99b79.elementor-widget",
+   "3433 SHIFT 0.0045 img,ul#menu-1-b175daa.elementor-nav-menu,a.elementor-button.elementor-button-link.elementor-size-sm",
+   "3544 focus() on a opts=null     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978",
+   "3545 focus a sy=0     at HTMLElement.focus (<anonymous>:12:271) /     at https://dabullaw.co.il/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2:2:5978"
+  ],
+  "sy": 0,
+  "html": {
+   "ov": "hidden auto",
+   "cls": ""
+  },
+  "body": {
+   "ov": "hidden auto",
+   "cls": [
+    "dialog-body",
+    "dialog-lightbox-body",
+    "dialog-container",
+    "dialog-lightbox-container"
+   ]
+  },
+  "pop": {
+   "pos": "fixed",
+   "disp": "flex",
+   "rect": "{\"x\":0,\"y\":0,\"width\":1350,\"height\":940,\"top\":0,\"right\":1350,\"bottom\":940,\"left\":0}",
+   "msg": "static",
+   "html": "<div class=\"dialog-widget dialog-lightbox-widget dialog-type-buttons dialog-type-lightbox elementor-popup-modal\" id=\"elementor-popup-modal-1023\" aria-modal=\"true\" role=\"document\" tabindex=\"0\" style=\"\"><div class=\"dialog-widget-content dialog-lightbox-widget-content animated\"><a role=\"button\" tabindex=\"0\" aria-label=\"Close\" href=\"#\" class=\"dialog-close-button dialog-lightbox-close-button\"><svg class=\"e-font-icon-svg e-eicon-close eicon-close\"><use xlink:href=\"#eicon-close\"></use></svg></a><div class=\"dialog-header dialog-lightbox-header\"></div><div class=\"dialog-message dialog-lightbox-message\"",
+   "settings": "{\"a11y_navigation\":\"yes\",\"triggers\":{\"page_load\":\"yes\",\"page_load_delay\":0},\"timing\":[]}"
+  }
+ }
+]
