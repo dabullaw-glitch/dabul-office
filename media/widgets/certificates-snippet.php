@@ -1,7 +1,8 @@
 /* dabul: certificates carousel on the home page, like the reference site (Yakir approved, 8.10.2026, without the zoom button).
    4 large certificates instead of 5 small ones (1 on the phone), full quality pictures, no gold frame, soft shadow,
    round arrows, no dots. The button under the carousel stays. To undo: deactivate this snippet.
-   Until it is checked it shows only on a preview address (?dblprev=1). */
+   Checked on phone and computer on 8.10.2026, now live for everyone. */
+define('DABUL_CERT_LIVE', 1);
 
 function dabul_cert_on() {
 	if (!is_front_page()) return false;
@@ -48,7 +49,7 @@ add_action('wp_footer', function () {
 				var s = i.style;
 				s.setProperty('width', '100%', 'important'); s.setProperty('object-fit', 'cover', 'important'); s.setProperty('border', '0', 'important');
 				s.setProperty('padding', '0', 'important'); s.setProperty('border-radius', '6px', 'important'); s.setProperty('background', '#fff', 'important');
-				s.setProperty('box-shadow', '0 14px 34px rgba(20,20,20,.10)', 'important');
+				s.setProperty('box-shadow', '0 8px 22px rgba(20,20,20,.09)', 'important');
 			});
 			root.querySelectorAll('.elementor-image-carousel-wrapper, .swiper-wrapper').forEach(function (e) { e.style.setProperty('height', 'auto', 'important'); e.style.setProperty('max-height', 'none', 'important'); e.style.setProperty('padding-bottom', '24px', 'important'); });
 			var sw = root.querySelector('.swiper'); if (sw && sw.swiper) { try { sw.swiper.update(); } catch (x) {} }
