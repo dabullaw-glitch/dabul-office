@@ -1,0 +1,26 @@
+{
+ "desktop": {
+  "status": 200,
+  "errs": [
+   "SyntaxError: Invalid or unexpected token",
+   "SyntaxError: Invalid or unexpected token"
+  ],
+  "scriptRan": false,
+  "hiddenAfterScroll": 0,
+  "phoneShown": true,
+  "emptySubmitMsg": "",
+  "hScroll": 0
+ },
+ "mobile": {
+  "status": 200,
+  "errs": [
+   "SyntaxError: Invalid or unexpected token",
+   "SyntaxError: Invalid or unexpected token"
+  ],
+  "scriptRan": false,
+  "hiddenAfterScroll": 0,
+  "phoneShown": true,
+  "emptySubmitMsg": "",
+  "hScroll": 0
+ }
+}
