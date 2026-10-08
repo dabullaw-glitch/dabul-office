@@ -1,0 +1,134 @@
+{
+ "vid-phone": {
+  "kids": [
+   [
+    "dbl-vcard dbl-wide",
+    274,
+    278,
+    20,
+    350
+   ],
+   [
+    "dbl-vcard",
+    602,
+    704,
+    20,
+    350
+   ],
+   [
+    "",
+    16100,
+    0,
+    0,
+    0
+   ],
+   [
+    "elementor elementor-5230 e-loo",
+    1356,
+    659,
+    20,
+    350
+   ],
+   [
+    "elementor elementor-5230 e-loo",
+    2065,
+    659,
+    20,
+    350
+   ],
+   [
+    "elementor elementor-5230 e-loo",
+    2773,
+    643,
+    20,
+    350
+   ],
+   [
+    "elementor elementor-5230 e-loo",
+    3466,
+    659,
+    20,
+    350
+   ]
+  ],
+  "imgs": [
+   "img.com/vi/K3fbG-jVHRI/maxresdefault.jpg",
+   "t/uploads/2026/10/video-wvi72erg6hy.webp",
+   "t/uploads/2026/10/video-6rr2oqwtc6s.webp",
+   "t/uploads/2026/10/video-mytxavpamge.webp"
+  ],
+  "docH": 22671
+ },
+ "a1335-phone": null,
+ "a4308-phone": [
+  340,
+  654,
+  "t/uploads/2026/10/video-wvi72erg6hy.webp"
+ ],
+ "vid-desktop": {
+  "kids": [
+   [
+    "dbl-vcard dbl-wide",
+    435,
+    568,
+    270,
+    900
+   ],
+   [
+    "dbl-vcard",
+    1053,
+    866,
+    970,
+    440
+   ],
+   [
+    "",
+    10077,
+    0,
+    0,
+    0
+   ],
+   [
+    "elementor elementor-5230 e-loo",
+    1053,
+    866,
+    500,
+    440
+   ],
+   [
+    "elementor elementor-5230 e-loo",
+    1053,
+    866,
+    30,
+    440
+   ],
+   [
+    "elementor elementor-5230 e-loo",
+    1969,
+    821,
+    970,
+    440
+   ],
+   [
+    "elementor elementor-5230 e-loo",
+    1969,
+    821,
+    500,
+    440
+   ]
+  ],
+  "imgs": [
+   "img.com/vi/K3fbG-jVHRI/maxresdefault.jpg",
+   "/2026/10/video-wvi72erg6hy-576x1024.webp",
+   "/2026/10/video-6rr2oqwtc6s-576x1024.webp",
+   "/2026/10/video-mytxavpamge-576x1024.webp"
+  ],
+  "docH": 10977
+ },
+ "a1335-desktop": null,
+ "a4308-desktop": [
+  340,
+  654,
+  "/2026/10/video-wvi72erg6hy-576x1024.webp"
+ ]
+}
