@@ -1,0 +1,122 @@
+{
+ "vid-phone": {
+  "n": 29,
+  "ours": 24,
+  "yt": [
+   "https://i.ytimg.com/vi/Wvi72eRG6HY/maxresdefault.jpg",
+   "https://i.ytimg.com/vi/K3fbG-jVHRI/maxresdefault.jpg",
+   "https://i.ytimg.com/vi/2ZJ664F6458/maxresdefault.jpg",
+   "https://i.ytimg.com/vi/xWw6RNRxZiA/maxresdefault.jpg",
+   "https://i.ytimg.com/vi/3f-RcPOcIvY/maxresdefault.jpg"
+  ],
+  "sample": [
+   [
+    "https://i.ytimg.com/vi/Wvi72eRG6HY/maxresdefault.jpg",
+    1280
+   ],
+   [
+    "https://i.ytimg.com/vi/K3fbG-jVHRI/maxresdefault.jpg",
+    1280
+   ],
+   [
+    "https://dabullaw.co.il/wp-content/uploads/2026/10/video-6rr2oqwtc6s.webp",
+    358
+   ]
+  ],
+  "vnew": [
+   [
+    274,
+    570,
+    20,
+    350
+   ]
+  ],
+  "items": [
+   [
+    924,
+    659,
+    20,
+    350
+   ],
+   [
+    1633,
+    659,
+    20,
+    350
+   ],
+   [
+    2341,
+    643,
+    20,
+    350
+   ],
+   [
+    3034,
+    659,
+    20,
+    350
+   ]
+  ],
+  "docH": 22239
+ },
+ "vid-desktop": {
+  "n": 29,
+  "ours": 24,
+  "yt": [
+   "https://i.ytimg.com/vi/Wvi72eRG6HY/maxresdefault.jpg",
+   "https://i.ytimg.com/vi/K3fbG-jVHRI/maxresdefault.jpg",
+   "https://i.ytimg.com/vi/2ZJ664F6458/maxresdefault.jpg",
+   "https://i.ytimg.com/vi/xWw6RNRxZiA/maxresdefault.jpg",
+   "https://i.ytimg.com/vi/3f-RcPOcIvY/maxresdefault.jpg"
+  ],
+  "sample": [
+   [
+    "https://i.ytimg.com/vi/Wvi72eRG6HY/maxresdefault.jpg",
+    1280
+   ],
+   [
+    "https://i.ytimg.com/vi/K3fbG-jVHRI/maxresdefault.jpg",
+    1280
+   ],
+   [
+    "https://dabullaw.co.il/wp-content/uploads/2026/10/video-6rr2oqwtc6s-576x1024.webp",
+    460
+   ]
+  ],
+  "vnew": [
+   [
+    435,
+    423,
+    30,
+    1380
+   ]
+  ],
+  "items": [
+   [
+    947,
+    821,
+    970,
+    440
+   ],
+   [
+    947,
+    821,
+    500,
+    440
+   ],
+   [
+    947,
+    821,
+    30,
+    440
+   ],
+   [
+    1818,
+    821,
+    970,
+    440
+   ]
+  ],
+  "docH": 10482
+ }
+}
