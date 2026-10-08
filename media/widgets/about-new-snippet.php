@@ -4,7 +4,8 @@
    and the 3 boxes (experts, full guidance, the vision) are in one row below. On the phone the photo comes first.
    The button "צפו בסרטון היכרות" opens the existing intro video in a window on the page.
    The old Elementor section (c7b857d) is not deleted in Elementor; this code only shows the new one in its place.
-   Before going live it shows only on a preview address (?dblprev=1). To undo: deactivate this snippet. */
+   Checked on a preview address (?dblprev=1) and Yakir approved it on 8.10.2026, now live. To undo: deactivate this snippet. */
+define('DABUL_AB_LIVE', 1);
 
 function dabul_ab_on() {
 	if (defined('DABUL_AB_LIVE')) return true;
