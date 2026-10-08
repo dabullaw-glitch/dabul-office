@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import lawyers from '../../data/lawyers.json';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const schema = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: 'עורכי דין לחדלות פירעון והסדרי חוב', itemListElement: lawyers.map((l, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'LegalService', name: l.office, telephone: l.phone, address: { '@type': 'PostalAddress', streetAddress: l.address, addressLocality: l.city, addressCountry: 'IL' }, areaServed: l.serves, url: l.site } })) }];
+---
+<Base title="עורכי דין לחדלות פירעון, הסדרי חוב והוצאה לפועל" description="רשימת עורכי דין שעוסקים בחדלות פירעון, הסדרי חוב והוצאה לפועל, לפי אזור. אפשר לפנות ישירות או להשאיר פרטים ולקבל חזרה מעורך דין מהרשימה." schema={schema}>
+  <div class="wrap" style="padding-block:28px 50px">
+    <Breadcrumbs items={[{ label: 'עורכי דין' }]} />
+    <h1>עורכי דין לחדלות פירעון והסדרי חוב</h1>
+    <p class="lede">עורכי דין שעוסקים בתחום, לפי אזור. אפשר לפנות ישירות, או להשאיר פרטים בטופס ולקבל חזרה.</p>
+    <p class="disc"><b>גילוי נאות:</b> הרשימה היא שטח פרסומי. עורכי הדין שמופיעים בה משלמים דמי פרסום קבועים, שאינם תלויים במספר הפניות. ההופעה ברשימה אינה המלצה, והאתר אינו צד להתקשרות ביניכם לבין עורך הדין.</p>
+    <div class="grid g2 list">
+      {lawyers.map((l) => (
+        <article class="card law">
+          <div class="top"><div class="av" aria-hidden="true">{l.name.replace('עו"ד ', '').split(' ').map((w) => w[0]).join('')}</div><div><h2>{l.name}</h2><p class="muted">{l.office} · {l.city}</p></div></div>
+          <p>{l.about}</p>
+          <ul class="chips">{l.areas.map((a) => <li>{a}</li>)}</ul>
+          <p class="meta"><span>משרת: {l.serves.join(', ')}</span><span>כתובת: {l.address}</span></p>
+          <div class="act"><a class="btn btn-teal" href={`tel:${l.phone.replace(/-/g, '')}`}>{l.phone}</a><a class="btn btn-line" href={l.site} target="_blank" rel="noopener sponsored">לאתר המשרד</a></div>
+        </article>
+      ))}
+      <a class="card join" href={`${B}orchei-din/hitztarfut/`}><b>עורכי דין: רוצים להופיע ברשימה?</b><p>פרסום במחיר קבוע, לפי אזור. בלי עמלה על פניות.</p><span>לפרטים ←</span></a>
+    </div>
+    <div style="margin-top:40px"><LeadForm source="directory" title="לא בטוחים למי לפנות?" sub="השאירו פרטים, ועורך דין מהרשימה שמתאים לאזור שלכם יחזור אליכם." /></div>
+  </div>
+</Base>
+<style>
+.lede{font-size:1.12rem;color:var(--ink-2);max-width:62ch}
+.disc{font-size:.9rem;color:var(--muted);background:var(--sand);border-radius:var(--r-s);padding:12px 16px;max-width:80ch}
+.list{margin-top:24px}
+.law .top{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.law h2{margin:0;font-size:1.3rem}.law .top p{margin:0}
+.av{width:54px;height:54px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;font:700 1.2rem/1 var(--ff-d);flex:none}
+.law>p{color:var(--ink-2)}
+.chips{list-style:none;padding:0;margin:8px 0;display:flex;flex-wrap:wrap;gap:6px}.chips li{font-size:.82rem;background:var(--teal-soft);color:var(--teal-2);padding:3px 10px;border-radius:999px;font-weight:700}
+.meta{display:grid;gap:2px;font-size:.9rem;color:var(--muted)}
+.act{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.join{display:grid;align-content:center;gap:6px;border-style:dashed;background:transparent}.join span{color:var(--teal);font-weight:700}
+</style>

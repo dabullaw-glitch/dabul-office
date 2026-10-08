@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Base title="חיפוש באתר" description="חיפוש במדריכים, במחשבונים ובשיעורי הקורס של בלי חובות." noindex>
+  <div class="wrap" style="padding-block:28px 50px;max-width:860px">
+    <Breadcrumbs items={[{ label: 'חיפוש' }]} />
+    <h1>חיפוש באתר</h1>
+    <form id="sf" role="search" onsubmit="return false"><label for="sq" class="sr">מה מחפשים?</label><input id="sq" type="search" placeholder="למשל: עיקול משכורת" autocomplete="off" /></form>
+    <p id="st" class="muted" aria-live="polite"></p>
+    <ol id="sr" class="sres"></ol>
+  </div>
+</Base>
+<style>#sq{width:100%;font:inherit;font-size:1.15rem;padding:14px 18px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}#sq:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}.sres{list-style:none;padding:0;margin:20px 0}.sres li{padding:16px 0;border-bottom:1px solid var(--line)}.sres a{font-weight:700;font-size:1.1rem}.sres p{margin:6px 0 0;color:var(--ink-2)}.sres mark{background:var(--sun-soft);color:inherit}</style>
+<script is:inline define:vars={{ B }}>
+(async function () {
+  const q = document.getElementById('sq'), st = document.getElementById('sr'), info = document.getElementById('st');
+  let pf; try { pf = await import(B + 'pagefind/pagefind.js'); await pf.options({ baseUrl: B }); } catch (e) { info.textContent = 'החיפוש עדיין לא זמין.'; return; }
+  async function run() {
+    const v = q.value.trim(); if (!v) { st.innerHTML = ''; info.textContent = ''; return; }
+    const r = await pf.debouncedSearch(v, {}, 250); if (!r) return;
+    const items = await Promise.all(r.results.slice(0, 12).map((x) => x.data()));
+    info.textContent = r.results.length ? `נמצאו ${r.results.length} תוצאות` : 'לא נמצאו תוצאות. נסו מילה אחרת.';
+    st.innerHTML = items.map((d) => `<li><a href="${d.url}">${d.meta.title || d.url}</a><p>${d.excerpt}</p></li>`).join('');
+  }
+  q.addEventListener('input', run);
+  const p = new URLSearchParams(location.search).get('q'); if (p) { q.value = p; run(); }
+})();
+</script>

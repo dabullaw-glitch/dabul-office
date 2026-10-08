@@ -1,0 +1,19 @@
+---
+interface Props { v: { id: string; title: string; description: string; src: string; poster: string; w?: number; h?: number; duration?: string; captions?: string } }
+const { v } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const w = v.w || 1080, h = v.h || 1920;
+---
+<figure class="vid" style={`--ar:${w}/${h}`}>
+  <video controls preload="none" playsinline poster={B + v.poster.replace(/^\//, '')} width={w} height={h} aria-label={v.title}>
+    <source src={B + v.src.replace(/^\//, '')} type="video/mp4" />
+    {v.captions && <track kind="captions" srclang="he" label="עברית" src={B + v.captions.replace(/^\//, '')} default />}
+  </video>
+  <figcaption><b>{v.title}</b><span>{v.description}</span></figcaption>
+</figure>
+<style>
+.vid{margin:30px 0;display:grid;grid-template-columns:minmax(0,260px) 1fr;gap:20px;align-items:center;background:var(--sand);border-radius:var(--r);padding:16px}
+.vid video{width:100%;height:auto;aspect-ratio:var(--ar);border-radius:12px;background:#0f1b2d}
+.vid figcaption{display:grid;gap:6px}.vid figcaption span{color:var(--muted);font-size:.95rem}
+@media (max-width:620px){.vid{grid-template-columns:1fr}.vid video{max-width:300px;margin-inline:auto}}
+</style>

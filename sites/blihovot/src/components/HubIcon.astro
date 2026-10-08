@@ -1,0 +1,13 @@
+---
+interface Props { name: string }
+const P: Record<string, string> = {
+  path: '<circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8 18h5a3.5 3.5 0 0 0 0-7h-2a3.5 3.5 0 0 1 0-7h5" stroke-dasharray="2 2.6"/>',
+  file: '<path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
+  hands: '<path d="M3 12l4-4 4 3 2-2a2 2 0 0 1 3 0l5 5"/><path d="M7 8l-4 4 6 6 2-1 2 1 6-5"/><path d="M11 17l2-2"/>',
+  briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>',
+  sun: '<path d="M5 17a7 7 0 0 1 14 0"/><path d="M2 20h20M12 6V3M5.6 9.6 3.5 7.5M18.4 9.6l2.1-2.1"/>',
+  cap: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/>',
+};
+---
+<span class="hi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={P[Astro.props.name] || P.path} /></span>
+<style>.hi{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:var(--teal-soft);color:var(--teal)}.hi svg{width:26px;height:26px}</style>

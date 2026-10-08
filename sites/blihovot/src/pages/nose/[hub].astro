@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import HubIcon from '../../components/HubIcon.astro';
+import StagePath from '../../components/StagePath.astro';
+import { HUBS, SITE } from '../../data/site';
+export function getStaticPaths() { return HUBS.map((h) => ({ params: { hub: h.id }, props: { h } })); }
+const { h } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const list = (await getCollection('guides')).filter((g) => !g.data.draft && g.data.hub === h.id).sort((a, b) => a.data.order - b.data.order);
+const schema = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: h.title, description: h.blurb, inLanguage: 'he-IL',
+  hasPart: list.map((g) => ({ '@type': 'Article', headline: g.data.title, url: new URL(`${B}madrich/${g.id}/`, Astro.site).href })) },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'ראשי', item: new URL(B, Astro.site).href }, { '@type': 'ListItem', position: 2, name: h.title, item: new URL(`${B}nose/${h.id}/`, Astro.site).href }] }];
+---
+<Base title={`${h.title}: כל המדריכים`} description={`${h.blurb} ${list.length} מדריכים בשפה פשוטה, לפי החוק ומקורות רשמיים.`} schema={schema}>
+  <div class="wrap" style="padding-block:28px 10px">
+    <Breadcrumbs items={[{ label: h.title }]} />
+    <header class="hh"><HubIcon name={h.icon} /><div><h1>{h.title}</h1><p class="lede">{h.blurb}</p></div></header>
+    {h.id === 'hadlut-piraon' && <div class="card" style="margin:10px 0 34px;padding:26px"><StagePath /></div>}
+    <div class="grid g2" style="margin-bottom:46px">{list.map((g) => <GuideCard g={g} showHub={false} />)}</div>
+    <LeadForm source={`hub:${h.id}`} />
+  </div>
+</Base>
+<style>.hh{display:flex;gap:18px;align-items:flex-start;margin-bottom:26px}.hh h1{margin:0 0 .2em}.lede{font-size:1.12rem;color:var(--ink-2);max-width:62ch;margin:0}</style>

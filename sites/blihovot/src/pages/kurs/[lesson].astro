@@ -1,0 +1,67 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import Video from '../../components/Video.astro';
+import videos from '../../data/videos.json';
+export async function getStaticPaths() {
+  const L = (await getCollection('lessons')).sort((a, b) => a.data.n - b.data.n);
+  return L.map((l, i) => ({ params: { lesson: l.id }, props: { l, prev: L[i - 1], next: L[i + 1], total: L.length } }));
+}
+const { l, prev, next, total } = Astro.props;
+const { Content } = await render(l);
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const guides = (await getCollection('guides')).filter((g) => l.data.guides.includes(g.id));
+const video = l.data.video ? (videos as any[]).find((v) => v.id === l.data.video) : (videos as any[]).find((v) => v.lesson === l.id);
+---
+<Base title={`${l.data.title} | קורס יוצאים מחובות`} description={l.data.description} type="article">
+  <div class="wrap lp">
+    <Breadcrumbs items={[{ href: 'kurs/', label: 'קורס חינמי' }, { label: `שיעור ${l.data.n}` }]} />
+    <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax={total} aria-valuenow={l.data.n} aria-label="התקדמות בקורס"><span style={`width:${(l.data.n / total) * 100}%`}></span></div>
+    <p class="eyebrow">שיעור {l.data.n} מתוך {total} · {l.data.minutes} דקות</p>
+    <h1>{l.data.title.replace(/^שיעור \d+: /, '')}</h1>
+    {video && <Video v={video} />}
+    <div class="prose"><Content /></div>
+    {l.data.quiz.length > 0 && (
+      <section class="quiz card" aria-labelledby="qz-h">
+        <h2 id="qz-h">בדקו את עצמכם</h2>
+        {l.data.quiz.map((q, qi) => (
+          <fieldset class="qq" data-correct={q.correct}>
+            <legend>{qi + 1}. {q.q}</legend>
+            {q.options.map((o, oi) => <label><input type="radio" name={`q${qi}`} value={oi} /> {o}</label>)}
+            <p class="why" hidden>{q.why}</p>
+          </fieldset>
+        ))}
+      </section>
+    )}
+    {guides.length > 0 && <section style="margin:30px 0"><h2>להעמקה</h2><div class="grid g2">{guides.map((g) => <GuideCard g={g} />)}</div></section>}
+    <nav class="pn" aria-label="ניווט בין שיעורים">
+      {prev ? <a class="btn btn-line" href={`${B}kurs/${prev.id}/`}>→ השיעור הקודם</a> : <span></span>}
+      {next ? <a class="btn btn-teal" href={`${B}kurs/${next.id}/`} data-mark={l.id}>לשיעור הבא ←</a> : <a class="btn btn-sun" href={`${B}kurs/`} data-mark={l.id}>סיימתי את הקורס ✓</a>}
+    </nav>
+    <div style="margin-top:40px"><LeadForm source={`kurs:${l.id}`} /></div>
+  </div>
+</Base>
+<style>
+.lp{padding-block:24px 40px;max-width:820px}
+.prog{height:6px;background:var(--sand);border-radius:99px;overflow:hidden;margin:6px 0 16px}.prog span{display:block;height:100%;background:var(--teal)}
+.quiz{margin:30px 0;padding:24px}.quiz h2{margin-top:0}
+.qq{border:0;padding:0;margin:0 0 18px}.qq legend{font-weight:700;margin-bottom:8px;font-size:1.05rem}
+.qq label{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;border:1.5px solid var(--line);border-radius:var(--r-s);margin-bottom:6px;cursor:pointer;background:var(--card)}
+.qq input{accent-color:var(--teal);width:18px;height:18px;margin-top:3px;flex:none}
+.qq label.ok{border-color:var(--teal);background:var(--teal-soft)}.qq label.no{border-color:var(--rose);background:var(--rose-soft)}
+.why{margin:6px 0 0;font-size:.95rem;color:var(--ink-2)}
+.pn{display:flex;justify-content:space-between;gap:12px;margin-top:20px}
+</style>
+<script is:inline>
+document.querySelectorAll('.qq').forEach(function (fs) {
+  fs.addEventListener('change', function (e) {
+    var c = +fs.dataset.correct, v = +e.target.value;
+    fs.querySelectorAll('label').forEach(function (lb, i) { lb.classList.remove('ok', 'no'); if (i === c) lb.classList.add('ok'); else if (i === v) lb.classList.add('no'); });
+    var w = fs.querySelector('.why'); w.hidden = false; w.textContent = (v === c ? 'נכון! ' : 'לא בדיוק. ') + w.textContent.replace(/^(נכון! |לא בדיוק\. )/, '');
+  });
+});
+document.querySelectorAll('[data-mark]').forEach(function (a) { a.addEventListener('click', function () { try { var d = JSON.parse(localStorage.getItem('bh-kurs') || '{}'); d[a.dataset.mark] = 1; localStorage.setItem('bh-kurs', JSON.stringify(d)); } catch (e) {} }); });
+</script>

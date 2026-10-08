@@ -1,0 +1,33 @@
+---
+// The road of an insolvency case, with real durations: the visual signature of the site.
+import { FACTS } from '../data/site';
+interface Props { compact?: boolean; active?: number }
+const { compact = false, active = -1 } = Astro.props;
+const steps = [
+  { t: 'בקשה', d: 'החייב (או נושה) מגיש בקשה לפתיחת הליכים' },
+  { t: 'צו פתיחת הליכים', d: 'ההליכים נגד החייב מוקפאים, ומתחילים תשלום חודשי ודיווחים' },
+  { t: 'תקופת ביניים', d: `${FACTS.interimMonths.label}: הנאמן בודק את המצב הכלכלי` },
+  { t: 'צו לשיקום כלכלי', d: `תוכנית פירעון, בדרך כלל ${FACTS.rehabYears.label}` },
+  { t: 'הפטר', d: 'פטור מיתרת החובות (למעט חובות מסוימים)' },
+];
+---
+<ol class={`path ${compact ? 'cmp' : ''}`} aria-label="שלבי הליך חדלות פירעון של יחיד">
+  {steps.map((s, i) => <li class={i === active ? 'on' : ''}><span class="dot" aria-hidden="true">{i + 1}</span><b>{s.t}</b>{!compact && <span class="d">{s.d}</span>}</li>)}
+</ol>
+<style>
+.path{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;counter-reset:s}
+.path:before{content:"";position:absolute;top:19px;inset-inline:10%;border-top:3px dotted var(--teal);opacity:.55}
+.path li{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:0 6px;min-width:0}
+.path .dot{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:2px solid var(--teal);color:var(--teal);font-weight:700;position:relative;z-index:1}
+.path li:last-child .dot{background:var(--sun);border-color:var(--sun);color:#1b1405}
+.path li.on .dot{background:var(--teal);color:#fff}
+.path b{font-size:.98rem;line-height:1.3}
+.path .d{font-size:.86rem;color:var(--muted);line-height:1.45}
+@media (max-width:760px){
+  .path{grid-template-columns:1fr;gap:14px}
+  .path:before{top:20px;bottom:20px;inset-inline:auto;inset-inline-start:19px;border-top:0;border-inline-start:3px dotted var(--teal)}
+  .path li{flex-direction:row;align-items:flex-start;text-align:start;flex-wrap:wrap;column-gap:12px}
+  .path li .d{flex-basis:100%;padding-inline-start:52px;margin-top:-8px}
+  .path li b{padding-top:8px}
+}
+</style>

@@ -1,0 +1,92 @@
+---
+import Tool from '../../layouts/Tool.astro';
+import { FACTS } from '../../data/site';
+const T = FACTS.threshold.value;
+---
+<Tool id="eize-halich" title="איזה הליך מתאים לי? בדיקה של דקה: הסדר, איחוד תיקים או חדלות פירעון" h1="איזה הליך מתאים לי?"
+  description="6 שאלות קצרות, ותשובה ברורה: האם להתחיל בהסדר עם הנושים, לבקש איחוד תיקים בהוצאה לפועל, או לבדוק הליך חדלות פירעון. לפי הכללים המעודכנים ל-2026."
+  intro="עונים על 6 שאלות, ומקבלים את המסלול שהכי כדאי לבדוק קודם, עם הסבר למה ומה הצעד הבא. אין צורך בפרטים מזהים."
+  sources={[{ title: 'כל זכות: בקשה לאיחוד תיקים של חייב בהוצאה לפועל', url: FACTS.consolidation.src }, { title: 'כל זכות: צו לפתיחת הליכי חדלות פירעון', url: FACTS.threshold.src }, { title: 'כל זכות: צו לשיקום כלכלי', url: FACTS.rehabYears.src }]}
+  related={['tzaadim-rishonim', 'ma-ze-hadlut-piraon', 'ichud-tikim', 'hesder-im-noshim']}
+  faq={[{ q: 'האם התשובה מחייבת?', a: 'לא. זו הכוונה ראשונית לפי כללים כלליים. בכל מקרה יש פרטים שיכולים לשנות את ההמלצה, כמו נכסים, ערבים או עסק.' }, { q: 'האם הפרטים שאני מזין נשמרים?', a: 'לא. החישוב נעשה בדפדפן שלכם, ושום תשובה לא נשלחת לשום מקום.' }]}>
+  <form id="qz" onsubmit="return false">
+    <div class="q"><b>1. מה סך כל החובות בערך?</b><div class="opts">
+      <label><input type="radio" name="debt" value="15000" /> עד 20,000 ₪</label>
+      <label><input type="radio" name="debt" value="60000" /> 20,000 עד 100,000 ₪</label>
+      <label><input type="radio" name="debt" value="140000" /> 100,000 עד 175,000 ₪</label>
+      <label><input type="radio" name="debt" value="350000" /> מעל 175,000 ₪</label>
+    </div></div>
+    <div class="q"><b>2. כמה נושים יש לכם?</b><div class="opts">
+      <label><input type="radio" name="cred" value="1" /> אחד או שניים</label>
+      <label><input type="radio" name="cred" value="3" /> 3 עד 5</label>
+      <label><input type="radio" name="cred" value="6" /> יותר מ-5</label>
+    </div></div>
+    <div class="q"><b>3. יש תיקים פתוחים בהוצאה לפועל?</b><div class="opts">
+      <label><input type="radio" name="files" value="0" /> לא</label>
+      <label><input type="radio" name="files" value="1" /> תיק אחד</label>
+      <label><input type="radio" name="files" value="2" /> 2 תיקים או יותר</label>
+    </div></div>
+    <div class="q"><b>4. יש לכם הכנסה קבועה?</b><div class="opts">
+      <label><input type="radio" name="inc" value="yes" /> כן</label>
+      <label><input type="radio" name="inc" value="var" /> משתנה</label>
+      <label><input type="radio" name="inc" value="no" /> כמעט אין</label>
+    </div></div>
+    <div class="q"><label for="pay"><b>5. כמה תוכלו לשלם בכל חודש, באמת, על החובות? (₪)</b></label><div class="num"><input id="pay" inputmode="numeric" placeholder="למשל 1,000" autocomplete="off" /></div></div>
+    <div class="q"><b>6. אחד מאלה נכון לגביכם? (אפשר לבחור כמה)</b><div class="opts">
+      <label><input type="checkbox" name="flag" value="home" /> יש דירה בבעלותי</label>
+      <label><input type="checkbox" name="flag" value="biz" /> עצמאי/ת או בעל/ת חברה</label>
+      <label><input type="checkbox" name="flag" value="guar" /> יש ערבים לחובות</label>
+      <label><input type="checkbox" name="flag" value="alim" /> יש חוב מזונות</label>
+    </div></div>
+    <button class="btn btn-sun" type="submit">מה מתאים לי?</button>
+  </form>
+  <div class="res" id="out" hidden aria-live="polite" tabindex="-1"></div>
+  <div slot="explain">
+    <h2>איך הבדיקה עובדת?</h2>
+    <p>הבדיקה משווה בין הסכום שאתם יכולים לשלם כל חודש לבין גובה החובות, ובודקת אם אפשר לסגור את החוב בתקופה סבירה:</p>
+    <ul>
+      <li><strong>הסדר חוב</strong> מתאים כשיש מעט נושים ויכולת לסגור את החוב בכמה שנים.</li>
+      <li><strong>איחוד תיקים</strong> מתאים כשיש 2 תיקים או יותר בהוצאה לפועל, ואפשר לסגור את כל החוב בתקופה שהחוק קובע (2, 3 או 4 שנים לפי הסכום, ועד 3 שנים נוספות).</li>
+      <li><strong>חדלות פירעון</strong> מתאימה כשגם בפריסה ארוכה אי אפשר לסגור את החובות. משלמים לפי היכולת, ובסוף אפשר לקבל הפטר.</li>
+    </ul>
+  </div>
+</Tool>
+<script define:vars={{ T, tiers: FACTS.consolidation.tiers.map((t) => ({ upTo: t.upTo === Infinity ? 1e15 : t.upTo, years: t.years })), extra: FACTS.consolidation.extraYears }}>
+const f = document.getElementById('qz'), out = document.getElementById('out'), payEl = document.getElementById('pay');
+const nf = new Intl.NumberFormat('he-IL');
+payEl.addEventListener('input', () => { const v = payEl.value.replace(/[^\d]/g, ''); payEl.value = v ? nf.format(+v) : ''; });
+const val = (n) => (f.querySelector(`input[name=${n}]:checked`) || {}).value;
+f.addEventListener('submit', () => {
+  const debt = +val('debt'), cred = +val('cred'), files = +val('files'), inc = val('inc'), pay = +payEl.value.replace(/[^\d]/g, '') || 0;
+  const flags = [...f.querySelectorAll('input[name=flag]:checked')].map((x) => x.value);
+  out.hidden = false;
+  if (!debt || !cred || isNaN(files) || !inc) { out.className = 'res bad'; out.textContent = 'ענו על שאלות 1 עד 4 כדי לקבל תשובה.'; out.focus(); return; }
+  const months = pay > 0 ? Math.ceil(debt / pay) : Infinity;
+  const tier = tiers.find((t) => debt <= t.upTo), maxC = tier.years * 12, maxCx = (tier.years + extra) * 12;
+  let title, why, next, cls = 'good';
+  if (inc === 'no' || months > maxCx || pay === 0) {
+    title = 'כדאי לבדוק הליך חדלות פירעון';
+    why = `לפי הנתונים, ${pay ? `בתשלום של ${nf.format(pay)} ₪ בחודש סגירת החובות תיקח כ-${Math.round(months / 12)} שנים או יותר` : 'אין כרגע יכולת תשלום חודשית'}. בהליך חדלות פירעון משלמים לפי היכולת, ההליכים נגדכם מוקפאים, ובסוף אפשר לקבל הפטר מהיתרה. ${debt > T ? 'סך החובות שציינתם גבוה מהסף, ולכן הבקשה מוגשת לממונה ובית המשפט מחליט.' : 'סך החובות שציינתם עד הסף, ולכן ההליך מתנהל בלשכת ההוצאה לפועל.'}`;
+    next = '<a class="btn btn-teal" href="../../madrich/ma-ze-hadlut-piraon/">המדריך לחדלות פירעון</a><a class="btn btn-line" href="../saf/">לאן מגישים?</a>';
+    cls = 'warn';
+  } else if (files >= 2 && months <= maxCx) {
+    title = 'כדאי לבדוק איחוד תיקים בהוצאה לפועל';
+    why = `יש לכם כמה תיקים, ובתשלום של ${nf.format(pay)} ₪ החוב ייסגר בכ-${months} חודשים. ${months <= maxC ? `זה בתוך התקופה של ${tier.years} שנים שהחוק קובע לחוב בגובה הזה.` : `זה מעבר ל-${tier.years} השנים הרגילות, ולכן תצטרכו הארכה (עד ${extra} שנים נוספות), שאינה מובטחת.`} איחוד ירכז הכול בתיק אחד ותשלום אחד.`;
+    next = '<a class="btn btn-teal" href="../../madrich/ichud-tikim/">המדריך לאיחוד תיקים</a><a class="btn btn-line" href="../ichud-tikim/">מחשבון איחוד תיקים</a>';
+    if (months > maxC) cls = 'warn';
+  } else {
+    title = 'כדאי להתחיל בהסדר חוב עם הנושים';
+    why = `${cred <= 2 ? 'יש לכם מעט נושים' : 'מספר הנושים מאפשר עדיין משא ומתן'}, ובתשלום של ${nf.format(pay)} ₪ החוב ייסגר בכ-${months} חודשים. נושים מעדיפים לרוב הסדר שנשמר על פני הליכים ארוכים. אם ההסדר לא מצליח, אפשר לבדוק מסלולים אחרים.`;
+    next = '<a class="btn btn-teal" href="../../madrich/hesder-im-noshim/">איך מגיעים להסדר</a><a class="btn btn-line" href="../tashlumim/">מחשבון סגירת חוב</a>';
+  }
+  const notes = [];
+  if (flags.includes('home')) notes.push('יש לכם דירה: בהליך חדלות פירעון נכסים נבחנים לטובת הנושים. חשוב לבדוק את ההשלכות לפני שמגישים.');
+  if (flags.includes('biz')) notes.push('עצמאים ובעלי חברות: יש לבדוק חובות לרשויות וערבויות אישיות. <a href="../../madrich/atzmai/">המדריך לעצמאים</a>.');
+  if (flags.includes('guar')) notes.push('יש ערבים: ככלל, הפטר של החייב לא משחרר אוטומטית את הערבים. <a href="../../madrich/arvut-ishit/">מה קורה לערבים</a>.');
+  if (flags.includes('alim')) notes.push('חוב מזונות: לא נכנס לאיחוד תיקים, וככלל גם לא נמחק בהפטר.');
+  out.className = 'res ' + cls;
+  out.innerHTML = `<h2>${title}</h2><p>${why}</p>${notes.length ? '<p><b>שימו לב:</b></p><ul>' + notes.map((n) => '<li>' + n + '</li>').join('') + '</ul>' : ''}<div class="next">${next}</div><p class="note" style="margin-top:12px">רוצים שעורך דין יבדוק את המקרה שלכם? אפשר <a href="#lead">להשאיר פרטים</a> בהמשך העמוד.</p>`;
+  out.focus();
+  window.dataLayer && window.dataLayer.push({ event: 'quiz_result', result: title });
+});
+</script>

@@ -1,0 +1,42 @@
+---
+// a short contact form (lawyers who want to join, advertisers, privacy requests, general contact). Goes to the same endpoint as leads, with a "kind".
+import { SITE, CITIES } from '../data/site';
+interface Props { kind: string; title: string; fields?: string[]; msgLabel?: string }
+const { kind, title, fields = ['name', 'phone', 'email', 'msg'], msgLabel = 'הודעה' } = Astro.props;
+const id = 'cf-' + kind;
+---
+<section class="card cform" aria-labelledby={`${id}-h`}>
+  <h2 id={`${id}-h`}>{title}</h2>
+  <form class="cf" data-endpoint={SITE.leadEndpoint} data-kind={kind} novalidate>
+    <div class="row">
+      {fields.includes('name') && <div class="field"><label for={`${id}-n`}>שם</label><input id={`${id}-n`} name="name" autocomplete="name" required maxlength="80" /></div>}
+      {fields.includes('phone') && <div class="field"><label for={`${id}-p`}>טלפון</label><input id={`${id}-p`} name="phone" type="tel" dir="ltr" autocomplete="tel" maxlength="20" /></div>}
+      {fields.includes('email') && <div class="field"><label for={`${id}-e`}>אימייל</label><input id={`${id}-e`} name="email" type="email" dir="ltr" autocomplete="email" maxlength="120" /></div>}
+      {fields.includes('city') && <div class="field"><label for={`${id}-c`}>אזור</label><select id={`${id}-c`} name="city"><option value="">בחירה</option>{CITIES.map((c) => <option>{c}</option>)}</select></div>}
+    </div>
+    {fields.includes('msg') && <div class="field"><label for={`${id}-m`}>{msgLabel}</label><textarea id={`${id}-m`} name="msg" rows="4" maxlength="2000"></textarea></div>}
+    <div class="hp" aria-hidden="true"><label>אתר<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+    <button class="btn btn-teal" type="submit">שליחה</button>
+    <div class="msg" role="status" aria-live="polite"></div>
+  </form>
+</section>
+<style>
+.cform{margin-top:34px;max-width:760px;padding:26px}.cform h2{margin-top:0;font-size:1.45rem}
+.cf .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px}
+.hp{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);opacity:0;pointer-events:none}
+.msg:empty{display:none}.msg{margin-top:12px}
+</style>
+<script>
+document.querySelectorAll<HTMLFormElement>('form.cf').forEach((f) => f.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = f.querySelector('.msg') as HTMLElement, btn = f.querySelector('button') as HTMLButtonElement;
+  const d = Object.fromEntries(new FormData(f).entries()) as Record<string, string>;
+  if (!d.name || (!d.phone && !d.email)) { msg.innerHTML = '<div class="err">צריך שם, ולפחות טלפון או אימייל.</div>'; return; }
+  btn.disabled = true; btn.textContent = 'שולח...';
+  try {
+    const r = await fetch(f.dataset.endpoint as string, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...d, type: f.dataset.kind, page: location.pathname }) });
+    if (!r.ok) throw new Error();
+    f.innerHTML = '<div class="ok"><b>תודה, ההודעה התקבלה.</b> נחזור אליכם בהקדם.</div>';
+  } catch { btn.disabled = false; btn.textContent = 'שליחה'; msg.innerHTML = '<div class="err">משהו לא עבד. אפשר לנסות שוב בעוד רגע.</div>'; }
+}));
+</script>

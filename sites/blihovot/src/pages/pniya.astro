@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import LeadForm from '../components/LeadForm.astro';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Base title="השארת פרטים: עורך דין לחובות וחדלות פירעון יחזור אליכם" description="השאירו פרטים, ועורך דין מרשימת האתר שעוסק בחדלות פירעון, הסדרי חוב והוצאה לפועל יחזור אליכם לשיחה ראשונה, בלי התחייבות.">
+  <div class="wrap pn">
+    <Breadcrumbs items={[{ label: 'השארת פרטים' }]} />
+    <div class="two">
+      <div>
+        <h1>רוצים שמישהו יסתכל על המקרה שלכם?</h1>
+        <p class="lede">משאירים פרטים בטופס, ועורך דין מרשימת האתר, שעוסק בחובות, בהוצאה לפועל ובחדלות פירעון, חוזר אליכם לשיחה ראשונה.</p>
+        <h2>מה קורה אחרי השליחה?</h2>
+        <ol>
+          <li>הפרטים מועברים לעורך דין מהרשימה, לפי האזור שבחרתם.</li>
+          <li>עורך הדין חוזר אליכם, שומע את המצב ומסביר מה האפשרויות.</li>
+          <li>אתם מחליטים אם ואיך להמשיך. השיחה הראשונה לא מחייבת אתכם בכלום.</li>
+        </ol>
+        <p class="note">עוד לא בטוחים? אפשר להתחיל <a href={`${B}kli/eize-halich/`}>בבדיקה של דקה: איזה הליך מתאים לי</a>, או לקרוא את <a href={`${B}madrich/tzaadim-rishonim/`}>7 הצעדים הראשונים ליציאה מחובות</a>.</p>
+      </div>
+      <LeadForm source="pniya" title="השארת פרטים" sub="כל השדות קצרים. לוקח פחות מדקה." />
+    </div>
+  </div>
+</Base>
+<style>.pn{padding-block:28px 50px}.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:44px;align-items:start}@media (max-width:900px){.two{grid-template-columns:1fr}}.lede{font-size:1.15rem;color:var(--ink-2)}ol li{margin-bottom:.4em}</style>

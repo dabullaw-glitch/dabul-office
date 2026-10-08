@@ -1,0 +1,13 @@
+---
+import { HUBS } from '../data/site';
+interface Props { g: any; showHub?: boolean }
+const { g, showHub = true } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const hub = HUBS.find((h) => h.id === g.data.hub);
+---
+<a class="card gcard" href={`${B}madrich/${g.id}/`}>
+  {showHub && hub && <span class="tag">{hub.short}</span>}
+  <h3>{g.data.title}</h3>
+  <p>{g.data.description}</p>
+</a>
+<style>.gcard h3{margin-top:10px}</style>

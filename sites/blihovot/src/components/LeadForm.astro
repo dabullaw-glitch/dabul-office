@@ -1,0 +1,69 @@
+---
+import { SITE, CITIES } from '../data/site';
+interface Props { title?: string; sub?: string; id?: string; source?: string }
+const { title = 'רוצים שעורך דין יחזור אליכם?', sub = 'משאירים פרטים, ועורך דין מהרשימה שלנו יחזור אליכם לשיחה ראשונה. בלי התחייבות.', id = 'lead', source = '' } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<section class="lead card" id={id} aria-labelledby={`${id}-h`}>
+  <h2 id={`${id}-h`}>{title}</h2>
+  <p class="muted">{sub}</p>
+  <form class="lf" data-endpoint={SITE.leadEndpoint} data-source={source} novalidate>
+    <div class="row">
+      <div class="field"><label for={`${id}-name`}>שם</label><input id={`${id}-name`} name="name" autocomplete="name" required maxlength="60" /></div>
+      <div class="field"><label for={`${id}-phone`}>טלפון</label><input id={`${id}-phone`} name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20" dir="ltr" /></div>
+    </div>
+    <div class="row">
+      <div class="field"><label for={`${id}-amount`}>סכום החובות בערך</label>
+        <select id={`${id}-amount`} name="amount" required>
+          <option value="">בחירה</option><option>עד 50,000 ₪</option><option>50,000 עד 175,000 ₪</option><option>175,000 עד 500,000 ₪</option><option>מעל 500,000 ₪</option><option>לא יודע/ת</option>
+        </select></div>
+      <div class="field"><label for={`${id}-city`}>אזור מגורים</label>
+        <select id={`${id}-city`} name="city" required><option value="">בחירה</option>{CITIES.map((c) => <option>{c}</option>)}</select></div>
+    </div>
+    <div class="field"><label for={`${id}-kind`}>מה המצב היום?</label>
+      <select id={`${id}-kind`} name="kind">
+        <option value="">בחירה (לא חובה)</option><option>יש תיקים בהוצאה לפועל</option><option>חובות לבנקים ולחברות אשראי</option><option>עצמאי/ת או בעל/ת עסק</option><option>כבר בהליך חדלות פירעון</option><option>אחר</option>
+      </select></div>
+    <div class="hp" aria-hidden="true"><label>אתר<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+    <label class="check"><input type="checkbox" name="consent" required /> <span>אני מסכים/ה שהפרטים יועברו לעורך דין מרשימת האתר כדי שיחזור אליי, לפי <a href={`${B}mediniyut-pratiyut/`}>מדיניות הפרטיות</a>.</span></label>
+    <button class="btn btn-sun" type="submit">שליחה</button>
+    <p class="note" style="margin-top:10px">השליחה אינה יוצרת יחסי עורך דין ולקוח. המידע באתר אינו ייעוץ משפטי.</p>
+    <div class="msg" role="status" aria-live="polite"></div>
+  </form>
+</section>
+<style>
+.lead{padding:28px;border-color:color-mix(in srgb,var(--teal) 35%,var(--line));background:linear-gradient(180deg,var(--card),var(--teal-soft))}
+.lead h2{margin-top:0;font-size:1.6rem}
+.lf .row{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media (max-width:560px){.lf .row{grid-template-columns:1fr}}
+.hp{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);opacity:0;pointer-events:none}
+.msg:empty{display:none}.msg{margin-top:12px}
+</style>
+<script>
+document.querySelectorAll<HTMLFormElement>('form.lf').forEach((f) => {
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = f.querySelector('.msg') as HTMLElement; const btn = f.querySelector('button[type=submit]') as HTMLButtonElement;
+    const d = Object.fromEntries(new FormData(f).entries()) as Record<string, string>;
+    const phone = (d.phone || '').replace(/[^\d+]/g, '');
+    const bad: string[] = [];
+    if (!d.name || d.name.trim().length < 2) bad.push('שם');
+    if (!/^(\+?972|0)5\d{8}$|^(\+?972|0)[2-9]\d{7}$/.test(phone)) bad.push('טלפון תקין');
+    if (!d.amount) bad.push('סכום החובות');
+    if (!d.city) bad.push('אזור מגורים');
+    if (!d.consent) bad.push('אישור העברת הפרטים');
+    if (bad.length) { msg.innerHTML = '<div class="err">חסר: ' + bad.join(', ') + '.</div>'; return; }
+    btn.disabled = true; btn.textContent = 'שולח...';
+    const q = new URLSearchParams(location.search);
+    try {
+      const r = await fetch(f.dataset.endpoint as string, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...d, phone, page: location.pathname, source: f.dataset.source || '', utm: ['utm_source', 'utm_medium', 'utm_campaign'].map((k) => q.get(k) || '').join('|'), ref: document.referrer.slice(0, 200) }) });
+      if (!r.ok) throw new Error(String(r.status));
+      f.innerHTML = '<div class="ok"><b>תודה, הפרטים התקבלו.</b><br>עורך דין מהרשימה יחזור אליכם בהקדם.</div>';
+      (window as any).dataLayer?.push({ event: 'lead_form_submit' });
+    } catch (err) {
+      btn.disabled = false; btn.textContent = 'שליחה';
+      msg.innerHTML = '<div class="err">משהו לא עבד. אפשר לנסות שוב בעוד רגע.</div>';
+    }
+  });
+});
+</script>

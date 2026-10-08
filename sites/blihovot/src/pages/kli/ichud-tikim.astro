@@ -1,0 +1,40 @@
+---
+import Tool from '../../layouts/Tool.astro';
+import { FACTS } from '../../data/site';
+---
+<Tool id="ichud-tikim" title="מחשבון איחוד תיקים בהוצאה לפועל: האם התשלום מספיק?" h1="מחשבון איחוד תיקים"
+  description="בודק אם תשלום חודשי מסוים מספיק כדי לקבל צו איחוד תיקים בהוצאה לפועל, לפי תקופות הפירעון שבחוק: 2, 3 או 4 שנים לפי גובה החוב, ועד 3 שנים נוספות."
+  intro="רשם ההוצאה לפועל נותן צו איחוד תיקים רק אם החוב ייפרע בתקופה שהחוק קובע לפי גובה החוב. הזינו את סך החוב ואת התשלום החודשי שתוכלו לעמוד בו, ונראה אם זה עובד."
+  sources={[{ title: 'כל זכות: בקשה לאיחוד תיקים של חייב בהוצאה לפועל', url: FACTS.consolidation.src }]}
+  related={['ichud-tikim', 'chakirat-yecholet', 'ma-ze-hadlut-piraon']}
+  faq={[{ q: 'המחשבון כולל ריבית?', a: 'המחשבון בודק את הקרן מול התקופה המותרת, כמו שהחוק מנסח את התנאי. בפועל יש ריבית והצמדה על חובות בהוצאה לפועל, ולכן כדאי להשאיר מרווח ולהציע תשלום מעט גבוה מהמינימום.' }, { q: 'מה אם התשלום לא מספיק גם עם הארכה?', a: 'אם אי אפשר לסגור את החוב גם בתקופה המורחבת, כדאי לבדוק הליך חדלות פירעון, שבו משלמים לפי היכולת ובסוף אפשר לקבל הפטר מהיתרה.' }]}>
+  <form id="ich" onsubmit="return false">
+    <div class="row">
+      <label for="d">סך החוב בכל התיקים (₪)<span class="num"><input id="d" inputmode="numeric" placeholder="למשל 60,000" autocomplete="off" /></span></label>
+      <label for="p">תשלום חודשי שאתם יכולים לעמוד בו (₪)<span class="num"><input id="p" inputmode="numeric" placeholder="למשל 1,500" autocomplete="off" /></span></label>
+    </div>
+    <button class="btn btn-teal" type="submit" style="margin-top:16px">חישוב</button>
+  </form>
+  <div class="res" id="out" hidden aria-live="polite"></div>
+  <div slot="explain">
+    <h2>מה הכללים?</h2>
+    <table><thead><tr><th>סך החוב</th><th>תקופת פירעון מקסימלית</th></tr></thead><tbody><tr><td>עד 20,000 ₪</td><td>2 שנים (24 חודשים)</td></tr><tr><td>20,000 עד 100,000 ₪</td><td>3 שנים (36 חודשים)</td></tr><tr><td>מעל 100,000 ₪</td><td>4 שנים (48 חודשים)</td></tr></tbody></table>
+    <p>אם החייב לא יכול לעמוד בתקופות האלה, הרשם רשאי להאריך אותן בעד 3 שנים נוספות. תיקי מזונות ותיקים שאינם כספיים לא נכנסים לאיחוד.</p>
+  </div>
+</Tool>
+<script define:vars={{ tiers: FACTS.consolidation.tiers.map((t) => ({ upTo: t.upTo === Infinity ? 1e15 : t.upTo, years: t.years })), extra: FACTS.consolidation.extraYears }}>
+const f = document.getElementById('ich'), out = document.getElementById('out'), d = document.getElementById('d'), p = document.getElementById('p');
+const nf = new Intl.NumberFormat('he-IL');
+[d, p].forEach((el) => el.addEventListener('input', () => { const v = el.value.replace(/[^\d]/g, ''); el.value = v ? nf.format(+v) : ''; }));
+f.addEventListener('submit', () => {
+  const debt = +d.value.replace(/[^\d]/g, ''), pay = +p.value.replace(/[^\d]/g, '');
+  out.hidden = false;
+  if (!debt || !pay) { out.className = 'res bad'; out.textContent = 'הזינו גם את סך החוב וגם את התשלום החודשי.'; return; }
+  const yrs = tiers.find((t) => debt <= t.upTo).years, maxM = yrs * 12, extM = (yrs + extra) * 12;
+  const months = Math.ceil(debt / pay), minPay = Math.ceil(debt / maxM), minExt = Math.ceil(debt / extM);
+  const kv = `<div class="kv"><div><small>חודשים לסגירת החוב</small><b>${nf.format(months)}</b></div><div><small>תקופה מותרת לפי החוק</small><b>${maxM} חודשים</b></div><div><small>תשלום מינימלי בתקופה הרגילה</small><b>${nf.format(minPay)} ₪</b></div><div><small>מינימום עם הארכה מלאה</small><b>${nf.format(minExt)} ₪</b></div></div>`;
+  if (months <= maxM) out.className = 'res good', out.innerHTML = `<h2>התשלום עומד בתנאי</h2><p>בתשלום של ${nf.format(pay)} ₪ החוב ייסגר בתוך כ-${months} חודשים, בתוך התקופה של ${yrs} שנים שהחוק קובע לחוב בגובה הזה.</p>${kv}<div class="next"><a class="btn btn-teal" href="../../madrich/ichud-tikim/">איך מגישים בקשה לאיחוד</a></div>`;
+  else if (months <= extM) out.className = 'res warn', out.innerHTML = `<h2>אפשרי, אבל רק עם הארכה</h2><p>בתשלום הזה החוב ייסגר בכ-${months} חודשים, יותר מ-${maxM} החודשים הרגילים. הרשם רשאי להאריך את התקופה בעד ${extra} שנים, אבל זה לא מובטח. תשלום של ${nf.format(minPay)} ₪ לפחות עומד בתקופה הרגילה.</p>${kv}`;
+  else out.className = 'res bad', out.innerHTML = `<h2>התשלום לא מספיק לאיחוד תיקים</h2><p>גם עם הארכה מלאה, החוב לא ייסגר בתשלום הזה (צריך לפחות ${nf.format(minExt)} ₪ בחודש). במצב כזה כדאי לבדוק הליך חדלות פירעון, שבו משלמים לפי היכולת ובסופו אפשר לקבל הפטר.</p>${kv}<div class="next"><a class="btn btn-teal" href="../../madrich/ma-ze-hadlut-piraon/">מה זה חדלות פירעון</a><a class="btn btn-line" href="../eize-halich/">איזה הליך מתאים לי</a></div>`;
+});
+</script>
