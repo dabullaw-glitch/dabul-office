@@ -127,18 +127,18 @@ const A11_HTML = () => `<section class="dbl-ab h1 u2 u3 a11"><div class="sec"><d
 const A11_CSS = `
 .dbl-ab.a11 .hd .sub{font-size:20px;color:#a88a4c;margin-top:10px;letter-spacing:.02em}
 .dbl-ab.a11 .w{align-items:stretch!important;grid-template-columns:minmax(0,1fr) 460px!important;gap:70px!important}
-.dbl-ab.a11 .tx{display:flex;flex-direction:column;justify-content:center}
-.dbl-ab.a11 .tx .acts{margin-top:14px}
+.dbl-ab.a11 .tx{display:flex;flex-direction:column;justify-content:space-between}.dbl-ab.a11 .tx>*{margin-top:0!important;margin-bottom:0!important}.dbl-ab.a11 .tx .lead{margin-top:-6px!important}
+
 .dbl-ab.a11 .phw{display:flex;flex-direction:column;padding:0!important}
 .dbl-ab.a11 .phw:before,.dbl-ab.a11 .phw:after,.dbl-ab.a11 .ph:after{display:none!important}
 .dbl-ab.a11 .ph{flex:1 1 auto;aspect-ratio:auto!important;min-height:500px;border-radius:16px 16px 0 0!important;box-shadow:none!important}
 .dbl-ab.a11 .ph img{object-position:50% 12%!important}
 .dbl-ab.a11 .stats{margin:0!important}
 .dbl-ab.a11 .rows3{max-width:1240px;margin:56px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.dbl-ab.a11 .rows3 .row{flex-direction:column;gap:14px;padding:26px 26px 24px}
+.dbl-ab.a11 .rows3 .row{flex-direction:column;gap:16px;padding:26px 26px 24px}.dbl-ab.a11 .rows3 .row i{flex:0 0 auto!important;width:50px;height:50px}
 .dbl-ab.a11 .rows3 .row b{font-size:20px;margin-bottom:8px}.dbl-ab.a11 .rows3 .row span{font-size:16px;line-height:1.75}
 @media (max-width:767px){.dbl-ab.a11 .hd .sub{font-size:17px}.dbl-ab.a11 .tx{order:3}.dbl-ab.a11 .ph{min-height:0;height:470px;border-radius:0!important}.dbl-ab.a11 .stats{border-radius:0 0 26px 26px!important}
-.dbl-ab.a11 .rows3{order:4;grid-template-columns:1fr;margin:26px 20px 0;gap:14px}.dbl-ab.a11 .rows3 .row{flex-direction:row;padding:18px}.dbl-ab.a11 .tx .acts{order:9}}`;
+.dbl-ab.a11 .rows3{order:4;grid-template-columns:1fr;margin:26px 20px 0;gap:14px}.dbl-ab.a11 .rows3 .row{flex-direction:row;padding:18px}.dbl-ab.a11 .rows3 .row i{width:46px;height:46px}.dbl-ab.a11 .tx{gap:18px}.dbl-ab.a11 .tx .acts{order:9}}`;
 /* three frames for the photo card (photo + numbers move as one piece) */
 const AV = {
   aA: `.dbl-ab.a11 .phw{border-radius:18px;box-shadow:0 0 0 1px #d6b25e,0 26px 54px rgba(20,20,40,.18)}.dbl-ab.a11 .ph{border-radius:17px 17px 0 0!important}.dbl-ab.a11 .stats{border-radius:0 0 17px 17px!important}`,
