@@ -1,0 +1,12 @@
+{
+ "phone": {
+  "about": true,
+  "old": false,
+  "bg": "url(\"https://dabullaw.co.il/wp-content/uploads/2026/10/netanya-city-night-mobile-bright.webp\")"
+ },
+ "desktop": {
+  "about": true,
+  "old": false,
+  "bg": "none"
+ }
+}
