@@ -29,6 +29,7 @@ const lessons = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    course: z.enum(['yotzim', 'kalkala', 'taktziv', 'hesder']).default('yotzim'),
     n: z.number(),
     minutes: z.number(),
     video: z.string().optional(),
