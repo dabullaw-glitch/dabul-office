@@ -2,7 +2,7 @@
    what goes out, when, on which channel, and who publishes it (Grok Bot or the office system).
    Grok Bot reads the same calendar from the public page (settings/pub.key). Here you can see it, and cancel or restore an item. */
 (function (s) {
-  if (!s || s.PUB) return; s.PUB = '20261007b';
+  if (!s || s.PUB) return; s.PUB = '20261008a';
   const n = s.esc;
   const bump = () => (s.bump ? s.bump() : s.render());
   ['pub', 'settings'].forEach(c => { s.S.data[c] = s.S.data[c] || {}; });
@@ -47,18 +47,58 @@
     }).join('');
     const link = cfg.key ? `https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/pubcal?k=${encodeURIComponent(cfg.key)}` : '';
     const ig = cfg.ig || {};
-    const conn = `<div class="card card-b" style="margin-bottom:12px"><b>חיבור אינסטגרם</b> ${ig.ok ? '<span class="pill p-ok">מחובר</span>' : '<span class="pill p-warn">לא מחובר</span>'}
-      <p class="muted small" style="margin:6px 0">${ig.ok ? 'המערכת מפרסמת באינסטגרם לפי הלוח.' : 'מדביקים כאן את קוד הגישה של אינסטגרם (לפי ההוראות שקיבלת בצ׳אט). הקוד נשמר מוצפן ולא מוצג שוב.'}</p>
-      ${ig.ok ? '' : `<div style="display:flex;gap:8px;flex-wrap:wrap"><input id="pb_ig" type="password" dir="ltr" placeholder="IGAA..." style="flex:1;min-width:200px"><button class="btn sm" data-a="pb-ig">שמירה</button></div>`}</div>`;
+    const conn = igCard(ig);
     return conn + `<div class="card card-b"><p class="muted" style="margin-top:0">לוח אחד לכל מה שמתפרסם: מה, מתי, באיזה ערוץ ומי מפרסם. <b>גרוק בוט</b> מפרסם בפייסבוק, ביוטיוב, בלינקדאין, ב-X ובגוגל עסקי, ו<b>המערכת</b> מפרסמת באינסטגרם, בטיקטוק ובקבוצת הוואטסאפ. גרוק קורא את הלוח הזה כל יום, כך ששניהם מסונכרנים. פריט שמבטלים כאן לא יוצא.</p>
       <div class="pb-legend"><span><span class="pb-own" style="background:#1d6fd6">גרוק בוט</span></span><span><span class="pb-own" style="background:#a8873f">המערכת</span></span>${link ? `<a href="${n(link)}" target="_blank" rel="noopener">הלוח כפי שגרוק רואה אותו</a>` : ''}
       <a href="#" data-a="pb-past">${showPast ? 'להסתיר פריטים שעברו' : 'להציג גם פריטים שעברו'}</a></div>
       ${list || s.empty('הלוח ריק', 'פריטים חדשים נכנסים לכאן כל שבוע.')}</div>`;
   }
+  // Instagram connection: "התחבר עם פייסבוק" (edge function fbauth), with the manual code field kept as a fallback
+  let FBS = null, fbBusy = false;
+  async function fbCall(action, extra) {
+    const { data, error } = await window.SB.functions.invoke('fbauth', { body: Object.assign({ action }, extra || {}) });
+    if (error) { let m = ''; try { m = (await error.context.json()).error; } catch { /* no body */ } throw new Error(m || 'הפעולה נכשלה'); }
+    return data;
+  }
+  function fbStatus() { if (FBS || fbBusy || !window.SB) return; fbBusy = true; fbCall('status').then(d => { FBS = d; }).catch(e => { FBS = { error: e.message }; }).finally(() => { fbBusy = false; bump(); }); }
+  function igCard(ig) {
+    const head = `<b>חיבור אינסטגרם</b> ${ig.ok ? '<span class="pill p-ok">מחובר</span>' : '<span class="pill p-warn">לא מחובר</span>'}`;
+    const manual = `<details style="margin-top:10px"><summary class="small muted" style="cursor:pointer">יש לך כבר קוד גישה? הדבקה ידנית</summary><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><input id="pb_ig" type="password" dir="ltr" placeholder="EAA... / IGAA..." style="flex:1;min-width:200px"><button class="btn sm" data-a="pb-ig">שמירה</button></div></details>`;
+    if (ig.ok) return `<div class="card card-b" style="margin-bottom:12px">${head}<p class="muted small" style="margin:6px 0">המערכת מפרסמת באינסטגרם לפי הלוח${ig.username ? ` (<span dir="ltr">@${n(ig.username)}</span>${ig.pageName ? `, דרך העמוד "${n(ig.pageName)}"` : ''})` : ''}.</p><button class="btn sm ghost" data-a="pb-fb-go">חיבור מחדש עם פייסבוק</button></div>`;
+    if (!window.SB) return `<div class="card card-b" style="margin-bottom:12px">${head}<p class="muted small">החיבור זמין רק במערכת המחוברת.</p></div>`;
+    fbStatus();
+    const st = FBS;
+    let body;
+    if (!st) body = '<p class="muted small"><span class="spin"></span> בודק...</p>';
+    else if (st.error) body = `<p class="muted small">לא הצלחתי לבדוק את מצב החיבור: ${n(st.error)}</p>`;
+    else if (!st.hasApp) body = `<p class="muted small" style="margin:6px 0"><b>שלב חד פעמי:</b> פרטי אפליקציית הפייסבוק של המשרד ("Dabul law"). מוצאים אותם ב-developers.facebook.com > האפליקציה > App settings > Basic. הסוד נשמר בשרת ולא מוצג שוב.</p>
+      <div style="display:grid;gap:8px;max-width:520px">
+        <input id="pb_fb_id" dir="ltr" inputmode="numeric" placeholder="App ID (מספר)">
+        <input id="pb_fb_sec" type="password" dir="ltr" placeholder="App Secret (לוחצים Show ומעתיקים)">
+        <input id="pb_fb_conf" dir="ltr" inputmode="numeric" placeholder="Configuration ID (רק אם יש Facebook Login for Business)">
+        <div><button class="btn sm" data-a="pb-fb-save">שמירה</button></div></div>
+      <p class="small muted" style="margin:8px 0 0">בהגדרות ההתחברות של האפליקציה (Valid OAuth Redirect URIs) צריכה להופיע הכתובת: <code dir="ltr" style="user-select:all">${n(st.redirect || '')}</code></p>`;
+    else body = `<p class="muted small" style="margin:6px 0">לוחצים, פייסבוק שואל אם לאשר, בוחרים את עמוד המשרד ואת חשבון האינסטגרם ומאשרים. המערכת שומרת את החיבור לבד.</p>
+      <button class="btn" data-a="pb-fb-go" style="background:#1877f2;color:#fff;border-color:#1877f2">התחבר עם פייסבוק</button>`;
+    return `<div class="card card-b" style="margin-bottom:12px">${head}${ig.check === 'failed' && ig.error ? `<p class="small" style="color:#b4442f;margin:6px 0">הניסיון האחרון נכשל: ${n(ig.error)}</p>` : ''}${body}${manual}</div>`;
+  }
   s.pubView = pubView;
   document.addEventListener('click', async e => {
-    const b = e.target.closest('[data-a="pb-set"],[data-a="pb-past"],[data-a="pb-ig"]'); if (!b) return;
+    const b = e.target.closest('[data-a="pb-set"],[data-a="pb-past"],[data-a="pb-ig"],[data-a="pb-fb-save"],[data-a="pb-fb-go"]'); if (!b) return;
     e.preventDefault();
+    if (b.dataset.a === 'pb-fb-save') {
+      const v = id => ((document.getElementById(id) || {}).value || '').trim();
+      b.disabled = true;
+      try { await fbCall('save-app', { appId: v('pb_fb_id'), appSecret: v('pb_fb_sec'), configId: v('pb_fb_conf') }); FBS = null; s.toast('נשמר. עכשיו אפשר ללחוץ "התחבר עם פייסבוק"'); bump(); }
+      catch (err) { s.toast(err.message || 'השמירה נכשלה', 'bad'); }
+      b.disabled = false; return;
+    }
+    if (b.dataset.a === 'pb-fb-go') {
+      b.disabled = true;
+      try { const d = await fbCall('start'); if (!d || !d.url) throw new Error('לא התקבל קישור'); location.href = d.url; }
+      catch (err) { s.toast(err.message || 'לא הצלחתי לפתוח את פייסבוק', 'bad'); b.disabled = false; }
+      return;
+    }
     if (b.dataset.a === 'pb-ig') {
       const v = (document.getElementById('pb_ig') || {}).value || ''; const t = v.trim();
       if (t.length < 40 || /\s/.test(t)) { s.toast('הקוד לא נראה תקין. מעתיקים את כל הקוד, בלי רווחים', 'bad'); return; }
