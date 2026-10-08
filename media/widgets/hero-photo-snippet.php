@@ -4,6 +4,8 @@
    Computer: the new studio cut-out photo instead of the old small one.
    The pictures are in the media library; their addresses are kept in the option dabul_hero.
    Also: an admin route dabul/v1/sideload that copies a picture from a public address into the media library.
+   8.10.2026: Yakir asked to bring the phone back to the old look until the new one is perfect,
+   so the phone part works only when the option dabul_hero_phone_live is on. The computer part stays.
    To undo: deactivate this snippet (the old pictures come back). */
 
 function dabul_hero_urls() {
@@ -14,7 +16,7 @@ function dabul_hero_urls() {
 add_action('wp_head', function () {
 	if (!is_front_page()) return;
 	$h = dabul_hero_urls();
-	if (empty($h['city']) || empty($h['desk'])) return;
+	if (empty($h['city']) || empty($h['desk']) || !get_option('dabul_hero_phone_live')) return;
 	echo '<link rel="preload" as="image" href="' . esc_url($h['city']) . '" media="(max-width:767px)" fetchpriority="high">' . "\n";
 	echo '<style id="dbl-hero-css">.dbl-hero-me{display:none}@media (max-width:767px){.elementor-element-9056c3a{background-image:url("' . esc_url($h['city']) . '")!important;background-size:cover!important;background-position:center bottom!important;position:relative;overflow:hidden}'
 		. '.dbl-hero-me{display:block;position:absolute;left:-3%;bottom:0;height:72%;z-index:0;pointer-events:none}.dbl-hero-me img{height:100%;width:auto;max-width:none;display:block;filter:drop-shadow(0 0 28px rgba(0,0,0,.5))}'
@@ -27,10 +29,11 @@ add_action('template_redirect', function () {
 		if (!is_string($html) || stripos($html, '<html') === false) return $html;
 		$h = dabul_hero_urls();
 		// the old phone picture is preloaded by an older fix; point it to the new one
-		if (!empty($h['city'])) $html = str_replace('wp-content/uploads/2026/03/yakir-mob-2.webp" media="(max-width:767px)"', 'wp-content/uploads/__dbl_old__" media="(max-width:1px)"', $html);
+		$phone = get_option('dabul_hero_phone_live');
+		if ($phone && !empty($h['city'])) $html = str_replace('wp-content/uploads/2026/03/yakir-mob-2.webp" media="(max-width:767px)"', 'wp-content/uploads/__dbl_old__" media="(max-width:1px)"', $html);
 		if (empty($h['desk'])) return $html;
 		// phone: the photo as its own layer at the bottom left of the hero, so it keeps its size on every phone
-		$html = preg_replace('#(<div class="elementor-element elementor-element-9056c3a [^>]*>)#', '$1<div class="dbl-hero-me" aria-hidden="true"><img src="' . esc_url($h['desk']) . '" alt="" width="596" height="1188" fetchpriority="high" class="skip-lazy" data-no-lazy="1"></div>', $html, 1);
+		if ($phone) $html = preg_replace('#(<div class="elementor-element elementor-element-9056c3a [^>]*>)#', '$1<div class="dbl-hero-me" aria-hidden="true"><img src="' . esc_url($h['desk']) . '" alt="" width="596" height="1188" fetchpriority="high" class="skip-lazy" data-no-lazy="1"></div>', $html, 1);
 		return preg_replace_callback('#(<div class="elementor-element elementor-element-2c91460 .*?)(<img\b[^>]*>)#s', function ($m) use ($h) {
 			$img = preg_replace('#\s(srcset|sizes|data-lazy-srcset|data-lazy-sizes)="[^"]*"#', '', $m[2]);
 			$img = preg_replace('#\s(src|data-lazy-src)="[^"]*"#', ' $1="' . esc_url($h['desk']) . '"', $img);
