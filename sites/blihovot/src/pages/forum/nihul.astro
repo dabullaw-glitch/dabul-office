@@ -2,6 +2,9 @@
 // Forum admin (Yakir only). Login: a code sent to Yakir's Telegram. Not linked from anywhere and hidden from search engines.
 import Base from '../../layouts/Base.astro';
 import { SITE } from '../../data/site';
+import { getCollection } from 'astro:content';
+const guides = (await getCollection('guides')).filter((g) => !g.data.draft).map((g) => ({ id: g.id, title: g.data.title })).sort((a, b) => a.title.localeCompare(b.title, 'he'));
+const TOPICS = ['חדלות פירעון', 'הוצאה לפועל', 'הסדרי חוב', 'עצמאים ועסקים', 'כלכלה נכונה', 'אחרי ההפטר', 'אחר'];
 const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <Base title="ניהול הפורום" description="ניהול הפורום" noindex={true}>
@@ -31,6 +34,19 @@ const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       </div>
       <p class="nh-msg" id="nh-msg" role="status" aria-live="polite"></p>
       <ol class="nh-list" id="nh-list"></ol>
+
+      <details class="card nh-staff" id="nh-staff">
+        <summary>פרסום שאלה נפוצה בשם הצוות</summary>
+        <p class="muted">מתאים לשאלה אמיתית שהגיעה אליכם, בלי פרטים מזהים. היא תופיע בפורום עם הסימון "שאלה נפוצה" ו"תשובת צוות האתר".</p>
+        <label class="fl" for="sq-title">כותרת השאלה</label><input id="sq-title" maxlength="140" />
+        <label class="fl" for="sq-topic">נושא</label><select id="sq-topic">{TOPICS.map((t) => <option>{t}</option>)}</select>
+        <label class="fl" for="sq-body">פרטי השאלה</label><textarea id="sq-body" rows="3" maxlength="3000"></textarea>
+        <label class="fl" for="sq-ans">התשובה</label><textarea id="sq-ans" rows="6" maxlength="6000"></textarea>
+        <label class="fl" for="sq-guide">מדריך לקישור (לא חובה)</label>
+        <select id="sq-guide"><option value="">בלי קישור</option>{guides.map((g) => <option value={g.id}>{g.title}</option>)}</select>
+        <button class="btn btn-teal" type="button" id="sq-send">פרסום</button>
+      </details>
+      <template id="nh-guides"><option value="">בלי קישור</option>{guides.map((g) => <option value={g.id}>{g.title}</option>)}</template>
     </section>
   </div>
 </Base>
@@ -61,6 +77,10 @@ const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 .nh-confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;padding:10px;border-radius:10px;background:var(--sand)}
 .nh-confirm input{flex:1 1 220px;width:auto}
 .nh .empty{color:var(--muted)}
+.nh-staff{padding:18px;margin-top:22px}.nh-staff summary{font-weight:700;cursor:pointer}
+.nh select{width:100%;font:inherit;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.nh-staff .btn{margin-top:14px}
+.nh-reply{display:grid;gap:8px;margin-top:10px;padding:10px;border-radius:10px;background:var(--sand)}
 </style>
 <script define:vars={{ EP: SITE.forumEndpoint, B }}>
 const KEY = 'bh-fadm';
@@ -114,8 +134,9 @@ function render() {
       <div class="nh-acts">
         ${x.status !== 'live' ? '<button type="button" class="ok" data-op="approve">אישור ופרסום</button>' : ''}
         ${x.status !== 'hidden' ? '<button type="button" data-op="hide">הסתרה</button>' : ''}
+        ${x.type === 'q' && x.status === 'live' ? '<button type="button" class="ok" data-op="reply">תשובה בשם הצוות</button>' : ''}
         <button type="button" class="bad" data-op="delete">מחיקה</button>
-        <button type="button" class="bad" data-op="block">חסימת הכותב</button>
+        ${x.staff ? '' : '<button type="button" class="bad" data-op="block">חסימת הכותב</button>'}
         ${x.status === 'live' ? '<a href="' + link + '" target="_blank" rel="noopener">צפייה באתר</a>' : ''}
       </div></li>`;
   }).join('');
@@ -123,6 +144,20 @@ function render() {
 $('nh-list').addEventListener('click', async (e) => {
   const b = e.target.closest('button[data-op]'); if (!b) return;
   const li = b.closest('li'), id = li.dataset.id, op = b.dataset.op;
+  if (op === 'reply') {
+    if (li.querySelector('.nh-reply')) return;
+    const box = document.createElement('div'); box.className = 'nh-reply';
+    box.innerHTML = '<textarea rows="5" maxlength="6000" aria-label="התשובה"></textarea><select aria-label="מדריך לקישור">' + document.getElementById('nh-guides').innerHTML + '</select><div class="nh-acts"><button type="button" class="ok" data-go="1">פרסום התשובה</button><button type="button" data-no="1">ביטול</button></div>';
+    li.appendChild(box);
+    box.addEventListener('click', async (ev) => {
+      if (ev.target.dataset.no) { box.remove(); return; }
+      if (!ev.target.dataset.go) return;
+      const body = box.querySelector('textarea').value.trim(); if (body.length < 15) { $('nh-msg').textContent = 'התשובה קצרה מדי.'; return; }
+      const j = await post('admin', { token: store.get(), op: 'staffa', qid: id, body, guide: box.querySelector('select').value });
+      $('nh-msg').textContent = j.ok ? 'התשובה פורסמה.' : 'הפרסום לא הצליח.'; if (j.ok) load();
+    });
+    return;
+  }
   if (op === 'delete' || op === 'block') {
     if (li.querySelector('.nh-confirm')) return;
     const box = document.createElement('div'); box.className = 'nh-confirm';
@@ -145,5 +180,14 @@ async function act(op, id, why) {
   $('nh-msg').textContent = j.ok ? 'עודכן.' : 'הפעולה לא הצליחה.';
   if (j.ok) load();
 }
+$('sq-send').addEventListener('click', async () => {
+  const title = $('sq-title').value.trim(), body = $('sq-body').value.trim(), ans = $('sq-ans').value.trim();
+  if (title.length < 8 || body.length < 15 || ans.length < 15) { $('nh-msg').textContent = 'צריך כותרת, פרטים ותשובה.'; return; }
+  const q = await post('admin', { token: store.get(), op: 'staffq', title, body, topic: $('sq-topic').value });
+  if (!q.ok) { $('nh-msg').textContent = 'הפרסום לא הצליח.'; return; }
+  const a = await post('admin', { token: store.get(), op: 'staffa', qid: q.id, body: ans, guide: $('sq-guide').value });
+  $('nh-msg').textContent = a.ok ? 'השאלה והתשובה פורסמו. דף משלהן ייווצר בבנייה הלילית.' : 'השאלה פורסמה, אבל התשובה לא. נסו להוסיף אותה מהרשימה.';
+  if (a.ok) { $('sq-title').value = ''; $('sq-body').value = ''; $('sq-ans').value = ''; } load();
+});
 if (store.get()) { showMain(true); load(); }
 </script>
