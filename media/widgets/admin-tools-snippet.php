@@ -80,6 +80,34 @@ add_action('rest_api_init', function () {
 		return array('dry' => $dry, 'res' => $res);
 	}));
 
+	// same pages are built with Elementor (one HTML widget): put the cleaned post_content into that widget; body {dry}
+	register_rest_route('dabul/v1', '/enfr-el', array('methods' => 'POST', 'permission_callback' => $admin, 'callback' => function ($r) {
+		$b = $r->get_json_params(); $dry = !empty($b['dry']); $res = array();
+		foreach (array(7006, 6999) as $id) {
+			$p = get_post($id); $pc = $p ? $p->post_content : '';
+			$o = array('id' => $id);
+			if (strpos($pc, '<!-- wp:html -->') !== 0) { $o['skip'] = 'post_content not cleaned'; $res[] = $o; continue; }
+			$clean = trim(str_replace(array('<!-- wp:html -->', '<!-- /wp:html -->'), '', $pc));
+			$doc = \Elementor\Plugin::$instance->documents->get($id); if (!$doc) { $o['skip'] = 'no doc'; $res[] = $o; continue; }
+			$data = $doc->get_elements_data(); $hit = 0;
+			$walk = function (&$els) use (&$walk, $clean, &$hit) {
+				foreach ($els as &$el) {
+					if (($el['widgetType'] ?? '') === 'html' && strpos((string) ($el['settings']['html'] ?? ''), 'DABUL-LP START') !== false) { $el['settings']['html'] = $clean; $hit++; }
+					if (!empty($el['elements'])) $walk($el['elements']);
+				}
+			};
+			$walk($data);
+			$o['widgets'] = $hit; $o['newLen'] = strlen($clean);
+			if ($hit && !$dry) {
+				if (!get_option('dabul_bak_el_' . $id)) update_option('dabul_bak_el_' . $id, get_post_meta($id, '_elementor_data', true), false);
+				$doc->save(array('elements' => $data));
+			}
+			$res[] = $o;
+		}
+		if (!$dry && function_exists('rocket_clean_domain')) rocket_clean_domain();
+		return array('dry' => $dry, 'res' => $res);
+	}));
+
 	// point every Elementor nav-menu widget that shows menu <from> to menu <to> (header templates); body {from, to, dry}
 	register_rest_route('dabul/v1', '/navswap', array('methods' => 'POST', 'permission_callback' => $admin, 'callback' => function ($r) {
 		$b = $r->get_json_params(); $dry = !empty($b['dry']); $from = (string) $b['from']; $to = (string) $b['to']; $res = array();
