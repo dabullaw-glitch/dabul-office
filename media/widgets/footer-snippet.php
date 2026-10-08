@@ -4,7 +4,7 @@
    selling, real estate tax and urban renewal), contact details and opening hours, the map and the Martindale seal,
    the WhatsApp group box, and one bottom line (rights, English / Français, privacy, accessibility, site map).
    The links are written here; to change a link, edit the lists below.
-   Checked on a preview address on 8.10.2026 (all 31 links answer), now live. To undo: deactivate this snippet. */
+   Checked on a preview address on 8.10.2026 (all 31 links answer), now live. On the phone the contact part is centered (Yakir asked). To undo: deactivate this snippet. */
 define('DABUL_FT_LIVE', 1);
 
 function dabul_ft_on() {
@@ -117,6 +117,7 @@ add_action('wp_head', function () {
 		. '@media (max-width:1100px){#dbl-foot .r2{grid-template-columns:repeat(3,minmax(0,1fr))}}'
 		. '@media (max-width:767px){#dbl-foot{padding:34px 20px 0}#dbl-foot .r1{flex-direction:column;gap:18px}#dbl-foot .soc{flex-wrap:wrap;justify-content:center}#dbl-foot .soc small{flex-basis:100%;text-align:center;margin:0}'
 		. '#dbl-foot .r2{grid-template-columns:1fr 1fr;gap:28px 18px}#dbl-foot .ct,#dbl-foot .mp{grid-column:1/-1}#dbl-foot .map{display:none}#dbl-foot .mp{align-items:center}'
-		. '#dbl-foot .wa{font-size:17px;text-align:center}#dbl-foot .r4{flex-direction:column;text-align:center}}'
+		. '#dbl-foot .wa{font-size:17px;text-align:center}#dbl-foot .r4{flex-direction:column;text-align:center}'
+		. '#dbl-foot .ct{text-align:center}#dbl-foot .ct .h:after{right:50%;margin-right:-14px}#dbl-foot .ct ul{display:flex;flex-direction:column;align-items:center}#dbl-foot .ct .hrs{width:100%;max-width:300px;margin:0 auto}}'
 		. '</style>' . "\n";
 }, 45);
