@@ -23,12 +23,13 @@
 .dabul-cl .who b{display:block;font-size:16px;color:#fff}
 .dabul-cl .who span{font-size:14px;color:#bfb9ab}
 /* form + document mock */
-.dabul-cl .formwrap{position:relative;padding-top:58px}
-.dabul-cl .doc{position:absolute;top:0;left:22px;width:150px;aspect-ratio:210/297;background:#fff;border-radius:6px;box-shadow:0 18px 40px rgba(0,0,0,.45);transform:rotate(-6deg);overflow:hidden;z-index:2;max-width:100%}
+.dabul-cl .formwrap{position:relative;padding-top:44px;scroll-margin-top:90px}
+.dabul-cl .ch{display:flex;align-items:flex-start;gap:16px;margin:0 0 6px}.dabul-cl .ch>div:first-child{flex:1;min-width:0}
+.dabul-cl .doc{position:relative;flex:0 0 112px;width:112px;margin-top:-62px;aspect-ratio:210/297;background:#fff;border-radius:6px;box-shadow:0 18px 40px rgba(0,0,0,.45);transform:rotate(-6deg);overflow:hidden}
 .dabul-cl .doc .dh{background:#141414;padding:10px 9px 9px;position:relative}
 .dabul-cl .doc .dh:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,#8c7646,#e4d19c,#8c7646)}
-.dabul-cl .doc .dh small{display:block;color:#e4d19c;font-size:5.5px;line-height:1.3}
-.dabul-cl .doc .dh b{display:block;color:#fff;font-size:10px;line-height:1.2;margin-top:3px}
+.dabul-cl .doc .dh small{display:block;color:#e4d19c;font-size:5px;line-height:1.3}
+.dabul-cl .doc .dh b{display:block;color:#fff;font-size:8px;line-height:1.2;margin-top:2px}
 .dabul-cl .doc .db{padding:7px 9px}
 .dabul-cl .doc .db p{margin:0 0 5px;font-size:6.5px;font-weight:700;color:#141414;display:flex;align-items:center;gap:4px}
 .dabul-cl .doc .db p u{width:9px;height:9px;border-radius:50%;background:#141414;color:#e4d19c;font-size:5px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
@@ -37,8 +38,8 @@
 .dabul-cl .doc .db s:after{content:"";height:3px;border-radius:2px;background:#e1ddd3;flex:1}
 .dabul-cl .doc .pdf{position:absolute;bottom:7px;right:7px;background:#b4442f;color:#fff;font-size:7px;font-weight:800;border-radius:3px;padding:1px 4px}
 .dabul-cl .card{position:relative;background:#fff;color:var(--ink);border-radius:18px;padding:26px 22px 20px;box-shadow:0 24px 60px rgba(0,0,0,.35);border-top:5px solid var(--g)}
-.dabul-cl .card h2{font-size:23px;line-height:1.25;margin:0 0 4px;padding-left:120px;color:var(--ink)}
-.dabul-cl .card .hint{font-size:14.5px;color:var(--mut);margin:0 0 12px;padding-left:120px}
+.dabul-cl .card .ct{font-size:23px!important;line-height:1.25!important;margin:0 0 4px!important;padding:0!important;color:var(--ink)!important;font-weight:800!important}
+.dabul-cl .card .hint{font-size:14.5px;color:var(--mut);margin:0!important;padding:0!important}
 .dabul-cl label.l{display:block;font-weight:700;font-size:14px;margin:10px 0 5px;color:var(--ink)}
 .dabul-cl input[type=text],.dabul-cl input[type=email],.dabul-cl input[type=tel]{width:100%;font:inherit;font-size:17px;padding:12px 14px;border:1.5px solid #d8d0bd;border-radius:10px;background:#fcfbf8;color:var(--ink);margin:0}
 .dabul-cl input:focus{outline:2px solid var(--g);outline-offset:1px;background:#fff}
@@ -132,9 +133,9 @@
 .dabul-cl .hero .w{grid-template-columns:1fr;gap:20px}
 .dabul-cl .stats{grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:18px}
 .dabul-cl .stats b{font-size:21px}.dabul-cl .stats span{font-size:11.5px}
-.dabul-cl .formwrap{padding-top:40px}
-.dabul-cl .doc{width:104px;left:14px}
-.dabul-cl .card h2{font-size:20px;padding-left:96px}.dabul-cl .card .hint{padding-left:96px;font-size:14px}
+.dabul-cl .formwrap{padding-top:34px}
+.dabul-cl .doc{flex-basis:86px;width:86px;margin-top:-52px}
+.dabul-cl .card .ct{font-size:20px!important}.dabul-cl .card .hint{font-size:14px}
 .dabul-cl .peekgrid{grid-template-columns:1fr;gap:28px}
 .dabul-cl .how{grid-template-columns:1fr}
 .dabul-cl .sec{padding-top:48px}
@@ -151,6 +152,7 @@
 .dabul-cl .road b{margin-top:4px}
 .dabul-cl .road em{justify-self:start;margin-top:6px}
 .dabul-cl .cta .btns a{flex:1 1 100%;justify-content:center}
+.dabul-cl .hero .who{display:none}
 }
 </style>
 
@@ -170,10 +172,8 @@
 </div>
 
 <div class="formwrap" id="cl-form">
-<div class="doc" aria-hidden="true"><div class="dh"><small>יקיר דבול · משרד עורכי דין</small><b>צ'קליסט לפני שקונים דירה יד שנייה</b></div><div class="db"><p><u>1</u>לפני שמציעים מחיר</p><s></s><s></s><s></s><p><u>2</u>מה רשום על הדירה</p><s></s><s></s><s></s><p><u>3</u>עירייה וועדה</p><s></s><s></s></div><span class="pdf">PDF</span></div>
 <form class="card" novalidate>
-<h2>קבלו את הצ'קליסט המלא למייל</h2>
-<p class="hint">קובץ PDF מסודר להדפסה או לטלפון.</p>
+<div class="ch"><div><p class="ct">קבלו את הצ'קליסט המלא למייל</p><p class="hint">קובץ PDF מסודר להדפסה או לטלפון.</p></div><div class="doc" aria-hidden="true"><div class="dh"><small>יקיר דבול · משרד עורכי דין</small><b>צ'קליסט לפני שקונים דירה יד שנייה</b></div><div class="db"><p><u>1</u>לפני שמציעים מחיר</p><s></s><s></s><s></s><p><u>2</u>מה רשום על הדירה</p><s></s><s></s><s></s><p><u>3</u>עירייה וועדה</p><s></s><s></s></div><span class="pdf">PDF</span></div></div>
 <label class="l" for="cl-name">שם מלא</label>
 <input id="cl-name" name="name" type="text" autocomplete="name" required>
 <label class="l" for="cl-email">מייל</label>
@@ -253,5 +253,5 @@
 <p class="note">המידע בעמוד ובצ'קליסט הוא מידע כללי, ואינו תחליף לייעוץ משפטי שמותאם לעסקה שלכם.</p>
 </div>
 
-<script>(function(){var r=document.currentScript&&document.currentScript.closest('.dabul-cl')||document.querySelector('.dabul-cl');if(!r)return;var f=r.querySelector('form.card'),m=r.querySelector('.msg'),b=r.querySelector('.btn'),bt=b.querySelector('span');if('IntersectionObserver' in window){r.classList.add('anim');var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});[].forEach.call(r.querySelectorAll('.rv'),function(x){io.observe(x)})}[].forEach.call(r.querySelectorAll('a[href="#cl-form"]'),function(a){a.addEventListener('click',function(e){e.preventDefault();r.querySelector('#cl-form').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){r.querySelector('#cl-name').focus({preventScroll:true})},600)})});function say(t,ok){m.textContent=t;m.className='msg '+(ok?'ok':'bad')}f.addEventListener('submit',function(e){e.preventDefault();var d={};[].forEach.call(f.elements,function(x){if(!x.name)return;if(x.type==='checkbox'){d[x.name]=x.checked?'1':''}else{d[x.name]=x.value.trim()}});if(!d.name){say('נא למלא שם',false);return}if(!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(d.email)){say('כתובת המייל לא תקינה',false);return}if(d.callme&&!/^0\d{8,9}$/.test(d.phone.replace(/[\s-]/g,''))){say('נא למלא טלפון תקין, או להוריד את הסימון של השיחה',false);return}if(!d.consent){say('כדי לקבל את הצ\'קליסט צריך לסמן את תיבת האישור',false);return}if(!d.callme)d.phone='';var q=new URLSearchParams(location.search);d.magnet='buyer-checklist';d.source=('checklist-page'+(q.get('utm_campaign')?'-'+q.get('utm_campaign'):'')).slice(0,60);d.page=location.href.slice(0,200);if(r.hasAttribute('data-preview')){say('תצוגה מקדימה: כאן הגולש יראה "כמעט סיימנו! שלחנו מייל עם כפתור אישור".',true);return}b.disabled=true;bt.textContent='שולח...';fetch(r.getAttribute('data-endpoint'),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)}).then(function(x){return x.json()}).then(function(j){if(j&&j.ok){say(j.msg||'נשלח',true);f.reset();try{window.gtag&&gtag('event','generate_lead',{form:'checklist'})}catch(_){}}else{say((j&&j.msg)||'משהו השתבש, נסו שוב',false)}}).catch(function(){say('משהו השתבש, נסו שוב או התקשרו 09-8613413',false)}).finally(function(){b.disabled=false;bt.textContent="שלחו לי את הצ'קליסט"})})})();</script>
+<script>(function(){var r=document.currentScript&&document.currentScript.closest('.dabul-cl')||document.querySelector('.dabul-cl');if(!r)return;var f=r.querySelector('form.card'),m=r.querySelector('.msg'),b=r.querySelector('.btn'),bt=b.querySelector('span');if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});[].forEach.call(r.querySelectorAll('.rv'),function(x){if(x.getBoundingClientRect().top<innerHeight){x.classList.add('in')}else{io.observe(x)}});r.classList.add('anim')}[].forEach.call(r.querySelectorAll('a[href="#cl-form"]'),function(a){a.addEventListener('click',function(e){e.preventDefault();r.querySelector('#cl-form').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){r.querySelector('#cl-name').focus({preventScroll:true})},600)})});function say(t,ok){m.textContent=t;m.className='msg '+(ok?'ok':'bad')}f.addEventListener('submit',function(e){e.preventDefault();var d={};[].forEach.call(f.elements,function(x){if(!x.name)return;if(x.type==='checkbox'){d[x.name]=x.checked?'1':''}else{d[x.name]=x.value.trim()}});if(!d.name){say('נא למלא שם',false);return}if(!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(d.email)){say('כתובת המייל לא תקינה',false);return}if(d.callme&&!/^0\d{8,9}$/.test(d.phone.replace(/[\s-]/g,''))){say('נא למלא טלפון תקין, או להוריד את הסימון של השיחה',false);return}if(!d.consent){say('כדי לקבל את הצ\'קליסט צריך לסמן את תיבת האישור',false);return}if(!d.callme)d.phone='';var q=new URLSearchParams(location.search);d.magnet='buyer-checklist';d.source=('checklist-page'+(q.get('utm_campaign')?'-'+q.get('utm_campaign'):'')).slice(0,60);d.page=location.href.slice(0,200);if(r.hasAttribute('data-preview')){say('תצוגה מקדימה: כאן הגולש יראה "כמעט סיימנו! שלחנו מייל עם כפתור אישור".',true);return}b.disabled=true;bt.textContent='שולח...';fetch(r.getAttribute('data-endpoint'),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)}).then(function(x){return x.json()}).then(function(j){if(j&&j.ok){say(j.msg||'נשלח',true);f.reset();try{window.gtag&&gtag('event','generate_lead',{form:'checklist'})}catch(_){}}else{say((j&&j.msg)||'משהו השתבש, נסו שוב',false)}}).catch(function(){say('משהו השתבש, נסו שוב או התקשרו 09-8613413',false)}).finally(function(){b.disabled=false;bt.textContent="שלחו לי את הצ'קליסט"})})})();</script>
 </div>

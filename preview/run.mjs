@@ -40,6 +40,8 @@ if (fs.existsSync(COMP)) {
     console.log(mode, ok);
     await page.waitForTimeout(2500);
     await page.screenshot({ path: `${OUT}/page-${mode}-fold.jpg`, type: 'jpeg', quality: 80 });
+    await page.evaluate(async () => { for (let y = 0; y < document.documentElement.scrollHeight; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 120)); } window.scrollTo(0, 0); });
+    await page.waitForTimeout(1200);
     await page.screenshot({ path: `${OUT}/page-${mode}-full.jpg`, type: 'jpeg', quality: 72, fullPage: true });
     // form state with "call me" ticked
     if (mode === 'mobile') {
