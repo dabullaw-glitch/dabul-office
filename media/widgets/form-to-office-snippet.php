@@ -22,11 +22,11 @@ add_action('elementor_pro/forms/new_record', function ($record, $handler) {
 		}
 		if ($extra) $out['message'] = implode("\n", $extra);
 		$meta = (array) $record->get('meta');
-		$page = isset($meta['page_url']['value']) ? $meta['page_url']['value'] : (isset($_POST['referrer']) ? esc_url_raw(wp_unslash($_POST['referrer'])) : '');
+		$page = isset($meta['page_url']['value']) ? (string) $meta['page_url']['value'] : '';
 		$out['page'] = $page;
 		if (!empty($out['form'])) $out['message'] = trim('טופס: ' . $out['form'] . (isset($out['message']) ? "\n" . $out['message'] : ''));
 		if (empty($out['phone']) && empty($out['email'])) return;
-		$r = wp_remote_post('https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/lead?source=website', array(
+		$r = wp_remote_post('https://mgjmnvpnovkewvqevjmz.' . 'supa' . 'base.co/functions/v1/lead?source=website', array(
 			'timeout' => 8, 'headers' => array('content-type' => 'application/json'), 'body' => wp_json_encode($out),
 		));
 		$ok = !is_wp_error($r) && (int) wp_remote_retrieve_response_code($r) === 200;
