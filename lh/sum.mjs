@@ -12,4 +12,4 @@ for (const f of process.argv.slice(2)) {
   out[f] = { cat, m, a11y, perf, ins };
 }
 fs.writeFileSync('diag-results/lh/summary.json', JSON.stringify(out, null, 1));
-# rerun Thu Oct  8 15:36:05 IDT 2026
+// rerun Thu Oct  8 15:36:05 IDT 2026
