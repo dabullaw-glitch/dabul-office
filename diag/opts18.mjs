@@ -1,19 +1,18 @@
 // round 12 mockups: desktop hero text on one right edge (2 versions), newsletter strip with the newsletter video (2 versions, computer only)
 import { chromium } from 'playwright';
 import fs from 'node:fs';
-const OUT = 'diag-results/opts18'; fs.mkdirSync(OUT, { recursive: true });
+const OUT = 'diag-results/opts18b'; fs.mkdirSync(OUT, { recursive: true });
 const S = 'https://dabullaw.co.il/'; const M = S + '__mock/'; const rep = {};
 const b = await chromium.launch();
 const HIDE = '.elementor-popup-modal,.onetap-container-toggle,.elementor-element-094a351,.elementor-element-74d8bec,.dabul-gbadge{display:none!important}';
-const ALIGN = `.elementor-element-6bb6c07{margin-right:0!important;margin-left:auto!important;width:100%!important;max-width:100%!important;text-align:right!important}
-.elementor-element-6bb6c07 *{text-align:right!important}
-@media (min-width:1025px) and (max-width:1599px){.elementor-element-6d16458,.elementor-element-94c4b61{padding-right:34px!important}}`;
+const ALIGN = `@media (min-width:1025px){.elementor-1112 .elementor-element.elementor-element-6bb6c07{right:var(--padding-right,0px)!important;left:auto!important;margin:0!important;width:auto!important;max-width:none!important}
+.elementor-element-6bb6c07 h1{text-align:right!important}}
+@media (min-width:1025px) and (max-width:1599px){.elementor-1112 .elementor-element.elementor-element-6d16458,.elementor-1112 .elementor-element.elementor-element-94c4b61{--padding-right:34px!important;padding-right:34px!important}}`;
 const HA = { a: ALIGN, b: ALIGN + `
-.dbl-t2{font-size:.62em!important;font-weight:300!important;letter-spacing:.01em}
-.dbl-ln{display:block;width:84px;height:3px;border-radius:2px;background:linear-gradient(90deg,#f0d9a0,#b8913f);margin:18px 0 16px auto}
-.elementor-element-464d8c8 *{font-size:30px!important}
-.elementor-element-a3067eb .elementor-icon-list-text{font-size:18px!important;line-height:1.6!important}
-.elementor-element-a3067eb{max-width:700px!important;margin-right:0!important;margin-left:auto!important}` };
+@media (min-width:1025px){.elementor-element-6bb6c07 h1 i{font-size:.6em!important;font-weight:300!important;display:block;margin-top:6px}
+.elementor-element-6bb6c07 h1 i:after{content:"";display:block;width:84px;height:3px;border-radius:2px;background:linear-gradient(90deg,#b8913f,#f0d9a0);margin:18px 0 0 auto}
+.elementor-element-464d8c8 h2{font-size:30px!important}
+.elementor-element-a3067eb .elementor-icon-list-text{font-size:18px!important;line-height:1.6!important}}` };
 const NV = {
   v1: `#dbl-nl .dn-in{max-width:1180px!important;display:grid!important;grid-template-columns:3px minmax(0,1fr) 300px;column-gap:48px;row-gap:22px;align-items:center}
 #dbl-nl .dn-bar{grid-row:1/3;grid-column:1}#dbl-nl .dn-tx{grid-column:2;grid-row:1}#dbl-nl form{grid-column:2;grid-row:2;max-width:560px}
@@ -47,13 +46,14 @@ for (const [w, h] of [[1440, 900], [1920, 1080]]) {
       const all = [...box.querySelectorAll('*')].filter((e) => e.children.length === 0 || e.childNodes.length === 1);
       const t2 = all.find((e) => e.textContent.trim() === 'עורך דין מקרקעין');
       document.querySelectorAll('.dbl-t2').forEach((e) => e.classList.remove('dbl-t2'));
-      if (k === 'b' && t2) { t2.classList.add('dbl-t2'); t2.insertAdjacentHTML('afterend', '<span class="dbl-ln"></span>'); }
+      
     }, { css, k });
     await p.waitForTimeout(800); await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(300);
     await p.screenshot({ path: `${OUT}/hero-${k}-${w}.jpg`, type: 'jpeg', quality: 86 });
-    if (w === 1440) rep['edges-' + k] = await p.evaluate(() => ['6bb6c07', '464d8c8', 'a3067eb'].map((id) => { const e = document.querySelector('.elementor-element-' + id); const r = e.getBoundingClientRect(); const range = document.createRange(); range.selectNodeContents(e); const rr = range.getBoundingClientRect(); return [id, Math.round(r.right), Math.round(rr.right)]; }));
+    rep['edges-' + k + w] = await p.evaluate(() => ['6bb6c07', '464d8c8', 'a3067eb'].map((id) => { const e = document.querySelector('.elementor-element-' + id); const r = e.getBoundingClientRect(); return [id, Math.round(r.left), Math.round(r.right), Math.round(r.top), Math.round(r.bottom)]; }));
   }
   await p.evaluate(() => { document.getElementById('dbl-h18')?.remove(); document.querySelectorAll('.dbl-ln').forEach((e) => e.remove()); });
+  if (false) {
   // newsletter strip
   await p.addStyleTag({ content: '[data-elementor-type="header"]{visibility:hidden!important}#dbl-cbar{display:none!important}' });
   const nl = p.locator('#dbl-nl'); await nl.scrollIntoViewIfNeeded(); await p.waitForTimeout(800);
@@ -70,6 +70,7 @@ for (const [w, h] of [[1440, 900], [1920, 1080]]) {
     }, { css, k, M, SND });
     await p.waitForTimeout(3500); await nl.scrollIntoViewIfNeeded(); await p.waitForTimeout(500);
     await nl.screenshot({ path: `${OUT}/nl-${k}-${w}.jpg`, type: 'jpeg', quality: 84 });
+  }
   }
   await ctx.close();
 }
