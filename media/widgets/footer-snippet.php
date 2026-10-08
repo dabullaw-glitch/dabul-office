@@ -4,7 +4,8 @@
    selling, real estate tax and urban renewal), contact details and opening hours, the map and the Martindale seal,
    the WhatsApp group box, and one bottom line (rights, English / Français, privacy, accessibility, site map).
    The links are written here; to change a link, edit the lists below.
-   Until checked it shows only on a preview address (?dblprev=1). To undo: deactivate this snippet. */
+   Checked on a preview address on 8.10.2026 (all 31 links answer), now live. To undo: deactivate this snippet. */
+define('DABUL_FT_LIVE', 1);
 
 function dabul_ft_on() {
 	if (defined('DABUL_FT_LIVE')) return true;
