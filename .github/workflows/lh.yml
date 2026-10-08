@@ -1,0 +1,31 @@
+name: lighthouse
+on:
+  push:
+    branches: [audit-run]
+    paths: ['lh/**', '.github/workflows/lh.yml']
+permissions:
+  contents: write
+jobs:
+  lh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run
+        run: |
+          mkdir -p diag-results/lh
+          npx -y lighthouse@12.2.1 "https://dabullaw.co.il/?lh=$RANDOM" --quiet --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=diag-results/lh/mobile.json || true
+          npx -y lighthouse@12.2.1 "https://dabullaw.co.il/?lh=$RANDOM" --quiet --preset=desktop --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=diag-results/lh/desktop.json || true
+          node lh/sum.mjs diag-results/lh/mobile.json diag-results/lh/desktop.json
+          rm -f diag-results/lh/mobile.json diag-results/lh/desktop.json
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name "audit-bot"
+          git config user.email "audit-bot@users.noreply.github.com"
+          git add diag-results/lh
+          git commit -m "lighthouse $(date -u +%FT%TZ)" || echo nothing
+          for i in 1 2 3 4 5; do git pull --rebase -q origin audit-run && git push origin HEAD:audit-run && break; sleep 7; done
