@@ -1,0 +1,56 @@
+{
+ "about-phone": {
+  "img": [
+   494,
+   true
+  ],
+  "disc": [
+   45,
+   300
+  ],
+  "imgBox": [
+   62,
+   218
+  ],
+  "kick": "עו״ד יקיר דבול"
+ },
+ "hub-phone": {
+  "h1Top": 130,
+  "headerBottom": 70,
+  "cards": 12
+ },
+ "filter-phone": {
+  "h2": [
+   "מאמרים בנושא התחדשות עירונית"
+  ],
+  "cards": 12
+ },
+ "errors-phone": [],
+ "about-desktop": {
+  "img": [
+   494,
+   true
+  ],
+  "disc": [
+   153,
+   420
+  ],
+  "imgBox": [
+   177,
+   305
+  ],
+  "kick": "עו״ד יקיר דבול\n· דיני מקרקעין · נתניה"
+ },
+ "hub-desktop": {
+  "h1Top": 176,
+  "headerBottom": 90,
+  "cards": 12
+ },
+ "filter-desktop": {
+  "h2": [
+   "מאמרים בנושא התחדשות עירונית"
+  ],
+  "cards": 12
+ },
+ "errors-desktop": []
+}
