@@ -76,6 +76,7 @@ p{margin:0 0 1em}
 .grid{display:grid;gap:18px}
 .g3{grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
 .g2{grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
+.g4{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;min-width:0}
 a.card{display:block;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s,box-shadow .15s}
 a.card:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:var(--shadow);color:inherit}

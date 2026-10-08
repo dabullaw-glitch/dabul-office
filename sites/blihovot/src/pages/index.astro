@@ -11,7 +11,7 @@ import videos from '../data/videos.json';
 const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const guides = (await getCollection('guides')).filter((g) => !g.data.draft);
 const byHub = (id: string) => guides.filter((g) => g.data.hub === id).length;
-const starters = ['ma-ze-hadlut-piraon', 'tzaadim-rishonim', 'ichud-tikim', 'hefter', 'saf-hovot', 'hesder-im-noshim'].map((s) => guides.find((g) => g.id === s)).filter(Boolean);
+const starters = ['tzaadim-rishonim', 'hashvaat-maslulim', 'ma-ze-hadlut-piraon', 'ichud-tikim', 'hefter', 'hesder-im-noshim'].map((s) => guides.find((g) => g.id === s)).filter(Boolean);
 const latest = [...guides].sort((a, b) => +b.data.updated - +a.data.updated).filter((g) => !starters.includes(g)).slice(0, 6);
 const faq = [
   { q: 'מה זה חדלות פירעון?', a: 'הליך חוקי לאדם שלא מסוגל לשלם את החובות שלו. בזמן ההליך משלמים תשלום חודשי לפי היכולת, ובסופו אפשר לקבל הפטר: פטור מיתרת החובות. עד 2019 קראו לזה פשיטת רגל.' },
@@ -77,8 +77,9 @@ const schema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEnti
   <section class="sec sec-sand">
     <div class="wrap">
       <div class="sec-head"><h2>לפי נושא</h2></div>
-      <div class="grid g3">
+      <div class="grid g4">
         {HUBS.map((h) => <a class="card hub" href={`${B}nose/${h.id}/`}><HubIcon name={h.icon} /><h3>{h.title}</h3><p>{h.blurb}</p><span class="muted cnt">{byHub(h.id)} מדריכים</span></a>)}
+        <a class="card hub" href={`${B}milon/`}><HubIcon name="file" /><h3>מילון מונחים</h3><p>הפטר, נאמן, קופת הנשייה, חקירת יכולת: כל המילים בשפה פשוטה.</p><span class="muted cnt">למילון ←</span></a>
         <a class="card hub kurs" href={`${B}kurs/`}><HubIcon name="cap" /><h3>קורס חינמי: יוצאים מחובות</h3><p>שיעורים קצרים עם סרטון ושאלות תרגול, מהצעד הראשון ועד הפטר.</p><span class="cnt">להתחיל ללמוד ←</span></a>
       </div>
     </div>
@@ -127,6 +128,7 @@ const schema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEnti
 @media (max-width:900px){.hero-in{grid-template-columns:1fr;gap:28px;padding-block:36px 44px}}
 .tool .go,.hub .cnt{display:inline-block;margin-top:12px;font-weight:700;color:var(--teal);font-size:.95rem}
 .tool.big{border-inline-start:5px solid var(--sun)}
+@media (min-width:900px){.tool.big{grid-column:span 2}}
 .hub h3{margin-top:12px}
 .hub.kurs{background:var(--ink);border-color:var(--ink)}.hub.kurs h3{color:#fff}.hub.kurs p{color:#c9d3e0}.hub.kurs .cnt{color:var(--sun)}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:start}
