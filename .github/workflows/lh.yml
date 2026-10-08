@@ -17,7 +17,7 @@ jobs:
       - name: Run
         run: |
           mkdir -p diag-results/lh
-          npx -y lighthouse@12.2.1 "https://dabullaw.co.il/?lh=$RANDOM" --quiet --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=diag-results/lh/mobile.json || true
+          npx -y lighthouse@12.2.1 "https://dabullaw.co.il/" --quiet --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=diag-results/lh/mobile.json || true
           npx -y lighthouse@12.2.1 "https://dabullaw.co.il/?lh=$RANDOM" --quiet --preset=desktop --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=diag-results/lh/desktop.json || true
           node lh/sum.mjs diag-results/lh/mobile.json diag-results/lh/desktop.json
           rm -f diag-results/lh/mobile.json diag-results/lh/desktop.json
