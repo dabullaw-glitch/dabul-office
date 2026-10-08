@@ -1,0 +1,14 @@
+import { chromium, devices } from 'playwright';
+import fs from 'node:fs';
+const OUT = 'diag-results/menu'; fs.mkdirSync(OUT, { recursive: true });
+const b = await chromium.launch(); const rep = {};
+const ctx = await b.newContext({ ...devices['iPhone 13'], locale: 'he-IL' }); const p = await ctx.newPage();
+await p.goto('https://dabullaw.co.il/?mn=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(2500);
+await p.evaluate(() => { const x = [...document.querySelectorAll('button,a')].find((e) => /הבנתי/.test(e.textContent || '')); if (x) x.click(); }).catch(() => null);
+await p.mouse.wheel(0, 300); await p.waitForTimeout(1500); await p.mouse.wheel(0, -300); await p.waitForTimeout(800);
+await p.locator('header a.elementor-icon[href*="off_canvas"]:visible, header .elementor-menu-toggle:visible').first().click().catch((e) => { rep.err = String(e); }); await p.waitForTimeout(1500);
+await p.screenshot({ path: `${OUT}/menu-phone.jpg`, type: 'jpeg', quality: 72 });
+rep.item = await p.evaluate(() => { const a = document.querySelector('.elementor-element-6997576 .elementor-nav-menu>li>a'); if (!a) return null; const cs = getComputedStyle(a); return { fs: cs.fontSize, pad: cs.padding, h: Math.round(a.getBoundingClientRect().height) }; });
+const first = p.locator('.elementor-element-6997576 .elementor-nav-menu>li>a', { hasText: 'קונים דירה' }).first(); await first.click().catch(() => null); await p.waitForTimeout(1000);
+await p.screenshot({ path: `${OUT}/menu-phone-open.jpg`, type: 'jpeg', quality: 72 });
+fs.writeFileSync(`${OUT}/rep.json`, JSON.stringify(rep, null, 1)); await b.close();
