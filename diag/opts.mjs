@@ -205,14 +205,14 @@ for (const mode of ['desktop', 'phone']) {
     st.textContent = `#dbl-new-foot{background:#141414;padding:40px 30px 0;direction:rtl}
 #dbl-new-foot .r1{max-width:1340px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-bottom:26px;border-bottom:1px solid #2b2b2b}
 #dbl-new-foot .r2{max-width:1340px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.25fr) 300px;gap:30px;padding:32px 0}
-#dbl-new-foot .col>*+*{margin-top:14px}#dbl-new-foot .col .gap{margin-top:26px}
+#dbl-new-foot .col{display:flex;flex-direction:column;gap:12px}#dbl-new-foot .col .gap{margin-top:14px!important}
 #dbl-new-foot .r3{max-width:1340px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:center;padding:0 0 28px}
 #dbl-new-foot .areas .elementor-icon-list-items{display:flex!important;flex-wrap:wrap;gap:6px 18px}#dbl-new-foot .areas .elementor-icon-list-item{margin:0!important;padding:0!important}
 #dbl-new-foot .r4{max-width:1340px;margin:0 auto;border-top:1px solid #2b2b2b;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 0 18px}
 #dbl-new-foot .r4 .rc{flex-basis:100%;text-align:center;opacity:.7}
 #dbl-new-foot .elementor-widget{width:auto!important;max-width:100%!important;position:static!important;margin:0!important}
 #dbl-new-foot .mapw iframe{width:100%!important;height:230px!important;border-radius:12px}
-@media (max-width:767px){#dbl-new-foot{padding:30px 20px 0}#dbl-new-foot .r1{flex-direction:column;gap:18px}#dbl-new-foot .r2{grid-template-columns:1fr 1fr;gap:26px 18px}#dbl-new-foot .r2 .contact,#dbl-new-foot .r2 .mapw{grid-column:1/-1}
+@media (max-width:767px){#dbl-new-foot{padding:30px 20px 0}#dbl-new-foot .r1{flex-direction:column;gap:18px}#dbl-new-foot .r2{grid-template-columns:1fr 1fr;gap:26px 18px}#dbl-new-foot .r2 .contact,#dbl-new-foot .r2 .mapw{grid-column:1/-1}#dbl-new-foot .mapw .elementor-element-832a7d8{display:none!important}#dbl-new-foot .mapw{align-items:center}
 #dbl-new-foot .r3{grid-template-columns:1fr}#dbl-new-foot .r4{flex-direction:column;text-align:center}}`;
     document.head.appendChild(st);
     const box = document.createElement('div'); box.id = 'dbl-new-foot'; box.className = old.className; old.after(box);
