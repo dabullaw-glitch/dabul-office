@@ -3,6 +3,7 @@
    and a "וואטסאפ" half with a green circle (opens a chat with Yakir, with a
    ready message naming the page). The big green "פנו אלינו" banner and the WhatsApp circle that opened a form are hidden
    on the phone, and so is the floating group circle (74d8bec; the group keeps its button and footer icon); the accessibility button moves up so it does not cover the bar.
+   The space kept free under the bar is part of the dark footer, so no white strip shows at the very bottom (Yakir asked, 8.10.2026).
    Computer: the green banner is hidden; the WhatsApp circle opens a direct chat instead of the form.
    Footer / menu WhatsApp icons (they led to the community group) open a direct chat; the group keeps its own icon.
    To undo everything: deactivate this snippet. */
@@ -28,7 +29,7 @@ add_action('wp_head', function () {
 		. '#dbl-cbar .c{background:linear-gradient(135deg,#f0d9a0,#c9a14f);color:#141008}#dbl-cbar .w{box-shadow:inset 0 0 0 1px rgba(255,255,255,.26);margin-right:6px}'
 		. '#dbl-cbar .ic{width:34px;height:34px;flex:0 0 34px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:7px;box-sizing:border-box}'
 		. '#dbl-cbar .c .ic{background:rgba(20,16,8,.12)}#dbl-cbar .w .ic{background:#25d366;color:#fff}#dbl-cbar svg{width:100%;height:100%;display:block}'
-		. 'body{padding-bottom:92px}'
+		. 'body{padding-bottom:92px}body:has(#dbl-foot){padding-bottom:0!important}#dbl-foot{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))!important}'
 		. '.elementor-element-094a351,.elementor-element-74d8bec{display:none!important}'
 		. '.onetap-container-toggle,.onetap-container-toggle .onetap-toggle{bottom:100px!important;top:auto!important}'
 		. '}'
