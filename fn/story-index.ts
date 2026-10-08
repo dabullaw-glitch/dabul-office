@@ -2,7 +2,8 @@
 // ?form=1 POST {t, ...}:      the phone form (story.html on the office GitHub site, opened from the Telegram button with the
 //                            key after #) sends what happened, what we did and the result; saved as docs casestory/<id>.
 // step=ask      (monthly):   Telegram message to Yakir with a button to the form.
-// step=preview  (writer):    every artjob with mode 'story' and status 'story-written' becomes a hidden draft on the site,
+// step=preview  (writer):    the oldest artjob with mode 'story' and status 'story-written' becomes a hidden draft on the site
+//                            (one story a month at most, see monthTaken),
 //                            and Yakir gets a Telegram message with preview / approve / reject buttons. Nothing is public.
 // ?approve=<token>:          the draft is removed and the job goes to the regular articles engine (status 'written'):
 //                            the same checks, cover image and Yoast fields as every article, scheduled for the next morning.
@@ -60,8 +61,18 @@ async function ask() {
   return { ok: true, waiting };
 }
 
+// Yakir's rule (9.10.2026): at most one case story a month on the site. A story waiting for approval, or one already
+// approved this month (Israel time), holds the next one back until next month.
+async function monthTaken() {
+  const ym = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jerusalem' }).slice(0, 7);
+  const { data } = await admin().from('docs').select('data').eq('coll', 'artjob').eq('data->>mode', 'story');
+  // deno-lint-ignore no-explicit-any
+  return (data || []).some((r: any) => r.data.status === 'story-awaiting' || (r.data.approvedAt && new Date(r.data.approvedAt).toLocaleDateString('en-CA', { timeZone: 'Asia/Jerusalem' }).slice(0, 7) === ym));
+}
+
 async function preview() {
-  const { data: jobs } = await admin().from('docs').select('id,data').eq('coll', 'artjob').eq('data->>mode', 'story').eq('data->>status', 'story-written').limit(3);
+  if (await monthTaken()) return { previews: [], held: 'one story a month: the next one waits for next month' };
+  const { data: jobs } = await admin().from('docs').select('id,data').eq('coll', 'artjob').eq('data->>mode', 'story').eq('data->>status', 'story-written').order('updated_at', { ascending: true }).limit(1);
   const out: string[] = [];
   const auth = basic(env('WP_USER'), env('WP_APP_PASSWORD'));
   const { data: exr } = await admin().from('docs').select('data').match({ coll: 'artcfg', id: 'exemplar' }).maybeSingle();

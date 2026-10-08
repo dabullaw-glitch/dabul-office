@@ -29,7 +29,7 @@ sources:
     url: "https://www.kolzchut.org.il/he/הפטר_(פטור_מחובות)_בהליכי_חדלות_פירעון_ושיקום_כלכלי_(פשיטת_רגל)"
   - title: "כל זכות: דוח ממצאי בדיקה של נאמן"
     url: "https://www.kolzchut.org.il/he/דוח_ממצאי_בדיקה_של_נאמן_בהליכי_חדלות_פירעון_ושיקום_כלכלי_(פשיטת_רגל)"
-related: [tkufat-habeinayim, tzav-shikum-kalkali, hagbalot, doch-du-chodshi]
+related: [tkufat-habeinayim, tzav-shikum-kalkali, hagbalot, doch-du-chodshi, chakira-neeman]
 ---
 
 בכל תיק חדלות פירעון של אדם פרטי יש **נאמן**. הוא לא שופט, לא עורך הדין שלכם וגם לא נציג של נושה מסוים. התפקיד שלו הוא לנהל את ההליך בצורה מקצועית והוגנת: לבדוק את המצב הכלכלי שלכם, לבדוק את התביעות של הנושים, ולבנות את התמונה שעליה תיקבע התוכנית שלכם.
