@@ -10,6 +10,7 @@
     "@fontsource/frank-ruhl-libre": "5.2.5",
     "@fontsource/heebo": "5.2.5",
     "astro": "5.18.2",
+    "jspdf": "^2.5.2",
     "pagefind": "1.4.0"
   },
   "devDependencies": {

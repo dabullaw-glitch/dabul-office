@@ -1,7 +1,7 @@
 ---
 import { SITE, CITIES } from '../data/site';
 interface Props { title?: string; sub?: string; id?: string; source?: string }
-const { title = 'רוצים שעורך דין יחזור אליכם?', sub = 'משאירים פרטים, ועורך דין מהרשימה שלנו יחזור אליכם לשיחה ראשונה. בלי התחייבות.', id = 'lead', source = '' } = Astro.props;
+const { title = 'רוצים שעורך דין יחזור אליכם?', sub = 'משאירים פרטים, ועורך דין שעוסק בתחום יחזור אליכם לשיחה ראשונה. בלי התחייבות.', id = 'lead', source = '' } = Astro.props;
 const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <section class="lead card" id={id} aria-labelledby={`${id}-h`}>
@@ -25,7 +25,7 @@ const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         <option value="">בחירה (לא חובה)</option><option>יש תיקים בהוצאה לפועל</option><option>חובות לבנקים ולחברות אשראי</option><option>עצמאי/ת או בעל/ת עסק</option><option>כבר בהליך חדלות פירעון</option><option>אחר</option>
       </select></div>
     <div class="hp" aria-hidden="true"><label>אתר<input name="website" tabindex="-1" autocomplete="off" /></label></div>
-    <label class="check"><input type="checkbox" name="consent" required /> <span>אני מסכים/ה שהפרטים יועברו לעורך דין מרשימת האתר כדי שיחזור אליי, לפי <a href={`${B}mediniyut-pratiyut/`}>מדיניות הפרטיות</a>.</span></label>
+    <label class="check"><input type="checkbox" name="consent" required /> <span>אני מסכים/ה שהפרטים יועברו לעורך דין שעוסק בתחום כדי שיחזור אליי, לפי <a href={`${B}mediniyut-pratiyut/`}>מדיניות הפרטיות</a>.</span></label>
     <button class="btn btn-sun" type="submit">שליחה</button>
     <p class="note" style="margin-top:10px">השליחה אינה יוצרת יחסי עורך דין ולקוח. המידע באתר אינו ייעוץ משפטי.</p>
     <div class="msg" role="status" aria-live="polite"></div>
@@ -58,7 +58,7 @@ document.querySelectorAll<HTMLFormElement>('form.lf').forEach((f) => {
     try {
       const r = await fetch(f.dataset.endpoint as string, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...d, phone, page: location.pathname, source: f.dataset.source || '', utm: ['utm_source', 'utm_medium', 'utm_campaign'].map((k) => q.get(k) || '').join('|'), ref: document.referrer.slice(0, 200) }) });
       if (!r.ok) throw new Error(String(r.status));
-      f.innerHTML = '<div class="ok"><b>תודה, הפרטים התקבלו.</b><br>עורך דין מהרשימה יחזור אליכם בהקדם.</div>';
+      f.innerHTML = '<div class="ok"><b>תודה, הפרטים התקבלו.</b><br>עורך דין שעוסק בתחום יחזור אליכם בהקדם.</div>';
       (window as any).dataLayer?.push({ event: 'lead_form_submit' });
     } catch (err) {
       btn.disabled = false; btn.textContent = 'שליחה';
