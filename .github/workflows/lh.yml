@@ -20,6 +20,9 @@ jobs:
           npx -y lighthouse@12.2.1 "https://dabullaw.co.il/" --quiet --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=diag-results/lh/mobile.json || true
           npx -y lighthouse@12.2.1 "https://dabullaw.co.il/?lh=$RANDOM" --quiet --preset=desktop --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=diag-results/lh/desktop.json || true
           node lh/sum.mjs diag-results/lh/mobile.json diag-results/lh/desktop.json
+          for st in mobile desktop; do curl -s -m 170 "https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=https%3A%2F%2Fdabullaw.co.il%2F&strategy=$st&category=performance&category=accessibility&category=best-practices&category=seo" -o diag-results/lh/psi-$st.json || true; done
+          node lh/sum2.mjs diag-results/lh/psi-mobile.json diag-results/lh/psi-desktop.json diag-results/lh/desktop.json
+          rm -f diag-results/lh/psi-mobile.json diag-results/lh/psi-desktop.json
           rm -f diag-results/lh/mobile.json diag-results/lh/desktop.json
       - name: Commit
         if: always()
