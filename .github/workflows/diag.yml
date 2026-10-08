@@ -20,7 +20,7 @@ jobs:
           npm i playwright@1.47.2
           npx playwright install --with-deps chromium
       - name: Diagnose
-        run: node diag/press19.mjs
+        run: node diag/press20.mjs
       - name: Commit
         run: |
           git config user.name "audit-bot"
