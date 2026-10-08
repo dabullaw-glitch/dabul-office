@@ -213,6 +213,10 @@ html body .elementor-element-abb2800 .certificates-carousel .elementor-swiper-bu
 html body .elementor-element-abb2800 .certificates-carousel{max-width:1440px;margin-inline:auto}`;
       document.head.appendChild(st);
       document.querySelectorAll('.elementor-element-abb2800 .certificates-carousel .swiper-slide').forEach((sl) => { const a = sl.querySelector('a'); const i = sl.querySelector('img'); if (a && i && a.href) { i.removeAttribute('srcset'); i.src = a.href; } });
+      const H2 = mode === 'phone' ? 400 : 470;
+      const root = document.querySelector('.elementor-element-abb2800 .certificates-carousel');
+      root.querySelectorAll('.swiper-slide, .swiper-slide-inner, .swiper-slide a, figure, img').forEach((e) => { ['height', 'min-height', 'max-height'].forEach((k) => e.style.setProperty(k, H2 + 'px', 'important')); });
+      [root, ...root.querySelectorAll('.elementor-image-carousel-wrapper, .swiper-wrapper, .elementor-widget-container')].forEach((e) => { e.style.setProperty('height', 'auto', 'important'); e.style.setProperty('max-height', 'none', 'important'); });
       const el = document.querySelector('.elementor-element-abb2800 .certificates-carousel .swiper');
       const sw = el && el.swiper; if (sw) { sw.params.slidesPerView = mode === 'phone' ? 1.25 : 4; sw.params.spaceBetween = mode === 'phone' ? 16 : 36; if (sw.params.breakpoints) sw.params.breakpoints = {}; sw.update(); sw.slideTo(sw.params.loop ? 6 : 0, 0); }
     }, mode);
