@@ -168,11 +168,8 @@ add_action('rest_api_init', function () {
 	// WP Rocket state (read only): main speed options, "remove unused CSS" queue, .htaccess cache rules, server
 	register_rest_route('dabul/v1', '/rocketinfo', array('methods' => 'GET', 'permission_callback' => $admin, 'callback' => function () {
 		global $wpdb; $o = get_option('wp_rocket_settings', array()); $keys = array('remove_unused_css', 'async_css', 'minify_css', 'minify_concatenate_css', 'delay_js', 'defer_all_js', 'lazyload', 'lazyload_css_bg_img', 'cache_logged_user', 'minify_js', 'manual_preload');
-		$out = array('opts' => array_intersect_key((array) $o, array_flip($keys)), 'version' => defined('WP_ROCKET_VERSION') ? WP_ROCKET_VERSION : '', 'server' => $_SERVER['SERVER_SOFTWARE'] ?? '');
-		$t = $wpdb->prefix . 'wpr_rucss_used_css'; $q = 'SEL' . 'ECT status, COUNT(*) n, MAX(modified) last ' . 'FR' . 'OM ' . $t . ' GROUP BY status';
-		$out['rucss'] = $wpdb->get_results($q, ARRAY_A); $out['rucss_err'] = $wpdb->last_error;
-		$hf = ABSPATH . '.ht' . 'access'; $hc = is_readable($hf) ? (string) file_get_contents($hf) : '';
-		$out['ht'] = array('size' => strlen($hc), 'rocket' => strpos($hc, 'WP Rocket') !== false, 'expires' => strpos($hc, 'Expires') !== false);
+		$out = array('opts' => array_intersect_key((array) $o, array_flip($keys)), 'version' => defined('WP_ROCKET_VERSION') ? WP_ROCKET_VERSION : '');
+		$out['rucss_tx'] = array('errors' => get_transient('wp_rocket_rucss_errors_count'), 'saas_down' => get_option('wp_rocket_saas_down'), 'notice' => get_transient('wpr_dynamic_lists_incompatible_plugins') ? 1 : 0);
 		$out['saas'] = array('valid_key' => function_exists('rocket_valid_key') ? (bool) rocket_valid_key() : null, 'license' => get_option('wp_rocket_customer_data') ? 'set' : 'none');
 		return $out;
 	}));
