@@ -1,0 +1,354 @@
+{
+ "base": {
+  "cls": 0.0048,
+  "ls": [
+   {
+    "v": 0.0003,
+    "t": 2863,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 32/25>6/77"
+    ]
+   },
+   {
+    "v": 0.0045,
+    "t": 4389,
+    "src": [
+     "img @ca99b79 6/77>9/71",
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   }
+  ]
+ },
+ "accessibility-onetap-front-end": {
+  "cls": 0.0291,
+  "ls": [
+   {
+    "v": 0.0064,
+    "t": 1864,
+    "src": [
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60"
+    ]
+   },
+   {
+    "v": 0.0182,
+    "t": 2019,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 0/0>6/77"
+    ]
+   },
+   {
+    "v": 0.0045,
+    "t": 3422,
+    "src": [
+     "img @ca99b79 6/77>9/71",
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   }
+  ]
+ },
+ "onetap-fonts-readable": {
+  "cls": 0.0291,
+  "ls": [
+   {
+    "v": 0.0064,
+    "t": 1393,
+    "src": [
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60"
+    ]
+   },
+   {
+    "v": 0.0182,
+    "t": 1612,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 0/0>6/77"
+    ]
+   },
+   {
+    "v": 0.0045,
+    "t": 2948,
+    "src": [
+     "img @ca99b79 6/77>9/71",
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   }
+  ]
+ },
+ "document-embedder": {
+  "cls": 0.0291,
+  "ls": [
+   {
+    "v": 0.0064,
+    "t": 1405,
+    "src": [
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60"
+    ]
+   },
+   {
+    "v": 0.0182,
+    "t": 1577,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 0/0>6/77"
+    ]
+   },
+   {
+    "v": 0.0045,
+    "t": 2880,
+    "src": [
+     "img @ca99b79 6/77>9/71",
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   }
+  ]
+ },
+ "fadeInRight": {
+  "cls": 0.0048,
+  "ls": [
+   {
+    "v": 0.0003,
+    "t": 1633,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 32/25>6/77"
+    ]
+   },
+   {
+    "v": 0.0045,
+    "t": 2887,
+    "src": [
+     "img @ca99b79 6/77>9/71",
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   }
+  ]
+ },
+ "slideInUp": {
+  "cls": 0.0291,
+  "ls": [
+   {
+    "v": 0.0064,
+    "t": 1407,
+    "src": [
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60"
+    ]
+   },
+   {
+    "v": 0.0182,
+    "t": 1584,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 0/0>6/77"
+    ]
+   },
+   {
+    "v": 0.0045,
+    "t": 2878,
+    "src": [
+     "img @ca99b79 6/77>9/71",
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   }
+  ]
+ },
+ "widget-google_maps": {
+  "cls": 0.0112,
+  "ls": [
+   {
+    "v": 0.0064,
+    "t": 1376,
+    "src": [
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60"
+    ]
+   },
+   {
+    "v": 0.0003,
+    "t": 1485,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 32/25>6/77"
+    ]
+   },
+   {
+    "v": 0.0045,
+    "t": 2915,
+    "src": [
+     "img @ca99b79 6/77>9/71",
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   }
+  ]
+ },
+ "widget-video": {
+  "cls": 0.0112,
+  "ls": [
+   {
+    "v": 0.0064,
+    "t": 1386,
+    "src": [
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60"
+    ]
+   },
+   {
+    "v": 0.0003,
+    "t": 1488,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 32/25>6/77"
+    ]
+   },
+   {
+    "v": 0.0045,
+    "t": 2818,
+    "src": [
+     "img @ca99b79 6/77>9/71",
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   }
+  ]
+ },
+ "widget-price-list": {
+  "cls": 0.0291,
+  "ls": [
+   {
+    "v": 0.0064,
+    "t": 1530,
+    "src": [
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60"
+    ]
+   },
+   {
+    "v": 0.0182,
+    "t": 1684,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 0/0>6/77"
+    ]
+   },
+   {
+    "v": 0.0045,
+    "t": 2953,
+    "src": [
+     "img @ca99b79 6/77>9/71",
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   }
+  ]
+ },
+ "unnamed-3-1": {
+  "cls": 0.01,
+  "ls": [
+   {
+    "v": 0.0064,
+    "t": 1502,
+    "src": [
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60"
+    ]
+   },
+   {
+    "v": 0.0033,
+    "t": 2936,
+    "src": [
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   },
+   {
+    "v": 0.0003,
+    "t": 4023,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 32/25>9/71"
+    ]
+   }
+  ]
+ },
+ "NotoSansHebrew": {
+  "cls": 0.0041,
+  "ls": [
+   {
+    "v": 0.0003,
+    "t": 1781,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 32/25>6/77"
+    ]
+   },
+   {
+    "v": 0.0031,
+    "t": 2960,
+    "src": [
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   },
+   {
+    "v": 0.0004,
+    "t": 4298,
+    "src": [
+     "#text 723/33>720/33",
+     "li.menu-item.menu-item-type-custom.menu-item-object-custom @b175daa 15/60>15/60",
+     "li.menu-item.menu-item-type-post_type.menu-item-object-page @b175daa 15/60>15/60",
+     "#text 317/41>313/41",
+     "#text 376/53>374/53"
+    ]
+   },
+   {
+    "v": 0.0003,
+    "t": 4675,
+    "src": [
+     "#text 873/49>870/49"
+    ]
+   }
+  ]
+ },
+ "post-619.css": {
+  "cls": 0.0227,
+  "ls": [
+   {
+    "v": 0.0182,
+    "t": 3850,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 0/0>6/77"
+    ]
+   },
+   {
+    "v": 0.0045,
+    "t": 4826,
+    "src": [
+     "img @ca99b79 6/77>9/71",
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   }
+  ]
+ },
+ "bgmain": {
+  "cls": 0.0291,
+  "ls": [
+   {
+    "v": 0.0064,
+    "t": 1429,
+    "src": [
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60"
+    ]
+   },
+   {
+    "v": 0.0182,
+    "t": 1586,
+    "src": [
+     "div.elementor-element.elementor-element-ca99b79.elementor-widget @ca99b79 0/0>6/77"
+    ]
+   },
+   {
+    "v": 0.0045,
+    "t": 2856,
+    "src": [
+     "img @ca99b79 6/77>9/71",
+     "ul#menu-1-b175daa.elementor-nav-menu @b175daa 15/60>15/60",
+     "a.elementor-button.elementor-button-link.elementor-size-sm @d8c5ab4 21/47>21/47"
+    ]
+   }
+  ]
+ }
+}
