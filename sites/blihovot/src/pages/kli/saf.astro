@@ -1,0 +1,37 @@
+---
+import Tool from '../../layouts/Tool.astro';
+import { FACTS } from '../../data/site';
+const T = FACTS.threshold.value;
+---
+<Tool id="saf" title="בית משפט או הוצאה לפועל? מחשבון סף חדלות פירעון 2026" h1="בית משפט או הוצאה לפועל?"
+  description={`מזינים את סך החובות ורואים לאן מגישים בקשה לחדלות פירעון: לממונה ולבית המשפט או ללשכת ההוצאה לפועל, לפי הסף המעודכן (${FACTS.threshold.label}, נכון ל-${FACTS.threshold.asOf}).`}
+  intro={`הסכום הכולל של החובות קובע איזה גוף מטפל בהליך חדלות הפירעון שלכם. הסף נכון ל-${FACTS.threshold.asOf}: ${FACTS.threshold.label}.`}
+  sources={[{ title: 'כל זכות: צו לפתיחת הליכי חדלות פירעון ושיקום כלכלי', url: FACTS.threshold.src }]}
+  related={['saf-hovot', 'ma-ze-hadlut-piraon', 'tzav-ptichat-halichim']}
+  faq={[{ q: 'האם הסף מתעדכן?', a: 'כן, מדי שנה. בחוק המקורי הוא עמד על 150,000 ₪, ונכון ל-2026 הוא 176,923.12 ₪.' }, { q: 'ומה אם נושה ביקש לפתוח את ההליך?', a: 'הליך שנפתח בבקשת נושה מתנהל בבית המשפט בפיקוח הממונה, בלי קשר לגובה החוב.' }]}>
+  <form id="saf" onsubmit="return false">
+    <div class="q"><label for="d"><b>סך כל החובות שלכם (₪)</b></label><div class="num"><input id="d" inputmode="numeric" placeholder="למשל 120,000" autocomplete="off" /></div></div>
+    <div class="q"><b>מי מבקש לפתוח את ההליך?</b><div class="opts"><label><input type="radio" name="who" value="me" checked /> אני (החייב)</label><label><input type="radio" name="who" value="cred" /> נושה</label></div></div>
+    <button class="btn btn-teal" type="submit">בדיקה</button>
+  </form>
+  <div class="res" id="out" hidden aria-live="polite"></div>
+  <div slot="explain">
+    <h2>איך זה עובד?</h2>
+    <p>החוק מחלק את הליכי חדלות הפירעון של אנשים פרטיים לשני מסלולים לפי סך החובות. בחובות מעל הסף, הבקשה מוגשת לממונה על הליכי חדלות פירעון, והחלטות על התוכנית וההפטר מתקבלות בבית המשפט. בחובות עד הסף, הבקשה מוגשת ללשכת ההוצאה לפועל, ורשם ההוצאה לפועל מחליט.</p>
+    <p>חשוב לחשב את <strong>היתרות העדכניות</strong>, כולל ריביות והוצאות, ולא את הסכום המקורי של כל חוב.</p>
+  </div>
+</Tool>
+<script define:vars={{ T }}>
+const f = document.getElementById('saf'), out = document.getElementById('out'), d = document.getElementById('d');
+const nf = new Intl.NumberFormat('he-IL');
+d.addEventListener('input', () => { const v = d.value.replace(/[^\d]/g, ''); d.value = v ? nf.format(+v) : ''; });
+f.addEventListener('submit', () => {
+  const v = +d.value.replace(/[^\d]/g, ''); const who = f.querySelector('input[name=who]:checked').value;
+  if (!v) { out.hidden = false; out.className = 'res bad'; out.innerHTML = 'הזינו את סך החובות.'; return; }
+  out.hidden = false;
+  if (who === 'cred') { out.className = 'res warn'; out.innerHTML = '<h2>בית המשפט</h2><p>הליך שנפתח בבקשת נושה מתנהל בבית המשפט, בפיקוח הממונה, בכל סכום חוב.</p>'; return; }
+  if (v > T) { out.className = 'res good'; out.innerHTML = `<h2>הממונה ובית המשפט</h2><p>סך החובות (${nf.format(v)} ₪) <b>גבוה מהסף</b> (${nf.format(Math.round(T))} ₪). הבקשה מוגשת לממונה על הליכי חדלות פירעון, ובית המשפט מחליט על התוכנית ועל ההפטר.</p><p>טלפון הממונה: ‎*5067</p>`; }
+  else { out.className = 'res good'; out.innerHTML = `<h2>לשכת ההוצאה לפועל</h2><p>סך החובות (${nf.format(v)} ₪) <b>עד הסף</b> (${nf.format(Math.round(T))} ₪). הבקשה מוגשת ללשכת ההוצאה לפועל (רשות האכיפה והגבייה), ורשם ההוצאה לפועל מחליט על התוכנית ועל ההפטר.</p><p>טלפון רשות האכיפה והגבייה: ‎*35592</p>`; }
+  if (Math.abs(v - T) < 15000) out.innerHTML += '<p><b>שימו לב:</b> הסכום קרוב מאוד לסף. כדאי לוודא יתרות מדויקות ועדכניות מכל הנושים.</p>';
+});
+</script>

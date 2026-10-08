@@ -1,0 +1,47 @@
+---
+import Tool from '../../layouts/Tool.astro';
+const inc = [['salary', 'משכורות נטו (כל בני הבית)'], ['benefits', 'קצבאות (ילדים, נכות, הבטחת הכנסה ועוד)'], ['other', 'הכנסות אחרות (מזונות, עבודות צדדיות)']];
+const fix = [['rent', 'שכר דירה או משכנתא'], ['bills', 'ארנונה, חשמל, מים, גז'], ['ins', 'ביטוחים'], ['tel', 'תקשורת (טלפון, אינטרנט, טלוויזיה)'], ['kids', 'מעון, צהרון, חוגים'], ['debt', 'החזרי הלוואות וחובות קיימים']];
+const vary = [['food', 'אוכל וסופר'], ['car', 'דלק, תחבורה ורכב'], ['health', 'בריאות ותרופות'], ['cloth', 'ביגוד והנעלה'], ['fun', 'בילויים ומנויים']];
+---
+<Tool id="taktziv" title="מחשבון תקציב חודשי למשפחה: כמה כסף פנוי נשאר?" h1="מחשבון תקציב חודשי"
+  description="מחשבון תקציב משפחתי פשוט: הכנסות מול הוצאות קבועות, משתנות ושנתיות, ומה נשאר פנוי כל חודש. הבסיס להסדר חוב, לאיחוד תיקים ולחקירת יכולת."
+  intro="ממלאים את ההכנסות וההוצאות החודשיות (בערך), ומקבלים כמה כסף פנוי נשאר כל חודש. ההוצאות השנתיות מחולקות אוטומטית ל-12."
+  sources={[{ title: 'כל זכות: חקירת יכולת בהוצאה לפועל', url: 'https://www.kolzchut.org.il/he/חקירת_יכולת_בהוצאה_לפועל' }]}
+  related={['taktziv', 'chakirat-yecholet', 'tzaadim-rishonim']}
+  faq={[{ q: 'למה זה חשוב לחובות?', a: 'הכסף הפנוי הוא הבסיס לכל הצעה: להסדר עם בנק, לבקשת איחוד תיקים ולחקירת יכולת. הצעה שמבוססת על תקציב אמיתי מחזיקה, והצעה שלא מבוססת נופלת.' }]}>
+  <form id="bud" onsubmit="return false">
+    <h2 class="h">הכנסות חודשיות</h2>
+    <div class="row">{inc.map(([k, l]) => <label for={k}>{l}<span class="num"><input id={k} data-g="in" inputmode="numeric" placeholder="0" autocomplete="off" /></span></label>)}</div>
+    <h2 class="h">הוצאות קבועות</h2>
+    <div class="row">{fix.map(([k, l]) => <label for={k}>{l}<span class="num"><input id={k} data-g="out" inputmode="numeric" placeholder="0" autocomplete="off" /></span></label>)}</div>
+    <h2 class="h">הוצאות משתנות</h2>
+    <div class="row">{vary.map(([k, l]) => <label for={k}>{l}<span class="num"><input id={k} data-g="out" inputmode="numeric" placeholder="0" autocomplete="off" /></span></label>)}</div>
+    <h2 class="h">הוצאות שנתיות (סכום לשנה)</h2>
+    <div class="row"><label for="year">טסט וביטוח רכב, חגים, מתנות, ציוד לבית ספר, תיקונים<span class="num"><input id="year" data-g="year" inputmode="numeric" placeholder="0" autocomplete="off" /></span></label></div>
+  </form>
+  <div class="res" id="out" aria-live="polite"><h2>כסף פנוי בחודש: <span class="big" id="free">0 ₪</span></h2><div class="kv"><div><small>הכנסות</small><b id="tin">0 ₪</b></div><div><small>הוצאות (כולל שנתיות חלקי 12)</small><b id="tout">0 ₪</b></div></div><p id="msg" style="margin-top:12px">מלאו את הסכומים, והחישוב יתעדכן מיד.</p></div>
+  <div slot="explain">
+    <h2>איך משתמשים בתוצאה?</h2>
+    <p>אם יש כסף פנוי, זה הסכום שממנו אפשר להציע תשלום להסדר חוב או לאיחוד תיקים. מומלץ לא להציע את כל הסכום הפנוי, אלא להשאיר מרווח להוצאות לא צפויות.</p>
+    <p>אם הכסף הפנוי שלילי, המשמעות היא שהחובות גדלים כל חודש. זה הזמן לבדוק חיסכון בהוצאות, מימוש זכויות, ופתרון כולל לחובות.</p>
+  </div>
+</Tool>
+<style>.h{font:700 1.1rem/1.3 var(--ff);margin:18px 0 10px}</style>
+<script is:inline>
+(function () {
+const nf = new Intl.NumberFormat('he-IL'), f = document.getElementById('bud');
+const v = (el) => +el.value.replace(/[^\d]/g, '') || 0;
+function calc() {
+  let a = 0, b = 0; f.querySelectorAll('input').forEach((el) => { if (el.dataset.g === 'in') a += v(el); else if (el.dataset.g === 'out') b += v(el); else b += v(el) / 12; });
+  const free = Math.round(a - b), out = document.getElementById('out');
+  document.getElementById('free').textContent = nf.format(free) + ' ₪'; document.getElementById('tin').textContent = nf.format(a) + ' ₪'; document.getElementById('tout').textContent = nf.format(Math.round(b)) + ' ₪';
+  const msg = document.getElementById('msg');
+  if (!a && !b) { out.className = 'res'; msg.textContent = 'מלאו את הסכומים, והחישוב יתעדכן מיד.'; return; }
+  if (free < 0) { out.className = 'res bad'; msg.innerHTML = 'ההוצאות גבוהות מההכנסות. כל חודש כזה מגדיל את החובות. כדאי לבדוק <a href="../../madrich/tzaadim-rishonim/">7 צעדים ראשונים ליציאה מחובות</a>.'; }
+  else if (free < a * 0.05) { out.className = 'res warn'; msg.innerHTML = 'כמעט לא נשאר מרווח. כל הוצאה לא צפויה עלולה לייצר חוב חדש. נסו לזהות הוצאה אחת או שתיים שאפשר להקטין.'; }
+  else { out.className = 'res good'; msg.innerHTML = 'יש כסף פנוי. זה הבסיס להצעה לנושים. מומלץ להציע חלק ממנו ולהשאיר מרווח. <a href="../tashlumim/">כמה זמן ייקח לסגור את החוב?</a>'; }
+}
+f.addEventListener('input', (e) => { const el = e.target; const x = el.value.replace(/[^\d]/g, ''); el.value = x ? nf.format(+x) : ''; calc(); });
+})();
+</script>

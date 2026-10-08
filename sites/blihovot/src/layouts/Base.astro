@@ -1,0 +1,106 @@
+---
+import '../styles/global.css';
+import { SITE, NAV } from '../data/site';
+import Logo from '../components/Logo.astro';
+interface Props { title: string; description: string; path?: string; type?: 'website' | 'article'; schema?: object[]; noindex?: boolean; image?: string; }
+const { title, description, type = 'website', schema = [], noindex = false } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const u = (p: string) => B + p.replace(/^\//, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
+const ogImage = new URL(u(Astro.props.image || 'og/default.png'), Astro.site).href;
+const here = Astro.url.pathname;
+const org = { '@context': 'https://schema.org', '@type': 'Organization', '@id': new URL(B + '#org', Astro.site).href, name: SITE.name, url: new URL(B, Astro.site).href, logo: new URL(u('icon-512.png'), Astro.site).href, description: SITE.description };
+const web = { '@context': 'https://schema.org', '@type': 'WebSite', '@id': new URL(B + '#web', Astro.site).href, name: SITE.name, url: new URL(B, Astro.site).href, inLanguage: 'he-IL', publisher: { '@id': org['@id'] }, potentialAction: { '@type': 'SearchAction', target: new URL(u('chipus/'), Astro.site).href + '?q={q}', 'query-input': 'required name=q' } };
+const fonts = `
+@font-face{font-family:Heebo;font-weight:400;font-display:swap;src:url(${B}fonts/heebo-hebrew-400-normal.woff2) format('woff2');unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:Heebo;font-weight:500;font-display:swap;src:url(${B}fonts/heebo-hebrew-500-normal.woff2) format('woff2');unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:Heebo;font-weight:700;font-display:swap;src:url(${B}fonts/heebo-hebrew-700-normal.woff2) format('woff2');unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:Heebo;font-weight:400;font-display:swap;src:url(${B}fonts/heebo-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:Heebo;font-weight:700;font-display:swap;src:url(${B}fonts/heebo-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:'Frank Ruhl Libre';font-weight:700;font-display:swap;src:url(${B}fonts/frank-ruhl-libre-hebrew-700-normal.woff2) format('woff2');unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:'Frank Ruhl Libre';font-weight:700;font-display:swap;src:url(${B}fonts/frank-ruhl-libre-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}`;
+---
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{(noindex || SITE.preview) && <meta name="robots" content="noindex,nofollow" />}
+<meta name="theme-color" content="#0d6b63" />
+<link rel="icon" href={u('favicon.svg')} type="image/svg+xml" />
+<link rel="apple-touch-icon" href={u('icon-512.png')} />
+<link rel="preload" href={`${B}fonts/heebo-hebrew-400-normal.woff2`} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={`${B}fonts/frank-ruhl-libre-hebrew-700-normal.woff2`} as="font" type="font/woff2" crossorigin />
+<style set:html={fonts}></style>
+<link rel="alternate" type="application/rss+xml" title={SITE.name} href={u('rss.xml')} />
+<meta property="og:type" content={type} />
+<meta property="og:locale" content="he_IL" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<script type="application/ld+json" set:html={JSON.stringify([org, web, ...schema])} />
+<slot name="head" />
+</head>
+<body>
+<a class="skip" href="#main">דילוג לתוכן</a>
+<header class="hdr" id="hdr">
+  <div class="wrap">
+    <a class="logo" href={B} aria-label={`${SITE.name}, לדף הבית`}><Logo /><span>{SITE.name}<small>{SITE.tagline}</small></span></a>
+    <nav class="nav" id="nav" aria-label="ראשי">
+      {NAV.map((n) => <a href={u(n.href)} aria-current={here.startsWith(u(n.href)) ? 'page' : undefined}>{n.label}</a>)}
+    </nav>
+    <a class="btn btn-sun cta" href={u('pniya/')}>השאירו פרטים</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav" aria-label="תפריט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+</header>
+<main id="main" data-pagefind-body={noindex ? undefined : ""}><slot /></main>
+<footer class="ftr">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <a class="logo" href={B} style="color:#fff"><Logo /><span>{SITE.name}</span></a>
+        <p style="margin-top:14px;max-width:38ch">{SITE.description}</p>
+      </div>
+      <div><h2>נושאים</h2><ul>
+        <li><a href={u('nose/hadlut-piraon/')}>חדלות פירעון</a></li>
+        <li><a href={u('nose/hotzaa-lapoal/')}>הוצאה לפועל</a></li>
+        <li><a href={u('nose/hesder-hov/')}>הסדרי חוב</a></li>
+        <li><a href={u('nose/atzmaim/')}>עצמאים ועסקים</a></li>
+        <li><a href={u('nose/achrei/')}>החיים אחרי החובות</a></li>
+        <li><a href={u('milon/')}>מילון מונחים</a></li>
+      </ul></div>
+      <div><h2>כלים</h2><ul>
+        <li><a href={u('kli/eize-halich/')}>איזה הליך מתאים לי?</a></li>
+        <li><a href={u('kli/saf/')}>בית משפט או הוצאה לפועל?</a></li>
+        <li><a href={u('kli/ichud-tikim/')}>מחשבון איחוד תיקים</a></li>
+        <li><a href={u('kli/tashlumim/')}>מחשבון סגירת חוב</a></li>
+        <li><a href={u('kli/taktziv/')}>מחשבון תקציב חודשי</a></li>
+        <li><a href={u('kurs/')}>קורס חינמי</a></li>
+      </ul></div>
+      <div><h2>האתר</h2><ul>
+        <li><a href={u('odot/')}>אודות ומדיניות מערכת</a></li>
+        <li><a href={u('orchei-din/')}>רשימת עורכי דין</a></li>
+        <li><a href={u('pirsum/')}>פרסום באתר</a></li>
+        <li><a href={u('pniya/')}>השארת פרטים</a></li>
+        <li><a href={u('mediniyut-pratiyut/')}>מדיניות פרטיות</a></li>
+        <li><a href={u('tnaei-shimush/')}>תנאי שימוש</a></li>
+        <li><a href={u('negishut/')}>הצהרת נגישות</a></li>
+      </ul></div>
+    </div>
+    <p class="legal">המידע באתר הוא מידע כללי בלבד ואינו ייעוץ משפטי או תחליף לייעוץ אישי. כל מצב שונה, והחוק והסכומים מתעדכנים מעת לעת. לפני פעולה, כדאי לבדוק את המקורות הרשמיים או להתייעץ עם עורך דין. {SITE.name} אינו משרד עורכי דין ואינו גוף ממשלתי. © {new Date().getFullYear()} {SITE.name}</p>
+  </div>
+</footer>
+<script is:inline>
+(function(){var h=document.getElementById('hdr'),b=h&&h.querySelector('.menu-btn');if(!b)return;b.addEventListener('click',function(){var o=h.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false')});})();
+</script>
+</body>
+</html>

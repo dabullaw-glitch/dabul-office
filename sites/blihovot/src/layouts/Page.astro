@@ -1,0 +1,15 @@
+---
+import Base from './Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+interface Props { title: string; h1?: string; description: string; noindex?: boolean; updated?: string }
+const { title, h1 = title, description, noindex = false, updated } = Astro.props;
+---
+<Base title={title} description={description} noindex={noindex}>
+  <div class="wrap" style="padding-block:28px 50px">
+    <Breadcrumbs items={[{ label: h1 }]} />
+    <h1>{h1}</h1>
+    {updated && <p class="muted" style="margin-top:-6px">עודכן: {updated}</p>}
+    <div class="prose"><slot /></div>
+    <slot name="after" />
+  </div>
+</Base>

@@ -1,0 +1,42 @@
+---
+import Tool from '../../layouts/Tool.astro';
+---
+<Tool id="tashlumim" title="מחשבון סגירת חוב: כמה זמן וכמה ריבית?" h1="מחשבון סגירת חוב"
+  description="כמה זמן ייקח לסגור חוב בתשלום חודשי קבוע, וכמה ריבית תשלמו בדרך? מחשבון פשוט לחוב לבנק, הלוואה או מינוס, עם השוואה בין תשלומים שונים."
+  intro="מזינים את יתרת החוב, הריבית השנתית והתשלום החודשי, ומקבלים כמה חודשים ייקח לסגור את החוב וכמה תשלמו בסך הכול. טוב להכנת הצעה להסדר עם בנק או נושה."
+  sources={[{ title: 'כל זכות: בנקים, כרטיסי אשראי ואמצעי תשלום', url: 'https://www.kolzchut.org.il/he/בנקים,_כרטיסי_אשראי_ואמצעי_תשלום' }]}
+  related={['hesder-im-noshim', 'masa-umatan-bank', 'tzaadim-rishonim']}
+  faq={[{ q: 'איך יודעים מה הריבית על החוב?', a: 'בהלוואה, הריבית מופיעה בהסכם ההלוואה ובאפליקציה של הבנק. במינוס, היא מופיעה בדף החשבון. אם אתם לא בטוחים, בקשו מהבנק את שיעור הריבית השנתית בפועל.' }, { q: 'למה כתוב שהחוב לא ייסגר לעולם?', a: 'כשהתשלום החודשי נמוך מהריבית שנצברת כל חודש, החוב לא קטן אלא גדל. זה סימן שצריך תשלום גבוה יותר, הפחתת ריבית בהסדר, או פתרון אחר.' }]}>
+  <form id="am" onsubmit="return false">
+    <div class="row">
+      <label for="d">יתרת החוב (₪)<span class="num"><input id="d" inputmode="numeric" placeholder="למשל 45,000" autocomplete="off" /></span></label>
+      <label for="r">ריבית שנתית (%)<span class="num"><input id="r" inputmode="decimal" placeholder="למשל 9.5" autocomplete="off" /></span></label>
+      <label for="p">תשלום חודשי (₪)<span class="num"><input id="p" inputmode="numeric" placeholder="למשל 1,200" autocomplete="off" /></span></label>
+    </div>
+    <button class="btn btn-teal" type="submit" style="margin-top:16px">חישוב</button>
+  </form>
+  <div class="res" id="out" hidden aria-live="polite"></div>
+  <div slot="explain">
+    <h2>איך מחשבים?</h2>
+    <p>בכל חודש נוספת ריבית על היתרה (הריבית השנתית חלקי 12), והתשלום החודשי מכסה קודם את הריבית ורק אחר כך מקטין את החוב. לכן תשלום קטן מדי כמעט לא מזיז את החוב, ותוספת קטנה לתשלום יכולה לקצר את התקופה בהרבה.</p>
+    <p>המחשבון לא כולל עמלות, הצמדה למדד או שינויי ריבית, ולכן התוצאה היא הערכה.</p>
+  </div>
+</Tool>
+<script is:inline>
+(function () {
+const f = document.getElementById('am'), out = document.getElementById('out'), d = document.getElementById('d'), r = document.getElementById('r'), p = document.getElementById('p');
+const nf = new Intl.NumberFormat('he-IL'), num = (el) => +String(el.value).replace(/[^\d.]/g, '');
+[d, p].forEach((el) => el.addEventListener('input', () => { const v = el.value.replace(/[^\d]/g, ''); el.value = v ? nf.format(+v) : ''; }));
+function run(debt, rate, pay) { const i = rate / 100 / 12; let b = debt, m = 0, paid = 0; while (b > 0.5 && m < 1200) { b += b * i; const x = Math.min(pay, b); b -= x; paid += x; m++; } return { m, paid, ok: b <= 0.5 }; }
+f.addEventListener('submit', () => {
+  const debt = num(d), rate = num(r) || 0, pay = num(p); out.hidden = false;
+  if (!debt || !pay) { out.className = 'res bad'; out.textContent = 'הזינו יתרת חוב ותשלום חודשי.'; return; }
+  const monthlyInt = debt * rate / 100 / 12;
+  if (pay <= monthlyInt) { out.className = 'res bad'; out.innerHTML = `<h2>בתשלום הזה החוב לא ייסגר</h2><p>הריבית שנצברת בחודש הראשון היא כ-${nf.format(Math.round(monthlyInt))} ₪, יותר מהתשלום החודשי. צריך תשלום גבוה יותר, הסדר עם הפחתת ריבית, או פתרון אחר.</p><div class="next"><a class="btn btn-teal" href="../../madrich/hesder-im-noshim/">איך מגיעים להסדר</a><a class="btn btn-line" href="../eize-halich/">איזה הליך מתאים לי</a></div>`; return; }
+  const a = run(debt, rate, pay), y = Math.floor(a.m / 12), mm = a.m % 12;
+  const alt = [1.25, 1.5].map((k) => { const pp = Math.round(pay * k), x = run(debt, rate, pp); return `<li>בתשלום של ${nf.format(pp)} ₪: ${x.m} חודשים, ריבית כוללת ${nf.format(Math.round(x.paid - debt))} ₪</li>`; }).join('');
+  out.className = 'res good';
+  out.innerHTML = `<h2>החוב ייסגר בעוד <span class="big">${a.m}</span> חודשים</h2><p>${y ? y + ' שנים' : ''}${y && mm ? ' ו-' : ''}${mm ? mm + ' חודשים' : ''}</p><div class="kv"><div><small>סך הכול תשלמו</small><b>${nf.format(Math.round(a.paid))} ₪</b></div><div><small>מתוכם ריבית</small><b>${nf.format(Math.round(a.paid - debt))} ₪</b></div><div><small>ריבית בחודש הראשון</small><b>${nf.format(Math.round(monthlyInt))} ₪</b></div></div><p style="margin-top:14px"><b>ואם מגדילים את התשלום?</b></p><ul>${alt}</ul>`;
+});
+})();
+</script>

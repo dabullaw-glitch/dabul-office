@@ -1,0 +1,5 @@
+---
+import { SITE } from '../data/site';
+interface Props { slot?: string }
+---
+{SITE.ads.enabled && <div class="ad no-print" aria-label="פרסומת"><ins class="adsbygoogle" style="display:block;width:100%;min-height:250px" data-ad-client={SITE.ads.client} data-ad-slot={Astro.props.slot || ''} data-ad-format="auto" data-full-width-responsive="true"></ins></div>}

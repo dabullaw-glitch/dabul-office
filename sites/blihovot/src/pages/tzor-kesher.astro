@@ -1,0 +1,9 @@
+---
+import Page from '../layouts/Page.astro';
+import ContactForm from '../components/ContactForm.astro';
+---
+<Page title="יצירת קשר עם מערכת האתר" description="פנייה למערכת האתר בלי חובות: הערות על תוכן, תיקון טעות, שאלות על פרטיות או שיתוף פעולה.">
+  <p>מצאתם טעות במדריך? יש לכם הערה, שאלה על פרטיות, או רעיון לשיתוף פעולה? כתבו לנו כאן.</p>
+  <p><strong>שימו לב:</strong> מערכת האתר לא נותנת ייעוץ משפטי אישי. כדי שעורך דין יחזור אליכם, השתמשו ב<a href="../pniya/">טופס השארת הפרטים</a>.</p>
+  <ContactForm slot="after" kind="contact" title="פנייה למערכת" fields={['name', 'phone', 'email', 'msg']} />
+</Page>

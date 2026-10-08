@@ -1,0 +1,34 @@
+name: bli-hovot site
+# Builds the "בלי חובות" information site (sites/blihovot) and publishes the result to the bli-hovot/ folder,
+# which GitHub Pages serves at https://dabullaw-glitch.github.io/dabul-office/bli-hovot/ (hidden from search engines until the real domain).
+on:
+  push:
+    branches: [main]
+    paths: ['sites/blihovot/**', '.github/workflows/blihovot.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: blihovot, cancel-in-progress: false }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Install
+        working-directory: sites/blihovot
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Build
+        working-directory: sites/blihovot
+        run: npm run build
+      - name: Publish to bli-hovot/
+        run: |
+          rm -rf bli-hovot && cp -r sites/blihovot/dist bli-hovot && touch bli-hovot/.nojekyll
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add -A bli-hovot
+          git commit -qm "bli-hovot: publish $(date -u +%FT%TZ)" || { echo nothing; exit 0; }
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done

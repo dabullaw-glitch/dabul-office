@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Video from '../../components/Video.astro';
+import videos from '../../data/videos.json';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const V = [...(videos as any[])].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+const schema = V.map((v) => ({ '@context': 'https://schema.org', '@type': 'VideoObject', name: v.title, description: v.description, thumbnailUrl: new URL(B + v.poster.replace(/^\//, ''), Astro.site).href, contentUrl: new URL(B + v.src.replace(/^\//, ''), Astro.site).href, uploadDate: v.date, duration: v.duration }));
+---
+<Base title="סרטונים קצרים: חובות, הוצאה לפועל וחדלות פירעון" description="סרטונים קצרים שמסבירים בפשטות: מה זה הפטר, איך עובד איחוד תיקים, מה אסור לעקל, ואיך יוצאים מחובות." schema={schema}>
+  <div class="wrap" style="padding-block:28px 50px;max-width:980px">
+    <Breadcrumbs items={[{ label: 'סרטונים' }]} />
+    <h1>סרטונים</h1>
+    <p style="font-size:1.1rem;color:var(--ink-2)">הסברים קצרים, דקה או שתיים, על הנושאים שהכי מבלבלים.</p>
+    {V.length ? V.map((v) => <Video v={v} />) : <p class="card">הסרטונים הראשונים בדרך. בינתיים אפשר להתחיל ב<a href={`${B}kurs/`}>קורס החינמי</a>.</p>}
+  </div>
+</Base>
