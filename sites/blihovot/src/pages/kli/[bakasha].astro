@@ -1,0 +1,54 @@
+---
+// One page per request helper (kli/bakasha-*/). Steps and logic live in src/lib/bakashot.ts; page text in src/data/bakashotMeta.ts.
+import Tool from '../../layouts/Tool.astro';
+import { BAKASHOT } from '../../data/bakashotMeta';
+export function getStaticPaths() { return BAKASHOT.map((m) => ({ params: { bakasha: m.id }, props: { m } })); }
+const { m } = Astro.props;
+---
+<Tool id={m.id} title={m.title} h1={m.h1} description={m.description} intro={m.intro} faq={m.faq} sources={m.sources} related={m.related}>
+  <div class="bq" data-helper={m.id}><p class="muted">טוען את העוזר...</p></div>
+  <noscript><p>העוזר דורש JavaScript.</p></noscript>
+  <Fragment slot="explain"><Fragment set:html={m.explain} /></Fragment>
+</Tool>
+<style is:global>
+.bq{display:block}
+.bq-prog{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:10px}.bq-prog span{display:block;height:100%;background:var(--teal);transition:width .3s}
+.bq-stepno{font-size:.85rem;color:var(--muted);margin:0}
+.bq-title{margin:.2em 0 .4em;font-size:1.35rem;outline:none}
+.bq-intro{color:var(--ink-2);margin:0 0 12px}
+.bq-fields{display:flex;flex-wrap:wrap;gap:14px}
+.bq-f{flex:1 1 100%;min-width:0;border:0;padding:0;margin:0}
+.bq-f.half{flex:1 1 220px}
+.bq-f>label,.bq-f legend{display:block;font-weight:700;margin-bottom:6px}
+.bq-f b{color:var(--rose)}
+.bq-help{display:block;font-size:.86rem;color:var(--muted);margin:-2px 0 6px}
+.bq input,.bq select,.bq textarea{width:100%;font:inherit;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.bq input[type=checkbox]{width:18px;height:18px;padding:0;accent-color:var(--teal)}
+.bq-opt{display:flex;gap:8px;align-items:center;padding:6px 0;font-weight:400}
+.bq-rowlist{display:grid;gap:10px}
+.bq-row{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--sand)}
+.bq-row label{flex:1 1 120px;min-width:0;font-size:.85rem;color:var(--ink-2)}.bq-row label span{display:block;margin-bottom:4px}
+.bq-del{background:none;border:0;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:10px}
+.bq-add{margin-top:8px;background:none;border:1.5px dashed var(--teal);color:var(--teal-2);border-radius:10px;padding:8px 14px;font:inherit;cursor:pointer}
+.bq-err:empty,.bq-msg:empty{display:none}.bq-err{color:var(--rose);font-weight:700}.bq-msg{font-weight:700;color:var(--teal-2)}
+.bq-nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.bq-actions{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.bq-verdict{border-radius:12px;padding:14px 16px;margin:10px 0;border:1.5px solid var(--line)}.bq-verdict p{margin:.3em 0 0}
+.bq-verdict.ok{background:var(--teal-soft);border-color:var(--teal)}.bq-verdict.warn{background:#fff1e0;border-color:#e9a23b;color:#4a2f00}.bq-verdict.info{background:var(--sand)}
+.bq-out{margin-top:10px}.bq-out h3{margin:1em 0 .4em}.bq-out h4{color:var(--teal-2);margin:1.2em 0 .4em;font-size:1.1rem}
+.bq-box{background:var(--sand);border-radius:10px;padding:12px 14px;margin:8px 0;white-space:normal}
+.bq-kv{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:6px 14px;margin:8px 0}.bq-kv dt{font-weight:700}.bq-kv dd{margin:0}
+.bq-check{list-style:none;padding:0}.bq-check li{padding-inline-start:28px;position:relative;margin:6px 0}.bq-check li::before{content:"";position:absolute;inset-inline-start:0;top:4px;width:16px;height:16px;border:2px solid var(--teal);border-radius:4px}
+.bq-reset{margin-top:18px;font-size:.9rem}.bq .lnk{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bq-verdict.warn{background:#3a2a10;color:#ffe2b8}}
+</style>
+<script>
+import { HELPERS, FOOTER } from '../../lib/bakashot';
+import { mount } from '../../lib/bakashaEngine';
+import { hebrewPdf, blocksToText } from '../../lib/hebrewPdf';
+const root = document.querySelector<HTMLElement>('.bq')!;
+const h = HELPERS[root.dataset.helper!];
+mount(root, h,
+  (r) => hebrewPdf(h.title, r.verdict ? [{ box: `${r.verdict.title}. ${r.verdict.text}` }, ...r.blocks] : r.blocks, FOOTER, `${h.id}.pdf`),
+  async (r) => { const t = blocksToText(r.blocks) + '\n\n' + FOOTER; try { await navigator.clipboard.writeText(t); } catch { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); } });
+</script>

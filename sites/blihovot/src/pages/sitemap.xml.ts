@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 import { HUBS } from '../data/site';
-import { TOOLS } from '../data/tools';
+import { ALL_TOOLS as TOOLS } from '../data/tools';
 import { forumData } from '../lib/forumData';
 export async function GET(ctx: { site: URL }) {
   const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');

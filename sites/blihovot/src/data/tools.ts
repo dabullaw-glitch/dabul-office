@@ -6,3 +6,8 @@ export const TOOLS = [
   { id: 'tashlumim', title: 'מחשבון סגירת חוב', blurb: 'כמה זמן ייקח לסגור חוב בתשלום חודשי קבוע, וכמה ריבית תשלמו בדרך.', cta: 'לחישוב' },
   { id: 'taktziv', title: 'מחשבון תקציב חודשי', blurb: 'הכנסות מול הוצאות: כמה כסף פנוי נשאר בכל חודש, ואיפה אפשר לחסוך.', cta: 'לחישוב' },
 ];
+
+// Request helpers: step-by-step preparation for official forms (pages: src/pages/kli/[bakasha].astro)
+import { BAKASHOT } from './bakashotMeta';
+export const FORM_TOOLS = BAKASHOT.map((m) => ({ id: m.id, title: m.card, blurb: m.intro, cta: 'להכנת הבקשה' }));
+export const ALL_TOOLS = [...TOOLS, ...FORM_TOOLS];
