@@ -2,7 +2,6 @@
    changing how the site looks). PREVIEW ONLY until Yakir approves: add ?dblprev=1 to a page address to see it.
    1. The page no longer jumps while it loads (the computer score fell because of this):
       - the logo gets its real size up front (it had no size and loaded late, so the header grew under the visitor),
-      - the cookie window no longer pulls the page when it opens (it moved the focus without "stay in place"),
       - the page's side overflow is cut with "clip" instead of "hidden", so the page body does not become its own
         scrolling box (that made the whole page register as moving).
    2. The big picture at the top is requested at once (phone: the city at night, computer: the hero background),
@@ -72,12 +71,7 @@ add_action('wp_footer', function () {
 	?>
 <script nowprocket data-no-optimize="1">
 (function () {
-	// the cookie window: focus without moving the page, and mark it as a named dialog
-	var f = HTMLElement.prototype.focus;
-	HTMLElement.prototype.focus = function (o) {
-		if (this.closest && this.closest('.elementor-popup-modal')) { o = Object.assign({}, o || {}, { preventScroll: true }); }
-		return f.call(this, o);
-	};
+	// the cookie window: mark it as a named dialog for screen readers
 	function fix() {
 		document.querySelectorAll('.elementor-popup-modal[role="document"]').forEach(function (p) {
 			p.setAttribute('role', 'dialog');
