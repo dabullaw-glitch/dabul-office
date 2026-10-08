@@ -180,6 +180,7 @@ for (const mode of ['desktop', 'phone']) {
   }, M);
   await p.waitForTimeout(2000);
   await p.screenshot({ path: `${OUT}/hero-${mode}-after.jpg`, type: 'jpeg', quality: 80 });
+  await p.addStyleTag({ content: 'header.elementor-location-header,[data-elementor-type="header"]{display:none!important}' });
   // about options
   const box = await p.evaluate(() => { const h = [...document.querySelectorAll('h1,h2,h3')].find((e) => /הכירו את/.test(e.textContent)); let c = h; for (let i = 0; i < 8 && c.parentElement; i++) { c = c.parentElement; if (c.classList.contains('e-parent')) break; } c.id = 'dbl-old-about'; return !!c; });
   await p.locator('#dbl-old-about').scrollIntoViewIfNeeded(); await p.waitForTimeout(800);
@@ -192,23 +193,64 @@ for (const mode of ['desktop', 'phone']) {
     await n.screenshot({ path: `${OUT}/about-${mode}-${k}.jpg`, type: 'jpeg', quality: 82 });
     rep[`about-${k}-${mode}`] = await p.evaluate(() => Math.round(document.getElementById('dbl-new-about').getBoundingClientRect().height));
   }
-  // footer options
-  await p.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight)); await p.waitForTimeout(2000);
-  const f = p.locator('[data-elementor-type="footer"]').first();
-  const info = await p.evaluate(() => { const f = document.querySelector('[data-elementor-type="footer"]'); const tops = [...f.children]; const formBox = tops.find((e) => e.querySelector('.elementor-element-0647149')); tops.forEach((e, i) => { e.dataset.dblTop = i; }); return { logo: (f.querySelector('.elementor-element-35de91f img') || {}).currentSrc || '', n: tops.length, form: tops.indexOf(formBox) }; });
-  await p.evaluate(() => { const f = document.querySelector('[data-elementor-type="footer"]'); [...f.children].forEach((e) => { if (!e.querySelector('.elementor-element-0647149')) e.dataset.dblHide = '1'; }); });
-  const lowerOld = await p.evaluate(() => { const f = document.querySelector('[data-elementor-type="footer"]'); const r = [...f.children].filter((e) => e.dataset.dblHide).map((e) => e.getBoundingClientRect()); return r.length ? { y: Math.round(Math.min(...r.map((x) => x.top)) + scrollY), h: Math.round(r.reduce((a, x) => a + x.height, 0)) } : null; });
-  rep['footer-before-' + mode] = lowerOld;
-  await p.evaluate(() => { document.querySelector('[data-elementor-type="footer"] [data-dbl-hide]')?.scrollIntoView(); }); await p.waitForTimeout(500);
-  await p.evaluate(() => { const f = document.querySelector('[data-elementor-type="footer"]'); const w = document.createElement('div'); w.id = 'dbl-old-foot'; const hide = [...f.children].filter((e) => e.dataset.dblHide); hide[0].before(w); hide.forEach((e) => w.appendChild(e)); });
+  // footer: same design, better order (existing widgets are moved, not redrawn)
+  await p.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight)); await p.waitForTimeout(2500);
+  await p.evaluate(() => { const f = document.querySelector('[data-elementor-type="footer"]'); [...f.children].forEach((e) => { if (!e.querySelector('.elementor-element-0647149')) e.dataset.dblHide = '1'; }); const w = document.createElement('div'); w.id = 'dbl-old-foot'; const hide = [...f.children].filter((e) => e.dataset.dblHide); hide[0].before(w); hide.forEach((e) => w.appendChild(e)); });
   await p.locator('#dbl-old-foot').screenshot({ path: `${OUT}/footer-${mode}-before.jpg`, type: 'jpeg', quality: 75 });
-  for (const [k, css, html] of [['F1', F1_CSS, F1_HTML(info.logo)], ['F2', F2_CSS, F2_HTML(info.logo)], ['F3', F3_CSS, F3_HTML(info.logo)]]) {
-    await p.evaluate((h) => { document.getElementById('dbl-new-foot')?.remove(); const o = document.getElementById('dbl-old-foot'); o.style.display = 'none'; o.insertAdjacentHTML('afterend', '<div id="dbl-new-foot">' + h + '</div>'); }, `<style>${FBASE}${css}</style>${html}`);
-    await p.waitForTimeout(1500);
-    const n = p.locator('#dbl-new-foot'); await n.scrollIntoViewIfNeeded(); await p.waitForTimeout(400);
-    await n.screenshot({ path: `${OUT}/footer-${mode}-${k}.jpg`, type: 'jpeg', quality: 82 });
-    rep[`footer-${k}-${mode}`] = await p.evaluate(() => Math.round(document.getElementById('dbl-new-foot').getBoundingClientRect().height));
-  }
+  rep['footer-before-' + mode] = await p.evaluate(() => Math.round(document.getElementById('dbl-old-foot').getBoundingClientRect().height));
+  await p.evaluate(() => {
+    const old = document.getElementById('dbl-old-foot'); const W = (id) => old.querySelector('.elementor-element-' + id);
+    const bg = getComputedStyle(old.firstElementChild).backgroundColor;
+    const st = document.createElement('style');
+    st.textContent = `#dbl-new-foot{background:#141414;padding:40px 30px 0;direction:rtl}
+#dbl-new-foot .r1{max-width:1340px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-bottom:26px;border-bottom:1px solid #2b2b2b}
+#dbl-new-foot .r2{max-width:1340px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.25fr) 300px;gap:30px;padding:32px 0}
+#dbl-new-foot .col>*+*{margin-top:14px}#dbl-new-foot .col .gap{margin-top:26px}
+#dbl-new-foot .r3{max-width:1340px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:center;padding:0 0 28px}
+#dbl-new-foot .areas .elementor-icon-list-items{display:flex!important;flex-wrap:wrap;gap:6px 18px}#dbl-new-foot .areas .elementor-icon-list-item{margin:0!important;padding:0!important}
+#dbl-new-foot .r4{max-width:1340px;margin:0 auto;border-top:1px solid #2b2b2b;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 0 18px}
+#dbl-new-foot .r4 .rc{flex-basis:100%;text-align:center;opacity:.7}
+#dbl-new-foot .elementor-widget{width:auto!important;max-width:100%!important;position:static!important;margin:0!important}
+#dbl-new-foot .mapw iframe{width:100%!important;height:230px!important;border-radius:12px}
+@media (max-width:767px){#dbl-new-foot{padding:30px 20px 0}#dbl-new-foot .r1{flex-direction:column;gap:18px}#dbl-new-foot .r2{grid-template-columns:1fr 1fr;gap:26px 18px}#dbl-new-foot .r2 .contact,#dbl-new-foot .r2 .mapw{grid-column:1/-1}
+#dbl-new-foot .r3{grid-template-columns:1fr}#dbl-new-foot .r4{flex-direction:column;text-align:center}}`;
+    document.head.appendChild(st);
+    const box = document.createElement('div'); box.id = 'dbl-new-foot'; box.className = old.className; old.after(box);
+    const mk = (cls, ...els) => { const d = document.createElement('div'); d.className = cls; els.filter(Boolean).forEach((e) => d.appendChild(e)); return d; };
+    const rename = (id, t) => { const h = W(id)?.querySelector('.elementor-heading-title'); if (h) h.textContent = t; return W(id); };
+    const drop = (id, re) => { W(id)?.querySelectorAll('li').forEach((li) => { if (re.test(li.innerText.trim())) li.remove(); }); return W(id); };
+    // links: keep the strong ones, drop duplicates and wrong targets
+    drop('e3a6a41', /נאמנות|מושכרת|חריגות|להריסה|קטין/);
+    drop('cf26f1d', /מדד תשומות/);
+    W('e3a6a41').querySelector('ul').append(...W('cf26f1d').querySelectorAll('li'));
+    drop('5f04f5a', /לנכים|לעולים|מציאת סכום/);
+    drop('023fe63', /צרו קשר/);
+    drop('886145f', /^$/);
+    const legal = W('56f4633'); const seen = new Set(); legal?.querySelectorAll('li').forEach((li) => { const t = li.innerText.trim(); if (seen.has(t)) li.remove(); else seen.add(t); });
+    // row 1: logo + one set of icons
+    box.appendChild(mk('r1', W('35de91f'), W('d678948')));
+    // row 2: 4 link columns, contact + hours, map
+    const c1 = mk('col', rename('3f4ec02', 'המשרד'), W('023fe63'));
+    const c2 = mk('col', rename('dd98793', 'קונים דירה'), W('e3a6a41'));
+    const c3 = mk('col', rename('20c9d78', 'מוכרים דירה'), W('270273d'));
+    const c4 = mk('col', W('6dccef0'), W('5f04f5a')); const h47 = W('47fbee4'); h47.classList.add('gap'); c4.append(h47, W('796bc41'));
+    const c5 = mk('col contact', rename('ff5ffac', 'יצירת קשר'), W('bced874')); const h93 = W('9339779'); h93.classList.add('gap'); c5.append(h93, W('a58e6fa'));
+    const c6 = mk('col mapw', W('832a7d8'), W('5d367c3'));
+    box.appendChild(mk('r2', c1, c2, c3, c4, c5, c6));
+    // row 3: local pages + WhatsApp group box
+    const areas = mk('areas col', rename('e6620b9', 'עורך דין מקרקעין באזור'), W('886145f'));
+    const waBox = W('f3a95db').closest('.e-con.e-child') || mk('', W('f3a95db'), W('831ef6d'));
+    box.appendChild(mk('r3', areas, waBox));
+    // row 4: legal line once
+    const rc = W('02509a1'); rc?.classList.add('rc');
+    box.appendChild(mk('r4', W('555996b'), legal, rc));
+    old.style.display = 'none';
+    W('e501cf7')?.remove();
+  });
+  await p.waitForTimeout(2500);
+  const nf = p.locator('#dbl-new-foot'); await nf.scrollIntoViewIfNeeded(); await p.waitForTimeout(800);
+  await nf.screenshot({ path: `${OUT}/footer-${mode}-new.jpg`, type: 'jpeg', quality: 82 });
+  rep['footer-new-' + mode] = await p.evaluate(() => Math.round(document.getElementById('dbl-new-foot').getBoundingClientRect().height));
   await ctx.close();
 }
 fs.writeFileSync(`${OUT}/rep.json`, JSON.stringify(rep, null, 1)); await b.close();
