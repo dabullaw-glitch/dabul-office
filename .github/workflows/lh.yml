@@ -19,15 +19,8 @@ jobs:
           mkdir -p diag-results/lh
           npm i -g lighthouse@12.8.2 >/dev/null 2>&1
           L() { lighthouse "$1" --quiet --chrome-flags="--headless=new --no-sandbox" --output=json --output-path="$2" $3 || true; }
-          for i in 1 2 3; do
-            L "https://dabullaw.co.il/?x=$RANDOM" diag-results/lh/live-d$i.json --preset=desktop
-            L "https://dabullaw.co.il/?dblprev=1&x=$RANDOM" diag-results/lh/prev-d$i.json --preset=desktop
-          done
-          for i in 1 2; do
-            L "https://dabullaw.co.il/?x=$RANDOM" diag-results/lh/live-m$i.json
-            L "https://dabullaw.co.il/?dblprev=1&x=$RANDOM" diag-results/lh/prev-m$i.json
-          done
-          node lh/sum2.mjs diag-results/lh/live-d1.json diag-results/lh/prev-d1.json diag-results/lh/live-m1.json diag-results/lh/prev-m1.json
+          n=0; while read -r url; do [ -z "$url" ] && continue; n=$((n+1)); L "$url" diag-results/lh/live-d$n.json --preset=desktop; L "$url" diag-results/lh/live-m$n.json; done < lh/urls.txt
+          node lh/sum2.mjs diag-results/lh/live-d1.json diag-results/lh/live-m1.json diag-results/lh/live-d2.json diag-results/lh/live-m2.json
           node -e "const fs=require('fs');const o={};for(const f of fs.readdirSync('diag-results/lh').filter(f=>/^(live|prev)-/.test(f))){try{const r=JSON.parse(fs.readFileSync('diag-results/lh/'+f));o[f]=Object.fromEntries(Object.entries(r.categories).map(([k,v])=>[k,Math.round(v.score*100)]));o[f].cls=r.audits['cumulative-layout-shift'].displayValue;o[f].lcp=r.audits['largest-contentful-paint'].displayValue;o[f].fcp=r.audits['first-contentful-paint'].displayValue}catch(e){o[f]=String(e)}}fs.writeFileSync('diag-results/lh/scores.json',JSON.stringify(o,null,1))"
           rm -f diag-results/lh/live-*.json diag-results/lh/prev-*.json
       - name: Commit
