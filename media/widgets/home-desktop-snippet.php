@@ -4,7 +4,9 @@
    2. Newsletter signup strip, version 2: the text and the form sit in a card with a thin gold frame, and the newsletter
       video plays next to it in a phone frame (muted, with a sound button). The video loads only when the visitor
       scrolls near the strip, so the page is not slower.
-   Shown only on a preview address (?dblprev=1) until checked. To undo: deactivate this snippet. */
+   Checked on a preview address on 8.10.2026 (all three blocks on one edge at 1440 and 1920, the phone unchanged); now live.
+   To undo: deactivate this snippet. */
+define('DABUL_HD_LIVE', 1);
 
 function dabul_hd_on() {
 	if (defined('DABUL_HD_LIVE')) return true;
