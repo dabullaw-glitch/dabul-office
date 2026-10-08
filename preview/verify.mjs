@@ -32,7 +32,7 @@ for (const mode of ['mobile', 'desktop']) {
   r.tocBefore = await tocState();
   r.firstParaY = await p.evaluate(() => { const q = [...document.querySelectorAll('.elementor-widget-theme-post-content p, article p, .elementor-location-single p')].find(x => x.innerText.trim().length > 60); return q ? Math.round(q.getBoundingClientRect().top) : null; });
   await wake(p); r.tocAfterJs = await tocState();
-  const tg = p.locator('.elementor-widget-table-of-contents:visible .elementor-toc__header').first();
+  const tg = p.locator('.elementor-widget-table-of-contents:visible .elementor-toc__toggle-button--expand:visible').first();
   if (await tg.count()) { await tg.click().catch(() => {}); await p.waitForTimeout(1200); r.tocAfterClick = await tocState(); await p.screenshot({ path: `${OUT}/v-article-${mode}-tocopen.jpg`, type: 'jpeg', quality: 70 }); }
   await c.close();
   // testimonials
