@@ -23,7 +23,7 @@ jobs:
           curl -sSL -o RealESRGAN_x4plus.pth https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth
       - name: Upscale
         run: |
-          mkdir -p diag-results/up
+          mkdir -p diag-results/up diag-results/up2
           ls -la RealESRGAN_x4plus.pth
           python up/up.py 2>&1 | tee diag-results/up/log.txt
       - name: Commit
@@ -31,6 +31,6 @@ jobs:
         run: |
           git config user.name "audit-bot"
           git config user.email "audit-bot@users.noreply.github.com"
-          git add diag-results/up
+          git add diag-results/up diag-results/up2
           git commit -m "upscale results $(date -u +%FT%TZ)" || echo nothing
           for i in 1 2 3 4 5; do git pull --rebase -q origin audit-run && git push origin HEAD:audit-run && break; sleep 5; done
