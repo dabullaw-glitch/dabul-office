@@ -1,0 +1,17 @@
+{
+ "phone-home": {
+  "cbar": true,
+  "forms": 3,
+  "swap": true
+ },
+ "phone-play": true,
+ "phone-page46": true,
+ "desktop-home": {
+  "cbar": true,
+  "forms": 3,
+  "swap": true
+ },
+ "desktop-play": true,
+ "desktop-page46": true,
+ "errors": []
+}
