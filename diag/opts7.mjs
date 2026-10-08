@@ -53,7 +53,7 @@ const PH_CSS = `.dbl-ph{position:relative;direction:rtl;font-family:"Noto Local"
 .dbl-ph .pic{position:relative;height:228px}
 /* v1: the studio photo itself (dark grey studio background) inside the arch */
 .v1 .pic{border-radius:999px 999px 18px 18px;overflow:hidden;box-shadow:0 0 0 1.5px #e7cd96,0 0 0 7px rgba(231,205,150,.1),0 20px 40px rgba(0,0,0,.55);background:#1b1b1d}
-.v1 .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 4%}
+.v1 .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 0;transform:scale(1.7);transform-origin:50% 4%}
 /* v2: the cut-out photo with the same night city behind it, inside the arch */
 .v2 .pic{border-radius:999px 999px 18px 18px;overflow:hidden;box-shadow:0 0 0 1.5px #e7cd96,0 0 0 7px rgba(231,205,150,.1),0 20px 40px rgba(0,0,0,.55);background:#0c1430 url(${CITY}) 40% 85%/260% auto no-repeat}
 .v2 .pic:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,13,30,.15),rgba(8,13,30,.55))}
@@ -61,7 +61,7 @@ const PH_CSS = `.dbl-ph{position:relative;direction:rtl;font-family:"Noto Local"
 /* v3: no box at all, the photo stands free with a thin gold arch line behind it */
 .v3 .pic{overflow:visible}.v3 .pic:before{content:"";position:absolute;left:8px;right:8px;top:6px;bottom:0;border:1.5px solid rgba(231,205,150,.8);border-bottom:0;border-radius:999px 999px 0 0}
 .v3 .pic:after{content:"";position:absolute;left:-10px;right:-10px;bottom:0;height:46px;background:linear-gradient(180deg,rgba(10,16,36,0),rgba(10,16,36,.95))}
-.v3 .pic img{position:absolute;left:50%;bottom:0;height:118%;transform:translateX(-50%);filter:drop-shadow(0 0 20px rgba(0,0,0,.6))}
+.v3 .pic img{position:absolute;left:50%;bottom:0;height:100%;transform:translateX(-50%);filter:drop-shadow(0 0 20px rgba(0,0,0,.6))}
 /* v4: a round portrait from the studio photo with a gold ring */
 .v4 .top{grid-template-columns:minmax(0,1fr) 150px}.v4 .pic{height:150px;width:150px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px #e7cd96,0 0 0 8px rgba(231,205,150,.12),0 18px 36px rgba(0,0,0,.5);background:#1b1b1d}
 .v4 .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 2%;transform:scale(1.55);transform-origin:50% 0}`;
@@ -92,7 +92,7 @@ const AB_CSS = `.dbl-ab{direction:rtl;font-family:"Noto Local",sans-serif;backgr
 .dbl-ab .stats div{padding:16px 8px;text-align:center;color:#fff}.dbl-ab .stats div+div{border-right:1px solid rgba(255,255,255,.12)}.dbl-ab .stats b{display:block;font-size:26px;font-weight:800;color:#d6b25e;direction:ltr}.dbl-ab .stats span{font-size:13px;color:#cfccc6}
 /* H2: right aligned title, like the current section */
 .dbl-ab.h2 .hd{text-align:right;max-width:1240px;margin:0 auto 46px}.dbl-ab.h2 .dv{margin:22px 0 0;width:120px;background:#d6b25e;height:2px}.dbl-ab.h2 .dv:after{display:none}
-.dbl-ab.h2 .rows{grid-template-columns:repeat(3,1fr)}.dbl-ab.h2 .row{flex-direction:column;background:#141414;color:#fff;box-shadow:none}.dbl-ab.h2 .row b{color:#fff}.dbl-ab.h2 .row span{color:#cfccc6}
+.dbl-ab.h2 .rows{grid-template-columns:repeat(3,1fr)}.dbl-ab.h2 .row{flex-direction:column;background:#141414;color:#fff;box-shadow:none}.dbl-ab.h2 .row b{color:#fff}.dbl-ab.h2 .row i{width:46px}.dbl-ab.h2 .row span{color:#cfccc6}
 @media (max-width:767px){.dbl-ab{padding:54px 20px 60px}.dbl-ab h2{font-size:32px}.dbl-ab .hd{margin-bottom:30px}.dbl-ab .w{grid-template-columns:1fr;gap:30px}.dbl-ab .ph{order:-1;aspect-ratio:4/4.6}.dbl-ab .ph .cap q{font-size:21px}
 .dbl-ab p{font-size:16.5px}.dbl-ab h3{font-size:21px}.dbl-ab .row{padding:16px}.dbl-ab.h2 .rows{grid-template-columns:1fr}.dbl-ab .btn{width:100%;justify-content:center}.dbl-ab .stats b{font-size:22px}}`;
 const AB_HTML = (k) => `<section class="dbl-ab ${k}"><div class="hd"><h2>הכירו את יקיר דבול</h2><div class="dv"></div></div><div class="w"><div class="tx"><p>${AB_INTRO}</p><h3>היתרון שלנו</h3><p>${AB_ADV}</p>
@@ -104,7 +104,7 @@ ${k === 'h2' ? `<div class="w" style="display:block;margin-top:34px"><div class=
 /* ---------- 4. footer: three new designs, built from the same links ---------- */
 const FT_CSS = `.dbl-ft{direction:rtl;font-family:"Noto Local",sans-serif}.dbl-ft *{box-sizing:border-box;font-family:inherit}.dbl-ft a{text-decoration:none;color:inherit}
 .dbl-ft .in{max-width:1300px;margin:0 auto}.dbl-ft ul{list-style:none;margin:0;padding:0}.dbl-ft .soc{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.dbl-ft .soc a{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center}.dbl-ft .soc svg{width:19px;height:19px}
-.dbl-ft .cols{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:32px}.dbl-ft .col h4{margin:0 0 14px;font-size:17px;font-weight:700}.dbl-ft .col li{padding:5px 0;font-size:15px;line-height:1.45}
+.dbl-ft .cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px}.dbl-ft .col li.sub{font-weight:700;font-size:17px;padding:18px 0 8px}.A .col li.sub{color:#141414}.B .col li.sub,.C .col li.sub{color:#e7cd96}.dbl-ft .col h4{margin:0 0 14px;font-size:17px;font-weight:700}.dbl-ft .col li{padding:5px 0;font-size:15px;line-height:1.45}
 .dbl-ft details summary{list-style:none;cursor:pointer}.dbl-ft details summary::-webkit-details-marker{display:none}.dbl-ft details summary svg{display:none}
 .dbl-ft .ct li{display:flex;gap:10px;align-items:center;padding:6px 0;font-size:15.5px}.dbl-ft .ct i{flex:0 0 34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center}.dbl-ft .ct i svg{width:16px;height:16px}
 .dbl-ft .wa{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:10px 18px;font-weight:700;font-size:15px;background:#25d366;color:#fff!important}.dbl-ft .wa svg{width:18px;height:18px}
@@ -122,7 +122,7 @@ const FT_CSS = `.dbl-ft{direction:rtl;font-family:"Noto Local",sans-serif}.dbl-f
 .B .cols{padding:34px 0;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}.B .col h4{color:#e7cd96}.B .col li a{color:#bdbab3}
 .B .mid2{display:flex;justify-content:center;align-items:center;gap:22px;padding:26px 0;flex-wrap:wrap}.B .bot{justify-content:center;flex-direction:column;text-align:center;padding:0 0 26px;color:#8f8c86}.B .bot a{color:#cfccc6}
 /* C: map split */
-.dbl-ft.C{background:linear-gradient(180deg,#0f1833,#0b0f1d);color:#e9e6df}.C .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);border-radius:20px;overflow:hidden;border:1px solid rgba(231,205,150,.25);transform:translateY(-40px);background:#121a33;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.dbl-ft.C{background:linear-gradient(180deg,#0f1833,#0b0f1d);color:#e9e6df}.C .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);border-radius:20px;overflow:hidden;border:1px solid rgba(231,205,150,.25);margin-bottom:34px;background:#121a33;box-shadow:0 20px 50px rgba(0,0,0,.35)}
 .C .info{padding:30px 32px}.C .info h3{margin:0 0 4px;font-size:26px;color:#fff}.C .info p{margin:0 0 18px;color:#a9a6a0;font-size:15px}.C .ct i{background:rgba(231,205,150,.12);color:#e7cd96}.C .ct li{color:#e9e6df}
 .C .btns{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}.C .call{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:10px 18px;font-weight:800;background:linear-gradient(135deg,#f0d9a0,#c9a14f);color:#141008!important}.C .call svg{width:18px;height:18px}
 .C .map{min-height:320px}.C .map iframe{width:100%;height:100%;border:0;filter:grayscale(.3)}
@@ -131,7 +131,7 @@ const FT_CSS = `.dbl-ft{direction:rtl;font-family:"Noto Local",sans-serif}.dbl-f
 @media (max-width:767px){.dbl-ft{padding:0 20px}.A .top,.C .top{flex-direction:column;gap:16px}.A .mid{grid-template-columns:1fr;gap:26px}.A .cols{grid-template-columns:1fr 1fr;gap:24px 16px}.A .bot{margin:0 -20px;padding:16px 20px;flex-direction:column;text-align:center}
 .B .cards{grid-template-columns:1fr}.dbl-ft.B .cols,.dbl-ft.C .cols{display:block;padding:10px 0}.B .col,.C .col{border-bottom:1px solid rgba(255,255,255,.08)}
 .B .col h4,.C .col h4{margin:0;padding:14px 0;display:flex;justify-content:space-between;align-items:center}.dbl-ft details summary svg{display:block;width:18px;height:18px;color:#e7cd96}.dbl-ft details[open] summary svg{transform:rotate(180deg)}.B .col ul,.C .col ul{padding-bottom:12px}
-.C .split{grid-template-columns:1fr;transform:translateY(-24px)}.C .map{min-height:200px;order:2}.C .bot{flex-direction:column;text-align:center}}`;
+.C .split{grid-template-columns:1fr}.C .map{min-height:200px;order:2}.C .bot{flex-direction:column;text-align:center}}`;
 
 /* ---------- run ---------- */
 const b = await chromium.launch();
@@ -183,18 +183,21 @@ for (const mode of ['phone', 'desktop']) {
     const lang = [...(W('886145f')?.querySelectorAll('a') || [])].map((a) => [a.innerText.trim(), a.href]).filter(([t]) => t && !/עורך דין/.test(t));
     return { logo: W('35de91f')?.querySelector('img')?.src, mart: W('5d367c3')?.querySelector('img')?.src, map: W('832a7d8')?.querySelector('iframe')?.src,
       cols: [['המשרד', items('023fe63', /צרו קשר/)], ['קונים דירה', items('e3a6a41', /נאמנות|מושכרת|חריגות|להריסה|קטין/).concat(items('cf26f1d', /מדד תשומות/))], ['מוכרים דירה', items('270273d')], ['מיסוי מקרקעין', items('5f04f5a', /לנכים|לעולים|מציאת סכום/)], ['התחדשות עירונית', items('796bc41')]],
+      dark: document.querySelector('[data-elementor-type="header"] img')?.src,
       contact: items('bced874'), hours: (W('a58e6fa')?.innerText || '').trim().split('\n').filter(Boolean), legal, lang, copy: (W('555996b')?.innerText || '').trim(), group: (document.querySelector('[data-elementor-type="footer"] a[href*="chat.whatsapp.com"]') || {}).href || '#' };
   });
   rep['footer-data'] = { cols: data.cols.map(([t, l]) => [t, l.length]), contact: data.contact.length, hours: data.hours, logo: !!data.logo, map: !!data.map };
   const soc = '<div class="soc"><small>עקבו אחרינו</small>' + SOC_LIST.slice(0, 3).map(([k, t]) => `<a href="#" aria-label="${t}">${SOC[k]}</a>`).join('') + '</div>';
-  const cols = (acc) => `<div class="cols">${data.cols.map(([t, l]) => acc ? `<details class="col" ${mode === 'desktop' ? 'open' : ''}><summary><h4>${t}${CHEV}</h4></summary><ul>${l.map(([x, h]) => `<li><a href="${h}">${x}</a></li>`).join('')}</ul></details>` : `<div class="col"><h4>${t}</h4><ul>${l.map(([x, h]) => `<li><a href="${h}">${x}</a></li>`).join('')}</ul></div>`).join('')}</div>`;
+  { const ur = data.cols.pop(); data.cols[3][1] = data.cols[3][1].concat([['__h', ur[0]]]).concat(ur[1]); }
+  const li = ([x, h]) => x === '__h' ? `<li class="sub">${h}</li>` : `<li><a href="${h}">${x}</a></li>`;
+  const cols = (acc) => `<div class="cols">${data.cols.map(([t, l]) => acc ? `<details class="col" ${mode === 'desktop' ? 'open' : ''}><summary><h4>${t}${CHEV}</h4></summary><ul>${l.map(li).join('')}</ul></details>` : `<div class="col"><h4>${t}</h4><ul>${l.map(li).join('')}</ul></div>`).join('')}</div>`;
   const ctIcons = [PIN, PHONE_SVG, MAIL, SOC.fb];
   const ct = `<ul class="ct">${data.contact.map(([x, h], i) => `<li><i>${ctIcons[i] || PIN}</i><a href="${h}">${x}</a></li>`).join('')}</ul>`;
   const hours = data.hours.join(' · ');
   const bot = `<div class="bot"><span>${data.copy}</span><span class="lg">${data.legal.map(([x, h]) => `<a href="${h}">${x}</a>`).join('')}${data.lang.map(([x, h]) => `<a href="${h}">${x}</a>`).join('')}</span></div>`;
   const wa = `<a class="wa" href="${data.group}">${SOC.wa}הצטרפו לקבוצת הוואטסאפ</a>`;
   const F = {
-    A: `<footer class="dbl-ft A" style="padding:0 30px"><div class="in"><div class="top"><img class="logo" src="${data.logo}" alt="">${soc}</div><div class="mid">${cols(false).replace('class="cols"', 'class="cols"')}<div class="side"><h4 style="margin:0;font-size:17px">יצירת קשר</h4>${ct}<div style="color:#54595f;font-size:14.5px">${CLOCK.replace('<svg', '<svg style="width:15px;height:15px;vertical-align:-2px;margin-left:6px;color:#a88a4c"')}${hours}</div>${wa}<div class="map"><iframe src="${data.map}" loading="lazy"></iframe></div><img class="mart" src="${data.mart}" alt=""></div></div></div>${bot}</footer>`.replace(data.cols.map(() => '').join(''), ''),
+    A: `<footer class="dbl-ft A" style="padding:0 30px"><div class="in"><div class="top"><img class="logo" src="${data.dark || data.logo}" alt="">${soc}</div><div class="mid">${cols(false).replace('class="cols"', 'class="cols"')}<div class="side"><h4 style="margin:0;font-size:17px">יצירת קשר</h4>${ct}<div style="color:#54595f;font-size:14.5px">${CLOCK.replace('<svg', '<svg style="width:15px;height:15px;vertical-align:-2px;margin-left:6px;color:#a88a4c"')}${hours}</div>${wa}<div class="map"><iframe src="${data.map}" loading="lazy"></iframe></div><img class="mart" src="${data.mart}" alt=""></div></div></div>${bot}</footer>`.replace(data.cols.map(() => '').join(''), ''),
     B: `<footer class="dbl-ft B" style="padding:0 30px"><div class="in"><div class="top"><img class="logo" src="${data.logo}" alt="">${soc}</div><div class="cards"><div class="card"><i>${PIN}</i><div><b>${(data.contact[0] || [''])[0]}</b><span>ניווט בוויז ובגוגל מפות</span></div></div><div class="card"><i>${PHONE_SVG}</i><div><b>${(data.contact[1] || [''])[0]}</b><span>${hours}</span></div></div><div class="card"><i>${MAIL}</i><div><b>${(data.contact[2] || [''])[0]}</b><span>נחזור אליכם בהקדם</span></div></div></div>${cols(true)}<div class="mid2">${wa}<img class="mart" src="${data.mart}" alt=""></div>${bot}</div></footer>`,
     C: `<footer class="dbl-ft C" style="padding:46px 30px 0"><div class="in"><div class="split"><div class="info"><h3>בואו נדבר</h3><p>המשרד ברחוב רזיאל 1 בנתניה. אפשר להגיע, להתקשר או לכתוב.</p>${ct}<div style="color:#a9a6a0;font-size:14.5px;margin-top:8px">${hours}</div><div class="btns"><a class="call" href="#">${PHONE_SVG}התקשרו</a>${wa}</div></div><div class="map"><iframe src="${data.map}" loading="lazy"></iframe></div></div><div class="top"><img class="logo" src="${data.logo}" alt="">${soc}</div>${cols(true)}<div style="display:flex;justify-content:center;padding:20px 0"><img class="mart" src="${data.mart}" alt=""></div>${bot}</div></footer>`,
   };
