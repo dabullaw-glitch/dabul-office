@@ -3,6 +3,8 @@
 //   instagram: feed image, reel (video) and story, through the Instagram API with Instagram Login (secret IG_TOKEN)
 //   tiktok:    once settings/pub.tiktok.ok (secret TIKTOK_TOKEN) - not active yet
 // Weekly reels: stageReels() attaches the approved reel of that day and copies it from Drive to storage; reels publish in two steps.
+// Extra Instagram reel slots (8.10.2026, Yakir asked to push Instagram): pub rows with an explicit "reel" id; once a reel is out on
+// Instagram it gets igAt, so its later weekly date does not post it there a second time.
 // Also: checks a newly saved Instagram token (settings/pub.ig.check = 'pending'), refreshes it every 30 days,
 // and reports to Telegram. Grok Bot's rows are never touched here.
 export function start(createClient) {
@@ -87,7 +89,8 @@ export function start(createClient) {
     if (row.reel) return (await sb.from('docs').select('id,data').match({ coll: 'reel', id: row.reel }).maybeSingle()).data;
     const day = String(row.at).slice(0, 10);
     const { data } = await sb.from('docs').select('id,data').eq('coll', 'reel').in('data->>status', ['approved', 'handed', 'published']);
-    return (data || []).find((r) => r.data.publishAt && ilDate(Date.parse(r.data.publishAt)) === day) || null;
+    // a reel that already went out on Instagram from an extra Instagram slot (igAt) is not posted there again
+    return (data || []).find((r) => r.data.publishAt && !r.data.igAt && ilDate(Date.parse(r.data.publishAt)) === day) || null;
   }
   async function stageReels(S, log, only) {
     const now = Date.now();
@@ -244,6 +247,7 @@ export function start(createClient) {
             if (row.kind === 'video' && !(row.media || []).length) throw new Error('no approved reel was attached to this slot');
             const out = await igPublish(row, cfg, C, res.instagram);
             res.instagram = out.pending ? { pending: out.pending, items: out.items, since: (res.instagram && res.instagram.since) || new Date().toISOString() } : { ok: true, at: new Date().toISOString(), items: out.items };
+            if (!out.pending && row.reel) await merge('reel', row.reel, { igAt: new Date().toISOString(), igPub: r.id });
           }
           catch (e) { res.instagram = { ok: false, error: String(e.message || e).slice(0, 300) }; await tg(S, `⚠️ פרסום באינסטגרם נכשל: ${row.title}\n${res.instagram.error}`); }
         }
