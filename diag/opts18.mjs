@@ -5,9 +5,10 @@ const OUT = 'diag-results/opts18b'; fs.mkdirSync(OUT, { recursive: true });
 const S = 'https://dabullaw.co.il/'; const M = S + '__mock/'; const rep = {};
 const b = await chromium.launch();
 const HIDE = '.elementor-popup-modal,.onetap-container-toggle,.elementor-element-094a351,.elementor-element-74d8bec,.dabul-gbadge{display:none!important}';
-const ALIGN = `@media (min-width:1025px){.elementor-1112 .elementor-element.elementor-element-6bb6c07{right:var(--padding-right,0px)!important;left:auto!important;margin:0!important;width:auto!important;max-width:none!important}
-.elementor-element-6bb6c07 h1{text-align:right!important}}
-@media (min-width:1025px) and (max-width:1599px){.elementor-1112 .elementor-element.elementor-element-6d16458,.elementor-1112 .elementor-element.elementor-element-94c4b61{--padding-right:34px!important;padding-right:34px!important}}`;
+const ALIGN = `@media (min-width:1025px){.elementor-element-9056c3a{--dbl-hx:max(34px,calc((100vw - 1440px) / 2 + 34px))}
+.elementor-1112 .elementor-element.elementor-element-6d16458,.elementor-1112 .elementor-element.elementor-element-94c4b61{--padding-right:var(--dbl-hx)!important;padding-right:var(--dbl-hx)!important}
+.elementor-1112 .elementor-element.elementor-element-6bb6c07{right:var(--dbl-hx)!important;left:auto!important;margin:0!important;width:auto!important;max-width:none!important}
+.elementor-element-6bb6c07 h1{text-align:right!important}}`;
 const HA = { a: ALIGN, b: ALIGN + `
 @media (min-width:1025px){.elementor-element-6bb6c07 h1 i{font-size:.6em!important;font-weight:300!important;display:block;margin-top:6px}
 .elementor-element-6bb6c07 h1 i:after{content:"";display:block;width:84px;height:3px;border-radius:2px;background:linear-gradient(90deg,#b8913f,#f0d9a0);margin:18px 0 0 auto}
