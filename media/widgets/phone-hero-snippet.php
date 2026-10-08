@@ -1,5 +1,5 @@
 /* dabul: the new home hero on the phone (Yakir chose option 4 on 8.10.2026: a round studio portrait with a gold ring,
-   the name next to it, and the four points in a glass card; with more space between the parts).
+   the name next to it, and the four points in a glass card; with more space between the parts; more space again on 8.10.2026 17:35 as Yakir asked).
    Only on phones (up to 767px). The computer hero does not change. The old phone hero stays in the page, hidden on phones.
    Checked on a preview address and approved by Yakir on 8.10.2026, now live. To undo: deactivate this snippet. */
 define('DABUL_HPH_LIVE', 1);
@@ -23,7 +23,7 @@ add_action('wp_head', function () {
 	echo '<link rel="preload" as="image" href="' . esc_url($im['city']) . '" media="(max-width:767px)">' . "\n";
 	echo '<style id="dbl-hph-css">.dbl-ph{display:none}'
 		. '@media (max-width:767px){.elementor-element-9056c3a{display:none!important}'
-		. '.dbl-ph{display:block;position:relative;direction:rtl;font-family:"Noto Local",sans-serif;color:#fff;overflow:hidden;background:#0a1226 url(' . esc_url($im['city']) . ') center bottom/cover no-repeat;isolation:isolate;padding:28px 20px 58px}'
+		. '.dbl-ph{display:block;position:relative;direction:rtl;font-family:"Noto Local",sans-serif;color:#fff;overflow:hidden;background:#0a1226 url(' . esc_url($im['city']) . ') center bottom/cover no-repeat;isolation:isolate;padding:28px 20px 72px}'
 		. '.dbl-ph *{box-sizing:border-box;font-family:inherit}'
 		. '.dbl-ph:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(8,13,30,.9) 0%,rgba(8,13,30,.72) 42%,rgba(8,13,30,.42) 100%)}'
 		. '.dbl-ph .top{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:16px;align-items:center}'
@@ -32,7 +32,7 @@ add_action('wp_head', function () {
 		. '.dbl-ph .tg{color:#e7cd96;font-size:15.5px;font-weight:700;white-space:nowrap;letter-spacing:.2px}'
 		. '.dbl-ph .pic{position:relative;height:150px;width:150px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px #e7cd96,0 0 0 8px rgba(231,205,150,.12),0 18px 36px rgba(0,0,0,.5);background:#1b1b1d}'
 		. '.dbl-ph .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}'
-		. '.dbl-ph ul{list-style:none;margin:40px 0 0;padding:18px 16px;display:flex;flex-direction:column;gap:14px;border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border:1px solid rgba(231,205,150,.28);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 14px 30px rgba(0,0,0,.25)}'
+		. '.dbl-ph ul{list-style:none;margin:64px 0 0;padding:18px 16px;display:flex;flex-direction:column;gap:14px;border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border:1px solid rgba(231,205,150,.28);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 14px 30px rgba(0,0,0,.25)}'
 		. '.dbl-ph li{display:flex;gap:12px;align-items:flex-start;font-size:16px;line-height:1.55;color:#f3f1ec;margin:0}'
 		. '.dbl-ph li i{flex:0 0 26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#f0d9a0,#c9a14f);color:#141008;display:flex;align-items:center;justify-content:center;margin-top:1px}.dbl-ph li i svg{width:15px;height:15px}'
 		. '}</style>' . "\n";
