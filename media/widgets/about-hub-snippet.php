@@ -77,7 +77,7 @@ function dabul_about_html() {
 		. '<div class="card"><div class="ic">' . dabul_ah_icon('route') . '</div><h4>ליווי מלא מהתחלה ועד הסוף</h4><p>אני מלווה את לקוחותיי לאורך כל הדרך, עם הקפדה על כל פרט וניתוח משפטי וכלכלי מקיף.</p></div></div>'
 		. '<blockquote>המשרד מובל על ידי עו״ד יקיר דבול, שמסירותו וניסיונו מאפשרים לו להציע פתרונות מקצועיים, יצירתיים ובטוחים. החזון: עתיד כלכלי יציב וביטחון בנכסים, הן ב״ארבעה קירות״ והן בתוכניות השקעה ומימוש נכסים מורכבים.</blockquote>'
 		. '<div class="cta"><a class="btn gold" href="' . esc_url($about) . '">קראו עליי עוד ←</a><a class="btn wa" href="' . esc_url(dabul_ah_wa()) . '" target="_blank" rel="noopener">' . dabul_ah_icon('wa') . ' שיחה בוואטסאפ</a></div></div>'
-		. '<div class="ph"><div class="disc"><img src="' . esc_url($img) . '" width="494" height="800" alt="עו״ד יקיר דבול" loading="lazy" decoding="async"></div>'
+		. '<div class="ph"><div class="disc"><img src="' . esc_url($img) . '" width="494" height="800" alt="עו״ד יקיר דבול" class="skip-lazy" data-no-lazy="1" decoding="async"></div>'
 		. '<div class="badges"><div class="badge"><b>100+</b><span>עסקאות מקרקעין<br>בכל שנה</span></div>'
 		. '<div class="badge"><b>' . $rt . '</b><span><span class="st" aria-hidden="true">★★★★★</span>' . $rc . ' ביקורות בגוגל</span></div></div></div></div>'
 		. '<div class="facts"><div class="fact"><span class="ic">' . dabul_ah_icon('scale') . '</span><span><strong>מעל 100</strong>עסקאות מקרקעין מדי שנה</span></div>'
@@ -144,7 +144,7 @@ add_filter('wp_robots', function ($r) {
 });
 
 function dabul_hub_css() {
-	return '.dbl-hub{--g:#c9a961;--g2:#e4d19c;--ink:#14213d;--tx:#4a5263;direction:rtl;font-family:inherit;background:#f7f6f2}'
+	return 'main.dbl-hub-main{max-width:none!important;width:100%!important;padding:0!important;margin:0!important}.dbl-hub{--g:#c9a961;--g2:#e4d19c;--ink:#14213d;--tx:#4a5263;direction:rtl;font-family:inherit;background:#f7f6f2}'
 		. '.dbl-hub *{box-sizing:border-box}'
 		. '.dbl-hub .hero{background:radial-gradient(120% 140% at 85% 0,#1d2b52 0,#0b1530 60%);color:#fff;padding:56px 24px 48px}'
 		. '.dbl-hub .in{max-width:1200px;margin:0 auto}'
