@@ -30,3 +30,4 @@ for src, name, width in jobs:
     fin.save(f'{OUT}/{name}.webp', 'WEBP', quality=84, method=6)
     im.save(f'{OUT}/{name}-orig.png'); fin.save(f'{OUT}/{name}-new.png')
     print(name, 'done', fin.size, os.path.getsize(f'{OUT}/{name}.webp') // 1024, 'KB', flush=True)
+# r2
