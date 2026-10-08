@@ -1,5 +1,6 @@
 /* dabul: WhatsApp and call buttons (Yakir approved, section 3, 8.10.2026).
-   Phone: one thin bar at the bottom with "התקשרו" (dials the office) and "וואטסאפ" (opens a chat with Yakir, with a
+   Phone: a floating dark pill at the bottom (Yakir chose option 2 on 8.10.2026): a gold "התקשרו עכשיו" half (dials the office)
+   and a "וואטסאפ" half with a green circle (opens a chat with Yakir, with a
    ready message naming the page). The big green "פנו אלינו" banner and the WhatsApp circle that opened a form are hidden
    on the phone, and so is the floating group circle (74d8bec; the group keeps its button and footer icon); the accessibility button moves up so it does not cover the bar.
    Computer: the green banner is hidden; the WhatsApp circle opens a direct chat instead of the form.
@@ -22,12 +23,14 @@ add_action('wp_head', function () {
 		. '#dbl-cbar{display:none}'
 		. '.elementor-element-434b289{display:none!important}'
 		. '@media (max-width:767px){'
-		. '#dbl-cbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:9990;gap:8px;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(255,255,255,.97);box-shadow:0 -4px 16px rgba(0,0,0,.12);direction:rtl}'
-		. '#dbl-cbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:12px;font-weight:800;font-size:17px;text-decoration:none;font-family:inherit}'
-		. '#dbl-cbar .c{background:#141414;color:#e4d19c}#dbl-cbar .w{background:#25d366;color:#fff}#dbl-cbar svg{width:20px;height:20px;flex:0 0 20px}'
-		. 'body{padding-bottom:66px}'
+		. '#dbl-cbar{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9990;gap:0;padding:6px;border-radius:999px;background:#101a33;border:1px solid rgba(231,205,150,.4);box-shadow:0 14px 34px rgba(8,12,28,.45);direction:rtl}'
+		. '#dbl-cbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;height:52px;border-radius:999px;font-weight:800;font-size:16.5px;text-decoration:none;font-family:inherit;color:#fff;background:transparent}'
+		. '#dbl-cbar .c{background:linear-gradient(135deg,#f0d9a0,#c9a14f);color:#141008}'
+		. '#dbl-cbar .ic{width:34px;height:34px;flex:0 0 34px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:7px;box-sizing:border-box}'
+		. '#dbl-cbar .c .ic{background:rgba(20,16,8,.12)}#dbl-cbar .w .ic{background:#25d366;color:#fff}#dbl-cbar svg{width:100%;height:100%;display:block}'
+		. 'body{padding-bottom:92px}'
 		. '.elementor-element-094a351,.elementor-element-74d8bec{display:none!important}'
-		. '.onetap-container-toggle,.onetap-container-toggle .onetap-toggle{bottom:84px!important;top:auto!important}'
+		. '.onetap-container-toggle,.onetap-container-toggle .onetap-toggle{bottom:100px!important;top:auto!important}'
 		. '}'
 		. '</style>' . "\n";
 }, 21);
@@ -36,8 +39,8 @@ add_action('wp_footer', function () {
 	if (is_admin()) return;
 	$wa = esc_url(dabul_wa_link());
 	echo '<div id="dbl-cbar" role="navigation" aria-label="יצירת קשר מהירה">'
-		. '<a class="c" href="tel:098613413"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>התקשרו</a>'
-		. '<a class="w" href="' . $wa . '" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 .9-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.6-.1 1.2z"/></svg>וואטסאפ</a>'
+		. '<a class="c" href="tel:098613413"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span>התקשרו עכשיו</a>'
+		. '<a class="w" href="' . $wa . '" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 .9-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.6-.1 1.2z"/></svg></span>וואטסאפ</a>'
 		. '</div>' . "\n";
 }, 98);
 
