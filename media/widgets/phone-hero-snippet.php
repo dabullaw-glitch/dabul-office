@@ -1,7 +1,8 @@
 /* dabul: the new home hero on the phone (Yakir chose option 4 on 8.10.2026: a round studio portrait with a gold ring,
    the name next to it, and the four points in a glass card; with more space between the parts).
    Only on phones (up to 767px). The computer hero does not change. The old phone hero stays in the page, hidden on phones.
-   Until checked it shows only on a preview address (?dblprev=1). To undo: deactivate this snippet. */
+   Checked on a preview address and approved by Yakir on 8.10.2026, now live. To undo: deactivate this snippet. */
+define('DABUL_HPH_LIVE', 1);
 
 function dabul_hph_on() {
 	if (defined('DABUL_HPH_LIVE')) return true;
