@@ -1,0 +1,119 @@
+[
+ {
+  "i": 0,
+  "ls": [],
+  "mut": 0
+ },
+ {
+  "i": 1,
+  "ls": [],
+  "mut": 18
+ },
+ {
+  "i": 2,
+  "ls": [
+   {
+    "v": 0.013,
+    "t": 7325,
+    "sw": 1350,
+    "cw": 1350,
+    "sx": 0,
+    "sy": 11429,
+    "hc": "",
+    "bs": null,
+    "hs": null,
+    "src": [
+     "footer.elementor.elementor-622.elementor-location-footer [0,0,1350,940]>[0,0,1350,940]"
+    ]
+   },
+   {
+    "v": 0.189,
+    "t": 9190,
+    "sw": 1350,
+    "cw": 1350,
+    "sx": 0,
+    "sy": 11684,
+    "hc": "",
+    "bs": null,
+    "hs": null,
+    "src": [
+     "footer.elementor.elementor-622.elementor-location-footer [0,0,1350,685]>[0,0,1350,940]"
+    ]
+   }
+  ],
+  "mut": [
+   "4147 B attributes class rtl home wp-singular page-template page-template-elementor_header_footer page page-id-1112 wp-custom-logo wp-embed-respo",
+   "4147 B attributes class rtl home wp-singular page-template page-template-elementor_header_footer page page-id-1112 wp-custom-logo wp-embed-respo",
+   "4147 B childList  script",
+   "4147 B childList  script",
+   "4147 B childList  link",
+   "4418 B childList  div",
+   "4418 B childList  ",
+   "4418 B childList  ",
+   "4418 B childList  ",
+   "4479 B attributes class rtl home wp-singular page-template page-template-elementor_header_footer page page-id-1112 wp-custom-logo wp-embed-respo",
+   "4479 B attributes class rtl home wp-singular page-template page-template-elementor_header_footer page page-id-1112 wp-custom-logo wp-embed-respo",
+   "4479 B childList  div#elementor-popup-modal-1023.dialog-widget.dialog-lightbox-widget.dialog-type-buttons",
+   "4503 childList html  table",
+   "4503 childList html  ",
+   "4513 B childList  script",
+   "4769 B childList  script#trustindex-loader-js-js",
+   "4812 B childList  svg"
+  ]
+ },
+ {
+  "i": 3,
+  "ls": [],
+  "mut": 18
+ },
+ {
+  "i": 4,
+  "ls": [],
+  "mut": 16
+ },
+ {
+  "i": 5,
+  "ls": [],
+  "mut": 18
+ },
+ {
+  "i": 6,
+  "ls": [],
+  "mut": 16
+ },
+ {
+  "i": 7,
+  "ls": [],
+  "mut": 18
+ },
+ {
+  "i": 8,
+  "ls": [],
+  "mut": 16
+ },
+ {
+  "i": 9,
+  "ls": [],
+  "mut": 18
+ },
+ {
+  "i": 10,
+  "ls": [],
+  "mut": 16
+ },
+ {
+  "i": 11,
+  "ls": [],
+  "mut": 18
+ },
+ {
+  "i": 12,
+  "ls": [],
+  "mut": 16
+ },
+ {
+  "i": 13,
+  "ls": [],
+  "mut": 18
+ }
+]
