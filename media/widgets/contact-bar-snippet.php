@@ -1,7 +1,7 @@
 /* dabul: WhatsApp and call buttons (Yakir approved, section 3, 8.10.2026).
    Phone: one thin bar at the bottom with "התקשרו" (dials the office) and "וואטסאפ" (opens a chat with Yakir, with a
    ready message naming the page). The big green "פנו אלינו" banner and the WhatsApp circle that opened a form are hidden
-   on the phone; the accessibility button moves up so it does not cover the bar.
+   on the phone, and so is the floating group circle (74d8bec; the group keeps its button and footer icon); the accessibility button moves up so it does not cover the bar.
    Computer: the green banner is hidden; the WhatsApp circle opens a direct chat instead of the form.
    Footer / menu WhatsApp icons (they led to the community group) open a direct chat; the group keeps its own icon.
    To undo everything: deactivate this snippet. */
@@ -26,7 +26,7 @@ add_action('wp_head', function () {
 		. '#dbl-cbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:12px;font-weight:800;font-size:17px;text-decoration:none;font-family:inherit}'
 		. '#dbl-cbar .c{background:#141414;color:#e4d19c}#dbl-cbar .w{background:#25d366;color:#fff}#dbl-cbar svg{width:20px;height:20px;flex:0 0 20px}'
 		. 'body{padding-bottom:66px}'
-		. '.elementor-element-094a351{display:none!important}'
+		. '.elementor-element-094a351,.elementor-element-74d8bec{display:none!important}'
 		. '.onetap-container-toggle,.onetap-container-toggle .onetap-toggle{bottom:84px!important;top:auto!important}'
 		. '}'
 		. '</style>' . "\n";
