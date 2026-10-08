@@ -1,4 +1,4 @@
-/* dabul: every contact form on the site also adds a lead to the office system (Yakir asked, 8.10.2026).
+/* dabul: every contact form on the site also adds a lead to the office app. Yakir asked for it on 8.10.2026.
    Works for all Elementor forms: home page, footer, popup and contact page.
    The e-mail that each form sends to the office stays exactly as before.
    The lead goes to the lead intake of the office system, which also sends the Telegram alert.
