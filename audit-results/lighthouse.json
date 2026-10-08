@@ -1,37 +1,37 @@
 {
- "article-mobile": {
+ "article-desktop": {
   "scores": {
-   "performance": 71,
-   "accessibility": 79,
+   "performance": 100,
+   "accessibility": 80,
    "best-practices": 100,
    "seo": 92
   },
   "fcp": {
-   "v": "3.7 s",
-   "score": 0.29
+   "v": "0.4 s",
+   "score": 1
   },
   "lcp": {
-   "v": "5.5 s",
-   "score": 0.19
+   "v": "0.7 s",
+   "score": 0.99
   },
   "tbt": {
    "v": "0 ms",
    "score": 1
   },
   "cls": {
-   "v": "0",
+   "v": "0.012",
    "score": 1
   },
   "si": {
-   "v": "3.7 s",
-   "score": 0.85
+   "v": "0.5 s",
+   "score": 1
   },
   "weight": {
-   "v": "Total size was 435 KiB",
+   "v": "Total size was 348 KiB",
    "score": 1
   },
   "dom": {
-   "v": "2,274 elements",
+   "v": "2,271 elements",
    "score": 0.5
   },
   "unusedJs": {
@@ -39,32 +39,96 @@
    "score": 1
   },
   "unusedCss": {
+   "v": "Potential savings of 28 KiB",
+   "score": 0.5
+  },
+  "renderBlocking": {
+   "score": 1
+  },
+  "lcpElement": "<img data-no-lazy=\"\" fetchpriority=\"high\" decoding=\"async\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/02/%D7%9E%D7%93%D7%A8%D7%99…\" alt=\"מדריך מקיף לרכישת דירה יד שניה\" width=\"1068\" height=\"5",
+  "opportunities": [
+   {
+    "id": "unused-css-rules",
+    "title": "Reduce unused CSS",
+    "ms": 0,
+    "kb": 28
+   },
+   {
+    "id": "uses-responsive-images",
+    "title": "Properly size images",
+    "ms": 0,
+    "kb": 15
+   }
+  ],
+  "a11yFails": [
+   "Elements with an ARIA `[role]` that require children to contain a specific `[role]` are missing some or all of those required children.",
+   "Background and foreground colors do not have a sufficient contrast ratio.",
+   "`<frame>` or `<iframe>` elements do not have a title",
+   "Elements with visible text labels do not have matching accessible names.",
+   "Links do not have a discernible name",
+   "Links rely on color to be distinguishable.",
+   "Skip links are not focusable.",
+   "Touch targets do not have sufficient size or spacing.",
+   "`<td>` elements in a large `<table>` do not have table headers."
+  ],
+  "seoFails": [
+   "Links are not crawlable"
+  ],
+  "bpFails": []
+ },
+ "article-mobile": {
+  "scores": {
+   "performance": 93,
+   "accessibility": 79,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "fcp": {
+   "v": "2.4 s",
+   "score": 0.7
+  },
+  "lcp": {
+   "v": "2.7 s",
+   "score": 0.85
+  },
+  "tbt": {
+   "v": "70 ms",
+   "score": 0.99
+  },
+  "cls": {
+   "v": "0",
+   "score": 1
+  },
+  "si": {
+   "v": "2.4 s",
+   "score": 0.98
+  },
+  "weight": {
+   "v": "Total size was 330 KiB",
+   "score": 1
+  },
+  "dom": {
+   "v": "2,271 elements",
+   "score": 0.5
+  },
+  "unusedJs": {
    "v": "",
    "score": 1
   },
-  "renderBlocking": {
-   "v": "Potential savings of 2,030 ms",
-   "score": 0
+  "unusedCss": {
+   "v": "Potential savings of 27 KiB",
+   "score": 0.5
   },
-  "lcpElement": "<img fetchpriority=\"high\" decoding=\"async\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/02/%D7%9E%D7%93%D7%A8%D7%99…\" alt=\"מדריך מקיף לרכישת דירה יד שניה\" width=\"1068\" height=\"559\" data-lazy-sr",
+  "renderBlocking": {
+   "score": 1
+  },
+  "lcpElement": "<p data-path-to-node=\"0\">",
   "opportunities": [
    {
-    "id": "render-blocking-resources",
-    "title": "Eliminate render-blocking resources",
-    "ms": 2033,
-    "kb": 0
-   },
-   {
-    "id": "server-response-time",
-    "title": "Reduce initial server response time",
-    "ms": 626,
-    "kb": 0
-   },
-   {
-    "id": "prioritize-lcp-image",
-    "title": "Preload Largest Contentful Paint image",
-    "ms": 43,
-    "kb": 0
+    "id": "unused-css-rules",
+    "title": "Reduce unused CSS",
+    "ms": 0,
+    "kb": 27
    }
   ],
   "a11yFails": [
@@ -72,6 +136,7 @@
    "Background and foreground colors do not have a sufficient contrast ratio.",
    "`<frame>` or `<iframe>` elements do not have a title",
    "Heading elements are not in a sequentially-descending order",
+   "Elements with visible text labels do not have matching accessible names.",
    "Links do not have a discernible name",
    "Links rely on color to be distinguishable.",
    "Skip links are not focusable.",
@@ -85,37 +150,37 @@
  },
  "contact-mobile": {
   "scores": {
-   "performance": 75,
-   "accessibility": 88,
+   "performance": 92,
+   "accessibility": 89,
    "best-practices": 100,
    "seo": 92
   },
   "fcp": {
-   "v": "3.9 s",
-   "score": 0.24
+   "v": "2.4 s",
+   "score": 0.7
   },
   "lcp": {
-   "v": "4.2 s",
-   "score": 0.45
+   "v": "2.9 s",
+   "score": 0.81
   },
   "tbt": {
    "v": "0 ms",
    "score": 1
   },
   "cls": {
-   "v": "0.001",
+   "v": "0",
    "score": 1
   },
   "si": {
-   "v": "4.8 s",
-   "score": 0.67
+   "v": "2.4 s",
+   "score": 0.98
   },
   "weight": {
-   "v": "Total size was 402 KiB",
+   "v": "Total size was 309 KiB",
    "score": 1
   },
   "dom": {
-   "v": "1,625 elements",
+   "v": "1,623 elements",
    "score": 0.5
   },
   "unusedJs": {
@@ -123,27 +188,26 @@
    "score": 1
   },
   "unusedCss": {
-   "v": "",
-   "score": 1
+   "v": "Potential savings of 20 KiB",
+   "score": 0.5
   },
   "renderBlocking": {
-   "v": "Potential savings of 1,600 ms",
-   "score": 0
+   "score": 1
   },
   "lcpElement": "<div class=\"elementor-element elementor-element-83941a1 e-flex e-con-boxed e-con e-par…\" data-id=\"83941a1\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_backgr",
   "opportunities": [
    {
-    "id": "render-blocking-resources",
-    "title": "Eliminate render-blocking resources",
-    "ms": 1595,
-    "kb": 0
+    "id": "unused-css-rules",
+    "title": "Reduce unused CSS",
+    "ms": 0,
+    "kb": 20
    }
   ],
   "a11yFails": [
    "Background and foreground colors do not have a sufficient contrast ratio.",
    "Heading elements are not in a sequentially-descending order",
+   "Elements with visible text labels do not have matching accessible names.",
    "Links do not have a discernible name",
-   "Skip links are not focusable.",
    "Touch targets do not have sufficient size or spacing."
   ],
   "seoFails": [
@@ -153,37 +217,37 @@
  },
  "home-desktop": {
   "scores": {
-   "performance": 94,
+   "performance": 92,
    "accessibility": 80,
    "best-practices": 100,
    "seo": 92
   },
   "fcp": {
    "v": "1.2 s",
-   "score": 0.76
+   "score": 0.74
   },
   "lcp": {
-   "v": "1.2 s",
-   "score": 0.9
+   "v": "1.5 s",
+   "score": 0.82
   },
   "tbt": {
    "v": "0 ms",
    "score": 1
   },
   "cls": {
-   "v": "0.011",
-   "score": 1
+   "v": "0.056",
+   "score": 0.98
   },
   "si": {
    "v": "1.2 s",
    "score": 0.93
   },
   "weight": {
-   "v": "Total size was 668 KiB",
+   "v": "Total size was 674 KiB",
    "score": 1
   },
   "dom": {
-   "v": "3,401 elements",
+   "v": "3,407 elements",
    "score": 0.5
   },
   "unusedJs": {
@@ -195,7 +259,7 @@
    "score": 1
   },
   "renderBlocking": {
-   "v": "Potential savings of 760 ms",
+   "v": "Potential savings of 590 ms",
    "score": 0
   },
   "lcpElement": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_backgr",
@@ -203,13 +267,13 @@
    {
     "id": "render-blocking-resources",
     "title": "Eliminate render-blocking resources",
-    "ms": 755,
+    "ms": 588,
     "kb": 0
    },
    {
-    "id": "server-response-time",
-    "title": "Reduce initial server response time",
-    "ms": 588,
+    "id": "prioritize-lcp-image",
+    "title": "Preload Largest Contentful Paint image",
+    "ms": 0,
     "kb": 0
    },
    {
@@ -235,14 +299,14 @@
  },
  "home-mobile": {
   "scores": {
-   "performance": 67,
+   "performance": 70,
    "accessibility": 80,
    "best-practices": 100,
    "seo": 92
   },
   "fcp": {
-   "v": "4.3 s",
-   "score": 0.18
+   "v": "4.1 s",
+   "score": 0.21
   },
   "lcp": {
    "v": "5.4 s",
@@ -253,19 +317,19 @@
    "score": 1
   },
   "cls": {
-   "v": "0.094",
-   "score": 0.91
+   "v": "0",
+   "score": 1
   },
   "si": {
-   "v": "4.3 s",
-   "score": 0.76
+   "v": "4.1 s",
+   "score": 0.79
   },
   "weight": {
-   "v": "Total size was 627 KiB",
+   "v": "Total size was 487 KiB",
    "score": 1
   },
   "dom": {
-   "v": "3,403 elements",
+   "v": "3,401 elements",
    "score": 0.5
   },
   "unusedJs": {
@@ -277,7 +341,7 @@
    "score": 1
   },
   "renderBlocking": {
-   "v": "Potential savings of 1,620 ms",
+   "v": "Potential savings of 1,460 ms",
    "score": 0
   },
   "lcpElement": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_backgr",
@@ -285,13 +349,7 @@
    {
     "id": "render-blocking-resources",
     "title": "Eliminate render-blocking resources",
-    "ms": 1623,
-    "kb": 0
-   },
-   {
-    "id": "prioritize-lcp-image",
-    "title": "Preload Largest Contentful Paint image",
-    "ms": 296,
+    "ms": 1464,
     "kb": 0
    },
    {
@@ -317,7 +375,7 @@
  },
  "netanya-mobile": {
   "scores": {
-   "performance": 69,
+   "performance": 58,
    "accessibility": 82,
    "best-practices": 100,
    "seo": 92
@@ -327,27 +385,27 @@
    "score": 0.14
   },
   "lcp": {
-   "v": "5.3 s",
-   "score": 0.21
+   "v": "5.2 s",
+   "score": 0.23
   },
   "tbt": {
    "v": "0 ms",
    "score": 1
   },
   "cls": {
-   "v": "0",
-   "score": 1
+   "v": "0.224",
+   "score": 0.56
   },
   "si": {
    "v": "4.6 s",
-   "score": 0.7
+   "score": 0.71
   },
   "weight": {
-   "v": "Total size was 439 KiB",
+   "v": "Total size was 449 KiB",
    "score": 1
   },
   "dom": {
-   "v": "2,793 elements",
+   "v": "2,801 elements",
    "score": 0.5
   },
   "unusedJs": {
@@ -356,10 +414,10 @@
   },
   "unusedCss": {
    "v": "Potential savings of 20 KiB",
-   "score": 0
+   "score": 0.5
   },
   "renderBlocking": {
-   "v": "Potential savings of 2,110 ms",
+   "v": "Potential savings of 2,100 ms",
    "score": 0
   },
   "lcpElement": "<p class=\"lvbl-p\">",
@@ -367,13 +425,13 @@
    {
     "id": "render-blocking-resources",
     "title": "Eliminate render-blocking resources",
-    "ms": 2110,
+    "ms": 2099,
     "kb": 0
    },
    {
     "id": "unused-css-rules",
     "title": "Reduce unused CSS",
-    "ms": 190,
+    "ms": 0,
     "kb": 20
    }
   ],
