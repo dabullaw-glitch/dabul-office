@@ -108,6 +108,28 @@ add_action('rest_api_init', function () {
 		return array('dry' => $dry, 'res' => $res);
 	}));
 
+	// build a new nav menu (the old one stays untouched): body {name, dry, items:[{title, id?|cat?|url?, children:[...]}]}
+	register_rest_route('dabul/v1', '/buildmenu', array('methods' => 'POST', 'permission_callback' => $admin, 'callback' => function ($r) {
+		$b = $r->get_json_params(); $dry = !empty($b['dry']); $name = sanitize_text_field($b['name'] ?? ''); $out = array(); $pos = 0;
+		if (!$name) return new WP_Error('name', 'name required');
+		$check = function ($it) { if (!empty($it['id'])) { $p = get_post((int) $it['id']); return $p && $p->post_status === 'publish' ? get_permalink($p) : false; } if (!empty($it['cat'])) { $l = get_term_link((int) $it['cat'], 'category'); return is_wp_error($l) ? false : $l; } return $it['url'] ?? ''; };
+		foreach ((array) $b['items'] as $top) { $out[] = array('t' => $top['title'], 'ok' => $check($top)); foreach ((array) ($top['children'] ?? array()) as $c) $out[] = array('t' => '  ' . $c['title'], 'ok' => $check($c)); }
+		if ($dry) return array('dry' => true, 'items' => $out);
+		if (wp_get_nav_menu_object($name)) return new WP_Error('exists', 'menu exists');
+		$mid = wp_create_nav_menu($name); if (is_wp_error($mid)) return $mid;
+		$add = function ($it, $parent) use ($mid, &$pos) {
+			$pos++;
+			$a = array('menu-item-title' => $it['title'], 'menu-item-status' => 'publish', 'menu-item-parent-id' => $parent, 'menu-item-position' => $pos);
+			if (!empty($it['id'])) { $p = get_post((int) $it['id']); $a += array('menu-item-type' => 'post_type', 'menu-item-object' => $p->post_type, 'menu-item-object-id' => $p->ID); }
+			elseif (!empty($it['cat'])) $a += array('menu-item-type' => 'taxonomy', 'menu-item-object' => 'category', 'menu-item-object-id' => (int) $it['cat']);
+			else $a += array('menu-item-type' => 'custom', 'menu-item-url' => $it['url'] ?? '');
+			return wp_update_nav_menu_item($mid, 0, $a);
+		};
+		foreach ((array) $b['items'] as $top) { $tid = $add($top, 0); foreach ((array) ($top['children'] ?? array()) as $c) $add($c, $tid); }
+		$m = wp_get_nav_menu_object($mid);
+		return array('dry' => false, 'menu' => $mid, 'slug' => $m->slug, 'count' => $pos, 'items' => $out);
+	}));
+
 	// point every Elementor nav-menu widget that shows menu <from> to menu <to> (header templates); body {from, to, dry}
 	register_rest_route('dabul/v1', '/navswap', array('methods' => 'POST', 'permission_callback' => $admin, 'callback' => function ($r) {
 		$b = $r->get_json_params(); $dry = !empty($b['dry']); $from = (string) $b['from']; $to = (string) $b['to']; $res = array();
