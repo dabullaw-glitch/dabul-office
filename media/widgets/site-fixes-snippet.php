@@ -5,7 +5,15 @@
    3. The Google rating image (fixed text "62", "ג גוגל") becomes a live badge with the current rating and count,
       read from the reviews widget on the testimonials page and refreshed twice a day.                            [item 16]
    4. Testimonials page: every reviewer photo gets alt text (generic, no names).                                [item 23]
+   5. The English and French pages declare their real language and left-to-right direction.                     [item 10]
    To undo everything: deactivate this snippet. */
+
+add_filter('language_attributes', function ($out) {
+	if (is_admin()) return $out;
+	if (is_page(7006)) return 'lang="en-US" dir="ltr"';
+	if (is_page(6999)) return 'lang="fr-FR" dir="ltr"';
+	return $out;
+}, 20);
 
 add_action('wp_head', function () {
 	if (is_admin()) return;
