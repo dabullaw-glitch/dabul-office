@@ -5,6 +5,7 @@ description: "חדלות פירעון בשפה פשוטה: מה זה, מי יכ�
 hub: hadlut-piraon
 published: 2026-10-08
 updated: 2026-10-08
+video: hadlut-4-shlavim
 order: 1
 tool: eize-halich
 summary:

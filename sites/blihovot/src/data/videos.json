@@ -1,1 +1,44 @@
-[]
+[
+ {
+  "id": "hadlut-4-shlavim",
+  "title": "חדלות פירעון ב-4 שלבים",
+  "description": "הדרך מצו לפתיחת הליכים ועד הפטר, בפחות מדקה.",
+  "src": "video/hadlut-4-shlavim.mp4",
+  "poster": "video/hadlut-4-shlavim.jpg",
+  "captions": "video/hadlut-4-shlavim.vtt",
+  "w": 1080,
+  "h": 1920,
+  "duration": "PT36S",
+  "date": "2026-10-08",
+  "guide": "ma-ze-hadlut-piraon",
+  "lesson": "6-hadlut"
+ },
+ {
+  "id": "ichud-tikim",
+  "title": "איחוד תיקים: מתי זה עובד?",
+  "description": "התנאי המרכזי לאיחוד תיקים בהוצאה לפועל, במספרים.",
+  "src": "video/ichud-tikim.mp4",
+  "poster": "video/ichud-tikim.jpg",
+  "captions": "video/ichud-tikim.vtt",
+  "w": 1080,
+  "h": 1920,
+  "duration": "PT31S",
+  "date": "2026-10-08",
+  "guide": "ichud-tikim",
+  "lesson": "5-ichud"
+ },
+ {
+  "id": "ma-asur-leakel",
+  "title": "מה אסור לעקל בהוצאה לפועל?",
+  "description": "הדברים שמוגנים מעיקול, גם כשיש צו עיקול.",
+  "src": "video/ma-asur-leakel.mp4",
+  "poster": "video/ma-asur-leakel.jpg",
+  "captions": "video/ma-asur-leakel.vtt",
+  "w": 1080,
+  "h": 1920,
+  "duration": "PT30S",
+  "date": "2026-10-08",
+  "guide": "ikulim",
+  "lesson": "4-hotzaa"
+ }
+]

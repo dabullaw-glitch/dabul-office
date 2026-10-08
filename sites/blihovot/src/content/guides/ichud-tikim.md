@@ -5,6 +5,7 @@ description: "איחוד תיקים מאחד כמה תיקי הוצאה לפוע
 hub: hotzaa-lapoal
 published: 2026-10-08
 updated: 2026-10-08
+video: ichud-tikim
 order: 1
 tool: ichud-tikim
 summary:
