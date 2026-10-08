@@ -68,7 +68,7 @@ add_action('wp_head', function () {
 
 add_action('wp_footer', function () {
 	if (is_admin() || !dabul_sp3_on()) return;
-	?>
+	echo <<<'DBLSP3JS'
 <script nowprocket data-no-optimize="1">
 (function () {
 	// the cookie window: mark it as a named dialog for screen readers
@@ -82,5 +82,5 @@ add_action('wp_footer', function () {
 	fix();
 })();
 </script>
-	<?php
+DBLSP3JS;
 }, 1);
