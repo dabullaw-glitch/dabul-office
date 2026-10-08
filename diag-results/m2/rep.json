@@ -1,0 +1,608 @@
+{
+ "phoneHeader": {
+  "y": 3006,
+  "chain": [
+   {
+    "tag": "HEADER",
+    "id": "",
+    "cls": "elementor elementor-619 elementor-location-header",
+    "pos": "static",
+    "top": "auto",
+    "h": 70
+   }
+  ],
+  "inner": [
+   {
+    "id": "2eb16f9",
+    "cls": "elementor-element elementor-element-2eb16f9 e-con-full e-flex e-con e-parent e-lazyloaded elementor-sticky elementor-sticky--active elementor-section--handles-i",
+    "pos": "fixed",
+    "h": 70,
+    "top": 0,
+    "set": "{\"sticky\":\"top\",\"sticky_effects_offset\":1,\"sticky_anchor_link_offset\":90,\"background_background\":\"classic\",\"sticky_anchor_link_offset_mobile\":70,\"sticky_on\":[\"desktop\",\"tablet\",\"mobile\"],\"sticky_offset\":0}"
+   },
+   {
+    "id": "2eb16f9",
+    "cls": "elementor-element elementor-element-2eb16f9 e-con-full e-flex e-con e-parent e-lazyloaded elementor-sticky elementor-sticky__spacer",
+    "pos": "relative",
+    "h": 70,
+    "top": -3006,
+    "set": "{\"sticky\":\"top\",\"sticky_effects_offset\":1,\"sticky_anchor_link_offset\":90,\"background_background\":\"classic\",\"sticky_anchor_link_offset_mobile\":70,\"sticky_on\":[\"desktop\",\"tablet\",\"mobile\"],\"sticky_offset\":0}"
+   }
+  ],
+  "mainTop": -2928,
+  "bodyPad": "0px"
+ },
+ "cut": {
+  "w": 494,
+  "h": 800,
+  "bbox": [
+   5,
+   4,
+   489,
+   799
+  ],
+  "massX": 261,
+  "headX": 304
+ },
+ "footer": {
+  "h": 1696,
+  "bg": "rgb(240, 240, 247)",
+  "bgi": "url(\"https://dabullaw.co.il/wp-content/uploads/2025/11/bgfooter.webp\")",
+  "widgets": [
+   {
+    "id": "4ca2ea9",
+    "type": "heading.default",
+    "text": "צריכים סיוע משפטי? צרו קשר עכשיו",
+    "links": []
+   },
+   {
+    "id": "0f66f10",
+    "type": "heading.default",
+    "text": "לשיחת ייעוץ חייגו",
+    "links": []
+   },
+   {
+    "id": "8aca4a8",
+    "type": "button.default",
+    "text": "09-861-3413",
+    "links": [
+     [
+      "09-861-3413",
+      "tel:098613413"
+     ]
+    ]
+   },
+   {
+    "id": "74792fe",
+    "type": "text-editor.default",
+    "text": "או השאירו פרטים ונחזור אליכם בהקדם.",
+    "links": []
+   },
+   {
+    "id": "0647149",
+    "type": "form.default",
+    "text": "שם מלא טלפון אימייל איך אפשר לעזור? קראתי ומסכימ/ה למדיניות הפרטיות. אני מאשר/ת כי ידוע לי ומוסכם עלי כי הפרטים שמסרתי ייאספו, יוחזקו ויעובדו במאגר מידע בהתאם להוראות חוק הגנת הפרטיות, התשמ\"א–1981 (כולל תיקון 13), ולמטרות המפורטות במדיניות הפרטיות של האתר. ידוע לי כי מסירת המידע נעשית מרצוני החופשי,",
+    "links": [
+     [
+      "מדיניות הפרטיות",
+      "https://dabullaw.co.il/privacy-policy/"
+     ]
+    ]
+   },
+   {
+    "id": "35de91f",
+    "type": "image.default",
+    "text": "",
+    "links": [
+     [
+      "",
+      "https://dabullaw.co.il/"
+     ]
+    ]
+   },
+   {
+    "id": "d678948",
+    "type": "social-icons.default",
+    "text": "טלפון - דבול ושות׳ Waze",
+    "links": [
+     [
+      "טלפון - דבול ושות׳",
+      "tel:098613413"
+     ],
+     [
+      "שליחת אימייל למשרד",
+      "mailto:dabullaw@gmail.com"
+     ],
+     [
+      "שיחת וואטסאפ עם המשרד",
+      "https://wa.me/972505580189?text=שלום, הגעתי מהעמוד \"העמוד לא נמצא - יקיר דבול - משרד עורכי דין\" באתר ואשמח לשאול..."
+     ],
+     [
+      "עמוד הפייסבוק של המשרד",
+      "https://www.facebook.com/dabullaw"
+     ],
+     [
+      "Waze",
+      "https://waze.com/ul?ll=32.3274395,34.8614253&navigate=yes&zoom=17"
+     ]
+    ]
+   },
+   {
+    "id": "dd98793",
+    "type": "heading.default",
+    "text": "רכישת דירה",
+    "links": []
+   },
+   {
+    "id": "e3a6a41",
+    "type": "icon-list.default",
+    "text": "רכישה דירה יד שנייה בדיקות מקדימות לפני קנייה זכרון דברים בעסקת מקרקעין עריכת הסכם מכר קניית דירה בנאמנות קניית דירה מושכרת קניית דירה עם חריגות בנייה רכישת דירה להריסה רכישת דירה מכונס נכסים רכישת דירה על שם קטין רכישת דירה תושב חוץ",
+    "links": [
+     [
+      "רכישה דירה יד שנייה",
+      "https://dabullaw.co.il/מדריך-מקיף-לרכישת-דירה-יד-שניה/"
+     ],
+     [
+      "בדיקות מקדימות לפני קנייה",
+      "https://dabullaw.co.il/בדיקות-מקדמיות-לפני-רכישת-דירה-2/"
+     ],
+     [
+      "זכרון דברים בעסקת מקרקעין",
+      "https://dabullaw.co.il/זיכרון-דברים-המפית-הכי-יקרה-שתחתמו-עלי/"
+     ],
+     [
+      "עריכת הסכם מכר",
+      "https://dabullaw.co.il/עריכת-הסכם-מקרקעין/"
+     ],
+     [
+      "קניית דירה בנאמנות",
+      "https://dabullaw.co.il/buying-apartment-in-trust-real-estate-legal-guide/"
+     ],
+     [
+      "קניית דירה מושכרת",
+      "https://dabullaw.co.il/buying-rented-apartment-israel-legal-guide/"
+     ],
+     [
+      "קניית דירה עם חריגות בנייה",
+      "https://dabullaw.co.il/buying-apartment-building-violations-legal-risks-guide/"
+     ],
+     [
+      "רכישת דירה להריסה",
+      "https://dabullaw.co.il/purchasing-apartment-for-demolition-legal-guide-urban-renewal/"
+     ],
+     [
+      "רכישת דירה מכונס נכסים",
+      "https://dabullaw.co.il/קניית-דירה-מכונס-נכסים-הזדמנות-פז-או-הר/"
+     ],
+     [
+      "רכישת דירה על שם קטין",
+      "https://dabullaw.co.il/רכישת-דירה-על-ידי-קטין/"
+     ],
+     [
+      "רכישת דירה תושב חוץ",
+      "https://dabullaw.co.il/המדריך-לתושבי-חוץ-איך-לקנות-ולמכור-נד/"
+     ]
+    ]
+   },
+   {
+    "id": "7117d3b",
+    "type": "heading.default",
+    "text": "קניית דירה מקבלן",
+    "links": []
+   },
+   {
+    "id": "cf26f1d",
+    "type": "icon-list.default",
+    "text": "איחור במסירת דירה מקבלן מדד תשומות הבנייה קניית דירה מוכנה מקבלן קניית דירה על הנייר",
+    "links": [
+     [
+      "איחור במסירת דירה מקבלן",
+      "https://dabullaw.co.il/איחור-במסירת-דירה-מקבלן/"
+     ],
+     [
+      "מדד תשומות הבנייה",
+      "https://dabullaw.co.il/מדד-תשומות-הבניה/"
+     ],
+     [
+      "קניית דירה מוכנה מקבלן",
+      "https://dabullaw.co.il/המדריך-המלא-לרכישת-דירה-מקבלן-2026/"
+     ],
+     [
+      "קניית דירה על הנייר",
+      "https://dabullaw.co.il/קניה-מקבלן/"
+     ]
+    ]
+   },
+   {
+    "id": "20c9d78",
+    "type": "heading.default",
+    "text": "מכירת דירה",
+    "links": []
+   },
+   {
+    "id": "270273d",
+    "type": "icon-list.default",
+    "text": "היטל השבחה במכירת דירה העברת דירה במתנה ללא תמורה (בין קרובי משפחה) הפרת חוזה מכר דירה על ידי הקונה מכירת דירה של תושב חוץ בישראל",
+    "links": [
+     [
+      "היטל השבחה במכירת דירה",
+      "https://dabullaw.co.il/שאלות-נפוצות-היטל-השבחה/"
+     ],
+     [
+      "העברת דירה במתנה ללא תמורה (בין קרובי משפחה)",
+      "https://dabullaw.co.il/העברה-ללא-תמורה-עסקת-מתנה-במשפחה-המדר/"
+     ],
+     [
+      "הפרת חוזה מכר דירה על ידי הקונה",
+      "https://dabullaw.co.il/הפרת-חוזה-מכר-דירה/"
+     ],
+     [
+      "מכירת דירה של תושב חוץ בישראל",
+      "https://dabullaw.co.il/המדריך-לתושבי-חוץ-איך-לקנות-ולמכור-נד/"
+     ]
+    ]
+   },
+   {
+    "id": "6dccef0",
+    "type": "heading.default",
+    "text": "מיסוי מקרקעין",
+    "links": []
+   },
+   {
+    "id": "5f04f5a",
+    "type": "icon-list.default",
+    "text": "הנחה במס רכישה לנכים הנחה במס רכישה לעולים חדשים הקטנת מס שבח חישוב מס רכישה חישוב מס שבח מיסוי דירת ירושה מציאת סכום הרכישה",
+    "links": [
+     [
+      "הנחה במס רכישה לנכים",
+      "https://dabullaw.co.il/המדריך-למס-רכישה-2025-כמה-תשלמו-למדינה-ואי/"
+     ],
+     [
+      "הנחה במס רכישה לעולים חדשים",
+      "https://dabullaw.co.il/המדריך-למס-רכישה-2025-כמה-תשלמו-למדינה-ואי/"
+     ],
+     [
+      "הקטנת מס שבח",
+      "https://dabullaw.co.il/דרכים-חוקיות-להפחתת-מס-שבח-ומיסוי/"
+     ],
+     [
+      "חישוב מס רכישה",
+      "https://dabullaw.co.il/המדריך-המלא-ומחשבון-להוצאות-לרכישת-די/"
+     ],
+     [
+      "חישוב מס שבח",
+      "https://dabullaw.co.il/תכנון-מס-וליווי-במיסוי-מקרקעין-שבח-רכי/"
+     ],
+     [
+      "מיסוי דירת ירושה",
+      "https://dabullaw.co.il/אתם-שואלים-עוד-יקיר-דבול-עונה-המדריך-2/"
+     ],
+     [
+      "מציאת סכום הרכישה",
+      "https://dabullaw.co.il/איך-לנהל-משא-ומתן-מוצלח-לרכישת-דירה-2/"
+     ]
+    ]
+   },
+   {
+    "id": "47fbee4",
+    "type": "heading.default",
+    "text": "התחדשות עירונית",
+    "links": []
+   },
+   {
+    "id": "796bc41",
+    "type": "icon-list.default",
+    "text": "סרבני פינוי בינוי עורך דין פינוי בינוי",
+    "links": [
+     [
+      "סרבני פינוי בינוי",
+      "https://dabullaw.co.il/הדייר-הסרבן-המדריך-המשפטי-המלא-להתמוד/"
+     ],
+     [
+      "עורך דין פינוי בינוי",
+      "https://dabullaw.co.il/התחדשות-עירונית/"
+     ]
+    ]
+   },
+   {
+    "id": "e6620b9",
+    "type": "heading.default",
+    "text": "עורך דין מקרקעין",
+    "links": []
+   },
+   {
+    "id": "886145f",
+    "type": "icon-list.default",
+    "text": "עורך דין מקרקעין בנתניה עורך דין מקרקעין בהרצליה עורך דין מקרקעין בחדרה עורך דין מקרקעין בכפר יונה Français English",
+    "links": [
+     [
+      "עורך דין מקרקעין בנתניה",
+      "https://dabullaw.co.il/עורך-דין-מקרקעין-בנתניה/"
+     ],
+     [
+      "עורך דין מקרקעין בהרצליה",
+      "https://dabullaw.co.il/עורך-דין-מקרקעין-בהרצליה-המדריך-המלא-ל/"
+     ],
+     [
+      "עורך דין מקרקעין בחדרה",
+      "https://dabullaw.co.il/עורך-דין-מקרקעין-בחדרה/"
+     ],
+     [
+      "עורך דין מקרקעין בכפר יונה",
+      "https://dabullaw.co.il/עורך-דין-מקרקעין-בכפר-יונה/"
+     ],
+     [
+      "Français",
+      "https://dabullaw.co.il/avocat-immobilier-netanya-francais/"
+     ],
+     [
+      "English",
+      "https://dabullaw.co.il/real-estate-lawyer-netanya-english/"
+     ]
+    ]
+   },
+   {
+    "id": "3f4ec02",
+    "type": "heading.default",
+    "text": "מידע באתר",
+    "links": []
+   },
+   {
+    "id": "023fe63",
+    "type": "icon-list.default",
+    "text": "אודות המשרד תעודות והסמכות עו״ד יקיר דבול המלצות המשרד בתקשורת סיפורי מקרה מידע משפטי טפסים צרו קשר",
+    "links": [
+     [
+      "אודות המשרד",
+      "https://dabullaw.co.il/אודות-המשרד/"
+     ],
+     [
+      "תעודות והסמכות עו״ד יקיר דבול",
+      "https://dabullaw.co.il/תעודות-והסמכות-עו״ד-יקיר-דבול/"
+     ],
+     [
+      "המלצות",
+      "https://dabullaw.co.il/המלצות/"
+     ],
+     [
+      "המשרד בתקשורת",
+      "https://dabullaw.co.il/category/press/"
+     ],
+     [
+      "סיפורי מקרה",
+      "https://dabullaw.co.il/category/סיפורי-מקרה/"
+     ],
+     [
+      "מידע משפטי",
+      "https://dabullaw.co.il/מידע-משפטי/"
+     ],
+     [
+      "טפסים",
+      "https://dabullaw.co.il/קישורים-וטפסים/"
+     ],
+     [
+      "צרו קשר",
+      "https://dabullaw.co.il/צרו-קשר/"
+     ]
+    ]
+   },
+   {
+    "id": "f3a95db",
+    "type": "heading.default",
+    "text": "יש לכם שאלות? הצטרפו לקבוצת הוואטסאפ שלנו",
+    "links": []
+   },
+   {
+    "id": "831ef6d",
+    "type": "button.default",
+    "text": "להצטרפות",
+    "links": [
+     [
+      "להצטרפות",
+      "https://chat.whatsapp.com/ClLGh1qsjnpBnjIdKKu2lA?mode=hqrt2"
+     ]
+    ]
+   },
+   {
+    "id": "ff5ffac",
+    "type": "heading.default",
+    "text": "יקיר דבול | משרד עורכי דין",
+    "links": []
+   },
+   {
+    "id": "bced874",
+    "type": "icon-list.default",
+    "text": "רזיאל 1, נתניה (קומת כניסה) 4247001 09-861-3413 dabullaw@gmail.com התחברו בפייסבוק",
+    "links": [
+     [
+      "09-861-3413",
+      "tel:098613413"
+     ],
+     [
+      "dabullaw@gmail.com",
+      "mailto:dabullaw@gmail.com"
+     ],
+     [
+      "התחברו בפייסבוק",
+      "https://www.facebook.com/dabullaw"
+     ]
+    ]
+   },
+   {
+    "id": "e501cf7",
+    "type": "social-icons.default",
+    "text": "טלפון - דבול ושות׳ Waze",
+    "links": [
+     [
+      "טלפון - דבול ושות׳",
+      "tel:09-8613413"
+     ],
+     [
+      "",
+      "https://dabullaw@gmail.com"
+     ],
+     [
+      "",
+      "https://wa.me/972505580189?text=שלום, הגעתי מהעמוד \"העמוד לא נמצא - יקיר דבול - משרד עורכי דין\" באתר ואשמח לשאול..."
+     ],
+     [
+      "",
+      "https://www.facebook.com/dabullaw"
+     ],
+     [
+      "Waze",
+      "https://waze.com/ul?ll=32.3274395,34.8614253&navigate=yes&zoom=17"
+     ]
+    ]
+   },
+   {
+    "id": "9339779",
+    "type": "heading.default",
+    "text": "שעות פעילות",
+    "links": []
+   },
+   {
+    "id": "a58e6fa",
+    "type": "price-list.default",
+    "text": "יום א'-ה' 9:00-18:00 יום ו' ושבת סגור",
+    "links": [
+     [
+      "יום א'-ה'\n9:00-18:00",
+      "#"
+     ],
+     [
+      "יום ו' ושבת\nסגור",
+      "#"
+     ]
+    ]
+   },
+   {
+    "id": "832a7d8",
+    "type": "google_maps.default",
+    "text": "",
+    "links": []
+   },
+   {
+    "id": "5d367c3",
+    "type": "image.default",
+    "text": "",
+    "links": []
+   },
+   {
+    "id": "56f4633",
+    "type": "nav-menu.default",
+    "text": "מדיניות פרטיות הצהרת נגישות מפת אתר",
+    "links": [
+     [
+      "מדיניות פרטיות",
+      "https://dabullaw.co.il/privacy-policy/"
+     ],
+     [
+      "הצהרת נגישות",
+      "https://dabullaw.co.il/הצהרת-נגישות/"
+     ],
+     [
+      "מפת אתר",
+      "https://dabullaw.co.il/מפת-אתר/"
+     ],
+     [
+      "מדיניות פרטיות",
+      "https://dabullaw.co.il/privacy-policy/"
+     ],
+     [
+      "הצהרת נגישות",
+      "https://dabullaw.co.il/הצהרת-נגישות/"
+     ],
+     [
+      "מפת אתר",
+      "https://dabullaw.co.il/מפת-אתר/"
+     ]
+    ]
+   },
+   {
+    "id": "555996b",
+    "type": "icon-list.default",
+    "text": "כל הזכויות שמורות ליקיר דבול משרד עורכי דין ©",
+    "links": []
+   },
+   {
+    "id": "74d8bec",
+    "type": "icon.default",
+    "text": "",
+    "links": [
+     [
+      "הצטרפות לקבוצת הוואטסאפ של המשרד",
+      "https://chat.whatsapp.com/ClLGh1qsjnpBnjIdKKu2lA"
+     ]
+    ]
+   },
+   {
+    "id": "02509a1",
+    "type": "heading.default",
+    "text": "אתר זה מוגן על ידי reCAPTCHA ומדיניות הפרטיות ותנאי השירות של גוגל חלים עליו.",
+    "links": []
+   },
+   {
+    "id": "844bd60",
+    "type": "image.default",
+    "text": "דירוג בגוגל 4.9 ★★★★★ מבוסס על 73 ביקורות",
+    "links": [
+     [
+      "דירוג בגוגל\n4.9\n★★★★★\nמבוסס על 73 ביקורות",
+      "https://dabullaw.co.il/המלצות/"
+     ]
+    ]
+   },
+   {
+    "id": "094a351",
+    "type": "icon.default",
+    "text": "",
+    "links": [
+     [
+      "שיחת וואטסאפ עם המשרד",
+      "https://wa.me/972505580189?text=שלום, הגעתי מהעמוד \"העמוד לא נמצא - יקיר דבול - משרד עורכי דין\" באתר ואשמח לשאול..."
+     ]
+    ]
+   },
+   {
+    "id": "46be141",
+    "type": "image-box.default",
+    "text": "פנו אלינו לתיאום פגישת ייעוץ09-861-3413",
+    "links": []
+   },
+   {
+    "id": "03267ec",
+    "type": "icon.default",
+    "text": "",
+    "links": [
+     [
+      "",
+      "tel:09-8613413"
+     ]
+    ]
+   },
+   {
+    "id": "9ce3ed2",
+    "type": "icon.default",
+    "text": "",
+    "links": [
+     [
+      "",
+      "https://chat.whatsapp.com/ClLGh1qsjnpBnjIdKKu2lA"
+     ]
+    ]
+   },
+   {
+    "id": "52f1039",
+    "type": "icon.default",
+    "text": "",
+    "links": [
+     [
+      "",
+      "https://dabullaw@gmail.com"
+     ]
+    ]
+   }
+  ]
+ }
+}
