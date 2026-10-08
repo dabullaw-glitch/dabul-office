@@ -13,6 +13,7 @@
       the gold color of a menu item under the mouse or of the current page, and the WhatsApp button at the bottom
       of the phone screen.
    To undo: deactivate this snippet. */
+define('DABUL_SP3_LIVE', 1);
 
 function dabul_sp3_on() {
 	if (defined('DABUL_SP3_LIVE')) return true;
