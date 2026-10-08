@@ -9,6 +9,7 @@
 //            ?a=export                   everything public, for the nightly static build
 // POST ?a=code {email}  ?a=verify {email, code, nick}  ?a=ask {token,title,body,topic}  ?a=answer {token,qid,body}
 //      ?a=report {id}   ?a=admincode {}  ?a=adminverify {code}  ?a=admin {token, op, id}
+//      admin ops: feed, approve, hide, delete, block {why}, unblock, staffq {title,body,topic}, staffa {qid,body,guide}
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 // deno-lint-ignore no-explicit-any
 type Any = any;
@@ -50,8 +51,8 @@ async function rate(uid: string, coll: string, max: number) {
   const { count } = await sb.from('docs').select('id', { count: 'exact', head: true }).eq('coll', coll).eq('data->>uid', uid).gte('updated_at', since);
   return (count || 0) < max;
 }
-const pubQ = (id: string, d: Any) => ({ id, title: d.title, body: d.body, topic: d.topic, nick: d.nick, created: d.created, answers: d.answers || 0 });
-const pubA = (id: string, d: Any) => ({ id, qid: d.qid, body: d.body, nick: d.nick, created: d.created });
+const pubQ = (id: string, d: Any) => ({ id, title: d.title, body: d.body, topic: d.topic, nick: d.nick, created: d.created, answers: d.answers || 0, staff: !!d.staff });
+const pubA = (id: string, d: Any) => ({ id, qid: d.qid, body: d.body, nick: d.nick, created: d.created, staff: !!d.staff, guide: d.staff && typeof d.guide === 'string' ? d.guide : undefined });
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
@@ -99,7 +100,8 @@ Deno.serve(async (req) => {
       await merge('forum_c', eh, { exp: 0 });
       let u = await get('forum_u', eh);
       if (u?.blocked) return J({ ok: false, error: 'blocked' }, 403);
-      const nick = clip(b.nick, 24).replace(/[<>@]/g, '') || u?.nick || `אנונימי ${parseInt(eh.slice(0, 6), 16) % 9000 + 1000}`;
+      let nickIn = clip(b.nick, 24).replace(/[<>@]/g, ''); if (/צוות|בלי\s*חובות|מנהל|admin/i.test(nickIn)) nickIn = ''; // only staff posts may look official
+      const nick = nickIn || u?.nick || `אנונימי ${parseInt(eh.slice(0, 6), 16) % 9000 + 1000}`;
       if (!u) { u = { nick, created: new Date().toISOString(), blocked: false }; await insert('forum_u', eh, u); } else if (b.nick) await merge('forum_u', eh, { nick });
       return J({ ok: true, token: await sign({ u: eh, r: 'u', exp: Date.now() + 30 * 864e5 }), nick });
     }
@@ -156,11 +158,19 @@ Deno.serve(async (req) => {
         const { data: bl } = await sb.from('docs').select('id,data').eq('coll', 'forum_u').eq('data->>blocked', 'true').limit(200);
         return J({ ok: true, items: (data || []).map((r: Any) => ({ id: r.id, type: r.coll === 'forum_q' ? 'q' : 'a', ...r.data })), blocked: (bl || []).map((r: Any) => ({ id: r.id, nick: r.data.nick, why: r.data.blockReason || '' })) });
       }
+      if (op === 'staffq' || op === 'staffa') { // official posts by the site team, always marked as such
+        const body = clip(b.body, 6000); if (body.length < 15) return J({ ok: false, error: 'short' }, 400);
+        const base = { body, nick: 'צוות בלי חובות', staff: true, status: 'live', reason: 'staff', created: new Date().toISOString(), reports: 0 };
+        if (op === 'staffq') { const title = clip(b.title, 140); if (title.length < 8) return J({ ok: false, error: 'title' }, 400); const nid = newId('q'); await insert('forum_q', nid, { ...base, title, topic: TOPICS.includes(b.topic) ? b.topic : 'אחר', answers: 0, uid: 'staff' }); return J({ ok: true, id: nid }); }
+        const qid = clip(b.qid, 40); const q = await get('forum_q', qid); if (!q) return J({ ok: false, error: 'q' }, 404);
+        const nid = newId('a'); await insert('forum_a', nid, { ...base, qid, uid: 'staff', guide: /^[a-z0-9-]{2,60}$/.test(String(b.guide || '')) ? b.guide : undefined });
+        await merge('forum_q', qid, { answers: (q.answers || 0) + 1 }); return J({ ok: true, id: nid });
+      }
       const d = await get(coll, id); if (!d && op !== 'unblock') return J({ ok: false, error: 'id' }, 404);
       if (op === 'approve') { await merge(coll, id, { status: 'live', reason: 'approved by admin' }); if (coll === 'forum_a' && d.status !== 'live') { const q = await get('forum_q', d.qid); await merge('forum_q', d.qid, { answers: (q?.answers || 0) + 1 }); } }
       else if (op === 'hide') await merge(coll, id, { status: 'hidden' });
       else if (op === 'delete') { await merge(coll, id, { status: 'deleted', body: '', title: d.title ? '(נמחק)' : undefined }); if (coll === 'forum_a' && d.status === 'live') { const q = await get('forum_q', d.qid); await merge('forum_q', d.qid, { answers: Math.max(0, (q?.answers || 1) - 1) }); } }
-      else if (op === 'block') { await merge('forum_u', d.uid, { blocked: true, blockReason: clip(b.why, 120), blockedAt: new Date().toISOString() }); await merge(coll, id, { status: 'hidden' }); }
+      else if (op === 'block') { if (d.staff) return J({ ok: false, error: 'staff' }, 400); await merge('forum_u', d.uid, { blocked: true, blockReason: clip(b.why, 120), blockedAt: new Date().toISOString() }); await merge(coll, id, { status: 'hidden' }); }
       else if (op === 'unblock') await merge('forum_u', id, { blocked: false });
       else return J({ ok: false, error: 'op' }, 400);
       return J({ ok: true });
