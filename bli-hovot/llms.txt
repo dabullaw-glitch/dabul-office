@@ -68,6 +68,11 @@
 - [מחשבון איחוד תיקים](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/kli/ichud-tikim/): בודק אם תשלום חודשי מסוים מספיק כדי לקבל צו איחוד תיקים, לפי תקופות הפירעון שבחוק.
 - [מחשבון סגירת חוב](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/kli/tashlumim/): כמה זמן ייקח לסגור חוב בתשלום חודשי קבוע, וכמה ריבית תשלמו בדרך.
 - [מחשבון תקציב חודשי](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/kli/taktziv/): הכנסות מול הוצאות: כמה כסף פנוי נשאר בכל חודש, ואיפה אפשר לחסוך.
+- [מכין בקשה לחדלות פירעון](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/kli/bakasha-hadlut/): עונים על 4 שלבים קצרים, ומקבלים קובץ מסודר עם כל מה שצריך כדי למלא את הבקשה הרשמית או להגיע מוכנים לפגישת ייעוץ. הכול נשאר אצלכם במכשיר.
+- [עוזר לבקשת איחוד תיקים](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/kli/bakasha-ichud/): מכניסים את התיקים, את ההכנסות וההוצאות ואת ההצעה החודשית, ומקבלים: האם התשלום מספיק, מה לכתוב בטופס, ורשימת מסמכים מסודרת. הכול נשאר אצלכם.
+- [עוזר לבקשת צו תשלומים](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/kli/bakasha-tzav/): מודים בחוב אבל לא יכולים לשלם אותו בבת אחת? עונים על 3 שלבים ומקבלים מועד הגשה, נוסח מוצע לנימוקים ורשימת מסמכים לטופס 233.
+- [עוזר להתנגדות לתביעה](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/kli/bakasha-hitnagdut/): מזינים את תאריך האזהרה והטענות, ומקבלים: עד מתי מגישים, נימוקים מסודרים, שלד לתצהיר ורשימת מה לצרף לטופס 218.
+- [עוזר לביטול "מוגבל באמצעים"](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/kli/bakasha-mugbal/): ההכרזה לא מתבטלת מאליה. עונים על 2 שלבים ומקבלים נוסח לנימוקים והוראות הגשה.
 
 ## עוד
 
