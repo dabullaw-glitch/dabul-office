@@ -1,0 +1,81 @@
+{
+ "phone0": {
+  "swap": false,
+  "menuName": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "lists": 3,
+  "arrowsNoName": 0,
+  "clickErr": "TimeoutError: locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('.onetap-toggle, .onetap-contain",
+  "fonts": [
+   "NotoSansHebrew-Regular.woff2",
+   "NotoSansHebrew-Bold.woff2",
+   "Roboto-Regular.woff2",
+   "NotoSansHebrew-Light.woff2",
+   "Roboto-Medium.woff2",
+   "Roboto-Bold.woff2",
+   "Roboto-Black.woff2",
+   "KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBHMdazQ.woff2"
+  ]
+ },
+ "phone1": {
+  "swap": true,
+  "menuName": [
+   "פתיחת התפריט",
+   "פתיחת התפריט",
+   "פתיחת התפריט",
+   "פתיחת התפריט"
+  ],
+  "lists": 0,
+  "arrowsNoName": 0,
+  "clickErr": "TimeoutError: locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('.onetap-toggle, .onetap-contain",
+  "fonts": [
+   "NotoSansHebrew-Regular.woff2",
+   "NotoSansHebrew-Bold.woff2",
+   "NotoSansHebrew-Light.woff2",
+   "KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBHMdazQ.woff2"
+  ]
+ },
+ "desktop0": {
+  "swap": false,
+  "menuName": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "lists": 3,
+  "arrowsNoName": 0,
+  "clickErr": "TimeoutError: locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('.onetap-toggle, .onetap-contain",
+  "fonts": [
+   "NotoSansHebrew-Regular.woff2",
+   "NotoSansHebrew-Bold.woff2",
+   "NotoSansHebrew-Light.woff2",
+   "Roboto-Regular.woff2",
+   "Roboto-Bold.woff2",
+   "Roboto-Medium.woff2",
+   "KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2"
+  ]
+ },
+ "desktop1": {
+  "swap": true,
+  "menuName": [
+   "פתיחת התפריט",
+   "פתיחת התפריט",
+   "פתיחת התפריט",
+   "פתיחת התפריט"
+  ],
+  "lists": 0,
+  "arrowsNoName": 0,
+  "clickErr": "TimeoutError: locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('.onetap-toggle, .onetap-contain",
+  "fonts": [
+   "NotoSansHebrew-Regular.woff2",
+   "NotoSansHebrew-Bold.woff2",
+   "NotoSansHebrew-Light.woff2",
+   "KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2"
+  ]
+ }
+}
