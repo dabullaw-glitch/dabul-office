@@ -1,4 +1,4 @@
-// Read-only check of a live page: screenshots + form behaviour without submitting any data.
+// rerun 2: Read-only check of a live page: screenshots + form behaviour without submitting any data.
 import { chromium, devices } from 'playwright';
 import fs from 'node:fs';
 const OUT = 'preview-results'; fs.mkdirSync(OUT, { recursive: true });
@@ -7,7 +7,7 @@ const b = await chromium.launch(); const rep = {};
 for (const mode of ['desktop', 'mobile']) {
   const ctx = mode === 'mobile' ? await b.newContext({ ...devices['iPhone 13'], locale: 'he-IL' }) : await b.newContext({ viewport: { width: 1366, height: 860 }, locale: 'he-IL' });
   const p = await ctx.newPage(); const errs = [];
-  p.on('pageerror', (e) => errs.push(String(e).slice(0, 160)));
+  p.on('pageerror', (e) => errs.push((String(e) + ' @ ' + String(e.stack || '').split('\n').slice(1, 3).join(' | ')).slice(0, 300)));
   const resp = await p.goto(url, { waitUntil: 'load', timeout: 60000 }); await p.waitForTimeout(2000);
   await p.screenshot({ path: `${OUT}/live-${mode}-fold.jpg`, type: 'jpeg', quality: 78 });
   await p.mouse.move(200, 300); await p.mouse.wheel(0, 200); await p.waitForTimeout(2500); // wakes delayed scripts
