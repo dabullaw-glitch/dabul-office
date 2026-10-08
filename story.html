@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>סיפור מקרה לאתר</title>
+<style>
+:root{--bg:#f8f5f0;--card:#fff;--ink:#2b2118;--mute:#7a6852;--line:#d9cdb8;--brand:#8b6f47;--brand2:#5c4528;--gold:#c9a961;--err:#a33a2a}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1712;--card:#26201a;--ink:#f1e9dc;--mute:#bfae95;--line:#4a3f33;--brand:#c9a961;--brand2:#e7cd96;--gold:#c9a961;--err:#ff8f7a;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 -apple-system,'Segoe UI',Arial,sans-serif}
+main{max-width:620px;margin:0 auto;padding:22px 16px 48px}
+h1{font-size:1.45rem;margin:.2em 0;color:var(--brand2)}
+p.s{color:var(--mute);margin:.2em 0 1.2em}
+label{display:block;font-weight:700;margin:16px 0 6px}
+small{display:block;font-weight:400;color:var(--mute);margin:-4px 0 6px;font-size:.88rem}
+select,textarea{width:100%;font:inherit;padding:12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:inherit}
+textarea{min-height:110px;resize:vertical}
+.ok{display:flex;gap:10px;align-items:flex-start;margin-top:18px;font-weight:400}
+.ok input{width:22px;height:22px;flex:none;margin-top:3px;accent-color:var(--brand)}
+button{margin-top:22px;width:100%;padding:15px;border:0;border-radius:999px;background:var(--brand);color:#fff;font:700 1.05rem/1 inherit;cursor:pointer}
+button[disabled]{opacity:.6}
+.msg{border-radius:14px;padding:16px;margin-top:14px;border:1.5px solid var(--gold);background:var(--card)}
+.msg.err{border-color:var(--err);color:var(--err)}
+</style>
+</head>
+<body>
+<main>
+<h1>סיפור מקרה לאתר</h1>
+<p class="s">כמה משפטים בכל שדה מספיקים. אפשר להקליט במקלדת של הטלפון (סימן המיקרופון). מזה נכתב מאמר מלא, והוא נשלח אליך לאישור לפני שמשהו עולה לאתר.</p>
+<form id="f" novalidate>
+<label for="area">התחום</label>
+<select id="area"><option>קניית דירה ומכירה</option><option>דירה מקבלן</option><option>מיסוי מקרקעין</option><option>ירושה וצוואה בנכסים</option><option>ייפוי כוח מתמשך</option><option>התחדשות עירונית</option><option>בית משותף</option><option>שכירות</option><option>חדלות פירעון והסדרי חוב</option><option>אחר</option></select>
+<label for="before">מה היה המצב כשהלקוחות הגיעו?</label><small>הבעיה, ממה הם חששו, סכומים ותאריכים אם יש</small><textarea id="before" required></textarea>
+<label for="did">מה עשינו?</label><small>הצעדים, מול מי, ועל איזה סעיף, הלכה או מסמך נשענו</small><textarea id="did" required></textarea>
+<label for="result">איך זה נגמר?</label><small>התוצאה בפועל, וכמה זמן זה לקח</small><textarea id="result" required></textarea>
+<label for="lesson">מה הקוראים צריכים לקחת מזה? (לא חובה)</label><textarea id="lesson"></textarea>
+<label for="avoid">מה לא לכתוב? (לא חובה)</label><small>למשל: לא לציין את העיר, לא לציין את שם הבנק</small><textarea id="avoid" style="min-height:70px"></textarea>
+<label class="ok"><input type="checkbox" id="real"><span>זה תיק אמיתי מהמשרד, ובסיפור לא יופיע שום פרט שמזהה את הלקוח (שם, כתובת, מספר תיק).</span></label>
+<button id="go" type="submit">שליחה</button>
+<div id="m" role="status" aria-live="polite"></div>
+</form>
+</main>
+<script>
+(function () {
+  var KEY = (location.hash || '').slice(1);
+  var URL_ = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/story?form=1';
+  var f = document.getElementById('f'), m = document.getElementById('m'), go = document.getElementById('go');
+  var v = function (id) { return document.getElementById(id).value.trim(); };
+  var say = function (t, err) { m.className = 'msg' + (err ? ' err' : ''); m.textContent = t; };
+  if (!KEY) say('הקישור לא שלם. פתח את הטופס מהכפתור בהודעה בטלגרם.', true);
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!v('before') || !v('did') || !v('result')) { say('צריך למלא את שלושת השדות הראשונים.', true); return; }
+    if (!document.getElementById('real').checked) { say('צריך לסמן שזה תיק אמיתי ושאין בו פרטים מזהים.', true); return; }
+    go.disabled = true; go.textContent = 'שולח...';
+    fetch(URL_, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ t: KEY, area: v('area'), before: v('before'), did: v('did'), result: v('result'), lesson: v('lesson'), avoid: v('avoid'), real: true }) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok && j.ok, j: j }; }); })
+      .then(function (x) {
+        if (x.ok) { f.querySelectorAll('textarea').forEach(function (t) { t.value = ''; }); document.getElementById('real').checked = false; say('תודה, הסיפור נשמר ✓ ייכתב ממנו מאמר, ותקבל תצוגה מקדימה בטלגרם. שום דבר לא עולה לאתר בלי האישור שלך.'); }
+        else say(x.j && x.j.error === 'key' ? 'הקישור לא תקף. פתח את הטופס מהכפתור בהודעה בטלגרם.' : 'השליחה לא הצליחה. נסה שוב בעוד רגע.', true);
+      })
+      .catch(function () { say('השליחה לא הצליחה. בדוק את החיבור ונסה שוב.', true); })
+      .then(function () { go.disabled = false; go.textContent = 'שליחה'; });
+  });
+})();
+</script>
+</body>
+</html>
