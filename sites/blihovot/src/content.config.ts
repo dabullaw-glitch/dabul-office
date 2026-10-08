@@ -19,6 +19,7 @@ const guides = defineCollection({
     video: z.string().optional(),            // id of a video in src/data/videos.json
     kind: z.enum(['guide', 'article', 'checklist', 'explainer']).default('guide'), // מדריך / מאמר / צ'קליסט / הסבר
     order: z.number().default(50),           // position inside its hub (lower first)
+    pillar: z.boolean().default(false),     // a main "super guide" of a hub (2,500+ words)
     draft: z.boolean().default(false),
   }),
 });

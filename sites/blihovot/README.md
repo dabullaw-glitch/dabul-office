@@ -25,6 +25,12 @@ The owner's name appears only in `src/data/lawyers.json` (the paid lawyer list).
    Key terms link automatically through `src/data/terms.json`; add the new guide's main terms there.
 7. After adding a guide, add its slug to `related` of 1 or 2 close existing guides.
 8. New topics come from `src/data/backlog.json` (remove the item once published).
+9. **Length (SEO and GEO): every guide, article, explainer and checklist is at least 1,000 words of body text.**
+   Guides 1,200 to 2,500, articles 1,000 to 2,000, explainers and checklists 1,000 to 1,500. A hub's main "super guide"
+   (`pillar: true` in the frontmatter) is 2,500 words or more. Check with `node scripts/words.mjs <slug>` (it exits with an
+   error when an item is too short). Length comes from real value, never filler: a direct answer in the first paragraph,
+   H2 headings phrased as the questions people search, a table, numbered steps, a worked example with made-up numbers
+   (say so), common mistakes, a "what to do this week" checklist, 4 to 6 FAQ items, and 5 to 10 internal links.
 
 ## Videos
 
@@ -36,7 +42,7 @@ The owner's name appears only in `src/data/lawyers.json` (the paid lawyer list).
 
 - `kind: guide` (default): a full how-to guide.
 - `kind: article`: an article with an angle (common mistakes, myths and facts, a real-life scenario walk-through, a comparison).
-- `kind: explainer`: a short focused explanation of one term or one rule (400 to 700 words).
+- `kind: explainer`: a focused explanation of one term or one rule (1,000 to 1,500 words).
 - `kind: checklist`: a practical checklist or template (documents to prepare, a letter to a creditor, questions to ask a bank).
 - **Calculators and tools**: a page in `src/pages/kli/<id>.astro` using `src/layouts/Tool.astro` (see the existing tools),
   vanilla JavaScript only, all math in the browser, no data sent anywhere; register it in `src/data/tools.ts`, link it from
