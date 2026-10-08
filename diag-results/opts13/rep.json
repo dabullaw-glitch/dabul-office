@@ -1,0 +1,37 @@
+{
+ "about-desktop": 1,
+ "about-geo-desktop": {
+  "tx": [
+   43.171875,
+   644.671875
+  ],
+  "ph": [
+   43.171875,
+   644.671875
+  ],
+  "img": 841,
+  "links": [
+   "https://dabullaw.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99",
+   "https://dabullaw.co.il/%d7%90%d7%95%d7%93%d7%95%d7%aa-%d7%94",
+   "https://www.youtube.com/watch?v=2ZJ664F6458"
+  ]
+ },
+ "modal": true,
+ "about-phone": 1,
+ "about-geo-phone": {
+  "tx": [
+   -43.796875,
+   598.578125
+  ],
+  "ph": [
+   -763.09375,
+   -193.09375
+  ],
+  "img": 841,
+  "links": [
+   "https://dabullaw.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99",
+   "https://dabullaw.co.il/%d7%90%d7%95%d7%93%d7%95%d7%aa-%d7%94",
+   "https://www.youtube.com/watch?v=2ZJ664F6458"
+  ]
+ }
+}
