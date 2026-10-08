@@ -21,9 +21,7 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Diagnose
         run: |
-          node diag/cmp27.mjs || true
-          pip install pillow >/dev/null 2>&1 || true
-          python3 diag/cmpdiff.py || true
+          node diag/appr28.mjs || true
       - name: Commit
         if: always()
         run: |
