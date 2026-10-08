@@ -8,11 +8,12 @@ const p = await ctx.newPage(); const net = [];
 p.on('response', async (r) => { if (/admin-ajax/.test(r.url())) { net.push({ st: r.status(), body: (await r.text().catch(() => '')).slice(0, 400) }); } });
 await p.goto('https://dabullaw.co.il/?ft=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(3000);
 await p.evaluate(() => { const x = [...document.querySelectorAll('button,a')].find((e) => /הבנתי/.test(e.textContent || '')); if (x) x.click(); }).catch(() => null);
-const form = p.locator('form.elementor-form').first();
+try {
+const form = p.locator('form.elementor-form:visible').first();
 rep.fields = await form.evaluate((f) => [...f.querySelectorAll('input,textarea,select')].map((i) => ({ n: i.name, t: i.type, req: i.required, ph: i.placeholder })));
 await form.scrollIntoViewIfNeeded();
-await form.locator('input[type="text"]').first().fill('בדיקת מערכת Claude');
-await form.locator('input[type="tel"]').first().fill('000');
+await form.locator('input[type="text"]:visible').first().fill('בדיקת מערכת Claude');
+await form.locator('input[type="tel"]:visible').first().fill('000');
 const em = form.locator('input[type="email"]'); if (await em.count()) await em.first().fill('');
 const ta = form.locator('textarea'); if (await ta.count()) await ta.first().fill('בדיקה: ליד מהאתר למערכת המשרד. אפשר למחוק.');
 const cb = form.locator('input[type="checkbox"]'); for (let i = 0; i < await cb.count(); i++) await cb.nth(i).check({ force: true });
@@ -22,4 +23,6 @@ await p.waitForTimeout(9000);
 rep.msg = await form.evaluate((f) => (f.querySelector('.elementor-message') || {}).innerText || '');
 rep.net = net;
 await form.screenshot({ path: `${OUT}/form.jpg`, type: 'jpeg', quality: 70 });
+} catch (e) { rep.err = String(e).slice(0, 600); await p.screenshot({ path: `${OUT}/page.jpg`, type: 'jpeg', quality: 60 }).catch(() => null); }
+rep.net = net;
 fs.writeFileSync(`${OUT}/rep.json`, JSON.stringify(rep, null, 1)); await b.close();
