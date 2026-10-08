@@ -1,0 +1,30 @@
+name: speed-diag
+on:
+  push:
+    branches: [audit-run]
+    paths: ['diag/**', '.github/workflows/diag.yml']
+permissions:
+  contents: write
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install
+        run: |
+          npm init -y >/dev/null
+          npm i playwright@1.47.2
+          npx playwright install --with-deps chromium
+      - name: Diagnose
+        run: node diag/diag.mjs
+      - name: Commit
+        run: |
+          git config user.name "audit-bot"
+          git config user.email "audit-bot@users.noreply.github.com"
+          git add diag-results
+          git commit -m "diag results $(date -u +%FT%TZ)" || echo nothing
+          for i in 1 2 3 4 5; do git pull --rebase -q origin audit-run && git push origin HEAD:audit-run && break; sleep 5; done
