@@ -7,7 +7,7 @@ torch.set_num_threads(os.cpu_count())
 model = ModelLoader().load_from_file('RealESRGAN_x4plus.pth').model.eval()
 def fetch(path):
     u = 'https://dabullaw.co.il/wp-content/uploads/' + '/'.join(urllib.parse.quote(p) for p in path.split('/'))
-    r = urllib.request.urlopen(urllib.request.Request(u, headers={'User-Agent': 'Mozilla/5.0'}), timeout=60)
+    r = urllib.request.urlopen(urllib.request.Request(u, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36', 'Accept': 'image/webp,image/*,*/*'}), timeout=60)
     return Image.open(io.BytesIO(r.read()))
 def up4(img, tile=192, pad=16):
     rgb = img.convert('RGB'); a = np.asarray(rgb).astype(np.float32) / 255.0

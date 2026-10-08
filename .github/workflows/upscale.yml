@@ -20,8 +20,12 @@ jobs:
           pip install spandrel pillow numpy
           curl -sSL -o RealESRGAN_x4plus.pth https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth
       - name: Upscale
-        run: python up/up.py
+        run: |
+          mkdir -p diag-results/up
+          ls -la RealESRGAN_x4plus.pth
+          python up/up.py 2>&1 | tee diag-results/up/log.txt
       - name: Commit
+        if: always()
         run: |
           git config user.name "audit-bot"
           git config user.email "audit-bot@users.noreply.github.com"
