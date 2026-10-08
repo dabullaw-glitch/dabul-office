@@ -1,0 +1,1204 @@
+{
+ "home-mobile": {
+  "ls": [
+   {
+    "t": 5609,
+    "v": 0.0003,
+    "src": [
+     {
+      "n": "#text",
+      "anc": "i.",
+      "p": [
+       126,
+       44
+      ],
+      "c": [
+       120,
+       44
+      ]
+     }
+    ]
+   }
+  ],
+  "cls": 0,
+  "lcp": [
+   {
+    "t": 3601,
+    "size": 11470,
+    "url": "",
+    "n": "span.elementor-icon-list-text"
+   },
+   {
+    "t": 5729,
+    "size": 259148,
+    "url": "https://dabullaw.co.il/wp-content/uploads/2026/03/yakir-mob-2.webp",
+    "n": "div[data-id=9056c3a].elementor-element.elementor-element-9056c3a.e-con-full.e-flex"
+   }
+  ],
+  "usedcss": false,
+  "sheets": 41,
+  "heroBg": "url(\"https://dabullaw.co.il/wp-content/uploads/2026/03/yakir-mob-2.webp\")",
+  "heroAttrs": "class=elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-parent e-l | data-id=9056c3a | data-element_type=container | data-e-type=container | data-settings={\"background_background\":\"classic\"}",
+  "htmlAttrs": "<html dir=\"rtl\" lang=\"he-IL\"><head><meta http-equiv=\"origin-trial\" content=\"A7vZI3v+Gz7JfuRolKNM4Aff6zaGuT7X0mf3wtoZTnKv",
+  "title": "עורך דין מקרקעין יקיר דבול - ליווי משפטי אישי בעסקאות נדל\"ן",
+  "h1": "יקיר דבולעורך דין מקרקעין",
+  "fonts": [
+   "Roboto 400",
+   "Roboto 500",
+   "Roboto 700",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100"
+  ]
+ },
+ "home-desktop": {
+  "ls": [
+   {
+    "t": 1625,
+    "v": 0.0004,
+    "src": [
+     {
+      "n": "div[data-id=ca99b79].elementor-element.elementor-element-ca99b79.elementor-widget.elementor-widget-image",
+      "anc": "div[data-id=2eb16f9].elementor-element.elementor-element-2eb16f9.e-con-full.e-flex",
+      "p": [
+       32,
+       25
+      ],
+      "c": [
+       6,
+       77
+      ]
+     }
+    ]
+   },
+   {
+    "t": 2303,
+    "v": 0.1288,
+    "src": [
+     {
+      "n": "nav.onetap-accessibility.onetap-plugin-onetap.onetap-rtl",
+      "anc": "body.rtl.home.wp-singular.page-template",
+      "p": [
+       0,
+       860
+      ],
+      "c": [
+       0,
+       860
+      ]
+     }
+    ]
+   },
+   {
+    "t": 2808,
+    "v": 0.0019,
+    "src": [
+     {
+      "n": "ul#menu-1-b175daa.elementor-nav-menu",
+      "anc": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline",
+      "p": [
+       15,
+       60
+      ],
+      "c": [
+       15,
+       60
+      ]
+     }
+    ]
+   }
+  ],
+  "cls": 0.131,
+  "lcp": [
+   {
+    "t": 1626,
+    "size": 892809,
+    "url": "https://dabullaw.co.il/wp-content/uploads/2026/05/bgmain.webp",
+    "n": "div[data-id=9056c3a].elementor-element.elementor-element-9056c3a.e-con-full.e-flex"
+   }
+  ],
+  "usedcss": false,
+  "sheets": 41,
+  "heroBg": "url(\"https://dabullaw.co.il/wp-content/uploads/2026/05/bgmain.webp\")",
+  "heroAttrs": "class=elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-parent e-l | data-id=9056c3a | data-element_type=container | data-e-type=container | data-settings={\"background_background\":\"classic\"}",
+  "htmlAttrs": "<html dir=\"rtl\" lang=\"he-IL\"><head><meta http-equiv=\"origin-trial\" content=\"A7vZI3v+Gz7JfuRolKNM4Aff6zaGuT7X0mf3wtoZTnKv",
+  "title": "עורך דין מקרקעין יקיר דבול - ליווי משפטי אישי בעסקאות נדל\"ן",
+  "h1": "יקיר דבולעורך דין מקרקעין",
+  "fonts": [
+   "Roboto 400",
+   "Roboto 500",
+   "Roboto 700",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100"
+  ]
+ },
+ "netanya-mobile": {
+  "ls": [
+   {
+    "t": 3784,
+    "v": 0.0217,
+    "src": [
+     {
+      "n": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-author",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item",
+      "p": [
+       181,
+       19
+      ],
+      "c": [
+       194,
+       19
+      ]
+     },
+     {
+      "n": "::after.",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item",
+      "p": [
+       186,
+       9
+      ],
+      "c": [
+       192,
+       22
+      ]
+     },
+     {
+      "n": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-terms",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-d38b18c.elementor-inline-item",
+      "p": [
+       181,
+       19
+      ],
+      "c": [
+       194,
+       19
+      ]
+     },
+     {
+      "n": "div[data-id=f1f2abe].elementor-element.elementor-element-f1f2abe.elementor-widget__width-inherit.elementor-hidden-desktop",
+      "anc": "div[data-id=346eefe].elementor-element.elementor-element-346eefe.e-con-full.e-flex",
+      "p": [
+       196,
+       111
+      ],
+      "c": [
+       222,
+       111
+      ]
+     },
+     {
+      "n": "div[data-id=8ad07f0].elementor-element.elementor-element-8ad07f0.elementor-widget.elementor-widget-theme-post-content",
+      "anc": "div.e-con-inner",
+      "p": [
+       317,
+       522
+      ],
+      "c": [
+       343,
+       496
+      ]
+     }
+    ]
+   }
+  ],
+  "cls": 0.022,
+  "lcp": [
+   {
+    "t": 2982,
+    "size": 183150,
+    "url": "",
+    "n": "p.lvbl-p"
+   }
+  ],
+  "usedcss": false,
+  "sheets": 42,
+  "heroBg": null,
+  "heroAttrs": null,
+  "htmlAttrs": "<html dir=\"rtl\" lang=\"he-IL\"><head><meta http-equiv=\"origin-trial\" content=\"A7vZI3v+Gz7JfuRolKNM4Aff6zaGuT7X0mf3wtoZTnKv",
+  "title": "עורך דין מקרקעין בנתניה | ליווי 100+ עסקאות בשנה",
+  "h1": "עורך דין מקרקעין בנתניה",
+  "fonts": [
+   "Roboto 400",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100"
+  ]
+ },
+ "netanya-desktop": {
+  "ls": [
+   {
+    "t": 1071,
+    "v": 0.0055,
+    "src": [
+     {
+      "n": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-author",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item",
+      "p": [
+       252,
+       24
+      ],
+      "c": [
+       263,
+       24
+      ]
+     },
+     {
+      "n": "::after.",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item",
+      "p": [
+       258,
+       12
+      ],
+      "c": [
+       263,
+       23
+      ]
+     },
+     {
+      "n": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-terms",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-d38b18c.elementor-inline-item",
+      "p": [
+       252,
+       24
+      ],
+      "c": [
+       263,
+       24
+      ]
+     },
+     {
+      "n": "div[data-id=8ad07f0].elementor-element.elementor-element-8ad07f0.elementor-widget.elementor-widget-theme-post-content",
+      "anc": "div.e-con-inner",
+      "p": [
+       309,
+       551
+      ],
+      "c": [
+       330,
+       530
+      ]
+     }
+    ]
+   },
+   {
+    "t": 1151,
+    "v": 0.0004,
+    "src": [
+     {
+      "n": "div[data-id=ca99b79].elementor-element.elementor-element-ca99b79.elementor-widget.elementor-widget-image",
+      "anc": "div[data-id=2eb16f9].elementor-element.elementor-element-2eb16f9.e-con-full.e-flex",
+      "p": [
+       32,
+       25
+      ],
+      "c": [
+       6,
+       77
+      ]
+     }
+    ]
+   },
+   {
+    "t": 1218,
+    "v": 0.0576,
+    "src": [
+     {
+      "n": "div[data-id=4ec86d12].elementor-element.elementor-element-4ec86d12.e-con-full.e-flex",
+      "anc": "div[data-id=b3cef9b].elementor-element.elementor-element-b3cef9b.e-con-full.e-flex",
+      "p": [
+       309,
+       514
+      ],
+      "c": [
+       299,
+       124
+      ]
+     },
+     {
+      "n": "img.",
+      "anc": "picture.attachment-large.size-large.wp-image-886",
+      "p": [
+       436,
+       377
+      ],
+      "c": [
+       279,
+       144
+      ]
+     },
+     {
+      "n": "div[data-id=32e29317].elementor-element.elementor-element-32e29317.elementor-button-align-stretch.elementor-widget",
+      "anc": "div[data-id=b3cef9b].elementor-element.elementor-element-b3cef9b.e-con-full.e-flex",
+      "p": [
+       843,
+       17
+      ],
+      "c": [
+       423,
+       309
+      ]
+     },
+     {
+      "n": "div.elementor-field-type-acceptance.elementor-field-group.elementor-column.elementor-field-group-field_ba4b8c9",
+      "anc": "div.elementor-form-fields-wrapper.elementor-labels-above",
+      "p": [
+       0,
+       0
+      ],
+      "c": [
+       521,
+       136
+      ]
+     },
+     {
+      "n": "div[data-id=a334cbd].elementor-element.elementor-element-a334cbd.elementor-widget.elementor-widget-html",
+      "anc": "div[data-id=ee1430e].elementor-element.elementor-element-ee1430e.e-con-full.e-flex",
+      "p": [
+       0,
+       0
+      ],
+      "c": [
+       752,
+       99
+      ]
+     }
+    ]
+   },
+   {
+    "t": 1296,
+    "v": 0,
+    "src": []
+   },
+   {
+    "t": 1379,
+    "v": 0,
+    "src": [
+     {
+      "n": "null",
+      "anc": "",
+      "p": [
+       477,
+       22
+      ],
+      "c": [
+       477,
+       21
+      ]
+     },
+     {
+      "n": "null",
+      "anc": "",
+      "p": [
+       477,
+       22
+      ],
+      "c": [
+       477,
+       21
+      ]
+     },
+     {
+      "n": "#text",
+      "anc": "span.elementor-button-text",
+      "p": [
+       676,
+       23
+      ],
+      "c": [
+       675,
+       23
+      ]
+     }
+    ]
+   },
+   {
+    "t": 1689,
+    "v": 0.1288,
+    "src": [
+     {
+      "n": "nav.onetap-accessibility.onetap-plugin-onetap.onetap-rtl",
+      "anc": "body.rtl.wp-singular.post-template-default.single",
+      "p": [
+       0,
+       860
+      ],
+      "c": [
+       0,
+       860
+      ]
+     }
+    ]
+   },
+   {
+    "t": 2316,
+    "v": 0.0019,
+    "src": [
+     {
+      "n": "ul#menu-1-b175daa.elementor-nav-menu",
+      "anc": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline",
+      "p": [
+       15,
+       60
+      ],
+      "c": [
+       15,
+       60
+      ]
+     }
+    ]
+   },
+   {
+    "t": 2445,
+    "v": 0.0187,
+    "src": [
+     {
+      "n": "div[data-id=b3cef9b].elementor-element.elementor-element-b3cef9b.e-con-full.e-flex",
+      "anc": "div.elementor.elementor-920",
+      "p": [
+       276,
+       479
+      ],
+      "c": [
+       405,
+       455
+      ]
+     },
+     {
+      "n": "div[data-id=a334cbd].elementor-element.elementor-element-a334cbd.elementor-widget.elementor-widget-html",
+      "anc": "div[data-id=ee1430e].elementor-element.elementor-element-ee1430e.e-con-full.e-flex",
+      "p": [
+       752,
+       99
+      ],
+      "c": [
+       0,
+       0
+      ]
+     }
+    ]
+   }
+  ],
+  "cls": 0.213,
+  "lcp": [
+   {
+    "t": 1029,
+    "size": 182508,
+    "url": "",
+    "n": "p.lvbl-p"
+   }
+  ],
+  "usedcss": false,
+  "sheets": 42,
+  "heroBg": null,
+  "heroAttrs": null,
+  "htmlAttrs": "<html dir=\"rtl\" lang=\"he-IL\"><head><meta http-equiv=\"origin-trial\" content=\"A7vZI3v+Gz7JfuRolKNM4Aff6zaGuT7X0mf3wtoZTnKv",
+  "title": "עורך דין מקרקעין בנתניה | ליווי 100+ עסקאות בשנה",
+  "h1": "עורך דין מקרקעין בנתניה",
+  "fonts": [
+   "Roboto 400",
+   "Roboto 700",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100"
+  ]
+ },
+ "article-mobile": {
+  "ls": [
+   {
+    "t": 3422,
+    "v": 0.0211,
+    "src": [
+     {
+      "n": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-author",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item",
+      "p": [
+       202,
+       19
+      ],
+      "c": [
+       215,
+       19
+      ]
+     },
+     {
+      "n": "::after.",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item",
+      "p": [
+       207,
+       9
+      ],
+      "c": [
+       213,
+       22
+      ]
+     },
+     {
+      "n": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-terms",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-d38b18c.elementor-inline-item",
+      "p": [
+       202,
+       19
+      ],
+      "c": [
+       215,
+       19
+      ]
+     },
+     {
+      "n": "div[data-id=f1f2abe].elementor-element.elementor-element-f1f2abe.elementor-widget__width-inherit.elementor-hidden-desktop",
+      "anc": "div[data-id=346eefe].elementor-element.elementor-element-346eefe.e-con-full.e-flex",
+      "p": [
+       217,
+       111
+      ],
+      "c": [
+       243,
+       111
+      ]
+     },
+     {
+      "n": "div[data-id=8ad07f0].elementor-element.elementor-element-8ad07f0.elementor-widget.elementor-widget-theme-post-content",
+      "anc": "div.e-con-inner",
+      "p": [
+       338,
+       501
+      ],
+      "c": [
+       364,
+       475
+      ]
+     }
+    ]
+   },
+   {
+    "t": 8825,
+    "v": 0.0659,
+    "src": [
+     {
+      "n": "ul.elementor-toc__list-wrapper",
+      "anc": "div#elementor-toc__f1f2abe.elementor-toc__body",
+      "p": [
+       344,
+       57
+      ],
+      "c": [
+       333,
+       68
+      ]
+     },
+     {
+      "n": "div[data-id=8ad07f0].elementor-element.elementor-element-8ad07f0.elementor-widget.elementor-widget-theme-post-content",
+      "anc": "div.e-con-inner",
+      "p": [
+       547,
+       292
+      ],
+      "c": [
+       434,
+       405
+      ]
+     }
+    ]
+   },
+   {
+    "t": 8892,
+    "v": 0.0296,
+    "src": [
+     {
+      "n": "ul.elementor-toc__list-wrapper",
+      "anc": "div#elementor-toc__f1f2abe.elementor-toc__body",
+      "p": [
+       333,
+       20
+      ],
+      "c": [
+       328,
+       25
+      ]
+     },
+     {
+      "n": "div[data-id=8ad07f0].elementor-element.elementor-element-8ad07f0.elementor-widget.elementor-widget-theme-post-content",
+      "anc": "div.e-con-inner",
+      "p": [
+       434,
+       405
+      ],
+      "c": [
+       386,
+       453
+      ]
+     }
+    ]
+   },
+   {
+    "t": 9153,
+    "v": 0.0165,
+    "src": [
+     {
+      "n": "div[data-id=8ad07f0].elementor-element.elementor-element-8ad07f0.elementor-widget.elementor-widget-theme-post-content",
+      "anc": "div.e-con-inner",
+      "p": [
+       386,
+       453
+      ],
+      "c": [
+       359,
+       480
+      ]
+     }
+    ]
+   }
+  ],
+  "cls": 0.133,
+  "lcp": [
+   {
+    "t": 2829,
+    "size": 72388,
+    "url": "https://dabullaw.co.il/wp-content/uploads/2026/02/%D7%9E%D7%93%D7%A8%D7%99%D7%9A-%D7%9E%D7%A7%D7%99%D7%A3-%D7%9C%D7%A8%D7%9B%D7%99%D7%A9%D7%AA-%D7%93%D7%99%D7%A8%D7%94-%D7%99%D7%93-%D7%A9%D7%A0%D7%99%D7%94.png.webp",
+    "n": "img."
+   }
+  ],
+  "usedcss": false,
+  "sheets": 41,
+  "heroBg": null,
+  "heroAttrs": null,
+  "htmlAttrs": "<html dir=\"rtl\" lang=\"he-IL\"><head><meta http-equiv=\"origin-trial\" content=\"A7vZI3v+Gz7JfuRolKNM4Aff6zaGuT7X0mf3wtoZTnKv",
+  "title": "רכישת דירה יד שנייה: מדריך מקיף | עו״ד יקיר דבול",
+  "h1": "מדריך מקיף לרכישת דירה יד שניה",
+  "fonts": [
+   "Roboto 400",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100"
+  ]
+ },
+ "article-desktop": {
+  "ls": [
+   {
+    "t": 1097,
+    "v": 0.0085,
+    "src": [
+     {
+      "n": "ul#menu-1-b175daa.elementor-nav-menu",
+      "anc": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline",
+      "p": [
+       15,
+       60
+      ],
+      "c": [
+       15,
+       60
+      ]
+     }
+    ]
+   },
+   {
+    "t": 1188,
+    "v": 0.0072,
+    "src": [
+     {
+      "n": "div[data-id=ca99b79].elementor-element.elementor-element-ca99b79.elementor-widget.elementor-widget-image",
+      "anc": "div[data-id=2eb16f9].elementor-element.elementor-element-2eb16f9.e-con-full.e-flex",
+      "p": [
+       32,
+       25
+      ],
+      "c": [
+       6,
+       77
+      ]
+     },
+     {
+      "n": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-author",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item",
+      "p": [
+       252,
+       24
+      ],
+      "c": [
+       263,
+       24
+      ]
+     },
+     {
+      "n": "::after.",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item",
+      "p": [
+       258,
+       12
+      ],
+      "c": [
+       263,
+       23
+      ]
+     },
+     {
+      "n": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-terms",
+      "anc": "li.elementor-icon-list-item.elementor-repeater-item-d38b18c.elementor-inline-item",
+      "p": [
+       252,
+       24
+      ],
+      "c": [
+       263,
+       24
+      ]
+     },
+     {
+      "n": "div[data-id=8ad07f0].elementor-element.elementor-element-8ad07f0.elementor-widget.elementor-widget-theme-post-content",
+      "anc": "div.e-con-inner",
+      "p": [
+       309,
+       551
+      ],
+      "c": [
+       330,
+       530
+      ]
+     }
+    ]
+   },
+   {
+    "t": 1302,
+    "v": 0.0576,
+    "src": [
+     {
+      "n": "div[data-id=4ec86d12].elementor-element.elementor-element-4ec86d12.e-con-full.e-flex",
+      "anc": "div[data-id=b3cef9b].elementor-element.elementor-element-b3cef9b.e-con-full.e-flex",
+      "p": [
+       309,
+       514
+      ],
+      "c": [
+       299,
+       124
+      ]
+     },
+     {
+      "n": "img.",
+      "anc": "picture.attachment-large.size-large.wp-image-886",
+      "p": [
+       436,
+       377
+      ],
+      "c": [
+       279,
+       144
+      ]
+     },
+     {
+      "n": "div[data-id=32e29317].elementor-element.elementor-element-32e29317.elementor-button-align-stretch.elementor-widget",
+      "anc": "div[data-id=b3cef9b].elementor-element.elementor-element-b3cef9b.e-con-full.e-flex",
+      "p": [
+       843,
+       17
+      ],
+      "c": [
+       423,
+       309
+      ]
+     },
+     {
+      "n": "div.elementor-field-type-acceptance.elementor-field-group.elementor-column.elementor-field-group-field_ba4b8c9",
+      "anc": "div.elementor-form-fields-wrapper.elementor-labels-above",
+      "p": [
+       0,
+       0
+      ],
+      "c": [
+       521,
+       136
+      ]
+     },
+     {
+      "n": "div[data-id=a334cbd].elementor-element.elementor-element-a334cbd.elementor-widget.elementor-widget-html",
+      "anc": "div[data-id=ee1430e].elementor-element.elementor-element-ee1430e.e-con-full.e-flex",
+      "p": [
+       0,
+       0
+      ],
+      "c": [
+       752,
+       99
+      ]
+     }
+    ]
+   },
+   {
+    "t": 1392,
+    "v": 0,
+    "src": []
+   },
+   {
+    "t": 1417,
+    "v": 0,
+    "src": [
+     {
+      "n": "null",
+      "anc": "",
+      "p": [
+       477,
+       22
+      ],
+      "c": [
+       477,
+       21
+      ]
+     },
+     {
+      "n": "null",
+      "anc": "",
+      "p": [
+       477,
+       22
+      ],
+      "c": [
+       477,
+       21
+      ]
+     },
+     {
+      "n": "span.elementor-button-text",
+      "anc": "span.elementor-button-content-wrapper",
+      "p": [
+       675,
+       22
+      ],
+      "c": [
+       675,
+       23
+      ]
+     }
+    ]
+   },
+   {
+    "t": 1516,
+    "v": 0.1288,
+    "src": [
+     {
+      "n": "nav.onetap-accessibility.onetap-plugin-onetap.onetap-rtl",
+      "anc": "body.rtl.wp-singular.post-template-default.single",
+      "p": [
+       0,
+       860
+      ],
+      "c": [
+       0,
+       860
+      ]
+     }
+    ]
+   },
+   {
+    "t": 2011,
+    "v": 0.0019,
+    "src": [
+     {
+      "n": "ul#menu-1-b175daa.elementor-nav-menu",
+      "anc": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline",
+      "p": [
+       15,
+       60
+      ],
+      "c": [
+       15,
+       60
+      ]
+     }
+    ]
+   },
+   {
+    "t": 2071,
+    "v": 0.0187,
+    "src": [
+     {
+      "n": "div[data-id=b3cef9b].elementor-element.elementor-element-b3cef9b.e-con-full.e-flex",
+      "anc": "div.elementor.elementor-920",
+      "p": [
+       276,
+       479
+      ],
+      "c": [
+       405,
+       455
+      ]
+     },
+     {
+      "n": "div[data-id=a334cbd].elementor-element.elementor-element-a334cbd.elementor-widget.elementor-widget-html",
+      "anc": "div[data-id=ee1430e].elementor-element.elementor-element-ee1430e.e-con-full.e-flex",
+      "p": [
+       752,
+       99
+      ],
+      "c": [
+       0,
+       0
+      ]
+     }
+    ]
+   }
+  ],
+  "cls": 0.223,
+  "lcp": [
+   {
+    "t": 1136,
+    "size": 188357,
+    "url": "https://dabullaw.co.il/wp-content/uploads/2026/02/%D7%9E%D7%93%D7%A8%D7%99%D7%9A-%D7%9E%D7%A7%D7%99%D7%A3-%D7%9C%D7%A8%D7%9B%D7%99%D7%A9%D7%AA-%D7%93%D7%99%D7%A8%D7%94-%D7%99%D7%93-%D7%A9%D7%A0%D7%99%D7%94.png.webp",
+    "n": "img."
+   }
+  ],
+  "usedcss": false,
+  "sheets": 41,
+  "heroBg": null,
+  "heroAttrs": null,
+  "htmlAttrs": "<html dir=\"rtl\" lang=\"he-IL\"><head><meta http-equiv=\"origin-trial\" content=\"A7vZI3v+Gz7JfuRolKNM4Aff6zaGuT7X0mf3wtoZTnKv",
+  "title": "רכישת דירה יד שנייה: מדריך מקיף | עו״ד יקיר דבול",
+  "h1": "מדריך מקיף לרכישת דירה יד שניה",
+  "fonts": [
+   "Roboto 400",
+   "Roboto 700",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100"
+  ]
+ },
+ "en-desktop": {
+  "ls": [
+   {
+    "t": 1200,
+    "v": 0.0002,
+    "src": [
+     {
+      "n": "#text",
+      "anc": "em.",
+      "p": [
+       77,
+       44
+      ],
+      "c": [
+       77,
+       44
+      ]
+     }
+    ]
+   }
+  ],
+  "cls": 0,
+  "lcp": [
+   {
+    "t": 1078,
+    "size": 824505,
+    "url": "",
+    "n": "div."
+   }
+  ],
+  "usedcss": false,
+  "sheets": 13,
+  "heroBg": null,
+  "heroAttrs": null,
+  "htmlAttrs": "<html lang=\"en-US\" dir=\"ltr\"><head>\n\t<meta charset=\"UTF-8\">\n\t\t<meta name=\"robots\" content=\"index, follow, max-image-prev",
+  "title": "English-Speaking Real Estate Lawyer in Netanya | Yakir Dabul",
+  "h1": "Your lawyer in Netanya, in English",
+  "fonts": [
+   "Roboto 400",
+   "Roboto 500",
+   "Roboto 700",
+   "Roboto 500",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100"
+  ]
+ },
+ "en-mobile": {
+  "ls": [
+   {
+    "t": 4483,
+    "v": 0.0032,
+    "src": [
+     {
+      "n": "section.",
+      "anc": "div.",
+      "p": [
+       447,
+       392
+      ],
+      "c": [
+       453,
+       386
+      ]
+     }
+    ]
+   },
+   {
+    "t": 4545,
+    "v": 0.0046,
+    "src": [
+     {
+      "n": "#text",
+      "anc": "h1.",
+      "p": [
+       75,
+       95
+      ],
+      "c": [
+       72,
+       95
+      ]
+     },
+     {
+      "n": "section.",
+      "anc": "div.",
+      "p": [
+       453,
+       386
+      ],
+      "c": [
+       447,
+       392
+      ]
+     }
+    ]
+   },
+   {
+    "t": 4700,
+    "v": 0.0118,
+    "src": [
+     {
+      "n": "div.dialog-widget-content.dialog-lightbox-widget-content.animated",
+      "anc": "div#elementor-popup-modal-1023.dialog-widget.dialog-lightbox-widget.dialog-type-buttons.dialog-type-lightbox",
+      "p": [
+       528,
+       311
+      ],
+      "c": [
+       554,
+       285
+      ]
+     }
+    ]
+   }
+  ],
+  "cls": 0.02,
+  "lcp": [
+   {
+    "t": 1741,
+    "size": 180950,
+    "url": "",
+    "n": "div."
+   }
+  ],
+  "usedcss": false,
+  "sheets": 13,
+  "heroBg": null,
+  "heroAttrs": null,
+  "htmlAttrs": "<html lang=\"en-US\" dir=\"ltr\"><head>\n\t<meta charset=\"UTF-8\">\n\t\t<meta name=\"robots\" content=\"index, follow, max-image-prev",
+  "title": "English-Speaking Real Estate Lawyer in Netanya | Yakir Dabul",
+  "h1": "Your lawyer in Netanya, in English",
+  "fonts": [
+   "Roboto 400",
+   "Roboto 500",
+   "Roboto 700",
+   "Roboto 500",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100"
+  ]
+ },
+ "fr-desktop": {
+  "ls": [],
+  "cls": 0,
+  "lcp": [
+   {
+    "t": 1399,
+    "size": 938810,
+    "url": "",
+    "n": "div."
+   }
+  ],
+  "usedcss": false,
+  "sheets": 12,
+  "heroBg": null,
+  "heroAttrs": null,
+  "htmlAttrs": "<html lang=\"fr-FR\" dir=\"ltr\"><head>\n\t<meta charset=\"UTF-8\">\n\t\t<meta name=\"robots\" content=\"index, follow, max-image-prev",
+  "title": "Avocat immobilier à Netanya en français | Me Yakir Dabul",
+  "h1": "Votre avocat à Netanya, en français",
+  "fonts": [
+   "Roboto 400",
+   "Roboto 500",
+   "Roboto 700",
+   "Roboto 500",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100",
+   "Noto Local normal",
+   "Noto Local bold",
+   "Noto Local 100"
+  ]
+ },
+ "headers": {
+  "https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Regular.woff2": {
+   "status": 200,
+   "server": "cloudflare",
+   "cache": "max-age=14400",
+   "cf": "MISS",
+   "via": "",
+   "powered": ""
+  },
+  "https://dabullaw.co.il/wp-content/uploads/2026/03/yakir-mob-2.webp": {
+   "status": 200,
+   "server": "cloudflare",
+   "cache": "max-age=14400",
+   "cf": "HIT",
+   "age": "4068",
+   "via": "",
+   "powered": ""
+  },
+  "https://dabullaw.co.il/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=4.2.1": {
+   "status": 200,
+   "server": "cloudflare",
+   "cache": "max-age=14400",
+   "cf": "HIT",
+   "age": "5506",
+   "via": "",
+   "powered": ""
+  },
+  "https://dabullaw.co.il/": {
+   "status": 200,
+   "server": "cloudflare",
+   "cf": "DYNAMIC",
+   "via": "",
+   "powered": "PHP/8.5.7"
+  }
+ }
+}
