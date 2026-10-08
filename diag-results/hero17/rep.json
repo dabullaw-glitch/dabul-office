@@ -1,0 +1,818 @@
+{
+ "1280": {
+  "els": [
+   {
+    "id": "3b0ce31",
+    "cls": "elementor-element-3b0ce31   ",
+    "box": [
+     602,
+     1280,
+     90,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "678.391px",
+    "maxw": "none",
+    "txt": "יקיר דבול עורך דין מקרקעין מקצ",
+    "fs": "80px"
+   },
+   {
+    "id": "6d16458",
+    "cls": "elementor-element-6d16458   ",
+    "box": [
+     602,
+     1280,
+     90,
+     566
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "678.391px",
+    "maxw": "none",
+    "txt": "יקיר דבול עורך דין מקרקעין מקצ",
+    "fs": "80px"
+   },
+   {
+    "id": "6bb6c07",
+    "cls": "elementor-element-6bb6c07 elementor-widget-mobile__width-inherit eleme",
+    "box": [
+     646,
+     1158,
+     110,
+     283
+    ],
+    "pad": "0px/0px",
+    "mar": "122.109px/0px",
+    "w": "512px",
+    "maxw": "100%",
+    "txt": "יקיר דבול עורך דין מקרקעין",
+    "fs": "80px"
+   },
+   {
+    "id": "464d8c8",
+    "cls": "elementor-element-464d8c8 elementor-widget-heading",
+    "box": [
+     602,
+     1280,
+     290,
+     328
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "678.391px",
+    "maxw": "100%",
+    "txt": "מקצועיות. ניסיון. תוצאות",
+    "fs": "32px"
+   },
+   {
+    "id": "a3067eb",
+    "cls": "elementor-element-a3067eb elementor-icon-list--layout-traditional elem",
+    "box": [
+     602,
+     1280,
+     348,
+     516
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "678.391px",
+    "maxw": "100%",
+    "txt": "אני יקיר דבול, עורך דין המתמחה",
+    "fs": "17px"
+   },
+   {
+    "id": "0b5de49",
+    "cls": "elementor-element-0b5de49  elementor-hidden-tablet elementor-hidden-mo",
+    "box": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "100%",
+    "maxw": "none",
+    "txt": " \t\t\t\t \t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t \t\t\t\t\t\t",
+    "fs": "17px"
+   },
+   {
+    "id": "9f8d625",
+    "cls": "elementor-element-9f8d625 elementor-mobile-align-center elementor-widg",
+    "box": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "auto",
+    "maxw": "100%",
+    "txt": " \t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t \t\t\t\t\t\t\t\t\tנד",
+    "fs": "17px"
+   },
+   {
+    "id": "20bfd48",
+    "cls": "elementor-element-20bfd48 elementor-mobile-align-center elementor-widg",
+    "box": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "auto",
+    "maxw": "100%",
+    "txt": " \t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t \t\t\t\t\t\t\t\t\tהת",
+    "fs": "17px"
+   },
+   {
+    "id": "94c4b61",
+    "cls": "elementor-element-94c4b61  elementor-hidden-tablet elementor-hidden-mo",
+    "box": [
+     602,
+     1280,
+     694,
+     930
+    ],
+    "pad": "0px/50px",
+    "mar": "0px/0px",
+    "w": "678.391px",
+    "maxw": "none",
+    "txt": "לשיחת ייעוץ חייגו 09-861-3413 ",
+    "fs": "24px"
+   },
+   {
+    "id": "251d48d",
+    "cls": "elementor-element-251d48d   ",
+    "box": [
+     652,
+     1280,
+     724,
+     751
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "628.391px",
+    "maxw": "none",
+    "txt": "לשיחת ייעוץ חייגו 09-861-3413",
+    "fs": "24px"
+   },
+   {
+    "id": "ce116af",
+    "cls": "elementor-element-ce116af elementor-widget-heading",
+    "box": [
+     1092,
+     1280,
+     725,
+     749
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "188px",
+    "maxw": "100%",
+    "txt": "לשיחת ייעוץ חייגו",
+    "fs": ""
+   },
+   {
+    "id": "62c1a11",
+    "cls": "elementor-element-62c1a11 elementor-widget-button",
+    "box": [
+     909,
+     1082,
+     726,
+     753
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "173px",
+    "maxw": "100%",
+    "txt": "09-861-3413",
+    "fs": "24px"
+   },
+   {
+    "id": "c162b4d",
+    "cls": "elementor-element-c162b4d elementor-widget-text-editor",
+    "box": [
+     652,
+     1280,
+     759,
+     799
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "628.391px",
+    "maxw": "100%",
+    "txt": "או השאירו פרטים ונחזור אליכם ב",
+    "fs": "17px"
+   },
+   {
+    "id": "3bc6c73",
+    "cls": "elementor-element-3bc6c73 elementor-button-align-stretch elementor-wid",
+    "box": [
+     652,
+     1280,
+     797,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "628.391px",
+    "maxw": "100%",
+    "txt": "שם מלא  טלפון  קראתי ומסכימ/ה ",
+    "fs": "17px"
+   },
+   {
+    "id": "161cd1d",
+    "cls": "elementor-element-161cd1d   ",
+    "box": [
+     0,
+     582,
+     90,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "581.609px",
+    "maxw": "none",
+    "txt": "",
+    "fs": ""
+   },
+   {
+    "id": "2c91460",
+    "cls": "elementor-element-2c91460 elementor-hidden-mobile elementor-widget-ima",
+    "box": [
+     0,
+     582,
+     130,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "581.609px",
+    "maxw": "100%",
+    "txt": "",
+    "fs": ""
+   }
+  ],
+  "logo": [
+   977,
+   1250,
+   9,
+   80
+  ],
+  "heroBox": [
+   0,
+   1280,
+   90,
+   930
+  ]
+ },
+ "1440": {
+  "els": [
+   {
+    "id": "3b0ce31",
+    "cls": "elementor-element-3b0ce31   ",
+    "box": [
+     677,
+     1440,
+     90,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "763.188px",
+    "maxw": "none",
+    "txt": "יקיר דבול עורך דין מקרקעין מקצ",
+    "fs": "80px"
+   },
+   {
+    "id": "6d16458",
+    "cls": "elementor-element-6d16458   ",
+    "box": [
+     677,
+     1440,
+     90,
+     566
+    ],
+    "pad": "10px/0px",
+    "mar": "0px/0px",
+    "w": "763.188px",
+    "maxw": "none",
+    "txt": "יקיר דבול עורך דין מקרקעין מקצ",
+    "fs": "80px"
+   },
+   {
+    "id": "6bb6c07",
+    "cls": "elementor-element-6bb6c07 elementor-widget-mobile__width-inherit eleme",
+    "box": [
+     791,
+     1303,
+     113,
+     286
+    ],
+    "pad": "0px/0px",
+    "mar": "137.359px/0px",
+    "w": "512px",
+    "maxw": "100%",
+    "txt": "יקיר דבול עורך דין מקרקעין",
+    "fs": "80px"
+   },
+   {
+    "id": "464d8c8",
+    "cls": "elementor-element-464d8c8 elementor-widget-heading",
+    "box": [
+     677,
+     1430,
+     290,
+     328
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "753.188px",
+    "maxw": "100%",
+    "txt": "מקצועיות. ניסיון. תוצאות",
+    "fs": "32px"
+   },
+   {
+    "id": "a3067eb",
+    "cls": "elementor-element-a3067eb elementor-icon-list--layout-traditional elem",
+    "box": [
+     677,
+     1430,
+     348,
+     516
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "753.188px",
+    "maxw": "100%",
+    "txt": "אני יקיר דבול, עורך דין המתמחה",
+    "fs": "17px"
+   },
+   {
+    "id": "0b5de49",
+    "cls": "elementor-element-0b5de49  elementor-hidden-tablet elementor-hidden-mo",
+    "box": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "100%",
+    "maxw": "none",
+    "txt": " \t\t\t\t \t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t \t\t\t\t\t\t",
+    "fs": "17px"
+   },
+   {
+    "id": "9f8d625",
+    "cls": "elementor-element-9f8d625 elementor-mobile-align-center elementor-widg",
+    "box": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "auto",
+    "maxw": "100%",
+    "txt": " \t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t \t\t\t\t\t\t\t\t\tנד",
+    "fs": "17px"
+   },
+   {
+    "id": "20bfd48",
+    "cls": "elementor-element-20bfd48 elementor-mobile-align-center elementor-widg",
+    "box": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "auto",
+    "maxw": "100%",
+    "txt": " \t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t \t\t\t\t\t\t\t\t\tהת",
+    "fs": "17px"
+   },
+   {
+    "id": "94c4b61",
+    "cls": "elementor-element-94c4b61  elementor-hidden-tablet elementor-hidden-mo",
+    "box": [
+     677,
+     1440,
+     694,
+     930
+    ],
+    "pad": "10px/50px",
+    "mar": "0px/0px",
+    "w": "763.188px",
+    "maxw": "none",
+    "txt": "לשיחת ייעוץ חייגו 09-861-3413 ",
+    "fs": "24px"
+   },
+   {
+    "id": "251d48d",
+    "cls": "elementor-element-251d48d   ",
+    "box": [
+     727,
+     1430,
+     724,
+     751
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "703.188px",
+    "maxw": "none",
+    "txt": "לשיחת ייעוץ חייגו 09-861-3413",
+    "fs": "24px"
+   },
+   {
+    "id": "ce116af",
+    "cls": "elementor-element-ce116af elementor-widget-heading",
+    "box": [
+     1242,
+     1430,
+     725,
+     749
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "188px",
+    "maxw": "100%",
+    "txt": "לשיחת ייעוץ חייגו",
+    "fs": ""
+   },
+   {
+    "id": "62c1a11",
+    "cls": "elementor-element-62c1a11 elementor-widget-button",
+    "box": [
+     1059,
+     1232,
+     726,
+     753
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "173px",
+    "maxw": "100%",
+    "txt": "09-861-3413",
+    "fs": "24px"
+   },
+   {
+    "id": "c162b4d",
+    "cls": "elementor-element-c162b4d elementor-widget-text-editor",
+    "box": [
+     727,
+     1430,
+     759,
+     799
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "703.188px",
+    "maxw": "100%",
+    "txt": "או השאירו פרטים ונחזור אליכם ב",
+    "fs": "17px"
+   },
+   {
+    "id": "3bc6c73",
+    "cls": "elementor-element-3bc6c73 elementor-button-align-stretch elementor-wid",
+    "box": [
+     727,
+     1430,
+     797,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "703.188px",
+    "maxw": "100%",
+    "txt": "שם מלא  טלפון  קראתי ומסכימ/ה ",
+    "fs": "17px"
+   },
+   {
+    "id": "161cd1d",
+    "cls": "elementor-element-161cd1d   ",
+    "box": [
+     0,
+     657,
+     90,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "656.812px",
+    "maxw": "none",
+    "txt": "",
+    "fs": ""
+   },
+   {
+    "id": "2c91460",
+    "cls": "elementor-element-2c91460 elementor-hidden-mobile elementor-widget-ima",
+    "box": [
+     0,
+     657,
+     130,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "656.812px",
+    "maxw": "100%",
+    "txt": "",
+    "fs": ""
+   }
+  ],
+  "logo": [
+   1115,
+   1410,
+   7,
+   82
+  ],
+  "heroBox": [
+   0,
+   1440,
+   90,
+   930
+  ]
+ },
+ "1920": {
+  "els": [
+   {
+    "id": "3b0ce31",
+    "cls": "elementor-element-3b0ce31   ",
+    "box": [
+     902,
+     1920,
+     90,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "1017.59px",
+    "maxw": "none",
+    "txt": "יקיר דבול עורך דין מקרקעין מקצ",
+    "fs": "80px"
+   },
+   {
+    "id": "6d16458",
+    "cls": "elementor-element-6d16458   ",
+    "box": [
+     902,
+     1920,
+     90,
+     566
+    ],
+    "pad": "250px/0px",
+    "mar": "0px/0px",
+    "w": "1017.59px",
+    "maxw": "none",
+    "txt": "יקיר דבול עורך דין מקרקעין מקצ",
+    "fs": "80px"
+   },
+   {
+    "id": "6bb6c07",
+    "cls": "elementor-element-6bb6c07 elementor-widget-mobile__width-inherit eleme",
+    "box": [
+     1225,
+     1737,
+     121,
+     294
+    ],
+    "pad": "0px/0px",
+    "mar": "183.156px/0px",
+    "w": "512px",
+    "maxw": "100%",
+    "txt": "יקיר דבול עורך דין מקרקעין",
+    "fs": "80px"
+   },
+   {
+    "id": "464d8c8",
+    "cls": "elementor-element-464d8c8 elementor-widget-heading",
+    "box": [
+     902,
+     1670,
+     290,
+     328
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "767.594px",
+    "maxw": "100%",
+    "txt": "מקצועיות. ניסיון. תוצאות",
+    "fs": "32px"
+   },
+   {
+    "id": "a3067eb",
+    "cls": "elementor-element-a3067eb elementor-icon-list--layout-traditional elem",
+    "box": [
+     902,
+     1670,
+     348,
+     516
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "767.594px",
+    "maxw": "100%",
+    "txt": "אני יקיר דבול, עורך דין המתמחה",
+    "fs": "17px"
+   },
+   {
+    "id": "0b5de49",
+    "cls": "elementor-element-0b5de49  elementor-hidden-tablet elementor-hidden-mo",
+    "box": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "100%",
+    "maxw": "none",
+    "txt": " \t\t\t\t \t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t \t\t\t\t\t\t",
+    "fs": "17px"
+   },
+   {
+    "id": "9f8d625",
+    "cls": "elementor-element-9f8d625 elementor-mobile-align-center elementor-widg",
+    "box": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "auto",
+    "maxw": "100%",
+    "txt": " \t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t \t\t\t\t\t\t\t\t\tנד",
+    "fs": "17px"
+   },
+   {
+    "id": "20bfd48",
+    "cls": "elementor-element-20bfd48 elementor-mobile-align-center elementor-widg",
+    "box": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "auto",
+    "maxw": "100%",
+    "txt": " \t\t\t\t\t\t\t\t\t\t \t\t\t\t\t\t \t\t\t\t\t\t\t\t\tהת",
+    "fs": "17px"
+   },
+   {
+    "id": "94c4b61",
+    "cls": "elementor-element-94c4b61  elementor-hidden-tablet elementor-hidden-mo",
+    "box": [
+     902,
+     1920,
+     694,
+     930
+    ],
+    "pad": "250px/50px",
+    "mar": "0px/0px",
+    "w": "1017.59px",
+    "maxw": "none",
+    "txt": "לשיחת ייעוץ חייגו 09-861-3413 ",
+    "fs": "24px"
+   },
+   {
+    "id": "251d48d",
+    "cls": "elementor-element-251d48d   ",
+    "box": [
+     952,
+     1670,
+     724,
+     751
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "717.594px",
+    "maxw": "none",
+    "txt": "לשיחת ייעוץ חייגו 09-861-3413",
+    "fs": "24px"
+   },
+   {
+    "id": "ce116af",
+    "cls": "elementor-element-ce116af elementor-widget-heading",
+    "box": [
+     1482,
+     1670,
+     725,
+     749
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "188px",
+    "maxw": "100%",
+    "txt": "לשיחת ייעוץ חייגו",
+    "fs": ""
+   },
+   {
+    "id": "62c1a11",
+    "cls": "elementor-element-62c1a11 elementor-widget-button",
+    "box": [
+     1299,
+     1472,
+     726,
+     753
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "173px",
+    "maxw": "100%",
+    "txt": "09-861-3413",
+    "fs": "24px"
+   },
+   {
+    "id": "c162b4d",
+    "cls": "elementor-element-c162b4d elementor-widget-text-editor",
+    "box": [
+     952,
+     1670,
+     759,
+     799
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "717.594px",
+    "maxw": "100%",
+    "txt": "או השאירו פרטים ונחזור אליכם ב",
+    "fs": "17px"
+   },
+   {
+    "id": "3bc6c73",
+    "cls": "elementor-element-3bc6c73 elementor-button-align-stretch elementor-wid",
+    "box": [
+     952,
+     1670,
+     797,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "717.594px",
+    "maxw": "100%",
+    "txt": "שם מלא  טלפון  קראתי ומסכימ/ה ",
+    "fs": "17px"
+   },
+   {
+    "id": "161cd1d",
+    "cls": "elementor-element-161cd1d   ",
+    "box": [
+     0,
+     882,
+     90,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "882.406px",
+    "maxw": "none",
+    "txt": "",
+    "fs": ""
+   },
+   {
+    "id": "2c91460",
+    "cls": "elementor-element-2c91460 elementor-hidden-mobile elementor-widget-ima",
+    "box": [
+     0,
+     882,
+     130,
+     930
+    ],
+    "pad": "0px/0px",
+    "mar": "0px/0px",
+    "w": "882.406px",
+    "maxw": "100%",
+    "txt": "",
+    "fs": ""
+   }
+  ],
+  "logo": [
+   1590,
+   1890,
+   6,
+   83
+  ],
+  "heroBox": [
+   0,
+   1920,
+   90,
+   930
+  ]
+ }
+}
