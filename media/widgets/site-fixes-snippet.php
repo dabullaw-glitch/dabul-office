@@ -95,11 +95,12 @@ add_action('template_redirect', function () {
 		// 10. social icons: Waze to the office, email as email, names for screen readers
 		if (strpos($html, 'elementor-social-icon') !== false) {
 			$waze = 'https://waze.com/ul?ll=32.3274395%2C34.8614253&amp;navigate=yes&amp;zoom=17';
-			$names = array('d412300' => 'ניווט למשרד בוויז', '1036720' => 'ניווט למשרד בוויז', '41fe709' => 'עמוד הפייסבוק של המשרד', 'bf4091e' => 'קבוצת הוואטסאפ של המשרד', 'dcd7426' => 'שליחת אימייל למשרד');
+			$names = array('d412300' => 'ניווט למשרד בוויז', '1036720' => 'ניווט למשרד בוויז', '41fe709' => 'עמוד הפייסבוק של המשרד', 'dcd7426' => 'שליחת אימייל למשרד');
 			$html = preg_replace_callback('#<a class="elementor-icon elementor-social-icon elementor-social-icon-[^ "]* elementor-repeater-item-([a-z0-9]+)" href="([^"]*)"#', function ($m) use ($waze, $names) {
 				$href = $m[2];
 				if ($m[1] === 'd412300' || $m[1] === '1036720') $href = $waze;
 				elseif ($href === 'https://dabullaw@gmail.com') $href = 'mailto:dabullaw@gmail.com';
+				if ($m[1] === 'bf4091e') $names['bf4091e'] = strpos($href, 'chat.whatsapp.com') !== false ? 'הצטרפות לקבוצת הוואטסאפ של המשרד' : 'שיחת וואטסאפ עם המשרד';
 				$label = isset($names[$m[1]]) ? ' aria-label="' . $names[$m[1]] . '"' : '';
 				return str_replace('href="' . $m[2] . '"', 'href="' . $href . '"' . $label, $m[0]);
 			}, $html);
