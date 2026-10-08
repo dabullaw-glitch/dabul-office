@@ -1,9 +1,17 @@
 /* dabul: certificates carousel on the home page, like the reference site (Yakir approved, 8.10.2026, without the zoom button).
    4 large certificates instead of 5 small ones (1 on the phone), full quality pictures, no gold frame, soft shadow,
-   round arrows, no dots. The button under the carousel stays. To undo: deactivate this snippet. */
+   round arrows, no dots. The button under the carousel stays. To undo: deactivate this snippet.
+   Until it is checked it shows only on a preview address (?dblprev=1). */
+
+function dabul_cert_on() {
+	if (!is_front_page()) return false;
+	if (defined('DABUL_CERT_LIVE')) return true;
+	$q = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
+	return strpos($q, 'dblprev=1') !== false;
+}
 
 add_action('template_redirect', function () {
-	if (is_admin() || !is_front_page()) return;
+	if (is_admin() || !dabul_cert_on()) return;
 	ob_start(function ($html) {
 		if (!is_string($html) || strpos($html, 'elementor-element-f595e2b') === false) return $html;
 		return preg_replace_callback('#(<div class="elementor-element elementor-element-f595e2b .*?data-settings=")([^"]*)(".*?</figure></a></div>\s*</div>)#s', function ($m) {
@@ -15,7 +23,7 @@ add_action('template_redirect', function () {
 }, 6);
 
 add_action('wp_head', function () {
-	if (!is_front_page()) return;
+	if (!dabul_cert_on()) return;
 	echo '<style id="dbl-cert-css">'
 		. '.elementor-element-f595e2b .swiper-pagination{display:none!important}'
 		. '.elementor-element-f595e2b .elementor-swiper-button{width:64px!important;height:64px!important;border-radius:50%!important;border:1px solid #cfcfcf!important;background:#fff!important;display:flex!important;align-items:center!important;justify-content:center!important}'
@@ -25,7 +33,7 @@ add_action('wp_head', function () {
 }, 40);
 
 add_action('wp_footer', function () {
-	if (!is_front_page()) return;
+	if (!dabul_cert_on()) return;
 	echo <<<'DBLCERT'
 <script nowprocket data-no-optimize="1">
 (function () {
