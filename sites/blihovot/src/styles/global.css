@@ -94,6 +94,7 @@ a.card:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:var(
 .prose blockquote p:last-child{margin:0}
 .prose table{width:100%;border-collapse:collapse;font-size:.98rem;margin:1em 0 1.6em}
 .prose .tbl{overflow-x:auto}
+@media (max-width:640px){.prose table{display:block;overflow-x:auto;max-width:100%}}
 .prose th,.prose td{border:1px solid var(--line);padding:10px 12px;text-align:start;vertical-align:top}
 .prose th{background:var(--sand);font-weight:700}
 .prose strong{color:var(--ink)}
