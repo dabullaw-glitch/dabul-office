@@ -4,7 +4,8 @@
       so these files are not downloaded. Roboto has no Hebrew letters anyway, so the Hebrew text in the panel looks the same.
    3. Screen readers: a name for the phone menu button and for the carousel arrows, no wrong "list" role on carousels,
       and the "skip to content" link works with the keyboard.
-   To undo: deactivate this snippet. Until checked it works only on a preview address (?dblprev=1). */
+   To undo: deactivate this snippet. Checked on a preview address on 8.10.2026 (same look, panel works), now live. */
+define('DABUL_SA_LIVE', 1);
 
 function dabul_sa_on() {
 	if (defined('DABUL_SA_LIVE')) return true;
