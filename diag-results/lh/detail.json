@@ -1,0 +1,417 @@
+{
+ "diag-results/lh/psi-mobile.json": {
+  "err": "{\"error\":{\"code\":429,\"message\":\"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351490'.\",\"errors\":[{\"message\":\"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351490'.\",\"domain\":\"global\",\"reason\":\""
+ },
+ "diag-results/lh/psi-desktop.json": {
+  "err": "{\"error\":{\"code\":429,\"message\":\"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351490'.\",\"errors\":[{\"message\":\"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351490'.\",\"domain\":\"global\",\"reason\":\""
+ },
+ "diag-results/lh/desktop.json": {
+  "cat": {
+   "performance": 85,
+   "accessibility": 91,
+   "best-practices": 78,
+   "seo": 92
+  },
+  "m": [
+   [
+    "first-contentful-paint",
+    "1.3 s"
+   ],
+   [
+    "largest-contentful-paint",
+    "1.6 s"
+   ],
+   [
+    "speed-index",
+    "2.1 s"
+   ],
+   [
+    "total-blocking-time",
+    "110 ms"
+   ],
+   [
+    "cumulative-layout-shift",
+    "0.024"
+   ]
+  ],
+  "bad": [
+   {
+    "id": "first-contentful-paint",
+    "score": 0.66,
+    "val": "1.3 s",
+    "items": []
+   },
+   {
+    "id": "largest-contentful-paint",
+    "score": 0.77,
+    "val": "1.6 s",
+    "items": []
+   },
+   {
+    "id": "speed-index",
+    "score": 0.56,
+    "val": "2.1 s",
+    "items": []
+   },
+   {
+    "id": "total-blocking-time",
+    "score": 0.96,
+    "val": "110 ms",
+    "items": []
+   },
+   {
+    "id": "max-potential-fid",
+    "score": 0.93,
+    "val": "110 ms",
+    "items": []
+   },
+   {
+    "id": "cumulative-layout-shift",
+    "score": 1,
+    "val": "0.024",
+    "items": []
+   },
+   {
+    "id": "server-response-time",
+    "score": 0,
+    "val": "Root document took 1,250 ms",
+    "items": [
+     "URL https://dabullaw.co.il/?lh=8796 | "
+    ]
+   },
+   {
+    "id": "interactive",
+    "score": 0.58,
+    "val": "4.1 s",
+    "items": []
+   },
+   {
+    "id": "third-party-cookies",
+    "score": 0,
+    "val": "9 cookies found",
+    "items": [
+     "URL https://www.clarity.ms/tag/vec4l3no5k?ref=wordpress | ",
+     "URL https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16882367901/?random=1791478583983&cv=11&fst=1791478583983&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45Pe6a70v874683139za200zd874683139xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938469~118897920~118897930~120213116~120385423~120469145~120469153~121046263~121046271&u_w=800&u_h=600&url=https%3A%2F%2Fdabullaw.co.il%2F%3Flh%3D8796&rcb=3&frm=0&tiba=%D7%A2%D7%95%D7%A8%D7%9A%20%D7%93%D7%99%D7%9F%20%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F%20%D7%99%D7%A7%D7%99%D7%A8%20%D7%93%D7%91%D7%95%D7%9C%20-%20%D7%9C%D7%99%D7%95%D7%95%D7%99%20%D7%9E%D7%A9%D7%A4%D7%98%D7%99%20%D7%90%D7%99%D7%A9%D7%99%20%D7%91%D7%A2&did=dZTNiMT&gdid=dZTNiMT&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=235627368.1791478584&uaa=x86&uab=64&uafvl=Chromium%3B154.0.8037.97%7CGoogle%2520Chrome%3B154.0.8037.97%7CNot%2520A(Brand%3B99.0.0.0&uamb=0&uam=&uap=macOS&uapv=10.15.7&uaw=0&data=event%3Dgtag.config&ept=9&rfmt=3&fmt=4 | ",
+     "URL https://c.clarity.ms/c.gif | ",
+     "URL https://c.clarity.ms/c.gif | ",
+     "URL https://c.bing.com/c.gif?ctsa=mr&CtsSyncId=A8C66BA3288D443A850EEDE9B4AE5F7B&RedC=c.clarity.ms&MXFR=17AD69F1E7F262EE13EF7E1DE3F26C4C | ",
+     "URL https://c.bing.com/c.gif?ctsa=mr&CtsSyncId=A8C66BA3288D443A850EEDE9B4AE5F7B&RedC=c.clarity.ms&MXFR=17AD69F1E7F262EE13EF7E1DE3F26C4C | ",
+     "URL https://c.bing.com/c.gif?ctsa=mr&CtsSyncId=A8C66BA3288D443A850EEDE9B4AE5F7B&RedC=c.clarity.ms&MXFR=17AD69F1E7F262EE13EF7E1DE3F26C4C | ",
+     "URL https://c.clarity.ms/c.gif?ctsa=mr&CtsSyncId=A8C66BA3288D443A850EEDE9B4AE5F7B&MUID=1442C78848F56D540182D064498F6CA3 | ",
+     "URL https://c.clarity.ms/c.gif?ctsa=mr&CtsSyncId=A8C66BA3288D443A850EEDE9B4AE5F7B&MUID=1442C78848F56D540182D064498F6CA3 | "
+    ]
+   },
+   {
+    "id": "mainthread-work-breakdown",
+    "score": 0,
+    "val": "2.3 s",
+    "items": []
+   },
+   {
+    "id": "font-display",
+    "score": 0.5,
+    "val": "",
+    "items": [
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Regular.woff2 | wastedMs=30.332",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2 | wastedMs=39.309",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Light.woff2 | wastedMs=35.129"
+    ]
+   },
+   {
+    "id": "lcp-lazy-loaded",
+    "score": null,
+    "val": "",
+    "items": []
+   },
+   {
+    "id": "layout-shifts",
+    "score": null,
+    "val": "",
+    "items": []
+   },
+   {
+    "id": "unsized-images",
+    "score": 0.5,
+    "val": "",
+    "items": [
+     "NODE div.elementor-element > a > picture > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2025/11/unnamed-3-1.jpg.webp\" alt=\"יקיר דבול משרד עורכי דין\" loading=\"lazy\">",
+     "NODE div.elementor-element > a > picture > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2025/11/unnamed-3-1.jpg.webp\" alt=\"יקיר דבול משרד עורכי דין\" loading=\"lazy\">",
+     "NODE div.elementor-element > a > picture > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2025/11/unnamed-3-1.jpg.webp\" alt=\"יקיר דבול משרד עורכי דין\" loading=\"lazy\">",
+     "NODE div.elementor-element > a > picture > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2025/11/unnamed-3-1.jpg.webp\" alt=\"יקיר דבול משרד עורכי דין\" loading=\"lazy\">"
+    ]
+   },
+   {
+    "id": "prioritize-lcp-image",
+    "score": null,
+    "val": "",
+    "items": []
+   },
+   {
+    "id": "aria-allowed-attr",
+    "score": 0,
+    "val": "",
+    "items": [
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a#sm-17914785834935042-1 | <a class=\"elementor-item has-submenu\" id=\"sm-17914785834935042-1\" aria-haspopup=\"true\" aria-controls=\"sm-17914785834935042-2\" aria-expanded=\"false\">",
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a#sm-17914785834935042-3 | <a class=\"elementor-item has-submenu\" id=\"sm-17914785834935042-3\" aria-haspopup=\"true\" aria-controls=\"sm-17914785834935042-4\" aria-expanded=\"false\">",
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a#sm-17914785834935042-5 | <a class=\"elementor-item has-submenu\" id=\"sm-17914785834935042-5\" aria-haspopup=\"true\" aria-controls=\"sm-17914785834935042-6\" aria-expanded=\"false\">",
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a#sm-17914785834935042-7 | <a class=\"elementor-item has-submenu\" id=\"sm-17914785834935042-7\" aria-haspopup=\"true\" aria-controls=\"sm-17914785834935042-8\" aria-expanded=\"false\">",
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a#sm-17914785834935042-9 | <a class=\"elementor-item has-submenu\" id=\"sm-17914785834935042-9\" aria-haspopup=\"true\" aria-controls=\"sm-17914785834935042-10\" aria-expanded=\"false\">",
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a#sm-17914785834935042-11 | <a class=\"elementor-item has-submenu\" id=\"sm-17914785834935042-11\" aria-haspopup=\"true\" aria-controls=\"sm-17914785834935042-12\" aria-expanded=\"false\">",
+     "NODE body.rtl > div#elementor-popup-modal-1023 | <div class=\"dialog-widget dialog-lightbox-widget dialog-type-buttons dialog-type-light…\" id=\"elementor-popup-modal-1023\" aria-modal=\"true\" role=\"document\" tabindex=\"0\" style=\"\">"
+    ]
+   },
+   {
+    "id": "color-contrast",
+    "score": 0,
+    "val": "",
+    "items": [
+     "NODE div.elementor-element > a.elementor-button > span.elementor-button-content-wrapper > span.elementor-button-text | <span class=\"elementor-button-text\">",
+     "NODE div.elementor-element > div.elementor-element > span.elementor-heading-title > a | <a href=\"https://dabullaw.co.il/rental-income-tax-three-tracks-2026-guide/\" target=\"_blank\" rel=\"nofollow\">",
+     "NODE div.elementor-element > div.elementor-element > span.elementor-heading-title > a | <a href=\"https://dabullaw.co.il/real-estate-lawyer-kiryat-nordau-netanya/\" target=\"_blank\" rel=\"nofollow\">",
+     "NODE div.elementor-element > div.elementor-element > span.elementor-heading-title > a | <a href=\"https://dabullaw.co.il/real-estate-lawyer-dora-ramat-yadin-netanya/\" target=\"_blank\" rel=\"nofollow\">",
+     "NODE div.elementor-element > div.elementor-element > span.elementor-heading-title > a | <a href=\"https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/\" target=\"_blank\" rel=\"nofollow\">",
+     "NODE div#dbl-foot > div.r3 > div.wa > a | <a href=\"https://chat.whatsapp.com/ClLGh1qsjnpBnjIdKKu2lA\" target=\"_blank\" rel=\"noopener\">"
+    ]
+   },
+   {
+    "id": "skip-link",
+    "score": 0,
+    "val": "",
+    "items": [
+     "NODE body.rtl > a.skip-link | <a class=\"skip-link screen-reader-text\" href=\"#content\">"
+    ]
+   },
+   {
+    "id": "uses-long-cache-ttl",
+    "score": 0.5,
+    "val": "148 resources found",
+    "items": [
+     "URL https://lpc.fixdigital.co.il/external_files/scripts/domain/dabullaw.co.il/google.js | wastedBytes=545 totalBytes=545 cacheLifetimeMs=0",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/e023e51b-17be-4a7c-b78f-c3119864e2a1.jpeg.webp | wastedBytes=69960.44 totalBytes=102883 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/6018ecb7-fc9a-4559-b050-295853dfcb7c.jpeg.webp | wastedBytes=69372.92 totalBytes=102019 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/a0ae0d8c-2c48-4f6b-bf67-0c3e90ca1882.jpeg.webp | wastedBytes=68620.16 totalBytes=100912 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/ea6ded6a-5082-4b4f-8b14-459f3c51804e.jpeg.webp | wastedBytes=67596.08 totalBytes=99406 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/0cdfe9e5-c746-4c99-8b1a-8af15f9a918f.jpeg.webp | wastedBytes=64823.04 totalBytes=95328 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/168b994c-e570-4e46-8191-efdf1298dd6a.jpeg.webp | wastedBytes=61856.88 totalBytes=90966 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/e3ca357b-adef-438b-8670-25c4926604ad.jpeg.webp | wastedBytes=58391.6 totalBytes=85870 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/1a93047d-1974-43ba-8c4b-5503ef397873.jpeg.webp | wastedBytes=58197.8 totalBytes=85585 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/3a6f4985-7421-4b33-97bf-949e1a8a8c0d.jpeg.webp | wastedBytes=51945.88 totalBytes=76391 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/51a5e476-190c-401e-98ba-892b0a21dc18.jpeg.webp | wastedBytes=51850.68 totalBytes=76251 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/362b130d-a7e3-4bc6-8850-18383826c887.jpeg.webp | wastedBytes=50405.68 totalBytes=74126 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/newsletter-video-poster.jpg | wastedBytes=41974.36 totalBytes=61727 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-about.webp | wastedBytes=33337.68 totalBytes=49026 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/plugins/elementor/assets/lib/swiper/v8/swiper.min.js?ver=8.4.5 | wastedBytes=33071.8 totalBytes=48635 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer.webp | wastedBytes=30954.96 totalBytes=45522 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-h75vexuuwxw-576x1024.webp | wastedBytes=26494.84 totalBytes=38963 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-wfqwwcqefew-576x1024.webp | wastedBytes=24760.84 totalBytes=36413 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-6rr2oqwtc6s-576x1024.webp | wastedBytes=24718 totalBytes=36350 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-8etrir6n4da-576x1024.webp | wastedBytes=24592.2 totalBytes=36165 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-includes/js/jquery/jquery.min.js?ver=3.7.1 | wastedBytes=24418.8 totalBytes=35910 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-mytxavpamge-576x1024.webp | wastedBytes=24356.92 totalBytes=35819 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-8rdcmqqifew-576x1024.webp | wastedBytes=24089.68 totalBytes=35426 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-vjkeqn54ci4-576x1024.webp | wastedBytes=23655.16 totalBytes=34787 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-wp5x0bbbh78-576x1024.webp | wastedBytes=23517.12 totalBytes=34584 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-r2rl6zurmu0-576x1024.webp | wastedBytes=23487.88 totalBytes=34541 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-eqmbebkkpuq-576x1024.webp | wastedBytes=23266.88 totalBytes=34216 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-qxzes0enrqq-576x1024.webp | wastedBytes=22078.24 totalBytes=32468 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/10/video-sfwkyrql1ra-576x1024.webp | wastedBytes=21175.88 totalBytes=31141 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2025/11/bgfooter.webp | wastedBytes=21084.08 totalBytes=31006 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/05/%D7%A7%D7%95%D7%A8%D7%A1-%D7%94%D7%AA%D7%97%D7%93%D7%A9%D7%95%D7%AA-%D7%A2%D7%99%D7%A8%D7%95%D7%A0%D7%99%D7%AA.webp | wastedBytes=21017.44 totalBytes=30908 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/05/%D7%94%D7%9B%D7%A9%D7%A8%D7%AA-%D7%A2%D7%95%D7%A8%D7%9B%D7%99-%D7%93%D7%99%D7%9F.webp | wastedBytes=20992.28 totalBytes=30871 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/05/%D7%97%D7%91%D7%A8-%D7%91%D7%9C%D7%A9%D7%9B%D7%AA-%D7%A2%D7%95%D7%A8%D7%9B%D7%99-%D7%94%D7%93%D7%99%D7%9F.webp | wastedBytes=20908.64 totalBytes=30748 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/05/%D7%94%D7%A9%D7%AA%D7%AA%D7%A4%D7%95%D7%AA-%D7%91%D7%A7%D7%95%D7%A8%D7%A1-%D7%99%D7%99%D7%A6%D7%95%D7%92-%D7%97%D7%99%D7%99%D7%91%D7%99%D7%9D-%D7%9C%D7%94%D7%A4%D7%98%D7%A8.webp | wastedBytes=20863.76 totalBytes=30682 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/05/%D7%AA%D7%95%D7%90%D7%A8-%D7%91%D7%95%D7%92%D7%A8-%D7%91%D7%9E%D7%A9%D7%A4%D7%98%D7%99%D7%9D-LLB.webp | wastedBytes=20226.6 totalBytes=29745 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/05/%D7%94%D7%A9%D7%AA%D7%AA%D7%A4%D7%95%D7%AA-%D7%91%D7%94%D7%A9%D7%AA%D7%9C%D7%9E%D7%95%D7%AA-%D7%9E%D7%99%D7%A1%D7%95%D7%99-%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F.webp | wastedBytes=19672.4 totalBytes=28930 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/05/bgmain.webp | wastedBytes=18051.96 totalBytes=26547 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Regular.woff2 | wastedBytes=14726.08 totalBytes=21656 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2 | wastedBytes=14687.32 totalBytes=21599 cacheLifetimeMs=14400000",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Light.woff2 | wastedBytes=14595.52 totalBytes=21464 cacheLifetimeMs=14400000"
+    ]
+   },
+   {
+    "id": "total-byte-weight",
+    "score": 0.5,
+    "val": "Total size was 3,340 KiB",
+    "items": [
+     "URL https://www.gstatic.com/recaptcha/releases/nY0xPItgwtlvjEjk2TqdwOQz/recaptcha__en.js | totalBytes=355347",
+     "URL https://www.googletagmanager.com/gtag/js?id=GT-NBJ6RF9P | totalBytes=188936",
+     "URL https://dabullaw.co.il/?lh=8796 | totalBytes=161287",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/e023e51b-17be-4a7c-b78f-c3119864e2a1.jpeg.webp | totalBytes=102883",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/6018ecb7-fc9a-4559-b050-295853dfcb7c.jpeg.webp | totalBytes=102019",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/a0ae0d8c-2c48-4f6b-bf67-0c3e90ca1882.jpeg.webp | totalBytes=100912",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/ea6ded6a-5082-4b4f-8b14-459f3c51804e.jpeg.webp | totalBytes=99406",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/0cdfe9e5-c746-4c99-8b1a-8af15f9a918f.jpeg.webp | totalBytes=95328",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/168b994c-e570-4e46-8191-efdf1298dd6a.jpeg.webp | totalBytes=90966",
+     "URL https://dabullaw.co.il/wp-content/uploads/2026/08/e3ca357b-adef-438b-8670-25c4926604ad.jpeg.webp | totalBytes=85870"
+    ]
+   },
+   {
+    "id": "offscreen-images",
+    "score": 0.5,
+    "val": "Potential savings of 258 KiB",
+    "items": [
+     "NODE section#dbl-nl > div.dn-in > div.dn-vid > div.fr | <div class=\"fr\" style=\"background-image: url(&quot;https://dabullaw.co.il/wp-content/uploads/2026/10/new…&quot;);\">",
+     "NODE body.rtl > footer.elementor > div.elementor-element | <div class=\"elementor-element elementor-element-d331701 e-flex e-con-boxed e-con e-par…\" data-id=\"d331701\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;cla",
+     "NODE div.make-column-clickable-elementor > div.elementor-element > picture.attachment-large > img | <img decoding=\"async\" width=\"800\" height=\"420\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/legal-sublet-rental-agre…\" alt=\"סאבלט חוקי: מתי מותר להשכיר דירה בשכירות משנה\" srcset=\"https://dabullaw.co.il/wp-conte",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp\" alt=\"7-1\" style=\"height: 220px !important; min-height: 220px !important;\">",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/Media-4-7E4F3D49-B72A-46…\" alt=\"הצלחות המשרד עו&quot;ד יקיר דבול\" style=\"height: 220px !important; min-height: 220px",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/Media-3-238885F3-ACD1-48…\" alt=\"הצלחות המשרד עו&quot;ד יקיר דבול\" style=\"height: 220px !important; min-height: 220px",
+     "NODE a > figure.swiper-slide-inner > picture.swiper-slide-image > img | <img decoding=\"async\" src=\"https://dabullaw.co.il/wp-content/uploads/2025/12/4-300x300.jpg.webp\" alt=\"המלצות\" style=\"height: 220px !important; min-height: 220px !important;\">",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/Media-2-648D13FE-A64F-40…\" alt=\"הצלחות המשרד עו&quot;ד יקיר דבול\" style=\"height: 220px !important; min-height: 220px",
+     "NODE a > figure.swiper-slide-inner > picture.swiper-slide-image > img | <img decoding=\"async\" src=\"https://dabullaw.co.il/wp-content/uploads/2025/12/552303613_10166058948674…\" alt=\"הצלחות\" style=\"height: 220px !important; min-height: 220px !important;\">",
+     "NODE a > figure.swiper-slide-inner > picture.swiper-slide-image > img | <img decoding=\"async\" src=\"https://dabullaw.co.il/wp-content/uploads/2025/12/574482520_10166278890599…\" alt=\"הצלחות\" style=\"height: 220px !important; min-height: 220px !important;\">",
+     "NODE a > figure.swiper-slide-inner > picture.swiper-slide-image > img | <img decoding=\"async\" src=\"https://dabullaw.co.il/wp-content/uploads/2025/12/582970595_69373895714088…\" alt=\"הצלחות\" style=\"height: 220px !important; min-height: 220px !important;\">",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/04/10-300x300.webp\" alt=\"10\" style=\"height: 220px !important; min-height: 220px !important;\">",
+     "NODE a > figure.swiper-slide-inner > picture.swiper-slide-image > img | <img decoding=\"async\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/03/496224849_22724879964998…\" alt=\"הצלחות\" style=\"height: 220px !important; min-height: 220px !important;\">",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/Media-1-20A63BE0-A957-49…\" alt=\"הצלחות המשרד עו&quot;ד יקיר דבול\" style=\"height: 220px !important; min-height: 220px",
+     "NODE div.dbl-ph > div.top > div.pic > img.skip-lazy | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-portrait.webp\" width=\"480\" height=\"480\" alt=\"עו״ד יקיר דבול\" fetchpriority=\"high\" class=\"skip-lazy\" data-no-lazy=\"1\">",
+     "NODE header.onetap-header-top > button#onetap-language-list > div.onetap-icon > img.onetap-active | <img src=\"https://dabullaw.co.il/wp-content/plugins/accessibility-onetap/assets/imag…\" class=\"onetap-active\" data-language=\"il\" alt=\"ישראל\">"
+    ]
+   },
+   {
+    "id": "render-blocking-resources",
+    "score": null,
+    "val": "",
+    "items": []
+   },
+   {
+    "id": "unminified-javascript",
+    "score": 0.5,
+    "val": "Potential savings of 6 KiB",
+    "items": [
+     "URL https://dabullaw.co.il/wp-content/plugins/fixdigital-integration/js/assembled_script.js?ver=2.39.1 | wastedBytes=3139 totalBytes=8178",
+     "URL https://dabullaw.co.il/wp-content/plugins/accessibility-onetap/assets/js/hotkeys.js?ver=2.14.0 | wastedBytes=2628 totalBytes=6367"
+    ]
+   },
+   {
+    "id": "unused-javascript",
+    "score": 0.5,
+    "val": "Potential savings of 270 KiB",
+    "items": [
+     "URL https://www.gstatic.com/recaptcha/releases/nY0xPItgwtlvjEjk2TqdwOQz/recaptcha__en.js | wastedBytes=186408 totalBytes=354771",
+     "URL https://www.googletagmanager.com/gtag/js?id=GT-NBJ6RF9P | wastedBytes=63446 totalBytes=188604",
+     "URL https://dabullaw.co.il/wp-content/plugins/elementor/assets/lib/swiper/v8/swiper.min.js?ver=8.4.5 | wastedBytes=26173 totalBytes=48167"
+    ]
+   },
+   {
+    "id": "modern-image-formats",
+    "score": 0.5,
+    "val": "Potential savings of 23 KiB",
+    "items": [
+     "NODE section#dbl-nl > div.dn-in > div.dn-vid > div.fr | <div class=\"fr\" style=\"background-image: url(&quot;https://dabullaw.co.il/wp-content/uploads/2026/10/new…&quot;);\">"
+    ]
+   },
+   {
+    "id": "uses-responsive-images",
+    "score": 0,
+    "val": "Potential savings of 487 KiB",
+    "items": [
+     "NODE div.w > div.phw > div.ph > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-about.webp\" alt=\"עו״ד יקיר דבול, עורך דין מקרקעין בנתניה\" width=\"841\" height=\"1264\" loading=\"lazy\" decoding=\"async\">",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/הכשרת-עורכי-דין.webp\" alt=\"הכשרת עורכי דין\" style=\"height: 470px !important; min-height: 470px !important;\">",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/קורס-התחדשות-עירונית.webp\" alt=\"קורס-התחדשות-עירונית\" style=\"height: 470px !important; min-height: 470px !important;",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/חבר-בלשכת-עורכי-הדין.webp\" alt=\"חבר-בלשכת-עורכי-הדין\" style=\"height: 470px !important; min-height: 470px !important;",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/השתתפות-בקורס-ייצוג-חייב…\" alt=\"השתתפות-בקורס-ייצוג-חייבים-להפטר\" style=\"height: 470px !important; min-height: 470px",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/תואר-בוגר-במשפטים-LLB.we…\" alt=\"תואר בוגר במשפטים LLB\" style=\"height: 470px !important; min-height: 470px !important",
+     "NODE div.elementor-element > div.elementor-element > picture > img.attachment-large | <img fetchpriority=\"high\" decoding=\"async\" width=\"596\" height=\"1188\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer.webp\" class=\"attachment-large size-large wp-image-4838\" alt=\"תמונת דיוקן מקצו",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/השתתפות-בהשתלמות-מיסוי-מ…\" alt=\"השתתפות בהשתלמות מיסוי מקרקעין\" style=\"height: 470px !important; min-height: 470px !",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-h75vexuuwxw-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-h75vexuuwxw.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"הטריק",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-wfqwwcqefew-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-wfqwwcqefew.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"משקיע",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-6rr2oqwtc6s-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-6rr2oqwtc6s.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"גירוש",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-8etrir6n4da-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-8etrir6n4da.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"תקופת",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-mytxavpamge-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-mytxavpamge.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"הדירה",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-8rdcmqqifew-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-8rdcmqqifew.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"הצמדו",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-vjkeqn54ci4-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-vjkeqn54ci4.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"הכירו",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-wp5x0bbbh78-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-wp5x0bbbh78.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"טופס ",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-r2rl6zurmu0-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-r2rl6zurmu0.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"הערת ",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-eqmbebkkpuq-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-eqmbebkkpuq.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"חברה ",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-qxzes0enrqq-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-qxzes0enrqq.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"מבנה ",
+     "NODE div.elementor-element > div.elementor-wrapper > div.dbl-yt > img | <img src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-sfwkyrql1ra-576x10…\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2026/10/video-sfwkyrql1ra.webp 1…\" sizes=\"(max-width:767px) 92vw, 460px\" alt=\"קונים",
+     "NODE div.make-column-clickable-elementor > div.elementor-element > picture.attachment-large > img | <img decoding=\"async\" width=\"800\" height=\"420\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/legal-sublet-rental-agre…\" alt=\"סאבלט חוקי: מתי מותר להשכיר דירה בשכירות משנה\" srcset=\"https://dabullaw.co.il/wp-conte",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp\" alt=\"7-1\" style=\"height: 220px !important; min-height: 220px !important;\">",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/Media-3-238885F3-ACD1-48…\" alt=\"הצלחות המשרד עו&quot;ד יקיר דבול\" style=\"height: 220px !important; min-height: 220px",
+     "NODE div.make-column-clickable-elementor > div.e-con-inner > div.elementor-element > img.attachment-large | <img loading=\"lazy\" decoding=\"async\" width=\"280\" height=\"118\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/10/logo-emess.jpg\" class=\"attachment-large size-large wp-image-7265\" alt=\"לוגו אמס\">",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/04/10-300x300.webp\" alt=\"10\" style=\"height: 220px !important; min-height: 220px !important;\">",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/Media-4-7E4F3D49-B72A-46…\" alt=\"הצלחות המשרד עו&quot;ד יקיר דבול\" style=\"height: 220px !important; min-height: 220px",
+     "NODE div.swiper-slide > a > figure.swiper-slide-inner > img.swiper-slide-image | <img decoding=\"async\" class=\"swiper-slide-image\" src=\"https://dabullaw.co.il/wp-content/uploads/2026/05/Media-2-648D13FE-A64F-40…\" alt=\"הצלחות המשרד עו&quot;ד יקיר דבול\" style=\"height: 220px !important; min-height: 220px"
+    ]
+   },
+   {
+    "id": "legacy-javascript",
+    "score": 0.5,
+    "val": "Potential savings of 0 KiB",
+    "items": [
+     "URL https://dabullaw.co.il/?lh=8796 | wastedBytes=29 totalBytes=0",
+     "URL https://dabullaw.co.il/?lh=8796 | ",
+     "URL https://dabullaw.co.il/?lh=8796 | wastedBytes=29 totalBytes=0",
+     "URL https://dabullaw.co.il/?lh=8796 | "
+    ]
+   },
+   {
+    "id": "dom-size",
+    "score": 0.5,
+    "val": "4,239 elements",
+    "items": [
+     "NODE svg#Capa_1 > g > g > path | <path d=\"M256,110.062c-52.412,0-95.053,42.641-95.053,95.053s42.641,95.053,95.053,95…\">",
+     "NODE body.rtl | <body class=\"rtl home wp-singular page-template page-template-elementor_header_footer p…\" data-elementor-device-mode=\"desktop\">"
+    ]
+   },
+   {
+    "id": "inspector-issues",
+    "score": 0,
+    "val": "",
+    "items": [
+     "URL https://www.clarity.ms/tag/vec4l3no5k?ref=wordpress | ",
+     "URL https://scripts.clarity.ms/0.8.72/clarity.js | ",
+     "URL https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16882367901/?random=1791478583983&cv=11&fst=1791478583983&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45Pe6a70v874683139za200zd874683139xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938469~118897920~118897930~120213116~120385423~120469145~120469153~121046263~121046271&u_w=800&u_h=600&url=https%3A%2F%2Fdabullaw.co.il%2F%3Flh%3D8796&rcb=3&frm=0&tiba=%D7%A2%D7%95%D7%A8%D7%9A%20%D7%93%D7%99%D7%9F%20%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F%20%D7%99%D7%A7%D7%99%D7%A8%20%D7%93%D7%91%D7%95%D7%9C%20-%20%D7%9C%D7%99%D7%95%D7%95%D7%99%20%D7%9E%D7%A9%D7%A4%D7%98%D7%99%20%D7%90%D7%99%D7%A9%D7%99%20%D7%91%D7%A2&did=dZTNiMT&gdid=dZTNiMT&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=235627368.1791478584&uaa=x86&uab=64&uafvl=Chromium%3B154.0.8037.97%7CGoogle%2520Chrome%3B154.0.8037.97%7CNot%2520A(Brand%3B99.0.0.0&uamb=0&uam=&uap=macOS&uapv=10.15.7&uaw=0&data=event%3Dgtag.config&ept=9&rfmt=3&fmt=4 | ",
+     "URL https://k.clarity.ms/collect | ",
+     "URL https://c.clarity.ms/c.gif | ",
+     "URL https://c.bing.com/c.gif?ctsa=mr&CtsSyncId=A8C66BA3288D443A850EEDE9B4AE5F7B&RedC=c.clarity.ms&MXFR=17AD69F1E7F262EE13EF7E1DE3F26C4C | ",
+     "URL https://c.clarity.ms/c.gif?ctsa=mr&CtsSyncId=A8C66BA3288D443A850EEDE9B4AE5F7B&MUID=1442C78848F56D540182D064498F6CA3 | "
+    ]
+   },
+   {
+    "id": "font-size",
+    "score": null,
+    "val": "",
+    "items": []
+   },
+   {
+    "id": "crawlable-anchors",
+    "score": 0,
+    "val": "",
+    "items": [
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\">",
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\">",
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\">",
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\">",
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\">",
+     "NODE nav.elementor-nav-menu--main > ul#menu-1-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-b175daa > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">",
+     "NODE nav.elementor-nav-menu--dropdown > ul#menu-2-6997576 > li.menu-item > a.elementor-item | <a class=\"elementor-item\" tabindex=\"-1\">"
+    ]
+   },
+   {
+    "id": "bf-cache",
+    "score": 1,
+    "val": "",
+    "items": []
+   }
+  ]
+ }
+}
