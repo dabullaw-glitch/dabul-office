@@ -36,7 +36,7 @@ sources:
     url: "https://www.kolzchut.org.il/he/תשלום_חודשי_(תשלום_נדרש)_של_חייב_בהליכי_חדלות_פירעון_ושיקום_כלכלי_(פשיטת_רגל)"
   - title: "gov.il: הגשת דוח דו-חודשי על הכנסות והוצאות"
     url: "https://www.gov.il/he/service/bi_monthly_report_about_incomes"
-related: [doch-du-chodshi, tzav-shikum-kalkali, neeman, hagbalot]
+related: [doch-du-chodshi, tzav-shikum-kalkali, neeman, hagbalot, chakira-neeman]
 ---
 
 **תקופת הביניים** היא השלב שבין **צו לפתיחת הליכים** לבין ההחלטה על **צו לשיקום כלכלי**. היא נמשכת בדרך כלל **כשנה**, ובמהלכה נבנית התמונה המלאה של המצב הכלכלי שלכם. על בסיס התמונה הזו ייקבע כמה תשלמו ולכמה זמן, ומה יהיו התנאים לקבלת [הפטר](../hefter/).
