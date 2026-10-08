@@ -67,7 +67,7 @@ const PH_CSS = `.dbl-ph{position:relative;direction:rtl;font-family:"Noto Local"
 .dbl-ph.p1 .me img{height:100%;width:auto;filter:drop-shadow(0 0 30px rgba(0,0,0,.55))}.dbl-ph.p1 .me .dbl-seal{right:22px;bottom:70px}
 /* P2: a card: name next to the photo, then the points */
 .dbl-ph.p2{padding:28px 20px 34px}.dbl-ph.p2 .top{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 158px;gap:14px;align-items:center}
-.dbl-ph.p2 h1 b{font-size:40px}.dbl-ph.p2 h1 span{font-size:24px;white-space:nowrap}.dbl-ph.p2 .top .tg{font-size:17px;margin:12px 0 0}
+.dbl-ph.p2 h1 b{font-size:40px}.dbl-ph.p2 h1 span{font-size:24px;white-space:nowrap}.dbl-ph.p2 .top .tg{font-size:15.5px;margin:12px 0 0;white-space:nowrap}
 .dbl-ph.p2 .arch{position:relative;height:216px;border-radius:999px 999px 16px 16px;overflow:hidden;background:radial-gradient(circle at 50% 30%,#2a3e72,#0c1532 75%);box-shadow:inset 0 0 0 2px #e7cd96,0 14px 30px rgba(0,0,0,.4)}
 .dbl-ph.p2 .arch img{position:absolute;left:50%;top:14px;width:118%;transform:translateX(-50%);max-width:none}
 .dbl-ph.p2 ul{margin-top:22px}.dbl-ph.p2 .sealw{position:absolute;left:-12px;bottom:-14px;z-index:3}.dbl-ph.p2 .sealw .dbl-seal{position:relative}
@@ -140,7 +140,7 @@ const D_HTML = `<section class="dbl-a D"><div class="hd"><h2>הכירו את י�
 <div class="tx"><p class="q">"הדרך שלנו, ההצלחה שלכם."</p><p>${INTRO}</p>
 <div class="nums"><div><b><em>+</em>100</b><span>עסקאות בכל שנה</span></div><div><b>4.9<em>★</em></b><span>73 ביקורות בגוגל</span></div><div><b>3</b><span>ועדות בלשכת עורכי הדין</span></div></div>
 <div class="row"><a class="btn g" href="#">קראו עליי עוד</a><a class="btn o" href="#">דברו איתי</a></div></div>
-<div class="pic"><a class="vid" href="#"><img src="https://dabullaw.co.il/wp-content/uploads/2026/10/video-2zj664f6458.webp" alt=""><span class="pl">${IC.play}</span><span class="cap">צפו: היכרות עם המשרד (דקה)</span></a><div class="me"><img src="${M}cut-p1.webp" alt=""></div></div></div>
+<div class="pic"><a class="vid" href="#"><img src="https://dabullaw.co.il/wp-content/uploads/2026/10/video-2zj664f6458.webp" alt=""><span class="pl">${IC.play}</span><span class="cap">צפו: היכרות עם המשרד (דקה)</span></a><div class="me"><img src="${M}cut-p1-hd.webp" alt=""></div></div></div>
 </section>`;
 // E: dark band, photo, areas of practice tiles, media strip
 const E_CSS = `.dbl-a.E{background:linear-gradient(180deg,#0e1730 0,#141414 100%);color:#fff;padding:0 30px;overflow:hidden}
@@ -155,7 +155,7 @@ const E_CSS = `.dbl-a.E{background:linear-gradient(180deg,#0e1730 0,#141414 100%
 .E .row{display:flex;gap:12px;flex-wrap:wrap}.E .btn.o{background:transparent;color:#fff;border-color:#3a3a3a}
 .E .media{border-top-color:rgba(255,255,255,.1)!important;margin:0!important;padding:22px 0 26px!important}.E .media b{color:#8f8c86!important}.E .media small{color:#8f8c86}
 @media (max-width:767px){.dbl-a.E{padding:0 20px}.E .w{grid-template-columns:1fr;gap:0;min-height:0}.E .ph{height:400px;margin-top:36px}.E .ph:before{width:300px;height:300px}.E .tx{padding:26px 0 30px}.E h2{font-size:32px}.E p{font-size:16.5px}.E .tiles{grid-template-columns:1fr 1fr;gap:8px}.E .tile{flex-direction:column;align-items:flex-start;padding:12px}.E .btn{flex:1}}`;
-const E_HTML = `<section class="dbl-a E"><div class="w"><div class="ph"><img src="${M}cut-p2.webp" alt=""></div><div class="tx"><h2>הכירו את יקיר דבול</h2><div class="ln"></div><p>${INTRO}</p>
+const E_HTML = `<section class="dbl-a E"><div class="w"><div class="ph"><img src="${M}cut-p2-hd.webp" alt=""></div><div class="tx"><h2>הכירו את יקיר דבול</h2><div class="ln"></div><p>${INTRO}</p>
 <div class="tiles"><div class="tile"><i>${IC.home}</i><div><b>עסקאות מקרקעין</b><span>קנייה ומכירה, יד שנייה ומקבלן</span></div></div><div class="tile"><i>${IC.city}</i><div><b>התחדשות עירונית</b><span>ייצוג דיירים בפינוי בינוי ותמ״א</span></div></div>
 <div class="tile"><i>${IC.tax}</i><div><b>מיסוי מקרקעין</b><span>מס שבח, מס רכישה והיטל השבחה</span></div></div><div class="tile"><i>${IC.shield}</i><div><b>חדלות פירעון</b><span>הסדר חובות ושיקום כלכלי</span></div></div></div>
 <div class="row"><a class="btn g" href="#">קראו עליי עוד</a><a class="btn o" href="#">צפו בסרטון היכרות</a></div></div></div>
@@ -176,7 +176,7 @@ const F_CSS = `.dbl-a.F{background:#fff;padding:80px 30px 70px}
 const F_HTML = `<section class="dbl-a F"><div class="hd"><h2>הכירו את יקיר דבול</h2><div class="dv"></div></div><div class="w"><div class="tx"><p>${INTRO}</p>
 <ol><li><i>1</i><div><b>שיחת היכרות</b><span>מבינים את העסקה, את הלוחות ואת הסיכונים.</span></div></li><li><i>2</i><div><b>בדיקות לפני חתימה</b><span>טאבו, היתרים, מיסוי ושמאות, יחד עם אנשי המקצוע.</span></div></li><li><i>3</i><div><b>הסכם וליווי עד הרישום</b><span>משא ומתן, חתימה, דיווח לרשויות ורישום בטאבו.</span></div></li></ol>
 <div class="row"><a class="btn g" href="#">קראו עליי עוד</a><a class="btn o" href="#">דברו איתי</a></div></div>
-<div class="card"><img src="${M}cut-p3.webp" alt=""><div class="q"><b>+100 עסקאות בשנה · 4.9★ ב-73 ביקורות בגוגל</b><br>חבר ועדות הקניין, המקרקעין וההתחדשות העירונית בלשכת עורכי הדין</div></div></div>
+<div class="card"><img src="${M}cut-p3-hd.webp" alt=""><div class="q"><b>+100 עסקאות בשנה · 4.9★ ב-73 ביקורות בגוגל</b><br>חבר ועדות הקניין, המקרקעין וההתחדשות העירונית בלשכת עורכי הדין</div></div></div>
 </section>`;
 
 /* ---------- run ---------- */
