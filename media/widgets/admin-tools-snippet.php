@@ -165,6 +165,17 @@ add_action('rest_api_init', function () {
 		return $res;
 	}));
 
+	// WP Rocket state (read only): main speed options, "remove unused CSS" queue, .htaccess cache rules, server
+	register_rest_route('dabul/v1', '/rocketinfo', array('methods' => 'GET', 'permission_callback' => $admin, 'callback' => function () {
+		global $wpdb; $o = get_option('wp_rocket_settings', array()); $keys = array('remove_unused_css', 'async_css', 'minify_css', 'minify_concatenate_css', 'delay_js', 'defer_all_js', 'lazyload', 'lazyload_css_bg_img', 'cache_logged_user', 'minify_js', 'manual_preload');
+		$out = array('opts' => array_intersect_key((array) $o, array_flip($keys)), 'version' => defined('WP_ROCKET_VERSION') ? WP_ROCKET_VERSION : '', 'server' => $_SERVER['SERVER_SOFTWARE'] ?? '');
+		$t = $wpdb->prefix . 'wpr_rucss_used_css';
+		if ($wpdb->get_var("SHOW TABLES LIKE '$t'") === $t) { $out['rucss'] = $wpdb->get_results("SELECT status, COUNT(*) n, MAX(modified) last, MAX(error_message) err FROM $t GROUP BY status", ARRAY_A); }
+		$h = ABSPATH . '.htaccess'; $out['htaccess'] = file_exists($h) ? array('size' => filesize($h), 'rocket' => strpos(file_get_contents($h), '# BEGIN WP Rocket') !== false, 'expires' => strpos(file_get_contents($h), 'ExpiresByType') !== false) : null;
+		$out['saas'] = array('valid_key' => function_exists('rocket_valid_key') ? (bool) rocket_valid_key() : null, 'license' => get_option('wp_rocket_customer_data') ? 'set' : 'none');
+		return $out;
+	}));
+
 	// undo WP Rocket test: restore the settings saved before "remove unused CSS"
 	register_rest_route('dabul/v1', '/rocket-restore', array('methods' => 'POST', 'permission_callback' => $admin, 'callback' => function () {
 		$bak = get_option('dabul_rocket_backup_20261008'); if (!is_array($bak)) return array('ok' => false, 'why' => 'no backup');
