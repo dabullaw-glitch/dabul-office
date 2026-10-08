@@ -1,5 +1,5 @@
 /* dabul: WhatsApp and call buttons (Yakir approved, section 3, 8.10.2026).
-   Phone: a floating dark pill at the bottom (Yakir chose option 2 on 8.10.2026): a gold "התקשרו עכשיו" half (dials the office)
+   Phone: a floating dark pill at the bottom (Yakir chose option 2 on 8.10.2026; almost black, faint white frame on the WhatsApp half): a gold "התקשרו עכשיו" half (dials the office)
    and a "וואטסאפ" half with a green circle (opens a chat with Yakir, with a
    ready message naming the page). The big green "פנו אלינו" banner and the WhatsApp circle that opened a form are hidden
    on the phone, and so is the floating group circle (74d8bec; the group keeps its button and footer icon); the accessibility button moves up so it does not cover the bar.
@@ -23,9 +23,9 @@ add_action('wp_head', function () {
 		. '#dbl-cbar{display:none}'
 		. '.elementor-element-434b289{display:none!important}'
 		. '@media (max-width:767px){'
-		. '#dbl-cbar{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9990;gap:0;padding:6px;border-radius:999px;background:#101a33;border:1px solid rgba(231,205,150,.4);box-shadow:0 14px 34px rgba(8,12,28,.45);direction:rtl}'
+		. '#dbl-cbar{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9990;gap:0;padding:6px;border-radius:999px;background:#070a14;border:1px solid rgba(231,205,150,.32);box-shadow:0 14px 34px rgba(8,12,28,.45);direction:rtl}'
 		. '#dbl-cbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;height:52px;border-radius:999px;font-weight:800;font-size:16.5px;text-decoration:none;font-family:inherit;color:#fff;background:transparent}'
-		. '#dbl-cbar .c{background:linear-gradient(135deg,#f0d9a0,#c9a14f);color:#141008}'
+		. '#dbl-cbar .c{background:linear-gradient(135deg,#f0d9a0,#c9a14f);color:#141008}#dbl-cbar .w{box-shadow:inset 0 0 0 1px rgba(255,255,255,.26);margin-right:6px}'
 		. '#dbl-cbar .ic{width:34px;height:34px;flex:0 0 34px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:7px;box-sizing:border-box}'
 		. '#dbl-cbar .c .ic{background:rgba(20,16,8,.12)}#dbl-cbar .w .ic{background:#25d366;color:#fff}#dbl-cbar svg{width:100%;height:100%;display:block}'
 		. 'body{padding-bottom:92px}'
