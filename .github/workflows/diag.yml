@@ -21,7 +21,7 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Diagnose
         run: |
-          node diag/appr28.mjs || true
+          node diag/live29.mjs || true
       - name: Commit
         if: always()
         run: |
