@@ -1,0 +1,550 @@
+{
+ "desktop": {
+  "hs": [
+   {
+    "t": "מקצועיות. ניסיון. תוצאות",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "32px",
+    "fw": "700",
+    "color": "rgb(231, 205, 150)",
+    "lh": "38.4px",
+    "ls": "normal",
+    "ta": "start"
+   },
+   {
+    "t": "שירותי המשרד",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "44px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "44px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "למה לבחור בי?",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "44px",
+    "fw": "400",
+    "color": "rgb(255, 255, 255)",
+    "lh": "44px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "הכירו את יקיר דבול\nעורך דין מק",
+    "ff": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+    "fs": "42px",
+    "fw": "800",
+    "color": "rgb(20, 33, 61)",
+    "lh": "48.3px",
+    "ls": "normal",
+    "ta": "start"
+   },
+   {
+    "t": "תעודות והסמכות",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "44px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "44px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "לקוחות ממליצים",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "44px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "44px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "הצלחות",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "44px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "44px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "תהליך ליווי עו\"ד מקרקעין ונדל\"",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "40px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "48px",
+    "ls": "normal",
+    "ta": "start"
+   },
+   {
+    "t": "מידע משפטי",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "44px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "44px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "המשרד בתקשורת",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "44px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "44px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "סרטונים",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "44px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "44px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "שאלות ותשובות",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "44px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "44px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "מה שחשוב לדעת על דירה, ישר למי",
+    "ff": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+    "fs": "30px",
+    "fw": "700",
+    "color": "rgb(255, 255, 255)",
+    "lh": "37.5px",
+    "ls": "normal",
+    "ta": "right"
+   }
+  ],
+  "parents": [
+   {
+    "id": "9056c3a",
+    "bg": "rgb(84, 89, 95)",
+    "bgi": "url(\"https://dabullaw.co.il/wp-content/uploads/2026/05/bgmain.webp\")",
+    "h": 840,
+    "top": 90,
+    "pad": "0px",
+    "txt": "מקצועיות. ניסיון. תוצאות"
+   },
+   {
+    "id": "a1de968",
+    "bg": "rgb(255, 255, 255)",
+    "bgi": "none",
+    "h": 610,
+    "top": 930,
+    "pad": "0px 30px",
+    "txt": "שירותי המשרד"
+   },
+   {
+    "id": "0f7132a",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 423,
+    "top": 1540,
+    "pad": "0px 30px",
+    "txt": "למה לבחור בי?"
+   },
+   {
+    "id": "about-yakir",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "linear-gradient(rgb(255, 255, 255) 0px, rgb(247, 246, 242) 100%)",
+    "h": 1200,
+    "top": 1962,
+    "pad": "72px 24px 64px",
+    "txt": "הכירו את יקיר דבול\nעורך דין מקרקעין"
+   },
+   {
+    "id": "abb2800",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 726,
+    "top": 3162,
+    "pad": "0px 30px",
+    "txt": "תעודות והסמכות"
+   },
+   {
+    "id": "1302fe0",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 326,
+    "top": 3888,
+    "pad": "0px 30px",
+    "txt": "לקוחות ממליצים"
+   },
+   {
+    "id": "e9818ea",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 666,
+    "top": 4214,
+    "pad": "0px 30px",
+    "txt": "הצלחות"
+   },
+   {
+    "id": "050e911",
+    "bg": "rgb(255, 255, 255)",
+    "bgi": "none",
+    "h": 1120,
+    "top": 4880,
+    "pad": "0px 30px",
+    "txt": "תהליך ליווי עו\"ד מקרקעין ונדל\"ן"
+   },
+   {
+    "id": "6c4ed0d",
+    "bg": "rgb(255, 255, 255)",
+    "bgi": "none",
+    "h": 736,
+    "top": 6000,
+    "pad": "0px 30px",
+    "txt": "מידע משפטי"
+   },
+   {
+    "id": "b80ce4f",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 824,
+    "top": 6736,
+    "pad": "0px 30px",
+    "txt": "המשרד בתקשורת"
+   },
+   {
+    "id": "42fa63c",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 734,
+    "top": 7560,
+    "pad": "0px 30px",
+    "txt": "סרטונים"
+   },
+   {
+    "id": "32f6098",
+    "bg": "rgb(231, 231, 241)",
+    "bgi": "none",
+    "h": 1334,
+    "top": 8294,
+    "pad": "0px 30px",
+    "txt": "שאלות ותשובות"
+   }
+  ],
+  "div": [
+   {
+    "w": "200px",
+    "bt": "1px solid rgb(168, 168, 168)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bi": "none"
+   },
+   {
+    "w": "200px",
+    "bt": "1px solid rgba(255, 255, 255, 0.38)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bi": "none"
+   },
+   {
+    "w": "200px",
+    "bt": "1px solid rgb(168, 168, 168)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bi": "none"
+   }
+  ],
+  "p": {
+   "ff": "\"Noto Local\", sans-serif",
+   "fs": "17px",
+   "fw": "400",
+   "color": "rgb(84, 89, 95)",
+   "lh": "25.5px",
+   "ls": "normal",
+   "ta": "start"
+  },
+  "bodyBg": "rgb(255, 255, 255)"
+ },
+ "phone": {
+  "hs": [
+   {
+    "t": "מקצועיות. ניסיון. תוצאות",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "17px",
+    "fw": "700",
+    "color": "rgb(231, 205, 150)",
+    "lh": "22.1px",
+    "ls": "normal",
+    "ta": "start"
+   },
+   {
+    "t": "שירותי המשרד",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "32px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "32px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "למה לבחור בי?",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "32px",
+    "fw": "400",
+    "color": "rgb(255, 255, 255)",
+    "lh": "32px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "הכירו את יקיר דבול\nעורך דין מק",
+    "ff": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+    "fs": "30px",
+    "fw": "800",
+    "color": "rgb(20, 33, 61)",
+    "lh": "34.5px",
+    "ls": "normal",
+    "ta": "start"
+   },
+   {
+    "t": "תעודות והסמכות",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "32px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "32px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "לקוחות ממליצים",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "32px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "32px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "הצלחות",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "32px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "32px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "תהליך ליווי עו\"ד מקרקעין ונדל\"",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "32px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "38.4px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "מידע משפטי",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "32px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "32px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "המשרד בתקשורת",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "32px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "32px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "סרטונים",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "32px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "32px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "שאלות ותשובות",
+    "ff": "\"Noto Local\", sans-serif",
+    "fs": "32px",
+    "fw": "500",
+    "color": "rgb(20, 20, 20)",
+    "lh": "32px",
+    "ls": "normal",
+    "ta": "center"
+   },
+   {
+    "t": "מה שחשוב לדעת על דירה, ישר למי",
+    "ff": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+    "fs": "24px",
+    "fw": "700",
+    "color": "rgb(255, 255, 255)",
+    "lh": "30px",
+    "ls": "normal",
+    "ta": "center"
+   }
+  ],
+  "parents": [
+   {
+    "id": "9056c3a",
+    "bg": "rgb(84, 89, 95)",
+    "bgi": "url(\"https://dabullaw.co.il/wp-content/uploads/2026/03/yakir-mob-2.webp\")",
+    "h": 513,
+    "top": 70,
+    "pad": "0px",
+    "txt": "מקצועיות. ניסיון. תוצאות"
+   },
+   {
+    "id": "a1de968",
+    "bg": "rgb(255, 255, 255)",
+    "bgi": "none",
+    "h": 836,
+    "top": 937,
+    "pad": "0px 20px",
+    "txt": "שירותי המשרד"
+   },
+   {
+    "id": "0f7132a",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 596,
+    "top": 1773,
+    "pad": "0px 20px",
+    "txt": "למה לבחור בי?"
+   },
+   {
+    "id": "about-yakir",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "linear-gradient(rgb(255, 255, 255) 0px, rgb(247, 246, 242) 100%)",
+    "h": 2181,
+    "top": 2369,
+    "pad": "44px 16px 40px",
+    "txt": "הכירו את יקיר דבול\nעורך דין מקרקעין"
+   },
+   {
+    "id": "abb2800",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 598,
+    "top": 4550,
+    "pad": "0px 20px",
+    "txt": "תעודות והסמכות"
+   },
+   {
+    "id": "1302fe0",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 213,
+    "top": 5148,
+    "pad": "0px 20px",
+    "txt": "לקוחות ממליצים"
+   },
+   {
+    "id": "e9818ea",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 550,
+    "top": 5361,
+    "pad": "0px 20px",
+    "txt": "הצלחות"
+   },
+   {
+    "id": "050e911",
+    "bg": "rgb(255, 255, 255)",
+    "bgi": "none",
+    "h": 1789,
+    "top": 5911,
+    "pad": "0px",
+    "txt": "תהליך ליווי עו\"ד מקרקעין ונדל\"ן"
+   },
+   {
+    "id": "6c4ed0d",
+    "bg": "rgb(255, 255, 255)",
+    "bgi": "none",
+    "h": 545,
+    "top": 7700,
+    "pad": "0px 20px",
+    "txt": "מידע משפטי"
+   },
+   {
+    "id": "b80ce4f",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 648,
+    "top": 8245,
+    "pad": "0px 20px",
+    "txt": "המשרד בתקשורת"
+   },
+   {
+    "id": "42fa63c",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bgi": "none",
+    "h": 606,
+    "top": 8893,
+    "pad": "0px 20px",
+    "txt": "סרטונים"
+   },
+   {
+    "id": "32f6098",
+    "bg": "rgb(231, 231, 241)",
+    "bgi": "none",
+    "h": 1264,
+    "top": 9499,
+    "pad": "0px",
+    "txt": "שאלות ותשובות"
+   }
+  ],
+  "div": [
+   {
+    "w": "160px",
+    "bt": "1px solid rgb(168, 168, 168)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bi": "none"
+   },
+   {
+    "w": "160px",
+    "bt": "1px solid rgba(255, 255, 255, 0.38)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bi": "none"
+   },
+   {
+    "w": "160px",
+    "bt": "1px solid rgb(168, 168, 168)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "bi": "none"
+   }
+  ],
+  "p": {
+   "ff": "\"Noto Local\", sans-serif",
+   "fs": "16px",
+   "fw": "400",
+   "color": "rgb(84, 89, 95)",
+   "lh": "24px",
+   "ls": "normal",
+   "ta": "start"
+  },
+  "bodyBg": "rgb(255, 255, 255)"
+ }
+}
