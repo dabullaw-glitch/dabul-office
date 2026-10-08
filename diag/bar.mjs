@@ -7,7 +7,7 @@ for (const dev of ['iPhone 13', 'Pixel 5', 'iPhone SE']) {
   const tag = dev.replace(/\s/g, '');
   for (const [n, u] of [['home', 'https://dabullaw.co.il/'], ['art', 'https://dabullaw.co.il/?p=4308']]) {
     await p.goto(u, { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(2500);
-    await p.evaluate(() => { const x = [...document.querySelectorAll('button,a')].find((e) => /הבנתי/.test(e.textContent || '')); if (x) x.click(); }); await p.waitForTimeout(500);
+    await p.evaluate(() => { const x = [...document.querySelectorAll('button,a,div,span')].filter((e) => (e.textContent || '').trim() === 'הבנתי').pop(); if (x) x.click(); document.querySelectorAll('body *').forEach((e) => { const cs = getComputedStyle(e); if (cs.position === 'fixed' && /Cookies/.test(e.textContent || '') && e.id !== 'dbl-cbar') e.style.display = 'none'; }); }); await p.waitForTimeout(500);
     await p.evaluate(() => scrollTo(0, 1400)); await p.waitForTimeout(700);
     await p.screenshot({ path: `${OUT}/${tag}-${n}.jpg`, quality: 75 });
     if (n === 'home') { await p.evaluate(() => scrollTo(0, document.documentElement.scrollHeight)); await p.waitForTimeout(1200); await p.screenshot({ path: `${OUT}/${tag}-bottom.jpg`, quality: 75 }); }
