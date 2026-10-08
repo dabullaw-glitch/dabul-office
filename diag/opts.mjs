@@ -217,6 +217,7 @@ html body .elementor-element-abb2800 .certificates-carousel{max-width:1440px;mar
       const sw = el && el.swiper; if (sw) { sw.params.slidesPerView = mode === 'phone' ? 1.25 : 4; sw.params.spaceBetween = mode === 'phone' ? 16 : 36; if (sw.params.breakpoints) sw.params.breakpoints = {}; sw.update(); sw.slideTo(sw.params.loop ? 6 : 0, 0); }
     }, mode);
     await p.waitForTimeout(3500);
+    rep['cert-chain-' + mode] = await p.evaluate(() => { const i = document.querySelector('.elementor-element-abb2800 .certificates-carousel .swiper-slide-active img') || document.querySelector('.elementor-element-abb2800 .certificates-carousel img'); const out = []; let e = i; for (let k = 0; k < 9 && e; k++) { const cs = getComputedStyle(e); out.push([e.tagName, (e.className || '').toString().slice(0, 60), Math.round(e.getBoundingClientRect().height), cs.height, cs.maxHeight, cs.overflow, cs.clipPath]); e = e.parentElement; } return out; });
     await sec.screenshot({ path: `${OUT}/cert-${mode}-after.jpg`, type: 'jpeg', quality: 80 });
   }
   // footer: same design, better order (existing widgets are moved, not redrawn)
