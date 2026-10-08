@@ -82,6 +82,8 @@ function dabul_ah_cut_element($html, $id, $with) {
 }
 
 add_action('template_redirect', function () {
+	// the new about section is off until Yakir approves a new mockup (8.10.2026): the old section shows
+	if (!get_option('dabul_about_live')) return;
 	if (is_admin() || wp_doing_ajax() || is_feed() || !is_front_page()) return;
 	ob_start(function ($html) {
 		if (!is_string($html) || stripos($html, '<html') === false) return $html;
