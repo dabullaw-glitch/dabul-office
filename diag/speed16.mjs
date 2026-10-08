@@ -1,4 +1,4 @@
-// speed round 2 check: same look with and without (?dblprev=1), the moment before late style files arrive, and what downloads
+// speed round 2 check (rerun 1905): same look with and without (?dblprev=1), the moment before late style files arrive, and what downloads
 import { chromium, devices } from 'playwright';
 import fs from 'node:fs';
 const OUT = 'diag-results/speed16'; fs.mkdirSync(OUT, { recursive: true });
