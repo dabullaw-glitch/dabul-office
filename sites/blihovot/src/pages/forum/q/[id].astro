@@ -1,0 +1,22 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import ForumThread from '../../../components/ForumThread.astro';
+import ForumAuth from '../../../components/ForumAuth.astro';
+import { forumData } from '../../../lib/forumData';
+export async function getStaticPaths() {
+  const { questions, answers } = await forumData();
+  return questions.map((q) => ({ params: { id: q.id }, props: { q, answers: answers.filter((a) => a.qid === q.id).sort((a, b) => a.created.localeCompare(b.created)) } }));
+}
+const { q, answers } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const schema = [{ '@context': 'https://schema.org', '@type': 'QAPage', mainEntity: { '@type': 'Question', name: q.title, text: q.body, answerCount: answers.length, dateCreated: q.created, author: { '@type': 'Person', name: q.nick },
+  suggestedAnswer: answers.map((a: any) => ({ '@type': 'Answer', text: a.body, dateCreated: a.created, author: { '@type': 'Person', name: a.nick }, url: new URL(`${B}forum/q/${q.id}/#${a.id}`, Astro.site).href })) } }];
+---
+<Base title={`${q.title} | פורום`} description={q.body.slice(0, 150)} schema={schema}>
+  <div class="wrap" style="padding-block:28px 50px">
+    <Breadcrumbs items={[{ href: 'forum/', label: 'פורום' }, { label: q.title.slice(0, 40) }]} />
+    <ForumThread q={q} answers={answers} />
+  </div>
+  <ForumAuth />
+</Base>

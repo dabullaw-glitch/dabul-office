@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ForumThread from '../../components/ForumThread.astro';
+import ForumAuth from '../../components/ForumAuth.astro';
+---
+<Base title="שאלה בפורום" description="שאלה ותשובות בפורום של בלי חובות." noindex>
+  <div class="wrap" style="padding-block:28px 50px">
+    <Breadcrumbs items={[{ href: 'forum/', label: 'פורום' }, { label: 'שאלה' }]} />
+    <ForumThread />
+  </div>
+  <ForumAuth />
+</Base>

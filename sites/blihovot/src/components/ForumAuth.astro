@@ -1,0 +1,60 @@
+---
+// Sign-in window for the forum: email, one-time code, nickname. The email is only used to send the code.
+import { SITE } from '../data/site';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<dialog id="fa" class="fa" aria-labelledby="fa-h" data-endpoint={SITE.forumEndpoint}>
+  <form method="dialog" class="fa-x"><button aria-label="סגירה">✕</button></form>
+  <h2 id="fa-h">כניסה לפורום</h2>
+  <div class="fa-step" data-step="1">
+    <p>כדי לשאול או להגיב צריך אימות קצר: נשלח לכם קוד למייל. <b>המייל לא נשמר ולא מוצג</b>. בפורום תופיעו רק בכינוי.</p>
+    <label class="fl" for="fa-email">כתובת מייל</label>
+    <input id="fa-email" type="email" dir="ltr" autocomplete="email" required />
+    <label class="fa-agree"><input type="checkbox" id="fa-ok" /> קראתי את <a href={`${B}forum/klalim/`} target="_blank">כללי הפורום</a> ואני מסכים/ה להם</label>
+    <button class="btn btn-teal" type="button" id="fa-send">שליחת קוד</button>
+  </div>
+  <div class="fa-step" data-step="2" hidden>
+    <p>שלחנו קוד בן 6 ספרות למייל. הוא תקף ל-15 דקות.</p>
+    <label class="fl" for="fa-code">הקוד</label>
+    <input id="fa-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" dir="ltr" />
+    <label class="fl" for="fa-nick">כינוי שיוצג בפורום (לא חובה)</label>
+    <input id="fa-nick" maxlength="24" placeholder="למשל: אבא מהצפון" />
+    <p class="note">אל תכתבו שם מלא. אם תשאירו ריק, תקבלו כינוי כמו "אנונימי 4821".</p>
+    <button class="btn btn-teal" type="button" id="fa-verify">כניסה</button>
+  </div>
+  <p class="fa-msg" id="fa-msg" role="status" aria-live="polite"></p>
+</dialog>
+<style>
+.fa{border:0;border-radius:18px;padding:26px;max-width:440px;width:calc(100% - 32px);background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.fa::backdrop{background:rgba(15,27,45,.55)}
+.fa h2{margin:0 0 8px;font-size:1.4rem}
+.fa-x{position:absolute;inset-inline-end:10px;top:8px}.fa-x button{background:none;border:0;font-size:1.2rem;cursor:pointer;color:var(--muted);padding:8px}
+.fa .fl{display:block;font-weight:700;margin:12px 0 6px}
+.fa input:not([type=checkbox]){width:100%;font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.fa-agree{display:flex;gap:8px;align-items:flex-start;font-size:.92rem;margin:14px 0;color:var(--muted)}
+.fa-agree input{width:18px;height:18px;margin-top:3px;accent-color:var(--teal)}
+.fa .btn{margin-top:14px;width:100%}
+.fa-msg:empty{display:none}.fa-msg{margin:12px 0 0;font-weight:700;color:var(--rose)}
+</style>
+<script>
+const D = document.getElementById('fa') as HTMLDialogElement; const EP = D.dataset.endpoint as string;
+const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+const say = (t: string) => { $('fa-msg').textContent = t; };
+const ERR: Record<string, string> = { 'email-not-ready': 'ההרשמה לפורום תיפתח בקרוב. בינתיים אפשר לקרוא את השאלות והתשובות.', wait: 'רגע, אפשר לבקש קוד חדש בעוד דקה.', email: 'כתובת המייל לא תקינה.', expired: 'הקוד פג תוקף. בקשו קוד חדש.', code: 'הקוד לא נכון. נסו שוב.', blocked: 'החשבון הזה חסום בפורום.', send: 'לא הצלחנו לשלוח מייל. נסו שוב בעוד רגע.' };
+let after: (() => void) | null = null;
+(window as any).forumLogin = (cb?: () => void) => { after = cb || null; let has = (window as any).__ft; try { has = has || localStorage.getItem('bh-ft'); } catch {} if (has) { cb && cb(); return; } D.showModal(); };
+$('fa-send').addEventListener('click', async () => {
+  if (!$<HTMLInputElement>('fa-ok').checked) return say('צריך לאשר את כללי הפורום.');
+  say(''); const r = await fetch(EP + '?a=code', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: $<HTMLInputElement>('fa-email').value }) }).catch(() => null);
+  const j = r ? await r.json().catch(() => ({})) : {};
+  if (!j.ok) return say(ERR[j.error] || 'משהו לא עבד. נסו שוב.');
+  D.querySelector<HTMLElement>('[data-step="1"]')!.hidden = true; D.querySelector<HTMLElement>('[data-step="2"]')!.hidden = false; $('fa-code').focus();
+});
+$('fa-verify').addEventListener('click', async () => {
+  say(''); const r = await fetch(EP + '?a=verify', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: $<HTMLInputElement>('fa-email').value, code: $<HTMLInputElement>('fa-code').value, nick: $<HTMLInputElement>('fa-nick').value }) }).catch(() => null);
+  const j = r ? await r.json().catch(() => ({})) : {};
+  if (!j.ok) return say(ERR[j.error] || 'משהו לא עבד. נסו שוב.');
+  (window as any).__ft = j.token; try { localStorage.setItem('bh-ft', j.token); localStorage.setItem('bh-fn', j.nick); } catch {}
+  D.close(); document.dispatchEvent(new CustomEvent('forum-login', { detail: j.nick })); after && after();
+});
+</script>

@@ -1,0 +1,89 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ForumAuth from '../../components/ForumAuth.astro';
+import { SITE } from '../../data/site';
+import { forumData } from '../../lib/forumData';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { questions } = await forumData();
+const TOPICS = ['חדלות פירעון', 'הוצאה לפועל', 'הסדרי חוב', 'עצמאים ועסקים', 'כלכלה נכונה', 'אחרי ההפטר', 'אחר'];
+const fmt = (s: string) => new Date(s).toLocaleDateString('he-IL', { day: 'numeric', month: 'numeric', year: 'numeric' });
+---
+<Base title="פורום חובות וחדלות פירעון: שאלות ותשובות אנונימיות" description="פורום אנונימי לשאלות על חובות, הוצאה לפועל, חדלות פירעון והסדרי חוב. שואלים בלי שם, ומקבלים תשובות מאנשים שעברו את זה. עם סינון ספאם ושמירה על פרטיות.">
+  <div class="wrap fr">
+    <Breadcrumbs items={[{ label: 'פורום' }]} />
+    <div class="fr-head">
+      <div>
+        <h1>פורום: שואלים בלי שם</h1>
+        <p class="lede">שאלות ותשובות על חובות, הוצאה לפועל וחדלות פירעון, מאנשים שנמצאים בדיוק באותו מקום. בפורום מופיע רק כינוי, ואף אחד לא רואה את המייל שלכם.</p>
+      </div>
+      <button class="btn btn-sun" type="button" id="fr-ask-btn">שאלה חדשה</button>
+    </div>
+    <p class="fr-note">התשובות בפורום הן של משתמשים, לא ייעוץ משפטי. לפני החלטה, בדקו גם את <a href={`${B}madrich/`}>המדריכים</a> או התייעצו עם איש מקצוע. <a href={`${B}forum/klalim/`}>כללי הפורום</a>.</p>
+
+    <section class="card fr-ask" id="fr-ask" hidden aria-labelledby="fr-ask-h">
+      <h2 id="fr-ask-h">שאלה חדשה</h2>
+      <label class="fl" for="fq-title">כותרת השאלה</label><input id="fq-title" maxlength="140" placeholder="למשל: אפשר לאחד תיקים כשיש חוב מזונות?" />
+      <label class="fl" for="fq-topic">נושא</label><select id="fq-topic">{TOPICS.map((t) => <option>{t}</option>)}</select>
+      <label class="fl" for="fq-body">פרטים</label><textarea id="fq-body" rows="6" maxlength="3000" placeholder="ספרו מה המצב ומה אתם רוצים לדעת. בלי שמות, תעודות זהות, טלפונים או מספרי תיקים."></textarea>
+      <div class="fr-btns"><button class="btn btn-teal" type="button" id="fq-send">פרסום השאלה</button><span class="muted" id="fq-who"></span></div>
+      <p class="fr-msg" id="fq-msg" role="status" aria-live="polite"></p>
+    </section>
+
+    <div class="fr-topics" role="toolbar" aria-label="סינון לפי נושא"><button type="button" class="on" data-t="">הכול</button>{TOPICS.map((t) => <button type="button" data-t={t}>{t}</button>)}</div>
+    <ol class="fr-list" id="fr-list">
+      {questions.length ? questions.map((q) => (
+        <li data-topic={q.topic}><a href={`${B}forum/q/${q.id}/`}><b>{q.title}</b></a><span class="meta">{q.topic} · {q.nick} · {fmt(q.created)} · {q.answers} תשובות</span></li>
+      )) : <li class="empty">עדיין אין שאלות. אפשר להיות הראשונים לשאול.</li>}
+    </ol>
+  </div>
+  <ForumAuth />
+</Base>
+<style is:global>
+.fr{padding-block:28px 50px;max-width:920px}
+.fr-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.fr .lede{font-size:1.1rem;color:var(--ink-2);max-width:60ch;margin:0}
+.fr-note{font-size:.9rem;color:var(--muted);background:var(--sand);border-radius:10px;padding:10px 14px;margin:18px 0}
+.fr-ask{padding:22px;margin:16px 0}.fr-ask h2{margin:0 0 8px;font-size:1.3rem}
+.fr .fl{display:block;font-weight:700;margin:12px 0 6px}
+.fr-ask input,.fr-ask select,.fr-ask textarea{width:100%;font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.fr-btns{display:flex;gap:12px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.fr-msg:empty{display:none}.fr-msg{margin:10px 0 0;font-weight:700}
+.fr-topics{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.fr-topics button{font:inherit;font-size:.92rem;border:1.5px solid var(--line);background:var(--card);color:var(--ink-2);border-radius:999px;padding:6px 14px;cursor:pointer}
+.fr-topics button.on{border-color:var(--teal);background:var(--teal-soft);color:var(--teal-2);font-weight:700}
+.fr-list{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.fr-list li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.fr-list a{text-decoration:none;color:var(--ink)}.fr-list a:hover b{color:var(--teal)}
+.fr-list b{display:block;font-size:1.06rem}.fr-list .meta{display:block;color:var(--muted);font-size:.86rem;margin-top:4px}
+.fr-list .empty{color:var(--muted)}
+</style>
+<script define:vars={{ EP: SITE.forumEndpoint, B }}>
+const tok = () => { let t = window.__ft; try { t = t || localStorage.getItem('bh-ft'); } catch {} return t; };
+const esc = (s) => String(s || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmt = (s) => new Date(s).toLocaleDateString('he-IL', { day: 'numeric', month: 'numeric', year: 'numeric' });
+const list = document.getElementById('fr-list'); let topic = '';
+async function load() {
+  try {
+    const r = await fetch(EP + '?a=list' + (topic ? '&topic=' + encodeURIComponent(topic) : '')); const j = await r.json(); if (!j.ok) return;
+    list.innerHTML = j.items.length ? j.items.map((q) => `<li><a href="${B}forum/sheela/#${q.id}"><b>${esc(q.title)}</b></a><span class="meta">${esc(q.topic)} · ${esc(q.nick)} · ${fmt(q.created)} · ${q.answers} תשובות</span></li>`).join('') : '<li class="empty">אין עדיין שאלות בנושא הזה.</li>';
+  } catch {}
+}
+document.querySelector('.fr-topics').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; document.querySelectorAll('.fr-topics button').forEach((x) => x.classList.toggle('on', x === b)); topic = b.dataset.t; load(); });
+const box = document.getElementById('fr-ask'), who = document.getElementById('fq-who'), msg = document.getElementById('fq-msg');
+const open = () => { box.hidden = false; try { who.textContent = 'תופיעו בתור: ' + (localStorage.getItem('bh-fn') || ''); } catch {} document.getElementById('fq-title').focus(); };
+document.getElementById('fr-ask-btn').addEventListener('click', () => window.forumLogin(open));
+document.getElementById('fq-send').addEventListener('click', async () => {
+  const title = document.getElementById('fq-title').value.trim(), body = document.getElementById('fq-body').value.trim();
+  if (title.length < 8) { msg.textContent = 'הכותרת קצרה מדי.'; return; } if (body.length < 15) { msg.textContent = 'כתבו עוד קצת פרטים.'; return; }
+  msg.textContent = 'שולח...';
+  const r = await fetch(EP + '?a=ask', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ token: tok(), title, body, topic: document.getElementById('fq-topic').value }) }).catch(() => null);
+  const j = r ? await r.json().catch(() => ({})) : {};
+  if (j.error === 'login') { try { localStorage.removeItem('bh-ft'); } catch {} window.forumLogin(open); msg.textContent = ''; return; }
+  if (!j.ok) { msg.textContent = j.error === 'rate' ? 'אפשר לפרסם עד 3 שאלות בשעה.' : 'משהו לא עבד. נסו שוב.'; return; }
+  msg.textContent = j.status === 'live' ? 'השאלה פורסמה.' : 'השאלה התקבלה, והיא תפורסם אחרי בדיקה קצרה.';
+  document.getElementById('fq-title').value = ''; document.getElementById('fq-body').value = '';
+  if (j.status === 'live') location.href = B + 'forum/sheela/#' + j.id;
+});
+load();
+</script>
