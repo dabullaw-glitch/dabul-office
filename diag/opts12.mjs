@@ -120,14 +120,14 @@ const U3_HTML = () => UP_HTML('u2').replace('class="dbl-ab h1 u2"', 'class="dbl-
 /* about, round 11: all of today's text, photo card exactly as tall as the text next to it, the 3 boxes in a row below */
 const STATS = '<div class="stats"><div><b>+100</b><span>עסקאות בכל שנה</span></div><div><b>4.9★</b><span>73 ביקורות בגוגל</span></div><div><b>3</b><span>ועדות בלשכה</span></div></div>';
 const A11_HTML = () => `<section class="dbl-ab h1 u2 u3 a11"><div class="sec"><div class="hd"><h2>הכירו את יקיר דבול</h2><div class="sub">עורך דין מקרקעין</div><div class="dv"></div></div>
-<div class="w"><div class="tx"><p class="lead">${AB_INTRO}</p><h3>היתרון שלנו</h3><p>${AB_ADV}</p>
+<div class="w"><div class="tx"><p class="lead">${AB_INTRO}</p><div class="adv"><h3>היתרון שלנו</h3><p>${AB_ADV}</p></div>
 <div class="acts"><a class="btn" href="#">← קראו עליי עוד</a><a class="btn2" href="#"><i>${IC.play}</i>צפו בסרטון היכרות (דקה)</a></div></div>
 <div class="phw"><div class="ph"><img src="${M}studio-p3.webp" alt=""><div class="cap"><q>הדרך שלנו, ההצלחה שלכם.</q><small>עו״ד יקיר דבול, עורך דין מקרקעין</small></div></div>${STATS}</div></div>
 <div class="rows3">${AB_ROWS.map(([b, s], i) => `<div class="row"><i>${AB_IC[i]}</i><div><b>${b}</b><span>${s}</span></div></div>`).join('')}</div></div></section>`;
 const A11_CSS = `
 .dbl-ab.a11 .hd .sub{font-size:20px;color:#a88a4c;margin-top:10px;letter-spacing:.02em}
 .dbl-ab.a11 .w{align-items:stretch!important;grid-template-columns:minmax(0,1fr) 460px!important;gap:70px!important}
-.dbl-ab.a11 .tx{display:flex;flex-direction:column;justify-content:space-between}.dbl-ab.a11 .tx>*{margin-top:0!important;margin-bottom:0!important}.dbl-ab.a11 .tx .lead{margin-top:-6px!important}
+.dbl-ab.a11 .tx{display:flex;flex-direction:column;justify-content:space-between}.dbl-ab.a11 .tx>*{margin-top:0!important;margin-bottom:0!important}.dbl-ab.a11 .tx .lead{margin-top:-6px!important}.dbl-ab.a11 .adv h3{margin:0 0 10px!important}.dbl-ab.a11 .adv p{margin:0!important}
 
 .dbl-ab.a11 .phw{display:flex;flex-direction:column;padding:0!important}
 .dbl-ab.a11 .phw:before,.dbl-ab.a11 .phw:after,.dbl-ab.a11 .ph:after{display:none!important}
