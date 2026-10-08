@@ -1,7 +1,8 @@
 /* dabul: speed, round 2 (Yakir approved items 1-3 on 8.10.2026). Nothing changes in how the site looks.
    1. Style files that are not needed for the first screen (the accessibility panel, a plugin's admin file,
       animations, maps, video and price-list widgets) load after the page shows, instead of holding it back.
-   2. On the phone, the old hero picture (hidden since the new phone hero) is no longer downloaded.
+   2. On the phone, the old hero picture and the computer hero photo (both hidden there since the new phone hero)
+      are no longer downloaded.
    3. Home page: the article pictures in the carousel load as the light webp copies that already exist in the
       media library (they loaded the heavy jpeg files), in a size that fits the card; the video cards load the
       smaller copy of their poster instead of the full size.
@@ -59,7 +60,11 @@ add_action('template_redirect', function () {
 		if (!is_string($html) || stripos($html, '<html') === false) return $html;
 		$html = dabul_sp2_late_css($html);
 		$html = dabul_sp2_pictures($html);
-		if (is_front_page()) $html = dabul_sp2_posters($html);
+		if (is_front_page()) {
+			$html = dabul_sp2_posters($html);
+			// the computer hero photo is hidden on phones (they have their own hero); phones get an empty 1px picture instead
+			$html = preg_replace('#(<div class="elementor-element elementor-element-2c91460 [^>]*>.*?)(<img\b[^>]*>)#s', '$1<picture><source media="(max-width:767px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">$2</picture>', $html, 1);
+		}
 		return $html;
 	});
 }, 8);
