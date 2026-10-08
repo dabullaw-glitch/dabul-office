@@ -1,0 +1,21 @@
+// live check: home on the computer (hero edge, newsletter video) and the press page with the 2 new items
+import { chromium, devices } from 'playwright';
+import fs from 'node:fs';
+const OUT = 'diag-results/live22'; fs.mkdirSync(OUT, { recursive: true });
+const S = 'https://dabullaw.co.il/'; const rep = {};
+const b = await chromium.launch();
+const p = await (await b.newContext({ viewport: { width: 1440, height: 900 }, locale: 'he-IL' })).newPage();
+await p.goto(S + '?l22=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(3000);
+await p.addStyleTag({ content: '.elementor-popup-modal{display:none!important}' });
+await p.screenshot({ path: `${OUT}/home-1440.jpg`, type: 'jpeg', quality: 82 });
+rep.edges = await p.evaluate(() => ['6bb6c07', '464d8c8', 'a3067eb'].map((id) => Math.round(document.querySelector('.elementor-element-' + id).getBoundingClientRect().right)));
+const nl = p.locator('#dbl-nl'); await nl.scrollIntoViewIfNeeded(); await p.waitForTimeout(3000);
+rep.nl = await p.evaluate(() => ({ built: document.getElementById('dbl-nl').classList.contains('dbl-nlv'), video: !!document.querySelector('#dbl-nl video') }));
+await p.goto(S + 'category/press/?l22=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(3000);
+await p.addStyleTag({ content: '.elementor-popup-modal{display:none!important}' });
+rep.press = await p.evaluate(() => [...document.querySelectorAll('.e-loop-item')].slice(0, 4).map((e) => ({ t: (e.innerText || '').split('\n').filter(Boolean).slice(0, 1).join(' ').slice(0, 70), href: (e.querySelector('a') || {}).href, logo: !!e.querySelector('.elementor-widget-image img[src]'), imgs: [...e.querySelectorAll('img')].map((i) => i.currentSrc.split('/').pop().slice(0, 40)) })));
+await p.screenshot({ path: `${OUT}/press-top.jpg`, type: 'jpeg', quality: 78, clip: { x: 0, y: 0, width: 1440, height: 1300 }, fullPage: true });
+const m = await (await b.newContext({ ...devices['iPhone 13'], locale: 'he-IL' })).newPage();
+await m.goto(S + '?l22p=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await m.waitForTimeout(2500);
+rep.phoneNl = await m.evaluate(() => document.getElementById('dbl-nl')?.classList.contains('dbl-nlv'));
+fs.writeFileSync(`${OUT}/rep.json`, JSON.stringify(rep, null, 1)); await b.close();
