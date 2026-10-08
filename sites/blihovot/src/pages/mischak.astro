@@ -1,0 +1,271 @@
+---
+// "36 חודשים": a short browser game about getting out of debt. Every number is invented for the game;
+// the lessons (interest, emergency fund, quick loans, talking to the bank) link to the real guides.
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const schema = [{ '@context': 'https://schema.org', '@type': 'VideoGame', name: '36 חודשים: משחק היציאה מהחובות', description: 'משחק קצר בעברית שמלמד איך יוצאים מחובות: ריבית, קרן חירום, הלוואות מהירות ומשא ומתן עם הבנק.', inLanguage: 'he-IL', genre: 'Educational', isAccessibleForFree: true, gamePlatform: 'Web browser' }];
+---
+<Base title="משחק: 36 חודשים לצאת מהחובות" description="משחק קצר וחינמי: יש לכם 36 חודשים לסגור מינוס, כרטיס אשראי והלוואה. כל חודש מגיעה החלטה. לומדים על ריבית, קרן חירום והלוואות מהירות, בדרך הכי כיפית." schema={schema}>
+  <div class="wrap gm-wrap">
+    <Breadcrumbs items={[{ label: 'משחק: 36 חודשים' }]} />
+    <h1>36 חודשים</h1>
+    <p class="lede">יש לכם מינוס, כרטיס אשראי והלוואה. המטרה: לסגור את כל החובות לפני שעוברים 36 חודשים, בלי להישבר בדרך. כל חודש מגיעה החלטה אחת. כל המספרים במשחק מומצאים.</p>
+
+    <section class="gm card" id="gm" aria-live="polite" data-base={B}>
+      <div class="gm-start" id="gm-start">
+        <h2>איך משחקים?</h2>
+        <ul>
+          <li>בכל חודש נכנסת משכורת, יוצאות ההוצאות, ומשולמים תשלומי המינימום.</li>
+          <li>מה שנשאר הולך לאן שתבחרו: לחוב היקר, לחוב הקטן, או לקרן חירום.</li>
+          <li>כל חודש מגיע אירוע. ההחלטה שלכם משנה את המספרים ואת מד הלחץ.</li>
+          <li>מנצחים כשכל החובות נסגרים. מפסידים אם הלחץ מגיע ל-100 או שהחובות יוצאים משליטה.</li>
+        </ul>
+        <h3>לאן ילך הכסף שנשאר בכל חודש?</h3>
+        <div class="gm-choices" id="gm-strategy">
+          <button type="button" data-s="avalanche"><b>קודם החוב היקר</b><span>שיטת ה"מפולת": פחות ריבית בסך הכול</span></button>
+          <button type="button" data-s="snowball"><b>קודם החוב הקטן</b><span>שיטת "כדור השלג": ניצחונות מהירים</span></button>
+          <button type="button" data-s="fund"><b>קודם קרן חירום</b><span>1,500 ₪ בצד, ואז לחובות</span></button>
+        </div>
+      </div>
+      <div class="gm-play" id="gm-play" hidden>
+        <div class="gm-top">
+          <div class="gm-month"><span>חודש</span><b id="g-month">1</b><span>מתוך 36</span></div>
+          <div class="gm-bars">
+            <div class="gm-bar"><span>לחץ</span><i><em id="g-stress"></em></i><b id="g-stress-n"></b></div>
+            <div class="gm-bar fund"><span>קרן חירום</span><i><em id="g-fund-bar"></em></i><b id="g-fund"></b></div>
+          </div>
+        </div>
+        <div class="gm-debts" id="g-debts"></div>
+        <p class="gm-flow" id="g-flow"></p>
+        <div class="gm-event" id="g-event"></div>
+        <p class="gm-lesson" id="g-lesson" hidden></p>
+        <div class="gm-foot"><label>הכסף שנשאר: <select id="g-strat"><option value="avalanche">לחוב היקר</option><option value="snowball">לחוב הקטן</option><option value="fund">לקרן חירום קודם</option></select></label><span class="muted" id="g-interest"></span></div>
+      </div>
+      <div class="gm-end" id="gm-end" hidden></div>
+    </section>
+
+    <section class="prose gm-learn">
+      <h2>מה המשחק מלמד?</h2>
+      <p><b>ריבית היא מה שהופך חוב קטן לגדול.</b> במשחק, כמו בחיים, החוב עם הריבית הגבוהה ביותר גדל הכי מהר. ראו <a href={`${B}madrich/minus/`}>איך יוצאים מהמינוס</a> ו<a href={`${B}madrich/ashrai-chacham/`}>אשראי חכם</a>.</p>
+      <p><b>קרן חירום קטנה שוברת את המעגל.</b> הוצאה לא צפויה בלי כסף בצד הופכת לחוב חדש. <a href={`${B}madrich/kerit-bitachon/`}>המדריך לקרן חירום</a>.</p>
+      <p><b>"הלוואה מהירה בלי בדיקות" כמעט תמיד יקרה.</b> ותמיד בודקים עלות כוללת לפני שחותמים.</p>
+      <p><b>מדברים עם הבנק מוקדם.</b> הסדר או המרה של מינוס להלוואה זולה יותר יכולים לחסוך הרבה. <a href={`${B}madrich/masa-umatan-bank/`}>משא ומתן עם הבנק</a>.</p>
+      <p>ואם במציאות החובות גדולים מהיכולת, יש דרכים מסודרות: <a href={`${B}madrich/hashvaat-maslulim/`}>הסדר חוב, איחוד תיקים או חדלות פירעון</a>.</p>
+    </section>
+  </div>
+</Base>
+<style is:global>
+.gm-wrap{padding-block:28px 50px;max-width:820px}
+.gm-wrap .lede{font-size:1.1rem;color:var(--ink-2);max-width:62ch}
+.gm{padding:20px;margin:20px 0 30px;overflow:hidden}
+.gm h2{margin:0 0 10px;font-size:1.3rem}.gm h3{font-size:1.08rem;margin:18px 0 10px}
+.gm ul{margin:0;padding-inline-start:1.2em}
+.gm-choices{display:grid;gap:10px}
+.gm-choices button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:start;font:inherit;padding:14px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;transition:border-color .15s,transform .15s}
+.gm-choices button:hover,.gm-choices button:focus-visible{border-color:var(--teal);transform:translateY(-1px)}
+.gm-choices button span{color:var(--muted);font-size:.92rem}
+.gm-choices button[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.gm-top{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.gm-month{display:flex;flex-direction:column;align-items:center;background:var(--sand);border-radius:14px;padding:8px 16px;min-width:84px}
+.gm-month b{font-size:2rem;line-height:1.1;font-variant-numeric:tabular-nums}.gm-month span{font-size:.8rem;color:var(--muted)}
+.gm-bars{flex:1 1 220px;display:grid;gap:8px;min-width:0}
+.gm-bar{display:grid;grid-template-columns:84px 1fr 54px;align-items:center;gap:8px;font-size:.9rem}
+.gm-bar i{display:block;height:12px;border-radius:99px;background:var(--line);overflow:hidden}
+.gm-bar em{display:block;height:100%;width:0;background:var(--rose);border-radius:99px;transition:width .5s}
+.gm-bar.fund em{background:var(--sun)}.gm-bar b{font-variant-numeric:tabular-nums;font-size:.9rem}
+.gm-debts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0 8px}
+.gm-debt{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--card);transition:background .3s}
+.gm-debt b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.gm-debt span{font-size:.82rem;color:var(--muted)}
+.gm-debt.done{background:var(--teal-soft);border-color:var(--teal)}.gm-debt.done b{color:var(--teal-2)}
+.gm-debt.up b{color:var(--rose)}
+.gm-flow{font-size:.92rem;color:var(--ink-2);margin:6px 0 14px}
+.gm-event{border-radius:14px;background:var(--sand);padding:16px}
+.gm-event h3{margin:0 0 6px;font-size:1.15rem}.gm-event p{margin:0 0 12px}
+.gm-lesson{border-inline-start:4px solid var(--teal);background:var(--teal-soft);padding:10px 14px;border-radius:8px;margin:12px 0 0}
+.gm-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:14px;font-size:.9rem}
+.gm-foot select{font:inherit;padding:4px 8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.gm-end{text-align:center;padding:10px 0}
+.gm-end .big{font-size:3rem;line-height:1}
+.gm-end .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:16px 0}
+.gm-end .stats div{background:var(--sand);border-radius:12px;padding:10px}.gm-end .stats b{display:block;font-size:1.4rem;font-variant-numeric:tabular-nums}
+.gm-end .acts{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:10px}
+.gm-learn{margin-top:10px}
+@keyframes gm-pop{from{transform:scale(.97);opacity:.4}to{transform:none;opacity:1}}
+.gm-event.pop{animation:gm-pop .35s ease}
+@media (prefers-reduced-motion: reduce){.gm-event.pop{animation:none}.gm-bar em{transition:none}}
+</style>
+<script>
+type Debt = { id: string; name: string; bal: number; rate: number; min: number; startBal: number };
+type St = { m: number; income: number; exp: number; cash: number; fund: number; stress: number; interest: number; debts: Debt[]; strat: string; extraIncome: { amt: number; until: number }[]; flags: Record<string, boolean>; lessons: string[]; maxTotal: number };
+type Choice = { t: string; s?: string; ok?: (st: St) => boolean; run: (st: St) => string };
+type Ev = { id: string; t: string; d: string; once?: boolean; when?: (st: St) => boolean; c: Choice[] };
+
+const $ = (id: string) => document.getElementById(id)!;
+const nf = new Intl.NumberFormat('he-IL', { maximumFractionDigits: 0 });
+const ils = (n: number) => `${nf.format(Math.round(n))} ₪`;
+const MONTHS = 36;
+let st: St;
+
+const debt = (st: St, id: string) => st.debts.find((d) => d.id === id)!;
+const totalDebt = (st: St) => st.debts.reduce((s, d) => s + Math.max(0, d.bal), 0);
+const addStress = (st: St, n: number) => { st.stress = Math.max(0, Math.min(100, st.stress + n)); };
+// pay an unplanned cost: from the fund first if chosen, otherwise it lands in the overdraft
+const payFromFund = (st: St, amt: number) => { if (st.fund >= amt) { st.fund -= amt; return true; } return false; };
+const toOverdraft = (st: St, amt: number) => { debt(st, 'od').bal += amt; };
+const toCard = (st: St, amt: number) => { const c = debt(st, 'cc'); c.bal += amt; };
+
+const EVENTS: Ev[] = [
+  { id: 'car', t: 'הרכב התקלקל', d: 'התיקון עולה 1,400 ₪, ובלי רכב קשה להגיע לעבודה.', c: [
+    { t: 'לשלם מקרן החירום', ok: (s) => s.fund >= 1400, s: 'צריך 1,400 ₪ בקרן', run: (s) => { payFromFund(s, 1400); addStress(s, -2); return 'בדיוק בשביל זה יש קרן חירום: הוצאה לא צפויה שלא הפכה לחוב. עכשיו ממלאים אותה מחדש.'; } },
+    { t: 'לשלם במינוס', run: (s) => { toOverdraft(s, 1400); addStress(s, 6); return 'המינוס גדל ב-1,400 ₪, ועליו רצה ריבית כל חודש. ככה רוב החובות מתחילים: הוצאה לא צפויה בלי כסף בצד.'; } },
+    { t: 'לפרוס ל-12 תשלומים בכרטיס', run: (s) => { toCard(s, 1400); addStress(s, 4); return 'פריסה בכרטיס היא אשראי. במשחק היא נכנסת לחוב הכרטיס, עם הריבית שלו.'; } },
+  ] },
+  { id: 'quickloan', t: 'הודעה: "אושרה לך הלוואה של 10,000 ₪ בלי בדיקות!"', d: 'הכסף יכול להיכנס היום. הריבית לא כתובה בהודעה.', once: true, c: [
+    { t: 'לקחת ולסגור איתה את המינוס', run: (s) => { s.debts.push({ id: 'ql', name: 'הלוואה מהירה', bal: 10000, rate: 0.03, min: 520, startBal: 10000 }); const od = debt(s, 'od'); const pay = Math.min(od.bal, 10000); od.bal -= pay; s.cash += 10000 - pay; addStress(s, -4); s.flags.ql = true; return 'המינוס נסגר, אבל במקומו יש הלוואה בריבית של 3% לחודש, הרבה יותר מהמינוס. "בלי בדיקות" כמעט תמיד אומר "יקר". ואם המסגרת לא מוקטנת, המינוס חוזר.'; } },
+    { t: 'לבדוק את העלות הכוללת ולסרב', run: (s) => { addStress(s, -1); return 'החלטה טובה. לפני כל הלוואה בודקים עלות כוללת, מי הגוף ומה העמלות. הצעה שלא כתובה בה ריבית היא סימן אזהרה.'; } },
+  ] },
+  { id: 'taxback', t: 'בדקתם וגיליתם: מגיע לכם החזר מס של 2,200 ₪', d: 'הכסף ייכנס החודש. מה עושים איתו?', once: true, c: [
+    { t: 'לשים על החוב היקר', run: (s) => { s.cash += 2200; s.flags.extraToDebt = true; return 'כסף מזדמן שהולך לחוב היקר חוסך ריבית בכל החודשים הבאים. זה אחד המהלכים הכי משתלמים.'; } },
+    { t: 'לקרן חירום', run: (s) => { s.fund += 2200; addStress(s, -5); return 'גם זו בחירה טובה, במיוחד כשאין כרית בכלל. עכשיו הוצאה לא צפויה לא תהפוך לחוב.'; } },
+    { t: 'לחופשה קצרה, מגיע לנו', run: (s) => { addStress(s, -12); return 'גם מנוחה חשובה, והלחץ ירד. רק שימו לב: הריבית על החובות ממשיכה לרוץ בזמן החופשה.'; } },
+  ] },
+  { id: 'overtime', t: 'הציעו לכם שעות נוספות', d: '+900 ₪ בחודש לשלושה חודשים. יהיה עמוס.', once: true, c: [
+    { t: 'לקחת', run: (s) => { s.extraIncome.push({ amt: 900, until: s.m + 3 }); addStress(s, 7); return 'הגדלת הכנסה היא הצד השני של התקציב. רק לא לשרוף את עצמכם: מד הלחץ עלה.'; } },
+    { t: 'לוותר הפעם', run: (s) => { addStress(s, -2); return 'לגיטימי. לפעמים שומרים כוח. אפשר לחפש הכנסה נוספת בדרך אחרת בהמשך.'; } },
+  ] },
+  { id: 'bank', t: 'הבנק מציע: להמיר את המינוס להלוואה בריבית נמוכה יותר', d: 'בתנאי שהמסגרת תוקטן בהדרגה.', once: true, when: (s) => debt(s, 'od').bal > 1500, c: [
+    { t: 'להסכים ולהקטין את המסגרת', run: (s) => { const od = debt(s, 'od'); s.debts.push({ id: 'bl', name: 'הלוואה מהבנק (מהמינוס)', bal: od.bal, rate: 0.006, min: Math.max(150, Math.round(od.bal / 30)), startBal: od.bal }); od.bal = 0; s.flags.limit = true; addStress(s, -6); return 'מהלך חכם: ריבית נמוכה יותר, תשלום קבוע וסוף ברור. ובגלל שהמסגרת מוקטנת, המינוס לא יחזור לגדול מעל ההלוואה.'; } },
+    { t: 'לא עכשיו', run: (s) => { addStress(s, 1); return 'המינוס נשאר בריבית שלו. פנייה לבנק מוקדם, עם הצעה מסודרת, פותחת לפעמים אפשרויות שלא ידעתם עליהן.'; } },
+  ] },
+  { id: 'subs', t: 'גיליתם 3 מנויים שאף אחד לא משתמש בהם', d: 'טלוויזיה, אפליקציה ומנוי לחדר כושר: 210 ₪ בחודש.', once: true, c: [
+    { t: 'לבטל את כולם', run: (s) => { s.exp -= 210; addStress(s, -2); return '210 ₪ בחודש הם 2,520 ₪ בשנה. ביטול אחד קטן, השפעה גדולה לאורך זמן.'; } },
+    { t: 'לבטל רק אחד', run: (s) => { s.exp -= 70; return 'התחלה. כדאי לעבור פעם בחצי שנה על כל החיובים הקבועים.'; } },
+    { t: 'להשאיר', run: () => 'הכסף ממשיך לצאת כל חודש. מנויים שנשכחו הם אחת ה"דליפות" הנפוצות בתקציב.' },
+  ] },
+  { id: 'sale', t: 'מבצע: טלוויזיה חדשה ב-12 תשלומים "בלי ריבית"', d: '3,600 ₪, כלומר 300 ₪ בחודש לשנה.', c: [
+    { t: 'לקנות', run: (s) => { s.debts.push({ id: 'tv' + s.m, name: 'תשלומי טלוויזיה', bal: 3600, rate: 0, min: 300, startBal: 3600 }); addStress(s, -3); return 'בלי ריבית, אבל עכשיו יש עוד 300 ₪ קבועים לשנה. תשלומים קטנים שמצטברים הם מה שמשאיר את החשבון באדום.'; } },
+    { t: 'לחכות 48 שעות ולוותר', run: (s) => { addStress(s, -1); return 'כלל 48 השעות עובד: רוב הקניות האימפולסיביות לא שורדות יומיים.'; } },
+  ] },
+  { id: 'wedding', t: 'חתונה של חבר קרוב', d: 'המקובל במעגל שלכם הוא מתנה של 600 ₪.', c: [
+    { t: 'לתת 600 ₪ מהחשבון', run: (s) => { toOverdraft(s, 600); addStress(s, -2); return 'הוצאה צפויה שלא תוכננה הלכה למינוס. בפעם הבאה: קופה קטנה לאירועים, כל חודש.'; } },
+    { t: 'לתת 350 ₪ ולהסביר שזה מה שאפשר', run: (s) => { toOverdraft(s, 350); return 'מתנה לפי היכולת היא לא בושה. חברים טובים מבינים.'; } },
+  ] },
+  { id: 'arnona', t: 'שמעתם שאולי מגיעה לכם הנחה בארנונה', d: 'צריך למלא בקשה ולצרף תלושים. ערב אחד של עבודה.', once: true, c: [
+    { t: 'להגיש בקשה', run: (s) => { s.exp -= 130; addStress(s, 2); return 'מיצוי זכויות: 130 ₪ פחות כל חודש. הרבה משפחות לא מבקשות הטבות שמגיעות להן.'; } },
+    { t: 'אין כוח עכשיו', run: () => 'מובן. אבל זכויות שלא מבקשים לא מגיעות לבד. אפשר לחזור לזה.' },
+  ] },
+  { id: 'sick', t: 'מחלה: שבועיים בבית', d: 'החודש המשכורת נמוכה ב-1,800 ₪.', c: [
+    { t: 'לכסות מקרן החירום', ok: (s) => s.fund >= 1800, s: 'צריך 1,800 ₪ בקרן', run: (s) => { payFromFund(s, 1800); return 'הקרן עשתה את העבודה שלה. בלעדיה, זה היה הולך למינוס.'; } },
+    { t: 'לספוג במינוס', run: (s) => { toOverdraft(s, 1800); addStress(s, 6); return 'ירידה בהכנסה בלי כרית הופכת ישר לחוב. אם זה קורה במציאות לאורך זמן, מדברים עם הבנק מוקדם.'; } },
+  ] },
+  { id: 'calm', t: 'חודש שקט', d: 'בלי הפתעות. מה עושים עם השקט?', c: [
+    { t: '10 דקות על התקציב', run: (s) => { s.exp -= 60; addStress(s, -2); return 'בדיקה שבועית קצרה מוצאת תמיד משהו: חיוב כפול, מנוי, עמלה. 60 ₪ פחות בחודש.'; } },
+    { t: 'לנוח', run: (s) => { addStress(s, -5); return 'גם מנוחה היא חלק מהדרך. יציאה מחובות היא מרתון.'; } },
+  ] },
+  { id: 'bonus', t: 'בונוס בעבודה: 1,500 ₪', d: 'הכסף ייכנס החודש.', c: [
+    { t: 'לחוב', run: (s) => { s.cash += 1500; return 'עוד צעד קדימה. כל שקל שהולך לקרן החוב חוסך ריבית בכל החודשים הבאים.'; } },
+    { t: 'חצי לחוב, חצי לקרן', run: (s) => { s.cash += 750; s.fund += 750; addStress(s, -2); return 'איזון טוב: גם מקטינים חוב וגם בונים כרית.'; } },
+  ] },
+  { id: 'letter', t: 'מכתב מחברת גבייה על חוב ישן של 1,200 ₪', d: 'מסתבר שנשאר חוב קטן לחברת סלולר מלפני שנתיים.', once: true, c: [
+    { t: 'לבדוק את החוב ולבקש פירוט', run: (s) => { s.debts.push({ id: 'old', name: 'חוב ישן לסלולר', bal: 800, rate: 0.01, min: 100, startBal: 800 }); return 'בבדיקה התברר שחלק כבר שולם, והחוב האמיתי הוא 800 ₪. תמיד מבקשים פירוט לפני שמשלמים.'; } },
+    { t: 'להתעלם', run: (s) => { s.debts.push({ id: 'old', name: 'חוב ישן (בהוצאה לפועל)', bal: 2100, rate: 0.015, min: 150, startBal: 2100 }); addStress(s, 9); return 'התעלמות היא הטעות היקרה ביותר: החוב עבר להוצאה לפועל, עם הוצאות וריבית, והגיע ל-2,100 ₪.'; } },
+  ] },
+];
+
+function newGame(strat: string) {
+  st = { m: 1, income: 11200, exp: 9300, cash: 0, fund: strat === 'fund' ? 0 : 0, stress: 35, interest: 0, strat,
+    debts: [
+      { id: 'od', name: 'מינוס בבנק', bal: 9000, rate: 0.011, min: 0, startBal: 9000 },
+      { id: 'cc', name: 'כרטיס אשראי', bal: 7000, rate: 0.016, min: 350, startBal: 7000 },
+      { id: 'ln', name: 'הלוואה', bal: 22000, rate: 0.006, min: 650, startBal: 22000 },
+    ], extraIncome: [], flags: {}, lessons: [], maxTotal: 38000 };
+  ($('g-strat') as HTMLSelectElement).value = strat;
+  $('gm-start').hidden = true; $('gm-end').hidden = true; $('gm-play').hidden = false;
+  showEvent();
+}
+
+let current: Ev | null = null;
+const used = new Set<string>();
+function pickEvent(): Ev {
+  if (st.m === 1) return EVENTS.find((e) => e.id === 'subs')!;
+  const pool = EVENTS.filter((e) => !(e.once && used.has(e.id)) && (!e.when || e.when(st)) && e.id !== current?.id);
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function showEvent() {
+  current = pickEvent(); used.add(current.id);
+  render();
+  const box = $('g-event'); box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
+  box.innerHTML = `<h3>${current.t}</h3><p>${current.d}</p><div class="gm-choices">${current.c.map((c, i) => {
+    const ok = !c.ok || c.ok(st); return `<button type="button" data-c="${i}" ${ok ? '' : 'disabled'}><b>${c.t}</b>${!ok && c.s ? `<span>${c.s}</span>` : ''}</button>`; }).join('')}</div>`;
+  $('g-lesson').hidden = true;
+}
+
+function endOfMonth() {
+  // income in, expenses and minimums out, interest on every debt, the rest by strategy
+  const extra = st.extraIncome.filter((x) => x.until >= st.m).reduce((s, x) => s + x.amt, 0);
+  let money = st.cash + st.income + extra - st.exp; st.cash = 0;
+  for (const d of st.debts) { if (d.bal <= 0) continue; const i = d.bal * d.rate; d.bal += i; st.interest += i; }
+  for (const d of st.debts) { if (d.bal <= 0 || !d.min) continue; const p = Math.min(d.min, d.bal); d.bal -= p; money -= p; }
+  const od = debt(st, 'od');
+  if (money < 0) { od.bal += -money; money = 0; addStress(st, 4); }
+  // strategy for what is left
+  if (st.strat === 'fund' && st.fund < 1500) { const f = Math.min(money, 1500 - st.fund); st.fund += f; money -= f; }
+  const open = st.debts.filter((d) => d.bal > 0.5);
+  open.sort(st.strat === 'snowball' ? (a, b) => a.bal - b.bal : (a, b) => b.rate - a.rate);
+  for (const d of open) { if (money <= 0) break; const p = Math.min(money, d.bal); d.bal -= p; money -= p; }
+  if (money > 0) st.fund += money; // all debts closed: savings
+  st.debts.forEach((d) => { if (d.bal < 0.5) d.bal = 0; });
+  // stress drifts down as debts shrink, up as they grow
+  const tot = totalDebt(st); if (tot > st.maxTotal) { addStress(st, 3); st.maxTotal = tot; } else addStress(st, -1);
+  if (st.fund >= 1500) addStress(st, -1);
+}
+
+function render() {
+  $('g-month').textContent = String(st.m);
+  ($('g-stress') as HTMLElement).style.width = st.stress + '%'; $('g-stress-n').textContent = String(Math.round(st.stress));
+  ($('g-fund-bar') as HTMLElement).style.width = Math.min(100, (st.fund / 3000) * 100) + '%'; $('g-fund').textContent = nf.format(st.fund);
+  $('g-debts').innerHTML = st.debts.map((d) => `<div class="gm-debt ${d.bal <= 0 ? 'done' : d.bal > d.startBal ? 'up' : ''}"><span>${d.name}</span><b>${d.bal <= 0 ? 'נסגר ✓' : ils(d.bal)}</b><span>${d.rate ? `ריבית ${(d.rate * 100).toFixed(1)}% לחודש` : 'בלי ריבית'}${d.min ? ` · מינימום ${ils(d.min)}` : ''}</span></div>`).join('');
+  const extra = st.extraIncome.filter((x) => x.until >= st.m).reduce((s, x) => s + x.amt, 0);
+  $('g-flow').textContent = `בכל חודש: נכנס ${ils(st.income + extra)}, יוצא על הוצאות ${ils(st.exp)}, ותשלומי מינימום ${ils(st.debts.reduce((s, d) => s + (d.bal > 0 ? d.min : 0), 0))}. סך החובות: ${ils(totalDebt(st))}.`;
+  $('g-interest').textContent = `ריבית ששולמה עד עכשיו: ${ils(st.interest)}`;
+}
+
+function finish(win: boolean, reason = '') {
+  $('gm-play').hidden = true; const e = $('gm-end'); e.hidden = false;
+  const months = st.m;
+  const text = win ? `יצאתי מהחובות ב-${months} חודשים במשחק "36 חודשים" של בלי חובות. ריבית ששילמתי בדרך: ${ils(st.interest)}. אתם יכולים יותר מהר?` : 'שיחקתי ב"36 חודשים" של בלי חובות, ולמדתי למה ריבית וקרן חירום משנות הכול.';
+  e.innerHTML = `<div class="big">${win ? '🎉' : '🧭'}</div><h2>${win ? `יצאתם מהחובות בחודש ${months}!` : 'הפעם לא הסתדר'}</h2>
+    <p>${win ? 'כל החובות נסגרו. זה בדיוק מה שקורה במציאות כשמשלבים תקציב, קרן חירום והחלטות טובות.' : reason}</p>
+    <div class="stats"><div><b>${months}</b>חודשים</div><div><b>${ils(st.interest)}</b>ריבית ששולמה</div><div><b>${ils(st.fund)}</b>בקרן חירום</div><div><b>${Math.round(st.stress)}</b>לחץ בסוף</div></div>
+    <div class="acts"><button type="button" class="btn btn-sun" id="g-share">שיתוף התוצאה</button><button type="button" class="btn btn-teal" id="g-again">לשחק שוב</button></div>
+    <p class="muted" id="g-share-msg" role="status"></p>
+    <p style="margin-top:14px"><a href="${$('gm').dataset.base}madrich/tzaadim-rishonim/">ובמציאות? 7 הצעדים הראשונים ליציאה מחובות ←</a></p>`;
+  $('g-again').addEventListener('click', () => { used.clear(); $('gm-end').hidden = true; $('gm-start').hidden = false; });
+  $('g-share').addEventListener('click', async () => {
+    const url = location.href.split('#')[0];
+    try { if (navigator.share) { await navigator.share({ title: '36 חודשים', text, url }); return; } } catch { return; }
+    try { await navigator.clipboard.writeText(text + ' ' + url); $('g-share-msg').textContent = 'הטקסט הועתק. אפשר להדביק בוואטסאפ.'; } catch { $('g-share-msg').textContent = text + ' ' + url; }
+  });
+  (window as any).dataLayer?.push({ event: 'game_end', win, months: st.m });
+}
+
+$('gm-strategy').addEventListener('click', (e) => { const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-s]'); if (b) newGame(b.dataset.s!); });
+$('g-strat').addEventListener('change', (e) => { st.strat = (e.target as HTMLSelectElement).value; });
+$('g-event').addEventListener('click', (e) => {
+  const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-c]'); if (!b || !current) return;
+  if (b.dataset.next) return;
+  const lesson = current.c[+b.dataset.c!].run(st);
+  endOfMonth();
+  const L = $('g-lesson'); L.textContent = lesson; L.hidden = false;
+  render();
+  const box = $('g-event');
+  if (totalDebt(st) <= 0) { box.innerHTML = `<div class="gm-choices"><button type="button" data-c="0" data-next="1" id="g-next"><b>לסיכום ←</b></button></div>`; $('g-next').addEventListener('click', () => finish(true)); return; }
+  if (st.stress >= 100) { box.innerHTML = `<div class="gm-choices"><button type="button" data-c="0" data-next="1" id="g-next"><b>לסיכום ←</b></button></div>`; $('g-next').addEventListener('click', () => finish(false, 'הלחץ הגיע לשיא. במציאות, זה הרגע לעצור ולבקש עזרה: לבנות תקציב, לדבר עם הבנק, ולבדוק את הדרכים המסודרות לצאת מחובות.')); return; }
+  if (st.m >= MONTHS) { box.innerHTML = `<div class="gm-choices"><button type="button" data-c="0" data-next="1" id="g-next"><b>לסיכום ←</b></button></div>`; $('g-next').addEventListener('click', () => finish(false, `עברו 36 חודשים ונשארו חובות של ${ils(totalDebt(st))}. נסו אסטרטגיה אחרת. ובמציאות, כשחובות לא נגמרים, כדאי לבדוק הסדר, איחוד תיקים או חדלות פירעון.`)); return; }
+  box.innerHTML = `<div class="gm-choices"><button type="button" data-c="0" data-next="1" id="g-next"><b>לחודש ${st.m + 1} ←</b></button></div>`;
+  $('g-next').addEventListener('click', () => { st.m++; showEvent(); });
+});
+</script>
