@@ -1,0 +1,32 @@
+{
+ "phone": {
+  "heroBg": "url(\"https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-hero-mobile.webp\")",
+  "deskImg": [
+   "https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer.webp",
+   596,
+   0
+  ],
+  "afterClick": {
+   "iframe": true,
+   "src": "https://www.youtube-nocookie.com/embed/K3fbG-jVHRI?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&origin=https%3A%2F%2Fdabull",
+   "playBtn": false,
+   "yt": true
+  },
+  "errors": []
+ },
+ "desktop": {
+  "heroBg": "url(\"https://dabullaw.co.il/wp-content/uploads/2026/05/bgmain.webp\")",
+  "deskImg": [
+   "https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer.webp",
+   596,
+   800
+  ],
+  "afterClick": {
+   "iframe": true,
+   "src": "https://www.youtube-nocookie.com/embed/K3fbG-jVHRI?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&origin=https%3A%2F%2Fdabull",
+   "playBtn": false,
+   "yt": true
+  },
+  "errors": []
+ }
+}
