@@ -16,7 +16,7 @@ const HC = {
 };
 const b = await chromium.launch();
 const prep = async (ctx) => { await ctx.route(M + '*', (r) => { const f = 'mock/' + r.request().url().split('/__mock/')[1]; r.fulfill({ status: 200, contentType: 'image/webp', body: fs.readFileSync(f) }); }); };
-for (const [w, h] of [[1440, 900], [1920, 1080]]) {
+for (const [w, h] of (process.env.ONLYPHONE ? [] : [[1440, 900], [1920, 1080]])) {
   const ctx = await b.newContext({ viewport: { width: w, height: h }, locale: 'he-IL' }); await prep(ctx);
   const p = await ctx.newPage(); await p.goto(S + '?o13=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(3000);
   await p.addStyleTag({ content: HIDE });
@@ -28,20 +28,20 @@ for (const [w, h] of [[1440, 900], [1920, 1080]]) {
   await ctx.close();
 }
 /* phone hero: how dark the layer over the city is */
-const G = { now: null, g1: [.8, .58, .3], g2: [.7, .45, .18], g3: [.6, .32, .08] };
+const G = { now: null, g1: [.75, .5, .2, 'l1'], g2: [.7, .4, .1, 'l2'], g3: [.65, .3, 0, 'l3'] };
 {
-  const ctx = await b.newContext({ ...devices['iPhone 13'], locale: 'he-IL' });
+  const ctx = await b.newContext({ ...devices['iPhone 13'], locale: 'he-IL' }); await prep(ctx);
   const p = await ctx.newPage(); await p.goto(S + '?o13p=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(3000);
   await p.addStyleTag({ content: '.elementor-popup-modal{display:none!important}' });
   for (const [k, v] of Object.entries(G)) {
-    await p.evaluate((v) => { document.getElementById('dbl-g')?.remove(); if (!v) return; const st = document.createElement('style'); st.id = 'dbl-g'; st.textContent = `.dbl-ph:before{background:linear-gradient(180deg,rgba(8,13,30,${v[0]}) 0%,rgba(8,13,30,${v[1]}) 42%,rgba(8,13,30,${v[2]}) 100%)!important}`; document.head.appendChild(st); }, v);
+    await p.evaluate((v) => { document.getElementById('dbl-g')?.remove(); if (!v) return; const st = document.createElement('style'); st.id = 'dbl-g'; st.textContent = `.dbl-ph{background-image:url(https://dabullaw.co.il/__mock/city-${v[3]}.webp)!important}.dbl-ph:before{background:linear-gradient(180deg,rgba(8,13,30,${v[0]}) 0%,rgba(8,13,30,${v[1]}) 42%,rgba(8,13,30,${v[2]}) 100%)!important}`; document.head.appendChild(st); }, v);
     await p.waitForTimeout(600); await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(300);
     await p.screenshot({ path: `${OUT}/phone-${k}.jpg`, type: 'jpeg', quality: 86 });
   }
   await ctx.close();
 }
 /* the new about section, from the site itself (preview address) */
-for (const mode of ['desktop', 'phone']) {
+for (const mode of (process.env.ONLYPHONE ? [] : ['desktop', 'phone'])) {
   const ctx = mode === 'phone' ? await b.newContext({ ...devices['iPhone 13'], locale: 'he-IL' }) : await b.newContext({ viewport: { width: 1440, height: 900 }, locale: 'he-IL' });
   const p = await ctx.newPage(); await p.goto(S + '?dblprev=1&o13a=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(3000);
   await p.addStyleTag({ content: HIDE + '[data-elementor-type="header"]{visibility:hidden!important}#dbl-cbar{display:none!important}' });
@@ -57,4 +57,4 @@ for (const mode of ['desktop', 'phone']) {
   }
   await ctx.close();
 }
-fs.writeFileSync(`${OUT}/rep.json`, JSON.stringify(rep, null, 1)); await b.close();
+if (!process.env.ONLYPHONE) fs.writeFileSync(`${OUT}/rep.json`, JSON.stringify(rep, null, 1)); await b.close();
