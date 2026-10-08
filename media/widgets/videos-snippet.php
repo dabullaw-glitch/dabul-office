@@ -63,6 +63,7 @@ add_action('template_redirect', function () {
 			if (!$id) return $m[0];
 			$ids[$id] = 1;
 			$meta = dabul_yt_meta($id);
+			if (strpos(str_replace('\\/', '/', $u[1]), '/shorts/') !== false) $m[1] .= ' dbl-short'; // vertical video: keep the tall frame
 			return '<div class="' . $m[1] . '"' . $m[2] . 'data-settings="' . $m[3] . '"' . $m[4] . 'data-widget_type="dblvideo.default"' . $m[5] . '>' . $m[6] . dabul_yt_facade($id, $meta ? $meta['title'] : '', true);
 		}, $html);
 		// YouTube iframes inside articles and pages
@@ -84,7 +85,7 @@ add_action('template_redirect', function () {
 				$m = dabul_yt_fetch_meta($vid); $ids[$vid] = 1;
 				$cards .= '<div class="dbl-vcard">' . dabul_yt_facade($vid, $m ? $m['title'] : '', false, '9/16') . ($m && $m['title'] ? '<p>' . esc_html($m['title']) . '</p>' : '') . '</div>';
 			}
-			$block = '<section class="dbl-vnew" aria-label="סרטונים חדשים"><h2>סרטונים חדשים</h2><div class="dbl-vgrid">' . $cards . '</div></section>';
+			$block = '<section class="dbl-vnew" aria-label="סרטונים"><div class="dbl-vgrid">' . $cards . '</div></section>';
 			$pos = strpos($html, 'elementor-widget-video');
 			if ($pos !== false) {
 				$cut = strrpos(substr($html, 0, $pos), '<div class="elementor-element ');
@@ -111,9 +112,10 @@ add_action('template_redirect', function () {
 			. '.dbl-yt:hover .dbl-yt-play,.dbl-yt:focus .dbl-yt-play{background:#e00}.dbl-yt-play:before{content:"";position:absolute;left:27px;top:14px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #fff}'
 			. '.dbl-yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.dbl-yt-play.load{opacity:.55}.dbl-yt-box{position:relative;width:100%;border-radius:12px;overflow:hidden;background:#000}.elementor-widget-video .elementor-wrapper{position:relative}'
 			. '.dbl-vid{margin:1.75rem auto;max-width:720px}.dbl-vid.short{max-width:340px}.dbl-vid figcaption{text-align:center;font-size:15px;color:#54595f;margin-top:8px}'
-			. '.dbl-vnew{max-width:1140px;margin:30px auto 10px;padding:0 20px;direction:rtl}.dbl-vnew h2{text-align:center;font-size:32px;font-weight:500;color:#141414;margin:0 0 20px}'
-			. '.dbl-vgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.dbl-vcard p{font-size:14.5px;line-height:1.5;color:#141414;margin:8px 0 0}'
-			. '@media (max-width:767px){.dbl-vgrid{grid-template-columns:1fr 1fr;gap:12px}}</style>';
+			. '.dbl-vnew{max-width:1320px;margin:30px auto 0;padding:0 30px;direction:rtl}'
+			. '.dbl-vgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px}.dbl-vcard .dbl-yt-box{border-radius:0}.dbl-vcard p{font-size:18px;font-weight:700;line-height:1.35;color:#141414;margin:14px 0 0;text-align:center}'
+			. '.dbl-short .elementor-wrapper{aspect-ratio:9/16!important;--video-aspect-ratio:0.5625}'
+			. '@media (max-width:767px){.dbl-vnew{padding:0 30px}.dbl-vgrid{grid-template-columns:1fr;gap:28px}}</style>';
 		$js = <<<'DBLJS'
 <script nowprocket data-no-optimize="1">
 (function () {
