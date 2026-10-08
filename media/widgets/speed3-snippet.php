@@ -21,7 +21,14 @@ function dabul_sp3_on() {
 
 function dabul_sp3_html($html) {
 	// 1. logo: real size, no lazy loading (it is at the very top of every page)
-	$html = preg_replace('#<img src="(https://dabullaw\.co\.il/wp-content/uploads/2025/11/unnamed-3-1\.jpg\.webp)" alt="([^"]*)" loading="lazy"\s*/?>#', '<img src="$1" alt="$2" width="300" height="77" decoding="async">', $html);
+	$html = preg_replace_callback('#<img\b[^>]*unnamed-3-1\.jpg[^>]*>#', function ($m) {
+		$i = $m[0];
+		if (strpos($i, ' width=') !== false) return $i;
+		$i = preg_replace('#\sloading="lazy"#', '', $i);
+		return preg_replace('#^<img\b#', '<img width="300" height="77" decoding="async"', $i);
+	}, $html);
+	// the picture wrapper around the logo also says lazy
+	$html = preg_replace('#(<picture title="[^"]*") loading="lazy"(>\s*<source type="image/webp" srcset="[^"]*unnamed-3-1)#', '$1$2', $html);
 	// 4. skip link target
 	if (strpos($html, 'id="content"') === false) {
 		$html = preg_replace('#<div data-elementor-type="(wp-page|wp-post|single-post|single-page|archive|search-results|error-404)"#', '<div id="content" data-elementor-type="$1"', $html, 1);
