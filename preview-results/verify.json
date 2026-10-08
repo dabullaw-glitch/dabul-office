@@ -90,8 +90,8 @@
   "tocAfterClick": [
    {
     "id": "f1f2abe",
-    "collapsed": true,
-    "bodyH": 0,
+    "collapsed": false,
+    "bodyH": 210,
     "items": 15
    }
   ],
@@ -178,14 +178,6 @@
   ],
   "firstParaY": 330,
   "tocAfterJs": [
-   {
-    "id": "9e1a1df",
-    "collapsed": false,
-    "bodyH": 210,
-    "items": 15
-   }
-  ],
-  "tocAfterClick": [
    {
     "id": "9e1a1df",
     "collapsed": false,
