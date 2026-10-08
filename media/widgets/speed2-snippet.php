@@ -6,7 +6,9 @@
    3. Home page: the article pictures in the carousel load as the light webp copies that already exist in the
       media library (they loaded the heavy jpeg files), in a size that fits the card; the video cards load the
       smaller copy of their poster instead of the full size.
-   Shown only on a preview address (?dblprev=1) until checked. To undo: deactivate this snippet. */
+   Checked on a preview address on 8.10.2026: the page looks the same (phone and computer), about 1.5MB less on the phone
+   and 1.9MB less on the computer; now live. To undo: deactivate this snippet. */
+define('DABUL_SP2_LIVE', 1);
 
 function dabul_sp2_on() {
 	if (defined('DABUL_SP2_LIVE')) return true;
