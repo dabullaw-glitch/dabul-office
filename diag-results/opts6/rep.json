@@ -1,0 +1,16 @@
+{
+ "contrast-desktop": {
+  "color": "rgb(168, 138, 76)",
+  "bg": "rgb(255, 255, 255)"
+ },
+ "about-dk-desktop": 1366,
+ "about-lt-desktop": 1366,
+ "ph-a": 593,
+ "ph-b": 586,
+ "contrast-phone": {
+  "color": "rgb(168, 138, 76)",
+  "bg": "rgb(255, 255, 255)"
+ },
+ "about-dk-phone": 2390,
+ "about-lt-phone": 2390
+}
