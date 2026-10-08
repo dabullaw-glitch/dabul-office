@@ -29,7 +29,7 @@ const VID = '2ZJ664F6458';
 
 /* ---------- trust seals (facts only) ---------- */
 const RING_TXT = 'עו״ד יקיר דבול • דיני מקרקעין • נתניה • ';
-const ring = (txt, r) => { const ch = [...txt]; const n = ch.length; return ch.map((c, i) => `<span style="transform:rotate(${(-i * 360 / n).toFixed(2)}deg) translateY(-${r}%)">${c === ' ' ? '&nbsp;' : c}</span>`).join(''); };
+const ring = (txt, r) => { const ch = [...txt]; const n = ch.length; return ch.map((c, i) => `<span style="transform:rotate(${(-i * 360 / n).toFixed(2)}deg) translateY(calc(var(--sz) * -${r / 100}))">${c === ' ' ? '&nbsp;' : c}</span>`).join(''); };
 const SEAL_CSS = `.dbl-seal{position:absolute;z-index:5;direction:rtl;font-family:"Noto Local",sans-serif;pointer-events:none}
 .dbl-seal.s1{width:var(--sz);height:var(--sz);border-radius:50%;background:radial-gradient(circle at 50% 40%,#1b2a52,#0a1128 72%);box-shadow:0 14px 34px rgba(0,0,0,.45),inset 0 0 0 2px #e7cd96,inset 0 0 0 7px #0a1128,inset 0 0 0 8px rgba(231,205,150,.55)}
 .dbl-seal.s1 .rg{position:absolute;inset:0;animation:dblspin 30s linear infinite}
@@ -45,9 +45,9 @@ const SEAL_CSS = `.dbl-seal{position:absolute;z-index:5;direction:rtl;font-famil
 .dbl-seal.s4 .rb:before{content:"";position:absolute;inset:calc(var(--sz)*.06);border:1px dashed rgba(60,40,10,.45);clip-path:polygon(0 0,100% 0,100% 100%,50% 86%,0 100%)}
 .dbl-seal.s4 .st{font-size:calc(var(--sz)*.13);letter-spacing:2px;color:#5a4214}.dbl-seal.s4 b{display:block;font-size:calc(var(--sz)*.3);line-height:1;font-weight:800;margin:6px 0 4px}.dbl-seal.s4 span{display:block;font-size:calc(var(--sz)*.11);line-height:1.3;font-weight:700}`;
 const SEALS = {
-  s1: `<div class="dbl-seal s1"><div class="rg">${ring(RING_TXT + RING_TXT, 41)}</div><div class="core"><b>+100</b><span>עסקאות<br>בכל שנה</span></div></div>`,
+  s1: `<div class="dbl-seal s1"><div class="rg">${ring(RING_TXT + RING_TXT, 41)}</div><div class="core"><b><bdi dir="ltr">+100</bdi></b><span>עסקאות<br>בכל שנה</span></div></div>`,
   s3: `<div class="dbl-seal s3"><svg viewBox="0 0 100 128"><defs><linearGradient id="dblg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6e3b0"/><stop offset=".5" stop-color="#d7b76a"/><stop offset="1" stop-color="#b38b3e"/></linearGradient></defs><path d="M30 80 L17 124 L33 114 L41 127 L50 90Z M70 80 L83 124 L67 114 L59 127 L50 90Z" fill="#9c7a35"/><g transform="translate(50 50)">${Array.from({ length: 28 }, (_, i) => `<circle r="8" cx="${(41 * Math.cos(i * Math.PI / 14)).toFixed(2)}" cy="${(41 * Math.sin(i * Math.PI / 14)).toFixed(2)}" fill="url(#dblg)"/>`).join('')}<circle r="42" fill="url(#dblg)"/><circle r="35" fill="none" stroke="#fff6dc" stroke-width="1.2" stroke-dasharray="2 2"/></g></svg><div class="tx"><small>חבר ועדות</small><b>לשכת עורכי הדין</b><span>קניין · מקרקעין · התחדשות עירונית</span></div></div>`,
-  s4: `<div class="dbl-seal s4"><div class="rb"><div class="st">★ ★ ★</div><b>100+</b><span>עסקאות<br>מקרקעין<br>בכל שנה</span></div></div>`,
+  s4: `<div class="dbl-seal s4"><div class="rb"><div class="st">★ ★ ★</div><b><bdi dir="ltr">+100</bdi></b><span>עסקאות<br>מקרקעין<br>בכל שנה</span></div></div>`,
 };
 const SEAL_NAMES = { s1: 'חותם מסתובב', s3: 'רוזטת זהב', s4: 'סרט תלוי' };
 
@@ -66,22 +66,22 @@ const PH_CSS = `.dbl-ph{position:relative;direction:rtl;font-family:"Noto Local"
 .dbl-ph.p1{padding:30px 22px 0}.dbl-ph.p1 .me{position:relative;height:430px;margin:18px -22px 0;display:flex;justify-content:center;align-items:flex-end}
 .dbl-ph.p1 .me img{height:100%;width:auto;filter:drop-shadow(0 0 30px rgba(0,0,0,.55))}.dbl-ph.p1 .me .dbl-seal{right:22px;bottom:70px}
 /* P2: a card: name next to the photo, then the points */
-.dbl-ph.p2{padding:28px 20px 34px}.dbl-ph.p2 .top{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:14px;align-items:end}
-.dbl-ph.p2 h1 b{font-size:42px}.dbl-ph.p2 h1 span{font-size:27px}
-.dbl-ph.p2 .arch{position:relative;height:204px;border-radius:999px 999px 16px 16px;overflow:hidden;background:radial-gradient(circle at 50% 30%,#2a3e72,#0c1532 75%);box-shadow:inset 0 0 0 2px #e7cd96,0 14px 30px rgba(0,0,0,.4)}
+.dbl-ph.p2{padding:28px 20px 34px}.dbl-ph.p2 .top{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 158px;gap:14px;align-items:center}
+.dbl-ph.p2 h1 b{font-size:40px}.dbl-ph.p2 h1 span{font-size:24px;white-space:nowrap}.dbl-ph.p2 .top .tg{font-size:17px;margin:12px 0 0}
+.dbl-ph.p2 .arch{position:relative;height:216px;border-radius:999px 999px 16px 16px;overflow:hidden;background:radial-gradient(circle at 50% 30%,#2a3e72,#0c1532 75%);box-shadow:inset 0 0 0 2px #e7cd96,0 14px 30px rgba(0,0,0,.4)}
 .dbl-ph.p2 .arch img{position:absolute;left:50%;top:14px;width:118%;transform:translateX(-50%);max-width:none}
-.dbl-ph.p2 .tg{margin-top:20px}.dbl-ph.p2 .sealw{position:absolute;left:12px;top:180px}
+.dbl-ph.p2 ul{margin-top:22px}.dbl-ph.p2 .sealw{position:absolute;left:-12px;bottom:-14px;z-index:3}.dbl-ph.p2 .sealw .dbl-seal{position:relative}
 /* P3: side by side: the photo on the left, the text on the right */
-.dbl-ph.p3{padding:30px 20px 34px;min-height:700px}.dbl-ph.p3 .tx{position:relative;z-index:2;margin-right:0;margin-left:40%}
+.dbl-ph.p3{padding:30px 20px 34px;min-height:700px}.dbl-ph.p3 .tx{position:relative;z-index:2;margin-right:0;margin-left:41%}
 .dbl-ph.p3 h1 b{font-size:44px}.dbl-ph.p3 h1 span{font-size:28px}.dbl-ph.p3 .tg{font-size:18px}.dbl-ph.p3 li{font-size:15.5px}
-.dbl-ph.p3 .me{position:absolute;left:-14px;bottom:0;height:62%;z-index:1}.dbl-ph.p3 .me img{height:100%;width:auto;filter:drop-shadow(0 0 26px rgba(0,0,0,.55))}
-.dbl-ph.p3 .me .dbl-seal{left:auto;right:-30px;top:-46px}`;
+.dbl-ph.p3 .me{position:absolute;left:-26px;bottom:0;height:400px;z-index:1}.dbl-ph.p3 .me img{height:100%;width:auto;filter:drop-shadow(0 0 26px rgba(0,0,0,.55))}
+.dbl-ph.p3 .me .dbl-seal{left:30px;right:auto;top:-96px}`;
 const phHead = (big) => `<h1><b>יקיר דבול</b><span>עורך דין מקרקעין</span></h1><div class="tg">מקצועיות. ניסיון. תוצאות</div>`;
 const phList = () => `<ul>${BUL.map((t) => `<li><i>${IC.check}</i><span>${t}</span></li>`).join('')}</ul>`;
 const seal = (k, sz) => SEALS[k].replace('class="dbl-seal ' + k + '"', `class="dbl-seal ${k}" style="--sz:${sz}px"`);
 const PH = {
   p1: `<div class="dbl-ph p1">${phHead()}${phList()}<div class="me"><img src="${ME}" alt="">${seal('s1', 100)}</div></div>`,
-  p2: `<div class="dbl-ph p2"><div class="top"><div>${phHead()}</div><div class="arch"><img src="${ME}" alt=""></div></div>${phList()}<div class="sealw">${seal('s1', 84).replace('position:absolute', '')}</div></div>`,
+  p2: `<div class="dbl-ph p2"><div class="top"><div>${phHead()}</div><div style="position:relative"><div class="arch"><img src="${ME}" alt=""></div><div class="sealw">${seal('s1', 78)}</div></div></div>${phList()}</div>`,
   p3: `<div class="dbl-ph p3"><div class="tx">${phHead()}${phList()}</div><div class="me"><img src="${ME}" alt="">${seal('s1', 86)}</div></div>`,
 };
 const PH_NAMES = { p1: 'טקסט למעלה, התמונה מתחת', p2: 'כרטיס: השם ליד התמונה', p3: 'צד לצד: התמונה משמאל, הטקסט מימין' };
@@ -200,7 +200,7 @@ for (const mode of ['desktop', 'phone']) {
         const hero = document.querySelector('.elementor-element-9056c3a'); hero.style.position = 'relative';
         hero.insertAdjacentHTML('beforeend', html); const s = hero.querySelector('.dbl-seal');
         const img = document.querySelector('.elementor-element-2c91460 img'); const r = img.getBoundingClientRect(), h = hero.getBoundingClientRect();
-        const sz = k === 's4' ? 118 : 150; s.style.setProperty('--sz', sz + 'px');
+        const sz = k === 's4' ? 118 : k === 's3' ? 172 : 156; s.style.setProperty('--sz', sz + 'px');
         if (k === 's4') { s.style.left = Math.round(r.right - h.left - 40) + 'px'; s.style.top = '0px'; }
         else { s.style.left = Math.round(r.right - h.left - sz * 0.45) + 'px'; s.style.top = Math.round(r.top - h.top + r.height * 0.38) + 'px'; }
       }, { html: SEALS[k], k });
@@ -218,7 +218,9 @@ for (const mode of ['desktop', 'phone']) {
       }, PH[k]);
       await p.waitForTimeout(1500); await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(400);
       await p.screenshot({ path: `${OUT}/hero-phone-${k}.jpg`, type: 'jpeg', quality: 82 });
+      await p.evaluate(() => { const st = document.createElement('style'); st.id = 'dbl-nohead'; st.textContent = '[data-elementor-type="header"]{visibility:hidden!important}'; document.head.appendChild(st); });
       await p.locator('#dbl-ph-wrap').screenshot({ path: `${OUT}/hero-phone-${k}-full.jpg`, type: 'jpeg', quality: 80 });
+      await p.evaluate(() => document.getElementById('dbl-nohead')?.remove());
       rep['ph-' + k] = await p.evaluate(() => Math.round(document.getElementById('dbl-ph-wrap').getBoundingClientRect().height));
     }
     await p.evaluate(() => { document.getElementById('dbl-ph-wrap')?.remove(); document.querySelector('.elementor-element-9056c3a').style.display = ''; });
