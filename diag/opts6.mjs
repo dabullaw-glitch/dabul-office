@@ -116,9 +116,9 @@ const G_CSS = `.dbl-a.G{padding:90px 30px 84px;overflow:hidden}
 
 /* ---------- footer: upgrades on top of the approved footer ---------- */
 const PHONE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>';
-const FUP_CSS = `#dbl-new-foot{position:relative;background:radial-gradient(90% 60% at 50% 0,#1a2440 0,#121212 62%)!important;padding-top:0!important}
+const FUP_CSS = `#dbl-new-foot{position:relative;background:radial-gradient(90% 60% at 50% 0,#1a2440 0,#121212 62%)!important;padding-top:40px!important}
 #dbl-new-foot:before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#c9a961,transparent)}
-#dbl-new-foot .cta{max-width:1340px;margin:0 auto;transform:translateY(-50%);display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:22px 28px;border-radius:20px;background:linear-gradient(120deg,#16213f,#0f1630);border:1px solid rgba(231,205,150,.4);box-shadow:0 18px 44px rgba(0,0,0,.4);font-family:"Noto Local",sans-serif}
+#dbl-new-foot .cta{max-width:1340px;margin:0 auto 34px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:22px 28px;border-radius:20px;background:linear-gradient(120deg,#16213f,#0f1630);border:1px solid rgba(231,205,150,.4);box-shadow:0 18px 44px rgba(0,0,0,.4);font-family:"Noto Local",sans-serif}
 #dbl-new-foot .cta b{display:block;color:#fff;font-size:24px;font-weight:700}#dbl-new-foot .cta span{color:#cfccc6;font-size:15.5px}
 #dbl-new-foot .cta .bt{display:flex;gap:10px;flex-wrap:wrap}#dbl-new-foot .cta a{display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 22px;border-radius:999px;font-weight:800;font-size:16.5px;text-decoration:none}
 #dbl-new-foot .cta a svg{width:20px;height:20px}#dbl-new-foot .cta .c{background:linear-gradient(135deg,#f0d9a0,#c9a14f);color:#141008}#dbl-new-foot .cta .w{border:1.5px solid #25d366;color:#fff}#dbl-new-foot .cta .w svg{color:#25d366}
@@ -130,7 +130,7 @@ const FUP_CSS = `#dbl-new-foot{position:relative;background:radial-gradient(90% 
 #dbl-new-foot .contact .elementor-icon-list-icon svg{width:15px!important;height:15px!important}
 #dbl-new-foot .soc a{width:46px;height:46px;background:linear-gradient(160deg,rgba(231,205,150,.14),rgba(231,205,150,.03))}
 #dbl-new-foot .mapw iframe{box-shadow:0 14px 30px rgba(0,0,0,.35)}
-@media (max-width:767px){#dbl-new-foot .cta{transform:translateY(-30%);margin:0 4px;padding:18px;text-align:center;justify-content:center}#dbl-new-foot .cta b{font-size:20px}#dbl-new-foot .cta .bt{width:100%}#dbl-new-foot .cta a{flex:1;justify-content:center;padding:0 12px;font-size:15.5px}}`;
+@media (max-width:767px){#dbl-new-foot .cta{margin:0 0 28px;padding:18px;text-align:center;justify-content:center}#dbl-new-foot .cta b{font-size:20px}#dbl-new-foot .cta .bt{width:100%}#dbl-new-foot .cta a{flex:1;justify-content:center;padding:0 12px;font-size:15.5px}}`;
 const FUP_HTML = `<div class="cta"><div><b>יש לכם שאלה על עסקה?</b><span>דברו איתנו, נחזור אליכם בהקדם.</span></div><div class="bt"><a class="c" href="#">${PHONE_SVG}09-861-3413</a><a class="w" href="#">${SOC.wa}וואטסאפ</a></div></div>`;
 
 /* ---------- about: three new sketches ---------- */
@@ -171,6 +171,8 @@ for (const mode of ['desktop', 'phone']) {
     }
     await p.evaluate(() => { document.getElementById('dbl-ph-wrap')?.remove(); document.querySelector('.elementor-element-9056c3a').style.display = ''; });
   }
+  // from here on the sticky header is hidden so it does not cover the element shots
+  await p.addStyleTag({ content: '[data-elementor-type="header"]{visibility:hidden!important}' });
   // speed / accessibility visual fixes: before and after
   {
     const box = await p.evaluate(() => { const t = document.querySelector('h3.elementor-icon-box-title a, h3.elementor-icon-box-title span'); if (!t) return null; let c = t.closest('.e-con.e-parent') || t.closest('.e-con'); c.id = 'dbl-contrast'; const cs = getComputedStyle(t); const bg = (() => { let e = t; while (e) { const b = getComputedStyle(e).backgroundColor; if (b && b !== 'rgba(0, 0, 0, 0)') return b; e = e.parentElement; } return 'white'; })(); return { color: cs.color, bg }; });
@@ -250,7 +252,7 @@ for (const mode of ['desktop', 'phone']) {
   await p.waitForTimeout(2500);
   const nf = p.locator('#dbl-new-foot'); await nf.scrollIntoViewIfNeeded(); await p.waitForTimeout(600);
   await nf.screenshot({ path: `${OUT}/footer-${mode}-ok.jpg`, type: 'jpeg', quality: 82 });
-  await p.addStyleTag({ content: FUP_CSS }); await p.evaluate((h) => { const f = document.getElementById('dbl-new-foot'); f.insertAdjacentHTML('afterbegin', h); f.style.marginTop = '70px'; }, FUP_HTML);
+  await p.addStyleTag({ content: FUP_CSS }); await p.evaluate((h) => { const f = document.getElementById('dbl-new-foot'); f.insertAdjacentHTML('afterbegin', h); }, FUP_HTML);
   await p.waitForTimeout(900); await p.evaluate(() => { const f = document.getElementById('dbl-new-foot'); window.scrollTo(0, f.getBoundingClientRect().top + scrollY - 120); }); await p.waitForTimeout(500);
   await p.screenshot({ path: `${OUT}/footer-${mode}-up-top.jpg`, type: 'jpeg', quality: 82 });
   await nf.screenshot({ path: `${OUT}/footer-${mode}-up.jpg`, type: 'jpeg', quality: 82 });
