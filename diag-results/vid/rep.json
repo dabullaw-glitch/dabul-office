@@ -1,0 +1,22 @@
+{
+ "desktop": {
+  "ytRequestsBeforeClick": 0,
+  "facades": 27,
+  "iframeAfterClick": 1,
+  "ytAfter": 0,
+  "netanyaBox": [
+   782,
+   440
+  ]
+ },
+ "phone": {
+  "ytRequestsBeforeClick": 0,
+  "facades": 27,
+  "iframeAfterClick": 1,
+  "ytAfter": 0,
+  "netanyaBox": [
+   350,
+   197
+  ]
+ }
+}
