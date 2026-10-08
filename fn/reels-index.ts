@@ -38,14 +38,18 @@ async function nextSlot(): Promise<string> {
   const { data } = await db().select('data').eq('coll', 'reel').in('data->>status', ['approved', 'handed', 'published']);
   const taken = new Set((data || []).map((r: Any) => String(r.data.publishAt || '').slice(0, 16)));
   const start = Date.now() + 3 * 3600e3;
-  for (let h = 0; h < 24 * 60; h++) { // walk hour by hour for up to 60 days
+  // walk hour by hour for up to two years (8.10.2026: it stopped at 60 days, and when every weekly slot in that
+  // window was taken all approved reels got "now + 3 hours", the same day and hour)
+  for (let h = 0; h < 24 * 730; h++) {
     const d = new Date(Math.ceil(start / 3600e3) * 3600e3 + h * 3600e3); const p = il(d);
-    if (!days.includes(wd[p.weekday])) continue;
+    if (!days.map(Number).includes(wd[p.weekday])) continue;
     if (`${p.hour}:00` !== hm.slice(0, 3) + '00' && `${p.hour}:${p.minute}` !== hm) continue;
     const iso = d.toISOString().slice(0, 16); if (taken.has(iso)) continue;
     return d.toISOString();
   }
-  return new Date(start).toISOString();
+  // never fall back to one shared time: one week after the last taken slot
+  const last = [...taken].sort().pop();
+  return new Date((last ? Date.parse(last + ':00Z') : start) + 7 * 24 * 3600e3).toISOString();
 }
 const when = (iso: string) => { const p = il(new Date(iso)); return `יום ${DAYS[wd[p.weekday]]} ${p.day}.${p.month} בשעה ${p.hour}:${p.minute}`; };
 const askButtons = (link: string, t: string) => [[{ text: '👁 צפייה בסרטון', url: link || 'https://drive.google.com' }], [{ text: '✅ מאשר, לפרסם', url: pub('ok', t) }, { text: '✗ לא לפרסם', url: pub('no', t) }]];
