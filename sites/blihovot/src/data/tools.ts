@@ -7,6 +7,9 @@ export const TOOLS = [
   { id: 'taktziv', title: 'מחשבון תקציב חודשי', blurb: 'הכנסות מול הוצאות: כמה כסף פנוי נשאר בכל חודש, ואיפה אפשר לחסוך.', cta: 'לחישוב' },
 ];
 
+// Calculators other websites may embed (kli/<id>/?embed=1, code on the hatmaa/ page)
+export const EMBEDDABLE = ['eize-halich', 'saf', 'ichud-tikim', 'tashlumim', 'taktziv'] as const;
+
 // Request helpers: step-by-step preparation for official forms (pages: src/pages/kli/[bakasha].astro)
 import { BAKASHOT } from './bakashotMeta';
 export const FORM_TOOLS = BAKASHOT.map((m) => ({ id: m.id, title: m.card, blurb: m.intro, cta: 'להכנת הבקשה' }));

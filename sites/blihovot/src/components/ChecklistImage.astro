@@ -1,0 +1,102 @@
+---
+// Every checklist in a guide (markdown "- [ ]" lists) gets a button that turns it into a picture (1080 px wide, for
+// WhatsApp, status or a gallery): the heading above the list, the items with empty boxes, and the guide's address.
+// On a phone it opens the share sheet with the picture; elsewhere it downloads the PNG. Drawn in the browser, nothing is sent.
+interface Props { guideTitle: string; url: string }
+const { guideTitle, url } = Astro.props;
+const short = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+---
+<div class="cli-data" hidden data-guide={guideTitle} data-url={short}></div>
+<style is:global>
+.cli-btn{margin:-4px 0 22px;display:flex;flex-wrap:wrap;gap:8px}
+.cli-btn .btn{min-height:40px;padding:8px 16px;font-size:.95rem}
+.cli-btn svg{width:18px;height:18px}
+</style>
+<script>
+const data = document.querySelector<HTMLElement>('.cli-data');
+const lists = document.querySelectorAll<HTMLUListElement>('.prose ul.contains-task-list');
+if (data && lists.length) {
+  const guide = data.dataset.guide || '', addr = data.dataset.url || '';
+  const ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></svg>';
+  const headingOf = (ul: Element) => { let e = ul.previousElementSibling; while (e && !/^H[23]$/.test(e.tagName)) e = e.previousElementSibling; return e ? (e.textContent || '').trim() : 'צ\'קליסט'; };
+
+  // wraps one paragraph into lines that fit `max` pixels (right to left, word by word)
+  const wrap = (ctx: CanvasRenderingContext2D, text: string, max: number) => {
+    const words = text.split(/\s+/); const out: string[] = []; let cur = '';
+    for (const w of words) { const t = cur ? cur + ' ' + w : w; if (ctx.measureText(t).width > max && cur) { out.push(cur); cur = w; } else cur = t; }
+    if (cur) out.push(cur); return out;
+  };
+
+  async function draw(ul: HTMLUListElement) {
+    const items = [...ul.querySelectorAll('li')].map((li) => (li.textContent || '').replace(/\s+/g, ' ').trim()).filter(Boolean);
+    const title = headingOf(ul);
+    await Promise.all([document.fonts.load('700 56px Heebo'), document.fonts.load('400 38px Heebo'), document.fonts.load("700 40px 'Frank Ruhl Libre'")]).catch(() => {});
+    const W = 1080, M = 84, BOX = 40, GAP = 28, LH = 54;
+    const c = document.createElement('canvas'); const ctx = c.getContext('2d')!;
+    // measure first
+    ctx.direction = 'rtl'; ctx.textAlign = 'right';
+    ctx.font = "700 60px 'Frank Ruhl Libre', Heebo, serif"; const tLines = wrap(ctx, title, W - 2 * M);
+    ctx.font = '400 30px Heebo, Arial, sans-serif'; const gLines = wrap(ctx, guide, W - 2 * M);
+    ctx.font = '400 38px Heebo, Arial, sans-serif';
+    const iLines = items.map((t) => wrap(ctx, t, W - 2 * M - BOX - 26));
+    const head = 170, titleH = tLines.length * 72 + gLines.length * 42 + 40;
+    const listH = iLines.reduce((s, l) => s + Math.max(l.length * LH, BOX + 10) + GAP, 0);
+    const H = Math.max(1080, Math.min(2400, head + titleH + listH + 230));
+    c.width = W; c.height = H;
+    // background and top band
+    ctx.fillStyle = '#fbf8f3'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#0d6b63'; ctx.fillRect(0, 0, W, 130);
+    ctx.fillStyle = '#f2a93b'; ctx.fillRect(0, 130, W, 8);
+    ctx.direction = 'rtl'; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#ffffff'; ctx.font = '700 46px Heebo, Arial, sans-serif'; ctx.fillText('בלי חובות', W - M, 82);
+    ctx.fillStyle = '#cfe8e3'; ctx.font = '400 26px Heebo, Arial, sans-serif'; ctx.fillText('המדריך הישראלי ליציאה מחובות', W - M, 118);
+    // sun mark on the left
+    ctx.save(); ctx.translate(M + 34, 74); ctx.fillStyle = '#f2a93b'; ctx.beginPath(); ctx.arc(0, 8, 26, Math.PI, 0); ctx.fill();
+    ctx.fillStyle = '#fbf8f3'; ctx.fillRect(-40, 12, 80, 6); ctx.restore();
+    // title and guide name
+    let y = head + 60;
+    ctx.fillStyle = '#14233a'; ctx.font = "700 60px 'Frank Ruhl Libre', Heebo, serif";
+    tLines.forEach((l) => { ctx.fillText(l, W - M, y); y += 72; });
+    ctx.fillStyle = '#5a6475'; ctx.font = '400 30px Heebo, Arial, sans-serif';
+    gLines.forEach((l) => { ctx.fillText(l, W - M, y); y += 42; });
+    y += 36;
+    // items
+    ctx.font = '400 38px Heebo, Arial, sans-serif';
+    iLines.forEach((lines) => {
+      const top = y - 34;
+      ctx.strokeStyle = '#0d6b63'; ctx.lineWidth = 4; ctx.beginPath();
+      const bx = W - M - BOX, r = 8;
+      ctx.moveTo(bx + r, top); ctx.arcTo(bx + BOX, top, bx + BOX, top + BOX, r); ctx.arcTo(bx + BOX, top + BOX, bx, top + BOX, r); ctx.arcTo(bx, top + BOX, bx, top, r); ctx.arcTo(bx, top, bx + BOX, top, r); ctx.closePath(); ctx.stroke();
+      ctx.fillStyle = '#14233a';
+      lines.forEach((l, i) => ctx.fillText(l, W - M - BOX - 26, y + i * LH));
+      y += Math.max(lines.length * LH, BOX + 10) + GAP;
+    });
+    // footer: label, the address on its own line (shrinks to fit), and the disclaimer
+    ctx.fillStyle = '#e4dacb'; ctx.fillRect(M, H - 176, W - 2 * M, 2);
+    ctx.fillStyle = '#0a524c'; ctx.font = '700 30px Heebo, Arial, sans-serif'; ctx.fillText('המדריך המלא, בחינם:', W - M, H - 126);
+    ctx.direction = 'ltr'; ctx.textAlign = 'right'; ctx.fillStyle = '#0d6b63';
+    let fs = 30; ctx.font = `400 ${fs}px Heebo, Arial, sans-serif`;
+    while (ctx.measureText(addr).width > W - 2 * M && fs > 18) { fs -= 2; ctx.font = `400 ${fs}px Heebo, Arial, sans-serif`; }
+    ctx.fillText(addr, W - M, H - 82);
+    ctx.direction = 'rtl'; ctx.textAlign = 'right'; ctx.fillStyle = '#5a6475'; ctx.font = '400 22px Heebo, Arial, sans-serif';
+    ctx.fillText('מידע כללי בלבד, לא ייעוץ משפטי', W - M, H - 36);
+    return new Promise<Blob | null>((res) => c.toBlob(res, 'image/png'));
+  }
+
+  lists.forEach((ul, i) => {
+    const box = document.createElement('div'); box.className = 'cli-btn';
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'btn btn-line';
+    b.innerHTML = `${ICON}<span>שמירת הצ'קליסט כתמונה</span>`;
+    box.appendChild(b); ul.after(box);
+    b.addEventListener('click', async () => {
+      const lbl = b.querySelector('span')!; lbl.textContent = 'מכין תמונה...';
+      const blob = await draw(ul);
+      lbl.textContent = "שמירת הצ'קליסט כתמונה";
+      if (!blob) return;
+      const file = new File([blob], `checklist-${i + 1}.png`, { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file], title: headingOf(ul) }).catch(() => {}); return; }
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    });
+  });
+}
+</script>

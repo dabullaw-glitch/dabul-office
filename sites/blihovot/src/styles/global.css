@@ -126,3 +126,13 @@ a.card:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:var(
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 @media print{.hdr,.ftr,.ad,.no-print{display:none!important}body{background:#fff}}
+
+/* embedded on another website (?embed=1): only the tool, its title and the credit line */
+.embed-credit{display:none}
+html.embed .hdr,html.embed .ftr,html.embed .skip,html.embed .no-embed{display:none!important}
+html.embed .tool-pg{padding-block:6px 4px}
+html.embed .tool-pg h1{font-size:1.5rem;margin:.2em 0 .3em}
+html.embed .tool-pg .lede{font-size:1rem;margin:0 0 6px}
+html.embed .tool-box{margin:10px 0 8px;padding:18px}
+html.embed .note{font-size:.85rem}
+html.embed .embed-credit{display:block;font-size:.9rem;margin:6px 0 0;color:var(--muted)}

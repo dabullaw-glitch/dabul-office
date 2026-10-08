@@ -7,12 +7,15 @@ import LeadForm from '../components/LeadForm.astro';
 import GuideCard from '../components/GuideCard.astro';
 import AdSlot from '../components/AdSlot.astro';
 import { SITE } from '../data/site';
+import ShareBar from '../components/ShareBar.astro';
+import { EMBEDDABLE } from '../data/tools';
 interface Props { id: string; title: string; h1: string; description: string; intro: string; faq?: { q: string; a: string }[]; sources: { title: string; url: string }[]; related?: string[] }
 const { id, title, h1, description, intro, faq = [], sources, related = [] } = Astro.props;
 const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const all = await getCollection('guides');
 const rel = related.map((s) => all.find((g) => g.id === s)).filter(Boolean);
 const url = new URL(`${B}kli/${id}/`, Astro.site).href;
+const embeddable = (EMBEDDABLE as readonly string[]).includes(id);
 const schema: object[] = [
   { '@context': 'https://schema.org', '@type': 'WebApplication', name: h1, description, url, applicationCategory: 'FinanceApplication', operatingSystem: 'Any', inLanguage: 'he-IL', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'ILS' }, publisher: { '@id': new URL(B + '#org', Astro.site).href } },
   { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'ראשי', item: new URL(B, Astro.site).href }, { '@type': 'ListItem', position: 2, name: 'מחשבונים וכלים', item: new URL(`${B}kli/`, Astro.site).href }, { '@type': 'ListItem', position: 3, name: h1, item: url }] },
@@ -21,21 +24,26 @@ if (faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQPag
 ---
 <Base title={title} description={description} schema={schema}>
   <div class="wrap tool-pg">
-    <Breadcrumbs items={[{ href: 'kli/', label: 'מחשבונים וכלים' }, { label: h1 }]} />
+    <div class="no-embed"><Breadcrumbs items={[{ href: 'kli/', label: 'מחשבונים וכלים' }, { label: h1 }]} /></div>
     <h1>{h1}</h1>
     <p class="lede">{intro}</p>
     <section class="tool-box card" aria-label={h1}><slot /></section>
     <p class="note">התוצאה היא הערכה כללית לפי הנתונים שהזנתם ולפי הכללים המפורסמים, ולא ייעוץ משפטי. הנתונים שמזינים לא נשלחים לשום מקום ונשארים במכשיר שלכם.</p>
-    <div class="cols2">
-      <div class="prose"><slot name="explain" /></div>
+    <p class="embed-credit">המחשבון באדיבות <a href={url} target="_blank" rel="noopener">בלי חובות: {h1}</a>. מידע כללי בלבד.</p>
+    <div class="no-embed">
+      <ShareBar title={h1} url={url} kind="tool" />
+      {embeddable && <p class="embed-offer">יש לכם אתר? <a href={`${B}hatmaa/#${id}`}>אפשר להטמיע את המחשבון הזה אצלכם, בחינם</a>.</p>}
+      <div class="cols2">
+        <div class="prose"><slot name="explain" /></div>
+      </div>
+      <AdSlot />
+      {faq.length > 0 && (
+        <section class="faq" aria-labelledby="tf-h"><h2 id="tf-h">שאלות נפוצות</h2>{faq.map((f) => <details><summary>{f.q}</summary><div set:html={f.a} /></details>)}</section>
+      )}
+      <section class="src"><h2>מקורות</h2><ul>{sources.map((s) => <li><a href={s.url} target="_blank" rel="noopener">{s.title}</a></li>)}</ul></section>
+      {rel.length > 0 && (<section style="margin:30px 0"><h2>מדריכים קשורים</h2><div class="grid g2">{rel.map((g) => <GuideCard g={g} />)}</div></section>)}
+      <LeadForm source={`tool:${id}`} />
     </div>
-    <AdSlot />
-    {faq.length > 0 && (
-      <section class="faq" aria-labelledby="tf-h"><h2 id="tf-h">שאלות נפוצות</h2>{faq.map((f) => <details><summary>{f.q}</summary><div set:html={f.a} /></details>)}</section>
-    )}
-    <section class="src"><h2>מקורות</h2><ul>{sources.map((s) => <li><a href={s.url} target="_blank" rel="noopener">{s.title}</a></li>)}</ul></section>
-    {rel.length > 0 && (<section style="margin:30px 0"><h2>מדריכים קשורים</h2><div class="grid g2">{rel.map((g) => <GuideCard g={g} />)}</div></section>)}
-    <LeadForm source={`tool:${id}`} />
   </div>
 </Base>
 <style>
@@ -47,6 +55,7 @@ if (faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQPag
 .faq details div{margin-top:8px;color:var(--ink-2)}
 .src ul{padding-inline-start:1.2em}
 .cols2{margin-top:26px}
+.embed-offer{font-size:.95rem;color:var(--muted);margin:-8px 0 24px}
 </style>
 <style is:global>
 .tool-box .q{margin-bottom:22px}
@@ -74,3 +83,10 @@ if (faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQPag
 .kv div{background:var(--card);border:1px solid var(--line);border-radius:var(--r-s);padding:12px 14px}
 .kv small{display:block;color:var(--muted);font-size:.85rem}.kv b{font-size:1.25rem;font-variant-numeric:tabular-nums}
 </style>
+<script is:inline>
+// embedded on another site (?embed=1): links open in a new tab, and the page tells the host its height
+(function(){if(!document.documentElement.classList.contains('embed'))return;
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a');if(a&&a.href&&!a.target){a.target='_blank';a.rel='noopener'}},true);
+var last=0;function send(){var h=Math.ceil(document.documentElement.scrollHeight);if(Math.abs(h-last)<2)return;last=h;try{parent.postMessage({blihovot:'h',h:h,p:location.pathname},'*')}catch(e){}}
+if(window.ResizeObserver)new ResizeObserver(send).observe(document.body);window.addEventListener('load',send);setTimeout(send,300);})();
+</script>
