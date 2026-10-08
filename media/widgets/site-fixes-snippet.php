@@ -9,6 +9,10 @@
    6. Speed: the accessibility panel (OneTap) no longer slides across the screen while the page loads (it caused most
       of the "layout shift" Google measures on computers); it is hidden while closed and opens as before.          [item 17]
    7. Speed: the home page hero picture (computer / phone version) starts downloading at once.                   [item 17]
+   9. Menu proportions: on laptop screens the header menu stays on one line; in the phone menu the items are tighter,
+      with dividers, and the sub items are indented.
+  10. Social icons: the Waze icon opens navigation to the office (it pointed to Facebook in the phone menu), the email
+      icon opens an email (it was a broken web link), and every icon has a name for screen readers.
    8. The static Google badges "מעולה ★★★★★ NN ביקורות" (articles, sidebar) show the live review count.
    To undo everything: deactivate this snippet. */
 
@@ -35,6 +39,13 @@ add_action('wp_head', function () {
 		. '.elementor-widget-table-of-contents.elementor-toc--minimized-on-tablet:not(.elementor-toc--collapsed):has(.elementor-toc__body:not([style*="block"])) .elementor-toc__toggle-button--expand{display:block!important}'
 		. '}'
 		. 'nav.onetap-accessibility.onetap-plugin-onetap:not(.onetap-toggle-open){visibility:hidden!important;transition:none!important;right:unset!important;left:-580px!important}'
+		. '@media (min-width:1025px) and (max-width:1500px){.elementor-element-b175daa .elementor-nav-menu{flex-wrap:nowrap!important}.elementor-element-b175daa .elementor-nav-menu--main>ul>li>a.elementor-item{padding-left:9px!important;padding-right:9px!important;white-space:nowrap!important}}'
+		. '@media (min-width:1025px) and (max-width:1300px){.elementor-element-b175daa .elementor-nav-menu--main>ul>li>a.elementor-item{font-size:15px!important;padding-left:7px!important;padding-right:7px!important}}'
+		. 'header .elementor-button .elementor-button-text{white-space:nowrap}'
+		. '.elementor-element-6997576 .elementor-nav-menu>li>a.elementor-item{font-size:17px!important;font-weight:600!important;line-height:1.3!important;padding:13px 18px!important;justify-content:space-between!important}'
+		. '.elementor-element-6997576 .elementor-nav-menu>li:not(:last-child){border-bottom:1px solid #eee7da}'
+		. '.elementor-element-6997576 .sub-menu{background:#faf7f2!important}'
+		. '.elementor-element-6997576 .sub-menu a.elementor-sub-item{font-size:15px!important;font-weight:400!important;line-height:1.35!important;padding:10px 34px 10px 18px!important;border:0!important}'
 		. '.dabul-gbadge{display:inline-flex;align-items:center;gap:10px;direction:rtl;background:#fff;border:1px solid #e6e1d6;border-radius:12px;padding:8px 12px;box-shadow:0 4px 14px rgba(0,0,0,.08);font-family:inherit;line-height:1.25;color:#1c1b19;max-width:100%}'
 		. '.dabul-gbadge svg{flex:0 0 28px;width:28px;height:28px}'
 		. '.dabul-gbadge b{display:block;font-size:14px;font-weight:700}'
@@ -80,6 +91,18 @@ add_action('template_redirect', function () {
 			$html = preg_replace('#<picture\b[^>]*>(?:(?!</picture>).)*?5dfcbf54-c7b0-45c2-9693-e87c66ea269e(?:(?!</picture>).)*?</picture>#s', $badge, $html);
 			$html = preg_replace('#<img\b[^>]*5dfcbf54-c7b0-45c2-9693-e87c66ea269e[^>]*>#', $badge, $html);
 			$html = preg_replace('#<noscript>\s*' . preg_quote('<span class="dabul-gbadge"', '#') . '.*?</noscript>#s', '', $html);
+		}
+		// 10. social icons: Waze to the office, email as email, names for screen readers
+		if (strpos($html, 'elementor-social-icon') !== false) {
+			$waze = 'https://waze.com/ul?ll=32.3274395%2C34.8614253&amp;navigate=yes&amp;zoom=17';
+			$names = array('d412300' => 'ניווט למשרד בוויז', '1036720' => 'ניווט למשרד בוויז', '41fe709' => 'עמוד הפייסבוק של המשרד', 'bf4091e' => 'קבוצת הוואטסאפ של המשרד', 'dcd7426' => 'שליחת אימייל למשרד');
+			$html = preg_replace_callback('#<a class="elementor-icon elementor-social-icon elementor-social-icon-[^ "]* elementor-repeater-item-([a-z0-9]+)" href="([^"]*)"#', function ($m) use ($waze, $names) {
+				$href = $m[2];
+				if ($m[1] === 'd412300' || $m[1] === '1036720') $href = $waze;
+				elseif ($href === 'https://dabullaw@gmail.com') $href = 'mailto:dabullaw@gmail.com';
+				$label = isset($names[$m[1]]) ? ' aria-label="' . $names[$m[1]] . '"' : '';
+				return str_replace('href="' . $m[2] . '"', 'href="' . $href . '"' . $label, $m[0]);
+			}, $html);
 		}
 		// 8. static Google badges with a fixed review count -> live count
 		if (strpos($html, 'ביקורות') !== false && strpos($html, '★★★★★') !== false) {
