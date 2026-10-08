@@ -16,7 +16,7 @@ await form.locator('input[type="text"]:visible').first().fill('בדיקת מער
 await form.locator('input[type="tel"]:visible').first().fill('000');
 const em = form.locator('input[type="email"]'); if (await em.count()) await em.first().fill('');
 const ta = form.locator('textarea'); if (await ta.count()) await ta.first().fill('בדיקה: ליד מהאתר למערכת המשרד. אפשר למחוק.');
-const cb = form.locator('input[type="checkbox"]'); for (let i = 0; i < await cb.count(); i++) await cb.nth(i).check({ force: true });
+await form.evaluate((f) => f.querySelectorAll('input[type="checkbox"]').forEach((c) => { c.checked = true; c.dispatchEvent(new Event('change', { bubbles: true })); }));
 await p.waitForTimeout(1500);
 await form.locator('button[type="submit"]').first().click();
 await p.waitForTimeout(9000);
