@@ -122,6 +122,24 @@ export function start(createClient) {
     }
   }
 
+  // ---- new Instagram comments -> Telegram, so Yakir can answer fast (answering quickly is what grows reach). Seen ids in settings/pub.igSeen.
+  async function igComments(S, cfg, log) {
+    const igc = cfg.ig || {}; if (!igc.ok) return;
+    const C = igc.mode === 'fb' ? { base: FB, who: '/' + igc.igId, token: S.IG_PAGE_TOKEN } : { base: IG, who: '/me', token: S.IG_TOKEN };
+    if (!C.token) return;
+    const j = await ig(C.who + '/media', { fields: 'id,caption,permalink,comments{id,text,timestamp}', limit: 15 }, C.token, 'GET', C.base);
+    const seen = new Set(cfg.igSeen || []); const first = !cfg.igSeen; const fresh = [];
+    for (const m of j.data || []) for (const c of (m.comments && m.comments.data) || []) {
+      if (seen.has(c.id)) continue; seen.add(c.id);
+      if (!first) fresh.push({ c, m });
+    }
+    for (const { c, m } of fresh.slice(0, 10)) {
+      await tg(S, `💬 תגובה חדשה באינסטגרם:\n"${String(c.text || '').slice(0, 300)}"\n\nעל הפוסט: ${String(m.caption || '').split('\n')[0].slice(0, 80)}\n${m.permalink || ''}\n\nכדאי לענות בשעה הקרובה: תשובה מהירה מגדילה את החשיפה של הפוסט.`);
+    }
+    await merge('settings', 'pub', { igSeen: [...seen].slice(-500) });
+    if (fresh.length) log.push('ig comments: ' + fresh.length);
+  }
+
   // ---- verification of Grok Bot's rows: did it really go out? (YouTube by the public channel feed, Facebook by the page token)
   async function ytFeed(channelId) {
     const r = await fetch('https://www.youtube.com/feeds/videos.xml?channel_id=' + encodeURIComponent(channelId));
@@ -264,6 +282,7 @@ export function start(createClient) {
     try { await stageReels(S, log); } catch (e) { log.push('stage failed: ' + (e.message || e)); }
     // once an hour: check what Grok Bot published
     if (new Date().getUTCMinutes() < 10) { try { await verifyGrok(S, cfg, log); } catch (e) { log.push('verify failed: ' + (e.message || e)); } }
+    if (new Date().getUTCMinutes() < 10 || new Date().getUTCMinutes() >= 30 && new Date().getUTCMinutes() < 40) { try { await igComments(S, cfg, log); } catch (e) { log.push('ig comments failed: ' + (e.message || e)); } }
     return Response.json({ ok: true, log });
   });
 }
