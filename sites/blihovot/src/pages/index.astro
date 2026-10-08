@@ -6,7 +6,7 @@ import GuideCard from '../components/GuideCard.astro';
 import LeadForm from '../components/LeadForm.astro';
 import HubIcon from '../components/HubIcon.astro';
 import { SITE, HUBS, FACTS } from '../data/site';
-import { TOOLS } from '../data/tools';
+import { TOOLS, FORM_TOOLS } from '../data/tools';
 import videos from '../data/videos.json';
 const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const guides = (await getCollection('guides')).filter((g) => !g.data.draft);
@@ -62,7 +62,11 @@ const schema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEnti
     <div class="wrap">
       <div class="sec-head"><h2>כלים שעושים לכם סדר</h2><a href={`${B}kli/`}>כל הכלים ←</a></div>
       <div class="grid g3 tools">
-        {TOOLS.map((t, i) => <a class={`card tool ${i === 0 ? 'big' : ''}`} href={`${B}kli/${t.id}/`}><span class="tag">{i === 0 ? 'הכי פופולרי' : 'מחשבון'}</span><h3>{t.title}</h3><p>{t.blurb}</p><span class="go">{t.cta} ←</span></a>)}
+        {TOOLS.map((t, i) => <a class={`card tool ${i === 0 ? 'big' : ''}`} href={`${B}kli/${t.id}/`}><span class="tag">{i === 0 ? 'חדש' : 'מחשבון'}</span><h3>{t.title}</h3><p>{t.blurb}</p><span class="go">{t.cta} ←</span></a>)}
+      </div>
+      <div class="sec-head" style="margin-top:34px"><h2>עוזרים למילוי בקשות</h2><a href={`${B}kli/`}>לכל העוזרים ←</a></div>
+      <div class="grid g3 tools">
+        {FORM_TOOLS.map((t) => <a class="card tool" href={`${B}kli/${t.id}/`}><span class="tag">עוזר בקשה</span><h3>{t.title}</h3><p>{t.blurb}</p><span class="go">{t.cta} ←</span></a>)}
       </div>
     </div>
   </section>

@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 import { SITE, HUBS, FACTS } from '../data/site';
-import { TOOLS } from '../data/tools';
+import { ALL_TOOLS as TOOLS } from '../data/tools';
 // llms.txt: a plain map of the site for AI assistants (GEO)
 export async function GET(ctx: { site: URL }) {
   const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
