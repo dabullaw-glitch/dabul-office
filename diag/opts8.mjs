@@ -85,13 +85,13 @@ const UP_CSS = `
 .dbl-ab .ph:after{content:"";position:absolute;inset:10px;border:1px solid rgba(231,205,150,.35);border-radius:10px;pointer-events:none}
 .dbl-ab .ph .cap{padding:90px 28px 26px!important}
 .dbl-ab .ph .cap q{font-size:28px!important}
-.dbl-ab.u1 .ph .stats{position:absolute;left:18px;right:18px;bottom:96px;margin:0;background:rgba(14,14,16,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(231,205,150,.35)}
+.dbl-ab.u1 .ph .stats{position:absolute;left:18px;right:18px;top:18px;bottom:auto;margin:0;background:rgba(14,14,16,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(231,205,150,.35)}
 .dbl-ab.u1 .ph .cap{padding-top:40px!important}
 .dbl-ab .btn{padding:14px 30px!important;font-size:16.5px!important;box-shadow:0 8px 20px rgba(201,161,79,.3)}
 @media (max-width:767px){.dbl-ab{padding:0 0 56px!important}.dbl-ab .sec{display:flex;flex-direction:column}.dbl-ab .w{display:contents!important}
 .dbl-ab .phw{order:1;padding:0;margin:0}.dbl-ab .phw:before{display:none}.dbl-ab .hd{order:2;padding:30px 20px 0;margin-bottom:22px!important}.dbl-ab .tx{order:3;padding:0 20px}
-.dbl-ab .ph{border-radius:0 0 26px 26px!important;aspect-ratio:auto!important;height:470px}.dbl-ab .ph img{object-position:50% 6%!important}.dbl-ab .ph:after{display:none}
-.dbl-ab.u1 .ph .stats{bottom:92px;left:14px;right:14px}.dbl-ab.u2 .stats{margin:14px 20px 0!important}
+.dbl-ab .ph{border-radius:0 0 26px 26px!important;aspect-ratio:auto!important;height:500px}.dbl-ab.u1 .ph img{object-position:50% 0!important;top:40px;height:calc(100% - 40px)}.dbl-ab .ph img{object-position:50% 6%!important}.dbl-ab .ph:after{display:none}
+.dbl-ab.u1 .ph .stats{top:14px;bottom:auto;left:14px;right:14px}.dbl-ab .ph .cap q{font-size:22px!important}.dbl-ab.u2 .stats{margin:14px 20px 0!important}
 .dbl-ab .lead{font-size:18px!important}}`;
 const UP_HTML = (k) => `<section class="dbl-ab h1 ${k}"><div class="sec"><div class="hd"><h2>הכירו את יקיר דבול</h2><div class="dv"></div></div><div class="w"><div class="tx"><p class="lead">${AB_INTRO}</p><h3>היתרון שלנו</h3><p>${AB_ADV}</p>
 <div class="rows">${AB_ROWS.map(([b, s], i) => `<div class="row"><i>${AB_IC[i]}</i><div><b>${b}</b><span>${s}</span></div></div>`).join('')}</div>
