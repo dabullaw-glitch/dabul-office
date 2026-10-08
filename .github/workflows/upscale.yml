@@ -17,7 +17,9 @@ jobs:
       - name: Install
         run: |
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-          pip install spandrel pillow numpy
+          pip install --no-deps spandrel
+          pip install safetensors einops typing_extensions pillow numpy
+          python -c "import torch,torchvision;print(torch.__version__,torchvision.__version__)"
           curl -sSL -o RealESRGAN_x4plus.pth https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth
       - name: Upscale
         run: |
