@@ -12,12 +12,25 @@ function dabul_yt_meta($id) {
 	return isset($all[$id]) ? $all[$id] : null;
 }
 function dabul_yt_fetch_meta($id) { return dabul_yt_meta($id); }
+function dabul_yt_poster_id($id) {
+	$all = get_option('dabul_yt_posters', array());
+	return isset($all[$id]) ? (int) $all[$id] : 0;
+}
 
-function dabul_yt_facade($id, $title, $abs, $ratio = '16/9') {
+function dabul_yt_facade($id, $title, $abs, $ratio = '16/9', $tall = null) {
+	if ($tall === null) { $r = array_map('floatval', explode('/', $ratio . '/1')); $tall = $r[1] > 0 && $r[0] < $r[1]; }
 	$t = $title !== '' ? $title : 'סרטון של עו״ד יקיר דבול';
-	$img = 'https://i.ytimg.com/vi/' . $id . '/hqdefault.jpg';
+	// sharp picture: our own full quality picture of the video when there is one, otherwise YouTube's largest picture
+	$pid = $tall ? dabul_yt_poster_id($id) : 0; // our pictures are tall; a wide frame keeps YouTube's wide picture
+	$src = $pid ? wp_get_attachment_image_url($pid, 'full') : '';
+	if ($src) {
+		$set = wp_get_attachment_image_srcset($pid, 'full');
+		$img = '<img src="' . esc_url($src) . '"' . ($set ? ' srcset="' . esc_attr($set) . '" sizes="(max-width:767px) 92vw, 460px"' : '') . ' alt="' . esc_attr($t) . '" loading="lazy" decoding="async" width="1080" height="1920">';
+	} else {
+		$img = '<img src="' . esc_url('https://i.ytimg.com/vi/' . $id . '/maxresdefault.jpg') . '" alt="' . esc_attr($t) . '" loading="lazy" decoding="async" width="1280" height="720">';
+	}
 	$f = '<div class="dbl-yt" data-id="' . esc_attr($id) . '" role="button" tabindex="0" aria-label="' . esc_attr('הפעלת הסרטון: ' . $t) . '">'
-		. '<img src="' . esc_url($img) . '" alt="' . esc_attr($t) . '" loading="lazy" decoding="async" width="480" height="360">'
+		. $img
 		. '<span class="dbl-yt-play" aria-hidden="true"></span></div>';
 	return $abs ? $f : '<div class="dbl-yt-box" style="aspect-ratio:' . esc_attr($ratio) . '">' . $f . '</div>';
 }
@@ -63,8 +76,9 @@ add_action('template_redirect', function () {
 			if (!$id) return $m[0];
 			$ids[$id] = 1;
 			$meta = dabul_yt_meta($id);
-			if (strpos(str_replace('\\/', '/', $u[1]), '/shorts/') !== false) $m[1] .= ' dbl-short'; // vertical video: keep the tall frame
-			return '<div class="' . $m[1] . '"' . $m[2] . 'data-settings="' . $m[3] . '"' . $m[4] . 'data-widget_type="dblvideo.default"' . $m[5] . '>' . $m[6] . dabul_yt_facade($id, $meta ? $meta['title'] : '', true);
+			$tall = strpos(str_replace('\\/', '/', $u[1]), '/shorts/') !== false;
+			if ($tall) $m[1] .= ' dbl-short'; // vertical video: keep the tall frame
+			return '<div class="' . $m[1] . '"' . $m[2] . 'data-settings="' . $m[3] . '"' . $m[4] . 'data-widget_type="dblvideo.default"' . $m[5] . '>' . $m[6] . dabul_yt_facade($id, $meta ? $meta['title'] : '', true, '16/9', $tall);
 		}, $html);
 		// YouTube iframes inside articles and pages
 		$html = preg_replace('#(<div class="lvbl-video-wrap"[^>]*>\s*)<iframe\b#i', '$1<iframe data-dblabs="1"', $html);
@@ -80,12 +94,14 @@ add_action('template_redirect', function () {
 		// new videos at the top of the videos page
 		$extra = (array) get_option('dabul_extra_videos', array());
 		if ($extra && is_page(5225)) {
-			$cards = '';
+			$cards = ''; $wide = '';
 			foreach (array_slice($extra, 0, 24) as $vid) {
 				$m = dabul_yt_fetch_meta($vid); $ids[$vid] = 1;
-				$cards .= '<div class="dbl-vcard">' . dabul_yt_facade($vid, $m ? $m['title'] : '', false, '9/16') . ($m && $m['title'] ? '<p>' . esc_html($m['title']) . '</p>' : '') . '</div>';
+				$tall = !$m || !empty($m['short']); // wide videos get their own row in a wide frame, so nothing is cut
+				$card = '<div class="dbl-vcard">' . dabul_yt_facade($vid, $m ? $m['title'] : '', false, $tall ? '9/16' : '16/9') . ($m && $m['title'] ? '<p>' . esc_html($m['title']) . '</p>' : '') . '</div>';
+				if ($tall) $cards .= $card; else $wide .= $card;
 			}
-			$block = '<section class="dbl-vnew" aria-label="סרטונים"><div class="dbl-vgrid">' . $cards . '</div></section>';
+			$block = '<section class="dbl-vnew" aria-label="סרטונים">' . ($wide ? '<div class="dbl-vgrid wide">' . $wide . '</div>' : '') . ($cards ? '<div class="dbl-vgrid">' . $cards . '</div>' : '') . '</section>';
 			// put the block right before the grid of videos (not inside the first video, which stretched every row)
 			$pos = strpos($html, '<div class="elementor-element elementor-element-76f9f98 ');
 			if ($pos !== false) $html = substr($html, 0, $pos) . $block . substr($html, $pos);
@@ -100,7 +116,7 @@ add_action('template_redirect', function () {
 			if (!$m || empty($m['date'])) continue;
 			$name = $m['title'] ? $m['title'] : 'סרטון של עו״ד יקיר דבול';
 			$graph[] = array('@type' => 'VideoObject', 'name' => $name, 'description' => $name . ' | עו״ד יקיר דבול, דיני מקרקעין, נתניה',
-				'thumbnailUrl' => array('https://i.ytimg.com/vi/' . $id . '/hqdefault.jpg'), 'uploadDate' => $m['date'],
+				'thumbnailUrl' => array(dabul_yt_poster_id($id) ? wp_get_attachment_image_url(dabul_yt_poster_id($id), 'full') : 'https://i.ytimg.com/vi/' . $id . '/maxresdefault.jpg'), 'uploadDate' => $m['date'],
 				'embedUrl' => 'https://www.youtube.com/embed/' . $id, 'contentUrl' => 'https://www.youtube.com/watch?v=' . $id,
 				'publisher' => array('@type' => 'Organization', 'name' => 'עו״ד יקיר דבול', 'url' => home_url('/')));
 		}
@@ -111,9 +127,10 @@ add_action('template_redirect', function () {
 			. '.dbl-vid{margin:1.75rem auto;max-width:720px}.dbl-vid.short{max-width:340px}.dbl-vid figcaption{text-align:center;font-size:15px;color:#54595f;margin-top:8px}'
 			. '.dbl-vnew{width:100%;margin:0 0 50px;padding:0;direction:rtl}'
 			. '.elementor-element-76f9f98 .elementor-loop-container{grid-auto-rows:auto!important}'
-			. '.dbl-vgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:50px 30px}.dbl-vcard .dbl-yt-box{border-radius:0}.dbl-vcard p{font-size:18px;font-weight:700;line-height:1.35;color:#141414;margin:14px 0 0;text-align:center}'
+			. '.dbl-vgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:50px 30px}.dbl-vgrid+.dbl-vgrid{margin-top:50px}.dbl-vgrid.wide{grid-template-columns:repeat(2,minmax(0,1fr))}'
+			. '.dbl-vcard .dbl-yt-box{border-radius:0}.dbl-vcard p{font-size:17px;font-weight:700;line-height:1.35;color:#141414;margin:20px 0 0;text-align:center}'
 			. '.dbl-short .elementor-wrapper{aspect-ratio:9/16!important;--video-aspect-ratio:0.5625}'
-			. '@media (max-width:767px){.dbl-vgrid{grid-template-columns:1fr;gap:50px}}</style>';
+			. '@media (max-width:767px){.dbl-vgrid,.dbl-vgrid.wide{grid-template-columns:1fr;gap:50px}.dbl-vcard p{font-size:16px}}</style>';
 		$js = <<<'DBLJS'
 <script nowprocket data-no-optimize="1">
 (function () {
@@ -178,9 +195,14 @@ add_action('rest_api_init', function () {
 					foreach ($b['meta'] as $v => $m) if (preg_match('/^[A-Za-z0-9_-]{11}$/', $v)) $all[$v] = array('title' => (string) ($m['title'] ?? ''), 'date' => (string) ($m['date'] ?? ''), 'short' => !empty($m['short']));
 					update_option('dabul_yt_meta', $all, false);
 				}
+				if (!empty($b['posters']) && is_array($b['posters'])) {
+					$all = get_option('dabul_yt_posters', array());
+					foreach ($b['posters'] as $v => $att) if (preg_match('/^[A-Za-z0-9_-]{11}$/', $v) && wp_attachment_is_image((int) $att)) $all[$v] = (int) $att;
+					update_option('dabul_yt_posters', $all, false);
+				}
 				if (function_exists('rocket_clean_domain')) rocket_clean_domain();
 			}
-			return array('art_videos' => get_option('dabul_art_videos', array()), 'extra' => get_option('dabul_extra_videos', array()), 'meta_count' => count(get_option('dabul_yt_meta', array())));
+			return array('art_videos' => get_option('dabul_art_videos', array()), 'extra' => get_option('dabul_extra_videos', array()), 'meta_count' => count(get_option('dabul_yt_meta', array())), 'posters' => get_option('dabul_yt_posters', array()));
 		},
 	));
 });
