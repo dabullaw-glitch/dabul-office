@@ -200,7 +200,10 @@ for (const mode of ['desktop', 'phone']) {
     await p.evaluate((mode) => {
       const st = document.createElement('style');
       const H = mode === 'phone' ? 400 : 470;
-      st.textContent = `html body .elementor-element-abb2800 .certificates-carousel .elementor-image-carousel-wrapper,html body .elementor-element-abb2800 .certificates-carousel .elementor-image-carousel,html body .elementor-element-abb2800 .certificates-carousel .swiper-wrapper,html body .elementor-element-abb2800 .certificates-carousel .swiper-slide,html body .elementor-element-abb2800 .certificates-carousel .swiper-slide-inner,html body .elementor-element-abb2800 .certificates-carousel a,html body .elementor-element-abb2800 .certificates-carousel figure{height:${H}px!important}
+      st.textContent = `html body .elementor-element-abb2800 .certificates-carousel,html body .elementor-element-abb2800 .certificates-carousel *:not(img):not(svg):not(path){height:auto!important;max-height:none!important;min-height:0!important}
+html body .elementor-element-abb2800 .certificates-carousel .swiper-slide,html body .elementor-element-abb2800 .certificates-carousel .swiper-slide-inner,html body .elementor-element-abb2800 .certificates-carousel .swiper-slide a,html body .elementor-element-abb2800 .certificates-carousel figure{height:${H}px!important}
+html body .elementor-element-abb2800 .certificates-carousel>.elementor-widget-container{padding:16px ${mode === 'phone' ? 0 : 92}px 30px!important;position:relative}
+html body .elementor-element-abb2800 .certificates-carousel .elementor-swiper-button-prev{left:${mode === 'phone' ? 4 : 0}px!important}html body .elementor-element-abb2800 .certificates-carousel .elementor-swiper-button-next{right:${mode === 'phone' ? 4 : 0}px!important}
 html body .elementor-element-abb2800 .certificates-carousel .swiper-slide a{position:relative;display:block!important;width:100%!important}
 html body .elementor-element-abb2800 .certificates-carousel img{height:${H}px!important;min-height:${H}px!important;max-height:${H}px!important;width:100%!important;object-fit:cover!important;border:0!important;border-radius:6px!important;padding:0!important;background:#fff!important;box-shadow:0 14px 34px rgba(20,20,20,.10)!important}
 html body .elementor-element-abb2800 .certificates-carousel .swiper-slide a:after{content:"";position:absolute;left:18px;bottom:18px;width:52px;height:52px;border-radius:10px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a8853f' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6'/%3E%3C/svg%3E") center/26px no-repeat;box-shadow:0 6px 16px rgba(0,0,0,.12)}
@@ -231,8 +234,8 @@ html body .elementor-element-abb2800 .certificates-carousel{max-width:1440px;mar
 #dbl-new-foot .r2{max-width:1340px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.3fr) 300px;gap:34px;padding:38px 0 34px}
 #dbl-new-foot .col{display:flex;flex-direction:column;gap:14px}#dbl-new-foot .col .gap{margin-top:18px!important}
 #dbl-new-foot .elementor-widget{width:auto!important;max-width:100%!important;position:static!important;margin:0!important}
-#dbl-new-foot .elementor-heading-title{color:#e7cd96!important;font-size:17px!important;font-weight:600!important;line-height:1.3!important;position:relative;padding-bottom:12px!important}
-#dbl-new-foot .elementor-heading-title:after{content:"";position:absolute;right:0;bottom:0;width:28px;height:2px;background:#c9a961}
+#dbl-new-foot .r2 .elementor-heading-title{color:#e7cd96!important;font-size:17px!important;font-weight:600!important;line-height:1.3!important;position:relative;padding-bottom:12px!important}
+#dbl-new-foot .r2 .elementor-heading-title:after{content:"";position:absolute;right:0;bottom:0;width:28px;height:2px;background:#c9a961}
 #dbl-new-foot .r2 .elementor-icon-list-item{padding:4px 0!important}
 #dbl-new-foot .r2 .elementor-icon-list-text{color:#cfccc6!important;font-size:15px!important;line-height:1.5!important;transition:color .15s}
 #dbl-new-foot .r2 a:hover .elementor-icon-list-text{color:#e7cd96!important}
