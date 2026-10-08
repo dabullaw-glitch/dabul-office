@@ -4,10 +4,11 @@ interface Props { g: any; showHub?: boolean }
 const { g, showHub = true } = Astro.props;
 const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const hub = HUBS.find((h) => h.id === g.data.hub);
+const KIND: Record<string, string> = { guide: '', article: 'מאמר', checklist: "צ'קליסט", explainer: 'הסבר' };
 ---
 <a class="card gcard" href={`${B}madrich/${g.id}/`}>
-  {showHub && hub && <span class="tag">{hub.short}</span>}
+  {showHub && hub && <span class="tag">{hub.short}</span>}{KIND[g.data.kind] && <span class="tag k">{KIND[g.data.kind]}</span>}
   <h3>{g.data.title}</h3>
   <p>{g.data.description}</p>
 </a>
-<style>.gcard h3{margin-top:10px}</style>
+<style>.gcard h3{margin-top:10px}.gcard .k{margin-inline-start:6px;background:var(--sun-soft);color:var(--ink)}</style>

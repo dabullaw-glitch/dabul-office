@@ -17,6 +17,7 @@ const guides = defineCollection({
     related: z.array(z.string()).default([]),
     tool: z.string().optional(),             // slug of a calculator to promote inside the guide
     video: z.string().optional(),            // id of a video in src/data/videos.json
+    kind: z.enum(['guide', 'article', 'checklist', 'explainer']).default('guide'), // מדריך / מאמר / צ'קליסט / הסבר
     order: z.number().default(50),           // position inside its hub (lower first)
     draft: z.boolean().default(false),
   }),
