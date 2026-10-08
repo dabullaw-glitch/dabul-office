@@ -1,0 +1,30 @@
+name: photo-upscale
+on:
+  push:
+    branches: [audit-run]
+    paths: ['up/**', '.github/workflows/upscale.yml']
+permissions:
+  contents: write
+jobs:
+  up:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install spandrel pillow numpy
+          curl -sSL -o RealESRGAN_x4plus.pth https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth
+      - name: Upscale
+        run: python up/up.py
+      - name: Commit
+        run: |
+          git config user.name "audit-bot"
+          git config user.email "audit-bot@users.noreply.github.com"
+          git add diag-results/up
+          git commit -m "upscale results $(date -u +%FT%TZ)" || echo nothing
+          for i in 1 2 3 4 5; do git pull --rebase -q origin audit-run && git push origin HEAD:audit-run && break; sleep 5; done
