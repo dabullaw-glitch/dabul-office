@@ -1,0 +1,53 @@
+{
+ "live-phone": {
+  "gold": "rgb(122, 90, 30)",
+  "under": "underline",
+  "tiScript": true,
+  "tiLater": 0,
+  "tiWidget": 13
+ },
+ "about-h1-phone": 1705,
+ "about-h2-phone": 1903,
+ "footer-data": {
+  "cols": [
+   [
+    "המשרד",
+    7
+   ],
+   [
+    "קונים דירה",
+    9
+   ],
+   [
+    "מוכרים דירה",
+    4
+   ],
+   [
+    "מיסוי מקרקעין",
+    4
+   ],
+   [
+    "התחדשות עירונית",
+    2
+   ]
+  ],
+  "contact": 4,
+  "hours": [
+   "יום א'-ה'",
+   "9:00-18:00",
+   "יום ו' ושבת",
+   "סגור"
+  ],
+  "logo": true,
+  "map": true
+ },
+ "live-desktop": {
+  "gold": "rgb(122, 90, 30)",
+  "under": "underline",
+  "tiScript": true,
+  "tiLater": 0,
+  "tiWidget": 13
+ },
+ "about-h1-desktop": 1087,
+ "about-h2-desktop": 1272
+}
