@@ -1,0 +1,400 @@
+{
+ "vid-phone": {
+  "vnew": [
+   274,
+   1420,
+   20,
+   350
+  ],
+  "vnewParent": "e-con-inner",
+  "cards": [
+   [
+    274,
+    685,
+    20,
+    350
+   ],
+   [
+    1009,
+    685,
+    20,
+    350
+   ]
+  ],
+  "grid": [
+   1773,
+   17737,
+   20,
+   350
+  ],
+  "rows": "658.656px 658.656px 642.656px 658.656px 642.656px 658.656px 658.656px 642.656px 658.656px 658.656px ",
+  "items": [
+   [
+    1773,
+    659,
+    20,
+    350
+   ],
+   [
+    2482,
+    659,
+    20,
+    350
+   ],
+   [
+    3191,
+    643,
+    20,
+    350
+   ],
+   [
+    3883,
+    659,
+    20,
+    350
+   ],
+   [
+    4592,
+    643,
+    20,
+    350
+   ],
+   [
+    5285,
+    659,
+    20,
+    350
+   ]
+  ],
+  "title": [
+   "DIV",
+   "16px",
+   "700",
+   "\"Noto Local\", sans-serif",
+   "rgb(20, 20, 20)",
+   "16px"
+  ],
+  "docH": 23088
+ },
+ "cert-phone": [
+  [
+   "DIV",
+   "elementor-element elementor-element-abb2800 e-flex e-con-box",
+   746,
+   "none",
+   "linear-gradient(rgb(248, 248, 253) 0%, rgb(255, 255, 255) 100%)",
+   "rgba(0, 0, 0, 0)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   400,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   400,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   400,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   400,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   400,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   400,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   400,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   400,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "DIV",
+   "elementor-swiper-button elementor-swiper-button-prev",
+   46,
+   "none",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "DIV",
+   "elementor-swiper-button elementor-swiper-button-next",
+   46,
+   "none",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "A",
+   "elementor-button elementor-button-link elementor-size-sm",
+   46,
+   "none",
+   "none",
+   "rgb(231, 205, 150)"
+  ]
+ ],
+ "vid-desktop": {
+  "vnew": [
+   435,
+   845,
+   30,
+   1380
+  ],
+  "vnewParent": "e-con-inner",
+  "cards": [
+   [
+    435,
+    845,
+    970,
+    440
+   ],
+   [
+    435,
+    845,
+    500,
+    440
+   ]
+  ],
+  "grid": [
+   1369,
+   7769,
+   30,
+   1380
+  ],
+  "rows": "820.656px 820.656px 820.656px 820.656px 820.656px 803.656px 820.656px 820.656px 820.656px",
+  "items": [
+   [
+    1369,
+    821,
+    970,
+    440
+   ],
+   [
+    1369,
+    821,
+    500,
+    440
+   ],
+   [
+    1369,
+    821,
+    30,
+    440
+   ],
+   [
+    2240,
+    821,
+    970,
+    440
+   ],
+   [
+    2240,
+    821,
+    500,
+    440
+   ],
+   [
+    2240,
+    821,
+    30,
+    440
+   ]
+  ],
+  "title": [
+   "DIV",
+   "17px",
+   "700",
+   "\"Noto Local\", sans-serif",
+   "rgb(20, 20, 20)",
+   "17px"
+  ],
+  "docH": 10904
+ },
+ "cert-desktop": [
+  [
+   "DIV",
+   "elementor-element elementor-element-abb2800 e-flex e-con-box",
+   944,
+   "none",
+   "linear-gradient(rgb(248, 248, 253) 0%, rgb(255, 255, 255) 100%)",
+   "rgba(0, 0, 0, 0)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "IMG",
+   "swiper-slide-image",
+   470,
+   "rgba(20, 20, 20, 0.1) 0px 14px 34px 0px",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "DIV",
+   "elementor-swiper-button elementor-swiper-button-prev",
+   64,
+   "none",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "DIV",
+   "elementor-swiper-button elementor-swiper-button-next",
+   64,
+   "none",
+   "none",
+   "rgb(255, 255, 255)"
+  ],
+  [
+   "A",
+   "elementor-button elementor-button-link elementor-size-sm",
+   47,
+   "none",
+   "none",
+   "rgb(231, 205, 150)"
+  ]
+ ]
+}
