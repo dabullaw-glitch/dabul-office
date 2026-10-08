@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Hamchasha from '../components/Hamchasha.astro';
+import { ANIMS } from '../data/hamchashot';
+import { getCollection } from 'astro:content';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const guides = await getCollection('guides');
+const title = (slug: string) => guides.find((g) => g.id === slug)?.data.title || slug;
+---
+<Base title="המחשות: חובות, ריבית, עיקולים וחדלות פירעון בתמונות שזזות" description="המחשות קצרות ומונפשות שמסבירות בשניות איך ריבית מנפחת חוב, איך עובד איחוד תיקים, מה מוגן מעיקול ואיך נראית הדרך בחדלות פירעון.">
+  <div class="wrap" style="padding-block:28px 50px;max-width:900px">
+    <Breadcrumbs items={[{ label: 'המחשות' }]} />
+    <h1>המחשות</h1>
+    <p class="lede" style="font-size:1.1rem;color:var(--ink-2);max-width:62ch">לפעמים תמונה אחת שזזה מסבירה יותר מעמוד טקסט. כל המחשה מתחברת למדריך המלא, עם כל הפרטים והמקורות.</p>
+    {ANIMS.map((a) => (
+      <section style="margin:34px 0">
+        <Hamchasha id={a.id} />
+        <p style="margin:6px 0 0">למדריך המלא: {a.guides.slice(0, 2).map((g, i) => <>{i ? ' · ' : ''}<a href={`${B}madrich/${g}/`}>{title(g)}</a></>)}</p>
+      </section>
+    ))}
+  </div>
+</Base>

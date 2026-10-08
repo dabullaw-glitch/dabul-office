@@ -1,0 +1,174 @@
+---
+// Animated explainers ("המחשות"). Each one is an inline SVG that plays when it scrolls into view, can be replayed,
+// and shows its final state at once for people who prefer reduced motion. Text is real text (accessible, translatable).
+import { ANIMS } from '../data/hamchashot';
+interface Props { id: string; compact?: boolean }
+const { id, compact = false } = Astro.props;
+const a = ANIMS.find((x) => x.id === id);
+if (!a) throw new Error('unknown hamchasha ' + id);
+const nf = new Intl.NumberFormat('he-IL');
+// interest example (illustrative): 10,000 at 1% a month, with and without a 300 monthly payment
+const yearsR = [0, 1, 2, 3, 4, 5];
+const noPay = yearsR.map((y) => Math.round(10000 * Math.pow(1.01, 12 * y)));
+const withPay = yearsR.map((y) => { let b = 10000; for (let m = 0; m < 12 * y; m++) { b = b * 1.01 - 300; if (b < 0) { b = 0; break; } } return Math.round(b); });
+const maxR = Math.max(...noPay);
+---
+<figure class={`hm hm-${id}${compact ? ' compact' : ''}`} data-hm={id} aria-labelledby={`hm-${id}-t`}>
+  <figcaption><div><b id={`hm-${id}-t`}>{a.title}</b><span>{a.caption}</span></div><button type="button" class="hm-replay" aria-label="הפעלה מחדש של ההמחשה">↺ שוב</button></figcaption>
+  <div class="hm-stage">
+    {id === 'ribit' && (
+      <svg viewBox="0 0 640 330" role="img" aria-label={a.alt}>
+        <text x="620" y="24" class="t lg" text-anchor="start">חוב של 10,000 ₪ בריבית של 1% לחודש (להמחשה)</text>
+        <g class="legend"><rect x="606" y="40" width="14" height="14" class="c-rose" /><text x="598" y="52" class="t" text-anchor="start">לא משלמים</text>
+          <rect x="470" y="40" width="14" height="14" class="c-teal" /><text x="462" y="52" class="t" text-anchor="start">משלמים 300 ₪ בחודש</text></g>
+        {yearsR.map((y, i) => {
+          const x = 560 - i * 96, h1 = (noPay[i] / maxR) * 200, h2 = (withPay[i] / maxR) * 200;
+          return (<g>
+            <rect class="bar c-rose" x={x} y={290 - h1} width="30" height={h1} style={`--d:${i * 0.35}s`} />
+            <rect class="bar c-teal" x={x + 34} y={290 - h2} width="30" height={Math.max(h2, 0.01)} style={`--d:${i * 0.35 + 0.15}s`} />
+            <text class="t sm fade" x={i === 0 ? x + 32 : x + 15} y={284 - h1} text-anchor="middle" style={`--d:${i * 0.35 + 0.3}s`}>{nf.format(noPay[i])}</text>
+            {i === 0 ? null : withPay[i] > 0 ? <text class="t sm fade" x={x + 49} y={284 - h2} text-anchor="middle" style={`--d:${i * 0.35 + 0.4}s`}>{nf.format(withPay[i])}</text> : <text class="t sm fade ok" x={x + 49} y={284} text-anchor="middle" style={`--d:${i * 0.35 + 0.4}s`}>0 ✓</text>}
+            <text class="t" x={x + 32} y="314" text-anchor="middle">{y === 0 ? 'היום' : `שנה ${y}`}</text>
+          </g>);
+        })}
+        <line x1="40" x2="620" y1="290" y2="290" class="axis" />
+      </svg>
+    )}
+    {id === 'hadlut-path' && (
+      <svg viewBox="0 0 640 260" role="img" aria-label={a.alt}>
+        <path d="M570 120 H70" class="road" />
+        <path d="M570 120 H70" class="road-fill" pathLength="1" />
+        {[
+          { x: 570, t: 'בקשה', s: 'ממונה או הוצל"פ' },
+          { x: 445, t: 'צו לפתיחת הליכים', s: 'ההליכים מוקפאים' },
+          { x: 320, t: 'תקופת ביניים', s: 'כשנה' },
+          { x: 195, t: 'צו לשיקום כלכלי', s: 'בדרך כלל כ-3 שנים' },
+          { x: 70, t: 'הפטר', s: 'פטור מהיתרה' },
+        ].map((st, i) => (
+          <g class="st fade" style={`--d:${0.4 + i * 0.7}s`}>
+            <circle cx={st.x} cy="120" r={i === 4 ? 18 : 13} class={i === 4 ? 'c-sun' : 'c-teal'} />
+            {i === 4 && <text x={st.x} y="126" class="t star" text-anchor="middle">★</text>}
+            <text x={st.x} y={i % 2 ? 78 : 168} class="t md" text-anchor="middle">{st.t}</text>
+            <text x={st.x} y={i % 2 ? 98 : 188} class="t sm muted" text-anchor="middle">{st.s}</text>
+          </g>
+        ))}
+        <circle cx="570" cy="120" r="7" class="walker" />
+        <text x="320" y="240" class="t sm muted fade" text-anchor="middle" style="--d:4s">בדרך כלל כ-4 שנים מהצו ועד ההפטר</text>
+      </svg>
+    )}
+    {id === 'ichud' && (
+      <svg viewBox="0 0 640 270" role="img" aria-label={a.alt}>
+        {[0, 1, 2, 3].map((i) => (
+          <g class="file" style={`--d:${i * 0.15}s;--tx:${-160 + 0}px;--ty:${60 - i * 40}px`}>
+            <rect x="520" y={30 + i * 48} width="90" height="38" rx="6" class="paper" />
+            <text x="565" y={54 + i * 48} class="t sm" text-anchor="middle">תיק {i + 1}</text>
+          </g>
+        ))}
+        <g class="fade" style="--d:1.2s">
+          <rect x="265" y="80" width="180" height="90" rx="10" class="c-teal" />
+          <text x="355" y="120" class="t md inv" text-anchor="middle">תיק איחוד</text>
+          <text x="355" y="145" class="t sm inv" text-anchor="middle">תשלום אחד בחודש</text>
+        </g>
+        {[0, 1, 2, 3, 4].map((i) => (
+          <g class="coin" style={`--d:${1.8 + i * 0.45}s`}><circle cx="250" cy="125" r="11" class="c-sun" /><text x="250" y="130" class="t sm" text-anchor="middle">₪</text></g>
+        ))}
+        <g class="fade" style="--d:1.6s"><rect x="40" y="95" width="110" height="60" rx="10" class="paper" /><text x="95" y="130" class="t md" text-anchor="middle">הנושים</text></g>
+        <g class="fade" style="--d:3.6s">
+          <text x="320" y="232" class="t sm" text-anchor="middle">עד 20,000 ₪: שנתיים · עד 100,000 ₪: 3 שנים</text><text x="320" y="258" class="t sm" text-anchor="middle">מעל 100,000 ₪: 4 שנים · אפשר הארכה בעד 3 שנים</text>
+        </g>
+      </svg>
+    )}
+    {id === 'ikul' && (
+      <svg viewBox="0 0 640 225" role="img" aria-label={a.alt}>
+        <text x="610" y="34" class="t md" text-anchor="start">המשכורת נטו</text>
+        <rect x="40" y="50" width="570" height="60" rx="10" class="paper" />
+        <rect x="290" y="50" width="320" height="60" rx="10" class="grow-r c-teal" style="--d:.3s" />
+        <rect x="40" y="50" width="250" height="60" rx="10" class="grow-r c-rose" style="--d:1.2s" />
+        <text x="450" y="88" class="t md inv fade" text-anchor="middle" style="--d:.9s">🔒 החלק המוגן</text>
+        <text x="165" y="88" class="t md inv fade" text-anchor="middle" style="--d:1.8s">מה שמעליו</text>
+        <text x="450" y="140" class="t sm fade" text-anchor="middle" style="--d:1s">לפי גמלת הבטחת הכנסה והרכב המשפחה</text>
+        <text x="165" y="140" class="t sm fade" text-anchor="middle" style="--d:2s">רק מכאן אפשר לעקל</text>
+        <text x="320" y="186" class="t sm muted fade" text-anchor="middle" style="--d:2.6s">משכורת נמוכה מהסכום המוגן, ככלל, לא מעקלים בכלל.</text><text x="320" y="210" class="t sm muted fade" text-anchor="middle" style="--d:2.8s">בחוב מזונות הכללים שונים.</text>
+      </svg>
+    )}
+    {id === 'taktziv' && (
+      <svg viewBox="0 0 640 280" role="img" aria-label={a.alt}>
+        <text x="610" y="30" class="t md" text-anchor="start">מה קורה למשכורת בחודש (להמחשה)</text>
+        {[
+          { w: 200, t: 'דיור', c: 'c-teal' }, { w: 120, t: 'מזון', c: 'c-teal2' }, { w: 80, t: 'חשבונות', c: 'c-ink' },
+          { w: 60, t: 'תחבורה', c: 'c-teal2' }, { w: 70, t: 'חובות', c: 'c-rose' }, { w: 40, t: 'נשאר', c: 'c-sun' },
+        ].reduce((acc: any[], s, i) => { const x = (acc.length ? acc[acc.length - 1].x : 610) - s.w; acc.push({ ...s, x, i }); return acc; }, []).map((s) => (
+          <g class="fade" style={`--d:${s.i * 0.35}s`}>
+            <rect x={s.x} y="50" width={s.w - 3} height="56" class={`seg ${s.c}`} />
+            <text x={s.x + s.w / 2} y="84" class={`t sm ${s.c === 'c-sun' ? '' : 'inv'}`} text-anchor="middle">{s.t}</text>
+          </g>
+        ))}
+        <g class="drop" style="--d:2.4s"><rect x="42" y="56" width="34" height="44" rx="4" class="c-sun" /></g>
+        <path d="M30 150 h70 v80 a10 10 0 0 1 -10 10 h-50 a10 10 0 0 1 -10 -10 z" class="jar" />
+        <rect x="32" y="200" width="66" height="38" rx="6" class="fill c-sun" style="--d:3s" />
+        <text x="65" y="268" class="t sm" text-anchor="middle">קרן חירום</text>
+        <text x="380" y="160" class="t sm fade" text-anchor="middle" style="--d:3.2s">גם סכום קטן שנשאר בכל חודש</text>
+        <text x="380" y="184" class="t sm fade" text-anchor="middle" style="--d:3.4s">בונה כרית שמונעת את החוב הבא</text>
+      </svg>
+    )}
+    {id === 'yamim-30' && (
+      <svg viewBox="0 0 640 300" role="img" aria-label={a.alt}>
+        <text x="610" y="30" class="t md" text-anchor="start">30 יום מקבלת האזהרה</text>
+        {Array.from({ length: 30 }, (_, i) => {
+          const col = i % 10, row = Math.floor(i / 10);
+          return (<g class="fade" style={`--d:${i * 0.07}s`}>
+            <rect x={560 - col * 56} y={50 + row * 62} width="48" height="50" rx="8" class={i === 29 ? 'c-rose' : i === 0 ? 'c-teal' : 'paper'} />
+            <text x={584 - col * 56} y={82 + row * 62} class={`t md ${i === 29 || i === 0 ? 'inv' : ''}`} text-anchor="middle">{i + 1}</text>
+          </g>);
+        })}
+        <text x="584" y="262" class="t sm fade" text-anchor="middle" style="--d:.2s">האזהרה</text>
+        <text x="80" y="262" class="t sm fade" text-anchor="middle" style="--d:2.2s">יום אחרון</text>
+        <text x="330" y="290" class="t sm muted fade" text-anchor="middle" style="--d:2.5s">התנגדות בזמן מעכבת את הגבייה</text>
+      </svg>
+    )}
+  </div>
+</figure>
+<style is:global>
+.hm{margin:26px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 16px 10px;max-width:100%}
+.hm figcaption{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}.hm figcaption div{display:flex;flex-direction:column;gap:2px;min-width:0}.hm figcaption b{font-size:1.08rem}.hm figcaption span{color:var(--muted);font-size:.9rem}
+.hm-stage{position:relative}.hm svg{width:100%;height:auto;display:block;overflow:visible}
+.hm .t{font-family:var(--ff);font-size:17px;fill:var(--ink)}.hm .t.sm{font-size:15px}.hm .t.md{font-size:18px;font-weight:700}.hm .t.lg{font-size:19px;font-weight:700}
+@media (max-width:560px){.hm .t{font-size:21px}.hm .t.sm{font-size:19px}.hm .t.md{font-size:22px}.hm .t.lg{font-size:23px}}.hm .t.muted{fill:var(--muted)}.hm .t.inv{fill:#fff}.hm .t.ok{fill:var(--teal);font-weight:700}.hm .t.star{fill:#1b1405;font-size:16px}
+.hm .c-teal{fill:var(--teal)}.hm .c-teal2{fill:var(--teal-2)}.hm .c-rose{fill:var(--rose)}.hm .c-sun{fill:var(--sun)}.hm .c-ink{fill:var(--ink-2)}.hm .paper{fill:var(--sand);stroke:var(--line)}
+.hm .axis{stroke:var(--line);stroke-width:2}.hm .road{stroke:var(--line);stroke-width:8;fill:none;stroke-linecap:round}
+.hm .road-fill{stroke:var(--teal);stroke-width:8;fill:none;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
+.hm .walker{fill:var(--sun);stroke:#fff;stroke-width:3}.hm .jar{fill:none;stroke:var(--ink-2);stroke-width:3}
+.hm-replay{flex:none;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font:inherit;font-size:.85rem;color:var(--ink-2);cursor:pointer}
+/* initial (hidden) states */
+.hm .bar{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0)}
+.hm .fade{opacity:0;transform:translateY(6px)}
+.hm .grow-r{transform-box:fill-box;transform-origin:right;transform:scaleX(0)}
+.hm .file{transform:translate(0,0)}.hm .coin{opacity:0}.hm .drop{opacity:1}
+.hm .fill{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0)}
+/* playing */
+.hm.go .bar{transition:transform .8s cubic-bezier(.2,.8,.2,1) var(--d,0s);transform:scaleY(1)}
+.hm.go .fade{transition:opacity .5s ease var(--d,0s),transform .5s ease var(--d,0s);opacity:1;transform:none}
+.hm.go .grow-r{transition:transform .9s cubic-bezier(.2,.8,.2,1) var(--d,0s);transform:scaleX(1)}
+.hm.go .road-fill{transition:stroke-dashoffset 3.6s linear .3s;stroke-dashoffset:0}
+.hm.go .walker{animation:hm-walk 3.6s linear .3s forwards}
+@keyframes hm-walk{to{transform:translateX(-500px)}}
+.hm.go .file{transition:transform .9s cubic-bezier(.5,0,.2,1) var(--d,0s),opacity .4s ease calc(var(--d,0s) + .7s);transform:translate(-190px,var(--ty));opacity:0}
+.hm.go .coin{animation:hm-coin 1.2s ease var(--d,0s) 1 both}
+@keyframes hm-coin{0%{opacity:0;transform:translateX(0)}15%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translateX(-120px)}}
+.hm.go .drop{animation:hm-drop 1s ease var(--d,0s) both}
+@keyframes hm-drop{0%{transform:none}100%{transform:translate(-6px,140px) scale(.9);opacity:0}}
+.hm.go .fill{transition:transform .8s ease var(--d,0s);transform:scaleY(1)}
+@media (prefers-reduced-motion: reduce){
+  .hm .bar,.hm .grow-r,.hm .fill{transform:none!important;transition:none!important}.hm .fade{opacity:1!important;transform:none!important}
+  .hm .road-fill{stroke-dashoffset:0!important}.hm .walker{transform:translateX(-500px)!important;animation:none!important}
+  .hm .file{opacity:0!important}.hm .coin,.hm .drop{display:none}.hm-replay{display:none}
+}
+</style>
+<script>
+const play = (el: Element) => { el.classList.remove('go'); void (el as HTMLElement).offsetWidth; el.classList.add('go'); };
+const io = 'IntersectionObserver' in window ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { play(e.target); io!.unobserve(e.target); } }), { threshold: 0.35 }) : null;
+document.querySelectorAll('.hm').forEach((el) => {
+  if (io) io.observe(el); else el.classList.add('go');
+  el.querySelector('.hm-replay')?.addEventListener('click', () => play(el));
+});
+</script>
