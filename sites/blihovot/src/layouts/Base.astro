@@ -54,7 +54,7 @@ const fonts = `
 <a class="skip" href="#main">דילוג לתוכן</a>
 <header class="hdr" id="hdr">
   <div class="wrap">
-    <a class="logo" href={B} aria-label={`${SITE.name}, לדף הבית`}><Logo /><span>{SITE.name}<small>{SITE.tagline}</small></span></a>
+    <a class="logo" href={B}><Logo /><span>{SITE.name}<small>{SITE.tagline}</small></span></a>
     <nav class="nav" id="nav" aria-label="ראשי">
       {NAV.map((n) => <a href={u(n.href)} aria-current={here.startsWith(u(n.href)) ? 'page' : undefined}>{n.label}</a>)}
     </nav>
