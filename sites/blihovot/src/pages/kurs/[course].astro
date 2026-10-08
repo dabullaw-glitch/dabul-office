@@ -5,34 +5,33 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import LeadForm from '../../components/LeadForm.astro';
 import { SITE } from '../../data/site';
 import { COURSES } from '../../data/courses';
+export function getStaticPaths() { return COURSES.filter((c) => c.id !== 'yotzim').map((c) => ({ params: { course: c.id }, props: { c } })); }
+const { c } = Astro.props;
 const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-const ALL = await getCollection('lessons');
-const L = ALL.filter((l) => l.data.course === 'yotzim').sort((a, b) => a.data.n - b.data.n);
-const others = COURSES.filter((c) => c.id !== 'yotzim').map((c) => ({ ...c, n: ALL.filter((l) => l.data.course === c.id).length, min: ALL.filter((l) => l.data.course === c.id).reduce((s, l) => s + l.data.minutes, 0) }));
+const L = (await getCollection('lessons')).filter((l) => l.data.course === c.id).sort((a, b) => a.data.n - b.data.n);
 const total = L.reduce((s, l) => s + l.data.minutes, 0);
-const schema = [{ '@context': 'https://schema.org', '@type': 'Course', name: 'יוצאים מחובות: קורס חינמי', description: 'קורס קצר בשפה פשוטה: תמונת מצב, תקציב, הסדר חוב, הוצאה לפועל, איחוד תיקים, חדלות פירעון והחיים אחרי.', inLanguage: 'he-IL', isAccessibleForFree: true, provider: { '@type': 'Organization', name: SITE.name, url: new URL(B, Astro.site).href },
+const others = COURSES.filter((x) => x.id !== c.id);
+const schema = [{ '@context': 'https://schema.org', '@type': 'Course', name: c.title, description: c.blurb, inLanguage: 'he-IL', isAccessibleForFree: true, provider: { '@type': 'Organization', name: SITE.name, url: new URL(B, Astro.site).href },
   hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: `PT${total}M` }, offers: { '@type': 'Offer', price: '0', priceCurrency: 'ILS', category: 'Free' },
   syllabusSections: L.map((l) => ({ '@type': 'Syllabus', name: l.data.title, description: l.data.description, timeRequired: `PT${l.data.minutes}M` })) }];
 ---
-<Base title="קורס חינמי: יוצאים מחובות ב-7 שיעורים" description={`קורס חינמי וקצר (כ-${total} דקות): תמונת מצב, תקציב, הסדר חוב, הוצאה לפועל, איחוד תיקים, חדלות פירעון והחיים אחרי. עם שאלות תרגול בכל שיעור.`} schema={schema}>
+<Base title={`קורס חינמי: ${c.title} (${L.length} שיעורים)`} description={`${c.blurb} קורס חינמי וקצר, כ-${total} דקות, עם שאלות תרגול בכל שיעור.`} schema={schema}>
   <section class="kh">
     <div class="wrap">
-      <Breadcrumbs items={[{ label: 'קורס חינמי' }]} />
+      <Breadcrumbs items={[{ href: 'kurs/', label: 'קורסים' }, { label: c.short }]} />
       <p class="eyebrow">קורס חינמי · {L.length} שיעורים · כ-{total} דקות</p>
-      <h1>יוצאים מחובות, צעד אחר צעד</h1>
-      <p class="lede">שיעורים קצרים בשפה פשוטה, עם שאלות תרגול. מתחילים בתמונת מצב, ומסיימים בבנייה מחדש אחרי החובות. בלי הרשמה ובלי תשלום.</p>
-      <a class="btn btn-sun" href={`${B}kurs/${L[0].id}/`}>מתחילים בשיעור הראשון</a>
+      <h1>{c.title}</h1>
+      <p class="lede">{c.blurb} בלי הרשמה ובלי תשלום.</p>
+      {L[0] && <a class="btn btn-sun" href={`${B}kurs/${L[0].id}/`}>מתחילים בשיעור הראשון</a>}
     </div>
   </section>
   <div class="wrap" style="padding-block:34px 50px">
     <ol class="les">
       {L.map((l) => <li><a class="card" href={`${B}kurs/${l.id}/`}><span class="n">{l.data.n}</span><div><h2>{l.data.title.replace(/^שיעור \d+: /, '')}</h2><p>{l.data.description}</p><small>{l.data.minutes} דקות{l.data.quiz.length ? ` · ${l.data.quiz.length} שאלות תרגול` : ''}</small></div><span class="done" data-les={l.id} hidden>✓ נקרא</span></a></li>)}
     </ol>
-    <h2 style="margin-top:44px">עוד קורסים חינמיים</h2>
-    <div class="grid g3" style="margin-top:14px">
-      {others.map((c) => <a class="card crs" href={`${B}kurs/${c.id}/`}><span class="tag">{c.n} שיעורים · כ-{c.min} דקות</span><h3>{c.title}</h3><p>{c.blurb}</p><span class="go">לקורס ←</span></a>)}
-    </div>
-    <div style="margin-top:40px"><LeadForm source="kurs" /></div>
+    <h2 style="margin-top:44px">קורסים נוספים</h2>
+    <ul class="oc">{others.map((o) => <li><a href={`${B}kurs/${o.id === 'yotzim' ? '' : o.id + '/'}`}>{o.title}</a></li>)}</ul>
+    <div style="margin-top:40px"><LeadForm source={`kurs:${c.id}`} /></div>
   </div>
 </Base>
 <style>
@@ -42,6 +41,6 @@ const schema = [{ '@context': 'https://schema.org', '@type': 'Course', name: 'י
 .les .n{flex:none;width:46px;height:46px;border-radius:50%;background:var(--teal-soft);color:var(--teal-2);display:grid;place-items:center;font:700 1.25rem/1 var(--ff-d)}
 .les h2{font-size:1.2rem;margin:0 0 .3em;font-family:var(--ff)}.les p{margin:0}.les small{color:var(--muted)}.les div{flex:1;min-width:0}
 .done{color:var(--teal);font-weight:700;white-space:nowrap}
-.crs h3{font-size:1.2rem;margin:.5em 0 .3em}.crs p{margin:0}.crs .go{display:inline-block;margin-top:10px;font-weight:700;color:var(--teal)}
+.oc{display:flex;flex-wrap:wrap;gap:10px 22px;padding:0;list-style:none}
 </style>
 <script is:inline>try { const d = JSON.parse(localStorage.getItem('bh-kurs') || '{}'); document.querySelectorAll('[data-les]').forEach((e) => { if (d[e.dataset.les]) e.hidden = false; }); } catch (e) {}</script>

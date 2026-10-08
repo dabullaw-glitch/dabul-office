@@ -6,19 +6,25 @@ import GuideCard from '../../components/GuideCard.astro';
 import LeadForm from '../../components/LeadForm.astro';
 import Video from '../../components/Video.astro';
 import videos from '../../data/videos.json';
+import { COURSES } from '../../data/courses';
 export async function getStaticPaths() {
-  const L = (await getCollection('lessons')).sort((a, b) => a.data.n - b.data.n);
-  return L.map((l, i) => ({ params: { lesson: l.id }, props: { l, prev: L[i - 1], next: L[i + 1], total: L.length } }));
+  const all = await getCollection('lessons');
+  return all.map((l) => {
+    const L = all.filter((x) => x.data.course === l.data.course).sort((a, b) => a.data.n - b.data.n); const i = L.indexOf(l);
+    return { params: { lesson: l.id }, props: { l, prev: L[i - 1], next: L[i + 1], total: L.length } };
+  });
 }
 const { l, prev, next, total } = Astro.props;
+const course = COURSES.find((c) => c.id === l.data.course)!;
+const home = l.data.course === 'yotzim' ? 'kurs/' : `kurs/${l.data.course}/`;
 const { Content } = await render(l);
 const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const guides = (await getCollection('guides')).filter((g) => l.data.guides.includes(g.id));
 const video = l.data.video ? (videos as any[]).find((v) => v.id === l.data.video) : (videos as any[]).find((v) => v.lesson === l.id);
 ---
-<Base title={`${l.data.title} | קורס יוצאים מחובות`} description={l.data.description} type="article">
+<Base title={`${l.data.title} | קורס ${course.short}`} description={l.data.description} type="article">
   <div class="wrap lp">
-    <Breadcrumbs items={[{ href: 'kurs/', label: 'קורס חינמי' }, { label: `שיעור ${l.data.n}` }]} />
+    <Breadcrumbs items={[{ href: 'kurs/', label: 'קורסים' }, ...(l.data.course === 'yotzim' ? [] : [{ href: home, label: course.short }]), { label: `שיעור ${l.data.n}` }]} />
     <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax={total} aria-valuenow={l.data.n} aria-label="התקדמות בקורס"><span style={`width:${(l.data.n / total) * 100}%`}></span></div>
     <p class="eyebrow">שיעור {l.data.n} מתוך {total} · {l.data.minutes} דקות</p>
     <h1>{l.data.title.replace(/^שיעור \d+: /, '')}</h1>
@@ -39,7 +45,7 @@ const video = l.data.video ? (videos as any[]).find((v) => v.id === l.data.video
     {guides.length > 0 && <section style="margin:30px 0"><h2>להעמקה</h2><div class="grid g2">{guides.map((g) => <GuideCard g={g} />)}</div></section>}
     <nav class="pn" aria-label="ניווט בין שיעורים">
       {prev ? <a class="btn btn-line" href={`${B}kurs/${prev.id}/`}>→ השיעור הקודם</a> : <span></span>}
-      {next ? <a class="btn btn-teal" href={`${B}kurs/${next.id}/`} data-mark={l.id}>לשיעור הבא ←</a> : <a class="btn btn-sun" href={`${B}kurs/`} data-mark={l.id}>סיימתי את הקורס ✓</a>}
+      {next ? <a class="btn btn-teal" href={`${B}kurs/${next.id}/`} data-mark={l.id}>לשיעור הבא ←</a> : <a class="btn btn-sun" href={`${B}${home}`} data-mark={l.id}>סיימתי את הקורס ✓</a>}
     </nav>
     <div style="margin-top:40px"><LeadForm source={`kurs:${l.id}`} /></div>
   </div>

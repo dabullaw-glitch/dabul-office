@@ -40,7 +40,7 @@ export const NAV = [
   { href: 'nose/hadlut-piraon/', label: 'חדלות פירעון' },
   { href: 'nose/hotzaa-lapoal/', label: 'הוצאה לפועל' },
   { href: 'kli/', label: 'מחשבונים' },
-  { href: 'kurs/', label: 'קורס חינמי' },
+  { href: 'kurs/', label: 'קורסים' },
   { href: 'video/', label: 'סרטונים' },
   { href: 'forum/', label: 'פורום' },
 ];
