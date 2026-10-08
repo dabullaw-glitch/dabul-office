@@ -32,6 +32,7 @@ jobs:
             CHROME_PATH="$CHROME" npx lighthouse "$u" --quiet --output=json --output-path="lh/$n-mobile.json" --chrome-flags="--headless=new --no-sandbox" --only-categories=performance,accessibility,best-practices,seo || true
           done
           CHROME_PATH="$CHROME" npx lighthouse "https://dabullaw.co.il/" --quiet --preset=desktop --output=json --output-path="lh/home-desktop.json" --chrome-flags="--headless=new --no-sandbox" --only-categories=performance,accessibility,best-practices,seo || true
+          CHROME_PATH="$CHROME" npx lighthouse "https://dabullaw.co.il/%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%9e%d7%a7%d7%99%d7%a3-%d7%9c%d7%a8%d7%9b%d7%99%d7%a9%d7%aa-%d7%93%d7%99%d7%a8%d7%94-%d7%99%d7%93-%d7%a9%d7%a0%d7%99%d7%94/" --quiet --preset=desktop --output=json --output-path="lh/article-desktop.json" --chrome-flags="--headless=new --no-sandbox" --only-categories=performance,accessibility,best-practices,seo || true
           node audit/lhsum.mjs
       - name: Commit results
         run: |

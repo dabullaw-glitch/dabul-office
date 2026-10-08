@@ -18,7 +18,24 @@ for (const f of fs.readdirSync('lh').filter((x) => x.endsWith('.json'))) {
     };
   } catch (e) { out[f] = { error: String(e).slice(0, 200) }; }
 }
+// detail dump: which files block, which lack caching, what shifts, which nodes fail accessibility
+const det = {};
+for (const f of fs.readdirSync('lh').filter((x) => x.endsWith('.json'))) {
+  try {
+    const j = JSON.parse(fs.readFileSync('lh/' + f, 'utf8')); const a = j.audits || {}; const d = {};
+    const pick = (it) => { const o = {}; for (const [k, v] of Object.entries(it)) { if (v && typeof v === 'object' && v.type === 'node') o[k] = (v.selector || '') + ' :: ' + (v.snippet || '').slice(0, 160); else if (typeof v !== 'object') o[k] = typeof v === 'string' ? v.slice(0, 200) : v; } return o; };
+    for (const id of ['render-blocking-resources', 'render-blocking-insight', 'uses-long-cache-ttl', 'cache-insight', 'layout-shifts', 'layout-shift-elements', 'cls-culprits-insight', 'largest-contentful-paint-element', 'lcp-discovery-insight', 'prioritize-lcp-image', 'lcp-phases-insight', 'font-display', 'font-display-insight', 'network-dependency-tree-insight', 'unused-javascript', 'third-party-summary', 'bootup-time']) {
+      const x = a[id]; if (!x) continue;
+      const items = (x.details?.items || []).flatMap((it) => it.items && Array.isArray(it.items) ? it.items : [it]).slice(0, 15).map(pick);
+      d[id] = { score: x.score, display: x.displayValue || '', items };
+    }
+    const fails = {};
+    for (const r of j.categories?.accessibility?.auditRefs || []) { const x = a[r.id]; if (x && x.score === 0) fails[r.id] = (x.details?.items || []).slice(0, 8).map((it) => it.node ? (it.node.selector || '') + ' :: ' + (it.node.snippet || '').slice(0, 180) : JSON.stringify(it).slice(0, 180)); }
+    d.a11y = fails;
+    det[f.replace('.json', '')] = d;
+  } catch (e) { det[f] = { error: String(e).slice(0, 200) }; }
+}
 fs.mkdirSync('audit-results', { recursive: true });
+fs.writeFileSync('audit-results/lh-details.json', JSON.stringify(det, null, 1));
 fs.writeFileSync('audit-results/lighthouse.json', JSON.stringify(out, null, 1));
-// run 1791446232
-// run2 1791446760
+// run speed-details 20261008
