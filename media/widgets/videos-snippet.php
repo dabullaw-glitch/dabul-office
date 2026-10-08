@@ -53,7 +53,7 @@ function dabul_art_figures($vids, $html) {
 	return $out;
 }
 add_filter('the_content', function ($html) {
-	if (!is_singular('post') || !in_the_loop() || !is_main_query()) return $html;
+	if (!is_singular() || !in_the_loop() || !is_main_query()) return $html;
 	$map = get_option('dabul_art_videos', array());
 	$pid = get_the_ID();
 	if (empty($map[$pid])) return $html;
@@ -112,7 +112,7 @@ add_action('template_redirect', function () {
 			}
 		}
 		// new videos in articles that are built with Elementor (the content filter does not reach them)
-		if (is_singular('post')) {
+		if (is_singular()) {
 			$map = get_option('dabul_art_videos', array()); $qid = get_queried_object_id();
 			if (!empty($map[$qid])) {
 				$miss = array_filter((array) $map[$qid], function ($v) use ($html) { return strpos($html, 'data-id="' . $v . '"') === false; });
