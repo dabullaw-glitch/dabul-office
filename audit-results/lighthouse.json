@@ -1,0 +1,407 @@
+{
+ "article-mobile": {
+  "scores": {
+   "performance": 59,
+   "accessibility": 80,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "fcp": {
+   "v": "4.5 s",
+   "score": 0.15
+  },
+  "lcp": {
+   "v": "5.0 s",
+   "score": 0.26
+  },
+  "tbt": {
+   "v": "0 ms",
+   "score": 1
+  },
+  "cls": {
+   "v": "0.224",
+   "score": 0.56
+  },
+  "si": {
+   "v": "4.5 s",
+   "score": 0.73
+  },
+  "weight": {
+   "v": "Total size was 446 KiB",
+   "score": 1
+  },
+  "dom": {
+   "v": "2,279 elements",
+   "score": 0.5
+  },
+  "unusedJs": {
+   "v": "",
+   "score": 1
+  },
+  "unusedCss": {
+   "v": "",
+   "score": 1
+  },
+  "renderBlocking": {
+   "v": "Potential savings of 1,970 ms",
+   "score": 0
+  },
+  "lcpElement": "<p data-path-to-node=\"0\">",
+  "opportunities": [
+   {
+    "id": "render-blocking-resources",
+    "title": "Eliminate render-blocking resources",
+    "ms": 1972,
+    "kb": 0
+   }
+  ],
+  "a11yFails": [
+   "Elements with an ARIA `[role]` that require children to contain a specific `[role]` are missing some or all of those required children.",
+   "Background and foreground colors do not have a sufficient contrast ratio.",
+   "`<frame>` or `<iframe>` elements do not have a title",
+   "Heading elements are not in a sequentially-descending order",
+   "Links do not have a discernible name",
+   "Links rely on color to be distinguishable.",
+   "Touch targets do not have sufficient size or spacing.",
+   "`<td>` elements in a large `<table>` do not have table headers."
+  ],
+  "seoFails": [
+   "Links are not crawlable"
+  ],
+  "bpFails": []
+ },
+ "contact-mobile": {
+  "scores": {
+   "performance": 81,
+   "accessibility": 89,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "fcp": {
+   "v": "2.9 s",
+   "score": 0.53
+  },
+  "lcp": {
+   "v": "3.9 s",
+   "score": 0.53
+  },
+  "tbt": {
+   "v": "0 ms",
+   "score": 1
+  },
+  "cls": {
+   "v": "0.094",
+   "score": 0.91
+  },
+  "si": {
+   "v": "2.9 s",
+   "score": 0.95
+  },
+  "weight": {
+   "v": "Total size was 413 KiB",
+   "score": 1
+  },
+  "dom": {
+   "v": "1,628 elements",
+   "score": 0.5
+  },
+  "unusedJs": {
+   "v": "",
+   "score": 1
+  },
+  "unusedCss": {
+   "v": "",
+   "score": 1
+  },
+  "renderBlocking": {
+   "v": "Potential savings of 1,220 ms",
+   "score": 0
+  },
+  "lcpElement": "<div class=\"elementor-element elementor-element-83941a1 e-flex e-con-boxed e-con e-par…\" data-id=\"83941a1\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_backgr",
+  "opportunities": [
+   {
+    "id": "render-blocking-resources",
+    "title": "Eliminate render-blocking resources",
+    "ms": 1224,
+    "kb": 0
+   },
+   {
+    "id": "server-response-time",
+    "title": "Reduce initial server response time",
+    "ms": 589,
+    "kb": 0
+   },
+   {
+    "id": "prioritize-lcp-image",
+    "title": "Preload Largest Contentful Paint image",
+    "ms": 0,
+    "kb": 0
+   }
+  ],
+  "a11yFails": [
+   "Background and foreground colors do not have a sufficient contrast ratio.",
+   "Heading elements are not in a sequentially-descending order",
+   "Links do not have a discernible name",
+   "Touch targets do not have sufficient size or spacing."
+  ],
+  "seoFails": [
+   "Links are not crawlable"
+  ],
+  "bpFails": []
+ },
+ "home-desktop": {
+  "scores": {
+   "performance": 94,
+   "accessibility": 81,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "fcp": {
+   "v": "1.2 s",
+   "score": 0.76
+  },
+  "lcp": {
+   "v": "1.2 s",
+   "score": 0.9
+  },
+  "tbt": {
+   "v": "0 ms",
+   "score": 1
+  },
+  "cls": {
+   "v": "0.011",
+   "score": 1
+  },
+  "si": {
+   "v": "1.2 s",
+   "score": 0.93
+  },
+  "weight": {
+   "v": "Total size was 689 KiB",
+   "score": 1
+  },
+  "dom": {
+   "v": "3,397 elements",
+   "score": 0.5
+  },
+  "unusedJs": {
+   "v": "Potential savings of 21 KiB",
+   "score": 0.5
+  },
+  "unusedCss": {
+   "v": "",
+   "score": 1
+  },
+  "renderBlocking": {
+   "v": "Potential savings of 730 ms",
+   "score": 0
+  },
+  "lcpElement": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_backgr",
+  "opportunities": [
+   {
+    "id": "render-blocking-resources",
+    "title": "Eliminate render-blocking resources",
+    "ms": 734,
+    "kb": 0
+   },
+   {
+    "id": "server-response-time",
+    "title": "Reduce initial server response time",
+    "ms": 579,
+    "kb": 0
+   },
+   {
+    "id": "unused-javascript",
+    "title": "Reduce unused JavaScript",
+    "ms": 0,
+    "kb": 21
+   },
+   {
+    "id": "uses-responsive-images",
+    "title": "Properly size images",
+    "ms": 0,
+    "kb": 19
+   }
+  ],
+  "a11yFails": [
+   "`button`, `link`, and `menuitem` elements do not have accessible names.",
+   "Elements with an ARIA `[role]` that require children to contain a specific `[role]` are missing some or all of those required children.",
+   "Background and foreground colors do not have a sufficient contrast ratio.",
+   "Links do not have a discernible name",
+   "Links rely on color to be distinguishable.",
+   "Touch targets do not have sufficient size or spacing."
+  ],
+  "seoFails": [
+   "Links are not crawlable"
+  ],
+  "bpFails": []
+ },
+ "home-mobile": {
+  "scores": {
+   "performance": 72,
+   "accessibility": 81,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "fcp": {
+   "v": "3.9 s",
+   "score": 0.25
+  },
+  "lcp": {
+   "v": "4.7 s",
+   "score": 0.33
+  },
+  "tbt": {
+   "v": "10 ms",
+   "score": 1
+  },
+  "cls": {
+   "v": "0.094",
+   "score": 0.91
+  },
+  "si": {
+   "v": "3.9 s",
+   "score": 0.83
+  },
+  "weight": {
+   "v": "Total size was 628 KiB",
+   "score": 1
+  },
+  "dom": {
+   "v": "3,400 elements",
+   "score": 0.5
+  },
+  "unusedJs": {
+   "v": "Potential savings of 21 KiB",
+   "score": 0.5
+  },
+  "unusedCss": {
+   "v": "",
+   "score": 1
+  },
+  "renderBlocking": {
+   "v": "Potential savings of 1,870 ms",
+   "score": 0
+  },
+  "lcpElement": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_backgr",
+  "opportunities": [
+   {
+    "id": "render-blocking-resources",
+    "title": "Eliminate render-blocking resources",
+    "ms": 1867,
+    "kb": 0
+   },
+   {
+    "id": "server-response-time",
+    "title": "Reduce initial server response time",
+    "ms": 595,
+    "kb": 0
+   },
+   {
+    "id": "prioritize-lcp-image",
+    "title": "Preload Largest Contentful Paint image",
+    "ms": 0,
+    "kb": 0
+   },
+   {
+    "id": "unused-javascript",
+    "title": "Reduce unused JavaScript",
+    "ms": 0,
+    "kb": 21
+   }
+  ],
+  "a11yFails": [
+   "`button`, `link`, and `menuitem` elements do not have accessible names.",
+   "Elements with an ARIA `[role]` that require children to contain a specific `[role]` are missing some or all of those required children.",
+   "Background and foreground colors do not have a sufficient contrast ratio.",
+   "Links do not have a discernible name",
+   "Links rely on color to be distinguishable.",
+   "Touch targets do not have sufficient size or spacing."
+  ],
+  "seoFails": [
+   "Links are not crawlable"
+  ],
+  "bpFails": []
+ },
+ "netanya-mobile": {
+  "scores": {
+   "performance": 52,
+   "accessibility": 83,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "fcp": {
+   "v": "5.4 s",
+   "score": 0.06
+  },
+  "lcp": {
+   "v": "6.6 s",
+   "score": 0.08
+  },
+  "tbt": {
+   "v": "0 ms",
+   "score": 1
+  },
+  "cls": {
+   "v": "0.224",
+   "score": 0.56
+  },
+  "si": {
+   "v": "5.4 s",
+   "score": 0.56
+  },
+  "weight": {
+   "v": "Total size was 451 KiB",
+   "score": 1
+  },
+  "dom": {
+   "v": "2,798 elements",
+   "score": 0.5
+  },
+  "unusedJs": {
+   "v": "",
+   "score": 1
+  },
+  "unusedCss": {
+   "v": "Potential savings of 20 KiB",
+   "score": 0
+  },
+  "renderBlocking": {
+   "v": "Potential savings of 3,320 ms",
+   "score": 0
+  },
+  "lcpElement": "<p class=\"lvbl-p\">",
+  "opportunities": [
+   {
+    "id": "render-blocking-resources",
+    "title": "Eliminate render-blocking resources",
+    "ms": 3318,
+    "kb": 0
+   },
+   {
+    "id": "server-response-time",
+    "title": "Reduce initial server response time",
+    "ms": 589,
+    "kb": 0
+   },
+   {
+    "id": "unused-css-rules",
+    "title": "Reduce unused CSS",
+    "ms": 0,
+    "kb": 20
+   }
+  ],
+  "a11yFails": [
+   "Elements with an ARIA `[role]` that require children to contain a specific `[role]` are missing some or all of those required children.",
+   "Background and foreground colors do not have a sufficient contrast ratio.",
+   "`<frame>` or `<iframe>` elements do not have a title",
+   "Heading elements are not in a sequentially-descending order",
+   "Links do not have a discernible name",
+   "Touch targets do not have sufficient size or spacing."
+  ],
+  "seoFails": [
+   "Links are not crawlable"
+  ],
+  "bpFails": []
+ }
+}
