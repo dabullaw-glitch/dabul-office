@@ -1,0 +1,25 @@
+// End-to-end check of the contact form: submit one clearly marked test lead from the home page form.
+import { chromium } from 'playwright';
+import fs from 'node:fs';
+const OUT = 'diag-results/formtest'; fs.mkdirSync(OUT, { recursive: true });
+const b = await chromium.launch(); const rep = {};
+const ctx = await b.newContext({ viewport: { width: 1440, height: 900 }, locale: 'he-IL', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36' });
+const p = await ctx.newPage(); const net = [];
+p.on('response', async (r) => { if (/admin-ajax/.test(r.url())) { net.push({ st: r.status(), body: (await r.text().catch(() => '')).slice(0, 400) }); } });
+await p.goto('https://dabullaw.co.il/?ft=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(3000);
+await p.evaluate(() => { const x = [...document.querySelectorAll('button,a')].find((e) => /הבנתי/.test(e.textContent || '')); if (x) x.click(); }).catch(() => null);
+const form = p.locator('form.elementor-form').first();
+rep.fields = await form.evaluate((f) => [...f.querySelectorAll('input,textarea,select')].map((i) => ({ n: i.name, t: i.type, req: i.required, ph: i.placeholder })));
+await form.scrollIntoViewIfNeeded();
+await form.locator('input[type="text"]').first().fill('בדיקת מערכת Claude');
+await form.locator('input[type="tel"]').first().fill('000');
+const em = form.locator('input[type="email"]'); if (await em.count()) await em.first().fill('');
+const ta = form.locator('textarea'); if (await ta.count()) await ta.first().fill('בדיקה: ליד מהאתר למערכת המשרד. אפשר למחוק.');
+const cb = form.locator('input[type="checkbox"]'); for (let i = 0; i < await cb.count(); i++) await cb.nth(i).check({ force: true });
+await p.waitForTimeout(1500);
+await form.locator('button[type="submit"]').first().click();
+await p.waitForTimeout(9000);
+rep.msg = await form.evaluate((f) => (f.querySelector('.elementor-message') || {}).innerText || '');
+rep.net = net;
+await form.screenshot({ path: `${OUT}/form.jpg`, type: 'jpeg', quality: 70 });
+fs.writeFileSync(`${OUT}/rep.json`, JSON.stringify(rep, null, 1)); await b.close();
