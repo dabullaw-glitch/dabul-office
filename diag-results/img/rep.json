@@ -1,0 +1,205 @@
+{
+ "cand": {
+  "2026/03/yakir-mob-2.webp": {
+   "w": 768,
+   "h": 1443,
+   "kb": 24,
+   "type": "image/webp"
+  },
+  "2025/12/yakir-mob-2.jpg": {
+   "w": 600,
+   "h": 1146,
+   "kb": 44,
+   "type": "image/jpeg"
+  },
+  "2025/12/yakir-mob-1.jpg": {
+   "w": 768,
+   "h": 1467,
+   "kb": 55,
+   "type": "image/jpeg"
+  },
+  "2025/12/yakir-mob-3.jpg": {
+   "w": 600,
+   "h": 1146,
+   "kb": 51,
+   "type": "image/jpeg"
+  },
+  "2025/12/yakir-dabul.jpg": {
+   "w": 400,
+   "h": 579,
+   "kb": 16,
+   "type": "image/jpeg"
+  },
+  "2025/11/yakir-dabul.png": {
+   "w": 204,
+   "h": 204,
+   "kb": 22,
+   "type": "image/png"
+  },
+  "2025/11/yakir-dabul-adv.png": {
+   "w": 415,
+   "h": 700,
+   "kb": 83,
+   "type": "image/png"
+  },
+  "2026/04/יקיר-דבול-עורך-דין.webp": {
+   "w": 494,
+   "h": 800,
+   "kb": 34,
+   "type": "image/webp"
+  },
+  "2026/03/יקיר.webp": {
+   "w": 910,
+   "h": 910,
+   "kb": 14,
+   "type": "image/webp"
+  },
+  "2026/03/יקיר-דבול-1.jpeg": {
+   "w": 832,
+   "h": 1251,
+   "kb": 25,
+   "type": "image/jpeg"
+  },
+  "2026/03/0יקיר-דבול-2-copy.webp": {
+   "w": 433,
+   "h": 433,
+   "kb": 8,
+   "type": "image/webp"
+  },
+  "2026/03/2יקיר.webp": {
+   "w": 910,
+   "h": 910,
+   "kb": 15,
+   "type": "image/webp"
+  },
+  "2026/03/יקיר-דבול-2-copy.webp": {
+   "w": 832,
+   "h": 1251,
+   "kb": 49,
+   "type": "image/webp"
+  },
+  "2026/03/יקיר-1.jpg": {
+   "w": 1024,
+   "h": 572,
+   "kb": 118,
+   "type": "image/jpeg"
+  },
+  "2026/03/יקיר-2.jpg": {
+   "w": 1024,
+   "h": 559,
+   "kb": 183,
+   "type": "image/jpeg"
+  },
+  "2026/04/יקיר-3.jpg": {
+   "w": 1024,
+   "h": 559,
+   "kb": 137,
+   "type": "image/jpeg"
+  },
+  "2026/04/יקיר-4.jpg": {
+   "w": 1024,
+   "h": 572,
+   "kb": 124,
+   "type": "image/jpeg"
+  },
+  "2026/04/יקיר5.jpg": {
+   "w": 1024,
+   "h": 559,
+   "kb": 118,
+   "type": "image/jpeg"
+  },
+  "2026/04/יקיר44.jpg": {
+   "w": 1024,
+   "h": 559,
+   "kb": 157,
+   "type": "image/jpeg"
+  },
+  "2026/04/יקיר-1.jpg": {
+   "w": 1024,
+   "h": 559,
+   "kb": 115,
+   "type": "image/jpeg"
+  },
+  "2026/03/דבול.webp": {
+   "w": 604,
+   "h": 341,
+   "kb": 28,
+   "type": "image/webp"
+  },
+  "2026/03/yakir-banner.webp": {
+   "w": 553,
+   "h": 800,
+   "kb": 38,
+   "type": "image/webp"
+  },
+  "2026/02/יקיר-דובול-באנר.webp": {
+   "w": 660,
+   "h": 368,
+   "kb": 20,
+   "type": "image/webp"
+  },
+  "2026/05/bgmain.webp": {
+   "w": 1400,
+   "h": 935,
+   "kb": 25,
+   "type": "image/webp"
+  },
+  "2025/11/Yakir-Dabul-Avatar.png": {
+   "w": 235,
+   "h": 235,
+   "kb": 23,
+   "type": "image/png"
+  },
+  "2026/03/p1.webp": {
+   "w": 855,
+   "h": 572,
+   "kb": 45,
+   "type": "image/webp"
+  }
+ },
+ "hero": {
+  "phone": [
+   {
+    "bg": "url(\"https://dabullaw.co.il/wp-content/uploads/2026/03/yakir-mob-2.webp\")",
+    "rw": 390,
+    "rh": 633,
+    "id": "9056c3a",
+    "vis": "flex"
+   }
+  ],
+  "tablet": [
+   {
+    "bg": "url(\"https://dabullaw.co.il/wp-content/uploads/2026/05/bgmain.webp\")",
+    "rw": 820,
+    "rh": 565,
+    "id": "9056c3a",
+    "vis": "flex"
+   },
+   {
+    "img": "https://dabullaw.co.il/wp-content/uploads/2026/04/%D7%99%D7%A7%D7%99%D7%A8-%D7%93%D7%91%D7%95%D7%9C-%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F.webp",
+    "nw": 494,
+    "nh": 800,
+    "rw": 324,
+    "rh": 525,
+    "id": "2c91460"
+   }
+  ],
+  "desktop": [
+   {
+    "bg": "url(\"https://dabullaw.co.il/wp-content/uploads/2026/05/bgmain.webp\")",
+    "rw": 1440,
+    "rh": 840,
+    "id": "9056c3a",
+    "vis": "flex"
+   },
+   {
+    "img": "https://dabullaw.co.il/wp-content/uploads/2026/04/%D7%99%D7%A7%D7%99%D7%A8-%D7%93%D7%91%D7%95%D7%9C-%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F.webp",
+    "nw": 494,
+    "nh": 800,
+    "rw": 494,
+    "rh": 800,
+    "id": "2c91460"
+   }
+  ]
+ }
+}
