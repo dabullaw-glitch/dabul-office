@@ -10,7 +10,8 @@
    4. Accessibility (screen readers and contrast): the "skip to content" link has a target, the menu items that open
       a submenu are marked as buttons, the cookie window is marked as a dialog with a name, and three colors are made
       a little darker so the text is readable for everyone: the green phone button, the gold "למידע נוסף" links,
-      and the WhatsApp button at the bottom of the phone screen.
+      the gold color of a menu item under the mouse or of the current page, and the WhatsApp button at the bottom
+      of the phone screen.
    To undo: deactivate this snippet. */
 
 function dabul_sp3_on() {
@@ -70,6 +71,7 @@ add_action('wp_head', function () {
 		. '.elementor-element-d8c5ab4 .elementor-button{background-color:#088a0b!important}'
 		. '.elementor-element-ff08b22 .elementor-heading-title,.elementor-element-ff08b22 .elementor-heading-title a{color:#8c6f33!important}'
 		. '#dbl-foot .wa a{background-color:#11823f!important}'
+		. '.elementor-element-b175daa .elementor-nav-menu--main .elementor-item:hover,.elementor-element-b175daa .elementor-nav-menu--main .elementor-item:focus,.elementor-element-b175daa .elementor-nav-menu--main .elementor-item.elementor-item-active,.elementor-element-b175daa .elementor-nav-menu--main .elementor-item.highlighted{color:#8c6f33!important}'
 		. '</style>' . "\n";
 }, 2);
 
