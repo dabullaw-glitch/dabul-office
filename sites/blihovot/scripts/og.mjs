@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
 const DIST = 'dist', OUT = path.join(DIST, 'og'); fs.mkdirSync(OUT, { recursive: true });
-const HUB = { 'hadlut-piraon': 'חדלות פירעון', 'hotzaa-lapoal': 'הוצאה לפועל', 'hesder-hov': 'הסדרי חוב', atzmaim: 'עצמאים ועסקים', achrei: 'אחרי החובות' };
+const HUB = { 'hadlut-piraon': 'חדלות פירעון', 'hotzaa-lapoal': 'הוצאה לפועל', 'hesder-hov': 'הסדרי חוב', atzmaim: 'עצמאים ועסקים', kalkala: 'כלכלה נכונה', achrei: 'אחרי החובות' };
 const fm = (s) => { const m = /^---\n([\s\S]*?)\n---/.exec(s); const o = {}; if (m) for (const line of m[1].split('\n')) { const k = /^(\w+):\s*"?(.*?)"?\s*$/.exec(line); if (k) o[k[1]] = k[2]; } return o; };
 const items = fs.readdirSync('src/content/guides').filter((f) => f.endsWith('.md')).map((f) => { const d = fm(fs.readFileSync(path.join('src/content/guides', f), 'utf8')); return { id: f.replace(/\.md$/, ''), title: d.title, tag: HUB[d.hub] || '' }; });
 items.push({ id: 'default', title: 'יש דרך החוצה מהחובות', tag: 'המדריך הישראלי ליציאה מחובות' });

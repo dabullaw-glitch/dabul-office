@@ -8,7 +8,7 @@ const guides = defineCollection({
     title: z.string(),                       // the H1
     seoTitle: z.string().optional(),         // <title> if different (max ~60 chars)
     description: z.string(),                 // meta description, 140-160 chars
-    hub: z.enum(['hadlut-piraon', 'hotzaa-lapoal', 'hesder-hov', 'atzmaim', 'achrei']),
+    hub: z.enum(['hadlut-piraon', 'hotzaa-lapoal', 'hesder-hov', 'atzmaim', 'kalkala', 'achrei']),
     published: z.coerce.date(),
     updated: z.coerce.date(),
     summary: z.array(z.string()).min(2),     // "בקצרה": 3-5 short answer lines shown at the top (what AI answers quote)
