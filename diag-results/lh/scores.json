@@ -1,1 +1,92 @@
-{}
+{
+ "live-d1.json": {
+  "performance": 86,
+  "accessibility": 91,
+  "best-practices": 78,
+  "seo": 92,
+  "cls": "0.012",
+  "lcp": "1.5 s",
+  "fcp": "1.2 s"
+ },
+ "live-d2.json": {
+  "performance": 74,
+  "accessibility": 91,
+  "best-practices": 78,
+  "seo": 92,
+  "cls": "0.016",
+  "lcp": "2.4 s",
+  "fcp": "2.0 s"
+ },
+ "live-d3.json": {
+  "performance": 88,
+  "accessibility": 91,
+  "best-practices": 78,
+  "seo": 92,
+  "cls": "0.005",
+  "lcp": "1.6 s",
+  "fcp": "1.1 s"
+ },
+ "live-m1.json": {
+  "performance": 43,
+  "accessibility": 90,
+  "best-practices": 79,
+  "seo": 92,
+  "cls": "0.032",
+  "lcp": "7.3 s",
+  "fcp": "4.4 s"
+ },
+ "live-m2.json": {
+  "performance": 38,
+  "accessibility": 90,
+  "best-practices": 79,
+  "seo": 92,
+  "cls": "0.032",
+  "lcp": "9.2 s",
+  "fcp": "5.4 s"
+ },
+ "prev-d1.json": {
+  "performance": 90,
+  "accessibility": 97,
+  "best-practices": 78,
+  "seo": 100,
+  "cls": "0.022",
+  "lcp": "1.4 s",
+  "fcp": "1.1 s"
+ },
+ "prev-d2.json": {
+  "performance": 84,
+  "accessibility": 97,
+  "best-practices": 78,
+  "seo": 100,
+  "cls": "0.022",
+  "lcp": "1.9 s",
+  "fcp": "1.3 s"
+ },
+ "prev-d3.json": {
+  "performance": 79,
+  "accessibility": 97,
+  "best-practices": 78,
+  "seo": 100,
+  "cls": "0.011",
+  "lcp": "2.0 s",
+  "fcp": "1.8 s"
+ },
+ "prev-m1.json": {
+  "performance": 42,
+  "accessibility": 100,
+  "best-practices": 79,
+  "seo": 100,
+  "cls": "0",
+  "lcp": "6.0 s",
+  "fcp": "4.2 s"
+ },
+ "prev-m2.json": {
+  "performance": 41,
+  "accessibility": 100,
+  "best-practices": 79,
+  "seo": 100,
+  "cls": "0",
+  "lcp": "6.9 s",
+  "fcp": "3.9 s"
+ }
+}
