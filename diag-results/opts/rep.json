@@ -1,0 +1,24 @@
+{
+ "about-before-desktop": 1003,
+ "about-A-desktop": 701,
+ "about-B-desktop": 543,
+ "about-C-desktop": 681,
+ "footer-before-desktop": {
+  "y": 10035,
+  "h": 1000
+ },
+ "footer-F1-desktop": 757,
+ "footer-F2-desktop": 549,
+ "footer-F3-desktop": 594,
+ "about-before-phone": 1633,
+ "about-A-phone": 970,
+ "about-B-phone": 868,
+ "about-C-phone": 950,
+ "footer-before-phone": {
+  "y": 10819,
+  "h": 2663
+ },
+ "footer-F1-phone": 1101,
+ "footer-F2-phone": 1194,
+ "footer-F3-phone": 1200
+}
