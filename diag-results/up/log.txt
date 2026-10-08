@@ -1,6 +1,3 @@
-hero-phone (768, 1443) RGB
-hero-phone done (1170, 2198) 71 KB
-cutout (494, 800) RGBA
-cutout done (1000, 1619) 99 KB
-hero-desktop-bg (1400, 935) RGB
-hero-desktop-bg done (2400, 1603) 175 KB
+cut-p1 (1300, 2591) 157 KB
+cut-p2 (1300, 2282) 132 KB
+cut-p3 (1300, 2176) 123 KB
