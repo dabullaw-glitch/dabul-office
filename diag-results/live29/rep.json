@@ -1,0 +1,74 @@
+{
+ "desk:home": {
+  "status": 200,
+  "errs": [],
+  "cls": 0.003,
+  "sp3": true,
+  "content": true,
+  "logo": "300x77",
+  "h": 12580
+ },
+ "desk:category/press/": {
+  "status": 200,
+  "errs": [],
+  "cls": 0.004,
+  "sp3": true,
+  "content": true,
+  "logo": "300x77",
+  "h": 5586
+ },
+ "desk:contact/": {
+  "status": 404,
+  "errs": [],
+  "cls": 0.004,
+  "sp3": true,
+  "content": true,
+  "logo": "300x77",
+  "h": 2065
+ },
+ "desk:real-estate-lawyer-agamim-netanya/": {
+  "status": 200,
+  "errs": [],
+  "cls": 0.087,
+  "sp3": true,
+  "content": true,
+  "logo": "300x77",
+  "h": 9184
+ },
+ "phone:home": {
+  "status": 200,
+  "errs": [],
+  "cls": 0,
+  "sp3": true,
+  "content": true,
+  "logo": "300x77",
+  "h": 14638
+ },
+ "phone:category/press/": {
+  "status": 200,
+  "errs": [],
+  "cls": 0,
+  "sp3": true,
+  "content": true,
+  "logo": "300x77",
+  "h": 14140
+ },
+ "phone:contact/": {
+  "status": 404,
+  "errs": [],
+  "cls": 0,
+  "sp3": true,
+  "content": true,
+  "logo": "300x77",
+  "h": 3135
+ },
+ "phone:real-estate-lawyer-agamim-netanya/": {
+  "status": 200,
+  "errs": [],
+  "cls": 0,
+  "sp3": true,
+  "content": true,
+  "logo": "300x77",
+  "h": 13269
+ }
+}
