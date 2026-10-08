@@ -1,0 +1,83 @@
+{
+ "fields": [
+  {
+   "n": "post_id",
+   "t": "hidden",
+   "req": false,
+   "ph": ""
+  },
+  {
+   "n": "form_id",
+   "t": "hidden",
+   "req": false,
+   "ph": ""
+  },
+  {
+   "n": "referer_title",
+   "t": "hidden",
+   "req": false,
+   "ph": ""
+  },
+  {
+   "n": "queried_id",
+   "t": "hidden",
+   "req": false,
+   "ph": ""
+  },
+  {
+   "n": "form_fields[name]",
+   "t": "text",
+   "req": true,
+   "ph": ""
+  },
+  {
+   "n": "form_fields[email]",
+   "t": "tel",
+   "req": true,
+   "ph": ""
+  },
+  {
+   "n": "form_fields[field_ba4b8c9]",
+   "t": "checkbox",
+   "req": true,
+   "ph": ""
+  },
+  {
+   "n": "form_page_data_for_uco_crm_integration",
+   "t": "hidden",
+   "req": false,
+   "ph": ""
+  },
+  {
+   "n": "form_type_for_uco_crm_integration",
+   "t": "hidden",
+   "req": false,
+   "ph": ""
+  },
+  {
+   "n": "form_fields_types_for_uco_crm_integration",
+   "t": "hidden",
+   "req": false,
+   "ph": ""
+  },
+  {
+   "n": "local_storage_data_for_fixdigital_integration",
+   "t": "hidden",
+   "req": false,
+   "ph": ""
+  },
+  {
+   "n": "leads_should_be_ignored_by_fixdigital_integration_settings",
+   "t": "hidden",
+   "req": false,
+   "ph": ""
+  }
+ ],
+ "msg": "הטופס נשלח בהצלחה.",
+ "net": [
+  {
+   "st": 200,
+   "body": "{\"success\":true,\"data\":{\"message\":\"\\u05d4\\u05d8\\u05d5\\u05e4\\u05e1 \\u05e0\\u05e9\\u05dc\\u05d7 \\u05d1\\u05d4\\u05e6\\u05dc\\u05d7\\u05d4.\",\"data\":[]}}"
+  }
+ ]
+}
