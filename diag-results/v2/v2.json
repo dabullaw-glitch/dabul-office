@@ -1,0 +1,96 @@
+{
+ "homeDesktopLS": [
+  {
+   "t": 2813,
+   "v": 0.0004,
+   "n": [
+    "elementor-element elementor-element-ca99b79 elementor-widget"
+   ]
+  },
+  {
+   "t": 4145,
+   "v": 0.0585,
+   "n": [
+    "IMG",
+    "elementor-nav-menu",
+    "elementor-element elementor-element-d8c5ab4 elementor-hidden",
+    "#text"
+   ]
+  }
+ ],
+ "menuTop": [
+  "אודות",
+  "קונים דירה",
+  "מוכרים דירה",
+  "התחדשות עירונית",
+  "מיסוי מקרקעין",
+  "מידע וכלים",
+  "צרו קשר",
+  "אודות",
+  "קונים דירה",
+  "מוכרים דירה",
+  "התחדשות עירונית",
+  "מיסוי מקרקעין",
+  "מידע וכלים",
+  "צרו קשר"
+ ],
+ "subDesktopLS": [
+  {
+   "t": 1477,
+   "v": 0.0004,
+   "n": [
+    "elementor-element elementor-element-ca99b79 elementor-widget"
+   ]
+  },
+  {
+   "t": 1528,
+   "v": 0.0049,
+   "n": [
+    "elementor-icon-list-text elementor-post-info__item elementor",
+    "::after",
+    "elementor-icon-list-text elementor-post-info__item elementor",
+    "elementor-element elementor-element-8ad07f0 elementor-widget"
+   ]
+  },
+  {
+   "t": 1770,
+   "v": 0.0576,
+   "n": [
+    "elementor-element elementor-element-4ec86d12 e-con-full e-fl",
+    "IMG",
+    "elementor-element elementor-element-32e29317 elementor-butto",
+    "elementor-field-type-acceptance elementor-field-group elemen",
+    "elementor-element elementor-element-a334cbd elementor-widget"
+   ]
+  },
+  {
+   "t": 1832,
+   "v": 0,
+   "n": []
+  },
+  {
+   "t": 2381,
+   "v": 0.0585,
+   "n": [
+    "IMG",
+    "elementor-nav-menu",
+    "elementor-element elementor-element-d8c5ab4 elementor-hidden",
+    "#text"
+   ]
+  },
+  {
+   "t": 2439,
+   "v": 0.0187,
+   "n": [
+    "elementor-element elementor-element-b3cef9b e-con-full e-fle",
+    "elementor-element elementor-element-a334cbd elementor-widget"
+   ]
+  }
+ ],
+ "reviewCounts": [
+  "73 ביקורות",
+  "73 ביקורות",
+  "73 ביקורות"
+ ],
+ "featured": []
+}
