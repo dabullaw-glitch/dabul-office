@@ -1,26 +1,20 @@
 {
  "desktop": {
   "status": 200,
-  "errs": [
-   "SyntaxError: Invalid or unexpected token @ ",
-   "SyntaxError: Invalid or unexpected token @ "
-  ],
-  "scriptRan": false,
+  "errs": [],
+  "scriptRan": true,
   "hiddenAfterScroll": 0,
   "phoneShown": true,
-  "emptySubmitMsg": "",
+  "emptySubmitMsg": "נא למלא שם",
   "hScroll": 0
  },
  "mobile": {
   "status": 200,
-  "errs": [
-   "SyntaxError: Invalid or unexpected token @ ",
-   "SyntaxError: Invalid or unexpected token @ "
-  ],
-  "scriptRan": false,
+  "errs": [],
+  "scriptRan": true,
   "hiddenAfterScroll": 0,
   "phoneShown": true,
-  "emptySubmitMsg": "",
+  "emptySubmitMsg": "נא למלא שם",
   "hScroll": 0
  }
 }
