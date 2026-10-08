@@ -17,10 +17,18 @@ jobs:
       - name: Run
         run: |
           mkdir -p diag-results/lh
-          for i in 1 2 3; do npx -y lighthouse@12.8.2 "https://dabullaw.co.il/?lh=$RANDOM" --quiet --preset=desktop --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=diag-results/lh/d$i.json || true; done
-          npx -y lighthouse@12.8.2 "https://dabullaw.co.il/?lh=$RANDOM" --quiet --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=diag-results/lh/m1.json || true
-          node lh/sum2.mjs diag-results/lh/d1.json diag-results/lh/d2.json diag-results/lh/d3.json diag-results/lh/m1.json
-          rm -f diag-results/lh/*.json.tmp; mkdir -p diag-results/lh/raw; gzip -c diag-results/lh/d1.json > diag-results/lh/raw/d1.json.gz; gzip -c diag-results/lh/m1.json > diag-results/lh/raw/m1.json.gz; rm -f diag-results/lh/d?.json diag-results/lh/m1.json
+          L="npx -y lighthouse@12.8.2 --quiet --chrome-flags=--headless=new --chrome-flags=--no-sandbox --output=json"
+          for i in 1 2 3; do
+            $L "https://dabullaw.co.il/?x=$RANDOM" --preset=desktop --output-path=diag-results/lh/live-d$i.json || true
+            $L "https://dabullaw.co.il/?dblprev=1&x=$RANDOM" --preset=desktop --output-path=diag-results/lh/prev-d$i.json || true
+          done
+          for i in 1 2; do
+            $L "https://dabullaw.co.il/?x=$RANDOM" --output-path=diag-results/lh/live-m$i.json || true
+            $L "https://dabullaw.co.il/?dblprev=1&x=$RANDOM" --output-path=diag-results/lh/prev-m$i.json || true
+          done
+          node lh/sum2.mjs diag-results/lh/live-d1.json diag-results/lh/prev-d1.json diag-results/lh/live-m1.json diag-results/lh/prev-m1.json
+          node -e "const fs=require('fs');const o={};for(const f of fs.readdirSync('diag-results/lh').filter(f=>/^(live|prev)-/.test(f))){try{const r=JSON.parse(fs.readFileSync('diag-results/lh/'+f));o[f]=Object.fromEntries(Object.entries(r.categories).map(([k,v])=>[k,Math.round(v.score*100)]));o[f].cls=r.audits['cumulative-layout-shift'].displayValue;o[f].lcp=r.audits['largest-contentful-paint'].displayValue;o[f].fcp=r.audits['first-contentful-paint'].displayValue}catch(e){o[f]=String(e)}}fs.writeFileSync('diag-results/lh/scores.json',JSON.stringify(o,null,1))"
+          rm -f diag-results/lh/live-*.json diag-results/lh/prev-*.json
       - name: Commit
         if: always()
         run: |
