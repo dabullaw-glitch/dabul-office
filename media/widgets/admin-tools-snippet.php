@@ -2,10 +2,10 @@
    in an option named dabul_bak_<what>_<id>. Deactivate this snippet when the work is done. */
 
 function dabul_q($s) { // literal text -> tolerant regex (quotes, spaces, dashes as stored by Elementor)
-	$p = preg_quote($s, '#');
+	$p = preg_quote($s, '~');
 	$p = str_replace('"', '(?:"|״|&quot;|&#34;|\\\\")', $p);
 	$p = str_replace(' ', '(?:\s|&nbsp;|\x{00A0})+', $p);
-	return '#' . $p . '#u';
+	return '~' . $p . '~u';
 }
 function dabul_walk(&$v, $pairs, &$hits) {
 	if (is_array($v)) { foreach ($v as &$x) dabul_walk($x, $pairs, $hits); return; }
