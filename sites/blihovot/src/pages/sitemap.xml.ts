@@ -9,7 +9,7 @@ export async function GET(ctx: { site: URL }) {
   const latest = guides.reduce((m, g) => (+g.data.updated > m ? +g.data.updated : m), 0);
   const d = (x: number | Date) => new Date(x).toISOString().slice(0, 10);
   const rows: [string, string][] = [
-    ['', d(latest)], ['madrich/', d(latest)], ['kli/', d(latest)], ['kurs/', d(latest)], ['video/', d(latest)], ['orchei-din/', d(latest)], ['milon/', d(latest)], ['pniya/', d(latest)], ['odot/', d(latest)], ['pirsum/', d(latest)], ['orchei-din/hitztarfut/', d(latest)],
+    ['', d(latest)], ['madrich/', d(latest)], ['kli/', d(latest)], ['kurs/', d(latest)], ['video/', d(latest)], ['milon/', d(latest)], ['pniya/', d(latest)], ['odot/', d(latest)], ['pirsum/', d(latest)], 
     ...HUBS.map((h) => [`nose/${h.id}/`, d(latest)] as [string, string]),
     ...TOOLS.map((t) => [`kli/${t.id}/`, d(latest)] as [string, string]),
     ...guides.map((g) => [`madrich/${g.id}/`, d(g.data.updated)] as [string, string]),

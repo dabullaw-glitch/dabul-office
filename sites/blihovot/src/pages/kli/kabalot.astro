@@ -1,0 +1,248 @@
+---
+import Tool from '../../layouts/Tool.astro';
+const SRC = 'https://www.gov.il/he/service/bi_monthly_report_about_incomes';
+---
+<Tool id="kabalot" title="תיק קבלות לדוח הדו-חודשי: צילום, סידור וקובץ PDF אחד" h1="תיק קבלות לדוח הדו-חודשי"
+  description="מצלמים קבלות ותלושים לאורך החודשיים, והכלי מסדר אותם ומפיק קובץ PDF אחד מסודר לצירוף לדוח ההכנסות וההוצאות בהליך חדלות פירעון. הכול נשמר רק בטלפון שלכם."
+  intro="בהליך חדלות פירעון מגישים כל חודשיים דוח הכנסות והוצאות, עם מסמכים וקבלות, כקובץ PDF אחד. כאן מצלמים כל קבלה ברגע שמקבלים אותה, ובסוף התקופה מפיקים קובץ אחד מסודר, עם דף סיכום לפי קטגוריות."
+  sources={[{ title: 'gov.il: הגשת דוח דו-חודשי על הכנסות והוצאות (משרד המשפטים)', url: SRC }]}
+  related={['tkufat-habeinayim', 'doch-du-chodshi', 'taktziv']}
+  faq={[
+    { q: 'איפה נשמרות התמונות?', a: 'רק בדפדפן של המכשיר שלכם. שום קבלה לא נשלחת לאתר. לכן כדאי לשמור גיבוי מדי פעם (כפתור "שמירת גיבוי"), ובמיוחד לפני החלפת טלפון.' },
+    { q: 'מתי מגישים את הדוח הדו-חודשי?', a: 'בתקופת הביניים מגישים דוח כל חודשיים, עד ה-15 בחודש. הדוח הראשון מוגש חודשיים אחרי מתן הצו לפתיחת הליכים. בתקופת השיקום הכלכלי מגישים דוח חצי שנתי.' },
+    { q: 'האם הקובץ שהכלי מפיק הוא הדוח עצמו?', a: 'לא. את טופס הדוח הרשמי ממלאים ומצרפים לו את המסמכים. הכלי מסדר את הקבלות והמסמכים לקובץ אחד עם דף סיכום, כדי שיהיה קל לצרף אותם ולמלא את הסכומים בטופס.' },
+    { q: 'אילו מסמכים צריך לצרף?', a: 'לפי משרד המשפטים: תלושי שכר שלכם, של בן או בת הזוג ושל ילדים בגירים שגרים איתכם, אישורים על הכנסות נוספות (קצבאות, שכר דירה, תמיכה), ואסמכתאות להוצאות: חוזה שכירות או משכנתא, חשבונות הבית, קבלות על מזון וצריכה והוצאות רכב. עצמאים מצרפים גם דיווחי מע"מ ומס הכנסה.' },
+  ]}>
+  <div id="kb">
+    <div class="kb-top">
+      <div class="row">
+        <label for="kb-type">סוג הדוח
+          <span class="num"><select id="kb-type"><option value="2">דו-חודשי (תקופת הביניים)</option><option value="6">חצי שנתי (תקופת השיקום)</option></select></span></label>
+        <label for="kb-start">החודש הראשון בתקופה
+          <span class="num"><input id="kb-start" type="month" /></span></label>
+      </div>
+      <p class="kb-due" id="kb-due" aria-live="polite"></p>
+    </div>
+
+    <div class="kb-add">
+      <label class="btn btn-sun kb-cam" for="kb-file"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg> צילום או העלאה של קבלה</label>
+      <input id="kb-file" type="file" accept="image/*" capture="environment" multiple class="sr" />
+      <p class="note">אפשר לבחור כמה תמונות בבת אחת. קבלה שקיבלתם כקובץ PDF (למשל חשבון חשמל)? צלמו מסך שלה והעלו את הצילום.</p>
+    </div>
+
+    <div id="kb-edit" class="kb-edit card" hidden>
+      <h3>פרטי המסמך</h3>
+      <div class="kb-edit-in">
+        <img id="kb-prev" alt="תצוגה מקדימה של המסמך" />
+        <div class="row">
+          <label for="kb-kind">סוג<span class="num"><select id="kb-kind"><option value="out">הוצאה</option><option value="in">הכנסה</option></select></span></label>
+          <label for="kb-cat">קטגוריה<span class="num"><select id="kb-cat"></select></span></label>
+          <label for="kb-date">תאריך<span class="num"><input id="kb-date" type="date" /></span></label>
+          <label for="kb-amt">סכום (₪)<span class="num"><input id="kb-amt" inputmode="decimal" placeholder="0" /></span></label>
+          <label for="kb-note">תיאור קצר (לא חובה)<span class="num"><input id="kb-note" maxlength="60" placeholder="למשל: סופר, חשבון חשמל" /></span></label>
+        </div>
+      </div>
+      <div class="kb-btns"><button class="btn btn-teal" type="button" id="kb-save">שמירה</button><button class="btn btn-line" type="button" id="kb-skip">דילוג</button><span class="muted" id="kb-left"></span></div>
+    </div>
+
+    <div class="kb-sum card" id="kb-sum"></div>
+    <div id="kb-list" class="kb-list"></div>
+
+    <div class="kb-actions">
+      <button class="btn btn-teal" type="button" id="kb-pdf">יצירת קובץ PDF לתקופה</button>
+      <button class="btn btn-line" type="button" id="kb-ics">תזכורת ביומן לכל דוח</button>
+      <button class="btn btn-line" type="button" id="kb-backup">שמירת גיבוי</button>
+      <label class="btn btn-line" for="kb-restore">טעינת גיבוי</label><input id="kb-restore" type="file" accept="application/json" class="sr" />
+    </div>
+    <p class="kb-msg" id="kb-msg" role="status" aria-live="polite"></p>
+  </div>
+
+  <div slot="explain">
+    <h2>איך עובדים עם הכלי</h2>
+    <ol>
+      <li><strong>בוחרים תקופה</strong>: דו-חודשי בתקופת הביניים, חצי שנתי בתקופת השיקום. הכלי מראה עד מתי מגישים.</li>
+      <li><strong>מצלמים כל מסמך כשהוא מגיע</strong>: תלוש שכר, אישור קצבה, חשבון חשמל, קבלה מהסופר, דלק. ממלאים סוג, קטגוריה, תאריך וסכום.</li>
+      <li><strong>בסוף התקופה</strong> לוחצים "יצירת קובץ PDF". מתקבל קובץ אחד: דף סיכום עם הסכומים לפי קטגוריה, ואחריו כל המסמכים, מסודרים לפי תאריך.</li>
+      <li><strong>ממלאים את טופס הדוח הרשמי</strong> לפי הסיכום, מצרפים אותו ואת הקובץ, ומגישים במערכת הממונה (או בלשכה, למי שלא מיוצג).</li>
+    </ol>
+    <h2>מה צריך לצרף לדוח</h2>
+    <ul>
+      <li>תלושי שכר: שלכם, של בן או בת הזוג, ושל ילדים בגירים שגרים איתכם.</li>
+      <li>אסמכתאות להכנסות נוספות: פנסיה, שכר דירה, קצבאות ביטוח לאומי, תמיכה או מתנות.</li>
+      <li>אסמכתאות להוצאות: חוזה שכירות או אישור משכנתא, חשמל, מים, ארנונה, טלפון, טלוויזיה, חינוך, קבלות על מזון וצריכה, הוצאות רכב.</li>
+      <li>עצמאים: גם דיווחי מע"מ ומס הכנסה.</li>
+      <li>בתקופת השיקום הכלכלי לא צריך לצרף קבלות על מזון וצריכה.</li>
+    </ul>
+    <p>שמרו עותק של הדוח ושל המסמכים המקוריים, למקרה שיבקשו אותם.</p>
+  </div>
+</Tool>
+
+<style is:global>
+#kb .kb-top{margin-bottom:18px}
+.kb-due{margin:12px 0 0;font-weight:700;color:var(--teal-2)}
+.kb-add{margin:10px 0 16px}
+.kb-cam{gap:10px}.kb-cam svg{width:22px;height:22px}
+.kb-edit{margin:14px 0;padding:18px}.kb-edit h3{margin:0 0 10px}
+.kb-edit-in{display:grid;grid-template-columns:140px 1fr;gap:16px;align-items:start}
+@media (max-width:620px){.kb-edit-in{grid-template-columns:1fr}}
+#kb-prev{width:100%;max-height:200px;object-fit:contain;border-radius:10px;background:var(--sand);border:1px solid var(--line)}
+.kb-btns{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.kb-sum{margin:14px 0;padding:16px 18px}
+.kb-sum table{width:100%;border-collapse:collapse;font-size:.95rem;font-variant-numeric:tabular-nums}.kb-sum td,.kb-sum th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:start}
+.kb-list{display:grid;gap:10px;margin:10px 0 18px}
+.kb-item{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.kb-item img{width:64px;height:64px;object-fit:cover;border-radius:8px;background:var(--sand)}
+.kb-item b{display:block}.kb-item small{color:var(--muted)}
+.kb-item .amt{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kb-item .amt.in{color:var(--teal-2)}
+.kb-item button{background:none;border:0;color:var(--rose);cursor:pointer;font:inherit;font-size:.85rem;padding:4px}
+.kb-actions{display:flex;flex-wrap:wrap;gap:10px}
+.kb-msg{margin-top:10px;font-weight:700}
+.kb-empty{color:var(--muted);padding:12px 0}
+</style>
+
+<script>
+import { jsPDF } from 'jspdf';
+type Rec = { id: string; kind: 'in' | 'out'; cat: string; date: string; amt: number; note: string; img: string; w: number; h: number };
+const CATS = {
+  in: ['משכורת (תלוש)', 'משכורת בן/בת הזוג', 'קצבת ביטוח לאומי', 'פנסיה', 'שכר דירה שמתקבל', 'תמיכה או מתנה', 'הכנסה אחרת'],
+  out: ['שכר דירה / משכנתא', 'חשמל', 'מים', 'ארנונה', 'טלפון ואינטרנט', 'מזון וצריכה', 'רכב ודלק', 'תחבורה ציבורית', 'חינוך וילדים', 'בריאות ותרופות', 'ביגוד', 'הוצאה אחרת'],
+};
+const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+const nf = new Intl.NumberFormat('he-IL', { maximumFractionDigits: 2 });
+const msg = (t: string) => { $('kb-msg').textContent = t; };
+
+// ---------- storage (IndexedDB, only on this device) ----------
+let dbp: Promise<IDBDatabase> | null = null;
+function db() {
+  if (!dbp) dbp = new Promise((res, rej) => { const r = indexedDB.open('blihovot-kabalot', 1); r.onupgradeneeded = () => r.result.createObjectStore('recs', { keyPath: 'id' }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+  return dbp;
+}
+async function tx<T>(mode: IDBTransactionMode, fn: (s: IDBObjectStore) => IDBRequest<T>): Promise<T> { const d = await db(); return new Promise((res, rej) => { const t = d.transaction('recs', mode); const q = fn(t.objectStore('recs')); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+const all = () => tx<Rec[]>('readonly', (s) => s.getAll());
+const put = (r: Rec) => tx('readwrite', (s) => s.put(r));
+const del = (id: string) => tx('readwrite', (s) => s.delete(id));
+
+// ---------- period ----------
+const ym = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+function period() {
+  const months = +$<HTMLSelectElement>('kb-type').value; const v = $<HTMLInputElement>('kb-start').value || ym(new Date());
+  const [y, m] = v.split('-').map(Number); const from = new Date(y, m - 1, 1), to = new Date(y, m - 1 + months, 0), due = new Date(y, m - 1 + months, 15);
+  return { months, from, to, due, key: v };
+}
+const inPeriod = (r: Rec, p: ReturnType<typeof period>) => { const d = new Date(r.date + 'T12:00'); return d >= p.from && d <= new Date(p.to.getTime() + 864e5 - 1); };
+const fmt = (d: Date) => d.toLocaleDateString('he-IL', { day: 'numeric', month: 'numeric', year: 'numeric' });
+const monthName = (d: Date) => d.toLocaleDateString('he-IL', { month: 'long', year: 'numeric' });
+
+// ---------- images ----------
+async function shrink(file: File): Promise<{ img: string; w: number; h: number }> {
+  const bmp = await createImageBitmap(file);
+  const k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height)); const w = Math.round(bmp.width * k), h = Math.round(bmp.height * k);
+  const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d')!.drawImage(bmp, 0, 0, w, h);
+  return { img: c.toDataURL('image/jpeg', 0.72), w, h };
+}
+
+// ---------- add flow ----------
+let queue: { file: File; lm: number }[] = []; let cur: { img: string; w: number; h: number; date: string } | null = null;
+function fillCats() { const k = $<HTMLSelectElement>('kb-kind').value as 'in' | 'out'; $<HTMLSelectElement>('kb-cat').innerHTML = CATS[k].map((c) => `<option>${c}</option>`).join(''); }
+async function next() {
+  const box = $('kb-edit');
+  if (!queue.length) { box.hidden = true; cur = null; return; }
+  const q = queue.shift()!; msg('מכין את התמונה...');
+  try { const s = await shrink(q.file); cur = { ...s, date: new Date(q.lm || Date.now()).toISOString().slice(0, 10) }; } catch { msg('לא הצלחתי לפתוח את הקובץ. נסו תמונה אחרת.'); return next(); }
+  msg('');
+  $<HTMLImageElement>('kb-prev').src = cur.img; $<HTMLInputElement>('kb-date').value = cur.date; $<HTMLInputElement>('kb-amt').value = ''; $<HTMLInputElement>('kb-note').value = '';
+  $('kb-left').textContent = queue.length ? `עוד ${queue.length} בתור` : '';
+  box.hidden = false; $<HTMLInputElement>('kb-amt').focus();
+}
+$<HTMLInputElement>('kb-file').addEventListener('change', (e) => { const fs = [...((e.target as HTMLInputElement).files || [])]; queue.push(...fs.map((f) => ({ file: f, lm: f.lastModified }))); (e.target as HTMLInputElement).value = ''; if (!cur) next(); });
+$('kb-kind').addEventListener('change', fillCats);
+$('kb-save').addEventListener('click', async () => {
+  if (!cur) return;
+  const amt = parseFloat($<HTMLInputElement>('kb-amt').value.replace(/[^\d.]/g, '')) || 0;
+  const r: Rec = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), kind: $<HTMLSelectElement>('kb-kind').value as 'in' | 'out', cat: $<HTMLSelectElement>('kb-cat').value, date: $<HTMLInputElement>('kb-date').value || cur.date, amt, note: $<HTMLInputElement>('kb-note').value.trim(), img: cur.img, w: cur.w, h: cur.h };
+  try { await put(r); msg('נשמר.'); } catch { msg('לא הצלחתי לשמור. ייתכן שהדפדפן במצב גלישה פרטית.'); }
+  cur = null; await render(); next();
+});
+$('kb-skip').addEventListener('click', () => { cur = null; next(); });
+
+// ---------- list and summary ----------
+async function render() {
+  const p = period(); let recs: Rec[] = [];
+  try { recs = (await all()).filter((r) => inPeriod(r, p)).sort((a, b) => a.date.localeCompare(b.date)); } catch { /* storage blocked */ }
+  $('kb-due').textContent = `התקופה: ${monthName(p.from)} עד ${monthName(p.to)} · מגישים עד ${fmt(p.due)}`;
+  const list = $('kb-list');
+  list.innerHTML = recs.length ? recs.map((r) => `<div class="kb-item"><img src="${r.img}" alt="" /><div><b>${r.cat}</b><small>${fmt(new Date(r.date + 'T12:00'))}${r.note ? ' · ' + r.note.replace(/</g, '&lt;') : ''}</small></div><div style="text-align:end"><div class="amt ${r.kind}">${r.kind === 'in' ? '+' : ''}${nf.format(r.amt)} ₪</div><button type="button" data-del="${r.id}">מחיקה</button></div></div>`).join('') : '<p class="kb-empty">עדיין אין מסמכים בתקופה הזו. התחילו בצילום הקבלה הראשונה.</p>';
+  const sum = (k: 'in' | 'out') => { const m = new Map<string, number>(); recs.filter((r) => r.kind === k).forEach((r) => m.set(r.cat, (m.get(r.cat) || 0) + r.amt)); return m; };
+  const si = sum('in'), so = sum('out'); const ti = [...si.values()].reduce((a, b) => a + b, 0), to = [...so.values()].reduce((a, b) => a + b, 0);
+  $('kb-sum').innerHTML = `<b>סיכום התקופה: ${recs.length} מסמכים</b><table><tr><th>הכנסות</th><th>${nf.format(ti)} ₪</th></tr>${[...si].map(([c, v]) => `<tr><td>${c}</td><td>${nf.format(v)} ₪</td></tr>`).join('')}<tr><th>הוצאות</th><th>${nf.format(to)} ₪</th></tr>${[...so].map(([c, v]) => `<tr><td>${c}</td><td>${nf.format(v)} ₪</td></tr>`).join('')}</table>`;
+  return { recs, p, si, so, ti, to };
+}
+$('kb-list').addEventListener('click', async (e) => { const id = (e.target as HTMLElement).dataset.del; if (!id) return; await del(id); msg('המסמך נמחק.'); render(); });
+['kb-type', 'kb-start'].forEach((id) => $(id).addEventListener('change', () => { try { localStorage.setItem('kb-' + id, $<HTMLInputElement>(id).value); } catch {} render(); }));
+
+// ---------- PDF: page 1 summary (drawn on a canvas, so Hebrew renders right), then every document ----------
+async function summaryPage(d: Awaited<ReturnType<typeof render>>) {
+  await document.fonts.load('700 30px Heebo'); await document.fonts.load('400 24px Heebo');
+  const W = 1240, H = 1754, c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d')!;
+  g.fillStyle = '#fff'; g.fillRect(0, 0, W, H); g.direction = 'rtl'; g.textAlign = 'right'; g.fillStyle = '#14233a';
+  let y = 120; const R = W - 100;
+  g.font = '700 46px Heebo, Arial'; g.fillText('ריכוז מסמכים לדוח הכנסות והוצאות', R, y); y += 60;
+  g.font = '400 28px Heebo, Arial'; g.fillStyle = '#2c3a50';
+  g.fillText(`תקופה: ${monthName(d.p.from)} עד ${monthName(d.p.to)} (${d.p.months === 2 ? 'דוח דו-חודשי' : 'דוח חצי שנתי'})`, R, y); y += 42;
+  g.fillText(`מועד הגשה: עד ${fmt(d.p.due)} · מספר מסמכים: ${d.recs.length}`, R, y); y += 70;
+  const block = (title: string, m: Map<string, number>, total: number) => {
+    g.fillStyle = '#0d6b63'; g.font = '700 34px Heebo, Arial'; g.fillText(`${title}: ${nf.format(total)} ₪`, R, y); y += 18;
+    g.fillStyle = '#e4dacb'; g.fillRect(100, y, W - 200, 3); y += 44; g.font = '400 28px Heebo, Arial'; g.fillStyle = '#14233a';
+    if (!m.size) { g.fillText('אין מסמכים', R, y); y += 44; }
+    for (const [cat, v] of m) { g.textAlign = 'right'; g.fillText(cat, R, y); g.textAlign = 'left'; g.fillText(`${nf.format(v)} ₪`, 100, y); g.textAlign = 'right'; y += 44; }
+    y += 30;
+  };
+  block('הכנסות', d.si, d.ti); block('הוצאות', d.so, d.to);
+  g.font = '400 22px Heebo, Arial'; g.fillStyle = '#5a6475';
+  g.fillText('המסמך הוכן בכלי "תיק קבלות" באתר בלי חובות. הסכומים הוזנו על ידי החייב ואינם מחליפים את טופס הדוח הרשמי.', R, H - 90);
+  return c.toDataURL('image/jpeg', 0.85);
+}
+$('kb-pdf').addEventListener('click', async () => {
+  const d = await render(); if (!d.recs.length) { msg('אין מסמכים בתקופה שנבחרה.'); return; }
+  msg('מכין את הקובץ...');
+  const pdf = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+  pdf.addImage(await summaryPage(d), 'JPEG', 0, 0, 210, 297);
+  for (const r of d.recs) {
+    pdf.addPage();
+    // caption strip drawn as an image too (Hebrew)
+    const c = document.createElement('canvas'); c.width = 1240; c.height = 110; const g = c.getContext('2d')!;
+    g.fillStyle = '#f3ece1'; g.fillRect(0, 0, 1240, 110); g.direction = 'rtl'; g.textAlign = 'right'; g.fillStyle = '#14233a'; g.font = '700 34px Heebo, Arial';
+    g.fillText(`${r.kind === 'in' ? 'הכנסה' : 'הוצאה'}: ${r.cat} · ${fmt(new Date(r.date + 'T12:00'))} · ${nf.format(r.amt)} ₪${r.note ? ' · ' + r.note : ''}`, 1180, 68);
+    pdf.addImage(c.toDataURL('image/jpeg', 0.85), 'JPEG', 0, 0, 210, 18.6);
+    const maxW = 190, maxH = 260, k = Math.min(maxW / r.w, maxH / r.h), w = r.w * k, h = r.h * k;
+    pdf.addImage(r.img, 'JPEG', (210 - w) / 2, 26, w, h);
+  }
+  pdf.save(`מסמכים-לדוח-${d.p.key}.pdf`);
+  msg('הקובץ נוצר. מצרפים אותו לדוח יחד עם הטופס הרשמי.');
+  (window as any).dataLayer?.push({ event: 'kabalot_pdf', n: d.recs.length });
+});
+
+// ---------- calendar reminder: the 15th, every 2 months (or 6) ----------
+$('kb-ics').addEventListener('click', () => {
+  const p = period(); const d = p.due; const ds = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}15`;
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//blihovot//kabalot//HE', 'BEGIN:VEVENT', `UID:kabalot-${ds}@blihovot`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`, `DTSTART;VALUE=DATE:${ds}`, `RRULE:FREQ=MONTHLY;INTERVAL=${p.months}`, `SUMMARY:הגשת דוח הכנסות והוצאות (חדלות פירעון)`, 'DESCRIPTION:להפיק קובץ PDF בתיק הקבלות ולהגיש עד ה-15.', 'BEGIN:VALARM', 'TRIGGER:-P3D', 'ACTION:DISPLAY', 'DESCRIPTION:עוד 3 ימים: דוח הכנסות והוצאות', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'tizkoret-doch.ics'; a.click();
+  msg('נוצר קובץ תזכורת. פותחים אותו והוא נכנס ליומן.');
+});
+
+// ---------- backup ----------
+$('kb-backup').addEventListener('click', async () => {
+  const recs = await all(); const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({ v: 1, recs })], { type: 'application/json' })); a.download = `gibui-kabalot-${new Date().toISOString().slice(0, 10)}.json`; a.click();
+  msg(`נשמר גיבוי של ${recs.length} מסמכים.`);
+});
+$<HTMLInputElement>('kb-restore').addEventListener('change', async (e) => {
+  const f = (e.target as HTMLInputElement).files?.[0]; if (!f) return;
+  try { const j = JSON.parse(await f.text()); let n = 0; for (const r of j.recs || []) { if (r && r.id && r.img) { await put(r); n++; } } msg(`נטענו ${n} מסמכים מהגיבוי.`); render(); } catch { msg('קובץ הגיבוי לא תקין.'); }
+});
+
+// ---------- start ----------
+try { const t = localStorage.getItem('kb-kb-type'); if (t) $<HTMLSelectElement>('kb-type').value = t; const s = localStorage.getItem('kb-kb-start'); $<HTMLInputElement>('kb-start').value = s || ym(new Date()); } catch { $<HTMLInputElement>('kb-start').value = ym(new Date()); }
+fillCats(); render();
+</script>
