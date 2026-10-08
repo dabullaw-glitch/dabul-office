@@ -1,0 +1,42 @@
+name: site-audit
+on:
+  push:
+    branches: [audit-run]
+    paths: ['audit/**', '.github/workflows/audit.yml']
+permissions:
+  contents: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install tools
+        run: |
+          npm init -y >/dev/null
+          npm i playwright@1.47.2 lighthouse@12.2.1
+          npx playwright install --with-deps chromium
+      - name: Screenshots and page inspection
+        run: node audit/shoot.mjs
+        continue-on-error: true
+      - name: Lighthouse (mobile)
+        continue-on-error: true
+        run: |
+          mkdir -p lh
+          CHROME="$(node -e "console.log(require('playwright').chromium.executablePath())")"
+          for p in "home|https://dabullaw.co.il/" "netanya|https://dabullaw.co.il/%d7%a2%d7%95%d7%a8%d7%9a-%d7%93%d7%99%d7%9f-%d7%9e%d7%a7%d7%a8%d7%a7%d7%a2%d7%99%d7%9f-%d7%91%d7%a0%d7%aa%d7%a0%d7%99%d7%94/" "article|https://dabullaw.co.il/%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%9e%d7%a7%d7%99%d7%a3-%d7%9c%d7%a8%d7%9b%d7%99%d7%a9%d7%aa-%d7%93%d7%99%d7%a8%d7%94-%d7%99%d7%93-%d7%a9%d7%a0%d7%99%d7%94/" "contact|https://dabullaw.co.il/%d7%a6%d7%a8%d7%95-%d7%a7%d7%a9%d7%a8/"; do
+            n="${p%%|*}"; u="${p#*|}"
+            CHROME_PATH="$CHROME" npx lighthouse "$u" --quiet --output=json --output-path="lh/$n-mobile.json" --chrome-flags="--headless=new --no-sandbox" --only-categories=performance,accessibility,best-practices,seo || true
+          done
+          CHROME_PATH="$CHROME" npx lighthouse "https://dabullaw.co.il/" --quiet --preset=desktop --output=json --output-path="lh/home-desktop.json" --chrome-flags="--headless=new --no-sandbox" --only-categories=performance,accessibility,best-practices,seo || true
+          node audit/lhsum.mjs
+      - name: Commit results
+        run: |
+          git config user.name "audit-bot"
+          git config user.email "audit-bot@users.noreply.github.com"
+          git add audit-results
+          git commit -m "audit results $(date -u +%FT%TZ)" || echo nothing
+          git push origin HEAD:audit-run
