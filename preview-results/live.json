@@ -2,8 +2,8 @@
  "desktop": {
   "status": 200,
   "errs": [
-   "SyntaxError: Invalid or unexpected token",
-   "SyntaxError: Invalid or unexpected token"
+   "SyntaxError: Invalid or unexpected token @ ",
+   "SyntaxError: Invalid or unexpected token @ "
   ],
   "scriptRan": false,
   "hiddenAfterScroll": 0,
@@ -14,8 +14,8 @@
  "mobile": {
   "status": 200,
   "errs": [
-   "SyntaxError: Invalid or unexpected token",
-   "SyntaxError: Invalid or unexpected token"
+   "SyntaxError: Invalid or unexpected token @ ",
+   "SyntaxError: Invalid or unexpected token @ "
   ],
   "scriptRan": false,
   "hiddenAfterScroll": 0,
