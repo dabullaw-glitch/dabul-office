@@ -86,12 +86,9 @@ add_action('template_redirect', function () {
 				$cards .= '<div class="dbl-vcard">' . dabul_yt_facade($vid, $m ? $m['title'] : '', false, '9/16') . ($m && $m['title'] ? '<p>' . esc_html($m['title']) . '</p>' : '') . '</div>';
 			}
 			$block = '<section class="dbl-vnew" aria-label="סרטונים"><div class="dbl-vgrid">' . $cards . '</div></section>';
-			$pos = strpos($html, 'elementor-widget-video');
-			if ($pos !== false) {
-				$cut = strrpos(substr($html, 0, $pos), '<div class="elementor-element ');
-				$box = $cut !== false ? strrpos(substr($html, 0, $cut), '<div class="elementor-element ') : false;
-				if ($box !== false) $html = substr($html, 0, $box) . $block . substr($html, $box);
-			}
+			// put the block right before the grid of videos (not inside the first video, which stretched every row)
+			$pos = strpos($html, '<div class="elementor-element elementor-element-76f9f98 ');
+			if ($pos !== false) $html = substr($html, 0, $pos) . $block . substr($html, $pos);
 		}
 		if (!$ids && strpos($html, 'class="dbl-yt"') === false) return $html;
 		preg_match_all('#class="dbl-yt" data-id="([A-Za-z0-9_-]{11})"#', $html, $all);
@@ -112,10 +109,11 @@ add_action('template_redirect', function () {
 			. '.dbl-yt:hover .dbl-yt-play,.dbl-yt:focus .dbl-yt-play{background:#e00}.dbl-yt-play:before{content:"";position:absolute;left:27px;top:14px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #fff}'
 			. '.dbl-yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.dbl-yt-play.load{opacity:.55}.dbl-yt-box{position:relative;width:100%;border-radius:12px;overflow:hidden;background:#000}.elementor-widget-video .elementor-wrapper{position:relative}'
 			. '.dbl-vid{margin:1.75rem auto;max-width:720px}.dbl-vid.short{max-width:340px}.dbl-vid figcaption{text-align:center;font-size:15px;color:#54595f;margin-top:8px}'
-			. '.dbl-vnew{max-width:1320px;margin:30px auto 0;padding:0 30px;direction:rtl}'
-			. '.dbl-vgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px}.dbl-vcard .dbl-yt-box{border-radius:0}.dbl-vcard p{font-size:18px;font-weight:700;line-height:1.35;color:#141414;margin:14px 0 0;text-align:center}'
+			. '.dbl-vnew{width:100%;margin:0 0 50px;padding:0;direction:rtl}'
+			. '.elementor-element-76f9f98 .elementor-loop-container{grid-auto-rows:auto!important}'
+			. '.dbl-vgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:50px 30px}.dbl-vcard .dbl-yt-box{border-radius:0}.dbl-vcard p{font-size:18px;font-weight:700;line-height:1.35;color:#141414;margin:14px 0 0;text-align:center}'
 			. '.dbl-short .elementor-wrapper{aspect-ratio:9/16!important;--video-aspect-ratio:0.5625}'
-			. '@media (max-width:767px){.dbl-vnew{padding:0 30px}.dbl-vgrid{grid-template-columns:1fr;gap:28px}}</style>';
+			. '@media (max-width:767px){.dbl-vgrid{grid-template-columns:1fr;gap:50px}}</style>';
 		$js = <<<'DBLJS'
 <script nowprocket data-no-optimize="1">
 (function () {
