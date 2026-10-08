@@ -1,4 +1,4 @@
-// rerun 2: Read-only check of a live page: screenshots + form behaviour without submitting any data.
+// rerun 3: Read-only check of a live page: screenshots + form behaviour without submitting any data.
 import { chromium, devices } from 'playwright';
 import fs from 'node:fs';
 const OUT = 'preview-results'; fs.mkdirSync(OUT, { recursive: true });
