@@ -7,44 +7,44 @@
   [
    "IMG",
    "swiper-slide-image",
-   220,
-   "220px",
-   "220px",
+   470,
+   "470px",
+   "470px",
    "clip",
    "none"
   ],
   [
    "FIGURE",
    "swiper-slide-inner",
-   220,
-   "220px",
-   "none",
+   470,
+   "470px",
+   "470px",
    "visible",
    "none"
   ],
   [
    "A",
    "",
-   220,
-   "220px",
-   "none",
+   470,
+   "470px",
+   "470px",
    "visible",
    "none"
   ],
   [
    "DIV",
    "swiper-slide swiper-slide-active",
-   220,
-   "220px",
-   "none",
+   470,
+   "470px",
+   "470px",
    "visible",
    "none"
   ],
   [
    "DIV",
    "elementor-image-carousel swiper-wrapper",
-   220,
-   "220px",
+   470,
+   "470px",
    "none",
    "visible",
    "none"
@@ -52,8 +52,8 @@
   [
    "DIV",
    "elementor-image-carousel-wrapper swiper swiper-initialized s",
-   220,
-   "220px",
+   500,
+   "500px",
    "none",
    "hidden",
    "none"
@@ -61,8 +61,8 @@
   [
    "DIV",
    "elementor-element elementor-element-f595e2b elementor-arrows",
-   220,
-   "220px",
+   500,
+   "500px",
    "none",
    "visible",
    "none"
@@ -70,8 +70,8 @@
   [
    "DIV",
    "e-con-inner",
-   646,
-   "646px",
+   926,
+   "926px",
    "none",
    "visible",
    "none"
@@ -79,8 +79,8 @@
   [
    "DIV",
    "elementor-element elementor-element-abb2800 e-flex e-con-box",
-   646,
-   "646px",
+   926,
+   "926px",
    "none",
    "visible",
    "none"
@@ -96,44 +96,44 @@
   [
    "IMG",
    "swiper-slide-image",
-   220,
-   "220px",
-   "220px",
+   400,
+   "400px",
+   "400px",
    "clip",
    "none"
   ],
   [
    "FIGURE",
    "swiper-slide-inner",
-   220,
-   "220px",
-   "none",
+   400,
+   "400px",
+   "400px",
    "visible",
    "none"
   ],
   [
    "A",
    "",
-   220,
-   "220px",
-   "none",
+   400,
+   "400px",
+   "400px",
    "visible",
    "none"
   ],
   [
    "DIV",
    "swiper-slide swiper-slide-active",
-   220,
-   "220px",
-   "none",
+   400,
+   "400px",
+   "400px",
    "visible",
    "none"
   ],
   [
    "DIV",
    "elementor-image-carousel swiper-wrapper",
-   220,
-   "220px",
+   400,
+   "400px",
    "none",
    "visible",
    "none"
@@ -141,8 +141,8 @@
   [
    "DIV",
    "elementor-image-carousel-wrapper swiper swiper-initialized s",
-   220,
-   "220px",
+   430,
+   "430px",
    "none",
    "hidden",
    "none"
@@ -150,8 +150,8 @@
   [
    "DIV",
    "elementor-element elementor-element-f595e2b elementor-arrows",
-   220,
-   "220px",
+   430,
+   "430px",
    "none",
    "visible",
    "none"
@@ -159,8 +159,8 @@
   [
    "DIV",
    "e-con-inner",
-   518,
-   "518px",
+   728,
+   "728px",
    "none",
    "visible",
    "none"
@@ -168,8 +168,8 @@
   [
    "DIV",
    "elementor-element elementor-element-abb2800 e-flex e-con-box",
-   518,
-   "518px",
+   728,
+   "728px",
    "none",
    "visible",
    "none"
