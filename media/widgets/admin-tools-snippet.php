@@ -165,6 +165,27 @@ add_action('rest_api_init', function () {
 		return $res;
 	}));
 
+	// article styles broken by the visual editor: line breaks (<br />) saved inside a <style> block make the browser drop
+	// every rule after the first. Finds those posts/pages and removes only the <br /> inside <style>; body {dry, ids?}
+	register_rest_route('dabul/v1', '/stylebr', array('methods' => 'POST', 'permission_callback' => $admin, 'callback' => function ($r) {
+		$b = $r->get_json_params(); $dry = !empty($b['dry']); $res = array();
+		$ids = !empty($b['ids']) ? array_map('intval', (array) $b['ids']) : get_posts(array('post_type' => array('post', 'page'), 'post_status' => array('publish', 'future', 'draft', 'private'), 'posts_per_page' => -1, 'fields' => 'ids'));
+		foreach ($ids as $id) {
+			$p = get_post($id); if (!$p) continue; $c = $p->post_content;
+			if (stripos($c, '<style') === false || stripos($c, '<br') === false) continue;
+			$n = 0;
+			$new = preg_replace_callback('~<style\b[^>]*>.*?</style>~is', function ($m) use (&$n) { $k = 0; $s = preg_replace('~<br\s*/?>~i', '', $m[0], -1, $k); $n += $k; return $s; }, $c);
+			if (!$n) continue;
+			$res[] = array('id' => $id, 'title' => get_the_title($id), 'removed' => $n);
+			if (!$dry) {
+				if (!get_option('dabul_bak_pc_' . $id)) update_option('dabul_bak_pc_' . $id, $c, false);
+				wp_update_post(array('ID' => $id, 'post_content' => $new));
+			}
+		}
+		if (!$dry && $res && function_exists('rocket_clean_domain')) rocket_clean_domain();
+		return array('dry' => $dry, 'count' => count($res), 'res' => $res);
+	}));
+
 	// WP Rocket state (read only): main speed options, "remove unused CSS" queue, .htaccess cache rules, server
 	register_rest_route('dabul/v1', '/rocketinfo', array('methods' => 'GET', 'permission_callback' => $admin, 'callback' => function () {
 		global $wpdb; $o = get_option('wp_rocket_settings', array()); $keys = array('remove_unused_css', 'async_css', 'minify_css', 'minify_concatenate_css', 'delay_js', 'defer_all_js', 'lazyload', 'lazyload_css_bg_img', 'cache_logged_user', 'minify_js', 'manual_preload');
