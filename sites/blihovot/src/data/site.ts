@@ -8,6 +8,7 @@ export const SITE = {
   description: 'מדריכים, מחשבונים, קורס חינמי וסרטונים על חדלות פירעון, הוצאה לפועל והסדרי חוב. בשפה פשוטה, לפי החוק ומקורות רשמיים, ועם אפשרות לקבל פנייה מעורך דין.',
   preview: process.env.PREVIEW !== '0',
   leadEndpoint: 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/hub-lead',
+  forumEndpoint: 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/forum',
   // display ads: off until an ad account is approved (the reserved space only appears when this is on)
   ads: { enabled: false, client: '' },
   email: '',
@@ -41,6 +42,7 @@ export const NAV = [
   { href: 'kli/', label: 'מחשבונים' },
   { href: 'kurs/', label: 'קורס חינמי' },
   { href: 'video/', label: 'סרטונים' },
+  { href: 'forum/', label: 'פורום' },
 ];
 
 export const CITIES = ['ירושלים', 'תל אביב', 'חיפה', 'ראשון לציון', 'פתח תקווה', 'אשדוד', 'נתניה', 'באר שבע', 'חולון', 'בני ברק', 'רמת גן', 'אשקלון', 'רחובות', 'בת ים', 'הרצליה', 'כפר סבא', 'חדרה', 'מודיעין', 'נצרת', 'רעננה', 'אחר'];

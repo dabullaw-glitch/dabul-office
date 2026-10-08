@@ -1,0 +1,73 @@
+---
+// One question with its answers + the answer form. Used by the static pages (with data) and the live page (empty, filled in the browser).
+import { SITE } from '../data/site';
+interface Props { q?: any; answers?: any[] }
+const { q, answers = [] } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const fmt = (s: string) => new Date(s).toLocaleDateString('he-IL', { day: 'numeric', month: 'numeric', year: 'numeric' });
+---
+<article class="ft" id="ft" data-qid={q?.id || ''}>
+  <header><span class="tag">{q?.topic || ''}</span><h1 id="ft-title">{q?.title || 'טוען...'}</h1><p class="meta" id="ft-meta">{q ? `${q.nick} · ${fmt(q.created)}` : ''}</p></header>
+  <div class="ft-body" id="ft-body">{q?.body}</div>
+  <button type="button" class="ft-rep" data-rep={q?.id || ''}>דיווח על תוכן לא מתאים</button>
+  <h2 id="ft-count">{answers.length ? `${answers.length} תשובות` : 'עדיין אין תשובות'}</h2>
+  <ol class="ft-ans" id="ft-ans">
+    {answers.map((a) => <li><div class="ft-body">{a.body}</div><p class="meta">{a.nick} · {fmt(a.created)} <button type="button" class="ft-rep" data-rep={a.id}>דיווח</button></p></li>)}
+  </ol>
+  <section class="card ft-reply" aria-labelledby="ft-reply-h">
+    <h2 id="ft-reply-h">יש לכם מה לענות?</h2>
+    <p class="muted">שתפו ניסיון או מידע. בלי פרטים מזהים, ובלי פרסום של שירותים.</p>
+    <label class="sr" for="fa-body">התשובה שלכם</label>
+    <textarea id="fa-body" rows="5" maxlength="3000"></textarea>
+    <button class="btn btn-teal" type="button" id="fa-post">פרסום תשובה</button>
+    <p class="fr-msg" id="fa-pmsg" role="status" aria-live="polite"></p>
+  </section>
+  <p class="fr-note">התשובות בפורום הן של משתמשים ואינן ייעוץ משפטי. <a href={`${B}madrich/`}>למדריכים</a> · <a href={`${B}forum/`}>לכל השאלות</a></p>
+</article>
+<style is:global>
+.ft{max-width:820px}.ft h1{margin:.4em 0 .2em;font-size:clamp(1.6rem,3.4vw,2.2rem)}
+.ft .meta{color:var(--muted);font-size:.88rem;margin:0}
+.ft-body{white-space:pre-wrap;font-size:1.08rem;line-height:1.75;margin:14px 0}
+.ft-ans{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.ft-ans li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.ft-ans .ft-body{margin:4px 0 8px;font-size:1.02rem}
+.ft-rep{background:none;border:0;color:var(--muted);font:inherit;font-size:.8rem;cursor:pointer;text-decoration:underline;padding:2px 4px}
+.ft-reply{margin:24px 0;padding:22px}.ft-reply h2{margin:0 0 4px;font-size:1.25rem}
+.ft-reply textarea{width:100%;font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);margin:10px 0}
+.fr-msg:empty{display:none}.fr-msg{margin:10px 0 0;font-weight:700}
+.fr-note{font-size:.9rem;color:var(--muted);background:var(--sand);border-radius:10px;padding:10px 14px}
+</style>
+<script define:vars={{ EP: SITE.forumEndpoint }}>
+(function () {
+const art = document.getElementById('ft'); const esc = (s) => String(s || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmt = (s) => new Date(s).toLocaleDateString('he-IL', { day: 'numeric', month: 'numeric', year: 'numeric' });
+const tok = () => { let t = window.__ft; try { t = t || localStorage.getItem('bh-ft'); } catch {} return t; };
+let qid = art.dataset.qid || location.hash.slice(1);
+async function load() {
+  if (!qid) return; const r = await fetch(EP + '?a=q&id=' + encodeURIComponent(qid)).catch(() => null); const j = r ? await r.json().catch(() => ({})) : {};
+  if (!j.ok) { if (!art.dataset.qid) document.getElementById('ft-title').textContent = 'השאלה לא נמצאה'; return; }
+  art.dataset.qid = qid; document.getElementById('ft-title').textContent = j.q.title; document.getElementById('ft-meta').textContent = j.q.nick + ' · ' + fmt(j.q.created);
+  document.getElementById('ft-body').textContent = j.q.body; document.querySelector('.ft > .ft-rep').dataset.rep = j.q.id; document.querySelector('.ft .tag').textContent = j.q.topic;
+  document.getElementById('ft-count').textContent = j.answers.length ? j.answers.length + ' תשובות' : 'עדיין אין תשובות';
+  document.getElementById('ft-ans').innerHTML = j.answers.map((a) => `<li><div class="ft-body">${esc(a.body)}</div><p class="meta">${esc(a.nick)} · ${fmt(a.created)} <button type="button" class="ft-rep" data-rep="${a.id}">דיווח</button></p></li>`).join('');
+  if (!document.title.includes(j.q.title)) document.title = j.q.title + ' | פורום בלי חובות';
+}
+art.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-rep]'); if (!b || !b.dataset.rep) return;
+  await fetch(EP + '?a=report', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: b.dataset.rep }) }).catch(() => null);
+  b.textContent = 'תודה, נבדוק'; b.disabled = true;
+});
+const msg = document.getElementById('fa-pmsg');
+async function post() {
+  const body = document.getElementById('fa-body').value.trim(); if (body.length < 15) { msg.textContent = 'כתבו קצת יותר.'; return; }
+  msg.textContent = 'שולח...';
+  const r = await fetch(EP + '?a=answer', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ token: tok(), qid, body }) }).catch(() => null);
+  const j = r ? await r.json().catch(() => ({})) : {};
+  if (j.error === 'login') { try { localStorage.removeItem('bh-ft'); } catch {} msg.textContent = ''; window.forumLogin(post); return; }
+  if (!j.ok) { msg.textContent = j.error === 'rate' ? 'אפשר לפרסם עד 10 תשובות בשעה.' : 'משהו לא עבד. נסו שוב.'; return; }
+  document.getElementById('fa-body').value = ''; msg.textContent = j.status === 'live' ? 'התשובה פורסמה. תודה!' : 'התשובה התקבלה ותפורסם אחרי בדיקה קצרה.'; load();
+}
+document.getElementById('fa-post').addEventListener('click', () => window.forumLogin(post));
+load();
+})();
+</script>

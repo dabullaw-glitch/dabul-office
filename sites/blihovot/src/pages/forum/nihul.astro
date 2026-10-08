@@ -1,0 +1,149 @@
+---
+// Forum admin (Yakir only). Login: a code sent to Yakir's Telegram. Not linked from anywhere and hidden from search engines.
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../data/site';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Base title="ניהול הפורום" description="ניהול הפורום" noindex={true}>
+  <div class="wrap nh">
+    <h1>ניהול הפורום</h1>
+    <section class="card nh-login" id="nh-login">
+      <p>לחיצה על הכפתור שולחת קוד כניסה לטלגרם של המשרד. הכניסה תקפה לשבוע.</p>
+      <button class="btn btn-teal" type="button" id="nh-send">שליחת קוד לטלגרם</button>
+      <div id="nh-step2" hidden>
+        <label class="fl" for="nh-code">הקוד מהטלגרם</label>
+        <input id="nh-code" inputmode="numeric" maxlength="6" dir="ltr" autocomplete="one-time-code" />
+        <button class="btn btn-teal" type="button" id="nh-verify">כניסה</button>
+      </div>
+      <p class="nh-msg" id="nh-lmsg" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="nh-main" hidden>
+      <div class="nh-bar">
+        <div class="nh-tabs" role="tablist" aria-label="סינון">
+          <button type="button" class="on" data-f="pending">ממתין לאישור <span id="c-pending"></span></button>
+          <button type="button" data-f="reported">דווח <span id="c-reported"></span></button>
+          <button type="button" data-f="live">מפורסם <span id="c-live"></span></button>
+          <button type="button" data-f="hidden">מוסתר <span id="c-hidden"></span></button>
+          <button type="button" data-f="blocked">חסומים <span id="c-blocked"></span></button>
+        </div>
+        <span class="nh-tools"><button type="button" class="lnk" id="nh-reload">רענון</button> · <button type="button" class="lnk" id="nh-out">יציאה</button></span>
+      </div>
+      <p class="nh-msg" id="nh-msg" role="status" aria-live="polite"></p>
+      <ol class="nh-list" id="nh-list"></ol>
+    </section>
+  </div>
+</Base>
+<style is:global>
+.nh{padding-block:28px 60px;max-width:960px}
+.nh-login{padding:22px;max-width:460px}
+.nh .fl{display:block;font-weight:700;margin:14px 0 6px}
+.nh input,.nh textarea{width:100%;font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.nh-login .btn{margin-top:12px}
+.nh-msg:empty{display:none}.nh-msg{font-weight:700;margin:12px 0}
+.nh-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 14px}
+.nh-tabs{display:flex;flex-wrap:wrap;gap:8px}
+.nh-tabs button{font:inherit;font-size:.92rem;border:1.5px solid var(--line);background:var(--card);color:var(--ink-2);border-radius:999px;padding:6px 14px;cursor:pointer}
+.nh-tabs button.on{border-color:var(--teal);background:var(--teal-soft);color:var(--teal-2);font-weight:700}
+.nh .lnk{background:none;border:0;font:inherit;color:var(--teal);cursor:pointer;padding:4px;text-decoration:underline}
+.nh-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.nh-list li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.nh-list .meta{color:var(--muted);font-size:.86rem;display:flex;flex-wrap:wrap;gap:4px 12px}
+.nh-list .tag{font-weight:700;border-radius:6px;padding:1px 8px;background:var(--sand)}
+.nh-list .tag.pending{background:#fff1c2;color:#6b4e00}.nh-list .tag.hidden{background:#f6d9d9;color:#7a1f1f}.nh-list .tag.live{background:var(--teal-soft);color:var(--teal-2)}
+.nh-list h3{margin:8px 0 4px;font-size:1.08rem}
+.nh-list .body{white-space:pre-wrap;margin:6px 0;overflow-wrap:anywhere}
+.nh-list .why{font-size:.88rem;color:var(--muted)}
+.nh-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.nh-acts button,.nh-confirm button{font:inherit;font-size:.9rem;border-radius:8px;padding:7px 14px;cursor:pointer;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.nh-acts .ok{border-color:var(--teal);color:var(--teal-2)}
+.nh-acts .bad,.nh-confirm .bad{border-color:var(--rose);color:var(--rose)}
+.nh-confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;padding:10px;border-radius:10px;background:var(--sand)}
+.nh-confirm input{flex:1 1 220px;width:auto}
+.nh .empty{color:var(--muted)}
+</style>
+<script define:vars={{ EP: SITE.forumEndpoint, B }}>
+const KEY = 'bh-fadm';
+const store = { get() { try { return localStorage.getItem(KEY) || window.__fadm; } catch { return window.__fadm; } }, set(v) { window.__fadm = v; try { v ? localStorage.setItem(KEY, v) : localStorage.removeItem(KEY); } catch {} } };
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const when = (s) => s ? new Date(s).toLocaleString('he-IL', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+const STATUS = { live: 'מפורסם', pending: 'ממתין', hidden: 'מוסתר' };
+const ERR = { wait: 'אפשר לבקש קוד חדש בעוד דקה.', expired: 'הקוד פג תוקף. בקשו קוד חדש.', code: 'הקוד לא נכון.' };
+const post = async (a, body) => { const r = await fetch(EP + '?a=' + a, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }).catch(() => null); return r ? r.json().catch(() => ({})) : {}; };
+let feed = { items: [], blocked: [] }, filter = 'pending';
+
+function showMain(on) { $('nh-login').hidden = on; $('nh-main').hidden = !on; }
+$('nh-send').addEventListener('click', async () => {
+  $('nh-lmsg').textContent = 'שולח...'; const j = await post('admincode', {});
+  if (!j.ok) { $('nh-lmsg').textContent = ERR[j.error] || 'לא הצלחנו לשלוח. נסו שוב.'; return; }
+  $('nh-lmsg').textContent = 'הקוד נשלח לטלגרם.'; $('nh-step2').hidden = false; $('nh-code').focus();
+});
+$('nh-verify').addEventListener('click', async () => {
+  const j = await post('adminverify', { code: $('nh-code').value });
+  if (!j.ok) { $('nh-lmsg').textContent = ERR[j.error] || 'משהו לא עבד.'; return; }
+  store.set(j.token); $('nh-lmsg').textContent = ''; showMain(true); load();
+});
+$('nh-out').addEventListener('click', () => { store.set(''); showMain(false); });
+$('nh-reload').addEventListener('click', () => load());
+document.querySelector('.nh-tabs').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; filter = b.dataset.f; document.querySelectorAll('.nh-tabs button').forEach((x) => x.classList.toggle('on', x === b)); render(); });
+
+async function load() {
+  $('nh-msg').textContent = 'טוען...';
+  const j = await post('admin', { token: store.get(), op: 'feed' });
+  if (j.error === 'login') { store.set(''); showMain(false); $('nh-lmsg').textContent = 'הכניסה פגה. בקשו קוד חדש.'; return; }
+  if (!j.ok) { $('nh-msg').textContent = 'לא הצלחנו לטעון. נסו רענון.'; return; }
+  feed = j; $('nh-msg').textContent = ''; render();
+}
+const pick = (f) => f === 'blocked' ? feed.blocked : f === 'reported' ? feed.items.filter((x) => (x.reports || 0) > 0 && x.status !== 'deleted') : feed.items.filter((x) => x.status === f);
+function render() {
+  ['pending', 'reported', 'live', 'hidden', 'blocked'].forEach((f) => { const n = pick(f).length; $('c-' + f).textContent = n ? '(' + n + ')' : ''; });
+  const list = pick(filter), el = $('nh-list');
+  if (!list.length) { el.innerHTML = '<li class="empty">אין כאן כלום כרגע.</li>'; return; }
+  if (filter === 'blocked') {
+    el.innerHTML = list.map((u) => `<li data-id="${esc(u.id)}"><div class="meta"><b>${esc(u.nick || 'ללא כינוי')}</b>${u.why ? '<span>סיבה: ' + esc(u.why) + '</span>' : ''}</div><div class="nh-acts"><button type="button" class="ok" data-op="unblock">ביטול חסימה</button></div></li>`).join('');
+    return;
+  }
+  el.innerHTML = list.map((x) => {
+    const link = x.type === 'q' ? B + 'forum/sheela/#' + x.id : B + 'forum/sheela/#' + x.qid;
+    return `<li data-id="${esc(x.id)}">
+      <div class="meta"><span class="tag ${esc(x.status)}">${STATUS[x.status] || esc(x.status)}</span><span>${x.type === 'q' ? 'שאלה' : 'תשובה'}</span><span>${esc(x.nick)}</span><span>${when(x.created)}</span>${x.reports ? '<span>דיווחים: ' + x.reports + '</span>' : ''}${x.topic ? '<span>' + esc(x.topic) + '</span>' : ''}</div>
+      ${x.title ? '<h3>' + esc(x.title) + '</h3>' : ''}
+      <div class="body">${esc(x.body)}</div>
+      ${x.reason && x.status !== 'live' ? '<div class="why">סיבת הבדיקה: ' + esc(x.reason) + '</div>' : ''}
+      <div class="nh-acts">
+        ${x.status !== 'live' ? '<button type="button" class="ok" data-op="approve">אישור ופרסום</button>' : ''}
+        ${x.status !== 'hidden' ? '<button type="button" data-op="hide">הסתרה</button>' : ''}
+        <button type="button" class="bad" data-op="delete">מחיקה</button>
+        <button type="button" class="bad" data-op="block">חסימת הכותב</button>
+        ${x.status === 'live' ? '<a href="' + link + '" target="_blank" rel="noopener">צפייה באתר</a>' : ''}
+      </div></li>`;
+  }).join('');
+}
+$('nh-list').addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-op]'); if (!b) return;
+  const li = b.closest('li'), id = li.dataset.id, op = b.dataset.op;
+  if (op === 'delete' || op === 'block') {
+    if (li.querySelector('.nh-confirm')) return;
+    const box = document.createElement('div'); box.className = 'nh-confirm';
+    box.innerHTML = op === 'block'
+      ? '<input type="text" maxlength="120" placeholder="סיבת החסימה (לא חובה)" aria-label="סיבת החסימה" /><button type="button" class="bad" data-go="1">לחסום</button><button type="button" data-no="1">ביטול</button>'
+      : '<span>למחוק לצמיתות?</span><button type="button" class="bad" data-go="1">כן, למחוק</button><button type="button" data-no="1">ביטול</button>';
+    li.appendChild(box);
+    box.addEventListener('click', async (ev) => {
+      if (ev.target.dataset.no) { box.remove(); return; }
+      if (ev.target.dataset.go) await act(op, id, box.querySelector('input')?.value || '');
+    });
+    return;
+  }
+  await act(op, id);
+});
+async function act(op, id, why) {
+  $('nh-msg').textContent = 'מעדכן...';
+  const j = await post('admin', { token: store.get(), op, id, why });
+  if (j.error === 'login') { store.set(''); showMain(false); return; }
+  $('nh-msg').textContent = j.ok ? 'עודכן.' : 'הפעולה לא הצליחה.';
+  if (j.ok) load();
+}
+if (store.get()) { showMain(true); load(); }
+</script>
