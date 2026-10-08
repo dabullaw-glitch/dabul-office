@@ -40,13 +40,9 @@ function dabul_yt_id($url) {
 }
 
 /* new videos inside articles */
-add_filter('the_content', function ($html) {
-	if (!is_singular('post') || !in_the_loop() || !is_main_query()) return $html;
-	$map = get_option('dabul_art_videos', array());
-	$pid = get_the_ID();
-	if (empty($map[$pid])) return $html;
+function dabul_art_figures($vids, $html) {
 	$out = '';
-	foreach ((array) $map[$pid] as $vid) {
+	foreach ($vids as $vid) {
 		if (strpos($html, $vid) !== false) continue; // already in the article
 		$m = dabul_yt_meta($vid);
 		$title = $m && $m['title'] ? $m['title'] : '';
@@ -54,6 +50,14 @@ add_filter('the_content', function ($html) {
 		$out .= '<figure class="dbl-vid' . ($short ? ' short' : '') . '">' . dabul_yt_facade($vid, $title, false, $short ? '9/16' : '16/9')
 			. ($title ? '<figcaption>' . esc_html($title) . '</figcaption>' : '') . '</figure>';
 	}
+	return $out;
+}
+add_filter('the_content', function ($html) {
+	if (!is_singular('post') || !in_the_loop() || !is_main_query()) return $html;
+	$map = get_option('dabul_art_videos', array());
+	$pid = get_the_ID();
+	if (empty($map[$pid])) return $html;
+	$out = dabul_art_figures((array) $map[$pid], $html);
 	if ($out === '') return $html;
 	// after the first section: before the second h2, or after the third paragraph
 	$parts = preg_split('#(<h2\b)#i', $html, 3, PREG_SPLIT_DELIM_CAPTURE);
@@ -97,14 +101,29 @@ add_action('template_redirect', function () {
 			$cards = ''; $wide = '';
 			foreach (array_slice($extra, 0, 24) as $vid) {
 				$m = dabul_yt_fetch_meta($vid); $ids[$vid] = 1;
-				$tall = !$m || !empty($m['short']); // wide videos get their own row in a wide frame, so nothing is cut
-				$card = '<div class="dbl-vcard">' . dabul_yt_facade($vid, $m ? $m['title'] : '', false, $tall ? '9/16' : '16/9') . ($m && $m['title'] ? '<p>' . esc_html($m['title']) . '</p>' : '') . '</div>';
+				$tall = !$m || !empty($m['short']); // a wide video gets a wide card over the whole row, so nothing is cut
+				$card = '<div class="dbl-vcard' . ($tall ? '' : ' dbl-wide') . '">' . dabul_yt_facade($vid, $m ? $m['title'] : '', false, $tall ? '9/16' : '16/9') . ($m && $m['title'] ? '<p>' . esc_html($m['title']) . '</p>' : '') . '</div>';
 				if ($tall) $cards .= $card; else $wide .= $card;
 			}
-			$block = '<section class="dbl-vnew" aria-label="סרטונים">' . ($wide ? '<div class="dbl-vgrid wide">' . $wide . '</div>' : '') . ($cards ? '<div class="dbl-vgrid">' . $cards . '</div>' : '') . '</section>';
-			// put the block right before the grid of videos (not inside the first video, which stretched every row)
-			$pos = strpos($html, '<div class="elementor-element elementor-element-76f9f98 ');
-			if ($pos !== false) $html = substr($html, 0, $pos) . $block . substr($html, $pos);
+			// the new videos join the same grid as the other videos, first in line
+			if (preg_match('#<div class="elementor-loop-container[^"]*"[^>]*>#', $html, $g, PREG_OFFSET_CAPTURE)) {
+				$at = $g[0][1] + strlen($g[0][0]);
+				$html = substr($html, 0, $at) . $wide . $cards . substr($html, $at);
+			}
+		}
+		// new videos in articles that are built with Elementor (the content filter does not reach them)
+		if (is_singular('post')) {
+			$map = get_option('dabul_art_videos', array()); $qid = get_queried_object_id();
+			if (!empty($map[$qid])) {
+				$miss = array_filter((array) $map[$qid], function ($v) use ($html) { return strpos($html, 'data-id="' . $v . '"') === false; });
+				$fig = $miss ? dabul_art_figures($miss, '') : '';
+				$doc = strpos($html, 'data-elementor-id="' . $qid . '"');
+				if ($fig !== '' && $doc !== false && preg_match_all('#<div class="elementor-element elementor-element-[0-9a-f]+ [^"]*elementor-widget-text-editor#', $html, $tw, PREG_OFFSET_CAPTURE, $doc) && count($tw[0]) >= 2) {
+					$at = $tw[0][min(2, count($tw[0]) - 1)][1];
+					$html = substr($html, 0, $at) . $fig . substr($html, $at);
+					foreach ($miss as $v) $ids[$v] = 1;
+				}
+			}
 		}
 		if (!$ids && strpos($html, 'class="dbl-yt"') === false) return $html;
 		preg_match_all('#class="dbl-yt" data-id="([A-Za-z0-9_-]{11})"#', $html, $all);
@@ -125,12 +144,11 @@ add_action('template_redirect', function () {
 			. '.dbl-yt:hover .dbl-yt-play,.dbl-yt:focus .dbl-yt-play{background:#e00}.dbl-yt-play:before{content:"";position:absolute;left:27px;top:14px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #fff}'
 			. '.dbl-yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.dbl-yt-play.load{opacity:.55}.dbl-yt-box{position:relative;width:100%;border-radius:12px;overflow:hidden;background:#000}.elementor-widget-video .elementor-wrapper{position:relative}'
 			. '.dbl-vid{margin:1.75rem auto;max-width:720px}.dbl-vid.short{max-width:340px}.dbl-vid figcaption{text-align:center;font-size:15px;color:#54595f;margin-top:8px}'
-			. '.dbl-vnew{width:100%;margin:0 0 50px;padding:0;direction:rtl}'
 			. '.elementor-element-76f9f98 .elementor-loop-container{grid-auto-rows:auto!important}'
-			. '.dbl-vgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:50px 30px}.dbl-vgrid+.dbl-vgrid{margin-top:50px}.dbl-vgrid.wide{grid-template-columns:repeat(2,minmax(0,1fr))}'
-			. '.dbl-vcard .dbl-yt-box{border-radius:0}.dbl-vcard p{font-size:17px;font-weight:700;line-height:1.35;color:#141414;margin:20px 0 0;text-align:center}'
+			. '.dbl-vcard{padding:10px 0;direction:rtl;min-width:0}.dbl-vcard.dbl-wide{grid-column:1/-1;width:100%;max-width:900px;margin:0 auto}'
+			. '.dbl-vcard .dbl-yt-box{border-radius:0}.dbl-vcard p{font-family:"Noto Local",sans-serif;font-size:17px;font-weight:700;line-height:1.3;color:#141414;margin:20px 0 0;text-align:center}'
 			. '.dbl-short .elementor-wrapper{aspect-ratio:9/16!important;--video-aspect-ratio:0.5625}'
-			. '@media (max-width:767px){.dbl-vgrid,.dbl-vgrid.wide{grid-template-columns:1fr;gap:50px}.dbl-vcard p{font-size:16px}}</style>';
+			. '@media (max-width:767px){.dbl-vcard p{font-size:16px}}</style>';
 		$js = <<<'DBLJS'
 <script nowprocket data-no-optimize="1">
 (function () {
