@@ -26,3 +26,4 @@ for (const mode of ['phone', 'desktop']) {
   rep['errors-' + mode] = errs; await ctx.close();
 }
 fs.writeFileSync(`${OUT}/rep.json`, JSON.stringify(rep, null, 1)); await b.close();
+// r2
