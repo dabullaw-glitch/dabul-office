@@ -92,7 +92,7 @@ const schema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEnti
   {latest.length > 0 && (
     <section class="sec">
       <div class="wrap">
-        <div class="sec-head"><h2>עודכנו לאחרונה</h2></div>
+        <div class="sec-head"><h2>עודכנו לאחרונה</h2><a href={`${B}ma-hishtana/`}>מה השתנה החודש ←</a></div>
         <div class="grid g3">{latest.map((g) => <GuideCard g={g} />)}</div>
       </div>
     </section>

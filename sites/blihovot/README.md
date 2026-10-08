@@ -32,6 +32,23 @@ The owner's name appears only in `src/data/lawyers.json` (the paid lawyer list).
    H2 headings phrased as the questions people search, a table, numbered steps, a worked example with made-up numbers
    (say so), common mistakes, a "what to do this week" checklist, 4 to 6 FAQ items, and 5 to 10 internal links.
 
+## Numbers, monthly check and "מה השתנה" (ma-hishtana/)
+
+- `src/data/numbers.json`: every important number the site quotes (amounts, thresholds, deadlines), each with its official
+  source and the date it was last checked. Shown on `ma-hishtana/` and in `llms.txt`. `FACTS` in `src/data/site.ts` holds
+  the numbers the calculators use; keep both in sync.
+- `src/data/updates.json`: the monthly log (kinds: `law`, `numbers`, `check`, `site`). Only verified, sourced changes.
+- A scheduled task checks all numbers on the 1st of every month, updates them everywhere (numbers.json, FACTS, guides,
+  src/lib/bakashot.ts), and adds the month's entry, even when nothing changed ("בדקנו, לא נמצאו שינויים").
+
+## Sharing and embedding
+
+- Every guide and tool has a share box (`ShareBar.astro`: WhatsApp, the phone's share sheet, copy link).
+- Checklists in guides (`- [ ]` lists) get a "save as picture" button (`ChecklistImage.astro`, drawn in the browser).
+- Calculators listed in `EMBEDDABLE` (`src/data/tools.ts`) can be embedded by other sites: `kli/<id>/?embed=1` shows only the
+  tool and a credit line; the code is on `hatmaa/`; `public/embed.js` adjusts the iframe height.
+  A new calculator: add its id to `EMBEDDABLE` and a height in `hatmaa.astro`.
+
 ## Videos
 
 `node scripts/video.mjs videos/<id>.json` renders a silent vertical explainer (1080x1920, captions included) into

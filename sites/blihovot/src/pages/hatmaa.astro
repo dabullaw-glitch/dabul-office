@@ -1,0 +1,78 @@
+---
+// Embeddable calculators: a live preview and copy-paste code for each one (the tool page with ?embed=1 in an iframe,
+// a credit line with a normal link back, and the optional auto-height script).
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { TOOLS, EMBEDDABLE } from '../data/tools';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const abs = (p: string) => new URL(B + p, Astro.site).href;
+const list = (EMBEDDABLE as readonly string[]).map((id) => TOOLS.find((t) => t.id === id)!).filter(Boolean);
+const HEIGHTS: Record<string, number> = { 'eize-halich': 900, saf: 520, 'ichud-tikim': 560, tashlumim: 600, taktziv: 900 };
+const code = (t: (typeof list)[number]) => `<iframe src="${abs(`kli/${t.id}/`)}?embed=1" title="${t.title}" data-blihovot loading="lazy" style="width:100%;max-width:760px;height:${HEIGHTS[t.id] || 640}px;border:0"></iframe>
+<p style="font-size:14px">המחשבון באדיבות <a href="${abs(`kli/${t.id}/`)}">בלי חובות: ${t.title}</a></p>
+<script src="${abs('embed.js')}" async></script>`;
+const schema = [{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'מחשבונים חינמיים לאתר שלכם', description: 'מחשבונים בעברית על חובות, הוצאה לפועל וחדלות פירעון, להטמעה חינמית באתרים של עמותות, יועצים וכותבי תוכן.', url: abs('hatmaa/'), inLanguage: 'he-IL' }];
+---
+<Base title="מחשבונים חינמיים לאתר שלכם: הטמעת מחשבוני חובות" description="מחשבון איחוד תיקים, סף חדלות פירעון, סגירת חוב, תקציב חודשי ובדיקת הליך: קוד חינמי להטמעה באתר שלכם, בעברית, מתעדכן אוטומטית ולא אוסף מידע." schema={schema}>
+  <div class="wrap hm">
+    <Breadcrumbs items={[{ href: 'kli/', label: 'מחשבונים וכלים' }, { label: 'הטמעה באתר שלכם' }]} />
+    <h1>מחשבונים חינמיים לאתר שלכם</h1>
+    <p class="lede">מנהלים אתר של עמותה, ייעוץ כלכלי, רווחה או בלוג על כסף? אפשר להוסיף אצלכם את המחשבונים של בלי חובות, בחינם ובלי הרשמה. הם בעברית, נגישים בטלפון, מתעדכנים אוטומטית כשהסכומים בחוק משתנים, ולא אוספים שום מידע על מי שמשתמש בהם.</p>
+    <ol class="steps">
+      <li><b>בוחרים מחשבון</b> מהרשימה למטה.</li>
+      <li><b>לוחצים "העתקת הקוד".</b></li>
+      <li><b>מדביקים בעמוד באתר.</b> בוורדפרס: בלוק "HTML מותאם אישית". באלמנטור: הווידג'ט "HTML". ברוב בוני האתרים יש רכיב "הטמעה" או "Embed".</li>
+    </ol>
+    {list.map((t) => (
+      <section class="tl card" id={t.id} aria-labelledby={`h-${t.id}`}>
+        <h2 id={`h-${t.id}`}>{t.title}</h2>
+        <p class="muted">{t.blurb}</p>
+        <details class="pv">
+          <summary>תצוגה מקדימה</summary>
+          <iframe data-src={`${B}kli/${t.id}/?embed=1`} title={t.title} data-blihovot style={`height:${HEIGHTS[t.id] || 640}px`}></iframe>
+        </details>
+        <label class="lbl" for={`c-${t.id}`}>הקוד להדבקה</label>
+        <textarea id={`c-${t.id}`} class="code" readonly rows="5" dir="ltr">{code(t)}</textarea>
+        <button class="btn btn-teal cp" type="button" data-for={`c-${t.id}`}>העתקת הקוד</button>
+      </section>
+    ))}
+    <section class="terms">
+      <h2>תנאי השימוש בהטמעה</h2>
+      <ul>
+        <li>השימוש חינמי, לכל אתר, כולל אתרים מסחריים.</li>
+        <li>משאירים את שורת הקרדיט עם הקישור, כמו שהיא בקוד.</li>
+        <li>לא משנים את המחשבון ולא מציגים אותו כאילו הוא שלכם.</li>
+        <li>המחשבונים נותנים מידע כללי ואינם ייעוץ משפטי. אנחנו מעדכנים אותם כשהחוק או הסכומים משתנים, והעדכון מגיע אליכם אוטומטית.</li>
+        <li>הנתונים שמשתמשים מזינים נשארים במכשיר שלהם ולא נשלחים אלינו או אליכם.</li>
+      </ul>
+      <p class="muted">רוצים מחשבון שלא קיים כאן, או נתקלתם בבעיה בהטמעה? <a href={`${B}tzor-kesher/`}>כתבו לנו</a>.</p>
+    </section>
+  </div>
+</Base>
+<style>
+.hm{padding-block:28px 50px;max-width:900px}
+.lede{font-size:1.1rem;color:var(--ink-2);max-width:68ch}
+.steps{display:grid;gap:8px;padding-inline-start:1.3em;margin:18px 0 30px}
+.tl{margin:0 0 22px;display:grid;gap:10px}
+.tl h2{margin:0;font-size:1.35rem}.tl p{margin:0}
+.pv summary{cursor:pointer;font-weight:700;color:var(--teal-2)}
+.pv iframe{width:100%;border:1px dashed var(--line);border-radius:var(--r-s);margin-top:10px;background:var(--paper)}
+.lbl{font-weight:700;font-size:.95rem}
+.code{width:100%;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:12px;border:1.5px solid var(--line);border-radius:var(--r-s);background:var(--sand);color:var(--ink);resize:vertical;text-align:left}
+.cp{justify-self:start}
+.terms{margin-top:34px}.terms ul{padding-inline-start:1.2em;display:grid;gap:6px}
+</style>
+<script>
+document.querySelectorAll<HTMLDetailsElement>('.pv').forEach((d) => d.addEventListener('toggle', () => {
+  const f = d.querySelector('iframe')!; if (d.open && !f.src) f.src = f.dataset.src!;
+}));
+window.addEventListener('message', (e) => {
+  const x = e.data; if (!x || x.blihovot !== 'h') return;
+  document.querySelectorAll<HTMLIFrameElement>('.pv iframe').forEach((f) => { if (f.contentWindow === e.source) f.style.height = Math.min(Math.max(x.h + 6, 300), 3000) + 'px'; });
+});
+document.querySelectorAll<HTMLButtonElement>('.cp').forEach((b) => b.addEventListener('click', async () => {
+  const t = document.getElementById(b.dataset.for!) as HTMLTextAreaElement;
+  try { await navigator.clipboard.writeText(t.value); } catch { t.select(); document.execCommand('copy'); }
+  b.textContent = 'הקוד הועתק ✓'; setTimeout(() => { b.textContent = 'העתקת הקוד'; }, 2200);
+}));
+</script>

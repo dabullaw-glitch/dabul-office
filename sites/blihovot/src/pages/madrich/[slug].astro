@@ -10,6 +10,8 @@ import { HUBS, SITE } from '../../data/site';
 import { ALL_TOOLS as TOOLS } from '../../data/tools';
 import Hamchasha from '../../components/Hamchasha.astro';
 import { animsFor } from '../../data/hamchashot';
+import ShareBar from '../../components/ShareBar.astro';
+import ChecklistImage from '../../components/ChecklistImage.astro';
 import videos from '../../data/videos.json';
 
 export async function getStaticPaths() {
@@ -62,6 +64,8 @@ if (video) schema.push({ '@context': 'https://schema.org', '@type': 'VideoObject
           <details class="toc-m" open={false}><summary>מה במדריך</summary><ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol></details>
         )}
         <div class="prose"><Content /></div>
+        <ChecklistImage guideTitle={d.title} url={url} />
+        <ShareBar title={d.title} url={url} />
         {video && <Video v={video} />}
         {tool && (
           <a class="toolcta card" href={`${B}kli/${tool.id}/`}><span class="tag">מחשבון</span><b>{tool.title}</b><span class="muted">{tool.blurb}</span><span class="go">{tool.cta} ←</span></a>
