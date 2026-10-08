@@ -32,7 +32,9 @@ for (const [name, url] of [['article', ART], ['home', S + '/']]) {
   await p.screenshot({ path: `${OUT}/m-${name}-before.jpg`, type: 'jpeg', quality: 75 });
   await p.mouse.wheel(0, 500); await p.waitForTimeout(2500);
   await p.screenshot({ path: `${OUT}/m-${name}-before-scrolled.jpg`, type: 'jpeg', quality: 75 });
-  await hideFloaters(p); await p.evaluate(h => { document.body.insertAdjacentHTML('beforeend', h); document.body.style.paddingBottom = '70px'; }, BAR);
+  await p.getByText('הבנתי', { exact: true }).first().click({ timeout: 3000 }).catch(() => {}); await p.waitForTimeout(600);
+  await hideFloaters(p); await p.evaluate(h => { document.body.insertAdjacentHTML('beforeend', h); document.body.style.paddingBottom = '70px';
+    for (const el of document.querySelectorAll('body *')) { const st = getComputedStyle(el); if (st.position === 'fixed' && /onetap/i.test(String(el.className) + el.id) && el.getBoundingClientRect().height < 120) { el.style.setProperty('bottom', '78px', 'important'); el.style.setProperty('top', 'auto', 'important'); } } }, BAR);
   await p.waitForTimeout(500);
   await p.screenshot({ path: `${OUT}/m-${name}-after-scrolled.jpg`, type: 'jpeg', quality: 75 });
   await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(800);
