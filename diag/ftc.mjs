@@ -1,0 +1,10 @@
+import { chromium, devices } from 'playwright';
+import fs from 'node:fs';
+const OUT = 'diag-results/ftc'; fs.mkdirSync(OUT, { recursive: true });
+const b = await chromium.launch(); const ctx = await b.newContext({ ...devices['iPhone 13'], locale: 'he-IL' }); const p = await ctx.newPage();
+await p.goto('https://dabullaw.co.il/?g=' + Date.now(), { waitUntil: 'load', timeout: 90000 }); await p.waitForTimeout(2000);
+await p.addStyleTag({ content: '.elementor-popup-modal{display:none!important}[data-elementor-type="header"]{visibility:hidden!important}#dbl-cbar{display:none!important}' });
+await p.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight)); await p.waitForTimeout(2000);
+const el = p.locator('#dbl-foot .ct'); await el.scrollIntoViewIfNeeded(); await p.waitForTimeout(500); await el.screenshot({ path: `${OUT}/ct.jpg`, type: 'jpeg', quality: 85 });
+await p.locator('#dbl-foot').screenshot({ path: `${OUT}/foot.jpg`, type: 'jpeg', quality: 75 });
+await b.close();
