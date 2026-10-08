@@ -1,0 +1,286 @@
+{
+ "footerAttrs": [
+  [
+   "data-elementor-type",
+   "footer"
+  ],
+  [
+   "data-elementor-id",
+   "622"
+  ],
+  [
+   "class",
+   "elementor elementor-622 elementor-location-footer"
+  ],
+  [
+   "data-elementor-post-type",
+   "elementor_library"
+  ]
+ ],
+ "heads": {
+  "9339779": "שעות פעילות",
+  "4ca2ea9": "צריכים סיוע משפטי?\nצרו קשר עכשיו",
+  "0f66f10": "לשיחת ייעוץ חייגו",
+  "dd98793": "רכישת דירה",
+  "7117d3b": "קניית דירה מקבלן",
+  "20c9d78": "מכירת דירה",
+  "6dccef0": "מיסוי מקרקעין",
+  "47fbee4": "התחדשות עירונית",
+  "e6620b9": "עורך דין מקרקעין",
+  "3f4ec02": "מידע באתר",
+  "f3a95db": "יש לכם שאלות? הצטרפו לקבוצת הוואטסאפ שלנו",
+  "ff5ffac": "יקיר דבול | משרד עורכי דין",
+  "02509a1": "אתר זה מוגן על ידי reCAPTCHA ומדיניות הפרטיות ותנאי השירות של גוגל חלים עליו."
+ },
+ "lists": {
+  "023fe63": [
+   [
+    "אודות המשרד",
+    "https://dabullaw.co.il/%d7%90%d7%95%d7%93%d7%95%d7%aa-%d7%94%d7%9e%d7%a9%d7%a8%d7%93/"
+   ],
+   [
+    "תעודות והסמכות עו״ד יקיר דבול",
+    "https://dabullaw.co.il/%d7%aa%d7%a2%d7%95%d7%93%d7%95%d7%aa-%d7%95%d7%94%d7%a1%d7%9e%d7%9b%d7%95%d7%aa-%d7%a2%d7%95%d7%b4%d7%93-%d7%99%d7%a7%d7%99%d7%a8-%d7%93%d7%91%d7%95%d7%9c/"
+   ],
+   [
+    "המלצות",
+    "https://dabullaw.co.il/%d7%94%d7%9e%d7%9c%d7%a6%d7%95%d7%aa/"
+   ],
+   [
+    "המשרד בתקשורת",
+    "https://dabullaw.co.il/category/press/"
+   ],
+   [
+    "סיפורי מקרה",
+    "https://dabullaw.co.il/category/%d7%a1%d7%99%d7%a4%d7%95%d7%a8%d7%99-%d7%9e%d7%a7%d7%a8%d7%94/"
+   ],
+   [
+    "מידע משפטי",
+    "https://dabullaw.co.il/%d7%9e%d7%99%d7%93%d7%a2-%d7%9e%d7%a9%d7%a4%d7%98%d7%99/"
+   ],
+   [
+    "טפסים",
+    "https://dabullaw.co.il/%d7%a7%d7%99%d7%a9%d7%95%d7%a8%d7%99%d7%9d-%d7%95%d7%98%d7%a4%d7%a1%d7%99%d7%9d/"
+   ],
+   [
+    "צרו קשר",
+    "https://dabullaw.co.il/%d7%a6%d7%a8%d7%95-%d7%a7%d7%a9%d7%a8/"
+   ]
+  ],
+  "e3a6a41": [
+   [
+    "רכישה דירה יד שנייה",
+    "https://dabullaw.co.il/%D7%9E%D7%93%D7%A8%D7%99%D7%9A-%D7%9E%D7%A7%D7%99%D7%A3-%D7%9C%D7%A8%D7%9B%D7%99%D7%A9%D7%AA-%D7%93%D7%99%D7%A8%D7%94-%D7%99%D7%93-%D7%A9%D7%A0%D7%99%D7%94/"
+   ],
+   [
+    "בדיקות מקדימות לפני קנייה",
+    "https://dabullaw.co.il/%D7%91%D7%93%D7%99%D7%A7%D7%95%D7%AA-%D7%9E%D7%A7%D7%93%D7%9E%D7%99%D7%95%D7%AA-%D7%9C%D7%A4%D7%A0%D7%99-%D7%A8%D7%9B%D7%99%D7%A9%D7%AA-%D7%93%D7%99%D7%A8%D7%94-2/"
+   ],
+   [
+    "זכרון דברים בעסקת מקרקעין",
+    "https://dabullaw.co.il/%D7%96%D7%99%D7%9B%D7%A8%D7%95%D7%9F-%D7%93%D7%91%D7%A8%D7%99%D7%9D-%D7%94%D7%9E%D7%A4%D7%99%D7%AA-%D7%94%D7%9B%D7%99-%D7%99%D7%A7%D7%A8%D7%94-%D7%A9%D7%AA%D7%97%D7%AA%D7%9E%D7%95-%D7%A2%D7%9C%D7%99/"
+   ],
+   [
+    "עריכת הסכם מכר",
+    "https://dabullaw.co.il/%D7%A2%D7%A8%D7%99%D7%9B%D7%AA-%D7%94%D7%A1%D7%9B%D7%9D-%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F/"
+   ],
+   [
+    "קניית דירה בנאמנות",
+    "https://dabullaw.co.il/buying-apartment-in-trust-real-estate-legal-guide/"
+   ],
+   [
+    "קניית דירה מושכרת",
+    "https://dabullaw.co.il/buying-rented-apartment-israel-legal-guide/"
+   ],
+   [
+    "קניית דירה עם חריגות בנייה",
+    "https://dabullaw.co.il/buying-apartment-building-violations-legal-risks-guide/"
+   ],
+   [
+    "רכישת דירה להריסה",
+    "https://dabullaw.co.il/purchasing-apartment-for-demolition-legal-guide-urban-renewal/"
+   ],
+   [
+    "רכישת דירה מכונס נכסים",
+    "https://dabullaw.co.il/%D7%A7%D7%A0%D7%99%D7%99%D7%AA-%D7%93%D7%99%D7%A8%D7%94-%D7%9E%D7%9B%D7%95%D7%A0%D7%A1-%D7%A0%D7%9B%D7%A1%D7%99%D7%9D-%D7%94%D7%96%D7%93%D7%9E%D7%A0%D7%95%D7%AA-%D7%A4%D7%96-%D7%90%D7%95-%D7%94%D7%A8/"
+   ],
+   [
+    "רכישת דירה על שם קטין",
+    "https://dabullaw.co.il/%D7%A8%D7%9B%D7%99%D7%A9%D7%AA-%D7%93%D7%99%D7%A8%D7%94-%D7%A2%D7%9C-%D7%99%D7%93%D7%99-%D7%A7%D7%98%D7%99%D7%9F/"
+   ],
+   [
+    "רכישת דירה תושב חוץ",
+    "https://dabullaw.co.il/%D7%94%D7%9E%D7%93%D7%A8%D7%99%D7%9A-%D7%9C%D7%AA%D7%95%D7%A9%D7%91%D7%99-%D7%97%D7%95%D7%A5-%D7%90%D7%99%D7%9A-%D7%9C%D7%A7%D7%A0%D7%95%D7%AA-%D7%95%D7%9C%D7%9E%D7%9B%D7%95%D7%A8-%D7%A0%D7%93/"
+   ]
+  ],
+  "cf26f1d": [
+   [
+    "איחור במסירת דירה מקבלן",
+    "https://dabullaw.co.il/%d7%90%d7%99%d7%97%d7%95%d7%a8-%d7%91%d7%9e%d7%a1%d7%99%d7%a8%d7%aa-%d7%93%d7%99%d7%a8%d7%94-%d7%9e%d7%a7%d7%91%d7%9c%d7%9f/"
+   ],
+   [
+    "מדד תשומות הבנייה",
+    "https://dabullaw.co.il/%D7%9E%D7%93%D7%93-%D7%AA%D7%A9%D7%95%D7%9E%D7%95%D7%AA-%D7%94%D7%91%D7%A0%D7%99%D7%94/"
+   ],
+   [
+    "קניית דירה מוכנה מקבלן",
+    "https://dabullaw.co.il/%D7%94%D7%9E%D7%93%D7%A8%D7%99%D7%9A-%D7%94%D7%9E%D7%9C%D7%90-%D7%9C%D7%A8%D7%9B%D7%99%D7%A9%D7%AA-%D7%93%D7%99%D7%A8%D7%94-%D7%9E%D7%A7%D7%91%D7%9C%D7%9F-2026/"
+   ],
+   [
+    "קניית דירה על הנייר",
+    "https://dabullaw.co.il/%D7%A7%D7%A0%D7%99%D7%94-%D7%9E%D7%A7%D7%91%D7%9C%D7%9F/"
+   ]
+  ],
+  "270273d": [
+   [
+    "היטל השבחה במכירת דירה",
+    "https://dabullaw.co.il/%D7%A9%D7%90%D7%9C%D7%95%D7%AA-%D7%A0%D7%A4%D7%95%D7%A6%D7%95%D7%AA-%D7%94%D7%99%D7%98%D7%9C-%D7%94%D7%A9%D7%91%D7%97%D7%94/"
+   ],
+   [
+    "העברת דירה במתנה ללא תמורה (בין קרובי משפחה)",
+    "https://dabullaw.co.il/%D7%94%D7%A2%D7%91%D7%A8%D7%94-%D7%9C%D7%9C%D7%90-%D7%AA%D7%9E%D7%95%D7%A8%D7%94-%D7%A2%D7%A1%D7%A7%D7%AA-%D7%9E%D7%AA%D7%A0%D7%94-%D7%91%D7%9E%D7%A9%D7%A4%D7%97%D7%94-%D7%94%D7%9E%D7%93%D7%A8/"
+   ],
+   [
+    "הפרת חוזה מכר דירה על ידי הקונה",
+    "https://dabullaw.co.il/%D7%94%D7%A4%D7%A8%D7%AA-%D7%97%D7%95%D7%96%D7%94-%D7%9E%D7%9B%D7%A8-%D7%93%D7%99%D7%A8%D7%94/"
+   ],
+   [
+    "מכירת דירה של תושב חוץ בישראל",
+    "https://dabullaw.co.il/%D7%94%D7%9E%D7%93%D7%A8%D7%99%D7%9A-%D7%9C%D7%AA%D7%95%D7%A9%D7%91%D7%99-%D7%97%D7%95%D7%A5-%D7%90%D7%99%D7%9A-%D7%9C%D7%A7%D7%A0%D7%95%D7%AA-%D7%95%D7%9C%D7%9E%D7%9B%D7%95%D7%A8-%D7%A0%D7%93/"
+   ]
+  ],
+  "5f04f5a": [
+   [
+    "הנחה במס רכישה לנכים",
+    "https://dabullaw.co.il/%D7%94%D7%9E%D7%93%D7%A8%D7%99%D7%9A-%D7%9C%D7%9E%D7%A1-%D7%A8%D7%9B%D7%99%D7%A9%D7%94-2025-%D7%9B%D7%9E%D7%94-%D7%AA%D7%A9%D7%9C%D7%9E%D7%95-%D7%9C%D7%9E%D7%93%D7%99%D7%A0%D7%94-%D7%95%D7%90%D7%99/"
+   ],
+   [
+    "הנחה במס רכישה לעולים חדשים",
+    "https://dabullaw.co.il/%D7%94%D7%9E%D7%93%D7%A8%D7%99%D7%9A-%D7%9C%D7%9E%D7%A1-%D7%A8%D7%9B%D7%99%D7%A9%D7%94-2025-%D7%9B%D7%9E%D7%94-%D7%AA%D7%A9%D7%9C%D7%9E%D7%95-%D7%9C%D7%9E%D7%93%D7%99%D7%A0%D7%94-%D7%95%D7%90%D7%99/"
+   ],
+   [
+    "הקטנת מס שבח",
+    "https://dabullaw.co.il/%D7%93%D7%A8%D7%9B%D7%99%D7%9D-%D7%97%D7%95%D7%A7%D7%99%D7%95%D7%AA-%D7%9C%D7%94%D7%A4%D7%97%D7%AA%D7%AA-%D7%9E%D7%A1-%D7%A9%D7%91%D7%97-%D7%95%D7%9E%D7%99%D7%A1%D7%95%D7%99/"
+   ],
+   [
+    "חישוב מס רכישה",
+    "https://dabullaw.co.il/%D7%94%D7%9E%D7%93%D7%A8%D7%99%D7%9A-%D7%94%D7%9E%D7%9C%D7%90-%D7%95%D7%9E%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%9C%D7%94%D7%95%D7%A6%D7%90%D7%95%D7%AA-%D7%9C%D7%A8%D7%9B%D7%99%D7%A9%D7%AA-%D7%93%D7%99/"
+   ],
+   [
+    "חישוב מס שבח",
+    "https://dabullaw.co.il/%D7%AA%D7%9B%D7%A0%D7%95%D7%9F-%D7%9E%D7%A1-%D7%95%D7%9C%D7%99%D7%95%D7%95%D7%99-%D7%91%D7%9E%D7%99%D7%A1%D7%95%D7%99-%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F-%D7%A9%D7%91%D7%97-%D7%A8%D7%9B%D7%99/"
+   ],
+   [
+    "מיסוי דירת ירושה",
+    "https://dabullaw.co.il/%D7%90%D7%AA%D7%9D-%D7%A9%D7%95%D7%90%D7%9C%D7%99%D7%9D-%D7%A2%D7%95%D7%93-%D7%99%D7%A7%D7%99%D7%A8-%D7%93%D7%91%D7%95%D7%9C-%D7%A2%D7%95%D7%A0%D7%94-%D7%94%D7%9E%D7%93%D7%A8%D7%99%D7%9A-2/"
+   ],
+   [
+    "מציאת סכום הרכישה",
+    "https://dabullaw.co.il/%D7%90%D7%99%D7%9A-%D7%9C%D7%A0%D7%94%D7%9C-%D7%9E%D7%A9%D7%90-%D7%95%D7%9E%D7%AA%D7%9F-%D7%9E%D7%95%D7%A6%D7%9C%D7%97-%D7%9C%D7%A8%D7%9B%D7%99%D7%A9%D7%AA-%D7%93%D7%99%D7%A8%D7%94-2/"
+   ]
+  ],
+  "796bc41": [
+   [
+    "סרבני פינוי בינוי",
+    "https://dabullaw.co.il/%D7%94%D7%93%D7%99%D7%99%D7%A8-%D7%94%D7%A1%D7%A8%D7%91%D7%9F-%D7%94%D7%9E%D7%93%D7%A8%D7%99%D7%9A-%D7%94%D7%9E%D7%A9%D7%A4%D7%98%D7%99-%D7%94%D7%9E%D7%9C%D7%90-%D7%9C%D7%94%D7%AA%D7%9E%D7%95%D7%93/"
+   ],
+   [
+    "עורך דין פינוי בינוי",
+    "https://dabullaw.co.il/%D7%94%D7%AA%D7%97%D7%93%D7%A9%D7%95%D7%AA-%D7%A2%D7%99%D7%A8%D7%95%D7%A0%D7%99%D7%AA/"
+   ]
+  ],
+  "bced874": [
+   [
+    "רזיאל 1, נתניה (קומת כניסה) 4247001",
+    ""
+   ],
+   [
+    "09-861-3413",
+    "tel:098613413"
+   ],
+   [
+    "dabullaw@gmail.com",
+    "mailto:dabullaw@gmail.com"
+   ],
+   [
+    "התחברו בפייסבוק",
+    "https://www.facebook.com/dabullaw"
+   ]
+  ],
+  "56f4633": [
+   [
+    "מדיניות פרטיות",
+    "https://dabullaw.co.il/privacy-policy/"
+   ],
+   [
+    "הצהרת נגישות",
+    "https://dabullaw.co.il/%d7%94%d7%a6%d7%94%d7%a8%d7%aa-%d7%a0%d7%92%d7%99%d7%a9%d7%95%d7%aa/"
+   ],
+   [
+    "מפת אתר",
+    "https://dabullaw.co.il/%d7%9e%d7%a4%d7%aa-%d7%90%d7%aa%d7%a8/"
+   ],
+   [
+    "מדיניות פרטיות",
+    "https://dabullaw.co.il/privacy-policy/"
+   ],
+   [
+    "הצהרת נגישות",
+    "https://dabullaw.co.il/%d7%94%d7%a6%d7%94%d7%a8%d7%aa-%d7%a0%d7%92%d7%99%d7%a9%d7%95%d7%aa/"
+   ],
+   [
+    "מפת אתר",
+    "https://dabullaw.co.il/%d7%9e%d7%a4%d7%aa-%d7%90%d7%aa%d7%a8/"
+   ]
+  ]
+ },
+ "hours": "יום א'-ה'\n9:00-18:00\nיום ו' ושבת\nסגור",
+ "langLinks": [
+  [
+   "עורך דין מקרקעין בנתניה",
+   "https://dabullaw.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F-%D7%91%D7%A0%D7%AA%D7%A0%D7%99%D7%94/"
+  ],
+  [
+   "עורך דין מקרקעין בהרצליה",
+   "https://dabullaw.co.il/%d7%a2%d7%95%d7%a8%d7%9a-%d7%93%d7%99%d7%9f-%d7%9e%d7%a7%d7%a8%d7%a7%d7%a2%d7%99%d7%9f-%d7%91%d7%94%d7%a8%d7%a6%d7%9c%d7%99%d7%94-%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%94%d7%9e%d7%9c%d7%90-%d7%9c/"
+  ],
+  [
+   "עורך דין מקרקעין בחדרה",
+   "https://dabullaw.co.il/%d7%a2%d7%95%d7%a8%d7%9a-%d7%93%d7%99%d7%9f-%d7%9e%d7%a7%d7%a8%d7%a7%d7%a2%d7%99%d7%9f-%d7%91%d7%97%d7%93%d7%a8%d7%94/"
+  ],
+  [
+   "עורך דין מקרקעין בכפר יונה",
+   "https://dabullaw.co.il/%d7%a2%d7%95%d7%a8%d7%9a-%d7%93%d7%99%d7%9f-%d7%9e%d7%a7%d7%a8%d7%a7%d7%a2%d7%99%d7%9f-%d7%91%d7%9b%d7%a4%d7%a8-%d7%99%d7%95%d7%a0%d7%94/"
+  ],
+  [
+   "Français",
+   "https://dabullaw.co.il/avocat-immobilier-netanya-francais/"
+  ],
+  [
+   "English",
+   "https://dabullaw.co.il/real-estate-lawyer-netanya-english/"
+  ]
+ ],
+ "logo": "<img width=\"701\" height=\"180\" src=\"https://dabullaw.co.il/wp-content/uploads/2025/11/logo-footer.webp\" class=\"attachment-large size-large wp-image-5629 entered lazyloaded\" alt=\"יקיר דבול משרד עורכי דין\" data-lazy-srcset=\"https://dabullaw.co.il/wp-content/uploads/2025/11/logo-footer.webp 701w, https://dabullaw.co.il/wp-content/uploads/2025/11/logo-footer-300x77.webp 300w\" data-lazy-sizes=\"(max-width: 701px) 100vw, 701px\" data-lazy-src=\"https://dabullaw.co.il/wp-content/uploads/2025/11/logo-footer.webp\" data-ll-status=\"loaded\" sizes=\"(max-width: 701px) 100vw, 701px\" srcset=\"https://dabullaw.co.il/wp-content/uploads/2025/11/logo-footer.webp 701w, https://dabullaw.co.il/wp-content/uploads/2025/11/logo-footer-300x77.webp 300w\">",
+ "mart": "<div class=\"elementor-element elementor-element-5d367c3 elementor-widget elementor-widget-image\" data-id=\"5d367c3\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"image.default\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<img width=\"300\" height=\"139\" src=\"https://dabullaw.co.il/wp-content/uploads/2025/11/martindale-חותם-אמינות-מרטינדייל-2-300x139-1.png.webp\" class=\"attachment-medium size-medium wp-image-5905 entered lazyloaded\" alt=\"חותם אמינות מרטינדייל\" data-lazy-src=\"https://dabullaw.co.il/wp-content/uploads/2025/11/martindale-חותם-אמינות-מרטינדייל-2-300x139-1.png.webp\" data-ll-status=\"loaded\"><noscript><img loading=\"lazy\" width=\"300\" height=\"139\" src=\"https://dabullaw.co.il/wp-content/uploads/2025/11/martindale-חותם-אמינות-מרטינדייל-2-300x139-1.png.webp\" class=\"attachment-medium size-medium wp-image-5905\" alt=\"חותם אמינות מרטינדייל\" /></noscript>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</div>",
+ "map": "<iframe loading=\"lazy\" src=\"https://maps.google.com/maps?q=%D7%A2%D7%95%D7%A8%D7%9A%20%D7%93%D7%99%D7%9F%20%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F%20%D7%99%D7%A7%D7%99%D7%A8%20%D7%93%D7%91%D7%95%D7%9C%20%D7%A0%D7%AA%D7%A0%D7%99%D7%94&amp;t=m&amp;z=14&amp;output=embed&amp;iwloc=near\" title=\"עורך דין מקרקעין יקיר דבול נתניה\" aria-label=\"עורך דין מקרקעין יקיר דבול נתניה\" data-rocket-lazyload=\"fitvidscompatible\" data-lazy-src=\"https://maps.google.com/maps?q=%D7%A2%D7%95%D7%A8%D7%9A%20%D7%93%D7%99%D7%9F%20%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F%20%D7%99%D7%A7%D7%99%D7%A8%20%D7%93%D7%91%D7%95%D7%9C%20%D7%A0%D7%AA%D7%A0%D7%99%D7%94&amp;t=m&amp;z=14&amp;output=embed&amp;iwloc=near\" data-ll-status=\"loaded\" class=\"entered lazyloaded\"></iframe>",
+ "copy": "כל הזכויות שמורות ליקיר דבול משרד עורכי דין ©",
+ "rc": "\n\t\t\t\t\t<span class=\"elementor-heading-title elementor-size-default\">אתר זה מוגן על ידי reCAPTCHA ומדיניות הפרטיות ותנאי השירות של גוגל חלים עליו.</span>\t\t\t\t",
+ "wa": "<div class=\"elementor-element elementor-element-d31fc23 e-con-full e-flex e-con e-child\" data-id=\"d31fc23\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\">\n\t\t\t\t<div class=\"elementor-element elementor-element-f3a95db elementor-widget elementor-widget-heading\" data-id=\"f3a95db\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"heading.default\">\n\t\t\t\t\t<div class=\"elementor-heading-title elementor-size-default\"><b>יש לכם שאלות? </b>הצטרפו לקבוצת הוואטסאפ שלנו</div>\t\t\t\t</div>\n\t\t\t\t<div class=\"elementor-element elementor-element-831ef6d elementor-mobile-align-center elementor-widget elementor-widget-button\" data-id=\"831ef6d\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"button.default\">\n\t\t\t\t\t\t\t\t\t\t<a class=\"elementor-button elementor-button-link elementor-size-sm\" href=\"https://chat.whatsapp.com/ClLGh1qsjnpBnjIdKKu2lA?mode=hqrt2\" target=\"_blank\">\n\t\t\t\t\t\t<span class=\"elementor-button-content-wrapper\">\n\t\t\t\t\t\t<span class=\"elementor-button-icon\">\n\t\t\t\t<svg aria-hidden=\"true\" class=\"e-font-icon-svg e-fab-whatsapp\" viewBox=\"0 0 448 512\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z\"></path></svg>\t\t\t</span>\n\t\t\t\t\t\t\t\t\t<span class=\"elementor-button-text\">להצטרפות</span>\n\t\t\t\t\t</span>\n\t\t\t\t\t</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t</div>",
+ "socials": [
+  "https://wa.me/972505580189?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%90%D7%95%D7%9C...",
+  "https://www.facebook.com/dabullaw",
+  "https://waze.com/ul?ll=32.3274395%2C34.8614253&navigate=yes&zoom=17",
+  "https://chat.whatsapp.com/ClLGh1qsjnpBnjIdKKu2lA?mode=hqrt2",
+  "https://www.facebook.com/dabullaw",
+  "https://wa.me/972505580189?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%90%D7%95%D7%9C...",
+  "https://www.facebook.com/dabullaw",
+  "https://waze.com/ul?ll=32.3274395%2C34.8614253&navigate=yes&zoom=17",
+  "https://chat.whatsapp.com/ClLGh1qsjnpBnjIdKKu2lA",
+  "https://wa.me/972505580189?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%90%D7%95%D7%9C...",
+  "https://chat.whatsapp.com/ClLGh1qsjnpBnjIdKKu2lA"
+ ],
+ "footerHtmlLen": 78447,
+ "scripts": 0,
+ "forms": 1
+}
