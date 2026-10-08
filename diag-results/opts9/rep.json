@@ -1,0 +1,12 @@
+{
+ "live-phone": {
+  "ph": true,
+  "phShown": "block"
+ },
+ "about-u3-phone": 1936,
+ "live-desktop": {
+  "ph": true,
+  "phShown": "none"
+ },
+ "about-u3-desktop": 1123
+}
