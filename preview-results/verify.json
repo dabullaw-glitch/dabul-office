@@ -1,0 +1,198 @@
+{
+ "mobile": {
+  "homeButtons": [
+   "block/0",
+   "block/0"
+  ],
+  "badge": {
+   "label": "דירוג 4.9 בגוגל, מבוסס על 73 ביקורות",
+   "w": 0,
+   "h": 0,
+   "y": 0
+  },
+  "a11y": {
+   "onetap": [
+    {
+     "tag": "BUTTON",
+     "id": "",
+     "cls": "onetap-toggle design-border2",
+     "x": 15,
+     "y": 605,
+     "w": 44,
+     "h": 44
+    },
+    {
+     "tag": "BUTTON",
+     "id": "onetap-language-list",
+     "cls": "onetap-languages",
+     "x": -570,
+     "y": 18,
+     "w": 111,
+     "h": 38
+    },
+    {
+     "tag": "BUTTON",
+     "id": "",
+     "cls": "onetap-close",
+     "x": -243,
+     "y": 20,
+     "w": 33,
+     "h": 33
+    },
+    {
+     "tag": "BUTTON",
+     "id": "",
+     "cls": "onetap-btn onetap-btn-increase",
+     "x": -307,
+     "y": 393,
+     "w": 30,
+     "h": 30
+    },
+    {
+     "tag": "BUTTON",
+     "id": "",
+     "cls": "onetap-btn onetap-btn-decrease",
+     "x": -493,
+     "y": 393,
+     "w": 30,
+     "h": 30
+    },
+    {
+     "tag": "BUTTON",
+     "id": "",
+     "cls": "onetap-btn onetap-btn-increase",
+     "x": -307,
+     "y": 666,
+     "w": 30,
+     "h": 30
+    }
+   ],
+   "ally": []
+  },
+  "homeErrs": [],
+  "tocBefore": [
+   {
+    "id": "f1f2abe",
+    "collapsed": false,
+    "bodyH": 0,
+    "items": 0
+   }
+  ],
+  "firstParaY": 363,
+  "tocAfterJs": [
+   {
+    "id": "f1f2abe",
+    "collapsed": true,
+    "bodyH": 0,
+    "items": 15
+   }
+  ],
+  "tocAfterClick": [
+   {
+    "id": "f1f2abe",
+    "collapsed": true,
+    "bodyH": 0,
+    "items": 15
+   }
+  ],
+  "testimonialsNoAlt": []
+ },
+ "desktop": {
+  "homeButtons": [
+   "block/0",
+   "block/0"
+  ],
+  "badge": {
+   "label": "דירוג 4.9 בגוגל, מבוסס על 73 ביקורות",
+   "w": 176,
+   "h": 70,
+   "y": 769
+  },
+  "a11y": {
+   "onetap": [
+    {
+     "tag": "BUTTON",
+     "id": "",
+     "cls": "onetap-toggle design-border2",
+     "x": 15,
+     "y": 793,
+     "w": 52,
+     "h": 52
+    },
+    {
+     "tag": "BUTTON",
+     "id": "onetap-language-list",
+     "cls": "onetap-languages",
+     "x": -562,
+     "y": 18,
+     "w": 111,
+     "h": 38
+    },
+    {
+     "tag": "BUTTON",
+     "id": "",
+     "cls": "onetap-close",
+     "x": -53,
+     "y": 20,
+     "w": 33,
+     "h": 33
+    },
+    {
+     "tag": "BUTTON",
+     "id": "",
+     "cls": "onetap-btn onetap-btn-increase",
+     "x": -126,
+     "y": 407,
+     "w": 30,
+     "h": 30
+    },
+    {
+     "tag": "BUTTON",
+     "id": "",
+     "cls": "onetap-btn onetap-btn-decrease",
+     "x": -311,
+     "y": 407,
+     "w": 30,
+     "h": 30
+    },
+    {
+     "tag": "BUTTON",
+     "id": "",
+     "cls": "onetap-btn onetap-btn-increase",
+     "x": -126,
+     "y": 549,
+     "w": 30,
+     "h": 30
+    }
+   ],
+   "ally": []
+  },
+  "homeErrs": [],
+  "tocBefore": [
+   {
+    "id": "9e1a1df",
+    "collapsed": false,
+    "bodyH": 82,
+    "items": 0
+   }
+  ],
+  "firstParaY": 330,
+  "tocAfterJs": [
+   {
+    "id": "9e1a1df",
+    "collapsed": false,
+    "bodyH": 210,
+    "items": 15
+   }
+  ],
+  "tocAfterClick": [
+   {
+    "id": "9e1a1df",
+    "collapsed": false,
+    "bodyH": 210,
+    "items": 15
+   }
+  ],
+  "testimonialsNoAlt": []
+ }
+}
