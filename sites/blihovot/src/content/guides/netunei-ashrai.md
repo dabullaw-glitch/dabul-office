@@ -21,7 +21,7 @@ sources:
     url: "https://www.kolzchut.org.il/he/קבלת_מידע_על_נתוני_אשראי_ודירוג_האשראי_האישי"
   - title: "בנק ישראל: מערכת נתוני אשראי"
     url: "https://boi.org.il/publications/pressreleases/בנק-ישראל-יצא-בתכנית-הסברה-באמצעי-המדיה-השונים-במטרה-להגביר-את-מודעות-הציבור-לשימוש-במערכת-נתוני-אשראי/"
-related: [hefter, mashkanta-achrei-hefter, taktziv, masa-umatan-bank]
+related: [netunei-ashrai-taut, hefter, mashkanta-achrei-hefter, taktziv, masa-umatan-bank]
 ---
 
 אחרי חובות, הוצאה לפועל או הליך חדלות פירעון, הרבה אנשים שואלים: "מה הבנקים יודעים עליי עכשיו?" התשובה נמצאת ב**מערכת נתוני האשראי** של בנק ישראל, וכדאי להכיר אותה.
