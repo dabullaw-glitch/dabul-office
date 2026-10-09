@@ -7,6 +7,8 @@
       They now arrive together with the other style files at the top (the same rules, nothing in the look changes).
    Checked on a preview address on 9.10.2026 (phone and computer: the same look). Now live. To undo: deactivate this snippet. */
 define('DABUL_STEADY_LIVE', 1);
+// part 2 is off since 9.10.2026: measured on the computer it made the side box jump more, not less (0.21 instead of 0.095)
+define('DABUL_STEADY_MOVE_CSS', false);
 
 function dabul_steady_on() {
 	if (defined('DABUL_STEADY_LIVE')) return true;
@@ -25,7 +27,7 @@ function dabul_steady_fix($html) {
 		$moved[] = trim($m[0]);
 		return '';
 	}, $body);
-	if (is_string($b2) && $moved) { $body = $b2; $head .= implode("\n", $moved) . "\n"; }
+	if (DABUL_STEADY_MOVE_CSS && is_string($b2) && $moved) { $body = $b2; $head .= implode("\n", $moved) . "\n"; }
 	// 1. the author photo gets its size
 	$b3 = preg_replace_callback('#<img (?![^>]*\swidth=)([^>]*Yakir-Dabul-Avatar[^>]*)>#', function ($m) {
 		return '<img width="150" height="150" ' . $m[1] . '>';
