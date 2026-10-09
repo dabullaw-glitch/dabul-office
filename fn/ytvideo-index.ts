@@ -91,11 +91,14 @@ async function attach() {
     if (!h || !h.ok) continue;
     const token = crypto.randomUUID().replace(/-/g, '');
     if (s.pubId) {
-      const note = `הסרטון מוכן בקובץ המצורף (media), לפרסם אותו כמו שהוא ביוטיוב. כותרת הסרטון: ${s.title}. התיאור: הטקסט של השורה (text). תגיות: ${s.tags || ''}`;
-      await merge('pub', s.pubId, { media: [`{MEDIA}${file}`], text: s.description || '', note, ytTitle: s.title, ytTags: s.tags || '', videoReady: new Date().toISOString() });
+      const note = `סרטון שאלה ביוטיוב. הסרטון מוכן בקובץ המצורף. במועד הפרסום מעלים אותו ליוטיוב כמו שהוא. כותרת הסרטון: ${s.title}. תיאור הסרטון: הטקסט לפרסום שבשורה הזאת. תגיות: ${s.tags || ''}`;
+      // settings/pub.ytDirect = true once the office uploader (ytup) is connected and approved: then the office uploads, not Grok
+      const direct = cfg?.data?.ytDirect === true;
+      await merge('pub', s.pubId, { media: [`{MEDIA}${file}`], text: s.description || '', ytTitle: s.title, ytTags: s.tags || '', videoReady: new Date().toISOString(),
+        ...(direct ? { owner: 'system', note: 'סרטון שאלה ביוטיוב. המערכת של המשרד מעלה אותו בעצמה בזמן הזה.' } : { note }) });
     }
     await merge('ytscript', row.id, { status: 'ready', file, readyAt: new Date().toISOString(), stopToken: token });
-    const when = String(s.at || '').replace('T', ' בשעה ');
+    const m = String(s.at || '').match(/^\d{4}-(\d\d)-(\d\d)T(\d\d:\d\d)/); const when = m ? `${+m[2]}.${+m[1]} בשעה ${m[3]}` : String(s.at || '');
     await tg(`🎬 סרטון יוטיוב מוכן: ${s.title}\nיעלה ב-${when}, לפי לוח הפרסום.\n\nאפשר לצפות עכשיו. אם משהו לא מתאים, לוחצים "לא לפרסם".`,
       [[{ text: '▶️ צפייה בסרטון', url: media + file }], [{ text: '⛔ לא לפרסם', url: `${env('SUPABASE_URL')}/functions/v1/ytvideo?stop=${token}` }]]);
     done.push(row.id);
