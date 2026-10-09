@@ -271,6 +271,13 @@ add_action('rest_api_init', function () {
 		if (is_wp_error($id)) { @unlink($tmp); return $id; }
 		return array('id' => $id, 'url' => wp_get_attachment_url($id));
 	}));
+	// WPCode keeps a cached copy of its snippets: rebuild it after their text changed
+	register_rest_route('dabul/v1', '/wpcode-recache', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function () {
+		$done = array();
+		if (function_exists('wpcode') && isset(wpcode()->cache) && method_exists(wpcode()->cache, 'cache_all_loaded_snippets')) { wpcode()->cache->cache_all_loaded_snippets(); $done[] = 'cache_all_loaded_snippets'; }
+		if (function_exists('rocket_clean_domain')) { rocket_clean_domain(); $done[] = 'rocket_clean_domain'; }
+		return array('done' => $done, 'wpcode' => function_exists('wpcode'));
+	}));
 	register_rest_route('dabul/v1', '/namefix-undo', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
 		global $wpdb;
 		$out = array();
