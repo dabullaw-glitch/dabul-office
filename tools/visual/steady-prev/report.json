@@ -1,0 +1,94 @@
+{
+ "phone-a": {
+  "errors": [
+   "e.target.closest is not a function",
+   "Cannot read properties of undefined (reading '0')"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "עיקרי הדברים"
+  },
+  "h": 12852,
+  "w": 412,
+  "invisible": [],
+  "styles": 61,
+  "links": 11
+ },
+ "phone-b": {
+  "errors": [
+   "e.target.closest is not a function",
+   "Cannot read properties of undefined (reading '0')"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "עיקרי הדברים"
+  },
+  "h": 12852,
+  "w": 412,
+  "invisible": [],
+  "styles": 63,
+  "links": 9
+ },
+ "computer-a": {
+  "errors": [
+   "e.target.closest is not a function",
+   "Cannot read properties of undefined (reading '0')",
+   "reCAPTCHA Timeout (C)",
+   "reCAPTCHA Timeout (z)"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "עיקרי הדברים"
+  },
+  "h": 9184,
+  "w": 1366,
+  "invisible": [],
+  "styles": 61,
+  "links": 11
+ },
+ "computer-b": {
+  "errors": [
+   "e.target.closest is not a function",
+   "Cannot read properties of undefined (reading '0')",
+   "reCAPTCHA Timeout (C)",
+   "reCAPTCHA Timeout (z)"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "עיקרי הדברים"
+  },
+  "h": 9184,
+  "w": 1366,
+  "invisible": [],
+  "styles": 63,
+  "links": 9
+ }
+}
