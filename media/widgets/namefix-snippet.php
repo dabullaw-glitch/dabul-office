@@ -104,6 +104,25 @@ function dabul_nf_strings($v) {
 	return $o;
 }
 
+// walks a JSON text; a quote inside a string counts as the end of the string only when the next
+// non-space character is , : } ] (or the end). Any other quote inside a string is escaped (\").
+function dabul_json_repair($s) {
+	$out = ''; $in = false; $len = strlen($s);
+	for ($i = 0; $i < $len; $i++) {
+		$ch = $s[$i];
+		if ($in && $ch === '\\') { $out .= $ch . ($i + 1 < $len ? $s[$i + 1] : ''); $i++; continue; }
+		if ($ch === '"') {
+			if (!$in) { $in = true; $out .= $ch; continue; }
+			$j = $i + 1; while ($j < $len && strpos(" \t\r\n", $s[$j]) !== false) $j++;
+			if ($j >= $len || strpos(',:}]', $s[$j]) !== false) { $in = false; $out .= $ch; }
+			else $out .= '\\"';
+			continue;
+		}
+		$out .= $ch;
+	}
+	return $out;
+}
+
 add_action('rest_api_init', function () {
 	$perm = function () { return current_user_can('manage_options'); };
 	register_rest_route('dabul/v1', '/namefix', array(
@@ -336,7 +355,10 @@ add_action('rest_api_init', function () {
 			if (!is_string($s) || stripos($s, 'ld+json') === false) return $s;
 			return preg_replace_callback('#(<script[^>]*ld\+json[^>]*>)(.*?)(</script>)#is', function ($m) use (&$n, &$bad, &$good) {
 				$c = 0; $in = preg_replace('/(?<=\p{Hebrew})"(?=\p{Hebrew})/u', '״', $m[2], -1, $c);
-				if (!$c || !is_string($in)) return $m[0];
+				if (!is_string($in)) return $m[0];
+				// still broken (a phrase "in quotes" inside a text): escape every quote that does not close a JSON string
+				if (json_decode(trim($in)) === null) { $r = dabul_json_repair($in); if (json_decode(trim($r)) !== null && $r !== $in) { $in = $r; $c++; } }
+				if (!$c) return $m[0];
 				$n += $c;
 				if (json_decode(trim($in)) === null) $bad++; else $good++;
 				return $m[1] . $in . $m[3];
