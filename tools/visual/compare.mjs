@@ -4,7 +4,7 @@
 import { chromium, devices } from 'playwright';
 import fs from 'node:fs';
 const [A, B, name] = process.argv.slice(2);
-const out = `tools/visual/${name}`; fs.mkdirSync(out, { recursive: true });
+const out = new URL(`../visual/${name}`, import.meta.url).pathname; fs.mkdirSync(out, { recursive: true });
 const b = await chromium.launch();
 const report = {};
 for (const [dev, ctxOpts] of [['phone', { ...devices['Pixel 7'] }], ['computer', { viewport: { width: 1366, height: 900 } }]]) {
