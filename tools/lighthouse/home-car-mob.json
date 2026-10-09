@@ -1,0 +1,107 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "mobile",
+ "at": "2026-10-09T08:43:33.861Z",
+ "runs": [
+  {
+   "score": 79,
+   "fcp": 1889.926,
+   "lcp": 2839.865,
+   "si": 2658.76460832095,
+   "tbt": 597.0000000000005,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-a9a0b486-1ae2-4151-8b70-37f70c7212d5=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     615
+    ],
+    [
+     "resourceLoadDelay",
+     91
+    ],
+    [
+     "resourceLoadDuration",
+     37
+    ],
+    [
+     "elementRenderDelay",
+     245
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 335523,
+   "docBytes": 166462
+  },
+  {
+   "score": 94,
+   "fcp": 1652.6480000000001,
+   "lcp": 2924.784,
+   "si": 1920.1091047691427,
+   "tbt": 7,
+   "cls": 0.00004601056509989043,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-a9a0b486-1ae2-4151-8b70-37f70c7212d5=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     552
+    ],
+    [
+     "resourceLoadDelay",
+     21
+    ],
+    [
+     "resourceLoadDuration",
+     38
+    ],
+    [
+     "elementRenderDelay",
+     179
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-a0e701d elementor-widget elementor-wid…\" data-id=\"a0e701d\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div#content > div.elementor-element > div.elementor-element > div.elementor-element",
+     "https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2"
+    ]
+   ],
+   "bytes": 335334,
+   "docBytes": 166278
+  },
+  {
+   "score": 92,
+   "fcp": 1688.152,
+   "lcp": 3221.0730000000003,
+   "si": 1896.1889881223074,
+   "tbt": 0,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-a9a0b486-1ae2-4151-8b70-37f70c7212d5=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     534
+    ],
+    [
+     "resourceLoadDelay",
+     20
+    ],
+    [
+     "resourceLoadDuration",
+     28
+    ],
+    [
+     "elementRenderDelay",
+     192
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 335314,
+   "docBytes": 166275
+  }
+ ]
+}
