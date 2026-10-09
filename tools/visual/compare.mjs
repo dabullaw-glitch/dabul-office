@@ -33,8 +33,10 @@ for (const [dev, ctxOpts] of [['phone', { ...devices['Pixel 7'] }], ['computer',
       const lang = p.locator('[class*="onetap"] [class*="language"]').first();
       await lang.click({ timeout: 3000 }).catch(() => {}); await p.waitForTimeout(800);
       await p.screenshot({ path: `${out}/${dev}-${tag}-panel-lang.png` });
+      await p.locator('[class*="onetap"] li[data-language="en"] button').first().click({ timeout: 3000 }).catch(() => {}); await p.waitForTimeout(1200);
+      await p.screenshot({ path: `${out}/${dev}-${tag}-panel-en.png` });
       panel = await p.evaluate(() => ({ visible: [...document.querySelectorAll('[class*="onetap"]')].some((e) => e.offsetHeight > 200),
-        langItems: [...document.querySelectorAll('[class*="onetap"] [class*="language"] li, [class*="onetap"] [class*="languages"] [data-language]')].map((e) => e.textContent.trim()).slice(0, 60) }));
+        langItems: [...document.querySelectorAll('.onetap-list-of-languages li')].map((e) => e.textContent.trim()), title: (document.querySelector('[class*="onetap"] h2, [class*="onetap"] .onetap-title')||{}).textContent }));
     } catch (e) { panel = { error: String(e.message || e).slice(0, 200) }; }
     report[`${dev}-${tag}`] = { errors, panel, ...(await p.evaluate(() => ({ h: document.documentElement.scrollHeight, w: document.documentElement.scrollWidth,
       invisible: [...document.querySelectorAll('.elementor-invisible')].map((e) => e.getAttribute('data-id')), styles: document.querySelectorAll('style').length, links: document.querySelectorAll('link[rel=stylesheet]').length }))) };

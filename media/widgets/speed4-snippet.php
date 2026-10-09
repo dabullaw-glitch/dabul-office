@@ -50,6 +50,12 @@ function dabul_sp4_inline($html) {
 }
 
 function dabul_sp4_onetap($body) {
+	$keep = array('il', 'en', 'fr', 'ru', 'ar');
+	// the language list in the panel shows the same 5 languages
+	$b2 = preg_replace_callback('#<li role="listitem" data-language="([a-z-]+)"[^>]*>\s*<button type="button">.*?</li>#s', function ($m) use ($keep) {
+		return in_array($m[1], $keep, true) ? $m[0] : '';
+	}, $body);
+	if (is_string($b2) && $b2 !== '') $body = $b2;
 	return preg_replace_callback('#(<script id="accessibility-onetap-js-extra">\s*var onetapAjaxObject = )(\{.*?\});(\s*(?://[^\n]*\s*)?</script>)#s', function ($m) {
 		$o = json_decode($m[2], true);
 		if (!is_array($o) || empty($o['languages']) || !is_array($o['languages'])) return $m[0];
