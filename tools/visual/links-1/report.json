@@ -1,0 +1,164 @@
+[
+ {
+  "i": 0,
+  "u": "https://www.gov.il/he/service/real_eatate_taxsimulator",
+  "status": 403,
+  "final": "https://www.gov.il/he/service/real_eatate_taxsimulator",
+  "title": "רק רגע...",
+  "h1": "www.gov.il",
+  "text": "www.gov.il\nביצוע אימות אבטחה\n\nאתר זה משתמש בשירות אבטחה להגנה מפני בוטים זדוניים. דף זה מופיע בזמן שהאתר מוודא שאינך בוט.\n\nRay ID: a47c401f3b83e144\nביצועים ואבטחה מבית Cloudflare\nפרטיות"
+ },
+ {
+  "i": 1,
+  "u": "https://www.misim.gov.il/svsimurechisha/",
+  "status": null,
+  "error": "page.goto: Timeout 45000ms exceeded.\nCall log:\n  - navigating to \"https://www.misim.gov.il/svsimurechisha/\", waiting until \"domcontentloaded\"\n"
+ },
+ {
+  "i": 2,
+  "u": "https://www.misim.gov.il/svsimushevach/",
+  "status": null,
+  "error": "page.goto: Timeout 45000ms exceeded.\nCall log:\n  - navigating to \"https://www.misim.gov.il/svsimushevach/\", waiting until \"domcontentloaded\"\n"
+ },
+ {
+  "i": 3,
+  "u": "https://www.gov.il/he/service/real-estate-tax-7000",
+  "status": 200,
+  "final": "https://www.gov.il/he/service/real-estate-tax-7000",
+  "title": "טופס הצהרה על מכירת ורכישת נכס מקרקעין (טופס 7000) | רשות המסים בישראל",
+  "h1": "טופס הצהרה על מכירת ורכישת נכס מקרקעין (טופס 7000)",
+  "text": "דלג לתוכן האתר\nחפשו שירות או מידע\nשירותים\nמשרדים וגופי ממשל\nמידע\nקבלת קהל\n1299\nלאזור האישי\ngov.il  בנייה, דיור ומקרקעין תשלומי נדל\"ן ומיסוי מקרקעין טופס הצהרה על מכירת ורכישת נכס מקרקעין (טופס 7000)\nטופס הצהרה על מכירת ורכישת נכס מקרקעין (טופס 7000)\n\nשירות זה מאפשר להצהיר על מכירה ורכישה של נכס מקרקעין (כגון: קרקע, דירה, חנות, משרד וכדומה). יש להגיש את ההצהרה בתוך 30 ימים מיום העסקה.\n\n \n\nשתפו:\nלקב"
+ },
+ {
+  "i": 4,
+  "u": "https://www.netanya.muni.il/CityHall/Engineering/Pages/ScannedBuildingsPlans.aspx",
+  "status": 403,
+  "final": "https://www.netanya.muni.il/CityHall/Engineering/Pages/ScannedBuildingsPlans.aspx",
+  "title": "Attention Required! | Cloudflare",
+  "h1": "Sorry, you have been blocked",
+  "text": "Sorry, you have been blocked\nYou are unable to access netanya.muni.il\nWhy have I been blocked?\n\nThis website is using a security service to protect itself from online attacks. The action you just performed triggered the security solution. There are several actions that could trigger this block including submitting a certain word or phrase, a SQL command or malformed data.\n\nWhat can I do to resolve"
+ },
+ {
+  "i": 5,
+  "u": "https://www.netanya.muni.il/Residents/Arnona/CustomerService/Pages/default.aspx",
+  "status": 403,
+  "final": "https://www.netanya.muni.il/Residents/Arnona/CustomerService/Pages/default.aspx",
+  "title": "Attention Required! | Cloudflare",
+  "h1": "Sorry, you have been blocked",
+  "text": "Sorry, you have been blocked\nYou are unable to access netanya.muni.il\nWhy have I been blocked?\n\nThis website is using a security service to protect itself from online attacks. The action you just performed triggered the security solution. There are several actions that could trigger this block including submitting a certain word or phrase, a SQL command or malformed data.\n\nWhat can I do to resolve"
+ },
+ {
+  "i": 6,
+  "u": "https://mavat.iplan.gov.il/",
+  "status": 200,
+  "final": "https://mavat.iplan.gov.il/SV1",
+  "title": "מידע תכנוני - מינהל התכנון",
+  "h1": "אתר מידע תכנוני",
+  "text": "נגישות\nדלג לתוכן האתר\nמה מתוכנן באזורך\nהנחיות למתנגד\nהנחיות לעורר\nצור קשר\nאתר מידע תכנוני\nמה מתוכנן באזורך\nהנחיות למתנגד\nהנחיות לעורר\nצור קשר\nדף הבית\n הודעות\n\nהודעות בנושא חוק התכנון והבניה\n\n ועדות\n\nועדות תכנון\n\n מרחבי תכנון\n\nתחומי שיפוט\n\nניתן לחפש לפי כתובת/סטטוס ולפי פרמטרים נוספים הקשורים לתכנית, ב'חיפוש מתקדם'\nחיפוש\nחיפוש מתקדם \nפעילות בתקופה נוכחית\nישיבות ועדה קרובות\nתכניות שאושרו לאחרונה\nהית"
+ },
+ {
+  "i": 7,
+  "u": "https://www.govmap.gov.il/",
+  "status": 200,
+  "final": "https://www.govmap.gov.il/?c=219143.61,618345.06",
+  "title": "Govmap מפות ישראל",
+  "h1": "",
+  "text": "שכבות\nיישומים\nשיתוף\nצור\nשינוי רקע\nהמרכז למיפוי ישראל ©\n1:2,000,000\nX :219144\nY :618345"
+ },
+ {
+  "i": 8,
+  "u": "https://www.cbs.gov.il/he/Pages/%D7%9E%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%94%D7%A6%D7%9E%D7%93%D7%94.aspx",
+  "status": 200,
+  "final": "https://www.cbs.gov.il/he/Pages/%D7%9E%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%94%D7%A6%D7%9E%D7%93%D7%94.aspx",
+  "title": "Oops, Something is wrong",
+  "h1": "",
+  "text": "\n\n\nמתנצלים, הדף לא נמצא\nSorry, the page is not found\nנשמח לדעת על כך\ninfo@cbs.gov.il\n\n\nלאתר הלמ\"ס - CBS Site חזור אחורה - Go Back"
+ },
+ {
+  "i": 9,
+  "u": "https://www.boi.org.il/information-and-service-to-the-public/interest-rates-and-early-repayment-fees/interest-rate-comparisons-housing-loans/",
+  "status": 404,
+  "final": "https://www.boi.org.il/information-and-service-to-the-public/interest-rates-and-early-repayment-fees/interest-rate-comparisons-housing-loans/",
+  "title": "404 | בנק ישראל - הבנק המרכזי של ישראל",
+  "h1": "404",
+  "text": "דלג לתוכן\n \nבנק ישראל\n\nאודות בנק ישראל\n\nהמבנה הארגוני ובעלי התפקידים\n\nהוועדה המוניטרית\n\nהמועצה המנהלית\n\nנגיד בנק ישראל פרופ' אמיר ירון\n\nחינוך ומרכז מבקרים\n\nהרשמה לסיור במרכז המבקרים\n\nבנקיפדיה\n\n\nמכרזים והתקשרויות\n\n \n\nקריירה\n\n \n\nיצירת קשר\n\nהתפקידים הכלכליים\n\nמדיניות מוניטרית\n\n \n\nשווקים פיננסים\n\nכלי המדיניות המוניטרית\n\nשערי חליפין יציגים\n\nריבית שיר SHIR\n\n \n\nיתרות מטבע חוץ\n\nסטטיסטיקה\n\nסטטיסטיקה לפי נו"
+ },
+ {
+  "i": 10,
+  "u": "https://www.gov.il/he/service/request_for_eligibility_confirmation",
+  "status": 403,
+  "final": "https://www.gov.il/he/service/request_for_eligibility_confirmation",
+  "title": "Attention Required! | Cloudflare",
+  "h1": "Sorry, you have been blocked",
+  "text": "Sorry, you have been blocked\nYou are unable to access www.gov.il\nWhy have I been blocked?\n\nThis website is using a security service to protect itself from online attacks. The action you just performed triggered the security solution. There are several actions that could trigger this block including submitting a certain word or phrase, a SQL command or malformed data.\n\nWhat can I do to resolve this"
+ },
+ {
+  "i": 11,
+  "u": "https://www.govmap.gov.il/?lay=200720",
+  "status": 200,
+  "final": "https://www.govmap.gov.il/?lay=200720&c=219143.61,618345.06",
+  "title": "Govmap מפות ישראל - מתחמי התחדשות עירונית",
+  "h1": "",
+  "text": "שכבות\n(1)\nיישומים\nשיתוף\nצור\nשינוי רקע\nהמרכז למיפוי ישראל ©\n1:2,000,000\nX :219144\nY :618345"
+ },
+ {
+  "i": 12,
+  "u": "https://www.gov.il/he/service/edit_and_deposit_continuous_power_of_attorney",
+  "status": 403,
+  "final": "https://www.gov.il/he/service/edit_and_deposit_continuous_power_of_attorney",
+  "title": "Attention Required! | Cloudflare",
+  "h1": "Sorry, you have been blocked",
+  "text": "Sorry, you have been blocked\nYou are unable to access www.gov.il\nWhy have I been blocked?\n\nThis website is using a security service to protect itself from online attacks. The action you just performed triggered the security solution. There are several actions that could trigger this block including submitting a certain word or phrase, a SQL command or malformed data.\n\nWhat can I do to resolve this"
+ },
+ {
+  "i": 13,
+  "u": "https://www.gov.il/he/service/inheritance_order",
+  "status": 403,
+  "final": "https://www.gov.il/he/service/inheritance_order",
+  "title": "Attention Required! | Cloudflare",
+  "h1": "Sorry, you have been blocked",
+  "text": "Sorry, you have been blocked\nYou are unable to access www.gov.il\nWhy have I been blocked?\n\nThis website is using a security service to protect itself from online attacks. The action you just performed triggered the security solution. There are several actions that could trigger this block including submitting a certain word or phrase, a SQL command or malformed data.\n\nWhat can I do to resolve this"
+ },
+ {
+  "i": 14,
+  "u": "https://www.kolzchut.org.il/he/%D7%91%D7%A7%D7%A9%D7%94_%D7%9C%D7%A6%D7%95_%D7%99%D7%A8%D7%95%D7%A9%D7%94",
+  "status": 403,
+  "final": "https://www.kolzchut.org.il/he/%D7%91%D7%A7%D7%A9%D7%94_%D7%9C%D7%A6%D7%95_%D7%99%D7%A8%D7%95%D7%A9%D7%94",
+  "title": "רק רגע...",
+  "h1": "www.kolzchut.org.il",
+  "text": "www.kolzchut.org.il\nביצוע אימות אבטחה\n\nאתר זה משתמש בשירות אבטחה להגנה מפני בוטים זדוניים. דף זה מופיע בזמן שהאתר מוודא שאינך בוט.\n\nRay ID: a47c44a8fc914f8b\nביצועים ואבטחה מבית Cloudflare\nפרטיות"
+ },
+ {
+  "i": 15,
+  "u": "https://www.gov.il/he/service/company_extract",
+  "status": 403,
+  "final": "https://www.gov.il/he/service/company_extract",
+  "title": "Attention Required! | Cloudflare",
+  "h1": "Sorry, you have been blocked",
+  "text": "Sorry, you have been blocked\nYou are unable to access www.gov.il\nWhy have I been blocked?\n\nThis website is using a security service to protect itself from online attacks. The action you just performed triggered the security solution. There are several actions that could trigger this block including submitting a certain word or phrase, a SQL command or malformed data.\n\nWhat can I do to resolve this"
+ },
+ {
+  "i": 16,
+  "u": "https://www.gov.il/BlobFolder/service/real-estate-tax-7000/en/Service_Pages_Real_Estate_Taxation_real-estate-tax-7002.pdf",
+  "status": null,
+  "error": "page.goto: Download is starting\nCall log:\n  - navigating to \"https://www.gov.il/BlobFolder/service/real-estate-tax-7000/en/Service_Pages_Real_Estate_Taxation_real-estate-tax-7002.pdf\", waiting until \""
+ },
+ {
+  "i": 17,
+  "u": "https://www.gov.il/he/departments/dynamiccollectors/formslist",
+  "status": 403,
+  "final": "https://www.gov.il/he/departments/dynamiccollectors/formslist",
+  "title": "Attention Required! | Cloudflare",
+  "h1": "Sorry, you have been blocked",
+  "text": "Sorry, you have been blocked\nYou are unable to access www.gov.il\nWhy have I been blocked?\n\nThis website is using a security service to protect itself from online attacks. The action you just performed triggered the security solution. There are several actions that could trigger this block including submitting a certain word or phrase, a SQL command or malformed data.\n\nWhat can I do to resolve this"
+ },
+ {
+  "i": 18,
+  "u": "https://www.gov.il/he/service/guide-transfer-rights",
+  "status": 403,
+  "final": "https://www.gov.il/he/service/guide-transfer-rights",
+  "title": "Attention Required! | Cloudflare",
+  "h1": "Sorry, you have been blocked",
+  "text": "Sorry, you have been blocked\nYou are unable to access www.gov.il\nWhy have I been blocked?\n\nThis website is using a security service to protect itself from online attacks. The action you just performed triggered the security solution. There are several actions that could trigger this block including submitting a certain word or phrase, a SQL command or malformed data.\n\nWhat can I do to resolve this"
+ }
+]
