@@ -7,12 +7,15 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#000000">
 <title>טלפרומטר</title>
-<!-- dabul: teleprompter + camera recorder for Yakir (9.10.2026). Replaces the CapCut teleprompter.
-     Everything stays on the phone: the script is kept in this browser only, and the video is saved to the phone. Nothing is uploaded. -->
+<!-- dabul: teleprompter + camera recorder for Yakir (9.10.2026), replaces the CapCut teleprompter.
+     v2: picture follows how the phone is held (upright = upright video, sideways = sideways video), no extra zoom,
+     scripts from the office system, "send for editing" upload, mic meter, framing lines + light check, sentence-by-sentence mode. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.0/dist/umd/supabase.js"></script>
+<script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/config.js"></script>
 <style>
-:root{--bg:#f8f5f0;--card:#fff;--ink:#2b2118;--mute:#7a6852;--line:#d9cdb8;--brand:#8b6f47;--brand2:#5c4528;--gold:#c9a961;--err:#a33a2a;
+:root{--bg:#f8f5f0;--card:#fff;--ink:#2b2118;--mute:#7a6852;--line:#d9cdb8;--brand:#8b6f47;--brand2:#5c4528;--gold:#c9a961;--ok:#2f7d4a;--err:#a33a2a;
   --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root{--bg:#1b1712;--card:#26201a;--ink:#f1e9dc;--mute:#bfae95;--line:#4a3f33;--brand:#c9a961;--brand2:#e7cd96;--err:#ff8f7a;color-scheme:dark}}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1712;--card:#26201a;--ink:#f1e9dc;--mute:#bfae95;--line:#4a3f33;--brand:#c9a961;--brand2:#e7cd96;--ok:#7fd39a;--err:#ff8f7a;color-scheme:dark}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--ink);font:17px/1.6 -apple-system,'Segoe UI',Arial,sans-serif}
@@ -23,71 +26,98 @@ button{font-family:inherit;cursor:pointer}
 #edit{max-width:640px;margin:0 auto;padding:calc(var(--st) + 18px) 16px calc(var(--sb) + 28px)}
 #edit h1{font-size:1.45rem;margin:0;color:var(--brand2)}
 #edit .s{color:var(--mute);margin:2px 0 14px;font-size:.95rem}
-#txt{width:100%;min-height:42vh;font:18px/1.7 -apple-system,'Segoe UI',Arial,sans-serif;padding:14px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);color:inherit;resize:vertical}
+.warn{background:#fff3cd;color:#5c4528;border-radius:12px;padding:10px 12px;font-size:.92rem;margin:0 0 12px}
+#txt{width:100%;min-height:36vh;font:18px/1.7 -apple-system,'Segoe UI',Arial,sans-serif;padding:14px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);color:inherit;resize:vertical}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .btn{flex:1;min-width:130px;padding:14px 16px;border:0;border-radius:999px;background:var(--brand);color:#fff;font-weight:700;font-size:1.05rem}
 .btn.ghost{background:transparent;color:var(--brand2);border:1.5px solid var(--line)}
-.meta{color:var(--mute);font-size:.88rem;margin-top:6px;font-variant-numeric:tabular-nums}
-#saved{margin-top:22px}
-#saved h2{font-size:1.05rem;margin:0 0 6px;color:var(--brand2)}
+.meta{color:var(--mute);font-size:.88rem;margin-top:6px}
+.modes{display:flex;gap:8px;margin-top:14px}
+.modes button{flex:1;padding:10px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font-size:.95rem;line-height:1.35}
+.modes button.on{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:700}
+.modes small{display:block;font-size:.78rem;opacity:.85;font-weight:400}
+h2{font-size:1.05rem;margin:22px 0 6px;color:var(--brand2)}
 .sv{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);margin-top:8px}
 .sv .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sv .k{font-size:.75rem;color:var(--mute);white-space:nowrap}
 .sv button{border:0;background:none;color:var(--brand);font-weight:700;padding:4px 6px}
 .sv button.del{color:var(--mute);font-weight:400}
+#login input{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:inherit;font-size:16px;margin-top:8px;direction:ltr;text-align:left}
+#acct{font-size:.9rem;color:var(--mute)}
+#acct b{color:var(--ok)}
 
 /* ---------- camera screen ---------- */
-#cam{position:fixed;inset:0;background:#000;color:#fff;overflow:hidden;touch-action:none}
+#cam{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#fff;overflow:hidden;touch-action:none}
+#cam.r90{transform-origin:top left;transform:rotate(90deg) translateY(-100%)}
+#cam.r270{transform-origin:top left;transform:rotate(-90deg) translateX(-100%)}
 #vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
 #vid.mirror{transform:scaleX(-1)}
-#box{position:absolute;left:12px;right:12px;top:calc(var(--st) + 52px);height:34vh;border-radius:18px;background:rgba(20,20,20,.55);
-  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);overflow:hidden}
-#scroller{position:absolute;inset:0;overflow:hidden}
+#grid{position:absolute;inset:0;pointer-events:none}
+#grid i{position:absolute;background:rgba(255,255,255,.28)}
+#grid .v1{left:33.33%;top:0;bottom:0;width:1px}#grid .v2{left:66.66%;top:0;bottom:0;width:1px}
+#grid .h1{top:33.33%;left:0;right:0;height:1px}#grid .h2{top:66.66%;left:0;right:0;height:1px}
+#grid .eye{left:50%;top:38%;width:44%;height:40%;transform:translate(-50%,-30%);border:1.5px dashed rgba(255,255,255,.45);border-radius:50%;background:none}
+#box{position:absolute;left:12px;right:12px;top:calc(var(--st) + 52px);height:34%;border-radius:18px;background:rgba(20,20,20,.55);overflow:hidden}
+#cam.land #box{top:10px;left:calc(env(safe-area-inset-left,0px) + 12px);right:132px}
+#cam.r90 #box,#cam.r270 #box{top:10px;left:12px;right:132px}
 #text{position:absolute;left:0;right:0;top:0;padding:0 22px;will-change:transform}
 #text p{margin:0 0 .5em}
 #text .seg{color:rgba(255,255,255,.42);transition:color .15s}
 #text .seg.on{color:#fff;font-weight:700}
-#text.mirror-text{transform-origin:center}
-#guide{position:absolute;left:0;right:0;height:0;border-top:2px solid rgba(201,169,97,.0)}
-#box .tag-unused{position:absolute;bottom:8px;left:10px;font-size:12px;color:rgba(255,255,255,.75);background:rgba(0,0,0,.35);padding:2px 8px;border-radius:999px;pointer-events:none}
-#closeCam{position:absolute;top:calc(var(--st) + 8px);right:10px}
-#flip{position:absolute;top:calc(var(--st) + 8px);left:10px}
-.ib{width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.45);color:#fff;font-size:20px;display:grid;place-items:center}
-#tools{position:absolute;left:12px;right:12px;top:calc(var(--st) + 52px + 34vh + 8px);display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
-#tools button{border:0;border-radius:999px;background:rgba(0,0,0,.5);color:#fff;padding:7px 12px;font-size:14px;font-variant-numeric:tabular-nums}
+#tools{position:absolute;left:12px;right:12px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+#tools button,.chip{border:0;border-radius:999px;background:rgba(0,0,0,.5);color:#fff;padding:7px 12px;font-size:14px}
 #tools b{font-weight:700}
+.tb{position:absolute;top:calc(var(--st) + 8px);display:flex;gap:8px}
+#tbR{right:10px}#tbL{left:10px}
+#cam.land .tb,#cam.r90 .tb,#cam.r270 .tb{top:auto;bottom:10px}
+.ib{width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.45);color:#fff;font-size:18px;display:grid;place-items:center;padding:0}
 #bottom{position:absolute;left:0;right:0;bottom:calc(var(--sb) + 18px);display:flex;flex-direction:column;align-items:center;gap:10px}
+#cam.land #bottom,#cam.r90 #bottom,#cam.r270 #bottom{left:auto;right:calc(env(safe-area-inset-right,0px) + 16px);bottom:auto;top:50%;transform:translateY(-50%);width:100px}
 #time{background:rgba(0,0,0,.45);border-radius:999px;padding:3px 14px;font-size:20px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px}
 #time i{width:9px;height:9px;border-radius:50%;background:#21c4dd;display:inline-block}
 #time.rec i{background:#ff3b30;animation:blink 1s infinite}
 @keyframes blink{50%{opacity:.25}}
+#meter{width:120px;height:6px;border-radius:6px;background:rgba(255,255,255,.25);overflow:hidden}
+#meter i{display:block;height:100%;width:0;background:#4cd964;transition:width .08s}
+#cam.land #meter,#cam.r90 #meter,#cam.r270 #meter{width:90px}
 #rec{width:84px;height:84px;border-radius:50%;border:5px solid rgba(255,255,255,.85);background:rgba(255,255,255,.18);display:grid;place-items:center;padding:0}
 #rec span{width:58px;height:58px;border-radius:50%;background:#ff3b30;transition:all .2s}
 #rec.on span{width:30px;height:30px;border-radius:7px}
+#light{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(var(--sb) + 180px);background:rgba(255,196,0,.92);color:#1d1a17;font-weight:700;font-size:14px;border-radius:999px;padding:6px 14px;white-space:nowrap}
+#cam.land #light,#cam.r90 #light,#cam.r270 #light{bottom:60px}
 #count{position:absolute;inset:0;display:grid;place-items:center;font-size:120px;font-weight:800;text-shadow:0 4px 24px rgba(0,0,0,.6);pointer-events:none}
-#msg{position:absolute;left:16px;right:16px;top:45%;background:rgba(0,0,0,.75);border-radius:14px;padding:16px;text-align:center;line-height:1.6}
+#msg{position:absolute;left:16px;right:16px;top:45%;background:rgba(0,0,0,.8);border-radius:14px;padding:16px;text-align:center;line-height:1.6}
 
 /* settings sheet */
-#sheet{position:absolute;left:0;right:0;bottom:0;background:#1d1a17;color:#fff;border-radius:20px 20px 0 0;padding:16px 18px calc(var(--sb) + 18px);box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+#sheet{position:absolute;left:0;right:0;bottom:0;max-height:88%;overflow:auto;background:#1d1a17;color:#fff;border-radius:20px 20px 0 0;padding:16px 18px calc(var(--sb) + 18px);box-shadow:0 -10px 40px rgba(0,0,0,.5)}
 #sheet h3{margin:0 0 6px;font-size:1.05rem}
 .set{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)}
-.set:last-of-type{border-bottom:0}
 .set label{flex:1}
 .set .v{min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
 .set button{width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:20px}
-.seg3{display:flex;gap:6px}
+.seg3{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .seg3 button{width:auto;height:auto;border-radius:999px;padding:6px 12px;font-size:14px}
 .seg3 button.on{background:#c9a961;color:#1d1a17;font-weight:700}
 #sheet .done{width:100%;margin-top:12px;padding:12px;border:0;border-radius:999px;background:#c9a961;color:#1d1a17;font-weight:800;font-size:1rem}
 
-/* review screen */
-#review{position:fixed;inset:0;background:#000;color:#fff;display:flex;flex-direction:column}
+/* review + summary */
+.dark{position:fixed;inset:0;background:#000;color:#fff;display:flex;flex-direction:column}
 #review video{flex:1;min-height:0;width:100%;object-fit:contain;background:#000}
-#review .bar{padding:12px 16px calc(var(--sb) + 14px);display:flex;gap:10px;flex-wrap:wrap}
-#review .bar button{flex:1;min-width:120px;padding:13px;border:0;border-radius:999px;font-weight:700;font-size:1rem}
-#save{background:#c9a961;color:#1d1a17}
-#again{background:rgba(255,255,255,.14);color:#fff}
-#back2{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.3)!important}
-#review .info{padding:10px 16px 0;font-size:.9rem;color:rgba(255,255,255,.75);font-variant-numeric:tabular-nums}
+.dark .bar{padding:12px 16px calc(var(--sb) + 14px);display:flex;gap:10px;flex-wrap:wrap}
+.dark .bar button{flex:1;min-width:120px;padding:13px;border:0;border-radius:999px;font-weight:700;font-size:1rem}
+.gold{background:#c9a961;color:#1d1a17}
+.soft{background:rgba(255,255,255,.14);color:#fff}
+.line{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.3)!important}
+.dark .info{padding:10px 16px 0;font-size:.92rem;color:rgba(255,255,255,.8)}
+#status{padding:8px 16px 0;font-size:.95rem;font-weight:700;color:#c9a961;min-height:1.2em}
+#sumList{flex:1;overflow:auto;padding:calc(var(--st) + 16px) 16px 8px}
+#sumList h3{margin:0 0 4px}
+.sr{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.sr .n{min-width:26px;color:#c9a961;font-weight:700}
+.sr .tx{flex:1;min-width:0;font-size:.95rem;line-height:1.5}
+.sr .st{white-space:nowrap;font-size:.85rem}
+.sr .st.ok{color:#7fd39a}.sr .st.no{color:rgba(255,255,255,.5)}
+.sr button{border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:999px;padding:4px 10px;font-size:.82rem}
 </style>
 </head>
 <body>
@@ -95,32 +125,43 @@ button{font-family:inherit;cursor:pointer}
 <!-- 1. the script -->
 <section id="edit">
   <h1>טלפרומטר</h1>
-  <p class="s">מדביקים את הטקסט, לוחצים "לצילום", והטקסט גולל מעל המצלמה בזמן שאתם מצלמים. בזמן הצילום: לחיצה על הטקסט עוצרת וממשיכה את הגלילה, וגרירה מזיזה אותו. הכול נשאר בטלפון.</p>
+  <p class="s">מדביקים טקסט או בוחרים תסריט מהמערכת, לוחצים "לצילום", והטקסט גולל מעל המצלמה. לחיצה על הטקסט עוצרת וממשיכה, וגרירה מזיזה אותו.</p>
+  <div class="warn" id="inapp" hidden>לצילום לרוחב: פותחים את הדף בספארי עצמו ולא מתוך אפליקציה אחרת (אם הוא נפתח בתוך Claude, לוחצים על סמל המצפן למטה), ומכבים את נעילת הסיבוב של הטלפון. אם המסך בכל זאת לא מסתובב, יש כפתור סיבוב ⤾ במסך הצילום.</div>
   <textarea id="txt" placeholder="הדביקו כאן את הטקסט של הסרטון..."></textarea>
   <div class="meta" id="est"></div>
+  <div class="modes" id="modes">
+    <button data-m="0">צילום רציף<small>כל הטקסט בצילום אחד</small></button>
+    <button data-m="1">לפי משפטים<small>כל משפט בצילום נפרד</small></button>
+  </div>
   <div class="row">
     <button class="btn" id="go">לצילום</button>
     <button class="btn ghost" id="keep">שמירת הטקסט</button>
   </div>
-  <div id="saved"></div>
+
+  <h2>תסריטים מהמערכת</h2>
+  <div id="acct">בודק חיבור...</div>
+  <form id="login" hidden>
+    <input id="lem" type="email" autocomplete="username" placeholder="אימייל של המערכת">
+    <input id="lpw" type="password" autocomplete="current-password" placeholder="סיסמה">
+    <div class="row"><button class="btn" type="submit">התחברות</button></div>
+  </form>
+  <div id="sys"></div>
+
+  <div id="savedWrap"><h2>טקסטים ששמרתי בטלפון</h2><div id="saved"></div></div>
 </section>
 
 <!-- 2. camera + prompter -->
 <section id="cam" hidden>
   <video id="vid" playsinline muted autoplay></video>
-  <div id="box">
-    <div id="scroller"><div id="text"></div></div>
-  </div>
-  <div id="tools">
-    <button id="slower">− איטי</button>
-    <button id="spd"><b id="wpm">130</b> מילים לדקה</button>
-    <button id="faster">מהיר +</button>
-    <button id="gear">הגדרות</button>
-  </div>
-  <button class="ib" id="closeCam" aria-label="חזרה לטקסט">✕</button>
-  <button class="ib" id="flip" aria-label="החלפת מצלמה">⟲</button>
+  <div id="grid" hidden><i class="v1"></i><i class="v2"></i><i class="h1"></i><i class="h2"></i><i class="eye"></i></div>
+  <div id="box"><div id="text"></div></div>
+  <div id="tools"></div>
+  <div class="tb" id="tbR"><button class="ib" id="closeCam" aria-label="חזרה לטקסט">✕</button></div>
+  <div class="tb" id="tbL"><button class="ib" id="flip" aria-label="החלפת מצלמה">⟲</button><button class="ib" id="rot" aria-label="סיבוב התצוגה">⤾</button></div>
+  <div id="light" hidden>התאורה חלשה: כדאי לעמוד מול חלון או מנורה</div>
   <div id="bottom">
     <div id="time"><i></i><span id="clock">00:00</span></div>
+    <div id="meter" title="עוצמת הקול"><i></i></div>
     <button id="rec" aria-label="התחלת צילום"><span></span></button>
   </div>
   <div id="count" hidden></div>
@@ -131,22 +172,28 @@ button{font-family:inherit;cursor:pointer}
     <div class="set"><label>גודל הטקסט</label><button data-k="font" data-d="-2">−</button><span class="v" id="vFont"></span><button data-k="font" data-d="2">+</button></div>
     <div class="set"><label>גובה החלון</label><button data-k="h" data-d="-4">−</button><span class="v" id="vH"></span><button data-k="h" data-d="4">+</button></div>
     <div class="set"><label>כהות הרקע</label><button data-k="dark" data-d="-10">−</button><span class="v" id="vDark"></span><button data-k="dark" data-d="10">+</button></div>
-    <div class="set"><label>ספירה לאחור</label><div class="seg3" id="cdSeg"><button data-cd="0">בלי</button><button data-cd="3">3</button><button data-cd="5">5</button></div></div>
-    <div class="set"><label>התחלת הגלילה</label><div class="seg3" id="asSeg"><button data-as="1">עם הצילום</button><button data-as="0">ידנית</button></div></div>
-    <div class="set"><label>היפוך הטקסט (למראה)</label><div class="seg3" id="mtSeg"><button data-mt="0">רגיל</button><button data-mt="1">הפוך</button></div></div>
+    <div class="set"><label>ספירה לאחור</label><div class="seg3" data-g="cd"><button data-v="0">בלי</button><button data-v="3">3</button><button data-v="5">5</button></div></div>
+    <div class="set"><label>התחלת הגלילה</label><div class="seg3" data-g="as"><button data-v="1">עם הצילום</button><button data-v="0">ידנית</button></div></div>
+    <div class="set"><label>קווי עזר למיקום</label><div class="seg3" data-g="grid"><button data-v="1">מוצגים</button><button data-v="0">מוסתרים</button></div></div>
+    <div class="set"><label>סיבוב התצוגה (כשהמסך לא מסתובב לבד)</label><div class="seg3" data-g="rot"><button data-v="0">רגיל</button><button data-v="90">לרוחב ↻</button><button data-v="270">לרוחב ↺</button></div></div>
+    <div class="set"><label>היפוך הטקסט (למראה)</label><div class="seg3" data-g="mt"><button data-v="0">רגיל</button><button data-v="1">הפוך</button></div></div>
     <button class="done" id="sheetDone">סגירה</button>
   </div>
 </section>
 
-<!-- 3. review -->
-<section id="review" hidden>
+<!-- 3. review of one take -->
+<section id="review" class="dark" hidden>
   <video id="play" playsinline controls></video>
   <div class="info" id="rinfo"></div>
-  <div class="bar">
-    <button id="save">שמירה לטלפון</button>
-    <button id="again">צילום חוזר</button>
-    <button id="back2">חזרה לטקסט</button>
-  </div>
+  <div id="status"></div>
+  <div class="bar" id="rbar"></div>
+</section>
+
+<!-- 4. sentence mode summary -->
+<section id="summary" class="dark" hidden>
+  <div id="sumList"></div>
+  <div id="status2" style="padding:0 16px;color:#c9a961;font-weight:700;min-height:1.2em"></div>
+  <div class="bar" id="sbar"></div>
 </section>
 
 <script>
@@ -157,32 +204,38 @@ button{font-family:inherit;cursor:pointer}
     get: function (k, d) { try { var v = localStorage.getItem('dpr_' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
     set: function (k, v) { try { localStorage.setItem('dpr_' + k, JSON.stringify(v)); } catch (e) {} }
   };
-  var cfg = Object.assign({ wpm: 130, font: 30, h: 34, dark: 55, cd: 3, as: 1, mt: 0, facing: 'user' }, LS.get('cfg', {}));
+  var cfg = Object.assign({ wpm: 130, font: 30, h: 34, dark: 55, cd: 3, as: 1, mt: 0, grid: 1, rot: 0, mode: 0, facing: 'user' }, LS.get('cfg', {}));
   function saveCfg() { LS.set('cfg', cfg); }
+  function fmt(s) { s = Math.max(0, Math.floor(s)); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+  function words(s) { return (s.match(/\S+/g) || []).length; }
+  function show(id) { ['edit', 'cam', 'review', 'summary'].forEach(function (x) { $(x).hidden = x !== id; }); }
+
+  // the Claude app / Instagram / Facebook in-app browsers do not rotate: suggest real Safari
+  if (/iPhone|iPad|Android/.test(navigator.userAgent)) $('inapp').hidden = false;
 
   /* ---------- script screen ---------- */
-  var txt = $('txt');
+  var txt = $('txt'), curTitle = '';
   txt.value = LS.get('draft', '');
-  function words(s) { return (s.match(/\S+/g) || []).length; }
   function est() {
     var w = words(txt.value);
     if (!w) { $('est').textContent = ''; return; }
     var sec = Math.round(w / cfg.wpm * 60);
-    $('est').textContent = w + ' מילים · בערך ' + Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0') + ' דקות בקצב של ' + cfg.wpm + ' מילים לדקה';
+    $('est').textContent = w + ' מילים, בערך ' + fmt(sec) + ' דקות בקצב של ' + cfg.wpm + ' מילים לדקה';
   }
-  txt.addEventListener('input', function () { LS.set('draft', txt.value); est(); });
+  txt.addEventListener('input', function () { LS.set('draft', txt.value); curTitle = ''; est(); });
   est();
+  function showModes() { Array.prototype.forEach.call($('modes').children, function (b) { b.classList.toggle('on', +b.getAttribute('data-m') === cfg.mode); }); }
+  Array.prototype.forEach.call($('modes').children, function (b) { b.onclick = function () { cfg.mode = +b.getAttribute('data-m'); saveCfg(); showModes(); }; });
+  showModes();
+  function useText(t, title) { txt.value = t; LS.set('draft', t); curTitle = title || ''; est(); window.scrollTo(0, 0); }
 
   function renderSaved() {
-    var list = LS.get('scripts', []);
-    var box = $('saved');
-    if (!list.length) { box.innerHTML = ''; return; }
-    box.innerHTML = '<h2>טקסטים שמורים</h2>';
+    var list = LS.get('scripts', []), box = $('saved');
+    $('savedWrap').hidden = !list.length; box.innerHTML = '';
     list.forEach(function (it, i) {
       var d = document.createElement('div'); d.className = 'sv';
       var t = document.createElement('div'); t.className = 't'; t.textContent = it.title;
-      var o = document.createElement('button'); o.textContent = 'פתיחה';
-      o.onclick = function () { txt.value = it.text; LS.set('draft', it.text); est(); window.scrollTo(0, 0); };
+      var o = document.createElement('button'); o.textContent = 'פתיחה'; o.onclick = function () { useText(it.text, it.title); };
       var x = document.createElement('button'); x.className = 'del'; x.textContent = 'מחיקה';
       x.onclick = function () { var l = LS.get('scripts', []); l.splice(i, 1); LS.set('scripts', l); renderSaved(); };
       d.appendChild(t); d.appendChild(o); d.appendChild(x); box.appendChild(d);
@@ -190,156 +243,310 @@ button{font-family:inherit;cursor:pointer}
   }
   $('keep').onclick = function () {
     var s = txt.value.trim(); if (!s) return;
-    var l = LS.get('scripts', []);
-    var title = s.split('\n')[0].slice(0, 50);
-    l = l.filter(function (it) { return it.text !== s; });
-    l.unshift({ title: title, text: s, at: Date.now() });
+    var l = LS.get('scripts', []).filter(function (it) { return it.text !== s; });
+    l.unshift({ title: curTitle || s.split('\n')[0].slice(0, 50), text: s, at: Date.now() });
     LS.set('scripts', l.slice(0, 40)); renderSaved();
     $('keep').textContent = 'נשמר ✓'; setTimeout(function () { $('keep').textContent = 'שמירת הטקסט'; }, 1500);
   };
   renderSaved();
 
+  /* ---------- office system: login, scripts, upload ---------- */
+  var sb = null, user = null;
+  try { var C = window.OFFICE_CONFIG; if (C && window.supabase) sb = window.supabase.createClient(C.url, C.anon, { auth: { persistSession: true, autoRefreshToken: true } }); } catch (e) {}
+  async function refreshAcct() {
+    if (!sb) { $('acct').textContent = 'אין חיבור למערכת כרגע. אפשר לצלם כרגיל.'; return; }
+    var r = await sb.auth.getSession(); user = r && r.data && r.data.session ? r.data.session.user : null;
+    if (!user) { $('acct').textContent = 'כדי לראות את התסריטים ולשלוח צילומים לעריכה, מתחברים פעם אחת עם הפרטים של מערכת המשרד:'; $('login').hidden = false; $('sys').innerHTML = ''; return; }
+    $('login').hidden = true; $('acct').innerHTML = '<b>מחובר למערכת</b>'; loadScripts();
+  }
+  $('login').onsubmit = async function (e) {
+    e.preventDefault();
+    var r = await sb.auth.signInWithPassword({ email: $('lem').value.trim(), password: $('lpw').value });
+    if (r.error) { $('acct').textContent = 'ההתחברות לא הצליחה. בודקים את האימייל והסיסמה ומנסים שוב.'; return; }
+    $('lpw').value = ''; refreshAcct();
+  };
+  async function loadScripts() {
+    var box = $('sys'); box.textContent = 'טוען תסריטים...';
+    var r = await sb.from('docs').select('coll,id,data,updated_at').in('coll', ['prompt', 'ytscript']).order('updated_at', { ascending: false }).limit(60);
+    if (r.error) { box.textContent = 'לא הצלחתי לטעון את התסריטים.'; return; }
+    var items = [];
+    (r.data || []).forEach(function (d) {
+      var x = d.data || {}, text = '', kind = '';
+      if (d.coll === 'prompt') { if (x.status === 'done' || x.arch) return; text = x.text || ''; kind = 'לצילום'; }
+      else { text = (x.scenes || []).map(function (s) { return s.say || ''; }).filter(Boolean).join('\n\n'); kind = 'יוטיוב'; }
+      if (text) items.push({ id: d.id, title: x.title || d.id, text: text, kind: kind });
+    });
+    box.innerHTML = items.length ? '' : '<div class="meta">אין עדיין תסריטים במערכת. כשאכתוב תסריט חדש לצילום, הוא יופיע כאן.</div>';
+    items.forEach(function (it) {
+      var d = document.createElement('div'); d.className = 'sv';
+      var t = document.createElement('div'); t.className = 't'; t.textContent = it.title;
+      var k = document.createElement('span'); k.className = 'k'; k.textContent = it.kind;
+      var o = document.createElement('button'); o.textContent = 'פתיחה'; o.onclick = function () { useText(it.text, it.title); };
+      d.appendChild(t); d.appendChild(k); d.appendChild(o); box.appendChild(d);
+    });
+  }
+  refreshAcct();
+
+  function stamp() { var d = new Date(), z = function (n) { return String(n).padStart(2, '0'); }; return d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '-' + z(d.getHours()) + z(d.getMinutes()) + z(d.getSeconds()); }
+  function extOf(m) { return /mp4/.test(m) ? 'mp4' : 'webm'; }
+  // upload takes to the office system (bucket "files", folder rawvideo/) and list them in collection "rawvid"
+  async function sendTakes(list, statusEl) {
+    if (!sb) { statusEl.textContent = 'אין חיבור למערכת.'; return false; }
+    var s = await sb.auth.getSession();
+    if (!s.data.session) { statusEl.textContent = 'צריך להתחבר קודם למערכת (במסך הטקסט, למטה).'; return false; }
+    var batch = stamp(), day = batch.slice(0, 8), ok = 0;
+    for (var i = 0; i < list.length; i++) {
+      var it = list[i];
+      if (it.blob.size > 48 * 1048576) { statusEl.textContent = 'צילום ' + (i + 1) + ' גדול מדי לשליחה (' + (it.blob.size / 1048576).toFixed(0) + ' מגה). שמרו אותו לטלפון.'; continue; }
+      statusEl.textContent = 'שולח ' + (i + 1) + ' מתוך ' + list.length + '...';
+      var name = batch + (list.length > 1 ? '-' + String(it.idx + 1).padStart(2, '0') : '') + '.' + extOf(it.mime);
+      var path = 'rawvideo/' + day + '/' + name;
+      var up = await sb.storage.from('files').upload(path, it.blob, { contentType: it.mime.split(';')[0], upsert: false });
+      if (up.error) { statusEl.textContent = 'השליחה נכשלה: ' + (up.error.message || '') ; return false; }
+      await sb.from('docs').insert({ coll: 'rawvid', id: batch + '-' + (it.idx + 1), data: { file: 'files/' + path, title: curTitle || txt.value.trim().split('\n')[0].slice(0, 60), part: it.idx + 1, parts: list.length, mode: cfg.mode ? 'sentences' : 'full', text: it.text || '', sec: Math.round(it.dur), w: it.w, h: it.h, size: it.blob.size, status: 'new', created: new Date().toISOString() } });
+      ok++;
+    }
+    if (ok) statusEl.textContent = 'נשלח למערכת ✓ (' + ok + (ok === 1 ? ' צילום' : ' צילומים') + '). אני אערוך משם.';
+    return ok > 0;
+  }
+
   /* ---------- prompter text ---------- */
-  var textEl = $('text'), scroller = $('scroller'), box = $('box');
-  var segs = [], pos = 0, scrolling = false, lastT = 0, pxPerWord = 10, maxPos = 0, guideY = 0;
+  var textEl = $('text'), box = $('box');
+  var segs = [], pos = 0, scrolling = false, lastT = 0, pxPerWord = 10, maxPos = 0, guideY = 0, segIdx = 0, takes = [];
 
   function buildText() {
     textEl.innerHTML = '';
-    var paras = txt.value.replace(/\r/g, '').split(/\n\s*\n|\n/).map(function (p) { return p.trim(); }).filter(Boolean);
+    var paras = txt.value.replace(/\r/g, '').split(/\n+/).map(function (p) { return p.trim(); }).filter(Boolean);
     paras.forEach(function (p) {
       var pe = document.createElement('p');
-      // one highlight unit per sentence (split after . ? ! : and after long pauses like " - ")
       (p.match(/[^.!?:]+[.!?:]+["'״׳)]*\s*|[^.!?:]+$/g) || [p]).forEach(function (s) {
+        if (!s.trim()) return;
         var sp = document.createElement('span'); sp.className = 'seg'; sp.textContent = s; pe.appendChild(sp);
       });
       textEl.appendChild(pe);
     });
     segs = Array.prototype.slice.call(textEl.querySelectorAll('.seg'));
-    layout();
+  }
+  function isLand() { return cfg.rot ? true : window.innerWidth > window.innerHeight; }
+  function sizeCam() {
+    var c = $('cam'), W = window.innerWidth, H = window.innerHeight;
+    c.classList.toggle('r90', cfg.rot === 90); c.classList.toggle('r270', cfg.rot === 270);
+    c.classList.toggle('land', !cfg.rot && W > H);
+    if (cfg.rot) { c.style.width = H + 'px'; c.style.height = W + 'px'; } else { c.style.width = W + 'px'; c.style.height = H + 'px'; }
   }
   function layout() {
-    box.style.height = cfg.h + 'vh';
-    $('tools').style.top = 'calc(var(--st) + 52px + ' + cfg.h + 'vh + 8px)';
+    sizeCam();
+    var land = isLand();
+    box.style.height = (land ? Math.min(70, cfg.h + 18) : cfg.h) + '%';
     box.style.background = 'rgba(20,20,20,' + (cfg.dark / 100) + ')';
-    textEl.style.fontSize = cfg.font + 'px';
-    textEl.style.lineHeight = '1.45';
-    textEl.style.transform = cfg.mt ? 'scaleX(-1)' : '';
+    textEl.style.fontSize = cfg.font + 'px'; textEl.style.lineHeight = '1.45';
     var bh = box.clientHeight;
+    $('tools').style.top = (box.offsetTop + bh + 8) + 'px';
+    if (land) { $('tools').style.right = '132px'; } else { $('tools').style.right = '12px'; }
     guideY = Math.round(bh * 0.28);
     textEl.style.paddingTop = guideY + 'px';
     textEl.style.paddingBottom = Math.round(bh * 0.75) + 'px';
     var contentH = textEl.scrollHeight - guideY - Math.round(bh * 0.75);
-    var w = words(txt.value) || 1;
-    pxPerWord = Math.max(contentH, 1) / w;
+    pxPerWord = Math.max(contentH, 1) / (words(txt.value) || 1);
     maxPos = Math.max(0, textEl.scrollHeight - bh);
-    pos = Math.min(pos, maxPos);
-    paint();
+    $('grid').hidden = !cfg.grid;
+    if (cfg.mode) gotoSeg(segIdx); else { pos = Math.min(pos, maxPos); paint(); }
   }
-  function paint() {
+  function paint(force) {
     textEl.style.transform = 'translateY(' + (-pos) + 'px)' + (cfg.mt ? ' scaleX(-1)' : '');
-    // highlight the sentence that crosses the reading line
-    var y = pos + guideY + cfg.font * 0.6, on = null;
-    for (var i = 0; i < segs.length; i++) {
-      var s = segs[i], top = s.offsetTop, rects = s.getClientRects();
-      var h = s.offsetHeight;
-      if (rects.length) { var r0 = rects[0], rl = rects[rects.length - 1]; h = rl.bottom - r0.top; }
-      if (y >= top && y <= top + h) { on = s; break; }
-      if (top > y) { on = segs[Math.max(0, i - 1)]; break; }
+    var on = null;
+    if (cfg.mode) on = segs[segIdx];
+    else {
+      var y = pos + guideY + cfg.font * 0.6;
+      for (var i = 0; i < segs.length; i++) {
+        var s = segs[i], top = s.offsetTop, r = s.getClientRects(), h = s.offsetHeight;
+        if (r.length) h = r[r.length - 1].bottom - r[0].top;
+        if (y >= top && y <= top + h) { on = s; break; }
+        if (top > y) { on = segs[Math.max(0, i - 1)]; break; }
+      }
     }
     segs.forEach(function (s) { s.classList.toggle('on', s === on); });
   }
+  function gotoSeg(i) {
+    segIdx = Math.max(0, Math.min(segs.length - 1, i));
+    var s = segs[segIdx]; if (!s) return;
+    pos = Math.max(0, Math.min(maxPos, s.offsetTop - guideY)); paint(); drawTools();
+  }
   function tick(t) {
-    if (scrolling) {
-      if (lastT) {
-        var dt = Math.min(0.1, (t - lastT) / 1000);
-        pos += dt * (cfg.wpm / 60) * pxPerWord;
-        if (pos >= maxPos) { pos = maxPos; scrolling = false; }
-        paint();
-      }
+    if (scrolling && !cfg.mode) {
+      if (lastT) { pos += Math.min(0.1, (t - lastT) / 1000) * (cfg.wpm / 60) * pxPerWord; if (pos >= maxPos) { pos = maxPos; scrolling = false; } paint(); }
       lastT = t;
     } else lastT = 0;
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
-  function setScroll(on) { scrolling = on && pos < maxPos; $('spd').style.background = scrolling ? 'rgba(0,0,0,.5)' : 'rgba(139,111,71,.85)'; }
+  function setScroll(on) { scrolling = !cfg.mode && on && pos < maxPos; var b = $('spd'); if (b) b.style.background = scrolling ? 'rgba(0,0,0,.5)' : 'rgba(139,111,71,.85)'; }
 
-  // tap = pause/resume; drag = move the text by hand
+  function drawTools() {
+    var t = $('tools');
+    if (cfg.mode) {
+      t.innerHTML = '<button id="prev">→ הקודם</button><span class="chip" id="segN"></span><button id="next">הבא ←</button><button id="gear">הגדרות</button>';
+      $('segN').textContent = 'משפט ' + (segIdx + 1) + ' מתוך ' + segs.length + (takes[segIdx] ? ' ✓' : '');
+      $('prev').onclick = function () { if (!recording) gotoSeg(segIdx - 1); };
+      $('next').onclick = function () { if (!recording) gotoSeg(segIdx + 1); };
+    } else {
+      t.innerHTML = '<button id="slower">− איטי</button><button id="spd"><b id="wpm"></b> מילים לדקה</button><button id="faster">מהיר +</button><button id="gear">הגדרות</button>';
+      $('wpm').textContent = cfg.wpm;
+      $('slower').onclick = function () { speed(-10); };
+      $('faster').onclick = function () { speed(10); };
+      $('spd').onclick = function () { setScroll(!scrolling); };
+      setScroll(scrolling);
+    }
+    $('gear').onclick = function () { showSet(); $('sheet').hidden = false; };
+  }
+  function speed(d) { cfg.wpm = Math.max(60, Math.min(260, cfg.wpm + d)); saveCfg(); $('wpm').textContent = cfg.wpm; est(); }
+
   var drag = null;
-  box.addEventListener('pointerdown', function (e) { drag = { y: e.clientY, p: pos, moved: false }; box.setPointerCapture(e.pointerId); });
+  box.addEventListener('pointerdown', function (e) { drag = { y: e.clientY, x: e.clientX, p: pos, moved: false }; box.setPointerCapture(e.pointerId); });
   box.addEventListener('pointermove', function (e) {
-    if (!drag) return; var d = drag.y - e.clientY;
+    if (!drag || cfg.mode) return;
+    var d = cfg.rot === 90 ? (e.clientX - drag.x) : cfg.rot === 270 ? (drag.x - e.clientX) : (drag.y - e.clientY);
     if (Math.abs(d) > 6) drag.moved = true;
     if (drag.moved) { pos = Math.max(0, Math.min(maxPos, drag.p + d)); paint(); }
   });
-  box.addEventListener('pointerup', function () { if (drag && !drag.moved) setScroll(!scrolling); drag = null; });
-
-  function showWpm() { $('wpm').textContent = cfg.wpm; }
-  function speed(d) { cfg.wpm = Math.max(60, Math.min(260, cfg.wpm + d)); saveCfg(); showWpm(); est(); }
-  $('slower').onclick = function () { speed(-10); };
-  $('faster').onclick = function () { speed(10); };
-  $('spd').onclick = function () { setScroll(!scrolling); };
+  box.addEventListener('pointerup', function () { if (drag && !drag.moved && !cfg.mode) setScroll(!scrolling); drag = null; });
 
   /* ---------- settings ---------- */
   function showSet() {
     $('vFont').textContent = cfg.font; $('vH').textContent = cfg.h + '%'; $('vDark').textContent = cfg.dark + '%';
-    [['cdSeg', 'cd'], ['asSeg', 'as'], ['mtSeg', 'mt']].forEach(function (a) {
-      Array.prototype.forEach.call($(a[0]).children, function (b) { b.classList.toggle('on', String(cfg[a[1]]) === b.getAttribute('data-' + a[1])); });
+    Array.prototype.forEach.call(document.querySelectorAll('.seg3'), function (g) {
+      var k = g.getAttribute('data-g');
+      Array.prototype.forEach.call(g.children, function (b) { b.classList.toggle('on', String(cfg[k]) === b.getAttribute('data-v')); });
     });
   }
-  $('gear').onclick = function () { showSet(); $('sheet').hidden = false; };
   $('sheetDone').onclick = function () { $('sheet').hidden = true; };
   Array.prototype.forEach.call(document.querySelectorAll('.set button[data-k]'), function (b) {
     b.onclick = function () {
-      var k = b.getAttribute('data-k'), d = +b.getAttribute('data-d');
-      var lim = { font: [18, 60], h: [18, 60], dark: [0, 90] }[k];
+      var k = b.getAttribute('data-k'), d = +b.getAttribute('data-d'), lim = { font: [18, 60], h: [18, 60], dark: [0, 90] }[k];
       cfg[k] = Math.max(lim[0], Math.min(lim[1], cfg[k] + d)); saveCfg(); showSet(); layout();
     };
   });
-  [['cdSeg', 'cd'], ['asSeg', 'as'], ['mtSeg', 'mt']].forEach(function (a) {
-    Array.prototype.forEach.call($(a[0]).children, function (b) {
-      b.onclick = function () { cfg[a[1]] = +b.getAttribute('data-' + a[1]); saveCfg(); showSet(); layout(); };
+  Array.prototype.forEach.call(document.querySelectorAll('.seg3'), function (g) {
+    var k = g.getAttribute('data-g');
+    Array.prototype.forEach.call(g.children, function (b) {
+      b.onclick = async function () {
+        var before = isLand();
+        cfg[k] = +b.getAttribute('data-v'); saveCfg(); showSet(); layout();
+        if (k === 'rot' && before !== isLand() && !recording) await startCam();
+      };
     });
   });
+  $('rot').onclick = async function () {
+    if (recording) return;
+    var before = isLand();
+    cfg.rot = cfg.rot === 0 ? 90 : cfg.rot === 90 ? 270 : 0; saveCfg(); layout();
+    if (before !== isLand()) await startCam();
+  };
 
   /* ---------- camera ---------- */
-  var stream = null, rec = null, chunks = [], recording = false, t0 = 0, clockT = null, wake = null, blobUrl = null, lastBlob = null, lastMime = '';
+  var vstream = null, astream = null, rec = null, chunks = [], recording = false, t0 = 0, clockT = null, wake = null;
+  var blobUrl = null, lastTake = null, crop = null, actx = null, analyser = null, lightT = null;
   function msg(s) { var m = $('msg'); if (!s) { m.hidden = true; return; } m.textContent = s; m.hidden = false; }
+  function stopVideo() { if (vstream) vstream.getTracks().forEach(function (t) { t.stop(); }); vstream = null; }
+  function stopAll() { stopVideo(); if (astream) astream.getTracks().forEach(function (t) { t.stop(); }); astream = null; analyser = null; clearInterval(lightT); }
 
+  // the camera picture must match how the phone is held. Different iPhones answer different requests,
+  // so try a few and keep the first that comes back the right way (remembered for next time).
+  var CANDS = [
+    { width: { ideal: 1920 }, height: { ideal: 1080 } },
+    { width: { ideal: 1080 }, height: { ideal: 1920 } },
+    { width: { ideal: 1280 }, height: { ideal: 720 } },
+    {}
+  ];
+  // attach a stream to the preview and wait until its real size is known
+  function attach(v, st) {
+    return new Promise(function (res) {
+      var done = false, fin = function () { if (done) return; done = true; res([v.videoWidth, v.videoHeight]); };
+      v.onloadedmetadata = function () { setTimeout(fin, 150); };
+      setTimeout(fin, 2500);
+      v.srcObject = st; v.classList.toggle('mirror', cfg.facing === 'user');
+      var pl = v.play(); if (pl && pl.catch) pl.catch(function () {});
+    });
+  }
   async function startCam() {
     msg('');
-    if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { msg('הדפדפן הזה לא מאפשר גישה למצלמה. פתחו את הדף בספארי (באייפון) או בכרום.'); return false; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { msg('הדפדפן הזה לא מאפשר גישה למצלמה. פתחו את הדף בספארי.'); return false; }
+    var v = $('vid');
     try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: cfg.facing, width: { ideal: 1080 }, height: { ideal: 1920 }, aspectRatio: { ideal: 9 / 16 }, frameRate: { ideal: 30 } },
-        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-      });
-    } catch (e) {
-      msg('אין גישה למצלמה או למיקרופון. צריך לאשר גישה כשהדפדפן שואל. אם כבר סירבתם: בהגדרות של הטלפון, תחת ספארי, מאשרים מצלמה ומיקרופון לאתר הזה.');
-      return false;
+      if (!astream) astream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+      startMeter();
+    } catch (e) { msg('אין גישה למיקרופון. צריך לאשר גישה כשהדפדפן שואל. אם כבר סירבתם: בהגדרות של הטלפון, תחת ספארי, מאשרים מיקרופון ומצלמה.'); return false; }
+    var land = isLand(), key = 'cand_' + (land ? 'L' : 'P') + '_' + cfg.facing;
+    var first = LS.get(key, 0), order = [first].concat([0, 1, 2, 3].filter(function (i) { return i !== first; }));
+    var best = null;
+    for (var k = 0; k < order.length; k++) {
+      stopVideo();
+      try { vstream = await navigator.mediaDevices.getUserMedia({ video: Object.assign({ facingMode: cfg.facing, frameRate: { ideal: 30 } }, CANDS[order[k]]) }); }
+      catch (e) { if (k === order.length - 1 && !best) { msg('אין גישה למצלמה. צריך לאשר גישה כשהדפדפן שואל.'); return false; } continue; }
+      var d = await attach(v, vstream), good = land ? d[0] >= d[1] : d[1] >= d[0];
+      if (good) { LS.set(key, order[k]); best = null; break; }
+      if (!best) best = order[k];
+      if (k === order.length - 1) {
+        // none came back the right way: use the first one and cut the right shape out of it
+        stopVideo();
+        vstream = await navigator.mediaDevices.getUserMedia({ video: Object.assign({ facingMode: cfg.facing, frameRate: { ideal: 30 } }, CANDS[best]) });
+        await attach(v, vstream);
+      }
     }
-    var v = $('vid'); v.srcObject = stream; v.classList.toggle('mirror', cfg.facing === 'user');
-    try { await v.play(); } catch (e) {}
+    startLight();
     return true;
+  }
+  function startMeter() {
+    try {
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === 'suspended') actx.resume();
+      var src = actx.createMediaStreamSource(astream); analyser = actx.createAnalyser(); analyser.fftSize = 512; src.connect(analyser);
+      var buf = new Uint8Array(analyser.fftSize), bar = $('meter').firstElementChild;
+      (function loop() {
+        if (!analyser) return;
+        analyser.getByteTimeDomainData(buf); var s = 0;
+        for (var i = 0; i < buf.length; i++) { var x = (buf[i] - 128) / 128; s += x * x; }
+        var lv = Math.min(1, Math.sqrt(s / buf.length) * 4);
+        bar.style.width = Math.round(lv * 100) + '%'; bar.style.background = lv > 0.85 ? '#ff9500' : '#4cd964';
+        requestAnimationFrame(loop);
+      })();
+    } catch (e) {}
+  }
+  function startLight() {
+    clearInterval(lightT);
+    var c = document.createElement('canvas'); c.width = 24; c.height = 24; var g = c.getContext('2d', { willReadFrequently: true });
+    lightT = setInterval(function () {
+      var v = $('vid'); if (!v.videoWidth || $('cam').hidden) return;
+      try {
+        g.drawImage(v, 0, 0, 24, 24); var px = g.getImageData(0, 0, 24, 24).data, s = 0;
+        for (var i = 0; i < px.length; i += 4) s += 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
+        $('light').hidden = (s / (px.length / 4)) > 62;
+      } catch (e) {}
+    }, 1200);
   }
   async function keepAwake() { try { if ('wakeLock' in navigator) wake = await navigator.wakeLock.request('screen'); } catch (e) {} }
 
   $('go').onclick = async function () {
     if (!txt.value.trim()) { txt.focus(); return; }
+    try { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); actx.resume(); } catch (e) {}
     LS.set('draft', txt.value);
-    $('edit').hidden = true; $('cam').hidden = false;
-    showWpm(); pos = 0; buildText(); setScroll(false);
-    await startCam(); keepAwake(); layout();
+    takes = []; segIdx = 0; pos = 0;
+    show('cam'); buildText(); drawTools(); setScroll(false);
+    layout(); await startCam(); keepAwake(); layout();
   };
   function closeCam() {
     if (recording) return;
-    if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); stream = null;
-    if (wake) { try { wake.release(); } catch (e) {} wake = null; }
-    $('cam').hidden = true; $('edit').hidden = false; $('sheet').hidden = true;
+    stopAll(); if (wake) { try { wake.release(); } catch (e) {} wake = null; }
+    $('sheet').hidden = true; show('edit');
   }
   $('closeCam').onclick = closeCam;
   $('flip').onclick = async function () { if (recording) return; cfg.facing = cfg.facing === 'user' ? 'environment' : 'user'; saveCfg(); await startCam(); };
-  window.addEventListener('resize', function () { if (!$('cam').hidden) layout(); });
+  var rsT = null, wasLand = null;
+  window.addEventListener('resize', function () {
+    if ($('cam').hidden) return;
+    layout();
+    clearTimeout(rsT); rsT = setTimeout(function () { var l = isLand(); if (wasLand !== null && l !== wasLand && !recording) startCam(); wasLand = l; }, 400);
+  });
 
   function pickMime() {
     var c = ['video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
@@ -347,81 +554,118 @@ button{font-family:inherit;cursor:pointer}
     for (var i = 0; i < c.length; i++) { try { if (MediaRecorder.isTypeSupported(c[i])) return c[i]; } catch (e) {} }
     return '';
   }
-  function fmt(s) { s = Math.floor(s); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
-
+  // when the camera picture is not the shape we want, record a centred cut of it through a canvas
+  function recordStream() {
+    var v = $('vid'), vw = v.videoWidth, vh = v.videoHeight, land = isLand();
+    var good = land ? vw >= vh : vh >= vw;
+    var at = astream ? astream.getAudioTracks() : [];
+    if (good || !vw) return { stream: new MediaStream(vstream.getVideoTracks().concat(at)), w: vw, h: vh };
+    var ar = land ? 16 / 9 : 9 / 16, sw = vw, sh = vh;
+    if (vw / vh > ar) sw = Math.round(vh * ar); else sh = Math.round(vw / ar);
+    var cv = document.createElement('canvas'); cv.width = sw - (sw % 2); cv.height = sh - (sh % 2);
+    var g = cv.getContext('2d'), sx = (vw - sw) / 2, sy = (vh - sh) / 2, run = true;
+    (function draw() { if (!run) return; try { g.drawImage(v, sx, sy, sw, sh, 0, 0, cv.width, cv.height); } catch (e) {} requestAnimationFrame(draw); })();
+    crop = function () { run = false; };
+    return { stream: new MediaStream(cv.captureStream(30).getVideoTracks().concat(at)), w: cv.width, h: cv.height };
+  }
   async function countdown() {
     var n = cfg.cd, c = $('count');
     while (n > 0) { c.textContent = n; c.hidden = false; await new Promise(function (r) { setTimeout(r, 1000); }); n--; }
     c.hidden = true;
   }
+  var recMeta = null;
   async function startRec() {
-    if (!stream && !(await startCam())) return;
+    if (!vstream && !(await startCam())) return;
     var mime = pickMime();
     if (mime === null) { msg('הדפדפן הזה לא יודע להקליט וידאו. באייפון צריך iOS מעודכן ולפתוח בספארי.'); return; }
     $('sheet').hidden = true; $('rec').disabled = true;
     await countdown();
-    chunks = [];
-    try { rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 8000000, audioBitsPerSecond: 128000 } : undefined); }
-    catch (e) { rec = new MediaRecorder(stream); }
-    lastMime = rec.mimeType || mime || 'video/mp4';
+    chunks = []; crop = null;
+    var rs = recordStream(); recMeta = { w: rs.w, h: rs.h, idx: cfg.mode ? segIdx : 0, text: cfg.mode && segs[segIdx] ? segs[segIdx].textContent.trim() : '' };
+    var opt = mime ? { mimeType: mime, videoBitsPerSecond: 5000000, audioBitsPerSecond: 128000 } : undefined;
+    try { rec = new MediaRecorder(rs.stream, opt); } catch (e) { rec = new MediaRecorder(rs.stream); }
+    var recMime = rec.mimeType || mime || 'video/mp4';
     rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
-    rec.onstop = review;
+    rec.onstop = function () { if (crop) crop(); review(recMime); };
     rec.start(1000);
     recording = true; t0 = Date.now();
     $('rec').disabled = false; $('rec').classList.add('on'); $('rec').setAttribute('aria-label', 'עצירת הצילום');
-    $('time').classList.add('rec'); $('closeCam').hidden = true; $('flip').hidden = true;
+    $('time').classList.add('rec'); $('tbR').hidden = true; $('tbL').hidden = true;
     clockT = setInterval(function () { $('clock').textContent = fmt((Date.now() - t0) / 1000); }, 250);
-    if (cfg.as) setScroll(true);
+    if (cfg.as && !cfg.mode) setScroll(true);
   }
   function stopRec() {
     if (!rec || !recording) return;
-    recording = false; setScroll(false);
-    clearInterval(clockT);
+    recording = false; setScroll(false); clearInterval(clockT);
     $('rec').classList.remove('on'); $('rec').setAttribute('aria-label', 'התחלת צילום'); $('time').classList.remove('rec');
-    $('closeCam').hidden = false; $('flip').hidden = false;
+    $('tbR').hidden = false; $('tbL').hidden = false;
     try { rec.stop(); } catch (e) {}
   }
   $('rec').onclick = function () { recording ? stopRec() : startRec(); };
-
-  // keyboard / Bluetooth remote: space = pause/resume, arrows = speed, Enter = record
   document.addEventListener('keydown', function (e) {
     if ($('cam').hidden) return;
-    if (e.code === 'Space' || e.key === 'PageDown') { e.preventDefault(); setScroll(!scrolling); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); speed(10); }
-    else if (e.key === 'ArrowDown') { e.preventDefault(); speed(-10); }
+    if (e.code === 'Space' || e.key === 'PageDown') { e.preventDefault(); if (cfg.mode) { if (!recording) gotoSeg(segIdx + 1); } else setScroll(!scrolling); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); if (cfg.mode) { if (!recording) gotoSeg(segIdx - 1); } else speed(10); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); if (cfg.mode) { if (!recording) gotoSeg(segIdx + 1); } else speed(-10); }
     else if (e.key === 'Enter') { e.preventDefault(); $('rec').click(); }
   });
 
-  /* ---------- review ---------- */
-  function review() {
+  /* ---------- review of one take ---------- */
+  function fileName(t, i) { return 'video-' + stamp() + (i != null ? '-' + String(i + 1).padStart(2, '0') : '') + '.' + extOf(t.mime); }
+  async function shareFiles(list) {
+    var files = list.map(function (t) { return new File([t.blob], fileName(t, list.length > 1 ? t.idx : null), { type: t.mime.split(';')[0] }); });
+    try { if (navigator.canShare && navigator.canShare({ files: files })) { await navigator.share({ files: files }); return; } }
+    catch (e) { if (e && e.name === 'AbortError') return; }
+    files.forEach(function (f) { var a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = f.name; document.body.appendChild(a); a.click(); a.remove(); });
+  }
+  function review(mime) {
     var dur = (Date.now() - t0) / 1000;
-    lastBlob = new Blob(chunks, { type: lastMime.split(';')[0] });
+    lastTake = { blob: new Blob(chunks, { type: mime.split(';')[0] }), mime: mime, dur: dur, w: recMeta.w, h: recMeta.h, idx: recMeta.idx, text: recMeta.text };
     if (blobUrl) URL.revokeObjectURL(blobUrl);
-    blobUrl = URL.createObjectURL(lastBlob);
-    var p = $('play'); p.src = blobUrl;
-    $('rinfo').innerHTML = 'אורך: <bdi>' + fmt(dur) + '</bdi> · גודל: <bdi>' + (lastBlob.size / 1048576).toFixed(1) + '</bdi> מגה';
-    $('cam').hidden = true; $('review').hidden = false;
-    if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); stream = null;
+    blobUrl = URL.createObjectURL(lastTake.blob);
+    $('play').src = blobUrl;
+    $('rinfo').innerHTML = (cfg.mode ? 'משפט ' + (segIdx + 1) + ' מתוך ' + segs.length + ' · ' : '') + 'אורך: <bdi>' + fmt(dur) + '</bdi> · גודל: <bdi>' + (lastTake.blob.size / 1048576).toFixed(1) + '</bdi> מגה · ' + (lastTake.h > lastTake.w ? 'לאורך' : 'לרוחב');
+    $('status').textContent = '';
+    stopVideo(); show('review');
+    var b = $('rbar');
+    if (cfg.mode) {
+      var last = segIdx >= segs.length - 1;
+      b.innerHTML = '<button class="gold" id="keepNext">' + (last ? 'טוב, לסיכום' : 'טוב, למשפט הבא') + '</button><button class="soft" id="again">צילום חוזר</button><button class="line" id="toSum">סיום וסיכום</button>';
+      $('keepNext').onclick = function () { takes[segIdx] = lastTake; if (last) toSummary(); else backToCam(segIdx + 1); };
+      $('toSum').onclick = function () { takes[segIdx] = lastTake; toSummary(); };
+    } else {
+      b.innerHTML = '<button class="gold" id="send">שליחה לעריכה</button><button class="gold" id="save">שמירה לטלפון</button><button class="soft" id="again">צילום חוזר</button><button class="line" id="back2">חזרה לטקסט</button>';
+      $('send').onclick = async function () { this.disabled = true; var ok = await sendTakes([lastTake], $('status')); this.disabled = ok; };
+      $('save').onclick = function () { shareFiles([lastTake]); };
+      $('back2').onclick = function () { $('play').pause(); stopAll(); show('edit'); };
+    }
+    $('again').onclick = function () { backToCam(segIdx); };
   }
-  function fileName() {
-    var d = new Date(), z = function (n) { return String(n).padStart(2, '0'); };
-    var ext = /mp4/.test(lastMime) ? 'mp4' : 'webm';
-    return 'video-' + d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '-' + z(d.getHours()) + z(d.getMinutes()) + '.' + ext;
+  async function backToCam(i) {
+    $('play').pause(); show('cam'); $('clock').textContent = '00:00';
+    if (!cfg.mode) { pos = 0; paint(); setScroll(false); }
+    await startCam(); layout(); if (cfg.mode) gotoSeg(i);
   }
-  $('save').onclick = async function () {
-    if (!lastBlob) return;
-    var f = new File([lastBlob], fileName(), { type: lastBlob.type });
-    try {
-      if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f] }); return; }
-    } catch (e) { if (e && e.name === 'AbortError') return; }
-    var a = document.createElement('a'); a.href = blobUrl; a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
-  };
-  $('again').onclick = async function () {
-    $('play').pause(); $('review').hidden = true; $('cam').hidden = false;
-    pos = 0; paint(); setScroll(false); $('clock').textContent = '00:00';
-    await startCam(); layout();
-  };
-  $('back2').onclick = function () { $('play').pause(); $('review').hidden = true; $('edit').hidden = false; $('clock').textContent = '00:00'; };
+
+  /* ---------- sentence mode summary ---------- */
+  function toSummary() {
+    $('play').pause(); stopAll(); show('summary'); $('status2').textContent = '';
+    var L = $('sumList'), n = takes.filter(Boolean).length;
+    L.innerHTML = '<h3>צילום לפי משפטים</h3><div class="info" style="padding:0 0 8px">צולמו ' + n + ' מתוך ' + segs.length + ' משפטים. אפשר לחזור לכל משפט ולצלם אותו שוב.</div>';
+    segs.forEach(function (s, i) {
+      var r = document.createElement('div'); r.className = 'sr';
+      r.innerHTML = '<span class="n">' + (i + 1) + '</span><span class="tx"></span><span class="st ' + (takes[i] ? 'ok">✓ ' + fmt(takes[i].dur) : 'no">חסר') + '</span><button>' + (takes[i] ? 'שוב' : 'צילום') + '</button>';
+      r.querySelector('.tx').textContent = s.textContent.trim();
+      r.querySelector('button').onclick = function () { backToCam(i); };
+      L.appendChild(r);
+    });
+    var b = $('sbar');
+    b.innerHTML = '<button class="gold" id="sendAll">שליחה לעריכה</button><button class="gold" id="saveAll">שמירה לטלפון</button><button class="line" id="back3">חזרה לטקסט</button>';
+    var list = function () { return takes.map(function (t, i) { if (t) t.idx = i; return t; }).filter(Boolean); };
+    $('sendAll').onclick = async function () { if (!list().length) return; this.disabled = true; var ok = await sendTakes(list(), $('status2')); this.disabled = ok; };
+    $('saveAll').onclick = function () { if (list().length) shareFiles(list()); };
+    $('back3').onclick = function () { show('edit'); };
+  }
 })();
 </script>
 </body>
