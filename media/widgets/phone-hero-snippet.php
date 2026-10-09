@@ -46,7 +46,7 @@ add_action('template_redirect', function () {
 		// the old phone picture is not needed any more on the phone
 		$html = str_replace('wp-content/uploads/2026/03/yakir-mob-2.webp" media="(max-width:767px)"', 'wp-content/uploads/__dbl_old__" media="(max-width:1px)"', $html);
 		$chk = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
-		$pts = array('אני יקיר דבול, עורך דין המתמחה בנדל״ן, התחדשות עירונית וחדלות פירעון.', 'מעל 100 עסקאות מקרקעין מדי שנה. ניסיון מוכח שמעניק לכם שקט.', 'חבר ועדות הקניין, המקרקעין וההתחדשות העירונית בלשכת עורכי הדין.', 'אני והצוות שלי זמינים עבורכם 24/7 למקרי חירום.');
+		$pts = array('אני יקיר דבול, עורך דין המתמחה בנדל״ן, התחדשות עירונית וחדלות פירעון.', 'מעל 100 עסקאות מקרקעין מדי שנה. ניסיון מוכח שמעניק לכם שקט.', 'חבר ועדות הקניין, המקרקעין, ההתחדשות העירונית והקשר נתניה בלשכת עורכי הדין.', 'אני והצוות שלי זמינים עבורכם 24/7 למקרי חירום.');
 		$li = ''; foreach ($pts as $t) $li .= '<li><i>' . $chk . '</i><span>' . esc_html($t) . '</span></li>';
 		$block = '<div class="dbl-ph"><div class="top"><div><p class="nm"><b>יקיר דבול</b><span>עורך דין מקרקעין</span></p><div class="ln"></div><div class="tg">מקצועיות. ניסיון. תוצאות</div></div>'
 			. ($im['face'] ? '<div class="pic"><img src="' . esc_url($im['face']) . '" width="480" height="480" alt="עו״ד יקיר דבול" fetchpriority="high" class="skip-lazy" data-no-lazy="1"></div>' : '')
