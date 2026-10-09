@@ -28,7 +28,7 @@ sources:
     url: "https://www.kolzchut.org.il/he/הפטר_(פטור_מחובות)_בהליכי_חדלות_פירעון_ושיקום_כלכלי_(פשיטת_רגל)"
   - title: "כל זכות: חוב מזונות לאחר סיום הליך פשיטת רגל"
     url: "https://www.kolzchut.org.il/he/חוב_מזונות_לאחר_סיום_הליך_פשיטת_רגל"
-related: [tzav-shikum-kalkali, hefter-laalter, netunei-ashrai, arvut-ishit]
+related: [tzav-shikum-kalkali, hefter-laalter, netunei-ashrai, netunei-ashrai-taut, arvut-ishit]
 ---
 
 **הפטר** הוא הרגע שלשמו נכנסים להליך חדלות פירעון: פטור מיתרת החובות שנכללו בהליך, ונקודת התחלה חדשה. אחרי ההפטר הנושים כבר לא יכולים לגבות את החובות האלה, והחיים הכלכליים יכולים להתחיל מחדש.
