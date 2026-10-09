@@ -13,6 +13,8 @@
 define('DABUL_STEADY_LIVE', 1);
 // part 2 is off since 9.10.2026: measured on the computer it made the side box jump more, not less (0.21 instead of 0.095)
 define('DABUL_STEADY_MOVE_CSS', false);
+// part 3 live since 9.10.2026 (measure: cls-probe on articles, computer)
+define('DABUL_STEADY_STICKY_LIVE', 1);
 
 function dabul_steady_on() {
 	if (defined('DABUL_STEADY_LIVE')) return true;
