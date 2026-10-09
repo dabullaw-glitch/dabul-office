@@ -1,0 +1,91 @@
+{
+ "url": "https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/",
+ "preset": "mobile",
+ "at": "2026-10-09T09:02:08.017Z",
+ "runs": [
+  {
+   "score": 83,
+   "fcp": 1850.921,
+   "lcp": 2408.7545,
+   "si": 3927.8982355445487,
+   "tbt": 475.49999999999955,
+   "cls": 0,
+   "lcpEl": "<p class=\"lvbl-p lvbl-p-lead\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     1479
+    ],
+    [
+     "elementRenderDelay",
+     494
+    ]
+   ],
+   "renderBlocking": [
+    [
+     "https://dabullaw.co.il/wp-includes/css/dist/block-library/style-rtl.min.css?ver=6.9.4",
+     168
+    ]
+   ],
+   "shifts": [],
+   "bytes": 261493,
+   "docBytes": 134707
+  },
+  {
+   "score": 97,
+   "fcp": 1570.9040000000002,
+   "lcp": 2506.034,
+   "si": 1570.9040000000002,
+   "tbt": 0,
+   "cls": 0,
+   "lcpEl": "<p class=\"lvbl-p lvbl-p-lead\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     223
+    ],
+    [
+     "elementRenderDelay",
+     115
+    ]
+   ],
+   "renderBlocking": [
+    [
+     "https://dabullaw.co.il/wp-includes/css/dist/block-library/style-rtl.min.css?ver=6.9.4",
+     168
+    ]
+   ],
+   "shifts": [],
+   "bytes": 260865,
+   "docBytes": 134071
+  },
+  {
+   "score": 97,
+   "fcp": 1549.9020000000003,
+   "lcp": 2469.0420000000004,
+   "si": 1851.9560970149273,
+   "tbt": 0,
+   "cls": 0,
+   "lcpEl": "<p class=\"lvbl-p lvbl-p-lead\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     570
+    ],
+    [
+     "elementRenderDelay",
+     284
+    ]
+   ],
+   "renderBlocking": [
+    [
+     "https://dabullaw.co.il/wp-includes/css/dist/block-library/style-rtl.min.css?ver=6.9.4",
+     165
+    ]
+   ],
+   "shifts": [],
+   "bytes": 260857,
+   "docBytes": 134068
+  }
+ ]
+}
