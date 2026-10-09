@@ -1,0 +1,659 @@
+{
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/?nc=1 | phone | 1": {
+  "cls": 0.064,
+  "total": 0.064,
+  "shifts": [
+   {
+    "t": 2680,
+    "v": 0.0398,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-8ad07f0.elementor-widget-theme-post-content[8ad07f0]",
+      "from": [
+       489,
+       350
+      ],
+      "to": [
+       419,
+       420
+      ],
+      "parent": "div.e-con-inner"
+     },
+     {
+      "el": "ul.elementor-toc__list-wrapper",
+      "from": [
+       356,
+       30
+      ],
+      "to": [
+       350,
+       37
+      ],
+      "parent": "div#elementor-toc__f1f2abe.elementor-toc__body"
+     }
+    ]
+   },
+   {
+    "t": 2744,
+    "v": 0.0188,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-8ad07f0.elementor-widget-theme-post-content[8ad07f0]",
+      "from": [
+       419,
+       420
+      ],
+      "to": [
+       387,
+       452
+      ],
+      "parent": "div.e-con-inner"
+     },
+     {
+      "el": "ul.elementor-toc__list-wrapper",
+      "from": [
+       350,
+       5
+      ],
+      "to": [
+       347,
+       8
+      ],
+      "parent": "div#elementor-toc__f1f2abe.elementor-toc__body"
+     }
+    ]
+   },
+   {
+    "t": 2794,
+    "v": 0.0051,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-8ad07f0.elementor-widget-theme-post-content[8ad07f0]",
+      "from": [
+       387,
+       452
+      ],
+      "to": [
+       379,
+       460
+      ],
+      "parent": "div.e-con-inner"
+     }
+    ]
+   }
+  ]
+ },
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/?nc=1 | phone | 2": {
+  "cls": 0,
+  "total": 0,
+  "shifts": []
+ },
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/?nc=1 | computer | 1": {
+  "cls": 0.081,
+  "total": 0.081,
+  "shifts": [
+   {
+    "t": 1010,
+    "v": 0.0588,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-4ec86d12.e-con-full.e-flex.e-con[4ec86d12]",
+      "from": [
+       308,
+       514
+      ],
+      "to": [
+       298,
+       124
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "img",
+      "from": [
+       435,
+       377
+      ],
+      "to": [
+       278,
+       144
+      ],
+      "parent": "picture.attachment-large.size-large.wp-image-886"
+     },
+     {
+      "el": "div.elementor-element-32e29317.elementor-button-align-stretch.elementor-widget-form[32e29317]",
+      "from": [
+       842,
+       58
+      ],
+      "to": [
+       422,
+       309
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "div.elementor-field-type-acceptance.elementor-field-group.elementor-field-group-field_ba4b8c9.elementor-col-100",
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       520,
+       136
+      ],
+      "parent": "div.elementor-form-fields-wrapper.elementor-labels-above"
+     }
+    ]
+   },
+   {
+    "t": 1320,
+    "v": 0.0032,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   },
+   {
+    "t": 1377,
+    "v": 0.0192,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       275,
+       479
+      ],
+      "to": [
+       405,
+       479
+      ],
+      "parent": "div.elementor.elementor-920"
+     },
+     {
+      "el": "div.elementor-element-a334cbd.elementor-widget-html[a334cbd]",
+      "from": [
+       751,
+       99
+      ],
+      "to": [
+       881,
+       19
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     },
+     {
+      "el": "div",
+      "from": [
+       795,
+       55
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "a"
+     }
+    ]
+   }
+  ]
+ },
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/?nc=1 | computer | 2": {
+  "cls": 0.081,
+  "total": 0.081,
+  "shifts": [
+   {
+    "t": 1415,
+    "v": 0.0588,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-4ec86d12.e-con-full.e-flex.e-con[4ec86d12]",
+      "from": [
+       308,
+       514
+      ],
+      "to": [
+       298,
+       124
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "img",
+      "from": [
+       435,
+       377
+      ],
+      "to": [
+       278,
+       144
+      ],
+      "parent": "picture.attachment-large.size-large.wp-image-886"
+     },
+     {
+      "el": "div.elementor-element-32e29317.elementor-button-align-stretch.elementor-widget-form[32e29317]",
+      "from": [
+       842,
+       58
+      ],
+      "to": [
+       422,
+       309
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "div.elementor-field-type-acceptance.elementor-field-group.elementor-field-group-field_ba4b8c9.elementor-col-100",
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       520,
+       136
+      ],
+      "parent": "div.elementor-form-fields-wrapper.elementor-labels-above"
+     }
+    ]
+   },
+   {
+    "t": 1745,
+    "v": 0.0032,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   },
+   {
+    "t": 1779,
+    "v": 0.0192,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       275,
+       479
+      ],
+      "to": [
+       405,
+       479
+      ],
+      "parent": "div.elementor.elementor-920"
+     },
+     {
+      "el": "div.elementor-element-a334cbd.elementor-widget-html[a334cbd]",
+      "from": [
+       751,
+       99
+      ],
+      "to": [
+       881,
+       19
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     },
+     {
+      "el": "div",
+      "from": [
+       795,
+       55
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "a"
+     }
+    ]
+   }
+  ]
+ },
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/?dblprev=1 | phone | 1": {
+  "cls": 0,
+  "total": 0,
+  "shifts": []
+ },
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/?dblprev=1 | phone | 2": {
+  "cls": 0,
+  "total": 0,
+  "shifts": []
+ },
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/?dblprev=1 | computer | 1": {
+  "cls": 0.081,
+  "total": 0.081,
+  "shifts": [
+   {
+    "t": 1448,
+    "v": 0.0588,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-4ec86d12.e-con-full.e-flex.e-con[4ec86d12]",
+      "from": [
+       308,
+       514
+      ],
+      "to": [
+       298,
+       124
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "img",
+      "from": [
+       435,
+       377
+      ],
+      "to": [
+       278,
+       144
+      ],
+      "parent": "picture.attachment-large.size-large.wp-image-886"
+     },
+     {
+      "el": "div.elementor-element-32e29317.elementor-button-align-stretch.elementor-widget-form[32e29317]",
+      "from": [
+       842,
+       58
+      ],
+      "to": [
+       422,
+       309
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "div.elementor-field-type-acceptance.elementor-field-group.elementor-field-group-field_ba4b8c9.elementor-col-100",
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       520,
+       136
+      ],
+      "parent": "div.elementor-form-fields-wrapper.elementor-labels-above"
+     }
+    ]
+   },
+   {
+    "t": 1826,
+    "v": 0.0032,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   },
+   {
+    "t": 1881,
+    "v": 0.0192,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       275,
+       479
+      ],
+      "to": [
+       405,
+       479
+      ],
+      "parent": "div.elementor.elementor-920"
+     },
+     {
+      "el": "div.elementor-element-a334cbd.elementor-widget-html[a334cbd]",
+      "from": [
+       751,
+       99
+      ],
+      "to": [
+       881,
+       19
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     },
+     {
+      "el": "div",
+      "from": [
+       795,
+       55
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "a"
+     }
+    ]
+   }
+  ]
+ },
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/?dblprev=1 | computer | 2": {
+  "cls": 0.081,
+  "total": 0.081,
+  "shifts": [
+   {
+    "t": 1032,
+    "v": 0.0588,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-4ec86d12.e-con-full.e-flex.e-con[4ec86d12]",
+      "from": [
+       308,
+       514
+      ],
+      "to": [
+       298,
+       124
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "img",
+      "from": [
+       435,
+       377
+      ],
+      "to": [
+       278,
+       144
+      ],
+      "parent": "picture.attachment-large.size-large.wp-image-886"
+     },
+     {
+      "el": "div.elementor-element-32e29317.elementor-button-align-stretch.elementor-widget-form[32e29317]",
+      "from": [
+       842,
+       58
+      ],
+      "to": [
+       422,
+       309
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "div.elementor-field-type-acceptance.elementor-field-group.elementor-field-group-field_ba4b8c9.elementor-col-100",
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       520,
+       136
+      ],
+      "parent": "div.elementor-form-fields-wrapper.elementor-labels-above"
+     }
+    ]
+   },
+   {
+    "t": 1305,
+    "v": 0.0032,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   },
+   {
+    "t": 1362,
+    "v": 0.0192,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       275,
+       479
+      ],
+      "to": [
+       405,
+       479
+      ],
+      "parent": "div.elementor.elementor-920"
+     },
+     {
+      "el": "div.elementor-element-a334cbd.elementor-widget-html[a334cbd]",
+      "from": [
+       751,
+       99
+      ],
+      "to": [
+       881,
+       19
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     },
+     {
+      "el": "div",
+      "from": [
+       795,
+       55
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "a"
+     }
+    ]
+   }
+  ]
+ }
+}
