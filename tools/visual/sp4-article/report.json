@@ -1,0 +1,92 @@
+{
+ "phone-a": {
+  "errors": [
+   "e.target.closest is not a function",
+   "Cannot read properties of undefined (reading '0')"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "למה לשלם מיסים על נכס שאיש לא נהנה ממנו?"
+  },
+  "h": 13551,
+  "w": 412,
+  "invisible": [],
+  "styles": 60,
+  "links": 11
+ },
+ "phone-b": {
+  "errors": [
+   "t.composedPath(...)[0].getRootNode is not a function"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "למה לשלם מיסים על נכס שאיש לא נהנה ממנו?"
+  },
+  "h": 13551,
+  "w": 412,
+  "invisible": [],
+  "styles": 67,
+  "links": 11
+ },
+ "computer-a": {
+  "errors": [
+   "e.target.closest is not a function",
+   "Cannot read properties of undefined (reading '0')",
+   "reCAPTCHA Timeout (C)",
+   "reCAPTCHA Timeout (z)"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "למה לשלם מיסים על נכס שאיש לא נהנה ממנו?"
+  },
+  "h": 9224,
+  "w": 1366,
+  "invisible": [],
+  "styles": 60,
+  "links": 11
+ },
+ "computer-b": {
+  "errors": [
+   "t.composedPath(...)[0].getRootNode is not a function",
+   "reCAPTCHA Timeout (C)",
+   "reCAPTCHA Timeout (z)"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "למה לשלם מיסים על נכס שאיש לא נהנה ממנו?"
+  },
+  "h": 9224,
+  "w": 1366,
+  "invisible": [],
+  "styles": 72,
+  "links": 11
+ }
+}
