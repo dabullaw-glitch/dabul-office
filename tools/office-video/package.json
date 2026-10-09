@@ -1,0 +1,7 @@
+{
+  "name": "office-video",
+  "private": true,
+  "type": "module",
+  "description": "Narrated answer videos for the law office YouTube slots (see render.mjs and .github/workflows/office-video.yml)",
+  "dependencies": { "playwright": "^1.47.2" }
+}
