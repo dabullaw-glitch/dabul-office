@@ -15,6 +15,11 @@ for (const [dev, ctxOpts] of [['phone', { ...devices['Pixel 7'] }], ['computer',
     p.on('pageerror', (e) => errors.push(String(e.message || e).slice(0, 200)));
     await p.goto(url, { waitUntil: 'load', timeout: 60000 });
     await p.waitForTimeout(1500);
+    // like a visitor's first touch or mouse move (WP Rocket starts the page scripts on it)
+    await p.mouse.move(200, 300).catch(() => {}); await p.mouse.move(210, 320).catch(() => {});
+    await p.mouse.wheel(0, 50).catch(() => {});
+    await p.evaluate(() => { try { window.dispatchEvent(new Event('touchstart')); document.dispatchEvent(new Event('touchstart')); } catch (e) {} });
+    await p.waitForTimeout(3000);
     await p.addStyleTag({ content: '.elementor-popup-modal{display:none!important}' }).catch(() => {});
     const vh = p.viewportSize().height;
     const H = await p.evaluate(() => document.documentElement.scrollHeight);
