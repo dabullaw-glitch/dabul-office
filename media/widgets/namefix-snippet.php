@@ -8,6 +8,7 @@
    Deactivate when done. */
 
 function dabul_nf_rules() {
+	if (!empty($GLOBALS['dabul_nf_custom'])) { $c = $GLOBALS['dabul_nf_custom']; return array(array('~' . preg_quote($c[0], '~') . '~u', $c[1])); }
 	$A = "(?:'|׳|’|&#8217;|&#039;|&#39;|&apos;)";
 	$Q = '(?:"|״|&quot;|&#8221;|&#8243;)';
 	$D = '(?:-|–|—|&#8211;|&#8212;)';
@@ -25,7 +26,9 @@ function dabul_nf_rules() {
 
 function dabul_nf_str($s, &$n) {
 	if (!is_string($s) || $s === '') return $s;
-	if (strpos($s, 'דבול ושות') === false && stripos($s, 'Dabul') === false) return $s;
+	$needle = !empty($GLOBALS['dabul_nf_custom']) ? $GLOBALS['dabul_nf_custom'][0] : null;
+	if ($needle !== null) { if (strpos($s, $needle) === false) return $s; }
+	elseif (strpos($s, 'דבול ושות') === false && stripos($s, 'Dabul') === false) return $s;
 	foreach (dabul_nf_rules() as $r) { $c = 0; $o = preg_replace($r[0], $r[1], $s, -1, $c); if (is_string($o)) { $s = $o; $n += $c; } }
 	return $s;
 }
@@ -63,7 +66,7 @@ function dabul_nf_scan($only = null) {
 	$lit = '%' . $wpdb->esc_like('דבול ושות') . '%';
 	$esc = 'דבול ושות';
 	$ids = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type <> 'revision' AND post_status <> 'trash' AND (post_content LIKE %s OR post_title LIKE %s OR post_excerpt LIKE %s OR post_content LIKE %s)", $lit, $lit, $lit, '%Dabul & Co%'));
-	$ids2 = $wpdb->get_col($wpdb->prepare("SELECT DISTINCT m.post_id FROM {$wpdb->postmeta} m JOIN {$wpdb->posts} p ON p.ID = m.post_id WHERE p.post_type <> 'revision' AND p.post_status <> 'trash' AND m.meta_key <> '_dabul_namebak' AND (m.meta_value LIKE %s OR LOCATE(%s, m.meta_value) > 0)", $lit, $esc));
+	$ids2 = $wpdb->get_col($wpdb->prepare("SELECT DISTINCT m.post_id FROM {$wpdb->postmeta} m JOIN {$wpdb->posts} p ON p.ID = m.post_id WHERE p.post_type <> 'revision' AND p.post_status <> 'trash' AND m.meta_key NOT IN ('_dabul_namebak','_dabul_textbak') AND (m.meta_value LIKE %s OR LOCATE(%s, m.meta_value) > 0)", $lit, $esc));
 	$all = array_values(array_unique(array_map('intval', array_merge($ids, $ids2))));
 	if ($only) $all = array_values(array_intersect($all, array_map('intval', $only)));
 	$out = array();
@@ -75,7 +78,7 @@ function dabul_nf_scan($only = null) {
 			$c = 0; $new = dabul_nf_str($p[$f], $c);
 			if ($c) { $item['fields'][$f] = $new; $item['n'] += $c; }
 		}
-		$rows = $wpdb->get_results($wpdb->prepare("SELECT meta_id, meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key <> '_dabul_namebak' AND (meta_value LIKE %s OR LOCATE(%s, meta_value) > 0)", $id, $lit, $esc), ARRAY_A);
+		$rows = $wpdb->get_results($wpdb->prepare("SELECT meta_id, meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key NOT IN ('_dabul_namebak','_dabul_textbak') AND (meta_value LIKE %s OR LOCATE(%s, meta_value) > 0)", $id, $lit, $esc), ARRAY_A);
 		foreach ($rows as $r) {
 			$c = 0; $new = dabul_nf_meta_new($r['meta_key'], $r['meta_value'], $c);
 			if ($new !== null && $c) { $item['meta'][$r['meta_id']] = array('key' => $r['meta_key'], 'new' => $new); $item['n'] += $c; }
@@ -83,7 +86,8 @@ function dabul_nf_scan($only = null) {
 		// a few before/after examples from the visible text, so the wording can be checked
 		$src = $p['post_title'] . ' ' . $p['post_content'] . ' ' . $p['post_excerpt'];
 		foreach ($rows as $r) $src .= ' ' . ($r['meta_key'] === '_elementor_data' ? implode(' ', dabul_nf_strings(json_decode($r['meta_value'], true))) : $r['meta_value']);
-		if (preg_match_all('#.{0,35}(?:דבול ושות|Dabul\s*&).{0,30}#u', $src, $mm)) {
+		$pat = !empty($GLOBALS['dabul_nf_custom']) ? preg_quote($GLOBALS['dabul_nf_custom'][0], '#') : '(?:דבול ושות|Dabul\s*&)';
+		if (preg_match_all('#.{0,35}' . $pat . '.{0,30}#u', $src, $mm)) {
 			foreach (array_slice(array_unique($mm[0]), 0, 40) as $s) { $c = 0; $item['samples'][] = array(trim(wp_strip_all_tags($s)), trim(wp_strip_all_tags(dabul_nf_str($s, $c)))); }
 		}
 		$out[] = $item;
@@ -93,7 +97,8 @@ function dabul_nf_scan($only = null) {
 
 function dabul_nf_strings($v) {
 	$o = array();
-	if (is_string($v)) { if (strpos($v, 'דבול ושות') !== false) $o[] = $v; }
+	$w = !empty($GLOBALS['dabul_nf_custom']) ? $GLOBALS['dabul_nf_custom'][0] : 'דבול ושות';
+	if (is_string($v)) { if (strpos($v, $w) !== false) $o[] = $v; }
 	elseif (is_array($v)) foreach ($v as $x) $o = array_merge($o, dabul_nf_strings($x));
 	return $o;
 }
@@ -130,6 +135,31 @@ add_action('rest_api_init', function () {
 			return array('done' => $done);
 		}),
 	));
+	// one-off exact text fix with the same backup: POST {find, replace, ids?, dry?}
+	register_rest_route('dabul/v1', '/textfix', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
+		global $wpdb;
+		$f = (string) $req->get_param('find'); $r = (string) $req->get_param('replace');
+		if (mb_strlen($f) < 8) return new WP_Error('find', 'find too short', array('status' => 400));
+		$GLOBALS['dabul_nf_custom'] = array($f, $r);
+		$items = dabul_nf_scan($req->get_param('ids') ? (array) $req->get_param('ids') : null);
+		if ($req->get_param('dry')) return array('items' => array_map(function ($it) { return array('id' => $it['id'], 'type' => $it['type'], 'title' => $it['title'], 'n' => $it['n'], 'fields' => array_keys($it['fields']), 'meta' => array_values(array_map(function ($m) { return $m['key']; }, $it['meta'])), 'samples' => $it['samples']); }, $items));
+		$done = array();
+		foreach ($items as $it) {
+			if (!$it['n']) continue;
+			$bak = array('at' => current_time('mysql'), 'find' => $f, 'fields' => array(), 'meta' => array());
+			$p = $wpdb->get_row($wpdb->prepare("SELECT post_title, post_content, post_excerpt FROM {$wpdb->posts} WHERE ID = %d", $it['id']), ARRAY_A);
+			foreach ($it['fields'] as $k => $v) $bak['fields'][$k] = $p[$k];
+			foreach ($it['meta'] as $mid => $m) $bak['meta'][$mid] = array('key' => $m['key'], 'old' => $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_id = %d", $mid)));
+			if (!$wpdb->insert($wpdb->postmeta, array('post_id' => $it['id'], 'meta_key' => '_dabul_textbak', 'meta_value' => wp_json_encode($bak, JSON_UNESCAPED_UNICODE)))) { $done[] = array('id' => $it['id'], 'error' => 'backup failed'); continue; }
+			if ($it['fields']) $wpdb->update($wpdb->posts, $it['fields'], array('ID' => $it['id']));
+			foreach ($it['meta'] as $mid => $m) $wpdb->update($wpdb->postmeta, array('meta_value' => $m['new']), array('meta_id' => $mid));
+			clean_post_cache($it['id']); wp_cache_delete($it['id'], 'post_meta'); delete_post_meta($it['id'], '_elementor_css'); delete_post_meta($it['id'], '_elementor_element_cache');
+			if (function_exists('rocket_clean_post')) rocket_clean_post($it['id']);
+			$done[] = array('id' => $it['id'], 'n' => $it['n']);
+		}
+		if (class_exists('\Elementor\Plugin')) \Elementor\Plugin::$instance->files_manager->clear_cache();
+		return array('done' => $done);
+	}));
 	register_rest_route('dabul/v1', '/namefix-undo', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
 		global $wpdb;
 		$out = array();
