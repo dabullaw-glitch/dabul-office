@@ -1,0 +1,19 @@
+0 403 https://www.gov.il/he/service/real_eatate_taxsimulator | רק רגע... | www.gov.il
+1 null https://www.misim.gov.il/svsimurechisha/ | undefined | undefined
+2 null https://www.misim.gov.il/svsimushevach/ | undefined | undefined
+3 200 https://www.gov.il/he/service/real-estate-tax-7000 | טופס הצהרה על מכירת ורכישת נכס מקרקעין (טופס 7000) | רשות המסים בישראל | טופס הצהרה על מכירת ורכישת נכס מקרקעין (טופס 7000)
+4 403 https://www.netanya.muni.il/CityHall/Engineering/Pages/ScannedBuildingsPlans.aspx | Attention Required! | Cloudflare | Sorry, you have been blocked
+5 403 https://www.netanya.muni.il/Residents/Arnona/CustomerService/Pages/default.aspx | Attention Required! | Cloudflare | Sorry, you have been blocked
+6 200 https://mavat.iplan.gov.il/ | מידע תכנוני - מינהל התכנון | אתר מידע תכנוני
+7 200 https://www.govmap.gov.il/ | Govmap מפות ישראל | 
+8 200 https://www.cbs.gov.il/he/Pages/%D7%9E%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%94%D7%A6%D7%9E%D7%93%D7%94.aspx | Oops, Something is wrong | 
+9 404 https://www.boi.org.il/information-and-service-to-the-public/interest-rates-and-early-repayment-fees/interest-rate-comparisons-housing-loans/ | 404 | בנק ישראל - הבנק המרכזי של ישראל | 404
+10 403 https://www.gov.il/he/service/request_for_eligibility_confirmation | Attention Required! | Cloudflare | Sorry, you have been blocked
+11 200 https://www.govmap.gov.il/?lay=200720 | Govmap מפות ישראל - מתחמי התחדשות עירונית | 
+12 403 https://www.gov.il/he/service/edit_and_deposit_continuous_power_of_attorney | Attention Required! | Cloudflare | Sorry, you have been blocked
+13 403 https://www.gov.il/he/service/inheritance_order | Attention Required! | Cloudflare | Sorry, you have been blocked
+14 403 https://www.kolzchut.org.il/he/%D7%91%D7%A7%D7%A9%D7%94_%D7%9C%D7%A6%D7%95_%D7%99%D7%A8%D7%95%D7%A9%D7%94 | רק רגע... | www.kolzchut.org.il
+15 403 https://www.gov.il/he/service/company_extract | Attention Required! | Cloudflare | Sorry, you have been blocked
+16 null https://www.gov.il/BlobFolder/service/real-estate-tax-7000/en/Service_Pages_Real_Estate_Taxation_real-estate-tax-7002.pdf | undefined | undefined
+17 403 https://www.gov.il/he/departments/dynamiccollectors/formslist | Attention Required! | Cloudflare | Sorry, you have been blocked
+18 403 https://www.gov.il/he/service/guide-transfer-rights | Attention Required! | Cloudflare | Sorry, you have been blocked
