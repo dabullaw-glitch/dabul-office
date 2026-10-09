@@ -1,0 +1,97 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "desktop",
+ "at": "2026-10-09T08:24:14.565Z",
+ "runs": [
+  {
+   "score": 90,
+   "fcp": 1069.771,
+   "lcp": 1684.9944999999998,
+   "si": 1585.229383003818,
+   "tbt": 72,
+   "cls": 0.00019089312218202028,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-9a271d9c-e980-4a12-80cd-e1d4f68f629b=\"excluded\" data-rocket-lazy-bg-7c218c46-4ade-43fe-88e4-40a25243fb83=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     745
+    ],
+    [
+     "resourceLoadDelay",
+     80
+    ],
+    [
+     "resourceLoadDuration",
+     588
+    ],
+    [
+     "elementRenderDelay",
+     103
+    ]
+   ],
+   "renderBlocking": [],
+   "bytes": 418692,
+   "docBytes": 166088
+  },
+  {
+   "score": 95,
+   "fcp": 414.062,
+   "lcp": 725.9999999999999,
+   "si": 891.7288592182763,
+   "tbt": 0,
+   "cls": 0.1365519662921348,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-9a271d9c-e980-4a12-80cd-e1d4f68f629b=\"excluded\" data-rocket-lazy-bg-7c218c46-4ade-43fe-88e4-40a25243fb83=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     717
+    ],
+    [
+     "resourceLoadDelay",
+     6
+    ],
+    [
+     "resourceLoadDuration",
+     51
+    ],
+    [
+     "elementRenderDelay",
+     309
+    ]
+   ],
+   "renderBlocking": [],
+   "bytes": 418942,
+   "docBytes": 166381
+  },
+  {
+   "score": 94,
+   "fcp": 419.355,
+   "lcp": 740.7920000000001,
+   "si": 896.6816870284814,
+   "tbt": 0,
+   "cls": 0.1365519662921348,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-9a271d9c-e980-4a12-80cd-e1d4f68f629b=\"excluded\" data-rocket-lazy-bg-7c218c46-4ade-43fe-88e4-40a25243fb83=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     729
+    ],
+    [
+     "resourceLoadDelay",
+     6
+    ],
+    [
+     "resourceLoadDuration",
+     38
+    ],
+    [
+     "elementRenderDelay",
+     312
+    ]
+   ],
+   "renderBlocking": [],
+   "bytes": 418791,
+   "docBytes": 166229
+  }
+ ]
+}
