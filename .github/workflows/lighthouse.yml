@@ -1,0 +1,45 @@
+name: lighthouse check
+# Runs Lighthouse (the engine behind PageSpeed Insights, same mobile settings) on a page, 3 times, and saves the scores
+# to tools/lighthouse/<name>.json so the office assistant can compare before and after a speed change.
+on:
+  workflow_dispatch:
+    inputs:
+      url: { description: 'page address', required: true, default: 'https://dabullaw.co.il/' }
+      name: { description: 'result name', required: true, default: 'home' }
+      preset: { description: 'mobile or desktop', required: true, default: 'mobile' }
+permissions:
+  contents: write
+concurrency: { group: lighthouse, cancel-in-progress: false }
+jobs:
+  lh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Lighthouse x3
+        run: |
+          mkdir -p tools/lighthouse /tmp/lh
+          P=""; [ "${{ inputs.preset }}" = "desktop" ] && P="--preset=desktop"
+          for i in 1 2 3; do
+            npx -y lighthouse@12 "${{ inputs.url }}" $P --only-categories=performance --output=json --output-path=/tmp/lh/r$i.json --chrome-flags="--headless=new --no-sandbox" --quiet || true
+          done
+          node -e '
+            const fs=require("fs"); const out=[];
+            for (const i of [1,2,3]) { try { const j=JSON.parse(fs.readFileSync(`/tmp/lh/r${i}.json`,"utf8")); const a=j.audits;
+              const pick=(k)=>a[k]?.numericValue;
+              const rb=(a["render-blocking-insight"]||a["render-blocking-resources"]||{}).details?.items||[];
+              out.push({score:Math.round(j.categories.performance.score*100), fcp:pick("first-contentful-paint"), lcp:pick("largest-contentful-paint"), si:pick("speed-index"), tbt:pick("total-blocking-time"), cls:pick("cumulative-layout-shift"),
+                lcpEl:a["largest-contentful-paint-element"]?.details?.items?.[0]?.items?.[0]?.node?.snippet||a["lcp-breakdown-insight"]?.details?.items?.[1]?.snippet||"",
+                lcpParts:(a["lcp-breakdown-insight"]?.details?.items?.[0]?.items||[]).map(x=>[x.subpart,Math.round(x.duration)]),
+                renderBlocking:rb.map(x=>[x.url, Math.round(x.wastedMs||x.duration||0)]).slice(0,40),
+                bytes:pick("total-byte-weight"), docBytes:(a["network-requests"]?.details?.items||[])[0]?.transferSize}); } catch(e) { out.push({error:String(e)}); } }
+            fs.writeFileSync("tools/lighthouse/${{ inputs.name }}.json", JSON.stringify({url:"${{ inputs.url }}", preset:"${{ inputs.preset }}", at:new Date().toISOString(), runs:out}, null, 1));
+            console.log(out.map(o=>o.score));'
+      - name: Save
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add tools/lighthouse
+          git commit -qm "lighthouse: ${{ inputs.name }}" || exit 0
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
