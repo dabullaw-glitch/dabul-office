@@ -43,7 +43,7 @@ for (let i = 0; i < spec.scenes.length; i++) {
 }
 fs.writeFileSync(path.join(tmp, 'list.txt'), parts.map((p) => `file '${p.file}'`).join('\n'));
 const audio = path.join(tmp, 'audio.wav');
-ff(['-f', 'concat', '-safe', '0', '-i', path.join(tmp, 'list.txt'), '-c', 'copy', audio]);
+ff(['-f', 'concat', '-safe', '0', '-i', path.join(tmp, 'list.txt'), '-af', 'loudnorm=I=-16:TP=-1.5:LRA=11', '-ar', '48000', audio]); // YouTube plays at about -14 LUFS
 
 // 2. captions: the narration split into short chunks, timed by length inside each scene
 const chunks = (t) => {
