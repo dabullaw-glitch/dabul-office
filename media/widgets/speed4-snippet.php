@@ -11,7 +11,7 @@
    list, so they are not lazy-loaded; the settings before that are kept in the option dabul_rocket_backup_sp4.
    Checked on a preview address on 9.10.2026 (phone and computer, slice by slice: same look, no script errors).
    Yakir approved, now live. To undo: deactivate this snippet. */
-// define('DABUL_SP4_LIVE', 1);
+define('DABUL_SP4_LIVE', 1);
 
 function dabul_sp4_on() {
 	if (defined('DABUL_SP4_LIVE')) return true;
