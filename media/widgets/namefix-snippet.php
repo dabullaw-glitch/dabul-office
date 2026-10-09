@@ -174,6 +174,7 @@ add_action('rest_api_init', function () {
 				if (isset($it['id']) && $it['id'] === $el) {
 					if (!isset($it['settings']) || !is_array($it['settings'])) $it['settings'] = array();
 					$it['settings']['link'] = array('url' => $url, 'is_external' => '', 'nofollow' => '', 'custom_attributes' => '');
+					if (isset($it['settings']['__dynamic__']['link'])) unset($it['settings']['__dynamic__']['link']);
 					$found++;
 				}
 				if (!empty($it['elements'])) $walk($it['elements']);
@@ -188,6 +189,16 @@ add_action('rest_api_init', function () {
 		if (class_exists('\Elementor\Plugin')) \Elementor\Plugin::$instance->files_manager->clear_cache();
 		if (function_exists('rocket_clean_post')) rocket_clean_post($pid);
 		return array('ok' => true, 'post' => $pid, 'el' => $el, 'url' => $url);
+	}));
+	register_rest_route('dabul/v1', '/elget', array('methods' => 'GET', 'permission_callback' => $perm, 'callback' => function ($req) {
+		global $wpdb;
+		$pid = (int) $req->get_param('post'); $el = (string) $req->get_param('el');
+		$raw = $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = '_elementor_data' LIMIT 1", $pid));
+		$d = json_decode((string) $raw, true); $hit = array();
+		$walk = function ($items) use (&$walk, $el, &$hit) { foreach ((array) $items as $it) { if (isset($it['id']) && $it['id'] === $el) $hit[] = $it; if (!empty($it['elements'])) $walk($it['elements']); } };
+		$walk($d);
+		$tpl = get_post_meta($pid, '_elementor_template_type', true);
+		return array('found' => $hit, 'template_type' => $tpl, 'edit_mode' => get_post_meta($pid, '_elementor_edit_mode', true));
 	}));
 	register_rest_route('dabul/v1', '/namefix-undo', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
 		global $wpdb;
