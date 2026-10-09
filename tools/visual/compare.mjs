@@ -23,7 +23,20 @@ for (const [dev, ctxOpts] of [['phone', { ...devices['Pixel 7'] }], ['computer',
       await p.evaluate((v) => window.scrollTo(0, v), y); await p.waitForTimeout(900);
       await p.screenshot({ path: `${out}/${dev}-${tag}-${String(i).padStart(2, '0')}.png` });
     }
-    report[`${dev}-${tag}`] = { errors, ...(await p.evaluate(() => ({ h: document.documentElement.scrollHeight, w: document.documentElement.scrollWidth,
+    // the accessibility panel: open it, take a picture, count the languages it offers
+    let panel = null;
+    try {
+      await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(500);
+      const btn = p.locator('[class*="onetap-toggle"], #onetap-toggle, button[class*="onetap"], a[class*="onetap"]').first();
+      await btn.click({ timeout: 5000 }); await p.waitForTimeout(1500);
+      await p.screenshot({ path: `${out}/${dev}-${tag}-panel.png` });
+      const lang = p.locator('[class*="onetap"] [class*="language"]').first();
+      await lang.click({ timeout: 3000 }).catch(() => {}); await p.waitForTimeout(800);
+      await p.screenshot({ path: `${out}/${dev}-${tag}-panel-lang.png` });
+      panel = await p.evaluate(() => ({ visible: [...document.querySelectorAll('[class*="onetap"]')].some((e) => e.offsetHeight > 200),
+        langItems: [...document.querySelectorAll('[class*="onetap"] [class*="language"] li, [class*="onetap"] [class*="languages"] [data-language]')].map((e) => e.textContent.trim()).slice(0, 60) }));
+    } catch (e) { panel = { error: String(e.message || e).slice(0, 200) }; }
+    report[`${dev}-${tag}`] = { errors, panel, ...(await p.evaluate(() => ({ h: document.documentElement.scrollHeight, w: document.documentElement.scrollWidth,
       invisible: [...document.querySelectorAll('.elementor-invisible')].map((e) => e.getAttribute('data-id')), styles: document.querySelectorAll('style').length, links: document.querySelectorAll('link[rel=stylesheet]').length }))) };
     await ctx.close();
   }
