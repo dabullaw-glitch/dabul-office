@@ -1,0 +1,1 @@
+{"phone-a":{"errors":[],"h":14423,"w":412,"invisible":[],"styles":49,"links":41},"phone-b":{"errors":[],"h":14423,"w":412,"invisible":[],"styles":74,"links":16},"computer-a":{"errors":[],"h":12563,"w":1366,"invisible":[],"styles":49,"links":41},"computer-b":{"errors":[],"h":12563,"w":1366,"invisible":[],"styles":74,"links":16}}
