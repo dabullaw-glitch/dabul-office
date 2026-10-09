@@ -25,7 +25,7 @@ jobs:
           mkdir -p tools/visual/${{ inputs.name }}; cp /tmp/cmp.log tools/visual/${{ inputs.name }}/log.txt
           rm tools/office-video/compare.mjs
           sudo apt-get install -yq imagemagick >/dev/null 2>&1 || true
-          for f in tools/visual/${{ inputs.name }}/*.png; do mogrify -resize '50%' "$f" || true; done
+          for f in tools/visual/${{ inputs.name }}/*.png; do mogrify -resize '50%' -quality 80 "$f" || true; done
       - name: Save
         run: |
           git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"

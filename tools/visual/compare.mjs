@@ -1,6 +1,6 @@
 // Visual check before a site change goes live: the same page with and without the change, on a phone and a computer.
-// Scrolls slowly through the page like a visitor (so lazy pictures and entrance animations run), then takes a full-page
-// picture of each, and writes a difference report. Usage: node compare.mjs <urlA> <urlB> <name>
+// Scrolls through the page like a visitor (so lazy pictures and entrance animations run) and takes a picture of every
+// screen-height slice. Also records script errors and elements that stayed hidden. Usage: node compare.mjs <urlA> <urlB> <name>
 import { chromium, devices } from 'playwright';
 import fs from 'node:fs';
 const [A, B, name] = process.argv.slice(2);
@@ -11,19 +11,20 @@ for (const [dev, ctxOpts] of [['phone', { ...devices['Pixel 7'] }], ['computer',
   for (const [tag, url] of [['a', A], ['b', B]]) {
     const ctx = await b.newContext({ ...ctxOpts, locale: 'he-IL' });
     const p = await ctx.newPage();
+    const errors = [];
+    p.on('pageerror', (e) => errors.push(String(e.message || e).slice(0, 200)));
     await p.goto(url, { waitUntil: 'load', timeout: 60000 });
     await p.waitForTimeout(1500);
-    // a visitor: touch + scroll down slowly, then back to the top
-    await p.mouse.move(50, 50).catch(() => {});
+    await p.addStyleTag({ content: '.elementor-popup-modal{display:none!important}' }).catch(() => {});
+    const vh = p.viewportSize().height;
     const H = await p.evaluate(() => document.documentElement.scrollHeight);
-    for (let y = 0; y < H; y += 500) { await p.evaluate((v) => window.scrollTo(0, v), y); await p.waitForTimeout(250); }
-    await p.waitForTimeout(2500);
-    await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(800);
-    // hide the cookie window so both pictures show the page itself
-    await p.addStyleTag({ content: '.elementor-popup-modal,#dbl-cookie{display:none!important}' }).catch(() => {});
-    await p.screenshot({ path: `${out}/${dev}-${tag}.png`, fullPage: true });
-    report[`${dev}-${tag}`] = await p.evaluate(() => ({ h: document.documentElement.scrollHeight, w: document.documentElement.scrollWidth,
-      invisible: [...document.querySelectorAll('.elementor-invisible')].length, styles: document.querySelectorAll('style').length, links: document.querySelectorAll('link[rel=stylesheet]').length }));
+    let i = 0;
+    for (let y = 0; y < H && i < 30; y += vh, i++) {
+      await p.evaluate((v) => window.scrollTo(0, v), y); await p.waitForTimeout(900);
+      await p.screenshot({ path: `${out}/${dev}-${tag}-${String(i).padStart(2, '0')}.png` });
+    }
+    report[`${dev}-${tag}`] = { errors, ...(await p.evaluate(() => ({ h: document.documentElement.scrollHeight, w: document.documentElement.scrollWidth,
+      invisible: [...document.querySelectorAll('.elementor-invisible')].map((e) => e.getAttribute('data-id')), styles: document.querySelectorAll('style').length, links: document.querySelectorAll('link[rel=stylesheet]').length }))) };
     await ctx.close();
   }
 }
