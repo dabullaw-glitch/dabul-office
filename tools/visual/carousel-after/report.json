@@ -1,0 +1,897 @@
+{
+ "phone": {
+  "loadAt": 3670,
+  "scrollStart": 5688,
+  "inView": 7188,
+  "errors": [],
+  "samples": [
+   {
+    "t": 8,
+    "onScreen": 7,
+    "empty": 7,
+    "swiper": false,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 474,
+    "onScreen": 7,
+    "empty": 7,
+    "swiper": false,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 733,
+    "onScreen": 7,
+    "empty": 5,
+    "swiper": false,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 987,
+    "onScreen": 7,
+    "empty": 0,
+    "swiper": false,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 1241,
+    "onScreen": 7,
+    "empty": 0,
+    "swiper": false,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 2417,
+    "onScreen": 7,
+    "empty": 0,
+    "swiper": false,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 2910,
+    "onScreen": 7,
+    "empty": 0,
+    "swiper": false,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 3197,
+    "onScreen": 7,
+    "empty": 0,
+    "swiper": false,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 3478,
+    "onScreen": 7,
+    "empty": 0,
+    "swiper": false,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 4937,
+    "onScreen": 7,
+    "empty": 0,
+    "swiper": false,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 6027,
+    "onScreen": 7,
+    "empty": 0,
+    "swiper": false,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 7459,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 7779,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 8251,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 8520,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 8787,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 9147,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 9983,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 10260,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 10532,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 10797,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 11051,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 11306,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 11603,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 11859,
+    "onScreen": 2,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 12135,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 12390,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 12644,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 12898,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 13152,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 13406,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 13661,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 13915,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 14537,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 14822,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 15089,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 15353,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 15677,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 15931,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 16185,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 16441,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 16694,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 16949,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 17235,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 17490,
+    "onScreen": 2,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 17769,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 18023,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 18298,
+    "onScreen": 3,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   }
+  ],
+  "net": {
+   "%D7%94%D7%9B%D7%A9%D7%A8%D7%AA-%D7%A2%D7%95%D7%A8%D7%9B%D7%99-%D7%93%D7%99%D7%9F.webp": {
+    "req": 6368,
+    "done": 9335,
+    "bytes": 30873,
+    "reqAfterView": -820,
+    "doneAfterView": 2147
+   },
+   "%D7%94%D7%A9%D7%AA%D7%AA%D7%A4%D7%95%D7%AA-%D7%91%D7%94%D7%A9%D7%AA%D7%9C%D7%9E%D7%95%D7%AA-%D7%9E%D7%99%D7%A1%D7%95%D7%99-%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F.webp": {
+    "req": 6368,
+    "done": 8909,
+    "bytes": 28933,
+    "reqAfterView": -820,
+    "doneAfterView": 1721
+   },
+   "%D7%94%D7%A9%D7%AA%D7%AA%D7%A4%D7%95%D7%AA-%D7%91%D7%A7%D7%95%D7%A8%D7%A1-%D7%99%D7%99%D7%A6%D7%95%D7%92-%D7%97%D7%99%D7%99%D7%91%D7%99%D7%9D-%D7%9C%D7%94%D7%A4%D7%98%D7%A8.webp": {
+    "req": 6368,
+    "done": 9336,
+    "bytes": 30683,
+    "reqAfterView": -820,
+    "doneAfterView": 2148
+   },
+   "%D7%97%D7%91%D7%A8-%D7%91%D7%9C%D7%A9%D7%9B%D7%AA-%D7%A2%D7%95%D7%A8%D7%9B%D7%99-%D7%94%D7%93%D7%99%D7%9F.webp": {
+    "req": 6368,
+    "done": 9337,
+    "bytes": 30752,
+    "reqAfterView": -820,
+    "doneAfterView": 2149
+   },
+   "%D7%A7%D7%95%D7%A8%D7%A1-%D7%94%D7%AA%D7%97%D7%93%D7%A9%D7%95%D7%AA-%D7%A2%D7%99%D7%A8%D7%95%D7%A0%D7%99%D7%AA.webp": {
+    "req": 6369,
+    "done": 9327,
+    "bytes": 30899,
+    "reqAfterView": -819,
+    "doneAfterView": 2139
+   },
+   "%D7%AA%D7%95%D7%90%D7%A8-%D7%91%D7%95%D7%92%D7%A8-%D7%91%D7%9E%D7%A9%D7%A4%D7%98%D7%99%D7%9D-LLB.webp": {
+    "req": 6369,
+    "done": 8936,
+    "bytes": 29744,
+    "reqAfterView": -819,
+    "doneAfterView": 1748
+   },
+   "Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp": {
+    "req": 6502,
+    "done": 8121,
+    "bytes": 14192,
+    "reqAfterView": -686,
+    "doneAfterView": 933
+   },
+   "Media-1-20A63BE0-A957-492B-A856-D9A2B4A8395C-300x225.webp": {
+    "req": 6502,
+    "done": 7897,
+    "bytes": 11401,
+    "reqAfterView": -686,
+    "doneAfterView": 709
+   },
+   "Media-3-238885F3-ACD1-4890-BB7A-84A00AC6676E-300x300.webp": {
+    "req": 6502,
+    "done": 8136,
+    "bytes": 13733,
+    "reqAfterView": -686,
+    "doneAfterView": 948
+   },
+   "Media-2-648D13FE-A64F-4051-8FAF-1F0B3BFDB894-300x225.webp": {
+    "req": 6502,
+    "done": 8009,
+    "bytes": 12761,
+    "reqAfterView": -686,
+    "doneAfterView": 821
+   },
+   "496224849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp": {
+    "req": 6635,
+    "done": 8018,
+    "bytes": 11732,
+    "reqAfterView": -553,
+    "doneAfterView": 830
+   },
+   "582970595_693738957140887_6466542977824114968_n-300x189.jpg.webp": {
+    "req": 6635,
+    "done": 8025,
+    "bytes": 11884,
+    "reqAfterView": -553,
+    "doneAfterView": 837
+   },
+   "7-1-300x300.webp": {
+    "req": 13833,
+    "done": 14330,
+    "bytes": 18824,
+    "reqAfterView": 6645,
+    "doneAfterView": 7142
+   }
+  }
+ },
+ "computer": {
+  "loadAt": 1735,
+  "scrollStart": 3741,
+  "inView": 5514,
+  "errors": [],
+  "samples": [
+   {
+    "t": 2,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 410,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 661,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 913,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 1166,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 1557,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 1812,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 2084,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 2336,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 2729,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 2982,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 3235,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 3487,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 3740,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 3992,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 4245,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "//dabullaw.co.il/wp-content/uploads/2026/05/7-1-300x300.webp"
+   },
+   {
+    "t": 4498,
+    "onScreen": 8,
+    "empty": 1,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 4884,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 5136,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 5389,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 5641,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 5893,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 6148,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 6401,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 6653,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 6906,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 7158,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 7411,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 7664,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 7917,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 8169,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 8422,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 8675,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 9060,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 9312,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 9565,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 9817,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp"
+   },
+   {
+    "t": 10069,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 10321,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 10574,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 10827,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 11079,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 11332,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 11584,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 11837,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 12089,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 12341,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   },
+   {
+    "t": 12593,
+    "onScreen": 8,
+    "empty": 0,
+    "swiper": true,
+    "firstSrc": "849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp"
+   }
+  ],
+  "net": {
+   "bgmain.webp": {
+    "req": 456,
+    "done": 466,
+    "bytes": 26408,
+    "reqAfterView": -5058,
+    "doneAfterView": -5048
+   },
+   "%D7%94%D7%9B%D7%A9%D7%A8%D7%AA-%D7%A2%D7%95%D7%A8%D7%9B%D7%99-%D7%93%D7%99%D7%9F.webp": {
+    "req": 675,
+    "done": 692,
+    "bytes": 30867,
+    "reqAfterView": -4839,
+    "doneAfterView": -4822
+   },
+   "%D7%94%D7%A9%D7%AA%D7%AA%D7%A4%D7%95%D7%AA-%D7%91%D7%94%D7%A9%D7%AA%D7%9C%D7%9E%D7%95%D7%AA-%D7%9E%D7%99%D7%A1%D7%95%D7%99-%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F.webp": {
+    "req": 677,
+    "done": 690,
+    "bytes": 28930,
+    "reqAfterView": -4837,
+    "doneAfterView": -4824
+   },
+   "%D7%94%D7%A9%D7%AA%D7%AA%D7%A4%D7%95%D7%AA-%D7%91%D7%A7%D7%95%D7%A8%D7%A1-%D7%99%D7%99%D7%A6%D7%95%D7%92-%D7%97%D7%99%D7%99%D7%91%D7%99%D7%9D-%D7%9C%D7%94%D7%A4%D7%98%D7%A8.webp": {
+    "req": 677,
+    "done": 704,
+    "bytes": 30688,
+    "reqAfterView": -4837,
+    "doneAfterView": -4810
+   },
+   "%D7%97%D7%91%D7%A8-%D7%91%D7%9C%D7%A9%D7%9B%D7%AA-%D7%A2%D7%95%D7%A8%D7%9B%D7%99-%D7%94%D7%93%D7%99%D7%9F.webp": {
+    "req": 677,
+    "done": 692,
+    "bytes": 30748,
+    "reqAfterView": -4837,
+    "doneAfterView": -4822
+   },
+   "%D7%A7%D7%95%D7%A8%D7%A1-%D7%94%D7%AA%D7%97%D7%93%D7%A9%D7%95%D7%AA-%D7%A2%D7%99%D7%A8%D7%95%D7%A0%D7%99%D7%AA.webp": {
+    "req": 677,
+    "done": 689,
+    "bytes": 30897,
+    "reqAfterView": -4837,
+    "doneAfterView": -4825
+   },
+   "%D7%AA%D7%95%D7%90%D7%A8-%D7%91%D7%95%D7%92%D7%A8-%D7%91%D7%9E%D7%A9%D7%A4%D7%98%D7%99%D7%9D-LLB.webp": {
+    "req": 677,
+    "done": 704,
+    "bytes": 29744,
+    "reqAfterView": -4837,
+    "doneAfterView": -4810
+   },
+   "Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-300x225.webp": {
+    "req": 3976,
+    "done": 3997,
+    "bytes": 14191,
+    "reqAfterView": -1538,
+    "doneAfterView": -1517
+   },
+   "496224849_2272487996499866_580159593228069400_n-3-300x225.jpg.webp": {
+    "req": 3976,
+    "done": 3996,
+    "bytes": 11736,
+    "reqAfterView": -1538,
+    "doneAfterView": -1518
+   },
+   "582970595_693738957140887_6466542977824114968_n-300x189.jpg.webp": {
+    "req": 3976,
+    "done": 3997,
+    "bytes": 11893,
+    "reqAfterView": -1538,
+    "doneAfterView": -1517
+   },
+   "Media-1-20A63BE0-A957-492B-A856-D9A2B4A8395C-300x225.webp": {
+    "req": 3976,
+    "done": 3998,
+    "bytes": 11393,
+    "reqAfterView": -1538,
+    "doneAfterView": -1516
+   },
+   "Media-3-238885F3-ACD1-4890-BB7A-84A00AC6676E-300x300.webp": {
+    "req": 3976,
+    "done": 3997,
+    "bytes": 13734,
+    "reqAfterView": -1538,
+    "doneAfterView": -1517
+   },
+   "Media-2-648D13FE-A64F-4051-8FAF-1F0B3BFDB894-300x225.webp": {
+    "req": 3976,
+    "done": 4000,
+    "bytes": 12760,
+    "reqAfterView": -1538,
+    "doneAfterView": -1514
+   },
+   "7-1-300x300.webp": {
+    "req": 4785,
+    "done": 4790,
+    "bytes": 18824,
+    "reqAfterView": -729,
+    "doneAfterView": -724
+   },
+   "4-300x300.jpg.webp": {
+    "req": 10028,
+    "done": 10138,
+    "bytes": 13443,
+    "reqAfterView": 4514,
+    "doneAfterView": 4624
+   },
+   "574482520_10166278890599838_1653346198526951860_n-225x300.jpg.webp": {
+    "req": 15560,
+    "done": 15570,
+    "bytes": 12647,
+    "reqAfterView": 10046,
+    "doneAfterView": 10056
+   }
+  }
+ }
+}
