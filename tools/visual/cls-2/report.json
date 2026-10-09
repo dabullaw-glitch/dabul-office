@@ -1,0 +1,498 @@
+{
+ "https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | phone | 1": {
+  "cls": 0,
+  "total": 0,
+  "shifts": []
+ },
+ "https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | phone | 2": {
+  "cls": 0,
+  "total": 0,
+  "shifts": []
+ },
+ "https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | computer | 1": {
+  "cls": 0.21,
+  "total": 0.233,
+  "shifts": [
+   {
+    "t": 980,
+    "v": 0.0069,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     }
+    ]
+   },
+   {
+    "t": 1035,
+    "v": 0.2029,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]",
+      "from": [
+       115,
+       496
+      ],
+      "to": [
+       115,
+       745
+      ],
+      "parent": "div.e-con-inner"
+     },
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       275,
+       349
+      ],
+      "to": [
+       275,
+       479
+      ],
+      "parent": "div.elementor.elementor-920"
+     },
+     {
+      "el": "div.elementor-element-9e1a1df.elementor-widget__width-inherit.elementor-hidden-tablet.elementor-hidden-mobile[9e1a1df]",
+      "from": [
+       102,
+       199
+      ],
+      "to": [
+       102,
+       199
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     },
+     {
+      "el": "svg.elementor-toc__spinner.eicon-animation-spin.e-font-icon-svg.e-eicon-loading",
+      "from": [
+       228,
+       39
+      ],
+      "to": [
+       216,
+       39
+      ],
+      "parent": "div.elementor-toc__spinner-container"
+     }
+    ]
+   },
+   {
+    "t": 4339,
+    "v": 0.0032,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   },
+   {
+    "t": 4417,
+    "v": 0.0194,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       270,
+       479
+      ],
+      "to": [
+       400,
+       479
+      ],
+      "parent": "div.elementor.elementor-920"
+     },
+     {
+      "el": "div.elementor-element-a334cbd.elementor-widget-html[a334cbd]",
+      "from": [
+       746,
+       99
+      ],
+      "to": [
+       876,
+       24
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     },
+     {
+      "el": "div",
+      "from": [
+       790,
+       55
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "a"
+     }
+    ]
+   }
+  ]
+ },
+ "https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | computer | 2": {
+  "cls": 0.21,
+  "total": 0.232,
+  "shifts": [
+   {
+    "t": 1093,
+    "v": 0.0069,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     }
+    ]
+   },
+   {
+    "t": 1146,
+    "v": 0.2029,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]",
+      "from": [
+       115,
+       496
+      ],
+      "to": [
+       115,
+       745
+      ],
+      "parent": "div.e-con-inner"
+     },
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       275,
+       349
+      ],
+      "to": [
+       275,
+       479
+      ],
+      "parent": "div.elementor.elementor-920"
+     },
+     {
+      "el": "div.elementor-element-9e1a1df.elementor-widget__width-inherit.elementor-hidden-tablet.elementor-hidden-mobile[9e1a1df]",
+      "from": [
+       102,
+       199
+      ],
+      "to": [
+       102,
+       199
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     },
+     {
+      "el": "svg.elementor-toc__spinner.eicon-animation-spin.e-font-icon-svg.e-eicon-loading",
+      "from": [
+       228,
+       39
+      ],
+      "to": [
+       216,
+       39
+      ],
+      "parent": "div.elementor-toc__spinner-container"
+     }
+    ]
+   },
+   {
+    "t": 4459,
+    "v": 0.0032,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   },
+   {
+    "t": 4537,
+    "v": 0.0194,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       270,
+       479
+      ],
+      "to": [
+       400,
+       479
+      ],
+      "parent": "div.elementor.elementor-920"
+     },
+     {
+      "el": "div.elementor-element-a334cbd.elementor-widget-html[a334cbd]",
+      "from": [
+       746,
+       99
+      ],
+      "to": [
+       876,
+       24
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     },
+     {
+      "el": "div",
+      "from": [
+       790,
+       55
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "a"
+     }
+    ]
+   }
+  ]
+ },
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/ | phone | 1": {
+  "cls": 0,
+  "total": 0,
+  "shifts": []
+ },
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/ | phone | 2": {
+  "cls": 0,
+  "total": 0,
+  "shifts": []
+ },
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/ | computer | 1": {
+  "cls": 0.576,
+  "total": 0.576,
+  "shifts": [
+   {
+    "t": 5131,
+    "v": 0.5156,
+    "input": false,
+    "y": 300,
+    "src": [
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       0,
+       388
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "div.elementor.elementor-920"
+     },
+     {
+      "el": "div.elementor-element-a334cbd.elementor-widget-html[a334cbd]",
+      "from": [
+       365,
+       99
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     }
+    ]
+   },
+   {
+    "t": 5189,
+    "v": 0.0032,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   },
+   {
+    "t": 5290,
+    "v": 0.0574,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       275,
+       626
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "div.elementor.elementor-920"
+     }
+    ]
+   }
+  ]
+ },
+ "https://dabullaw.co.il/legal-sublet-rental-agreement-guide/ | computer | 2": {
+  "cls": 0.185,
+  "total": 0.185,
+  "shifts": [
+   {
+    "t": 3569,
+    "v": 0.1822,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "div.elementor-element-a334cbd.elementor-widget-html[a334cbd]",
+      "from": [
+       65,
+       99
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     },
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       0,
+       88
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "div.elementor.elementor-920"
+     }
+    ]
+   },
+   {
+    "t": 3682,
+    "v": 0.0032,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   }
+  ]
+ }
+}
