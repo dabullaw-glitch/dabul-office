@@ -20,9 +20,10 @@ jobs:
       - name: Shots
         run: |
           cd tools/office-video && npm install --no-audit --no-fund && npx playwright install --with-deps chromium && cd ../..
-          ln -s ../office-video/node_modules tools/visual/node_modules
-          node tools/visual/compare.mjs "${{ inputs.a }}" "${{ inputs.b }}" "${{ inputs.name }}"
-          rm tools/visual/node_modules
+          cp tools/visual/compare.mjs tools/office-video/compare.mjs
+          node tools/office-video/compare.mjs "${{ inputs.a }}" "${{ inputs.b }}" "${{ inputs.name }}" 2>&1 | tee /tmp/cmp.log || true
+          mkdir -p tools/visual/${{ inputs.name }}; cp /tmp/cmp.log tools/visual/${{ inputs.name }}/log.txt
+          rm tools/office-video/compare.mjs
           sudo apt-get install -yq imagemagick >/dev/null 2>&1 || true
           for f in tools/visual/${{ inputs.name }}/*.png; do mogrify -resize '50%' "$f" || true; done
       - name: Save
