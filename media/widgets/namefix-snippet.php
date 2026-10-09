@@ -295,4 +295,34 @@ add_action('rest_api_init', function () {
 		if (class_exists('\Elementor\Plugin')) \Elementor\Plugin::$instance->files_manager->clear_cache();
 		return array('done' => $out);
 	}));
+	// Yoast title + description of pages Yakir approved (9.10.2026: search titles round 1).
+	// body {items:[{path,title,desc}], dry, undo}. The old values are kept first in _dabul_seobak of the same post.
+	register_rest_route('dabul/v1', '/seometa', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
+		$dry = (bool) $req->get_param('dry'); $undo = (bool) $req->get_param('undo'); $out = array();
+		foreach ((array) $req->get_param('items') as $it) {
+			$path = isset($it['path']) ? (string) $it['path'] : '';
+			$id = url_to_postid(home_url($path));
+			$o = array('path' => $path, 'id' => $id);
+			if (!$id) { $o['error'] = 'not found'; $out[] = $o; continue; }
+			$o['old'] = array('title' => (string) get_post_meta($id, '_yoast_wpseo_title', true), 'desc' => (string) get_post_meta($id, '_yoast_wpseo_metadesc', true));
+			$bak = get_post_meta($id, '_dabul_seobak', true);
+			if ($undo) {
+				if (!$bak) { $o['error'] = 'no backup'; $out[] = $o; continue; }
+				$b = json_decode($bak, true);
+				if (!$dry) { update_post_meta($id, '_yoast_wpseo_title', wp_slash($b['title'])); update_post_meta($id, '_yoast_wpseo_metadesc', wp_slash($b['desc'])); }
+				$o['restored'] = $b;
+			} else {
+				$t = isset($it['title']) ? trim((string) $it['title']) : ''; $d = isset($it['desc']) ? trim((string) $it['desc']) : '';
+				if ($t === '' || $d === '') { $o['error'] = 'empty'; $out[] = $o; continue; }
+				if (!$dry) {
+					if (!$bak) add_post_meta($id, '_dabul_seobak', wp_slash(wp_json_encode($o['old'], JSON_UNESCAPED_UNICODE)), true);
+					update_post_meta($id, '_yoast_wpseo_title', wp_slash($t)); update_post_meta($id, '_yoast_wpseo_metadesc', wp_slash($d));
+				}
+				$o['new'] = array('title' => $t, 'desc' => $d);
+			}
+			if (!$dry) { clean_post_cache($id); if (function_exists('rocket_clean_post')) rocket_clean_post($id); }
+			$out[] = $o;
+		}
+		return array('dry' => $dry, 'undo' => $undo, 'res' => $out);
+	}));
 });
