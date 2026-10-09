@@ -1,0 +1,8 @@
+https://dabullaw.co.il/ | phone | 1 0 0 0
+https://dabullaw.co.il/ | phone | 2 0 0 0
+https://dabullaw.co.il/ | computer | 1 0.007 0.01 2
+https://dabullaw.co.il/ | computer | 2 0.007 0.01 2
+https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | phone | 1 0.087 0.087 1
+https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | phone | 2 0 0 0
+https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | computer | 1 0.095 0.118 5
+https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | computer | 2 0.095 0.117 5

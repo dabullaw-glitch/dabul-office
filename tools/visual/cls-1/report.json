@@ -1,0 +1,623 @@
+{
+ "https://dabullaw.co.il/ | phone | 1": {
+  "cls": 0,
+  "total": 0,
+  "shifts": []
+ },
+ "https://dabullaw.co.il/ | phone | 2": {
+  "cls": 0,
+  "total": 0,
+  "shifts": []
+ },
+ "https://dabullaw.co.il/ | computer | 1": {
+  "cls": 0.007,
+  "total": 0.01,
+  "shifts": [
+   {
+    "t": 312,
+    "v": 0.0069,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     }
+    ]
+   },
+   {
+    "t": 5270,
+    "v": 0.0032,
+    "input": false,
+    "y": 900,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   }
+  ]
+ },
+ "https://dabullaw.co.il/ | computer | 2": {
+  "cls": 0.007,
+  "total": 0.01,
+  "shifts": [
+   {
+    "t": 321,
+    "v": 0.0069,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     }
+    ]
+   },
+   {
+    "t": 4044,
+    "v": 0.0032,
+    "input": false,
+    "y": 900,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   }
+  ]
+ },
+ "https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | phone | 1": {
+  "cls": 0.087,
+  "total": 0.087,
+  "shifts": [
+   {
+    "t": 2095,
+    "v": 0.0869,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-8ad07f0.elementor-widget-theme-post-content[8ad07f0]",
+      "from": [
+       475,
+       364
+      ],
+      "to": [
+       364,
+       475
+      ],
+      "parent": "div.e-con-inner"
+     },
+     {
+      "el": "div.elementor-element-f1f2abe.elementor-widget__width-inherit.elementor-hidden-desktop.elementor-toc--minimized-on-tablet[f1f2abe]",
+      "from": [
+       354,
+       111
+      ],
+      "to": [
+       243,
+       111
+      ],
+      "parent": "div.elementor-element-346eefe.e-con-full.e-flex.e-con[346eefe]"
+     },
+     {
+      "el": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-terms",
+      "from": [
+       271,
+       19
+      ],
+      "to": [
+       215,
+       19
+      ],
+      "parent": "li.elementor-icon-list-item.elementor-repeater-item-d38b18c.elementor-inline-item"
+     },
+     {
+      "el": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-author",
+      "from": [
+       271,
+       19
+      ],
+      "to": [
+       215,
+       19
+      ],
+      "parent": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item"
+     }
+    ]
+   }
+  ]
+ },
+ "https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | phone | 2": {
+  "cls": 0,
+  "total": 0,
+  "shifts": []
+ },
+ "https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | computer | 1": {
+  "cls": 0.095,
+  "total": 0.118,
+  "shifts": [
+   {
+    "t": 1301,
+    "v": 0.0069,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     }
+    ]
+   },
+   {
+    "t": 1358,
+    "v": 0.0588,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-4ec86d12.e-con-full.e-flex.e-con[4ec86d12]",
+      "from": [
+       308,
+       514
+      ],
+      "to": [
+       298,
+       124
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "img",
+      "from": [
+       435,
+       377
+      ],
+      "to": [
+       278,
+       144
+      ],
+      "parent": "picture.attachment-large.size-large.wp-image-886"
+     },
+     {
+      "el": "div.elementor-element-32e29317.elementor-button-align-stretch.elementor-widget-form[32e29317]",
+      "from": [
+       842,
+       58
+      ],
+      "to": [
+       422,
+       309
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "div.elementor-field-type-acceptance.elementor-field-group.elementor-field-group-field_ba4b8c9.elementor-col-100",
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       520,
+       136
+      ],
+      "parent": "div.elementor-form-fields-wrapper.elementor-labels-above"
+     }
+    ]
+   },
+   {
+    "t": 1954,
+    "v": 0.029,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-8ad07f0.elementor-widget-theme-post-content[8ad07f0]",
+      "from": [
+       441,
+       459
+      ],
+      "to": [
+       330,
+       570
+      ],
+      "parent": "div.e-con-inner"
+     },
+     {
+      "el": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-terms",
+      "from": [
+       318,
+       24
+      ],
+      "to": [
+       263,
+       24
+      ],
+      "parent": "li.elementor-icon-list-item.elementor-repeater-item-d38b18c.elementor-inline-item"
+     },
+     {
+      "el": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-author",
+      "from": [
+       318,
+       24
+      ],
+      "to": [
+       263,
+       24
+      ],
+      "parent": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item"
+     },
+     {
+      "el": "::after",
+      "from": [
+       292,
+       76
+      ],
+      "to": [
+       263,
+       22
+      ],
+      "parent": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item"
+     }
+    ]
+   },
+   {
+    "t": 5054,
+    "v": 0.0032,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   },
+   {
+    "t": 5120,
+    "v": 0.0194,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       270,
+       479
+      ],
+      "to": [
+       400,
+       479
+      ],
+      "parent": "div.elementor.elementor-920"
+     },
+     {
+      "el": "div.elementor-element-a334cbd.elementor-widget-html[a334cbd]",
+      "from": [
+       746,
+       99
+      ],
+      "to": [
+       876,
+       24
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     },
+     {
+      "el": "div",
+      "from": [
+       790,
+       55
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "a"
+     }
+    ]
+   }
+  ]
+ },
+ "https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/ | computer | 2": {
+  "cls": 0.095,
+  "total": 0.117,
+  "shifts": [
+   {
+    "t": 1877,
+    "v": 0.0069,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     }
+    ]
+   },
+   {
+    "t": 2491,
+    "v": 0.0588,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-4ec86d12.e-con-full.e-flex.e-con[4ec86d12]",
+      "from": [
+       308,
+       514
+      ],
+      "to": [
+       298,
+       124
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "img",
+      "from": [
+       435,
+       377
+      ],
+      "to": [
+       278,
+       144
+      ],
+      "parent": "picture.attachment-large.size-large.wp-image-886"
+     },
+     {
+      "el": "div.elementor-element-32e29317.elementor-button-align-stretch.elementor-widget-form[32e29317]",
+      "from": [
+       842,
+       58
+      ],
+      "to": [
+       422,
+       309
+      ],
+      "parent": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]"
+     },
+     {
+      "el": "div.elementor-field-type-acceptance.elementor-field-group.elementor-field-group-field_ba4b8c9.elementor-col-100",
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       520,
+       136
+      ],
+      "parent": "div.elementor-form-fields-wrapper.elementor-labels-above"
+     }
+    ]
+   },
+   {
+    "t": 2559,
+    "v": 0.029,
+    "input": false,
+    "y": 0,
+    "src": [
+     {
+      "el": "div.elementor-element-8ad07f0.elementor-widget-theme-post-content[8ad07f0]",
+      "from": [
+       441,
+       459
+      ],
+      "to": [
+       330,
+       570
+      ],
+      "parent": "div.e-con-inner"
+     },
+     {
+      "el": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-terms",
+      "from": [
+       318,
+       24
+      ],
+      "to": [
+       263,
+       24
+      ],
+      "parent": "li.elementor-icon-list-item.elementor-repeater-item-d38b18c.elementor-inline-item"
+     },
+     {
+      "el": "span.elementor-icon-list-text.elementor-post-info__item.elementor-post-info__item--type-author",
+      "from": [
+       318,
+       24
+      ],
+      "to": [
+       263,
+       24
+      ],
+      "parent": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item"
+     },
+     {
+      "el": "::after",
+      "from": [
+       292,
+       76
+      ],
+      "to": [
+       263,
+       22
+      ],
+      "parent": "li.elementor-icon-list-item.elementor-repeater-item-cffeca0.elementor-inline-item"
+     }
+    ]
+   },
+   {
+    "t": 5673,
+    "v": 0.0032,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "ul#menu-1-b175daa.elementor-nav-menu",
+      "from": [
+       15,
+       60
+      ],
+      "to": [
+       15,
+       60
+      ],
+      "parent": "nav.elementor-nav-menu--main.elementor-nav-menu__container.elementor-nav-menu--layout-horizontal.e--pointer-underline"
+     },
+     {
+      "el": "a.elementor-button.elementor-button-link.elementor-size-sm",
+      "from": [
+       21,
+       47
+      ],
+      "to": [
+       21,
+       47
+      ],
+      "parent": "div.elementor-element-d8c5ab4.elementor-hidden-mobile.elementor-widget-button[d8c5ab4]"
+     }
+    ]
+   },
+   {
+    "t": 5748,
+    "v": 0.0194,
+    "input": false,
+    "y": 600,
+    "src": [
+     {
+      "el": "div.elementor-element-b3cef9b.e-con-full.e-flex.e-con[b3cef9b]",
+      "from": [
+       270,
+       479
+      ],
+      "to": [
+       400,
+       479
+      ],
+      "parent": "div.elementor.elementor-920"
+     },
+     {
+      "el": "div.elementor-element-a334cbd.elementor-widget-html[a334cbd]",
+      "from": [
+       746,
+       99
+      ],
+      "to": [
+       876,
+       24
+      ],
+      "parent": "div.elementor-element-ee1430e.e-con-full.e-flex.e-con[ee1430e]"
+     },
+     {
+      "el": "div",
+      "from": [
+       790,
+       55
+      ],
+      "to": [
+       0,
+       0
+      ],
+      "parent": "a"
+     }
+    ]
+   }
+  ]
+ }
+}
