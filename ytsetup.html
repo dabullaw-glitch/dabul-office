@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>חיבור יוטיוב למערכת</title>
+<style>
+:root{--bg:#f8f5f0;--card:#fff;--ink:#2b2118;--mute:#7a6852;--line:#d9cdb8;--brand:#8b6f47;--brand2:#5c4528;--gold:#c9a961;--err:#a33a2a}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1712;--card:#26201a;--ink:#f1e9dc;--mute:#bfae95;--line:#4a3f33;--brand:#c9a961;--brand2:#e7cd96;--gold:#c9a961;--err:#ff8f7a;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 -apple-system,'Segoe UI',Arial,sans-serif}
+main{max-width:620px;margin:0 auto;padding:22px 16px 48px}
+h1{font-size:1.45rem;margin:.2em 0;color:var(--brand2)}
+p.s{color:var(--mute);margin:.2em 0 1.2em}
+label{display:block;font-weight:700;margin:16px 0 6px}
+small{display:block;font-weight:400;color:var(--mute);margin:-4px 0 6px;font-size:.88rem}
+input{width:100%;font:15px/1.4 ui-monospace,Menlo,Consolas,monospace;padding:12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:inherit;direction:ltr;text-align:left}
+button,.go{display:block;text-align:center;text-decoration:none;margin-top:22px;width:100%;padding:15px;border:0;border-radius:999px;background:var(--brand);color:#fff;font-family:inherit;font-weight:700;font-size:1.05rem;cursor:pointer}
+button[disabled]{opacity:.6}
+.msg{border-radius:14px;padding:16px;margin-top:14px;border:1.5px solid var(--gold);background:var(--card)}
+.msg.err{border-color:var(--err);color:var(--err)}
+</style>
+</head>
+<body>
+<main>
+<h1>חיבור ערוץ היוטיוב למערכת</h1>
+<p class="s">מדביקים כאן את שני הפרטים מגוגל קלאוד. הם נשמרים ישר במערכת של המשרד, ואף אחד אחר לא רואה אותם.</p>
+<form id="f" novalidate>
+<label for="id">Client ID</label><small>מסתיים ב-apps.googleusercontent.com</small><input id="id" autocomplete="off" spellcheck="false" required>
+<label for="sec">Client secret</label><input id="sec" autocomplete="off" spellcheck="false" required>
+<button id="b" type="submit">שמירה</button>
+</form>
+<div id="out"></div>
+</main>
+<script>
+const FN = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/ytup';
+const t = location.hash.slice(1), out = document.getElementById('out'), b = document.getElementById('b');
+if (!t) { document.getElementById('f').hidden = true; out.innerHTML = '<p class="msg err">הקישור חסר. פתחו את הקישור המלא שקיבלתם.</p>'; }
+document.getElementById('f').addEventListener('submit', async (e) => {
+  e.preventDefault(); b.disabled = true; b.textContent = 'שומר...'; out.innerHTML = '';
+  try {
+    const r = await fetch(FN + '?a=setkeys', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ t, id: document.getElementById('id').value, secret: document.getElementById('sec').value }) });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || 'משהו לא הסתדר');
+    document.getElementById('f').hidden = true;
+    out.innerHTML = '<p class="msg">✓ נשמר. עכשיו הצעד האחרון: לוחצים על הכפתור, בוחרים את חשבון הגוגל של ערוץ היוטיוב, ומאשרים. אם מופיע "Google hasn\'t verified this app", לוחצים Advanced ואז Go to.</p><a class="go" href="' + j.connect + '">חיבור הערוץ</a>';
+  } catch (err) { out.innerHTML = '<p class="msg err">' + String(err.message || err) + '</p>'; b.disabled = false; b.textContent = 'שמירה'; }
+});
+</script>
+</body>
+</html>

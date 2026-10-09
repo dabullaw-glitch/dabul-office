@@ -2,8 +2,10 @@
 // One-time setup by Yakir: an OAuth client in the Google Cloud project "dabul-office" (app_secrets YT_CLIENT_ID, YT_CLIENT_SECRET),
 // then he opens ?a=connect once and approves with the channel's Google account. The refresh token is kept in app_secrets YT_REFRESH.
 //
+// POST ?a=setkeys       {t, id, secret} from the setup form (ytsetup.html#<YT_SETUP_KEY>): Yakir pastes the OAuth client there,
+//                        so nobody else ever sees it. Stored in app_secrets YT_CLIENT_ID / YT_CLIENT_SECRET.
 // GET  ?a=connect        -> Google consent screen (YouTube upload + read)
-// GET  ?a=cb&code=...    -> saves the refresh token, shows the channel name
+// GET  ?code=...         -> (Google returns here) saves the refresh token, shows the channel name
 // GET  ?a=status         -> { connected, channel }
 // POST ?step=publish     cron: calendar rows with owner 'system', channel youtube and a ready video (media .mp4) whose time has come
 //                        are uploaded with their title (ytTitle), description (text) and tags (ytTags), then marked published.
@@ -16,7 +18,8 @@ const env = (k: string) => Deno.env.get(k) || SECRETS[k] || '';
 let _sb: any = null;
 const sb = () => _sb || (_sb = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'), { auth: { persistSession: false } }));
 async function loadSecrets() { const { data } = await sb().from('app_secrets').select('k,v'); (data || []).forEach((r: { k: string; v: string }) => { SECRETS[r.k] = r.v; }); }
-const json = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { 'content-type': 'application/json; charset=utf-8' } });
+const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'content-type' };
+const json = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { ...cors, 'content-type': 'application/json; charset=utf-8' } });
 const page = (title: string, body: string) => new Response(`${title}\n\n${body}`, { headers: { 'content-type': 'text/plain; charset=utf-8' } }); // Supabase serves function HTML as plain text, so plain text it is
 // deno-lint-ignore no-explicit-any
 const merge = (coll: string, id: string, patch: any) => sb().rpc('docs_merge', { p_coll: coll, p_id: id, p_patch: patch });
@@ -85,18 +88,28 @@ async function publish() {
 }
 
 Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   await loadSecrets().catch(() => {});
   const url = new URL(req.url); const a = url.searchParams.get('a');
   try {
+    if (a === 'setkeys' && req.method === 'POST') {
+      const b = await req.json().catch(() => ({}));
+      if (!env('YT_SETUP_KEY') || b.t !== env('YT_SETUP_KEY')) return json({ ok: false, error: 'הקישור לא תקף' }, 401);
+      const id = String(b.id || '').trim(), secret = String(b.secret || '').trim();
+      if (!/^[\w.-]+\.apps\.googleusercontent\.com$/.test(id) || secret.length < 10) return json({ ok: false, error: 'נראה שהמזהה או הסוד לא הועתקו במלואם' }, 400);
+      const { error } = await sb().from('app_secrets').upsert([{ k: 'YT_CLIENT_ID', v: id }, { k: 'YT_CLIENT_SECRET', v: secret }], { onConflict: 'k' });
+      if (error) return json({ ok: false, error: 'השמירה נכשלה' }, 500);
+      return json({ ok: true, connect: SELF() + '?a=connect' });
+    }
     if (a === 'connect') {
       if (!env('YT_CLIENT_ID')) return page('עוד לא מוכן', 'חסר מזהה החיבור של גוגל. צריך להשלים קודם את ההגדרה בגוגל קלאוד.');
-      const q = new URLSearchParams({ client_id: env('YT_CLIENT_ID'), redirect_uri: SELF() + '?a=cb', response_type: 'code', scope: SCOPES, access_type: 'offline', prompt: 'consent', include_granted_scopes: 'true' });
+      const q = new URLSearchParams({ client_id: env('YT_CLIENT_ID'), redirect_uri: SELF(), response_type: 'code', scope: SCOPES, access_type: 'offline', prompt: 'consent', include_granted_scopes: 'true' });
       return Response.redirect('https://accounts.google.com/o/oauth2/v2/auth?' + q, 302);
     }
-    if (a === 'cb') {
+    if (url.searchParams.has('code') || url.searchParams.has('error')) {
       const code = url.searchParams.get('code'); if (!code) return page('החיבור בוטל', 'לא התקבל אישור מגוגל. אפשר לנסות שוב מהקישור.');
       const r = await fetch('https://oauth2.googleapis.com/token', { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ code, client_id: env('YT_CLIENT_ID'), client_secret: env('YT_CLIENT_SECRET'), redirect_uri: SELF() + '?a=cb', grant_type: 'authorization_code' }) });
+        body: new URLSearchParams({ code, client_id: env('YT_CLIENT_ID'), client_secret: env('YT_CLIENT_SECRET'), redirect_uri: SELF(), grant_type: 'authorization_code' }) });
       const j = await r.json(); if (!j.refresh_token) return page('משהו לא הסתדר', 'גוגל לא החזיר הרשאה קבועה. אפשר לנסות שוב מהקישור.');
       const { error } = await sb().from('app_secrets').upsert({ k: 'YT_REFRESH', v: j.refresh_token }, { onConflict: 'k' });
       if (error) return page('משהו לא הסתדר', 'לא הצלחתי לשמור את החיבור.');
