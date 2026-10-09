@@ -1,0 +1,33 @@
+name: link check
+# Opens addresses in a real browser and saves where they lead (title, heading, picture) to tools/visual/<name>/.
+on:
+  workflow_dispatch:
+    inputs:
+      urls: { description: 'addresses, space separated', required: true }
+      name: { description: 'result folder', required: true, default: 'links' }
+permissions:
+  contents: write
+concurrency: { group: visual, cancel-in-progress: false }
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Check
+        run: |
+          cd tools/office-video && npm install --no-audit --no-fund && npx playwright install --with-deps chromium && cd ../..
+          cp tools/visual/links.mjs tools/office-video/links.mjs
+          node tools/office-video/links.mjs "${{ inputs.name }}" ${{ inputs.urls }} 2>&1 | tee /tmp/c.log || true
+          mkdir -p tools/visual/${{ inputs.name }}; cp /tmp/c.log tools/visual/${{ inputs.name }}/log.txt
+          rm tools/office-video/links.mjs
+          sudo apt-get install -yq imagemagick >/dev/null 2>&1 || true
+          for f in tools/visual/${{ inputs.name }}/*.png; do mogrify -resize '50%' -quality 70 "$f" || true; done
+      - name: Save
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add tools/visual
+          git commit -qm "link check: ${{ inputs.name }}" || exit 0
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
