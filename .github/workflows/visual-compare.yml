@@ -1,0 +1,33 @@
+name: visual compare
+# Before a site change goes live: pictures of the page with and without it (phone + computer), saved to tools/visual/<name>/.
+on:
+  workflow_dispatch:
+    inputs:
+      a: { description: 'page without the change', required: true }
+      b: { description: 'page with the change', required: true }
+      name: { description: 'result folder', required: true }
+permissions:
+  contents: write
+concurrency: { group: visual, cancel-in-progress: false }
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Shots
+        run: |
+          cd tools/office-video && npm install --no-audit --no-fund && npx playwright install --with-deps chromium && cd ../..
+          ln -s ../office-video/node_modules tools/visual/node_modules
+          node tools/visual/compare.mjs "${{ inputs.a }}" "${{ inputs.b }}" "${{ inputs.name }}"
+          rm tools/visual/node_modules
+          sudo apt-get install -yq imagemagick >/dev/null 2>&1 || true
+          for f in tools/visual/${{ inputs.name }}/*.png; do mogrify -resize '50%' "$f" || true; done
+      - name: Save
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add tools/visual
+          git commit -qm "visual compare: ${{ inputs.name }}" || exit 0
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
