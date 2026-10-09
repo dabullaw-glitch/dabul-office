@@ -34,7 +34,7 @@ jobs:
                 lcpEl:a["largest-contentful-paint-element"]?.details?.items?.[0]?.items?.[0]?.node?.snippet||a["lcp-breakdown-insight"]?.details?.items?.[1]?.snippet||"",
                 lcpParts:(a["lcp-breakdown-insight"]?.details?.items?.[0]?.items||[]).map(x=>[x.subpart,Math.round(x.duration)]),
                 renderBlocking:rb.map(x=>[x.url, Math.round(x.wastedMs||x.duration||0)]).slice(0,40),
-                bytes:pick("total-byte-weight"), docBytes:(a["network-requests"]?.details?.items||[])[0]?.transferSize}); } catch(e) { out.push({error:String(e)}); } }
+                shifts:((a["layout-shifts"]||{}).details?.items||[]).slice(0,8).map(x=>[Math.round((x.score||0)*1000)/1000, x.node?.snippet?.slice(0,160)||"", x.node?.selector||"", (x.subItems?.items||[]).map(y=>y.extra?.value||y.cause||"").join("|").slice(0,200)]), bytes:pick("total-byte-weight"), docBytes:(a["network-requests"]?.details?.items||[])[0]?.transferSize}); } catch(e) { out.push({error:String(e)}); } }
             fs.writeFileSync("tools/lighthouse/${{ inputs.name }}.json", JSON.stringify({url:"${{ inputs.url }}", preset:"${{ inputs.preset }}", at:new Date().toISOString(), runs:out}, null, 1));
             console.log(out.map(o=>o.score));'
       - name: Save
