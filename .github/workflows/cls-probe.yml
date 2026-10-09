@@ -1,0 +1,31 @@
+name: cls probe
+# Which parts of the pages jump while loading and scrolling (phone + computer). Saves tools/visual/<name>/report.json.
+on:
+  workflow_dispatch:
+    inputs:
+      urls: { description: 'page addresses, space separated', required: true, default: 'https://dabullaw.co.il/' }
+      name: { description: 'result folder', required: true, default: 'cls' }
+permissions:
+  contents: write
+concurrency: { group: visual, cancel-in-progress: false }
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Probe
+        run: |
+          cd tools/office-video && npm install --no-audit --no-fund && npx playwright install --with-deps chromium && cd ../..
+          cp tools/visual/cls.mjs tools/office-video/cls.mjs
+          node tools/office-video/cls.mjs "${{ inputs.name }}" ${{ inputs.urls }} 2>&1 | tee /tmp/c.log || true
+          mkdir -p tools/visual/${{ inputs.name }}; cp /tmp/c.log tools/visual/${{ inputs.name }}/log.txt
+          rm tools/office-video/cls.mjs
+      - name: Save
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add tools/visual
+          git commit -qm "cls probe: ${{ inputs.name }}" || exit 0
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
