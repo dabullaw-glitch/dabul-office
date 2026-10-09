@@ -325,4 +325,60 @@ add_action('rest_api_init', function () {
 		}
 		return array('dry' => $dry, 'undo' => $undo, 'res' => $out);
 	}));
+	// Google Search Console, 9.10.2026: "unparsable structured data". Inside <script type="application/ld+json"> blocks
+	// some Hebrew abbreviations were written with a plain double quote (עו"ד, נדל"ן, חו"ל), which ends the JSON string early.
+	// This turns a plain " between two Hebrew letters into the Hebrew gershayim (״), only inside those script blocks.
+	// POST {dry, ids?}. The old values are kept first in _dabul_textbak of the same post.
+	register_rest_route('dabul/v1', '/schemafix', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
+		global $wpdb;
+		$dry = (bool) $req->get_param('dry'); $only = $req->get_param('ids') ? array_map('intval', (array) $req->get_param('ids')) : null;
+		$fixs = function ($s, &$n, &$bad, &$good) {
+			if (!is_string($s) || stripos($s, 'ld+json') === false) return $s;
+			return preg_replace_callback('#(<script[^>]*ld\+json[^>]*>)(.*?)(</script>)#is', function ($m) use (&$n, &$bad, &$good) {
+				$c = 0; $in = preg_replace('/(?<=\p{Hebrew})"(?=\p{Hebrew})/u', '״', $m[2], -1, $c);
+				if (!$c || !is_string($in)) return $m[0];
+				$n += $c;
+				if (json_decode(trim($in)) === null) $bad++; else $good++;
+				return $m[1] . $in . $m[3];
+			}, $s);
+		};
+		$walk = function ($v, &$n, &$bad, &$good) use (&$walk, $fixs) {
+			if (is_string($v)) return $fixs($v, $n, $bad, $good);
+			if (is_array($v)) { foreach ($v as $k => $x) $v[$k] = $walk($x, $n, $bad, $good); }
+			return $v;
+		};
+		$ids = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} WHERE post_type <> 'revision' AND post_status IN ('publish','future','draft','private') AND post_content LIKE '%ld+json%'");
+		$ids2 = $wpdb->get_col("SELECT DISTINCT m.post_id FROM {$wpdb->postmeta} m JOIN {$wpdb->posts} p ON p.ID = m.post_id WHERE p.post_type <> 'revision' AND p.post_status IN ('publish','future','draft','private') AND m.meta_key NOT IN ('_dabul_namebak','_dabul_textbak','_dabul_seobak') AND m.meta_value LIKE '%ld+json%'");
+		$all = array_values(array_unique(array_map('intval', array_merge($ids, $ids2))));
+		if ($only) $all = array_values(array_intersect($all, $only));
+		$out = array();
+		foreach ($all as $id) {
+			$p = $wpdb->get_row($wpdb->prepare("SELECT post_content FROM {$wpdb->posts} WHERE ID = %d", $id), ARRAY_A);
+			$n = 0; $bad = 0; $good = 0; $fields = array(); $meta = array();
+			$new = $fixs($p['post_content'], $n, $bad, $good); if ($new !== $p['post_content']) $fields['post_content'] = $new;
+			$rows = $wpdb->get_results($wpdb->prepare("SELECT meta_id, meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key NOT IN ('_dabul_namebak','_dabul_textbak','_dabul_seobak') AND meta_value LIKE %s", $id, '%ld+json%'), ARRAY_A);
+			foreach ($rows as $r) {
+				$raw = $r['meta_value'];
+				if ($r['meta_key'] === '_elementor_data') { $d = json_decode($raw, true); if (!is_array($d)) continue; $c0 = $n; $d2 = $walk($d, $n, $bad, $good); if ($n > $c0) $meta[$r['meta_id']] = array('key' => $r['meta_key'], 'old' => $raw, 'new' => wp_json_encode($d2)); }
+				elseif (is_serialized($raw)) { $v = @unserialize($raw, array('allowed_classes' => false)); if ($v === false) continue; $c0 = $n; $v2 = $walk($v, $n, $bad, $good); if ($n > $c0) $meta[$r['meta_id']] = array('key' => $r['meta_key'], 'old' => $raw, 'new' => serialize($v2)); }
+				else { $c0 = $n; $s2 = $fixs($raw, $n, $bad, $good); if ($n > $c0) $meta[$r['meta_id']] = array('key' => $r['meta_key'], 'old' => $raw, 'new' => $s2); }
+			}
+			if (!$n) continue;
+			$o = array('id' => $id, 'url' => get_permalink($id), 'fixes' => $n, 'blocks_valid_after' => $good, 'blocks_still_invalid' => $bad, 'fields' => array_keys($fields), 'meta' => array_values(array_map(function ($m) { return $m['key']; }, $meta)));
+			if (!$dry) {
+				$bak = array('at' => current_time('mysql'), 'find' => 'schemafix', 'fields' => array('post_content' => $p['post_content']), 'meta' => array());
+				foreach ($meta as $mid => $m) $bak['meta'][$mid] = array('key' => $m['key'], 'old' => $m['old']);
+				if (!$fields) unset($bak['fields']['post_content']);
+				if (!$wpdb->insert($wpdb->postmeta, array('post_id' => $id, 'meta_key' => '_dabul_textbak', 'meta_value' => wp_json_encode($bak, JSON_UNESCAPED_UNICODE)))) { $o['error'] = 'backup failed'; $out[] = $o; continue; }
+				if ($fields) $wpdb->update($wpdb->posts, $fields, array('ID' => $id));
+				foreach ($meta as $mid => $m) $wpdb->update($wpdb->postmeta, array('meta_value' => $m['new']), array('meta_id' => $mid));
+				clean_post_cache($id); wp_cache_delete($id, 'post_meta'); delete_post_meta($id, '_elementor_css'); delete_post_meta($id, '_elementor_element_cache');
+				if (function_exists('rocket_clean_post')) rocket_clean_post($id);
+				$o['done'] = true;
+			}
+			$out[] = $o;
+		}
+		if (!$dry && class_exists('\Elementor\Plugin')) \Elementor\Plugin::$instance->files_manager->clear_cache();
+		return array('dry' => $dry, 'count' => count($out), 'items' => $out);
+	}));
 });
