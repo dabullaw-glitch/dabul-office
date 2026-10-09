@@ -1,0 +1,118 @@
+{
+ "url": "https://dabullaw.co.il/real-estate-lawyer-agamim-netanya/",
+ "preset": "mobile",
+ "at": "2026-10-09T08:32:26.779Z",
+ "runs": [
+  {
+   "score": 77,
+   "fcp": 1863.4950000000001,
+   "lcp": 2536.99,
+   "si": 3287.54156463231,
+   "tbt": 647.0000000000002,
+   "cls": 0.08792386849275625,
+   "lcpEl": "<p class=\"lvbl-p lvbl-p-lead\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     729
+    ],
+    [
+     "elementRenderDelay",
+     454
+    ]
+   ],
+   "renderBlocking": [
+    [
+     "https://dabullaw.co.il/wp-includes/css/dist/block-library/style-rtl.min.css?ver=6.9.4",
+     181
+    ]
+   ],
+   "shifts": [
+    [
+     0.088,
+     "<div class=\"elementor-element elementor-element-8ad07f0 elementor-widget elementor-wid…\" data-id=\"8ad07f0\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div.e-con-inner > div.elementor-element > div.e-con-inner > div.elementor-element",
+     "Media element lacking an explicit size"
+    ]
+   ],
+   "bytes": 264980,
+   "docBytes": 132595
+  },
+  {
+   "score": 94,
+   "fcp": 1616.7019999999998,
+   "lcp": 2597.0779999999995,
+   "si": 1616.7019999999998,
+   "tbt": 33,
+   "cls": 0.08792386849275625,
+   "lcpEl": "<p class=\"lvbl-p lvbl-p-lead\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     241
+    ],
+    [
+     "elementRenderDelay",
+     127
+    ]
+   ],
+   "renderBlocking": [
+    [
+     "https://dabullaw.co.il/wp-includes/css/dist/block-library/style-rtl.min.css?ver=6.9.4",
+     168
+    ]
+   ],
+   "shifts": [
+    [
+     0.088,
+     "<div class=\"elementor-element elementor-element-8ad07f0 elementor-widget elementor-wid…\" data-id=\"8ad07f0\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div.e-con-inner > div.elementor-element > div.e-con-inner > div.elementor-element",
+     "Media element lacking an explicit size"
+    ]
+   ],
+   "bytes": 264864,
+   "docBytes": 132473
+  },
+  {
+   "score": 86,
+   "fcp": 1549.522,
+   "lcp": 2472.0339999999997,
+   "si": 2196.260199385814,
+   "tbt": 0,
+   "cls": 0.22549774573561626,
+   "lcpEl": "<p class=\"lvbl-p lvbl-p-lead\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     680
+    ],
+    [
+     "elementRenderDelay",
+     370
+    ]
+   ],
+   "renderBlocking": [
+    [
+     "https://dabullaw.co.il/wp-includes/css/dist/block-library/style-rtl.min.css?ver=6.9.4",
+     164
+    ]
+   ],
+   "shifts": [
+    [
+     0.138,
+     "<div class=\"elementor-element elementor-element-ee1430e e-con-full e-flex e-con e-child\" data-id=\"ee1430e\" data-element_type=\"container\" data-e-type=\"container\"",
+     "div#content > div.elementor-element > div.e-con-inner > div.elementor-element",
+     ""
+    ],
+    [
+     0.088,
+     "<div class=\"elementor-element elementor-element-8ad07f0 elementor-widget elementor-wid…\" data-id=\"8ad07f0\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div.e-con-inner > div.elementor-element > div.e-con-inner > div.elementor-element",
+     "Media element lacking an explicit size"
+    ]
+   ],
+   "bytes": 264977,
+   "docBytes": 132591
+  }
+ ]
+}
