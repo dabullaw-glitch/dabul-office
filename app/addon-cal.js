@@ -7,9 +7,10 @@
    It replaces the old list in שיווק > לוח פרסום; the old list and the Instagram connection stay
    available at the bottom, so nothing that worked before is lost. */
 (function (s) {
-  if (!s || s.CAL) return; s.CAL = '20261009a';
+  if (!s || s.CAL) return; s.CAL = '20261009b';
   const n = s.esc;
-  const bump = () => (s.bump ? s.bump() : s.render());
+  // s.bump only clears the app's memo cache; s.render actually redraws the screen
+  const bump = () => { try { if (s.bump) s.bump(); } catch { /* cache only */ } if (s.render) s.render(); };
   ['pub', 'prompt', 'roadmap', 'settings'].forEach(c => { s.S.data[c] = s.S.data[c] || {}; });
   function sub(c) {
     s.S.db.collection(c).onSnapshot(q => { const r = {}; q.docs.forEach(d => { r[d.id] = d.data(); }); s.S.data[c] = r; s.S.loaded[c] = true; bump(); }, () => { s.S.loaded[c] = true; });
@@ -71,6 +72,10 @@
 .cl-msr.done .tt{text-decoration:line-through;color:var(--muted)}.cl-msr.sel{background:var(--accent-soft);border-radius:8px}
 .cl-wait{background:var(--warn-soft);border-radius:14px;padding:12px 14px;margin-bottom:12px}.cl-wait h4{margin:0 0 6px;color:var(--warn);font-size:15px}
 .cl-wait button{display:block;border:0;background:none;font:inherit;font-size:14px;color:var(--ink);cursor:pointer;text-align:start;padding:3px 0}
+.cl-it .ml{display:block;font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.5}
+.cl-key{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted);background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:8px 10px;margin-bottom:10px;align-items:center}.cl-key span{display:inline-flex;gap:5px;align-items:center}
+.cl-c .dn{border:0;background:none;padding:0 2px;cursor:pointer;text-align:start;font:inherit;font-size:12px;font-weight:700;color:var(--muted)}.cl-c.pick{outline:2px solid var(--accent);outline-offset:-2px}
+.cl-dlist{margin-top:10px}
 .cl-old{margin-top:18px}.cl-old>summary{cursor:pointer;color:var(--muted);font-size:13.5px;padding:6px 0}`;
   document.head.appendChild(st);
 
@@ -94,14 +99,14 @@
   const dayName = ds => 'יום ' + DAYS[dU(ds).getUTCDay()] + ' ' + dm(ds);
 
   // UI state (kept for the session)
-  const U = { view: 'month', cur: null, filt: new Set(), sel: null, pubOld: null };
+  const U = { view: (window.innerWidth < 700 ? 'list' : 'month'), day: null, cur: null, filt: new Set(), sel: null, pubOld: null };
 
   function items() {
     const cfg = (s.S.data.settings || {}).pub || {};
     const media = m => String(m).replace('{MEDIA}', cfg.media || MEDIA);
     const P = Object.entries(s.S.data.pub || {}).filter(([, d]) => d && d.at).map(([id, d]) => ({
       id: 'pub:' + id, rid: id, src: 'pub', at: String(d.at).slice(0, 16), kind: d.kind || '', own: d.owner || '', ch: (d.channels || []).filter(Boolean), st: d.status || 'planned',
-      ti: d.title || '', tx: d.text || '', note: d.note || '', m: (d.media || []).map(media)
+      ti: d.title || '', tx: d.text || '', note: d.note || '', link: d.link || d.url || '', m: (d.media || []).map(media)
     }));
     const F = Object.entries(s.S.data.prompt || {}).filter(([, d]) => d && !d.arch && d.plan).map(([id, d]) => ({
       id: 'prompt:' + id, rid: id, src: 'prompt', at: String(d.plan).slice(0, 10) + 'T09:00', kind: 'film', own: 'yakir', ch: ['film'], st: d.status || 'ready',
@@ -141,15 +146,21 @@
       Object.keys(CH).filter(c => used.has(c)).map(c => `<button class="cl-chip ${U.filt.has(c) ? 'on' : ''}" data-a="cl-f" data-c="${c}"><span class="cl-dot" style="background:${CH[c][1]}"></span>${CH[c][0]}</button>`).join('') + '</div>';
   }
   const evHtml = i => `<button class="cl-ev ${i.st === 'skipped' ? 'skip' : ''} ${i.kind === 'film' ? 'film' : ''} ${i.kind === 'ms' ? 'ms ' + n(i.st) : ''} ${U.sel === i.id ? 'sel' : ''}" data-a="cl-sel" data-id="${n(i.id)}" style="--c:${col(i)}" title="${n(i.ti)}">${icon(i)}<span class="t">${i.src === 'pub' ? n(i.at.slice(11, 16)) + ' ' : ''}${n(i.ti)}</span></button>`;
+  function metaLines(i) {
+    if (i.kind === 'ms') return [`פרויקט: ${n((PROJ[i.proj] || [i.proj])[0])}`, `אחראי: ${n(OWN[i.own] || i.own)} · מצב: ${MST[i.st] || n(i.st)}`];
+    if (i.kind === 'film') return ['סרטון שאתה מצלם (תסריט מוכן בטלפרומטר)', `תאריך יעד לצילום · מצב: ${done(i) ? 'צולם ✓' : 'מחכה לצילום'}`];
+    const where = i.ch.map(c => n((CH[c] || [c])[0])).join(', ');
+    return [`לאן: ${where || 'לא צוין'}`, `מי מפרסם: ${n(OWN[i.own] || i.own || 'לא צוין')} · מצב: ${n(PST[i.st] || i.st)}`];
+  }
   function itHtml(i) {
-    const chs = i.kind === 'ms'
-      ? `<i><span class="cl-dot" style="background:${col(i)}"></span>${n((PROJ[i.proj] || [i.proj])[0])}</i><span class="cl-p s-${n(i.st)}">${MST[i.st] || n(i.st)}</span>`
-      : i.ch.map(c => `<i><span class="cl-dot" style="background:${(CH[c] || ['', '#999'])[1]}"></span>${n((CH[c] || [c])[0])}</i>`).join('');
+    const ml = metaLines(i);
+    const flags = (noText(i) ? '<span class="cl-p s-notext">הטקסט עוד לא נכתב</span>' : '') + (i.st === 'published' ? '<span class="cl-p s-published">פורסם ✓</span>' : '') + (i.st === 'skipped' ? '<span class="cl-p">בוטל</span>' : '');
     return `<button class="cl-it ${i.st === 'skipped' ? 'skip' : ''} ${i.kind === 'film' ? 'film' : ''} ${U.sel === i.id ? 'sel' : ''}" data-a="cl-sel" data-id="${n(i.id)}" style="--c:${col(i)}">
       <span class="tm">${i.src === 'pub' ? n(i.at.slice(11, 16)) : icon(i)}</span><span class="g"><span class="ti" style="display:block">${n(i.ti)}</span>
-      <span class="ch">${chs}${i.own ? `<span class="cl-p o-${n(i.own)}">${n(OWN[i.own] || i.own)}</span>` : ''}${noText(i) ? '<span class="cl-p s-notext">הטקסט עוד לא נכתב</span>' : ''}${i.st === 'skipped' ? '<span class="cl-p">בוטל</span>' : ''}${i.src === 'pub' && i.st === 'published' ? '<span class="cl-p s-published">פורסם ✓</span>' : ''}</span>
+      <span class="ml">${ml.map(x => `<span style="display:block">${x}</span>`).join('')}</span>${flags ? `<span class="ch">${flags}</span>` : ''}
       ${i.tx && i.kind !== 'ms' ? `<span class="tx" style="display:block">${n(i.tx)}</span>` : ''}</span></button>`;
   }
+  const LEGEND = `<div class="cl-key"><b>מה כל סימן אומר:</b> <span><span class="cl-dot" style="background:#1877f2"></span> נקודה צבעונית = פרסום ברשת (הצבע לפי הרשת)</span><span>🎥 = סרטון שאתה צריך לצלם</span><span>🏁 = משימה עם מועד (פיתוחים)</span><span>✓ = בוצע</span><span>לחיצה על פריט מראה את כל הפרטים</span></div>`;
   function monthHtml(all, T) {
     const y = U.cur.getUTCFullYear(), mo = U.cur.getUTCMonth();
     const first = new Date(Date.UTC(y, mo, 1, 12)), start = addD(first, -first.getUTCDay());
@@ -157,9 +168,11 @@
     for (let k = 0; k < 42; k++) {
       const d = addD(start, k), ds = iso(d); if (k >= 35 && d.getUTCMonth() !== mo) break;
       const its = all.filter(i => i.at.slice(0, 10) === ds);
-      h += `<div class="cl-c ${d.getUTCMonth() !== mo ? 'out' : ''} ${ds === T ? 'today' : ''}"><div class="dn">${d.getUTCDate()}</div>${its.slice(0, 4).map(evHtml).join('')}${its.length > 4 ? `<button class="cl-more" style="border:0;background:none;cursor:pointer;text-align:start" data-a="cl-week" data-d="${ds}">ועוד ${its.length - 4}</button>` : ''}</div>`;
+      h += `<div class="cl-c ${d.getUTCMonth() !== mo ? 'out' : ''} ${ds === T ? 'today' : ''} ${U.day === ds ? 'pick' : ''}"><button class="dn" data-a="cl-day" data-d="${ds}" aria-label="הצגת ${dm(ds)}">${d.getUTCDate()}</button>${its.slice(0, 4).map(evHtml).join('')}${its.length > 4 ? `<button class="cl-more" style="border:0;background:none;cursor:pointer;text-align:start" data-a="cl-week" data-d="${ds}">ועוד ${its.length - 4}</button>` : ''}</div>`;
     }
-    return { range: MON[mo] + ' ' + y, html: `<div class="cl-m">${h}</div><div class="cl-leg"><span>🎥 מסגרת מקווקוות: תסריט שמחכה לצילום, לפי תאריך היעד</span><span>🏁 מועד של פיתוח, בצבע הפרויקט</span><span>קו חוצה: פריט שבוטל</span></div>` };
+    const dd = U.day && U.day.slice(0, 7) === iso(first).slice(0, 7) ? U.day : null;
+    const dl = dd ? `<div class="cl-dlist"><div class="cl-day">${dayName(dd)}</div>${all.filter(i => i.at.slice(0, 10) === dd).map(itHtml).join('') || '<div class="cl-more">אין כלום ביום הזה</div>'}</div>` : `<div class="cl-more" style="margin-top:8px">לוחצים על מספר של יום כדי לראות מתחת ללוח מה יש בו, במילים.</div>`;
+    return { range: MON[mo] + ' ' + y, html: `<div class="cl-m">${h}</div>${dl}` };
   }
   function weekHtml(all, T) {
     const st0 = addD(U.cur, -U.cur.getUTCDay()), e = addD(st0, 6);
@@ -217,6 +230,7 @@
       ${i.tx ? `<div class="full">${n(i.tx)}</div>` : (i.src === 'pub' ? `<div class="cl-note">${i.own === 'grok' ? 'הטקסט עוד לא כתוב: גרוק בוט כותב אותו רק ביום הפרסום. אחרי שהערוץ עובר ל-Claude, הטקסט ייכתב כמה ימים מראש ויופיע כאן.' : 'הטקסט עוד לא כתוב. הוא ייכתב לפני מועד הפרסום ויופיע כאן.'}</div>` : '')}
       ${imgs.map(m => `<img src="${n(m)}" alt="" loading="lazy">`).join('')}
       ${vids.length ? `<div class="cl-leg">${vids.map(v => `<a href="${n(v)}" target="_blank" rel="noopener">🎬 צפייה בסרטון</a>`).join(' · ')}</div>` : ''}
+      ${i.link ? `<div class="cl-leg"><a href="${n(i.link)}" target="_blank" rel="noopener">לצפייה בפרסום עצמו</a></div>` : ''}
       <div class="acts">${acts}</div>`;
   }
 
@@ -228,7 +242,7 @@
     const isDev = U.view === 'dev';
     const segs = [['month', 'חודש'], ['week', 'שבוע'], ['list', 'רשימה'], ['dev', 'פיתוחים ומועדים']].map(([k, t]) => `<button class="${U.view === k ? 'on' : ''}" data-a="cl-v" data-v="${k}">${t}</button>`).join('');
     const nav = isDev || U.view === 'list' ? `<div class="cl-nav"><span>${n(v.range)}</span></div>` : `<div class="cl-nav"><button data-a="cl-nav" data-d="-1" aria-label="הקודם">›</button><span>${n(v.range)}</span><button data-a="cl-nav" data-d="1" aria-label="הבא">‹</button><button data-a="cl-nav" data-d="0" style="padding:0 10px;font-size:13px">היום</button></div>`;
-    return `${statsHtml(items(), T)}<div class="cl-bar"><div class="cl-segs">${segs}</div>${nav}</div>${isDev ? '' : chipsHtml(items())}
+    return `${statsHtml(items(), T)}<div class="cl-bar"><div class="cl-segs">${segs}</div>${nav}</div>${isDev ? '' : LEGEND + chipsHtml(items())}
       <div class="cl-lay"><div style="min-width:0">${v.html}</div><aside class="cl-det" id="cl-det">${detHtml()}</aside></div>`;
   }
   s.calView = calHtml;
@@ -249,7 +263,8 @@
   const reSel = () => { bump(); if (window.innerWidth < 1180) setTimeout(() => { const d = document.getElementById('cl-det'); if (d) d.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60); };
   s.act('cl-v', (b, d) => { U.view = d.v; bump(); });
   s.act('cl-f', (b, d) => { const c = d.c; if (!c) U.filt.clear(); else if (U.filt.has(c)) U.filt.delete(c); else U.filt.add(c); bump(); });
-  s.act('cl-sel', (b, d) => { U.sel = d.id; reSel(); });
+  s.act('cl-sel', (b, d) => { U.sel = d.id; const it = find(d.id); if (it && it.at) U.day = it.at.slice(0, 10); reSel(); });
+  s.act('cl-day', (b, d) => { U.day = d.d; bump(); setTimeout(() => { const x = document.querySelector('.cl-dlist'); if (x && window.innerWidth < 1180) x.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60); });
   s.act('cl-close', () => { U.sel = null; bump(); });
   s.act('cl-week', (b, d) => { U.view = 'week'; U.cur = dU(d.d); bump(); });
   s.act('cl-nav', (b, d) => {
