@@ -4,8 +4,9 @@
    so some slides stayed blank for seconds (until the carousel moved on).
    The fix: in the two picture carousels of the site (הצלחות and the certificates), the pictures keep their real address and
    are left to the browser's own late loading, so the copies are complete too. The same pictures, the same look.
-   To undo: deactivate this snippet. */
-// define('DABUL_CAR_LIVE', 1);
+   Checked on a preview address on 9.10.2026 (phone and computer: the same look, all carousel pictures complete).
+   Yakir approved, now live. To undo: deactivate this snippet. */
+define('DABUL_CAR_LIVE', 1);
 
 function dabul_car_on() {
 	if (defined('DABUL_CAR_LIVE')) return true;
