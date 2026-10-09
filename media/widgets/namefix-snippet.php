@@ -63,8 +63,9 @@ function dabul_nf_meta_new($key, $raw, &$n) {
 
 function dabul_nf_scan($only = null) {
 	global $wpdb;
-	$lit = '%' . $wpdb->esc_like('דבול ושות') . '%';
-	$esc = 'דבול ושות';
+	$word = !empty($GLOBALS['dabul_nf_custom']) ? $GLOBALS['dabul_nf_custom'][0] : 'דבול ושות';
+	$lit = '%' . $wpdb->esc_like($word) . '%';
+	$esc = trim(wp_json_encode($word), '"'); // the same words as they look inside saved Elementor data (ד...)
 	$ids = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type <> 'revision' AND post_status <> 'trash' AND (post_content LIKE %s OR post_title LIKE %s OR post_excerpt LIKE %s OR post_content LIKE %s)", $lit, $lit, $lit, '%Dabul & Co%'));
 	$ids2 = $wpdb->get_col($wpdb->prepare("SELECT DISTINCT m.post_id FROM {$wpdb->postmeta} m JOIN {$wpdb->posts} p ON p.ID = m.post_id WHERE p.post_type <> 'revision' AND p.post_status <> 'trash' AND m.meta_key NOT IN ('_dabul_namebak','_dabul_textbak') AND (m.meta_value LIKE %s OR LOCATE(%s, m.meta_value) > 0)", $lit, $esc));
 	$all = array_values(array_unique(array_map('intval', array_merge($ids, $ids2))));
