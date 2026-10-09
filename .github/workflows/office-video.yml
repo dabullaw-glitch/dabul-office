@@ -1,0 +1,54 @@
+name: office videos
+# Makes the law office's own answer videos for the YouTube slots in the publishing calendar ("own-video" rows).
+# Every hour: asks the ytvideo function for the next script that has no video yet (the narration is already made there
+# with Google Text-to-Speech), renders it with tools/office-video/render.mjs and commits media/yt/<id>.mp4 + .jpg.
+# GitHub Pages then serves the file, and the ytvideo attach step (pg_cron) puts it into its calendar row.
+on:
+  schedule: [{ cron: '41 * * * *' }]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: office-video, cancel-in-progress: false }
+env:
+  FN: https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/ytvideo
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Next script
+        id: next
+        run: |
+          have=$(ls media/yt/*.mp4 2>/dev/null | xargs -r -n1 basename | sed 's/\.mp4$//' | paste -sd, -)
+          curl -fsS --retry 3 "$FN?a=next&have=$have" -o /tmp/next.json
+          id=$(jq -r '.id // empty' /tmp/next.json)
+          echo "id=$id" >> "$GITHUB_OUTPUT"; echo "next: ${id:-none}"
+      - uses: actions/setup-node@v4
+        if: steps.next.outputs.id != ''
+        with: { node-version: '22' }
+      - name: Install
+        if: steps.next.outputs.id != ''
+        working-directory: tools/office-video
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+          command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
+      - name: Render up to 3 videos
+        if: steps.next.outputs.id != ''
+        run: |
+          for n in 1 2 3; do
+            [ "$n" = 1 ] || {
+              have=$(ls media/yt/*.mp4 2>/dev/null | xargs -r -n1 basename | sed 's/\.mp4$//' | paste -sd, -)
+              curl -fsS --retry 3 "$FN?a=next&have=$have" -o /tmp/next.json
+            }
+            id=$(jq -r '.id // empty' /tmp/next.json); [ -n "$id" ] || break
+            node tools/office-video/render.mjs /tmp/next.json
+          done
+      - name: Publish
+        if: steps.next.outputs.id != ''
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add media/yt
+          git commit -qm "office video: $(ls -t media/yt/*.mp4 | head -3 | xargs -n1 basename | paste -sd' ' -)" || { echo nothing; exit 0; }
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
