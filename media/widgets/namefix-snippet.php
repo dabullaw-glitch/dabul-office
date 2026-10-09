@@ -161,6 +161,34 @@ add_action('rest_api_init', function () {
 		if (class_exists('\Elementor\Plugin')) \Elementor\Plugin::$instance->files_manager->clear_cache();
 		return array('done' => $done);
 	}));
+	// set the link of one Elementor element (a button): POST {post, el, url}; the old data is kept in _dabul_textbak
+	register_rest_route('dabul/v1', '/elsetlink', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
+		global $wpdb;
+		$pid = (int) $req->get_param('post'); $el = (string) $req->get_param('el'); $url = esc_url_raw((string) $req->get_param('url'));
+		if (!$pid || !$el || !$url) return new WP_Error('args', 'post, el, url required', array('status' => 400));
+		$row = $wpdb->get_row($wpdb->prepare("SELECT meta_id, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = '_elementor_data' LIMIT 1", $pid), ARRAY_A);
+		if (!$row) return new WP_Error('nodata', 'no elementor data', array('status' => 404));
+		$d = json_decode($row['meta_value'], true); $found = 0;
+		$walk = function (&$items) use (&$walk, $el, $url, &$found) {
+			foreach ($items as &$it) {
+				if (isset($it['id']) && $it['id'] === $el) {
+					if (!isset($it['settings']) || !is_array($it['settings'])) $it['settings'] = array();
+					$it['settings']['link'] = array('url' => $url, 'is_external' => '', 'nofollow' => '', 'custom_attributes' => '');
+					$found++;
+				}
+				if (!empty($it['elements'])) $walk($it['elements']);
+			}
+		};
+		if (!is_array($d)) return new WP_Error('bad', 'bad data', array('status' => 500));
+		$walk($d);
+		if ($found !== 1) return new WP_Error('el', 'element found ' . $found . ' times', array('status' => 409));
+		$wpdb->insert($wpdb->postmeta, array('post_id' => $pid, 'meta_key' => '_dabul_textbak', 'meta_value' => wp_json_encode(array('at' => current_time('mysql'), 'el' => $el, 'meta' => array($row['meta_id'] => array('key' => '_elementor_data', 'old' => $row['meta_value']))), JSON_UNESCAPED_UNICODE)));
+		$wpdb->update($wpdb->postmeta, array('meta_value' => wp_json_encode($d)), array('meta_id' => $row['meta_id']));
+		clean_post_cache($pid); wp_cache_delete($pid, 'post_meta'); delete_post_meta($pid, '_elementor_css'); delete_post_meta($pid, '_elementor_element_cache');
+		if (class_exists('\Elementor\Plugin')) \Elementor\Plugin::$instance->files_manager->clear_cache();
+		if (function_exists('rocket_clean_post')) rocket_clean_post($pid);
+		return array('ok' => true, 'post' => $pid, 'el' => $el, 'url' => $url);
+	}));
 	register_rest_route('dabul/v1', '/namefix-undo', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
 		global $wpdb;
 		$out = array();
