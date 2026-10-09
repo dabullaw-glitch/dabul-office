@@ -1,0 +1,88 @@
+{
+ "phone-a": {
+  "errors": [
+   "e.target.closest is not a function",
+   "Cannot read properties of undefined (reading '0')"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "מקצועיות. ניסיון. תוצאות"
+  },
+  "h": 14706,
+  "w": 412,
+  "invisible": [],
+  "styles": 75,
+  "links": 16
+ },
+ "phone-b": {
+  "errors": [
+   "t.composedPath(...)[0].getRootNode is not a function"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "מקצועיות. ניסיון. תוצאות"
+  },
+  "h": 14558,
+  "w": 412,
+  "invisible": [],
+  "styles": 86,
+  "links": 17
+ },
+ "computer-a": {
+  "errors": [
+   "e.target.closest is not a function",
+   "Cannot read properties of undefined (reading '0')"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "מקצועיות. ניסיון. תוצאות"
+  },
+  "h": 12563,
+  "w": 1366,
+  "invisible": [],
+  "styles": 75,
+  "links": 15
+ },
+ "computer-b": {
+  "errors": [
+   "t.composedPath(...)[0].getRootNode is not a function"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "מקצועיות. ניסיון. תוצאות"
+  },
+  "h": 12600,
+  "w": 1366,
+  "invisible": [],
+  "styles": 91,
+  "links": 17
+ }
+}
