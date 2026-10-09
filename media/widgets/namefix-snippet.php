@@ -200,6 +200,25 @@ add_action('rest_api_init', function () {
 		$tpl = get_post_meta($pid, '_elementor_template_type', true);
 		return array('found' => $hit, 'template_type' => $tpl, 'edit_mode' => get_post_meta($pid, '_elementor_edit_mode', true));
 	}));
+	// compact outline of an Elementor page: id, type, widget, and the visible texts/links of each element
+	register_rest_route('dabul/v1', '/eltree', array('methods' => 'GET', 'permission_callback' => $perm, 'callback' => function ($req) {
+		global $wpdb;
+		$pid = (int) $req->get_param('post');
+		$raw = $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = '_elementor_data' LIMIT 1", $pid));
+		$d = json_decode((string) $raw, true); $out = array();
+		$walk = function ($items, $depth) use (&$walk, &$out) {
+			foreach ((array) $items as $it) {
+				$st = isset($it['settings']) ? $it['settings'] : array(); $txt = array();
+				foreach (array('title', 'text', 'editor', 'html', 'title_text', 'description_text') as $k) if (!empty($st[$k]) && is_string($st[$k])) $txt[] = $k . ': ' . mb_substr(wp_strip_all_tags($st[$k]), 0, 160);
+				foreach (array('icon_list', 'tabs', 'slides') as $k) if (!empty($st[$k]) && is_array($st[$k])) foreach ($st[$k] as $li) $txt[] = $k . '> ' . mb_substr(wp_strip_all_tags(isset($li['text']) ? $li['text'] : (isset($li['tab_title']) ? $li['tab_title'] : '')), 0, 80) . (isset($li['link']['url']) ? ' => ' . $li['link']['url'] : '');
+				if (!empty($st['link']['url'])) $txt[] = 'link: ' . $st['link']['url'];
+				$out[] = str_repeat('  ', $depth) . $it['id'] . ' ' . $it['elType'] . (isset($it['widgetType']) ? ':' . $it['widgetType'] : '') . ($txt ? ' | ' . implode(' | ', $txt) : '');
+				if (!empty($it['elements'])) $walk($it['elements'], $depth + 1);
+			}
+		};
+		$walk($d, 0);
+		return array('lines' => $out);
+	}));
 	register_rest_route('dabul/v1', '/namefix-undo', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
 		global $wpdb;
 		$out = array();
