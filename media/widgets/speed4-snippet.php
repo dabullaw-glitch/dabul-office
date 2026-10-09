@@ -5,7 +5,13 @@
    2. The bold site font (the big "יקיר דבול" title) is requested at once, like the regular one already is.
    3. WP Rocket's own guess of the top picture is turned off: it kept requesting an old phone photo that is no longer shown
       (the top pictures are requested by round 3 already).
-   PREVIEW ONLY until checked: add ?dblprev=1 to a page address. To undo: deactivate this snippet. */
+   4. The accessibility panel (OneTap) put its texts for 44 languages into every page (about a quarter of the page).
+      It now gets Hebrew, English, French, Russian and Arabic only, so its language list shows these 5.
+   Also (outside this snippet, 9.10.2026): the top pictures of the home page were added to WP Rocket's "Excluded images"
+   list, so they are not lazy-loaded; the settings before that are kept in the option dabul_rocket_backup_sp4.
+   Checked on a preview address on 9.10.2026 (phone and computer, slice by slice: same look, no script errors).
+   Yakir approved, now live. To undo: deactivate this snippet. */
+// define('DABUL_SP4_LIVE', 1);
 
 function dabul_sp4_on() {
 	if (defined('DABUL_SP4_LIVE')) return true;
@@ -38,7 +44,24 @@ function dabul_sp4_inline($html) {
 		$total += strlen($css);
 		return '<style id="' . $m[1] . '">' . $css . '</style>';
 	}, $head);
-	return $head . substr($html, $end);
+	$body = substr($html, $end);
+	$slim = dabul_sp4_onetap($body);
+	return $head . (is_string($slim) && $slim !== '' ? $slim : $body);
+}
+
+function dabul_sp4_onetap($body) {
+	return preg_replace_callback('#(<script id="accessibility-onetap-js-extra">\s*var onetapAjaxObject = )(\{.*?\});(\s*(?://[^\n]*\s*)?</script>)#s', function ($m) {
+		$o = json_decode($m[2], true);
+		if (!is_array($o) || empty($o['languages']) || !is_array($o['languages'])) return $m[0];
+		$keep = array('il', 'en', 'fr', 'ru', 'ar');
+		if (!empty($o['activeLanguage'])) $keep[] = $o['activeLanguage'];
+		if (!empty($o['getSettings']['language'])) $keep[] = $o['getSettings']['language'];
+		$o['languages'] = array_intersect_key($o['languages'], array_flip($keep));
+		if (!empty($o['languageList']) && is_array($o['languageList'])) $o['languageList'] = array_intersect_key($o['languageList'], array_flip($keep));
+		if (!$o['languages']) return $m[0];
+		$js = wp_json_encode($o, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG);
+		return $js ? $m[1] . $js . ';' . $m[3] : $m[0];
+	}, $body, 1);
 }
 
 add_action('template_redirect', function () {
