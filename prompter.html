@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
+<title>טלפרומטר</title>
+<!-- dabul: teleprompter + camera recorder for Yakir (9.10.2026). Replaces the CapCut teleprompter.
+     Everything stays on the phone: the script is kept in this browser only, and the video is saved to the phone. Nothing is uploaded. -->
+<style>
+:root{--bg:#f8f5f0;--card:#fff;--ink:#2b2118;--mute:#7a6852;--line:#d9cdb8;--brand:#8b6f47;--brand2:#5c4528;--gold:#c9a961;--err:#a33a2a;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1712;--card:#26201a;--ink:#f1e9dc;--mute:#bfae95;--line:#4a3f33;--brand:#c9a961;--brand2:#e7cd96;--err:#ff8f7a;color-scheme:dark}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 -apple-system,'Segoe UI',Arial,sans-serif}
+button{font-family:inherit;cursor:pointer}
+[hidden]{display:none!important}
+
+/* ---------- script screen ---------- */
+#edit{max-width:640px;margin:0 auto;padding:calc(var(--st) + 18px) 16px calc(var(--sb) + 28px)}
+#edit h1{font-size:1.45rem;margin:0;color:var(--brand2)}
+#edit .s{color:var(--mute);margin:2px 0 14px;font-size:.95rem}
+#txt{width:100%;min-height:42vh;font:18px/1.7 -apple-system,'Segoe UI',Arial,sans-serif;padding:14px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);color:inherit;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.btn{flex:1;min-width:130px;padding:14px 16px;border:0;border-radius:999px;background:var(--brand);color:#fff;font-weight:700;font-size:1.05rem}
+.btn.ghost{background:transparent;color:var(--brand2);border:1.5px solid var(--line)}
+.meta{color:var(--mute);font-size:.88rem;margin-top:6px;font-variant-numeric:tabular-nums}
+#saved{margin-top:22px}
+#saved h2{font-size:1.05rem;margin:0 0 6px;color:var(--brand2)}
+.sv{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);margin-top:8px}
+.sv .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sv button{border:0;background:none;color:var(--brand);font-weight:700;padding:4px 6px}
+.sv button.del{color:var(--mute);font-weight:400}
+
+/* ---------- camera screen ---------- */
+#cam{position:fixed;inset:0;background:#000;color:#fff;overflow:hidden;touch-action:none}
+#vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+#vid.mirror{transform:scaleX(-1)}
+#box{position:absolute;left:12px;right:12px;top:calc(var(--st) + 52px);height:34vh;border-radius:18px;background:rgba(20,20,20,.55);
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);overflow:hidden}
+#scroller{position:absolute;inset:0;overflow:hidden}
+#text{position:absolute;left:0;right:0;top:0;padding:0 22px;will-change:transform}
+#text p{margin:0 0 .5em}
+#text .seg{color:rgba(255,255,255,.42);transition:color .15s}
+#text .seg.on{color:#fff;font-weight:700}
+#text.mirror-text{transform-origin:center}
+#guide{position:absolute;left:0;right:0;height:0;border-top:2px solid rgba(201,169,97,.0)}
+#box .tag-unused{position:absolute;bottom:8px;left:10px;font-size:12px;color:rgba(255,255,255,.75);background:rgba(0,0,0,.35);padding:2px 8px;border-radius:999px;pointer-events:none}
+#closeCam{position:absolute;top:calc(var(--st) + 8px);right:10px}
+#flip{position:absolute;top:calc(var(--st) + 8px);left:10px}
+.ib{width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.45);color:#fff;font-size:20px;display:grid;place-items:center}
+#tools{position:absolute;left:12px;right:12px;top:calc(var(--st) + 52px + 34vh + 8px);display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+#tools button{border:0;border-radius:999px;background:rgba(0,0,0,.5);color:#fff;padding:7px 12px;font-size:14px;font-variant-numeric:tabular-nums}
+#tools b{font-weight:700}
+#bottom{position:absolute;left:0;right:0;bottom:calc(var(--sb) + 18px);display:flex;flex-direction:column;align-items:center;gap:10px}
+#time{background:rgba(0,0,0,.45);border-radius:999px;padding:3px 14px;font-size:20px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px}
+#time i{width:9px;height:9px;border-radius:50%;background:#21c4dd;display:inline-block}
+#time.rec i{background:#ff3b30;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.25}}
+#rec{width:84px;height:84px;border-radius:50%;border:5px solid rgba(255,255,255,.85);background:rgba(255,255,255,.18);display:grid;place-items:center;padding:0}
+#rec span{width:58px;height:58px;border-radius:50%;background:#ff3b30;transition:all .2s}
+#rec.on span{width:30px;height:30px;border-radius:7px}
+#count{position:absolute;inset:0;display:grid;place-items:center;font-size:120px;font-weight:800;text-shadow:0 4px 24px rgba(0,0,0,.6);pointer-events:none}
+#msg{position:absolute;left:16px;right:16px;top:45%;background:rgba(0,0,0,.75);border-radius:14px;padding:16px;text-align:center;line-height:1.6}
+
+/* settings sheet */
+#sheet{position:absolute;left:0;right:0;bottom:0;background:#1d1a17;color:#fff;border-radius:20px 20px 0 0;padding:16px 18px calc(var(--sb) + 18px);box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+#sheet h3{margin:0 0 6px;font-size:1.05rem}
+.set{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.set:last-of-type{border-bottom:0}
+.set label{flex:1}
+.set .v{min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+.set button{width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:20px}
+.seg3{display:flex;gap:6px}
+.seg3 button{width:auto;height:auto;border-radius:999px;padding:6px 12px;font-size:14px}
+.seg3 button.on{background:#c9a961;color:#1d1a17;font-weight:700}
+#sheet .done{width:100%;margin-top:12px;padding:12px;border:0;border-radius:999px;background:#c9a961;color:#1d1a17;font-weight:800;font-size:1rem}
+
+/* review screen */
+#review{position:fixed;inset:0;background:#000;color:#fff;display:flex;flex-direction:column}
+#review video{flex:1;min-height:0;width:100%;object-fit:contain;background:#000}
+#review .bar{padding:12px 16px calc(var(--sb) + 14px);display:flex;gap:10px;flex-wrap:wrap}
+#review .bar button{flex:1;min-width:120px;padding:13px;border:0;border-radius:999px;font-weight:700;font-size:1rem}
+#save{background:#c9a961;color:#1d1a17}
+#again{background:rgba(255,255,255,.14);color:#fff}
+#back2{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.3)!important}
+#review .info{padding:10px 16px 0;font-size:.9rem;color:rgba(255,255,255,.75);font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<!-- 1. the script -->
+<section id="edit">
+  <h1>טלפרומטר</h1>
+  <p class="s">מדביקים את הטקסט, לוחצים "לצילום", והטקסט גולל מעל המצלמה בזמן שאתם מצלמים. בזמן הצילום: לחיצה על הטקסט עוצרת וממשיכה את הגלילה, וגרירה מזיזה אותו. הכול נשאר בטלפון.</p>
+  <textarea id="txt" placeholder="הדביקו כאן את הטקסט של הסרטון..."></textarea>
+  <div class="meta" id="est"></div>
+  <div class="row">
+    <button class="btn" id="go">לצילום</button>
+    <button class="btn ghost" id="keep">שמירת הטקסט</button>
+  </div>
+  <div id="saved"></div>
+</section>
+
+<!-- 2. camera + prompter -->
+<section id="cam" hidden>
+  <video id="vid" playsinline muted autoplay></video>
+  <div id="box">
+    <div id="scroller"><div id="text"></div></div>
+  </div>
+  <div id="tools">
+    <button id="slower">− איטי</button>
+    <button id="spd"><b id="wpm">130</b> מילים לדקה</button>
+    <button id="faster">מהיר +</button>
+    <button id="gear">הגדרות</button>
+  </div>
+  <button class="ib" id="closeCam" aria-label="חזרה לטקסט">✕</button>
+  <button class="ib" id="flip" aria-label="החלפת מצלמה">⟲</button>
+  <div id="bottom">
+    <div id="time"><i></i><span id="clock">00:00</span></div>
+    <button id="rec" aria-label="התחלת צילום"><span></span></button>
+  </div>
+  <div id="count" hidden></div>
+  <div id="msg" hidden></div>
+
+  <div id="sheet" hidden>
+    <h3>הגדרות</h3>
+    <div class="set"><label>גודל הטקסט</label><button data-k="font" data-d="-2">−</button><span class="v" id="vFont"></span><button data-k="font" data-d="2">+</button></div>
+    <div class="set"><label>גובה החלון</label><button data-k="h" data-d="-4">−</button><span class="v" id="vH"></span><button data-k="h" data-d="4">+</button></div>
+    <div class="set"><label>כהות הרקע</label><button data-k="dark" data-d="-10">−</button><span class="v" id="vDark"></span><button data-k="dark" data-d="10">+</button></div>
+    <div class="set"><label>ספירה לאחור</label><div class="seg3" id="cdSeg"><button data-cd="0">בלי</button><button data-cd="3">3</button><button data-cd="5">5</button></div></div>
+    <div class="set"><label>התחלת הגלילה</label><div class="seg3" id="asSeg"><button data-as="1">עם הצילום</button><button data-as="0">ידנית</button></div></div>
+    <div class="set"><label>היפוך הטקסט (למראה)</label><div class="seg3" id="mtSeg"><button data-mt="0">רגיל</button><button data-mt="1">הפוך</button></div></div>
+    <button class="done" id="sheetDone">סגירה</button>
+  </div>
+</section>
+
+<!-- 3. review -->
+<section id="review" hidden>
+  <video id="play" playsinline controls></video>
+  <div class="info" id="rinfo"></div>
+  <div class="bar">
+    <button id="save">שמירה לטלפון</button>
+    <button id="again">צילום חוזר</button>
+    <button id="back2">חזרה לטקסט</button>
+  </div>
+</section>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var LS = {
+    get: function (k, d) { try { var v = localStorage.getItem('dpr_' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem('dpr_' + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  var cfg = Object.assign({ wpm: 130, font: 30, h: 34, dark: 55, cd: 3, as: 1, mt: 0, facing: 'user' }, LS.get('cfg', {}));
+  function saveCfg() { LS.set('cfg', cfg); }
+
+  /* ---------- script screen ---------- */
+  var txt = $('txt');
+  txt.value = LS.get('draft', '');
+  function words(s) { return (s.match(/\S+/g) || []).length; }
+  function est() {
+    var w = words(txt.value);
+    if (!w) { $('est').textContent = ''; return; }
+    var sec = Math.round(w / cfg.wpm * 60);
+    $('est').textContent = w + ' מילים · בערך ' + Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0') + ' דקות בקצב של ' + cfg.wpm + ' מילים לדקה';
+  }
+  txt.addEventListener('input', function () { LS.set('draft', txt.value); est(); });
+  est();
+
+  function renderSaved() {
+    var list = LS.get('scripts', []);
+    var box = $('saved');
+    if (!list.length) { box.innerHTML = ''; return; }
+    box.innerHTML = '<h2>טקסטים שמורים</h2>';
+    list.forEach(function (it, i) {
+      var d = document.createElement('div'); d.className = 'sv';
+      var t = document.createElement('div'); t.className = 't'; t.textContent = it.title;
+      var o = document.createElement('button'); o.textContent = 'פתיחה';
+      o.onclick = function () { txt.value = it.text; LS.set('draft', it.text); est(); window.scrollTo(0, 0); };
+      var x = document.createElement('button'); x.className = 'del'; x.textContent = 'מחיקה';
+      x.onclick = function () { var l = LS.get('scripts', []); l.splice(i, 1); LS.set('scripts', l); renderSaved(); };
+      d.appendChild(t); d.appendChild(o); d.appendChild(x); box.appendChild(d);
+    });
+  }
+  $('keep').onclick = function () {
+    var s = txt.value.trim(); if (!s) return;
+    var l = LS.get('scripts', []);
+    var title = s.split('\n')[0].slice(0, 50);
+    l = l.filter(function (it) { return it.text !== s; });
+    l.unshift({ title: title, text: s, at: Date.now() });
+    LS.set('scripts', l.slice(0, 40)); renderSaved();
+    $('keep').textContent = 'נשמר ✓'; setTimeout(function () { $('keep').textContent = 'שמירת הטקסט'; }, 1500);
+  };
+  renderSaved();
+
+  /* ---------- prompter text ---------- */
+  var textEl = $('text'), scroller = $('scroller'), box = $('box');
+  var segs = [], pos = 0, scrolling = false, lastT = 0, pxPerWord = 10, maxPos = 0, guideY = 0;
+
+  function buildText() {
+    textEl.innerHTML = '';
+    var paras = txt.value.replace(/\r/g, '').split(/\n\s*\n|\n/).map(function (p) { return p.trim(); }).filter(Boolean);
+    paras.forEach(function (p) {
+      var pe = document.createElement('p');
+      // one highlight unit per sentence (split after . ? ! : and after long pauses like " - ")
+      (p.match(/[^.!?:]+[.!?:]+["'״׳)]*\s*|[^.!?:]+$/g) || [p]).forEach(function (s) {
+        var sp = document.createElement('span'); sp.className = 'seg'; sp.textContent = s; pe.appendChild(sp);
+      });
+      textEl.appendChild(pe);
+    });
+    segs = Array.prototype.slice.call(textEl.querySelectorAll('.seg'));
+    layout();
+  }
+  function layout() {
+    box.style.height = cfg.h + 'vh';
+    $('tools').style.top = 'calc(var(--st) + 52px + ' + cfg.h + 'vh + 8px)';
+    box.style.background = 'rgba(20,20,20,' + (cfg.dark / 100) + ')';
+    textEl.style.fontSize = cfg.font + 'px';
+    textEl.style.lineHeight = '1.45';
+    textEl.style.transform = cfg.mt ? 'scaleX(-1)' : '';
+    var bh = box.clientHeight;
+    guideY = Math.round(bh * 0.28);
+    textEl.style.paddingTop = guideY + 'px';
+    textEl.style.paddingBottom = Math.round(bh * 0.75) + 'px';
+    var contentH = textEl.scrollHeight - guideY - Math.round(bh * 0.75);
+    var w = words(txt.value) || 1;
+    pxPerWord = Math.max(contentH, 1) / w;
+    maxPos = Math.max(0, textEl.scrollHeight - bh);
+    pos = Math.min(pos, maxPos);
+    paint();
+  }
+  function paint() {
+    textEl.style.transform = 'translateY(' + (-pos) + 'px)' + (cfg.mt ? ' scaleX(-1)' : '');
+    // highlight the sentence that crosses the reading line
+    var y = pos + guideY + cfg.font * 0.6, on = null;
+    for (var i = 0; i < segs.length; i++) {
+      var s = segs[i], top = s.offsetTop, rects = s.getClientRects();
+      var h = s.offsetHeight;
+      if (rects.length) { var r0 = rects[0], rl = rects[rects.length - 1]; h = rl.bottom - r0.top; }
+      if (y >= top && y <= top + h) { on = s; break; }
+      if (top > y) { on = segs[Math.max(0, i - 1)]; break; }
+    }
+    segs.forEach(function (s) { s.classList.toggle('on', s === on); });
+  }
+  function tick(t) {
+    if (scrolling) {
+      if (lastT) {
+        var dt = Math.min(0.1, (t - lastT) / 1000);
+        pos += dt * (cfg.wpm / 60) * pxPerWord;
+        if (pos >= maxPos) { pos = maxPos; scrolling = false; }
+        paint();
+      }
+      lastT = t;
+    } else lastT = 0;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  function setScroll(on) { scrolling = on && pos < maxPos; $('spd').style.background = scrolling ? 'rgba(0,0,0,.5)' : 'rgba(139,111,71,.85)'; }
+
+  // tap = pause/resume; drag = move the text by hand
+  var drag = null;
+  box.addEventListener('pointerdown', function (e) { drag = { y: e.clientY, p: pos, moved: false }; box.setPointerCapture(e.pointerId); });
+  box.addEventListener('pointermove', function (e) {
+    if (!drag) return; var d = drag.y - e.clientY;
+    if (Math.abs(d) > 6) drag.moved = true;
+    if (drag.moved) { pos = Math.max(0, Math.min(maxPos, drag.p + d)); paint(); }
+  });
+  box.addEventListener('pointerup', function () { if (drag && !drag.moved) setScroll(!scrolling); drag = null; });
+
+  function showWpm() { $('wpm').textContent = cfg.wpm; }
+  function speed(d) { cfg.wpm = Math.max(60, Math.min(260, cfg.wpm + d)); saveCfg(); showWpm(); est(); }
+  $('slower').onclick = function () { speed(-10); };
+  $('faster').onclick = function () { speed(10); };
+  $('spd').onclick = function () { setScroll(!scrolling); };
+
+  /* ---------- settings ---------- */
+  function showSet() {
+    $('vFont').textContent = cfg.font; $('vH').textContent = cfg.h + '%'; $('vDark').textContent = cfg.dark + '%';
+    [['cdSeg', 'cd'], ['asSeg', 'as'], ['mtSeg', 'mt']].forEach(function (a) {
+      Array.prototype.forEach.call($(a[0]).children, function (b) { b.classList.toggle('on', String(cfg[a[1]]) === b.getAttribute('data-' + a[1])); });
+    });
+  }
+  $('gear').onclick = function () { showSet(); $('sheet').hidden = false; };
+  $('sheetDone').onclick = function () { $('sheet').hidden = true; };
+  Array.prototype.forEach.call(document.querySelectorAll('.set button[data-k]'), function (b) {
+    b.onclick = function () {
+      var k = b.getAttribute('data-k'), d = +b.getAttribute('data-d');
+      var lim = { font: [18, 60], h: [18, 60], dark: [0, 90] }[k];
+      cfg[k] = Math.max(lim[0], Math.min(lim[1], cfg[k] + d)); saveCfg(); showSet(); layout();
+    };
+  });
+  [['cdSeg', 'cd'], ['asSeg', 'as'], ['mtSeg', 'mt']].forEach(function (a) {
+    Array.prototype.forEach.call($(a[0]).children, function (b) {
+      b.onclick = function () { cfg[a[1]] = +b.getAttribute('data-' + a[1]); saveCfg(); showSet(); layout(); };
+    });
+  });
+
+  /* ---------- camera ---------- */
+  var stream = null, rec = null, chunks = [], recording = false, t0 = 0, clockT = null, wake = null, blobUrl = null, lastBlob = null, lastMime = '';
+  function msg(s) { var m = $('msg'); if (!s) { m.hidden = true; return; } m.textContent = s; m.hidden = false; }
+
+  async function startCam() {
+    msg('');
+    if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { msg('הדפדפן הזה לא מאפשר גישה למצלמה. פתחו את הדף בספארי (באייפון) או בכרום.'); return false; }
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: cfg.facing, width: { ideal: 1080 }, height: { ideal: 1920 }, aspectRatio: { ideal: 9 / 16 }, frameRate: { ideal: 30 } },
+        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+      });
+    } catch (e) {
+      msg('אין גישה למצלמה או למיקרופון. צריך לאשר גישה כשהדפדפן שואל. אם כבר סירבתם: בהגדרות של הטלפון, תחת ספארי, מאשרים מצלמה ומיקרופון לאתר הזה.');
+      return false;
+    }
+    var v = $('vid'); v.srcObject = stream; v.classList.toggle('mirror', cfg.facing === 'user');
+    try { await v.play(); } catch (e) {}
+    return true;
+  }
+  async function keepAwake() { try { if ('wakeLock' in navigator) wake = await navigator.wakeLock.request('screen'); } catch (e) {} }
+
+  $('go').onclick = async function () {
+    if (!txt.value.trim()) { txt.focus(); return; }
+    LS.set('draft', txt.value);
+    $('edit').hidden = true; $('cam').hidden = false;
+    showWpm(); pos = 0; buildText(); setScroll(false);
+    await startCam(); keepAwake(); layout();
+  };
+  function closeCam() {
+    if (recording) return;
+    if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); stream = null;
+    if (wake) { try { wake.release(); } catch (e) {} wake = null; }
+    $('cam').hidden = true; $('edit').hidden = false; $('sheet').hidden = true;
+  }
+  $('closeCam').onclick = closeCam;
+  $('flip').onclick = async function () { if (recording) return; cfg.facing = cfg.facing === 'user' ? 'environment' : 'user'; saveCfg(); await startCam(); };
+  window.addEventListener('resize', function () { if (!$('cam').hidden) layout(); });
+
+  function pickMime() {
+    var c = ['video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+    if (!window.MediaRecorder) return null;
+    for (var i = 0; i < c.length; i++) { try { if (MediaRecorder.isTypeSupported(c[i])) return c[i]; } catch (e) {} }
+    return '';
+  }
+  function fmt(s) { s = Math.floor(s); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+
+  async function countdown() {
+    var n = cfg.cd, c = $('count');
+    while (n > 0) { c.textContent = n; c.hidden = false; await new Promise(function (r) { setTimeout(r, 1000); }); n--; }
+    c.hidden = true;
+  }
+  async function startRec() {
+    if (!stream && !(await startCam())) return;
+    var mime = pickMime();
+    if (mime === null) { msg('הדפדפן הזה לא יודע להקליט וידאו. באייפון צריך iOS מעודכן ולפתוח בספארי.'); return; }
+    $('sheet').hidden = true; $('rec').disabled = true;
+    await countdown();
+    chunks = [];
+    try { rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 8000000, audioBitsPerSecond: 128000 } : undefined); }
+    catch (e) { rec = new MediaRecorder(stream); }
+    lastMime = rec.mimeType || mime || 'video/mp4';
+    rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+    rec.onstop = review;
+    rec.start(1000);
+    recording = true; t0 = Date.now();
+    $('rec').disabled = false; $('rec').classList.add('on'); $('rec').setAttribute('aria-label', 'עצירת הצילום');
+    $('time').classList.add('rec'); $('closeCam').hidden = true; $('flip').hidden = true;
+    clockT = setInterval(function () { $('clock').textContent = fmt((Date.now() - t0) / 1000); }, 250);
+    if (cfg.as) setScroll(true);
+  }
+  function stopRec() {
+    if (!rec || !recording) return;
+    recording = false; setScroll(false);
+    clearInterval(clockT);
+    $('rec').classList.remove('on'); $('rec').setAttribute('aria-label', 'התחלת צילום'); $('time').classList.remove('rec');
+    $('closeCam').hidden = false; $('flip').hidden = false;
+    try { rec.stop(); } catch (e) {}
+  }
+  $('rec').onclick = function () { recording ? stopRec() : startRec(); };
+
+  // keyboard / Bluetooth remote: space = pause/resume, arrows = speed, Enter = record
+  document.addEventListener('keydown', function (e) {
+    if ($('cam').hidden) return;
+    if (e.code === 'Space' || e.key === 'PageDown') { e.preventDefault(); setScroll(!scrolling); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); speed(10); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); speed(-10); }
+    else if (e.key === 'Enter') { e.preventDefault(); $('rec').click(); }
+  });
+
+  /* ---------- review ---------- */
+  function review() {
+    var dur = (Date.now() - t0) / 1000;
+    lastBlob = new Blob(chunks, { type: lastMime.split(';')[0] });
+    if (blobUrl) URL.revokeObjectURL(blobUrl);
+    blobUrl = URL.createObjectURL(lastBlob);
+    var p = $('play'); p.src = blobUrl;
+    $('rinfo').innerHTML = 'אורך: <bdi>' + fmt(dur) + '</bdi> · גודל: <bdi>' + (lastBlob.size / 1048576).toFixed(1) + '</bdi> מגה';
+    $('cam').hidden = true; $('review').hidden = false;
+    if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); stream = null;
+  }
+  function fileName() {
+    var d = new Date(), z = function (n) { return String(n).padStart(2, '0'); };
+    var ext = /mp4/.test(lastMime) ? 'mp4' : 'webm';
+    return 'video-' + d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '-' + z(d.getHours()) + z(d.getMinutes()) + '.' + ext;
+  }
+  $('save').onclick = async function () {
+    if (!lastBlob) return;
+    var f = new File([lastBlob], fileName(), { type: lastBlob.type });
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f] }); return; }
+    } catch (e) { if (e && e.name === 'AbortError') return; }
+    var a = document.createElement('a'); a.href = blobUrl; a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
+  };
+  $('again').onclick = async function () {
+    $('play').pause(); $('review').hidden = true; $('cam').hidden = false;
+    pos = 0; paint(); setScroll(false); $('clock').textContent = '00:00';
+    await startCam(); layout();
+  };
+  $('back2').onclick = function () { $('play').pause(); $('review').hidden = true; $('edit').hidden = false; $('clock').textContent = '00:00'; };
+})();
+</script>
+</body>
+</html>
