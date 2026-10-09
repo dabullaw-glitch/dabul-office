@@ -219,6 +219,47 @@ add_action('rest_api_init', function () {
 		$walk($d, 0);
 		return array('lines' => $out);
 	}));
+	// add boxes to an Elementor page by copying an existing box: POST {post, template, parent, items:[{title,url}], dry}
+	register_rest_route('dabul/v1', '/eladdboxes', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
+		global $wpdb;
+		$pid = (int) $req->get_param('post'); $tplId = (string) $req->get_param('template'); $parentId = (string) $req->get_param('parent');
+		$items = (array) $req->get_param('items');
+		$row = $wpdb->get_row($wpdb->prepare("SELECT meta_id, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = '_elementor_data' LIMIT 1", $pid), ARRAY_A);
+		if (!$row || !$items) return new WP_Error('args', 'missing', array('status' => 400));
+		$d = json_decode($row['meta_value'], true);
+		$tpl = null;
+		$find = function ($els) use (&$find, $tplId, &$tpl) { foreach ((array) $els as $e) { if (isset($e['id']) && $e['id'] === $tplId) $tpl = $e; if (!empty($e['elements'])) $find($e['elements']); } };
+		$find($d);
+		if (!$tpl) return new WP_Error('tpl', 'template not found', array('status' => 404));
+		$newid = function () { return substr(md5(uniqid('', true) . wp_rand()), 0, 7); };
+		$made = array();
+		foreach ($items as $it) {
+			$c = $tpl;
+			$fix = function (&$e) use (&$fix, $newid, $it) {
+				$e['id'] = $newid();
+				if (isset($e['widgetType']) && $e['widgetType'] === 'icon-box') {
+					$e['settings']['title_text'] = sanitize_text_field($it['title']);
+					$e['settings']['link'] = array('url' => esc_url_raw($it['url']), 'is_external' => (strpos($it['url'], 'dabullaw.co.il') === false ? 'on' : ''), 'nofollow' => '', 'custom_attributes' => '');
+					if (isset($e['settings']['__dynamic__']['link'])) unset($e['settings']['__dynamic__']['link']);
+					if (isset($e['settings']['__dynamic__']['title_text'])) unset($e['settings']['__dynamic__']['title_text']);
+				}
+				if (!empty($e['elements'])) foreach ($e['elements'] as &$ch) $fix($ch);
+			};
+			$fix($c);
+			$made[] = $c;
+		}
+		$added = 0;
+		$ins = function (&$els) use (&$ins, $parentId, $made, &$added) { foreach ($els as &$e) { if (isset($e['id']) && $e['id'] === $parentId) { foreach ($made as $m) $e['elements'][] = $m; $added++; } if (!empty($e['elements'])) $ins($e['elements']); } };
+		$ins($d);
+		if ($added !== 1) return new WP_Error('parent', 'parent found ' . $added . ' times', array('status' => 409));
+		if ($req->get_param('dry')) return array('dry' => true, 'boxes' => array_map(function ($m) { return $m['id']; }, $made));
+		$wpdb->insert($wpdb->postmeta, array('post_id' => $pid, 'meta_key' => '_dabul_textbak', 'meta_value' => wp_json_encode(array('at' => current_time('mysql'), 'added' => count($made), 'meta' => array($row['meta_id'] => array('key' => '_elementor_data', 'old' => $row['meta_value']))), JSON_UNESCAPED_UNICODE)));
+		$wpdb->update($wpdb->postmeta, array('meta_value' => wp_json_encode($d)), array('meta_id' => $row['meta_id']));
+		clean_post_cache($pid); wp_cache_delete($pid, 'post_meta'); delete_post_meta($pid, '_elementor_css'); delete_post_meta($pid, '_elementor_element_cache');
+		if (class_exists('\Elementor\Plugin')) \Elementor\Plugin::$instance->files_manager->clear_cache();
+		if (function_exists('rocket_clean_post')) rocket_clean_post($pid);
+		return array('ok' => true, 'added' => count($made));
+	}));
 	register_rest_route('dabul/v1', '/namefix-undo', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
 		global $wpdb;
 		$out = array();
