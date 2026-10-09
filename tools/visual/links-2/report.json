@@ -1,0 +1,35 @@
+[
+ {
+  "i": 0,
+  "u": "https://www.cbs.gov.il/he/Pages/%D7%9E%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%94%D7%A6%D7%9E%D7%93%D7%94-%D7%9C%D7%9E%D7%93%D7%93%D7%99%D7%9D.aspx",
+  "status": 200,
+  "final": "https://www.cbs.gov.il/he/CBSNewBrand/Pages/Calculator.aspx",
+  "title": "הלשכה המרכזית לסטטיסטיקה מחשבון הצמדה למדדים",
+  "h1": "",
+  "text": "הפעל מצב נגיש יותר\nאודות\nיצירת קשר\nEnglish\nהלשכה המרכזית לסטטיסטיקה\nCentral Bureau of Statistics\nدائرة الإحصاء المركزية\nנושאים\nכלים ופרסומים\nמידע לפי אזור גאוגרפי\nסקרים ומפקדים\nהגדרות, סיווגים ושיטות\nמחשבון הצמדה למדדים\n\n\n\nמחשבון הצמדה למדדים\nבחר מדד לחישוב\n[מדד ראשי] :\nמדד המחירים לצרכן\n- 120010\nמדד המחירים לצרכן (כולל מע\"מ), לפי קבוצות צריכה ראשיות\nמדד המחירים לצרכן - כללי\n- 120010\nהמדד ללא ירקו"
+ },
+ {
+  "i": 1,
+  "u": "https://www.boi.org.il/roles/statistics/banking/housing_cred/xls_report/",
+  "status": 200,
+  "final": "https://www.boi.org.il/roles/statistics/banking/housing_cred/xls_report/",
+  "title": "ביצועים וריביות-דוחות אקסל | בנק ישראל - הבנק המרכזי של ישראל",
+  "h1": "ביצועים וריביות-דוחות אקסל",
+  "text": "דלג לתוכן\nבנק ישראל \nהתפקידים הכלכליים \nמידע ושירות לציבור \nתקשורת ופרסומים \nחיפוש \nיצירת קשר\nHE \nדף הבית \nהתפקידים הכלכליים \nסטטיסטיקה \nבנקים \nאשראי לדיור \nביצועים וריביות-דוחות אקסל\nביצועים וריביות-דוחות אקסל\nמבט מהיר\nמידע סטטיסטי לפי נושאים\nבנק ישראל\nבנקים\nמאזן\nאשראי\nאשראי לדיור\nיתרות\nביצועים וריביות-דוחות אקסל\nדוח חודשי על הלוואות לדיור\nפקדונות\nהון\nהבנקים וסניפיהם\nדוחות כספיים\nפעילות במסלקות ("
+ },
+ {
+  "i": 2,
+  "u": "https://ica.justice.gov.il/GenericCorporarionInfo/SearchCorporation?unit=8",
+  "status": 200,
+  "final": "https://ica.justice.gov.il/GenericCorporarionInfo/SearchCorporation?unit=8",
+  "title": "מידע ושרותים מקוונים - תאגידים ברשת (תאגידים ONLINE)",
+  "h1": "מידע ושרותים מקוונים",
+  "text": "דילוג לתוכן העמוד\nנגישות\nתאגידים ברשת (תאגידים online)\nIsraeli Corporations Authority\nמשרד המשפטים\nלדף הבית\nתאגידים ברשת (תאגידים ONLINE)\nמידע ושרותים מקוונים\nפניה לפי נושאים\n\nלפנייה בנושא: חברות\n\nלפנייה בנושא: עמותות וחל\"צ\n\nלפנייה בנושא: שותפויות\n\nלפנייה ישירה בנושא משכונות:\nmoked-mashkonot@justice.gov.il\n\nפנו אלינו בצ'אט אנושי:\nבנושא חברות ושותפויות\nבנושא עמותות וחל\"צ\n\nשוחחו איתנו ב WhatsApp:\nבנ"
+ },
+ {
+  "i": 3,
+  "u": "https://www.misim.gov.il/svsimurechisha/",
+  "status": null,
+  "error": "page.goto: Timeout 45000ms exceeded.\nCall log:\n  - navigating to \"https://www.misim.gov.il/svsimurechisha/\", waiting until \"domcontentloaded\"\n"
+ }
+]

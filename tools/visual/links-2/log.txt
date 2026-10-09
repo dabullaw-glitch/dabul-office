@@ -1,0 +1,4 @@
+0 200 https://www.cbs.gov.il/he/Pages/%D7%9E%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%94%D7%A6%D7%9E%D7%93%D7%94-%D7%9C%D7%9E%D7%93%D7%93%D7%99%D7%9D.aspx | הלשכה המרכזית לסטטיסטיקה מחשבון הצמדה למדדים | 
+1 200 https://www.boi.org.il/roles/statistics/banking/housing_cred/xls_report/ | ביצועים וריביות-דוחות אקסל | בנק ישראל - הבנק המרכזי של ישראל | ביצועים וריביות-דוחות אקסל
+2 200 https://ica.justice.gov.il/GenericCorporarionInfo/SearchCorporation?unit=8 | מידע ושרותים מקוונים - תאגידים ברשת (תאגידים ONLINE) | מידע ושרותים מקוונים
+3 null https://www.misim.gov.il/svsimurechisha/ | undefined | undefined
