@@ -260,6 +260,17 @@ add_action('rest_api_init', function () {
 		if (function_exists('rocket_clean_post')) rocket_clean_post($pid);
 		return array('ok' => true, 'added' => count($made));
 	}));
+	// add a file to the media library from an address: POST {url, filename, title}
+	register_rest_route('dabul/v1', '/sideload', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
+		require_once ABSPATH . 'wp-admin/includes/file.php'; require_once ABSPATH . 'wp-admin/includes/media.php'; require_once ABSPATH . 'wp-admin/includes/image.php';
+		$url = esc_url_raw((string) $req->get_param('url')); $fn = sanitize_file_name((string) $req->get_param('filename'));
+		if (strpos($url, 'https://raw.githubusercontent.com/dabullaw-glitch/') !== 0 || !$fn) return new WP_Error('args', 'bad url or name', array('status' => 400));
+		$tmp = download_url($url, 60);
+		if (is_wp_error($tmp)) return $tmp;
+		$id = media_handle_sideload(array('name' => $fn, 'tmp_name' => $tmp), 0, (string) $req->get_param('title'));
+		if (is_wp_error($id)) { @unlink($tmp); return $id; }
+		return array('id' => $id, 'url' => wp_get_attachment_url($id));
+	}));
 	register_rest_route('dabul/v1', '/namefix-undo', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
 		global $wpdb;
 		$out = array();
