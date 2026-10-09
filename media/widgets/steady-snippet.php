@@ -5,8 +5,8 @@
    2. The style files of the side contact box and one more template were requested only at the end of the page, so on the
       computer the side box was first drawn unstyled (a big photo, the form without its checkbox) and then rearranged.
       They now arrive together with the other style files at the top (the same rules, nothing in the look changes).
-   Preview: add ?dblprev=1 to any address. To undo: deactivate this snippet. */
-// define('DABUL_STEADY_LIVE', 1);
+   Checked on a preview address on 9.10.2026 (phone and computer: the same look). Now live. To undo: deactivate this snippet. */
+define('DABUL_STEADY_LIVE', 1);
 
 function dabul_steady_on() {
 	if (defined('DABUL_STEADY_LIVE')) return true;
