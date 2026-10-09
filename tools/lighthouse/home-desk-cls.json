@@ -1,0 +1,127 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "desktop",
+ "at": "2026-10-09T08:30:57.395Z",
+ "runs": [
+  {
+   "score": 99,
+   "fcp": 517.671,
+   "lcp": 685.2994999999999,
+   "si": 1097.8709417947314,
+   "tbt": 34,
+   "cls": 0.01123595505617977,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-9a271d9c-e980-4a12-80cd-e1d4f68f629b=\"excluded\" data-rocket-lazy-bg-7c218c46-4ade-43fe-88e4-40a25243fb83=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     566
+    ],
+    [
+     "resourceLoadDelay",
+     118
+    ],
+    [
+     "resourceLoadDuration",
+     45
+    ],
+    [
+     "elementRenderDelay",
+     317
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0.011,
+     "<html dir=\"rtl\" lang=\"he-IL\">",
+     "html",
+     "https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Light.woff2"
+    ]
+   ],
+   "bytes": 418708,
+   "docBytes": 166136
+  },
+  {
+   "score": 95,
+   "fcp": 428.163,
+   "lcp": 706.1070000000001,
+   "si": 742.2109503533611,
+   "tbt": 0,
+   "cls": 0.1365836721922722,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-9a271d9c-e980-4a12-80cd-e1d4f68f629b=\"excluded\" data-rocket-lazy-bg-7c218c46-4ade-43fe-88e4-40a25243fb83=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     528
+    ],
+    [
+     "resourceLoadDelay",
+     6
+    ],
+    [
+     "resourceLoadDuration",
+     19
+    ],
+    [
+     "elementRenderDelay",
+     251
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0.137,
+     "<html dir=\"rtl\" lang=\"he-IL\">",
+     "html",
+     ""
+    ],
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-62c1a11 elementor-widget elementor-wid…\" data-id=\"62c1a11\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div.elementor-element > div.elementor-element > div.elementor-element > div.elementor-element",
+     ""
+    ]
+   ],
+   "bytes": 418841,
+   "docBytes": 166262
+  },
+  {
+   "score": 95,
+   "fcp": 409.322,
+   "lcp": 711.7619999999998,
+   "si": 695.4767826252719,
+   "tbt": 0,
+   "cls": 0.1365519662921348,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-9a271d9c-e980-4a12-80cd-e1d4f68f629b=\"excluded\" data-rocket-lazy-bg-7c218c46-4ade-43fe-88e4-40a25243fb83=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     480
+    ],
+    [
+     "resourceLoadDelay",
+     6
+    ],
+    [
+     "resourceLoadDuration",
+     16
+    ],
+    [
+     "elementRenderDelay",
+     239
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0.137,
+     "<html dir=\"rtl\" lang=\"he-IL\">",
+     "html",
+     "https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2"
+    ]
+   ],
+   "bytes": 418822,
+   "docBytes": 166262
+  }
+ ]
+}
