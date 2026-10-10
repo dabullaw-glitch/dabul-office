@@ -1,3 +1,2 @@
-c-levy https://dabullaw.co.il/calculators/betterment-levy/
-c-ry https://dabullaw.co.il/calculators/rental-yield/
-c-hub https://dabullaw.co.il/calculators/
+c2-levy https://dabullaw.co.il/calculators/betterment-levy/
+c2-ry https://dabullaw.co.il/calculators/rental-yield/
