@@ -1,5 +1,2 @@
-img-62f34a93.jpg https://images.rawpixel.com/editor_1024/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcHg2MzMxNDUtaW1hZ2Uta3d2eGwycGMuanBn.jpg
-img-81e90529.jpg https://images.rawpixel.com/editor_1024/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcHgxMDY3MjMyLWltYWdlLWt3dnk2OGI1LmpwZw.jpg
-img-2196bf51.jpg https://images.rawpixel.com/editor_1024/cHJpdmF0ZS9zdGF0aWMvaW1hZ2Uvd2Vic2l0ZS8yMDIyLTA0L2xyL3B4MTI3NDc2NS1pbWFnZS1rd3Z3NXJ4dy5qcGc.jpg
-img-ce77acb2.jpg https://images.rawpixel.com/editor_1024/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcHgxMjczNjAzLWltYWdlLWt3dnkwOHJnLmpwZw.jpg
-img-c7e000cb.jpg https://images.rawpixel.com/editor_1024/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvZmw0MDQwNDgzNTQ0NS1pbWFnZS1reWNqMzR2OS5qcGc.jpg
+logo-site.webp https://dabullaw.co.il/wp-content/uploads/2025/11/logo-footer.webp
+logo-head.webp https://dabullaw.co.il/wp-content/uploads/2025/11/unnamed-3-1.jpg.webp
