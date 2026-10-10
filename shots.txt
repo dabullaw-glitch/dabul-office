@@ -1,1 +1,3 @@
-whyprev https://dabullaw.co.il/?dblprev=1
+c-levy https://dabullaw.co.il/calculators/betterment-levy/
+c-ry https://dabullaw.co.il/calculators/rental-yield/
+c-hub https://dabullaw.co.il/calculators/
