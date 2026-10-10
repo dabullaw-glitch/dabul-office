@@ -1,0 +1,19 @@
+.wf-force-outline-none[tabindex="-1"]:focus { outline: none; }
+@media (min-width: 992px) {
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="862ffba5-7473-bdd2-0bd0-67c0875b6fa4"] { height: 60svh; }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="2ff8e0f1-9652-c149-2016-4060ff90405d"] { opacity: 1; height: 52px; }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="743bd5f4-c88e-4c7b-1b3e-708c5eb8bdcc"] { opacity: 0; }
+}
+@media (max-width: 991px) and (min-width: 768px) {
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="862ffba5-7473-bdd2-0bd0-67c0875b6fa4"] { height: 60svh; }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="2ff8e0f1-9652-c149-2016-4060ff90405d"] { opacity: 1; height: 52px; }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="743bd5f4-c88e-4c7b-1b3e-708c5eb8bdcc"] { opacity: 0; }
+}
+@media (max-width: 767px) and (min-width: 480px) {
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="862ffba5-7473-bdd2-0bd0-67c0875b6fa4"] { height: 150svh; }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="2ff8e0f1-9652-c149-2016-4060ff90405d"] { opacity: 1; height: 52px; }
+}
+@media (max-width: 479px) {
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="862ffba5-7473-bdd2-0bd0-67c0875b6fa4"] { height: 150svh; }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="2ff8e0f1-9652-c149-2016-4060ff90405d"] { opacity: 1; height: 52px; }
+}
