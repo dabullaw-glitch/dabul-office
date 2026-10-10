@@ -1,0 +1,14 @@
+# Cache rules for Cloudflare Pages (used once the site moves to its own domain)
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+/og/*
+  Cache-Control: public, max-age=2592000
+/video/*
+  Cache-Control: public, max-age=2592000
+/pagefind/*
+  Cache-Control: public, max-age=86400
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

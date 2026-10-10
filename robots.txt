@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /chipus/
+Disallow: /forum/nihul/
+Disallow: /forum/sheela/
+
+Sitemap: https://blihovot.co.il/sitemap.xml
