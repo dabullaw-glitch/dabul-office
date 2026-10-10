@@ -75,5 +75,6 @@ function dqzInit(){document.querySelectorAll('.dqz[data-quiz]').forEach(function
    b.disabled=true; var T={evict:'שוכר שלא משלם או לא עוזב (שאלון באתר)',split:'פירוק שיתוף (שאלון באתר)',renew:'התחדשות עירונית (שאלון באתר)'}, rr=D.result(ans);var body={name:name,phone:tel,topic:T[id]||id,source:'website',form:'quiz-'+id,page:location.href.split('#')[0],notes:'שאלון באתר: '+D.h+'\n'+D.qs.map(function(q,n){return q[0]+' '+(picks[n]?picks[n][0]:'');}).join('\n')+'\nתוצאה שהוצגה: '+rr.tag[1]};var done=function(){L.innerHTML='<p>תודה, קיבלנו. נחזור אליכם ביום העבודה הקרוב.</p>';try{if(window.gtag)window.gtag('event','lead_form_submit',{form_name:'quiz-'+id,page_path:location.pathname});}catch(x){}};var fail=function(){b.disabled=false;m.textContent='משהו השתבש. אפשר להתקשר: 09-8613413';};fetch(window.DQZ_API||'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/lead',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}).then(function(x){return x.json();}).then(function(j){if(j&&j.ok)done();else fail();}).catch(fail);}});
  draw();
 });}
+window.dqzInit=dqzInit;
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',dqzInit);else dqzInit();
 })();
