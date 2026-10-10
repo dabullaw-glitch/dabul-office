@@ -10,7 +10,7 @@
    Option dabul_quiz_map can override the placement: {post_id: [quiz, heading text]}.
    To stop: deactivate this snippet. */
 define('DABUL_QUIZ_BASE', 'https://dabullaw-glitch.github.io/dabul-office/media/widgets/');
-define('DABUL_QUIZ_VER', '20261010b');
+define('DABUL_QUIZ_VER', '20261010c');
 function dabul_quiz_enqueue() {
 	wp_enqueue_style('dabul-quiz', DABUL_QUIZ_BASE . 'quizzes.css', array(), DABUL_QUIZ_VER);
 	wp_enqueue_script('dabul-quiz', DABUL_QUIZ_BASE . 'quizzes.js', array(), DABUL_QUIZ_VER, true);
