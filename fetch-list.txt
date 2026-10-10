@@ -1,8 +1,8 @@
-pv-s1.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s1.mp3
-pv-s2.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s2.mp3
-pv-s3.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s3.mp3
-pv-s4.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s4.mp3
-pv-s5.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s5.mp3
-pv-s6.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s6.mp3
-pv-s7.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s7.mp3
-yakir-about.webp https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-about.webp
+ov-keys.json https://api.openverse.org/v1/images/?q=house%20keys&license=cc0,pdm&page_size=20&mature=false
+ov-building.json https://api.openverse.org/v1/images/?q=apartment%20building%20balcony&license=cc0,pdm&page_size=20&mature=false
+ov-docs.json https://api.openverse.org/v1/images/?q=signing%20contract%20documents&license=cc0,pdm&page_size=20&mature=false
+ov-calc.json https://api.openverse.org/v1/images/?q=calculator%20documents&license=cc0,pdm&page_size=20&mature=false
+ov-city.json https://api.openverse.org/v1/images/?q=netanya&license=cc0,pdm&page_size=20&mature=false
+ov-interior.json https://api.openverse.org/v1/images/?q=living%20room%20apartment&license=cc0,pdm&page_size=20&mature=false
+ov-blueprint.json https://api.openverse.org/v1/images/?q=architectural%20blueprint&license=cc0,pdm&page_size=20&mature=false
+ov-handshake.json https://api.openverse.org/v1/images/?q=handshake%20real%20estate&license=cc0,pdm&page_size=20&mature=false
