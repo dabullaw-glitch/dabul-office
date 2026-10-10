@@ -68,6 +68,18 @@ pane('late',function(I,O){var now=new Date();now.setHours(12,0,0,0);if(!I('due')
  var r0=document.createElement('div');r0.className='r';var s0=document.createElement('span');s0.textContent='החודש הראשון: בלי פיצוי';var b0=document.createElement('b');b0.textContent=ILS(0);r0.appendChild(s0);r0.appendChild(b0);if(days>0)box.appendChild(r0);
  T.forEach(function(t){var a=t[0],e=t[1]&&t[1]<got?t[1]:got;var n=Math.max(0,Math.round((e-a)/864e5));if(!n)return;var v=n*daily*t[2];tot+=v;var r=document.createElement('div');r.className='r';var s=document.createElement('span');s.textContent=t[3]+' ('+n+' ימים)';var b=document.createElement('b');b.textContent=ILS(v);r.appendChild(s);r.appendChild(b);box.appendChild(r);});
  O('sum').textContent=ILS(tot);});
+// court fees 2026 (תקנות בתי המשפט (אגרות), התשס"ז-2007, התוספת; amounts as updated 1.1.2026)
+pane('court',function(I,O,P){var c=I('court').value,t=I('type').value,a=num(I('amt')),F={s:{min:893,non:774,oth:2012,app:1654,bra:588,ded:839},d:{non:1363,oth:3762,app:3539,bra:588,ded:1429}},f=F[c],T=28580660,tot=0,two=t==='money',lbl={s:'בית משפט השלום',d:'בית המשפט המחוזי'}[c];
+ var tenOpt=I('type').querySelector('option[value=ten]');if(tenOpt){tenOpt.disabled=c!=='s';if(c!=='s'&&t==='ten'){I('type').value='money';t='money';two=true;}}
+ I('amt').closest('.fld').hidden=!two;
+ if(two){tot=c==='s'?Math.max(a*.025,f.min):Math.min(a,T)*.025+Math.max(0,a-T)*.01;}
+ else tot=t==='ten'?285:f[t];
+ tot=Math.round(tot);var h1=two?Math.round(tot/2):tot,h2=two?tot-h1:0;
+ O('tot').textContent=ILS(tot);O('h1').textContent=ILS(h1);O('h2').textContent=two?ILS(h2)+' + הפרשי הצמדה':'אין';
+ O('ref').textContent=two?ILS(Math.max(0,h1-f.ded)):'לא רלוונטי';
+ var n='';if(two){n=c==='s'&&a*.025<f.min?'הסכום נמוך, ולכן חלה האגרה המזערית בבית משפט השלום: '+ILS(f.min)+'. ':'';n+='החישוב לפי 2.5% מסכום התביעה'+(c==='d'&&a>T?', ו-1% על החלק שמעל '+ILS(T):'')+', ב'+lbl+'.';}
+ else n={non:'אגרה קבועה לתביעה לסעד שאינו כספי (למשל צו הצהרתי, צו עשה, צו מניעה, אכיפה או פירוק שותפות), ב'+lbl+'.',oth:'אגרה קבועה לתביעה אחרת, שאינה תביעה כספית ואינה מהסוגים של הסעד שאינו כספי, ב'+lbl+'.',ten:'אגרה קבועה לתביעה בבית הדין לשכירות.',app:c==='s'?'ערעור על פסק דין של בית משפט השלום (מוגש לבית המשפט המחוזי).':'ערעור על פסק דין של בית המשפט המחוזי (מוגש לבית המשפט העליון).',bra:c==='s'?'בקשת רשות ערעור על החלטת ביניים של בית משפט השלום.':'בקשת רשות ערעור על החלטת ביניים של בית המשפט המחוזי.'}[t];
+ O('note').textContent=n;});
 pane('defects',function(I,O){var now=new Date();now.setHours(12,0,0,0);if(!I('got').value){I('got').value=iso(addY(now,-2));}var g=D(I('got').value),box=O('rows');box.innerHTML='';
  [['ליקוי רגיל אחר',1],['אינסטלציה, כולל חימום ומרזבים',2],['רטיבות בקירות ובמקלט',3],['מכונות, מנועים ודודים',3],['שקיעת ריצוף בקומת הקרקע ובשבילים',3],['סדקים עוברים בקירות ובתקרות',5],['התקלפות ניכרת של חיפוי חיצוני',7]].forEach(function(x){
   var be=addY(g,x[1]),ae=addY(be,3),d=document.createElement('div'),t=document.createElement('b'),st=document.createElement('i'),s=document.createElement('span');t.textContent=x[0];
