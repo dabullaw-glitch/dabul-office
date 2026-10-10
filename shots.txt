@@ -1,3 +1,1 @@
-plg-online https://www.poleg-law.com/sherutim-mishpatiim-online/
-plg-hitel https://www.poleg-law.com/machshevon-hitel-hashbacha/
-plg-tsua https://www.poleg-law.com/machshevon-tsua-hashkara/
+home https://dabullaw.co.il/?nc=w1
