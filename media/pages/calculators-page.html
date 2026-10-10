@@ -72,7 +72,7 @@
 .dt3 .tabs button[aria-selected=true] svg{background:var(--gold)}
 .dt3 .tabs button[aria-selected=true] svg *{stroke:#fff}
 @media(max-width:860px){.dt3 .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;border-inline-end:0;border-bottom:1px solid var(--line);padding:10px}.dt3 .tabs .tg{grid-column:1/-1}.dt3 .tabs button{display:flex;flex-direction:row;justify-content:flex-start;text-align:right;gap:8px;white-space:normal;font-size:14px;line-height:1.25;padding:8px;min-height:50px;background:#fff;border:1px solid var(--line)}.dt3 .tabs button svg{width:24px;height:24px}.dt3 .tabs button[aria-selected=true]{border-color:var(--ink)}}
-.dt3 .pane{padding:26px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px}
+.dt3 .pane{padding:26px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-content:start}
 .dt3 .pane[hidden]{display:none}
 @media(max-width:700px){.dt3 .pane{grid-template-columns:minmax(0,1fr);padding:18px}}
 .dt3 .pane h3{font-size:24px;grid-column:1/-1}
@@ -153,6 +153,28 @@
 .dt3 .note{font-size:13.5px;color:var(--mut);margin-top:18px}
 .dt3 button{white-space:normal;text-transform:none;letter-spacing:normal;min-width:0;max-width:100%}
 .dt3 .stop span,.dt3 .chk,.dt3 .term{overflow-wrap:anywhere}
+.dt3 .dtab{display:grid;gap:8px}
+.dt3 .dtab div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;background:rgba(255,255,255,.05);border-radius:12px;padding:9px 12px;font-size:14.5px;color:#e8e2d4}
+.dt3 .dtab div span{grid-column:1/-1;font-size:13px;color:#bfb6a2}
+.dt3 .dtab div i{font-style:normal;font-size:12.5px;font-weight:800;border-radius:99px;padding:1px 10px;white-space:nowrap}
+.dt3 .dtab i.b{background:#1f8f4e;color:#fff}.dt3 .dtab i.a{background:#e4d19c;color:#1c1b19}.dt3 .dtab i.x{background:rgba(255,255,255,.14);color:#d8d0bf}
+.dt3 .pop a{display:flex;justify-content:space-between;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px;font-size:16px}
+.dt3 .pop a:hover{border-color:var(--gold)}
+.dt3 .pop a span{color:var(--gold2);font-weight:800}
+.dt3 .pop small a{display:inline;border:0;background:none;padding:0;color:var(--gold2);font-weight:800}
+.dt3 .cgroup{margin-top:18px}
+.dt3 .cgroup .tg{font-size:14px;font-weight:800;color:var(--gold2);margin:0 0 10px;letter-spacing:.03em}
+.dt3 .cgroups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 24px}.dt3 .cgroup.full{grid-column:1/-1}.dt3 .cgrid{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:12px}
+.dt3 .ccard{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px;transition:border-color .15s,transform .15s,box-shadow .15s}
+.dt3 .ccard:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 10px 24px rgba(28,27,25,.08)}
+.dt3 .ccard.dim{opacity:.35}
+.dt3 .ccard .ci{width:42px;height:42px;border-radius:12px;background:var(--soft);display:grid;place-items:center}
+.dt3 .ccard .ci svg{width:22px;height:22px}
+.dt3 .ccard b{font-size:17px;line-height:1.35}
+.dt3 .ccard .cd{font-size:14px;color:var(--mut);line-height:1.5;flex:1}
+.dt3 .ccard .go{font-size:14px;font-weight:800;color:var(--gold2)}
+@media (max-width:1000px){.dt3 .cgroups{grid-template-columns:minmax(0,1fr)}.dt3 .cgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.dt3 .cgrid{grid-template-columns:minmax(0,1fr)}.dt3 .ccard{flex-direction:row;flex-wrap:wrap;align-items:center}.dt3 .ccard .ci{flex:0 0 42px}.dt3 .ccard b{flex:1;min-width:0}.dt3 .ccard .cd{flex-basis:100%}.dt3 .ccard .go{display:none}}
 </style>
 
 <div class="dt3" dir="rtl">
@@ -164,19 +186,19 @@
       <h1 id="h3-hero">מחשבונים וכלים לעסקת דירה</h1>
       <p class="lede">כמה מס רכישה, כמה הון עצמי צריך, מה ההחזר החודשי, כמה יישאר מהמכירה, ומה מותר לבקש מהשוכר. מחשבים כאן, בלי להירשם, ומבינים מה כל מספר אומר.</p>
       <div class="stats">
-        <div><b class="num">17</b><span>מחשבונים וכלים</span></div>
+        <div><b class="num">13</b><span>מחשבונים</span></div>
         <div><b class="num">3</b><span>בדיקות מהירות</span></div>
         <div><b class="num">50+</b><span>טפסים רשמיים</span></div>
       </div>
     </div>
-    <div class="hc" data-calc="hero">
-      <p class="hct">כמה מס רכישה תשלמו?</p>
-      <div class="fld"><label for="h-price">מחיר הדירה</label><div class="money"><input id="h-price" inputmode="numeric" value="2,500,000" autocomplete="off"><span>₪</span></div></div>
-      <div class="seg" data-g="type"><button type="button" aria-pressed="true" data-v="single">דירה יחידה</button><button type="button" aria-pressed="false" data-v="extra">דירה נוספת</button></div>
-      <div class="big"><span>מס רכישה</span><b class="num" data-o="tax">20,538 ₪</b></div>
-      <div class="rate" data-o="rate">שיעור אפקטיבי: 0.82% מהמחיר</div>
-      <div class="bars"><div class="bar" data-o="bar"></div><div class="leg" data-o="leg"></div></div>
-      <small>לפי מדרגות 2026, בתוקף עד 15.1.2028. הערכה כללית: עולים חדשים, תושבי חוץ ומקרים מיוחדים מחושבים אחרת. <a href="#wb-tax" data-open="tax">לפירוט מלא ←</a></small>
+    <div class="hc pop">
+      <p class="hct">מה רוצים לחשב?</p>
+      <a href="/calculators/purchase-tax/"><b>כמה מס רכישה אשלם?</b><span>←</span></a>
+      <a href="/calculators/equity/"><b>כמה הון עצמי צריך?</b><span>←</span></a>
+      <a href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%94%d7%97%d7%96%d7%a8-%d7%97%d7%95%d7%93%d7%a9%d7%99-%d7%9c%d7%9e%d7%a9%d7%9b%d7%a0%d7%aa%d7%90-%d7%aa%d7%9b%d7%a0%d7%a0%d7%95-%d7%90%d7%aa-%d7%94%d7%aa%d7%a7/"><b>מה יהיה ההחזר החודשי?</b><span>←</span></a>
+      <a href="/calculators/shevach-exemption/"><b>האם אהיה פטור ממס שבח?</b><span>←</span></a>
+      <a href="/calculators/late-delivery/"><b>הקבלן מאחר: כמה פיצוי מגיע?</b><span>←</span></a>
+      <small><a href="#wb">לכל 13 המחשבונים ←</a></small>
     </div>
   </section>
 
@@ -191,127 +213,11 @@
     </div>
   </section>
 
-  <!-- WORKBENCH -->
   <section id="wb" aria-labelledby="h3-wb">
-    <div class="sh"><div><p class="k">שולחן העבודה</p><h2 id="h3-wb">10 מחשבונים שעובדים כאן בעמוד</h2><p>בוחרים מחשבון, משנים מספרים ורואים את התוצאה מיד. כל מחשבון מסביר מה התוצאה אומרת.</p></div></div>
-    <div class="wb">
-      <div class="tabs" role="tablist" aria-label="מחשבונים">
-        <p class="tg">לקונים</p>
-        <button role="tab" type="button" aria-selected="true" data-t="tax" data-s="2 3"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8v3H8zM8 14h1M11.5 14h1M15 14h1M8 17.5h1M11.5 17.5h1M15 17.5h1"/></svg>מס רכישה</button>
-        <button role="tab" type="button" aria-selected="false" data-t="eq" data-s="1"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 11l9-7 9 7v9H3z"/><path d="M12 13v5M9.5 15.5h5"/></svg>הון עצמי</button>
-        <button role="tab" type="button" aria-selected="false" data-t="pmt" data-s="1"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 20h18M5 20V10M19 20V10M9 20v-6M15 20v-6M2 10l10-6 10 6z"/></svg>החזר חודשי</button>
-        <button role="tab" type="button" aria-selected="false" data-t="dates" data-s="4"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 14h3"/></svg>מועדים אחרי חתימה</button>
-        <p class="tg">למוכרים</p>
-        <button role="tab" type="button" aria-selected="false" data-t="sell" data-s=""><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 11l9-7 9 7v9H3z"/><path d="M9 15h6M13 12.5l2.5 2.5-2.5 2.5"/></svg>כמה יישאר מהמכירה</button>
-        <button role="tab" type="button" aria-selected="false" data-t="shevach" data-s=""><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>פטור ממס שבח?</button>
-        <p class="tg">למשכירים ולמשקיעים</p>
-        <button role="tab" type="button" aria-selected="false" data-t="yield" data-s="2"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 20h18M5 16l5-5 4 3 6-7"/><path d="M16 7h4v4"/></svg>תשואה להשקעה</button>
-        <button role="tab" type="button" aria-selected="false" data-t="rent" data-s=""><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M12 3l8 4v5c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>בטוחה בשכירות</button>
-        <button role="tab" type="button" aria-selected="false" data-t="lease" data-s=""><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/></svg>מועדי שכירות</button>
-        <button role="tab" type="button" aria-selected="false" data-t="index" data-s=""><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M4 19h16M6 15l4-4 3 2 5-6"/><path d="M15 7h3v3"/></svg>הצמדה למדד</button>
-      </div>
-
-      <div class="pane" role="tabpanel" data-p="tax" id="wb-tax">
-        <h3>מחשבון מס רכישה, עם פירוט מדרגות</h3><p class="why">כמה מס תשלמו על כל חלק מהמחיר. המדרגות מתעדכנות בדרך כלל כל שנה, וכרגע הן מוקפאות עד 15.1.2028.</p>
-        <div class="ins">
-          <div class="fld"><label>מחיר הדירה</label><div class="money"><input data-i="price" inputmode="numeric" value="2,500,000"><span>₪</span></div></div>
-          <div class="fld"><label>סוג הרכישה</label><select data-i="type"><option value="single">דירה יחידה (או דירה חלופית)</option><option value="extra">דירה נוספת</option></select></div>
-        </div>
-        <div class="res"><div data-o="rows"></div><div class="hl"><span>סך הכול מס רכישה</span><b data-o="sum"></b></div><small>דירה חלופית: מי שמוכר את הדירה הקודמת בתוך 18 חודשים (24 בדירה מקבלן) נהנה בדרך כלל ממדרגות דירה יחידה. עולים חדשים ותושבי חוץ מחושבים אחרת. <a href="https://dabullaw.co.il/%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%9c%d7%9e%d7%a1-%d7%a8%d7%9b%d7%99%d7%a9%d7%94-2025-%d7%9b%d7%9e%d7%94-%d7%aa%d7%a9%d7%9c%d7%9e%d7%95-%d7%9c%d7%9e%d7%93%d7%99%d7%a0%d7%94-%d7%95%d7%90%d7%99/">המדריך המלא למס רכישה ←</a></small></div>
-      </div>
-
-      <div class="pane" role="tabpanel" data-p="eq" hidden>
-        <h3>כמה הון עצמי צריך, וכמה משכנתא אפשר לקבל</h3><p class="why">בנק ישראל מגביל את שיעור המימון לפי סוג הרכישה. ההון העצמי צריך לכסות גם את מס הרכישה ואת ההוצאות.</p>
-        <div class="ins">
-          <div class="fld"><label>מחיר הדירה</label><div class="money"><input data-i="price" inputmode="numeric" value="2,200,000"><span>₪</span></div></div>
-          <div class="fld"><label>סוג הרכישה</label><select data-i="kind"><option value="first">דירה יחידה (עד 75% מימון)</option><option value="replace">משפרי דיור (עד 70% מימון)</option><option value="inv">דירה נוספת להשקעה (עד 50% מימון)</option></select></div>
-          <div class="fld"><label>הוצאות נלוות (עו״ד, תיווך, שמאי, הובלה)</label><div class="money"><input data-i="extra" inputmode="numeric" value="60,000"><span>₪</span></div></div>
-        </div>
-        <div class="res"><div class="r"><span>משכנתא מקסימלית</span><b data-o="loan"></b></div><div class="r"><span>הון עצמי למחיר הדירה</span><b data-o="eqp"></b></div><div class="r"><span>מס רכישה (משוער)</span><b data-o="tax"></b></div><div class="r"><span>הוצאות נלוות</span><b data-o="ex"></b></div><div class="hl"><span>הון עצמי נדרש בסך הכול</span><b data-o="tot"></b></div><small>שיעורי המימון הם התקרה שבנק ישראל קבע. הבנק בודק גם את ההכנסה ואת יכולת ההחזר, ולכן בפועל המשכנתא עשויה להיות נמוכה יותר. בדירה חלופית, המס מחושב לפי מדרגות דירה יחידה.</small></div>
-      </div>
-
-      <div class="pane" role="tabpanel" data-p="pmt" hidden>
-        <h3>החזר חודשי משוער של משכנתא</h3><p class="why">חישוב פשוט לפי סכום, תקופה וריבית ממוצעת, בשיטת שפיצר (החזר חודשי קבוע).</p>
-        <div class="ins">
-          <div class="fld"><label>סכום המשכנתא</label><div class="money"><input data-i="loan" inputmode="numeric" value="1,500,000"><span>₪</span></div></div>
-          <div class="fld"><label>תקופה: <b data-o="yrs">25</b> שנים</label><input data-i="years" type="range" min="5" max="30" value="25"></div>
-          <div class="fld"><label>ריבית שנתית ממוצעת (%)</label><input data-i="rate" type="text" inputmode="decimal" value="5"></div>
-          <div class="fld"><label>הכנסה נטו של משק הבית (לא חובה)</label><div class="money"><input data-i="inc" inputmode="numeric" value=""><span>₪</span></div></div>
-        </div>
-        <div class="res"><div class="hl"><span>החזר חודשי</span><b data-o="m"></b></div><div class="r"><span>סך כל התשלומים לבנק</span><b data-o="all"></b></div><div class="r"><span>מתוכם ריבית</span><b data-o="int"></b></div><div data-o="ptiw" hidden><div class="r" style="border:0"><span>החזר מתוך ההכנסה</span><b data-o="pti"></b></div><div class="gauge"><i data-o="g"></i></div><small data-o="ptin"></small></div><small>הערכה בלבד: משכנתא אמיתית מורכבת מכמה מסלולים, וחלקם צמודים למדד או בריבית משתנה. <a href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%94%d7%97%d7%96%d7%a8-%d7%97%d7%95%d7%93%d7%a9%d7%99-%d7%9c%d7%9e%d7%a9%d7%9b%d7%a0%d7%aa%d7%90-%d7%aa%d7%9b%d7%a0%d7%a0%d7%95-%d7%90%d7%aa-%d7%94%d7%aa%d7%a7/">מחשבון המשכנתא המלא ←</a></small></div>
-      </div>
-
-      <div class="pane" role="tabpanel" data-p="dates" hidden>
-        <h3>מה צריך לעשות אחרי החתימה, ועד מתי</h3><p class="why">בוחרים את תאריך החתימה על החוזה, ומקבלים את המועדים החשובים לפי הדין.</p>
-        <div class="ins">
-          <div class="fld"><label>תאריך החתימה על החוזה</label><input data-i="d" type="date"></div>
-          <div class="fld"><label>אתם</label><select data-i="side"><option value="buy">קונים</option><option value="sell">מוכרים</option></select></div>
-        </div>
-        <div class="res"><div class="tline" data-o="tl"></div><small>המועדים לפי חוק מיסוי מקרקעין. כשהמועד האחרון חל בשבת או בחג, בדרך כלל אפשר לשלם ביום העבודה הבא. עורך הדין שלכם מגיש את הדיווחים ומעדכן אתכם.</small></div>
-      </div>
-
-      <div class="pane" role="tabpanel" data-p="yield" hidden>
-        <h3>תשואה על דירה להשקעה</h3><p class="why">כמה הדירה מכניסה ביחס לכסף שהשקעתם, לפני ואחרי הוצאות.</p>
-        <div class="ins">
-          <div class="fld"><label>מחיר הדירה</label><div class="money"><input data-i="price" inputmode="numeric" value="1,800,000"><span>₪</span></div></div>
-          <div class="fld"><label>שכר דירה חודשי</label><div class="money"><input data-i="rent" inputmode="numeric" value="5,500"><span>₪</span></div></div>
-          <div class="fld"><label>הוצאות שנתיות (תחזוקה, ביטוח, ועד, חודשים ריקים)</label><div class="money"><input data-i="cost" inputmode="numeric" value="9,000"><span>₪</span></div></div>
-        </div>
-        <div class="res"><div class="r"><span>הכנסה שנתית משכירות</span><b data-o="yr"></b></div><div class="r"><span>תשואה ברוטו</span><b data-o="g"></b></div><div class="r"><span>מס רכישה על דירה נוספת</span><b data-o="tax"></b></div><div class="hl"><span>תשואה נטו (משוערת)</span><b data-o="n"></b></div><small>התשואה נטו מחושבת על המחיר בתוספת מס הרכישה, לפני מס על הכנסה משכירות ולפני מימון. <a href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%aa%d7%a9%d7%95%d7%90%d7%94-%d7%9c%d7%9e%d7%a9%d7%a7%d7%99%d7%a2%d7%99%d7%9d/">מחשבון התשואה המלא ←</a></small></div>
-      </div>
-
-      <div class="pane" role="tabpanel" data-p="rent" hidden>
-        <h3>כמה בטוחה מותר לבקש מהשוכר</h3><p class="why">לפי חוק השכירות והשאילה, בשכירות למגורים יש תקרה לבטוחה, ומועד קבוע להחזרתה.</p>
-        <div class="ins">
-          <div class="fld"><label>שכר דירה חודשי</label><div class="money"><input data-i="rent" inputmode="numeric" value="6,000"><span>₪</span></div></div>
-          <div class="fld"><label>תקופת השכירות: <b data-o="mo">12</b> חודשים</label><input data-i="months" type="range" min="1" max="36" value="12"></div>
-        </div>
-        <div class="res"><div class="r"><span>3 חודשי שכירות</span><b data-o="a"></b></div><div class="r"><span>שליש מכל דמי השכירות לתקופה</span><b data-o="b"></b></div><div class="hl"><span>הבטוחה המקסימלית</span><b data-o="max"></b></div><small>התקרה היא הסכום הנמוך מבין השניים, לכל הבטוחות יחד. המשכיר מחזיר את הבטוחה בתוך 60 יום מתום השכירות, אלא אם יש חוב של השוכר. <a href="https://dabullaw.co.il/%d7%aa%d7%91%d7%99%d7%a2%d7%94-%d7%9c%d7%a4%d7%99%d7%a0%d7%95%d7%99-%d7%9e%d7%95%d7%a9%d7%9b%d7%a8/">שוכר לא משלם? ←</a></small></div>
-      </div>
-      <div class="pane" role="tabpanel" data-p="sell" hidden>
-        <h3>כמה כסף יישאר לכם מהמכירה</h3><p class="why">מחיר המכירה הוא לא הסכום שנכנס לחשבון. מורידים את סילוק המשכנתא, התיווך, המס וההוצאות.</p>
-        <div class="ins">
-          <div class="fld"><label>מחיר המכירה</label><div class="money"><input data-i="price" inputmode="numeric" value="2,800,000"><span>₪</span></div></div>
-          <div class="fld"><label>יתרת המשכנתא לסילוק</label><div class="money"><input data-i="loan" inputmode="numeric" value="600,000"><span>₪</span></div></div>
-          <div class="fld"><label>דמי תיווך (%, לפני מע״מ)</label><input data-i="brk" type="text" inputmode="decimal" value="2"></div>
-          <div class="fld"><label>מס שבח משוער (אם אין פטור)</label><div class="money"><input data-i="tax" inputmode="numeric" value="0"><span>₪</span></div></div>
-          <div class="fld"><label>הוצאות נוספות (שכר טרחה, הובלה, תיקונים)</label><div class="money"><input data-i="other" inputmode="numeric" value=""><span>₪</span></div></div>
-        </div>
-        <div class="res"><div class="r"><span>סילוק משכנתא</span><b data-o="loan"></b></div><div class="r"><span>תיווך כולל מע״מ</span><b data-o="brk"></b></div><div class="r"><span>מס שבח</span><b data-o="tax"></b></div><div class="r"><span>הוצאות נוספות</span><b data-o="other"></b></div><div class="hl"><span>נשאר לכם</span><b data-o="net"></b></div><small>בפירעון מוקדם של משכנתא הבנק עשוי לגבות עמלה. את הסכום המדויק לסילוק נותן הבנק במכתב יתרה. לא יודעים אם יש פטור ממס שבח? <a href="#wb" data-open="shevach">לבדיקה מהירה ←</a></small></div>
-      </div>
-
-      <div class="pane" role="tabpanel" data-p="shevach" hidden>
-        <h3>האם המכירה פטורה ממס שבח?</h3><p class="why">בדיקה מהירה של התנאים העיקריים לפטור על דירת מגורים יחידה. 4 שאלות, תשובה מיד.</p>
-        <div class="ins">
-          <div class="fld"><label>כמה דירות בבעלותכם בישראל?</label><select data-i="own"><option value="only">רק הדירה שאני מוכר</option><option value="small">עוד חלק קטן בדירה (עד 25%) או דירה שקיבלתי בירושה</option><option value="more">יש לי עוד דירה</option></select></div>
-          <div class="fld"><label>כמה זמן הדירה בבעלותכם?</label><select data-i="held"><option value="ge">18 חודשים ומעלה</option><option value="lt">פחות מ־18 חודשים</option></select></div>
-          <div class="fld"><label>מכרתם דירה אחרת בפטור ב־18 החודשים האחרונים?</label><select data-i="prev"><option value="no">לא</option><option value="yes">כן</option></select></div>
-          <div class="fld"><label>מחיר המכירה גבוה במיוחד (בערך 5 מיליון ₪ ומעלה)?</label><select data-i="high"><option value="no">לא</option><option value="yes">כן</option><option value="dk">לא יודע</option></select></div>
-        </div>
-        <div class="res"><div class="hl" style="flex-direction:column;align-items:flex-start;gap:4px"><span data-o="tag"></span><b data-o="t" style="font-size:22px;white-space:normal;line-height:1.35"></b></div><p data-o="d" style="margin:0;color:#e8e2d4;font-size:15px;line-height:1.6"></p><small>בדיקה כללית בלבד. הפטור לא ניתן אוטומטית: מגישים הצהרה ובקשה לפטור לרשות המסים בתוך 30 יום מהמכירה. יש מקרים נוספים ומסלולים אחרים (למשל חישוב ליניארי מוטב), ולכן כדאי לבדוק את המקרה שלכם.</small></div>
-      </div>
-
-      <div class="pane" role="tabpanel" data-p="lease" hidden>
-        <h3>המועדים החשובים בחוזה השכירות</h3><p class="why">מקלידים את תאריך סיום החוזה, ומקבלים עד מתי צריך להודיע ומתי מחזירים את הבטוחה.</p>
-        <div class="ins">
-          <div class="fld"><label>תאריך סיום החוזה</label><input data-i="end" type="date"></div>
-        </div>
-        <div class="res"><div class="tline" data-o="tl"></div><small>לפי חוק השכירות והשאילה. מועדי ההודעה חלים בדרך כלל כשבחוזה יש אפשרות להארכה. כדאי לבדוק מה כתוב בחוזה שלכם.</small></div>
-      </div>
-
-      <div class="pane" role="tabpanel" data-p="index" hidden>
-        <h3>מחשבון הצמדה למדד</h3><p class="why">לשכר דירה צמוד למדד, או לתשלום לקבלן שצמוד למדד תשומות הבנייה: כמה הסכום עכשיו.</p>
-        <div class="ins">
-          <div class="fld"><label>הסכום המקורי</label><div class="money"><input data-i="amt" inputmode="numeric" value="6,000"><span>₪</span></div></div>
-          <div class="fld"><label>מדד הבסיס (מהחוזה)</label><input data-i="b" type="text" inputmode="decimal" value="100"></div>
-          <div class="fld"><label>המדד האחרון שפורסם</label><input data-i="n" type="text" inputmode="decimal" value="103.2"></div>
-        </div>
-        <div class="res"><div class="r"><span>שינוי במדד</span><b data-o="p"></b></div><div class="r"><span>תוספת</span><b data-o="d"></b></div><div class="hl"><span>הסכום המעודכן</span><b data-o="v"></b></div><small>המדדים מתפרסמים באתר הלשכה המרכזית לסטטיסטיקה, בדרך כלל באמצע כל חודש. בחוזה כתוב איזה מדד הוא מדד הבסיס, והאם הסכום יכול גם לרדת.</small></div>
-      </div>
-    </div>
+    <div class="sh"><div><p class="k">כל המחשבונים</p><h2 id="h3-wb">מחשבונים לעסקת דירה</h2><p>לכל מחשבון עמוד משלו, עם הסבר על החישוב, דוגמה ושאלות נפוצות. בוחרים ולוחצים.</p></div></div>
+    <div class="cgroups"><div class="cgroup full" style="--n:5"><p class="tg">לקונים</p><div class="cgrid"><a class="ccard" href="/calculators/purchase-tax/" data-s="2 3"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8v3H8zM8 14h1M11.5 14h1M15 14h1M8 17.5h1M11.5 17.5h1M15 17.5h1"/></svg></span><b>מחשבון מס רכישה</b><span class="cd">לפי מדרגות 2026, עם פירוט לכל מדרגה</span><span class="go">לחשב ←</span></a><a class="ccard" href="/calculators/equity/" data-s="1"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 11l9-7 9 7v9H3z"/><path d="M12 13v5M9.5 15.5h5"/></svg></span><b>הון עצמי ומשכנתא</b><span class="cd">כמה הון עצמי צריך וכמה משכנתא אפשר לקבל</span><span class="go">לחשב ←</span></a><a class="ccard" href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%94%d7%97%d7%96%d7%a8-%d7%97%d7%95%d7%93%d7%a9%d7%99-%d7%9c%d7%9e%d7%a9%d7%9b%d7%a0%d7%aa%d7%90-%d7%aa%d7%9b%d7%a0%d7%a0%d7%95-%d7%90%d7%aa-%d7%94%d7%aa%d7%a7/" data-s="1"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 20h18M5 20V10M19 20V10M9 20v-6M15 20v-6M2 10l10-6 10 6z"/></svg></span><b>החזר חודשי למשכנתא</b><span class="cd">כמה תשלמו בכל חודש ובסך הכול</span><span class="go">לחשב ←</span></a><a class="ccard" href="https://dabullaw.co.il/%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%94%d7%9e%d7%9c%d7%90-%d7%95%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%9c%d7%94%d7%95%d7%a6%d7%90%d7%95%d7%aa-%d7%9c%d7%a8%d7%9b%d7%99%d7%a9%d7%aa-%d7%93%d7%99/" data-s="1 2"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span><b>הוצאות רכישת דירה</b><span class="cd">כל העלויות שמעבר למחיר הדירה</span><span class="go">לחשב ←</span></a><a class="ccard" href="/calculators/after-signing-dates/" data-s="4"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 14h3"/></svg></span><b>מועדים אחרי החתימה</b><span class="cd">עד מתי מדווחים ומשלמים מס רכישה</span><span class="go">לחשב ←</span></a></div></div><div class="cgroup " style="--n:2"><p class="tg">לקונים מקבלן</p><div class="cgrid"><a class="ccard" href="/calculators/late-delivery/" data-s="4"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg></span><b>פיצוי על איחור במסירה</b><span class="cd">כמה פיצוי מגיע לפי חוק המכר (דירות)</span><span class="go">לחשב ←</span></a><a class="ccard" href="/calculators/defects-warranty/" data-s="4"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 11l9-7 9 7v9H3z"/><path d="M10 13l4 4M14 13l-4 4"/></svg></span><b>ליקויי בנייה: עד מתי</b><span class="cd">תקופות הבדק והאחריות לכל סוג ליקוי</span><span class="go">לחשב ←</span></a></div></div><div class="cgroup " style="--n:2"><p class="tg">למוכרים</p><div class="cgrid"><a class="ccard" href="/calculators/sale-net/" data-s=""><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 11l9-7 9 7v9H3z"/><path d="M9 15h6M13 12.5l2.5 2.5-2.5 2.5"/></svg></span><b>כמה יישאר מהמכירה</b><span class="cd">אחרי משכנתא, תיווך, מס ועלויות</span><span class="go">לחשב ←</span></a><a class="ccard" href="/calculators/shevach-exemption/" data-s=""><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg></span><b>פטור ממס שבח?</b><span class="cd">בדיקה מהירה של התנאים לדירה יחידה</span><span class="go">לחשב ←</span></a></div></div><div class="cgroup full" style="--n:4"><p class="tg">למשכירים ולמשקיעים</p><div class="cgrid"><a class="ccard" href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%aa%d7%a9%d7%95%d7%90%d7%94-%d7%9c%d7%9e%d7%a9%d7%a7%d7%99%d7%a2%d7%99%d7%9d/" data-s="2"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 20h18M5 16l5-5 4 3 6-7"/><path d="M16 7h4v4"/></svg></span><b>תשואה על דירה להשקעה</b><span class="cd">ברוטו ונטו, כולל מס רכישה</span><span class="go">לחשב ←</span></a><a class="ccard" href="/calculators/rent-deposit/" data-s=""><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M12 3l8 4v5c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span><b>בטוחה בשכירות</b><span class="cd">כמה בטוחה מותר לבקש מהשוכר</span><span class="go">לחשב ←</span></a><a class="ccard" href="/calculators/lease-dates/" data-s=""><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/></svg></span><b>מועדי חוזה שכירות</b><span class="cd">מתי מודיעים ומתי מחזירים את הבטוחה</span><span class="go">לחשב ←</span></a><a class="ccard" href="/calculators/index-linkage/" data-s=""><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M4 19h16M6 15l4-4 3 2 5-6"/><path d="M15 7h3v3"/></svg></span><b>הצמדה למדד</b><span class="cd">כמה הסכום שווה היום</span><span class="go">לחשב ←</span></a></div></div></div>
   </section>
 
-  <!-- MORE TOOLS BY CATEGORY -->
   <section class="tl" aria-labelledby="h3-tl" id="tl">
 <style>
 .dt3 .tl{--tlw:3px}
@@ -358,7 +264,7 @@
  <li><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="when">אחרי המסירה</span>
   <div class="card"><b>רישום הדירה על שמכם</b><span>אחרי שמתקבלים אישורי המסים, עורך הדין רושם את הבעלות בטאבו.</span><span class="pay"><i>אגרת רישום</i></span></div></li>
 </ol>
-<div class="foot"><p>בדירה מקבלן התשלומים צמודים בדרך כלל להתקדמות הבנייה, והמועדים משתנים. לפני החתימה כדאי לעבור על לוח התשלומים עם עורך דין.</p><div class="go"><a href="#calc-dates">המועדים לפי תאריך החתימה</a><a href="#calc-tax">מחשבון מס רכישה</a></div></div>
+<div class="foot"><p>בדירה מקבלן התשלומים צמודים בדרך כלל להתקדמות הבנייה, והמועדים משתנים. לפני החתימה כדאי לעבור על לוח התשלומים עם עורך דין.</p><div class="go"><a href="/calculators/after-signing-dates/">המועדים לפי תאריך החתימה</a><a href="/calculators/purchase-tax/">מחשבון מס רכישה</a></div></div>
 </section>
   <section aria-labelledby="h3-cats">
     <div class="sh"><div><p class="k">עוד כלים באתר</p><h2 id="h3-cats">מדריכים עם מחשבון, רשימות וטפסים</h2><p>כל כלי פותח עמוד עם הסבר מלא, דוגמאות ושאלות נפוצות.</p></div></div>
@@ -429,5 +335,5 @@
 {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "כמה מדויקים המחשבונים?", "acceptedAnswer": {"@type": "Answer", "text": "המחשבונים מבוססים על הנתונים הרשמיים המעודכנים, כמו מדרגות מס הרכישה לשנת 2026 ושיעורי המימון של בנק ישראל. התוצאה היא הערכה כללית, ולפני חתימה כדאי לבדוק אותה עם עורך דין."}}, {"@type": "Question", "name": "מה ההבדל בין דירה יחידה לדירה נוספת במס רכישה?", "acceptedAnswer": {"@type": "Answer", "text": "בדירה יחידה משלמים לפי מדרגות, והחלק הראשון של המחיר פטור. בדירה נוספת משלמים בדרך כלל 8% מהשקל הראשון ו־10% על החלק שמעל המדרגה העליונה."}}, {"@type": "Question", "name": "כמה הון עצמי צריך כדי לקנות דירה?", "acceptedAnswer": {"@type": "Answer", "text": "בנק ישראל מאפשר מימון של עד 75% לדירה יחידה, עד 70% למשפרי דיור ועד 50% לדירה להשקעה. ההון העצמי צריך לכסות את היתרה, ובנוסף את מס הרכישה וההוצאות."}}, {"@type": "Question", "name": "מתי פטורים ממס שבח במכירת דירה?", "acceptedAnswer": {"@type": "Answer", "text": "בדרך כלל, מי שמוכר דירת מגורים יחידה שהייתה בבעלותו לפחות 18 חודשים, ולא מכר דירה אחרת בפטור ב־18 החודשים שלפני כן, זכאי לפטור, עד תקרת שווי שמתעדכנת כל שנה."}}, {"@type": "Question", "name": "מתי משלמים את מס הרכישה?", "acceptedAnswer": {"@type": "Answer", "text": "מגישים הצהרה בתוך 30 יום מיום החתימה, ומשלמים את המס בתוך 60 יום מיום החתימה."}}, {"@type": "Question", "name": "כמה בטוחה מותר לבקש משוכר?", "acceptedAnswer": {"@type": "Answer", "text": "הנמוך מבין שלושה חודשי שכירות לבין שליש מכל דמי השכירות לתקופה. הבטוחה מוחזרת בתוך 60 יום מתום השכירות, אלא אם יש חוב."}}, {"@type": "Question", "name": "מה עושים עם התוצאה של השאלון?", "acceptedAnswer": {"@type": "Answer", "text": "השאלון נותן הערכה כללית ורשימה של מה להכין. מי שרוצה משאיר שם וטלפון, והמשרד חוזר אליו."}}, {"@type": "Question", "name": "הנתונים שאני מקליד נשמרים?", "acceptedAnswer": {"@type": "Answer", "text": "לא. המספרים במחשבונים נשארים בדפדפן. בשאלונים נשלח רק מה שהגולש בוחר לשלוח."}}, {"@type": "Question", "name": "זה במקום ייעוץ משפטי?", "acceptedAnswer": {"@type": "Answer", "text": "לא. הכלים נותנים תמונה כללית, ועורך דין יבדוק את העסקה שלכם."}}], "@id": "https://dabullaw.co.il/calculators/#faq", "isPartOf": {"@id": "https://dabullaw.co.il/calculators/"}}
 ]}</script>
 
-<script nowprocket data-no-optimize="1" defer src="https://dabullaw-glitch.github.io/dabul-office/media/widgets/calc-hub.js?ver=20261010d"></script>
+<script nowprocket data-no-optimize="1" defer src="https://dabullaw-glitch.github.io/dabul-office/media/widgets/calc-core.js?ver=20261010e"></script>
 <!-- /wp:html -->
