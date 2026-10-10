@@ -20,7 +20,7 @@
 .pb-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--muted)}`;
   document.head.appendChild(st);
   const CH = { facebook: 'פייסבוק', youtube: 'יוטיוב', linkedin: 'לינקדאין', x: 'X', gbp: 'גוגל עסקי', instagram: 'אינסטגרם', tiktok: 'טיקטוק', whatsapp: 'קבוצת וואטסאפ', newsletter: 'ניוזלטר', internal: 'פנימי' };
-  const OWN = { grok: 'גרוק בוט', system: 'המערכת', yakir: 'יקיר' };
+  const OWN = { grok: 'גרוק בוט', system: 'המערכת', buffer: 'המערכת (Buffer)', office: 'המערכת', yakir: 'יקיר' };
   const ST = { planned: 'מתוכנן', published: 'פורסם ✓', skipped: 'בוטל', waiting: 'מחכה לחיבור', missed: 'לא פורסם ⚠️', unverified: 'עבר (אין דרך לבדוק)' };
   const DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
   const MEDIA = 'https://dabullaw-glitch.github.io/dabul-office/media/';
@@ -47,8 +47,8 @@
     }).join('');
     const link = cfg.key ? `https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/pubcal?k=${encodeURIComponent(cfg.key)}` : '';
     const ig = cfg.ig || {};
-    const conn = (cfg.buffer && cfg.buffer.ok ? bufCard(cfg.buffer) : '') + igCard(ig);
-    return conn + `<div class="card card-b"><p class="muted" style="margin-top:0">לוח אחד לכל מה שמתפרסם: מה, מתי, באיזה ערוץ ומי מפרסם. <b>גרוק בוט</b> מפרסם בפייסבוק, ביוטיוב, בלינקדאין, ב-X ובגוגל עסקי, ו<b>המערכת</b> מפרסמת באינסטגרם, בטיקטוק ובקבוצת הוואטסאפ. גרוק קורא את הלוח הזה כל יום, כך ששניהם מסונכרנים. פריט שמבטלים כאן לא יוצא.</p>
+    const conn = (cfg.buffer && cfg.buffer.ok ? bufCard(cfg.buffer) : '') + (cfg.socapi && cfg.socapi.ok ? sapiCard(cfg.socapi) : '') + igCard(ig);
+    return conn + `<div class="card card-b"><p class="muted" style="margin-top:0">לוח אחד לכל מה שמתפרסם: מה, מתי, באיזה ערוץ. מאז 11.10.2026 <b>המערכת</b> מפרסמת הכל בעצמה: פייסבוק, לינקדאין ו-X דרך Buffer, יוטיוב דרך SocialAPI, אינסטגרם ישירות, והפוסט לגוגל עסקי נשלח אליך לטלגרם. פריט שמבטלים כאן לא יוצא.</p>
       <div class="pb-legend"><span><span class="pb-own" style="background:#1d6fd6">גרוק בוט</span></span><span><span class="pb-own" style="background:#a8873f">המערכת</span></span>${link ? `<a href="${n(link)}" target="_blank" rel="noopener">הלוח כפי שגרוק רואה אותו</a>` : ''}
       <a href="#" data-a="pb-past">${showPast ? 'להסתיר פריטים שעברו' : 'להציג גם פריטים שעברו'}</a></div>
       ${list || s.empty('הלוח ריק', 'פריטים חדשים נכנסים לכאן כל שבוע.')}</div>`;
@@ -95,11 +95,32 @@
     return `<div class="card card-b" style="margin-bottom:12px">${head}${info}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><input id="pb_buf" type="password" dir="ltr" autocomplete="off" placeholder="${b.saved ? 'נשמר. להחלפה מדביקים מפתח חדש' : 'Buffer API key'}" style="flex:1;min-width:200px"><button class="btn sm" data-a="pb-buf">שמירה</button></div></div>`;
   }
   // shown at the top of שיווק > יומן תוכן until Buffer is connected (addon-cal puts the old list in a closed box)
-  s.bufTop = () => { const b = (((s.S.data.settings || {}).pub) || {}).buffer || {}; return b.ok ? '' : bufCard(b); };
+  // SocialAPI (11.10.2026): YouTube uploads (10 a month on the current plan). Same pattern as Buffer.
+  function sapiCard(b) {
+    const head = `<b>חיבור SocialAPI (יוטיוב)</b> ${b.ok ? '<span class="pill p-ok">מחובר</span>' : '<span class="pill p-warn">לא מחובר</span>'}`;
+    const acc = (b.accounts || []).map(a => n(`${a.platform}: ${a.name}`)).join(' · ');
+    const info = b.ok ? `<p class="muted small" style="margin:6px 0">המערכת מעלה ליוטיוב דרך SocialAPI${acc ? `: ${acc}` : ''}. עד ${n(b.monthlyCap || 10)} העלאות בחודש.</p>` : `<p class="muted small" style="margin:6px 0">נכנסים ל-app.social-api.ai > API Keys, יוצרים מפתח (מתחיל ב-sapi_key_), מעתיקים ומדביקים כאן. המפתח נשמר בשרת בלבד ולא מוצג שוב.</p>`;
+    if (!window.SB) return `<div class="card card-b" style="margin-bottom:12px">${head}${info}</div>`;
+    return `<div class="card card-b" style="margin-bottom:12px">${head}${info}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><input id="pb_sapi" type="password" dir="ltr" autocomplete="off" placeholder="${b.saved ? 'נשמר. להחלפה מדביקים מפתח חדש' : 'sapi_key_...'}" style="flex:1;min-width:200px"><button class="btn sm" data-a="pb-sapi">שמירה</button></div></div>`;
+  }
+  s.bufTop = () => { const c = (((s.S.data.settings || {}).pub) || {}); const b = c.buffer || {}, a = c.socapi || {}; return (b.ok ? '' : bufCard(b)) + (a.ok ? '' : sapiCard(a)); };
   s.pubView = pubView;
   document.addEventListener('click', async e => {
-    const b = e.target.closest('[data-a="pb-set"],[data-a="pb-past"],[data-a="pb-ig"],[data-a="pb-buf"],[data-a="pb-fb-save"],[data-a="pb-fb-go"]'); if (!b) return;
+    const b = e.target.closest('[data-a="pb-set"],[data-a="pb-past"],[data-a="pb-ig"],[data-a="pb-buf"],[data-a="pb-sapi"],[data-a="pb-fb-save"],[data-a="pb-fb-go"]'); if (!b) return;
     e.preventDefault();
+    if (b.dataset.a === 'pb-sapi') {
+      const t = (((document.getElementById('pb_sapi') || {}).value) || '').trim();
+      if (t.length < 20 || /\s/.test(t)) { s.toast('המפתח לא נראה תקין. מעתיקים את כל המפתח, בלי רווחים', 'bad'); return; }
+      b.disabled = true;
+      try {
+        const { data, error } = await window.SB.functions.invoke('bufauth', { body: { action: 'save-sapi', key: t } });
+        if (error) { let m = ''; try { m = (await error.context.json()).error; } catch { /* no body */ } throw new Error(m || 'השמירה נכשלה'); }
+        const el = document.getElementById('pb_sapi'); if (el) el.value = '';
+        const cfg = ((s.S.data.settings || {}).pub) || null; if (cfg) cfg.socapi = { ok: true, saved: new Date().toISOString(), accounts: (data && data.accounts) || [], monthlyCap: 10 };
+        s.toast('SocialAPI מחובר. הפרטים נשלחו גם לטלגרם.'); bump(); }
+      catch (err) { s.toast(err.message || 'השמירה נכשלה, נסה שוב', 'bad'); }
+      b.disabled = false; return;
+    }
     if (b.dataset.a === 'pb-buf') {
       const t = (((document.getElementById('pb_buf') || {}).value) || '').trim();
       if (t.length < 20 || /\s/.test(t)) { s.toast('המפתח לא נראה תקין. מעתיקים את כל המפתח, בלי רווחים', 'bad'); return; }
