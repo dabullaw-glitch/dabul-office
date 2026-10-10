@@ -3766,6 +3766,9 @@ body.rtl .elementor-622 .elementor-element.elementor-element-09ce0d1 { right: 0p
 .elementor-1023 .elementor-element.elementor-element-b07f209 strong { font-weight: 600; }
 .elementor-1023 .elementor-element.elementor-element-b07f209 a { color: rgb(231, 205, 150); }
 .elementor-1023 .elementor-element.elementor-element-b07f209 a:hover { color: rgb(255, 255, 255); }
+@font-face { font-family: "Noto Local"; font-style: normal; font-weight: normal; font-display: swap; src: url("https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Regular.woff2") format("woff2"), url("https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Regular.woff") format("woff"), url("https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Noto Local"; font-style: normal; font-weight: bold; font-display: swap; src: url("https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2") format("woff2"), url("https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff") format("woff"), url("https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Noto Local"; font-style: normal; font-weight: 100; font-display: swap; src: url("https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Light.woff2") format("woff2"), url("https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Light.woff") format("woff"), url("https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Light.ttf") format("truetype"); }
 .faq-section { max-width: 900px; margin: 40px auto; padding: 0px 20px; direction: rtl; font-family: inherit; }
 .faq-section h2 { text-align: center; margin-bottom: 30px; font-size: 32px; font-weight: 700; }
 .faq-item { border: 1px solid rgb(201, 168, 76); border-radius: 8px; margin-bottom: 12px; overflow: hidden; background: rgb(255, 255, 255); }
