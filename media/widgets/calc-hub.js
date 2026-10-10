@@ -20,6 +20,9 @@ function tax(p,t){var s=0,rows=[];B[t].forEach(function(b,i){if(p>b[0]){var part
 var tabs=[].slice.call(R.querySelectorAll('.tabs button'));
 function openTab(id){tabs.forEach(function(b){b.setAttribute('aria-selected',b.getAttribute('data-t')===id?'true':'false');});R.querySelectorAll('.pane').forEach(function(p){p.hidden=p.getAttribute('data-p')!==id;});}
 tabs.forEach(function(b){b.addEventListener('click',function(){openTab(b.getAttribute('data-t'));});});
+/* deep link: /calculators/#calc-tax opens that calculator */
+function fromHash(){var m=/^#calc-([a-z]+)$/.exec(location.hash||'');if(!m)return;var ok=tabs.some(function(b){return b.getAttribute('data-t')===m[1];});if(!ok)return;openTab(m[1]);var wb=document.getElementById('wb');if(wb)wb.scrollIntoView({block:'start'});}
+fromHash();window.addEventListener('hashchange',fromHash);
 R.querySelectorAll('[data-open]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();openTab(a.getAttribute('data-open'));R.querySelector('#wb').scrollIntoView({behavior:'smooth'});});});
 function pane(id,fn){var P=R.querySelector('[data-p='+id+']'),I=function(k){return P.querySelector('[data-i='+k+']');},O=function(k){return P.querySelector('[data-o='+k+']');};
  var run=function(){fn(I,O,P);};P.querySelectorAll('input,select').forEach(function(x){x.addEventListener('input',run);x.addEventListener('change',run);});run();}
