@@ -1,0 +1,167 @@
+<!-- dabul course: sales page on dabullaw.co.il for the course "קונים דירה ראשונה, בלי הפתעות".
+     Buying here -> payment page of the card processor -> the system opens the buyer's personal course page (academy)
+     and emails the access link. Nothing here is live until Yakir approves. -->
+<style>
+.dcr{--b:#5c4528;--a:#8b6f47;--g:#c9a961;--l:#e6dcc6;--s:#faf6ee;--t:#1f2937;--m:#6b7280;--ok:#1e7a3c;color:var(--t);line-height:1.65;font-size:16px;max-width:900px;margin:0 auto}
+.dcr *{box-sizing:border-box}
+.dcr h2{color:var(--b);font-size:28px;line-height:1.25;margin:0 0 10px;text-wrap:balance}
+.dcr h3{color:var(--b);font-size:21px;margin:0 0 12px;text-wrap:balance}
+.dcr .hero{position:relative;overflow:hidden;border-radius:20px;padding:26px 22px;margin:0 0 18px;background:linear-gradient(150deg,#5c4528,#8b6f47);color:#fff}
+.dcr .hero::after{content:"";position:absolute;left:-60px;bottom:-60px;width:220px;height:220px;border-radius:50%;background:rgba(201,169,97,.25)}
+.dcr .hero h2{color:#fff;font-size:30px}
+.dcr .hero p{margin:0 0 14px;font-size:17px;color:#f6efe2;max-width:560px;position:relative;z-index:1}
+.dcr .kick{display:inline-block;background:rgba(255,255,255,.15);border-radius:999px;padding:3px 12px;font-size:13.5px;margin-bottom:10px}
+.dcr .facts{display:flex;flex-wrap:wrap;gap:8px 16px;margin:0 0 16px;font-size:14.5px;color:#f6efe2;position:relative;z-index:1}
+.dcr .facts span::before{content:"✓ ";color:var(--g);font-weight:800}
+.dcr .buy{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;position:relative;z-index:1}
+.dcr .buy b{font-size:32px;font-variant-numeric:tabular-nums}
+.dcr .buy small{display:block;font-size:13px;color:#eadcc3}
+.dcr .go{display:inline-block;background:var(--g);color:#3f2f1b;border:0;border-radius:12px;padding:12px 22px;font:inherit;font-weight:800;font-size:17px;cursor:pointer;text-decoration:none}
+.dcr .go.dark{background:var(--a);color:#fff}
+.dcr .go.line{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6)}
+.dcr .go:disabled{opacity:.5;cursor:default}
+.dcr .card{background:#fff;border:1px solid var(--l);border-radius:16px;padding:20px;margin:0 0 16px}
+.dcr .who{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.dcr .who div{background:var(--s);border-radius:12px;padding:12px 14px}
+.dcr .who b{display:block;color:var(--b)}
+.dcr ol.lessons{list-style:none;counter-reset:l;padding:0;margin:0;display:grid;gap:8px}
+.dcr ol.lessons li{counter-increment:l;display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--l);border-radius:12px}
+.dcr ol.lessons li::before{content:counter(l);flex:none;width:30px;height:30px;border-radius:50%;background:var(--s);color:var(--b);font-weight:800;display:grid;place-items:center;font-size:14px}
+.dcr ol.lessons b{display:block;color:var(--b)}
+.dcr ol.lessons span{font-size:14.5px;color:var(--m)}
+.dcr .inside{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.dcr .inside div{border:1px solid var(--l);border-radius:12px;padding:12px 14px}
+.dcr .inside i{font-style:normal;font-size:22px;display:block;margin-bottom:4px}
+.dcr .inside b{display:block;color:var(--b)}
+.dcr .about{display:flex;gap:14px;align-items:flex-start}
+.dcr .about .ph{flex:none;width:72px;height:72px;border-radius:50%;background:var(--s);border:2px solid var(--g);display:grid;place-items:center;color:var(--b);font-weight:800;font-size:13px;text-align:center;line-height:1.2}
+.dcr details{border-top:1px solid var(--l);padding:10px 0}.dcr details:first-of-type{border-top:0}
+.dcr summary{cursor:pointer;font-weight:700;color:var(--b)}.dcr details p{margin:8px 0 0}
+.dcr .small{font-size:13.5px;color:var(--m)}
+.dcr .order{border:2px solid var(--a)}
+.dcr label{display:block;font-weight:700;color:var(--b);font-size:15px;margin:12px 0 5px}
+.dcr label small{font-weight:400;color:var(--m)}
+.dcr input[type=text],.dcr input[type=tel],.dcr input[type=email]{width:100%;border:1px solid #d9c08a;border-radius:10px;padding:10px 12px;font:inherit;font-size:16px;background:#fff;color:var(--t)}
+.dcr .row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media(max-width:560px){.dcr .row2{grid-template-columns:minmax(0,1fr)}.dcr .hero h2{font-size:25px}}
+.dcr .chkline{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;margin-top:8px}
+.dcr .chkline input{accent-color:var(--a);margin-top:5px;flex:none}
+.dcr .total{display:flex;justify-content:space-between;align-items:baseline;background:var(--s);border-radius:12px;padding:12px 14px;margin-top:14px;font-variant-numeric:tabular-nums}
+.dcr .total b{font-size:24px;color:var(--b);white-space:nowrap}
+.dcr .err{color:#b4442f;font-size:14px;margin-top:8px;min-height:1em}
+.dcr .done{text-align:center}.dcr .done .big{font-size:44px;line-height:1;color:var(--ok)}
+.dcr .sticky{position:sticky;bottom:10px;z-index:5;display:none;justify-content:space-between;align-items:center;gap:10px;background:#fff;border:1px solid var(--l);border-radius:14px;padding:10px 12px;box-shadow:0 8px 24px -10px rgba(60,40,10,.35)}
+.dcr .sticky b{color:var(--b)}
+@media(max-width:700px){.dcr .sticky.on{display:flex}}
+.dcr [hidden]{display:none!important}
+</style>
+
+<div class="dcr" dir="rtl">
+  <div class="hero">
+    <span class="kick">קורס דיגיטלי לקונים</span>
+    <h2>קונים דירה ראשונה, בלי הפתעות</h2>
+    <p>כל מה שעובר על קונה דירה, מהרגע שמצאתם דירה ועד שהיא רשומה על שמכם: מה בודקים, על מה חותמים, כמה זה עולה, ואיפה אנשים נופלים. בשפה פשוטה, צעד אחרי צעד.</p>
+    <div class="facts"><span>10 שיעורים קצרים</span><span>צופים מתי שנוח, גם מהטלפון</span><span>גישה לתמיד</span><span>צ׳קליסט לכל שלב</span></div>
+    <div class="buy"><div><b>390 ₪</b><small>כולל מע"מ · תשלום אחד</small></div>
+      <a class="go" href="#dcr-order">לרכישת הקורס</a><a class="go line" href="#dcr-lessons">מה לומדים</a></div>
+  </div>
+
+  <div class="card">
+    <h3>למי הקורס מתאים</h3>
+    <div class="who">
+      <div><b>מחפשים דירה ראשונה</b>ורוצים להבין את התהליך לפני שמתחילים לראות דירות.</div>
+      <div><b>מצאתם דירה</b>ורוצים לדעת מה לבדוק לפני שמציעים מחיר וחותמים.</div>
+      <div><b>קונים עם עזרה מההורים</b>או עם בן או בת זוג, ורוצים לעשות את זה נכון.</div>
+      <div><b>קונים מקבלן</b>ורוצים להבין ערבויות, מפרט ואיחורים במסירה.</div>
+    </div>
+  </div>
+
+  <div class="card" id="dcr-lessons">
+    <h3>מה לומדים: 10 שיעורים</h3>
+    <ol class="lessons">
+      <li><div><b>מפת הדרכים של עסקת דירה</b><span>השלבים מהחיפוש ועד הטאבו, מה קורה בכל אחד, ואיפה נופלים בדרך כלל.</span></div></li>
+      <li><div><b>לפני שמתאהבים בדירה</b><span>איך מזמינים נסח טאבו או אישור זכויות, איך קוראים אותו, ומה אומר לכם לעצור לפני שמסכמים מחיר.</span></div></li>
+      <li><div><b>העירייה והוועדה המקומית</b><span>איך בודקים שהדירה תואמת את ההיתר, מה עומד לקרות סביבה, ואילו חובות עלולים לעכב את הרישום.</span></div></li>
+      <li><div><b>זיכרון דברים: מתי הוא כבר חוזה</b><span>מה מחייב ומה לא, למה לא חותמים במשרד התיווך, ודמי התיווך.</span></div></li>
+      <li><div><b>משכנתא ומשפטים</b><span>אישור עקרוני, מה הבנק בודק, מכתב כוונות ורישום המשכנתא.</span></div></li>
+      <li><div><b>החוזה עצמו</b><span>לוח התשלומים, בטוחות לכסף שלכם, פיצוי מוסכם, מועד מסירה ותכולה.</span></div></li>
+      <li><div><b>מס רכישה</b><span>דירה יחידה, איך מחשבים, מתי מדווחים ומתי משלמים.</span></div></li>
+      <li><div><b>קונים יחד</b><span>בני זוג לא נשואים, עזרה מההורים כמתנה או כהלוואה, ורישום החלקים.</span></div></li>
+      <li><div><b>דירה מקבלן: מה שונה</b><span>ערבות חוק המכר, הצמדה למדד, המפרט, איחור במסירה ותקופת הבדק.</span></div></li>
+      <li><div><b>מהמפתח ועד הטאבו</b><span>פרוטוקול מסירה, רישום הזכויות, ומה עושים כשמשהו משתבש.</span></div></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>מה מקבלים</h3>
+    <div class="inside">
+      <div><i>🎧</i><b>שיעורים קצרים</b>שקפים עם הסבר קולי, שאפשר לעצור ולחזור אליהם.</div>
+      <div><i>📝</i><b>סיכום כתוב לכל שיעור</b>הנקודות החשובות, בלי לחפש בסרטון.</div>
+      <div><i>✅</i><b>צ׳קליסטים</b>מה לבדוק ומה לבקש בכל שלב, להדפסה או לטלפון.</div>
+      <div><i>🔑</i><b>דף אישי וגישה לתמיד</b>כולל עדכונים כשהחוק או המספרים משתנים.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>מי מלמד</h3>
+    <div class="about"><div class="ph">תמונה<br>של יקיר</div>
+      <div><b>עו״ד יקיר דבול</b><p style="margin:4px 0 0">עורך דין מקרקעין בנתניה. מלווה קונים ומוכרים בעסקאות דירה בשרון, ממונה מטעם בית המשפט לרישום בתים משותפים, וחבר בוועדות בלשכת עורכי הדין. הקורס בנוי מהשאלות שקונים שואלים במשרד, ומהטעויות שרואים שוב ושוב.</p></div></div>
+  </div>
+
+  <div class="card order" id="dcr-order">
+    <div data-s="form">
+      <h3>רכישת הקורס</h3>
+      <label for="dcr-name">שם מלא</label><input type="text" id="dcr-name" autocomplete="name">
+      <div class="row2">
+        <div><label for="dcr-email">מייל <small>(לכאן תגיע הגישה לקורס)</small></label><input type="email" id="dcr-email" autocomplete="email" dir="ltr"></div>
+        <div><label for="dcr-phone">טלפון</label><input type="tel" id="dcr-phone" autocomplete="tel" dir="ltr"></div>
+      </div>
+      <label class="chkline"><input type="checkbox" id="dcr-terms"> <span>קראתי ואני מסכים/ה ל<a href="#dcr-terms-text">תנאי הרכישה</a>. ידוע לי שהקורס הוא מידע כללי ואינו ייעוץ משפטי לעסקה מסוימת.</span></label>
+      <label class="chkline"><input type="checkbox" id="dcr-mkt"> <span>אשמח לקבל מהמשרד עדכונים ומאמרים במייל (לא חובה).</span></label>
+      <div class="total"><span>קונים דירה ראשונה, בלי הפתעות<br><span class="small">10 שיעורים · גישה לתמיד</span></span><b>390 ₪</b></div>
+      <div class="err" id="dcr-err"></div>
+      <button type="button" class="go dark" id="dcr-pay" style="width:100%;margin-top:6px">לתשלום מאובטח</button>
+      <p class="small" style="margin:8px 0 0">התשלום בדף המאובטח של חברת הסליקה. הקבלה והגישה לקורס נשלחות למייל מיד אחרי התשלום.</p>
+    </div>
+    <div data-s="done" hidden><div class="done"><div class="big">✓</div><h3>ברוכים הבאים לקורס</h3>
+      <p>שלחנו לכם למייל קישור אישי לקורס. אפשר להתחיל עכשיו.</p>
+      <a class="go dark" href="#">כניסה לקורס</a></div></div>
+  </div>
+
+  <div class="card">
+    <h3>שאלות נפוצות</h3>
+    <details><summary>כמה זמן יש לי גישה?</summary><p>לתמיד. נכנסים מהקישור האישי שנשלח למייל, מכל מכשיר.</p></details>
+    <details><summary>זה במקום עורך דין בעסקה?</summary><p>לא. הקורס מסביר את התהליך כדי שתגיעו מוכנים ותדעו מה לשאול. בעסקה עצמה כל מקרה שונה, וכדאי שעורך דין ילווה אתכם.</p></details>
+    <details><summary>כמה זמן לוקח לעבור את הקורס?</summary><p>כל שיעור קצר, ואפשר לעבור את כולם בערב אחד, או שיעור אחד בכל פעם, לפי השלב שבו אתם נמצאים.</p></details>
+    <details><summary>אפשר לבטל?</summary><p>אפשר לבטל בתוך 14 יום מהרכישה, כל עוד לא התחלתם לצפות בשיעורים, ולקבל את כל הסכום בחזרה.</p></details>
+    <details><summary>קיבלתי חשבונית?</summary><p>כן. הקבלה נשלחת למייל אוטומטית מיד אחרי התשלום.</p></details>
+  </div>
+
+  <div class="card" id="dcr-terms-text">
+    <h3>תנאי הרכישה בקצרה</h3>
+    <p class="small" style="font-size:14.5px">הקורס הוא מידע כללי לקונים ואינו ייעוץ משפטי לעסקה מסוימת. הגישה אישית ואין להעביר אותה לאחרים. ביטול בתוך 14 יום מהרכישה, כל עוד לא התחלתם לצפות בשיעורים, עם החזר מלא. השירות ניתן על ידי יקיר דבול - משרד עורכי דין, רזיאל 1 נתניה, 09-8613413.</p>
+  </div>
+
+  <div class="sticky" id="dcr-sticky"><span><b>390 ₪</b> · 10 שיעורים · גישה לתמיד</span><a class="go dark" href="#dcr-order" style="padding:9px 16px;font-size:15px">לרכישה</a></div>
+</div>
+
+<script nowprocket>/*dabul-course*/(function(){
+var R=document.querySelector('.dcr'); if(!R) return;
+var API=(window.DCR_API||'');
+var $=function(id){return document.getElementById(id);};
+var v=function(id){return String(($(id)||{}).value||'').trim();};
+var sticky=$('dcr-sticky'), order=$('dcr-order');
+function onScroll(){var hero=R.querySelector('.hero').getBoundingClientRect(), o=order.getBoundingClientRect();sticky.classList.toggle('on',hero.bottom<0&&(o.top>window.innerHeight||o.bottom<0));}
+window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+$('dcr-pay').addEventListener('click',function(){
+  var e=$('dcr-err'), b=this, m='';
+  if(v('dcr-name').length<2) m='כתבו שם מלא.'; else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('dcr-email'))) m='כתבו מייל תקין. לשם תגיע הגישה לקורס.'; else if(v('dcr-phone').replace(/\D/g,'').length<9) m='כתבו מספר טלפון.'; else if(!$('dcr-terms').checked) m='צריך לאשר את תנאי הרכישה.';
+  e.textContent=m; if(m) return;
+  b.disabled=true; b.textContent='מעביר לתשלום...';
+  if(!API){ setTimeout(function(){ R.querySelector('[data-s=form]').hidden=true; R.querySelector('[data-s=done]').hidden=false; },700); return; } // preview
+  fetch(API+'?step=buy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({course:'first-home',name:v('dcr-name'),email:v('dcr-email'),phone:v('dcr-phone'),marketing:$('dcr-mkt').checked,page:location.href.split('#')[0]})})
+    .then(function(r){return r.json();}).then(function(d){ if(d&&d.payUrl) location.href=d.payUrl; else throw 0; })
+    .catch(function(){ b.disabled=false; b.textContent='לתשלום מאובטח'; e.textContent='משהו השתבש. נסו שוב, או התקשרו 09-8613413.'; });
+});
+if(/#bought/.test(location.hash)){ R.querySelector('[data-s=form]').hidden=true; R.querySelector('[data-s=done]').hidden=false; }
+})();</script>
