@@ -1,0 +1,36 @@
+/* dabul quizzes (בדיקה קצרה), 10.10.2026. Loaded by the WordPress snippet "dabul: שאלונים במאמרים". */
+.dqz{--gold:#a8873f;--gold2:#8a6d2c;--ink:#1c1b19;--mut:#6c675d;--line:#e4ded0;--paper:#fbfaf6;--soft:#f3ead3;--ok:#1f8f4e;--warn:#9a6a1a;--bad:#a8402a;
+  color:var(--ink);font-size:17px;line-height:1.7;max-width:760px;margin:0 auto;font-family:inherit}
+.dqz *{box-sizing:border-box}
+.dqz .box{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 40px -30px rgba(60,45,10,.5)}
+.dqz .k{font-size:13px;letter-spacing:.05em;color:var(--gold);font-weight:700;margin:0}
+.dqz h2,.dqz h3{margin:0;font-weight:800;text-wrap:balance}
+.dqz h2{font-size:26px;line-height:1.25;margin:2px 0 6px}
+.dqz .intro{color:var(--mut);margin:0 0 16px}
+.dqz .bar{height:6px;border-radius:99px;background:#eee8da;overflow:hidden;margin:0 0 16px}
+.dqz .bar i{display:block;height:100%;background:var(--gold);width:0;transition:width .25s}
+.dqz .q{font-size:19px;font-weight:800;margin:0 0 12px}
+.dqz .ops{display:grid;gap:8px}
+.dqz .ops button{font:inherit;text-align:right;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;padding:12px 14px;cursor:pointer;color:var(--ink);transition:border-color .15s,background .15s}
+.dqz .ops button:hover{border-color:var(--gold);background:#fff}
+.dqz .nav{display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:14px;color:var(--mut)}
+.dqz .nav button{font:inherit;background:none;border:0;color:var(--gold2);font-weight:700;cursor:pointer;padding:0}
+.dqz .res h3{font-size:22px;margin:4px 0 8px}
+.dqz .tag{display:inline-block;font-size:13px;font-weight:800;border-radius:99px;padding:2px 12px;margin-bottom:6px}
+.dqz .tag.g{background:#e3f2e9;color:var(--ok)}.dqz .tag.y{background:#f6ebcf;color:var(--warn)}.dqz .tag.r{background:#f7e0d9;color:var(--bad)}
+.dqz .res ul{margin:8px 0 0;padding-inline-start:20px}
+.dqz .res li{margin:4px 0}
+.dqz .steps{display:grid;gap:8px;margin:14px 0}
+.dqz .steps>div{display:grid;grid-template-columns:30px 1fr;gap:10px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.dqz .steps i{font-style:normal;display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--gold);color:#fff;font-weight:800}
+.dqz .steps b{display:block}
+.dqz .steps span{font-size:15px;color:var(--mut)}
+.dqz .warn{background:#fbf1ee;border:1px solid #efd3ca;border-radius:12px;padding:10px 12px;font-size:15px;margin:12px 0}
+.dqz .lead{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+.dqz .lead p{margin:0 0 8px;font-weight:700}
+.dqz .lead .r{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}
+@media(max-width:560px){.dqz .lead .r{grid-template-columns:1fr}}
+.dqz input{font:inherit;font-size:16px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--paper);width:100%;color:var(--ink)}
+.dqz .go{font:inherit;font-weight:800;border:0;border-radius:12px;padding:10px 18px;background:var(--ink);color:#fff;cursor:pointer;white-space:nowrap}
+.dqz .small{font-size:13px;color:var(--mut);margin-top:10px}
+.dqz [hidden]{display:none!important}
