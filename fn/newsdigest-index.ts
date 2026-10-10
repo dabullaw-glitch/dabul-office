@@ -83,7 +83,7 @@ async function topic(t: string, month: string) {
   const T = TOPICS[t]; if (!T) return { error: 'topic?' };
   const id = 'dg-' + month;
   if (!(await get(id))) await merge(id, { month, status: 'collecting', created: new Date().toISOString() });
-  const tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5, user_location: { type: 'approximate', country: 'IL', timezone: 'Asia/Jerusalem' } }];
+  const tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }];
   const messages: Any[] = [{ role: 'user', content: `החודש: ${monthName(month)} (${month}).\nהנושא: ${T.ask}\nחפש, קרא את המקורות, ותן את התשובה בפורמט שנקבע.` }];
   let d: Any = null, content: Any[] = [], inTok = 0, outTok = 0, searches = 0;
   // a long search can pause the turn; it is resumed (at most twice) by sending the answer so far back
