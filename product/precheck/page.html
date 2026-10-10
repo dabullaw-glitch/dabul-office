@@ -66,7 +66,7 @@
 .pc2 .checks li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
 .pc2 .checks svg{width:44px;height:44px;padding:8px;border-radius:14px;background:var(--c,#EEF3FC)}
 .pc2 .checks li{grid-template-columns:44px 1fr!important;align-items:center!important}
-.pc2 .checks li:nth-child(1){--c:#FFF3B0}.pc2 .checks li:nth-child(2){--c:#D7F6F1}.pc2 .checks li:nth-child(3){--c:#E3ECFF}.pc2 .checks li:nth-child(4){--c:#FFE1DD}.pc2 .checks li:nth-child(5){--c:#EDE6FF}.pc2 .checks li:nth-child(6){--c:#FFE8D6}.pc2 .checks li:nth-child(7){--c:#DDF0FF}.pc2 .checks li:nth-child(8){--c:#DDF6E8}
+.pc2 .checks li{--c:#EEF3FC}
 .pc2 .checks b{display:block;color:var(--ink)}
 .pc2 .checks span{font-size:15.5px;color:var(--mut)}
 .pc2 .mail{background:#fff;border-radius:18px;box-shadow:0 24px 50px -24px rgba(14,42,87,.45);overflow:hidden;border:1px solid var(--rule)}
@@ -141,8 +141,11 @@
 .pc2 details p{margin:8px 0 0;color:var(--mut)}
 .pc2 .terms{font-size:14px;color:var(--mut);margin-top:22px;border-top:1px solid var(--rule);padding-top:14px}
 .pc2 [hidden]{display:none!important}
+.pc2 .vid{background:var(--ink);padding:0 22px 44px;text-align:center;color:#BFD0F4;font-size:15px}
+.pc2 .vbox{max-width:860px;margin:0 auto 10px;border-radius:18px;overflow:hidden;box-shadow:0 24px 50px -24px rgba(0,0,0,.6);border:3px solid rgba(255,225,77,.6);aspect-ratio:16/9;background:#163B78}
+.pc2 .vbox video{width:100%;height:100%;display:block;object-fit:cover}
 /* infographic: the check against the apartment price */
-.pc2 .ratio{background:linear-gradient(120deg,#FFE14D,#FFC93C);padding:40px 22px;color:var(--ink)}
+.pc2 .ratio{background:#fff;padding:44px 22px;color:var(--ink);border-bottom:1px solid var(--rule)}
 .pc2 .ratio h2{font-family:"Karantina",sans-serif;font-size:52px;line-height:.95;margin:0 0 6px}
 .pc2 .ratio p{margin:0 0 22px;max-width:620px;font-size:17px}
 .pc2 .bar{position:relative;height:74px;border-radius:16px;background:var(--ink);overflow:visible;display:flex;align-items:center;padding:0 18px;color:#fff;font-weight:700}
@@ -152,17 +155,17 @@
 .pc2 .bar .pin{position:absolute;left:-2px;top:-56px;background:var(--red);color:#fff;border-radius:10px;padding:6px 10px;font-size:14px;line-height:1.3;white-space:nowrap}
 .pc2 .bar .pin::after{content:"";position:absolute;left:6px;bottom:-8px;border:8px solid transparent;border-top-color:var(--red);border-bottom:0}
 .pc2 .ratio .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}
-.pc2 .ratio .facts div{background:rgba(255,255,255,.55);border-radius:14px;padding:12px 14px}
+.pc2 .ratio .facts div{background:var(--paper);border-radius:14px;padding:14px 16px;border-right:5px solid var(--hi)}
 .pc2 .ratio .facts b{display:block;font-family:"Karantina",sans-serif;font-size:44px;line-height:1}
 .pc2 .ratio .facts span{font-size:14.5px}
 @media(max-width:640px){.pc2 .ratio .facts{grid-template-columns:minmax(0,1fr)}.pc2 .ratio h2{font-size:44px}}
 /* infographic: where problems hide */
 .pc2 .map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:24px}
 @media(max-width:760px){.pc2 .map{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.pc2 .map div{border-radius:16px;padding:16px 14px;color:#fff;min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
+.pc2 .map div{border-radius:16px;padding:18px 16px;color:var(--ink);background:#fff;border:1px solid var(--rule);border-top:6px solid var(--ink);min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
 .pc2 .map b{font-family:"Karantina",sans-serif;font-size:34px;line-height:.95}
-.pc2 .map span{font-size:14.5px;opacity:.95}
-.pc2 .map .m1{background:var(--ink)}.pc2 .map .m2{background:var(--teal)}.pc2 .map .m3{background:var(--violet)}.pc2 .map .m4{background:var(--orange)}
+.pc2 .map span{font-size:14.5px;color:var(--mut)}
+.pc2 .map i{font-style:normal;font-family:'Karantina',sans-serif;font-size:30px;color:var(--red);line-height:1}
 
 @media(prefers-reduced-motion:reduce){.pc2 *{transition:none!important;animation:none!important}}
 </style>
@@ -239,6 +242,11 @@
     </div>
   </section>
 
+  <section class="vid">
+    <div class="vbox"><video id="pc2-video" controls playsinline preload="none" poster="precheck-video-poster.jpg"><source src="precheck-video.mp4" type="video/mp4"></video></div>
+    <p>דקה אחת: מה בודקים, מה מוצאים, ומה מקבלים.</p>
+  </section>
+
   <section class="ratio">
     <h2>בדיקה אחת, לפני ההחלטה הכי גדולה</h2>
     <p>בדירה של 2,150,000 ₪, הבדיקה היא פחות מאלפית מהמחיר. והיא נעשית לפני שמתחייבים לשקל אחד.</p>
@@ -254,10 +262,10 @@
     <h2>איפה מסתתרות ההפתעות</h2>
     <p class="lead">ארבעה מקורות מידע, ובכל אחד מהם משהו שהמודעה לא תספר לכם.</p>
     <div class="map">
-      <div class="m1"><b>נסח טאבו</b><span>משכנתאות, עיקולים, הערות אזהרה, ומי באמת הבעלים</span></div>
-      <div class="m2"><b>בית משותף</b><span>מה מוצמד לדירה: חניה, מחסן, גג, חצר</span></div>
-      <div class="m3"><b>תיק בניין</b><span>מה אושר בהיתר, ומה נבנה בלי היתר</span></div>
-      <div class="m4"><b>תכנון ומס</b><span>תוכניות באזור, היטל השבחה ומס רכישה</span></div>
+      <div class="m1"><i>1</i><b>נסח טאבו</b><span>משכנתאות, עיקולים, הערות אזהרה, ומי באמת הבעלים</span></div>
+      <div class="m2"><i>2</i><b>בית משותף</b><span>מה מוצמד לדירה: חניה, מחסן, גג, חצר</span></div>
+      <div class="m3"><i>3</i><b>תיק בניין</b><span>מה אושר בהיתר, ומה נבנה בלי היתר</span></div>
+      <div class="m4"><i>4</i><b>תכנון ומס</b><span>תוכניות באזור, היטל השבחה ומס רכישה</span></div>
     </div>
   </section>
 
