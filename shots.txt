@@ -1,0 +1,3 @@
+c3-levy https://dabullaw.co.il/calculators/betterment-levy/
+c3-ry https://dabullaw.co.il/calculators/rental-yield/
+c3-pt https://dabullaw.co.il/calculators/purchase-tax/
