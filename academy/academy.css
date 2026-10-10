@@ -301,3 +301,10 @@ p{margin:0 0 1em}
 .dk-split .good{background:rgba(79,150,104,.13);border:2px solid rgba(90,168,119,.6)}.dk-split .good .dk-ic{color:#7cc394}
 .dk-quote{display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px}.dk-quote p{font-family:var(--serif);font-weight:900;font-size:76px;line-height:1.25;margin:0}.dk-quote small{font-size:26px;color:#d9d1bf}
 .dk-scene{animation:dkIn .7s ease both}@keyframes dkIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+
+/* new-device check and the buyer's name in the course (10.10.2026) */
+.verify{margin:22px 0;padding:20px;border:1px solid var(--line,#e2e0da);border-radius:14px;background:#fff}
+.verify h3{margin:0 0 6px;font-size:21px}
+.verify form{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.verify input{flex:1;min-width:140px;font:inherit;font-size:20px;letter-spacing:.3em;text-align:center;padding:10px;border:1.5px solid #cfccc3;border-radius:10px}
+.owner{margin:4px 0 10px;font-size:13px;color:var(--muted,#66645f)}

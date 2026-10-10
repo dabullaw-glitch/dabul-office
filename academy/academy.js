@@ -38,10 +38,41 @@
   });
   if (!tok && !preview) return;
   (async () => {
-    const r = await fetch(`${API}?a=course&c=first-home${tok ? '&t=' + tok : '&preview=1'}`).then(x => x.json()).catch(() => ({}));
+    // each buyer's course opens on up to 3 of their own devices; a new device is approved with a code sent to the buyer's email
+    let dev = null; try { dev = localStorage.getItem('dabul-course-d'); } catch (_) {}
+    const load = () => fetch(`${API}?a=course&c=first-home${tok ? '&t=' + tok + (dev ? '&d=' + dev : '') : '&preview=1'}`).then(x => x.json()).catch(() => ({}));
+    let r = await load();
+    if (r.newDevice) { dev = r.newDevice; try { localStorage.setItem('dabul-course-d', dev); } catch (_) {} }
+    if (!r.ok && r.verify && tok) {
+      const g = $('#gate'); const box = document.createElement('div'); box.className = 'verify';
+      box.innerHTML = r.limit
+        ? '<h3>הקורס כבר פתוח ב־3 מכשירים</h3><p>הגישה לקורס אישית, ואפשר לפתוח אותה בעד 3 מכשירים. כדי להחליף מכשיר, התקשרו למשרד: 09-8613413.</p>'
+        : '<h3>כניסה ממכשיר חדש</h3><p>הקורס אישי. כדי לפתוח אותו במכשיר הזה, נשלח קוד למייל שאיתו נרשמתם: <b dir="ltr"></b></p><button class="btn btn-ink" type="button" data-send>שלחו לי קוד</button><form novalidate hidden><input inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="הקוד מהמייל" required><button class="btn btn-gold" type="submit">כניסה</button></form><p class="msg" role="status"></p>';
+      g.insertBefore(box, g.children[1] || null);
+      if (!r.limit) {
+        box.querySelector('b').textContent = r.mail || '';
+        const m = box.querySelector('.msg'), f = box.querySelector('form');
+        box.querySelector('[data-send]').addEventListener('click', async ev => {
+          ev.target.disabled = true; const x = await post(`${API}?a=code`, { t: tok, c: 'first-home' });
+          m.textContent = x.ok ? 'שלחנו קוד למייל. הוא בתוקף ל־15 דקות. בדקו גם בספאם.' : (x.msg || 'משהו לא עבד. נסו שוב בעוד דקה.');
+          if (x.ok) { f.hidden = false; f.querySelector('input').focus(); } else ev.target.disabled = false;
+        });
+        f.addEventListener('submit', async ev => {
+          ev.preventDefault(); const code = f.querySelector('input').value.replace(/\D/g, '');
+          if (code.length !== 6) { m.textContent = 'הקוד הוא 6 ספרות.'; return; }
+          const x = await post(`${API}?a=verify`, { t: tok, c: 'first-home', code });
+          if (x.ok && x.d) { dev = x.d; try { localStorage.setItem('dabul-course-d', dev); } catch (_) {} box.remove(); r = await load(); if (r.ok) open(); return; }
+          m.textContent = x.msg || 'הקוד לא נכון. בדקו ונסו שוב.';
+        });
+      }
+      return;
+    }
     if (!r.ok) { if (tok) { $('.msg', resend).textContent = 'הקישור הזה לא פעיל. הקלידו את המייל ונשלח קישור חדש.'; } return; }
+    open();
+    function open() {
     $('#gate').hidden = true; $('#player').hidden = false;
     $('#ctitle').textContent = r.title;
+    if (r.owner) { let o = $('#cowner'); if (!o) { o = document.createElement('p'); o.id = 'cowner'; o.className = 'owner'; $('#ctitle').after(o); } o.textContent = 'הקורס האישי של ' + r.owner; }
     const done = new Set(r.done || []);
     const toc = $('#toc');
     let cur = Math.max(0, r.lessons.findIndex(l => !done.has(l.n) && !l.locked));
@@ -77,9 +108,10 @@
     $('#prev').addEventListener('click', () => { if (cur > 0) { cur--; show(); } });
     $('#next').addEventListener('click', async () => {
       const l = r.lessons[cur];
-      if (!l.locked && tok && !done.has(l.n)) { done.add(l.n); post(`${API}?a=done`, { t: tok, c: 'first-home', n: l.n }); }
+      if (!l.locked && tok && !done.has(l.n)) { done.add(l.n); post(`${API}?a=done`, { t: tok, d: dev, c: 'first-home', n: l.n }); }
       if (cur < r.lessons.length - 1) { cur++; show(); } else paint();
     });
     show();
+    }
   })();
 })();
