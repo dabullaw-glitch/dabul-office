@@ -312,6 +312,54 @@
   </section>
 
   <!-- MORE TOOLS BY CATEGORY -->
+  <section class="tl" aria-labelledby="h3-tl" id="tl">
+<style>
+.dt3 .tl{--tlw:3px}
+.dt3 .tl .sh p{margin:0;color:var(--mut);max-width:60ch}
+.dt3 .tl ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;position:relative}
+.dt3 .tl ol::before{content:"";position:absolute;top:27px;right:8%;left:8%;height:var(--tlw);background:linear-gradient(to left,var(--gold),var(--gold3));border-radius:3px}
+.dt3 .tl li{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.dt3 .tl .node{position:relative;z-index:1;width:56px;height:56px;border-radius:50%;background:var(--ink);color:var(--gold3);display:grid;place-items:center;border:4px solid #fff;box-shadow:0 0 0 2px var(--gold)}
+.dt3 .tl .node svg{width:24px;height:24px}
+.dt3 .tl li.hot .node{background:var(--gold);color:#fff}
+.dt3 .tl .when{margin:12px 0 8px;font-size:13px;font-weight:800;letter-spacing:.02em;color:var(--gold2);background:var(--soft);border-radius:99px;padding:2px 12px;white-space:nowrap}
+.dt3 .tl .card{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:14px 14px 16px;width:100%;flex:1;display:flex;flex-direction:column;gap:6px}
+.dt3 .tl li.hot .card{border-color:var(--gold)}
+.dt3 .tl .card b{font-size:17px;line-height:1.35;display:block}
+.dt3 .tl .card span{font-size:14px;line-height:1.55;color:var(--mut);display:block}
+.dt3 .tl .pay{margin-top:auto;padding-top:8px;font-size:13px;font-weight:700;color:var(--ink)}
+.dt3 .tl .pay i{font-style:normal;display:inline-block;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:2px 8px}
+.dt3 .tl .foot{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 18px}
+.dt3 .tl .foot p{margin:0;font-size:14px;color:var(--mut);max-width:70ch}
+.dt3 .tl .foot .go{display:flex;gap:8px;flex-wrap:wrap}
+.dt3 .tl .foot a{font-size:14px;font-weight:800;color:var(--ink);text-decoration:none;background:#fff;border:1.5px solid var(--gold);border-radius:99px;padding:6px 14px;white-space:nowrap}
+@media (max-width:900px){
+ .dt3 .tl ol{grid-template-columns:minmax(0,1fr);gap:0}
+ .dt3 .tl ol::before{display:none}
+ .dt3 .tl li:not(:last-child)::before{content:"";position:absolute;right:26.5px;top:28px;bottom:-28px;width:var(--tlw);background:linear-gradient(to bottom,var(--gold),var(--gold3));border-radius:3px}
+ .dt3 .tl li{display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:14px;align-items:start;text-align:right;padding-bottom:16px}
+ .dt3 .tl .node{grid-row:1/3}
+ .dt3 .tl .when{margin:4px 0 8px;justify-self:start}
+ .dt3 .tl .card{grid-column:2}
+}
+</style>
+<div class="sh"><div><p class="k">מה משלמים ומתי</p><h2 id="h3-tl">ציר התשלומים בעסקת דירה</h2></div><p>מהחתימה ועד הרישום בטאבו. הסדר והסכומים נקבעים בחוזה, וזו התמונה הכללית בדירה יד שנייה.</p></div>
+<ol>
+ <li><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M14.5 4.5l5 5L9 20H4v-5z"/></svg></span><span class="when">יום החתימה</span>
+  <div class="card"><b>תשלום ראשון למוכר</b><span>החוזה נחתם, ועורך הדין רושם הערת אזהרה בטאבו כדי להגן עליכם.</span><span class="pay"><i>לרוב 10% עד 20% מהמחיר</i></span></div></li>
+ <li><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 13h8M8 17h5"/></svg></span><span class="when">עד יום 30</span>
+  <div class="card"><b>דיווח לרשות המסים</b><span>מגישים הצהרה על העסקה. עורך הדין מגיש אותה בשמכם.</span><span class="pay"><i>בלי תשלום בשלב הזה</i></span></div></li>
+ <li class="hot"><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M8 18h8"/></svg></span><span class="when">עד יום 60</span>
+  <div class="card"><b>תשלום מס רכישה</b><span>משלמים לפי המדרגות. איחור מוסיף הצמדה, ריבית וקנסות.</span><span class="pay"><i>לפי מחיר הדירה ומספר הדירות</i></span></div></li>
+ <li><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"/><path d="M5 10v9h14v-9"/><path d="M9 19v-5h6v5"/></svg></span><span class="when">לפי החוזה</span>
+  <div class="card"><b>תשלומי ביניים וכסף המשכנתא</b><span>הבנק מעביר את כסף המשכנתא ישירות למוכר, במועד שנקבע בחוזה.</span><span class="pay"><i>הון עצמי ומשכנתא</i></span></div></li>
+ <li><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg></span><span class="when">מסירת הדירה</span>
+  <div class="card"><b>תשלום אחרון</b><span>בדרך כלל כנגד המפתחות, ואחרי שהמוכר מציג את האישורים שנקבעו בחוזה.</span><span class="pay"><i>יתרת המחיר</i></span></div></li>
+ <li><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="when">אחרי המסירה</span>
+  <div class="card"><b>רישום הדירה על שמכם</b><span>אחרי שמתקבלים אישורי המסים, עורך הדין רושם את הבעלות בטאבו.</span><span class="pay"><i>אגרת רישום</i></span></div></li>
+</ol>
+<div class="foot"><p>בדירה מקבלן התשלומים צמודים בדרך כלל להתקדמות הבנייה, והמועדים משתנים. לפני החתימה כדאי לעבור על לוח התשלומים עם עורך דין.</p><div class="go"><a href="#calc-dates">המועדים לפי תאריך החתימה</a><a href="#calc-tax">מחשבון מס רכישה</a></div></div>
+</section>
   <section aria-labelledby="h3-cats">
     <div class="sh"><div><p class="k">עוד כלים באתר</p><h2 id="h3-cats">מדריכים עם מחשבון, רשימות וטפסים</h2><p>כל כלי פותח עמוד עם הסבר מלא, דוגמאות ושאלות נפוצות.</p></div></div>
     <div class="cats">
