@@ -1,0 +1,167 @@
+<!-- dabul tools hub (10.10.2026): "מחשבונים וכלים" page on dabullaw.co.il.
+     One page that gathers every calculator and tool, so the menu keeps a single item ("מחשבונים וכלים")
+     instead of a growing list. The page title in the site's banner is the only H1; this block starts at H2.
+     Colors follow the site's own widgets (gold #a8873f, ink #1c1b19, paper #fbfaf6).
+     Nothing here is live until Yakir approves. -->
+<style>
+.dth{--gold:#a8873f;--gold2:#8a6d2c;--ink:#1c1b19;--mut:#6c675d;--line:#e4ded0;--paper:#fbfaf6;--soft:#f3ead3;
+  color:var(--ink);font-size:17px;line-height:1.7;max-width:1120px;margin:0 auto;font-family:inherit}
+.dth *{box-sizing:border-box}
+.dth h2,.dth h3{margin:0;font-weight:800;text-wrap:balance;color:var(--ink)}
+.dth .lead{font-size:19px;color:#3b3833;max-width:760px;margin:0 0 8px}
+.dth .upd{font-size:13.5px;color:var(--mut)}
+.dth .k{font-size:13px;letter-spacing:.05em;color:var(--gold);font-weight:700;margin:0 0 4px}
+/* who are you */
+.dth .who{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 8px}
+.dth .who button{font:inherit;font-size:15.5px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:99px;padding:8px 18px;cursor:pointer}
+.dth .who button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+/* groups */
+.dth .grp{margin-top:34px}
+.dth .grp>h2{font-size:28px;margin-bottom:4px}
+.dth .grp>p{margin:0 0 16px;color:var(--mut)}
+.dth .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.dth .tool{display:flex;flex-direction:column;gap:6px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s,border-color .15s;position:relative}
+.dth .tool:hover{transform:translateY(-3px);box-shadow:0 18px 34px -22px rgba(60,45,10,.45);border-color:#d6c69c}
+.dth .tool .ic{width:48px;height:48px;border-radius:14px;background:var(--soft);display:grid;place-items:center;margin-bottom:6px}
+.dth .tool .ic svg{width:26px;height:26px}
+.dth .tool h3{font-size:19px;line-height:1.35}
+.dth .tool p{margin:0;font-size:15.5px;color:var(--mut);flex:1}
+.dth .tool .meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:13.5px;color:var(--mut)}
+.dth .tool .go{font-weight:800;color:var(--gold2)}
+.dth .tool .new{position:absolute;top:16px;left:16px;font-size:12px;font-weight:800;background:var(--ink);color:#fff;border-radius:99px;padding:1px 10px}
+.dth .tool[hidden]{display:none}
+/* how to use */
+.dth .how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:40px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px}
+@media(max-width:760px){.dth .how{grid-template-columns:minmax(0,1fr)}}
+.dth .how b{display:block;font-size:17px}
+.dth .how span{font-size:15px;color:var(--mut)}
+.dth .how i{font-style:normal;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--gold);color:#fff;font-weight:800;margin-bottom:6px}
+/* faq */
+.dth .faq{margin-top:40px}
+.dth .faq h2{font-size:28px;margin-bottom:8px}
+.dth details{border-bottom:1px solid var(--line);padding:14px 0}
+.dth summary{cursor:pointer;font-weight:700;font-size:17.5px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.dth summary::-webkit-details-marker{display:none}
+.dth summary::after{content:"+";color:var(--gold);font-size:22px;line-height:1}
+.dth details[open] summary::after{content:"−"}
+.dth details p{margin:8px 0 0;color:#3b3833}
+/* cta */
+.dth .cta{margin-top:40px;background:var(--ink);color:#fff;border-radius:22px;padding:26px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+.dth .cta h2{color:#fff;font-size:24px}
+.dth .cta p{margin:4px 0 0;color:#cfc8b8;font-size:15.5px}
+.dth .cta a{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,#d9bd7f,#b8954a);color:var(--ink);font-weight:800;text-decoration:none;border-radius:14px;padding:12px 22px}
+.dth .note{font-size:13.5px;color:var(--mut);margin-top:18px}
+</style>
+
+<div class="dth" dir="rtl">
+  <p class="lead">כל המחשבונים והכלים של המשרד במקום אחד: כמה באמת עולה לקנות דירה, כמה מס רכישה תשלמו, מה יהיה ההחזר החודשי על המשכנתא, ומה התשואה על דירה להשקעה. כל כלי נותן תשובה בתוך דקה, בשפה פשוטה, בלי להירשם.</p>
+  <div class="upd">עודכן: אוקטובר 2026 · מדרגות מס הרכישה לפי 2026</div>
+
+  <div class="who" role="group" aria-label="סינון לפי מי אתם">
+    <button type="button" aria-pressed="true" data-f="all">הכל</button>
+    <button type="button" aria-pressed="false" data-f="buy">קונים דירה</button>
+    <button type="button" aria-pressed="false" data-f="inv">משקיעים</button>
+    <button type="button" aria-pressed="false" data-f="info">מידע ומסמכים</button>
+  </div>
+
+  <section class="grp" data-g="buy">
+    <p class="k">קונים דירה</p>
+    <h2>לפני שקונים: כמה זה עולה ומה בודקים</h2>
+    <p>ארבעה כלים שעונים על השאלות הראשונות של כל קונה.</p>
+    <div class="grid">
+      <a class="tool" data-t="buy" href="https://dabullaw.co.il/%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%94%d7%9e%d7%9c%d7%90-%d7%95%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%9c%d7%94%d7%95%d7%a6%d7%90%d7%95%d7%aa-%d7%9c%d7%a8%d7%9b%d7%99%d7%a9%d7%aa-%d7%93%d7%99/">
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9H3z" fill="none" stroke="#8a6d2c" stroke-width="1.8"/><path d="M9 15h6M12 12v6" stroke="#8a6d2c" stroke-width="1.8"/></svg></span>
+        <h3>מחשבון הוצאות לרכישת דירה</h3><p>כמה תעלה הדירה באמת: מס רכישה, עורך דין, תיווך, שמאי ומשכנתא, מעבר למחיר.</p>
+        <span class="meta"><span>דקה אחת</span><span class="go">לחישוב ←</span></span></a>
+      <a class="tool" data-t="buy" href="https://dabullaw.co.il/%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%9c%d7%9e%d7%a1-%d7%a8%d7%9b%d7%99%d7%a9%d7%94-2025-%d7%9b%d7%9e%d7%94-%d7%aa%d7%a9%d7%9c%d7%9e%d7%95-%d7%9c%d7%9e%d7%93%d7%99%d7%a0%d7%94-%d7%95%d7%90%d7%99/">
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="#8a6d2c" stroke-width="1.8"/><path d="M8 7h8v3H8zM8 14h1M11.5 14h1M15 14h1M8 17.5h1M11.5 17.5h1M15 17.5h1" stroke="#8a6d2c" stroke-width="1.8"/></svg></span>
+        <h3>מחשבון מס רכישה</h3><p>כמה מס רכישה תשלמו על דירה יחידה או נוספת, לפי מדרגות 2026.</p>
+        <span class="meta"><span>30 שניות</span><span class="go">לחישוב ←</span></span></a>
+      <a class="tool" data-t="buy" href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%94%d7%97%d7%96%d7%a8-%d7%97%d7%95%d7%93%d7%a9%d7%99-%d7%9c%d7%9e%d7%a9%d7%9b%d7%a0%d7%aa%d7%90-%d7%aa%d7%9b%d7%a0%d7%a0%d7%95-%d7%90%d7%aa-%d7%94%d7%aa%d7%a7/">
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M5 20V10M19 20V10M9 20v-6M15 20v-6M2 10l10-6 10 6z" fill="none" stroke="#8a6d2c" stroke-width="1.8"/></svg></span>
+        <h3>מחשבון משכנתא</h3><p>ההחזר החודשי וכמה תשלמו לבנק בסך הכול, לפי סכום, שנים וריבית.</p>
+        <span class="meta"><span>דקה אחת</span><span class="go">לחישוב ←</span></span></a>
+      <a class="tool" data-t="buy" href="https://dabullaw.co.il/checklist/">
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="#8a6d2c" stroke-width="1.8"/><path d="M8.5 9l1.5 1.5L13 7.5M8.5 15l1.5 1.5L13 13.5" fill="none" stroke="#8a6d2c" stroke-width="1.8"/></svg></span>
+        <h3>צ׳קליסט לפני שקונים דירה</h3><p>כל מה שבודקים לפני שמציעים מחיר ולפני שחותמים, ברשימה אחת שאפשר לסמן.</p>
+        <span class="meta"><span>5 דקות</span><span class="go">לרשימה ←</span></span></a>
+    </div>
+  </section>
+
+  <section class="grp" data-g="inv">
+    <p class="k">משקיעים</p>
+    <h2>דירה להשקעה: האם המספרים מסתדרים</h2>
+    <p>לפני שמתאהבים בנכס, בודקים את התשואה ואת היעד.</p>
+    <div class="grid">
+      <a class="tool" data-t="inv" href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%aa%d7%a9%d7%95%d7%90%d7%94-%d7%9c%d7%9e%d7%a9%d7%a7%d7%99%d7%a2%d7%99%d7%9d/">
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M5 16l5-5 4 3 6-7" fill="none" stroke="#8a6d2c" stroke-width="1.8"/><path d="M16 7h4v4" fill="none" stroke="#8a6d2c" stroke-width="1.8"/></svg></span>
+        <h3>מחשבון תשואה למשקיעים</h3><p>כמה תשואה דירה להשקעה מניבה באמת, לפי המחיר, שכר הדירה וההוצאות.</p>
+        <span class="meta"><span>2 דקות</span><span class="go">לחישוב ←</span></span></a>
+      <a class="tool" data-t="inv" href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%97%d7%95%d7%a4%d7%a9-%d7%9b%d7%9c%d7%9b%d7%9c%d7%99-%d7%9b%d7%9e%d7%94-%d7%94%d7%95%d7%9f-%d7%91%d7%90%d7%9e%d7%aa-%d7%a6%d7%a8%d7%99%d7%9a-%d7%9b%d7%93%d7%99/">
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#8a6d2c" stroke-width="1.8"/><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 010 3h-3a1.5 1.5 0 000 3h4" fill="none" stroke="#8a6d2c" stroke-width="1.6"/></svg></span>
+        <h3>מחשבון חופש כלכלי</h3><p>כמה הון ונכסים צריך כדי שהשכירות תכסה את ההוצאות החודשיות.</p>
+        <span class="meta"><span>2 דקות</span><span class="go">לחישוב ←</span></span></a>
+    </div>
+  </section>
+
+  <section class="grp" data-g="info">
+    <p class="k">מידע ומסמכים</p>
+    <h2>להבין את המילים ולמצוא את הטופס</h2>
+    <p>כלים שחוסכים חיפוש בגוגל ובאתרי הממשלה.</p>
+    <div class="grid">
+      <a class="tool" data-t="info" href="https://dabullaw.co.il/%d7%9e%d7%99%d7%9c%d7%95%d7%9f-%d7%9e%d7%95%d7%a0%d7%97%d7%99%d7%9d-%d7%9e%d7%a9%d7%a4%d7%98%d7%99%d7%99%d7%9d-%d7%91%d7%a0%d7%93%d7%9c%d7%b4%d7%9f/">
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z" fill="none" stroke="#8a6d2c" stroke-width="1.8"/><path d="M4 21V5M9 8h6" stroke="#8a6d2c" stroke-width="1.8"/></svg></span>
+        <h3>מילון מונחים בנדל״ן</h3><p>32 מונחים בשפה פשוטה: נסח, הערת אזהרה, היטל השבחה, טופס 4 ועוד.</p>
+        <span class="meta"><span>קריאה קצרה</span><span class="go">למילון ←</span></span></a>
+      <a class="tool" data-t="info" href="https://dabullaw.co.il/%d7%a7%d7%99%d7%a9%d7%95%d7%a8%d7%99%d7%9d-%d7%95%d7%98%d7%a4%d7%a1%d7%99%d7%9d/">
+        <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z" fill="none" stroke="#8a6d2c" stroke-width="1.8"/><path d="M14 3v4h4M9 12h6M9 16h6" stroke="#8a6d2c" stroke-width="1.8" fill="none"/></svg></span>
+        <h3>טפסים וקישורים</h3><p>יותר מ־50 טפסים רשמיים: טאבו, מיסוי מקרקעין, ירושה, בית משותף והוצאה לפועל.</p>
+        <span class="meta"><span>לפי נושא</span><span class="go">לטפסים ←</span></span></a>
+    </div>
+  </section>
+
+  <div class="how">
+    <div><i>1</i><b>בוחרים כלי</b><span>לפי השלב שבו אתם נמצאים: קונים, משקיעים או מחפשים טופס.</span></div>
+    <div><i>2</i><b>ממלאים כמה מספרים</b><span>בלי הרשמה ובלי להשאיר פרטים. התוצאה מופיעה מיד.</span></div>
+    <div><i>3</i><b>בודקים עם עורך דין</b><span>המספרים הם הערכה. לפני חתימה, כדאי שעורך דין יעבור על העסקה שלכם.</span></div>
+  </div>
+
+  <section class="faq">
+    <h2>שאלות נפוצות על המחשבונים</h2>
+    <details><summary>כמה מדויקים המחשבונים?</summary><p>המחשבונים מבוססים על הנתונים הרשמיים המעודכנים, כמו מדרגות מס הרכישה לשנת 2026. התוצאה היא הערכה כללית. המספר הסופי תלוי בפרטי העסקה שלכם, ולכן לפני חתימה כדאי לבדוק אותו עם עורך דין.</p></details>
+    <details><summary>באיזה מחשבון מתחילים כשקונים דירה ראשונה?</summary><p>מתחילים במחשבון ההוצאות לרכישת דירה. הוא מראה את כל העלויות מעבר למחיר, כולל מס רכישה, עורך דין ותיווך. אחר כך בודקים במחשבון המשכנתא את ההחזר החודשי.</p></details>
+    <details><summary>צריך להירשם או להשאיר פרטים?</summary><p>לא. כל הכלים פתוחים ומחשבים מיד, בלי הרשמה ובלי להשאיר טלפון או מייל.</p></details>
+    <details><summary>זה במקום ייעוץ משפטי?</summary><p>לא. הכלים נותנים תמונה כללית. כל עסקה שונה, ועורך דין יבדוק את המסמכים, את המס ואת הסיכונים של העסקה שלכם.</p></details>
+  </section>
+
+  <div class="cta">
+    <div><h2>רוצים שנבדוק את המספרים של העסקה שלכם?</h2><p>עו״ד יקיר דבול, עסקאות מקרקעין ומיסוי מקרקעין בנתניה ובשרון.</p></div>
+    <a href="tel:098613413">שיחה עם המשרד · 09-8613413</a>
+  </div>
+  <p class="note">המחשבונים והכלים בעמוד הם מידע כללי ואינם ייעוץ משפטי או מיסויי.</p>
+</div>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"CollectionPage","@id":"https://dabullaw.co.il/calculators/#page","name":"מחשבונים וכלים לעסקת נדל״ן","inLanguage":"he-IL","dateModified":"2026-10-10","about":"מחשבונים וכלים לקונים דירה ולמשקיעי נדל״ן בישראל","publisher":{"@type":"LegalService","name":"יקיר דבול - משרד עורכי דין","url":"https://dabullaw.co.il/","telephone":"+972-9-8613413"}},
+{"@type":"ItemList","name":"מחשבונים וכלים","itemListElement":[
+{"@type":"ListItem","position":1,"name":"מחשבון הוצאות לרכישת דירה","url":"https://dabullaw.co.il/%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%94%d7%9e%d7%9c%d7%90-%d7%95%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%9c%d7%94%d7%95%d7%a6%d7%90%d7%95%d7%aa-%d7%9c%d7%a8%d7%9b%d7%99%d7%a9%d7%aa-%d7%93%d7%99/"},
+{"@type":"ListItem","position":2,"name":"מחשבון מס רכישה","url":"https://dabullaw.co.il/%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%9c%d7%9e%d7%a1-%d7%a8%d7%9b%d7%99%d7%a9%d7%94-2025-%d7%9b%d7%9e%d7%94-%d7%aa%d7%a9%d7%9c%d7%9e%d7%95-%d7%9c%d7%9e%d7%93%d7%99%d7%a0%d7%94-%d7%95%d7%90%d7%99/"},
+{"@type":"ListItem","position":3,"name":"מחשבון משכנתא","url":"https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%94%d7%97%d7%96%d7%a8-%d7%97%d7%95%d7%93%d7%a9%d7%99-%d7%9c%d7%9e%d7%a9%d7%9b%d7%a0%d7%aa%d7%90-%d7%aa%d7%9b%d7%a0%d7%a0%d7%95-%d7%90%d7%aa-%d7%94%d7%aa%d7%a7/"},
+{"@type":"ListItem","position":4,"name":"צ׳קליסט לפני שקונים דירה","url":"https://dabullaw.co.il/checklist/"},
+{"@type":"ListItem","position":5,"name":"מחשבון תשואה למשקיעים","url":"https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%aa%d7%a9%d7%95%d7%90%d7%94-%d7%9c%d7%9e%d7%a9%d7%a7%d7%99%d7%a2%d7%99%d7%9d/"},
+{"@type":"ListItem","position":6,"name":"מחשבון חופש כלכלי","url":"https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%97%d7%95%d7%a4%d7%a9-%d7%9b%d7%9c%d7%9b%d7%9c%d7%99-%d7%9b%d7%9e%d7%94-%d7%94%d7%95%d7%9f-%d7%91%d7%90%d7%9e%d7%aa-%d7%a6%d7%a8%d7%99%d7%9a-%d7%9b%d7%93%d7%99/"},
+{"@type":"ListItem","position":7,"name":"מילון מונחים בנדל״ן","url":"https://dabullaw.co.il/%d7%9e%d7%99%d7%9c%d7%95%d7%9f-%d7%9e%d7%95%d7%a0%d7%97%d7%99%d7%9d-%d7%9e%d7%a9%d7%a4%d7%98%d7%99%d7%99%d7%9d-%d7%91%d7%a0%d7%93%d7%9c%d7%b4%d7%9f/"},
+{"@type":"ListItem","position":8,"name":"טפסים וקישורים","url":"https://dabullaw.co.il/%d7%a7%d7%99%d7%a9%d7%95%d7%a8%d7%99%d7%9d-%d7%95%d7%98%d7%a4%d7%a1%d7%99%d7%9d/"}]},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"כמה מדויקים המחשבונים?","acceptedAnswer":{"@type":"Answer","text":"המחשבונים מבוססים על הנתונים הרשמיים המעודכנים, כמו מדרגות מס הרכישה לשנת 2026. התוצאה היא הערכה כללית, ולפני חתימה כדאי לבדוק אותה עם עורך דין."}},
+{"@type":"Question","name":"באיזה מחשבון מתחילים כשקונים דירה ראשונה?","acceptedAnswer":{"@type":"Answer","text":"מתחילים במחשבון ההוצאות לרכישת דירה, שמראה את כל העלויות מעבר למחיר, ואחר כך בודקים במחשבון המשכנתא את ההחזר החודשי."}},
+{"@type":"Question","name":"צריך להירשם או להשאיר פרטים?","acceptedAnswer":{"@type":"Answer","text":"לא. כל הכלים פתוחים ומחשבים מיד, בלי הרשמה ובלי להשאיר פרטים."}},
+{"@type":"Question","name":"זה במקום ייעוץ משפטי?","acceptedAnswer":{"@type":"Answer","text":"לא. הכלים נותנים תמונה כללית. כל עסקה שונה, ועורך דין יבדוק את המסמכים, את המס ואת הסיכונים."}}]}
+]}</script>
+
+<script nowprocket>/*dabul-tools-hub*/(function(){
+var R=document.querySelector('.dth'); if(!R) return;
+R.querySelector('.who').addEventListener('click',function(e){var b=e.target.closest('button'); if(!b) return; var f=b.getAttribute('data-f');
+  R.querySelectorAll('.who button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+  R.querySelectorAll('.grp').forEach(function(g){g.hidden=!(f==='all'||g.getAttribute('data-g')===f);});});
+})();</script>
