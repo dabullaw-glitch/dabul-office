@@ -3,7 +3,7 @@
    a swipe strip on the phone, and a photo viewer on click. The photo of another brokerage office was left out.
    The old Elementor section (e9818ea) is not deleted in Elementor; this code shows the new one in its place.
    Preview before going live: add ?dblprev=1 to the address. To undo: deactivate this snippet. */
-define('DABUL_SUCC_LIVE', 0);
+define('DABUL_SUCC_LIVE', 1);
 
 function dabul_succ_on() {
 	if (DABUL_SUCC_LIVE) return true;
