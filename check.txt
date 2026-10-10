@@ -1,0 +1,10 @@
+purchase-tax https://dabullaw.co.il/calculators/purchase-tax/
+equity https://dabullaw.co.il/calculators/equity/
+after-signing-dates https://dabullaw.co.il/calculators/after-signing-dates/
+late-delivery https://dabullaw.co.il/calculators/late-delivery/
+defects-warranty https://dabullaw.co.il/calculators/defects-warranty/
+sale-net https://dabullaw.co.il/calculators/sale-net/
+shevach-exemption https://dabullaw.co.il/calculators/shevach-exemption/
+rent-deposit https://dabullaw.co.il/calculators/rent-deposit/
+lease-dates https://dabullaw.co.il/calculators/lease-dates/
+index-linkage https://dabullaw.co.il/calculators/index-linkage/
