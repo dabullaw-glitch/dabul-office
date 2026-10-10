@@ -1,0 +1,107 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "mobile",
+ "at": "2026-10-10T19:35:05.461Z",
+ "runs": [
+  {
+   "score": 83,
+   "fcp": 2288.4735,
+   "lcp": 3514.947,
+   "si": 2864.786084088904,
+   "tbt": 246,
+   "cls": 0.00004601056509989043,
+   "lcpEl": "<div data-rocket-location-hash=\"7154915fcb53ff4d5c4d2716577b2499\" class=\"dbl-ph\" data-rocket-lazy-bg-168f2ef6-b7a4-4a62-b5fb-a628f9346255=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     661
+    ],
+    [
+     "resourceLoadDelay",
+     28
+    ],
+    [
+     "resourceLoadDuration",
+     426
+    ],
+    [
+     "elementRenderDelay",
+     48
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-a0e701d elementor-widget elementor-wid…\" data-id=\"a0e701d\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div#content > div.elementor-element > div.elementor-element > div.elementor-element",
+     ""
+    ]
+   ],
+   "bytes": 346327,
+   "docBytes": 167560
+  },
+  {
+   "score": 94,
+   "fcp": 1707.955,
+   "lcp": 2896.0080000000007,
+   "si": 2013.139399019385,
+   "tbt": 0,
+   "cls": 0,
+   "lcpEl": "<div data-rocket-location-hash=\"7154915fcb53ff4d5c4d2716577b2499\" class=\"dbl-ph\" data-rocket-lazy-bg-168f2ef6-b7a4-4a62-b5fb-a628f9346255=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     582
+    ],
+    [
+     "resourceLoadDelay",
+     23
+    ],
+    [
+     "resourceLoadDuration",
+     31
+    ],
+    [
+     "elementRenderDelay",
+     199
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 346263,
+   "docBytes": 167560
+  },
+  {
+   "score": 95,
+   "fcp": 1579.2509999999997,
+   "lcp": 2807.996,
+   "si": 1942.44350461832,
+   "tbt": 0,
+   "cls": 0,
+   "lcpEl": "<div data-rocket-location-hash=\"7154915fcb53ff4d5c4d2716577b2499\" class=\"dbl-ph\" data-rocket-lazy-bg-168f2ef6-b7a4-4a62-b5fb-a628f9346255=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     575
+    ],
+    [
+     "resourceLoadDelay",
+     23
+    ],
+    [
+     "resourceLoadDuration",
+     34
+    ],
+    [
+     "elementRenderDelay",
+     205
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 346280,
+   "docBytes": 167558
+  }
+ ]
+}
