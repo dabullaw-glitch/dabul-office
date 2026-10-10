@@ -252,7 +252,7 @@
     if (typeof s.pubView !== 'function') { if (k < 120) setTimeout(() => wrap(k + 1), 250); return; }
     if (s.pubView.__cal) return;
     U.pubOld = s.pubView;
-    const f = () => { let old = ''; try { old = U.pubOld(); } catch { old = ''; } return calHtml() + `<details class="cl-old"><summary>חיבור אינסטגרם והלוח הישן (רשימה)</summary>${old}</details>`; };
+    const f = () => { let old = ''; try { old = U.pubOld(); } catch { old = ''; } return (s.bufTop ? s.bufTop() : '') + calHtml() + `<details class="cl-old"><summary>חיבורים (Buffer, אינסטגרם) והלוח הישן (רשימה)</summary>${old}</details>`; };
     f.__cal = true; s.pubView = f;
   })(0);
 
