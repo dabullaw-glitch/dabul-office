@@ -1,0 +1,133 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "desktop",
+ "at": "2026-10-10T20:21:49.709Z",
+ "runs": [
+  {
+   "score": 94,
+   "fcp": 529.952,
+   "lcp": 720.4399999999998,
+   "si": 1026.971312412651,
+   "tbt": 7.999999999999943,
+   "cls": 0.1365519662921348,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-2db03565-e58f-4303-8ed0-456ed2129f2a=\"excluded\" data-rocket-lazy-bg-0640360e-fd0d-4cda-a8b0-3d3f825e9e08=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     519
+    ],
+    [
+     "resourceLoadDelay",
+     67
+    ],
+    [
+     "resourceLoadDuration",
+     38
+    ],
+    [
+     "elementRenderDelay",
+     386
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0.137,
+     "<html dir=\"rtl\" lang=\"he-IL\">",
+     "html",
+     "https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2"
+    ]
+   ],
+   "bytes": 419871,
+   "docBytes": 167313
+  },
+  {
+   "score": 95,
+   "fcp": 414.97799999999995,
+   "lcp": 722.346,
+   "si": 685.0546233396682,
+   "tbt": 0,
+   "cls": 0.1365836721922722,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-2db03565-e58f-4303-8ed0-456ed2129f2a=\"excluded\" data-rocket-lazy-bg-0640360e-fd0d-4cda-a8b0-3d3f825e9e08=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     459
+    ],
+    [
+     "resourceLoadDelay",
+     6
+    ],
+    [
+     "resourceLoadDuration",
+     18
+    ],
+    [
+     "elementRenderDelay",
+     231
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0.137,
+     "<html dir=\"rtl\" lang=\"he-IL\">",
+     "html",
+     ""
+    ],
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-62c1a11 elementor-widget elementor-wid…\" data-id=\"62c1a11\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div.elementor-element > div.elementor-element > div.elementor-element > div.elementor-element",
+     ""
+    ]
+   ],
+   "bytes": 419791,
+   "docBytes": 167274
+  },
+  {
+   "score": 95,
+   "fcp": 430.66200000000003,
+   "lcp": 716.7744999999999,
+   "si": 676.6493941445419,
+   "tbt": 0,
+   "cls": 0.1365836721922722,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-2db03565-e58f-4303-8ed0-456ed2129f2a=\"excluded\" data-rocket-lazy-bg-0640360e-fd0d-4cda-a8b0-3d3f825e9e08=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     455
+    ],
+    [
+     "resourceLoadDelay",
+     6
+    ],
+    [
+     "resourceLoadDuration",
+     20
+    ],
+    [
+     "elementRenderDelay",
+     231
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0.137,
+     "<html dir=\"rtl\" lang=\"he-IL\">",
+     "html",
+     ""
+    ],
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-62c1a11 elementor-widget elementor-wid…\" data-id=\"62c1a11\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div.elementor-element > div.elementor-element > div.elementor-element > div.elementor-element",
+     ""
+    ]
+   ],
+   "bytes": 419992,
+   "docBytes": 167422
+  }
+ ]
+}
