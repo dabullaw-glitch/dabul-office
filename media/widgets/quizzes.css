@@ -34,3 +34,6 @@
 .dqz .go{font:inherit;font-weight:800;border:0;border-radius:12px;padding:10px 18px;background:var(--ink);color:#fff;cursor:pointer;white-space:nowrap}
 .dqz .small{font-size:13px;color:var(--mut);margin-top:10px}
 .dqz [hidden]{display:none!important}
+
+.dqz button{white-space:normal;text-transform:none;letter-spacing:normal;box-sizing:border-box;max-width:100%;min-width:0;overflow-wrap:anywhere;height:auto;line-height:1.45}
+.dqz .ops button{width:100%}
