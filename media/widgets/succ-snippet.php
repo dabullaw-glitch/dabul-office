@@ -53,7 +53,10 @@ function dabul_succ_html() {
  .dsc .bar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px 0}
  .dsc .hd .more{display:none}
  .dsc .bar .ar{display:flex;gap:8px}
- .dsc .bar .ar button{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:18px;display:grid;place-items:center}
+ .dsc .bar .ar button{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:#fff;color:var(--ink);display:grid;place-items:center;padding:0;margin:0;line-height:0;-webkit-appearance:none;appearance:none;transition:opacity .2s,border-color .2s}
+ .dsc .bar .ar button svg{width:20px;height:20px;display:block}
+ .dsc .bar .ar button:disabled{opacity:.3}
+ .dsc .bar .ar button:not(:disabled):active{border-color:var(--g)}
  .dsc .lb{padding:56px 0}.dsc .lb img{border-radius:0}
 }
 @media (min-width:901px){.dsc .bar{display:none}}
@@ -82,16 +85,21 @@ function dabul_succ_html() {
   <button type="button" class="t" data-i="8"><img src="https://dabullaw.co.il/wp-content/uploads/2026/03/496224849_2272487996499866_580159593228069400_n-3-768x576.jpg.webp" alt="עסקה שנחתמה במשרד" loading="lazy" decoding="async"></button>
   <button type="button" class="t" data-i="9"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/7-1.webp" alt="חגיגה אחרי חתימה" loading="lazy" decoding="async"></button>
  </div>
- <div class="bar"><a class="more" href="https://dabullaw.co.il/%d7%94%d7%9e%d7%9c%d7%a6%d7%95%d7%aa/">לכל ההצלחות ←</a><span class="ar"><button type="button" data-d="-1" aria-label="הקודמת">→</button><button type="button" data-d="1" aria-label="הבאה">←</button></span></div>
+ <div class="bar"><span class="ar"><button type="button" data-d="-1" aria-label="התמונה הקודמת" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button><button type="button" data-d="1" aria-label="התמונה הבאה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button></span><a class="more" href="https://dabullaw.co.il/%d7%94%d7%9e%d7%9c%d7%a6%d7%95%d7%aa/">לכל ההצלחות ←</a></div>
 </div>
 <div class="lb" role="dialog" aria-modal="true" aria-label="תמונה"><button type="button" class="x" aria-label="סגירה">×</button><button type="button" class="p" aria-label="הקודמת">→</button><img alt=""><button type="button" class="n" aria-label="הבאה">←</button><span class="c"></span></div>
 <script>
 (function(){var r=document.getElementById('dbl-succ');if(!r)return;var rail=r.querySelector('.rail'),imgs=[].map.call(rail.querySelectorAll('img'),function(i){return i.getAttribute('src')}),lb=r.querySelector('.lb'),li=lb.querySelector('img'),lc=lb.querySelector('.c'),cur=0;
+var cards=rail.querySelectorAll('.t'),bp=r.querySelector('.bar [data-d="-1"]'),bn=r.querySelector('.bar [data-d="1"]');
+function near(){var rr=rail.getBoundingClientRect(),mid=rr.left+rr.width/2,best=0,bd=1e9;for(var i=0;i<cards.length;i++){var b=cards[i].getBoundingClientRect(),dd=Math.abs(b.left+b.width/2-mid);if(dd<bd){bd=dd;best=i;}}return best;}
+function go(el){var rr=rail.getBoundingClientRect(),b=el.getBoundingClientRect();rail.scrollTo({left:rail.scrollLeft+(b.left+b.width/2)-(rr.left+rr.width/2),behavior:'smooth'});}
+function upd(){var k=near();if(bp)bp.disabled=k<=0;if(bn)bn.disabled=k>=cards.length-1;}
+var tm;rail.addEventListener('scroll',function(){clearTimeout(tm);tm=setTimeout(upd,80);},{passive:true});upd();
 function show(i){cur=(i+imgs.length)%imgs.length;li.src=imgs[cur];lc.textContent=(cur+1)+' מתוך '+imgs.length;lb.classList.add('on');}
 r.addEventListener('click',function(e){var t=e.target.closest('.t');if(t){show(+t.getAttribute('data-i'));return;}
  if(e.target.closest('.x')||e.target===lb){lb.classList.remove('on');return;}
  if(e.target.closest('.lb .n'))show(cur+1);if(e.target.closest('.lb .p'))show(cur-1);
- var d=e.target.closest('.bar button');if(d){var w=rail.querySelector('.t').getBoundingClientRect().width+10;rail.scrollBy({left:-(+d.getAttribute('data-d'))*w,behavior:'smooth'});}});
+ var d=e.target.closest('.bar button');if(d){var c=rail.querySelectorAll('.t'),k=Math.max(0,Math.min(c.length-1,near()+(+d.getAttribute('data-d'))));go(c[k]);}});
 document.addEventListener('keydown',function(e){if(!lb.classList.contains('on'))return;if(e.key==='Escape')lb.classList.remove('on');if(e.key==='ArrowLeft')show(cur+1);if(e.key==='ArrowRight')show(cur-1);});
 })();
 </script>
