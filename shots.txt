@@ -1,1 +1,3 @@
-forms https://dabullaw.co.il/%d7%a7%d7%99%d7%a9%d7%95%d7%a8%d7%99%d7%9d-%d7%95%d7%98%d7%a4%d7%a1%d7%99%d7%9d/?nc=k1
+plg-online https://www.poleg-law.com/sherutim-mishpatiim-online/
+plg-hitel https://www.poleg-law.com/machshevon-hitel-hashbacha/
+plg-tsua https://www.poleg-law.com/machshevon-tsua-hashkara/
