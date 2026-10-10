@@ -1,209 +1,438 @@
-<!-- dabul precheck: the service page block on dabullaw.co.il ("בדיקת דירה לפני קנייה").
-     Will be served through a shortcode snippet (no wpautop). Orders go to the office system (function "precheck"),
-     then to the payment page of the card processor. Nothing here is live until Yakir approves. -->
+<!-- dabul precheck v2 (10.10.2026): the service page block on dabullaw.co.il ("בדיקת דירה לפני קנייה").
+     Served through a shortcode snippet (no wpautop). Orders go to the office system (function "precheck"),
+     then to the card processor's payment page. Nothing here is live until Yakir approves. -->
 <style>
-.dpc{--b:#5c4528;--a:#8b6f47;--g:#c9a961;--l:#e6dcc6;--s:#faf6ee;--t:#1f2937;--m:#6b7280;--ok:#1e7a3c;color:var(--t);line-height:1.65;font-size:16px;max-width:860px;margin:0 auto}
-.dpc *{box-sizing:border-box}
-.dpc h2{color:var(--b);font-size:26px;line-height:1.3;margin:0 0 10px;text-wrap:balance}
-.dpc h3{color:var(--b);font-size:20px;margin:0 0 10px}
-.dpc .hero{background:linear-gradient(160deg,#fbf8f2,#f1e9da);border:1px solid var(--l);border-radius:18px;padding:22px 20px;margin:0 0 18px}
-.dpc .hero p{margin:0 0 12px;font-size:17px}
-.dpc .price{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline;margin:6px 0 14px}
-.dpc .price b{font-size:30px;color:var(--b);font-variant-numeric:tabular-nums}
-.dpc .price span{color:var(--m);font-size:14.5px}
-.dpc .chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
-.dpc .chips span{background:#fff;border:1px solid var(--l);border-radius:999px;padding:3px 11px;font-size:14px;color:var(--b)}
-.dpc .go{display:inline-block;background:var(--a);color:#fff;border:0;border-radius:12px;padding:12px 22px;font:inherit;font-weight:800;font-size:17px;cursor:pointer;text-decoration:none}
-.dpc .go:disabled{opacity:.5;cursor:default}
-.dpc .ghost{background:#fff;color:var(--b);border:1px solid var(--l)}
-.dpc .card{background:#fff;border:1px solid var(--l);border-radius:16px;padding:18px;margin:0 0 16px}
-.dpc ul.chk{list-style:none;padding:0;margin:0;display:grid;gap:8px}
-.dpc ul.chk li{display:flex;gap:10px;align-items:flex-start}
-.dpc ul.chk li::before{content:"✓";color:var(--ok);font-weight:800;flex:none;margin-top:1px}
-.dpc ul.no li::before{content:"•";color:var(--m)}
-.dpc .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-.dpc .steps div{background:var(--s);border-radius:12px;padding:12px 14px}
-.dpc .steps b{display:block;color:var(--b);margin-bottom:2px}
-.dpc .steps i{font-style:normal;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--a);color:#fff;font-weight:800;margin-left:8px;font-size:14px}
-.dpc details{border-top:1px solid var(--l);padding:10px 0}
-.dpc details:first-of-type{border-top:0}
-.dpc summary{cursor:pointer;font-weight:700;color:var(--b)}
-.dpc details p{margin:8px 0 0}
-.dpc .small{font-size:13.5px;color:var(--m)}
-/* the order form */
-.dpc .form{border:2px solid var(--a)}
-.dpc .bar{display:flex;gap:6px;margin:0 0 14px}
-.dpc .bar span{flex:1;height:6px;border-radius:99px;background:var(--l)}
-.dpc .bar span.on{background:var(--a)}
-.dpc .stepname{font-size:13.5px;color:var(--m);margin:0 0 4px}
-.dpc label{display:block;font-weight:700;color:var(--b);font-size:15px;margin:12px 0 5px}
-.dpc label small{font-weight:400;color:var(--m)}
-.dpc input[type=text],.dpc input[type=tel],.dpc input[type=email],.dpc input[type=url],.dpc select,.dpc textarea{width:100%;border:1px solid #d9c08a;border-radius:10px;padding:10px 12px;font:inherit;font-size:16px;background:#fff;color:var(--t)}
-.dpc textarea{min-height:84px;resize:vertical}
-.dpc .row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.dpc .row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-@media(max-width:560px){.dpc .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.dpc .row2{grid-template-columns:minmax(0,1fr)}.dpc h2{font-size:23px}}
-.dpc .opts{display:grid;gap:6px}
-.dpc .opts label{display:flex;gap:10px;align-items:flex-start;font-weight:500;color:var(--t);margin:0;padding:9px 11px;border:1px solid var(--l);border-radius:10px;cursor:pointer}
-.dpc .opts input{accent-color:var(--a);margin-top:5px}
-.dpc .opts label.on{border-color:var(--a);background:var(--s)}
-.dpc .chkline{display:flex;gap:10px;align-items:flex-start;font-weight:500;color:var(--t);font-size:14.5px}
-.dpc .chkline input{accent-color:var(--a);margin-top:5px;flex:none}
-.dpc .nav{display:flex;gap:8px;justify-content:space-between;margin-top:16px;flex-wrap:wrap}
-.dpc .err{color:#b4442f;font-size:14px;margin-top:8px;min-height:1em}
-.dpc .sum{background:var(--s);border-radius:12px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:15px}
-.dpc .sum dt{color:var(--m)}.dpc .sum dd{margin:0}
-.dpc .total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed var(--l);margin-top:10px;padding-top:10px;font-variant-numeric:tabular-nums}
-.dpc .total b{font-size:22px;color:var(--b);white-space:nowrap}
-.dpc .done{text-align:center;padding:10px 0}
-.dpc .done .big{font-size:44px;line-height:1}
-.dpc [hidden]{display:none!important}
+@import url('https://fonts.googleapis.com/css2?family=Karantina:wght@400;700&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&display=swap');
+.pc2{--ink:#0E2A57;--ink2:#163B78;--line:#7FA6F0;--paper:#F6F8FC;--red:#D33A2C;--hi:#FFE14D;--ok:#17915A;--txt:#13203A;--mut:#5B6782;--rule:#D9E1EF;--teal:#0FB5A3;--orange:#FF8A3D;--violet:#7B5CFA;--sky:#3BA0FF;
+  font-family:"IBM Plex Sans Hebrew","Assistant",Arial,sans-serif;color:var(--txt);font-size:17px;line-height:1.65;background:var(--paper);border-radius:22px;overflow:hidden;max-width:1080px;margin:0 auto}
+.pc2 *{box-sizing:border-box}
+.pc2 :focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.pc2 .kar{font-family:"Karantina","IBM Plex Sans Hebrew",sans-serif;font-weight:700;letter-spacing:.01em;line-height:.95}
+.pc2 .wrap{padding:0 22px}
+.pc2 h2,.pc2 h3{margin:0;color:var(--ink);text-wrap:balance}
+.pc2 .sec{padding:56px 22px}
+.pc2 .sec h2{font-family:"Karantina",sans-serif;font-weight:700;font-size:56px;line-height:.95;margin-bottom:14px}
+.pc2 .lead{max-width:640px;color:var(--mut);margin:0 0 26px}
+.pc2 .btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:14px;padding:15px 24px;font:inherit;font-weight:700;font-size:18px;cursor:pointer;text-decoration:none;transition:transform .15s}
+.pc2 .btn:hover{transform:translateY(-2px)}
+.pc2 .btn.hi{background:var(--hi);color:var(--ink)}
+.pc2 .btn.ink{background:var(--ink);color:#fff}
+.pc2 .btn.out{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+.pc2 .btn:disabled{opacity:.5;cursor:default;transform:none}
+
+/* ---------- hero: blueprint ---------- */
+.pc2 .hero{background:var(--ink);color:#fff;position:relative;padding:44px 22px 48px;
+  background-image:linear-gradient(rgba(127,166,240,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(127,166,240,.14) 1px,transparent 1px),linear-gradient(rgba(127,166,240,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(127,166,240,.06) 1px,transparent 1px);
+  background-size:96px 96px,96px 96px,24px 24px,24px 24px}
+.pc2 .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:36px;align-items:center}
+@media(max-width:860px){.pc2 .hero-grid{grid-template-columns:minmax(0,1fr)}}
+.pc2 .hero h1{font-family:"Karantina",sans-serif;font-weight:700;font-size:clamp(60px,6.4vw,80px);line-height:.88;margin:0 0 18px;color:#fff;text-wrap:balance}
+.pc2 .hero h1 mark{background:linear-gradient(transparent 58%,var(--red) 58%,var(--red) 88%,transparent 88%);color:#fff;padding:0 4px}
+.pc2 .hero p{font-size:19px;color:#D6E2FA;max-width:500px;margin:0 0 24px}
+.pc2 .hero .meta{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-top:22px;color:#BFD0F4;font-size:15px}
+.pc2 .hero .meta b{font-family:"Karantina",sans-serif;font-size:44px;color:var(--hi);line-height:1;font-weight:700}
+@media(max-width:560px){.pc2 .hero h1{font-size:68px}.pc2 .sec h2{font-size:46px}}
+
+/* the reveal */
+.pc2 .xr{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/4.4;max-width:100%;box-shadow:0 30px 60px -20px rgba(0,0,0,.55);user-select:none;touch-action:pan-y}
+.pc2 .xr .layer{position:absolute;inset:0}
+.pc2 .xr svg{display:block;width:100%;height:100%}
+.pc2 .xr .ad{background:#fff}
+.pc2 .xr .doc{background:var(--ink2);clip-path:inset(0 calc(100% - var(--p,50%)) 0 0)}
+.pc2 .xr .handle{position:absolute;top:0;bottom:0;left:var(--p,50%);width:3px;margin-left:-1.5px;background:var(--hi);pointer-events:none}
+.pc2 .xr .handle::after{content:"⇆";position:absolute;top:50%;left:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:var(--hi);color:var(--ink);display:grid;place-items:center;font-size:22px;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.pc2 .xr input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.pc2 .xr .tag{position:absolute;top:12px;padding:4px 10px;border-radius:8px;font-size:13px;font-weight:700;pointer-events:none}
+.pc2 .xr .tag.l{left:12px;background:var(--hi);color:var(--ink)}
+.pc2 .xr .tag.r{right:12px;background:#fff;color:var(--ink);border:1px solid #E3E8F2}
+.pc2 .xr-hint{text-align:center;color:#BFD0F4;font-size:14px;margin-top:10px}
+
+/* ---------- findings wall ---------- */
+.pc2 .wall{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px 18px}
+.pc2 .frag{position:relative;background:#fff;padding:22px 20px 20px;border:1px solid var(--rule);box-shadow:0 1px 0 var(--rule),0 12px 24px -18px rgba(14,42,87,.35);
+  clip-path:polygon(0 4%,6% 0,14% 3%,22% 0,31% 2%,40% 0,50% 3%,61% 0,70% 2%,79% 0,88% 3%,100% 0,100% 100%,0 100%)}
+.pc2 .frag:nth-child(3n+1){transform:rotate(-.6deg)}.pc2 .frag:nth-child(3n+2){transform:rotate(.5deg)}
+.pc2 .frag .src{font-size:12.5px;color:var(--mut);border-bottom:1px dashed var(--rule);padding-bottom:6px;margin-bottom:10px;font-weight:600}
+.pc2 .frag h3{font-size:20px;line-height:1.3;margin-bottom:6px}
+.pc2 .frag p{margin:0;font-size:15.5px;color:var(--mut)}
+.pc2 .frag .hl{background:linear-gradient(transparent 55%,var(--hi) 55%);padding:0 2px;color:var(--txt)}
+.pc2 .stamp{position:absolute;top:14px;left:14px;font-family:"Karantina",sans-serif;font-weight:700;font-size:21px;line-height:1;padding:5px 9px 3px;border:3px solid currentColor;border-radius:8px;transform:rotate(-8deg);opacity:.9}
+.pc2 .stamp.r{color:var(--red)}.pc2 .stamp.y{color:#B98A00}.pc2 .stamp.g{color:var(--ok)}
+
+/* ---------- the answer you get ---------- */
+.pc2 .ans{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:34px;align-items:start}
+@media(max-width:860px){.pc2 .ans{grid-template-columns:minmax(0,1fr)}}
+.pc2 .checks{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.pc2 .checks li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.pc2 .checks svg{width:44px;height:44px;padding:8px;border-radius:14px;background:var(--c,#EEF3FC)}
+.pc2 .checks li{grid-template-columns:44px 1fr!important;align-items:center!important}
+.pc2 .checks li:nth-child(1){--c:#FFF3B0}.pc2 .checks li:nth-child(2){--c:#D7F6F1}.pc2 .checks li:nth-child(3){--c:#E3ECFF}.pc2 .checks li:nth-child(4){--c:#FFE1DD}.pc2 .checks li:nth-child(5){--c:#EDE6FF}.pc2 .checks li:nth-child(6){--c:#FFE8D6}.pc2 .checks li:nth-child(7){--c:#DDF0FF}.pc2 .checks li:nth-child(8){--c:#DDF6E8}
+.pc2 .checks b{display:block;color:var(--ink)}
+.pc2 .checks span{font-size:15.5px;color:var(--mut)}
+.pc2 .mail{background:#fff;border-radius:18px;box-shadow:0 24px 50px -24px rgba(14,42,87,.45);overflow:hidden;border:1px solid var(--rule)}
+.pc2 .mail .bar{background:var(--ink);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;font-size:13.5px}
+.pc2 .mail .in{padding:18px}
+.pc2 .mail .bl{background:#EEF3FC;border-radius:12px;padding:12px 14px;margin:10px 0 12px;font-size:15px}
+.pc2 .mail .row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--rule);font-size:15px}
+.pc2 .mk{font-size:12.5px;font-weight:700;color:#fff;border-radius:99px;padding:2px 10px;white-space:nowrap}
+.pc2 .mk.g{background:var(--ok)}.pc2 .mk.y{background:#C08A00}.pc2 .mk.r{background:var(--red)}
+
+/* ---------- timeline ---------- */
+.pc2 .tl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;position:relative;margin-top:10px}
+.pc2 .tl::before{content:"";position:absolute;top:27px;right:8%;left:8%;height:3px;background:repeating-linear-gradient(90deg,var(--ink) 0 14px,transparent 14px 22px)}
+.pc2 .tl div{position:relative;padding:0 12px;text-align:center}
+.pc2 .tl i{display:grid;place-items:center;width:56px;height:56px;margin:0 auto 12px;border-radius:50%;background:var(--hi);color:var(--ink);font-style:normal;font-family:"Karantina",sans-serif;font-size:30px;font-weight:700;position:relative;border:3px solid var(--ink)}
+.pc2 .tl b{display:block;color:var(--ink);font-size:18px}
+.pc2 .tl span{font-size:15.5px;color:var(--mut)}
+@media(max-width:700px){.pc2 .tl{grid-template-columns:minmax(0,1fr);gap:22px}.pc2 .tl::before{top:20px;bottom:20px;right:27px;left:auto;width:3px;height:auto;background:repeating-linear-gradient(180deg,var(--ink) 0 14px,transparent 14px 22px)}.pc2 .tl div{display:grid;grid-template-columns:56px 1fr;gap:14px;text-align:right;padding:0}.pc2 .tl i{margin:0}}
+
+/* ---------- price ---------- */
+.pc2 .price{background:var(--ink);color:#fff;border-radius:22px;padding:30px 26px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:30px;align-items:center}
+@media(max-width:760px){.pc2 .price{grid-template-columns:minmax(0,1fr)}}
+.pc2 .price .big{font-family:"Karantina",sans-serif;font-weight:700;font-size:120px;line-height:.8;color:var(--hi)}
+.pc2 .price .big small{display:block;font-family:"IBM Plex Sans Hebrew",sans-serif;font-size:16px;color:#BFD0F4;font-weight:500;margin-top:10px;line-height:1.4}
+.pc2 .price .cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+@media(max-width:560px){.pc2 .price .cols{grid-template-columns:minmax(0,1fr)}}
+.pc2 .price h3{color:#fff;font-size:17px;margin-bottom:8px}
+.pc2 .price ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:15.5px;color:#D6E2FA}
+.pc2 .price li{display:grid;grid-template-columns:20px 1fr;gap:6px}
+.pc2 .price .yes li::before{content:"✓";color:#5FE0A0;font-weight:700}
+.pc2 .price .no li::before{content:"✕";color:#FF8C80;font-weight:700}
+.pc2 .credit{margin-top:18px;background:rgba(255,225,77,.12);border:1px dashed var(--hi);border-radius:14px;padding:12px 14px;color:#fff;font-size:15.5px}
+
+/* ---------- order form ---------- */
+.pc2 .form{background:#fff;border-radius:22px;border:2px solid var(--ink);padding:26px 22px;position:relative}
+.pc2 .ruler{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 0 22px}
+.pc2 .ruler span{height:8px;border-radius:99px;background:var(--rule);position:relative}
+.pc2 .ruler span.on{background:var(--ink)}
+.pc2 .ruler span.now{background:var(--hi);box-shadow:0 0 0 2px var(--ink)}
+.pc2 .stepname{font-size:14px;color:var(--mut);margin:0 0 2px}
+.pc2 .form h3{font-family:"Karantina",sans-serif;font-size:42px;line-height:1;margin-bottom:8px}
+.pc2 label{display:block;font-weight:600;color:var(--ink);font-size:15.5px;margin:14px 0 6px}
+.pc2 label small{font-weight:400;color:var(--mut)}
+.pc2 input[type=text],.pc2 input[type=tel],.pc2 input[type=email],.pc2 input[type=url],.pc2 textarea{width:100%;border:2px solid var(--rule);border-radius:12px;padding:12px 14px;font:inherit;font-size:16px;background:var(--paper);color:var(--txt);transition:border-color .15s}
+.pc2 input:focus,.pc2 textarea:focus{border-color:var(--ink);outline:none;background:#fff}
+.pc2 textarea{min-height:88px;resize:vertical}
+.pc2 .r3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.pc2 .r2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(max-width:560px){.pc2 .r2{grid-template-columns:minmax(0,1fr)}}
+.pc2 .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.pc2 .opts label{display:flex;gap:10px;align-items:center;font-weight:500;color:var(--txt);margin:0;padding:12px 14px;border:2px solid var(--rule);border-radius:12px;cursor:pointer;background:var(--paper)}
+.pc2 .opts input{accent-color:var(--ink);width:18px;height:18px;flex:none}
+.pc2 .opts label.on{border-color:var(--ink);background:#fff;box-shadow:inset 0 0 0 1px var(--ink)}
+.pc2 .chkline{display:flex;gap:10px;align-items:flex-start;font-weight:400;color:var(--txt);font-size:15px;margin:10px 0 0}
+.pc2 .chkline input{accent-color:var(--ink);margin-top:5px;flex:none;width:18px;height:18px}
+.pc2 .nav{display:flex;gap:10px;justify-content:space-between;margin-top:20px;flex-wrap:wrap}
+.pc2 .err{color:var(--red);font-size:14.5px;margin-top:10px;min-height:1em;font-weight:600}
+.pc2 .sum{background:var(--paper);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15.5px;margin:0}
+.pc2 .sum dt{color:var(--mut)}.pc2 .sum dd{margin:0;overflow-wrap:anywhere}
+.pc2 .total{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:2px dashed var(--rule);margin-top:14px;padding-top:14px}
+.pc2 .total b{font-family:"Karantina",sans-serif;font-size:48px;line-height:1;color:var(--ink);white-space:nowrap}
+.pc2 .small{font-size:14px;color:var(--mut)}
+.pc2 .done{text-align:center;padding:10px 0}
+.pc2 .done .seal{display:inline-block;font-family:"Karantina",sans-serif;font-size:40px;font-weight:700;color:var(--ok);border:4px solid var(--ok);border-radius:12px;padding:6px 16px 2px;transform:rotate(-6deg);margin-bottom:14px}
+
+/* ---------- questions ---------- */
+.pc2 details{border-bottom:1px solid var(--rule);padding:14px 0}
+.pc2 summary{cursor:pointer;font-weight:700;color:var(--ink);font-size:18px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.pc2 summary::after{content:"+";font-size:24px;line-height:1;color:var(--ink)}
+.pc2 details[open] summary::after{content:"−"}
+.pc2 summary::-webkit-details-marker{display:none}
+.pc2 details p{margin:8px 0 0;color:var(--mut)}
+.pc2 .terms{font-size:14px;color:var(--mut);margin-top:22px;border-top:1px solid var(--rule);padding-top:14px}
+.pc2 [hidden]{display:none!important}
+/* infographic: the check against the apartment price */
+.pc2 .ratio{background:linear-gradient(120deg,#FFE14D,#FFC93C);padding:40px 22px;color:var(--ink)}
+.pc2 .ratio h2{font-family:"Karantina",sans-serif;font-size:52px;line-height:.95;margin:0 0 6px}
+.pc2 .ratio p{margin:0 0 22px;max-width:620px;font-size:17px}
+.pc2 .bar{position:relative;height:74px;border-radius:16px;background:var(--ink);overflow:visible;display:flex;align-items:center;padding:0 18px;color:#fff;font-weight:700}
+.pc2 .bar .flat{display:flex;gap:10px;align-items:center;font-size:17px}
+.pc2 .bar .flat svg{width:34px;height:34px}
+.pc2 .bar .chk{position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--red);border-radius:16px 0 0 16px}
+.pc2 .bar .pin{position:absolute;left:-2px;top:-56px;background:var(--red);color:#fff;border-radius:10px;padding:6px 10px;font-size:14px;line-height:1.3;white-space:nowrap}
+.pc2 .bar .pin::after{content:"";position:absolute;left:6px;bottom:-8px;border:8px solid transparent;border-top-color:var(--red);border-bottom:0}
+.pc2 .ratio .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}
+.pc2 .ratio .facts div{background:rgba(255,255,255,.55);border-radius:14px;padding:12px 14px}
+.pc2 .ratio .facts b{display:block;font-family:"Karantina",sans-serif;font-size:44px;line-height:1}
+.pc2 .ratio .facts span{font-size:14.5px}
+@media(max-width:640px){.pc2 .ratio .facts{grid-template-columns:minmax(0,1fr)}.pc2 .ratio h2{font-size:44px}}
+/* infographic: where problems hide */
+.pc2 .map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:24px}
+@media(max-width:760px){.pc2 .map{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pc2 .map div{border-radius:16px;padding:16px 14px;color:#fff;min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
+.pc2 .map b{font-family:"Karantina",sans-serif;font-size:34px;line-height:.95}
+.pc2 .map span{font-size:14.5px;opacity:.95}
+.pc2 .map .m1{background:var(--ink)}.pc2 .map .m2{background:var(--teal)}.pc2 .map .m3{background:var(--violet)}.pc2 .map .m4{background:var(--orange)}
+
+@media(prefers-reduced-motion:reduce){.pc2 *{transition:none!important;animation:none!important}}
 </style>
 
-<div class="dpc" dir="rtl">
-  <div class="hero">
-    <h2>בדיקת דירה לפני קנייה</h2>
-    <p>מצאתם דירה יד שנייה? לפני שמציעים מחיר או חותמים על משהו, נבדוק את המסמכים הרשמיים של הנכס ונגיד לכם מה מצאנו, מה זה אומר, ומה כדאי לברר לפני שממשיכים.</p>
-    <div class="price"><b>490 ₪</b><span>+ מע"מ · תשובה מלאה למייל עד 2 ימי עבודה · כל הארץ</span></div>
-    <div class="chips"><span>נסח טאבו</span><span>תיק בניין והיתרים</span><span>חריגות בנייה</span><span>הצמדות</span><span>מס רכישה</span></div>
-    <a class="go" href="#dpc-order">להזמנת בדיקה</a>
-    <p class="small" style="margin:10px 0 0">המחיר כולל את אגרות הוצאת נסח הטאבו ומסמכי הבית המשותף (צו ותקנון), במידת הצורך. לא כולל שמאי ובעלי מקצוע נוספים, אם יידרשו. ממשיכים איתנו לעסקה? הסכום מקוזז משכר הטרחה.</p>
-  </div>
+<div class="pc2" dir="rtl">
 
-  <div class="card">
-    <h3>מה בודקים</h3>
-    <ul class="chk">
-      <li><span><b>נסח טאבו עדכני:</b> מי הבעלים, האם יש משכנתא, עיקולים, הערות אזהרה או צווים.</span></li>
-      <li><span><b>צו בית משותף ותקנון:</b> האם החניה, המחסן, הגג או החצר שבמודעה באמת שייכים לדירה.</span></li>
-      <li><span><b>תיק בניין והיתרים:</b> האם מה שנבנה תואם להיתר, במקומות שבהם הרשות מאפשרת עיון מקוון.</span></li>
-      <li><span><b>חשד לחריגות בנייה:</b> השוואה בין ההיתר לבין תיאור הדירה. חריגה עוברת לקונה יחד עם הדירה.</span></li>
-      <li><span><b>מידע תכנוני:</b> תוכניות באזור, התחדשות עירונית מתוכננת, וחשיפה להיטל השבחה.</span></li>
-      <li><span><b>הערכת מס רכישה</b> לפי המצב שלכם: דירה יחידה, דירה נוספת, עולים חדשים או תושבי חוץ.</span></li>
-      <li><span><b>רשימת שאלות</b> למוכר ולמתווך, ומה חשוב לבקש לפני שחותמים.</span></li>
-      <li><span><b>סיכום והמלצה:</b> מה מצאנו, ומה עוד כדאי לבדוק, למשל שמאי או בודק מבנה.</span></li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>איך זה עובד</h3>
-    <div class="steps">
-      <div><b><i>1</i>ממלאים פרטים</b>כתובת הדירה, ואם יש, גוש וחלקה וקישור למודעה.</div>
-      <div><b><i>2</i>משלמים באתר</b>תשלום מאובטח בכרטיס אשראי, וקבלה נשלחת למייל.</div>
-      <div><b><i>3</i>מקבלים תשובה</b>עד 2 ימי עבודה: הסבר מלא במייל, יחד עם המסמכים שהזמנו ובדקנו.</div>
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <h1>לפני שמציעים מחיר, תראו מה <mark>המודעה לא מספרת</mark></h1>
+        <p>אנחנו בודקים את המסמכים הרשמיים של הדירה: נסח טאבו, צו הבית המשותף, ההיתרים ותיק הבניין. תוך 2 ימי עבודה תקבלו למייל תשובה ברורה: מה מצאנו, מה זה אומר, ומה לברר לפני שממשיכים.</p>
+        <a class="btn hi" href="#pc2-order">לבדיקת הדירה שלי</a>
+        <div class="meta"><b>490 ₪</b><span>+ מע"מ · כל הארץ<br>ממשיכים איתנו לעסקה? הסכום מקוזז</span></div>
+      </div>
+      <div>
+        <div class="xr" id="pc2-xr" style="--p:50%">
+          <!-- the ad -->
+          <div class="layer ad">
+            <svg viewBox="0 0 400 440" style="direction:rtl" role="img" aria-label="מודעה לדוגמה: דירת 4 חדרים עם מרפסת, חניה ומחסן">
+              <rect width="400" height="440" fill="#FFF7EC"/>
+              <g transform="translate(30,40)">
+                <rect x="0" y="0" width="340" height="230" rx="6" fill="#FFFFFF" stroke="#E8DCC8" stroke-width="3"/>
+                <rect x="6" y="6" width="190" height="140" fill="#FBE3C7"/><rect x="200" y="6" width="134" height="80" fill="#D9F0E3"/>
+                <rect x="200" y="90" width="134" height="134" fill="#E3E9FB"/><rect x="6" y="150" width="110" height="74" fill="#F7D6DC"/>
+                <rect x="120" y="150" width="76" height="74" fill="#FFF0B8"/>
+                <rect x="30" y="40" width="80" height="34" rx="8" fill="#F2B880"/><rect x="40" y="90" width="60" height="22" rx="5" fill="#E8A266"/>
+                <rect x="230" y="120" width="70" height="80" rx="6" fill="#B9C7F3"/><circle cx="268" cy="44" r="16" fill="#9ED7B7"/>
+                <rect x="-24" y="236" width="200" height="40" rx="6" fill="#CDEBFF" stroke="#9CCDF0" stroke-width="2"/>
+                <text x="76" y="261" font-size="15" text-anchor="middle" fill="#2D5E86" font-family="IBM Plex Sans Hebrew,Arial" font-weight="600">מרפסת סוכה</text>
+              </g>
+              <rect x="0" y="330" width="400" height="110" fill="#FFFFFF"/>
+              <text x="372" y="362" font-size="22" text-anchor="start" fill="#1B2333" font-family="IBM Plex Sans Hebrew,Arial" font-weight="700">4 חדרים · 102 מ״ר · קומה 3</text>
+              <g font-family="IBM Plex Sans Hebrew,Arial" font-size="14" font-weight="600" fill="#1E7A4C">
+                <rect x="268" y="376" width="104" height="26" rx="13" fill="#E3F6EC"/><text x="320" y="394" text-anchor="middle">✓ חניה בטאבו</text>
+                <rect x="186" y="376" width="76" height="26" rx="13" fill="#E3F6EC"/><text x="224" y="394" text-anchor="middle">✓ מחסן</text>
+                <rect x="96" y="376" width="84" height="26" rx="13" fill="#E3F6EC"/><text x="138" y="394" text-anchor="middle">✓ מרפסת</text>
+              </g>
+              <text x="372" y="428" font-size="26" text-anchor="start" fill="#E0592A" font-family="IBM Plex Sans Hebrew,Arial" font-weight="700">2,150,000 ₪</text>
+              <rect x="24" y="408" width="70" height="24" rx="12" fill="#E0592A"/><text x="59" y="425" font-size="13" text-anchor="middle" fill="#fff" font-family="IBM Plex Sans Hebrew,Arial" font-weight="700">מציאה!</text>
+            </svg>
+          </div>
+          <!-- the documents -->
+          <div class="layer doc" aria-hidden="true">
+            <svg viewBox="0 0 400 440" style="direction:rtl">
+              <defs><pattern id="pc2g" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#2C559E" stroke-width="1"/></pattern></defs>
+              <rect width="400" height="440" fill="#163B78"/><rect width="400" height="440" fill="url(#pc2g)"/>
+              <g transform="translate(30,40)" fill="none" stroke="#DCE8FF" stroke-width="2.5">
+                <rect x="0" y="0" width="340" height="230"/><path d="M200 0V230M200 88H340M0 148H200M118 148V230"/>
+                <path d="M60 148V140M150 0V10" stroke-width="2"/>
+                <rect x="-24" y="236" width="200" height="40" stroke="#FF8C80" stroke-dasharray="7 5"/>
+              </g>
+              <g font-family="IBM Plex Sans Hebrew,Arial" font-size="12" fill="#BFD3FA">
+                <text x="125" y="120" text-anchor="middle">סלון 28 מ״ר</text><text x="300" y="90" text-anchor="middle">מטבח</text><text x="300" y="200" text-anchor="middle">חדר שינה</text>
+              </g>
+              <!-- registry extract strip -->
+              <rect x="16" y="8" width="368" height="24" rx="4" fill="#0E2A57" stroke="#7FA6F0"/>
+              <text x="376" y="25" font-size="13" text-anchor="start" fill="#DCE8FF" font-family="IBM Plex Sans Hebrew,Arial">נסח טאבו:</text>
+              <rect x="150" y="13" width="160" height="15" fill="#FFE14D"/><text x="304" y="25" font-size="12.5" text-anchor="start" fill="#0E2A57" font-family="IBM Plex Sans Hebrew,Arial" font-weight="700">הערת אזהרה לטובת צד ג׳</text>
+              <text x="140" y="25" font-size="12.5" text-anchor="start" fill="#DCE8FF" font-family="IBM Plex Sans Hebrew,Arial">+ משכנתא</text>
+              <!-- stamps -->
+              <g font-family="Karantina,IBM Plex Sans Hebrew,Arial" font-weight="700" text-anchor="middle">
+                <g transform="translate(96,300) rotate(-8)"><rect x="-84" y="-20" width="168" height="40" rx="7" fill="none" stroke="#FF6B5E" stroke-width="3.5"/><text y="9" font-size="24" fill="#FF6B5E">נסגרה בלי היתר</text></g>
+                <g transform="translate(300,382) rotate(6)"><rect x="-96" y="-20" width="192" height="40" rx="7" fill="none" stroke="#FF6B5E" stroke-width="3.5"/><text y="9" font-size="24" fill="#FF6B5E">חניה: לא מוצמדת</text></g>
+                <g transform="translate(118,402) rotate(-4)"><rect x="-66" y="-17" width="132" height="34" rx="7" fill="none" stroke="#5FE0A0" stroke-width="3"/><text y="8" font-size="21" fill="#5FE0A0">מחסן מוצמד ✓</text></g>
+              </g>
+            </svg>
+          </div>
+          <span class="tag r">המודעה</span><span class="tag l">המסמכים</span>
+          <div class="handle"></div>
+          <input type="range" min="0" max="100" value="50" aria-label="גררו כדי להשוות בין המודעה לבין המסמכים">
+        </div>
+        <div class="xr-hint">גררו את הקו: אותה דירה, כמו שהמודעה מציגה אותה וכמו שהמסמכים מציגים אותה.</div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div class="card form" id="dpc-order">
-    <div class="bar"><span class="on"></span><span></span><span></span><span></span></div>
-
-    <!-- step 1: the property -->
-    <div data-step="1">
-      <p class="stepname">שלב 1 מתוך 4</p><h3>איזו דירה בודקים?</h3>
-      <div class="row2">
-        <div><label for="dpc-city">עיר</label><input type="text" id="dpc-city" autocomplete="address-level2"></div>
-        <div><label for="dpc-addr">רחוב ומספר בית</label><input type="text" id="dpc-addr" autocomplete="street-address"></div>
-      </div>
-      <label>גוש, חלקה ותת חלקה <small>(אם יש. אם אין, נמצא לפי הכתובת)</small></label>
-      <div class="row"><input type="text" id="dpc-gush" inputmode="numeric" placeholder="גוש" aria-label="גוש"><input type="text" id="dpc-chelka" inputmode="numeric" placeholder="חלקה" aria-label="חלקה"><input type="text" id="dpc-sub" inputmode="numeric" placeholder="תת חלקה" aria-label="תת חלקה"></div>
-      <div class="row2">
-        <div><label for="dpc-floor">קומה ומספר דירה <small>(אם ידוע)</small></label><input type="text" id="dpc-floor"></div>
-        <div><label for="dpc-price">המחיר המבוקש <small>(₪)</small></label><input type="text" id="dpc-price" inputmode="numeric"></div>
-      </div>
-      <label for="dpc-link">קישור למודעה <small>(לא חובה)</small></label><input type="url" id="dpc-link" placeholder="https://" dir="ltr">
-      <div class="err" data-err="1"></div>
-      <div class="nav"><span></span><button type="button" class="go" data-next="2">המשך</button></div>
+  <section class="ratio">
+    <h2>בדיקה אחת, לפני ההחלטה הכי גדולה</h2>
+    <p>בדירה של 2,150,000 ₪, הבדיקה היא פחות מאלפית מהמחיר. והיא נעשית לפני שמתחייבים לשקל אחד.</p>
+    <div class="bar"><span class="chk"></span><span class="pin">הבדיקה: 490 ₪<br>0.02% מהמחיר</span><span class="flat"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="M4 30V14L17 4l13 10v16z" fill="none" stroke="#FFE14D" stroke-width="2.6"/><path d="M13 30v-9h8v9" fill="none" stroke="#FFE14D" stroke-width="2.6"/></svg>הדירה: 2,150,000 ₪</span></div>
+    <div class="facts">
+      <div><b>8</b><span>נושאים נבדקים, מהטאבו ועד המס</span></div>
+      <div><b>2</b><span>ימי עבודה, והתשובה אצלכם במייל</span></div>
+      <div><b>100%</b><span>מקוזז אם ממשיכים איתנו לעסקה בתוך 90 יום</span></div>
     </div>
+  </section>
 
-    <!-- step 2: the buyer -->
-    <div data-step="2" hidden>
-      <p class="stepname">שלב 2 מתוך 4</p><h3>קצת עליכם, בשביל הערכת המס</h3>
-      <label>הדירה תהיה בשבילכם</label>
-      <div class="opts" data-group="status">
-        <label><input type="radio" name="dpc-status" value="first"> דירה יחידה (אין לנו דירה אחרת)</label>
-        <label><input type="radio" name="dpc-status" value="replace"> מחליפים דירה (נמכור את הדירה הקיימת)</label>
-        <label><input type="radio" name="dpc-status" value="extra"> דירה נוספת (להשקעה או לילדים)</label>
-        <label><input type="radio" name="dpc-status" value="oleh"> עולים חדשים</label>
-        <label><input type="radio" name="dpc-status" value="foreign"> תושבי חוץ</label>
-      </div>
-      <label>משכנתא</label>
-      <div class="opts" data-group="mort">
-        <label><input type="radio" name="dpc-mort" value="yes"> נצטרך משכנתא</label>
-        <label><input type="radio" name="dpc-mort" value="no"> בלי משכנתא</label>
-      </div>
-      <label for="dpc-worry">משהו מטריד אתכם בדירה? <small>(לא חובה)</small></label>
-      <textarea id="dpc-worry" placeholder="למשל: המוכר אמר שהמרפסת נסגרה לפני שנים, או שהחניה &quot;כמעט רשומה&quot;"></textarea>
-      <div class="err" data-err="2"></div>
-      <div class="nav"><button type="button" class="go ghost" data-next="1">חזרה</button><button type="button" class="go" data-next="3">המשך</button></div>
+  <section class="sec" style="padding-bottom:0">
+    <h2>איפה מסתתרות ההפתעות</h2>
+    <p class="lead">ארבעה מקורות מידע, ובכל אחד מהם משהו שהמודעה לא תספר לכם.</p>
+    <div class="map">
+      <div class="m1"><b>נסח טאבו</b><span>משכנתאות, עיקולים, הערות אזהרה, ומי באמת הבעלים</span></div>
+      <div class="m2"><b>בית משותף</b><span>מה מוצמד לדירה: חניה, מחסן, גג, חצר</span></div>
+      <div class="m3"><b>תיק בניין</b><span>מה אושר בהיתר, ומה נבנה בלי היתר</span></div>
+      <div class="m4"><b>תכנון ומס</b><span>תוכניות באזור, היטל השבחה ומס רכישה</span></div>
     </div>
+  </section>
 
-    <!-- step 3: contact -->
-    <div data-step="3" hidden>
-      <p class="stepname">שלב 3 מתוך 4</p><h3>לאן לשלוח את התשובה?</h3>
-      <label for="dpc-name">שם מלא</label><input type="text" id="dpc-name" autocomplete="name">
-      <div class="row2">
-        <div><label for="dpc-phone">טלפון</label><input type="tel" id="dpc-phone" autocomplete="tel" dir="ltr"></div>
-        <div><label for="dpc-email">מייל <small>(לכאן תגיע התשובה)</small></label><input type="email" id="dpc-email" autocomplete="email" dir="ltr"></div>
+  <section class="sec">
+    <h2>מה מוצאים בבדיקות כאלה</h2>
+    <p class="lead">לא בכל דירה יש בעיה. אבל כשיש, עדיף לגלות אותה לפני שמציעים מחיר, ולא אחרי שחתמתם.</p>
+    <div class="wall">
+      <div class="frag"><span class="stamp y">שימו לב</span><div class="src">נסח טאבו</div><h3>משכנתא של המוכר</h3><p>נפוץ ולא מפחיד. אבל צריך לוודא בחוזה <span class="hl">שהיא מסולקת מהכסף שלכם, בסדר הנכון</span>.</p></div>
+      <div class="frag"><span class="stamp r">עצרו</span><div class="src">נסח טאבו</div><h3>הערת אזהרה לטובת מישהו אחר</h3><p>מישהו כבר רשם זכות על הדירה. <span class="hl">לפני כל צעד, מבינים מי ולמה</span>.</p></div>
+      <div class="frag"><span class="stamp r">פער</span><div class="src">צו בית משותף ותשריט</div><h3>"חניה בטאבו" שהיא רכוש משותף</h3><p>במודעה כתוב חניה. בתשריט <span class="hl">היא לא מוצמדת לדירה</span>, וכל שכן יכול לחנות בה.</p></div>
+      <div class="frag"><span class="stamp r">חריגה</span><div class="src">היתר בנייה ותיק בניין</div><h3>מרפסת שנסגרה בלי היתר</h3><p>חריגת בנייה <span class="hl">עוברת אליכם עם הדירה</span>, יחד עם הקנסות והסיכון להריסה.</p></div>
+      <div class="frag"><span class="stamp y">לבדוק</span><div class="src">מידע תכנוני</div><h3>תוכנית שבדרך</h3><p>פינוי בינוי או תמ"א באזור <span class="hl">יכולים לשנות את הבניין ואת המחיר</span>, לטוב או לרע.</p></div>
+      <div class="frag"><span class="stamp g">תקין</span><div class="src">כל המסמכים</div><h3>הכל מסתדר</h3><p>גם זו תשובה שווה כסף: <span class="hl">מציעים מחיר בראש שקט</span>, ויודעים בדיוק על מה לשים לב בחוזה.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" style="background:#fff">
+    <div class="ans">
+      <div>
+        <h2>מה בודקים</h2>
+        <p class="lead">8 נושאים, כל אחד עם סימון ברור והסבר בשפה פשוטה.</p>
+        <ul class="checks">
+          <li><svg viewBox="0 0 30 30" aria-hidden="true"><rect x="5" y="3" width="20" height="24" rx="3" fill="none" stroke="#0E2A57" stroke-width="2.2"/><path d="M10 10h10M10 15h10M10 20h6" stroke="#0E2A57" stroke-width="2.2"/></svg><div><b>נסח טאבו עדכני</b><span>בעלים, משכנתאות, עיקולים, הערות אזהרה וצווים.</span></div></li>
+          <li><svg viewBox="0 0 30 30" aria-hidden="true"><rect x="3" y="6" width="24" height="18" fill="none" stroke="#0E2A57" stroke-width="2.2"/><path d="M15 6v18M3 15h12" stroke="#0E2A57" stroke-width="2.2"/></svg><div><b>צו בית משותף, תקנון ותשריט</b><span>האם החניה, המחסן, הגג או החצר באמת שייכים לדירה.</span></div></li>
+          <li><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M4 26V12l11-8 11 8v14z" fill="none" stroke="#0E2A57" stroke-width="2.2"/><path d="M12 26v-8h6v8" stroke="#0E2A57" stroke-width="2.2" fill="none"/></svg><div><b>תיק בניין והיתרים</b><span>האם מה שנבנה תואם להיתר, במקומות שבהם הרשות מאפשרת עיון מקוון.</span></div></li>
+          <li><svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="13" cy="13" r="8" fill="none" stroke="#D33A2C" stroke-width="2.4"/><path d="M19 19l7 7" stroke="#D33A2C" stroke-width="2.4"/></svg><div><b>חשד לחריגות בנייה</b><span>השוואה בין ההיתר לבין תיאור הדירה והמודעה.</span></div></li>
+          <li><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M3 25h24M7 25V13h6v12M17 25V7h6v18" fill="none" stroke="#0E2A57" stroke-width="2.2"/></svg><div><b>מידע תכנוני</b><span>תוכניות באזור, התחדשות עירונית, וחשיפה להיטל השבחה.</span></div></li>
+          <li><svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="11" fill="none" stroke="#0E2A57" stroke-width="2.2"/><path d="M15 8v14M11 11h6a2 2 0 010 4h-4a2 2 0 000 4h6" fill="none" stroke="#0E2A57" stroke-width="2"/></svg><div><b>הערכת מס רכישה</b><span>לפי המצב שלכם: דירה יחידה, נוספת, עולים או תושבי חוץ.</span></div></li>
+          <li><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M4 6h22v14H12l-6 5v-5H4z" fill="none" stroke="#0E2A57" stroke-width="2.2"/></svg><div><b>שאלות למוכר ולמתווך</b><span>ומה חשוב לבקש לפני שחותמים.</span></div></li>
+          <li><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M6 16l6 6L25 8" fill="none" stroke="#17915A" stroke-width="3"/></svg><div><b>סיכום והמלצה</b><span>מה מצאנו, ומה עוד כדאי לבדוק, למשל שמאי או בודק מבנה.</span></div></li>
+        </ul>
       </div>
-      <div style="display:grid;gap:8px;margin-top:14px">
-        <label class="chkline"><input type="checkbox" id="dpc-terms"> <span>קראתי ואני מסכים/ה ל<a href="#dpc-terms-text">תנאי השירות</a>, ובכלל זה שהבדיקה מבוססת על מסמכים רשמיים ואינה מחליפה שמאי, מהנדס או בודק מבנה.</span></label>
+      <div class="mail" aria-label="כך נראית התשובה במייל (דוגמה)">
+        <div class="bar"><span>יקיר דבול - משרד עורכי דין</span><span>דוגמה</span></div>
+        <div class="in">
+          <h3 style="font-size:21px">בדיקת הדירה שלכם מוכנה</h3>
+          <div class="small">דירת 4 חדרים, נתניה · גוש 8263 חלקה 112</div>
+          <div class="bl"><b>בשורה התחתונה:</b> הדירה רשומה כראוי, אבל החניה לא מוצמדת וסגירת המרפסת לא מופיעה בהיתר. לפני הצעת מחיר, בקשו מהמוכר הסבר בכתב על החניה.</div>
+          <div class="row"><span>נסח טאבו</span><span class="mk y">שימו לב</span></div>
+          <div class="row"><span>הצמדות בבית המשותף</span><span class="mk r">בעיה</span></div>
+          <div class="row"><span>תיק בניין והיתרים</span><span class="mk r">בעיה</span></div>
+          <div class="row"><span>מידע תכנוני</span><span class="mk g">תקין</span></div>
+          <div class="row"><span>מס רכישה משוער</span><b style="font-variant-numeric:tabular-nums">כ-5,994 ₪</b></div>
+          <div class="row" style="border-bottom:0"><span>מצורף: נסח, צו בית משותף, היתר</span><span class="small">PDF</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>איך זה עובד</h2>
+    <div class="tl">
+      <div><i>1</i><div><b>היום</b><span>ממלאים את פרטי הדירה ומשלמים באתר, בכרטיס אשראי.</span></div></div>
+      <div><i>2</i><div><b>עד 2 ימי עבודה</b><span>מזמינים את המסמכים, בודקים, ושולחים לכם תשובה מלאה למייל.</span></div></div>
+      <div><i>3</i><div><b>אחר כך</b><span>ממשיכים לעסקה? 490 ₪ ששילמתם מקוזזים משכר הטרחה.</span></div></div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="price">
+      <div class="big">490 ₪<small>+ מע"מ (578.20 ₪)<br>תשלום אחד, באתר</small></div>
+      <div>
+        <div class="cols">
+          <div class="yes"><h3>כלול במחיר</h3><ul><li>אגרות הוצאת נסח טאבו ומסמכי הבית המשותף, במידת הצורך</li><li>בדיקת 8 הנושאים והסבר על כל אחד</li><li>תשובה מלאה במייל, עם המסמכים שבדקנו</li></ul></div>
+          <div class="no"><h3>לא כלול</h3><ul><li>שמאי, מהנדס, בודק מבנה ובעלי מקצוע נוספים, אם יידרשו</li><li>ביקור בנכס</li><li>חוזה וליווי העסקה (בנפרד, והבדיקה מקוזזת)</li></ul></div>
+        </div>
+        <div class="credit"><b>ממשיכים איתנו לעסקה?</b> אם נחתם הסכם שכר טרחה בתוך 90 יום מהבדיקה, 490 ₪ מקוזזים במלואם.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0" id="pc2-order">
+    <div class="form">
+      <div class="ruler" aria-hidden="true"><span class="now"></span><span></span><span></span><span></span></div>
+
+      <div data-step="1">
+        <p class="stepname">שלב 1 מתוך 4</p><h3>איזו דירה בודקים?</h3>
+        <div class="r2">
+          <div><label for="dpc-city">עיר</label><input type="text" id="dpc-city" autocomplete="address-level2"></div>
+          <div><label for="dpc-addr">רחוב ומספר בית</label><input type="text" id="dpc-addr" autocomplete="street-address"></div>
+        </div>
+        <label>גוש, חלקה ותת חלקה <small>(אם יש. אם אין, נמצא לפי הכתובת)</small></label>
+        <div class="r3"><input type="text" id="dpc-gush" inputmode="numeric" placeholder="גוש" aria-label="גוש"><input type="text" id="dpc-chelka" inputmode="numeric" placeholder="חלקה" aria-label="חלקה"><input type="text" id="dpc-sub" inputmode="numeric" placeholder="תת חלקה" aria-label="תת חלקה"></div>
+        <div class="r2">
+          <div><label for="dpc-floor">קומה ומספר דירה <small>(אם ידוע)</small></label><input type="text" id="dpc-floor"></div>
+          <div><label for="dpc-price">המחיר המבוקש <small>(₪)</small></label><input type="text" id="dpc-price" inputmode="numeric"></div>
+        </div>
+        <label for="dpc-link">קישור למודעה <small>(לא חובה)</small></label><input type="url" id="dpc-link" placeholder="https://" dir="ltr">
+        <div class="err" data-err="1"></div>
+        <div class="nav"><span></span><button type="button" class="btn ink" data-next="2">המשך</button></div>
+      </div>
+
+      <div data-step="2" hidden>
+        <p class="stepname">שלב 2 מתוך 4</p><h3>קצת עליכם, בשביל הערכת המס</h3>
+        <label>הדירה תהיה בשבילכם</label>
+        <div class="opts">
+          <label><input type="radio" name="dpc-status" value="first"> דירה יחידה</label>
+          <label><input type="radio" name="dpc-status" value="replace"> מחליפים דירה</label>
+          <label><input type="radio" name="dpc-status" value="extra"> דירה נוספת</label>
+          <label><input type="radio" name="dpc-status" value="oleh"> עולים חדשים</label>
+          <label><input type="radio" name="dpc-status" value="foreign"> תושבי חוץ</label>
+        </div>
+        <label>משכנתא</label>
+        <div class="opts">
+          <label><input type="radio" name="dpc-mort" value="yes"> נצטרך משכנתא</label>
+          <label><input type="radio" name="dpc-mort" value="no"> בלי משכנתא</label>
+        </div>
+        <label for="dpc-worry">משהו מטריד אתכם בדירה? <small>(לא חובה)</small></label>
+        <textarea id="dpc-worry" placeholder="למשל: המוכר אמר שהמרפסת נסגרה לפני שנים, או שהחניה &quot;כמעט רשומה&quot;"></textarea>
+        <div class="err" data-err="2"></div>
+        <div class="nav"><button type="button" class="btn out" data-next="1">חזרה</button><button type="button" class="btn ink" data-next="3">המשך</button></div>
+      </div>
+
+      <div data-step="3" hidden>
+        <p class="stepname">שלב 3 מתוך 4</p><h3>לאן לשלוח את התשובה?</h3>
+        <label for="dpc-name">שם מלא</label><input type="text" id="dpc-name" autocomplete="name">
+        <div class="r2">
+          <div><label for="dpc-phone">טלפון</label><input type="tel" id="dpc-phone" autocomplete="tel" dir="ltr"></div>
+          <div><label for="dpc-email">מייל <small>(לכאן תגיע התשובה)</small></label><input type="email" id="dpc-email" autocomplete="email" dir="ltr"></div>
+        </div>
+        <label class="chkline"><input type="checkbox" id="dpc-terms"> <span>קראתי ואני מסכים/ה ל<a href="#pc2-terms">תנאי השירות</a>, ובכלל זה שהבדיקה מבוססת על מסמכים רשמיים ואינה מחליפה שמאי, מהנדס או בודק מבנה.</span></label>
         <label class="chkline"><input type="checkbox" id="dpc-mkt"> <span>אשמח לקבל מהמשרד עדכונים ומאמרים במייל (לא חובה).</span></label>
+        <div class="err" data-err="3"></div>
+        <div class="nav"><button type="button" class="btn out" data-next="2">חזרה</button><button type="button" class="btn ink" data-next="4">לסיכום</button></div>
       </div>
-      <div class="err" data-err="3"></div>
-      <div class="nav"><button type="button" class="go ghost" data-next="2">חזרה</button><button type="button" class="go" data-next="4">לסיכום</button></div>
-    </div>
 
-    <!-- step 4: summary + pay -->
-    <div data-step="4" hidden>
-      <p class="stepname">שלב 4 מתוך 4</p><h3>סיכום ההזמנה</h3>
-      <dl class="sum" id="dpc-sum"></dl>
-      <div class="total"><span>בדיקת דירה לפני קנייה<br><span class="small">490 ₪ + מע"מ 18% · כולל אגרות נסח ומסמכי בית משותף</span></span><b>578.20 ₪</b></div>
-      <p class="small">התשלום מתבצע בדף המאובטח של חברת הסליקה. הקבלה נשלחת למייל. ממשיכים איתנו לעסקה? הסכום מקוזז משכר הטרחה.</p>
-      <div class="err" data-err="4"></div>
-      <div class="nav"><button type="button" class="go ghost" data-next="3">חזרה</button><button type="button" class="go" id="dpc-pay">לתשלום מאובטח</button></div>
-    </div>
+      <div data-step="4" hidden>
+        <p class="stepname">שלב 4 מתוך 4</p><h3>סיכום ההזמנה</h3>
+        <dl class="sum" id="dpc-sum"></dl>
+        <div class="total"><span>בדיקת דירה לפני קנייה<br><span class="small">490 ₪ + מע"מ 18% · כולל אגרות נסח ומסמכי בית משותף</span></span><b>578.20 ₪</b></div>
+        <p class="small">התשלום בדף המאובטח של חברת הסליקה, והקבלה נשלחת למייל.</p>
+        <div class="err" data-err="4"></div>
+        <div class="nav"><button type="button" class="btn out" data-next="3">חזרה</button><button type="button" class="btn hi" id="dpc-pay">לתשלום מאובטח</button></div>
+      </div>
 
-    <!-- after payment (the processor sends the customer back here with #paid) -->
-    <div data-step="5" hidden>
-      <div class="done"><div class="big">✓</div><h3>ההזמנה התקבלה</h3>
-        <p>שלחנו אישור למייל שלכם. התשובה המלאה תגיע עד <b id="dpc-due">2 ימי עבודה</b>.</p>
-        <p class="small">אם נצטרך פרט נוסף, נתקשר. שאלה דחופה? <a href="tel:098613413">09-8613413</a></p></div>
+      <div data-step="5" hidden>
+        <div class="done"><div class="seal">התקבל</div><h3>ההזמנה בטיפול</h3>
+          <p>שלחנו אישור למייל. התשובה המלאה תגיע עד 2 ימי עבודה.</p>
+          <p class="small">אם נצטרך פרט נוסף, נתקשר. שאלה דחופה? <a href="tel:098613413">09-8613413</a></p></div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div class="card">
-    <h3>שאלות נפוצות</h3>
-    <details><summary>זה במקום עורך דין בעסקה?</summary><p>לא. זו בדיקה מוקדמת, לפני שמציעים מחיר. היא עוזרת להחליט אם להמשיך ועל מה לשים לב. בעסקה עצמה יש עוד הרבה: משא ומתן, חוזה, בטוחות, דיווח לרשות המסים ורישום. אם ממשיכים איתנו לעסקה, התשלום על הבדיקה מקוזז משכר הטרחה.</p></details>
-    <details><summary>מה אם הדירה לא רשומה בטאבו?</summary><p>נבדוק את מה שאפשר לפי המידע הזמין, ונכתוב לכם בדיוק אילו אישורים לבקש מהמוכר (למשל אישור זכויות מרשות מקרקעי ישראל או מהחברה המשכנת).</p></details>
-    <details><summary>אתם רואים את הדירה עצמה?</summary><p>לא. הבדיקה נעשית על המסמכים הרשמיים. אם יש חשד לבעיה פיזית או לפער במחיר, נמליץ על בודק מבנה או שמאי.</p></details>
+  <section class="sec" style="padding-top:0">
+    <h2>שאלות</h2>
+    <details><summary>זה במקום עורך דין בעסקה?</summary><p>לא. זו בדיקה מוקדמת, לפני שמציעים מחיר. היא עוזרת להחליט אם להמשיך ועל מה לשים לב. בעסקה עצמה יש עוד הרבה: משא ומתן, חוזה, בטוחות, דיווח לרשות המסים ורישום. ממשיכים איתנו? 490 ₪ מקוזזים משכר הטרחה.</p></details>
+    <details><summary>מה אם הדירה לא רשומה בטאבו?</summary><p>נבדוק את מה שאפשר לפי המידע הזמין, ונכתוב לכם בדיוק אילו אישורים לבקש מהמוכר, למשל אישור זכויות מרשות מקרקעי ישראל או מהחברה המשכנת.</p></details>
+    <details><summary>אתם מגיעים לראות את הדירה?</summary><p>לא. הבדיקה נעשית על המסמכים הרשמיים. אם יש חשד לבעיה פיזית או לפער במחיר, נמליץ על בודק מבנה או שמאי. העלות שלהם לא כלולה.</p></details>
     <details><summary>כמה זמן זה לוקח?</summary><p>עד 2 ימי עבודה מהרגע שהתשלום והפרטים התקבלו. אם רשות מקומית מעכבת את תיק הבניין, נעדכן אתכם מראש.</p></details>
     <details><summary>אפשר לקבל החזר?</summary><p>אם לא נוכל לזהות את הנכס או לבצע את הבדיקה, תקבלו את כל הסכום בחזרה. אחרי שהבדיקה התחילה, אין החזר.</p></details>
-  </div>
-
-  <div class="card" id="dpc-terms-text">
-    <h3>תנאי השירות בקצרה</h3>
-    <ul class="chk no">
-      <li>הבדיקה מבוססת על המסמכים הרשמיים הזמינים ועל המידע שמסרתם. היא לא מחליפה שמאי, מהנדס או בודק מבנה, ואינה אישור לחתום על חוזה.</li>
-      <li>המחיר כולל את אגרות הוצאת נסח הטאבו ומסמכי הבית המשותף (צו בית משותף, תקנון ותשריט), במידת הצורך.</li>
-      <li>המחיר לא כולל שמאי, מהנדס, בודק מבנה או בעלי מקצוע נוספים. אם יידרשו, נכתוב את זה בסיכום, ואתם תחליטו אם להזמין.</li>
-      <li>במקומות שבהם הרשות לא מאפשרת עיון מקוון בתיק הבניין, נעדכן מראש מה כן אפשר לבדוק.</li>
-      <li>הקיזוז משכר הטרחה חל כשנחתם הסכם שכר טרחה עם המשרד לעסקה בתוך 90 יום מהבדיקה.</li>
-      <li>השירות ניתן על ידי יקיר דבול - משרד עורכי דין, רזיאל 1 נתניה, 09-8613413.</li>
-    </ul>
-  </div>
+    <div class="terms" id="pc2-terms"><b>תנאי השירות בקצרה.</b> הבדיקה מבוססת על המסמכים הרשמיים הזמינים ועל המידע שמסרתם. היא אינה מחליפה שמאי, מהנדס או בודק מבנה, ואינה אישור לחתום על חוזה. המחיר כולל את אגרות הוצאת נסח הטאבו ומסמכי הבית המשותף (צו, תקנון ותשריט), במידת הצורך, ואינו כולל שמאי ובעלי מקצוע נוספים. במקומות שבהם הרשות לא מאפשרת עיון מקוון בתיק הבניין, נעדכן מראש מה כן אפשר לבדוק. הקיזוז משכר הטרחה חל כשנחתם הסכם שכר טרחה עם המשרד לעסקה בתוך 90 יום מהבדיקה. החזר מלא רק אם הבדיקה אינה אפשרית. השירות ניתן על ידי יקיר דבול - משרד עורכי דין, רזיאל 1 נתניה, 09-8613413.</div>
+  </section>
 </div>
 
 <script nowprocket>/*dabul-precheck*/(function(){
-var R=document.querySelector('.dpc'); if(!R) return;
+var R=document.querySelector('.pc2'); if(!R) return;
 var API=(window.DPC_API||'');
 var $=function(id){return document.getElementById(id);};
-var steps=R.querySelectorAll('[data-step]'), bars=R.querySelectorAll('.bar span');
-var ST={1:'דירה יחידה',replace:'מחליפים דירה',first:'דירה יחידה',extra:'דירה נוספת',oleh:'עולים חדשים',foreign:'תושבי חוץ'};
+// the reveal: one slow sweep when it comes into view, then it's the visitor's
+var xr=$('pc2-xr'), rg=xr&&xr.querySelector('input');
+function setP(v){xr.style.setProperty('--p',v+'%');}
+if(rg){rg.addEventListener('input',function(){setP(100-this.value);});setP(50);
+  var still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches, swept=false, touched=false;
+  rg.addEventListener('pointerdown',function(){touched=true;});
+  var sweep=function(){if(swept||still||touched)return;swept=true;var K=[50,84,22,56],T=2600,t0=null;var ease=function(x){return x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;};var f=function(t){if(touched)return;t0=t0||t;var k=Math.min(1,(t-t0)/T),seg=Math.min(2,Math.floor(k*3)),lk=ease(k*3-seg),v=K[seg]+(K[seg+1]-K[seg])*lk;setP(v);rg.value=100-v;if(k<1)requestAnimationFrame(f);};requestAnimationFrame(f);};
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(e){if(e[0].isIntersecting){setTimeout(sweep,500);io.disconnect();}},{threshold:.5});io.observe(xr);}else setTimeout(sweep,800);}
+// the order form
+var steps=R.querySelectorAll('[data-step]'), bars=R.querySelectorAll('.ruler span');
+var ST={first:'דירה יחידה',replace:'מחליפים דירה',extra:'דירה נוספת',oleh:'עולים חדשים',foreign:'תושבי חוץ'};
 function val(id){var e=$(id);return e?String(e.value||'').trim():'';}
 function radio(n){var e=R.querySelector('input[name="'+n+'"]:checked');return e?e.value:'';}
 function digits(s){return String(s||'').replace(/[^\d]/g,'');}
 function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 function err(k,t){var e=R.querySelector('[data-err="'+k+'"]'); if(e) e.textContent=t||'';}
-function show(n){steps.forEach(function(s){s.hidden=String(s.getAttribute('data-step'))!==String(n);});bars.forEach(function(b,i){b.className=i<Math.min(n,4)?'on':'';});var f=$('dpc-order');if(f&&f.getBoundingClientRect().top<0)f.scrollIntoView({behavior:'smooth',block:'start'});}
+function show(n){steps.forEach(function(s){s.hidden=String(s.getAttribute('data-step'))!==String(n);});bars.forEach(function(b,i){b.className=i<n-1?'on':(i===n-1?'now':'');});var f=$('pc2-order');if(f&&f.getBoundingClientRect().top<0)f.scrollIntoView({behavior:'smooth',block:'start'});}
 function check(n){
   if(n===1){ if(!val('dpc-city')) return 'כתבו את העיר.'; if(!val('dpc-addr')&&!(digits(val('dpc-gush'))&&digits(val('dpc-chelka')))) return 'כתבו כתובת, או גוש וחלקה.'; }
   if(n===2){ if(!radio('dpc-status')) return 'בחרו למי הדירה, בשביל הערכת המס.'; }
@@ -212,13 +441,13 @@ function check(n){
 }
 function order(){return {city:val('dpc-city'),address:val('dpc-addr'),gush:digits(val('dpc-gush')),chelka:digits(val('dpc-chelka')),sub:digits(val('dpc-sub')),floor:val('dpc-floor'),askPrice:digits(val('dpc-price')),link:val('dpc-link'),status:radio('dpc-status'),mortgage:radio('dpc-mort'),worry:val('dpc-worry'),name:val('dpc-name'),phone:val('dpc-phone'),email:val('dpc-email'),marketing:$('dpc-mkt').checked,page:location.href.split('#')[0]};}
 function summary(){var o=order(),esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
-  var rows=[['הנכס',[o.address,o.city].filter(Boolean).join(', ')+(o.gush?' · גוש '+o.gush+' חלקה '+o.chelka+(o.sub?' תת '+o.sub:''):'')],['מחיר מבוקש',o.askPrice?fmt(o.askPrice)+' ₪':'לא צוין'],['מעמד',ST[o.status]||''],['שם',o.name],['מייל',o.email],['טלפון',o.phone]];
+  var rows=[['הנכס',[o.address,o.city].filter(Boolean).join(', ')+(o.gush?', גוש '+o.gush+' חלקה '+o.chelka+(o.sub?' תת '+o.sub:''):'')],['מחיר מבוקש',o.askPrice?fmt(o.askPrice)+' ₪':'לא צוין'],['מעמד',ST[o.status]||''],['שם',o.name],['מייל',o.email],['טלפון',o.phone]];
   $('dpc-sum').innerHTML=rows.map(function(r){return '\x3cdt>'+esc(r[0])+'\x3c/dt>\x3cdd>'+esc(r[1])+'\x3c/dd>';}).join('');}
 R.addEventListener('click',function(e){
   var b=e.target.closest('[data-next]'); if(b){var to=+b.getAttribute('data-next'),cur=+b.closest('[data-step]').getAttribute('data-step');
     if(to>cur){var m=check(cur);err(cur,m);if(m)return;} if(to===4)summary(); show(to); return;}
-  var o=e.target.closest('.opts label'); if(o){setTimeout(function(){o.parentNode.querySelectorAll('label').forEach(function(l){l.classList.toggle('on',l.querySelector('input').checked);});},0);}
 });
+R.addEventListener('change',function(e){var o=e.target.closest('.opts');if(o)o.querySelectorAll('label').forEach(function(l){l.classList.toggle('on',l.querySelector('input').checked);});});
 $('dpc-price').addEventListener('blur',function(){var d=digits(this.value);this.value=d?fmt(d):'';});
 $('dpc-pay').addEventListener('click',function(){
   var btn=this; btn.disabled=true; btn.textContent='מעביר לתשלום...'; err(4,'');

@@ -1,167 +1,290 @@
-<!-- dabul course: sales page on dabullaw.co.il for the course "קונים דירה ראשונה, בלי הפתעות".
-     Buying here -> payment page of the card processor -> the system opens the buyer's personal course page (academy)
-     and emails the access link. Nothing here is live until Yakir approves. -->
+<!-- dabul course v2 (10.10.2026): sales page on dabullaw.co.il for "קונים דירה ראשונה, בלי הפתעות".
+     Buying -> card processor's payment page -> the system opens the buyer's personal course page and emails access.
+     Nothing here is live until Yakir approves. -->
 <style>
-.dcr{--b:#5c4528;--a:#8b6f47;--g:#c9a961;--l:#e6dcc6;--s:#faf6ee;--t:#1f2937;--m:#6b7280;--ok:#1e7a3c;color:var(--t);line-height:1.65;font-size:16px;max-width:900px;margin:0 auto}
-.dcr *{box-sizing:border-box}
-.dcr h2{color:var(--b);font-size:28px;line-height:1.25;margin:0 0 10px;text-wrap:balance}
-.dcr h3{color:var(--b);font-size:21px;margin:0 0 12px;text-wrap:balance}
-.dcr .hero{position:relative;overflow:hidden;border-radius:20px;padding:26px 22px;margin:0 0 18px;background:linear-gradient(150deg,#5c4528,#8b6f47);color:#fff}
-.dcr .hero::after{content:"";position:absolute;left:-60px;bottom:-60px;width:220px;height:220px;border-radius:50%;background:rgba(201,169,97,.25)}
-.dcr .hero h2{color:#fff;font-size:30px}
-.dcr .hero p{margin:0 0 14px;font-size:17px;color:#f6efe2;max-width:560px;position:relative;z-index:1}
-.dcr .kick{display:inline-block;background:rgba(255,255,255,.15);border-radius:999px;padding:3px 12px;font-size:13.5px;margin-bottom:10px}
-.dcr .facts{display:flex;flex-wrap:wrap;gap:8px 16px;margin:0 0 16px;font-size:14.5px;color:#f6efe2;position:relative;z-index:1}
-.dcr .facts span::before{content:"✓ ";color:var(--g);font-weight:800}
-.dcr .buy{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;position:relative;z-index:1}
-.dcr .buy b{font-size:32px;font-variant-numeric:tabular-nums}
-.dcr .buy small{display:block;font-size:13px;color:#eadcc3}
-.dcr .go{display:inline-block;background:var(--g);color:#3f2f1b;border:0;border-radius:12px;padding:12px 22px;font:inherit;font-weight:800;font-size:17px;cursor:pointer;text-decoration:none}
-.dcr .go.dark{background:var(--a);color:#fff}
-.dcr .go.line{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6)}
-.dcr .go:disabled{opacity:.5;cursor:default}
-.dcr .card{background:#fff;border:1px solid var(--l);border-radius:16px;padding:20px;margin:0 0 16px}
-.dcr .who{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
-.dcr .who div{background:var(--s);border-radius:12px;padding:12px 14px}
-.dcr .who b{display:block;color:var(--b)}
-.dcr ol.lessons{list-style:none;counter-reset:l;padding:0;margin:0;display:grid;gap:8px}
-.dcr ol.lessons li{counter-increment:l;display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--l);border-radius:12px}
-.dcr ol.lessons li::before{content:counter(l);flex:none;width:30px;height:30px;border-radius:50%;background:var(--s);color:var(--b);font-weight:800;display:grid;place-items:center;font-size:14px}
-.dcr ol.lessons b{display:block;color:var(--b)}
-.dcr ol.lessons span{font-size:14.5px;color:var(--m)}
-.dcr .inside{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-.dcr .inside div{border:1px solid var(--l);border-radius:12px;padding:12px 14px}
-.dcr .inside i{font-style:normal;font-size:22px;display:block;margin-bottom:4px}
-.dcr .inside b{display:block;color:var(--b)}
-.dcr .about{display:flex;gap:14px;align-items:flex-start}
-.dcr .about .ph{flex:none;width:72px;height:72px;border-radius:50%;background:var(--s);border:2px solid var(--g);display:grid;place-items:center;color:var(--b);font-weight:800;font-size:13px;text-align:center;line-height:1.2}
-.dcr details{border-top:1px solid var(--l);padding:10px 0}.dcr details:first-of-type{border-top:0}
-.dcr summary{cursor:pointer;font-weight:700;color:var(--b)}.dcr details p{margin:8px 0 0}
-.dcr .small{font-size:13.5px;color:var(--m)}
-.dcr .order{border:2px solid var(--a)}
-.dcr label{display:block;font-weight:700;color:var(--b);font-size:15px;margin:12px 0 5px}
-.dcr label small{font-weight:400;color:var(--m)}
-.dcr input[type=text],.dcr input[type=tel],.dcr input[type=email]{width:100%;border:1px solid #d9c08a;border-radius:10px;padding:10px 12px;font:inherit;font-size:16px;background:#fff;color:var(--t)}
-.dcr .row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-@media(max-width:560px){.dcr .row2{grid-template-columns:minmax(0,1fr)}.dcr .hero h2{font-size:25px}}
-.dcr .chkline{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;margin-top:8px}
-.dcr .chkline input{accent-color:var(--a);margin-top:5px;flex:none}
-.dcr .total{display:flex;justify-content:space-between;align-items:baseline;background:var(--s);border-radius:12px;padding:12px 14px;margin-top:14px;font-variant-numeric:tabular-nums}
-.dcr .total b{font-size:24px;color:var(--b);white-space:nowrap}
-.dcr .err{color:#b4442f;font-size:14px;margin-top:8px;min-height:1em}
-.dcr .done{text-align:center}.dcr .done .big{font-size:44px;line-height:1;color:var(--ok)}
-.dcr .sticky{position:sticky;bottom:10px;z-index:5;display:none;justify-content:space-between;align-items:center;gap:10px;background:#fff;border:1px solid var(--l);border-radius:14px;padding:10px 12px;box-shadow:0 8px 24px -10px rgba(60,40,10,.35)}
-.dcr .sticky b{color:var(--b)}
-@media(max-width:700px){.dcr .sticky.on{display:flex}}
-.dcr [hidden]{display:none!important}
+@import url('https://fonts.googleapis.com/css2?family=Secular+One&family=Rubik:wght@400;500;600;700&display=swap');
+.cr2{--night:#1C1D4F;--night2:#2A2C6E;--mint:#2FD39A;--sun:#FFC83D;--coral:#FF6F61;--sky:#5AA9FF;--mist:#EEF0FF;--txt:#23244A;--mut:#5E6090;--rule:#DCDDF4;
+  font-family:"Rubik","Assistant",Arial,sans-serif;color:var(--txt);font-size:17px;line-height:1.65;background:#fff;border-radius:24px;overflow:hidden;max-width:1080px;margin:0 auto}
+.cr2 *{box-sizing:border-box}
+.cr2 :focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.cr2 h1,.cr2 h2,.cr2 h3{font-family:"Secular One","Rubik",sans-serif;font-weight:400;margin:0;text-wrap:balance;color:var(--night)}
+.cr2 .sec{padding:58px 22px}
+.cr2 .sec h2{font-size:42px;line-height:1.1;margin-bottom:12px}
+.cr2 .lead{max-width:640px;color:var(--mut);margin:0 0 28px}
+.cr2 .btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:15px 28px;font:inherit;font-weight:700;font-size:18px;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.cr2 .btn:hover{transform:translateY(-2px)}
+.cr2 .btn.sun{background:var(--sun);color:var(--night);box-shadow:0 10px 24px -10px rgba(255,200,61,.8)}
+.cr2 .btn.night{background:var(--night);color:#fff}
+.cr2 .btn.ghost{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5)}
+.cr2 .btn:disabled{opacity:.5;cursor:default;transform:none}
+@media(max-width:560px){.cr2 .sec h2{font-size:34px}}
+
+/* ---------- hero: the route ---------- */
+.cr2 .hero{background:radial-gradient(1200px 500px at 85% -10%,#3B3DA0 0%,transparent 60%),var(--night);color:#fff;padding:46px 22px 30px;position:relative}
+.cr2 .hero h1{color:#fff;font-size:clamp(46px,6vw,72px);line-height:1.02;max-width:720px}
+.cr2 .hero h1 span{color:var(--sun)}
+.cr2 .hero p{font-size:19px;color:#D7D8FF;max-width:600px;margin:16px 0 24px}
+.cr2 .hero .row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.cr2 .hero .price{display:flex;align-items:baseline;gap:8px;color:#fff}
+.cr2 .hero .price b{font-family:"Secular One",sans-serif;font-size:44px;color:var(--sun);font-weight:400}
+.cr2 .hero .price small{color:#BFC1F5;font-size:14px}
+.cr2 .route{margin-top:34px;position:relative}
+.cr2 .route svg{width:100%;height:auto;display:block;overflow:visible}
+.cr2 .route .path{fill:none;stroke:var(--mint);stroke-width:6;stroke-linecap:round;stroke-dasharray:1400;stroke-dashoffset:1400;animation:cr2draw 2.4s .3s cubic-bezier(.6,.1,.2,1) forwards}
+.cr2 .route .ghost{fill:none;stroke:rgba(255,255,255,.12);stroke-width:6;stroke-linecap:round;stroke-dasharray:2 14}
+.cr2 .route .st{opacity:0;animation:cr2pop .4s forwards}
+@keyframes cr2draw{to{stroke-dashoffset:0}}
+@keyframes cr2pop{to{opacity:1}}
+.cr2 .route text{font-family:"Rubik",sans-serif;fill:#D7D8FF;font-size:13px}
+.cr2 .route .ends text{font-family:"Secular One",sans-serif;fill:#fff;font-size:17px}
+@media(max-width:700px){.cr2 .route{display:none}}
+
+/* ---------- mistakes ---------- */
+.cr2 .mist{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media(max-width:900px){.cr2 .mist{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.cr2 .mist{grid-template-columns:minmax(0,1fr)}}
+.cr2 .mist div{border-radius:20px;padding:20px 18px;position:relative;overflow:hidden}
+.cr2 .mist div:nth-child(1){background:#FFE9E6}.cr2 .mist div:nth-child(2){background:#FFF4D1}.cr2 .mist div:nth-child(3){background:#E2F8EF}.cr2 .mist div:nth-child(4){background:#E5EEFF}
+.cr2 .mist svg{width:52px;height:52px;margin-bottom:10px}
+.cr2 .mist h3{font-size:21px;line-height:1.25;margin-bottom:6px}
+.cr2 .mist p{margin:0;font-size:15.5px;color:var(--mut)}
+.cr2 .mist .lesson{display:inline-block;margin-top:10px;font-size:13.5px;font-weight:600;color:var(--night);background:rgba(255,255,255,.7);border-radius:99px;padding:2px 10px}
+
+/* ---------- costs infographic ---------- */
+.cr2 .costs{background:var(--mist);border-radius:24px;padding:26px 22px}
+.cr2 .costs h3{font-size:24px;margin-bottom:4px}
+.cr2 .cbar{display:grid;grid-template-columns:150px minmax(0,1fr) 140px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--rule)}
+.cr2 .cbar:last-of-type{border-bottom:0}
+.cr2 .cbar b{font-size:15.5px}
+.cr2 .cbar .track{height:18px;border-radius:99px;background:#fff;position:relative}
+.cr2 .cbar .fill{position:absolute;top:0;bottom:0;border-radius:99px}
+.cr2 .cbar .v{font-size:14.5px;color:var(--mut);text-align:left;font-variant-numeric:tabular-nums}
+@media(max-width:620px){.cr2 .cbar{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n v" "t t"}.cr2 .cbar b{grid-area:n}.cr2 .cbar .v{grid-area:v}.cr2 .cbar .track{grid-area:t}}
+@media(max-width:620px){.cr2 .cbar.axis{display:none}}
+.cr2 .costs .note{font-size:13.5px;color:var(--mut);margin-top:10px}
+
+/* ---------- the lesson route ---------- */
+.cr2 .phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px}
+@media(max-width:900px){.cr2 .phases{grid-template-columns:minmax(0,1fr)}}
+.cr2 .phase h3{font-size:22px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.cr2 .phase h3 i{width:14px;height:14px;border-radius:50%;background:var(--c)}
+.cr2 .stops{list-style:none;margin:0;padding:0;position:relative}
+.cr2 .stops::before{content:"";position:absolute;right:21px;top:22px;bottom:22px;width:5px;border-radius:5px;background:var(--c)}
+.cr2 .stops li{display:grid;grid-template-columns:48px 1fr;gap:12px;align-items:start;padding:8px 0;position:relative}
+.cr2 .stops .n{width:48px;height:48px;border-radius:50%;background:#fff;border:5px solid var(--c);display:grid;place-items:center;font-family:"Secular One",sans-serif;font-size:19px;color:var(--night);position:relative;z-index:1}
+.cr2 .stops b{display:block;font-family:"Secular One",sans-serif;font-weight:400;font-size:18px;color:var(--night);line-height:1.3;margin-top:4px}
+.cr2 .stops span{font-size:15px;color:var(--mut)}
+
+/* ---------- inside ---------- */
+.cr2 .inside{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media(max-width:860px){.cr2 .inside{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cr2 .inside div{border:2px solid var(--rule);border-radius:20px;padding:18px}
+.cr2 .inside svg{width:46px;height:46px;margin-bottom:8px}
+.cr2 .inside b{display:block;font-family:"Secular One",sans-serif;font-weight:400;font-size:18px;color:var(--night)}
+.cr2 .inside span{font-size:15px;color:var(--mut)}
+
+/* ---------- teacher ---------- */
+.cr2 .teach{display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;align-items:center;background:var(--night);color:#fff;border-radius:24px;padding:26px}
+@media(max-width:620px){.cr2 .teach{grid-template-columns:minmax(0,1fr)}}
+.cr2 .teach .ph{width:150px;height:150px;border-radius:50%;background:conic-gradient(var(--mint),var(--sun),var(--coral),var(--sky),var(--mint));padding:5px}
+.cr2 .teach .ph div{width:100%;height:100%;border-radius:50%;background:#3B3DA0;display:grid;place-items:center;color:#D7D8FF;font-size:14px;text-align:center}
+.cr2 .teach h3{color:#fff;font-size:26px}
+.cr2 .teach p{color:#D7D8FF;margin:8px 0 0}
+.cr2 .teach ul{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.cr2 .teach li{background:rgba(255,255,255,.1);border-radius:99px;padding:3px 12px;font-size:14px}
+
+/* ---------- ticket + order ---------- */
+.cr2 .buy{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:24px;align-items:start}
+@media(max-width:860px){.cr2 .buy{grid-template-columns:minmax(0,1fr)}}
+.cr2 .ticket{background:linear-gradient(150deg,var(--sun),#FFB020);border-radius:24px;padding:26px;color:var(--night);position:relative}
+.cr2 .ticket::before,.cr2 .ticket::after{content:"";position:absolute;top:58%;width:30px;height:30px;border-radius:50%;background:#fff}
+.cr2 .ticket::before{right:-15px}.cr2 .ticket::after{left:-15px}
+.cr2 .ticket .big{font-family:"Secular One",sans-serif;font-size:84px;line-height:1}
+.cr2 .ticket .big small{font-size:20px}
+.cr2 .ticket ul{list-style:none;padding:0;margin:18px 0 0;border-top:3px dashed rgba(28,29,79,.35);padding-top:16px;display:grid;gap:8px}
+.cr2 .ticket li{display:grid;grid-template-columns:24px 1fr;gap:8px;font-weight:500}
+.cr2 .ticket li::before{content:"✓";font-weight:700}
+.cr2 .order{border:2px solid var(--rule);border-radius:24px;padding:24px}
+.cr2 .order h3{font-size:28px;margin-bottom:6px}
+.cr2 label{display:block;font-weight:600;color:var(--night);font-size:15.5px;margin:14px 0 6px}
+.cr2 label small{font-weight:400;color:var(--mut)}
+.cr2 input[type=text],.cr2 input[type=tel],.cr2 input[type=email]{width:100%;border:2px solid var(--rule);border-radius:14px;padding:12px 14px;font:inherit;font-size:16px;background:var(--mist);color:var(--txt)}
+.cr2 input:focus{border-color:var(--night);background:#fff;outline:none}
+.cr2 .r2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(max-width:560px){.cr2 .r2{grid-template-columns:minmax(0,1fr)}}
+.cr2 .chkline{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:15px;margin:10px 0 0;color:var(--txt)}
+.cr2 .chkline input{accent-color:var(--night);margin-top:5px;flex:none;width:18px;height:18px}
+.cr2 .err{color:#D23B2E;font-size:14.5px;margin-top:10px;min-height:1em;font-weight:600}
+.cr2 .small{font-size:14px;color:var(--mut)}
+.cr2 .done{text-align:center}.cr2 .done .big{font-size:56px;line-height:1}
+
+/* ---------- questions ---------- */
+.cr2 details{border-bottom:2px solid var(--mist);padding:14px 0}
+.cr2 summary{cursor:pointer;font-family:"Secular One",sans-serif;font-size:19px;color:var(--night);list-style:none;display:flex;justify-content:space-between;gap:10px}
+.cr2 summary::-webkit-details-marker{display:none}
+.cr2 summary::after{content:"+";color:var(--mint);font-size:26px;line-height:1}
+.cr2 details[open] summary::after{content:"−"}
+.cr2 details p{margin:8px 0 0;color:var(--mut)}
+.cr2 .terms{font-size:14px;color:var(--mut);margin-top:20px}
+.cr2 .stick{position:sticky;bottom:10px;z-index:5;display:none;justify-content:space-between;align-items:center;gap:10px;background:var(--night);color:#fff;border-radius:999px;padding:8px 8px 8px 18px;margin:0 12px;box-shadow:0 14px 30px -12px rgba(28,29,79,.6)}
+.cr2 .stick b{color:var(--sun);font-family:"Secular One",sans-serif;font-weight:400;font-size:22px}
+@media(max-width:700px){.cr2 .stick.on{display:flex}}
+.cr2 [hidden]{display:none!important}
+@media(prefers-reduced-motion:reduce){.cr2 .route .path{animation:none;stroke-dashoffset:0}.cr2 .route .st{animation:none;opacity:1}.cr2 *{transition:none!important}}
 </style>
 
-<div class="dcr" dir="rtl">
-  <div class="hero">
-    <span class="kick">קורס דיגיטלי לקונים</span>
-    <h2>קונים דירה ראשונה, בלי הפתעות</h2>
-    <p>כל מה שעובר על קונה דירה, מהרגע שמצאתם דירה ועד שהיא רשומה על שמכם: מה בודקים, על מה חותמים, כמה זה עולה, ואיפה אנשים נופלים. בשפה פשוטה, צעד אחרי צעד.</p>
-    <div class="facts"><span>10 שיעורים קצרים</span><span>צופים מתי שנוח, גם מהטלפון</span><span>גישה לתמיד</span><span>צ׳קליסט לכל שלב</span></div>
-    <div class="buy"><div><b>390 ₪</b><small>כולל מע"מ · תשלום אחד</small></div>
-      <a class="go" href="#dcr-order">לרכישת הקורס</a><a class="go line" href="#dcr-lessons">מה לומדים</a></div>
-  </div>
+<div class="cr2" dir="rtl">
 
-  <div class="card">
-    <h3>למי הקורס מתאים</h3>
-    <div class="who">
-      <div><b>מחפשים דירה ראשונה</b>ורוצים להבין את התהליך לפני שמתחילים לראות דירות.</div>
-      <div><b>מצאתם דירה</b>ורוצים לדעת מה לבדוק לפני שמציעים מחיר וחותמים.</div>
-      <div><b>קונים עם עזרה מההורים</b>או עם בן או בת זוג, ורוצים לעשות את זה נכון.</div>
-      <div><b>קונים מקבלן</b>ורוצים להבין ערבויות, מפרט ואיחורים במסירה.</div>
+  <section class="hero">
+    <h1>מהמודעה ועד המפתח. <span>בלי הפתעות.</span></h1>
+    <p>קורס דיגיטלי לקונים דירה ראשונה: מה בודקים, על מה חותמים, כמה זה עולה, ואיפה אנשים נופלים. 10 שיעורים קצרים, בשפה פשוטה, צעד אחרי צעד.</p>
+    <div class="row">
+      <a class="btn sun" href="#cr2-buy">לרכישת הקורס</a>
+      <a class="btn ghost" href="#cr2-route">מה לומדים</a>
+      <span class="price"><b>390 ₪</b><small>כולל מע"מ · גישה לתמיד</small></span>
     </div>
-  </div>
-
-  <div class="card" id="dcr-lessons">
-    <h3>מה לומדים: 10 שיעורים</h3>
-    <ol class="lessons">
-      <li><div><b>מפת הדרכים של עסקת דירה</b><span>השלבים מהחיפוש ועד הטאבו, מה קורה בכל אחד, ואיפה נופלים בדרך כלל.</span></div></li>
-      <li><div><b>לפני שמתאהבים בדירה</b><span>איך מזמינים נסח טאבו או אישור זכויות, איך קוראים אותו, ומה אומר לכם לעצור לפני שמסכמים מחיר.</span></div></li>
-      <li><div><b>העירייה והוועדה המקומית</b><span>איך בודקים שהדירה תואמת את ההיתר, מה עומד לקרות סביבה, ואילו חובות עלולים לעכב את הרישום.</span></div></li>
-      <li><div><b>זיכרון דברים: מתי הוא כבר חוזה</b><span>מה מחייב ומה לא, למה לא חותמים במשרד התיווך, ודמי התיווך.</span></div></li>
-      <li><div><b>משכנתא ומשפטים</b><span>אישור עקרוני, מה הבנק בודק, מכתב כוונות ורישום המשכנתא.</span></div></li>
-      <li><div><b>החוזה עצמו</b><span>לוח התשלומים, בטוחות לכסף שלכם, פיצוי מוסכם, מועד מסירה ותכולה.</span></div></li>
-      <li><div><b>מס רכישה</b><span>דירה יחידה, איך מחשבים, מתי מדווחים ומתי משלמים.</span></div></li>
-      <li><div><b>קונים יחד</b><span>בני זוג לא נשואים, עזרה מההורים כמתנה או כהלוואה, ורישום החלקים.</span></div></li>
-      <li><div><b>דירה מקבלן: מה שונה</b><span>ערבות חוק המכר, הצמדה למדד, המפרט, איחור במסירה ותקופת הבדק.</span></div></li>
-      <li><div><b>מהמפתח ועד הטאבו</b><span>פרוטוקול מסירה, רישום הזכויות, ומה עושים כשמשהו משתבש.</span></div></li>
-    </ol>
-  </div>
-
-  <div class="card">
-    <h3>מה מקבלים</h3>
-    <div class="inside">
-      <div><i>🎧</i><b>שיעורים קצרים</b>שקפים עם הסבר קולי, שאפשר לעצור ולחזור אליהם.</div>
-      <div><i>📝</i><b>סיכום כתוב לכל שיעור</b>הנקודות החשובות, בלי לחפש בסרטון.</div>
-      <div><i>✅</i><b>צ׳קליסטים</b>מה לבדוק ומה לבקש בכל שלב, להדפסה או לטלפון.</div>
-      <div><i>🔑</i><b>דף אישי וגישה לתמיד</b>כולל עדכונים כשהחוק או המספרים משתנים.</div>
+    <div class="route" aria-hidden="true">
+      <svg viewBox="0 0 1000 150">
+        <path class="ghost" d="M960 70 C 860 10, 780 130, 680 70 S 500 10, 400 70 S 220 130, 120 70 L 40 70"/>
+        <path class="path" id="cr2-line" d="M960 70 C 860 10, 780 130, 680 70 S 500 10, 400 70 S 220 130, 120 70 L 40 70"/>
+        <g class="ends"><circle cx="960" cy="70" r="12" fill="#FFC83D"/><text x="960" y="118" text-anchor="middle">מצאתי דירה</text>
+          <circle cx="40" cy="70" r="12" fill="#2FD39A"/><text x="40" y="118" text-anchor="middle">המפתח בידיים</text></g>
+        <g id="cr2-st"></g>
+      </svg>
     </div>
-  </div>
+  </section>
 
-  <div class="card">
-    <h3>מי מלמד</h3>
-    <div class="about"><div class="ph">תמונה<br>של יקיר</div>
-      <div><b>עו״ד יקיר דבול</b><p style="margin:4px 0 0">עורך דין מקרקעין בנתניה. מלווה קונים ומוכרים בעסקאות דירה בשרון, ממונה מטעם בית המשפט לרישום בתים משותפים, וחבר בוועדות בלשכת עורכי הדין. הקורס בנוי מהשאלות שקונים שואלים במשרד, ומהטעויות שרואים שוב ושוב.</p></div></div>
-  </div>
+  <section class="sec">
+    <h2>4 טעויות שהקורס בנוי למנוע</h2>
+    <p class="lead">רואים אותן במשרד שוב ושוב. כל אחת מהן קורית לפני שמבינים שהיא בכלל טעות.</p>
+    <div class="mist">
+      <div><svg viewBox="0 0 52 52" aria-hidden="true"><rect x="10" y="6" width="32" height="40" rx="5" fill="#fff" stroke="#FF6F61" stroke-width="3"/><path d="M17 18h18M17 25h18M17 32h10" stroke="#FF6F61" stroke-width="3"/><path d="M30 38l14-14" stroke="#1C1D4F" stroke-width="4" stroke-linecap="round"/></svg>
+        <h3>חותמים על "זיכרון דברים" במשרד התיווך</h3><p>נראה כמו טופס קטן, אבל הוא יכול לחייב כמו חוזה.</p><span class="lesson">שיעור 4</span></div>
+      <div><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="22" cy="22" r="13" fill="#fff" stroke="#E0A400" stroke-width="3"/><path d="M32 32l12 12" stroke="#1C1D4F" stroke-width="4" stroke-linecap="round"/><path d="M22 15v9M22 29v.5" stroke="#E0A400" stroke-width="3.5" stroke-linecap="round"/></svg>
+        <h3>מציעים מחיר לפני שבודקים את הנסח</h3><p>משכנתא, עיקול או הערת אזהרה מתגלים אחרי שכבר התחייבתם.</p><span class="lesson">שיעור 2</span></div>
+      <div><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="18" cy="16" r="7" fill="#fff" stroke="#17A673" stroke-width="3"/><circle cx="34" cy="16" r="7" fill="#fff" stroke="#17A673" stroke-width="3"/><path d="M6 44c2-10 8-14 12-14s10 4 12 14M22 44c2-10 8-14 12-14s10 4 12 14" fill="none" stroke="#1C1D4F" stroke-width="3"/></svg>
+        <h3>כסף מההורים, בלי שום מסמך</h3><p>בדרך כלל נחשב מתנה לשניכם. וזה משנה הרבה אם יום אחד נפרדים.</p><span class="lesson">שיעור 8</span></div>
+      <div><svg viewBox="0 0 52 52" aria-hidden="true"><path d="M26 6l16 6v12c0 10-7 18-16 22-9-4-16-12-16-22V12z" fill="#fff" stroke="#3B7BFF" stroke-width="3"/><path d="M19 26l5 5 9-10" fill="none" stroke="#1C1D4F" stroke-width="3.5"/></svg>
+        <h3>משלמים בלי בטוחה לכסף</h3><p>כל תשלום צריך להיות צמוד למשהו שמגן עליכם: רישום, ערבות או נאמנות.</p><span class="lesson">שיעור 6</span></div>
+    </div>
+  </section>
 
-  <div class="card order" id="dcr-order">
-    <div data-s="form">
-      <h3>רכישת הקורס</h3>
-      <label for="dcr-name">שם מלא</label><input type="text" id="dcr-name" autocomplete="name">
-      <div class="row2">
-        <div><label for="dcr-email">מייל <small>(לכאן תגיע הגישה לקורס)</small></label><input type="email" id="dcr-email" autocomplete="email" dir="ltr"></div>
-        <div><label for="dcr-phone">טלפון</label><input type="tel" id="dcr-phone" autocomplete="tel" dir="ltr"></div>
+  <section class="sec" style="padding-top:0">
+    <div class="costs">
+      <h3>כמה עולה לקנות דירה, מעבר למחיר שלה?</h3>
+      <p class="small" style="margin:0 0 12px">דוגמה: דירה יחידה במחיר 1,800,000 ₪. הטווחים מקובלים בשוק, ובקורס מפרקים כל אחד מהם.</p>
+      <div class="cbar"><b>מס רכישה</b><div class="track"><div class="fill" style="right:0;width:1.5%;background:var(--mint)"></div></div><span class="v">0 ₪</span></div>
+      <div class="cbar"><b>עורך דין</b><div class="track"><div class="fill" style="right:22%;width:45%;background:var(--sky)"></div></div><span class="v">9,000 עד 27,000 ₪</span></div>
+      <div class="cbar"><b>תיווך</b><div class="track"><div class="fill" style="right:0;width:90%;background:var(--sun)"></div></div><span class="v">עד 36,000 ₪</span></div>
+      <div class="cbar"><b>שמאי ומשכנתא</b><div class="track"><div class="fill" style="right:5%;width:8%;background:var(--coral)"></div></div><span class="v">כמה אלפי ₪</span></div>
+      <div class="cbar axis" style="border:0;padding-top:0"><span></span><div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--mut)"><span>0 ₪</span><span>20,000 ₪</span><span>40,000 ₪</span></div><span></span></div>
+      <p class="note">הדוגמה כללית בלבד. מס רכישה לפי מדרגות 2026 לדירה יחידה (פטור עד 1,978,745 ₪). שכר טרחת עורך דין ותיווך לפי הטווח המקובל, 0.5% עד 1.5% ועד 2%, ובתוספת מע"מ. אצל כל קונה המספרים שונים.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="cr2-route" style="background:#FAFAFF">
+    <h2>10 תחנות, מהמודעה ועד הטאבו</h2>
+    <p class="lead">כל שיעור הוא תחנה בדרך. אפשר לעבור את כולם בערב אחד, או רק את התחנה שבה אתם נמצאים עכשיו.</p>
+    <div class="phases">
+      <div class="phase" style="--c:var(--mint)"><h3><i></i>בודקים</h3><ol class="stops">
+        <li><span class="n">1</span><div><b>מפת הדרכים של עסקת דירה</b><span>השלבים מהחיפוש ועד הטאבו, ואיפה נופלים בדרך כלל.</span></div></li>
+        <li><span class="n">2</span><div><b>לפני שמתאהבים בדירה</b><span>איך מזמינים נסח טאבו, איך קוראים אותו, ומתי עוצרים.</span></div></li>
+        <li><span class="n">3</span><div><b>העירייה והוועדה המקומית</b><span>היתרים, תוכניות בסביבה וחובות שעלולים לעכב רישום.</span></div></li></ol></div>
+      <div class="phase" style="--c:var(--sun)"><h3><i></i>חותמים ומממנים</h3><ol class="stops">
+        <li><span class="n">4</span><div><b>זיכרון דברים: מתי הוא כבר חוזה</b><span>מה מחייב, למה לא חותמים במשרד התיווך, ודמי התיווך.</span></div></li>
+        <li><span class="n">5</span><div><b>משכנתא ומשפטים</b><span>אישור עקרוני, מה הבנק בודק, מכתב כוונות ורישום.</span></div></li>
+        <li><span class="n">6</span><div><b>החוזה עצמו</b><span>לוח תשלומים, בטוחות לכסף, פיצוי מוסכם ומועד מסירה.</span></div></li>
+        <li><span class="n">7</span><div><b>מס רכישה</b><span>דירה יחידה, איך מחשבים, מתי מדווחים ומתי משלמים.</span></div></li></ol></div>
+      <div class="phase" style="--c:var(--coral)"><h3><i></i>מקרים מיוחדים ומסירה</h3><ol class="stops">
+        <li><span class="n">8</span><div><b>קונים יחד</b><span>בני זוג, עזרה מההורים כמתנה או כהלוואה, ורישום החלקים.</span></div></li>
+        <li><span class="n">9</span><div><b>דירה מקבלן: מה שונה</b><span>ערבות חוק המכר, הצמדה למדד, מפרט ואיחור במסירה.</span></div></li>
+        <li><span class="n">10</span><div><b>מהמפתח ועד הטאבו</b><span>פרוטוקול מסירה, רישום הזכויות, ומה עושים כשמשהו משתבש.</span></div></li></ol></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>מה מקבלים</h2>
+    <div class="inside" style="margin-top:20px">
+      <div><svg viewBox="0 0 46 46" aria-hidden="true"><rect x="4" y="9" width="38" height="26" rx="6" fill="#E2F8EF"/><path d="M19 16v12l10-6z" fill="#17A673"/><path d="M14 40h18" stroke="#1C1D4F" stroke-width="3" stroke-linecap="round"/></svg><b>שיעורים קצרים</b><span>שקפים עם הסבר קולי, שאפשר לעצור ולחזור אליהם.</span></div>
+      <div><svg viewBox="0 0 46 46" aria-hidden="true"><rect x="9" y="5" width="28" height="36" rx="5" fill="#FFF4D1"/><path d="M15 15h16M15 22h16M15 29h10" stroke="#E0A400" stroke-width="3" stroke-linecap="round"/></svg><b>סיכום כתוב</b><span>הנקודות החשובות של כל שיעור, בלי לחפש בסרטון.</span></div>
+      <div><svg viewBox="0 0 46 46" aria-hidden="true"><rect x="7" y="6" width="32" height="34" rx="6" fill="#FFE9E6"/><path d="M14 17l3 3 6-6M14 29l3 3 6-6M27 18h6M27 30h6" stroke="#FF6F61" stroke-width="3" stroke-linecap="round" fill="none"/></svg><b>צ׳קליסטים</b><span>מה לבדוק ומה לבקש בכל שלב, להדפסה או לטלפון.</span></div>
+      <div><svg viewBox="0 0 46 46" aria-hidden="true"><circle cx="17" cy="23" r="10" fill="#E5EEFF" stroke="#3B7BFF" stroke-width="3"/><path d="M27 23h14M36 23v6M41 23v4" stroke="#1C1D4F" stroke-width="3" stroke-linecap="round"/></svg><b>גישה לתמיד</b><span>דף אישי, כולל עדכונים כשהחוק או המספרים משתנים.</span></div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="teach">
+      <div class="ph"><div>תמונה<br>של יקיר</div></div>
+      <div><h3>מלמד: עו״ד יקיר דבול</h3>
+        <p>עורך דין מקרקעין בנתניה. מלווה קונים ומוכרים בעסקאות דירה בשרון. הקורס בנוי מהשאלות שקונים שואלים במשרד, ומהטעויות שרואים שוב ושוב.</p>
+        <ul><li>עסקאות מקרקעין בשרון</li><li>ממונה מטעם בית המשפט לרישום בתים משותפים</li><li>חבר בוועדות בלשכת עורכי הדין</li></ul></div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0" id="cr2-buy">
+    <div class="buy">
+      <div class="ticket">
+        <div style="font-family:'Secular One',sans-serif;font-size:20px">קונים דירה ראשונה, בלי הפתעות</div>
+        <div class="big">390 <small>₪</small></div>
+        <div style="font-weight:600">כולל מע"מ · תשלום אחד</div>
+        <ul><li>10 שיעורים, מהמודעה ועד הטאבו</li><li>סיכום וצ׳קליסט לכל שלב</li><li>גישה לתמיד, מכל מכשיר</li><li>ביטול בתוך 14 יום, אם עוד לא התחלתם לצפות</li></ul>
       </div>
-      <label class="chkline"><input type="checkbox" id="dcr-terms"> <span>קראתי ואני מסכים/ה ל<a href="#dcr-terms-text">תנאי הרכישה</a>. ידוע לי שהקורס הוא מידע כללי ואינו ייעוץ משפטי לעסקה מסוימת.</span></label>
-      <label class="chkline"><input type="checkbox" id="dcr-mkt"> <span>אשמח לקבל מהמשרד עדכונים ומאמרים במייל (לא חובה).</span></label>
-      <div class="total"><span>קונים דירה ראשונה, בלי הפתעות<br><span class="small">10 שיעורים · גישה לתמיד</span></span><b>390 ₪</b></div>
-      <div class="err" id="dcr-err"></div>
-      <button type="button" class="go dark" id="dcr-pay" style="width:100%;margin-top:6px">לתשלום מאובטח</button>
-      <p class="small" style="margin:8px 0 0">התשלום בדף המאובטח של חברת הסליקה. הקבלה והגישה לקורס נשלחות למייל מיד אחרי התשלום.</p>
+      <div class="order">
+        <div data-s="form">
+          <h3>רכישת הקורס</h3>
+          <label for="dcr-name">שם מלא</label><input type="text" id="dcr-name" autocomplete="name">
+          <div class="r2">
+            <div><label for="dcr-email">מייל <small>(לכאן תגיע הגישה)</small></label><input type="email" id="dcr-email" autocomplete="email" dir="ltr"></div>
+            <div><label for="dcr-phone">טלפון</label><input type="tel" id="dcr-phone" autocomplete="tel" dir="ltr"></div>
+          </div>
+          <label class="chkline"><input type="checkbox" id="dcr-terms"> <span>קראתי ואני מסכים/ה ל<a href="#cr2-terms">תנאי הרכישה</a>. ידוע לי שהקורס הוא מידע כללי ואינו ייעוץ משפטי לעסקה מסוימת.</span></label>
+          <label class="chkline"><input type="checkbox" id="dcr-mkt"> <span>אשמח לקבל מהמשרד עדכונים ומאמרים במייל (לא חובה).</span></label>
+          <div class="err" id="dcr-err"></div>
+          <button type="button" class="btn night" id="dcr-pay" style="width:100%;justify-content:center;margin-top:6px">לתשלום מאובטח, 390 ₪</button>
+          <p class="small" style="margin:10px 0 0">התשלום בדף המאובטח של חברת הסליקה. הקבלה והגישה לקורס נשלחות למייל מיד אחרי התשלום.</p>
+        </div>
+        <div data-s="done" hidden><div class="done"><div class="big">🎉</div><h3>ברוכים הבאים לקורס</h3>
+          <p>שלחנו לכם למייל קישור אישי לקורס. אפשר להתחיל עכשיו.</p><a class="btn night" href="#">כניסה לקורס</a></div></div>
+      </div>
     </div>
-    <div data-s="done" hidden><div class="done"><div class="big">✓</div><h3>ברוכים הבאים לקורס</h3>
-      <p>שלחנו לכם למייל קישור אישי לקורס. אפשר להתחיל עכשיו.</p>
-      <a class="go dark" href="#">כניסה לקורס</a></div></div>
-  </div>
+  </section>
 
-  <div class="card">
-    <h3>שאלות נפוצות</h3>
+  <section class="sec" style="padding-top:0">
+    <h2>שאלות</h2>
     <details><summary>כמה זמן יש לי גישה?</summary><p>לתמיד. נכנסים מהקישור האישי שנשלח למייל, מכל מכשיר.</p></details>
     <details><summary>זה במקום עורך דין בעסקה?</summary><p>לא. הקורס מסביר את התהליך כדי שתגיעו מוכנים ותדעו מה לשאול. בעסקה עצמה כל מקרה שונה, וכדאי שעורך דין ילווה אתכם.</p></details>
-    <details><summary>כמה זמן לוקח לעבור את הקורס?</summary><p>כל שיעור קצר, ואפשר לעבור את כולם בערב אחד, או שיעור אחד בכל פעם, לפי השלב שבו אתם נמצאים.</p></details>
+    <details><summary>כמה זמן לוקח לעבור את הקורס?</summary><p>כל שיעור קצר. אפשר לעבור את כולם בערב אחד, או שיעור אחד בכל פעם, לפי השלב שבו אתם נמצאים.</p></details>
     <details><summary>אפשר לבטל?</summary><p>אפשר לבטל בתוך 14 יום מהרכישה, כל עוד לא התחלתם לצפות בשיעורים, ולקבל את כל הסכום בחזרה.</p></details>
-    <details><summary>קיבלתי חשבונית?</summary><p>כן. הקבלה נשלחת למייל אוטומטית מיד אחרי התשלום.</p></details>
-  </div>
+    <details><summary>קיבלתי קבלה?</summary><p>כן. הקבלה נשלחת למייל אוטומטית מיד אחרי התשלום.</p></details>
+    <p class="terms" id="cr2-terms"><b>תנאי הרכישה בקצרה.</b> הקורס הוא מידע כללי לקונים ואינו ייעוץ משפטי לעסקה מסוימת. הגישה אישית ואין להעביר אותה לאחרים. ביטול בתוך 14 יום מהרכישה, כל עוד לא התחלתם לצפות בשיעורים, עם החזר מלא. השירות ניתן על ידי יקיר דבול - משרד עורכי דין, רזיאל 1 נתניה, 09-8613413.</p>
+  </section>
 
-  <div class="card" id="dcr-terms-text">
-    <h3>תנאי הרכישה בקצרה</h3>
-    <p class="small" style="font-size:14.5px">הקורס הוא מידע כללי לקונים ואינו ייעוץ משפטי לעסקה מסוימת. הגישה אישית ואין להעביר אותה לאחרים. ביטול בתוך 14 יום מהרכישה, כל עוד לא התחלתם לצפות בשיעורים, עם החזר מלא. השירות ניתן על ידי יקיר דבול - משרד עורכי דין, רזיאל 1 נתניה, 09-8613413.</p>
-  </div>
-
-  <div class="sticky" id="dcr-sticky"><span><b>390 ₪</b> · 10 שיעורים · גישה לתמיד</span><a class="go dark" href="#dcr-order" style="padding:9px 16px;font-size:15px">לרכישה</a></div>
+  <div class="stick" id="dcr-sticky"><span><b>390 ₪</b> · 10 שיעורים</span><a class="btn sun" href="#cr2-buy" style="padding:10px 20px;font-size:16px">לרכישה</a></div>
 </div>
 
 <script nowprocket>/*dabul-course*/(function(){
-var R=document.querySelector('.dcr'); if(!R) return;
+var R=document.querySelector('.cr2'); if(!R) return;
 var API=(window.DCR_API||'');
 var $=function(id){return document.getElementById(id);};
 var v=function(id){return String(($(id)||{}).value||'').trim();};
-var sticky=$('dcr-sticky'), order=$('dcr-order');
-function onScroll(){var hero=R.querySelector('.hero').getBoundingClientRect(), o=order.getBoundingClientRect();sticky.classList.toggle('on',hero.bottom<0&&(o.top>window.innerHeight||o.bottom<0));}
+var sticky=$('dcr-sticky'), buy=$('cr2-buy');
+// the 10 stations, evenly along the route line
+(function(){var L=$('cr2-line'),G=$('cr2-st'); if(!L||!G||!L.getTotalLength) return; var len=L.getTotalLength(), NS='http://www.w3.org/2000/svg';
+  var names={1:'נסח טאבו',3:'היתרים',4:'זיכרון דברים',5:'משכנתא',7:'מס רכישה',10:'מסירה'};
+  for(var i=1;i<=10;i++){var pt=L.getPointAtLength(len*(i/11)), c=document.createElementNS(NS,'circle');c.setAttribute('cx',pt.x);c.setAttribute('cy',pt.y);c.setAttribute('r',9);c.setAttribute('fill','#1C1D4F');c.setAttribute('stroke','#2FD39A');c.setAttribute('stroke-width',4);c.setAttribute('class','st');c.style.animationDelay=(0.3+2.4*i/11)+'s';G.appendChild(c);
+    if(names[i]){var t=document.createElementNS(NS,'text');t.setAttribute('x',pt.x);t.setAttribute('y',pt.y<70?pt.y-18:pt.y+30);t.setAttribute('text-anchor','middle');t.setAttribute('class','st');t.style.animationDelay=c.style.animationDelay;t.textContent=names[i];G.appendChild(t);}}})();
+function onScroll(){var h=R.querySelector('.hero').getBoundingClientRect(), o=buy.getBoundingClientRect();sticky.classList.toggle('on',h.bottom<0&&(o.top>window.innerHeight||o.bottom<0));}
 window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+function done(){R.querySelector('[data-s=form]').hidden=true;R.querySelector('[data-s=done]').hidden=false;}
 $('dcr-pay').addEventListener('click',function(){
   var e=$('dcr-err'), b=this, m='';
   if(v('dcr-name').length<2) m='כתבו שם מלא.'; else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('dcr-email'))) m='כתבו מייל תקין. לשם תגיע הגישה לקורס.'; else if(v('dcr-phone').replace(/\D/g,'').length<9) m='כתבו מספר טלפון.'; else if(!$('dcr-terms').checked) m='צריך לאשר את תנאי הרכישה.';
   e.textContent=m; if(m) return;
   b.disabled=true; b.textContent='מעביר לתשלום...';
-  if(!API){ setTimeout(function(){ R.querySelector('[data-s=form]').hidden=true; R.querySelector('[data-s=done]').hidden=false; },700); return; } // preview
+  if(!API){ setTimeout(done,700); return; } // preview
   fetch(API+'?step=buy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({course:'first-home',name:v('dcr-name'),email:v('dcr-email'),phone:v('dcr-phone'),marketing:$('dcr-mkt').checked,page:location.href.split('#')[0]})})
     .then(function(r){return r.json();}).then(function(d){ if(d&&d.payUrl) location.href=d.payUrl; else throw 0; })
-    .catch(function(){ b.disabled=false; b.textContent='לתשלום מאובטח'; e.textContent='משהו השתבש. נסו שוב, או התקשרו 09-8613413.'; });
+    .catch(function(){ b.disabled=false; b.textContent='לתשלום מאובטח, 390 ₪'; e.textContent='משהו השתבש. נסו שוב, או התקשרו 09-8613413.'; });
 });
-if(/#bought/.test(location.hash)){ R.querySelector('[data-s=form]').hidden=true; R.querySelector('[data-s=done]').hidden=false; }
+if(/#bought/.test(location.hash)) done();
 })();</script>
