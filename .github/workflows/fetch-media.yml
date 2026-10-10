@@ -1,10 +1,12 @@
 name: fetch media (internal)
 # Internal helper branch: downloads the files listed in fetch-list.txt and commits them under fetched/.
+# shots.txt lines "name url" are captured as full-page screenshots (desktop + phone) into fetched/shots/.
+# check.txt lines "name url" are only checked (HTTP status + final URL) into fetched/check.tsv.
 # Nothing here is published (GitHub Pages serves only main).
 on:
   push:
     branches: [tools/fetch-media]
-    paths: [fetch-list.txt]
+    paths: [fetch-list.txt, shots.txt, check.txt]
 permissions:
   contents: write
 jobs:
@@ -14,10 +16,57 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download
+        continue-on-error: true
         run: |
           mkdir -p fetched
-          while read -r name url; do [ -n "$url" ] && curl -fsSL --retry 3 "$url" -o "fetched/$name"; done < fetch-list.txt
+          while read -r name url; do [ -n "$url" ] && { curl -fsSL --retry 3 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36" "$url" -o "fetched/$name" || echo "fail $name"; }; done < fetch-list.txt
           ls -la fetched
+      - name: Check links
+        continue-on-error: true
+        run: |
+          mkdir -p fetched
+          : > fetched/check.tsv
+          if [ -f check.txt ]; then while read -r name url; do [ -n "$url" ] || continue; r=$(curl -sS -o /tmp/body -L --max-time 40 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36" -w '%{http_code}\t%{content_type}\t%{size_download}\t%{url_effective}' "$url" 2>&1 | tr '\n' ' '); printf '%s\t%s\t%s\n' "$name" "$r" "$url" >> fetched/check.tsv; done < check.txt; fi
+          cat fetched/check.tsv
+      - name: Screenshots
+        continue-on-error: true
+        timeout-minutes: 12
+        run: |
+          [ -s shots.txt ] || exit 0
+          mkdir -p fetched/shots /tmp/pw
+          cd /tmp/pw
+          npm init -y >/dev/null
+          npm i playwright@1.47.2 > $GITHUB_WORKSPACE/fetched/shots/log.txt 2>&1
+          npx playwright install --with-deps chromium >> $GITHUB_WORKSPACE/fetched/shots/log.txt 2>&1
+          cat > shot.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'fs';
+          const lines = fs.readFileSync(process.argv[2],'utf8').split('\n').filter(l=>l.trim());
+          const b = await chromium.launch();
+          for (const l of lines) {
+            const [name,url] = l.trim().split(/\s+/);
+            for (const [tag,vp,mob] of [['d',{width:1440,height:900},false],['m',{width:390,height:844},true]]) {
+              const c = await b.newContext({viewport:vp,isMobile:mob,hasTouch:mob,deviceScaleFactor:1,locale:'he-IL'});
+              const p = await c.newPage();
+              try {
+                await p.goto(url,{waitUntil:'load',timeout:60000});
+                await p.waitForTimeout(3000);
+                for (let y=0;y<30000;y+=500){ await p.evaluate(v=>window.scrollTo(0,v),y); await p.waitForTimeout(120); }
+                await p.evaluate(()=>window.scrollTo(0,0)); await p.waitForTimeout(1500);
+                await p.screenshot({path:`${process.env.OUT}/${name}-${tag}.jpg`,fullPage:true,type:'jpeg',quality:70});
+                if (tag==='d') {
+                  fs.writeFileSync(`${process.env.OUT}/${name}.html`, await p.content());
+                  const css = await p.evaluate(()=>{ const out=[]; for (const s of document.styleSheets){ try{ for(const r of s.cssRules) out.push(r.cssText);}catch(e){} } return out.join('\n'); });
+                  fs.writeFileSync(`${process.env.OUT}/${name}.css`, css);
+                }
+              } catch(e) { console.log('fail',name,tag,e.message); }
+              await c.close();
+            }
+          }
+          await b.close();
+          JS
+          OUT=$GITHUB_WORKSPACE/fetched/shots node shot.mjs $GITHUB_WORKSPACE/shots.txt >> $GITHUB_WORKSPACE/fetched/shots/log.txt 2>&1
+          ls -la $GITHUB_WORKSPACE/fetched/shots
       - name: Commit
         if: always()
         run: |
