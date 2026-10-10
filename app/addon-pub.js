@@ -47,7 +47,7 @@
     }).join('');
     const link = cfg.key ? `https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/pubcal?k=${encodeURIComponent(cfg.key)}` : '';
     const ig = cfg.ig || {};
-    const conn = igCard(ig);
+    const conn = bufCard(cfg.buffer || {}) + igCard(ig);
     return conn + `<div class="card card-b"><p class="muted" style="margin-top:0">לוח אחד לכל מה שמתפרסם: מה, מתי, באיזה ערוץ ומי מפרסם. <b>גרוק בוט</b> מפרסם בפייסבוק, ביוטיוב, בלינקדאין, ב-X ובגוגל עסקי, ו<b>המערכת</b> מפרסמת באינסטגרם, בטיקטוק ובקבוצת הוואטסאפ. גרוק קורא את הלוח הזה כל יום, כך ששניהם מסונכרנים. פריט שמבטלים כאן לא יוצא.</p>
       <div class="pb-legend"><span><span class="pb-own" style="background:#1d6fd6">גרוק בוט</span></span><span><span class="pb-own" style="background:#a8873f">המערכת</span></span>${link ? `<a href="${n(link)}" target="_blank" rel="noopener">הלוח כפי שגרוק רואה אותו</a>` : ''}
       <a href="#" data-a="pb-past">${showPast ? 'להסתיר פריטים שעברו' : 'להציג גם פריטים שעברו'}</a></div>
@@ -85,10 +85,32 @@
       <button class="btn" data-a="pb-fb-go" style="background:#1877f2;color:#fff;border-color:#1877f2">התחבר עם פייסבוק</button>`;
     return `<div class="card card-b" style="margin-bottom:12px">${head}${ig.check === 'failed' && ig.error ? `<p class="small" style="color:#b4442f;margin:6px 0">הניסיון האחרון נכשל: ${n(ig.error)}</p>` : ''}${body}${manual}</div>`;
   }
+  // Buffer (11.10.2026): the office publishes to Facebook, LinkedIn, X and the other channels connected in Buffer.
+  // The API key is saved on the server only (set_secret BUFFER_API_KEY) and never shown again.
+  function bufCard(b) {
+    const head = `<b>חיבור Buffer</b> ${b.ok ? '<span class="pill p-ok">מחובר</span>' : b.saved ? '<span class="pill p-warn">נשמר, בבדיקה</span>' : '<span class="pill p-warn">לא מחובר</span>'}`;
+    const chans = (b.channels || []).map(c => n(c.name || c.service || '')).filter(Boolean).join(' · ');
+    const info = b.ok ? `<p class="muted small" style="margin:6px 0">המערכת מפרסמת דרך Buffer${chans ? `: ${chans}` : ''}.</p>` : `<p class="muted small" style="margin:6px 0">נכנסים ל-publish.buffer.com > Settings > API, יוצרים מפתח (Create API key), מעתיקים ומדביקים כאן. המפתח נשמר בשרת בלבד ולא מוצג שוב.</p>`;
+    if (!window.SB) return `<div class="card card-b" style="margin-bottom:12px">${head}${info}</div>`;
+    return `<div class="card card-b" style="margin-bottom:12px">${head}${info}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><input id="pb_buf" type="password" dir="ltr" autocomplete="off" placeholder="${b.saved ? 'נשמר. להחלפה מדביקים מפתח חדש' : 'Buffer API key'}" style="flex:1;min-width:200px"><button class="btn sm" data-a="pb-buf">שמירה</button></div></div>`;
+  }
   s.pubView = pubView;
   document.addEventListener('click', async e => {
-    const b = e.target.closest('[data-a="pb-set"],[data-a="pb-past"],[data-a="pb-ig"],[data-a="pb-fb-save"],[data-a="pb-fb-go"]'); if (!b) return;
+    const b = e.target.closest('[data-a="pb-set"],[data-a="pb-past"],[data-a="pb-ig"],[data-a="pb-buf"],[data-a="pb-fb-save"],[data-a="pb-fb-go"]'); if (!b) return;
     e.preventDefault();
+    if (b.dataset.a === 'pb-buf') {
+      const t = (((document.getElementById('pb_buf') || {}).value) || '').trim();
+      if (t.length < 20 || /\s/.test(t)) { s.toast('המפתח לא נראה תקין. מעתיקים את כל המפתח, בלי רווחים', 'bad'); return; }
+      b.disabled = true;
+      try {
+        const { data, error } = await window.SB.functions.invoke('bufauth', { body: { action: 'save', key: t } });
+        if (error) { let m = ''; try { m = (await error.context.json()).error; } catch { /* no body */ } throw new Error(m || 'השמירה נכשלה'); }
+        const el = document.getElementById('pb_buf'); if (el) el.value = '';
+        const cfg = ((s.S.data.settings || {}).pub) || null; if (cfg) cfg.buffer = { ok: true, saved: new Date().toISOString(), channels: (data && data.channels) || [] };
+        s.toast(`מחובר. נמצאו ${((data && data.channels) || []).length} ערוצים. הפרטים נשלחו גם לטלגרם.`); bump(); }
+      catch (err) { s.toast(err.message || 'השמירה נכשלה, נסה שוב', 'bad'); }
+      b.disabled = false; return;
+    }
     if (b.dataset.a === 'pb-fb-save') {
       const v = id => ((document.getElementById(id) || {}).value || '').trim();
       b.disabled = true;
