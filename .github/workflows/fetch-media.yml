@@ -1,0 +1,24 @@
+name: fetch media (internal)
+# Internal helper branch: downloads the files listed in fetch-list.txt and commits them under fetched/.
+# Nothing here is published (GitHub Pages serves only main).
+on:
+  push:
+    branches: [tools/fetch-media]
+    paths: [fetch-list.txt]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    if: "!contains(github.event.head_commit.message, '[fetched]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download
+        run: |
+          mkdir -p fetched
+          while read -r name url; do [ -n "$url" ] && curl -fsSL --retry 3 "$url" -o "fetched/$name"; done < fetch-list.txt
+          ls -la fetched
+      - name: Commit
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add fetched && git commit -qm "[fetched] $(date -u +%FT%TZ)" && git push origin HEAD:tools/fetch-media || echo nothing
