@@ -17,7 +17,7 @@ function dabul_listen_on() {
 add_action('wp_head', function () {
 	if (!dabul_listen_on()) return;
 	echo '<style id="dbl-listen-css">
-.dlp{width:100%;--g:#b8932f;--g2:#8a6d2c;--g3:#f0e2bd;--ink:#1c1b19;--mut:#6c675d;--line:#e6dfcf;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin:0 0 22px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 14px;align-items:center;box-shadow:0 8px 24px -18px rgba(28,27,25,.35);direction:rtl}
+.dlp{width:100%;--g:#b8932f;--g2:#8a6d2c;--g3:#f0e2bd;--ink:#1c1b19;--mut:#6c675d;--line:#e6dfcf;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin:0 0 -8px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 14px;align-items:center;box-shadow:0 8px 24px -18px rgba(28,27,25,.35);direction:rtl}
 .dlp[hidden]{display:none!important}
 .dlp *{box-sizing:border-box}
 .dlp .pl{grid-row:span 2;width:56px;height:56px;border-radius:50%;border:0;padding:0;background:var(--ink);color:var(--g3);display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 5px rgba(184,147,47,.18)}
