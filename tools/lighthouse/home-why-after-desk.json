@@ -1,0 +1,127 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "desktop",
+ "at": "2026-10-10T19:44:26.915Z",
+ "runs": [
+  {
+   "score": 91,
+   "fcp": 974.054,
+   "lcp": 1673.374,
+   "si": 1390.1481225357566,
+   "tbt": 0,
+   "cls": 0.00019089312218202028,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-6ba11314-833b-4a20-acc6-51fe50a1bf49=\"excluded\" data-rocket-lazy-bg-3cab5b27-6510-4dee-968f-475170e1491e=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     735
+    ],
+    [
+     "resourceLoadDelay",
+     13
+    ],
+    [
+     "resourceLoadDuration",
+     682
+    ],
+    [
+     "elementRenderDelay",
+     27
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0,
+     "<ul id=\"menu-1-b175daa\" class=\"elementor-nav-menu\">",
+     "div.elementor-element > div.elementor-element > nav.elementor-nav-menu--main > ul#menu-1-b175daa",
+     "https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Regular.woff2"
+    ],
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-62c1a11 elementor-widget elementor-wid…\" data-id=\"62c1a11\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div.elementor-element > div.elementor-element > div.elementor-element > div.elementor-element",
+     "https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2|https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Light.woff2"
+    ]
+   ],
+   "bytes": 419291,
+   "docBytes": 166718
+  },
+  {
+   "score": 95,
+   "fcp": 406.647,
+   "lcp": 726.8459999999998,
+   "si": 843.3465476795882,
+   "tbt": 0,
+   "cls": 0.1365519662921348,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-6ba11314-833b-4a20-acc6-51fe50a1bf49=\"excluded\" data-rocket-lazy-bg-3cab5b27-6510-4dee-968f-475170e1491e=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     713
+    ],
+    [
+     "resourceLoadDelay",
+     5
+    ],
+    [
+     "resourceLoadDuration",
+     32
+    ],
+    [
+     "elementRenderDelay",
+     283
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0.137,
+     "<html dir=\"rtl\" lang=\"he-IL\">",
+     "html",
+     ""
+    ]
+   ],
+   "bytes": 419291,
+   "docBytes": 166721
+  },
+  {
+   "score": 95,
+   "fcp": 400.05999999999995,
+   "lcp": 716.6200000000001,
+   "si": 827.5396230018434,
+   "tbt": 0,
+   "cls": 0.1365519662921348,
+   "lcpEl": "<div class=\"elementor-element elementor-element-9056c3a e-con-full e-flex e-con e-pare…\" data-id=\"9056c3a\" data-element_type=\"container\" data-e-type=\"container\" data-settings=\"{&quot;background_background&quot;:&quot;classic&quot;}\" data-rocket-lazy-bg-6ba11314-833b-4a20-acc6-51fe50a1bf49=\"excluded\" data-rocket-lazy-bg-3cab5b27-6510-4dee-968f-475170e1491e=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     701
+    ],
+    [
+     "resourceLoadDelay",
+     4
+    ],
+    [
+     "resourceLoadDuration",
+     30
+    ],
+    [
+     "elementRenderDelay",
+     282
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0.137,
+     "<html dir=\"rtl\" lang=\"he-IL\">",
+     "html",
+     ""
+    ]
+   ],
+   "bytes": 419272,
+   "docBytes": 166719
+  }
+ ]
+}
