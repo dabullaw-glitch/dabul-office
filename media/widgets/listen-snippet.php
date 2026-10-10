@@ -6,7 +6,7 @@
    The player sits under the table of contents, right above the article text. It shows only where the device has a
    Hebrew voice (iPhone, Android, Edge and most computers in Israel); elsewhere it stays hidden.
    Preview before going live: add ?dblprev=1 to an article address. To undo: deactivate this snippet. */
-define('DABUL_LISTEN_LIVE', 0);
+define('DABUL_LISTEN_LIVE', 1);
 
 function dabul_listen_on() {
 	if (!is_singular('post')) return false;
