@@ -29,12 +29,12 @@ const TOPICS: Record<string, { name: string; ask: string; domains?: string[] }> 
   market: { name: 'שוק ונתניה', ask: 'נתונים והחלטות שמשפיעים על קונים ומוכרים בשרון ובנתניה: מדד מחירי הדירות של הלמ"ס, ריבית בנק ישראל ומשכנתאות, והחלטות של הוועדה המקומית נתניה על פינוי בינוי והתחדשות עירונית.' },
 };
 
-const SYSTEM = `אתה עוזר מחקר במשרד עורכי דין לנדל"ן בנתניה. המשימה: למצוא ברשת עדכונים אמיתיים מחודש מסוים, ולסכם אותם בעברית פשוטה ללקוחות (קונים ומוכרים של דירות).
+const SYSTEM = `אתה עוזר מחקר במשרד עורכי דין לנדל"ן בנתניה. המשימה: למצוא ברשת חדשות ועדכונים אמיתיים מחודש מסוים, ולסכם אותם בעברית פשוטה ללקוחות (קונים ומוכרים של דירות).
 כללים:
-- רק עדכונים שפורסמו בחודש המבוקש, ורק ממקורות אמינים: אתרי ממשלה (gov.il), בתי המשפט, הכנסת, הלמ"ס, בנק ישראל, עיריית נתניה, ועיתונות כלכלית מוכרת (גלובס, כלכליסט, דה מרקר, ynet, מרכז הנדל"ן, ביזפורטל). לא אתרים של משרדי עורכי דין.
-- כל טענה עובדתית חייבת להישען על מקור שקראת בחיפוש. אם לא מצאת מקור, אל תכתוב אותה. אל תנחש תאריכים, מספרים או שמות.
-- בין 2 ל־4 עדכונים. אם לא מצאת עדכון אמיתי מהחודש, כתוב רק: אין עדכונים.
-- בלי מקפים ארוכים. בלי לשון הפלגה. בלי הבטחות.
+- חפש כתבות חדשות ועדכונים רשמיים, לא מדריכים כלליים. השתמש בגיל העמוד (page_age) ובתאריך שבכתבה כדי לבחור רק פריטים מהחודש המבוקש.
+- כל טענה עובדתית חייבת להישען על מקור שקראת בחיפוש, עם ציטוט. אל תנחש תאריכים, מספרים או שמות.
+- בין 2 ל־4 עדכונים. אם לא מצאת אף עדכון מהחודש, כתוב רק: אין עדכונים.
+- בלי מקפים ארוכים. בלי לשון הפלגה. בלי הבטחות. בלי פנייה ללקוחות לפנות למשרד.
 פורמט התשובה הסופית, בדיוק כך, לכל עדכון:
 ITEM
 כותרת: (עד 12 מילים)
@@ -42,6 +42,8 @@ ITEM
 מה קרה: (2 עד 3 משפטים)
 מה זה אומר לקונים ולמוכרים: (משפט או שניים)
 END`;
+// only news sites and official sources (never other law firms' sites)
+const DOMAINS = ['gov.il', 'globes.co.il', 'calcalist.co.il', 'themarker.com', 'ynet.co.il', 'nadlancenter.co.il', 'bizportal.co.il', 'ice.co.il', 'magdilim.co.il', 'boi.org.il', 'cbs.gov.il', 'netanya.muni.il', 'knesset.gov.il', 'maariv.co.il', 'israelhayom.co.il', 'walla.co.il', 'mako.co.il', 'kolzchut.org.il'];
 
 // deno-lint-ignore no-explicit-any
 async function claude(body: any): Promise<any> {
@@ -83,7 +85,7 @@ async function topic(t: string, month: string) {
   const T = TOPICS[t]; if (!T) return { error: 'topic?' };
   const id = 'dg-' + month;
   if (!(await get(id))) await merge(id, { month, status: 'collecting', created: new Date().toISOString() });
-  const tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }];
+  const tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 6, allowed_domains: DOMAINS }];
   const messages: Any[] = [{ role: 'user', content: `החודש: ${monthName(month)} (${month}).\nהנושא: ${T.ask}\nחפש, קרא את המקורות, ותן את התשובה בפורמט שנקבע.` }];
   let d: Any = null, content: Any[] = [], inTok = 0, outTok = 0, searches = 0;
   // a long search can pause the turn; it is resumed (at most twice) by sending the answer so far back
@@ -94,9 +96,9 @@ async function topic(t: string, month: string) {
     if (d.stop_reason !== 'pause_turn') break;
     messages.push({ role: 'assistant', content: d.content });
   }
-  const { items } = parse(content);
+  const { items, text } = parse(content);
   const cost = +((inTok * 3 + outTok * 15) / 1e6 + searches * 0.01).toFixed(3);
-  await merge(id, { ['t_' + t]: { name: T.name, items: items.map(x => Object.assign(x, { topic: T.name })), at: new Date().toISOString(), cost, searches, model: d._model } });
+  await merge(id, { ['t_' + t]: { name: T.name, items: items.map(x => Object.assign(x, { topic: T.name })), at: new Date().toISOString(), cost, searches, model: d._model, stop: d.stop_reason, raw: text.slice(0, 3000), cites: content.filter((b: Any) => b.type === 'text' && b.citations?.length).length } });
   return { topic: t, items: items.length, cost, searches };
 }
 
