@@ -1,0 +1,106 @@
+{
+ "url": "https://dabullaw.co.il/rental-income-tax-three-tracks-2026-guide/",
+ "preset": "mobile",
+ "at": "2026-10-10T20:41:07.570Z",
+ "runs": [
+  {
+   "score": 65,
+   "fcp": 2189.907,
+   "lcp": 2424.407,
+   "si": 4160.127434877213,
+   "tbt": 2185,
+   "cls": 0,
+   "lcpEl": "<p class=\"lvbl-p lvbl-p-lead\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     1221
+    ],
+    [
+     "elementRenderDelay",
+     616
+    ]
+   ],
+   "renderBlocking": [
+    [
+     "https://dabullaw.co.il/wp-includes/css/dist/block-library/style-rtl.min.css?ver=6.9.4",
+     0
+    ]
+   ],
+   "shifts": [],
+   "bytes": 271386,
+   "docBytes": 139411
+  },
+  {
+   "score": 92,
+   "fcp": 1538.758,
+   "lcp": 2462.938,
+   "si": 1670.686214638673,
+   "tbt": 0,
+   "cls": 0.13757387724286,
+   "lcpEl": "<p class=\"lvbl-p lvbl-p-lead\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     448
+    ],
+    [
+     "elementRenderDelay",
+     247
+    ]
+   ],
+   "renderBlocking": [
+    [
+     "https://dabullaw.co.il/wp-includes/css/dist/block-library/style-rtl.min.css?ver=6.9.4",
+     157
+    ]
+   ],
+   "shifts": [
+    [
+     0.138,
+     "<div class=\"elementor-element elementor-element-ee1430e e-con-full e-flex e-con e-child\" data-id=\"ee1430e\" data-element_type=\"container\" data-e-type=\"container\"",
+     "div#content > div.elementor-element > div.e-con-inner > div.elementor-element",
+     ""
+    ]
+   ],
+   "bytes": 270964,
+   "docBytes": 138582
+  },
+  {
+   "score": 94,
+   "fcp": 2312.4799999999996,
+   "lcp": 2644.504000000001,
+   "si": 2312.4799999999996,
+   "tbt": 0,
+   "cls": 0,
+   "lcpEl": "<p class=\"lvbl-p lvbl-p-lead\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     691
+    ],
+    [
+     "elementRenderDelay",
+     101
+    ]
+   ],
+   "renderBlocking": [
+    [
+     "https://dabullaw.co.il/wp-content/cache/background-css/1/dabullaw.co.il/wp-content/uploads/elementor/css/post-3815.css?ver=1791661636&wpr_t=1791657626",
+     472
+    ],
+    [
+     "https://dabullaw.co.il/wp-content/uploads/elementor/css/post-920.css?ver=1791661655",
+     472
+    ],
+    [
+     "https://dabullaw.co.il/wp-includes/css/dist/block-library/style-rtl.min.css?ver=6.9.4",
+     472
+    ]
+   ],
+   "shifts": [],
+   "bytes": 271777,
+   "docBytes": 139399
+  }
+ ]
+}
