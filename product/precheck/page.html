@@ -47,9 +47,13 @@
 .pc4 .facts{display:flex;flex-wrap:wrap;gap:0;margin-top:30px;border-top:1px solid var(--line);padding-top:18px}
 .pc4 .facts div{padding-inline:0 22px;margin-inline-end:22px;border-inline-end:1px solid var(--line)}
 .pc4 .facts div:last-child{border:0;margin:0}
+.pc4 .tabu{margin:16px 0 0;font-size:14.5px;color:#C6CDDB;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:10px 14px;max-width:520px}
+.pc4 .tabu a{color:var(--peach);font-weight:700;text-decoration:none;white-space:nowrap}
 .pc4 .facts b{display:block;font-size:26px;font-weight:800;color:#fff;line-height:1.1}
 .pc4 .facts span{font-size:14px;color:var(--mut)}
-@media(max-width:520px){.pc4 .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.pc4 .facts div{padding:0 8px;margin:0}.pc4 .facts b{font-size:21px}}
+@media(max-width:520px){.pc4 .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.pc4 .facts div{padding:0 8px;margin:0}.pc4 .tabu{margin:16px 0 0;font-size:14.5px;color:#C6CDDB;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:10px 14px;max-width:520px}
+.pc4 .tabu a{color:var(--peach);font-weight:700;text-decoration:none;white-space:nowrap}
+.pc4 .facts b{font-size:21px}}
 
 /* the reveal: same apartment, the ad and the documents */
 .pc4 .xr{position:relative;border-radius:26px;overflow:hidden;aspect-ratio:4/4.3;max-width:100%;box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06);user-select:none;touch-action:pan-y;background:var(--navy2)}
@@ -232,6 +236,7 @@
           <div><b>2 ימי עבודה</b><span>והתשובה במייל</span></div>
           <div><b>כל הארץ</b><span>בלי לצאת מהבית</span></div>
         </div>
+        <p class="tabu">הבדיקה מיועדת לדירות שרשומות בטאבו. דירה שרשומה במינהל (רמ״י) או בחברה משכנת? היא צריכה בדיקה פרטנית. <a href="tel:098613413">דברו עם המשרד: 09-8613413</a></p>
       </div>
       <div>
         <div class="xr" id="pc4-xr" style="--p:50%">
@@ -376,6 +381,14 @@
           <div><label for="dpc-floor">קומה ומספר דירה <small>(אם ידוע)</small></label><input type="text" id="dpc-floor"></div>
           <div><label for="dpc-price">המחיר המבוקש <small>(₪)</small></label><input type="text" id="dpc-price" inputmode="numeric"></div>
         </div>
+        <label>איפה הדירה רשומה?</label>
+        <div class="opts">
+          <label><input type="radio" name="dpc-reg" value="tabu"> בטאבו</label>
+          <label><input type="radio" name="dpc-reg" value="rmi"> במינהל (רמ״י)</label>
+          <label><input type="radio" name="dpc-reg" value="company"> בחברה משכנת</label>
+          <label><input type="radio" name="dpc-reg" value="unknown"> לא יודע/ת</label>
+        </div>
+        <p class="small" data-regnote hidden></p>
         <label for="dpc-link">קישור למודעה <small>(לא חובה)</small></label><input type="url" id="dpc-link" placeholder="https://" dir="ltr">
         <div class="err" data-err="1"></div>
         <div class="nav"><span></span><button type="button" class="btn p" data-next="2">המשך</button></div>
@@ -436,11 +449,11 @@
     <div class="center"><h2><em>שאלות</em> שחוזרות</h2></div>
     <div class="faq">
       <details><summary>זה במקום עורך דין בעסקה?</summary><p>לא. זו בדיקה מוקדמת, לפני שמציעים מחיר. היא עוזרת להחליט אם להמשיך ועל מה לשים לב. בעסקה עצמה יש עוד הרבה: משא ומתן, חוזה, בטוחות, דיווח לרשות המסים ורישום. ממשיכים איתנו? 490 ₪ מקוזזים משכר הטרחה.</p></details>
-      <details><summary>מה אם הדירה לא רשומה בטאבו?</summary><p>נבדוק את מה שאפשר לפי המידע הזמין, ונכתוב לכם בדיוק אילו אישורים לבקש מהמוכר, למשל אישור זכויות מרשות מקרקעי ישראל או מהחברה המשכנת.</p></details>
+      <details><summary>מה אם הדירה לא רשומה בטאבו?</summary><p>הבדיקה ב־490 ₪ מיועדת לדירות שרשומות בטאבו (לשכת רישום המקרקעין). דירה שרשומה במינהל (רשות מקרקעי ישראל) או בחברה משכנת צריכה בדיקה פרטנית, כי המסמכים והאישורים שונים. התקשרו למשרד, 09-8613413, ונבדוק איתכם מה צריך.</p></details>
       <details><summary>אתם מגיעים לראות את הדירה?</summary><p>לא. הבדיקה נעשית על המסמכים הרשמיים. אם יש חשד לבעיה פיזית או לפער במחיר, נמליץ על בודק מבנה או שמאי. העלות שלהם לא כלולה.</p></details>
       <details><summary>כמה זמן זה לוקח?</summary><p>עד 2 ימי עבודה מהרגע שהתשלום והפרטים התקבלו. אם רשות מקומית מעכבת את תיק הבניין, נעדכן אתכם מראש.</p></details>
       <details><summary>אפשר לקבל החזר?</summary><p>אם לא נוכל לזהות את הנכס או לבצע את הבדיקה, תקבלו את כל הסכום בחזרה. אחרי שהבדיקה התחילה, אין החזר.</p></details>
-      <div class="terms" id="pc4-terms"><b>תנאי השירות בקצרה.</b> הבדיקה מבוססת על המסמכים הרשמיים הזמינים ועל המידע שמסרתם. היא אינה מחליפה שמאי, מהנדס או בודק מבנה, ואינה אישור לחתום על חוזה. המחיר כולל את אגרות הוצאת נסח הטאבו ומסמכי הבית המשותף (צו, תקנון ותשריט), במידת הצורך, ואינו כולל שמאי ובעלי מקצוע נוספים. במקומות שבהם הרשות לא מאפשרת עיון מקוון בתיק הבניין, נעדכן מראש מה כן אפשר לבדוק. הקיזוז משכר הטרחה חל כשנחתם הסכם שכר טרחה עם המשרד לעסקה בתוך 90 יום מהבדיקה. החזר מלא רק אם הבדיקה אינה אפשרית. השירות ניתן על ידי יקיר דבול - משרד עורכי דין, רזיאל 1 נתניה, 09-8613413.</div>
+      <div class="terms" id="pc4-terms"><b>תנאי השירות בקצרה.</b> הבדיקה מיועדת לדירות שרשומות בטאבו, ומבוססת על המסמכים הרשמיים הזמינים ועל המידע שמסרתם. דירה שרשומה במינהל או בחברה משכנת דורשת בדיקה פרטנית מול המשרד. היא אינה מחליפה שמאי, מהנדס או בודק מבנה, ואינה אישור לחתום על חוזה. המחיר כולל את אגרות הוצאת נסח הטאבו ומסמכי הבית המשותף (צו, תקנון ותשריט), במידת הצורך, ואינו כולל שמאי ובעלי מקצוע נוספים. במקומות שבהם הרשות לא מאפשרת עיון מקוון בתיק הבניין, נעדכן מראש מה כן אפשר לבדוק. הקיזוז משכר הטרחה חל כשנחתם הסכם שכר טרחה עם המשרד לעסקה בתוך 90 יום מהבדיקה. החזר מלא רק אם הבדיקה אינה אפשרית. השירות ניתן על ידי יקיר דבול - משרד עורכי דין, רזיאל 1 נתניה, 09-8613413.</div>
       <div class="credits">התמונות בעמוד: צילומים חופשיים לשימוש (CC0). הדירה והממצאים בדוגמאות להמחשה בלבד.</div>
     </div>
   </section>
@@ -468,12 +481,12 @@ function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 function err(k,t){var e=R.querySelector('[data-err="'+k+'"]'); if(e) e.textContent=t||'';}
 function show(n){steps.forEach(function(s){s.hidden=String(s.getAttribute('data-step'))!==String(n);});bars.forEach(function(b,i){b.className=i<n-1?'on':(i===n-1?'now':'');});var f=$('pc4-order');if(f&&f.getBoundingClientRect().top<0)f.scrollIntoView({behavior:'smooth',block:'start'});}
 function check(n){
-  if(n===1){ if(!val('dpc-city')) return 'כתבו את העיר.'; if(!val('dpc-addr')&&!(digits(val('dpc-gush'))&&digits(val('dpc-chelka')))) return 'כתבו כתובת, או גוש וחלקה.'; }
+  if(n===1){ if(!val('dpc-city')) return 'כתבו את העיר.'; if(!val('dpc-addr')&&!(digits(val('dpc-gush'))&&digits(val('dpc-chelka')))) return 'כתבו כתובת, או גוש וחלקה.'; var rg=radio('dpc-reg'); if(!rg) return 'סמנו איפה הדירה רשומה.'; if(rg==='rmi'||rg==='company') return 'לדירה שרשומה במינהל או בחברה משכנת צריך בדיקה פרטנית. התקשרו 09-8613413 ונבדוק איתכם.'; }
   if(n===2){ if(!radio('dpc-status')) return 'בחרו למי הדירה, בשביל הערכת המס.'; }
   if(n===3){ if(val('dpc-name').length<2) return 'כתבו שם מלא.'; if(digits(val('dpc-phone')).length<9) return 'כתבו מספר טלפון.'; if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('dpc-email'))) return 'כתבו מייל תקין. לשם תגיע התשובה.'; if(!$('dpc-terms').checked) return 'צריך לאשר את תנאי השירות.'; }
   return '';
 }
-function order(){return {city:val('dpc-city'),address:val('dpc-addr'),gush:digits(val('dpc-gush')),chelka:digits(val('dpc-chelka')),sub:digits(val('dpc-sub')),floor:val('dpc-floor'),askPrice:digits(val('dpc-price')),link:val('dpc-link'),status:radio('dpc-status'),mortgage:radio('dpc-mort'),worry:val('dpc-worry'),name:val('dpc-name'),phone:val('dpc-phone'),email:val('dpc-email'),marketing:$('dpc-mkt').checked,page:location.href.split('#')[0]};}
+function order(){return {registry:radio('dpc-reg'),city:val('dpc-city'),address:val('dpc-addr'),gush:digits(val('dpc-gush')),chelka:digits(val('dpc-chelka')),sub:digits(val('dpc-sub')),floor:val('dpc-floor'),askPrice:digits(val('dpc-price')),link:val('dpc-link'),status:radio('dpc-status'),mortgage:radio('dpc-mort'),worry:val('dpc-worry'),name:val('dpc-name'),phone:val('dpc-phone'),email:val('dpc-email'),marketing:$('dpc-mkt').checked,page:location.href.split('#')[0]};}
 function summary(){var o=order(),esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
   var rows=[['הנכס',[o.address,o.city].filter(Boolean).join(', ')+(o.gush?', גוש '+o.gush+' חלקה '+o.chelka+(o.sub?' תת '+o.sub:''):'')],['מחיר מבוקש',o.askPrice?fmt(o.askPrice)+' ₪':'לא צוין'],['מעמד',ST[o.status]||''],['שם',o.name],['מייל',o.email],['טלפון',o.phone]];
   $('dpc-sum').innerHTML=rows.map(function(r){return '\x3cdt>'+esc(r[0])+'\x3c/dt>\x3cdd>'+esc(r[1])+'\x3c/dd>';}).join('');}
@@ -481,7 +494,8 @@ R.addEventListener('click',function(e){
   var b=e.target.closest('[data-next]'); if(b){var to=+b.getAttribute('data-next'),cur=+b.closest('[data-step]').getAttribute('data-step');
     if(to>cur){var m=check(cur);err(cur,m);if(m)return;} if(to===4)summary(); show(to); return;}
 });
-R.addEventListener('change',function(e){var o=e.target.closest('.opts');if(o)o.querySelectorAll('label').forEach(function(l){l.classList.toggle('on',l.querySelector('input').checked);});});
+R.addEventListener('change',function(e){var o=e.target.closest('.opts');if(o)o.querySelectorAll('label').forEach(function(l){l.classList.toggle('on',l.querySelector('input').checked);});
+  if(e.target.name==='dpc-reg'){var n=R.querySelector('[data-regnote]'),v=e.target.value;n.hidden=v==='tabu';n.textContent=v==='unknown'?'אין בעיה. נבדוק לפי הכתובת. אם יתברר שהדירה לא רשומה בטאבו, נעדכן אתכם לפני שמתחילים, ותקבלו את הכסף בחזרה.':(v==='tabu'?'':'לדירה שרשומה '+(v==='rmi'?'במינהל':'בחברה משכנת')+' צריך בדיקה פרטנית. התקשרו 09-8613413 ונבדוק איתכם מה צריך.');}});
 $('dpc-price').addEventListener('blur',function(){var d=digits(this.value);this.value=d?fmt(d):'';});
 $('dpc-pay').addEventListener('click',function(){
   var btn=this; btn.disabled=true; btn.textContent='מעביר לתשלום...'; err(4,'');
