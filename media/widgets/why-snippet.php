@@ -3,7 +3,7 @@
    Elementor), and the new one is shown right after "הכירו את יקיר דבול", before "תעודות והסמכות".
    No images, no scripts, no fonts: only inline style and small inline icons (about 10KB).
    Preview before going live: add ?dblprev=1 to the address. To undo: deactivate this snippet. */
-define('DABUL_WHY_LIVE', 0);
+define('DABUL_WHY_LIVE', 1);
 
 function dabul_why_on() {
 	if (DABUL_WHY_LIVE) return true;
