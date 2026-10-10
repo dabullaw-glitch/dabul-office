@@ -47,7 +47,7 @@
     }).join('');
     const link = cfg.key ? `https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/pubcal?k=${encodeURIComponent(cfg.key)}` : '';
     const ig = cfg.ig || {};
-    const conn = bufCard(cfg.buffer || {}) + igCard(ig);
+    const conn = (cfg.buffer && cfg.buffer.ok ? bufCard(cfg.buffer) : '') + igCard(ig);
     return conn + `<div class="card card-b"><p class="muted" style="margin-top:0">לוח אחד לכל מה שמתפרסם: מה, מתי, באיזה ערוץ ומי מפרסם. <b>גרוק בוט</b> מפרסם בפייסבוק, ביוטיוב, בלינקדאין, ב-X ובגוגל עסקי, ו<b>המערכת</b> מפרסמת באינסטגרם, בטיקטוק ובקבוצת הוואטסאפ. גרוק קורא את הלוח הזה כל יום, כך ששניהם מסונכרנים. פריט שמבטלים כאן לא יוצא.</p>
       <div class="pb-legend"><span><span class="pb-own" style="background:#1d6fd6">גרוק בוט</span></span><span><span class="pb-own" style="background:#a8873f">המערכת</span></span>${link ? `<a href="${n(link)}" target="_blank" rel="noopener">הלוח כפי שגרוק רואה אותו</a>` : ''}
       <a href="#" data-a="pb-past">${showPast ? 'להסתיר פריטים שעברו' : 'להציג גם פריטים שעברו'}</a></div>
@@ -94,6 +94,8 @@
     if (!window.SB) return `<div class="card card-b" style="margin-bottom:12px">${head}${info}</div>`;
     return `<div class="card card-b" style="margin-bottom:12px">${head}${info}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><input id="pb_buf" type="password" dir="ltr" autocomplete="off" placeholder="${b.saved ? 'נשמר. להחלפה מדביקים מפתח חדש' : 'Buffer API key'}" style="flex:1;min-width:200px"><button class="btn sm" data-a="pb-buf">שמירה</button></div></div>`;
   }
+  // shown at the top of שיווק > יומן תוכן until Buffer is connected (addon-cal puts the old list in a closed box)
+  s.bufTop = () => { const b = (((s.S.data.settings || {}).pub) || {}).buffer || {}; return b.ok ? '' : bufCard(b); };
   s.pubView = pubView;
   document.addEventListener('click', async e => {
     const b = e.target.closest('[data-a="pb-set"],[data-a="pb-past"],[data-a="pb-ig"],[data-a="pb-buf"],[data-a="pb-fb-save"],[data-a="pb-fb-go"]'); if (!b) return;
