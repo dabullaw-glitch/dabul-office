@@ -19,7 +19,7 @@ jobs:
         continue-on-error: true
         run: |
           mkdir -p fetched
-          while read -r name url; do [ -n "$url" ] && { curl -fsSL --retry 3 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36" "$url" -o "fetched/$name" || echo "fail $name"; }; done < fetch-list.txt
+          while read -r name url; do [ -n "$url" ] && { curl -fsSL --retry 3 -A "dabul-fetch/1.0 (https://dabullaw.co.il; office@dabullaw.co.il)" "$url" -o "fetched/$name" || echo "fail $name"; }; done < fetch-list.txt
           ls -la fetched
       - name: Check links
         continue-on-error: true
