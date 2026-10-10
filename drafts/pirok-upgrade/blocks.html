@@ -1,0 +1,150 @@
+<div class="pk" dir="rtl">
+<style>
+.pk{--gold:#a8873f;--gold2:#8a6d2c;--gold3:#e4d19c;--ink:#1c1b19;--mut:#5f5a50;--line:#e4ded0;--paper:#fbfaf6;--soft:#f3ead3;color:var(--ink);font-size:17px;line-height:1.75}
+.pk *{box-sizing:border-box}
+.pk .new{position:relative}
+.pk .tag{display:inline-block;font-size:12px;font-weight:800;background:#1f8f4e;color:#fff;border-radius:6px;padding:1px 8px;margin-bottom:8px}
+.pk h2{font-size:26px;line-height:1.25;margin:0 0 12px;text-wrap:balance}
+.pk h3{font-size:19px;margin:0 0 6px}
+.pk p{margin:0 0 10px}
+.pk section{margin:34px 0}
+.pk .short{background:var(--paper);border:1.5px solid var(--line);border-right:5px solid var(--gold);border-radius:16px;padding:18px 20px}
+.pk .short .k{font-size:13px;font-weight:800;color:var(--gold2);letter-spacing:.04em;margin-bottom:4px}
+.pk .chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.pk .chips div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45}
+.pk .chips b{display:block;font-size:17px}
+.pk .ways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.pk .way{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.pk .way .ic{width:46px;height:46px;border-radius:14px;background:var(--ink);color:var(--gold3);display:grid;place-items:center}
+.pk .way .ic svg{width:24px;height:24px}
+.pk .way.main{border-color:var(--gold);box-shadow:0 0 0 4px var(--soft)}
+.pk .way dl{margin:0;display:grid;gap:6px;font-size:14.5px;line-height:1.5}
+.pk .way dt{font-weight:800;color:var(--gold2);font-size:12.5px}
+.pk .way dd{margin:0;color:var(--mut)}
+.pk .steps{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:s}
+.pk .steps li{counter-increment:s;display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.pk .steps li::before{content:counter(s);width:40px;height:40px;border-radius:50%;background:var(--ink);color:var(--gold3);display:grid;place-items:center;font-weight:800}
+.pk .steps b{display:block}
+.pk .steps span{color:var(--mut);font-size:15px}
+.pk .time{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pk .time div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.pk .time b{display:block;font-size:20px;color:var(--ink)}
+.pk .time span{font-size:13.5px;color:var(--mut);line-height:1.4;display:block}
+.pk .time em{font-style:normal;display:inline-block;margin-bottom:6px;font-size:12.5px;font-weight:800;color:var(--gold2);background:var(--soft);border-radius:99px;padding:1px 10px}
+.pk .cta{background:var(--ink);color:#fff;border-radius:20px;padding:20px 22px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.pk .cta p{margin:0;color:#d9d3c4;max-width:46ch}
+.pk .cta b{color:var(--gold3);font-size:19px;display:block;margin-bottom:4px}
+.pk .cta .btns{display:flex;gap:8px;flex-wrap:wrap}
+.pk .cta a{text-decoration:none;font-weight:800;border-radius:99px;padding:9px 18px;font-size:15px;white-space:nowrap}
+.pk .cta a.p{background:var(--gold3);color:var(--ink)}
+.pk .cta a.w{background:#1f8f4e;color:#fff}
+.pk .cost{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pk .cost div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:15px}
+.pk .cost b{display:block}
+.pk .ph{background:#fff6dc;border:1.5px dashed var(--gold);border-radius:12px;padding:10px 14px;font-size:14.5px;margin-top:10px}
+.pk .tax{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.pk .tax ul{margin:6px 0 0;padding-inline-start:20px}
+.pk .cluster{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pk .cluster a{display:block;text-decoration:none;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;font-weight:700;font-size:15.5px}
+.pk .cluster a span{display:block;font-weight:400;color:var(--mut);font-size:13.5px}
+@media (max-width:720px){
+ .pk .chips,.pk .time{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pk .ways,.pk .cost,.pk .cluster{grid-template-columns:minmax(0,1fr)}
+ .pk h2{font-size:23px}
+}
+</style>
+
+<section class="new">
+<span class="tag">חדש: בראש המאמר</span>
+<div class="short">
+<div class="k">בקצרה</div>
+<p><b>פירוק שיתוף במקרקעין הוא הדרך לצאת מבעלות משותפת בנכס.</b> לפי סעיף 37 לחוק המקרקעין, כל שותף רשאי לדרוש פירוק בכל עת, גם מי שמחזיק חלק קטן. אפשר לפרק בהסכמה או בתביעה לבית המשפט. בדירת מגורים הפירוק נעשה בדרך כלל במכירה וחלוקת הכסף לפי החלקים.</p>
+<div class="chips">
+<div><b>סעיף 37</b>כל שותף רשאי לדרוש פירוק</div>
+<div><b>חודש עד 3</b>פירוק בהסכמה</div>
+<div><b>שנה עד 3 שנים</b>פירוק בתביעה</div>
+<div><b>שלום או משפחה</b>בית המשפט לפי סוג השותפים</div>
+</div>
+</div>
+</section>
+
+<section class="new">
+<span class="tag">חדש: במקום שלושה פרקים שחוזרים על עצמם</span>
+<h2>3 הדרכים לפרק שותפות בנכס</h2>
+<div class="ways">
+<div class="way"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/></svg></span><h3>חלוקה בעין</h3>
+<dl><dt>מה קורה</dt><dd>הנכס מחולק פיזית, וכל שותף מקבל חלק משלו</dd><dt>מתי מתאים</dt><dd>מגרש או קרקע שהתוכנית מאפשרת לחלק</dd><dt>לשים לב</dt><dd>אם החלקים לא שווים, משלמים תשלומי איזון</dd></dl></div>
+<div class="way main"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></svg></span><h3>מכירה וחלוקת הכסף</h3>
+<dl><dt>מה קורה</dt><dd>שותף קונה את האחר, או שהנכס נמכר והכסף מתחלק</dd><dt>מתי מתאים</dt><dd>דירת מגורים, שאי אפשר לחלק פיזית</dd><dt>לשים לב</dt><dd>אם אין הסכמה, בית המשפט ממנה כונס נכסים למכירה</dd></dl></div>
+<div class="way"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13"/><path d="M4 13h16M12 8v13"/></svg></span><h3>רישום בית משותף</h3>
+<dl><dt>מה קורה</dt><dd>כל שותף מקבל דירה רשומה על שמו בטאבו</dd><dt>מתי מתאים</dt><dd>בניין או דו משפחתי על חלקה אחת</dd><dt>לשים לב</dt><dd>צריך תשריט ומדידה, ואישור של המפקח על הבתים המשותפים</dd></dl></div>
+</div>
+</section>
+
+<section class="new">
+<span class="tag">חדש: השלבים בפועל</span>
+<h2>איך מפרקים שיתוף, שלב אחרי שלב</h2>
+<ol class="steps">
+<li><div><b>בודקים את הזכויות</b><span>נסח טאבו או אישור זכויות, צו ירושה אם צריך, ומי גר בנכס.</span></div></li>
+<li><div><b>מעריכים את השווי</b><span>שמאי מקרקעין, כדי שלכל הצדדים יהיה מספר אחד לדבר עליו.</span></div></li>
+<li><div><b>מנסים להגיע להסכם</b><span>הצעה לקנות את החלק של השותף, או התמחרות פנימית ביניכם.</span></div></li>
+<li><div><b>אם אין הסכמה: תביעה</b><span>בבית משפט השלום, ובין בני משפחה בבית המשפט לענייני משפחה.</span></div></li>
+<li><div><b>מכירה או חלוקה</b><span>בית המשפט מורה על הדרך, ולעיתים ממנה כונס נכסים שמוכר את הנכס.</span></div></li>
+<li><div><b>חלוקת הכסף ורישום</b><span>הכסף מתחלק לפי החלקים, והבעלות החדשה נרשמת בטאבו.</span></div></li>
+</ol>
+</section>
+
+<section class="new">
+<span class="tag">חדש: במקום הטבלה שלא נכנסת במסך הטלפון</span>
+<h2>כמה זמן לוקח פירוק שיתוף במקרקעין?</h2>
+<div class="time">
+<div><em>הסכמה מלאה</em><b>1 עד 3 חודשים</b><span>הסכם, דיווח למיסוי מקרקעין ורישום</span></div>
+<div><em>הסכמה עם מחלוקת</em><b>3 עד 8 חודשים</b><span>שמאי, משא ומתן על תשלומי איזון, הסכם</span></div>
+<div><em>תביעה</em><b>שנה עד 3</b><span>כתבי טענות, שמאי, דיונים ופסק דין</span></div>
+<div><em>תביעה עם כונס</em><b>שנתיים עד 4</b><span>מינוי כונס, פרסום, התמחרות ואישור</span></div>
+</div>
+</section>
+
+<section class="new">
+<span class="tag">חדש: באמצע המאמר</span>
+<div class="cta">
+<div><b>שותפים בנכס ולא מסכימים?</b><p>שלחו את פרטי הנכס, ונבדוק איזו דרך מתאימה לכם ומה כדאי לעשות קודם.</p></div>
+<div class="btns"><a class="p" href="#">התקשרו 09-8613413</a><a class="w" href="#">וואטסאפ</a></div>
+</div>
+</section>
+
+<section class="new">
+<span class="tag">חדש</span>
+<h2>כמה עולה פירוק שיתוף?</h2>
+<div class="cost">
+<div><b>שכר טרחת עורך דין</b>תלוי בדרך: הסכם, או תביעה בבית המשפט</div>
+<div><b>אגרת בית משפט</b>בתביעה, לפי שווי התביעה</div>
+<div><b>שמאי מקרקעין</b>חוות דעת על שווי הנכס או על אפשרות החלוקה</div>
+<div><b>שכר כונס נכסים</b>אם יש מכירה בכינוס, נקבע על ידי בית המשפט</div>
+</div>
+<div class="ph">כאן יופיע טווח שכר הטרחה של המשרד לפירוק שיתוף, לפי מה שתאשר.</div>
+</section>
+
+<section class="new">
+<span class="tag">חדש</span>
+<div class="tax">
+<h3>מס בפירוק שיתוף, בקצרה</h3>
+<ul>
+<li>חלוקה בעין לפי החלקים, בלי תשלום נוסף: בדרך כלל אינה נחשבת מכירה לעניין מס.</li>
+<li>שותף שקונה את החלק של שותף אחר: הקונה משלם מס רכישה על החלק, והמוכר בודק חיוב או פטור ממס שבח.</li>
+<li>יורשים שמחלקים עיזבון בחלוקה ראשונה, בלי כסף מבחוץ: בדרך כלל אין אירוע מס.</li>
+</ul>
+</div>
+</section>
+
+<section class="new">
+<span class="tag">חדש: קישורים למדריכים הקשורים</span>
+<h2>עוד על פירוק שיתוף</h2>
+<div class="cluster">
+<a href="#">פירוק שיתוף בהסכמה<span>איך עושים את זה בלי בית משפט</span></a>
+<a href="#">פירוק שיתוף בין בני זוג בגירושין<span>בית המשפט לענייני משפחה</span></a>
+<a href="#">מכירת דירה בכינוס נכסים<span>איך זה עובד ומה המחיר</span></a>
+<a href="#">כפיית מכירה על שותף שמעכב<span>מה עושים כשהשותף לא משתף פעולה</span></a>
+</div>
+</section>
+</div>

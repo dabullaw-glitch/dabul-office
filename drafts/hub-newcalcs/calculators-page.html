@@ -1,0 +1,460 @@
+<!-- wp:html -->
+<link rel="stylesheet" href="https://dabullaw-glitch.github.io/dabul-office/media/widgets/quizzes.css?ver=20261010c"><script nowprocket data-no-optimize="1" src="https://dabullaw-glitch.github.io/dabul-office/media/widgets/quizzes.js?ver=20261010c"></script>
+<style>
+.dt3{--gold:#a8873f;--gold2:#8a6d2c;--gold3:#e4d19c;--ink:#1c1b19;--ink2:#2a2723;--mut:#6c675d;--line:#e4ded0;--paper:#fbfaf6;--soft:#f3ead3;--ok:#1f8f4e;
+  color:var(--ink);font-size:17px;line-height:1.7;max-width:1192px;margin:0 auto;padding:28px 16px 64px;font-family:inherit}
+.dt3 *{box-sizing:border-box}
+.dt3 h2,.dt3 h3{margin:0;font-weight:800;text-wrap:balance;color:inherit}
+.dt3 .k{font-size:13px;letter-spacing:.06em;color:var(--gold);font-weight:800;margin:0 0 6px}
+.dt3 .num{font-variant-numeric:tabular-nums}
+.dt3 section{margin-top:56px}
+.dt3 .sh{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.dt3 .sh h2{font-size:30px;line-height:1.2}
+.dt3 .sh p{margin:6px 0 0;color:var(--mut);max-width:640px}
+
+/* HERO */
+.dt3 .hero{margin-top:0;position:relative;overflow:hidden;border-radius:28px;background:radial-gradient(900px 380px at 85% -10%,rgba(228,209,156,.22),transparent 60%),radial-gradient(600px 300px at 0% 110%,rgba(168,135,63,.25),transparent 60%),var(--ink);color:#fff;padding:34px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:30px}
+@media(max-width:900px){.dt3 .hero{grid-template-columns:minmax(0,1fr);padding:24px}}
+.dt3 .hero .k{color:var(--gold3)}
+.dt3 .hero h1{font-size:40px;line-height:1.15;color:#fff;margin:0;font-weight:900;text-wrap:balance}
+.dt3 .hero .lede{color:#d8d0bf;margin:12px 0 22px;font-size:17.5px}
+.dt3 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.dt3 .stats div{background:rgba(255,255,255,.06);border:1px solid rgba(228,209,156,.22);border-radius:16px;padding:12px 14px}
+.dt3 .stats b{display:block;font-size:30px;color:var(--gold3);line-height:1.1}
+.dt3 .stats span{font-size:13.5px;color:#cfc8b8}
+.dt3 .hc{background:#fff;color:var(--ink);border-radius:22px;padding:22px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.dt3 .hc h3,.dt3 .hc .hct{font-size:22px;margin:0 0 12px;font-weight:800;line-height:1.3;text-wrap:balance;color:inherit}
+.dt3 .fld label{display:block;font-weight:700;font-size:14px;margin:0 0 6px;color:var(--ink2)}
+.dt3 .money{position:relative}
+.dt3 .money input{width:100%;font:inherit;font-size:26px;font-weight:900;padding:10px 16px 10px 44px;border:1.5px solid #d9d2c1;border-radius:14px;background:var(--paper);direction:ltr;text-align:right;color:var(--ink)}
+.dt3 .money input:focus,.dt3 input:focus,.dt3 select:focus{outline:2px solid var(--gold);outline-offset:1px}
+.dt3 .money span{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-weight:800;color:var(--mut)}
+.dt3 .seg{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.dt3 .seg button{font:inherit;font-size:14.5px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:99px;padding:6px 14px;cursor:pointer}
+.dt3 .seg button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.dt3 .big{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:16px;padding-top:14px;border-top:2px solid var(--gold)}
+.dt3 .big span{font-weight:800;color:var(--mut)}
+.dt3 .big b{font-size:40px;font-weight:900;white-space:nowrap}
+.dt3 .rate{font-size:14px;color:var(--mut);margin-top:2px}
+/* bracket bar */
+.dt3 .bars{margin-top:14px}
+.dt3 .bars .bar{display:flex;height:16px;border-radius:99px;overflow:hidden;background:#eee8da}
+.dt3 .bars .bar i{display:block;height:100%;transition:width .35s}
+.dt3 .bars .leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:13px;color:var(--mut)}
+.dt3 .bars .leg em{font-style:normal;display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;vertical-align:middle}
+.dt3 .hc small{display:block;color:var(--mut);font-size:12.5px;margin-top:10px;line-height:1.55}
+.dt3 .hc a{color:var(--gold2);font-weight:800;text-decoration:none}
+
+/* JOURNEY */
+.dt3 .road{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.dt3 .road:before{content:"";position:absolute;top:34px;right:6%;left:6%;height:2px;background:repeating-linear-gradient(90deg,var(--gold) 0 8px,transparent 8px 14px);z-index:0}
+@media(max-width:820px){.dt3 .road{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.dt3 .road:before{display:none}}
+.dt3 .stop{position:relative;z-index:1;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:18px;cursor:pointer;text-align:right;font:inherit;color:inherit;transition:border-color .15s,transform .15s,box-shadow .15s}
+.dt3 .stop:hover{transform:translateY(-2px)}
+.dt3 .stop[aria-pressed=true]{border-color:var(--gold);box-shadow:0 0 0 4px var(--soft)}
+.dt3 .stop .dot{width:36px;height:36px;border-radius:12px;background:var(--ink);color:var(--gold3);display:grid;place-items:center;font-weight:900;margin-bottom:10px}
+.dt3 .stop[aria-pressed=true] .dot{background:var(--gold);color:#fff}
+.dt3 .stop b{display:block;font-size:18px}
+.dt3 .stop span{display:block;font-size:14px;color:var(--mut);line-height:1.5}
+.dt3 .stop .tl{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.dt3 .stop .tl i{font-style:normal;font-size:12px;font-weight:700;background:var(--soft);color:var(--gold2);border-radius:99px;padding:1px 8px}
+
+/* WORKBENCH */
+.dt3 .wb{display:grid;grid-template-columns:260px minmax(0,1fr);border:1px solid var(--line);border-radius:26px;overflow:hidden;background:#fff;box-shadow:0 28px 60px -46px rgba(60,45,10,.7)}
+@media(max-width:860px){.dt3 .wb{grid-template-columns:minmax(0,1fr)}}
+.dt3 .tabs{background:var(--paper);border-inline-end:1px solid var(--line);padding:12px;display:flex;flex-direction:column;gap:6px}
+
+.dt3 .tabs .tg{margin:8px 6px 0;font-size:12.5px;font-weight:800;letter-spacing:.05em;color:var(--gold2)}
+.dt3 .tabs .tg:first-child{margin-top:2px}
+.dt3 .tabs button{font:inherit;display:flex;align-items:center;gap:10px;text-align:right;border:0;background:transparent;border-radius:14px;padding:10px 12px;cursor:pointer;color:var(--ink);font-weight:700;font-size:15.5px;white-space:nowrap}
+.dt3 .tabs button svg{width:26px;height:26px;flex:none;padding:4px;border-radius:9px;background:var(--soft)}
+.dt3 .tabs button[aria-selected=true]{background:var(--ink);color:#fff}
+.dt3 .tabs button[aria-selected=true] svg{background:var(--gold)}
+.dt3 .tabs button[aria-selected=true] svg *{stroke:#fff}
+@media(max-width:860px){.dt3 .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;border-inline-end:0;border-bottom:1px solid var(--line);padding:10px}.dt3 .tabs .tg{grid-column:1/-1}.dt3 .tabs button{display:flex;flex-direction:row;justify-content:flex-start;text-align:right;gap:8px;white-space:normal;font-size:14px;line-height:1.25;padding:8px;min-height:50px;background:#fff;border:1px solid var(--line)}.dt3 .tabs button svg{width:24px;height:24px}.dt3 .tabs button[aria-selected=true]{border-color:var(--ink)}}
+.dt3 .pane{padding:26px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-content:start}
+.dt3 .pane[hidden]{display:none}
+@media(max-width:700px){.dt3 .pane{grid-template-columns:minmax(0,1fr);padding:18px}}
+.dt3 .pane h3{font-size:24px;grid-column:1/-1}
+.dt3 .pane .why{grid-column:1/-1;margin:-12px 0 0;color:var(--mut);font-size:15.5px}
+.dt3 .ins{display:grid;gap:12px;align-content:start}
+.dt3 .ins input,.dt3 .ins select{width:100%;font:inherit;font-size:17px;padding:10px 12px;border:1.5px solid #d9d2c1;border-radius:12px;background:var(--paper);color:var(--ink)}
+.dt3 .ins input[type=text],.dt3 .ins input[inputmode]{direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.dt3 .res{background:var(--ink);color:#fff;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px;align-self:start}
+.dt3 .res .r{display:flex;justify-content:space-between;gap:12px;align-items:baseline;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:8px;font-size:15px;color:#d8d0bf}
+.dt3 .res .r b{font-size:19px;color:#fff;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dt3 .res .hl{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.dt3 .res .hl span{color:var(--gold3);font-weight:800}
+.dt3 .res .hl b{font-size:32px;font-weight:900;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dt3 .res small{color:#a9a294;font-size:12.5px;line-height:1.55}
+.dt3 .res a{color:var(--gold3);font-weight:800;text-decoration:none}
+.dt3 .tline{display:grid;gap:8px;margin-top:4px}
+.dt3 .tline div{display:grid;grid-template-columns:118px 1fr;gap:10px;align-items:center;background:rgba(255,255,255,.05);border-radius:12px;padding:8px 10px;font-size:14.5px;color:#e8e2d4}
+.dt3 .tline b{color:var(--gold3);font-size:15px}
+.dt3 .gauge{height:10px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.dt3 .gauge i{display:block;height:100%;background:linear-gradient(90deg,#d9bd7f,#b8954a);transition:width .3s}
+
+/* CARDS */
+.dt3 .cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media(max-width:900px){.dt3 .cats{grid-template-columns:minmax(0,1fr)}}
+.dt3 .cat{background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden;display:flex;flex-direction:column}
+.dt3 .cat .top{padding:18px 20px;background:linear-gradient(135deg,var(--soft),#fff);border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center}
+.dt3 .cat .top svg{width:46px;height:46px;flex:none}
+.dt3 .cat .top b{display:block;font-size:19px}
+.dt3 .cat .top span{font-size:14px;color:var(--mut)}
+.dt3 .cat a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid #f0ebdf;text-decoration:none;color:var(--ink);font-weight:700;font-size:16px;transition:background .15s}
+.dt3 .cat a:last-child{border-bottom:0}
+.dt3 .cat a:hover{background:var(--paper)}
+.dt3 .cat a small{display:block;font-weight:500;color:var(--mut);font-size:13.5px}
+.dt3 .cat a .go{color:var(--gold2);font-weight:900;flex:none}
+.dt3 .cat a.dim{opacity:.32}
+.dt3 .cat a .soon{font-size:11.5px;font-weight:800;background:var(--ink);color:#fff;border-radius:99px;padding:1px 8px;margin-inline-start:6px}
+
+/* CHECKS */
+.dt3 .checks{background:var(--ink);color:#fff;border-radius:28px;padding:30px;position:relative;overflow:hidden}
+.dt3 .checks:after{content:"";position:absolute;inset:auto -80px -120px auto;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(228,209,156,.18),transparent 70%)}
+.dt3 .checks .sh p{color:#cfc8b8}
+.dt3 .checks .k{color:var(--gold3)}
+.dt3 .cgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;position:relative;z-index:1}
+@media(max-width:860px){.dt3 .cgrid{grid-template-columns:minmax(0,1fr)}}
+.dt3 .chk{font:inherit;text-align:right;display:flex;flex-direction:column;gap:6px;background:rgba(255,255,255,.06);border:1.5px solid rgba(228,209,156,.25);border-radius:20px;padding:18px;cursor:pointer;color:#fff}
+.dt3 .chk:hover,.dt3 .chk[aria-expanded=true]{border-color:var(--gold3);background:rgba(255,255,255,.1)}
+.dt3 .chk .who{font-size:13px;font-weight:800;color:var(--gold3)}
+.dt3 .chk b{font-size:19px;line-height:1.35}
+.dt3 .chk span.d{font-size:14.5px;color:#cfc8b8}
+.dt3 .chk .go{font-weight:800;color:var(--gold3);font-size:14.5px;margin-top:6px}
+.dt3 .qhost{position:relative;z-index:1;margin-top:16px;color:var(--ink)}
+
+/* GLOSSARY */
+.dt3 .gl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:900px){.dt3 .gl{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media(max-width:480px){.dt3 .gl{grid-template-columns:minmax(0,1fr)}}
+.dt3 .term{font:inherit;text-align:right;border:1px solid var(--line);background:#fff;border-radius:18px;padding:16px;cursor:pointer;min-height:132px;display:flex;flex-direction:column;gap:6px;color:var(--ink)}
+.dt3 .term b{font-size:18px}
+.dt3 .term span{font-size:14.5px;color:var(--mut)}
+.dt3 .term .q{color:var(--gold2);font-weight:800;font-size:13.5px;margin-top:auto}
+.dt3 .term[aria-expanded=true]{background:var(--paper);border-color:var(--gold)}
+
+/* FAQ + CTA */
+.dt3 details{border-bottom:1px solid var(--line);padding:14px 0}
+.dt3 summary{cursor:pointer;font-weight:700;font-size:17.5px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.dt3 summary::-webkit-details-marker{display:none}
+.dt3 summary::after{content:"+";color:var(--gold);font-size:22px;line-height:1}
+.dt3 details[open] summary::after{content:"−"}
+.dt3 details p{margin:8px 0 0;color:#3b3833}
+.dt3 .cta{margin-top:48px;border-radius:26px;padding:28px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;background:linear-gradient(135deg,#f3ead3,#fbfaf6);border:1px solid #e3d3a8}
+@media(max-width:700px){.dt3 .cta{grid-template-columns:minmax(0,1fr)}}
+.dt3 .cta h2{font-size:26px}
+.dt3 .cta p{margin:6px 0 0;color:var(--mut)}
+.dt3 .cta .btns{display:flex;flex-wrap:wrap;gap:10px}
+.dt3 .cta a{display:inline-flex;align-items:center;gap:8px;font-weight:800;text-decoration:none;border-radius:14px;padding:12px 20px}
+.dt3 .cta a.p{background:var(--ink);color:#fff}
+.dt3 .cta a.s{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.dt3 .note{font-size:13.5px;color:var(--mut);margin-top:18px}
+.dt3 button{white-space:normal;text-transform:none;letter-spacing:normal;min-width:0;max-width:100%}
+.dt3 .stop span,.dt3 .chk,.dt3 .term{overflow-wrap:anywhere}
+.dt3 .dtab{display:grid;gap:8px}
+.dt3 .dtab div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;background:rgba(255,255,255,.05);border-radius:12px;padding:9px 12px;font-size:14.5px;color:#e8e2d4}
+.dt3 .dtab div span{grid-column:1/-1;font-size:13px;color:#bfb6a2}
+.dt3 .dtab div i{font-style:normal;font-size:12.5px;font-weight:800;border-radius:99px;padding:1px 10px;white-space:nowrap}
+.dt3 .dtab i.b{background:#1f8f4e;color:#fff}.dt3 .dtab i.a{background:#e4d19c;color:#1c1b19}.dt3 .dtab i.x{background:rgba(255,255,255,.14);color:#d8d0bf}
+</style>
+
+<div class="dt3" dir="rtl">
+
+  <!-- HERO with the quick purchase-tax answer -->
+  <section class="hero" aria-labelledby="h3-hero">
+    <div>
+      <p class="k">כל המספרים של העסקה, במקום אחד וברור</p>
+      <h1 id="h3-hero">מחשבונים וכלים לעסקת דירה</h1>
+      <p class="lede">כמה מס רכישה, כמה הון עצמי צריך, מה ההחזר החודשי, כמה יישאר מהמכירה, ומה מותר לבקש מהשוכר. מחשבים כאן, בלי להירשם, ומבינים מה כל מספר אומר.</p>
+      <div class="stats">
+        <div><b class="num">17</b><span>מחשבונים וכלים</span></div>
+        <div><b class="num">3</b><span>בדיקות מהירות</span></div>
+        <div><b class="num">50+</b><span>טפסים רשמיים</span></div>
+      </div>
+    </div>
+    <div class="hc" data-calc="hero">
+      <p class="hct">כמה מס רכישה תשלמו?</p>
+      <div class="fld"><label for="h-price">מחיר הדירה</label><div class="money"><input id="h-price" inputmode="numeric" value="2,500,000" autocomplete="off"><span>₪</span></div></div>
+      <div class="seg" data-g="type"><button type="button" aria-pressed="true" data-v="single">דירה יחידה</button><button type="button" aria-pressed="false" data-v="extra">דירה נוספת</button></div>
+      <div class="big"><span>מס רכישה</span><b class="num" data-o="tax">20,538 ₪</b></div>
+      <div class="rate" data-o="rate">שיעור אפקטיבי: 0.82% מהמחיר</div>
+      <div class="bars"><div class="bar" data-o="bar"></div><div class="leg" data-o="leg"></div></div>
+      <small>לפי מדרגות 2026, בתוקף עד 15.1.2028. הערכה כללית: עולים חדשים, תושבי חוץ ומקרים מיוחדים מחושבים אחרת. <a href="#wb-tax" data-open="tax">לפירוט מלא ←</a></small>
+    </div>
+  </section>
+
+  <!-- JOURNEY -->
+  <section aria-labelledby="h3-road">
+    <div class="sh"><div><p class="k">איפה אתם בדרך?</p><h2 id="h3-road">הכלים לפי שלבי העסקה</h2><p>לוחצים על השלב שלכם, והכלים שמתאימים לו מודגשים בהמשך העמוד.</p></div></div>
+    <div class="road" role="group" aria-label="שלבי העסקה">
+      <button type="button" class="stop" data-s="1" aria-pressed="false"><span class="dot">1</span><b>מחפשים</b><span>כמה אפשר להוציא, ואיזה החזר חודשי מתאים לכם.</span><span class="tl"><i>הון עצמי</i><i>משכנתא</i><i>הוצאות</i></span></button>
+      <button type="button" class="stop" data-s="2" aria-pressed="false"><span class="dot">2</span><b>מצאנו דירה</b><span>העלות המלאה, מס הרכישה והבדיקות הראשונות.</span><span class="tl"><i>מס רכישה</i><i>צ׳קליסט</i><i>תשואה</i></span></button>
+      <button type="button" class="stop" data-s="3" aria-pressed="false"><span class="dot">3</span><b>לפני חתימה</b><span>נסח, הצמדות, תיק בניין ומה לבקש מהמוכר.</span><span class="tl"><i>צ׳קליסט</i><i>מילון</i><i>טפסים</i></span></button>
+      <button type="button" class="stop" data-s="4" aria-pressed="false"><span class="dot">4</span><b>אחרי חתימה</b><span>מועדי דיווח ותשלום, רישום ומסירה.</span><span class="tl"><i>מועדים</i><i>טפסים</i><i>פרוטוקול</i></span></button>
+    </div>
+  </section>
+
+  <!-- WORKBENCH -->
+  <section id="wb" aria-labelledby="h3-wb">
+    <div class="sh"><div><p class="k">שולחן העבודה</p><h2 id="h3-wb">12 מחשבונים שעובדים כאן בעמוד</h2><p>בוחרים מחשבון, משנים מספרים ורואים את התוצאה מיד. כל מחשבון מסביר מה התוצאה אומרת.</p></div></div>
+    <div class="wb">
+      <div class="tabs" role="tablist" aria-label="מחשבונים">
+        <p class="tg">לקונים</p>
+        <button role="tab" type="button" aria-selected="true" data-t="tax" data-s="2 3"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8v3H8zM8 14h1M11.5 14h1M15 14h1M8 17.5h1M11.5 17.5h1M15 17.5h1"/></svg>מס רכישה</button>
+        <button role="tab" type="button" aria-selected="false" data-t="eq" data-s="1"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 11l9-7 9 7v9H3z"/><path d="M12 13v5M9.5 15.5h5"/></svg>הון עצמי</button>
+        <button role="tab" type="button" aria-selected="false" data-t="pmt" data-s="1"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 20h18M5 20V10M19 20V10M9 20v-6M15 20v-6M2 10l10-6 10 6z"/></svg>החזר חודשי</button>
+        <button role="tab" type="button" aria-selected="false" data-t="dates" data-s="4"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 14h3"/></svg>מועדים אחרי חתימה</button>
+        <p class="tg">לקונים מקבלן</p>
+        <button role="tab" type="button" aria-selected="false" data-t="late" data-s="4"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>פיצוי על איחור במסירה</button>
+        <button role="tab" type="button" aria-selected="false" data-t="defects" data-s="4"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 11l9-7 9 7v9H3z"/><path d="M10 13l4 4M14 13l-4 4"/></svg>ליקויי בנייה: עד מתי</button>
+        <p class="tg">למוכרים</p>
+        <button role="tab" type="button" aria-selected="false" data-t="sell" data-s=""><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 11l9-7 9 7v9H3z"/><path d="M9 15h6M13 12.5l2.5 2.5-2.5 2.5"/></svg>כמה יישאר מהמכירה</button>
+        <button role="tab" type="button" aria-selected="false" data-t="shevach" data-s=""><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>פטור ממס שבח?</button>
+        <p class="tg">למשכירים ולמשקיעים</p>
+        <button role="tab" type="button" aria-selected="false" data-t="yield" data-s="2"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M3 20h18M5 16l5-5 4 3 6-7"/><path d="M16 7h4v4"/></svg>תשואה להשקעה</button>
+        <button role="tab" type="button" aria-selected="false" data-t="rent" data-s=""><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M12 3l8 4v5c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>בטוחה בשכירות</button>
+        <button role="tab" type="button" aria-selected="false" data-t="lease" data-s=""><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/></svg>מועדי שכירות</button>
+        <button role="tab" type="button" aria-selected="false" data-t="index" data-s=""><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M4 19h16M6 15l4-4 3 2 5-6"/><path d="M15 7h3v3"/></svg>הצמדה למדד</button>
+      </div>
+
+      <div class="pane" role="tabpanel" data-p="tax" id="wb-tax">
+        <h3>מחשבון מס רכישה, עם פירוט מדרגות</h3><p class="why">כמה מס תשלמו על כל חלק מהמחיר. המדרגות מתעדכנות בדרך כלל כל שנה, וכרגע הן מוקפאות עד 15.1.2028.</p>
+        <div class="ins">
+          <div class="fld"><label>מחיר הדירה</label><div class="money"><input data-i="price" inputmode="numeric" value="2,500,000"><span>₪</span></div></div>
+          <div class="fld"><label>סוג הרכישה</label><select data-i="type"><option value="single">דירה יחידה (או דירה חלופית)</option><option value="extra">דירה נוספת</option></select></div>
+        </div>
+        <div class="res"><div data-o="rows"></div><div class="hl"><span>סך הכול מס רכישה</span><b data-o="sum"></b></div><small>דירה חלופית: מי שמוכר את הדירה הקודמת בתוך 18 חודשים (24 בדירה מקבלן) נהנה בדרך כלל ממדרגות דירה יחידה. עולים חדשים ותושבי חוץ מחושבים אחרת. <a href="https://dabullaw.co.il/%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%9c%d7%9e%d7%a1-%d7%a8%d7%9b%d7%99%d7%a9%d7%94-2025-%d7%9b%d7%9e%d7%94-%d7%aa%d7%a9%d7%9c%d7%9e%d7%95-%d7%9c%d7%9e%d7%93%d7%99%d7%a0%d7%94-%d7%95%d7%90%d7%99/">המדריך המלא למס רכישה ←</a></small></div>
+      </div>
+
+      <div class="pane" role="tabpanel" data-p="eq" hidden>
+        <h3>כמה הון עצמי צריך, וכמה משכנתא אפשר לקבל</h3><p class="why">בנק ישראל מגביל את שיעור המימון לפי סוג הרכישה. ההון העצמי צריך לכסות גם את מס הרכישה ואת ההוצאות.</p>
+        <div class="ins">
+          <div class="fld"><label>מחיר הדירה</label><div class="money"><input data-i="price" inputmode="numeric" value="2,200,000"><span>₪</span></div></div>
+          <div class="fld"><label>סוג הרכישה</label><select data-i="kind"><option value="first">דירה יחידה (עד 75% מימון)</option><option value="replace">משפרי דיור (עד 70% מימון)</option><option value="inv">דירה נוספת להשקעה (עד 50% מימון)</option></select></div>
+          <div class="fld"><label>הוצאות נלוות (עו״ד, תיווך, שמאי, הובלה)</label><div class="money"><input data-i="extra" inputmode="numeric" value="60,000"><span>₪</span></div></div>
+        </div>
+        <div class="res"><div class="r"><span>משכנתא מקסימלית</span><b data-o="loan"></b></div><div class="r"><span>הון עצמי למחיר הדירה</span><b data-o="eqp"></b></div><div class="r"><span>מס רכישה (משוער)</span><b data-o="tax"></b></div><div class="r"><span>הוצאות נלוות</span><b data-o="ex"></b></div><div class="hl"><span>הון עצמי נדרש בסך הכול</span><b data-o="tot"></b></div><small>שיעורי המימון הם התקרה שבנק ישראל קבע. הבנק בודק גם את ההכנסה ואת יכולת ההחזר, ולכן בפועל המשכנתא עשויה להיות נמוכה יותר. בדירה חלופית, המס מחושב לפי מדרגות דירה יחידה.</small></div>
+      </div>
+
+      <div class="pane" role="tabpanel" data-p="pmt" hidden>
+        <h3>החזר חודשי משוער של משכנתא</h3><p class="why">חישוב פשוט לפי סכום, תקופה וריבית ממוצעת, בשיטת שפיצר (החזר חודשי קבוע).</p>
+        <div class="ins">
+          <div class="fld"><label>סכום המשכנתא</label><div class="money"><input data-i="loan" inputmode="numeric" value="1,500,000"><span>₪</span></div></div>
+          <div class="fld"><label>תקופה: <b data-o="yrs">25</b> שנים</label><input data-i="years" type="range" min="5" max="30" value="25"></div>
+          <div class="fld"><label>ריבית שנתית ממוצעת (%)</label><input data-i="rate" type="text" inputmode="decimal" value="5"></div>
+          <div class="fld"><label>הכנסה נטו של משק הבית (לא חובה)</label><div class="money"><input data-i="inc" inputmode="numeric" value=""><span>₪</span></div></div>
+        </div>
+        <div class="res"><div class="hl"><span>החזר חודשי</span><b data-o="m"></b></div><div class="r"><span>סך כל התשלומים לבנק</span><b data-o="all"></b></div><div class="r"><span>מתוכם ריבית</span><b data-o="int"></b></div><div data-o="ptiw" hidden><div class="r" style="border:0"><span>החזר מתוך ההכנסה</span><b data-o="pti"></b></div><div class="gauge"><i data-o="g"></i></div><small data-o="ptin"></small></div><small>הערכה בלבד: משכנתא אמיתית מורכבת מכמה מסלולים, וחלקם צמודים למדד או בריבית משתנה. <a href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%94%d7%97%d7%96%d7%a8-%d7%97%d7%95%d7%93%d7%a9%d7%99-%d7%9c%d7%9e%d7%a9%d7%9b%d7%a0%d7%aa%d7%90-%d7%aa%d7%9b%d7%a0%d7%a0%d7%95-%d7%90%d7%aa-%d7%94%d7%aa%d7%a7/">מחשבון המשכנתא המלא ←</a></small></div>
+      </div>
+
+      <div class="pane" role="tabpanel" data-p="dates" hidden>
+        <h3>מה צריך לעשות אחרי החתימה, ועד מתי</h3><p class="why">בוחרים את תאריך החתימה על החוזה, ומקבלים את המועדים החשובים לפי הדין.</p>
+        <div class="ins">
+          <div class="fld"><label>תאריך החתימה על החוזה</label><input data-i="d" type="date"></div>
+          <div class="fld"><label>אתם</label><select data-i="side"><option value="buy">קונים</option><option value="sell">מוכרים</option></select></div>
+        </div>
+        <div class="res"><div class="tline" data-o="tl"></div><small>המועדים לפי חוק מיסוי מקרקעין. כשהמועד האחרון חל בשבת או בחג, בדרך כלל אפשר לשלם ביום העבודה הבא. עורך הדין שלכם מגיש את הדיווחים ומעדכן אתכם.</small></div>
+      </div>
+
+      <div class="pane" role="tabpanel" data-p="yield" hidden>
+        <h3>תשואה על דירה להשקעה</h3><p class="why">כמה הדירה מכניסה ביחס לכסף שהשקעתם, לפני ואחרי הוצאות.</p>
+        <div class="ins">
+          <div class="fld"><label>מחיר הדירה</label><div class="money"><input data-i="price" inputmode="numeric" value="1,800,000"><span>₪</span></div></div>
+          <div class="fld"><label>שכר דירה חודשי</label><div class="money"><input data-i="rent" inputmode="numeric" value="5,500"><span>₪</span></div></div>
+          <div class="fld"><label>הוצאות שנתיות (תחזוקה, ביטוח, ועד, חודשים ריקים)</label><div class="money"><input data-i="cost" inputmode="numeric" value="9,000"><span>₪</span></div></div>
+        </div>
+        <div class="res"><div class="r"><span>הכנסה שנתית משכירות</span><b data-o="yr"></b></div><div class="r"><span>תשואה ברוטו</span><b data-o="g"></b></div><div class="r"><span>מס רכישה על דירה נוספת</span><b data-o="tax"></b></div><div class="hl"><span>תשואה נטו (משוערת)</span><b data-o="n"></b></div><small>התשואה נטו מחושבת על המחיר בתוספת מס הרכישה, לפני מס על הכנסה משכירות ולפני מימון. <a href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%aa%d7%a9%d7%95%d7%90%d7%94-%d7%9c%d7%9e%d7%a9%d7%a7%d7%99%d7%a2%d7%99%d7%9d/">מחשבון התשואה המלא ←</a></small></div>
+      </div>
+
+      <div class="pane" role="tabpanel" data-p="rent" hidden>
+        <h3>כמה בטוחה מותר לבקש מהשוכר</h3><p class="why">לפי חוק השכירות והשאילה, בשכירות למגורים יש תקרה לבטוחה, ומועד קבוע להחזרתה.</p>
+        <div class="ins">
+          <div class="fld"><label>שכר דירה חודשי</label><div class="money"><input data-i="rent" inputmode="numeric" value="6,000"><span>₪</span></div></div>
+          <div class="fld"><label>תקופת השכירות: <b data-o="mo">12</b> חודשים</label><input data-i="months" type="range" min="1" max="36" value="12"></div>
+        </div>
+        <div class="res"><div class="r"><span>3 חודשי שכירות</span><b data-o="a"></b></div><div class="r"><span>שליש מכל דמי השכירות לתקופה</span><b data-o="b"></b></div><div class="hl"><span>הבטוחה המקסימלית</span><b data-o="max"></b></div><small>התקרה היא הסכום הנמוך מבין השניים, לכל הבטוחות יחד. המשכיר מחזיר את הבטוחה בתוך 60 יום מתום השכירות, אלא אם יש חוב של השוכר. <a href="https://dabullaw.co.il/%d7%aa%d7%91%d7%99%d7%a2%d7%94-%d7%9c%d7%a4%d7%99%d7%a0%d7%95%d7%99-%d7%9e%d7%95%d7%a9%d7%9b%d7%a8/">שוכר לא משלם? ←</a></small></div>
+      </div>
+      <div class="pane" role="tabpanel" data-p="late" hidden>
+        <h3>פיצוי על איחור במסירת דירה מקבלן</h3><p class="why">הקבלן מאחר במסירה? מקלידים את המועד שבחוזה, את מועד המסירה בפועל ושכר דירה של דירה דומה, ומקבלים את הפיצוי לפי חוק המכר (דירות).</p>
+        <div class="ins">
+          <div class="fld"><label>מתי נחתם החוזה?</label><select data-i="when"><option value="new">אחרי 7.7.2022</option><option value="old">לפני 7.7.2022</option></select></div>
+          <div class="fld"><label>מועד המסירה לפי החוזה</label><input data-i="due" type="date"></div>
+          <div class="fld"><label>מועד המסירה בפועל (אם עוד לא נמסרה: היום)</label><input data-i="got" type="date"></div>
+          <div class="fld"><label>שכר דירה חודשי של דירה דומה</label><div class="money"><input data-i="rent" inputmode="numeric" value="6,000"><span>₪</span></div></div>
+        </div>
+        <div class="res"><div class="r"><span>האיחור</span><b data-o="dl"></b></div><div data-o="rows"></div><div class="hl"><span>הפיצוי המשוער</span><b data-o="sum"></b></div><small data-o="note">לפי סעיף 5א לחוק המכר (דירות), כפי שתוקן ב־2022: בחודש הראשון של האיחור אין פיצוי. מהחודש השני ועד הרביעי: שכר דירה של דירה דומה. מהחודש החמישי ועד העשירי: פי 1.25. מהחודש ה־11: פי 1.5. אין פיצוי כשהאיחור נגרם מסיבה שאינה בשליטת הקבלן, או בגלל הקונה. שכר הדירה של דירה דומה הוא לעיתים נושא למחלוקת.</small></div>
+      </div>
+
+      <div class="pane" role="tabpanel" data-p="defects" hidden>
+        <h3>ליקויי בנייה בדירה מקבלן: עד מתי הקבלן אחראי</h3><p class="why">מקלידים את תאריך המסירה, ורואים לכל סוג ליקוי עד מתי נמשכת תקופת הבדק, שבה הקבלן חייב לתקן, ועד מתי תקופת האחריות.</p>
+        <div class="ins">
+          <div class="fld"><label>תאריך מסירת הדירה</label><input data-i="got" type="date"></div>
+        </div>
+        <div class="res"><div class="dtab" data-o="rows"></div><small>לפי חוק המכר (דירות). בתקופת הבדק הקבלן חייב לתקן ליקוי שהתגלה, אלא אם יוכיח שנגרם בגלל הקונה. תקופת האחריות מתחילה בסוף תקופת הבדק ונמשכת 3 שנים, ובה הקונה צריך להוכיח שהליקוי נובע מהבנייה. מודיעים לקבלן על כל ליקוי בכתב, תוך זמן סביר מהגילוי.</small></div>
+      </div>
+
+      <div class="pane" role="tabpanel" data-p="sell" hidden>
+        <h3>כמה כסף יישאר לכם מהמכירה</h3><p class="why">מחיר המכירה הוא לא הסכום שנכנס לחשבון. מורידים את סילוק המשכנתא, התיווך, המס וההוצאות.</p>
+        <div class="ins">
+          <div class="fld"><label>מחיר המכירה</label><div class="money"><input data-i="price" inputmode="numeric" value="2,800,000"><span>₪</span></div></div>
+          <div class="fld"><label>יתרת המשכנתא לסילוק</label><div class="money"><input data-i="loan" inputmode="numeric" value="600,000"><span>₪</span></div></div>
+          <div class="fld"><label>דמי תיווך (%, לפני מע״מ)</label><input data-i="brk" type="text" inputmode="decimal" value="2"></div>
+          <div class="fld"><label>מס שבח משוער (אם אין פטור)</label><div class="money"><input data-i="tax" inputmode="numeric" value="0"><span>₪</span></div></div>
+          <div class="fld"><label>הוצאות נוספות (שכר טרחה, הובלה, תיקונים)</label><div class="money"><input data-i="other" inputmode="numeric" value=""><span>₪</span></div></div>
+        </div>
+        <div class="res"><div class="r"><span>סילוק משכנתא</span><b data-o="loan"></b></div><div class="r"><span>תיווך כולל מע״מ</span><b data-o="brk"></b></div><div class="r"><span>מס שבח</span><b data-o="tax"></b></div><div class="r"><span>הוצאות נוספות</span><b data-o="other"></b></div><div class="hl"><span>נשאר לכם</span><b data-o="net"></b></div><small>בפירעון מוקדם של משכנתא הבנק עשוי לגבות עמלה. את הסכום המדויק לסילוק נותן הבנק במכתב יתרה. לא יודעים אם יש פטור ממס שבח? <a href="#wb" data-open="shevach">לבדיקה מהירה ←</a></small></div>
+      </div>
+
+      <div class="pane" role="tabpanel" data-p="shevach" hidden>
+        <h3>האם המכירה פטורה ממס שבח?</h3><p class="why">בדיקה מהירה של התנאים העיקריים לפטור על דירת מגורים יחידה. 4 שאלות, תשובה מיד.</p>
+        <div class="ins">
+          <div class="fld"><label>כמה דירות בבעלותכם בישראל?</label><select data-i="own"><option value="only">רק הדירה שאני מוכר</option><option value="small">עוד חלק קטן בדירה (עד 25%) או דירה שקיבלתי בירושה</option><option value="more">יש לי עוד דירה</option></select></div>
+          <div class="fld"><label>כמה זמן הדירה בבעלותכם?</label><select data-i="held"><option value="ge">18 חודשים ומעלה</option><option value="lt">פחות מ־18 חודשים</option></select></div>
+          <div class="fld"><label>מכרתם דירה אחרת בפטור ב־18 החודשים האחרונים?</label><select data-i="prev"><option value="no">לא</option><option value="yes">כן</option></select></div>
+          <div class="fld"><label>מחיר המכירה גבוה במיוחד (בערך 5 מיליון ₪ ומעלה)?</label><select data-i="high"><option value="no">לא</option><option value="yes">כן</option><option value="dk">לא יודע</option></select></div>
+        </div>
+        <div class="res"><div class="hl" style="flex-direction:column;align-items:flex-start;gap:4px"><span data-o="tag"></span><b data-o="t" style="font-size:22px;white-space:normal;line-height:1.35"></b></div><p data-o="d" style="margin:0;color:#e8e2d4;font-size:15px;line-height:1.6"></p><small>בדיקה כללית בלבד. הפטור לא ניתן אוטומטית: מגישים הצהרה ובקשה לפטור לרשות המסים בתוך 30 יום מהמכירה. יש מקרים נוספים ומסלולים אחרים (למשל חישוב ליניארי מוטב), ולכן כדאי לבדוק את המקרה שלכם.</small></div>
+      </div>
+
+      <div class="pane" role="tabpanel" data-p="lease" hidden>
+        <h3>המועדים החשובים בחוזה השכירות</h3><p class="why">מקלידים את תאריך סיום החוזה, ומקבלים עד מתי צריך להודיע ומתי מחזירים את הבטוחה.</p>
+        <div class="ins">
+          <div class="fld"><label>תאריך סיום החוזה</label><input data-i="end" type="date"></div>
+        </div>
+        <div class="res"><div class="tline" data-o="tl"></div><small>לפי חוק השכירות והשאילה. מועדי ההודעה חלים בדרך כלל כשבחוזה יש אפשרות להארכה. כדאי לבדוק מה כתוב בחוזה שלכם.</small></div>
+      </div>
+
+      <div class="pane" role="tabpanel" data-p="index" hidden>
+        <h3>מחשבון הצמדה למדד</h3><p class="why">לשכר דירה צמוד למדד, או לתשלום לקבלן שצמוד למדד תשומות הבנייה: כמה הסכום עכשיו.</p>
+        <div class="ins">
+          <div class="fld"><label>הסכום המקורי</label><div class="money"><input data-i="amt" inputmode="numeric" value="6,000"><span>₪</span></div></div>
+          <div class="fld"><label>מדד הבסיס (מהחוזה)</label><input data-i="b" type="text" inputmode="decimal" value="100"></div>
+          <div class="fld"><label>המדד האחרון שפורסם</label><input data-i="n" type="text" inputmode="decimal" value="103.2"></div>
+        </div>
+        <div class="res"><div class="r"><span>שינוי במדד</span><b data-o="p"></b></div><div class="r"><span>תוספת</span><b data-o="d"></b></div><div class="hl"><span>הסכום המעודכן</span><b data-o="v"></b></div><small>המדדים מתפרסמים באתר הלשכה המרכזית לסטטיסטיקה, בדרך כלל באמצע כל חודש. בחוזה כתוב איזה מדד הוא מדד הבסיס, והאם הסכום יכול גם לרדת.</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MORE TOOLS BY CATEGORY -->
+  <section class="tl" aria-labelledby="h3-tl" id="tl">
+<style>
+.dt3 .tl{--tlw:3px}
+.dt3 .tl .sh p{margin:0;color:var(--mut);max-width:60ch}
+.dt3 .tl ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;position:relative}
+.dt3 .tl ol::before{content:"";position:absolute;top:27px;right:8%;left:8%;height:var(--tlw);background:linear-gradient(to left,var(--gold),var(--gold3));border-radius:3px}
+.dt3 .tl li{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.dt3 .tl .node{position:relative;z-index:1;width:56px;height:56px;border-radius:50%;background:var(--ink);color:var(--gold3);display:grid;place-items:center;border:4px solid #fff;box-shadow:0 0 0 2px var(--gold)}
+.dt3 .tl .node svg{width:24px;height:24px}
+.dt3 .tl li.hot .node{background:var(--gold);color:#fff}
+.dt3 .tl .when{margin:12px 0 8px;font-size:13px;font-weight:800;letter-spacing:.02em;color:var(--gold2);background:var(--soft);border-radius:99px;padding:2px 12px;white-space:nowrap}
+.dt3 .tl .card{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:14px 14px 16px;width:100%;flex:1;display:flex;flex-direction:column;gap:6px}
+.dt3 .tl li.hot .card{border-color:var(--gold)}
+.dt3 .tl .card b{font-size:17px;line-height:1.35;display:block}
+.dt3 .tl .card span{font-size:14px;line-height:1.55;color:var(--mut);display:block}
+.dt3 .tl .pay{margin-top:auto;padding-top:8px;font-size:13px;font-weight:700;color:var(--ink)}
+.dt3 .tl .pay i{font-style:normal;display:inline-block;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:2px 8px}
+.dt3 .tl .foot{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 18px}
+.dt3 .tl .foot p{margin:0;font-size:14px;color:var(--mut);max-width:70ch}
+.dt3 .tl .foot .go{display:flex;gap:8px;flex-wrap:wrap}
+.dt3 .tl .foot a{font-size:14px;font-weight:800;color:var(--ink);text-decoration:none;background:#fff;border:1.5px solid var(--gold);border-radius:99px;padding:6px 14px;white-space:nowrap}
+@media (max-width:900px){
+ .dt3 .tl ol{grid-template-columns:minmax(0,1fr);gap:0}
+ .dt3 .tl ol::before{display:none}
+ .dt3 .tl li:not(:last-child)::before{content:"";position:absolute;right:26.5px;top:28px;bottom:-28px;width:var(--tlw);background:linear-gradient(to bottom,var(--gold),var(--gold3));border-radius:3px}
+ .dt3 .tl li{display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:14px;align-items:start;text-align:right;padding-bottom:16px}
+ .dt3 .tl .node{grid-row:1/3}
+ .dt3 .tl .when{margin:4px 0 8px;justify-self:start}
+ .dt3 .tl .card{grid-column:2}
+}
+</style>
+<div class="sh"><div><p class="k">מה משלמים ומתי</p><h2 id="h3-tl">ציר התשלומים בעסקת דירה</h2></div><p>מהחתימה ועד הרישום בטאבו. הסדר והסכומים נקבעים בחוזה, וזו התמונה הכללית בדירה יד שנייה.</p></div>
+<ol>
+ <li><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M14.5 4.5l5 5L9 20H4v-5z"/></svg></span><span class="when">יום החתימה</span>
+  <div class="card"><b>תשלום ראשון למוכר</b><span>החוזה נחתם, ועורך הדין רושם הערת אזהרה בטאבו כדי להגן עליכם.</span><span class="pay"><i>לרוב 10% עד 20% מהמחיר</i></span></div></li>
+ <li><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 13h8M8 17h5"/></svg></span><span class="when">עד יום 30</span>
+  <div class="card"><b>דיווח לרשות המסים</b><span>מגישים הצהרה על העסקה. עורך הדין מגיש אותה בשמכם.</span><span class="pay"><i>בלי תשלום בשלב הזה</i></span></div></li>
+ <li class="hot"><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M8 18h8"/></svg></span><span class="when">עד יום 60</span>
+  <div class="card"><b>תשלום מס רכישה</b><span>משלמים לפי המדרגות. איחור מוסיף הצמדה, ריבית וקנסות.</span><span class="pay"><i>לפי מחיר הדירה ומספר הדירות</i></span></div></li>
+ <li><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"/><path d="M5 10v9h14v-9"/><path d="M9 19v-5h6v5"/></svg></span><span class="when">לפי החוזה</span>
+  <div class="card"><b>תשלומי ביניים וכסף המשכנתא</b><span>הבנק מעביר את כסף המשכנתא ישירות למוכר, במועד שנקבע בחוזה.</span><span class="pay"><i>הון עצמי ומשכנתא</i></span></div></li>
+ <li><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg></span><span class="when">מסירת הדירה</span>
+  <div class="card"><b>תשלום אחרון</b><span>בדרך כלל כנגד המפתחות, ואחרי שהמוכר מציג את האישורים שנקבעו בחוזה.</span><span class="pay"><i>יתרת המחיר</i></span></div></li>
+ <li><span class="node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="when">אחרי המסירה</span>
+  <div class="card"><b>רישום הדירה על שמכם</b><span>אחרי שמתקבלים אישורי המסים, עורך הדין רושם את הבעלות בטאבו.</span><span class="pay"><i>אגרת רישום</i></span></div></li>
+</ol>
+<div class="foot"><p>בדירה מקבלן התשלומים צמודים בדרך כלל להתקדמות הבנייה, והמועדים משתנים. לפני החתימה כדאי לעבור על לוח התשלומים עם עורך דין.</p><div class="go"><a href="#calc-dates">המועדים לפי תאריך החתימה</a><a href="#calc-tax">מחשבון מס רכישה</a></div></div>
+</section>
+  <section aria-labelledby="h3-cats">
+    <div class="sh"><div><p class="k">עוד כלים באתר</p><h2 id="h3-cats">מדריכים עם מחשבון, רשימות וטפסים</h2><p>כל כלי פותח עמוד עם הסבר מלא, דוגמאות ושאלות נפוצות.</p></div></div>
+    <div class="cats">
+      <div class="cat"><div class="top"><svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="14" fill="#fff"/><path d="M10 23l14-11 14 11v14H10z" stroke="#a8873f" stroke-width="2.4"/><path d="M20 37v-9h8v9" stroke="#1c1b19" stroke-width="2.4"/></svg><div><b>קונים דירה</b><span>כמה זה עולה ומה בודקים</span></div></div>
+        <a data-s="1 2" href="https://dabullaw.co.il/%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%94%d7%9e%d7%9c%d7%90-%d7%95%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%9c%d7%94%d7%95%d7%a6%d7%90%d7%95%d7%aa-%d7%9c%d7%a8%d7%9b%d7%99%d7%a9%d7%aa-%d7%93%d7%99/"><span>מחשבון הוצאות לרכישת דירה<small>כל העלויות מעבר למחיר</small></span><span class="go">←</span></a>
+        <a data-s="2 3" href="https://dabullaw.co.il/checklist/"><span>צ׳קליסט לפני שקונים דירה<small>רשימה אחת שאפשר לסמן</small></span><span class="go">←</span></a>
+        <a data-s="2 3" href="tel:098613413"><span>בדיקת דירה לפני שמציעים מחיר<span class="soon">בקרוב</span><small>שירות בדיקת מסמכים בתשלום</small></span><span class="go">←</span></a>
+      </div>
+      <div class="cat"><div class="top"><svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="14" fill="#fff"/><path d="M10 34l9-9 7 6 12-14" stroke="#a8873f" stroke-width="2.4"/><path d="M31 17h7v7" stroke="#1c1b19" stroke-width="2.4"/></svg><div><b>משקיעים</b><span>האם המספרים מסתדרים</span></div></div>
+        <a data-s="2" href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%aa%d7%a9%d7%95%d7%90%d7%94-%d7%9c%d7%9e%d7%a9%d7%a7%d7%99%d7%a2%d7%99%d7%9d/"><span>מחשבון תשואה למשקיעים<small>ברוטו, נטו והחזר ההשקעה</small></span><span class="go">←</span></a>
+        <a data-s="1" href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%97%d7%95%d7%a4%d7%a9-%d7%9b%d7%9c%d7%9b%d7%9c%d7%99-%d7%9b%d7%9e%d7%94-%d7%94%d7%95%d7%9f-%d7%91%d7%90%d7%9e%d7%aa-%d7%a6%d7%a8%d7%99%d7%9a-%d7%9b%d7%93%d7%99/"><span>מחשבון חופש כלכלי<small>כמה נכסים צריך כדי שהשכירות תכסה את ההוצאות</small></span><span class="go">←</span></a>
+        <a data-s="1" href="https://dabullaw.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%95%d7%9f-%d7%94%d7%97%d7%96%d7%a8-%d7%97%d7%95%d7%93%d7%a9%d7%99-%d7%9c%d7%9e%d7%a9%d7%9b%d7%a0%d7%aa%d7%90-%d7%aa%d7%9b%d7%a0%d7%a0%d7%95-%d7%90%d7%aa-%d7%94%d7%aa%d7%a7/"><span>מחשבון משכנתא מלא<small>החזר חודשי ועלות כוללת</small></span><span class="go">←</span></a>
+      </div>
+      <div class="cat"><div class="top"><svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="14" fill="#fff"/><path d="M14 10h14l7 7v21H14z" stroke="#a8873f" stroke-width="2.4"/><path d="M19 25h11M19 31h11" stroke="#1c1b19" stroke-width="2.4"/></svg><div><b>מידע ומסמכים</b><span>להבין את המילים ולמצוא את הטופס</span></div></div>
+        <a data-s="3 4" href="https://dabullaw.co.il/%d7%a7%d7%99%d7%a9%d7%95%d7%a8%d7%99%d7%9d-%d7%95%d7%98%d7%a4%d7%a1%d7%99%d7%9d/"><span>טפסים וקישורים<small>יותר מ־50 טפסים: טאבו, מיסוי, ירושה, הוצאה לפועל</small></span><span class="go">←</span></a>
+        <a data-s="3" href="https://dabullaw.co.il/%d7%9e%d7%99%d7%9c%d7%95%d7%9f-%d7%9e%d7%95%d7%a0%d7%97%d7%99%d7%9d-%d7%9e%d7%a9%d7%a4%d7%98%d7%99%d7%99%d7%9d-%d7%91%d7%a0%d7%93%d7%9c%d7%b4%d7%9f/"><span>מילון מונחים בנדל״ן<small>32 מונחים בשפה פשוטה</small></span><span class="go">←</span></a>
+        <a data-s="3 4" href="https://dabullaw.co.il/%d7%a7%d7%99%d7%a9%d7%95%d7%a8%d7%99%d7%9d-%d7%95%d7%98%d7%a4%d7%a1%d7%99%d7%9d/"><span>מסמכים לדוגמה להורדה<small>חוזה שכירות, צוואה, רשימת מסמכים ומכתב התראה לשוכר</small></span><span class="go">←</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK CHECKS -->
+  <section class="checks" aria-labelledby="h3-ck">
+    <div class="sh"><div><p class="k">בדיקות מהירות</p><h2 id="h3-ck">6 שאלות, ותדעו מה הצעד הבא</h2><p>שאלונים קצרים לבעלי דירות ולשותפים בנכס. בסוף מקבלים את הדרך שמתאימה למצב שלכם ורשימה של מה להכין.</p></div></div>
+    <div class="cgrid">
+      <button type="button" class="chk" data-q="evict" aria-expanded="false"><span class="who">למשכירים</span><b>השוכר לא משלם או לא עוזב?</b><span class="d">מה המסלול, ומה אסור לעשות לבד.</span><span class="go">להתחיל ←</span></button>
+      <button type="button" class="chk" data-q="split" aria-expanded="false"><span class="who">לשותפים בנכס</span><b>שותפים בדירה ולא מסכימים?</b><span class="d">הדרכים לצאת מהשותפות, בהסכמה או בבית משפט.</span><span class="go">להתחיל ←</span></button>
+      <button type="button" class="chk" data-q="renew" aria-expanded="false"><span class="who">לבעלי דירות</span><b>הבניין מתאים להתחדשות עירונית?</b><span class="d">הערכה כללית לפי שנת הבנייה, הגודל והסביבה.</span><span class="go">להתחיל ←</span></button>
+    </div>
+    <div class="qhost" data-qhost></div>
+  </section>
+
+  <!-- GLOSSARY TEASER -->
+  <section aria-labelledby="h3-gl">
+    <div class="sh"><div><p class="k">מילים שכדאי להכיר</p><h2 id="h3-gl">4 מונחים שכל קונה פוגש</h2><p>לוחצים על כרטיס כדי לראות הסבר קצר.</p></div><a href="https://dabullaw.co.il/%d7%9e%d7%99%d7%9c%d7%95%d7%9f-%d7%9e%d7%95%d7%a0%d7%97%d7%99%d7%9d-%d7%9e%d7%a9%d7%a4%d7%98%d7%99%d7%99%d7%9d-%d7%91%d7%a0%d7%93%d7%9c%d7%b4%d7%9f/" style="color:#8a6d2c;font-weight:800;text-decoration:none">לכל 32 המונחים ←</a></div>
+    <div class="gl">
+      <button type="button" class="term" aria-expanded="false" data-a="המסמך הרשמי שמראה מי הבעלים של הדירה, ואם יש עליה משכנתא, עיקול או הערת אזהרה. מוציאים אותו באתר רשם המקרקעין."><b>נסח טאבו</b><span>מה זה ולמה בודקים אותו לפני כל עסקה?</span><span class="q">להסבר ←</span></button>
+      <button type="button" class="term" aria-expanded="false" data-a="רישום בטאבו שמזהיר כל אחד שהדירה נמכרה לכם. היא מונעת מהמוכר למכור או למשכן את הדירה למישהו אחר בלי הסכמתכם."><b>הערת אזהרה</b><span>מה היא מגינה עליכם, ומתי רושמים אותה?</span><span class="q">להסבר ←</span></button>
+      <button type="button" class="term" aria-expanded="false" data-a="מס שהוועדה המקומית גובה כשתוכנית חדשה העלתה את שווי הנכס. בדרך כלל משלמים אותו במכירה או כשמנצלים את זכויות הבנייה."><b>היטל השבחה</b><span>מי משלם אותו, ומתי?</span><span class="q">להסבר ←</span></button>
+      <button type="button" class="term" aria-expanded="false" data-a="הרשאה של העירייה לחבר בניין חדש לחשמל, מים וטלפון. בלי טופס 4 אסור לגור בדירה חדשה, גם אם הקבלן מוסר מפתח."><b>טופס 4</b><span>למה לא מקבלים מפתח בלעדיו?</span><span class="q">להסבר ←</span></button>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section aria-labelledby="h3-faq">
+    <div class="sh"><div><p class="k">שאלות נפוצות</p><h2 id="h3-faq">על המחשבונים והכלים</h2></div></div>
+    <details><summary>כמה מדויקים המחשבונים?</summary><p>המחשבונים מבוססים על הנתונים הרשמיים המעודכנים, כמו מדרגות מס הרכישה לשנת 2026 ושיעורי המימון שבנק ישראל קבע. התוצאה היא הערכה כללית. המספר הסופי תלוי בפרטי העסקה שלכם, ולכן לפני חתימה כדאי לבדוק אותו עם עורך דין.</p></details>
+    <details><summary>מה ההבדל בין דירה יחידה לדירה נוספת במס רכישה?</summary><p>מי שקונה דירה יחידה משלם מס רכישה לפי מדרגות, והחלק הראשון של המחיר פטור. מי שכבר יש לו דירה ומוסיף עוד אחת משלם בדרך כלל 8% מהשקל הראשון, ו־10% על החלק שמעל המדרגה העליונה. מי שמוכר את הדירה הקודמת בתוך 18 חודשים נחשב בדרך כלל כקונה דירה יחידה.</p></details>
+    <details><summary>כמה הון עצמי צריך כדי לקנות דירה?</summary><p>בנק ישראל מאפשר מימון של עד 75% ממחיר הדירה לדירה יחידה, עד 70% למשפרי דיור ועד 50% לדירה להשקעה. לכן ההון העצמי צריך לכסות לפחות 25%, 30% או 50% מהמחיר, ובנוסף את מס הרכישה ואת ההוצאות הנלוות.</p></details>
+    <details><summary>מתי פטורים ממס שבח במכירת דירה?</summary><p>בדרך כלל, מי שמוכר את דירת המגורים היחידה שלו, שהייתה בבעלותו לפחות 18 חודשים, ולא מכר דירה אחרת בפטור ב־18 החודשים שלפני כן, זכאי לפטור. לפטור המלא יש תקרת שווי שמתעדכנת כל שנה. הפטור לא ניתן אוטומטית, ומבקשים אותו בהצהרה לרשות המסים.</p></details>
+    <details><summary>מתי משלמים את מס הרכישה?</summary><p>מגישים הצהרה לרשות המסים בתוך 30 יום מיום החתימה על החוזה, ומשלמים את המס בתוך 60 יום מיום החתימה, לפי השובר שרשות המסים מוציאה. איחור בתשלום מוסיף ריבית והפרשי הצמדה.</p></details>
+    <details><summary>כמה בטוחה מותר לבקש משוכר?</summary><p>בשכירות דירה למגורים, כל הבטוחות יחד לא יעלו על הנמוך מבין שלושה חודשי שכירות לבין שליש מכל דמי השכירות לתקופה. המשכיר מחזיר את הבטוחה בתוך 60 יום מתום השכירות, אלא אם יש חוב של השוכר.</p></details>
+    <details><summary>מה עושים עם התוצאה של השאלון?</summary><p>השאלון נותן הערכה כללית ורשימה של מה להכין. מי שרוצה משאיר שם וטלפון בסוף השאלון, והמשרד חוזר אליו עם התשובות שסימן, כדי שהשיחה הראשונה תהיה קצרה וממוקדת.</p></details>
+    <details><summary>הנתונים שאני מקליד נשמרים?</summary><p>לא. המספרים במחשבונים נשארים בדפדפן שלכם ולא נשלחים לשום מקום. בשאלונים, רק מי שבוחר לשלוח את הטופס בסוף שולח אלינו את התשובות, יחד עם השם והטלפון.</p></details>
+    <details><summary>זה במקום ייעוץ משפטי?</summary><p>לא. הכלים נותנים תמונה כללית. כל עסקה שונה, ועורך דין יבדוק את המסמכים, את המס ואת הסיכונים של העסקה שלכם.</p></details>
+  </section>
+
+  <div class="cta">
+    <div><h2>רוצים שנבדוק את המספרים של העסקה שלכם?</h2><p>עו״ד יקיר דבול, עסקאות מקרקעין ומיסוי מקרקעין בנתניה ובשרון. שיחה ראשונה קצרה, ונגיד לכם מה צריך לבדוק.</p></div>
+    <div class="btns"><a class="p" href="tel:098613413">להתקשר · 09-8613413</a><a class="s" href="https://wa.me/972505580189">וואטסאפ</a></div>
+  </div>
+  <p class="note">המחשבונים, השאלונים והכלים בעמוד הם מידע כללי ואינם ייעוץ משפטי, מיסויי או פיננסי.</p>
+</div>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type": "WebApplication", "@id": "https://dabullaw.co.il/calculators/#app", "name": "מחשבוני עסקת דירה", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "inLanguage": "he-IL", "isAccessibleForFree": true, "featureList": ["מחשבון מס רכישה לפי מדרגות 2026", "מחשבון הון עצמי ומשכנתא מקסימלית", "מחשבון החזר חודשי", "מועדי דיווח ותשלום מס רכישה", "מחשבון תשואה לדירה להשקעה", "בטוחה מקסימלית בשכירות למגורים", "כמה כסף נשאר מהמכירה", "בדיקה מהירה של פטור ממס שבח על דירה יחידה", "מועדי הודעה והחזרת בטוחה בשכירות", "הצמדה למדד המחירים לצרכן ולמדד תשומות הבנייה"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "ILS"}, "isPartOf": {"@id": "https://dabullaw.co.il/calculators/"}, "provider": {"@id": "https://dabullaw.co.il/#organization"}, "url": "https://dabullaw.co.il/calculators/"},
+{"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "כמה מדויקים המחשבונים?", "acceptedAnswer": {"@type": "Answer", "text": "המחשבונים מבוססים על הנתונים הרשמיים המעודכנים, כמו מדרגות מס הרכישה לשנת 2026 ושיעורי המימון של בנק ישראל. התוצאה היא הערכה כללית, ולפני חתימה כדאי לבדוק אותה עם עורך דין."}}, {"@type": "Question", "name": "מה ההבדל בין דירה יחידה לדירה נוספת במס רכישה?", "acceptedAnswer": {"@type": "Answer", "text": "בדירה יחידה משלמים לפי מדרגות, והחלק הראשון של המחיר פטור. בדירה נוספת משלמים בדרך כלל 8% מהשקל הראשון ו־10% על החלק שמעל המדרגה העליונה."}}, {"@type": "Question", "name": "כמה הון עצמי צריך כדי לקנות דירה?", "acceptedAnswer": {"@type": "Answer", "text": "בנק ישראל מאפשר מימון של עד 75% לדירה יחידה, עד 70% למשפרי דיור ועד 50% לדירה להשקעה. ההון העצמי צריך לכסות את היתרה, ובנוסף את מס הרכישה וההוצאות."}}, {"@type": "Question", "name": "מתי פטורים ממס שבח במכירת דירה?", "acceptedAnswer": {"@type": "Answer", "text": "בדרך כלל, מי שמוכר דירת מגורים יחידה שהייתה בבעלותו לפחות 18 חודשים, ולא מכר דירה אחרת בפטור ב־18 החודשים שלפני כן, זכאי לפטור, עד תקרת שווי שמתעדכנת כל שנה."}}, {"@type": "Question", "name": "מתי משלמים את מס הרכישה?", "acceptedAnswer": {"@type": "Answer", "text": "מגישים הצהרה בתוך 30 יום מיום החתימה, ומשלמים את המס בתוך 60 יום מיום החתימה."}}, {"@type": "Question", "name": "כמה בטוחה מותר לבקש משוכר?", "acceptedAnswer": {"@type": "Answer", "text": "הנמוך מבין שלושה חודשי שכירות לבין שליש מכל דמי השכירות לתקופה. הבטוחה מוחזרת בתוך 60 יום מתום השכירות, אלא אם יש חוב."}}, {"@type": "Question", "name": "מה עושים עם התוצאה של השאלון?", "acceptedAnswer": {"@type": "Answer", "text": "השאלון נותן הערכה כללית ורשימה של מה להכין. מי שרוצה משאיר שם וטלפון, והמשרד חוזר אליו."}}, {"@type": "Question", "name": "הנתונים שאני מקליד נשמרים?", "acceptedAnswer": {"@type": "Answer", "text": "לא. המספרים במחשבונים נשארים בדפדפן. בשאלונים נשלח רק מה שהגולש בוחר לשלוח."}}, {"@type": "Question", "name": "זה במקום ייעוץ משפטי?", "acceptedAnswer": {"@type": "Answer", "text": "לא. הכלים נותנים תמונה כללית, ועורך דין יבדוק את העסקה שלכם."}}], "@id": "https://dabullaw.co.il/calculators/#faq", "isPartOf": {"@id": "https://dabullaw.co.il/calculators/"}}
+]}</script>
+
+<script nowprocket data-no-optimize="1" defer src="https://dabullaw-glitch.github.io/dabul-office/media/widgets/calc-hub.js?ver=20261010d"></script>
+<!-- /wp:html -->
