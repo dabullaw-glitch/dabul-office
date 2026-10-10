@@ -66,11 +66,10 @@ async function youtubeOut(row: any, media: string[], cfg: any) {
   if (!acc) return { ok: false, error: 'ערוץ היוטיוב לא מחובר ב-SocialAPI' };
   const vid = media.find(m => /\.mp4(\?|$)/i.test(m) || /reels\//.test(m) || /token=/.test(m));
   if (!vid) return { ok: false, error: 'אין קובץ וידאו בשורה' };
-  // monthly limit of the plan (10 uploads): counted from our own results
-  const month = new Date().toISOString().slice(0, 7);
-  const { data: done } = await admin().from('docs').select('id').eq('coll', 'pub').like('data->result->youtube->>at', month + '%');
-  const cap = +(cfg.socapi && cfg.socapi.monthlyCap) || 10;
-  if ((done || []).length >= cap) return { ok: false, error: `הגענו למכסה החודשית של SocialAPI (${cap} העלאות)`, cap: true };
+  // the plan's limit (posts_limit per billing period, 10 a month from the 12th): asked from SocialAPI itself
+  const u = await sapi(key, '/usage');
+  const used = +(u.d && u.d.posts_used), lim = +(u.d && u.d.posts_limit);
+  if (lim && used >= lim) return { ok: false, error: `הגענו למכסה של SocialAPI (${used} מתוך ${lim} עד ${String(u.d.period_end || '').slice(0, 10)})`, cap: true };
   const tags = String(row.ytTags || '').split(',').map((t: string) => t.trim()).filter(Boolean).slice(0, 15);
   const body = { targets: [{ account_id: acc.id }], publish_now: true, title: String(row.ytTitle || row.title || '').replace(/^סרטון שאלה: /, '').slice(0, 100), text: String(row.ytDesc || row.text || '').slice(0, 4900), visibility: 'public', media: [{ source_type: 'url', source: vid }], platform_data: { youtube: { category_id: '27', tags, made_for_kids: false, default_language: 'he' } } };
   const { status, d } = await sapi(key, '/posts', 'POST', body);
