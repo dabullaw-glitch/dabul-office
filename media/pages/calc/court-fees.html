@@ -1,0 +1,203 @@
+<style>
+.dt3{--gold:#a8873f;--gold2:#8a6d2c;--gold3:#e4d19c;--ink:#1c1b19;--ink2:#2a2723;--mut:#6c675d;--line:#e4ded0;--paper:#fbfaf6;--soft:#f3ead3;--ok:#1f8f4e;
+  color:var(--ink);font-size:17px;line-height:1.7;max-width:1192px;margin:0 auto;padding:28px 16px 64px;font-family:inherit}
+.dt3 *{box-sizing:border-box}
+.dt3 h2,.dt3 h3{margin:0;font-weight:800;text-wrap:balance;color:inherit}
+.dt3 .k{font-size:13px;letter-spacing:.06em;color:var(--gold);font-weight:800;margin:0 0 6px}
+.dt3 .num{font-variant-numeric:tabular-nums}
+.dt3 section{margin-top:56px}
+.dt3 .sh{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.dt3 .sh h2{font-size:30px;line-height:1.2}
+.dt3 .sh p{margin:6px 0 0;color:var(--mut);max-width:640px}
+
+/* HERO */
+.dt3 .hero{margin-top:0;position:relative;overflow:hidden;border-radius:28px;background:radial-gradient(900px 380px at 85% -10%,rgba(228,209,156,.22),transparent 60%),radial-gradient(600px 300px at 0% 110%,rgba(168,135,63,.25),transparent 60%),var(--ink);color:#fff;padding:34px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:30px}
+@media(max-width:900px){.dt3 .hero{grid-template-columns:minmax(0,1fr);padding:24px}}
+.dt3 .hero .k{color:var(--gold3)}
+.dt3 .hero h1{font-size:40px;line-height:1.15;color:#fff;margin:0;font-weight:900;text-wrap:balance}
+.dt3 .hero .lede{color:#d8d0bf;margin:12px 0 22px;font-size:17.5px}
+.dt3 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.dt3 .stats div{background:rgba(255,255,255,.06);border:1px solid rgba(228,209,156,.22);border-radius:16px;padding:12px 14px}
+.dt3 .stats b{display:block;font-size:30px;color:var(--gold3);line-height:1.1}
+.dt3 .stats span{font-size:13.5px;color:#cfc8b8}
+.dt3 .hc{background:#fff;color:var(--ink);border-radius:22px;padding:22px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.dt3 .hc h3,.dt3 .hc .hct{font-size:22px;margin:0 0 12px;font-weight:800;line-height:1.3;text-wrap:balance;color:inherit}
+.dt3 .fld label{display:block;font-weight:700;font-size:14px;margin:0 0 6px;color:var(--ink2)}
+.dt3 .money{position:relative}
+.dt3 .money input{width:100%;font:inherit;font-size:26px;font-weight:900;padding:10px 16px 10px 44px;border:1.5px solid #d9d2c1;border-radius:14px;background:var(--paper);direction:ltr;text-align:right;color:var(--ink)}
+.dt3 .money input:focus,.dt3 input:focus,.dt3 select:focus{outline:2px solid var(--gold);outline-offset:1px}
+.dt3 .money span{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-weight:800;color:var(--mut)}
+.dt3 .seg{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.dt3 .seg button{font:inherit;font-size:14.5px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:99px;padding:6px 14px;cursor:pointer}
+.dt3 .seg button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.dt3 .big{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:16px;padding-top:14px;border-top:2px solid var(--gold)}
+.dt3 .big span{font-weight:800;color:var(--mut)}
+.dt3 .big b{font-size:40px;font-weight:900;white-space:nowrap}
+.dt3 .rate{font-size:14px;color:var(--mut);margin-top:2px}
+/* bracket bar */
+.dt3 .bars{margin-top:14px}
+.dt3 .bars .bar{display:flex;height:16px;border-radius:99px;overflow:hidden;background:#eee8da}
+.dt3 .bars .bar i{display:block;height:100%;transition:width .35s}
+.dt3 .bars .leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:13px;color:var(--mut)}
+.dt3 .bars .leg em{font-style:normal;display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;vertical-align:middle}
+.dt3 .hc small{display:block;color:var(--mut);font-size:12.5px;margin-top:10px;line-height:1.55}
+.dt3 .hc a{color:var(--gold2);font-weight:800;text-decoration:none}
+
+/* JOURNEY */
+.dt3 .road{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.dt3 .road:before{content:"";position:absolute;top:34px;right:6%;left:6%;height:2px;background:repeating-linear-gradient(90deg,var(--gold) 0 8px,transparent 8px 14px);z-index:0}
+@media(max-width:820px){.dt3 .road{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.dt3 .road:before{display:none}}
+.dt3 .stop{position:relative;z-index:1;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:18px;cursor:pointer;text-align:right;font:inherit;color:inherit;transition:border-color .15s,transform .15s,box-shadow .15s}
+.dt3 .stop:hover{transform:translateY(-2px)}
+.dt3 .stop[aria-pressed=true]{border-color:var(--gold);box-shadow:0 0 0 4px var(--soft)}
+.dt3 .stop .dot{width:36px;height:36px;border-radius:12px;background:var(--ink);color:var(--gold3);display:grid;place-items:center;font-weight:900;margin-bottom:10px}
+.dt3 .stop[aria-pressed=true] .dot{background:var(--gold);color:#fff}
+.dt3 .stop b{display:block;font-size:18px}
+.dt3 .stop span{display:block;font-size:14px;color:var(--mut);line-height:1.5}
+.dt3 .stop .tl{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.dt3 .stop .tl i{font-style:normal;font-size:12px;font-weight:700;background:var(--soft);color:var(--gold2);border-radius:99px;padding:1px 8px}
+
+/* WORKBENCH */
+.dt3 .wb{display:grid;grid-template-columns:260px minmax(0,1fr);border:1px solid var(--line);border-radius:26px;overflow:hidden;background:#fff;box-shadow:0 28px 60px -46px rgba(60,45,10,.7)}
+@media(max-width:860px){.dt3 .wb{grid-template-columns:minmax(0,1fr)}}
+.dt3 .tabs{background:var(--paper);border-inline-end:1px solid var(--line);padding:12px;display:flex;flex-direction:column;gap:6px}
+
+.dt3 .tabs .tg{margin:8px 6px 0;font-size:12.5px;font-weight:800;letter-spacing:.05em;color:var(--gold2)}
+.dt3 .tabs .tg:first-child{margin-top:2px}
+.dt3 .tabs button{font:inherit;display:flex;align-items:center;gap:10px;text-align:right;border:0;background:transparent;border-radius:14px;padding:10px 12px;cursor:pointer;color:var(--ink);font-weight:700;font-size:15.5px;white-space:nowrap}
+.dt3 .tabs button svg{width:26px;height:26px;flex:none;padding:4px;border-radius:9px;background:var(--soft)}
+.dt3 .tabs button[aria-selected=true]{background:var(--ink);color:#fff}
+.dt3 .tabs button[aria-selected=true] svg{background:var(--gold)}
+.dt3 .tabs button[aria-selected=true] svg *{stroke:#fff}
+@media(max-width:860px){.dt3 .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;border-inline-end:0;border-bottom:1px solid var(--line);padding:10px}.dt3 .tabs .tg{grid-column:1/-1}.dt3 .tabs button{display:flex;flex-direction:row;justify-content:flex-start;text-align:right;gap:8px;white-space:normal;font-size:14px;line-height:1.25;padding:8px;min-height:50px;background:#fff;border:1px solid var(--line)}.dt3 .tabs button svg{width:24px;height:24px}.dt3 .tabs button[aria-selected=true]{border-color:var(--ink)}}
+.dt3 .pane{padding:26px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-content:start}
+.dt3 .pane[hidden]{display:none}
+@media(max-width:700px){.dt3 .pane{grid-template-columns:minmax(0,1fr);padding:18px}}
+.dt3 .pane h3{font-size:24px;grid-column:1/-1}
+.dt3 .pane .why{grid-column:1/-1;margin:-12px 0 0;color:var(--mut);font-size:15.5px}
+.dt3 .ins{display:grid;gap:12px;align-content:start}
+.dt3 .ins input,.dt3 .ins select{width:100%;font:inherit;font-size:17px;padding:10px 12px;border:1.5px solid #d9d2c1;border-radius:12px;background:var(--paper);color:var(--ink)}
+.dt3 .ins input[type=text],.dt3 .ins input[inputmode]{direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.dt3 .res{background:var(--ink);color:#fff;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px;align-self:start}
+.dt3 .res .r{display:flex;justify-content:space-between;gap:12px;align-items:baseline;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:8px;font-size:15px;color:#d8d0bf}
+.dt3 .res .r b{font-size:19px;color:#fff;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dt3 .res .hl{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.dt3 .res .hl span{color:var(--gold3);font-weight:800}
+.dt3 .res .hl b{font-size:32px;font-weight:900;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dt3 .res small{color:#a9a294;font-size:12.5px;line-height:1.55}
+.dt3 .res a{color:var(--gold3);font-weight:800;text-decoration:none}
+.dt3 .tline{display:grid;gap:8px;margin-top:4px}
+.dt3 .tline div{display:grid;grid-template-columns:118px 1fr;gap:10px;align-items:center;background:rgba(255,255,255,.05);border-radius:12px;padding:8px 10px;font-size:14.5px;color:#e8e2d4}
+.dt3 .tline b{color:var(--gold3);font-size:15px}
+.dt3 .gauge{height:10px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.dt3 .gauge i{display:block;height:100%;background:linear-gradient(90deg,#d9bd7f,#b8954a);transition:width .3s}
+
+/* CARDS */
+.dt3 .cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media(max-width:900px){.dt3 .cats{grid-template-columns:minmax(0,1fr)}}
+.dt3 .cat{background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden;display:flex;flex-direction:column}
+.dt3 .cat .top{padding:18px 20px;background:linear-gradient(135deg,var(--soft),#fff);border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center}
+.dt3 .cat .top svg{width:46px;height:46px;flex:none}
+.dt3 .cat .top b{display:block;font-size:19px}
+.dt3 .cat .top span{font-size:14px;color:var(--mut)}
+.dt3 .cat a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid #f0ebdf;text-decoration:none;color:var(--ink);font-weight:700;font-size:16px;transition:background .15s}
+.dt3 .cat a:last-child{border-bottom:0}
+.dt3 .cat a:hover{background:var(--paper)}
+.dt3 .cat a small{display:block;font-weight:500;color:var(--mut);font-size:13.5px}
+.dt3 .cat a .go{color:var(--gold2);font-weight:900;flex:none}
+.dt3 .cat a.dim{opacity:.32}
+.dt3 .cat a .soon{font-size:11.5px;font-weight:800;background:var(--ink);color:#fff;border-radius:99px;padding:1px 8px;margin-inline-start:6px}
+
+/* CHECKS */
+.dt3 .checks{background:var(--ink);color:#fff;border-radius:28px;padding:30px;position:relative;overflow:hidden}
+.dt3 .checks:after{content:"";position:absolute;inset:auto -80px -120px auto;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(228,209,156,.18),transparent 70%)}
+.dt3 .checks .sh p{color:#cfc8b8}
+.dt3 .checks .k{color:var(--gold3)}
+.dt3 .cgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;position:relative;z-index:1}
+@media(max-width:860px){.dt3 .cgrid{grid-template-columns:minmax(0,1fr)}}
+.dt3 .chk{font:inherit;text-align:right;display:flex;flex-direction:column;gap:6px;background:rgba(255,255,255,.06);border:1.5px solid rgba(228,209,156,.25);border-radius:20px;padding:18px;cursor:pointer;color:#fff}
+.dt3 .chk:hover,.dt3 .chk[aria-expanded=true]{border-color:var(--gold3);background:rgba(255,255,255,.1)}
+.dt3 .chk .who{font-size:13px;font-weight:800;color:var(--gold3)}
+.dt3 .chk b{font-size:19px;line-height:1.35}
+.dt3 .chk span.d{font-size:14.5px;color:#cfc8b8}
+.dt3 .chk .go{font-weight:800;color:var(--gold3);font-size:14.5px;margin-top:6px}
+.dt3 .qhost{position:relative;z-index:1;margin-top:16px;color:var(--ink)}
+
+/* GLOSSARY */
+.dt3 .gl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:900px){.dt3 .gl{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media(max-width:480px){.dt3 .gl{grid-template-columns:minmax(0,1fr)}}
+.dt3 .term{font:inherit;text-align:right;border:1px solid var(--line);background:#fff;border-radius:18px;padding:16px;cursor:pointer;min-height:132px;display:flex;flex-direction:column;gap:6px;color:var(--ink)}
+.dt3 .term b{font-size:18px}
+.dt3 .term span{font-size:14.5px;color:var(--mut)}
+.dt3 .term .q{color:var(--gold2);font-weight:800;font-size:13.5px;margin-top:auto}
+.dt3 .term[aria-expanded=true]{background:var(--paper);border-color:var(--gold)}
+
+/* FAQ + CTA */
+.dt3 details{border-bottom:1px solid var(--line);padding:14px 0}
+.dt3 summary{cursor:pointer;font-weight:700;font-size:17.5px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.dt3 summary::-webkit-details-marker{display:none}
+.dt3 summary::after{content:"+";color:var(--gold);font-size:22px;line-height:1}
+.dt3 details[open] summary::after{content:"−"}
+.dt3 details p{margin:8px 0 0;color:#3b3833}
+.dt3 .cta{margin-top:48px;border-radius:26px;padding:28px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;background:linear-gradient(135deg,#f3ead3,#fbfaf6);border:1px solid #e3d3a8}
+@media(max-width:700px){.dt3 .cta{grid-template-columns:minmax(0,1fr)}}
+.dt3 .cta h2{font-size:26px}
+.dt3 .cta p{margin:6px 0 0;color:var(--mut)}
+.dt3 .cta .btns{display:flex;flex-wrap:wrap;gap:10px}
+.dt3 .cta a{display:inline-flex;align-items:center;gap:8px;font-weight:800;text-decoration:none;border-radius:14px;padding:12px 20px}
+.dt3 .cta a.p{background:var(--ink);color:#fff}
+.dt3 .cta a.s{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.dt3 .note{font-size:13.5px;color:var(--mut);margin-top:18px}
+.dt3 button{white-space:normal;text-transform:none;letter-spacing:normal;min-width:0;max-width:100%}
+.dt3 .stop span,.dt3 .chk,.dt3 .term{overflow-wrap:anywhere}
+.dt3 .dtab{display:grid;gap:8px}
+.dt3 .dtab div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;background:rgba(255,255,255,.05);border-radius:12px;padding:9px 12px;font-size:14.5px;color:#e8e2d4}
+.dt3 .dtab div span{grid-column:1/-1;font-size:13px;color:#bfb6a2}
+.dt3 .dtab div i{font-style:normal;font-size:12.5px;font-weight:800;border-radius:99px;padding:1px 10px;white-space:nowrap}
+.dt3 .dtab i.b{background:#1f8f4e;color:#fff}.dt3 .dtab i.a{background:#e4d19c;color:#1c1b19}.dt3 .dtab i.x{background:rgba(255,255,255,.14);color:#d8d0bf}
+.dt3 .pop a{display:flex;justify-content:space-between;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px;font-size:16px}
+.dt3 .pop a:hover{border-color:var(--gold)}
+.dt3 .pop a span{color:var(--gold2);font-weight:800}
+.dt3 .pop small a{display:inline;border:0;background:none;padding:0;color:var(--gold2);font-weight:800}
+.dt3 .cgroup{margin-top:18px}
+.dt3 .cgroup .tg{font-size:14px;font-weight:800;color:var(--gold2);margin:0 0 10px;letter-spacing:.03em}
+.dt3 .cgroups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 24px}.dt3 .cgroup.full{grid-column:1/-1}.dt3 .cgrid{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:12px}
+.dt3 .ccard{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px;transition:border-color .15s,transform .15s,box-shadow .15s}
+.dt3 .ccard:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 10px 24px rgba(28,27,25,.08)}
+.dt3 .ccard.dim{opacity:.35}
+.dt3 .ccard .ci{width:42px;height:42px;border-radius:12px;background:var(--soft);display:grid;place-items:center}
+.dt3 .ccard .ci svg{width:22px;height:22px}
+.dt3 .ccard b{font-size:17px;line-height:1.35}
+.dt3 .ccard .cd{font-size:14px;color:var(--mut);line-height:1.5;flex:1}
+.dt3 .ccard .go{font-size:14px;font-weight:800;color:var(--gold2)}
+@media (max-width:1000px){.dt3 .cgroups{grid-template-columns:minmax(0,1fr)}.dt3 .cgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.dt3 .cgrid{grid-template-columns:minmax(0,1fr)}.dt3 .ccard{flex-direction:row;flex-wrap:wrap;align-items:center}.dt3 .ccard .ci{flex:0 0 42px}.dt3 .ccard b{flex:1;min-width:0}.dt3 .ccard .cd{flex-basis:100%}.dt3 .ccard .go{display:none}}
+</style><style>
+.dt3 .crumb{font-size:13px;color:var(--mut);margin:0 0 10px}.dt3 .crumb a{color:var(--gold2);text-decoration:none}
+.dt3 .chead{margin:0 0 18px}.dt3 .chead h1{font-size:38px;line-height:1.15;margin:4px 0 10px;font-weight:900;text-wrap:balance}
+.dt3 .chead .ans{font-size:18px;max-width:70ch;margin:0}
+.dt3 .calcbox{border:1px solid var(--line);border-radius:26px;overflow:hidden;background:#fff;box-shadow:0 28px 60px -46px rgba(60,45,10,.7)}
+.dt3 .calcbox .pane .ph2{font-size:22px;margin:0;grid-column:1/-1}
+.dt3 .art{max-width:820px}.dt3 .art h2{font-size:28px;line-height:1.25;margin:0 0 10px}.dt3 .art p{margin:0 0 12px}
+.dt3 .btab{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:15.5px;font-variant-numeric:tabular-nums}
+.dt3 .btab th,.dt3 .btab td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:right}
+.dt3 .btab th{background:var(--paper);font-size:14px;color:var(--gold2)}
+.dt3 .tw{overflow-x:auto}
+.dt3 .ex{background:var(--paper);border:1px solid var(--line);border-right:4px solid var(--gold);border-radius:14px;padding:14px 16px}
+.dt3 .rel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.dt3 .rel{grid-template-columns:minmax(0,1fr)}.dt3 .chead h1{font-size:30px}}
+.dt3 .ctab{background:var(--ink);color:#fff;border-radius:22px;padding:22px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+.dt3 .ctab b{color:var(--gold3);font-size:20px;display:block}.dt3 .ctab p{margin:4px 0 0;color:#d8d0bf}
+.dt3 .ctab a{background:var(--gold3);color:var(--ink);text-decoration:none;font-weight:800;border-radius:99px;padding:10px 18px}
+.dt3 .srcs{font-size:14px;color:var(--mut)}.dt3 .srcs ol{padding-inline-start:20px;margin:6px 0}.dt3 .srcs a{color:var(--gold2)}.dt3 sup a{color:var(--gold2);text-decoration:none;font-size:12px}.dt3 .relart{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}.dt3 .relart a{color:var(--gold2);font-weight:800}
+</style><div class="dt3" dir="rtl"><p class="crumb"><a href="/">דף הבית</a> › <a href="/calculators/">מחשבונים וכלים</a> › מחשבון אגרת בית משפט</p><header class="chead"><p class="k">מחשבונים לתביעות והליכים</p><h1>מחשבון אגרת בית משפט 2026</h1><p class="ans"><strong>בתביעה כספית האגרה היא 2.5% מסכום התביעה, ובבית משפט השלום לא פחות מ-893 ₪. משלמים חצי עם הגשת התביעה וחצי לפני הדיון בהוכחות. בתביעה שאינה כספית, ובערעור, האגרה היא סכום קבוע.</strong> <sup><a href="#src-1">[1]</a></sup> בוחרים בית משפט וסוג הליך, ומקבלים את האגרה לפי הסכומים של 2026.</p></header><div class="calcbox">      <div class="pane" role="tabpanel" data-p="court">
+        <h2 class="ph2">מקלידים ומקבלים תוצאה</h2><p class="why">הסכומים לפי תקנות בתי המשפט (אגרות), כפי שעודכנו ב-1 בינואר 2026.</p>
+        <div class="ins">
+          <div class="fld"><label>באיזה בית משפט?</label><select data-i="court"><option value="s">בית משפט השלום</option><option value="d">בית המשפט המחוזי</option></select></div>
+          <div class="fld"><label>איזה הליך?</label><select data-i="type"><option value="money">תביעה לסכום כסף</option><option value="non">סעד שאינו כספי (צו הצהרתי, צו עשה, אכיפה, פירוק שותפות)</option><option value="oth">תביעה אחרת</option><option value="ten">תביעה בבית הדין לשכירות</option><option value="app">ערעור על פסק דין</option><option value="bra">בקשת רשות ערעור על החלטת ביניים</option></select></div>
+          <div class="fld"><label>סכום התביעה</label><div class="money"><input data-i="amt" inputmode="numeric" value="150,000"><span>₪</span></div></div>
+        </div>
+        <div class="res"><div class="hl"><span>האגרה הכוללת</span><b data-o="tot"></b></div><div class="r"><span>משלמים עם הגשת התביעה</span><b data-o="h1"></b></div><div class="r"><span>משלמים עד 20 יום לפני הדיון בהוכחות</span><b data-o="h2"></b></div><div class="r"><span>אם התיק מסתיים מוקדם בפשרה, יוחזר בערך</span><b data-o="ref"></b></div><small data-o="note"></small></div>
+      </div>
+</div><section class="art"><h2>איך מחושבת אגרה בתביעה כספית?</h2><p>בתביעה לסכום כסף משלמים 2.5% מהסכום שתובעים, לפי ערכו ביום הגשת התביעה. בבית משפט השלום יש אגרה מזערית: גם בתביעה קטנה בסכום, משלמים לפחות 893 ₪ (סכום 2026). בבית המשפט המחוזי, על החלק של התביעה שמעל 28,580,660 ₪ משלמים 1% בלבד. <sup><a href="#src-1">[1]</a></sup></p><div class="ex"><b>דוגמה:</b> תביעה כספית של 150,000 ₪ בבית משפט השלום. האגרה היא 2.5%, כלומר 3,750 ₪. משלמים 1,875 ₪ עם ההגשה, ועוד 1,875 ₪ (בתוספת הצמדה) לפני הדיון בהוכחות.</div></section><section class="art"><h2>מתי משלמים את האגרה?</h2><p>בתביעה כספית האגרה משולמת בשני חלקים: המחצית הראשונה עם הגשת התביעה, והמחצית השנייה עד 20 יום לפני המועד שנקבע לדיון הראשון בהוכחות, בתוספת הפרשי הצמדה למדד. <sup><a href="#src-1">[1]</a></sup> ישיבת קדם משפט לא נחשבת "דיון" לעניין זה. אם ניתן פסק דין בהעדר הגנה, או שהתיק הסתיים לפני שהתחיל הדיון, בדרך כלל לא משלמים את המחצית השנייה.</p></section><section class="art"><h2>החזר אגרה כשהתיק מסתיים מוקדם</h2><p>אם ההליך הסתיים לפני סוף ישיבת קדם המשפט השלישית, כי התובע ביטל את התביעה, כי הצדדים הגיעו לפשרה, כי הסכסוך הועבר לבוררות או כי הסתיים בגישור, האגרה ששולמה מוחזרת בניכוי סכום קבוע: 839 ₪ בבית משפט השלום ו-1,429 ₪ בבית המשפט המחוזי (סכומי 2026). <sup><a href="#src-1">[1]</a></sup></p></section><section class="art"><h2>תביעה שאינה כספית וערעורים</h2><p>בתביעה לסעד שאינו כספי, כמו צו הצהרתי, צו עשה או צו מניעה, אכיפה או פירוק שותפות, משלמים אגרה קבועה: 774 ₪ בשלום ו-1,363 ₪ במחוזי. בתביעה אחרת: 2,012 ₪ בשלום ו-3,762 ₪ במחוזי. בתביעה שכוללת כמה סעדים משלמים אגרה אחת בלבד, לפי הסכום הגבוה. <sup><a href="#src-1">[1]</a></sup></p><div class="tw"><table class="btab"><thead><tr><th>הליך (2026)</th><th>שלום</th><th>מחוזי</th></tr></thead><tbody><tr><td>תביעה לסכום כסף</td><td>2.5%, לפחות 893 ₪</td><td>2.5% (1% מעל 28,580,660 ₪)</td></tr><tr><td>סעד שאינו כספי</td><td>774 ₪</td><td>1,363 ₪</td></tr><tr><td>תביעה אחרת</td><td>2,012 ₪</td><td>3,762 ₪</td></tr><tr><td>ערעור על פסק דין</td><td>1,654 ₪ (ערעור על פסק דין של השלום)</td><td>3,539 ₪ (ערעור על פסק דין של המחוזי)</td></tr><tr><td>בקשת רשות ערעור על החלטת ביניים</td><td>588 ₪</td><td>588 ₪</td></tr><tr><td>בית הדין לשכירות</td><td>285 ₪</td><td>לא רלוונטי</td></tr></tbody></table></div><p>תביעות קטנות, בית המשפט לענייני משפחה ובית הדין לעבודה מוסדרים בתקנות אגרה אחרות, ולכן הם לא במחשבון.</p></section><section class="art"><h2>שאלות נפוצות</h2><details><summary>כמה עולה להגיש תביעה כספית?</summary><p>בבית משפט השלום ובבית המשפט המחוזי האגרה היא 2.5% מסכום התביעה. בבית משפט השלום יש אגרה מזערית, 893 ₪ בשנת 2026. בבית המשפט המחוזי משלמים 1% בלבד על החלק שמעל 28,580,660 ₪.</p></details><details><summary>משלמים את כל האגרה מראש?</summary><p>לא. בתביעה כספית משלמים מחצית עם הגשת התביעה, ואת המחצית השנייה עד 20 יום לפני הדיון הראשון בהוכחות, בתוספת הפרשי הצמדה למדד.</p></details><details><summary>מה קורה עם האגרה אם מגיעים לפשרה?</summary><p>אם ההליך הסתיים לפני סוף ישיבת קדם המשפט השלישית, בפשרה, בגישור, בהעברה לבוררות או כשהתובע ביטל את התביעה, מחזירים את האגרה ששולמה, בניכוי סכום קבוע: 839 ₪ בשלום ו-1,429 ₪ במחוזי.</p></details><details><summary>אפשר לקבל פטור מאגרה?</summary><p>כן, מי שאין ביכולתו לשלם יכול לבקש פטור עם הגשת התביעה, בצירוף תצהיר על רכושו והכנסותיו. בית המשפט מחליט אם לפטור, כולו או חלקו.</p></details><details><summary>הסכומים משתנים כל שנה?</summary><p>כן. הסכומים בתקנות מתעדכנים ב-1 בינואר של כל שנה לפי מדד המחירים לצרכן. המחשבון מעודכן לסכומים של 2026.</p></details></section><section><div class="sh"><div><p class="k">עוד מחשבונים</p><h2>מחשבונים קשורים</h2></div></div><div class="rel"><a class="ccard" href="https://dabullaw.co.il/calculators/index-linkage/"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><path d="M4 18l5-6 4 3 7-9"/><path d="M15 6h5v5"/></svg></span><b>מחשבון הצמדה למדד</b><span class="cd">כמה שווה היום סכום מלפני כמה שנים</span><span class="go">לחשב ←</span></a><a class="ccard" href="https://dabullaw.co.il/calculators/late-delivery/"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><b>פיצוי על איחור במסירה</b><span class="cd">כמה הקבלן חייב לפי חוק המכר (דירות)</span><span class="go">לחשב ←</span></a><a class="ccard" href="https://dabullaw.co.il/calculators/rent-deposit/"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="#8a6d2c" stroke-width="1.8"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M4 10h16M8 14h3"/></svg></span><b>כמה בטוחה מותר לבקש מהשוכר</b><span class="cd">הסכום המרבי לפי חוק השכירות</span><span class="go">לחשב ←</span></a></div></section><section><div class="ctab"><div><b>רוצים שנבדוק את המספרים שלכם?</b><p>נעבור על העסקה, על החוזה ועל המס, ונגיד לכם מה כדאי לעשות. 09-8613413</p></div><a href="/%D7%A6%D7%A8%D7%95-%D7%A7%D7%A9%D7%A8/">לשיחה עם עו״ד יקיר דבול ←</a></div></section><section class="art srcs"><h2>מקורות</h2><ol><li id="src-1"><a href="https://he.wikisource.org/wiki/%D7%AA%D7%A7%D7%A0%D7%95%D7%AA_%D7%91%D7%AA%D7%99_%D7%94%D7%9E%D7%A9%D7%A4%D7%98_(%D7%90%D7%92%D7%A8%D7%95%D7%AA)" target="_blank" rel="noopener noreferrer">תקנות בתי המשפט (אגרות), התשס"ז-2007, כולל התוספת והסכומים המעודכנים ל-2026</a>, <em>ויקיטקסט</em></li><li id="src-2"><a href="https://www.gov.il/he/departments/the_judicial_authority" target="_blank" rel="noopener noreferrer">הרשות השופטת</a>, <em>gov.il</em></li></ol><p>החישוב הוא הערכה כללית ואינו ייעוץ משפטי. את האגרה הסופית קובעת מזכירות בית המשפט לפי סוג ההליך והסעדים.</p></section></div><script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "@id": "https://dabullaw.co.il/calculators/court-fees/#app", "name": "מחשבון אגרת בית משפט 2026", "url": "https://dabullaw.co.il/calculators/court-fees/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "inLanguage": "he-IL", "isAccessibleForFree": true, "isPartOf": {"@id": "https://dabullaw.co.il/calculators/court-fees/"}, "provider": {"@id": "https://dabullaw.co.il/#organization"}}, {"@type": "FAQPage", "@id": "https://dabullaw.co.il/calculators/court-fees/#faq", "isPartOf": {"@id": "https://dabullaw.co.il/calculators/court-fees/"}, "mainEntity": [{"@type": "Question", "name": "כמה עולה להגיש תביעה כספית?", "acceptedAnswer": {"@type": "Answer", "text": "בבית משפט השלום ובבית המשפט המחוזי האגרה היא 2.5% מסכום התביעה. בבית משפט השלום יש אגרה מזערית, 893 ₪ בשנת 2026. בבית המשפט המחוזי משלמים 1% בלבד על החלק שמעל 28,580,660 ₪."}}, {"@type": "Question", "name": "משלמים את כל האגרה מראש?", "acceptedAnswer": {"@type": "Answer", "text": "לא. בתביעה כספית משלמים מחצית עם הגשת התביעה, ואת המחצית השנייה עד 20 יום לפני הדיון הראשון בהוכחות, בתוספת הפרשי הצמדה למדד."}}, {"@type": "Question", "name": "מה קורה עם האגרה אם מגיעים לפשרה?", "acceptedAnswer": {"@type": "Answer", "text": "אם ההליך הסתיים לפני סוף ישיבת קדם המשפט השלישית, בפשרה, בגישור, בהעברה לבוררות או כשהתובע ביטל את התביעה, מחזירים את האגרה ששולמה, בניכוי סכום קבוע: 839 ₪ בשלום ו-1,429 ₪ במחוזי."}}, {"@type": "Question", "name": "אפשר לקבל פטור מאגרה?", "acceptedAnswer": {"@type": "Answer", "text": "כן, מי שאין ביכולתו לשלם יכול לבקש פטור עם הגשת התביעה, בצירוף תצהיר על רכושו והכנסותיו. בית המשפט מחליט אם לפטור, כולו או חלקו."}}, {"@type": "Question", "name": "הסכומים משתנים כל שנה?", "acceptedAnswer": {"@type": "Answer", "text": "כן. הסכומים בתקנות מתעדכנים ב-1 בינואר של כל שנה לפי מדד המחירים לצרכן. המחשבון מעודכן לסכומים של 2026."}}]}]}</script><script nowprocket data-no-optimize="1" defer src="https://dabullaw-glitch.github.io/dabul-office/media/widgets/calc-core.js?ver=20261011c"></script>
