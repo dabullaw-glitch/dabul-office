@@ -188,6 +188,7 @@ CSS = """<style>
 .dsv .ctab p{margin:0}
 @media (max-width:900px){.dsv{font-size:16.5px}.dsv .two,.dsv .cards{grid-template-columns:minmax(0,1fr)}.dsv .steps{grid-template-columns:repeat(2,minmax(0,1fr))}.dsv .hero{padding:24px 18px;border-radius:20px}.dsv table.pr th,.dsv table.pr td{padding:9px 10px}}
 @media (max-width:480px){.dsv .steps{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){.dsv .sv-bar{bottom:88px;border-radius:16px;margin-inline:4px}}
 </style>"""
 
 def app_embed(sid):
