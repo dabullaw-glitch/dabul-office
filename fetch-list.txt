@@ -1,0 +1,8 @@
+pv-s1.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s1.mp3
+pv-s2.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s2.mp3
+pv-s3.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s3.mp3
+pv-s4.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s4.mp3
+pv-s5.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s5.mp3
+pv-s6.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s6.mp3
+pv-s7.mp3 https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/tts/precheck-video/s7.mp3
+yakir-about.webp https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-about.webp
