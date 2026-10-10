@@ -53,7 +53,7 @@
 .cl-it .tx{font-size:12.5px;color:var(--muted);white-space:pre-wrap;max-height:3.9em;overflow:hidden;margin-top:4px}
 .cl-day{margin:14px 0 6px;font-weight:800;font-size:14px;color:var(--muted)}
 .cl-p{display:inline-block;font-size:11.5px;border-radius:999px;padding:0 8px;line-height:19px;font-weight:700;background:var(--line2);color:var(--muted)}
-.cl-p.o-grok{background:var(--info-soft);color:var(--info)}.cl-p.o-system{background:var(--accent-soft);color:var(--accent)}.cl-p.o-yakir{background:var(--warn-soft);color:var(--warn)}.cl-p.o-claude{background:var(--teal-soft);color:var(--teal)}
+.cl-p.o-grok{background:var(--info-soft);color:var(--info)}.cl-p.o-system,.cl-p.o-buffer,.cl-p.o-office{background:var(--accent-soft);color:var(--accent)}.cl-p.o-yakir{background:var(--warn-soft);color:var(--warn)}.cl-p.o-claude{background:var(--teal-soft);color:var(--teal)}
 .cl-p.s-done,.cl-p.s-published{background:var(--ok-soft);color:var(--ok)}.cl-p.s-prop{background:var(--info-soft);color:var(--info)}.cl-p.s-wait,.cl-p.s-notext,.cl-p.s-missed{background:var(--warn-soft);color:var(--warn)}
 .cl-det{position:sticky;top:12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
 .cl-det h3{margin:6px 0 8px;font-size:17px;text-wrap:balance}
@@ -81,7 +81,7 @@
 
   const CH = { instagram: ['אינסטגרם', '#c13584'], tiktok: ['טיקטוק', '#25262b'], youtube: ['יוטיוב', '#e62117'], facebook: ['פייסבוק', '#1877f2'], linkedin: ['לינקדאין', '#0a66c2'], x: ['X', '#666'], gbp: ['גוגל עסקי', '#1e8e3e'], whatsapp: ['וואטסאפ', '#25a85a'], newsletter: ['ניוזלטר', '#a86a06'], internal: ['פנימי', '#999'], film: ['לצילום', '#8b6f47'], dev: ['פיתוחים ומועדים', '#6b4fa0'] };
   const PROJ = { course: ['קורס "קונים דירה ראשונה"', '#6b4fa0'], clients: ['להביא לקוחות', '#c13b2e'], video: ['סרטונים ותוכן', '#c13584'], chan: ['ערוצי פרסום (מעבר מגרוק)', '#0a66c2'], site: ['אתר וקידום בגוגל', '#1e8e3e'], launch: ['השקה ושיווק', '#b7791f'], money: ['כספים', '#62797a'] };
-  const OWN = { grok: 'גרוק בוט', system: 'המערכת', yakir: 'יקיר', claude: 'Claude' };
+  const OWN = { grok: 'גרוק בוט', system: 'המערכת', buffer: 'המערכת (Buffer)', office: 'המערכת', yakir: 'יקיר', claude: 'Claude' };
   const PST = { planned: 'מתוכנן', published: 'פורסם ✓', skipped: 'בוטל', waiting: 'מחכה לחיבור', missed: 'לא פורסם', unverified: 'עבר, אין דרך לבדוק' };
   const MST = { done: 'בוצע ✓', open: 'מתוכנן', prop: 'מועד מוצע, מחכה לאישורך', wait: 'מחכה לך', ext: 'תלוי בגורם חיצוני', hold: 'בהמתנה' };
   const KIND = { 'own-video': 'סרטון שאלה ליוטיוב', weekly: 'פוסט מקצועי שבועי', group: 'הודעה לקבוצה', community: 'טיוטה לקהילה', video: 'סרטון', image: 'פוסט עם תמונה', article: 'מאמר מהאתר', film: 'תסריט לצילום', ms: 'פיתוח' };
