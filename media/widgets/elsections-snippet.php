@@ -88,6 +88,21 @@ add_action('rest_api_init', function () {
 		dabul_els_save($pid, $row, $d, 'eladdsection ' . count($sections) . ' sections, ' . $count . ' boxes');
 		return array('ok' => true, 'sections' => count($sections), 'boxes' => $count);
 	}));
+	// POST {post, items:{widgetId: "new title"}, dry}  changes the text of heading widgets (keeps their h1/h2 level)
+	register_rest_route('dabul/v1', '/elsettitle', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
+		global $wpdb;
+		$pid = (int) $req->get_param('post'); $items = (array) $req->get_param('items');
+		$row = $wpdb->get_row($wpdb->prepare("SELECT meta_id, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = '_elementor_data' LIMIT 1", $pid), ARRAY_A);
+		if (!$row || !$items) return new WP_Error('args', 'missing', array('status' => 400));
+		$d = json_decode($row['meta_value'], true); $hit = array();
+		$walk = function (&$els) use (&$walk, $items, &$hit) { foreach ($els as &$e) { if (isset($e['id'], $items[$e['id']]) && isset($e['widgetType']) && $e['widgetType'] === 'heading') { $e['settings']['title'] = sanitize_text_field($items[$e['id']]); $hit[] = $e['id']; } if (!empty($e['elements'])) $walk($e['elements']); } };
+		$walk($d);
+		$missing = array_values(array_diff(array_keys($items), $hit));
+		if ($req->get_param('dry')) return array('dry' => true, 'set' => count($hit), 'missing' => $missing);
+		if (!$hit) return new WP_Error('none', 'nothing matched', array('status' => 404));
+		dabul_els_save($pid, $row, $d, 'elsettitle ' . count($hit));
+		return array('ok' => true, 'set' => count($hit), 'missing' => $missing);
+	}));
 	register_rest_route('dabul/v1', '/elsetdesc', array('methods' => 'POST', 'permission_callback' => $perm, 'callback' => function ($req) {
 		global $wpdb;
 		$pid = (int) $req->get_param('post'); $items = (array) $req->get_param('items');
