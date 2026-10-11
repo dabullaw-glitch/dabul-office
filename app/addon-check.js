@@ -2,7 +2,7 @@
    (orders from the office website, docs coll "chk"). For each paid order: the property and buyer details, the documents
    that were ordered (uploaded to the private files bucket), a writing box for each topic, a purchase tax estimate,
    the summary, an email preview, and sending the full answer to the client's email.
-   Built 10.10.2026; live in the office system from 11.10.2026 (orders and payment through the services function). */
+   Built 10.10.2026; live from 11.10.2026. Shown inside the client's card (addon-clientsvc.js), not as a menu item. */
 (function (s) {
   if (!s || s.CHK) return; s.CHK = '20261010a';
   const n = s.esc;
@@ -95,7 +95,7 @@
   }
 
   // ---------- one order ----------
-  function orderView(o) {
+  function orderView(o, inline) {
     const sec = o.sections || {};
     const files = o.files || [];
     const price = +o.askPrice || 0, buyer = o.buyer || 'first';
@@ -106,7 +106,7 @@
         ${k === 'tax' ? `<div class="ck-tax"><span>${price ? `לפי ${money(price)}, ${n(BUYER[buyer] || '')}` : 'אין מחיר מבוקש בהזמנה'}</span><b>${price ? money(t) : ''}</b></div>${price && !v.text ? `<button class="btn sm ghost" data-a="ck-taxfill" data-id="${n(o.id)}">להכניס את ההערכה לטקסט</button>` : ''}` : ''}
         <textarea data-ck-field="${k}" data-id="${n(o.id)}" placeholder="${n(starter || 'מה מצאנו, ומה זה אומר בשבילכם')}">${n(v.text || '')}</textarea></div>`;
     }).join('');
-    return `<div class="toolbar"><button class="btn sm ghost" data-a="ck-back">← כל ההזמנות</button></div>
+    return `${inline ? '' : '<div class="toolbar"><button class="btn sm ghost" data-a="ck-back">← כל ההזמנות</button></div>'}
       <div class="ck-grid"><div style="min-width:0">
         ${topics}
         <div class="ck-sec"><h4><span>סיכום והמלצה</span></h4>
@@ -163,7 +163,8 @@
     const o = id && all().find(x => x.id === id);
     el.innerHTML = `<div>${s.pageHead('בדיקות דירה לפני קנייה', 'הזמנות מהאתר: 490 ₪ + מע"מ, תשובה ללקוח עד 2 ימי עבודה.', '')}${o ? orderView(o) : listView()}</div>`;
   } };
-  try { const a = (s.AREAS || []).find(x => x[0] === 'money'); if (a && !a[3].some(x => x[0] === 'chk')) a[3].push(['chk', 'בדיקות דירה']); } catch { /* menu stays */ }
+  // 11.10.2026 (Yakir): no menu entry of its own. The answer is written inside the client's card (addon-clientsvc.js).
+  s.chkInline = id => { const o = all().find(x => x.id === id); return o ? orderView(o, true) : ''; };
 
   // ---------- actions ----------
   const save = (id, patch) => s.patch('chk', id, Object.assign(patch, { updatedAt: new Date().toISOString() })).catch(() => s.toast('לא נשמר, נסה שוב', 'bad'));

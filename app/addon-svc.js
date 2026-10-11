@@ -2,7 +2,7 @@
    (docs coll "svc", written by the "services" function): list by status and service, and for each order the client,
    the answers with the questions as the client saw them, the price, the files (download links from the server),
    status changes, an email to the client, and the history. The service definitions come from svc-config.json,
-   the same file the order form uses. Built 10.10.2026; live in the office system from 11.10.2026. */
+   the same file the order form uses. Built 10.10.2026; live from 11.10.2026. Each order also shows in the buyer's client card (addon-clientsvc.js). */
 (function (s) {
   if (!s || s.SVC) return; s.SVC = '20261010a';
   const n = s.esc;
@@ -75,7 +75,7 @@
     return `<div class="sv-fl">${tabs}</div><div class="sv-fl">${svs}<button data-a="sv-f" data-k="test" data-v="${test ? '' : '1'}" class="${test ? 'on' : ''}">להציג בדיקות</button></div><div class="card" style="padding:4px 12px">${list}</div>`;
   }
 
-  function orderView(o) {
+  function orderView(o, inline) {
     const d = svcDef(o.svc), a = o.a || {}, c = o.c || {};
     const fields = d ? d.fields.filter(f => f.t !== 'file') : Object.keys(a).map(k => ({ k, q: k, t: 'text' }));
     const qa = fields.map(f => { const v = answer(f, a[f.k]); return v ? `<dt>${n(f.q)}</dt><dd>${v}</dd>` : ''; }).join('');
@@ -85,8 +85,8 @@
     const files = (o.files || []).length ? `<div class="sv-files">${o.files.map((f, i) => `<div class="sv-file"><span class="g">${n(f.name)}</span>${f.up ? `<button class="btn sm" data-a="sv-file" data-id="${n(o.id)}" data-i="${i}">הורדה</button>` : '<small>לא הועלה</small>'}</div>`).join('')}</div>` : '<small>לא צורפו קבצים.</small>';
     const sts = NEXT.filter(x => x !== o.status).map(x => `<button class="btn sm" data-a="sv-status" data-id="${n(o.id)}" data-s="${x}">${n(STATUS[x][0])}</button>`).join('');
     const log = (o.log || []).slice().reverse().map(l => `<div>${n(l.text)} <small>${n(when(l.at))}</small></div>`).join('');
-    const chk = o.svc === 'precheck' ? `<button class="btn" data-a="sv-chk" data-id="${n(o.id)}">לכתוב את התשובה בבדיקות דירה ←</button>` : '';
-    return `<p><button class="btn ghost sm" data-a="sv-back">→ לכל ההזמנות</button></p>
+    const chk = o.svc === 'precheck' && !inline && o.clientId ? `<button class="btn" data-a="go" data-v="client" data-id="${n(o.clientId)}">לכתוב את התשובה בכרטיס הלקוח ←</button>` : '';
+    return `${inline ? '' : `<p><button class="btn ghost sm" data-a="sv-back">→ לכל ההזמנות</button>${o.clientId ? ` <button class="btn sm" data-a="go" data-v="client" data-id="${n(o.clientId)}">לכרטיס הלקוח ←</button>` : ''}</p>`}
     <div class="sv-grid"><div>
       ${(o.review || []).length ? `<div class="sv-rev"><b>צריך בדיקה לפני תשלום:</b> ${n(o.review.join(', '))}</div>` : ''}
       <div class="sv-sec"><h4>${n(o.title || o.svc)} ${pill(o.status)}</h4><dl class="sv-dl">${qa}${meet}</dl></div>
@@ -113,7 +113,14 @@
     return data;
   };
   s.act('sv-f', (b, d) => { s.UI.svc = s.UI.svc || {}; s.UI.svc[d.k] = d.k === 'test' ? !!d.v : d.v; redraw(); });
-  s.act('sv-open', (b, d) => { s.UI.svc = s.UI.svc || {}; s.UI.svc.id = d.id; redraw(); window.scrollTo(0, 0); });
+  s.act('sv-open', (b, d) => {
+    const o = (s.S.data.svc || {})[d.id] || {};
+    // the order lives in the client's card; without a card (older orders) it opens here
+    if (o.clientId && s.get && s.get('clients', o.clientId)) { s.UI.client = s.UI.client || {}; s.UI.clientSvc = { open: d.id }; s.go('client', o.clientId); return; }
+    s.UI.svc = s.UI.svc || {}; s.UI.svc.id = d.id; redraw(); window.scrollTo(0, 0);
+  });
+  s.svcInline = id => { const o = all().find(x => x.id === id); return o ? orderView(o, true) : ''; };
+  s.svcAll = all; s.svcPill = pill; s.svcWhen = when; s.svcMoney = money;
   s.act('sv-back', () => { s.UI.svc = s.UI.svc || {}; s.UI.svc.id = ''; redraw(); });
   s.act('sv-chk', (b, d) => { s.UI.chk = s.UI.chk || {}; s.UI.chk.id = d.id; if (s.go) s.go('chk'); });
   s.act('sv-file', async (b, d) => {
