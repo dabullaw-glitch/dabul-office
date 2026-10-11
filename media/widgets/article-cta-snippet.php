@@ -26,7 +26,7 @@ add_action('wp_head', function () {
 	echo '<style id="dbl-acta-css">
 .dacta{direction:rtl;margin:28px 0;border:1px solid #e8e2d4;border-right:5px solid #c9a85c;background:#fbf8f1;border-radius:12px;padding:20px 22px;display:grid;grid-template-columns:64px minmax(0,1fr);gap:16px;align-items:center;clear:both}
 .dacta *{box-sizing:border-box}
-.dacta img{width:64px;height:64px;border-radius:50%;object-fit:cover;object-position:50% 30%;border:2px solid #c9a85c;margin:0;display:block;max-width:none}
+.dacta img{width:64px!important;height:64px!important;border-radius:50%!important;object-fit:cover;object-position:50% 30%;border:2px solid #c9a85c;margin:0;display:block;max-width:none}
 .dacta .tt{display:block;font-size:20px;font-weight:800;line-height:1.3;color:#16161a;margin:0}
 .dacta p{margin:4px 0 12px;font-size:15.5px;line-height:1.55;color:#45433d}
 .dacta .bb{display:flex;flex-wrap:wrap;gap:10px}
@@ -34,7 +34,7 @@ add_action('wp_head', function () {
 .dacta a.cl{background:#16161a;color:#fff!important}
 .dacta a.wa{background:#25d366;color:#08301a!important}
 .dacta svg{width:18px;height:18px;flex:none}
-@media (max-width:640px){.dacta{grid-template-columns:52px minmax(0,1fr);padding:18px 16px;gap:12px}.dacta img{width:52px;height:52px}.dacta .tt{font-size:18px}.dacta p,.dacta .bb{grid-column:1 / -1}.dacta a.cb{flex:1 1 100%;justify-content:center;padding:13px}}
+@media (max-width:640px){.dacta{grid-template-columns:52px minmax(0,1fr);padding:18px 16px;gap:12px}.dacta img{width:52px!important;height:52px!important}.dacta .tt{font-size:18px}.dacta p,.dacta .bb{grid-column:1 / -1}.dacta a.cb{flex:1 1 100%;justify-content:center;padding:13px}}
 </style>';
 }, 30);
 add_filter('the_content', function ($html) {
