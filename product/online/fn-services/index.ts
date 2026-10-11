@@ -6,7 +6,7 @@
 //  POST {action:'slots', svc}                      -> free Zoom times
 //  POST {action:'order', svc, a, c, meet, files}   -> saves the order, returns signed upload links for the files
 //  POST {action:'uploaded', id, token}             -> files are in: notify the office, email the client, return payUrl
-//  POST ?step=paid                                 -> Morning's server callback (enabled when Morning is connected)
+//  POST ?step=paid&id=&k=                          -> Morning's server callback after payment (k: the order's secret key)
 //  POST {action:'admin-file'|'admin-mail'|'admin-status', ...} with the office user's sign-in -> office panel actions
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { loadSecrets, json, cors, admin, env, telegram } from '../_shared/common.ts';
@@ -107,12 +107,79 @@ const safeName = (n: string) => String(n || 'file').replace(/[^\p{L}\p{N}._-]+/g
 const today = () => new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
 const ymd = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-// ---- the payment (Morning). Until it is connected there is no payment link and the client gets one by email later. ----
+// ---- the payment (Morning, connected 11.10.2026: MORNING_API_ID / MORNING_API_SECRET in app_secrets) ----
+// payLink: a hosted Morning payment page for the order total (credit card / Bit, by the clearing connected in Morning).
+// Morning issues the receipt itself. The callback URL carries a secret key known only to this server and Morning.
+// Without clearing in Morning (or on any error) there is no link: the client gets one by email later and Yakir a Telegram.
+const MORNING = 'https://api.greeninvoice.co.il/api/v1';
+let mTok = '', mTokAt = 0;
+async function morningToken() {
+  if (mTok && Date.now() - mTokAt < 40 * 60e3) return mTok;
+  const id = env('MORNING_API_ID'), secret = env('MORNING_API_SECRET');
+  if (!id || !secret) return '';
+  const r = await fetch(MORNING + '/account/token', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, secret }) });
+  // deno-lint-ignore no-explicit-any
+  const j: any = await r.json().catch(() => ({}));
+  if (!r.ok || !j.token) return '';
+  mTok = j.token; mTokAt = Date.now(); return mTok;
+}
 // deno-lint-ignore no-explicit-any
-async function payLink(_id: string, _o: any): Promise<string> {
-  // Morning (Green Invoice): POST /payments/form with the amount, description, client and the callback
-  // URL ?step=paid&id=<id>; returns the hosted payment page. Filled in when Yakir connects Morning.
-  return '';
+async function morning(path: string, method = 'GET', body?: any) {
+  const t = await morningToken(); if (!t) return { status: 0, j: { errorMessage: 'no token' } };
+  const r = await fetch(MORNING + path, { method, headers: { authorization: `Bearer ${t}`, 'content-type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+  // deno-lint-ignore no-explicit-any
+  const j: any = await r.json().catch(() => ({}));
+  return { status: r.status, j };
+}
+// the active payment plugin (clearing) in Morning; remembered in settings/pay.morning.pluginId
+async function plugin(): Promise<string> {
+  const s = await getDoc('settings', 'pay'); const known = s && s.morning && s.morning.pluginId;
+  if (known) return known;
+  const { j } = await morning('/documents/info?type=320');
+  // deno-lint-ignore no-explicit-any
+  const p = ((j && j.paymentPlugins) || []).find((x: any) => x.active);
+  if (p && p.id) await merge('settings', 'pay', { morning: { ...(s && s.morning || {}), pluginId: p.id, pluginName: p.friendlyName || '' } });
+  return (p && p.id) || '';
+}
+// deno-lint-ignore no-explicit-any
+async function payLink(id: string, o: any): Promise<string> {
+  try {
+    if (!(await morningToken())) return '';
+    const pluginId = await plugin();
+    if (!pluginId) { await telegram(`⚠️ אין סליקה פעילה במורנינג, ולכן להזמנה ${id} לא נוצר קישור תשלום. הלקוח יקבל קישור במייל אחר כך.`).catch(() => false); return ''; }
+    const payKey = rand(24);
+    const hook = `${env('SUPABASE_URL')}/functions/v1/services?step=paid&id=${encodeURIComponent(id)}&k=${payKey}`;
+    const body = {
+      description: `${o.title} (הזמנה ${id})`, type: 320, lang: 'he', currency: 'ILS', vatType: 0,
+      amount: o.price.total, maxPayments: 1, pluginId,
+      client: { name: o.c.name, emails: o.c.email ? [o.c.email] : [], phone: o.c.phone || '', add: true },
+      successUrl: `${SITE}/online/thanks/?id=${encodeURIComponent(id)}`, failureUrl: `${SITE}/online/?pay=failed`,
+      notifyUrl: hook, custom: id, remarks: `הזמנה מקוונת ${id}`,
+    };
+    const { status, j } = await morning('/payments/form', 'POST', body);
+    const url = typeof j.url === 'string' ? j.url : (j.url && (j.url.he || j.url.origin)) || '';
+    if (!url || j.errorCode) {
+      await telegram(`⚠️ מורנינג לא יצר קישור תשלום להזמנה ${id} (${status} ${j.errorCode || ''} ${String(j.errorMessage || '').slice(0, 120)}).`).catch(() => false);
+      return '';
+    }
+    await merge('svc', id, { payKey, payAt: new Date().toISOString() });
+    return url;
+  } catch (e) { console.error(e); return ''; }
+}
+// Morning's server callback after a successful payment: the order becomes "paid" (only with the order's secret key)
+async function paid(url: URL, req: Request) {
+  const id = clip(url.searchParams.get('id'), 40), k = clip(url.searchParams.get('k'), 40);
+  const o = id ? await getDoc('svc', id) : null;
+  if (!o || !o.payKey || k !== o.payKey) return json({ ok: false }, 404);
+  if (o.status === 'paid' || o.paidAt) return json({ ok: true, again: true });
+  // deno-lint-ignore no-explicit-any
+  const p: any = await req.json().catch(() => ({}));
+  const now = new Date().toISOString();
+  await merge('svc', id, { status: 'paid', paidAt: now, payment: { amount: p.amount ?? o.price.total, doc: p.documentId || p.id || '', ref: clip(p.transactionId || p.reference || '', 80) },
+    log: (o.log || []).concat([{ at: now, kind: 'paid', text: 'התשלום התקבל במורנינג' }]) });
+  if (o.svc === 'precheck') await admin().rpc('docs_merge', { p_coll: 'chk', p_id: id, p_patch: { status: 'paid', paidAt: now } });
+  await telegram(`💳 שולם: ${o.title} · ${ils(o.price.total)}\n👤 ${o.c.name} · 📞 ${o.c.phone}\nמספר: ${id}`).catch(() => false);
+  return json({ ok: true });
 }
 
 // ---- free Zoom times ----
@@ -269,7 +336,7 @@ Deno.serve(async (req) => {
   await loadSecrets().catch(() => {});
   const url = new URL(req.url);
   try {
-    if (url.searchParams.get('step') === 'paid') return json({ ok: false, error: 'התשלום עוד לא מחובר' }, 503); // Morning callback, enabled with its verification
+    if (url.searchParams.get('step') === 'paid') return await paid(url, req); // Morning's callback (secret key per order)
     // deno-lint-ignore no-explicit-any
     const b: any = await req.json().catch(() => ({}));
     if (b.action === 'slots') return await slots();
