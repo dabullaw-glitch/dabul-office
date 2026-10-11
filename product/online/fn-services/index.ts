@@ -12,7 +12,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { loadSecrets, json, cors, admin, env, telegram } from './_shared/common.ts';
 
-const TG_ON_ORDER = false; // Telegram for orders not yet paid (off by Yakir's request, 11.10.2026)
 const CFG_URL = 'https://dabullaw-glitch.github.io/dabul-office/media/widgets/svc-config.json';
 const SITE = 'https://dabullaw.co.il';
 // deno-lint-ignore no-explicit-any
@@ -315,9 +314,9 @@ async function uploaded(b: any) {
   }
   const c = await cfg(); const svc = c.services.find((s: { id: string }) => s.id === o.svc) || { title: o.title };
   const when = o.slot && o.slot !== 'later' ? `\n🗓 ${o.slot.split(' ')[0].split('-').reverse().join('.')} ${o.slot.split(' ')[1] || ''}` : '';
-  // No Telegram when an order is only sent (Yakir, 11.10.2026): he gets a Telegram message only when a client paid (payment webhook).
-  // Orders that need a check before payment show in the office system (הזמנות אונליין and the client card).
-  if (TG_ON_ORDER) await telegram(`${review ? '🔎 הזמנה אונליין לבדיקה לפני תשלום' : '🛒 הזמנה אונליין חדשה (ממתינה לתשלום)'}\n${svc.title} · ${ils(o.price.total)}\n👤 ${o.c.name}\n📞 ${o.c.phone}\n✉️ ${o.c.email}${when}${review ? `\n⚠️ ${o.review.join(', ')}` : ''}${o.src && o.src.chName ? `\n📣 מקור: ${o.src.chName}` : ''}\nמספר: ${id}`).catch(() => false);
+  // Telegram (Yakir, 11.10.2026): when a client paid (payment webhook), and here only when an order needs his check before
+  // payment. Orders that only wait for payment are not sent.
+  if (review) await telegram(`${review ? '🔎 הזמנה אונליין לבדיקה לפני תשלום' : '🛒 הזמנה אונליין חדשה (ממתינה לתשלום)'}\n${svc.title} · ${ils(o.price.total)}\n👤 ${o.c.name}\n📞 ${o.c.phone}\n✉️ ${o.c.email}${when}${review ? `\n⚠️ ${o.review.join(', ')}` : ''}${o.src && o.src.chName ? `\n📣 מקור: ${o.src.chName}` : ''}\nמספר: ${id}`).catch(() => false);
   await mail(o.c.email, review ? `קיבלנו את הפרטים: ${svc.title}` : `ההזמנה התקבלה: ${svc.title}`, receipt({ ...o, files, status, payUrl }, svc, id)).catch(() => null);
   return json({ ok: true, payUrl });
 }
