@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>preview</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;800&amp;display=swap"><style>body{margin:0;background:#fff;font-family:Heebo,Arial,sans-serif}</style></head><body><style>
+.dt{--g:#b8932f;--g2:#8a6d2c;--g3:#f0e2bd;--ink:#141311;--line:#e7e0d0;--mut:#6c675d;--paper:#faf8f3;direction:rtl;color:var(--ink);font-size:17px;line-height:1.7;background:var(--paper);padding:56px 20px 72px}
+.dt *{box-sizing:border-box}
+.dt .card{max-width:640px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:26px;padding:34px 30px;box-shadow:0 30px 60px -40px rgba(28,27,25,.45);text-align:center}
+.dt .ic{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;background:linear-gradient(145deg,#fbf3dd,#efe1b8);color:var(--g2)}
+.dt .ic svg{width:36px;height:36px}
+.dt h1{font-size:clamp(26px,4vw,34px);line-height:1.2;margin:0 0 10px;font-weight:800;text-wrap:balance}
+.dt p{margin:0 0 12px;color:#3d3a34}
+.dt .num{display:inline-block;background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:4px 14px;font-weight:800;font-variant-numeric:tabular-nums;margin:2px 0 14px}
+.dt ol{text-align:right;margin:18px 0 22px;padding:16px 20px 16px 16px;background:var(--paper);border-radius:16px;list-style:none;counter-reset:s;display:grid;gap:10px}
+.dt ol li{counter-increment:s;position:relative;padding-right:36px;font-size:16px}
+.dt ol li::before{content:counter(s);position:absolute;right:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--g3);font-size:14px;font-weight:800;display:grid;place-items:center}
+.dt .bb{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.dt .b{display:inline-flex;align-items:center;gap:8px;border-radius:99px;padding:12px 22px;font-weight:800;text-decoration:none!important}
+.dt .b1{background:var(--ink);color:#fff!important}.dt .b2{background:#25d366;color:#08301a!important}.dt .b3{border:1px solid var(--line);color:var(--ink)!important}
+.dt .fail{display:none}.dt.is-fail .ok{display:none}.dt.is-fail .fail{display:block}
+.dt.is-fail .ic{background:#fdecea;color:#c13b2e}
+</style>
+<div class="dt" id="dt">
+ <div class="card">
+  <div class="ic ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></div>
+  <div class="ic fail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 7v6M12 17h.01"></path><circle cx="12" cy="12" r="9"></circle></svg></div>
+  <div class="ok">
+   <h1>התשלום התקבל, תודה</h1>
+   <p>ההזמנה שלכם אצלנו, ועורך הדין כבר יכול להתחיל לטפל.</p>
+   <span class="num" data-id="" hidden=""></span>
+   <ol>
+    <li>קבלה על התשלום נשלחת למייל שמסרתם.</li>
+    <li>עו״ד יקיר דבול עובר על הפרטים והמסמכים. אם חסר משהו, נתקשר או נכתוב לכם.</li>
+    <li>את התשובה, המסמכים או המועד תקבלו במייל, בזמן שכתוב בדף השירות.</li>
+   </ol>
+  </div>
+  <div class="fail">
+   <h1>התשלום לא הושלם</h1>
+   <p>לא חויבתם. ההזמנה שמורה אצלנו, ואפשר לנסות שוב מהקישור לתשלום שנשלח אליכם במייל.</p>
+   <span class="num" data-id="" hidden=""></span>
+   <p>אם משהו לא עובד, נשמח לעזור בטלפון או בוואטסאפ.</p>
+  </div>
+  <div class="bb">
+   <a class="b b1" href="tel:+97298613413">להתקשר 09-8613413</a>
+   <a class="b b2" href="https://wa.me/972505580189" target="_blank" rel="noopener">וואטסאפ</a>
+   <a class="b b3" href="online.html">לכל השירותים</a>
+  </div>
+ </div>
+</div>
+<script>(function(){var q=new URLSearchParams(location.search),id=(q.get('id')||'').replace(/[^A-Za-z0-9-]/g,'').slice(0,20),d=document.getElementById('dt');if(q.get('failed')==='1')d.classList.add('is-fail');if(id)d.querySelectorAll('[data-id]').forEach(function(e){e.textContent='מספר הזמנה: '+id;e.hidden=false;});if(window.gtag&&q.get('failed')!=='1'&&id)try{gtag('event','purchase_online_service',{order_id:id});}catch(e){}})();</script>
+</body></html>
