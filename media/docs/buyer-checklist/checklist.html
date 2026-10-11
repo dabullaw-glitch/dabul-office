@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>צ'קליסט לפני שקונים דירה יד שנייה · יקיר דבול - משרד עורכי דין</title>
+<style>
+@font-face{font-family:H;src:url(fonts/heebo-hebrew-300-normal.woff2) format('woff2');font-weight:300}
+@font-face{font-family:H;src:url(fonts/heebo-hebrew-400-normal.woff2) format('woff2');font-weight:400}
+@font-face{font-family:H;src:url(fonts/heebo-hebrew-500-normal.woff2) format('woff2');font-weight:500}
+@font-face{font-family:H;src:url(fonts/heebo-hebrew-700-normal.woff2) format('woff2');font-weight:700}
+@font-face{font-family:H;src:url(fonts/heebo-hebrew-800-normal.woff2) format('woff2');font-weight:800}
+@font-face{font-family:H;src:url(fonts/heebo-latin-400-normal.woff2) format('woff2');font-weight:400;unicode-range:U+0000-00FF}
+@font-face{font-family:H;src:url(fonts/heebo-latin-700-normal.woff2) format('woff2');font-weight:700;unicode-range:U+0000-00FF}
+@font-face{font-family:F;src:url(fonts/frank-ruhl-libre-hebrew-500-normal.woff2) format('woff2');font-weight:500}
+@font-face{font-family:F;src:url(fonts/frank-ruhl-libre-hebrew-700-normal.woff2) format('woff2');font-weight:700}
+@font-face{font-family:F;src:url(fonts/frank-ruhl-libre-latin-700-normal.woff2) format('woff2');font-weight:700;unicode-range:U+0000-00FF}
+@page{size:A4;margin:0}
+:root{--dark:#111318;--dark2:#1b1e26;--g:#c9a85c;--gd:#8c7646;--g1:#e4d19c;--g2:#f6efdd;--ink:#16161a;--mut:#5d5a54;--line:#e8e2d4;--paper:#fffdf8}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#888}
+body{font-family:H,Arial,sans-serif;color:var(--ink);font-size:9.6pt;line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:210mm;height:297mm;position:relative;overflow:hidden;background:var(--paper);page-break-after:always;break-after:page;margin:0 auto}
+.page:last-child{page-break-after:auto;break-after:auto}
+@media screen{.page{margin:10mm auto;box-shadow:0 2mm 8mm rgba(0,0,0,.3)}}
+.in{position:absolute;inset:15mm 16mm 20mm 16mm}
+
+/* running header + footer */
+.rh{position:absolute;top:7mm;right:16mm;left:16mm;display:flex;justify-content:space-between;align-items:center;font-size:7.6pt;color:var(--mut);letter-spacing:.02em}
+.rh b{color:var(--gd);font-weight:700}
+.ft{position:absolute;bottom:8mm;right:16mm;left:16mm;display:flex;justify-content:space-between;align-items:center;font-size:7.4pt;color:var(--mut);border-top:.3mm solid var(--line);padding-top:2.6mm}
+.ft .pn{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.ft .ph{direction:ltr;unicode-bidi:isolate}
+
+/* ---------- cover ---------- */
+.cover{background:var(--dark);color:#f4efe3}
+.cover .frame{position:absolute;inset:9mm;border:.35mm solid rgba(201,168,92,.55)}
+.cover .frame:after{content:"";position:absolute;inset:1.6mm;border:.2mm solid rgba(201,168,92,.25)}
+.cover .top{position:absolute;top:22mm;right:22mm;left:22mm;display:flex;justify-content:space-between;align-items:flex-start}
+.brand{font-family:F,serif;font-weight:700;font-size:15pt;color:#fff;line-height:1.15}
+.brand small{display:block;font-family:H,sans-serif;font-weight:400;font-size:8.4pt;color:var(--g1);letter-spacing:.08em;margin-top:1.4mm}
+.mono{width:15mm;height:15mm;border:.4mm solid var(--g);display:grid;place-items:center;font-family:F,serif;font-weight:700;color:var(--g);font-size:15pt;transform:rotate(45deg)}
+.mono span{transform:rotate(-45deg)}
+.cover .kick{position:absolute;top:68mm;right:22mm;left:22mm;font-size:9pt;letter-spacing:.06em;color:var(--g);font-weight:500}
+.cover h1{position:absolute;top:77mm;right:22mm;left:22mm;font-family:F,serif;font-weight:700;font-size:40pt;line-height:1.08;color:#fff;text-wrap:balance}
+.cover h1 em{font-style:normal;color:var(--g)}
+.cover .lead{position:absolute;top:128mm;right:22mm;width:128mm;font-size:11.2pt;line-height:1.65;color:#d9d3c4;font-weight:300}
+.stats{position:absolute;top:156mm;right:22mm;left:22mm;display:grid;grid-template-columns:repeat(4,1fr);border-top:.3mm solid rgba(201,168,92,.45);border-bottom:.3mm solid rgba(201,168,92,.45)}
+.stats div{padding:5mm 4mm;border-left:.3mm solid rgba(201,168,92,.25)}
+.stats div:last-child{border-left:0}
+.stats b{display:block;font-family:F,serif;font-size:24pt;color:var(--g);line-height:1;font-weight:700}
+.stats span{font-size:8.6pt;color:#cfc8b8}
+.road{position:absolute;top:190mm;right:22mm;left:22mm}
+.road h3{font-size:8.4pt;letter-spacing:.06em;color:var(--g);font-weight:500;margin-bottom:4mm}
+.road ol{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:2.6mm 9mm}
+.road li{display:flex;gap:3mm;align-items:baseline;font-size:9.6pt;color:#eee7d6;border-bottom:.2mm dotted rgba(201,168,92,.3);padding-bottom:1.8mm}
+.road li i{font-style:normal;font-family:F,serif;font-weight:700;color:var(--g);font-size:11pt;width:5mm;flex:none}
+.road li small{margin-inline-start:auto;color:#9d968a;font-size:8pt;white-space:nowrap}
+.cover .who{position:absolute;bottom:22mm;right:22mm;left:22mm;display:flex;justify-content:space-between;align-items:flex-end;font-size:8.6pt;color:#bdb6a7}
+.cover .who b{display:block;color:#fff;font-size:10.4pt;font-weight:500}
+.cover .who .ph{direction:ltr;unicode-bidi:isolate;color:var(--g1);font-weight:700;font-size:10.4pt}
+
+/* ---------- how to use ---------- */
+.intro h2{font-family:F,serif;font-size:21pt;line-height:1.15;font-weight:700;margin:2mm 0 4mm}
+.intro p.lead{font-size:10.6pt;color:#36352f;max-width:150mm;margin-bottom:6mm}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;margin-bottom:7mm}
+.how div{border:.3mm solid var(--line);border-top:1mm solid var(--g);background:#fff;padding:4mm 4.2mm}
+.how b{display:block;font-size:10pt;margin-bottom:1mm}
+.how p{font-size:8.8pt;color:var(--mut)}
+.legend{display:flex;gap:6mm;flex-wrap:wrap;font-size:8.4pt;color:var(--mut);margin-bottom:8mm;align-items:center}
+.legend span{display:inline-flex;gap:1.8mm;align-items:center}
+.k{display:inline-block;width:3.6mm;height:3.6mm;border:.35mm solid var(--ink);border-radius:.6mm;background:#fff}
+.src{display:inline-block;font-size:7pt;font-weight:700;color:var(--gd);background:var(--g2);border:.2mm solid var(--g1);border-radius:.8mm;padding:0 1.2mm;line-height:1.5;font-variant-numeric:tabular-nums}
+.who-box{display:grid;grid-template-columns:auto 1fr;gap:6mm;align-items:center;background:var(--dark);color:#eee7d6;padding:6mm 7mm;margin-bottom:7mm}
+.who-box .mono{width:12mm;height:12mm;font-size:12pt;margin:0 2mm}
+.who-box b{color:#fff;font-size:10.6pt;display:block;margin-bottom:.6mm}
+.who-box p{font-size:9pt;color:#cfc8b8;line-height:1.55}
+.when{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+.when div{padding:4mm 4.5mm;background:var(--g2);border-right:1mm solid var(--g)}
+.when b{display:block;font-size:9.8pt;margin-bottom:1mm}
+.when p{font-size:8.8pt;color:#45433d}
+
+.deal{margin-top:6mm;border:.3mm solid var(--line);background:#fff;padding:5mm 6mm 6mm}
+.deal h3{font-family:F,serif;font-size:13pt;font-weight:700}
+.deal p{font-size:8.6pt;color:var(--mut);margin:.6mm 0 3mm}
+.deal .f{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 6mm}
+.deal .f span{font-size:7.8pt;color:var(--mut);border-bottom:.3mm solid #cfc8b8;height:12.5mm;display:flex;align-items:flex-end;padding-bottom:7mm}
+/* ---------- stages ---------- */
+.stage{margin-bottom:5.4mm}
+.sh{display:grid;grid-template-columns:15mm 1fr auto;align-items:end;gap:4mm;border-bottom:.5mm solid var(--ink);padding-bottom:2.2mm;margin-bottom:2.6mm}
+.sh .n{font-family:F,serif;font-weight:700;font-size:34pt;line-height:.8;color:var(--g)}
+.sh h2{font-family:F,serif;font-weight:700;font-size:16.5pt;line-height:1.1}
+.sh h2 small{display:block;font-family:H,sans-serif;font-weight:400;font-size:8.6pt;color:var(--mut);margin-top:1mm}
+.sh .cnt{font-size:7.8pt;color:var(--gd);font-weight:700;letter-spacing:.06em;white-space:nowrap}
+.it{display:grid;grid-template-columns:6.2mm 9mm 1fr;gap:0 2.4mm;padding:2.5mm 0;border-bottom:.25mm solid var(--line);break-inside:avoid}
+.it:last-child{border-bottom:0}
+.it .box{width:5mm;height:5mm;border:.4mm solid var(--ink);border-radius:.8mm;margin-top:.4mm;background:#fff}
+.it .no{font-size:8pt;font-weight:700;color:var(--gd);padding-top:.7mm;font-variant-numeric:tabular-nums}
+.it h3{font-size:10.2pt;font-weight:700;line-height:1.35;margin-bottom:.5mm}
+.it p{font-size:9pt;color:#3d3b35;line-height:1.5}
+.it .meta{margin-top:1.1mm;font-size:7.9pt;color:var(--mut);display:flex;gap:2mm;align-items:center;flex-wrap:wrap}
+.it .meta b{color:var(--ink);font-weight:500}
+.tip{margin-top:1mm;background:var(--g2);border-right:.9mm solid var(--g);padding:2.6mm 4mm;font-size:8.7pt;color:#3d3b35;break-inside:avoid}
+.tip b{color:var(--ink)}
+
+/* ---------- glossary / sources ---------- */
+.sec-t{font-family:F,serif;font-weight:700;font-size:18pt;margin-bottom:1mm}
+.sec-s{font-size:8.8pt;color:var(--mut);margin-bottom:4mm}
+.gl{display:grid;grid-template-columns:1fr 1fr;gap:3.2mm 6mm;margin-bottom:8mm}
+.gl div{border-top:.3mm solid var(--line);padding-top:2.4mm}
+.gl b{font-size:9.8pt;display:block;margin-bottom:.4mm}
+.gl b:before{content:"";display:inline-block;width:1.6mm;height:1.6mm;background:var(--g);transform:rotate(45deg);margin-inline-end:2mm;vertical-align:middle}
+.gl p{font-size:8.7pt;color:#45433d;line-height:1.5}
+.sl{list-style:none;columns:2;column-gap:7mm;margin-bottom:7mm}
+.sl li{break-inside:avoid;display:grid;grid-template-columns:7mm 1fr;font-size:8.3pt;line-height:1.4;margin-bottom:2.2mm}
+.sl li .src{justify-self:start;align-self:start}
+.sl li small{display:block;color:var(--mut);font-size:7.5pt}
+.cta{background:var(--dark);color:#eee7d6;padding:6.5mm 7mm;display:grid;grid-template-columns:1fr auto;gap:6mm;align-items:center}
+.cta h3{font-family:F,serif;font-size:15pt;color:#fff;font-weight:700;margin-bottom:1mm}
+.cta p{font-size:9pt;color:#cfc8b8;max-width:105mm}
+.cta .c{text-align:left;font-size:8.4pt;color:#bdb6a7;line-height:1.75}
+.cta .c b{display:block;direction:ltr;color:var(--g);font-size:15pt;font-weight:700;line-height:1.2}
+.disc{margin-top:4.5mm;font-size:7.6pt;color:var(--mut);line-height:1.5}
+.notes{margin-top:2mm;border:.3mm solid var(--line);background:#fff;padding:3mm 4mm;min-height:24mm}
+.notes b{font-size:8.6pt;color:var(--mut);font-weight:500}
+.notes i{display:block;border-bottom:.25mm solid var(--line);height:7mm}
+</style>
+</head>
+<body>
+
+<!-- ============ 1 · COVER ============ -->
+<section class="page cover">
+  <div class="frame"></div>
+  <div class="top">
+    <div class="brand">יקיר דבול<small>משרד עורכי דין · נדל"ן ומקרקעין · נתניה</small></div>
+    <div class="mono"><span>יד</span></div>
+  </div>
+  <div class="kick">צ'קליסט לרוכשי דירה יד שנייה</div>
+  <h1>לפני שקונים<br>דירה <em>יד שנייה</em></h1>
+  <p class="lead">כל הבדיקות במקום אחד, לפי סדר העסקה: מההצעה הראשונה ועד שהדירה רשומה על שמכם. לכל בדיקה כתוב מה בודקים, איפה, ולמה זה חשוב.</p>
+  <div class="stats">
+    <div><b>7</b><span>שלבי עסקה</span></div>
+    <div><b>30</b><span>בדיקות לסימון</span></div>
+    <div><b>8</b><span>מונחים מוסברים</span></div>
+    <div><b>12</b><span>מקורות רשמיים</span></div>
+  </div>
+  <div class="road">
+    <h3>המסלול</h3>
+    <ol>
+      <li><i>1</i>לפני שמציעים מחיר<small>4 בדיקות</small></li>
+      <li><i>5</i>החוזה<small>5 בדיקות</small></li>
+      <li><i>2</i>מה רשום על הדירה<small>4 בדיקות</small></li>
+      <li><i>6</i>יום החתימה והדיווח<small>4 בדיקות</small></li>
+      <li><i>3</i>עירייה וועדה לתכנון ובנייה<small>5 בדיקות</small></li>
+      <li><i>7</i>מסירה ורישום על שמכם<small>4 בדיקות</small></li>
+      <li><i>4</i>כסף, משכנתא ומסים<small>4 בדיקות</small></li>
+      <li><i>+</i>מילון מונחים ומקורות<small>עמ' 7</small></li>
+    </ol>
+  </div>
+  <div class="who">
+    <div><b>עו"ד יקיר דבול</b>עורך דין מקרקעין ונדל"ן</div>
+    <div style="text-align:left"><span class="ph">09-8613413</span><br>dabullaw.co.il</div>
+  </div>
+</section>
+
+<!-- ============ 2 · HOW TO USE ============ -->
+<section class="page">
+  <div class="rh"><span><b>צ'קליסט לפני שקונים דירה יד שנייה</b></span><span>יקיר דבול - משרד עורכי דין</span></div>
+  <div class="in intro">
+    <h2>איך משתמשים בצ'קליסט</h2>
+    <p class="lead">רוב הבעיות בעסקת דירה יד שנייה אפשר לגלות מראש, בבדיקות פשוטות שעושים לפני שחותמים. הצ'קליסט מסודר לפי סדר העסקה, כך שבכל שלב ברור מה בודקים עכשיו ומה מחכה לשלב הבא.</p>
+    <div class="how">
+      <div><b>1. מדפיסים או שומרים בטלפון</b><p>הקובץ בנוי לדפי A4. אפשר להדפיס ולסמן ביד, או לשמור ולעבור עליו מהטלפון.</p></div>
+      <div><b>2. מסמנים בדיקה שהושלמה</b><p>ליד כל בדיקה יש תיבה. בדיקה שלא מסומנת היא שאלה שעדיין פתוחה.</p></div>
+      <div><b>3. שומרים כל מסמך</b><p>נסח, אישורים ומכתבים מהבנק. כדאי לשמור הכל בתיקייה אחת עד הרישום.</p></div>
+    </div>
+    <div class="legend">
+      <span><i class="k"></i> תיבה לסימון</span>
+      <span><i class="src">3</i> מספר המקור ברשימת המקורות בעמוד האחרון</span>
+    </div>
+    <div class="who-box">
+      <div class="mono"><span>יד</span></div>
+      <div><b>מי אנחנו</b><p>יקיר דבול - משרד עורכי דין, נתניה. המשרד מלווה רוכשים ומוכרים בעסקאות דירה יד שנייה: בדיקת הנסח והתיק בעירייה, ניסוח החוזה, דיווח לרשות המסים ורישום הדירה על שם הקונים.</p></div>
+    </div>
+    <div class="when">
+      <div><b>מתי כדאי לעצור ולהתייעץ</b><p>כשהנסח לא נקי (משכנתא, עיקול, הערה לטובת מישהו אחר), כשהדירה לא רשומה בטאבו, כשיש חריגות בנייה, או כשמבקשים מכם לשלם סכום משמעותי לפני שנרשמה הערת אזהרה.</p></div>
+      <div><b>מה אף פעם לא עושים</b><p>לא חותמים על "זכרון דברים" או "טופס הצעה" בלי בדיקה. בישראל גם מסמך קצר כזה יכול להיות חוזה מחייב לכל דבר.</p></div>
+    </div>
+    <div class="deal"><h3>כרטיס הדירה</h3><p>ממלאים כשמתחילים לבדוק דירה מסוימת. כל הפרטים כאן יידרשו בהמשך.</p>
+      <div class="f"><span>כתובת הדירה</span><span>קומה ומספר דירה</span><span>גוש</span><span>חלקה</span><span>תת-חלקה</span><span>מחיר מבוקש</span><span>שם המוכר/ים</span><span>טלפון המוכר</span><span>עורך הדין של המוכר</span><span>הבנק למשכנתא</span><span>תאריך חתימה מתוכנן</span><span>תאריך מסירה מתוכנן</span></div></div>
+  </div>
+  <div class="ft"><span>יקיר דבול - משרד עורכי דין · <span class="ph">09-8613413</span> · dabullaw.co.il</span><span class="pn">2</span></div>
+</section>
+
+<!-- ============ 3 · STAGES 1-2 ============ -->
+<section class="page">
+  <div class="rh"><span><b>צ'קליסט לפני שקונים דירה יד שנייה</b></span><span>שלבים 1 ו-2</span></div>
+  <div class="in">
+    <div class="stage">
+      <div class="sh"><div class="n">1</div><h2>לפני שמציעים מחיר<small>מי הבעלים, ומה בדיוק נמכר</small></h2><div class="cnt">4 בדיקות</div></div>
+      <div class="it"><div class="box"></div><div class="no">1.1</div><div><h3>מוציאים נסח רישום עדכני (נסח טאבו)</h3><p>הנסח מראה מי הבעלים הרשום, מה גודל החלק שלו ומה רשום על הדירה. מוציאים נסח חדש, מהיום, ולא מסתמכים על צילום שהמוכר שלח.</p><div class="meta"><b>איפה:</b> אתר משרד המשפטים, שירות הוצאת נסח רישום מקרקעין <span class="src">1</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">1.2</div><div><h3>מוודאים שמי שמוכר הוא הבעלים הרשום</h3><p>משווים את שמות המוכרים לנסח. אם יש כמה בעלים (בני זוג, יורשים), כולם צריכים לחתום. אם מישהו חותם בשם אחר, מבקשים לראות ייפוי כוח בתוקף.</p><div class="meta"><b>איפה:</b> הנסח, מול תעודות הזהות של המוכרים <span class="src">1</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">1.3</div><div><h3>הדירה לא רשומה בטאבו? מבקשים אישור זכויות</h3><p>יש דירות שרשומות ברשות מקרקעי ישראל או בחברה משכנת ולא בלשכת רישום המקרקעין. במקרה כזה מבקשים אישור זכויות עדכני מהגוף שבו הדירה רשומה, ובודקים שעבודים ברשם המשכונות.</p><div class="meta"><b>איפה:</b> רשות מקרקעי ישראל או החברה המשכנת, רשם המשכונות <span class="src">3</span><span class="src">5</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">1.4</div><div><h3>בודקים מחירים של עסקאות אמיתיות באזור</h3><p>לפני הצעת מחיר, בודקים בכמה נמכרו בפועל דירות דומות ברחוב ובשכונה. זה בסיס טוב למשא ומתן, וגם לשמאות שהבנק יעשה בהמשך.</p><div class="meta"><b>איפה:</b> אתר הנדל"ן הממשלתי, עסקאות שבוצעו <span class="src">4</span></div></div></div>
+    </div>
+    <div class="stage">
+      <div class="sh"><div class="n">2</div><h2>מה רשום על הדירה<small>משכנתאות, עיקולים והערות אזהרה</small></h2><div class="cnt">4 בדיקות</div></div>
+      <div class="it"><div class="box"></div><div class="no">2.1</div><div><h3>מחפשים בנסח משכנתאות רשומות</h3><p>משכנתא של המוכר היא דבר נפוץ, אבל היא צריכה להיות מסולקת עד הרישום, והחוזה צריך לקבוע איך: בדרך כלל חלק מהתשלום עובר ישירות לבנק של המוכר.</p><div class="meta"><b>איפה:</b> הנסח, חלק "משכנתאות" <span class="src">1</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">2.2</div><div><h3>מחפשים עיקולים, צווים והגבלות</h3><p>עיקול או צו של בית משפט יכולים לעכב את הרישום על שמכם. אם מופיע משהו כזה, צריך תוכנית ברורה להסרה שלו לפני שמשלמים.</p><div class="meta"><b>איפה:</b> הנסח, חלקי "עיקולים" ו"הערות" <span class="src">1</span><span class="src">5</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">2.3</div><div><h3>בודקים אם יש הערות אזהרה לטובת אחרים</h3><p>הערת אזהרה לטובת מישהו אחר מעידה שהבעלים התחייב לעשות עסקה בדירה עם אדם נוסף. צריך להבין למה היא רשומה ומתי תימחק.</p><div class="meta"><b>איפה:</b> הנסח, חלק "הערות" <span class="src">2</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">2.4</div><div><h3>משווים את מה שרשום למה שרואים</h3><p>שטח, קומה והצמדות כמו חניה, מחסן או גג. בבית משותף בודקים גם את צו הבית המשותף והתשריט, כדי לוודא שמה שמוצג לכם באמת שייך לדירה.</p><div class="meta"><b>איפה:</b> הנסח, צו הבית המשותף והתשריט מלשכת רישום המקרקעין <span class="src">1</span></div></div></div>
+    </div>
+  </div>
+  <div class="ft"><span>יקיר דבול - משרד עורכי דין · <span class="ph">09-8613413</span> · dabullaw.co.il</span><span class="pn">3</span></div>
+</section>
+
+<!-- ============ 4 · STAGE 3 ============ -->
+<section class="page">
+  <div class="rh"><span><b>צ'קליסט לפני שקונים דירה יד שנייה</b></span><span>שלבים 3 ו-4</span></div>
+  <div class="in">
+    <div class="stage">
+      <div class="sh"><div class="n">3</div><h2>עירייה וועדה לתכנון ובנייה<small>היתר, תעודת גמר, חריגות ותוכניות באזור</small></h2><div class="cnt">5 בדיקות</div></div>
+      <div class="it"><div class="box"></div><div class="no">3.1</div><div><h3>מעיינים בתיק הבניין בוועדה המקומית</h3><p>בתיק נמצאים היתר הבנייה והתוכניות שאושרו לבניין ולדירה. אצל רוב הרשויות אפשר לעיין בתיק באתר העירייה או לקבוע תור לארכיון.</p><div class="meta"><b>איפה:</b> הוועדה המקומית לתכנון ובנייה בעיר שבה הדירה <span class="src">6</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">3.2</div><div><h3>משווים את הדירה בפועל להיתר</h3><p>מרפסת שנסגרה, חדר שנוסף, דירה שחולקה לשתי יחידות. תוספת בלי היתר עלולה להוביל לקנס, לצו או לבעיה בקבלת משכנתא, והקונה יורש אותה.</p><div class="meta"><b>איפה:</b> התוכנית בהיתר מול הדירה עצמה <span class="src">6</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">3.3</div><div><h3>בודקים שיש תעודת גמר או אישור אכלוס</h3><p>תעודת גמר (ובבניינים ישנים גם "טופס 4") מאשרת שהבניין נבנה לפי ההיתר וחובר לתשתיות. כשאין, כדאי להבין למה לפני שממשיכים.</p><div class="meta"><b>איפה:</b> תיק הבניין בוועדה המקומית <span class="src">6</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">3.4</div><div><h3>שואלים על הליכים בגלל חריגות בנייה</h3><p>בודקים אם נפתח הליך פיקוח, אם הוטל קנס או אם יש צו הריסה על הדירה או על הבניין. את זה לא תמיד רואים בנסח.</p><div class="meta"><b>איפה:</b> מחלקת הפיקוח על הבנייה בעירייה <span class="src">6</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">3.5</div><div><h3>בודקים תוכניות שמקודמות באזור</h3><p>התחדשות עירונית, הפקעה לכביש או שינוי ייעוד משפיעים על ערך הדירה. תוכנית שאושרה לפני המכירה יכולה ליצור היטל השבחה שצריך לסגור בחוזה מי משלם.</p><div class="meta"><b>איפה:</b> מערכת התכנון הארצית של מנהל התכנון <span class="src">6</span><span class="src">7</span></div></div></div>
+    </div>
+    <div class="stage">
+      <div class="sh"><div class="n">4</div><h2>כסף, משכנתא ומסים<small>לפני החתימה, לא אחריה</small></h2><div class="cnt">4 בדיקות</div></div>
+      <div class="it"><div class="box"></div><div class="no">4.1</div><div><h3>אישור עקרוני למשכנתא, לפני החתימה</h3><p>אישור עקרוני מראה כמה הבנק מוכן להלוות ובאילו תנאים. כדאי להתאים את מועדי התשלום בחוזה לזמן שלוקח לבנק להעביר את הכסף.</p><div class="meta"><b>איפה:</b> הבנקים למשכנתאות, מידע לצרכן של בנק ישראל <span class="src">8</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">4.2</div><div><h3>מחשבים מס רכישה</h3><p>הסכום תלוי במחיר ובשאלה אם זו דירה יחידה או דירה נוספת. מחשבים מראש, כדי שהמס לא יפתיע אתכם אחרי החתימה.</p><div class="meta"><b>איפה:</b> סימולטור מס רכישה של רשות המסים <span class="src">9</span></div></div></div>
+    </div>
+  </div>
+  <div class="ft"><span>יקיר דבול - משרד עורכי דין · <span class="ph">09-8613413</span> · dabullaw.co.il</span><span class="pn">4</span></div>
+</section>
+
+<!-- ============ 5 · STAGE 4 end + 5 ============ -->
+<section class="page">
+  <div class="rh"><span><b>צ'קליסט לפני שקונים דירה יד שנייה</b></span><span>שלבים 4 ו-5</span></div>
+  <div class="in">
+    <div class="stage">
+      <div class="sh"><div class="n">4</div><h2>כסף, משכנתא ומסים<small>המשך</small></h2><div class="cnt">4 בדיקות</div></div>
+      <div class="it"><div class="box"></div><div class="no">4.3</div><div><h3>בודקים היטל השבחה וחובות לעירייה</h3><p>לפי החוק, היטל השבחה חל בדרך כלל על המוכר. בכל זאת בודקים אם יש חוב או שומה פתוחה, ורושמים בחוזה במפורש מי משלם.</p><div class="meta"><b>איפה:</b> מחלקת היטל השבחה בוועדה המקומית <span class="src">7</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">4.4</div><div><h3>מכניסים לתקציב את כל העלויות הנלוות</h3><p>מעבר למחיר הדירה: מס רכישה, שכר טרחת עורך דין, שמאי, תיווך אם יש, בדק בית, הובלה ושיפוץ. כך יודעים כמה הון עצמי באמת צריך.</p><div class="meta"><b>איפה:</b> רשימת עלויות הרכישה באתר כל זכות <span class="src">12</span></div></div></div>
+    </div>
+    <div class="stage">
+      <div class="sh"><div class="n">5</div><h2>החוזה<small>כל תשלום צריך הגנה</small></h2><div class="cnt">5 בדיקות</div></div>
+      <div class="it"><div class="box"></div><div class="no">5.1</div><div><h3>תשלומים בשלבים, וכל תשלום מוגן</h3><p>לא משלמים סכום משמעותי לפני שנרשמה הערת אזהרה לטובתכם, או בלי שהכסף מוחזק בנאמנות. לוח התשלומים צריך להיות צמוד להתקדמות העסקה.</p><div class="meta"><b>למה:</b> הערת האזהרה מגינה עליכם מפני עסקה נוספת בדירה <span class="src">2</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">5.2</div><div><h3>סילוק המשכנתא של המוכר</h3><p>אם רשומה משכנתא, מבקשים מכתב כוונות מהבנק של המוכר עם סכום הסילוק, והחוזה קובע שחלק מהתשלום עובר ישירות לבנק הזה.</p><div class="meta"><b>איפה:</b> הבנק של המוכר <span class="src">1</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">5.3</div><div><h3>מס שבח: איך מבטיחים שהמוכר ישלם</h3><p>מס שבח הוא של המוכר, אבל בלי אישור על תשלומו אי אפשר לרשום את הדירה על שמכם. החוזה קובע מה מעכבים עד שהמוכר מציג אישור.</p><div class="meta"><b>איפה:</b> חוק מיסוי מקרקעין <span class="src">10</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">5.4</div><div><h3>תאריך מסירה, מצב הדירה ופיצוי על איחור</h3><p>כותבים מתי מוסרים את הדירה, מה נשאר בה (מזגנים, ארונות, מטבח) ומה הפיצוי אם המסירה מתאחרת.</p><div class="meta"><b>איפה:</b> נספח מצב הדירה בחוזה <span class="src">12</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">5.5</div><div><h3>חובות עד המסירה: ארנונה, מים, ועד בית</h3><p>החוזה קובע שכל החובות עד יום המסירה על המוכר. מבקשים גם אישור מוועד הבית שאין חוב ושאין הוצאה גדולה שכבר הוחלט עליה, כמו שיפוץ או מעלית.</p><div class="meta"><b>איפה:</b> העירייה, תאגיד המים, ועד הבית <span class="src">12</span></div></div></div>
+    </div>
+  </div>
+  <div class="ft"><span>יקיר דבול - משרד עורכי דין · <span class="ph">09-8613413</span> · dabullaw.co.il</span><span class="pn">5</span></div>
+</section>
+
+<!-- ============ 6 · STAGES 6-7 ============ -->
+<section class="page">
+  <div class="rh"><span><b>צ'קליסט לפני שקונים דירה יד שנייה</b></span><span>שלבים 6 ו-7</span></div>
+  <div class="in">
+    <div class="stage">
+      <div class="sh"><div class="n">6</div><h2>יום החתימה והדיווח לרשות המסים<small>מה עושים ביום החתימה ובחודשיים שאחריו</small></h2><div class="cnt">4 בדיקות</div></div>
+      <div class="it"><div class="box"></div><div class="no">6.1</div><div><h3>זיהוי כל החותמים מול הנסח</h3><p>כל מי שרשום כבעלים מציג תעודה מזהה, והפרטים נבדקים מול הנסח. מוציאים נסח נוסף ביום החתימה, כדי לוודא ששום דבר חדש לא נרשם.</p><div class="meta"><b>איפה:</b> נסח מיום החתימה <span class="src">1</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">6.2</div><div><h3>רושמים הערת אזהרה לטובתכם</h3><p>מגישים את הבקשה מיד אחרי החתימה. ההערה נרשמת בנסח ומונעת מהמוכר לעשות עסקה נוספת בדירה בלי הסכמתכם.</p><div class="meta"><b>איפה:</b> לשכת רישום המקרקעין <span class="src">2</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">6.3</div><div><h3>מדווחים לרשות המסים תוך 30 יום</h3><p>את העסקה מדווחים לרשות המסים בתוך 30 יום מיום החתימה, עם הצהרה ושומה עצמית. בדרך כלל עורך הדין שמלווה את העסקה מגיש את הדיווח.</p><div class="meta"><b>איפה:</b> מערכת הדיווח המקוון של רשות המסים <span class="src">10</span><span class="src">11</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">6.4</div><div><h3>משלמים מס רכישה בתוך 60 יום</h3><p>מס הרכישה לפי השומה העצמית משולם בתוך 60 יום מיום העסקה. שומרים את האישור על התשלום, הוא נדרש לרישום.</p><div class="meta"><b>איפה:</b> שובר התשלום מרשות המסים <span class="src">9</span><span class="src">10</span></div></div></div>
+    </div>
+    <div class="stage">
+      <div class="sh"><div class="n">7</div><h2>מסירה ורישום על שמכם<small>העסקה נגמרת בנסח, לא במפתח</small></h2><div class="cnt">4 בדיקות</div></div>
+      <div class="it"><div class="box"></div><div class="no">7.1</div><div><h3>פרוטוקול מסירה</h3><p>ביום המסירה רושמים קריאה של מוני המים, החשמל והגז, מצלמים את מצב הדירה ומקבלים את כל המפתחות והשלטים.</p><div class="meta"><b>איפה:</b> בדירה, עם המוכר <span class="src">12</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">7.2</div><div><h3>מעבירים את החשבונות על שמכם</h3><p>ארנונה, מים, חשמל וגז. מעבירים מיום המסירה, כדי שחובות של אחרים לא יירשמו עליכם.</p><div class="meta"><b>איפה:</b> העירייה, תאגיד המים וחברות החשמל והגז <span class="src">12</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">7.3</div><div><h3>אוספים את כל האישורים לרישום</h3><p>אישורי מס שבח ומס רכישה מרשות המסים, אישור מהעירייה שאין חובות, ומסמכי ביטול המשכנתא של המוכר אם הייתה.</p><div class="meta"><b>איפה:</b> רשות המסים, העירייה והבנק של המוכר <span class="src">10</span><span class="src">12</span></div></div></div>
+      <div class="it"><div class="box"></div><div class="no">7.4</div><div><h3>רושמים את הדירה על שמכם ובודקים נסח חדש</h3><p>אחרי הרישום מוציאים נסח חדש ובודקים שאתם רשומים כבעלים, שהערת האזהרה נמחקה ושהמשכנתא של המוכר לא מופיעה.</p><div class="meta"><b>איפה:</b> לשכת רישום המקרקעין, נסח חדש <span class="src">1</span></div></div></div>
+    </div>
+  </div>
+  <div class="ft"><span>יקיר דבול - משרד עורכי דין · <span class="ph">09-8613413</span> · dabullaw.co.il</span><span class="pn">6</span></div>
+</section>
+
+<!-- ============ 7 · GLOSSARY ============ -->
+<section class="page">
+  <div class="rh"><span><b>צ'קליסט לפני שקונים דירה יד שנייה</b></span><span>מילון מונחים ומקורות</span></div>
+  <div class="in">
+    <h2 class="sec-t">מילון מונחים קצר</h2>
+    <p class="sec-s">שמונה מונחים שתשמעו בכל עסקת דירה, בשפה פשוטה.</p>
+    <div class="gl">
+      <div><b>נסח טאבו (נסח רישום)</b><p>מסמך רשמי מלשכת רישום המקרקעין. מראה מי הבעלים, ומה רשום על הדירה: משכנתאות, עיקולים והערות.</p></div>
+      <div><b>הערת אזהרה</b><p>רישום בנסח שמודיע לכולם שהבעלים התחייב למכור לכם. מגינה מפני מכירה כפולה ומפני שעבוד חדש של הדירה.</p></div>
+      <div><b>אישור זכויות</b><p>מסמך מרשות מקרקעי ישראל או מחברה משכנת, לדירות שעוד לא רשומות בטאבו. מחליף את הנסח בבדיקה.</p></div>
+      <div><b>תעודת גמר וטופס 4</b><p>אישורים מהוועדה המקומית שהבניין נבנה לפי ההיתר וחובר לחשמל, מים וביוב.</p></div>
+      <div><b>היטל השבחה</b><p>תשלום לוועדה המקומית כשתוכנית חדשה העלתה את שווי הנכס. חל בדרך כלל על המוכר.</p></div>
+      <div><b>מס רכישה</b><p>מס שהקונה משלם לרשות המסים. השיעור תלוי במחיר ובשאלה אם זו דירה יחידה.</p></div>
+      <div><b>מס שבח</b><p>מס שהמוכר משלם על הרווח מהמכירה. בלי אישור על תשלומו (או על פטור) אי אפשר לרשום את הדירה על שם הקונה.</p></div>
+      <div><b>אישור עקרוני</b><p>הודעה מהבנק כמה הוא מוכן להלוות ובאילו תנאים. ניתן לפני החתימה, והאישור הסופי מגיע אחרי שמאות ובדיקת מסמכים.</p></div>
+    </div>
+    <div class="tip"><b>טיפ אחרון:</b> שמרו את כל המסמכים בתיקייה אחת, בנייר או בטלפון: נסחים, אישורים, החוזה ושוברי תשלום. ברישום ובמכירה עתידית תצטרכו את כולם.</div>
+    <div style="height:6mm"></div>
+    <h2 class="sec-t" style="font-size:15pt">מקורות</h2>
+    <p class="sec-s">כל בדיקה בצ'קליסט מפנה למקור רשמי מהרשימה הזו, כדי שתוכלו לבדוק בעצמכם.</p>
+    <ol class="sl">
+      <li><span class="src">1</span><div>משרד המשפטים: הוצאת נסח רישום מקרקעין<small>gov.il</small></div></li>
+      <li><span class="src">2</span><div>חוק המקרקעין, התשכ"ט-1969, סעיף 126 (הערת אזהרה)<small>ספר החוקים, gov.il</small></div></li>
+      <li><span class="src">3</span><div>רשות מקרקעי ישראל: אישור זכויות בנכס<small>land.gov.il</small></div></li>
+      <li><span class="src">4</span><div>אתר הנדל"ן הממשלתי: עסקאות שבוצעו<small>nadlan.gov.il</small></div></li>
+      <li><span class="src">5</span><div>משרד המשפטים: רשם המשכונות<small>gov.il</small></div></li>
+      <li><span class="src">6</span><div>מנהל התכנון: מערכת התכנון הארצית ומידע על תיקי בניין<small>iplan.gov.il</small></div></li>
+      <li><span class="src">7</span><div>חוק התכנון והבנייה, התשכ"ה-1965, התוספת השלישית (היטל השבחה)<small>gov.il</small></div></li>
+      <li><span class="src">8</span><div>בנק ישראל: מידע לצרכן על משכנתאות<small>boi.org.il</small></div></li>
+      <li><span class="src">9</span><div>רשות המסים: סימולטור מס רכישה<small>taxes.gov.il</small></div></li>
+      <li><span class="src">10</span><div>חוק מיסוי מקרקעין (שבח ורכישה), התשכ"ג-1963<small>gov.il</small></div></li>
+      <li><span class="src">11</span><div>רשות המסים: דיווח מקוון על עסקת מקרקעין<small>taxes.gov.il</small></div></li>
+      <li><span class="src">12</span><div>כל זכות: רכישת דירה ותשלום מס רכישה<small>kolzchut.org.il</small></div></li>
+    </ol>
+    <div class="cta">
+      <div><h3>כבר מצאתם דירה?</h3><p>אפשר לתאם בדיקה של הנסח, התיק בעירייה והחוזה, לפני שחותמים על משהו. נשמח לעבור על זה איתכם.</p></div>
+      <div class="c"><b>09-8613413</b>dabullaw.co.il<br>נתניה</div>
+    </div>
+    <p class="disc">המידע בצ'קליסט הוא מידע כללי בלבד, נכון למועד הכנתו (אוקטובר 2026), ואינו תחליף לייעוץ משפטי שמותאם לעסקה שלכם. סכומים, שיעורי מס ונהלים משתנים מעת לעת, ולכן כדאי לבדוק אותם במקור הרשמי לפני כל החלטה. © יקיר דבול - משרד עורכי דין.</p>
+  </div>
+  <div class="ft"><span>יקיר דבול - משרד עורכי דין · <span class="ph">09-8613413</span> · dabullaw.co.il</span><span class="pn">7</span></div>
+</section>
+
+</body>
+</html>
