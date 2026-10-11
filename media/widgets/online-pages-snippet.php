@@ -72,11 +72,11 @@ if (!function_exists('dabul_online_slug')) {
 			'publisher' => array('@type' => 'Organization', 'name' => 'יקיר דבול - משרד עורכי דין', 'url' => home_url('/')));
 		echo '<script type="application/ld+json">' . wp_json_encode($ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
 	}, 41);
-	// a small box in related articles that leads to the matching online service (Yakir approved, 11.10.2026)
+	// a small box in related articles that leads to the matching online service (Yakir approved, 11.10.2026; up to 10 articles only, Yakir)
 	function dabul_online_article_box($c) {
 		static $done = false;
 		if ($done || is_admin() || !is_singular()) return $c;
-		$links = array(4300 => 'apartment-check', 3392 => 'apartment-check', 3590 => 'apartment-check', 2953 => 'apartment-check', 1626 => 'apartment-check', 3027 => 'apartment-check', 2153 => 'apartment-check', 3126 => 'apartment-check', 2642 => 'apartment-check', 5948 => 'apartment-check', 6630 => 'tabu-registration', 2988 => 'tabu-registration', 3367 => 'tabu-registration', 3678 => 'tabu-registration', 6816 => 'tabu-registration', 2717 => 'tabu-registration', 3090 => 'inheritance-order', 3597 => 'inheritance-order', 3108 => 'inheritance-order', 4868 => 'inheritance-order', 2681 => 'inheritance-order', 6151 => 'inheritance-order', 44 => 'inheritance-order', 5751 => 'enduring-power-of-attorney', 1741 => 'enduring-power-of-attorney', 3543 => 'enduring-power-of-attorney', 5753 => 'enduring-power-of-attorney', 46 => 'enduring-power-of-attorney', 4675 => 'company-registration', 33 => 'company-registration', 2583 => 'consolidation-of-files', 2753 => 'consolidation-of-files', 3058 => 'consolidation-of-files', 37 => 'consolidation-of-files', 2768 => 'consolidation-of-files', 1607 => 'payment-order', 3270 => 'payment-order', 2171 => 'payment-order', 3105 => 'payment-order');
+		$links = array(4300 => 'apartment-check', 3392 => 'apartment-check', 3590 => 'apartment-check', 2988 => 'tabu-registration', 3367 => 'tabu-registration', 3090 => 'inheritance-order', 3108 => 'inheritance-order', 3543 => 'enduring-power-of-attorney', 2583 => 'consolidation-of-files', 1607 => 'payment-order');
 		$id = get_queried_object_id();
 		if (!$id || !isset($links[$id]) || get_the_ID() !== $id) return $c;
 		$p = get_page_by_path('online');
@@ -118,8 +118,8 @@ if (!function_exists('dabul_online_slug')) {
 	add_filter('rocket_exclude_css', function ($e) { $e[] = '(.*)svc-app.css'; return $e; });
 	// one-time cache purge when the pages went live, so the menu item and the footer button show on every page
 	add_action('init', function () {
-		if (get_option('dabul_online_purged') === '20261011c') return;
-		update_option('dabul_online_purged', '20261011c', false);
+		if (get_option('dabul_online_purged') === '20261011d') return;
+		update_option('dabul_online_purged', '20261011d', false);
 		if (function_exists('rocket_clean_domain')) rocket_clean_domain();
 	});
 }
