@@ -4,7 +4,7 @@
    selling, real estate tax and urban renewal), contact details and opening hours, the map and the Martindale seal,
    the WhatsApp group box, and one bottom line (rights, English / Français, privacy, accessibility, site map).
    The links are written here; to change a link, edit the lists below.
-   Checked on a preview address on 8.10.2026 (all 31 links answer), now live. On the phone the contact part is centered (Yakir asked). To undo: deactivate this snippet. */
+   Checked on a preview address on 8.10.2026 (all 31 links answer), now live. On the phone the contact part is centered (Yakir asked). 11.10.2026: the online services button in the top row (shows once /online/ is published). To undo: deactivate this snippet. */
 define('DABUL_FT_LIVE', 1);
 
 function dabul_ft_on() {
@@ -26,6 +26,14 @@ function dabul_ft_icon($k) {
 	return $i[$k];
 }
 
+// The "שירותים משפטיים אונליין" button in the top row (Yakir chose option A, 11.10.2026).
+// It shows only once the /online/ page is published, so it never links to a missing page.
+function dabul_ft_online() {
+	static $on = null;
+	if ($on === null) { $p = get_page_by_path('online'); $on = ($p && $p->post_status === 'publish'); }
+	return $on ? '<a class="onp" href="https://dabullaw.co.il/online/"><span class="onp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M10.5 18.5h3"/><path d="M9.6 10.2l1.7 1.7 3.2-3.4"/></svg></span><span class="onp-tx"><b>שירותים משפטיים אונליין</b><small>מחיר קבוע · הזמנה מהטלפון</small></span><span class="onp-new">חדש</span><span class="onp-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></span></a>' : '';
+}
+
 function dabul_ft_html() {
 	$cols = array(
 			array('המשרד', array(array('אודות המשרד', 'https://dabullaw.co.il/%d7%90%d7%95%d7%93%d7%95%d7%aa-%d7%94%d7%9e%d7%a9%d7%a8%d7%93/'), array('תעודות והסמכות עו״ד יקיר דבול', 'https://dabullaw.co.il/%d7%aa%d7%a2%d7%95%d7%93%d7%95%d7%aa-%d7%95%d7%94%d7%a1%d7%9e%d7%9b%d7%95%d7%aa-%d7%a2%d7%95%d7%b4%d7%93-%d7%99%d7%a7%d7%99%d7%a8-%d7%93%d7%91%d7%95%d7%9c/'), array('המלצות', 'https://dabullaw.co.il/%d7%94%d7%9e%d7%9c%d7%a6%d7%95%d7%aa/'), array('המשרד בתקשורת', 'https://dabullaw.co.il/category/press/'), array('סיפורי מקרה', 'https://dabullaw.co.il/category/%d7%a1%d7%99%d7%a4%d7%95%d7%a8%d7%99-%d7%9e%d7%a7%d7%a8%d7%94/'), array('מידע משפטי', 'https://dabullaw.co.il/%d7%9e%d7%99%d7%93%d7%a2-%d7%9e%d7%a9%d7%a4%d7%98%d7%99/'), array('טפסים', 'https://dabullaw.co.il/%d7%a7%d7%99%d7%a9%d7%95%d7%a8%d7%99%d7%9d-%d7%95%d7%98%d7%a4%d7%a1%d7%99%d7%9d/'))),
@@ -39,6 +47,7 @@ function dabul_ft_html() {
 	$o = '<div id="dbl-foot" dir="rtl">';
 	// row 1: logo and social networks
 	$o .= '<div class="r1"><a class="lg" href="' . esc_url(home_url('/')) . '"><img src="https://dabullaw.co.il/wp-content/uploads/2025/11/logo-footer.webp" width="701" height="180" alt="יקיר דבול משרד עורכי דין" loading="lazy" decoding="async"></a>'
+		. dabul_ft_online()
 		. '<div class="soc"><small>עקבו אחרינו</small>'
 		. '<a href="https://www.facebook.com/dabullaw" target="_blank" rel="noopener" aria-label="פייסבוק">' . dabul_ft_icon('fb') . '</a>'
 		. '<a href="https://www.instagram.com/dabullaw" target="_blank" rel="noopener" aria-label="אינסטגרם">' . dabul_ft_icon('ig') . '</a>'
@@ -114,6 +123,7 @@ add_action('wp_head', function () {
 		. '#dbl-foot .r4{border-top:1px solid rgba(231,205,150,.18);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 0 18px;font-size:14px}'
 		. '#dbl-foot .r4 .ln,#dbl-foot .r4 .lgl{display:flex;gap:14px;flex-wrap:wrap}#dbl-foot .r4 .lgl a+a:before{content:"|";margin-left:14px;color:rgba(207,204,198,.4)}#dbl-foot .r4 a:hover{color:#e7cd96}'
 		. '#dbl-foot .r4 .rc{flex-basis:100%;text-align:center;opacity:.6;font-size:13px}'
+		. '#dbl-foot .onp{position:relative;overflow:hidden;isolation:isolate;display:inline-flex;align-items:center;gap:12px;padding:7px 7px 7px 10px;padding-inline-start:8px;border-radius:999px; background:linear-gradient(180deg,#221d14,#17140f);border:1px solid rgba(231,205,150,.55);box-shadow:0 0 0 4px rgba(197,162,90,.08),0 14px 30px -18px rgba(197,162,90,.9);color:#fff!important;transition:transform .2s,border-color .2s} #dbl-foot .onp:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(231,205,150,.28) 50%,transparent 65%);transform:translateX(110%);animation:onpS 3.2s ease-in-out 1.2s 3} @keyframes onpS{0%{transform:translateX(110%)}55%,100%{transform:translateX(-110%)}} #dbl-foot .onp:hover{transform:translateY(-2px);border-color:#E7CD96} #dbl-foot .onp-ic{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#141414;background:linear-gradient(145deg,#F1DDB0,#C5A25A)} #dbl-foot .onp-ic svg{width:20px;height:20px} #dbl-foot .onp-tx{display:flex;flex-direction:column;line-height:1.25;text-align:right} #dbl-foot .onp-tx b{font-size:15.5px;font-weight:700;color:#fff} #dbl-foot .onp-tx small{font-size:12.5px;color:#cbbf9f} #dbl-foot .onp-new{font-size:11.5px;font-weight:700;color:#141414;background:#E7CD96;border-radius:999px;padding:2px 9px} #dbl-foot .onp-go{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(231,205,150,.14);color:#E7CD96;transition:transform .25s} #dbl-foot .onp-go svg{width:17px;height:17px}#dbl-foot .onp:hover .onp-go{transform:translateX(-4px)} #dbl-foot .onp:focus-visible{outline:2px solid #E7CD96;outline-offset:3px} @media (prefers-reduced-motion:reduce){#dbl-foot .onp:after{animation:none}}@media (max-width:767px){#dbl-foot .r1 .onp{order:3}}'
 		. '@media (max-width:1100px){#dbl-foot .r2{grid-template-columns:repeat(3,minmax(0,1fr))}}'
 		. '@media (max-width:767px){#dbl-foot{padding:34px 20px 0}#dbl-foot .r1{flex-direction:column;gap:18px}#dbl-foot .soc{flex-wrap:wrap;justify-content:center}#dbl-foot .soc small{flex-basis:100%;text-align:center;margin:0}'
 		. '#dbl-foot .r2{grid-template-columns:1fr 1fr;gap:28px 18px}#dbl-foot .ct,#dbl-foot .mp{grid-column:1/-1}#dbl-foot .map{display:none}#dbl-foot .mp{align-items:center}'
