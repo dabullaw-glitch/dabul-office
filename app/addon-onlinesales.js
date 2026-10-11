@@ -5,7 +5,7 @@
    bring buyers, and plain recommendations (which service to advertise, which channel works, where people drop out).
    Test orders are left out. Needs addon-svc.js (s.svcAll). */
 (function (s) {
-  if (!s || s.ONLINESALES) return; s.ONLINESALES = '20261011a';
+  if (!s || s.ONLINESALES) return; s.ONLINESALES = '20261011b';
   const n = v => (s.esc ? s.esc(v == null ? '' : String(v)) : String(v == null ? '' : v));
   const st = document.createElement('style');
   st.textContent = `.os-k{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 16px}
@@ -18,6 +18,7 @@
 .os-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}`;
   document.head.appendChild(st);
 
+  // a sale counts only with a real payment: status paid/working/done (test orders and simulated payments are left out above)
   const PAID = ['paid', 'working', 'done'];
   const money = v => Math.round(v || 0).toLocaleString('he-IL') + ' ₪';
   const pct = (a, b) => b ? Math.round(a / b * 100) + '%' : '-';
@@ -26,7 +27,7 @@
   const path = u => { try { const x = new URL(u); return decodeURIComponent(x.pathname); } catch { return String(u || ''); } };
 
   function rows(per) {
-    const L = (s.svcAll ? s.svcAll() : []).filter(o => !o.test && !String(o.status || '').startsWith('cancel'));
+    const L = (s.svcAll ? s.svcAll() : []).filter(o => !o.test && !String(o.status || '').startsWith('cancel') && !/^SIMULATED/i.test(String((o.payment && o.payment.ref) || '')));
     if (per === 'all') return L;
     const from = Date.now() - (+per) * 864e5;
     return L.filter(o => Date.parse(o.created || 0) >= from);
