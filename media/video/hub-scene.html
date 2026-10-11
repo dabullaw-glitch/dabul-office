@@ -1,0 +1,183 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:K;font-weight:700;src:url('file:///tmp/claude-0/node_modules/@fontsource/karantina/files/karantina-hebrew-700-normal.woff2')}
+@font-face{font-family:K;font-weight:700;src:url('file:///tmp/claude-0/node_modules/@fontsource/karantina/files/karantina-latin-700-normal.woff2');unicode-range:U+0000-00FF,U+20AA}
+@font-face{font-family:P;font-weight:400;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-hebrew-400-normal.woff2')}
+@font-face{font-family:P;font-weight:600;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-hebrew-600-normal.woff2')}
+@font-face{font-family:P;font-weight:700;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-hebrew-700-normal.woff2')}
+@font-face{font-family:P;font-weight:400;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-latin-400-normal.woff2');unicode-range:U+0000-00FF,U+20AA}
+@font-face{font-family:P;font-weight:700;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-latin-700-normal.woff2');unicode-range:U+0000-00FF,U+20AA}
+*{box-sizing:border-box;margin:0}
+html,body{width:1280px;height:720px;overflow:hidden;background:#0E2A57}
+#S{position:relative;width:1280px;height:720px;overflow:hidden;font-family:P,Arial,sans-serif;color:#fff;background:#0E2A57;
+ background-image:linear-gradient(rgba(127,166,240,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(127,166,240,.13) 1px,transparent 1px),linear-gradient(rgba(127,166,240,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(127,166,240,.05) 1px,transparent 1px);background-size:120px 120px,120px 120px,30px 30px,30px 30px}
+.k{font-family:K,P,sans-serif;font-weight:700;line-height:.92}
+.sc{position:absolute;inset:0;opacity:0}
+#cap{position:absolute;left:120px;right:120px;bottom:34px;text-align:center;font-size:30px;font-weight:600;line-height:1.35;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+#cap span{background:rgba(9,25,54,.78);padding:4px 14px;border-radius:10px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+#brand{position:absolute;top:26px;right:34px;font-size:18px;font-weight:600;color:#BFD0F4;display:flex;gap:10px;align-items:center;z-index:5}
+#brand i{width:10px;height:10px;border-radius:50%;background:#FFE14D}
+.title{position:absolute;right:110px;top:120px;width:560px;font-size:112px}
+.title mark{background:linear-gradient(transparent 62%,#FFE14D 62%,#FFE14D 90%,transparent 90%);color:#fff;padding:0 6px}
+.sub{position:absolute;right:112px;top:380px;width:520px;font-size:30px;font-weight:600;color:#D6E2FA;line-height:1.35}
+/* phone */
+.phone{position:absolute;left:150px;top:64px;width:300px;height:560px;border-radius:44px;background:#0A1B3B;border:10px solid #1B3A72;box-shadow:0 40px 80px -30px rgba(0,0,0,.75);overflow:hidden}
+.phone .scr{position:absolute;inset:0;background:#F6F8FC;color:#13203A;padding:26px 18px}
+.phone .hd{font-size:15px;font-weight:700;color:#0E2A57;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.phone .hd i{width:30px;height:6px;border-radius:3px;background:#C9D5EE}
+.chip{display:block;background:#fff;border:2px solid #E1E8F5;border-radius:14px;padding:12px 12px;margin-bottom:10px;font-size:16px;font-weight:700;color:#0E2A57}
+.chip small{display:block;font-size:12.5px;font-weight:400;color:#5B6782}
+.chip.on{border-color:#FFE14D;background:#FFFBE6}
+/* service tiles */
+.tiles{position:absolute;left:110px;right:110px;top:250px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.tile{background:#fff;color:#0E2A57;border-radius:20px;padding:20px 22px;border-top:9px solid #FFE14D;display:flex;gap:16px;align-items:center;box-shadow:0 24px 40px -24px rgba(0,0,0,.6)}
+.tile svg{width:46px;height:46px;flex:none;color:#0E2A57}
+.tile b{font-size:27px;line-height:1.1}
+.tile span{display:block;font-size:16px;color:#5B6782;font-weight:600;margin-top:3px}
+/* form */
+.bar{height:8px;border-radius:4px;background:#E1E8F5;overflow:hidden;margin:4px 0 16px}.bar i{display:block;height:100%;width:0;background:#FFE14D}
+.fld{font-size:13px;color:#5B6782;font-weight:600;margin:10px 0 4px}
+.inp{height:38px;border-radius:10px;background:#fff;border:2px solid #E1E8F5;padding:7px 10px;font-size:16px;font-weight:600;color:#13203A;overflow:hidden;white-space:nowrap}
+.up{margin-top:14px;border:2px dashed #9CB3E0;border-radius:12px;padding:12px;font-size:15px;font-weight:700;color:#0E2A57;text-align:center}
+.up.ok{border-style:solid;border-color:#17915A;color:#17915A;background:#E7F6EE}
+/* price */
+.pay{position:absolute;left:150px;top:96px;width:470px;background:#fff;color:#13203A;border-radius:24px;overflow:hidden;box-shadow:0 40px 80px -30px rgba(0,0,0,.7)}
+.pay .top{background:#13254A;color:#fff;padding:18px 24px;font-size:20px;font-weight:700;display:flex;justify-content:space-between}
+.pay .ln{display:flex;justify-content:space-between;padding:14px 24px;border-bottom:1px solid #E1E8F5;font-size:21px}
+.pay .tot{display:flex;justify-content:space-between;align-items:baseline;padding:18px 24px}
+.pay .tot b{font-family:K,P;font-size:76px;color:#0E2A57;line-height:1}
+.pay .tot span{font-size:22px;font-weight:700}
+.pay .btn{margin:0 24px 22px;background:#FFE14D;color:#0E2A57;border-radius:16px;text-align:center;padding:16px;font-size:24px;font-weight:700}
+.pay .ways{display:flex;gap:10px;justify-content:center;margin:-8px 0 20px;font-size:16px;color:#5B6782;font-weight:600}
+.lock{position:absolute;right:120px;top:420px;display:flex;gap:14px;align-items:center;font-size:32px;font-weight:700;color:#FFE14D}
+.lock svg{width:46px;height:46px}
+/* timeline */
+.tl{position:absolute;left:130px;top:130px;width:520px}
+.st{display:flex;gap:18px;align-items:center;background:#fff;color:#13203A;border-radius:18px;padding:16px 20px;margin-bottom:16px;box-shadow:0 24px 40px -24px rgba(0,0,0,.6)}
+.st .n{width:46px;height:46px;border-radius:50%;background:#E1E8F5;display:grid;place-items:center;flex:none;font-weight:700;color:#0E2A57;font-size:20px}
+.st .n.done{background:#17915A;color:#fff}
+.st b{font-size:24px;display:block}.st span{font-size:16px;color:#5B6782}
+/* refund */
+#ref{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px}
+#ref svg{width:150px;height:150px;color:#FFE14D}
+#ref .k{font-size:170px;color:#FFE14D}
+#ref p{font-size:36px;color:#D6E2FA;font-weight:600}
+/* end */
+#end{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:56px}
+#end .ph{width:300px;height:300px;border-radius:50%;overflow:hidden;border:6px solid #FFE14D;box-shadow:0 30px 60px -20px rgba(0,0,0,.7);background:#111}
+#end .ph img{width:100%;height:auto;margin-top:-6px}
+#end h2{font-size:96px;color:#fff}
+#end p{font-size:32px;color:#D6E2FA;margin-top:12px;font-weight:600}
+#end .url{display:inline-block;margin-top:22px;background:#FFE14D;color:#0E2A57;font-size:32px;font-weight:700;padding:10px 24px;border-radius:14px;direction:ltr}
+</style></head><body>
+<div id="S">
+ <div id="brand"><i></i>יקיר דבול - משרד עורכי דין</div>
+
+ <!-- 1: no time to come -->
+ <div class="sc" id="sc1">
+  <div class="title k" id="t1">עורך דין,<br><mark>בלי לצאת</mark><br>מהבית.</div>
+  <div class="phone" id="ph1"><div class="scr">
+    <div class="hd"><span>שירותים משפטיים אונליין</span><i></i></div>
+    <span class="chip on" id="c1">בדיקת דירה לפני קנייה<small>תשובה בתוך 2 ימי עבודה</small></span>
+    <span class="chip" id="c2">רישומים בטאבו<small>הגשה מקוונת</small></span>
+    <span class="chip" id="c3">הקמת חברה<small>פגישה קצרה אחת לחתימה</small></span>
+    <span class="chip" id="c4">ייעוץ משפטי בזום<small>מועד לבחירה באתר</small></span>
+    <span class="chip" id="c5">צו ירושה<small>מההכנה ועד מתן הצו</small></span>
+  </div></div>
+ </div>
+
+ <!-- 2: choose a service -->
+ <div class="sc" id="sc2">
+  <div class="title k" style="top:96px;width:900px;font-size:104px">בוחרים <mark>שירות</mark></div>
+  <div class="tiles">
+   <div class="tile" id="v1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M8 11h6M11 8v6"/></svg><div><b>בדיקת דירה</b><span>לפני שמציעים מחיר</span></div></div>
+   <div class="tile" id="v2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><div><b>רישום בטאבו</b><span>הערת אזהרה, משכנתא</span></div></div>
+   <div class="tile" id="v3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 21V5l8-3v19M12 21V9l8 3v9M2 21h20"/></svg><div><b>הקמת חברה</b><span>ושינויים ברשם</span></div></div>
+   <div class="tile" id="v4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 3h11a2 2 0 0 1 2 2v2h-4"/><path d="M16 7v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2h10"/><path d="M8 9h5M8 13h5"/></svg><div><b>צו ירושה</b><span>או צו קיום צוואה</span></div></div>
+   <div class="tile" id="v5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><div><b>ייפוי כוח מתמשך</b><span>מסדרים מראש</span></div></div>
+   <div class="tile" id="v6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg><div><b>הוצאה לפועל</b><span>איחוד תיקים, תשלומים</span></div></div>
+  </div>
+ </div>
+
+ <!-- 3: short form -->
+ <div class="sc" id="sc3">
+  <div class="title k" id="t3" style="top:150px">טופס <mark>קצר.</mark><br>כמה דקות.</div>
+  <div class="phone"><div class="scr">
+    <div class="hd"><span>בדיקת דירה לפני קנייה</span><i></i></div>
+    <div style="font-size:13px;color:#5B6782;font-weight:600">שלב <b id="stepn">1</b> מתוך 5</div>
+    <div class="bar"><i id="pbar"></i></div>
+    <div class="fld">עיר</div><div class="inp" id="i1"></div>
+    <div class="fld">רחוב ומספר</div><div class="inp" id="i2"></div>
+    <div class="fld">המחיר המבוקש</div><div class="inp" id="i3"></div>
+    <div class="up" id="upl">צירוף מסמכים</div>
+  </div></div>
+ </div>
+
+ <!-- 4: price and pay -->
+ <div class="sc" id="sc4">
+  <div class="title k" style="top:120px">רואים <mark>מחיר.</mark><br>משלמים.</div>
+  <div class="pay" id="pay"><div class="top"><span>סיכום ההזמנה</span><span>🔒</span></div>
+   <div class="ln"><span>בדיקת דירה לפני קנייה</span><span>490 ₪</span></div>
+   <div class="ln"><span>מע״מ</span><span>88.20 ₪</span></div>
+   <div class="tot"><span>סה״כ לתשלום</span><b id="ptot">578.20 ₪</b></div>
+   <div class="btn" id="pbtn">לתשלום מאובטח</div>
+   <div class="ways"><span>אשראי</span>·<span>ביט</span>·<span>קבלה למייל</span></div>
+  </div>
+  <div class="lock" id="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>המחיר הסופי, לפני התשלום</div>
+ </div>
+
+ <!-- 5: the lawyer handles -->
+ <div class="sc" id="sc5">
+  <div class="title k" style="top:130px;width:540px">עורך הדין<br><mark>מטפל</mark> ומעדכן</div>
+  <div class="tl">
+   <div class="st" id="l1"><span class="n" id="n1">1</span><div><b>ההזמנה התקבלה</b><span>אישור ותשלום במייל</span></div></div>
+   <div class="st" id="l2"><span class="n" id="n2">2</span><div><b>עו״ד יקיר דבול עובר על הפרטים</b><span>ואם חסר משהו, מתקשר</span></div></div>
+   <div class="st" id="l3"><span class="n" id="n3">3</span><div><b>עדכון במייל בכל שלב</b><span>בלי לרדוף אחרי אף אחד</span></div></div>
+   <div class="st" id="l4"><span class="n" id="n4">4</span><div><b>התשובה אצלכם</b><span>בזמן שכתוב בדף השירות</span></div></div>
+  </div>
+ </div>
+
+ <!-- 6: refund -->
+ <div class="sc" id="sc6"><div id="ref">
+  <svg id="refi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14l-5-5 5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>
+  <div class="k" id="reft">החזר מלא</div>
+  <p id="refp">אם מבטלים לפני שהטיפול התחיל</p>
+ </div></div>
+
+ <!-- 7: end -->
+ <div class="sc" id="sc7"><div id="end">
+  <div><h2 class="k">שירותים משפטיים<br>אונליין</h2><p>יקיר דבול - משרד עורכי דין · 09-8613413</p><span class="url">dabullaw.co.il/online</span></div>
+  <div class="ph"><img src="yakir.webp" alt=""></div>
+ </div></div>
+
+ <div id="cap"></div>
+</div>
+<script>
+const D=window.DUR||[6.4,9.9,6.3,5.7,5.3,5.9,7.2];
+const CAP=['צריכים עורך דין, ואין לכם זמן להגיע למשרד? עכשיו אפשר לעשות את זה אונליין.','בוחרים את השירות: בדיקת דירה לפני קנייה, רישום בטאבו, הקמת חברה, צו ירושה, ייפוי כוח מתמשך, או בקשה בהוצאה לפועל.','ממלאים טופס קצר מהטלפון, ומצרפים את המסמכים. כמה דקות, וזהו.','המחיר הסופי מוצג לפני התשלום, ומשלמים באתר, בתשלום מאובטח.','עורך הדין יקיר דבול מטפל בעצמו, ומעדכן אתכם במייל בכל שלב.','ואם מבטלים לפני שהטיפול התחיל, מקבלים את הכסף בחזרה.','שירותים משפטיים אונליין, במחיר קבוע. יקיר דבול, משרד עורכי דין.'];
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>{x=cl(x);return 1-Math.pow(1-x,3)};
+const back=x=>{x=cl(x);const c=1.6;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const starts=D.reduce((a,d,i)=>(a.push(i?a[i-1]+D[i-1]:0),a),[]);
+function inn(el,p,dx=0,dy=40){el.style.opacity=cl(p*1.4);el.style.transform=`translate(${dx*(1-ease(p))}px,${dy*(1-ease(p))}px)`;}
+function typ(el,txt,p){const n=Math.round(txt.length*cl(p));el.textContent=txt.slice(0,n);}
+function render(t){
+  let i=starts.findIndex((s,k)=>t>=s&&t<s+D[k]); if(i<0)i=D.length-1; const lt=t-starts[i], d=D[i];
+  const fade=k=>{const a=cl((t-starts[k])/.45), b=cl((starts[k]+D[k]-t)/.35);return Math.min(k===0?cl(t/.4):a,k===D.length-1?1:b)};
+  for(let k=0;k<7;k++) $('sc'+(k+1)).style.opacity = i===k?fade(k):0;
+  $('cap').innerHTML=`<span>${CAP[i]}</span>`; $('cap').style.opacity=cl(lt/.3)*(i===D.length-1?1:cl((d-lt)/.25));
+  if(i===0){ inn($('ph1'),lt/1,-120,0); $('t1').style.opacity=cl((lt-.6)/.5); $('t1').style.transform=`translateY(${30*(1-ease((lt-.6)/.7))}px)`;
+    ['c1','c2','c3','c4','c5'].forEach((c,k)=>inn($(c),(lt-1-k*.35)/.5,0,20)); }
+  if(i===1){ ['v1','v2','v3','v4','v5','v6'].forEach((v,k)=>{const p=(lt-.6-k*1.15)/.6; const el=$(v); el.style.opacity=cl(p*1.5); el.style.transform=`scale(${.7+.3*back(p)})`;}); }
+  if(i===2){ $('t3').style.opacity=cl(lt/.4); const st=Math.min(5,1+Math.floor(lt/1.1)); $('stepn').textContent=st; $('pbar').style.width=(20*cl(lt/5)*5)+'%';
+    typ($('i1'),'נתניה',(lt-.6)/.6); typ($('i2'),'הרצל 12',(lt-1.4)/.8); typ($('i3'),'2,150,000 ₪',(lt-2.4)/.9);
+    const u=$('upl'); if(lt>3.6){u.className='up ok';u.textContent='✓ נסח טאבו.pdf הועלה';} else {u.className='up';u.textContent='צירוף מסמכים';} }
+  if(i===3){ inn($('pay'),lt/.8,-80,0); const b=$('pbtn'); const pr=cl((lt-2.6)/.3); b.style.transform=`scale(${1-.06*Math.sin(Math.PI*pr)})`; $('lock').style.opacity=cl((lt-1.2)/.5); }
+  if(i===4){ ['l1','l2','l3','l4'].forEach((s,k)=>{inn($(s),(lt-.3-k*1)/.6,-60,0); const n=$('n'+(k+1)); const done=lt>.9+k*1.05; n.className='n'+(done?' done':''); n.textContent=done?'✓':String(k+1);}); }
+  if(i===5){ const p=back(lt/.9); $('refi').style.transform=`rotate(${-200*(1-ease(lt/1.2))}deg) scale(${.6+.4*p})`; $('refi').style.opacity=cl(lt/.4);
+    $('reft').style.opacity=cl((lt-.4)/.4); $('reft').style.transform=`scale(${.7+.3*back((lt-.4)/.8)})`; $('refp').style.opacity=cl((lt-1.2)/.5); }
+  if(i===6){ inn(document.querySelector('#end>div'),lt/.8,0,30); const ph=document.querySelector('#end .ph'); ph.style.opacity=cl((lt-.3)/.6); ph.style.transform=`scale(${.85+.15*ease((lt-.3)/.8)})`; }
+}
+window.render=render; render(0);
+</script></body></html>
