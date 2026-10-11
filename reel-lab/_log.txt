@@ -1,0 +1,45 @@
+-rw-r--r-- 1 runner runner 339244564 Oct 11 20:48 /tmp/raw/inherit-siblings.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "video",
+            "width": 720,
+            "height": 1280,
+            "r_frame_rate": "30/1",
+            "duration": "213.106667",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "213.066304",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "213.134309"
+    }
+}
+crf 20 -> 135287331 bytes
+crf 23 -> 64497506 bytes
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+model ivrit-ai/whisper-large-v3-turbo-ct2
+Traceback (most recent call last):
+  File "/home/runner/work/dabul-office/dabul-office/tools/reel-lab/transcribe.py", line 11, in <module>
+    segs, info = m.transcribe(wav, language="he", word_timestamps=True, vad_filter=False, beam_size=5)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/faster_whisper/transcribe.py", line 834, in transcribe
+    audio = decode_audio(audio, sampling_rate=sampling_rate)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/faster_whisper/audio.py", line 46, in decode_audio
+    with av.open(input_file, mode="r", metadata_errors="ignore") as container:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "av/container/core.py", line 479, in av.container.core.open
+TypeError: open() got an unexpected keyword argument 'metadata_errors'
