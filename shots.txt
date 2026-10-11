@@ -1,11 +1,2 @@
-pv-online https://dabullaw-glitch.github.io/dabul-office/media/preview/online/online.html?v=3
-pv-apartment-check https://dabullaw-glitch.github.io/dabul-office/media/preview/online/apartment-check.html?v=3
-pv-zoom-consultation https://dabullaw-glitch.github.io/dabul-office/media/preview/online/zoom-consultation.html?v=3
-pv-company-registration https://dabullaw-glitch.github.io/dabul-office/media/preview/online/company-registration.html?v=3
-pv-companies-registrar-changes https://dabullaw-glitch.github.io/dabul-office/media/preview/online/companies-registrar-changes.html?v=3
-pv-tabu-registration https://dabullaw-glitch.github.io/dabul-office/media/preview/online/tabu-registration.html?v=3
-pv-inheritance-order https://dabullaw-glitch.github.io/dabul-office/media/preview/online/inheritance-order.html?v=3
-pv-enduring-power-of-attorney https://dabullaw-glitch.github.io/dabul-office/media/preview/online/enduring-power-of-attorney.html?v=3
-pv-consolidation-of-files https://dabullaw-glitch.github.io/dabul-office/media/preview/online/consolidation-of-files.html?v=3
-pv-payment-order https://dabullaw-glitch.github.io/dabul-office/media/preview/online/payment-order.html?v=3
-pv-thanks https://dabullaw-glitch.github.io/dabul-office/media/preview/online/thanks.html?v=3
+pv2-apartment-check https://dabullaw-glitch.github.io/dabul-office/media/preview/online/apartment-check.html?v=5
+pv2-zoom-consultation https://dabullaw-glitch.github.io/dabul-office/media/preview/online/zoom-consultation.html?v=5
