@@ -21,7 +21,7 @@ sources:
     url: "https://www.kolzchut.org.il/he/התנגדות_לתביעה_על_סכום_קצוב_בהוצאה_לפועל"
   - title: "gov.il: בקשה להתנגדות לביצוע תביעה על סכום קצוב"
     url: "https://www.gov.il/he/service/claim_objection"
-related: [chakirat-yecholet, ikulim, ichud-tikim]
+related: [azhara-hotzaa-lapoal, chakirat-yecholet, ikulim, ichud-tikim]
 ---
 
 יש מקרים שבהם תיק בהוצאה לפועל נפתח עוד **לפני** שמישהו בבית משפט שמע את הצד שלכם. זה קורה ב**תביעה על סכום קצוב**: הנושה מגיש את התביעה ישר ללשכת ההוצאה לפועל, ואתם מקבלים אזהרה. אם אתם חולקים על החוב, יש לכם כלי אחד וחשוב: **התנגדות**, והשעון מתחיל לתקתק מהיום שבו קיבלתם את האזהרה.
