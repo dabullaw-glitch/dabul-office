@@ -72,10 +72,13 @@ async function videoReady(id: string) {
   const v = await api(`/${id}`, 'GET', { fields: 'status' });
   return v.status && (v.status.video_status === 'ready');
 }
-const FB_FEED = ['feed', 'marketplace', 'search', 'profile_feed']; // 'video_feeds' was retired by Meta (2490562)
-const IG_FEED = ['stream', 'explore', 'explore_home', 'profile_feed'];
-const FB_TALL = ['story', 'facebook_reels'];
-const IG_TALL = ['story', 'reels'];
+// Placements. Meta retired 'video_feeds' (2490562) and IG 'explore' (2490589). A campaign spec may override any list
+// with spec.placements = {fbFeed, igFeed, fbTall, igTall}, so a future retirement is fixed in data, not code.
+let FB_FEED = ['feed', 'marketplace', 'profile_feed'];
+let IG_FEED = ['stream', 'explore_home', 'profile_feed'];
+let FB_TALL = ['story', 'facebook_reels'];
+let IG_TALL = ['story', 'reels'];
+function usePlacements(p: Any) { if (!p) return; if (p.fbFeed) FB_FEED = p.fbFeed; if (p.igFeed) IG_FEED = p.igFeed; if (p.fbTall) FB_TALL = p.fbTall; if (p.igTall) IG_TALL = p.igTall; }
 
 function creativeSpec(spec: Any, ad: Any, assets: Any) {
   const text = { bodies: [{ text: ad.primary }], titles: [{ text: ad.headline }], descriptions: ad.desc ? [{ text: ad.desc }] : undefined, link_urls: [{ website_url: ad.url, display_url: 'dabullaw.co.il' }], call_to_action_types: [ad.ctaType || 'LEARN_MORE'] };
@@ -105,7 +108,7 @@ function simpleCreative(spec: Any, ad: Any, assets: Any) {
 
 async function build(id: string) {
   const spec = await getDoc('adcampaign', id); if (!spec) throw new Error('no campaign spec ' + id);
-  const acct = spec.account; const st: Any = spec.state || {}; const log: string[] = [];
+  const acct = spec.account; const st: Any = spec.state || {}; const log: string[] = []; usePlacements(spec.placements);
   const save = async () => { await merge('adcampaign', id, { state: st, builtAt: new Date().toISOString() }); };
   st.assets = st.assets || {}; st.adsets = st.adsets || {}; st.creatives = st.creatives || {}; st.ads = st.ads || {}; st.errors = {};
   const t0 = Date.now(); const room = () => Date.now() - t0 < 110e3;
