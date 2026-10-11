@@ -1,0 +1,107 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "mobile",
+ "at": "2026-10-11T11:15:01.117Z",
+ "runs": [
+  {
+   "score": 71,
+   "fcp": 1975.536,
+   "lcp": 3069.3555,
+   "si": 3168.598649206501,
+   "tbt": 897.5,
+   "cls": 0.00004601056509989043,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-dcc1af15-bdff-4569-9e29-01919fb14823=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     749
+    ],
+    [
+     "resourceLoadDelay",
+     181
+    ],
+    [
+     "resourceLoadDuration",
+     27
+    ],
+    [
+     "elementRenderDelay",
+     249
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-a0e701d elementor-widget elementor-wid…\" data-id=\"a0e701d\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div#content > div.elementor-element > div.elementor-element > div.elementor-element",
+     ""
+    ]
+   ],
+   "bytes": 343051,
+   "docBytes": 167305
+  },
+  {
+   "score": 92,
+   "fcp": 1725.0400000000002,
+   "lcp": 3037.022,
+   "si": 2334.203670713625,
+   "tbt": 147,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-dcc1af15-bdff-4569-9e29-01919fb14823=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     678
+    ],
+    [
+     "resourceLoadDelay",
+     28
+    ],
+    [
+     "resourceLoadDuration",
+     19
+    ],
+    [
+     "elementRenderDelay",
+     282
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 342747,
+   "docBytes": 167025
+  },
+  {
+   "score": 92,
+   "fcp": 1752.15,
+   "lcp": 3076.188,
+   "si": 2411.810612141371,
+   "tbt": 118,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-dcc1af15-bdff-4569-9e29-01919fb14823=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     705
+    ],
+    [
+     "resourceLoadDelay",
+     30
+    ],
+    [
+     "resourceLoadDuration",
+     24
+    ],
+    [
+     "elementRenderDelay",
+     281
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 342776,
+   "docBytes": 167017
+  }
+ ]
+}
