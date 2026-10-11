@@ -72,7 +72,7 @@ async function videoReady(id: string) {
   const v = await api(`/${id}`, 'GET', { fields: 'status' });
   return v.status && (v.status.video_status === 'ready');
 }
-const FB_FEED = ['feed', 'marketplace', 'video_feeds', 'search', 'profile_feed'];
+const FB_FEED = ['feed', 'marketplace', 'search', 'profile_feed']; // 'video_feeds' was retired by Meta (2490562)
 const IG_FEED = ['stream', 'explore', 'explore_home', 'profile_feed'];
 const FB_TALL = ['story', 'facebook_reels'];
 const IG_TALL = ['story', 'reels'];
