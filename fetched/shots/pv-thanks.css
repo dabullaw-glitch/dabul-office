@@ -1,0 +1,21 @@
+body { margin: 0px; background: rgb(255, 255, 255); font-family: Heebo, Arial, sans-serif; }
+.dt { --g: #b8932f; --g2: #8a6d2c; --g3: #f0e2bd; --ink: #141311; --line: #e7e0d0; --mut: #6c675d; --paper: #faf8f3; direction: rtl; color: var(--ink); font-size: 17px; line-height: 1.7; background: var(--paper); padding: 56px 20px 72px; }
+.dt * { box-sizing: border-box; }
+.dt .card { max-width: 640px; margin: 0px auto; background: rgb(255, 255, 255); border: 1px solid var(--line); border-radius: 26px; padding: 34px 30px; box-shadow: rgba(28, 27, 25, 0.45) 0px 30px 60px -40px; text-align: center; }
+.dt .ic { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; margin: 0px auto 16px; background: linear-gradient(145deg, rgb(251, 243, 221), rgb(239, 225, 184)); color: var(--g2); }
+.dt .ic svg { width: 36px; height: 36px; }
+.dt h1 { font-size: clamp(26px, 4vw, 34px); line-height: 1.2; margin: 0px 0px 10px; font-weight: 800; text-wrap: balance; }
+.dt p { margin: 0px 0px 12px; color: rgb(61, 58, 52); }
+.dt .num { display: inline-block; background: var(--paper); border: 1px solid var(--line); border-radius: 99px; padding: 4px 14px; font-weight: 800; font-variant-numeric: tabular-nums; margin: 2px 0px 14px; }
+.dt ol { text-align: right; margin: 18px 0px 22px; padding: 16px 20px 16px 16px; background: var(--paper); border-radius: 16px; list-style: none; counter-reset: s 0; display: grid; gap: 10px; }
+.dt ol li { counter-increment: s 1; position: relative; padding-right: 36px; font-size: 16px; }
+.dt ol li::before { content: counter(s); position: absolute; right: 0px; top: 1px; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--g3); font-size: 14px; font-weight: 800; display: grid; place-items: center; }
+.dt .bb { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.dt .b { display: inline-flex; align-items: center; gap: 8px; border-radius: 99px; padding: 12px 22px; font-weight: 800; text-decoration: none !important; }
+.dt .b1 { background: var(--ink); color: rgb(255, 255, 255) !important; }
+.dt .b2 { background: rgb(37, 211, 102); color: rgb(8, 48, 26) !important; }
+.dt .b3 { border: 1px solid var(--line); color: var(--ink) !important; }
+.dt .fail { display: none; }
+.dt.is-fail .ok { display: none; }
+.dt.is-fail .fail { display: block; }
+.dt.is-fail .ic { background: rgb(253, 236, 234); color: rgb(193, 59, 46); }
