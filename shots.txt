@@ -1,1 +1,3 @@
-rv1 https://dabullaw-glitch.github.io/dabul-office/media/preview/home/reviews-section.html?v=1
+rv2 https://dabullaw-glitch.github.io/dabul-office/media/preview/home/reviews-section.html?v=2
+v5-online https://dabullaw-glitch.github.io/dabul-office/media/preview/online5/online.html?v=1
+v5-apartment https://dabullaw-glitch.github.io/dabul-office/media/preview/online5/apartment-check.html?v=1
