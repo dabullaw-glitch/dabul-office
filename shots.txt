@@ -1,2 +1,1 @@
-fta https://dabullaw-glitch.github.io/dabul-office/media/preview/footer/footer-online-a.html
-ftb https://dabullaw-glitch.github.io/dabul-office/media/preview/footer/footer-online-b.html
+ftlive https://dabullaw.co.il/?ft=1
