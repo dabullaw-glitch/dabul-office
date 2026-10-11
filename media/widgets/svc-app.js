@@ -19,6 +19,27 @@
     });
   });
 
+  // ---------- where the visitor came from (11.10.2026) ----------
+  // Kept in this browser: the first visit's source (kept 90 days) and the latest outside source, plus the page that
+  // led here. Sent with the order so the office knows which channel and which article brought each sale.
+  var SRC_KEY = 'dabul_src_v1';
+  function readSrc() {
+    var o = {}; try { o = JSON.parse(localStorage.getItem(SRC_KEY) || '{}') || {}; } catch (e) { o = {}; }
+    var q = new URLSearchParams(location.search), ref = document.referrer || '', ext = ref && ref.indexOf(location.host) < 0;
+    var hasUtm = ['utm_source', 'utm_medium', 'utm_campaign', 'gclid', 'fbclid'].some(function (k) { return q.get(k); });
+    if (hasUtm || ext || !o.first) {
+      var v = { ref: ext ? ref.slice(0, 200) : '', landing: location.href.split('#')[0].slice(0, 300), at: new Date().toISOString() };
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid'].forEach(function (k) { if (q.get(k)) v[k] = q.get(k).slice(0, 120); });
+      var old = o.first && o.first.at && (Date.now() - Date.parse(o.first.at)) < 90 * 864e5;
+      if (!old) o.first = v;
+      if (hasUtm || ext) o.last = v;
+    }
+    if (ref && !ext) o.from = ref.split('#')[0].slice(0, 300);
+    try { localStorage.setItem(SRC_KEY, JSON.stringify(o)); } catch (e) { /* ignore */ }
+    return o;
+  }
+  var SRC = readSrc();
+
   // ---------- small helpers ----------
   var nf = new Intl.NumberFormat('he-IL', { maximumFractionDigits: 0 });
   var nf2 = new Intl.NumberFormat('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
@@ -338,7 +359,7 @@
       var files = []; Object.keys(st.files).forEach(function (k) { (st.files[k] || []).forEach(function (x, i) { files.push({ k: k, i: i, name: x.name, size: x.size, type: x.type || '' }); }); });
       if (!fnUrl) { st.done = { preview: true, review: !!rv.length, msg: 'בגרסה האמיתית ההזמנה נשמרת במערכת המשרד, הקבצים עולים לאחסון המאובטח, ו' + (rv.length ? 'המשרד חוזר אליכם לפני תשלום.' : 'אתם עוברים לדף התשלום (' + ils(p.total) + ').') }; render(); return; }
       st.sending = true; render();
-      var payload = { action: 'order', svc: svc.id, a: st.a, c: st.c, meet: st.meet, files: files, website: hp ? hp.value : '', page: location.href.split('#')[0], total: p.total };
+      var payload = { action: 'order', svc: svc.id, a: st.a, c: st.c, meet: st.meet, files: files, website: hp ? hp.value : '', page: location.href.split('#')[0], total: p.total, src: SRC };
       fetch(fnUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) })
         .then(function (r) { return r.json().then(function (j) { if (!r.ok || !j.ok) throw new Error(j.error || 'שגיאה'); return j; }); })
         .then(function (j) {

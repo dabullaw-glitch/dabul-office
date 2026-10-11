@@ -1,0 +1,64 @@
+/* home-reviews.css: "לקוחות ממליצים" on the home page (11.10.2026). Matches the site: Noto Local, black #141414, gold #C5A25A / #E7CD96. */
+.dbr{--g:#C5A25A;--g2:#E7CD96;--g3:#A88A4C;--ink:#141414;--tx:#54595F;--ln:#E7E7F1;--bg:#fff;--st:#F4B400;
+ direction:rtl;font-family:"Noto Local","Noto Sans Hebrew",Arial,sans-serif;color:var(--ink);max-width:1360px;margin:0 auto;position:relative}
+.dbr *{box-sizing:border-box}
+/* rating badges */
+.dbr .dbr-top{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:0 0 26px}
+.dbr .dbr-badge{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--ln);border-radius:18px;padding:12px 18px 12px 22px;text-decoration:none!important;color:var(--ink)!important;
+ box-shadow:0 14px 34px -24px rgba(20,20,20,.35);transition:transform .2s,box-shadow .2s,border-color .2s;min-width:250px}
+.dbr .dbr-badge:hover{transform:translateY(-2px);border-color:var(--g2);box-shadow:0 22px 40px -26px rgba(168,138,76,.7)}
+.dbr .dbr-logo{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex:none;background:#F8F8FD}
+.dbr .dbr-logo svg{width:26px;height:26px}
+.dbr .dbr-num{font-size:34px;line-height:1;font-weight:700;letter-spacing:-.02em}
+.dbr .dbr-meta{display:flex;flex-direction:column;gap:3px;line-height:1.25}
+.dbr .dbr-meta small{font-size:13.5px;color:var(--tx)}
+.dbr .dbr-meta b{font-size:14.5px;font-weight:700}
+.dbr .dbr-stars{display:inline-flex;gap:1px;color:var(--st)}.dbr .dbr-stars svg{width:15px;height:15px;fill:currentColor}
+.dbr .dbr-badge.lw .dbr-stars{color:#3BA7E6}
+.dbr .dbr-badge.lw .dbr-logo{background:#EAF6FD}
+/* slider */
+.dbr .dbr-vp{position:relative}
+.dbr .dbr-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:8px 4px 26px;margin:0;list-style:none;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.dbr .dbr-track::-webkit-scrollbar{display:none}
+.dbr .dbr-card{scroll-snap-align:start;flex:0 0 calc((100% - 54px)/4);background:var(--bg);border:1px solid var(--ln);border-radius:20px;padding:22px 22px 18px;display:flex;flex-direction:column;gap:12px;
+ box-shadow:0 18px 40px -32px rgba(20,20,20,.45);position:relative;transition:transform .2s,box-shadow .2s,border-color .2s}
+.dbr .dbr-card:hover{transform:translateY(-3px);border-color:var(--g2);box-shadow:0 26px 48px -30px rgba(168,138,76,.6)}
+.dbr .dbr-card::before{content:"\201D";position:absolute;top:6px;left:18px;font-size:76px;line-height:1;color:var(--g2);opacity:.45;font-family:Georgia,serif}
+.dbr .dbr-who{display:flex;align-items:center;gap:12px;min-width:0}
+.dbr .dbr-av{width:46px;height:46px;border-radius:50%;flex:none;object-fit:cover;background:linear-gradient(140deg,var(--g2),var(--g3));color:#fff;display:grid;place-items:center;font-weight:700;font-size:19px;box-shadow:0 0 0 3px #fff,0 0 0 4px var(--ln)}
+.dbr .dbr-nm{min-width:0}
+.dbr .dbr-nm b{display:block;font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dbr .dbr-nm small{display:block;font-size:13px;color:var(--tx)}
+.dbr .dbr-rate{display:flex;align-items:center;gap:8px}
+.dbr .dbr-ver{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:var(--tx)}
+.dbr .dbr-ver svg{width:14px;height:14px}
+.dbr .dbr-txt{font-size:15.5px;line-height:1.65;color:#2b2d31;margin:0;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}
+.dbr .dbr-card.open .dbr-txt{-webkit-line-clamp:unset;display:block}
+.dbr .dbr-more{align-self:flex-start;background:none;border:0;padding:0;color:var(--g3);font:inherit;font-size:14px;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.dbr .dbr-more:hover{color:var(--ink)}
+.dbr .dbr-src{margin-top:auto;display:flex;align-items:center;justify-content:space-between;border-top:1px dashed var(--ln);padding-top:12px;font-size:12.5px;color:var(--tx)}
+.dbr .dbr-src span{display:inline-flex;align-items:center;gap:6px}.dbr .dbr-src svg{width:16px;height:16px}
+/* arrows + dots */
+.dbr .dbr-arw{position:absolute;top:calc(50% - 30px);width:50px;height:50px;border-radius:50%;border:1px solid var(--ln);background:#fff;color:var(--ink);display:grid;place-items:center;cursor:pointer;z-index:3;
+ box-shadow:0 12px 26px -14px rgba(20,20,20,.5);transition:background .2s,color .2s,transform .2s,opacity .2s;padding:0}
+.dbr .dbr-arw svg{width:22px;height:22px}
+.dbr .dbr-arw:hover{background:var(--ink);color:var(--g2);transform:scale(1.06)}
+.dbr .dbr-arw:focus-visible{outline:3px solid var(--g);outline-offset:3px}
+.dbr .dbr-arw[disabled]{opacity:.35;cursor:default;transform:none;background:#fff;color:var(--ink)}
+.dbr .dbr-prev{right:-24px}.dbr .dbr-next{left:-24px}
+.dbr .dbr-dots{display:flex;justify-content:center;gap:7px;margin:2px 0 0}
+.dbr .dbr-dots button{width:8px;height:8px;border-radius:99px;border:0;padding:0;background:#D5D5E2;cursor:pointer;transition:width .25s,background .25s}
+.dbr .dbr-dots button.on{width:26px;background:var(--g)}
+.dbr .dbr-note{text-align:center;font-size:12.5px;color:#8A8D93;margin:12px 0 0}
+@media (max-width:1100px){.dbr .dbr-card{flex-basis:calc((100% - 36px)/3)}.dbr .dbr-prev{right:-10px}.dbr .dbr-next{left:-10px}}
+@media (max-width:820px){.dbr .dbr-card{flex-basis:calc((100% - 18px)/2)}}
+@media (max-width:600px){
+ .dbr .dbr-top{gap:10px}.dbr .dbr-badge{min-width:0;flex:1 1 100%;padding:10px 14px}
+ .dbr .dbr-num{font-size:28px}
+ .dbr .dbr-card{flex-basis:86%;padding:18px 18px 14px}
+ .dbr .dbr-track{gap:12px;scroll-padding-inline:2px}
+ .dbr .dbr-arw{width:42px;height:42px;top:auto;bottom:-6px}
+ .dbr .dbr-prev{right:calc(50% - 120px)}.dbr .dbr-next{left:calc(50% - 120px)}
+ .dbr .dbr-dots{margin-top:12px;min-height:42px;align-items:center}
+}
+@media (prefers-reduced-motion:reduce){.dbr .dbr-track{scroll-behavior:auto}.dbr .dbr-card,.dbr .dbr-badge,.dbr .dbr-arw{transition:none}}
