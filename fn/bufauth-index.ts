@@ -103,6 +103,10 @@ async function publishDue(key: string, dryRow?: string) {
   const chans = (cfg.buffer && cfg.buffer.channels) || [];
   const byChan: Record<string, string> = {};
   for (const [ch, svc] of Object.entries(CH2SVC)) { const c = chans.find((x: { service: string; paused: boolean }) => x.service === svc && !x.paused); if (c) byChan[ch] = c.id; }
+  // 11.10.2026 (Yakir): once Postoria is connected (settings/pub.postoria.ok), every network except X goes out through Postoria
+  // (function postoria). Buffer keeps only X; rows without X are left to Postoria and not touched here.
+  const PST = !!(cfg.postoria && cfg.postoria.ok);
+  const mine = (c: string) => !PST || c === 'x';
   const now = Date.now(), log: string[] = [];
   const from = new Date(now - 30 * 3600e3).toISOString().slice(0, 10);
   const q = admin().from('docs').select('id,data').eq('coll', 'pub').eq('data->>owner', 'office');
@@ -110,6 +114,7 @@ async function publishDue(key: string, dryRow?: string) {
   for (const r of data || []) {
     const row = r.data; const t = ilToMs(row.at);
     if (!dryRow && (t > now || now - t > 2 * 3600e3)) continue;
+    if (!((row.channels || []) as string[]).some(mine)) continue;
     const res = { ...(row.result || {}) };
     let media: string[] = (row.media || []).map((m: string) => String(m).replace('{MEDIA}', cfg.media || ''));
     let reelPath = row.reelPath;
@@ -118,11 +123,11 @@ async function publishDue(key: string, dryRow?: string) {
       const su = await admin().storage.from('files').createSignedUrl(reelPath, 6 * 3600);
       if (su.data) media = [su.data.signedUrl, ...media.filter(m => !/\.mp4/i.test(m))];
     }
-    if (!dryRow && (row.channels || []).includes('youtube') && !(res.youtube && (res.youtube.ok || res.youtube.cap))) {
+    if (!dryRow && !PST && (row.channels || []).includes('youtube') && !(res.youtube && (res.youtube.ok || res.youtube.cap))) {
       try { res.youtube = await youtubeOut(row, media, cfg); } catch (e) { res.youtube = { ok: false, error: String((e as Error).message || e).slice(0, 300) }; }
     }
     for (const ch of (row.channels || []) as string[]) {
-      if (!CH2SVC[ch] || (res[ch] && res[ch].ok)) continue;
+      if (!CH2SVC[ch] || !mine(ch) || (res[ch] && res[ch].ok)) continue;
       if (!byChan[ch]) { res[ch] = { ok: false, error: 'הערוץ לא מחובר ב-Buffer' }; continue; }
       if (!row.text && !row.textX) { res[ch] = { ok: false, error: 'אין טקסט בשורה' }; continue; }
       try {
@@ -132,7 +137,7 @@ async function publishDue(key: string, dryRow?: string) {
         res[ch] = { ok: true, id: o.post.id, url: o.post.externalLink || '', at: new Date().toISOString(), draft: !!dryRow };
       } catch (e) { res[ch] = { ok: false, error: String((e as Error).message || e).slice(0, 300) }; }
     }
-    const want = ((row.channels || []) as string[]).filter(c => CH2SVC[c] || c === 'youtube');
+    const want = ((row.channels || []) as string[]).filter(c => (CH2SVC[c] || c === 'youtube') && mine(c));
     const allOk = want.length > 0 && want.every(c => res[c] && res[c].ok);
     const failed = want.filter(c => res[c] && !res[c].ok);
     if (dryRow) { log.push(JSON.stringify(res)); continue; }

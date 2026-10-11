@@ -1,7 +1,8 @@
 // socialpub: the office system's own publisher (cron every 10 minutes, x-cron-secret).
 // Publishes calendar rows (docs coll "pub") whose owner is "system", when their time comes:
 //   instagram: feed image, reel (video) and story, through the Instagram API with Instagram Login (secret IG_TOKEN)
-//   tiktok:    once settings/pub.tiktok.ok (secret TIKTOK_TOKEN) - not active yet
+//   tiktok:    through Postoria since 11.10.2026 (function postoria); once settings/pub.postoria.ok, Instagram too.
+//   This job keeps staging the weekly reels (Drive -> storage) and the Instagram comments check.
 // Weekly reels: stageReels() attaches the approved reel of that day and copies it from Drive to storage; reels publish in two steps.
 // Extra Instagram reel slots (8.10.2026, Yakir asked to push Instagram): pub rows with an explicit "reel" id; once a reel is out on
 // Instagram it gets igAt, so its later weekly date does not post it there a second time.
@@ -251,6 +252,8 @@ export function start(createClient) {
       const pend = row.result && row.result.instagram && row.result.instagram.pending;
       if (t > now || now - t > (pend ? 6 : 2) * 3600e3) continue;
       const ch = row.channels || [];
+      // 11.10.2026 (Yakir): with Postoria connected, Instagram and TikTok go out through the postoria function; this job only stages the reels
+      if (cfg.postoria && cfg.postoria.ok && ch.every((c) => ['instagram', 'tiktok', 'facebook', 'youtube', 'linkedin', 'gbp'].includes(c))) continue;
       const res = { ...(row.result || {}) };
       if (ch.includes('instagram') && (!res.instagram || res.instagram.pending)) {
         const C = igc.mode === 'fb' ? { base: FB, who: '/' + igc.igId, token: S.IG_PAGE_TOKEN } : { base: IG, who: '/me', token: S.IG_TOKEN };
