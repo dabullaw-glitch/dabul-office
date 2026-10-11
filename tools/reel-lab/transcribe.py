@@ -1,5 +1,7 @@
 # Word-level Hebrew transcript for the reel editor v2: python3 transcribe.py <out_dir> <audio.wav>
 import sys, json
+import numpy as np
+from scipy.io import wavfile
 from faster_whisper import WhisperModel
 out, wav = sys.argv[1], sys.argv[2]
 m = None
@@ -8,7 +10,9 @@ for name in ("ivrit-ai/whisper-large-v3-turbo-ct2", "ivrit-ai/faster-whisper-v2-
         m = WhisperModel(name, device="cpu", compute_type="int8"); print("model", name); break
     except Exception as e:
         print("model failed", name, e)
-segs, info = m.transcribe(wav, language="he", word_timestamps=True, vad_filter=False, beam_size=5)
+sr, a = wavfile.read(wav)
+audio = (a.astype(np.float32) / 32768.0) if a.dtype == np.int16 else a.astype(np.float32)
+segs, info = m.transcribe(audio, language="he", word_timestamps=True, vad_filter=False, beam_size=5)
 res = {"language": info.language, "duration": info.duration, "segments": []}
 for s in segs:
     res["segments"].append({"start": round(s.start, 3), "end": round(s.end, 3), "text": s.text.strip(),
