@@ -92,9 +92,8 @@ function postBody(row: any, ch: string, acc: number, pst: any) {
     body.media = pst.media.map((id: number) => ({ media_id: id }));
   } else if (row.link && (ch === 'facebook' || ch === 'linkedin')) { body.content_type = 'link'; body.link_url = row.link; }
   else body.content_type = 'text';
-  // Google Business: the link goes on a "Learn more" button (Google does not want links or phone numbers in the text)
-  if (ch === 'gbp') { const u = row.gbpLink || row.link || 'https://dabullaw.co.il/'; if (u) body.google_business_profile = { button_type: 'LEARN_MORE', button_url: u };
-    text = String(row.textGbp || text).split('\n').filter(l => !/(https?:\/\/|www\.|\.co\.il|📞|\d{2,3}-?\d{7}|English\s*:|Français\s*:|^\s*#)/i.test(l)).join('\n').replace(/\n{3,}/g, '\n\n').trim(); }
+  // Google Business: its own weekly post in Yakir's template (text as written, article link at the end), plus a "Learn more" button
+  if (ch === 'gbp') { const u = row.gbpLink || row.link || 'https://dabullaw.co.il/'; body.google_business_profile = { button_type: 'LEARN_MORE', button_url: u }; text = String(row.textGbp || text).trim(); }
   if (row.link && body.content_type !== 'link' && (ch === 'facebook' || ch === 'linkedin') && !text.includes(row.link)) text += `\n\n${row.link}`;
   body.caption = text.slice(0, ch === 'instagram' ? 2150 : ch === 'tiktok' ? 2200 : ch === 'gbp' ? 1450 : 5000);
   if (ch === 'tiktok') body.tiktok = { who_can_watch: 'public', allow_comments: true, allow_duet: false, allow_stitch: false, your_brand: false, branded_content: false, disclose_post_content: false, auto_add_music: false };
