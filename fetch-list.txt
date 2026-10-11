@@ -1,1 +1,3 @@
-home-raw3.html https://dabullaw.co.il/?r=1
+page-sitemap.xml https://dabullaw.co.il/page-sitemap.xml
+llms.txt https://dabullaw.co.il/llms.txt
+robots.txt https://dabullaw.co.il/robots.txt
