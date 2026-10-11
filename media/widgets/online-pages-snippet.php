@@ -92,7 +92,7 @@ if (!function_exists('dabul_online_slug')) {
 		);
 		$s = $links[$id]; if (!isset($i[$s])) return $c;
 		$done = true;
-		$box = '<style>.dbl-oa{margin:26px 0;padding:16px 18px;border-radius:16px;background:#faf7f0;border:1px solid #e4d19c;border-right:4px solid #c9a85c;display:flex;align-items:center;gap:14px;flex-wrap:wrap;direction:rtl;font-family:inherit}.dbl-oa .t{flex:1 1 260px;min-width:0}.dbl-oa .t b{display:block;font-size:17px;line-height:1.35;color:#16161a;margin:0 0 3px}.dbl-oa .t span{display:block;font-size:15px;line-height:1.55;color:#4a4740}.dbl-oa .t em{font-style:normal;font-weight:700;color:#8c7646}.dbl-oa a{display:inline-flex;align-items:center;white-space:nowrap;padding:10px 18px;border-radius:999px;font-weight:700;font-size:15px;line-height:1.2;color:#16161a!important;text-decoration:none!important;background:linear-gradient(180deg,#f1ddb0,#c9a85c)}.dbl-oa a:hover{filter:brightness(1.05)}@media (max-width:600px){.dbl-oa a{width:100%;justify-content:center}}</style><div class="dbl-oa"><div class="t"><b>' . esc_html($i[$s][0]) . '</b><span>' . esc_html($i[$s][1]) . ' <em>' . esc_html($i[$s][2]) . '</em></span></div><a href="' . esc_url(home_url('/online/' . $s . '/')) . '">לפרטים ולהזמנה</a></div>';
+		$box = '<style>.dbl-oa{margin:26px 0;padding:16px 18px;border-radius:16px;background:#faf7f0;border:1px solid #e4d19c;border-right:4px solid #c9a85c;display:flex;align-items:center;gap:14px;flex-wrap:wrap;direction:rtl;font-family:inherit}.dbl-oa .t{flex:1 1 260px;min-width:0}.dbl-oa .t b{display:block;font-size:17px;line-height:1.35;color:#16161a;margin:0 0 3px}.dbl-oa .t span{display:block;font-size:15px;line-height:1.55;color:#4a4740}.dbl-oa .t em{font-style:normal;font-weight:700;color:#8c7646;white-space:nowrap}.dbl-oa.pg{max-width:1100px;width:calc(100% - 32px);margin:34px auto;box-sizing:border-box}.dbl-oa a{display:inline-flex;align-items:center;white-space:nowrap;padding:10px 18px;border-radius:999px;font-weight:700;font-size:15px;line-height:1.2;color:#16161a!important;text-decoration:none!important;background:linear-gradient(180deg,#f1ddb0,#c9a85c)}.dbl-oa a:hover{filter:brightness(1.05)}@media (max-width:600px){.dbl-oa a{width:100%;justify-content:center}}</style><div class="dbl-oa' . (get_post_type($id) === 'post' ? '' : ' pg') . '"><div class="t"><b>' . esc_html($i[$s][0]) . '</b><span>' . esc_html($i[$s][1]) . ' <em>' . esc_html($i[$s][2]) . '</em></span></div><a href="' . esc_url(home_url('/online/' . $s . '/')) . '">לפרטים ולהזמנה</a></div>';
 		// in an article: after its opening part (before the second heading); on a page (built with Elementor): at the end
 		if (get_post_type($id) === 'post' && preg_match_all('#<h2[\s>]#i', $c, $mm, PREG_OFFSET_CAPTURE) && count($mm[0]) >= 2) {
 			$pos = $mm[0][1][1];
@@ -118,8 +118,8 @@ if (!function_exists('dabul_online_slug')) {
 	add_filter('rocket_exclude_css', function ($e) { $e[] = '(.*)svc-app.css'; return $e; });
 	// one-time cache purge when the pages went live, so the menu item and the footer button show on every page
 	add_action('init', function () {
-		if (get_option('dabul_online_purged') === '20261011b') return;
-		update_option('dabul_online_purged', '20261011b', false);
+		if (get_option('dabul_online_purged') === '20261011c') return;
+		update_option('dabul_online_purged', '20261011c', false);
 		if (function_exists('rocket_clean_domain')) rocket_clean_domain();
 	});
 }
