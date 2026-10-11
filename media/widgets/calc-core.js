@@ -75,7 +75,7 @@ pane('court',function(I,O,P){var c=I('court').value,t=I('type').value,a=num(I('a
  if(two){tot=c==='s'?Math.max(a*.025,f.min):Math.min(a,T)*.025+Math.max(0,a-T)*.01;}
  else tot=t==='ten'?285:f[t];
  tot=Math.round(tot);var h1=two?Math.round(tot/2):tot,h2=two?tot-h1:0;
- O('tot').textContent=ILS(tot);O('h1').textContent=ILS(h1);O('h2').textContent=two?ILS(h2)+' + הפרשי הצמדה':'אין';
+ O('tot').textContent=ILS(tot);O('h1').textContent=ILS(h1);O('h2').textContent=two?ILS(h2):'אין';
  O('ref').textContent=two?ILS(Math.max(0,h1-f.ded)):'לא רלוונטי';
  var n='';if(two){n=c==='s'&&a*.025<f.min?'הסכום נמוך, ולכן חלה האגרה המזערית בבית משפט השלום: '+ILS(f.min)+'. ':'';n+='החישוב לפי 2.5% מסכום התביעה'+(c==='d'&&a>T?', ו-1% על החלק שמעל '+ILS(T):'')+', ב'+lbl+'.';}
  else n={non:'אגרה קבועה לתביעה לסעד שאינו כספי (למשל צו הצהרתי, צו עשה, צו מניעה, אכיפה או פירוק שותפות), ב'+lbl+'.',oth:'אגרה קבועה לתביעה אחרת, שאינה תביעה כספית ואינה מהסוגים של הסעד שאינו כספי, ב'+lbl+'.',ten:'אגרה קבועה לתביעה בבית הדין לשכירות.',app:c==='s'?'ערעור על פסק דין של בית משפט השלום (מוגש לבית המשפט המחוזי).':'ערעור על פסק דין של בית המשפט המחוזי (מוגש לבית המשפט העליון).',bra:c==='s'?'בקשת רשות ערעור על החלטת ביניים של בית משפט השלום.':'בקשת רשות ערעור על החלטת ביניים של בית המשפט המחוזי.'}[t];
