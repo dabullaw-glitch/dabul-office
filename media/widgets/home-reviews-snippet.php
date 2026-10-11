@@ -1,40 +1,35 @@
 <?php
-// Dabul: "לקוחות ממליצים" on the home page (11.10.2026, for Yakir's approval).
+// Dabul: "לקוחות ממליצים" on the home page (approved by Yakir 11.10.2026).
 // Replaces the Trustindex widget on the home page only, with the office carousel (Google + LawReviews ratings).
-// The reviews come from the office "reviews" function (refreshed every morning), cached here for 6 hours, and are
-// printed into the page (data-json) so the section shows at once without waiting for the browser.
-// Undo: deactivate this snippet; the Trustindex widget comes back as it was.
+// The reviews are fixed (Yakir: no automatic updates); to change them, edit the JSON below.
+// Files: github dabullaw-glitch/dabul-office media/widgets/home-reviews.css + home-reviews.js. Undo: deactivate this snippet.
 if (!function_exists('dabul_reviews_html')) {
-  function dabul_reviews_data() {
-    $c = get_transient('dabul_reviews_v1');
-    if ($c !== false) return $c;
-    $r = wp_remote_get('https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reviews', array('timeout' => 8));
-    $j = is_wp_error($r) ? null : json_decode(wp_remote_retrieve_body($r), true);
-    if (!$j || empty($j['google'])) { $old = get_option('dabul_reviews_last'); return $old ? $old : null; }
-    set_transient('dabul_reviews_v1', $j, 6 * HOUR_IN_SECONDS);
-    update_option('dabul_reviews_last', $j, false);
-    return $j;
-  }
   function dabul_reviews_html() {
-    $d = dabul_reviews_data();
+    $json = <<<'DABULJSON'
+{"google": {"rating": 4.9, "count": 73, "url": "https://search.google.com/local/reviews?placeid=ChIJFyPNpLBBHRURR161JAMeBb0", "reviews": [{"name": "Glemm Dabomb", "photo": "https://lh3.googleusercontent.com/a-/ALV-UjVzJhmY3gwfCtQYEIEsvheVtNoJZIkiK1ZwpLmZcslMwOCCH3Y=w96-h96-c-rp-mo-br100", "rating": 5, "text": "מה שאהבתי במיוחד בעבודה מול עו״ד יקיר דבול זה השקיפות והזמינות. בניגוד למשרדים אחרים שבהם אתה רודף אחרי עורך הדין, יקיר מעדכן אותך בכל התפתחות בוואטסאפ או בטלפון, ונותן הרגשה שיש בעל בית שמטפל בנכס שלך. יסודי, מהיר ומקצועי מאוד.", "at": "2026-06-19T00:00:00Z"}, {"name": "Ido Ben haim", "photo": "https://lh3.googleusercontent.com/a/ACg8ocILwdlaDkbBSP_LDmqwMRT4VCfUtMgx6lIcRUqiLBM0aBu-Bg=w96-h96-c-rp-mo-br100", "rating": 5, "text": "בתור זוג צעיר שקונה נכס בפעם הראשונה, תהליך של רכישת דירה נראה לנו כמו הר שאי אפשר לטפס עליו. יקיר פישט לנו את הכל, תרגם את המושגים המשפטיים המסובכים לשפה יומיומית וליווה אותנו צעד אחר צעד עד לחתימה. חוויה משפטית מרגיעה, בטוחה ומושלמת.", "at": "2026-06-17T00:00:00Z"}, {"name": "אורי מואטי", "photo": "https://lh3.googleusercontent.com/a/ACg8ocJiEedFuJUk5QWtBHEng_UjhYctIdoW0MDeC9hOGcTt0sy2Pw=w96-h96-c-rp-mo-br100", "rating": 5, "text": "אם אתם מחפשים עורך דין מקרקעין בנתניה שלא מתפשר על שום פסיק בחוזה, יקיר הוא הכתובת. הוא עבר על הסכם המכר שלנו בפינצטה, תיקן סעיפים לרעתנו והסביר לנו הכל בסבלנות בלתי רגילה. עורך דין שבאמת אכפת לו מהלקוחות שלו וזמין לכל שאלה.", "at": "2026-06-17T00:00:00Z"}, {"name": "ivri saunders", "photo": "https://lh3.googleusercontent.com/a/ACg8ocKljFYlSN_h9g1TnOZ9EWpNh0WXmlNnnMahU6qvgipJjZp35A=w96-h96-c-rp-mo-br100", "rating": 5, "text": "פנינו אל יקיר דבול - משרד עורכי דין כדי שייצגו אותנו במכירת הנכס שלנו. קיבלנו יחס אישי מהשנייה הראשונה, ללא סינונים וללא מתמחים באמצע. יקיר תקתק את ענייני מיסוי המקרקעין, ניהל את התהליך בשקיפות ונתן לנו ביטחון מוחלט שהעסקה בידיים טובות.", "at": "2026-06-16T00:00:00Z"}, {"name": "אורי דהן", "photo": "https://lh3.googleusercontent.com/a-/ALV-UjXmhKLSOlaUlNiRNDSCuQpDkUk35DuBeTEfwKIbj3iShVNeaHc=w96-h96-c-rp-mo-br100", "rating": 5, "text": "חיפשנו עורך דין מקרקעין בנתניה שידריך אותנו בקניית דירה בשכונה חדשה. הגענו לעו״ד יקיר דבול וזו הייתה חוויה פשוט מצוינת. הוא ירד לפרטים הכי קטנים, בדק את הכל מול העירייה והטאבו, וחסך לנו המון כאב ראש. שירות אישי, זמינות מלאה ושקט נפשי מהרגע הראשון.", "at": "2026-06-16T00:00:00Z"}, {"name": "נועם שחר", "photo": "https://lh3.googleusercontent.com/a/ACg8ocKPXHYMe2BFgnBrerR5V6bvrOObxWvRyjppeEF1JAS4oaLy9g=w96-h96-c-rp-mo-br100", "rating": 5, "text": "בתור משקיע שקונה נכסים באזור, אני עובד רק עם עורך דין מקרקעין בנתניה שמבין את השוק המקומי לעומק. יקיר מספק לי מעטפת משפטית הרמטית, עולה על מוקשים בחוזים עוד לפני שהם מתפוצצים, ומגן על האינטרסים שלי בנחישות. ממליץ עליו לכל משקיע או קונה.", "at": "2026-06-15T00:00:00Z"}, {"name": "Viki", "photo": "https://lh3.googleusercontent.com/a/ACg8ocILoP8WixP8L7wgaecMKETp8zzW7k2vfardb8h7DIGvpFxN=w96-h96-c-rp-mo-br100", "rating": 5, "text": "כמעט וחתמנו על חוזה עם קבלן שהיה מלא בסעיפים דרקוניים, אבל עו״ד יקיר דבול עצר אותנו בזמן. הוא נכנס לעובי הקורה, שינה סעיפים מהותיים מול עורכי הדין של החברה היזמית, ורק כשהכל היה מושלם לטובתנו – חתמנו. הוא הציל אותנו מהמון עוגמת נפש עתידית.", "at": "2026-06-12T00:00:00Z"}, {"name": "orly amitay", "photo": "https://lh3.googleusercontent.com/a/ACg8ocIrMdS8WZoeZ4P9TLFRKSLjpkoH5sIEwjXzO1YZNwSrqd-FPg=w96-h96-c-rp-mo-br100", "rating": 5, "text": "ברצוני להביע הערכתי והוקרתי לעורך הדין יקיר דבול.\nמתוך נסיון רב של התנהלות מול עו\"ד בנסיבות שונות,\nעוה\"ד דבול הוכיח בהתנהלותו שרות ומקצועיות ברמה אחרת.\nעבודתו מצטיינת באדיבות יושרה ונכונות לסייע שלא על מנת לקבל שכר.\nעוה\"ד דבול הוכיח כי ערכים ודאגה ללקוח עומדים בראש מעייניו וניכר כי לקוחותיו ועינייניהם מטופלים על הצד הטוב ביותר, ומופקדים בידי הטוב ביותר!\nבכבוד רב\nאורלי אמיתי", "at": "2026-03-18T00:00:00Z"}, {"name": "רומיאו נמירובסקי", "photo": "https://lh3.googleusercontent.com/a/ACg8ocI3KXU04KO5I6IB21cAMcdHANF2upYyezr0dsSShgQuopOH8A=w96-h96-c-rp-mo-br100", "rating": 5, "text": "בן אדם באמת יוצא מן הכלל, הוציא אותי מהבור הגדול ביותר שהייתי בו בחיי, ממליץ בחום לכל מי ששוקל לבקש שירות מהאיש הקסום והצלול הזה❤️.\nבאמת בחור טהור😊", "at": "2026-02-25T00:00:00Z"}, {"name": "ilay elimelech", "photo": "https://lh3.googleusercontent.com/a/ACg8ocJJ475SnncYfmIfuKewpDY9LnGkEbV6EVRGyLfSUi0WMUmPNQ=w96-h96-c-rp-mo-br100", "rating": 5, "text": "למי שרוכש דירה, אל תוותרו על ייצוג משלכם! שכרנו את שירותיו של יקיר כעורך דין מקרקעין והוא עבר על החוזה בפינצטה, שינה סעיפים בעייתיים ודאג לאינטרסים שלנו מהרגע הראשון ועד קבלת המפתח.", "at": "2026-02-25T00:00:00Z"}]}, "lawreviews": {"rating": 5.0, "count": 52, "url": "https://www.lawreviews.co.il/provider/dabul-yakir"}}
+DABULJSON;
+    $d = json_decode($json, true);
     $v = '20261011b';
     $base = 'https://dabullaw-glitch.github.io/dabul-office/media/widgets/';
     wp_enqueue_style('dabul-reviews', $base . 'home-reviews.css', array(), $v);
     wp_enqueue_script('dabul-reviews', $base . 'home-reviews.js', array(), $v, true);
-    $json = $d ? wp_json_encode($d, JSON_UNESCAPED_UNICODE) : '';
-    // noscript: the first reviews as plain text, for search engines and old browsers
     $ns = '';
-    if ($d && !empty($d['google']['reviews'])) {
-      foreach (array_slice($d['google']['reviews'], 0, 6) as $rv) {
-        $ns .= '<blockquote><p>' . esc_html($rv['text']) . '</p><cite>' . esc_html($rv['name']) . ', ביקורת בגוגל</cite></blockquote>';
-      }
+    foreach (array_slice($d['google']['reviews'], 0, 6) as $rv) {
+      $ns .= '<blockquote><p>' . esc_html($rv['text']) . '</p><cite>' . esc_html($rv['name']) . ', ביקורת בגוגל</cite></blockquote>';
     }
-    return '<div class="dbr" data-src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reviews"' . ($json ? ' data-json="' . esc_attr($json) . '"' : '') . '></div>'
-      . ($ns ? '<noscript>' . $ns . '</noscript>' : '');
+    return '<div class="dbr" data-json="' . esc_attr(wp_json_encode($d, JSON_UNESCAPED_UNICODE)) . '"></div><noscript>' . $ns . '</noscript>';
   }
   add_shortcode('dabul_reviews', 'dabul_reviews_html');
   add_filter('do_shortcode_tag', function ($out, $tag) {
     if (is_front_page() && stripos($tag, 'trustindex') === 0) return dabul_reviews_html();
     return $out;
   }, 10, 2);
+  // WP Rocket: do not delay the carousel script until the visitor touches the page
+  add_filter('rocket_delay_js_exclusions', function ($e) { $e[] = 'home-reviews'; return $e; });
+  add_action('init', function () {
+    if (get_option('dabul_reviews_purged') === '20261011b') return;
+    update_option('dabul_reviews_purged', '20261011b', false);
+    if (function_exists('rocket_clean_home')) rocket_clean_home();
+    if (function_exists('rocket_clean_domain')) rocket_clean_domain();
+  });
 }
