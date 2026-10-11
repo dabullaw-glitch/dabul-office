@@ -91,6 +91,11 @@ CSS5 = r"""<style>
  .dz .bento{grid-template-columns:minmax(0,1fr)}.dz .bx.big{grid-column:auto}
  .dz .bx.wide{flex-direction:column;align-items:flex-start}.dz .bx.wide .seal{margin:0;position:absolute;left:16px;top:16px;width:78px;height:78px;font-size:11px}.dz .bx.wide .seal strong{font-size:20px}
 }
+.dz .bx b,.dz .bx span.t{display:block}
+.dz .bx.wide > div{flex:1;min-width:0}
+@media (min-width:641px){.dz .bx.wide .seal{width:116px;height:116px;font-size:12px;padding:8px}.dz .bx.wide .seal strong{font-size:28px}}
+.dz .vid .pl span{left:16px;white-space:normal;line-height:1.35;text-align:right}
+@media (max-width:640px){.dz .vid .pl span{font-size:13px;bottom:10px;right:10px;left:10px}.dz .vid .pl i{width:68px;height:68px}}
 @media (prefers-reduced-motion:reduce){.dz .btn,.dz .btn::after,.dz .bx,.dz .sc .go i{transition:none}}
 </style>"""
 
