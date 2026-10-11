@@ -1,3 +1,1 @@
-v3-online https://dabullaw-glitch.github.io/dabul-office/media/preview/online/online.html?v=21
-v3-apartment-check https://dabullaw-glitch.github.io/dabul-office/media/preview/online/apartment-check.html?v=21
-v3-company https://dabullaw-glitch.github.io/dabul-office/media/preview/online/company-registration.html?v=21
+v3b-apartment-check https://dabullaw-glitch.github.io/dabul-office/media/preview/online/apartment-check.html?v=22
