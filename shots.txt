@@ -1,2 +1,1 @@
-courtfees https://dabullaw.co.il/calculators/court-fees/?zz=7
-calchub https://dabullaw.co.il/calculators/?zz=7
+courtfees https://dabullaw.co.il/calculators/court-fees/?zz=9
