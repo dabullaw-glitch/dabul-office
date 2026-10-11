@@ -63,7 +63,7 @@ function dabul_ft_html() {
 	}
 	$o .= '<div class="col ct"><p class="h">יצירת קשר</p><ul>'
 		. '<li><a href="https://waze.com/ul?ll=32.3274395%2C34.8614253&amp;navigate=yes&amp;zoom=17" target="_blank" rel="noopener"><i>' . dabul_ft_icon('pin') . '</i>רזיאל 1, נתניה (קומת כניסה) 4247001</a></li>'
-		. '<li><a href="tel:098613413"><i>' . dabul_ft_icon('tel') . '</i>09-861-3413</a></li>'
+		. '<li><a href="tel:098613413"><i>' . dabul_ft_icon('tel') . '</i>09-8613413</a></li>'
 		. '<li><a href="mailto:dabullaw@gmail.com"><i>' . dabul_ft_icon('mail') . '</i>dabullaw@gmail.com</a></li>'
 		. '<li><a href="https://www.facebook.com/dabullaw" target="_blank" rel="noopener"><i>' . dabul_ft_icon('fb') . '</i>התחברו בפייסבוק</a></li></ul>'
 		. '<p class="h gap">שעות פעילות</p><div class="hrs"><div><span>יום א\'-ה\'</span><i></i><span>9:00-18:00</span></div><div><span>יום ו\' ושבת</span><i></i><span>סגור</span></div></div></div>';
