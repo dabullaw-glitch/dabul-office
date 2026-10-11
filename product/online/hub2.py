@@ -121,9 +121,9 @@ CSS = r"""<style>
 /* who */
 .dh .who{background:var(--paper)}
 .dh .wg{display:grid;grid-template-columns:320px minmax(0,1fr);gap:40px;align-items:center}
-.dh .ph{position:relative;border-radius:26px;overflow:hidden;aspect-ratio:4/5;max-width:100%;background:#ddd}
-.dh .ph img{width:100%;height:100%;object-fit:cover;display:block}
-.dh .ph .cap{position:absolute;inset:auto 0 0 0;padding:40px 18px 16px;background:linear-gradient(to top,rgba(20,19,17,.88),transparent);color:#fff}
+.dh .ph{position:relative;border-radius:26px;overflow:hidden;max-width:100%;background:#161513;box-shadow:0 30px 60px -36px rgba(20,19,17,.55)}
+.dh .ph img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:50% 6%;display:block}
+.dh .ph .cap{position:static;padding:14px 18px 16px;background:#161513;color:#fff;border-top:2px solid var(--g)}
 .dh .ph .cap b{display:block;font-size:18px}.dh .ph .cap span{color:#d8d0bf;font-size:14px}
 .dh .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0 0}
 .dh .facts div{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px}
@@ -145,7 +145,7 @@ CSS = r"""<style>
  .dh .pg{grid-template-columns:minmax(0,1fr)}
  .dh .steps{grid-template-columns:minmax(0,1fr);gap:18px}.dh .steps::before{top:28px;bottom:28px;right:27px;left:auto;width:2px;height:auto;background:repeating-linear-gradient(180deg,var(--g) 0 8px,transparent 8px 14px)}
  .dh .steps li{display:grid;grid-template-columns:56px minmax(0,1fr);gap:4px 14px;text-align:right;padding:0}.dh .steps .n{grid-row:span 3;margin:0}
- .dh .ph{max-width:320px;aspect-ratio:1/1}
+ .dh .ph{max-width:340px;width:100%;margin:0 auto}
  .dh .spot .tx{padding:30px 22px}.dh .spot .vis{padding:26px 18px}
 }
 @media (max-width:640px){
