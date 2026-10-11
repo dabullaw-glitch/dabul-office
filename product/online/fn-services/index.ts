@@ -12,6 +12,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { loadSecrets, json, cors, admin, env, telegram } from './_shared/common.ts';
 
+const TG_ON_ORDER = false; // Telegram for orders not yet paid (off by Yakir's request, 11.10.2026)
 const CFG_URL = 'https://dabullaw-glitch.github.io/dabul-office/media/widgets/svc-config.json';
 const SITE = 'https://dabullaw.co.il';
 // deno-lint-ignore no-explicit-any
@@ -180,7 +181,7 @@ async function paid(url: URL, req: Request) {
     log: (o.log || []).concat([{ at: now, kind: 'paid', text: 'התשלום התקבל במורנינג' }]) });
   if (o.svc === 'precheck') await admin().rpc('docs_merge', { p_coll: 'chk', p_id: id, p_patch: { status: 'paid', paidAt: now } });
   if (o.clientId) await admin().from('docs').insert({ coll: 'notes', id: 'n-' + Date.now().toString(36) + rand(4).toLowerCase(), data: { refType: 'client', refId: o.clientId, kind: 'system', date: now, text: `התקבל תשלום ${ils(o.price.total)} עבור ${o.title} (הזמנה מהאתר ${id})` } }).catch(() => null);
-  await telegram(`💳 שולם: ${o.title} · ${ils(o.price.total)}\n👤 ${o.c.name} · 📞 ${o.c.phone}\nמספר: ${id}`).catch(() => false);
+  await telegram(`💳 שולם: ${o.title} · ${ils(o.price.total)}\n👤 ${o.c.name} · 📞 ${o.c.phone}${o.src && o.src.chName ? `\n📣 מקור: ${o.src.chName}` : ''}\nמספר: ${id}`).catch(() => false);
   return json({ ok: true });
 }
 
@@ -314,7 +315,9 @@ async function uploaded(b: any) {
   }
   const c = await cfg(); const svc = c.services.find((s: { id: string }) => s.id === o.svc) || { title: o.title };
   const when = o.slot && o.slot !== 'later' ? `\n🗓 ${o.slot.split(' ')[0].split('-').reverse().join('.')} ${o.slot.split(' ')[1] || ''}` : '';
-  await telegram(`${review ? '🔎 הזמנה אונליין לבדיקה לפני תשלום' : '🛒 הזמנה אונליין חדשה (ממתינה לתשלום)'}\n${svc.title} · ${ils(o.price.total)}\n👤 ${o.c.name}\n📞 ${o.c.phone}\n✉️ ${o.c.email}${when}${review ? `\n⚠️ ${o.review.join(', ')}` : ''}${o.src && o.src.chName ? `\n📣 מקור: ${o.src.chName}` : ''}\nמספר: ${id}`).catch(() => false);
+  // No Telegram when an order is only sent (Yakir, 11.10.2026): he gets a Telegram message only when a client paid (payment webhook).
+  // Orders that need a check before payment show in the office system (הזמנות אונליין and the client card).
+  if (TG_ON_ORDER) await telegram(`${review ? '🔎 הזמנה אונליין לבדיקה לפני תשלום' : '🛒 הזמנה אונליין חדשה (ממתינה לתשלום)'}\n${svc.title} · ${ils(o.price.total)}\n👤 ${o.c.name}\n📞 ${o.c.phone}\n✉️ ${o.c.email}${when}${review ? `\n⚠️ ${o.review.join(', ')}` : ''}${o.src && o.src.chName ? `\n📣 מקור: ${o.src.chName}` : ''}\nמספר: ${id}`).catch(() => false);
   await mail(o.c.email, review ? `קיבלנו את הפרטים: ${svc.title}` : `ההזמנה התקבלה: ${svc.title}`, receipt({ ...o, files, status, payUrl }, svc, id)).catch(() => null);
   return json({ ok: true, payUrl });
 }
@@ -345,7 +348,7 @@ function receipt(o: any, svc: any, id: string) {
   const slotTxt = o.slot && o.slot !== 'later' ? `<p style="font-size:14.5px"><b>המועד שבחרתם:</b> ${esc(o.slot.split(' ')[0].split('-').reverse().join('.'))} בשעה ${esc(o.slot.split(' ')[1] || '')}. הקישור לזום יישלח אחרי התשלום.</p>` : '';
   return shell(o.status === 'review' ? 'קיבלנו את הפרטים' : 'ההזמנה התקבלה', `<p style="font-size:15px;line-height:1.7">שלום ${esc(first)}, קיבלנו את ההזמנה שלכם: <b>${esc(svc.title)}</b>. מספר הזמנה: <b>${esc(id)}</b>.</p>${next}${slotTxt}${meetTxt}
     <table role="presentation" width="100%" style="font-size:14.5px;margin-top:8px" cellpadding="0" cellspacing="0">${rows}</table>
-    ${svc.gov ? `<p style="font-size:12.5px;color:#6b7280">${esc(svc.gov)}</p>` : ''}<p style="font-size:12.5px;color:#6b7280">המחירים כוללים מע״מ. ביטול לפני שהטיפול התחיל: החזר מלא.</p>`);
+    ${svc.gov ? `<p style="font-size:12.5px;color:#6b7280">${esc(svc.gov)}</p>` : ''}<p style="font-size:12.5px;color:#6b7280">המחירים כוללים מע״מ.</p>`);
 }
 
 // ---- the office panel ----
