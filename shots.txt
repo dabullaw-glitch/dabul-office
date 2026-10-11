@@ -1,2 +1,2 @@
-pv2-apartment-check https://dabullaw-glitch.github.io/dabul-office/media/preview/online/apartment-check.html?v=5
-pv2-zoom-consultation https://dabullaw-glitch.github.io/dabul-office/media/preview/online/zoom-consultation.html?v=5
+pv3-apartment-check https://dabullaw-glitch.github.io/dabul-office/media/preview/online/apartment-check.html?v=11
+pv3-online https://dabullaw-glitch.github.io/dabul-office/media/preview/online/online.html?v=11
