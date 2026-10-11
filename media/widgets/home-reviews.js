@@ -10,7 +10,7 @@
   var GAVEL = '<svg viewBox="0 0 24 24" fill="none" stroke="#2F9BDB" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 4.5l6 6M11 7l6 6M12.2 5.8l-4.6 4.6M18.2 11.8l-4.6 4.6M9.8 13.8L3.6 20"/><path d="M14 20h7"/></svg>';
   var ARW = function (d) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + d + '"/></svg>'; };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function stars(n) { var s = ''; for (var i = 0; i < Math.round(n || 5); i++) s += STAR; return '<span class="dbr-stars" aria-label="' + (n || 5) + ' כוכבים">' + s + '</span>'; }
+  function stars(n) { var s = ''; for (var i = 0; i < Math.round(n || 5); i++) s += STAR; return '<span class="dbr-stars" role="img" aria-label="' + (n || 5) + ' כוכבים">' + s + '</span>'; }
   function num(n) { return (Math.round((+n || 0) * 10) / 10).toFixed(1); }
   function ago(iso) {
     var t = Date.parse(iso); if (!t) return '';
@@ -27,7 +27,7 @@
   function card(r, i) {
     var first = String(r.name || '?').trim().charAt(0);
     var av = r.photo ? '<img class="dbr-av" src="' + esc(r.photo) + '" alt="" width="46" height="46" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.outerHTML=\'<span class=dbr-av>' + esc(first) + '</span>\'">' : '<span class="dbr-av">' + esc(first) + '</span>';
-    return '<li class="dbr-card" aria-roledescription="ביקורת" aria-label="' + (i + 1) + '"><div class="dbr-who">' + av + '<div class="dbr-nm"><b><bdi>' + esc(r.name) + '</bdi></b><small>' + esc(r.ago_he || ago(r.at)) + '</small></div></div>' +
+    return '<li class="dbr-card"><div class="dbr-who">' + av + '<div class="dbr-nm"><b><bdi>' + esc(r.name) + '</bdi></b><small>' + esc(r.ago_he || ago(r.at)) + '</small></div></div>' +
       '<div class="dbr-rate">' + stars(r.rating) + '</div><p class="dbr-txt">' + esc(r.text) + '</p><button type="button" class="dbr-more" hidden>קרא עוד</button>' +
       '<div class="dbr-src"><span>' + G + 'ביקורת בגוגל</span></div></li>';
   }
@@ -39,7 +39,7 @@
       (lw.rating ? badge('lw', lw.url || 'https://www.lawreviews.co.il/', GAVEL, lw.rating, (lw.count || '') + ' חוות דעת ב-LawReviews', 'דירוג המשרד ב-LawReviews') : '') + '</div>';
     root.innerHTML = top + '<div class="dbr-vp"><button type="button" class="dbr-arw dbr-prev" aria-label="הביקורת הקודמת">' + ARW('M9 6l6 6-6 6') + '</button>' +
       '<ul class="dbr-track" tabindex="0" aria-label="ביקורות לקוחות">' + list.map(card).join('') + '</ul>' +
-      '<button type="button" class="dbr-arw dbr-next" aria-label="הביקורת הבאה">' + ARW('M15 6l-6 6 6 6') + '</button></div><div class="dbr-dots" role="tablist"></div>' +
+      '<button type="button" class="dbr-arw dbr-next" aria-label="הביקורת הבאה">' + ARW('M15 6l-6 6 6 6') + '</button></div><div class="dbr-dots"></div>' +
       '<p class="dbr-note">ביקורות שלקוחות המשרד פרסמו בגוגל. כל מקרה שונה.</p>';
     wire(root);
     return true;
@@ -62,7 +62,7 @@
     var nP = 0;
     function drawDots() {
       nP = pages(); var h = '';
-      for (var i = 0; i < nP; i++) h += '<button type="button" role="tab" aria-label="קבוצה ' + (i + 1) + '"></button>';
+      for (var i = 0; i < nP; i++) h += '<button type="button" aria-label="קבוצה ' + (i + 1) + '"></button>';
       dots.innerHTML = h;
       Array.prototype.forEach.call(dots.children, function (b, i) { b.addEventListener('click', function () { var s = Math.round(i * (max() / Math.max(1, nP - 1))); tr.scrollTo({ left: (getComputedStyle(tr).direction === 'rtl' ? -s : s), behavior: 'smooth' }); stop(); }); });
       sync();
@@ -71,7 +71,7 @@
       var p = pos(), m = max();
       prev.disabled = p < 4; next.disabled = p > m - 4;
       var a = m > 0 ? Math.round(p / m * (nP - 1)) : 0;
-      Array.prototype.forEach.call(dots.children, function (b, i) { b.classList.toggle('on', i === a); b.setAttribute('aria-selected', i === a ? 'true' : 'false'); });
+      Array.prototype.forEach.call(dots.children, function (b, i) { b.classList.toggle('on', i === a); if (i === a) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
     }
     prev.addEventListener('click', function () { go(-1); stop(); });
     next.addEventListener('click', function () { go(1); stop(); });
