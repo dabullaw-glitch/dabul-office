@@ -195,6 +195,28 @@ Deno.serve(async (req) => {
       await telegram(`🔗 SocialAPI מחובר למערכת המשרד.\nהחשבונות: ${accounts.map((a: { platform: string; name: string }) => `${a.platform}: ${a.name}`).join(', ') || 'לא נמצאו'}`).catch(() => false);
       return json({ ok: true, accounts });
     }
+    // Morning (Green Invoice), 11.10.2026: the API key ID + secret for the online services payment links.
+    // Tested against Morning (account/token) before saving. Saved on the server only and never shown again.
+    if (b.action === 'save-morning') {
+      const id = String(b.id || '').trim(), secret = String(b.secret || '').trim();
+      if (id.length < 8 || secret.length < 8 || /\s/.test(id + secret)) return json({ error: 'המזהה או הסוד לא נראים תקינים' }, 400);
+      const tr = await fetch('https://api.greeninvoice.co.il/api/v1/account/token', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, secret }) });
+      // deno-lint-ignore no-explicit-any
+      const tj: any = await tr.json().catch(() => ({}));
+      if (!tr.ok || !tj.token) return json({ error: `מורנינג לא קיבל את המפתח (${tr.status}${tj.errorMessage ? ': ' + String(tj.errorMessage).slice(0, 120) : ''})` }, 400);
+      let business = '';
+      try {
+        const br = await fetch('https://api.greeninvoice.co.il/api/v1/businesses/me', { headers: { authorization: `Bearer ${tj.token}` } });
+        // deno-lint-ignore no-explicit-any
+        const bj: any = await br.json().catch(() => ({})); business = String(bj.name || '').slice(0, 120);
+      } catch { /* the name is only for the confirmation */ }
+      const { error } = await admin().from('app_secrets').upsert([{ k: 'MORNING_API_ID', v: id }, { k: 'MORNING_API_SECRET', v: secret }], { onConflict: 'k' });
+      if (error) return json({ error: 'השמירה נכשלה' }, 500);
+      const now = new Date().toISOString();
+      await mergeDoc('settings', 'pay', { morning: { ok: true, saved: now, checkedAt: now, business } });
+      await telegram(`🔗 מורנינג מחובר למערכת המשרד${business ? ` (${business})` : ''}. אפשר לבנות קישורי תשלום לשירותים המקוונים.`).catch(() => false);
+      return json({ ok: true, business });
+    }
     if (b.action === 'save') {
       const key = String(b.key || '').trim();
       if (key.length < 20 || /\s/.test(key)) return json({ error: 'המפתח לא נראה תקין' }, 400);
