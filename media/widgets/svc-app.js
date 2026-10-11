@@ -3,6 +3,24 @@
    the same file the server uses to recompute the price, so the page and the server always agree.
    Mount: <div class="svc-app" data-svc="poa" data-cfg="...svc-config.json" data-fn="https://.../functions/v1/services"></div>
    Without data-fn the form runs in preview mode (nothing is sent). Built 10.10.2026 for Yakir's approval. */
+/* Meta pixel for the Facebook / Instagram campaign of the online services (11.10.2026, approved by Yakir). Pixel
+   "dabullaw.co.il" 2010050569657680 in the ad account "שיווק ממוקד dabullaw". Runs on every online service page (the ad
+   landing pages): PageView, ViewContent (which service), InitiateCheckout when the visitor presses the payment button.
+   Payments themselves are counted on the server (services function), not here. To turn off: set PX = ''. */
+(function () {
+  var PX = '2010050569657680';
+  if (!PX || window.dabulPx) return; window.dabulPx = 1;
+  var m = location.pathname.match(/^\/online\/([^\/]+)\/?/); var slug = m ? decodeURIComponent(m[1]) : '';
+  if (!slug || slug === 'thanks') return;
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', PX); fbq('track', 'PageView');
+  fbq('track', 'ViewContent', { content_name: slug, content_category: 'online-legal-services' });
+  var sent = false;
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.svc-app button, .svc-app a'); if (!b || sent) return;
+    if ((b.textContent || '').indexOf('תשלום') > -1) { sent = true; fbq('track', 'InitiateCheckout', { content_name: slug, currency: 'ILS' }); }
+  }, true);
+})();
 (function () {
   'use strict';
   var ROOTS = document.querySelectorAll('.svc-app');
