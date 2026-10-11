@@ -140,8 +140,10 @@ async function build(id: string) {
       facebook_positions: [...FB_FEED.filter(p => p !== 'profile_feed'), ...FB_TALL], instagram_positions: [...IG_FEED, ...IG_TALL], targeting_automation: { advantage_audience: 0 } };
     const body: Any = { name: s.name, campaign_id: st.campaign, daily_budget: String(Math.round(s.daily * 100)), billing_event: 'IMPRESSIONS', bid_strategy: 'LOWEST_COST_WITHOUT_CAP',
       optimization_goal: px ? 'LANDING_PAGE_VIEWS' : 'LINK_CLICKS', destination_type: 'WEBSITE', targeting, status: 'PAUSED' };
-    if (px) body.promoted_object = { pixel_id: px };
-    const r = await api(`/act_${acct}/adsets`, 'POST', body);
+    // Traffic + landing page views: Meta counts page views through the pixel on the site, no promoted_object here
+    // (sending one gives error 1885014). If Meta refuses landing page views, fall back to link clicks.
+    const r = await api(`/act_${acct}/adsets`, 'POST', body)
+      .catch(() => api(`/act_${acct}/adsets`, 'POST', { ...body, optimization_goal: 'LINK_CLICKS' }));
     st.adsets[s.key] = r.id; log.push('adset ' + s.key + ' ' + r.id); await save();
   }
   // 4. creatives and ads (videos must be processed first)
