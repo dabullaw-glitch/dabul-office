@@ -14,7 +14,7 @@ import { loadSecrets, json, cors, admin, env } from '../_shared/common.ts';
 type Any = any;
 const FB = 'https://graph.facebook.com/v21.0';
 const SCOPES = 'instagram_basic,instagram_content_publish,pages_show_list,pages_read_engagement,business_management';
-const ADS_SCOPES = 'ads_management,ads_read,business_management,pages_show_list,pages_read_engagement,pages_manage_ads,instagram_basic';
+const ADS_SCOPES = 'ads_management,ads_read,business_management,pages_show_list,pages_read_engagement,instagram_basic';
 const OFFICE = 'https://dabullaw-glitch.github.io/dabul-office/';
 const db = () => admin().from('docs');
 const getDoc = async (coll: string, id: string): Promise<Any> => { const { data } = await db().select('data').match({ coll, id }).maybeSingle(); return data ? data.data : null; };
