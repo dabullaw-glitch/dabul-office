@@ -1,4 +1,4 @@
-// services: the online legal services ordered on dabullaw.co.il (written 10.10.2026, for Yakir's approval).
+// services: the online legal services ordered on dabullaw.co.il (written 10.10.2026; v4 11.10.2026: orders linked to client cards).
 // The service definitions (questions, prices) come from svc-config.json on the website, the same file the order form
 // uses, and the price is always recomputed here. Orders are kept in docs coll "svc" (the office panel addon-svc.js),
 // the client's files in the private "files" bucket under svc/<id>/. The payment (Morning) is the last missing piece:
@@ -178,6 +178,7 @@ async function paid(url: URL, req: Request) {
   await merge('svc', id, { status: 'paid', paidAt: now, payment: { amount: p.amount ?? o.price.total, doc: p.documentId || p.id || '', ref: clip(p.transactionId || p.reference || '', 80) },
     log: (o.log || []).concat([{ at: now, kind: 'paid', text: 'התשלום התקבל במורנינג' }]) });
   if (o.svc === 'precheck') await admin().rpc('docs_merge', { p_coll: 'chk', p_id: id, p_patch: { status: 'paid', paidAt: now } });
+  if (o.clientId) await admin().from('docs').insert({ coll: 'notes', id: 'n-' + Date.now().toString(36) + rand(4).toLowerCase(), data: { refType: 'client', refId: o.clientId, kind: 'system', date: now, text: `התקבל תשלום ${ils(o.price.total)} עבור ${o.title} (הזמנה מהאתר ${id})` } }).catch(() => null);
   await telegram(`💳 שולם: ${o.title} · ${ils(o.price.total)}\n👤 ${o.c.name} · 📞 ${o.c.phone}\nמספר: ${id}`).catch(() => false);
   return json({ ok: true });
 }
@@ -242,6 +243,26 @@ async function order(b: any, req: Request) {
   return json({ ok: true, id, token, uploads, review: rv.length > 0 });
 }
 
+// ---- the client card in the office system (11.10.2026, Yakir: what a client bought shows in his card) ----
+// An existing card with the same phone or email is used; otherwise a new card is opened (tag "אונליין").
+const normPhone = (p: string) => { let d = digits(p); if (d.startsWith('972')) d = '0' + d.slice(3); return d; };
+// deno-lint-ignore no-explicit-any
+async function linkClient(id: string, o: any): Promise<string> {
+  if (o.clientId) return o.clientId;
+  const ph = normPhone(o.c.phone), em = String(o.c.email || '').trim().toLowerCase();
+  const { data } = await admin().from('docs').select('id,data').eq('coll', 'clients');
+  // deno-lint-ignore no-explicit-any
+  const hit = (data || []).find((r: any) => (ph && ph.length >= 9 && normPhone(r.data?.phone || '') === ph) || (em && String(r.data?.email || '').trim().toLowerCase() === em));
+  let cid = hit ? hit.id : '';
+  const today = ymd(new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' })));
+  if (!cid) {
+    cid = 'c-' + Date.now().toString(36) + rand(4).toLowerCase();
+    await admin().from('docs').insert({ coll: 'clients', id: cid, data: { name: o.c.name, phone: o.c.phone, email: em, idNo: '', address: '', notes: '', tags: ['אונליין'], source: 'אתר: שירותים אונליין', created: today } });
+  }
+  await admin().from('docs').insert({ coll: 'notes', id: 'n-' + Date.now().toString(36) + rand(4).toLowerCase(), data: { refType: 'client', refId: cid, kind: 'system', date: new Date().toISOString(), text: `הזמנה מהאתר: ${o.title} · ${ils(o.price.total)} · מספר ${id}` } });
+  return cid;
+}
+
 // ---- after the files were uploaded ----
 // deno-lint-ignore no-explicit-any
 async function uploaded(b: any) {
@@ -253,14 +274,15 @@ async function uploaded(b: any) {
   // deno-lint-ignore no-explicit-any
   const files = (o.files || []).map((f: any) => ({ ...f, up: have.has(f.path) }));
   const review = (o.review || []).length > 0, now = new Date().toISOString();
+  const clientId = await linkClient(id, o).catch((e) => { console.error(e); return ''; });
   const payUrl = review ? '' : await payLink(id, o);
   const status = review ? 'review' : 'awaiting';
-  await merge('svc', id, { files, status, payUrl, log: (o.log || []).concat([{ at: now, kind: 'files', text: ((n: number) => n === 1 ? 'קובץ אחד התקבל' : `${n} קבצים התקבלו`)(files.filter((f: { up: boolean }) => f.up).length) }]) });
+  await merge('svc', id, { files, status, payUrl, clientId, log: (o.log || []).concat([{ at: now, kind: 'files', text: ((n: number) => n === 1 ? 'קובץ אחד התקבל' : `${n} קבצים התקבלו`)(files.filter((f: { up: boolean }) => f.up).length) }]) });
   // the precheck service keeps its own answer panel (addon-check, coll chk)
   if (o.svc === 'precheck') {
     const a = o.a || {};
     await admin().from('docs').upsert({ coll: 'chk', id, data: { svcId: id, city: a.city, address: a.address, gush: a.gush, chelka: a.helka, sub: a.sub, floor: a.floor, askPrice: a.askPrice, link: a.link,
-      buyer: a.buyer, mortgage: a.mortgage, worry: a.worry, reg: a.reg, name: o.c.name, phone: o.c.phone, email: o.c.email, status: review ? 'review' : 'pending', created: o.created, page: o.page } });
+      buyer: a.buyer, mortgage: a.mortgage, worry: a.worry, reg: a.reg, clientId, name: o.c.name, phone: o.c.phone, email: o.c.email, status: review ? 'review' : 'pending', created: o.created, page: o.page } });
   }
   const c = await cfg(); const svc = c.services.find((s: { id: string }) => s.id === o.svc) || { title: o.title };
   const when = o.slot && o.slot !== 'later' ? `\n🗓 ${o.slot.split(' ')[0].split('-').reverse().join('.')} ${o.slot.split(' ')[1] || ''}` : '';
