@@ -153,7 +153,7 @@ async function payLink(id: string, o: any): Promise<string> {
       description: `${o.title} (הזמנה ${id})`, type: 320, lang: 'he', currency: 'ILS', vatType: 0,
       amount: o.price.total, maxPayments: 1, pluginId,
       client: { name: o.c.name, emails: o.c.email ? [o.c.email] : [], phone: o.c.phone || '', add: true },
-      successUrl: `${SITE}/online/thanks/?id=${encodeURIComponent(id)}`, failureUrl: `${SITE}/online/?pay=failed`,
+      successUrl: `${SITE}/online/thanks/?id=${encodeURIComponent(id)}`, failureUrl: `${SITE}/online/thanks/?id=${encodeURIComponent(id)}&failed=1`,
       notifyUrl: hook, custom: id, remarks: `הזמנה מקוונת ${id}`,
     };
     const { status, j } = await morning('/payments/form', 'POST', body);
