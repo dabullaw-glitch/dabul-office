@@ -1,0 +1,52 @@
+name: reel lab (internal)
+# Prepares raw talking-head footage for the reel editor v2 (HyperFrames): downloads the raw take from Google Drive,
+# makes a 1080x1920 working copy, and transcribes it word by word in Hebrew (faster-whisper, ivrit-ai model).
+# Trigger: push to branch tools/reel-lab that changes reel-lab.txt (lines: "<name> <driveFileId>").
+# Output (committed back to the same branch, never to main, so nothing is published): reel-lab/<name>/{proxy.mp4,words.json,info.json}
+on:
+  push:
+    branches: [tools/reel-lab]
+    paths: [reel-lab.txt]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: reel-lab, cancel-in-progress: false }
+jobs:
+  prep:
+    if: "!contains(github.event.head_commit.message, '[reel-lab]')"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools
+        run: |
+          command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
+          pip install -q faster-whisper==1.1.1
+      - name: Download, working copy, transcript
+        run: |
+          set -e
+          while read -r name id; do
+            [ -n "$id" ] || continue
+            out="reel-lab/$name"; [ -f "$out/words.json" ] && { echo "skip $name"; continue; }
+            mkdir -p "$out" /tmp/raw
+            curl -fsSL --retry 3 "https://drive.usercontent.google.com/download?id=$id&export=download&confirm=t" -o /tmp/raw/$name.mov
+            ls -la /tmp/raw/$name.mov
+            ffprobe -v error -show_entries stream=codec_type,width,height,r_frame_rate,duration:stream_tags=rotate:format=duration -of json /tmp/raw/$name.mov > "$out/info.json"
+            cat "$out/info.json"
+            # working copy: portrait 1080x1920, 30 fps, good quality, small enough for git (< 95 MB)
+            crf=20
+            while :; do
+              ffmpeg -y -v error -i /tmp/raw/$name.mov -vf "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30" \
+                -c:v libx264 -preset slow -crf $crf -pix_fmt yuv420p -c:a aac -b:a 160k -movflags +faststart "$out/proxy.mp4"
+              s=$(stat -c %s "$out/proxy.mp4"); echo "crf $crf -> $s bytes"
+              [ "$s" -lt 95000000 ] && break; crf=$((crf+3))
+            done
+            ffmpeg -y -v error -i /tmp/raw/$name.mov -vn -ac 1 -ar 16000 /tmp/raw/$name.wav
+            python3 tools/reel-lab/transcribe.py "$out" /tmp/raw/$name.wav
+          done < reel-lab.txt
+      - name: Commit
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add reel-lab
+          git commit -qm "[reel-lab] prepared $(ls reel-lab | paste -sd' ' -)" || { echo nothing; exit 0; }
+          for i in 1 2 3 4 5; do git pull --rebase -q origin tools/reel-lab && git push origin HEAD:tools/reel-lab && break; sleep 6; done
