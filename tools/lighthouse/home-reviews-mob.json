@@ -1,0 +1,72 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "mobile",
+ "at": "2026-10-11T11:09:38.967Z",
+ "runs": [
+  {
+   "score": 76,
+   "fcp": 2002.952,
+   "lcp": 2985.9040000000005,
+   "si": 2660.1622950268456,
+   "tbt": 659.5000000000002,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-dcc1af15-bdff-4569-9e29-01919fb14823=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     513
+    ],
+    [
+     "resourceLoadDelay",
+     89
+    ],
+    [
+     "resourceLoadDuration",
+     24
+    ],
+    [
+     "elementRenderDelay",
+     266
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 342741,
+   "docBytes": 167015
+  },
+  {
+   "score": 0,
+   "fcp": 2461.9199999999996,
+   "si": 4711.490010760488,
+   "cls": 0,
+   "lcpEl": "",
+   "lcpParts": [],
+   "renderBlocking": [
+    [
+     "https://dabullaw.co.il/wp-content/cache/min/1/dabul-office/media/widgets/home-reviews.css?ver=1791716403",
+     0
+    ]
+   ],
+   "shifts": [],
+   "bytes": 342746,
+   "docBytes": 167021
+  },
+  {
+   "score": 0,
+   "fcp": 2508.661,
+   "si": 4721.293659867719,
+   "cls": 0,
+   "lcpEl": "",
+   "lcpParts": [],
+   "renderBlocking": [
+    [
+     "https://dabullaw.co.il/wp-content/cache/min/1/dabul-office/media/widgets/home-reviews.css?ver=1791716403",
+     0
+    ]
+   ],
+   "shifts": [],
+   "bytes": 342761,
+   "docBytes": 167017
+  }
+ ]
+}
