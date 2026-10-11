@@ -10,6 +10,7 @@
 //   {action:'activate', id} / {action:'pause', id}
 //   {action:'budget', id, adset, daily}  -> changes an ad set's daily budget (in shekels)
 //   {action:'insights', id, days?}       -> spend, impressions, clicks, landing page views and results per ad
+//   {action:'get'|'post', path, params}  -> passthrough for checks and one-off objects (paging links are removed, they hold the token)
 import { loadSecrets, json, cors, admin, env, telegram } from './_shared/common.ts';
 // deno-lint-ignore no-explicit-any
 type Any = any;
@@ -200,7 +201,8 @@ Deno.serve(async (req) => {
     if (b.action === 'pause') return json(await setStatus(String(b.id), false));
     if (b.action === 'budget') { const spec = await getDoc('adcampaign', String(b.id)); const as = spec.state.adsets[b.adset]; await api(`/${as}`, 'POST', { daily_budget: String(Math.round(+b.daily * 100)) }); return json({ ok: true }); }
     if (b.action === 'insights') return json(await insights(String(b.id), +b.days || 7));
-    if (b.action === 'get') return json(await api(String(b.path), 'GET', b.params || {}));
+    if (b.action === 'get') { const r = await api(String(b.path), 'GET', b.params || {}); if (r.paging) delete r.paging.next, delete r.paging.previous; return json(r); }
+    if (b.action === 'post') return json(await api(String(b.path), 'POST', b.params || {})); // creates only; Claude never uses it to activate
     return json({ ok: false, error: 'action?' }, 400);
   } catch (e) { return json({ ok: false, error: String((e as Error).message || e) }, 500); }
 });

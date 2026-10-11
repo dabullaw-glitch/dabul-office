@@ -13,6 +13,15 @@
 import { loadSecrets, json, cors, admin, env, telegram } from './_shared/common.ts';
 
 const API = 'https://api.postoria.io/v1';
+// YouTube titles (Yakir, 11.10.2026: "לא לכתוב יותר שורטס ... תכתוב כמו בשאר הסרטונים"): no #shorts or other hashtags,
+// and the same ending as the other videos on the channel: "<title> | עורך דין יקיר דבול".
+const YT_END = ' | עורך דין יקיר דבול';
+// deno-lint-ignore no-explicit-any
+function ytTitle(row: any) {
+  let t = String(row.ytTitle || row.title || '').replace(/^(רילס|סרטון שאלה): /, '').replace(/#[^\s#]+/g, '').replace(/\s+/g, ' ').trim();
+  if (!/יקיר דבול/.test(t)) t = (t.length + YT_END.length <= 100) ? t + YT_END : t;
+  return t.slice(0, 100);
+}
 // deno-lint-ignore no-explicit-any
 async function pst_(path: string, method = 'GET', body?: any): Promise<{ status: number; j: any }> {
   const r = await fetch(API + path, { method, headers: { authorization: `Bearer ${env('POSTORIA_API_KEY')}`, 'content-type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
@@ -97,7 +106,7 @@ function postBody(row: any, ch: string, acc: number, pst: any) {
   if (row.link && body.content_type !== 'link' && (ch === 'facebook' || ch === 'linkedin') && !text.includes(row.link)) text += `\n\n${row.link}`;
   body.caption = text.slice(0, ch === 'instagram' ? 2150 : ch === 'tiktok' ? 2200 : ch === 'gbp' ? 1450 : 5000);
   if (ch === 'tiktok') body.tiktok = { who_can_watch: 'public', allow_comments: true, allow_duet: false, allow_stitch: false, your_brand: false, branded_content: false, disclose_post_content: false, auto_add_music: false };
-  if (ch === 'youtube') body.youtube = { title: String(row.ytTitle || row.title || '').replace(/^(רילס|סרטון שאלה): /, '').slice(0, 100), tags: String(row.ytTags || '').split(',').map((t: string) => t.trim()).filter(Boolean).slice(0, 15), visibility: 'public', made_for_kids: false };
+  if (ch === 'youtube') body.youtube = { title: ytTitle(row), tags: String(row.ytTags || '').split(',').map((t: string) => t.trim()).filter(Boolean).slice(0, 15), visibility: 'public', made_for_kids: false };
   return body;
 }
 async function publish() {
