@@ -1,0 +1,87 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><style>
+@font-face{font-family:K;font-weight:700;src:url('file:///tmp/claude-0/node_modules/@fontsource/karantina/files/karantina-hebrew-700-normal.woff2')}
+@font-face{font-family:K;font-weight:700;src:url('file:///tmp/claude-0/node_modules/@fontsource/karantina/files/karantina-latin-700-normal.woff2');unicode-range:U+0000-00FF}
+@font-face{font-family:P;font-weight:400;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-hebrew-400-normal.woff2')}
+@font-face{font-family:P;font-weight:500;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-hebrew-500-normal.woff2')}
+@font-face{font-family:P;font-weight:600;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-hebrew-600-normal.woff2')}
+@font-face{font-family:P;font-weight:700;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-hebrew-700-normal.woff2')}
+@font-face{font-family:P;font-weight:400;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-latin-400-normal.woff2');unicode-range:U+0000-00FF}
+@font-face{font-family:P;font-weight:600;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-latin-600-normal.woff2');unicode-range:U+0000-00FF}
+@font-face{font-family:P;font-weight:700;src:url('file:///tmp/claude-0/node_modules/@fontsource/ibm-plex-sans-hebrew/files/ibm-plex-sans-hebrew-latin-700-normal.woff2');unicode-range:U+0000-00FF}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0E2A57}
+.A{position:relative;overflow:hidden;font-family:P,Arial,sans-serif;color:#fff;background:#0E2A57;
+ background-image:radial-gradient(1200px 900px at 85% 0%,rgba(80,130,230,.28),transparent 60%),linear-gradient(rgba(127,166,240,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(127,166,240,.14) 1px,transparent 1px),linear-gradient(rgba(127,166,240,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(127,166,240,.05) 1px,transparent 1px);
+ background-size:auto,135px 135px,135px 135px,33.75px 33.75px,33.75px 33.75px}
+.f{width:1080px;height:1350px}.s{width:1080px;height:1920px}
+.k{font-family:K,P,sans-serif;font-weight:700;line-height:.9;letter-spacing:.005em}
+.brand{position:absolute;right:64px;display:flex;gap:14px;align-items:center;font-size:30px;font-weight:600;color:#C9D7F6}
+.brand i{width:14px;height:14px;border-radius:50%;background:#FFE14D}
+.pill{display:inline-flex;align-items:center;gap:12px;border-radius:99px;padding:10px 26px;font-size:30px;font-weight:700}
+.title{color:#fff}
+.title mark{background:linear-gradient(transparent 60%,#FFE14D 60%,#FFE14D 88%,transparent 88%);color:#fff;padding:0 8px}
+.sub{color:#D6E2FA;font-weight:500;line-height:1.38}
+.bl{display:grid;gap:16px}
+.bl div{display:flex;gap:16px;align-items:center;font-weight:600;color:#fff}
+.bl i{flex:none;border-radius:50%;background:#17915A;display:grid;place-items:center;color:#fff}
+.bl i svg{width:62%;height:62%}
+.cta{display:inline-flex;gap:16px;align-items:center;background:#FFE14D;color:#0E2A57;font-weight:700;border-radius:20px;box-shadow:0 22px 40px -18px rgba(0,0,0,.6)}
+.cta svg{width:1em;height:1em}
+.foot{position:absolute;left:64px;right:64px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.who{display:flex;align-items:center;gap:20px}
+.who .ph{border-radius:50%;overflow:hidden;border:4px solid #FFE14D;background:#13254A;flex:none}
+.who .ph img{width:100%;height:100%;object-fit:cover;object-position:50% 18%}
+.who b{display:block;font-size:31px;font-weight:700;color:#fff}.who span{display:block;font-size:24px;color:#B9C8EA;font-weight:500}
+.url{direction:ltr;font-weight:700;color:#FFE14D}
+/* phone */
+.phone{position:absolute;border-radius:58px;background:#0A1B3B;border:14px solid #1B3A72;box-shadow:0 60px 110px -40px rgba(0,0,0,.85);overflow:hidden}
+.phone .scr{position:absolute;inset:0;background:#F6F8FC;color:#13203A;padding:40px 28px}
+.phone .hd{font-size:25px;font-weight:700;color:#0E2A57;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.phone .hd i{width:46px;height:9px;border-radius:5px;background:#C9D5EE}
+.phone .stp{font-size:20px;color:#5B6782;font-weight:600}
+.phone .bar{height:12px;border-radius:6px;background:#E1E8F5;overflow:hidden;margin:8px 0 22px}.phone .bar i{display:block;height:100%;background:#FFE14D}
+.phone .fld{font-size:20px;color:#5B6782;font-weight:600;margin:18px 0 7px}
+.phone .inp{border-radius:14px;background:#fff;border:2px solid #E1E8F5;padding:13px 16px;font-size:23px;font-weight:600;color:#13203A;white-space:nowrap;overflow:hidden}
+.phone .up{margin-top:24px;border:2px solid #17915A;border-radius:16px;padding:16px;font-size:22px;font-weight:700;color:#17915A;background:#E7F6EE;text-align:center}
+.phone .go{margin-top:22px;border-radius:16px;padding:18px;font-size:24px;font-weight:700;color:#0E2A57;background:#FFE14D;text-align:center}
+.phone .li{border:2px solid #E1E8F5;background:#fff;border-radius:18px;padding:16px 20px;margin-bottom:14px}
+.phone .li b{display:block;font-size:24px;color:#13203A}.phone .li span{display:block;font-size:19px;color:#5B6782;margin-top:3px}
+.phone .li.on{border-color:#FFE14D;background:#FFF9DB}
+/* white cards */
+.card{position:absolute;background:#fff;color:#13203A;border-radius:30px;box-shadow:0 60px 110px -40px rgba(0,0,0,.85);overflow:hidden}
+.card .top{background:#13254A;color:#fff;padding:24px 32px;font-size:26px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.card .top small{font-size:20px;color:#B9C8EA;font-weight:600}
+.row{display:flex;gap:18px;align-items:center;padding:16px 30px;border-bottom:2px solid #EEF2F9;font-size:26px;font-weight:600}
+.row i{width:44px;height:44px;border-radius:50%;background:#17915A;color:#fff;display:grid;place-items:center;flex:none}.row i svg{width:26px;height:26px}
+.row:last-child{border-bottom:0}
+.note{padding:20px 32px;background:#F6F8FC;font-size:22px;color:#5B6782;font-weight:600}
+/* listing */
+.lst .img{height:330px;background:linear-gradient(160deg,#9DB7E6 0%,#6E8FCB 45%,#E9D9B4 100%);position:relative}
+.lst .img:after{content:'';position:absolute;left:12%;right:12%;bottom:0;height:62%;background:linear-gradient(#F4EFE4,#E3D8C2);clip-path:polygon(0 30%,50% 0,100% 30%,100% 100%,0 100%)}
+.lst .bd{padding:24px 30px}
+.lst .bd b{font-size:32px;display:block}
+.tags{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}.tags span{background:#EAF1FF;color:#2563EB;font-weight:700;font-size:22px;border-radius:99px;padding:8px 18px}
+.q{position:absolute;white-space:nowrap;background:#FFE14D;color:#0E2A57;font-weight:700;border-radius:18px;padding:14px 22px;box-shadow:0 24px 40px -18px rgba(0,0,0,.7);display:flex;gap:12px;align-items:center}
+.q b{width:40px;height:40px;border-radius:50%;background:#0E2A57;color:#FFE14D;display:grid;place-items:center;font-size:26px;flex:none}
+/* steps */
+.steps{position:absolute;display:grid;gap:16px}
+.steps .st{display:flex;gap:20px;align-items:center;background:#fff;color:#13203A;border-radius:22px;padding:20px 24px;box-shadow:0 30px 50px -28px rgba(0,0,0,.7)}
+.steps .n{width:58px;height:58px;border-radius:50%;background:#17915A;color:#fff;display:grid;place-items:center;font-weight:700;font-size:26px;flex:none}
+.steps .n.w{background:#E1E8F5;color:#0E2A57}
+.steps b{display:block;font-size:27px}.steps span{display:block;font-size:20px;color:#5B6782;margin-top:2px}
+/* nasach */
+.nas .sec{padding:18px 32px;border-bottom:2px solid #EEF2F9}
+.nas .sec small{display:block;font-size:19px;color:#5B6782;font-weight:600}
+.nas .sec b{font-size:25px}
+.stamp{position:absolute;border:6px solid #17915A;color:#17915A;border-radius:18px;font-weight:700;padding:8px 22px;transform:rotate(-8deg);background:rgba(231,246,238,.92);display:flex;gap:10px;align-items:center}
+.stamp svg{width:1em;height:1em}
+/* zoom */
+.call{position:absolute;border-radius:30px;background:#0A1B3B;border:12px solid #1B3A72;box-shadow:0 60px 110px -40px rgba(0,0,0,.85);overflow:hidden}
+.call .v{position:absolute;inset:0;background:#24324F}
+.call .v img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.call .lab{position:absolute;right:20px;bottom:20px;background:rgba(9,25,54,.8);border-radius:12px;padding:8px 16px;font-size:22px;font-weight:600}
+.call .me{position:absolute;left:20px;top:20px;width:30%;aspect-ratio:4/3;border-radius:16px;background:linear-gradient(160deg,#5A6E96,#2E3E61);border:3px solid rgba(255,255,255,.4)}
+.call .bar{position:absolute;left:0;right:0;bottom:0;height:0}
+.slot{position:absolute;background:#fff;color:#13203A;border-radius:22px;padding:20px 26px;box-shadow:0 30px 50px -28px rgba(0,0,0,.7)}
+.slot small{display:block;font-size:20px;color:#5B6782;font-weight:600}.slot b{font-size:32px}
+</style></head><body><div class="A f" id="ad"><div class="brand" style="top:52px"><i></i>יקיר דבול - משרד עורכי דין</div><div style="position:absolute;right:64px;top:124px;left:64px"><span class="pill" style="background:#EAF1FF;color:#2563EB">מקרקעין</span><div class="title k" style="font-size:132px;margin-top:26px">מה המודעה<br><mark>לא מספרת</mark><br>על הדירה?</div><div class="sub" style="font-size:32px;margin-top:24px;max-width:930px">במודעה יש חניה, מחסן ומרפסת. במסמכים הרשמיים התמונה יכולה להיראות אחרת.</div></div><div style="position:absolute;right:64px;top:800px;width:440px;display:flex;flex-direction:column;gap:34px;align-items:flex-start"><div class="bl"><div style="font-size:26px"><i style="width:37px;height:37px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>בודקים מה באמת רשום על הדירה</span></div><div style="font-size:26px"><i style="width:37px;height:37px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>מגלים לפני שמתחייבים</span></div><div style="font-size:26px"><i style="width:37px;height:37px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>תשובה ברורה במייל</span></div></div><div class="cta" style="font-size:34px;padding:20px 32px">לבדיקת הדירה<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></div></div><div style="position:absolute;right:64px;bottom:50px"><div class="who"><div class="ph" style="width:92px;height:92px"><img src="../img/yakir-portrait.webp"></div><div><b>עו״ד יקיר דבול</b><span>רזיאל 1, נתניה</span></div></div></div><div class="card lst" style="left:50px;top:780px;width:460px"><div class="img"></div><div class="bd"><b>4 חדרים · קומה 3</b><div class="tags"><span>חניה</span><span>מחסן</span><span>מרפסת</span></div></div></div><div class="q" style="left:150px;top:810px;font-size:24px"><b>?</b><span>החניה מוצמדת לדירה?</span></div><div class="q" style="left:90px;top:885px;font-size:24px"><b>?</b><span>המרפסת נבנתה בהיתר?</span></div><div class="q" style="left:170px;top:960px;font-size:24px"><b>?</b><span>רשומה משכנתא של המוכר?</span></div></div></body></html>

@@ -1,0 +1,448 @@
+{
+ "name": "שירותים משפטיים אונליין · פייסבוק ואינסטגרם · אוקטובר 2026",
+ "creatives": [
+  {
+   "key": "hub",
+   "dom": "all",
+   "title": [
+    "עורך דין,",
+    "בלי לצאת",
+    "מהבית."
+   ],
+   "mark": 1,
+   "sub": "ממלאים טופס קצר מהטלפון, משלמים באתר, ועורך הדין מטפל.",
+   "bullets": [
+    "מחיר קבוע, מוצג לפני התשלום",
+    "עורך הדין עצמו מטפל",
+    "תשלום מאובטח וקבלה למייל"
+   ],
+   "cta": "לכל השירותים",
+   "visual": {
+    "type": "phone_list",
+    "head": "שירותים משפטיים אונליין",
+    "items": [
+     [
+      "בדיקת דירה לפני קנייה",
+      "תשובה בתוך 2 ימי עבודה"
+     ],
+     [
+      "ייפוי כוח מתמשך",
+      "פגישה אחת לחתימה"
+     ],
+     [
+      "צו ירושה",
+      "מההכנה ועד מתן הצו"
+     ],
+     [
+      "הקמת חברה",
+      "הגשה לרשם החברות"
+     ],
+     [
+      "רישומים בטאבו",
+      "הגשה מקוונת"
+     ],
+     [
+      "ייעוץ משפטי בזום",
+      "מועד לבחירה באתר"
+     ]
+    ]
+   }
+  },
+  {
+   "key": "precheck-a",
+   "dom": "re",
+   "title": [
+    "מצאתם דירה?",
+    "בודקים לפני",
+    "שמציעים מחיר."
+   ],
+   "mark": 1,
+   "sub": "עורך דין עובר על המסמכים הרשמיים של הדירה, ושולח לכם תשובה ברורה למייל.",
+   "bullets": [
+    "נסח טאבו, משכנתאות ועיקולים",
+    "בית משותף, היתרים ותכנון",
+    "הערכת מס רכישה לפי המצב שלכם"
+   ],
+   "cta": "להזמנת בדיקה",
+   "visual": {
+    "type": "doc_check",
+    "head": "בדיקת דירה לפני קנייה",
+    "small": "סיכום",
+    "rows": [
+     "נסח טאבו עדכני",
+     "צו בית משותף והצמדות",
+     "תיק בניין והיתרים",
+     "מידע תכנוני באזור",
+     "הערכת מס רכישה"
+    ],
+    "note": "התשובה במייל בתוך 2 ימי עבודה"
+   }
+  },
+  {
+   "key": "precheck-b",
+   "dom": "re",
+   "title": [
+    "מה המודעה",
+    "לא מספרת",
+    "על הדירה?"
+   ],
+   "mark": 1,
+   "sub": "במודעה יש חניה, מחסן ומרפסת. במסמכים הרשמיים התמונה יכולה להיראות אחרת.",
+   "bullets": [
+    "בודקים מה באמת רשום על הדירה",
+    "מגלים לפני שמתחייבים",
+    "תשובה ברורה במייל"
+   ],
+   "cta": "לבדיקת הדירה",
+   "visual": {
+    "type": "listing",
+    "head": "4 חדרים · קומה 3",
+    "tags": [
+     "חניה",
+     "מחסן",
+     "מרפסת"
+    ],
+    "qs": [
+     "החניה מוצמדת לדירה?",
+     "המרפסת נבנתה בהיתר?",
+     "רשומה משכנתא של המוכר?"
+    ]
+   }
+  },
+  {
+   "key": "poa",
+   "dom": "fam",
+   "title": [
+    "מי יחליט",
+    "בשבילכם,",
+    "אם לא תוכלו?"
+   ],
+   "mark": 1,
+   "sub": "ייפוי כוח מתמשך קובע את זה מראש, לפי הבחירה שלכם. ממלאים אונליין ונפגשים פעם אחת לחתימה.",
+   "bullets": [
+    "עריכה במערכת האפוטרופוס הכללי",
+    "פגישת חתימה במשרד או בבית",
+    "הפקדה מקוונת"
+   ],
+   "cta": "למילוי הטופס",
+   "visual": {
+    "type": "phone_form",
+    "head": "ייפוי כוח מתמשך",
+    "step": 3,
+    "fields": [
+     [
+      "מי ממלא את הטופס?",
+      "הבת של הממנה"
+     ],
+     [
+      "על אילו עניינים?",
+      "רכוש ובריאות"
+     ],
+     [
+      "מיופה הכוח",
+      "רונית לוי"
+     ]
+    ],
+    "up": "צילום ת״ז.jpg"
+   }
+  },
+  {
+   "key": "inherit",
+   "dom": "fam",
+   "title": [
+    "צו ירושה,",
+    "בלי לרוץ",
+    "בין משרדים."
+   ],
+   "mark": 1,
+   "sub": "מכינים את הבקשה, מגישים לרשם לענייני ירושה, ומלווים עד מתן הצו.",
+   "bullets": [
+    "גם צו קיום צוואה",
+    "מענה לדרישות הרשם",
+    "אפשר גם רישום הדירה בטאבו"
+   ],
+   "cta": "להתחלת התהליך",
+   "visual": {
+    "type": "steps",
+    "done": 2,
+    "steps": [
+     [
+      "ממלאים את הפרטים",
+      "מהטלפון או מהמחשב"
+     ],
+     [
+      "משלמים באתר",
+      "המחיר המלא מוצג מראש"
+     ],
+     [
+      "פגישה קצרה לחתימה",
+      "במשרד בנתניה"
+     ],
+     [
+      "אנחנו מגישים ומעדכנים",
+      "עד שהצו מתקבל"
+     ]
+    ]
+   }
+  },
+  {
+   "key": "company",
+   "dom": "biz",
+   "title": [
+    "פותחים חברה?",
+    "מתחילים",
+    "מהטלפון."
+   ],
+   "mark": 1,
+   "sub": "בודקים שהשם פנוי, מכינים תקנון ומסמכים, ומגישים לרשם החברות עד תעודת ההתאגדות.",
+   "bullets": [
+    "חברת יחיד או עם שותפים",
+    "פגישה אחת לחתימה",
+    "מעקב עד תעודת ההתאגדות"
+   ],
+   "cta": "להקמת חברה",
+   "visual": {
+    "type": "phone_form",
+    "head": "הקמת חברה",
+    "step": 2,
+    "fields": [
+     [
+      "איזו חברה?",
+      "חברה עם שותפים"
+     ],
+     [
+      "השם המבוקש לחברה",
+      "אור ים השקעות בע״מ"
+     ],
+     [
+      "מה העיסוק?",
+      "השקעות בנדל״ן"
+     ]
+    ],
+    "up": "צילום ת״ז.jpg"
+   }
+  },
+  {
+   "key": "tabu",
+   "dom": "re",
+   "title": [
+    "חתמתם על חוזה?",
+    "רושמים",
+    "הערת אזהרה."
+   ],
+   "mark": 2,
+   "fs_f": 120,
+   "fs_s": 150,
+   "sub": "הערת אזהרה בטאבו מגינה על הזכות שלכם בדירה. מכינים, מאמתים חתימות ומגישים אונליין.",
+   "bullets": [
+    "רישום או מחיקה של הערת אזהרה",
+    "רישום משכנתא",
+    "נסח טאבו אחרי הרישום"
+   ],
+   "cta": "לרישום בטאבו",
+   "visual": {
+    "type": "nasach",
+    "head": "נסח רישום מקרקעין",
+    "small": "דוגמה",
+    "secs": [
+     [
+      "גוש / חלקה / תת חלקה",
+      "8263 / 120 / 7"
+     ],
+     [
+      "בעלים",
+      "ישראל ישראלי"
+     ],
+     [
+      "הערות",
+      "הערת אזהרה לטובת הקונים"
+     ]
+    ],
+    "stamp": "נרשם"
+   }
+  },
+  {
+   "key": "zoom",
+   "dom": "consult",
+   "title": [
+    "שאלה משפטית?",
+    "פגישה בזום",
+    "עם עורך הדין."
+   ],
+   "mark": 1,
+   "fs_f": 124,
+   "fs_s": 150,
+   "sub": "בוחרים מועד באתר, מעלים מסמכים מראש, ומקבלים קישור לזום במייל.",
+   "bullets": [
+    "לפני חתימה על חוזה",
+    "אחרי מכתב או דרישה",
+    "מכל מקום בארץ"
+   ],
+   "cta": "לקביעת פגישה",
+   "visual": {
+    "type": "zoom",
+    "label": "עו״ד יקיר דבול",
+    "slot_small": "המועד שבחרתם",
+    "slot": "יום ג׳ · 10:30"
+   }
+  }
+ ],
+ "meta": {
+  "account": "Yakir Dabul (40406549)",
+  "budget": {
+   "month": 1000,
+   "day": 32,
+   "debtMonth": 1000
+  },
+  "objective": "תנועה, עם אופטימיזציה לצפיות בדף הנחיתה (אחרי התקנת הפיקסל). כל קהל מקבל תקציב יומי משלו.",
+  "placements": "מיקומים אוטומטיים בפייסבוק ובאינסטגרם (פיד, סטוריז, רילס), בלי Audience Network",
+  "adsets": [
+   {
+    "key": "A",
+    "name": "כל הארץ · בדיקת דירה וייעוץ בזום",
+    "day": 17,
+    "geo": "כל הארץ",
+    "age": "25 עד 60",
+    "why": "שני השירותים האלה נעשים כולם אונליין, בלי פגישה. לכן אפשר לפרסם אותם בכל הארץ.",
+    "interests": "קהל רחב עם הצעות למטא: נדל\"ן, משכנתאות, קניית דירה, יד 2",
+    "ads": [
+     {
+      "key": "precheck-a",
+      "kind": "image",
+      "headline": "בדיקת דירה לפני שמציעים מחיר",
+      "desc": "מזמינים אונליין · תשובה במייל",
+      "cta": "למידע נוסף",
+      "url": "https://dabullaw.co.il/online/apartment-check/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=precheck-a",
+      "primary": "מצאתם דירה יד שנייה?\n\nלפני שמציעים מחיר, עורך דין עובר על המסמכים הרשמיים: נסח טאבו, צו בית משותף, תיק בניין, מידע תכנוני והערכת מס רכישה.\n\nמזמינים אונליין, ומקבלים תשובה ברורה למייל בתוך 2 ימי עבודה.\nעו״ד יקיר דבול, רזיאל 1 נתניה."
+     },
+     {
+      "key": "precheck-b",
+      "kind": "image",
+      "headline": "מה המודעה לא מספרת על הדירה?",
+      "desc": "בדיקת דירה לפני קנייה, אונליין",
+      "cta": "למידע נוסף",
+      "url": "https://dabullaw.co.il/online/apartment-check/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=precheck-b",
+      "primary": "במודעה כתוב חניה, מחסן ומרפסת.\n\nאבל האם החניה מוצמדת לדירה? המרפסת נבנתה בהיתר? רשומה על הדירה משכנתא של המוכר?\n\nאת זה רואים במסמכים הרשמיים, ועדיף לגלות לפני שמתחייבים. בדיקת דירה לפני קנייה, אונליין, עם עו״ד יקיר דבול."
+     },
+     {
+      "key": "precheck",
+      "kind": "video",
+      "headline": "בדיקת דירה לפני קנייה",
+      "desc": "תשובה במייל בתוך 2 ימי עבודה",
+      "cta": "למידע נוסף",
+      "url": "https://dabullaw.co.il/online/apartment-check/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=precheck-video",
+      "primary": "רגע לפני שמציעים מחיר על דירה: מה המודעה לא תמיד מספרת, מה בודקים במסמכים, ואיך מזמינים בדיקה אונליין.\n\nעו״ד יקיר דבול, נתניה."
+     },
+     {
+      "key": "zoom",
+      "kind": "image",
+      "headline": "ייעוץ משפטי בזום עם עורך הדין",
+      "desc": "בוחרים מועד באתר",
+      "cta": "להזמנה",
+      "url": "https://dabullaw.co.il/online/zoom-consultation/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=zoom",
+      "primary": "יש לכם שאלה משפטית ואין זמן להגיע למשרד?\n\nבוחרים מועד באתר, מעלים מסמכים מראש, ונפגשים בזום עם עו״ד יקיר דבול.\nמתאים לפני חתימה על חוזה, אחרי מכתב או דרישה, ומכל מקום בארץ."
+     }
+    ]
+   },
+   {
+    "key": "B",
+    "name": "נתניה והשרון · משפחה, חברות וטאבו",
+    "day": 15,
+    "geo": "נתניה ועד 30 ק\"מ ממנה (השרון, חדרה, כפר סבא, הרצליה)",
+    "age": "30 עד 70",
+    "why": "בשירותים האלה יש פגישה אחת לחתימה במשרד בנתניה. לכן מפרסמים רק למי שגר בטווח נסיעה.",
+    "interests": "קהל רחב עם הצעות למטא: בעלי עסקים קטנים, נדל\"ן, תכנון פרישה",
+    "ads": [
+     {
+      "key": "poa",
+      "kind": "video",
+      "headline": "ייפוי כוח מתמשך: ממלאים אונליין",
+      "desc": "פגישה אחת לחתימה, במשרד או בבית",
+      "cta": "למידע נוסף",
+      "url": "https://dabullaw.co.il/online/enduring-power-of-attorney/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=poa-video",
+      "primary": "מי יחליט בשבילכם, אם יום אחד לא תוכלו? ייפוי כוח מתמשך קובע את זה מראש, לפי הבחירה שלכם.\n\nממלאים את הפרטים אונליין, נפגשים פעם אחת לחתימה, במשרד בנתניה או בבית, ואנחנו מפקידים אצל האפוטרופוס הכללי."
+     },
+     {
+      "key": "inherit",
+      "kind": "image",
+      "headline": "צו ירושה, בלי לרוץ בין משרדים",
+      "desc": "הגשה מקוונת לרשם לענייני ירושה",
+      "cta": "למידע נוסף",
+      "url": "https://dabullaw.co.il/online/inheritance-order/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=inherit",
+      "primary": "צריכים צו ירושה או צו קיום צוואה?\n\nאנחנו מכינים את הבקשה והתצהיר, מגישים לרשם לענייני ירושה ומלווים עד מתן הצו.\nממלאים את הפרטים מהטלפון, ונפגשים פעם אחת לחתימה בנתניה."
+     },
+     {
+      "key": "company",
+      "kind": "image",
+      "headline": "הקמת חברה בע״מ: מתחילים אונליין",
+      "desc": "הגשה לרשם החברות",
+      "cta": "למידע נוסף",
+      "url": "https://dabullaw.co.il/online/company-registration/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=company",
+      "primary": "פותחים חברה?\n\nבודקים שהשם פנוי, מכינים תקנון ומסמכי התאגדות, ומגישים לרשם החברות עד תעודת ההתאגדות.\nמתחילים בטופס דיגיטלי, ונפגשים פעם אחת לחתימה."
+     },
+     {
+      "key": "tabu",
+      "kind": "image",
+      "headline": "רישום הערת אזהרה בטאבו",
+      "desc": "הכנה, אימות חתימות והגשה מקוונת",
+      "cta": "למידע נוסף",
+      "url": "https://dabullaw.co.il/online/tabu-registration/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=tabu",
+      "primary": "חתמתם על חוזה לדירה?\n\nהערת אזהרה בטאבו מגינה על הזכות שלכם בדירה עד שהבעלות עוברת. מכינים את הבקשה, מאמתים חתימות ומגישים אונליין, ושולחים לכם נסח אחרי הרישום.\nגם רישום משכנתא ומחיקת הערה."
+     }
+    ]
+   }
+  ],
+  "spares": [
+   {
+    "key": "hub",
+    "kind": "image",
+    "for": "שני הקהלים",
+    "url": "https://dabullaw.co.il/online/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=hub",
+    "headline": "עורך דין, בלי לצאת מהבית",
+    "primary": "ממלאים טופס קצר מהטלפון, משלמים באתר, ועורך הדין מטפל: בדיקת דירה, ייפוי כוח מתמשך, צו ירושה, הקמת חברה, רישומים בטאבו וייעוץ בזום.\n\nהמחיר קבוע, ומוצג לפני התשלום."
+   },
+   {
+    "key": "poa",
+    "kind": "image",
+    "for": "B",
+    "url": "https://dabullaw.co.il/online/enduring-power-of-attorney/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=poa",
+    "headline": "ייפוי כוח מתמשך: ממלאים אונליין"
+   },
+   {
+    "key": "inherit",
+    "kind": "video",
+    "for": "B",
+    "url": "https://dabullaw.co.il/online/inheritance-order/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=inherit-video",
+    "headline": "צו ירושה או צו קיום צוואה"
+   },
+   {
+    "key": "company",
+    "kind": "video",
+    "for": "B",
+    "url": "https://dabullaw.co.il/online/company-registration/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=company-video",
+    "headline": "הקמת חברה בע״מ"
+   },
+   {
+    "key": "registrar",
+    "kind": "video",
+    "for": "B",
+    "url": "https://dabullaw.co.il/online/companies-registrar-changes/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=registrar-video",
+    "headline": "שינויים ברשם החברות, אונליין"
+   },
+   {
+    "key": "tabu",
+    "kind": "video",
+    "for": "B",
+    "url": "https://dabullaw.co.il/online/tabu-registration/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=tabu-video",
+    "headline": "רישומים בטאבו"
+   },
+   {
+    "key": "zoom",
+    "kind": "video",
+    "for": "A",
+    "url": "https://dabullaw.co.il/online/zoom-consultation/?utm_source=facebook&utm_medium=paid&utm_campaign=online-services&utm_content=zoom-video",
+    "headline": "ייעוץ משפטי בזום"
+   }
+  ]
+ }
+}

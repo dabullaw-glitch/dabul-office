@@ -1,0 +1,273 @@
+<title>קמפיין שירותים אונליין</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Karantina:wght@700&display=swap">
+<style>
+/* layout: one reading column; ads shown the way they appear on the phone (feed post + story beside it) */
+:root{--bg:#F2F5FB;--surface:#FFFFFF;--ink:#0E1E3D;--muted:#56637F;--line:#D9E1EF;--navy:#0E2A57;--sun:#FFE14D;--sunInk:#0E2A57;--ok:#17915A;--warn:#B45309;--soft:#E9EEF8;
+ --display:"Karantina","IBM Plex Sans Hebrew",sans-serif;--body:"IBM Plex Sans Hebrew",Arial,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0A1530;--surface:#111F42;--ink:#EEF2FB;--muted:#A3B2D3;--line:#22386A;--navy:#0E2A57;--soft:#16295A;--ok:#3CC487;--warn:#F59E0B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0A1530;--surface:#111F42;--ink:#EEF2FB;--muted:#A3B2D3;--line:#22386A;--navy:#0E2A57;--soft:#16295A;--ok:#3CC487;--warn:#F59E0B;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;margin:0;direction:rtl}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:28px 80px}
+h1,h2,h3{text-wrap:balance;margin:0}
+.hero{background:var(--navy);color:#fff;border-radius:22px;padding:34px 30px;position:relative;overflow:hidden;
+ background-image:linear-gradient(rgba(127,166,240,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(127,166,240,.14) 1px,transparent 1px);background-size:44px 44px}
+.hero .st{display:inline-flex;gap:8px;align-items:center;background:var(--sun);color:var(--sunInk);font-weight:700;font-size:14px;border-radius:99px;padding:5px 14px}
+.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(46px,8vw,84px);line-height:.95;margin:16px 0 10px;letter-spacing:.01em}
+.hero h1 mark{background:linear-gradient(transparent 60%,var(--sun) 60%,var(--sun) 88%,transparent 88%);color:#fff;padding:0 4px}
+.hero p{color:#D6E2FA;max-width:62ch;margin:0;font-size:17px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:26px}
+.facts div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:12px 14px;min-width:0}
+.facts dt{font-size:13px;color:#B9C8EA}.facts dd{margin:2px 0 0;font-weight:700;font-size:19px;color:#fff}
+h2{font-family:var(--display);font-size:clamp(36px,5vw,52px);font-weight:700;line-height:1;margin:56px 0 8px;color:var(--ink)}
+.lead{color:var(--muted);max-width:68ch;margin:0 0 20px}
+.tree{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tree .root{grid-column:1/-1;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline}
+.tree .root b{font-size:18px}.tree .root span{color:var(--muted)}
+.node{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;min-width:0}
+.node .eyebrow{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.node h3{font-size:20px;margin:2px 0 8px}
+.node .money{font-family:var(--display);font-size:44px;line-height:1;color:var(--ink)}
+.node .money small{font-family:var(--body);font-size:15px;color:var(--muted);margin-inline-start:6px}
+.node ul{margin:10px 0 0;padding-inline-start:18px;color:var(--muted)}
+.set{margin-top:34px}
+.set-h{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;border-bottom:3px solid var(--sun);padding-bottom:12px}
+.eyebrow{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.set-h h3{font-size:26px}
+.set-b{text-align:left}.set-b b{font-family:var(--display);font-size:46px;line-height:1;display:block}.set-b span{color:var(--muted);font-size:14px}
+.set-d{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px 22px;margin:16px 0 8px}
+.set-d dt{font-size:13px;font-weight:700;color:var(--muted)}.set-d dd{margin:0;font-size:15px}
+.ads{display:grid;gap:30px;margin-top:18px}
+.ad{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px}
+.ad-meta{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.num{width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+.tag{background:var(--sun);color:var(--sunInk);font-weight:700;font-size:13px;border-radius:99px;padding:3px 12px}
+.tag.ghost{background:var(--soft);color:var(--muted)}
+.ad-pair{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.75fr);gap:20px;align-items:start}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+.fb-h{display:flex;gap:10px;align-items:center;padding:12px 14px}.fb-h img{width:40px;height:40px;border-radius:50%;object-fit:cover}
+.fb-h b{display:block;font-size:15px}.fb-h span{font-size:12px;color:var(--muted)}
+.fb-t{margin:0;padding:0 14px 12px;font-size:15px;line-height:1.55}
+.fb-m img,.fb-m video,.story img,.story video{display:block;width:100%;height:auto;max-width:100%;background:#0E2A57}
+.fb-l{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;background:var(--soft)}
+.fb-l div{min-width:0}.fb-l small{display:block;color:var(--muted);font-size:12px;text-align:right}.fb-l b{display:block;font-size:15px}.fb-l span{font-size:13px;color:var(--muted)}
+.btn{flex:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-weight:700;font-size:14px;color:var(--ink)}
+.story{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.story figcaption{font-size:13px;color:var(--muted);padding:8px 10px;text-align:center}
+details.url{margin-top:12px;font-size:13px;color:var(--muted)}details.url code{display:block;word-break:break-all;margin-top:6px;background:var(--soft);padding:8px 10px;border-radius:8px;color:var(--ink)}
+.spares{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.sp{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.sp img,.sp video{display:block;width:100%;height:auto}
+.sp figcaption{padding:10px 12px}.sp b{display:block;font-size:15px}.sp span{font-size:13px;color:var(--muted)}
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+th,td{text-align:right;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--muted);font-weight:700;background:var(--soft)}
+tr:last-child td{border-bottom:0}
+td b{white-space:nowrap}
+.terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:16px}
+.terms div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}.terms b{display:block}.terms span{color:var(--muted);font-size:15px}
+.todo{display:grid;gap:14px}
+.todo article{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}
+.todo h3{font-size:20px;display:flex;gap:10px;align-items:center}
+.todo h3 .num{flex:none}
+.todo ol{margin:10px 0 0;padding-inline-start:22px}.todo li{margin:6px 0}
+.todo p{margin:8px 0 0;color:var(--muted)}
+.opt{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:12px}
+.opt div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--soft)}.opt b{display:block}.opt span{font-size:14px;color:var(--muted)}
+.checks{display:grid;gap:10px;list-style:none;padding:0;margin:0}
+.checks li{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.checks svg{width:22px;height:22px;flex:none;color:var(--ok);margin-top:2px}
+.checks li.n svg{color:var(--warn)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:13px}
+@media (max-width:760px){.tree{grid-template-columns:1fr}.ad-pair{grid-template-columns:1fr}.story{max-width:260px}.hero{padding:26px 20px}}
+</style>
+<div class="wrap">
+<header class="hero">
+ <span class="st">טיוטה לאישור · שום דבר עוד לא עלה</span>
+ <h1>שירותים משפטיים <mark>אונליין</mark></h1>
+ <p>קמפיין בפייסבוק ובאינסטגרם שמביא אנשים לדפי השירותים באתר, כדי שיזמינו וישלמו אונליין. במודעות אין מחירים: המחיר מופיע רק באתר, לפני התשלום.</p>
+ <dl class="facts">
+  <div><dt>תקציב</dt><dd>1,000 ₪ לחודש</dd></div>
+  <div><dt>ביום</dt><dd>32 ₪</dd></div>
+  <div><dt>איפה</dt><dd>פייסבוק ואינסטגרם</dd></div>
+  <div><dt>קהלים</dt><dd>2</dd></div>
+  <div><dt>מודעות פעילות</dt><dd>8</dd></div>
+  <div><dt>מודעות בהמתנה</dt><dd>7</dd></div>
+ </dl>
+</header>
+
+<h2>המבנה</h2>
+<p class="lead">קמפיין אחד ושני קהלים. כל קהל מקבל תקציב יומי קבוע, כדי ששניהם יקבלו חשיפה. המטרה בחודש הראשון היא כניסות לדפי השירותים, כי בתקציב הזה מטא לא תצבור מספיק הזמנות כדי ללמוד מהן לבד.</p>
+<div class="tree">
+ <div class="root"><b>קמפיין: שירותים משפטיים אונליין</b><span>תנועה, עם אופטימיזציה לצפיות בדף הנחיתה (אחרי התקנת הפיקסל). כל קהל מקבל תקציב יומי משלו.</span><span>מיקומים אוטומטיים בפייסבוק ובאינסטגרם (פיד, סטוריז, רילס), בלי Audience Network</span></div>
+ <div class="node"><span class="eyebrow">קהל A</span><h3>כל הארץ · בדיקת דירה וייעוץ בזום</h3><div class="money">17 ₪<small>ליום · כ-517 ₪ בחודש</small></div><ul><li>כל הארץ</li><li>גילאים 25 עד 60</li><li>4 מודעות</li></ul></div><div class="node"><span class="eyebrow">קהל B</span><h3>נתניה והשרון · משפחה, חברות וטאבו</h3><div class="money">15 ₪<small>ליום · כ-456 ₪ בחודש</small></div><ul><li>נתניה ועד 30 ק&quot;מ ממנה (השרון, חדרה, כפר סבא, הרצליה)</li><li>גילאים 30 עד 70</li><li>4 מודעות</li></ul></div>
+</div>
+
+<h2>המודעות</h2>
+<p class="lead">כך המודעות ייראו בטלפון. משמאל לכל מודעה בפיד מופיעה הגרסה לסטורי ולרילס. כל קישור מסומן, כך שבכל הזמנה רואים מאיזו מודעה היא הגיעה (זה מופיע גם בהודעת הטלגרם על הזמנה ששולמה).</p>
+<section class="set" id="set-A">
+ <header class="set-h"><div><span class="eyebrow">קהל A</span><h3>כל הארץ · בדיקת דירה וייעוץ בזום</h3></div><div class="set-b"><b>17 ₪</b><span>ליום · כ-517 ₪ בחודש</span></div></header>
+ <dl class="set-d"><div><dt>איפה</dt><dd>כל הארץ</dd></div><div><dt>גילאים</dt><dd>25 עד 60</dd></div><div><dt>למה כך</dt><dd>שני השירותים האלה נעשים כולם אונליין, בלי פגישה. לכן אפשר לפרסם אותם בכל הארץ.</dd></div><div><dt>מי רואה</dt><dd>קהל רחב עם הצעות למטא: נדל&quot;ן, משכנתאות, קניית דירה, יד 2</dd></div></dl>
+ <div class="ads"><article class="ad" id="ad-precheck-a-image">
+ <div class="ad-meta"><span class="num">1</span><span class="tag">תמונה</span><span class="tag ghost">פיד 4:5 · סטורי 9:16</span></div>
+ <div class="ad-pair">
+  <div class="fb">
+   <div class="fb-h"><img src="img/yakir.webp" alt=""><div><b>יקיר דבול - משרד עורכי דין</b><span>ממומן</span></div></div>
+   <p class="fb-t">מצאתם דירה יד שנייה?<br><br>לפני שמציעים מחיר, עורך דין עובר על המסמכים הרשמיים: נסח טאבו, צו בית משותף, תיק בניין, מידע תכנוני והערכת מס רכישה.<br><br>מזמינים אונליין, ומקבלים תשובה ברורה למייל בתוך 2 ימי עבודה.<br>עו״ד יקיר דבול, רזיאל 1 נתניה.</p>
+   <div class="fb-m"><img src="img/precheck-a-f.jpg" alt="מצאתם דירה? בודקים לפני שמציעים מחיר." loading="lazy"></div>
+   <div class="fb-l"><div><small dir="ltr">dabullaw.co.il/online/apartment-check/</small><b>בדיקת דירה לפני שמציעים מחיר</b><span>מזמינים אונליין · תשובה במייל</span></div><span class="btn">למידע נוסף</span></div>
+  </div>
+  <figure class="story"><img src="img/precheck-a-s.jpg" alt="מצאתם דירה? בודקים לפני שמציעים מחיר." loading="lazy"><figcaption>סטורי ורילס</figcaption></figure>
+ </div>
+ <details class="url"><summary>הקישור במודעה</summary><code dir="ltr">https://dabullaw.co.il/online/apartment-check/?utm_source=facebook&amp;utm_medium=paid&amp;utm_campaign=online-services&amp;utm_content=precheck-a</code></details>
+</article><article class="ad" id="ad-precheck-b-image">
+ <div class="ad-meta"><span class="num">2</span><span class="tag">תמונה</span><span class="tag ghost">פיד 4:5 · סטורי 9:16</span></div>
+ <div class="ad-pair">
+  <div class="fb">
+   <div class="fb-h"><img src="img/yakir.webp" alt=""><div><b>יקיר דבול - משרד עורכי דין</b><span>ממומן</span></div></div>
+   <p class="fb-t">במודעה כתוב חניה, מחסן ומרפסת.<br><br>אבל האם החניה מוצמדת לדירה? המרפסת נבנתה בהיתר? רשומה על הדירה משכנתא של המוכר?<br><br>את זה רואים במסמכים הרשמיים, ועדיף לגלות לפני שמתחייבים. בדיקת דירה לפני קנייה, אונליין, עם עו״ד יקיר דבול.</p>
+   <div class="fb-m"><img src="img/precheck-b-f.jpg" alt="מה המודעה לא מספרת על הדירה?" loading="lazy"></div>
+   <div class="fb-l"><div><small dir="ltr">dabullaw.co.il/online/apartment-check/</small><b>מה המודעה לא מספרת על הדירה?</b><span>בדיקת דירה לפני קנייה, אונליין</span></div><span class="btn">למידע נוסף</span></div>
+  </div>
+  <figure class="story"><img src="img/precheck-b-s.jpg" alt="מה המודעה לא מספרת על הדירה?" loading="lazy"><figcaption>סטורי ורילס</figcaption></figure>
+ </div>
+ <details class="url"><summary>הקישור במודעה</summary><code dir="ltr">https://dabullaw.co.il/online/apartment-check/?utm_source=facebook&amp;utm_medium=paid&amp;utm_campaign=online-services&amp;utm_content=precheck-b</code></details>
+</article><article class="ad" id="ad-precheck-video">
+ <div class="ad-meta"><span class="num">3</span><span class="tag">סרטון</span><span class="tag ghost">פיד 4:5 · סטורי 9:16</span></div>
+ <div class="ad-pair">
+  <div class="fb">
+   <div class="fb-h"><img src="img/yakir.webp" alt=""><div><b>יקיר דבול - משרד עורכי דין</b><span>ממומן</span></div></div>
+   <p class="fb-t">רגע לפני שמציעים מחיר על דירה: מה המודעה לא תמיד מספרת, מה בודקים במסמכים, ואיך מזמינים בדיקה אונליין.<br><br>עו״ד יקיר דבול, נתניה.</p>
+   <div class="fb-m"><video controls preload="none" playsinline poster="img/precheck-video-f-poster.jpg"><source src="vid/precheck-video-f.mp4" type="video/mp4"></video></div>
+   <div class="fb-l"><div><small dir="ltr">dabullaw.co.il/online/apartment-check/</small><b>בדיקת דירה לפני קנייה</b><span>תשובה במייל בתוך 2 ימי עבודה</span></div><span class="btn">למידע נוסף</span></div>
+  </div>
+  <figure class="story"><video controls preload="none" playsinline poster="img/precheck-video-s-poster.jpg"><source src="vid/precheck-video-s.mp4" type="video/mp4"></video><figcaption>סטורי ורילס</figcaption></figure>
+ </div>
+ <details class="url"><summary>הקישור במודעה</summary><code dir="ltr">https://dabullaw.co.il/online/apartment-check/?utm_source=facebook&amp;utm_medium=paid&amp;utm_campaign=online-services&amp;utm_content=precheck-video</code></details>
+</article><article class="ad" id="ad-zoom-image">
+ <div class="ad-meta"><span class="num">4</span><span class="tag">תמונה</span><span class="tag ghost">פיד 4:5 · סטורי 9:16</span></div>
+ <div class="ad-pair">
+  <div class="fb">
+   <div class="fb-h"><img src="img/yakir.webp" alt=""><div><b>יקיר דבול - משרד עורכי דין</b><span>ממומן</span></div></div>
+   <p class="fb-t">יש לכם שאלה משפטית ואין זמן להגיע למשרד?<br><br>בוחרים מועד באתר, מעלים מסמכים מראש, ונפגשים בזום עם עו״ד יקיר דבול.<br>מתאים לפני חתימה על חוזה, אחרי מכתב או דרישה, ומכל מקום בארץ.</p>
+   <div class="fb-m"><img src="img/zoom-f.jpg" alt="שאלה משפטית? פגישה בזום עם עורך הדין." loading="lazy"></div>
+   <div class="fb-l"><div><small dir="ltr">dabullaw.co.il/online/zoom-consultation/</small><b>ייעוץ משפטי בזום עם עורך הדין</b><span>בוחרים מועד באתר</span></div><span class="btn">להזמנה</span></div>
+  </div>
+  <figure class="story"><img src="img/zoom-s.jpg" alt="שאלה משפטית? פגישה בזום עם עורך הדין." loading="lazy"><figcaption>סטורי ורילס</figcaption></figure>
+ </div>
+ <details class="url"><summary>הקישור במודעה</summary><code dir="ltr">https://dabullaw.co.il/online/zoom-consultation/?utm_source=facebook&amp;utm_medium=paid&amp;utm_campaign=online-services&amp;utm_content=zoom</code></details>
+</article></div>
+</section><section class="set" id="set-B">
+ <header class="set-h"><div><span class="eyebrow">קהל B</span><h3>נתניה והשרון · משפחה, חברות וטאבו</h3></div><div class="set-b"><b>15 ₪</b><span>ליום · כ-456 ₪ בחודש</span></div></header>
+ <dl class="set-d"><div><dt>איפה</dt><dd>נתניה ועד 30 ק&quot;מ ממנה (השרון, חדרה, כפר סבא, הרצליה)</dd></div><div><dt>גילאים</dt><dd>30 עד 70</dd></div><div><dt>למה כך</dt><dd>בשירותים האלה יש פגישה אחת לחתימה במשרד בנתניה. לכן מפרסמים רק למי שגר בטווח נסיעה.</dd></div><div><dt>מי רואה</dt><dd>קהל רחב עם הצעות למטא: בעלי עסקים קטנים, נדל&quot;ן, תכנון פרישה</dd></div></dl>
+ <div class="ads"><article class="ad" id="ad-poa-video">
+ <div class="ad-meta"><span class="num">5</span><span class="tag">סרטון</span><span class="tag ghost">פיד 4:5 · סטורי 9:16</span></div>
+ <div class="ad-pair">
+  <div class="fb">
+   <div class="fb-h"><img src="img/yakir.webp" alt=""><div><b>יקיר דבול - משרד עורכי דין</b><span>ממומן</span></div></div>
+   <p class="fb-t">מי יחליט בשבילכם, אם יום אחד לא תוכלו? ייפוי כוח מתמשך קובע את זה מראש, לפי הבחירה שלכם.<br><br>ממלאים את הפרטים אונליין, נפגשים פעם אחת לחתימה, במשרד בנתניה או בבית, ואנחנו מפקידים אצל האפוטרופוס הכללי.</p>
+   <div class="fb-m"><video controls preload="none" playsinline poster="img/poa-video-f-poster.jpg"><source src="vid/poa-video-f.mp4" type="video/mp4"></video></div>
+   <div class="fb-l"><div><small dir="ltr">dabullaw.co.il/online/enduring-power-of-attorney/</small><b>ייפוי כוח מתמשך: ממלאים אונליין</b><span>פגישה אחת לחתימה, במשרד או בבית</span></div><span class="btn">למידע נוסף</span></div>
+  </div>
+  <figure class="story"><video controls preload="none" playsinline poster="img/poa-video-s-poster.jpg"><source src="vid/poa-video-s.mp4" type="video/mp4"></video><figcaption>סטורי ורילס</figcaption></figure>
+ </div>
+ <details class="url"><summary>הקישור במודעה</summary><code dir="ltr">https://dabullaw.co.il/online/enduring-power-of-attorney/?utm_source=facebook&amp;utm_medium=paid&amp;utm_campaign=online-services&amp;utm_content=poa-video</code></details>
+</article><article class="ad" id="ad-inherit-image">
+ <div class="ad-meta"><span class="num">6</span><span class="tag">תמונה</span><span class="tag ghost">פיד 4:5 · סטורי 9:16</span></div>
+ <div class="ad-pair">
+  <div class="fb">
+   <div class="fb-h"><img src="img/yakir.webp" alt=""><div><b>יקיר דבול - משרד עורכי דין</b><span>ממומן</span></div></div>
+   <p class="fb-t">צריכים צו ירושה או צו קיום צוואה?<br><br>אנחנו מכינים את הבקשה והתצהיר, מגישים לרשם לענייני ירושה ומלווים עד מתן הצו.<br>ממלאים את הפרטים מהטלפון, ונפגשים פעם אחת לחתימה בנתניה.</p>
+   <div class="fb-m"><img src="img/inherit-f.jpg" alt="צו ירושה, בלי לרוץ בין משרדים." loading="lazy"></div>
+   <div class="fb-l"><div><small dir="ltr">dabullaw.co.il/online/inheritance-order/</small><b>צו ירושה, בלי לרוץ בין משרדים</b><span>הגשה מקוונת לרשם לענייני ירושה</span></div><span class="btn">למידע נוסף</span></div>
+  </div>
+  <figure class="story"><img src="img/inherit-s.jpg" alt="צו ירושה, בלי לרוץ בין משרדים." loading="lazy"><figcaption>סטורי ורילס</figcaption></figure>
+ </div>
+ <details class="url"><summary>הקישור במודעה</summary><code dir="ltr">https://dabullaw.co.il/online/inheritance-order/?utm_source=facebook&amp;utm_medium=paid&amp;utm_campaign=online-services&amp;utm_content=inherit</code></details>
+</article><article class="ad" id="ad-company-image">
+ <div class="ad-meta"><span class="num">7</span><span class="tag">תמונה</span><span class="tag ghost">פיד 4:5 · סטורי 9:16</span></div>
+ <div class="ad-pair">
+  <div class="fb">
+   <div class="fb-h"><img src="img/yakir.webp" alt=""><div><b>יקיר דבול - משרד עורכי דין</b><span>ממומן</span></div></div>
+   <p class="fb-t">פותחים חברה?<br><br>בודקים שהשם פנוי, מכינים תקנון ומסמכי התאגדות, ומגישים לרשם החברות עד תעודת ההתאגדות.<br>מתחילים בטופס דיגיטלי, ונפגשים פעם אחת לחתימה.</p>
+   <div class="fb-m"><img src="img/company-f.jpg" alt="פותחים חברה? מתחילים מהטלפון." loading="lazy"></div>
+   <div class="fb-l"><div><small dir="ltr">dabullaw.co.il/online/company-registration/</small><b>הקמת חברה בע״מ: מתחילים אונליין</b><span>הגשה לרשם החברות</span></div><span class="btn">למידע נוסף</span></div>
+  </div>
+  <figure class="story"><img src="img/company-s.jpg" alt="פותחים חברה? מתחילים מהטלפון." loading="lazy"><figcaption>סטורי ורילס</figcaption></figure>
+ </div>
+ <details class="url"><summary>הקישור במודעה</summary><code dir="ltr">https://dabullaw.co.il/online/company-registration/?utm_source=facebook&amp;utm_medium=paid&amp;utm_campaign=online-services&amp;utm_content=company</code></details>
+</article><article class="ad" id="ad-tabu-image">
+ <div class="ad-meta"><span class="num">8</span><span class="tag">תמונה</span><span class="tag ghost">פיד 4:5 · סטורי 9:16</span></div>
+ <div class="ad-pair">
+  <div class="fb">
+   <div class="fb-h"><img src="img/yakir.webp" alt=""><div><b>יקיר דבול - משרד עורכי דין</b><span>ממומן</span></div></div>
+   <p class="fb-t">חתמתם על חוזה לדירה?<br><br>הערת אזהרה בטאבו מגינה על הזכות שלכם בדירה עד שהבעלות עוברת. מכינים את הבקשה, מאמתים חתימות ומגישים אונליין, ושולחים לכם נסח אחרי הרישום.<br>גם רישום משכנתא ומחיקת הערה.</p>
+   <div class="fb-m"><img src="img/tabu-f.jpg" alt="חתמתם על חוזה? רושמים הערת אזהרה." loading="lazy"></div>
+   <div class="fb-l"><div><small dir="ltr">dabullaw.co.il/online/tabu-registration/</small><b>רישום הערת אזהרה בטאבו</b><span>הכנה, אימות חתימות והגשה מקוונת</span></div><span class="btn">למידע נוסף</span></div>
+  </div>
+  <figure class="story"><img src="img/tabu-s.jpg" alt="חתמתם על חוזה? רושמים הערת אזהרה." loading="lazy"><figcaption>סטורי ורילס</figcaption></figure>
+ </div>
+ <details class="url"><summary>הקישור במודעה</summary><code dir="ltr">https://dabullaw.co.il/online/tabu-registration/?utm_source=facebook&amp;utm_medium=paid&amp;utm_campaign=online-services&amp;utm_content=tabu</code></details>
+</article></div>
+</section>
+
+<h2>מודעות בהמתנה</h2>
+<p class="lead">אחרי שבועיים עד שלושה אנשים מתחילים לראות את אותן מודעות שוב ושוב, והתוצאות יורדות. אז מחליפים את המודעות החלשות באלה. הן מוכנות, עם אותו טקסט וקישור לשירות.</p>
+<div class="spares"><figure class="sp"><img src="img/hub-f.jpg" alt="" loading="lazy"><figcaption><b>עורך דין, בלי לצאת מהבית</b><span>תמונה · שני הקהלים</span></figcaption></figure><figure class="sp"><img src="img/poa-f.jpg" alt="" loading="lazy"><figcaption><b>ייפוי כוח מתמשך: ממלאים אונליין</b><span>תמונה · קהל B</span></figcaption></figure><figure class="sp"><video controls preload="none" playsinline poster="img/inherit-video-f-poster.jpg"><source src="vid/inherit-video-f.mp4" type="video/mp4"></video><figcaption><b>צו ירושה או צו קיום צוואה</b><span>סרטון · קהל B</span></figcaption></figure><figure class="sp"><video controls preload="none" playsinline poster="img/company-video-f-poster.jpg"><source src="vid/company-video-f.mp4" type="video/mp4"></video><figcaption><b>הקמת חברה בע״מ</b><span>סרטון · קהל B</span></figcaption></figure><figure class="sp"><video controls preload="none" playsinline poster="img/registrar-video-f-poster.jpg"><source src="vid/registrar-video-f.mp4" type="video/mp4"></video><figcaption><b>שינויים ברשם החברות, אונליין</b><span>סרטון · קהל B</span></figcaption></figure><figure class="sp"><video controls preload="none" playsinline poster="img/tabu-video-f-poster.jpg"><source src="vid/tabu-video-f.mp4" type="video/mp4"></video><figcaption><b>רישומים בטאבו</b><span>סרטון · קהל B</span></figcaption></figure><figure class="sp"><video controls preload="none" playsinline poster="img/zoom-video-f-poster.jpg"><source src="vid/zoom-video-f.mp4" type="video/mp4"></video><figcaption><b>ייעוץ משפטי בזום</b><span>סרטון · קהל A</span></figcaption></figure></div>
+
+<h2>החודש הראשון</h2>
+<div class="tbl"><table>
+<thead><tr><th>מתי</th><th>מה קורה</th><th>מה אני בודק</th></tr></thead>
+<tbody>
+<tr><td><b>ימים 1 עד 3</b></td><td>מטא לומדת מי מגיב לכל מודעה. התוצאות קופצות, וזה רגיל.</td><td>שהמודעות אושרו, שהתקציב יוצא, ושהקישורים פותחים את הדף הנכון.</td></tr>
+<tr><td><b>סוף שבוע 1</b></td><td>יש מספיק נתונים להשוואה בין המודעות.</td><td>מחיר לכניסה לדף בכל מודעה. מודעה שמביאה כניסות ביוקר בהרבה מהאחרות נעצרת.</td></tr>
+<tr><td><b>סוף שבוע 2</b></td><td>רואים אילו שירותים מביאים הזמנות.</td><td>הזמנות שהתחילו והזמנות ששולמו, לפי מודעה. אפשר להעביר תקציב בין שני הקהלים.</td></tr>
+<tr><td><b>שבוע 3</b></td><td>רענון: מכניסים מודעות מההמתנה במקום החלשות.</td><td>כמה פעמים בממוצע כל אדם ראה את המודעה. מעל 3 פעמים זה הזמן לרענן.</td></tr>
+<tr><td><b>סוף החודש</b></td><td>סיכום ליקיר והחלטה על החודש הבא.</td><td>כמה עלתה הזמנה ששולמה, ואילו שירותים כדאי לחזק.</td></tr>
+</tbody></table></div>
+<div class="terms">
+ <div><b>כניסה לדף</b><span>מישהו לחץ על המודעה והדף באתר נפתח אצלו עד הסוף. זה המדד העיקרי בחודש הראשון.</span></div>
+ <div><b>הזמנה שהתחילה</b><span>מישהו התחיל למלא את טופס השירות באתר.</span></div>
+ <div><b>הזמנה ששולמה</b><span>התשלום עבר. זו התוצאה שבאמת מעניינת, והיא תגיע לך כמו היום בטלגרם, עם שם המודעה.</span></div>
+ <div><b>תדירות</b><span>כמה פעמים בממוצע אותו אדם ראה את המודעה. כשהיא עולה, מרעננים.</span></div>
+</div>
+
+<h2>לפני שמעלים</h2>
+<div class="todo">
+ <article><h3><span class="num">1</span>פיקסל של מטא באתר</h3>
+  <p>הפיקסל הוא קוד קטן באתר שמספר למטא מי נכנס לדף, מי התחיל הזמנה ומי שילם. בלעדיו מטא לא יודעת מה עובד, ואי אפשר למדוד הזמנות מהקמפיין. כרגע אין פיקסל באתר. אתה רק יוצר אותו ושולח לי מספר, ואת ההתקנה באתר אני עושה.</p>
+  <ol>
+   <li>נכנסים ל-<code dir="ltr">business.facebook.com</code> ובוחרים את העסק שלך.</li>
+   <li>בתפריט בצד לוחצים "מנהל האירועים" (Events Manager).</li>
+   <li>לוחצים על הכפתור הירוק "חיבור מקורות נתונים" (Connect data sources), בוחרים "אינטרנט" (Web) ולוחצים "חיבור".</li>
+   <li>בשם כותבים <code dir="ltr">dabullaw.co.il</code> ולוחצים "יצירה" (Create). אם מוצע להזין כתובת אתר, מדלגים.</li>
+   <li>על המסך יופיע מספר ארוך, 15 או 16 ספרות, ליד השם, שנקרא "מזהה מערך נתונים" (Dataset ID). מעתיקים אותו ושולחים לי כאן. זה לא קוד סודי.</li>
+  </ol>
+  <p>אחרי שאקבל את המספר: אתקין את הפיקסל, אחבר אותו לטופס ההזמנה ולעמוד התודה אחרי התשלום, ואבדוק שהוא עובד לפני שהקמפיין עולה.</p>
+ </article>
+ <article><h3><span class="num">2</span>איך הקמפיין עולה למטא</h3>
+  <p>החיבור שדרכו אני מעלה קמפיינים ישירות לחשבון המודעות שלך (Adspirer) מאפשר 15 פעולות בחודש, וכל ה-15 של החודש הזה כבר נוצלו. יש שלוש דרכים:</p>
+  <div class="opt">
+   <div><b>א. מחכים ל-1.11</b><span>המכסה מתחדשת, ואני מעלה הכל לבד. בלי עלות, אבל הקמפיין מתחיל רק בעוד כשלושה שבועות.</span></div>
+   <div><b>ב. אתה מעלה עכשיו, עם הדרכה</b><span>אני שולח הוראות לחיצה אחרי לחיצה, וכל הקבצים והטקסטים מוכנים להעתקה. בערך 20 עד 30 דקות.</span></div>
+   <div><b>ג. שדרוג החיבור</b><span>מכסה גדולה יותר ואני מעלה הכל עכשיו. זה כרוך בתשלום חודשי ל-Adspirer, ולכן רק באישור שלך.</span></div>
+  </div>
+ </article>
+ <article><h3><span class="num">3</span>קמפיין חדלות פירעון וחובות</h3>
+  <p>כמו שקבעת: 1,000 ₪ לחודש, כלומר כ-33 ₪ ליום. התקציב שם מתעדכן באותה דרך שתבחר בסעיף 2. שני השירותים המקוונים של חובות (איחוד תיקים וצו חיוב בתשלומים) לא נכנסו לקמפיין הזה. אם תרצה, אפשר להוסיף אותם לקמפיין החובות, מתוך התקציב שלו.</p>
+ </article>
+</div>
+
+<h2>בדיקות</h2>
+<ul class="checks">
+ <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>אין מחיר באף מודעה, לא בתמונה, לא בסרטון ולא בטקסט. בסרטונים חתכתי את החלק שמראה את המחיר.</span></li>
+ <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>כללי הפרסום של לשכת עורכי הדין: שם עורך הדין מופיע בכל מודעה. אין "מומחה", אין "הכי" או "הטוב ביותר", אין הבטחה לתוצאה, ואין המלצות של לקוחות.</span></li>
+ <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>כללי מטא: המודעות לא פונות לאדם לפי מאפיין אישי שלו (גיל, בריאות, מצב כלכלי). למשל, "מי יחליט בשבילכם, אם לא תוכלו?" במקום פנייה לגיל או לבריאות.</span></li>
+ <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>מה שמובטח במודעות הוא מה שכתוב בדפי השירות: תשובה בתוך 2 ימי עבודה בבדיקת דירה, ופגישה אחת לחתימה בשירותים שדורשים חתימה.</span></li>
+ <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>כל הפרטים בטפסים ובנסח שבתמונות הם דוגמה (שמות, גוש וחלקה), וגם מסומנים כך.</span></li>
+ <li class="n"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>לתשומת לבך: בסרטון של בדיקת הדירה מופיעה בהתחלה מודעת דירה לדוגמה עם מחיר מבוקש של הדירה (2,150,000 ₪) והערכת מס רכישה לדוגמה. אלה לא המחיר שלנו. אם אתה מעדיף, אוריד גם אותם.</span></li>
+ <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>כל הקישורים נבדקו ופותחים את דף השירות הנכון.</span></li>
+</ul>
+</div>
