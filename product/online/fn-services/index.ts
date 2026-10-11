@@ -1,4 +1,5 @@
-// services: the online legal services ordered on dabullaw.co.il (written 10.10.2026; v4 11.10.2026: orders linked to client cards).
+// services: the online legal services ordered on dabullaw.co.il (written 10.10.2026; v4 11.10.2026: orders linked to client cards;
+// v5 11.10.2026: every order records where the buyer came from, src.ch, for the office report "מכירות אונליין").
 // The service definitions (questions, prices) come from svc-config.json on the website, the same file the order form
 // uses, and the price is always recomputed here. Orders are kept in docs coll "svc" (the office panel addon-svc.js),
 // the client's files in the private "files" bucket under svc/<id>/. The payment (Morning) is the last missing piece:
@@ -9,7 +10,7 @@
 //  POST ?step=paid&id=&k=                          -> Morning's server callback after payment (k: the order's secret key)
 //  POST {action:'admin-file'|'admin-mail'|'admin-status', ...} with the office user's sign-in -> office panel actions
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { loadSecrets, json, cors, admin, env, telegram } from '../_shared/common.ts';
+import { loadSecrets, json, cors, admin, env, telegram } from './_shared/common.ts';
 
 const CFG_URL = 'https://dabullaw-glitch.github.io/dabul-office/media/widgets/svc-config.json';
 const SITE = 'https://dabullaw.co.il';
@@ -201,6 +202,33 @@ async function slots() {
   return json({ days });
 }
 
+// ---- where the buyer came from (11.10.2026, Yakir: the finances must show where every sale comes from) ----
+// The form sends the first visit's source (utm, click ids, the outside referrer, the landing page) and the page that led
+// to the form. Here it is cleaned and given one channel name, so the office report can count sales per channel.
+// deno-lint-ignore no-explicit-any
+function cleanSrc(x: any) {
+  const t = (k: string, n = 200) => clip(x?.[k], n);
+  const one = (v: any) => v && typeof v === 'object' ? { utm_source: clip(v.utm_source, 80).toLowerCase(), utm_medium: clip(v.utm_medium, 80).toLowerCase(), utm_campaign: clip(v.utm_campaign, 120), utm_term: clip(v.utm_term, 120), utm_content: clip(v.utm_content, 120), gclid: v.gclid ? 1 : 0, fbclid: v.fbclid ? 1 : 0, ref: clip(v.ref, 200), landing: clip(v.landing, 300), at: clip(v.at, 30) } : null;
+  return { first: one(x?.first), last: one(x?.last), from: t('from', 300) };
+}
+const CH: Record<string, string> = { gads: 'גוגל ממומן', fbads: 'פייסבוק/אינסטגרם ממומן', seo: 'גוגל אורגני', bing: 'בינג', social: 'רשתות חברתיות', ai: 'צ׳אטבוטים (AI)', email: 'מייל / ניוזלטר', wa: 'וואטסאפ', ref: 'אתרים מפנים', site: 'מתוך האתר', direct: 'ישיר / לא ידוע' };
+// deno-lint-ignore no-explicit-any
+function channel(v: any): string {
+  if (!v) return 'direct';
+  const s = v.utm_source || '', m = v.utm_medium || '', r = String(v.ref || '').toLowerCase();
+  if (v.gclid || (/google/.test(s) && /cpc|ppc|paid|ads/.test(m))) return 'gads';
+  if (v.fbclid && /cpc|paid|ads/.test(m) || (/facebook|fb|instagram|ig|meta/.test(s) && /cpc|paid|ads/.test(m))) return 'fbads';
+  if (/mail|newsletter/.test(m + s)) return 'email';
+  if (/whatsapp|wa/.test(s) || /whatsapp/.test(r)) return 'wa';
+  if (/facebook|fb|instagram|ig|tiktok|linkedin|youtube|twitter|x\.com/.test(s + ' ' + r) || v.fbclid) return 'social';
+  if (/chatgpt|openai|perplexity|gemini|claude|copilot/.test(s + ' ' + r)) return 'ai';
+  if (/google\./.test(r)) return 'seo';
+  if (/bing\.|duckduckgo|yahoo/.test(r)) return 'bing';
+  if (s) return 'ref';
+  if (r && !/dabullaw\.co\.il/.test(r)) return 'ref';
+  return 'direct';
+}
+
 // ---- a new order ----
 // deno-lint-ignore no-explicit-any
 async function order(b: any, req: Request) {
@@ -237,7 +265,7 @@ async function order(b: any, req: Request) {
     stored.push({ k: f.k, name: clip(f.name, 120), size: +f.size, path, up: false });
   }
   const o = { svc: svc.id, title: svc.title, a, c: ct, meet, price: p, review: rv, status: 'draft', token, files: stored, slot: a.slot || '',
-    created: now, page: clip(b.page, 300), ip: (req.headers.get('x-forwarded-for') || '').split(',')[0].trim(), log: [{ at: now, kind: 'created', text: 'הזמנה נשלחה מהאתר' }] };
+    created: now, page: clip(b.page, 300), src: (() => { const x = cleanSrc(b.src || {}); const ch = channel(x.last || x.first); return { ...x, ch, chName: CH[ch], firstCh: channel(x.first) }; })(), ip: (req.headers.get('x-forwarded-for') || '').split(',')[0].trim(), log: [{ at: now, kind: 'created', text: 'הזמנה נשלחה מהאתר' }] };
   const { error } = await admin().from('docs').insert({ coll: 'svc', id, data: o });
   if (error) { console.error(error); return json({ ok: false, error: 'השמירה נכשלה' }, 500); }
   return json({ ok: true, id, token, uploads, review: rv.length > 0 });
@@ -257,7 +285,7 @@ async function linkClient(id: string, o: any): Promise<string> {
   const today = ymd(new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' })));
   if (!cid) {
     cid = 'c-' + Date.now().toString(36) + rand(4).toLowerCase();
-    await admin().from('docs').insert({ coll: 'clients', id: cid, data: { name: o.c.name, phone: o.c.phone, email: em, idNo: '', address: '', notes: '', tags: ['אונליין'], source: 'אתר: שירותים אונליין', created: today } });
+    await admin().from('docs').insert({ coll: 'clients', id: cid, data: { name: o.c.name, phone: o.c.phone, email: em, idNo: '', address: '', notes: '', tags: ['אונליין'], source: 'אתר: שירותים אונליין' + (o.src && o.src.chName ? ' · ' + o.src.chName : ''), created: today } });
   }
   await admin().from('docs').insert({ coll: 'notes', id: 'n-' + Date.now().toString(36) + rand(4).toLowerCase(), data: { refType: 'client', refId: cid, kind: 'system', date: new Date().toISOString(), text: `הזמנה מהאתר: ${o.title} · ${ils(o.price.total)} · מספר ${id}` } });
   return cid;
@@ -286,7 +314,7 @@ async function uploaded(b: any) {
   }
   const c = await cfg(); const svc = c.services.find((s: { id: string }) => s.id === o.svc) || { title: o.title };
   const when = o.slot && o.slot !== 'later' ? `\n🗓 ${o.slot.split(' ')[0].split('-').reverse().join('.')} ${o.slot.split(' ')[1] || ''}` : '';
-  await telegram(`${review ? '🔎 הזמנה אונליין לבדיקה לפני תשלום' : '🛒 הזמנה אונליין חדשה (ממתינה לתשלום)'}\n${svc.title} · ${ils(o.price.total)}\n👤 ${o.c.name}\n📞 ${o.c.phone}\n✉️ ${o.c.email}${when}${review ? `\n⚠️ ${o.review.join(', ')}` : ''}\nמספר: ${id}`).catch(() => false);
+  await telegram(`${review ? '🔎 הזמנה אונליין לבדיקה לפני תשלום' : '🛒 הזמנה אונליין חדשה (ממתינה לתשלום)'}\n${svc.title} · ${ils(o.price.total)}\n👤 ${o.c.name}\n📞 ${o.c.phone}\n✉️ ${o.c.email}${when}${review ? `\n⚠️ ${o.review.join(', ')}` : ''}${o.src && o.src.chName ? `\n📣 מקור: ${o.src.chName}` : ''}\nמספר: ${id}`).catch(() => false);
   await mail(o.c.email, review ? `קיבלנו את הפרטים: ${svc.title}` : `ההזמנה התקבלה: ${svc.title}`, receipt({ ...o, files, status, payUrl }, svc, id)).catch(() => null);
   return json({ ok: true, payUrl });
 }
