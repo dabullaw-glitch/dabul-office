@@ -1,2 +1,2 @@
-v5b-online https://dabullaw-glitch.github.io/dabul-office/media/preview/online5/online.html?v=2
-v5b-tabu https://dabullaw-glitch.github.io/dabul-office/media/preview/online5/tabu-registration.html?v=2
+ft-online https://dabullaw-glitch.github.io/dabul-office/media/preview/footer/footer-online.html
+menu-live https://dabullaw.co.il/?m=2
