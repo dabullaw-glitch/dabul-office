@@ -46,6 +46,12 @@ if (!function_exists('dabul_online_slug')) {
 		if (is_admin()) return;
 		echo '<script nowprocket data-no-optimize="1" data-no-minify="1">' . '(function(){var K=\'dabul_src_v1\',o={};try{o=JSON.parse(localStorage.getItem(K)||\'{}\')||{}}catch(e){o={}}var q=new URLSearchParams(location.search),r=document.referrer||\'\',x=r&&r.indexOf(location.host)<0,u=[\'utm_source\',\'utm_medium\',\'utm_campaign\',\'gclid\',\'fbclid\'].some(function(k){return q.get(k)});if(u||x||!o.first){var v={ref:x?r.slice(0,200):\'\',landing:location.href.split(\'#\')[0].slice(0,300),at:new Date().toISOString()};[\'utm_source\',\'utm_medium\',\'utm_campaign\',\'utm_term\',\'utm_content\',\'gclid\',\'fbclid\'].forEach(function(k){if(q.get(k))v[k]=q.get(k).slice(0,120)});var d=o.first&&o.first.at&&(Date.now()-Date.parse(o.first.at))<7776e6;if(!d)o.first=v;if(u||x)o.last=v}if(r&&!x)o.from=r.split(\'#\')[0].slice(0,300);try{localStorage.setItem(K,JSON.stringify(o))}catch(e){}})();' . '</script>' . "\n";
 	}, 3);
+	// on the service pages, the page's own order bar (price + "להזמנה") replaces the site's call/WhatsApp bar while it shows,
+	// so the two bars never sit on top of each other on the phone
+	add_action('wp_head', function () {
+		if (is_admin() || dabul_online_slug() === '') return;
+		echo '<style id="dbl-onl-bars">#dbl-cbar{transition:transform .25s,opacity .25s}body:has(.dz .mbar.on) #dbl-cbar{transform:translateY(160%);opacity:0;pointer-events:none}.dz .mbar{z-index:9991}</style>' . "\n";
+	}, 40);
 	add_filter('the_content', function ($c) {
 		if (is_admin() || !is_page('checklist') || !in_the_loop() || !is_main_query()) return $c;
 		$p = get_page_by_path('online');
