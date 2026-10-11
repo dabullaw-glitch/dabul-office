@@ -63,8 +63,7 @@ ADV = [('tag', 'מחיר ידוע מראש', 'רואים את המחיר הסו�
        ('car', 'בלי נסיעות ובלי המתנה', 'ממלאים מהטלפון, בזמן שנוח לכם. גם בערב.'),
        ('user', 'עורך הדין עצמו מטפל', 'עו״ד יקיר דבול קורא כל הזמנה ומטפל בה, מההתחלה ועד הסוף.'),
        ('lock', 'תשלום מאובטח וקבלה', 'אשראי או ביט, וקבלה נשלחת אליכם למייל.'),
-       ('mail', 'עדכון בכל שלב', 'מייל כשההזמנה מתקבלת, כשמתחילים, וכשהתשובה מוכנה.'),
-       ('back', 'החזר מלא', 'מבטלים לפני שהטיפול התחיל? כל הסכום חוזר אליכם.')]
+       ('mail', 'עדכון בכל שלב', 'מייל כשההזמנה מתקבלת, כשמתחילים, וכשהתשובה מוכנה.')]
 STATS = [('+100', 'עסקאות מקרקעין בכל שנה'), (RATING + '★', 'דירוג בגוגל, %d ביקורות' % NREV), ('9', 'שירותים במחיר קבוע'), ('1', 'עורך דין שמטפל מההתחלה עד הסוף')]
 
 CSS = r"""<style>
@@ -314,7 +313,7 @@ def hub(ld, photo_src):
     hero = ('<div class="hero"><div class="w"><p class="crumb"><a href="/">דף הבית</a> › שירותים משפטיים אונליין</p><div class="hg"><div>'
             '<span class="kick">שירותים משפטיים אונליין · מחיר קבוע</span><h1>עורך דין, <span class="hm">בלי לצאת</span> מהבית.</h1>'
             '<p class="lead">בוחרים שירות, ממלאים טופס קצר ומשלמים באתר. עו״ד יקיר דבול מטפל בעצמו, ואתם יודעים מראש כמה זה עולה ומתי תקבלו תשובה.</p>'
-            '<ul class="t"><li>%s<span>9 שירותים ב-5 תחומים, לכל אחד מחיר קבוע</span></li><li>%s<span>תשלום מאובטח באתר, קבלה למייל</span></li><li>%s<span>החזר מלא אם מבטלים לפני שהטיפול התחיל</span></li></ul>'
+            '<ul class="t"><li>%s<span>9 שירותים ב-5 תחומים, לכל אחד מחיר קבוע</span></li><li>%s<span>תשלום מאובטח באתר, קבלה למייל</span></li><li>%s<span>עורך הדין מטפל בעצמו, מההתחלה ועד הסוף</span></li></ul>'
             '<div class="btns"><a class="btn y" href="#services">לבחירת שירות ←</a><a class="btn g" href="tel:098613413">%sשאלה לפני? 09-8613413</a></div>'
             '<a class="rate" href="%s" target="_blank" rel="noopener nofollow">%s<b>%s</b> · %d ביקורות בגוגל</a></div>%s</div></div></div>') % (
         ic('check', '2.4'), ic('check', '2.4'), ic('check', '2.4'), ic('phone'), GOOGLE, STAR5, RATING, NREV, video('hub', 'איך מזמינים שירות משפטי אונליין'))
@@ -356,8 +355,8 @@ def service(sid, ld, photo_src):
     hero = ('<div class="hero"><div class="w"><p class="crumb"><a href="/">דף הבית</a> › <a href="/online/">שירותים משפטיים אונליין</a> › %s</p><div class="hg"><div>%s</div>%s</div></div></div>') % (esc(s['title']), right, media)
     pv = ('%s כולל מע״מ' % P.vat(fp)) if not is_from(sid) else 'המחיר המדויק מחושב בטופס'
     pbar = ('<div class="pbar"><div class="w"><div class="in"><div class="pr"><small>%s</small><b>%s</b><em>+ מע״מ</em><span class="v">%s</span></div>'
-            '<div class="f">%s<div><b>זמן</b><span>%s</span></div></div><div class="f">%s<div><b>איך</b><span>%s</span></div></div><div class="f">%s<div><b>החזר מלא</b><span>אם מבטלים לפני תחילת הטיפול</span></div></div>'
-            '<a class="btn y" href="#order">להזמנה ←</a></div></div></div>') % ('החל מ־' if is_from(sid) else 'מחיר קבוע', ils(fp), esc(pv), ic('clock'), esc(HB.TIME[sid]), ic(SIGN_ICON[sig]), esc(SIGN_TXT[sig]), ic('back'))
+            '<div class="f">%s<div><b>זמן</b><span>%s</span></div></div><div class="f">%s<div><b>איך</b><span>%s</span></div></div><div class="f">%s<div><b>תשלום</b><span>מאובטח באתר, קבלה למייל</span></div></div>'
+            '<a class="btn y" href="#order">להזמנה ←</a></div></div></div>') % ('החל מ־' if is_from(sid) else 'מחיר קבוע', ils(fp), esc(pv), ic('clock'), esc(HB.TIME[sid]), ic(SIGN_ICON[sig]), esc(SIGN_TXT[sig]), ic('lock'))
     st = P.STEPS[sig]
     how = '<section class="cream" style="margin-top:56px"><div class="w"><span class="kick">איך זה עובד</span><h2>ארבעה צעדים פשוטים</h2>%s<p class="sla">%s%s</p></div></section>' % (
         steps_path([(STEP_ICONS[k], a, b, '') for k, (a, b) in enumerate(st)], 4), ic('clock'), esc(s['sla']))
@@ -369,8 +368,8 @@ def service(sid, ld, photo_src):
     order = ('<section class="order" id="order"><div class="w"><div class="oh"><span class="kick">ההזמנה</span><h2>מזמינים בכמה דקות</h2>'
              '<p class="lead">ממלאים שלב אחרי שלב. בסוף רואים את המחיר הסופי, ורק אז משלמים.</p></div>'
              '<div class="prep">%s</div><div class="form">%s</div>'
-             '<div class="pay"><span>%sתשלום מאובטח</span><span>%sקבלה למייל</span><span>%sביטול לפני תחילת הטיפול: החזר מלא</span></div></div></section>') % (
-        ''.join('<span><b>✓</b> %s</span>' % esc(x) for x in c['prep']), P.app_embed(sid), ic('lock'), ic('mail'), ic('back'))
+             '<div class="pay"><span>%sתשלום מאובטח</span><span>%sקבלה למייל</span><span>%sעורך הדין מטפל בעצמו</span></div></div></section>') % (
+        ''.join('<span><b>✓</b> %s</span>' % esc(x) for x in c['prep']), P.app_embed(sid), ic('lock'), ic('mail'), ic('user'))
     ex_h, ex_b = c['extra']
     extra = '<section style="padding-bottom:0"><div class="w"><span class="kick">חשוב לדעת</span><h2>%s</h2><div class="box" style="border-inline-start:5px solid %s;max-width:860px">%s</div></div></section>' % (esc(ex_h), d[2], ex_b)
     rel_ids = [x for x in c['rel']]

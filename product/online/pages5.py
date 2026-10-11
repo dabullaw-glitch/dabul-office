@@ -120,7 +120,7 @@ def advantages5(title='למה להזמין אצלנו אונליין', sid='prec
     wide = ('<div class="bx wide" style="--c:#FFE14D"><span class="bi">%s</span><div><b>החזר מלא</b><span class="t">מבטלים לפני שהטיפול התחיל? כל הסכום חוזר אליכם. בלי שאלות ובלי דמי ביטול.</span></div>'
             '<span class="seal"><span><strong>100%%</strong>החזר לפני<br>תחילת הטיפול</span></span><span class="bg">%s</span></div>') % (B.ic('back', '2'), B.ic('back', '1.2'))
     return ('<section class="advs"><div class="w"><span class="kick">היתרונות</span><h2>%s</h2><p class="lead">שירות משפטי אמיתי, עם עורך דין אמיתי. רק בלי הנסיעה, בלי ההמתנה ובלי הפתעות במחיר.</p>'
-            '<div class="bento">%s%s%s</div></div></section>') % (esc(title), big, small, wide)
+            '<div class="bento">%s%s</div></div></section>') % (esc(title), big, small)  # refund card removed (Yakir 11.10)
 
 def upgrade_buttons(h):
     # <a class="btn ..">label ←</a>  ->  label + round arrow chip;  <a class="btn .."><svg..>label</a>  ->  icon chip + label
