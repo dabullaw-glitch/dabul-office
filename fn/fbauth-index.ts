@@ -6,11 +6,15 @@
 // Facebook redirects back here (GET ?code=&state=): the code becomes a long-lived user token, then the token of the
 // Facebook page linked to Instagram (a page token taken from a long-lived user token does not expire). Both are stored in
 // app_secrets (IG_TOKEN, IG_PAGE_TOKEN) and settings/pub.ig is marked connected, the same shape socialpub already uses.
+// 11.10.2026 (Yakir: Claude runs the Meta ad campaigns end to end): when settings/fbauth.purpose is 'ads' the same dialog asks
+// for the ads permissions, and the long-lived user token is stored as META_ADS_TOKEN (IG_TOKEN is not touched).
+// The ad accounts and pages it can use are saved in settings/ads.meta.
 import { loadSecrets, json, cors, admin, env } from '../_shared/common.ts';
 // deno-lint-ignore no-explicit-any
 type Any = any;
 const FB = 'https://graph.facebook.com/v21.0';
 const SCOPES = 'instagram_basic,instagram_content_publish,pages_show_list,pages_read_engagement,business_management';
+const ADS_SCOPES = 'ads_management,ads_read,business_management,pages_show_list,pages_read_engagement,pages_manage_ads,instagram_basic';
 const OFFICE = 'https://dabullaw-glitch.github.io/dabul-office/';
 const db = () => admin().from('docs');
 const getDoc = async (coll: string, id: string): Promise<Any> => { const { data } = await db().select('data').match({ coll, id }).maybeSingle(); return data ? data.data : null; };
@@ -43,16 +47,40 @@ async function officeUser(req: Request): Promise<string | null> {
   const { data: u } = await admin().from('office_users').select('email').ilike('email', email).limit(1);
   return u && u.length ? email : null;
 }
+async function adsCallback(code: string, id: string, secret: string) {
+  await merge('settings', 'fbauth', { purpose: '' });
+  try {
+    const short = await graph('/oauth/access_token', { client_id: id, client_secret: secret, redirect_uri: redirect(), code });
+    const long = await graph('/oauth/access_token', { grant_type: 'fb_exchange_token', client_id: id, client_secret: secret, fb_exchange_token: short.access_token });
+    const t = long.access_token;
+    const perms = ((await graph('/me/permissions', { access_token: t })).data || []).filter((p: Any) => p.status === 'granted').map((p: Any) => p.permission);
+    if (!perms.includes('ads_management')) {
+      return page('חסרה הרשאה לניהול מודעות', '<p>ההתחברות הצליחה, אבל בחלון של פייסבוק לא אושרה ההרשאה לניהול מודעות. אפשר לפתוח שוב את הקישור ולאשר את כל ההרשאות.</p>', false, 400);
+    }
+    await setSecret('META_ADS_TOKEN', t);
+    const accts = ((await graph('/me/adaccounts', { fields: 'account_id,name,account_status,currency,timezone_name', limit: '50', access_token: t })).data || [])
+      .map((a: Any) => ({ id: a.account_id, name: a.name, status: a.account_status, currency: a.currency, tz: a.timezone_name }));
+    const pages = ((await graph('/me/accounts', { fields: 'id,name,instagram_business_account{id,username}', limit: '50', access_token: t })).data || [])
+      .map((p: Any) => ({ id: p.id, name: p.name, ig: p.instagram_business_account ? p.instagram_business_account.id : '', igUser: p.instagram_business_account ? p.instagram_business_account.username : '' }));
+    await merge('settings', 'ads', { meta: { ok: true, saved: new Date().toISOString(), perms, accounts: accts, pages } });
+    await tg(`✅ חשבון המודעות של מטא מחובר למערכת המשרד (${accts.map((a: Any) => a.name).join(', ') || 'לא נמצאו חשבונות'}). מעכשיו Claude יכול להעלות ולנהל את הקמפיינים בעצמו. שום קמפיין לא יעלה בלי האישור שלך.`);
+    return page('חשבון המודעות מחובר', `<p>המערכת מחוברת עכשיו לחשבון המודעות: <b>${esc(accts.map((a: Any) => a.name).join(', '))}</b>.</p><p>Claude יכין את הקמפיין בחשבון במצב מושהה, ושום דבר לא ירוץ בלי האישור שלך.</p>`);
+  } catch (e) {
+    await merge('settings', 'ads', { meta: { ok: false, error: String((e as Error).message || e).slice(0, 200), saved: new Date().toISOString() } });
+    return page('החיבור לא הושלם', `<p>${esc(String((e as Error).message || e).slice(0, 300))}</p>`, false, 500);
+  }
+}
 async function callback(url: URL) {
   const err = url.searchParams.get('error_description') || url.searchParams.get('error');
   if (err) return page('החיבור בוטל', `<p>פייסבוק החזיר: ${esc(err)}</p><p>אפשר לנסות שוב מהכפתור במערכת.</p>`, false);
   const code = url.searchParams.get('code') || '', state = url.searchParams.get('state') || '';
   const st = (await getDoc('settings', 'fbauth')) || {};
-  if (!code || !state || state !== st.state || Date.now() - Date.parse(st.stateAt || 0) > 20 * 60e3) return page('הקישור פג', '<p>צריך ללחוץ שוב על "התחבר עם פייסבוק" במערכת המשרד.</p>', false, 400);
+  if (!code || !state || state !== st.state || Date.now() - Date.parse(st.stateAt || 0) > (st.purpose === 'ads' ? 48 * 3600e3 : 20 * 60e3)) return page('הקישור פג', '<p>צריך ללחוץ שוב על "התחבר עם פייסבוק" במערכת המשרד.</p>', false, 400);
   await merge('settings', 'fbauth', { state: '', usedAt: new Date().toISOString() });
   const { data: cs } = await admin().from('app_secrets').select('k,v').in('k', ['META_APP_ID', 'META_APP_SECRET']);
   const cm: Record<string, string> = Object.fromEntries((cs || []).map((r: Any) => [r.k, r.v]));
   const id = cm.META_APP_ID || '', secret = cm.META_APP_SECRET || '';
+  if (st.purpose === 'ads') return await adsCallback(code, id, secret);
   try {
     const short = await graph('/oauth/access_token', { client_id: id, client_secret: secret, redirect_uri: redirect(), code });
     const long = await graph('/oauth/access_token', { grant_type: 'fb_exchange_token', client_id: id, client_secret: secret, fb_exchange_token: short.access_token });
@@ -106,11 +134,20 @@ Deno.serve(async (req) => {
       await merge('settings', 'fbauth', { appSavedAt: new Date().toISOString(), appSavedBy: who });
       return json({ ok: true });
     }
+    if (b.action === 'start-ads') {
+      const { data: rs } = await admin().from('app_secrets').select('k,v').in('k', ['META_APP_ID', 'META_APP_SECRET']);
+      const m: Record<string, string> = Object.fromEntries((rs || []).map((r: Any) => [r.k, r.v]));
+      if (!m.META_APP_ID || !m.META_APP_SECRET) return json({ error: 'קודם שומרים את פרטי האפליקציה' }, 400);
+      const state = rnd(); await merge('settings', 'fbauth', { state, stateAt: new Date().toISOString(), by: who, purpose: 'ads' });
+      const u = new URL('https://www.facebook.com/v21.0/dialog/oauth');
+      u.searchParams.set('client_id', m.META_APP_ID); u.searchParams.set('redirect_uri', redirect()); u.searchParams.set('state', state); u.searchParams.set('response_type', 'code'); u.searchParams.set('scope', ADS_SCOPES);
+      return json({ url: u.toString() });
+    }
     if (b.action === 'start') {
       const { data: rs } = await admin().from('app_secrets').select('k,v').in('k', ['META_APP_ID', 'META_APP_SECRET', 'META_LOGIN_CONFIG_ID']);
       const m: Record<string, string> = Object.fromEntries((rs || []).map((r: Any) => [r.k, r.v]));
       if (!m.META_APP_ID || !m.META_APP_SECRET) return json({ error: 'קודם שומרים את פרטי האפליקציה' }, 400);
-      const state = rnd(); await merge('settings', 'fbauth', { state, stateAt: new Date().toISOString(), by: who });
+      const state = rnd(); await merge('settings', 'fbauth', { state, stateAt: new Date().toISOString(), by: who, purpose: '' });
       const u = new URL('https://www.facebook.com/v21.0/dialog/oauth');
       u.searchParams.set('client_id', m.META_APP_ID); u.searchParams.set('redirect_uri', redirect()); u.searchParams.set('state', state); u.searchParams.set('response_type', 'code');
       if (m.META_LOGIN_CONFIG_ID) { u.searchParams.set('config_id', m.META_LOGIN_CONFIG_ID); u.searchParams.set('override_default_response_type', 'true'); }
