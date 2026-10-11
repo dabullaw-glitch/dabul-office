@@ -90,8 +90,10 @@ function postBody(row: any, ch: string, acc: number, pst: any) {
   } else if (pst.kind === 'image') {
     body.content_type = pst.media.length > 1 ? 'carousel' : 'image';
     body.media = pst.media.map((id: number) => ({ media_id: id }));
-  } else if (row.link && (ch === 'facebook' || ch === 'linkedin' || ch === 'gbp')) { body.content_type = 'link'; body.link_url = row.link; }
+  } else if (row.link && (ch === 'facebook' || ch === 'linkedin')) { body.content_type = 'link'; body.link_url = row.link; }
   else body.content_type = 'text';
+  // Google Business: the link goes on a "Learn more" button (Google does not want links or phone numbers in the text)
+  if (ch === 'gbp') { const u = row.gbpLink || row.link || 'https://dabullaw.co.il/'; if (u) body.google_business_profile = { button_type: 'LEARN_MORE', button_url: u }; text = text.replace(/https?:\/\/\S+/g, '').replace(/\n{3,}/g, '\n\n').trim(); }
   if (row.link && body.content_type !== 'link' && (ch === 'facebook' || ch === 'linkedin') && !text.includes(row.link)) text += `\n\n${row.link}`;
   body.caption = text.slice(0, ch === 'instagram' ? 2150 : ch === 'tiktok' ? 2200 : ch === 'gbp' ? 1450 : 5000);
   if (ch === 'tiktok') body.tiktok = { who_can_watch: 'public', allow_comments: true, allow_duet: false, allow_stitch: false, your_brand: false, branded_content: false, disclose_post_content: false, auto_add_music: false };
@@ -108,6 +110,7 @@ async function publish() {
   const accOf = (ch: string) => (acc.find((a: any) => a.network === NET[ch]) || {}).id;
   const ws = pc.workspace || await workspace();
   const now = Date.now(); const from = new Date(now - 30 * 3600e3).toISOString().slice(0, 10);
+  const budget = now + 80e3;
   const { data: rows } = await admin().from('docs').select('id,data').eq('coll', 'pub').in('data->>owner', ['office', 'system']).eq('data->>status', 'planned').gte('data->>at', from).order('data->>at');
   for (const r of rows || []) {
     const row = r.data, t = ilToMs(row.at);
@@ -127,7 +130,12 @@ async function publish() {
           }
           pst = { kind: m.kind, media: ids, thumb, at: new Date().toISOString() };
           await merge('pub', r.id, { pst }); log.push(`${r.id}: media imported (${m.kind})`);
-          if (ids.length) continue;
+          // give Postoria up to a minute (within this run's time budget) so the post goes out close to its time
+          for (let i = 0; i < 12 && ids.length && Date.now() < budget; i++) {
+            await new Promise(res2 => setTimeout(res2, 5000));
+            const sts = await Promise.all(ids.map(id => pst_(`/workspaces/${ws}/media/${id}`)));
+            if (sts.every(s => s.j && (s.j.status === 'ready' || s.j.status === 'failed'))) break;
+          }
         }
         const wait = [...pst.media, ...(pst.thumb ? [pst.thumb] : [])];
         let ready = true;
@@ -154,7 +162,15 @@ async function publish() {
         else if (g.status === 'posted' || x.link_to_post) res[ch] = { ok: true, via: 'postoria', postId: res[ch].pending, url: x.link_to_post || '', at: res[ch].at };
       }
     } catch (e) { for (const ch of todo) if (!res[ch] || !res[ch].ok) res[ch] = { ok: false, via: 'postoria', error: String((e as Error).message || e).slice(0, 300) }; }
-    const allOk = chans.every(c => res[c] && res[c].ok);
+    // X (and any channel outside Postoria) is published by another function (bufauth): re-read its latest result so it is
+    // never overwritten, and mark the row published only when those channels went out too
+    const others = ((row.channels || []) as string[]).filter(c => !NET[c]);
+    if (others.length) {
+      const { data: cur } = await admin().from('docs').select('data').match({ coll: 'pub', id: r.id }).maybeSingle();
+      const cres = (cur && cur.data && cur.data.result) || {};
+      for (const c of others) if (cres[c]) res[c] = cres[c];
+    }
+    const allOk = chans.every(c => res[c] && res[c].ok) && others.every(c => res[c] && res[c].ok);
     const failed = chans.filter(c => res[c] && res[c].ok === false && !res[c].pending);
     const late = now - t > 3.5 * 3600e3;
     const status = allOk ? 'published' : late ? 'missed' : 'planned';
