@@ -311,7 +311,7 @@ HUB_STEPS = [('form', 'בוחרים שירות', 'לכל שירות מחיר ק�
 
 def hub(ld, photo_src):
     hero = ('<div class="hero"><div class="w"><p class="crumb"><a href="/">דף הבית</a> › שירותים משפטיים אונליין</p><div class="hg"><div>'
-            '<span class="kick">שירותים משפטיים אונליין · מחיר קבוע</span><h1>עורך דין, <span class="hm">בלי לצאת</span> מהבית.</h1>'
+            '<span class="kick">מחיר קבוע · הזמנה מהטלפון</span><h1><span class="h1k">שירותים משפטיים אונליין:</span> עורך דין, <span class="hm">בלי לצאת</span> מהבית.</h1>'
             '<p class="lead">בוחרים שירות, ממלאים טופס קצר ומשלמים באתר. עו״ד יקיר דבול מטפל בעצמו, ואתם יודעים מראש כמה זה עולה ומתי תקבלו תשובה.</p>'
             '<ul class="t"><li>%s<span>9 שירותים ב-5 תחומים, לכל אחד מחיר קבוע</span></li><li>%s<span>תשלום מאובטח באתר, קבלה למייל</span></li><li>%s<span>עורך הדין מטפל בעצמו, מההתחלה ועד הסוף</span></li></ul>'
             '<div class="btns"><a class="btn y" href="#services">לבחירת שירות ←</a><a class="btn g" href="tel:098613413">%sשאלה לפני? 09-8613413</a></div>'
