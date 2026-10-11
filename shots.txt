@@ -1,2 +1,2 @@
-ft-online2 https://dabullaw-glitch.github.io/dabul-office/media/preview/footer/footer-online.html?v=2
-home-live3 https://dabullaw.co.il/
+fta https://dabullaw-glitch.github.io/dabul-office/media/preview/footer/footer-online-a.html
+ftb https://dabullaw-glitch.github.io/dabul-office/media/preview/footer/footer-online-b.html
