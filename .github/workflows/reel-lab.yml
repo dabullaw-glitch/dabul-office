@@ -27,7 +27,7 @@ jobs:
           set -e
           mkdir -p reel-lab; exec > >(tee -a reel-lab/_log.txt) 2>&1
           while read -r name id; do
-            [ -n "$id" ] || continue
+            case "$name" in \#*|"") continue;; esac; [ -n "$id" ] || continue
             out="reel-lab/$name"; [ -f "$out/words.json" ] && { echo "skip $name"; continue; }
             mkdir -p "$out" /tmp/raw
             curl -fsSL --retry 3 "https://drive.usercontent.google.com/download?id=$id&export=download&confirm=t" -o /tmp/raw/$name.mov
