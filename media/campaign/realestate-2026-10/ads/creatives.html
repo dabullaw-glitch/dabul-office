@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><title>creatives</title>
+<style>
+@font-face{font-family:H;src:url(../../../docs/buyer-checklist/fonts/heebo-hebrew-400-normal.woff2);font-weight:400}
+@font-face{font-family:H;src:url(../../../docs/buyer-checklist/fonts/heebo-hebrew-500-normal.woff2);font-weight:500}
+@font-face{font-family:H;src:url(../../../docs/buyer-checklist/fonts/heebo-hebrew-700-normal.woff2);font-weight:700}
+@font-face{font-family:H;src:url(../../../docs/buyer-checklist/fonts/heebo-hebrew-800-normal.woff2);font-weight:800}
+@font-face{font-family:H;src:url(../../../docs/buyer-checklist/fonts/heebo-latin-700-normal.woff2);font-weight:700;unicode-range:U+0000-00FF}
+@font-face{font-family:F;src:url(../../../docs/buyer-checklist/fonts/frank-ruhl-libre-hebrew-700-normal.woff2);font-weight:700}
+@font-face{font-family:F;src:url(../../../docs/buyer-checklist/fonts/frank-ruhl-libre-latin-700-normal.woff2);font-weight:700;unicode-range:U+0000-00FF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#555;font-family:H,sans-serif;display:flex;flex-wrap:wrap;gap:40px;padding:40px}
+.c{position:relative;overflow:hidden;background:#111318;color:#eee7d6;isolation:isolate;flex:none}
+.sq{width:1080px;height:1080px}.st{width:1080px;height:1920px}
+.c .bg{position:absolute;inset:0;background:url(img/netanya-night.webp) center 75%/cover;opacity:.28;z-index:-2}
+.c .sh{position:absolute;inset:0;background:linear-gradient(270deg,rgba(17,19,24,.97) 0%,rgba(17,19,24,.9) 50%,rgba(17,19,24,.35) 100%);z-index:-1}
+.st .sh{background:linear-gradient(180deg,rgba(17,19,24,.97) 0%,rgba(17,19,24,.88) 55%,rgba(17,19,24,.4) 100%)}
+.c .fr{position:absolute;inset:28px;border:2px solid rgba(201,168,92,.45);pointer-events:none}
+.brand{position:absolute;top:70px;right:76px;font-family:F,serif;font-weight:700;font-size:40px;color:#fff;line-height:1.05}
+.brand small{display:block;font-family:H,sans-serif;font-weight:500;font-size:22px;color:#e4d19c;letter-spacing:.03em;margin-top:6px}
+.kick{color:#c9a85c;font-weight:700;font-size:30px;letter-spacing:.02em}
+h1{font-family:F,serif;font-weight:700;color:#fff;line-height:1.02}
+h1 em{font-style:normal;color:#c9a85c}
+.sub{color:#d6cfbf;font-size:33px;line-height:1.45;font-weight:400}
+.chips{display:flex;flex-wrap:wrap;gap:14px}
+.chips span{display:inline-flex;align-items:center;gap:12px;border:2px solid rgba(201,168,92,.55);border-radius:999px;padding:10px 24px 10px 22px;font-size:29px;font-weight:500;color:#f2ecdf}
+.chips span:before{content:"";width:22px;height:22px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9a85c' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E") center/contain no-repeat}
+.cta{display:inline-flex;align-items:center;gap:16px;background:#c9a85c;color:#14130f;font-weight:800;font-size:34px;border-radius:999px;padding:22px 44px}
+.foot{position:absolute;bottom:68px;right:76px;left:76px;display:flex;justify-content:space-between;align-items:center;font-size:27px;color:#bdb6a7}
+.foot b{direction:ltr;color:#e4d19c;font-size:34px;font-weight:700}
+.yak{position:absolute;bottom:0;left:40px;height:900px;z-index:0;filter:drop-shadow(0 30px 40px rgba(0,0,0,.5))}
+.st .yak{height:900px;left:auto;right:50%;transform:translateX(50%);bottom:0}
+.tx{position:absolute;right:76px;z-index:1}
+.sq .tx{top:200px;width:610px}
+.sq h1{font-size:94px;margin:16px 0 26px}
+.sq .sub{font-size:31px;margin-bottom:34px}
+.sq .chips{margin-bottom:44px;max-width:600px}
+.st .brand{top:250px}.st .tx{top:420px;left:76px}
+.st h1{font-size:112px;margin:18px 0 26px}
+.st .sub{font-size:40px;max-width:900px;margin-bottom:40px}
+.st .chips span{font-size:34px}
+.st .cta{font-size:40px;padding:26px 54px}
+.st .foot{bottom:390px;z-index:2;background:rgba(17,19,24,.82);padding:22px 30px;border-radius:20px;border:1px solid rgba(201,168,92,.35);right:60px;left:60px}
+.st .ctabox{position:absolute;bottom:530px;right:0;left:0;text-align:center;z-index:2}
+/* checklist mock */
+.doc{position:absolute;z-index:0;box-shadow:0 40px 80px rgba(0,0,0,.6);border-radius:6px}
+.sq .d1{width:370px;left:62px;top:250px;transform:rotate(-5deg)}
+.sq .d2{width:330px;left:170px;top:330px;transform:rotate(5deg);z-index:-1;opacity:.95}
+.st .d1{width:520px;left:110px;bottom:660px;transform:rotate(-5deg)}
+.st .d2{width:480px;right:130px;bottom:620px;transform:rotate(5deg);z-index:-1}
+.badge{position:absolute;z-index:2;width:190px;height:190px;border-radius:50%;background:#c9a85c;color:#14130f;display:grid;place-items:center;text-align:center;font-weight:800;line-height:1;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.badge b{display:block;font-family:F,serif;font-size:84px}
+.badge span{font-size:25px}
+.sq .badge{left:330px;top:170px;width:160px;height:160px}.sq .badge b{font-size:70px}.sq .badge span{font-size:22px}
+.st .badge{left:560px;bottom:1180px;width:200px;height:200px}
+.cl .sq .tx,.sq.cl .tx{width:560px}
+#cl-st .d1{width:380px;left:auto;right:430px;top:400px;bottom:auto;transform:rotate(-6deg)}
+#cl-st .d2{width:360px;right:220px;top:450px;bottom:auto;transform:rotate(6deg)}
+#cl-st .badge{left:auto;right:150px;top:360px;bottom:auto;width:190px;height:190px}
+#cl-st .tx{top:1010px}
+#cl-st h1{font-size:96px;margin:14px 0 20px}
+#cl-st .sub{font-size:36px}
+</style></head><body>
+
+<!-- 1 BUY square -->
+<div class="c sq" id="buy-sq"><div class="bg"></div><div class="sh"></div><div class="fr"></div>
+ <div class="brand">יקיר דבול<small>משרד עורכי דין · נדל"ן ומקרקעין</small></div>
+ <img class="yak" src="img/yakir-cutout.webp" alt="">
+ <div class="tx"><div class="kick">נתניה והשרון</div><h1>קונים דירה<br><em>יד שנייה?</em></h1>
+ <p class="sub">בודקים הכל לפני שחותמים, עם עורך הדין שמלווה את העסקה מההתחלה ועד הטאבו.</p>
+ <div class="chips"><span>נסח טאבו</span><span>תיק בעירייה</span><span>חוזה</span><span>מס רכישה</span></div>
+ <span class="cta">לשיחה עם עורך הדין ←</span></div>
+ <div class="foot"><span>עו"ד יקיר דבול · רזיאל 1, נתניה</span><b>09-8613413</b></div>
+</div>
+
+<!-- 2 SELL square -->
+<div class="c sq" id="sell-sq"><div class="bg"></div><div class="sh"></div><div class="fr"></div>
+ <div class="brand">יקיר דבול<small>משרד עורכי דין · נדל"ן ומקרקעין</small></div>
+ <img class="yak" src="img/yakir-cutout.webp" alt="">
+ <div class="tx"><div class="kick">נתניה והשרון</div><h1>מוכרים<br><em>דירה?</em></h1>
+ <p class="sub">מכינים את המסמכים ומחשבים את מס השבח לפני שמפרסמים. כך הקונה מקבל תשובות מהר.</p>
+ <div class="chips"><span>משכנתא</span><span>מס שבח</span><span>חוזה</span><span>רישום</span></div>
+ <span class="cta">לשיחה עם עורך הדין ←</span></div>
+ <div class="foot"><span>עו"ד יקיר דבול · רזיאל 1, נתניה</span><b>09-8613413</b></div>
+</div>
+
+<!-- 3 CHECKLIST square -->
+<div class="c sq cl" id="cl-sq"><div class="bg"></div><div class="sh" style="background:linear-gradient(270deg,rgba(17,19,24,.98) 0%,rgba(17,19,24,.92) 55%,rgba(17,19,24,.6) 100%)"></div><div class="fr"></div>
+ <div class="brand">יקיר דבול<small>משרד עורכי דין · נדל"ן ומקרקעין</small></div>
+ <img class="doc d2" src="img/cl-p3-3.png" alt=""><img class="doc d1" src="img/cl-cover-1.png" alt="">
+ <div class="badge"><div><b>30</b><span>בדיקות</span></div></div>
+ <div class="tx" style="width:470px"><div class="kick">צ'קליסט PDF להורדה</div><h1 style="font-size:76px">לפני שקונים<br><em>דירה יד שנייה</em></h1>
+ <p class="sub" style="font-size:30px">30 בדיקות ב-7 שלבים, מההצעה ועד הרישום. לכל בדיקה: איפה בודקים ומקור רשמי.</p>
+ <span class="cta">להורדת הצ'קליסט ←</span></div>
+ <div class="foot"><span>עו"ד יקיר דבול · נתניה</span><b>dabullaw.co.il</b></div>
+</div>
+
+<!-- 4 BUY story -->
+<div class="c st" id="buy-st"><div class="bg"></div><div class="sh"></div><div class="fr"></div>
+ <div class="brand">יקיר דבול<small>משרד עורכי דין · נדל"ן ומקרקעין</small></div>
+ <img class="yak" src="img/yakir-cutout.webp" alt="" style="opacity:.96">
+ <div class="tx"><div class="kick">נתניה והשרון</div><h1>קונים דירה<br><em>יד שנייה?</em></h1>
+ <p class="sub">בודקים הכל לפני שחותמים, עם עורך הדין שמלווה את העסקה מההתחלה ועד הטאבו.</p>
+ <div class="chips"><span>נסח טאבו</span><span>תיק בעירייה</span><span>חוזה</span><span>מס רכישה</span></div></div>
+ <div class="ctabox"><span class="cta">לשיחה עם עורך הדין ←</span></div>
+ <div class="foot"><span>עו"ד יקיר דבול · רזיאל 1, נתניה</span><b>09-8613413</b></div>
+</div>
+
+<!-- 5 SELL story -->
+<div class="c st" id="sell-st"><div class="bg"></div><div class="sh"></div><div class="fr"></div>
+ <div class="brand">יקיר דבול<small>משרד עורכי דין · נדל"ן ומקרקעין</small></div>
+ <img class="yak" src="img/yakir-cutout.webp" alt="" style="opacity:.96">
+ <div class="tx"><div class="kick">נתניה והשרון</div><h1>מוכרים<br><em>דירה?</em></h1>
+ <p class="sub">מכינים את המסמכים ומחשבים את מס השבח לפני שמפרסמים. כך הקונה מקבל תשובות מהר.</p>
+ <div class="chips"><span>משכנתא</span><span>מס שבח</span><span>חוזה</span><span>רישום</span></div></div>
+ <div class="ctabox"><span class="cta">לשיחה עם עורך הדין ←</span></div>
+ <div class="foot"><span>עו"ד יקיר דבול · רזיאל 1, נתניה</span><b>09-8613413</b></div>
+</div>
+
+<!-- 6 CHECKLIST story -->
+<div class="c st" id="cl-st"><div class="bg"></div><div class="sh"></div><div class="fr"></div>
+ <div class="brand">יקיר דבול<small>משרד עורכי דין · נדל"ן ומקרקעין</small></div>
+ <img class="doc d2" src="img/cl-p3-3.png" alt=""><img class="doc d1" src="img/cl-cover-1.png" alt="">
+ <div class="badge"><div><b>30</b><span>בדיקות</span></div></div>
+ <div class="tx"><div class="kick">צ'קליסט PDF להורדה</div><h1>לפני שקונים<br><em>דירה יד שנייה</em></h1>
+ <p class="sub">30 בדיקות ב-7 שלבים, מההצעה ועד הרישום. לכל בדיקה: איפה בודקים ומקור רשמי.</p></div>
+ <div class="ctabox" style="bottom:420px"><span class="cta">להורדת הצ'קליסט ←</span></div>
+</div>
+
+</body></html>
