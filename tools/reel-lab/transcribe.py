@@ -2,7 +2,12 @@
 import sys, json
 from faster_whisper import WhisperModel
 out, wav = sys.argv[1], sys.argv[2]
-m = WhisperModel("ivrit-ai/whisper-large-v3-turbo-ct2", device="cpu", compute_type="int8")
+m = None
+for name in ("ivrit-ai/whisper-large-v3-turbo-ct2", "ivrit-ai/faster-whisper-v2-d4", "large-v3-turbo", "large-v3"):
+    try:
+        m = WhisperModel(name, device="cpu", compute_type="int8"); print("model", name); break
+    except Exception as e:
+        print("model failed", name, e)
 segs, info = m.transcribe(wav, language="he", word_timestamps=True, vad_filter=False, beam_size=5)
 res = {"language": info.language, "duration": info.duration, "segments": []}
 for s in segs:
