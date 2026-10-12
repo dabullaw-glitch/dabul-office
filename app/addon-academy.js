@@ -22,7 +22,7 @@
   const all = c => s.all(c);
   const when = a => a ? `${fd(String(a).slice(0, 10))} ${new Date(a).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jerusalem' })}` : '';
   const nis = v => '₪' + Math.round(Number(v) || 0).toLocaleString('he-IL');
-  const PILL = { active: ['פעיל', 'p-ok'], awaiting: ['ממתין', 'p-warn'], approved: ['אושר, ממתין להעברה', 'p-info'], handed: ['אצל גרוק בוט', 'p-info'], published: ['פורסם', 'p-ok'], rejected: ['לא לפרסם', 'p-mute'], ready: ['מוכן', 'p-ok'], got: ['התקבלה', 'p-ok'] };
+  const PILL = { active: ['פעיל', 'p-ok'], awaiting: ['ממתין', 'p-warn'], approved: ['אושר, ממתין להעברה', 'p-info'], handed: ['מתוזמן, המערכת מפרסמת', 'p-info'], published: ['פורסם', 'p-ok'], rejected: ['לא לפרסם', 'p-mute'], ready: ['מוכן', 'p-ok'], got: ['התקבלה', 'p-ok'] };
   const pill = k => { const [t, c] = PILL[k] || [k || '', 'p-mute']; return `<span class="pill ${c}">${n(t)}</span>`; };
   const course = () => s.get('course', 'first-home') || {};
   const lessonsN = () => (course().lessons || []).length || 10;
@@ -86,7 +86,7 @@
   }
   function reelsView() {
     const R = all('reel').sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
-    return `<div class="card card-b"><p class="muted" style="margin-top:0">רילסים ערוכים: מאשרים בטלגרם, וגרוק בוט מפרסם סרטון אחד בשבוע בפייסבוק וביוטיוב, ביום שלישי ב-19:00. אינסטגרם וטיקטוק אתה מעלה בעצמך.</p>${R.map(r => `<div class="ac-row"><div class="grow"><div><b>${n(r.name || '')}</b></div><small class="muted">${r.publishAt ? 'מתוזמן ל-' + when(r.publishAt) : 'נוצר ' + when(r.created)}</small>${r.link ? `<div><a class="small" href="${n(r.link)}" target="_blank" rel="noopener">לצפייה</a></div>` : ''}</div>${pill(r.status)}</div>`).join('') || s.empty('עוד אין רילסים', 'רילסים חדשים יופיעו כאן אחרי שהמחשב במשרד יערוך אותם.')}</div>`;
+    return `<div class="card card-b"><p class="muted" style="margin-top:0">רילסים ערוכים: מאשרים בטלגרם, והמערכת מפרסמת אותם בעצמה בכל הרשתות (פייסבוק, אינסטגרם, יוטיוב וטיקטוק) במועדים שבלוח הפרסום: שלישי וחמישי ב-19:00. אין צורך להעלות כלום ידנית.</p>${R.map(r => `<div class="ac-row"><div class="grow"><div><b>${n(r.name || '')}</b></div><small class="muted">${r.publishAt ? 'מתוזמן ל-' + when(r.publishAt) : 'נוצר ' + when(r.created)}</small>${r.link ? `<div><a class="small" href="${n(r.link)}" target="_blank" rel="noopener">לצפייה</a></div>` : ''}</div>${pill(r.status)}</div>`).join('') || s.empty('עוד אין רילסים', 'רילסים חדשים יופיעו כאן אחרי שהמחשב במשרד יערוך אותם.')}</div>`;
   }
   s.reelsView = reelsView; // shown in שיווק > רילסים
   s.V.academy = {

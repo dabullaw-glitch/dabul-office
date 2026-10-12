@@ -80,8 +80,8 @@
   document.head.appendChild(st);
 
   const CH = { instagram: ['אינסטגרם', '#c13584'], tiktok: ['טיקטוק', '#25262b'], youtube: ['יוטיוב', '#e62117'], facebook: ['פייסבוק', '#1877f2'], linkedin: ['לינקדאין', '#0a66c2'], x: ['X', '#666'], gbp: ['גוגל עסקי', '#1e8e3e'], whatsapp: ['וואטסאפ', '#25a85a'], newsletter: ['ניוזלטר', '#a86a06'], internal: ['פנימי', '#999'], film: ['לצילום', '#8b6f47'], dev: ['פיתוחים ומועדים', '#6b4fa0'] };
-  const PROJ = { course: ['קורס "קונים דירה ראשונה"', '#6b4fa0'], clients: ['להביא לקוחות', '#c13b2e'], video: ['סרטונים ותוכן', '#c13584'], chan: ['ערוצי פרסום (מעבר מגרוק)', '#0a66c2'], site: ['אתר וקידום בגוגל', '#1e8e3e'], launch: ['השקה ושיווק', '#b7791f'], money: ['כספים', '#62797a'] };
-  const OWN = { grok: 'גרוק בוט', system: 'המערכת', buffer: 'המערכת (Buffer)', office: 'המערכת', yakir: 'יקיר', claude: 'Claude' };
+  const PROJ = { course: ['קורס "קונים דירה ראשונה"', '#6b4fa0'], clients: ['להביא לקוחות', '#c13b2e'], video: ['סרטונים ותוכן', '#c13584'], chan: ['ערוצי פרסום', '#0a66c2'], site: ['אתר וקידום בגוגל', '#1e8e3e'], launch: ['השקה ושיווק', '#b7791f'], money: ['כספים', '#62797a'] };
+  const OWN = { grok: 'גרוק בוט (ישן)', system: 'המערכת', buffer: 'המערכת (Buffer)', office: 'המערכת', yakir: 'יקיר', claude: 'המערכת' };
   const PST = { planned: 'מתוכנן', published: 'פורסם ✓', skipped: 'בוטל', waiting: 'מחכה לחיבור', missed: 'לא פורסם', unverified: 'עבר, אין דרך לבדוק' };
   const MST = { done: 'בוצע ✓', open: 'מתוכנן', prop: 'מועד מוצע, מחכה לאישורך', wait: 'מחכה לך', ext: 'תלוי בגורם חיצוני', hold: 'בהמתנה' };
   const KIND = { 'own-video': 'סרטון שאלה ליוטיוב', weekly: 'פוסט מקצועי שבועי', group: 'הודעה לקבוצה', community: 'טיוטה לקהילה', video: 'סרטון', image: 'פוסט עם תמונה', article: 'מאמר מהאתר', film: 'תסריט לצילום', ms: 'פיתוח' };
@@ -227,7 +227,7 @@
       <dt>סוג</dt><dd>${n(KIND[i.kind] || i.kind)}${i.type ? ' · ' + n(TYPE[i.type] || i.type) : ''}</dd>
       <dt>מצב</dt><dd>${i.kind === 'film' ? (done(i) ? 'צולם ✓' : 'מאושר לצילום') : n(PST[i.st] || i.st)}</dd></dl>
       ${i.note ? `<div style="font-size:13px;color:var(--muted);margin-bottom:8px">${n(i.note)}</div>` : ''}
-      ${i.tx ? `<div class="full">${n(i.tx)}</div>` : (i.src === 'pub' ? `<div class="cl-note">${i.own === 'grok' ? 'הטקסט עוד לא כתוב: גרוק בוט כותב אותו רק ביום הפרסום. אחרי שהערוץ עובר ל-Claude, הטקסט ייכתב כמה ימים מראש ויופיע כאן.' : 'הטקסט עוד לא כתוב. הוא ייכתב לפני מועד הפרסום ויופיע כאן.'}</div>` : '')}
+      ${i.tx ? `<div class="full">${n(i.tx)}</div>` : (i.src === 'pub' ? `<div class="cl-note">הטקסט עוד לא כתוב. הוא ייכתב לפני מועד הפרסום ויופיע כאן.</div>` : '')}
       ${imgs.map(m => `<img src="${n(m)}" alt="" loading="lazy">`).join('')}
       ${vids.length ? `<div class="cl-leg">${vids.map(v => `<a href="${n(v)}" target="_blank" rel="noopener">🎬 צפייה בסרטון</a>`).join(' · ')}</div>` : ''}
       ${i.link ? `<div class="cl-leg"><a href="${n(i.link)}" target="_blank" rel="noopener">לצפייה בפרסום עצמו</a></div>` : ''}
