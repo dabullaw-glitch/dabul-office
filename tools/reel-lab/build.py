@@ -6,7 +6,10 @@ Rules from Yakir (12.10.2026):
 - the captions and the editing rhythm stay as they are (cuts without silences, punch-ins, active word in gold);
 - graphics never cover his face: each graphic goes where there is free space (above the head, smaller, or the
   picture slides down / shrinks for a moment to make room), decided per beat from the face track;
-- every video gets a different design (themes.py); no music at all (only light sound effects).
+- every video gets a different design (themes.py); no music at all (only light sound effects);
+- (12.10.2026) not only "edit it as it is": when the camera was held crooked, he is off centre, too far, or the face is
+  dark, the picture is fixed first (level, centre, small zoom, brightness), from the measurements in faces.json "fix".
+  The plan can override it: "frameFix": {"rotate": deg, "dx": px, "dy": px, "zoom": x, "bright": x}, or false for none.
 
 The plan lists the source ranges to keep (silences inside them are cut automatically), caption fixes, and overlay
 beats anchored to SOURCE seconds. Everything is mapped to the edited timeline here.
@@ -70,12 +73,50 @@ def T(src):  # source second -> timeline second (snaps into the clip that holds 
         if src < ss: return st
     return BODY
 
-# ---- face geometry (output pixels, before any layout move) ----
+# ---- picture fix: level the camera, centre him, zoom a little if he is far, brighten a dark face ----
+import math
+def frame_fix():
+    f = (faces or {}).get('fix') or {}; kx = W / (faces or {}).get('w', W); ky = H / (faces or {}).get('h', H)
+    ov = plan.get('frameFix', {})
+    if ov is False: return dict(r=0.0, dx=0.0, dy=0.0, s=1.0, b=1.0, why='off')
+    why = []
+    roll = float(f.get('roll', 0)); r = -roll if (0.4 <= abs(roll) <= 5 and f.get('n', 0) >= 12) else 0.0
+    if r: why.append(f'level {r:+.1f} deg')
+    fh = f.get('fh', 0) * ky; zoom = 1.0
+    if fh and fh < 0.15 * H: zoom = min(1.2, 0.17 * H / fh); why.append(f'zoom {zoom:.2f} (far from camera)')
+    cx = f.get('cx', W / 2) * kx; top = f.get('top', 0.24 * H) * ky
+    b = 1.0; lu = f.get('luma', 128)
+    if lu < 105: b = min(1.18, 120 / max(lu, 60)); why.append(f'brighten {b:.2f}')
+    elif lu > 205: b = 0.95; why.append('darken 0.95')
+    r = float(ov.get('rotate', r)); zoom = float(ov.get('zoom', zoom)); b = float(ov.get('bright', b))
+    ox, oy = W / 2, H / 2; rr = math.radians(r)
+    def place(s, x, y): return (ox + s * (math.cos(rr) * (x - ox) - math.sin(rr) * (y - oy)), oy + s * (math.sin(rr) * (x - ox) + math.cos(rr) * (y - oy)))
+    s = max(zoom, math.cos(abs(rr)) + (H / W) * math.sin(abs(rr)))
+    dx = dy = 0.0
+    for _ in range(3):   # centre him (if he is more than 3% off), keep his head below the top bar, then grow s to cover the edges
+        px, py = place(s, cx, top)
+        dx = float(ov['dx']) if 'dx' in ov else (max(-0.09 * W, min(0.09 * W, W / 2 - px)) if abs(W / 2 - px) > 0.03 * W else 0.0)
+        dy = float(ov['dy']) if 'dy' in ov else (max(-0.08 * H, 0.30 * H - py) if py > 0.36 * H else (max(0.0, min(0.04 * H, 0.05 * H - py)) if py < 0.05 * H else 0.0))
+        s = max(zoom, (math.cos(abs(rr)) + (H / W) * math.sin(abs(rr))) * (1 + 2 * abs(dx) / W) * (1 + 2 * abs(dy) / H))
+    if dx: why.append(f'centre {dx:+.0f}px')
+    if dy: why.append(f'move {dy:+.0f}px up/down')
+    return dict(r=round(r, 2), dx=round(dx, 1), dy=round(dy, 1), s=round(s, 4), b=round(b, 3), why=', '.join(why) or 'none needed')
+FF = frame_fix()
+def fix_pt(x, y):
+    rr = math.radians(FF['r']); ox, oy = W / 2, H / 2
+    return (ox + FF['s'] * (math.cos(rr) * (x - ox) - math.sin(rr) * (y - oy)) + FF['dx'], oy + FF['s'] * (math.sin(rr) * (x - ox) + math.cos(rr) * (y - oy)) + FF['dy'])
+
+# ---- face geometry (output pixels, after the picture fix, before any layout move) ----
 def face_src(src_t):
     if not faces: return (330, 470, 420, 520)
     i = max(0, min(len(faces['box']) - 1, int(round(src_t / faces['step']))))
     x, y, w, h = faces['box'][i]; kx, ky = W / faces['w'], H / faces['h']
-    return (x * kx, y * ky, w * kx, h * ky)
+    x, y, w, h = x * kx, y * ky, w * kx, h * ky
+    if FF['r'] or FF['s'] != 1 or FF['dx'] or FF['dy']:
+        pts = [fix_pt(px, py) for px, py in ((x, y - 0.08 * h), (x + w, y - 0.08 * h), (x, y + h), (x + w, y + h))]
+        x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts); t0, t1 = min(p[1] for p in pts), max(p[1] for p in pts)
+        h2 = (t1 - t0) / 1.08; return (x0, t0 + 0.08 * h2, x1 - x0, h2)
+    return (x, y, w, h)
 
 def face_out(tl_t):
     for k, (st, ss, d) in enumerate(tl_clips):
@@ -327,7 +368,7 @@ doc = f'''<!doctype html>
 <html lang="he" data-resolution="portrait"><head>{HEAD.replace('<meta charset="UTF-8"/>', '<meta charset="UTF-8"/><meta name="viewport" content="width=1080, height=1920"/><script src="assets/gsap.min.js"></script>')}</head><body>
 <div id="root" data-composition-id="main" data-start="0" data-duration="{TOTAL}" data-width="1080" data-height="1920" data-theme="{TNAME}">
 <div id="bg"></div>
-<div id="frame"><div id="stage">{"".join(vid_html)}</div><div class="grade"></div></div>
+<div id="frame"><div id="stage"><div id="fix" style="position:absolute;inset:0;transform-origin:50% 50%;transform:translate({FF['dx']}px,{FF['dy']}px) rotate({FF['r']}deg) scale({FF['s']}){';filter:brightness(' + str(FF['b']) + ')' if FF['b'] != 1 else ''}">{"".join(vid_html)}</div></div><div class="grade"></div></div>
 {"".join(ov_html)}
 <div id="caps">{"".join(cap_html)}</div>
 <div class="prog"><div class="progf" id="progf"></div></div>
@@ -345,5 +386,5 @@ window.__timelines["main"] = tl;
 </script></body></html>'''
 open(proj + '/index.html', 'w', encoding='utf-8').write(doc)
 print(json.dumps({'sizes': {b['id']: [round(b['w']), round(b['h'])] for b in beats}}), file=sys.stderr)
-print(json.dumps({'theme': TNAME, 'clips': len(tl_clips), 'body': BODY, 'total': TOTAL, 'captions': len(chunks), 'sfx': len(sfx),
+print(json.dumps({'fix': FF, 'theme': TNAME, 'clips': len(tl_clips), 'body': BODY, 'total': TOTAL, 'captions': len(chunks), 'sfx': len(sfx),
                   'layout': {b['id']: (b['mode'], b.get('s'), b.get('D')) for b in beats}}, ensure_ascii=False))
