@@ -22,7 +22,7 @@ word-by-word captions (active word in gold), animated graphics that follow what 
 2. Words: `python3 transcribe.py <outdir> <audio16k.wav>` (faster-whisper, ivrit-ai model) -> `words.json`.
 3. Face track: `python3 facetrack.py take.mp4 faces.json 0.2` (needs `opencv-python-headless==4.10.0.84`; OpenCV 5 has no Haar cascades).
 4. Plan: copy `plans/inherit-siblings.json` and write the new one from the transcript: `keep` ranges (source seconds,
-   only the strongest 45 to 70 seconds), `fix` for transcription mistakes, `goldWords`, and `beats`
+   only the strongest 30 to 60 seconds, like before), `fix` for transcription mistakes, `goldWords`, and `beats`
    (kinds: hook, name, thirds, stack, boom, title, option, stamp, term, cta). 6 to 10 beats; each beat says on screen
    what he is saying at that moment, short (max about 4 words a line).
 5. Build: `python3 build.py plan.json words.json faces.json <project> --avoid=<last 3 themes>` (project needs
