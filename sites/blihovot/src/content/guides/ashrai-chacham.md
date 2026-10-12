@@ -20,7 +20,7 @@ faq:
 sources:
   - title: "כל זכות: בנקים, כרטיסי אשראי ואמצעי תשלום"
     url: "https://www.kolzchut.org.il/he/בנקים,_כרטיסי_אשראי_ואמצעי_תשלום"
-related: [minus, kerit-bitachon, netunei-ashrai]
+related: [minus, kerit-bitachon, netunei-ashrai, ma-ze-ribit]
 ---
 
 אשראי הוא כלי. כמו כל כלי, הוא יכול לעזור (לפרוס הוצאה גדולה שתוכננה) או להזיק (לממן חיים שההכנסה לא מכסה). ההבדל הוא בהרגלים.
