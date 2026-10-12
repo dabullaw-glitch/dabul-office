@@ -9,7 +9,9 @@
 <title>טלפרומטר</title>
 <!-- dabul: teleprompter + camera recorder for Yakir (9.10.2026), replaces the CapCut teleprompter.
      v2: picture follows how the phone is held (upright = upright video, sideways = sideways video), no extra zoom,
-     scripts from the office system, "send for editing" upload, mic meter, framing lines + light check, sentence-by-sentence mode. -->
+     scripts from the office system, "send for editing" upload, mic meter, framing lines + light check, sentence-by-sentence mode.
+     12.10.2026: the script list is the same as the office system (coll prompt only), upload of videos filmed with the phone camera
+     (big files go up in 45 MB pieces, joined back by function rawq), and "won't film" (status skipped, can be undone). -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.0/dist/umd/supabase.js"></script>
 <script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/config.js"></script>
 <style>
@@ -45,6 +47,24 @@ h2{font-size:1.05rem;margin:22px 0 6px;color:var(--brand2)}
 #login input{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:inherit;font-size:16px;margin-top:8px;direction:ltr;text-align:left}
 #acct{font-size:.9rem;color:var(--mute)}
 #acct b{color:var(--ok)}
+/* scripts from the office system (12.10.2026: same list as the admin panel, upload a video filmed with the camera, mark "won't film") */
+.sc{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--card);margin-top:8px}
+.sc .t{font-weight:700;line-height:1.35}
+.sc .lb{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tg{font-size:.76rem;border-radius:999px;padding:2px 10px;background:rgba(139,111,71,.13);color:var(--brand2);white-space:nowrap}
+.tg.ok{background:rgba(47,125,74,.15);color:var(--ok)}.tg.mute{opacity:.75}
+.sc .ac{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.sc .ac button{flex:1;min-width:84px;padding:9px 10px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--brand2);font-weight:700;font-size:.92rem}
+.sc .ac button.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.sc .ac button.no{color:var(--err)}.sc .ac button.sure{background:var(--err);border-color:var(--err);color:#fff}
+.sc.skip{opacity:.8}
+details.skipd{margin-top:12px}details.skipd summary{cursor:pointer;color:var(--mute);font-size:.95rem}
+.upc{padding:14px;border:1.5px dashed var(--line);border-radius:14px;margin-top:12px}
+.upc b{display:block;color:var(--brand2)}
+.upc input{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:inherit;font-size:16px;margin-top:10px}
+.upr{display:flex;gap:10px;align-items:baseline;padding:8px 2px;border-bottom:1px solid var(--line);font-size:.92rem}
+.upr .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upr .st{white-space:nowrap;font-weight:700;color:var(--brand)}.upr .st.ok{color:var(--ok)}.upr .st.bad{color:var(--err);white-space:normal}
 
 /* ---------- camera screen ---------- */
 #cam{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#fff;overflow:hidden;touch-action:none}
@@ -141,6 +161,16 @@ h2{font-size:1.05rem;margin:22px 0 6px;color:var(--brand2)}
     <input id="lpw" type="password" autocomplete="current-password" placeholder="סיסמה">
     <div class="row"><button class="btn" type="submit">התחברות</button></div>
   </form>
+  <div id="upWrap" hidden>
+    <div class="upc">
+      <b>העלאת סרטון שצילמתי במצלמה</b>
+      <div class="meta">צילמתם תסריט מהרשימה? לוחצים "העלאה" ליד התסריט עצמו. כאן מעלים סרטון שלא שייך לתסריט.</div>
+      <input id="upTitle" placeholder="על מה הסרטון? (כמה מילים, לא חובה)">
+      <div class="row"><button class="btn" id="upPick">בחירת סרטונים מהטלפון</button></div>
+    </div>
+    <div id="upLog"></div>
+  </div>
+  <input type="file" id="upFile" accept="video/*" multiple style="position:fixed;left:-200px;top:0;width:1px;height:1px;opacity:0" tabindex="-1" aria-hidden="true">
   <div id="sys"></div>
 
   <div id="savedWrap"><h2>טקסטים ששמרתי בטלפון</h2><div id="saved"></div></div>
@@ -251,7 +281,7 @@ h2{font-size:1.05rem;margin:22px 0 6px;color:var(--brand2)}
     if (!sb) { $('acct').textContent = 'אין חיבור למערכת כרגע. אפשר לצלם כרגיל.'; return; }
     var r = await sb.auth.getSession(); user = r && r.data && r.data.session ? r.data.session.user : null;
     if (!user) { $('acct').textContent = 'כדי לראות את התסריטים ולשלוח צילומים לעריכה, מתחברים פעם אחת עם הפרטים של מערכת המשרד:'; $('login').hidden = false; $('sys').innerHTML = ''; return; }
-    $('login').hidden = true; $('acct').innerHTML = '<b>מחובר למערכת</b>'; loadScripts();
+    $('login').hidden = true; $('acct').innerHTML = '<b>מחובר למערכת</b>'; $('upWrap').hidden = false; loadScripts();
   }
   $('login').onsubmit = async function (e) {
     e.preventDefault();
@@ -259,28 +289,147 @@ h2{font-size:1.05rem;margin:22px 0 6px;color:var(--brand2)}
     if (r.error) { $('acct').textContent = 'ההתחברות לא הצליחה. בודקים את האימייל והסיסמה ומנסים שוב.'; return; }
     $('lpw').value = ''; refreshAcct();
   };
+  // the same list as "סרטונים > תסריטים לצילום" in the office system: docs coll "prompt" that are not archived.
+  // (12.10.2026: the AI voiced YouTube videos, coll "ytscript", are made automatically and are not for filming, so they are not here)
+  var SCR = {}, STL = { draft: ['ממתין לאישור', ''], ready: ['מאושר לצילום', ''], filmed: ['צולם', 'ok'], done: ['פורסם', 'ok'], skipped: ['לא יצולם', 'mute'] };
+  function tag(t, c) { var e = document.createElement('span'); e.className = 'tg' + (c ? ' ' + c : ''); e.textContent = t; return e; }
+  function btn(t, c, f) { var e = document.createElement('button'); e.type = 'button'; e.textContent = t; if (c) e.className = c; e.onclick = f; return e; }
+  async function setStatus(id, patch) {
+    var r = await sb.rpc('docs_merge', { p_coll: 'prompt', p_id: id, p_patch: patch });
+    if (r.error) { alertBox('השינוי לא נשמר. נסו שוב.'); return false; }
+    return true;
+  }
+  function alertBox(t) { var b = $('sys'), m = document.createElement('div'); m.className = 'warn'; m.textContent = t; b.insertBefore(m, b.firstChild); setTimeout(function () { m.remove(); }, 5000); }
+  function card(it) {
+    var d = document.createElement('div'); d.className = 'sc' + (it.status === 'skipped' ? ' skip' : '');
+    var t = document.createElement('div'); t.className = 't'; t.textContent = it.title; d.appendChild(t);
+    var lb = document.createElement('div'); lb.className = 'lb'; lb.appendChild(tag(it.kind));
+    var s0 = STL[it.status]; if (s0) lb.appendChild(tag(s0[0], s0[1]));
+    if (it.sec) lb.appendChild(tag('כ-' + it.sec + ' שניות', 'mute'));
+    d.appendChild(lb);
+    var ac = document.createElement('div'); ac.className = 'ac';
+    if (it.status === 'skipped') {
+      ac.appendChild(btn('החזרה לרשימה', '', async function () { this.disabled = true; if (await setStatus(it.id, { status: it.prev && it.prev !== 'skipped' ? it.prev : 'ready', skippedAt: '' })) loadScripts(); else this.disabled = false; }));
+    } else {
+      ac.appendChild(btn('פתיחה', 'pri', function () { useText(it.text, it.title, it.id); }));
+      ac.appendChild(btn('העלאת סרטון', '', function () { pickUpload({ script: it.id, scriptTitle: it.title }); }));
+      if (it.status !== 'done') {
+        var sure = null;
+        ac.appendChild(btn('לא אצלם', 'no', async function () {
+          var b = this;
+          if (!sure) { b.textContent = 'בטוח? לחיצה נוספת'; b.className = 'sure'; sure = setTimeout(function () { sure = null; b.textContent = 'לא אצלם'; b.className = 'no'; }, 4000); return; }
+          clearTimeout(sure); b.disabled = true;
+          if (await setStatus(it.id, { status: 'skipped', skippedAt: new Date().toISOString(), prevStatus: it.status || 'ready' })) loadScripts(); else b.disabled = false;
+        }));
+      }
+    }
+    d.appendChild(ac);
+    return d;
+  }
   async function loadScripts() {
-    var box = $('sys'); box.textContent = 'טוען תסריטים...';
-    var r = await sb.from('docs').select('coll,id,data,updated_at').in('coll', ['prompt', 'ytscript']).order('updated_at', { ascending: false }).limit(60);
+    var box = $('sys'); if (!box.children.length) box.textContent = 'טוען תסריטים...';
+    var r = await sb.from('docs').select('id,data').eq('coll', 'prompt').limit(300);
     if (r.error) { box.textContent = 'לא הצלחתי לטעון את התסריטים.'; return; }
-    var items = [];
+    var items = []; SCR = {};
     (r.data || []).forEach(function (d) {
-      var x = d.data || {}, text = '', kind = '';
-      if (d.coll === 'prompt') { if (x.status === 'done' || x.arch) return; text = x.text || ''; kind = 'לצילום'; }
-      else { text = (x.scenes || []).map(function (s) { return s.say || ''; }).filter(Boolean).join('\n\n'); kind = 'יוטיוב'; }
-      if (text) items.push({ id: d.id, title: x.title || d.id, text: text, kind: (d.coll === 'prompt' && x.typeLabel) ? x.typeLabel : kind, order: x.order || 0, coll: d.coll });
+      var x = d.data || {}; if (x.arch) return;
+      var it = { id: d.id, title: x.title || d.id, text: x.text || '', kind: x.typeLabel || 'לצילום', status: x.status || 'ready', prev: x.prevStatus || '', order: x.order || 0, sec: x.sec || 0 };
+      SCR[d.id] = it; items.push(it);
     });
-    items.sort(function (a, b) { return (a.coll === b.coll ? 0 : a.coll === 'prompt' ? -1 : 1) || (a.order - b.order); });
-    box.innerHTML = items.length ? '' : '<div class="meta">אין עדיין תסריטים במערכת. כשאכתוב תסריט חדש לצילום, הוא יופיע כאן.</div>';
+    items.sort(function (a, b) { return (a.order - b.order) || String(a.title).localeCompare(String(b.title), 'he'); });
+    var main = items.filter(function (it) { return it.status !== 'skipped'; }), skip = items.filter(function (it) { return it.status === 'skipped'; });
+    box.innerHTML = '';
+    if (!main.length) box.innerHTML = '<div class="meta">אין כרגע תסריטים לצילום. כשאכתוב תסריט חדש, הוא יופיע כאן.</div>';
+    else { var h = document.createElement('div'); h.className = 'meta'; h.textContent = main.length + ' תסריטים, אותה רשימה כמו במערכת המשרד.'; box.appendChild(h); }
+    main.forEach(function (it) { box.appendChild(card(it)); });
+    if (skip.length) {
+      var det = document.createElement('details'); det.className = 'skipd';
+      var sm = document.createElement('summary'); sm.textContent = 'סימנתי שלא אצלם (' + skip.length + ')'; det.appendChild(sm);
+      skip.forEach(function (it) { det.appendChild(card(it)); });
+      box.appendChild(det);
+    }
     var want = (location.hash.match(/^#p=(.+)$/) || [])[1];
-    if (want) { var hit = items.filter(function (it) { return it.id === decodeURIComponent(want); })[0]; if (hit) useText(hit.text, hit.title, hit.id); }
-    items.forEach(function (it) {
-      var d = document.createElement('div'); d.className = 'sv';
-      var t = document.createElement('div'); t.className = 't'; t.textContent = it.title;
-      var k = document.createElement('span'); k.className = 'k'; k.textContent = it.kind;
-      var o = document.createElement('button'); o.textContent = 'פתיחה'; o.onclick = function () { useText(it.text, it.title, it.id); };
-      d.appendChild(t); d.appendChild(k); d.appendChild(o); box.appendChild(d);
+    if (want && !curId) { var hit = SCR[decodeURIComponent(want)]; if (hit) useText(hit.text, hit.title, hit.id); }
+  }
+  async function markFilmed(id) {
+    var it = SCR[id]; if (!id || (it && it.status === 'done')) return;
+    await sb.rpc('docs_merge', { p_coll: 'prompt', p_id: id, p_patch: { status: 'filmed', filmedAt: new Date().toISOString() } });
+  }
+
+  /* ---------- upload a video filmed with the phone camera ---------- */
+  // the free plan of the office system takes up to 50 MB per file, so a big video goes up in pieces of 45 MB.
+  // The editor gets one link that joins the pieces back into the original file (function rawq).
+  var CH = 45 * 1048576, upCtx = {};
+  function pickUpload(ctx) { upCtx = ctx || {}; var f = $('upFile'); f.value = ''; f.click(); }
+  $('upPick').onclick = function () { pickUpload({ title: $('upTitle').value.trim() }); };
+  $('upFile').onchange = function () { var files = Array.prototype.slice.call(this.files || []); if (files.length) uploadFiles(files, upCtx); };
+  function vmeta(file) {
+    return new Promise(function (res) {
+      var v = document.createElement('video'), u = URL.createObjectURL(file), done = false;
+      var fin = function () { if (done) return; done = true; var o = { sec: Math.round(isFinite(v.duration) ? v.duration : 0), w: v.videoWidth || 0, h: v.videoHeight || 0 }; v.removeAttribute('src'); URL.revokeObjectURL(u); res(o); };
+      v.preload = 'metadata'; v.muted = true; v.playsInline = true; v.onloadedmetadata = fin; v.onerror = fin; setTimeout(fin, 6000); v.src = u;
     });
+  }
+  function upErr(e) {
+    var m = (e && (e.message || e.error)) || '';
+    if (/exceed|quota|too large|payload/i.test(m)) return 'אין כרגע מספיק מקום במערכת. המקום מתפנה אחרי העריכה הבאה.';
+    return 'ההעלאה נכשלה (' + (m || 'תקלה ברשת') + '). נסו שוב.';
+  }
+  async function upOne(path, blob, type) {
+    var r = null;
+    for (var a = 0; a < 3; a++) {
+      r = await sb.storage.from('files').upload(path, blob, { contentType: type, upsert: a > 0 });
+      if (!r.error) return r;
+      await new Promise(function (ok) { setTimeout(ok, 2000); });
+    }
+    return r;
+  }
+  async function uploadFiles(files, ctx) {
+    var log = $('upLog'); $('upWrap').hidden = false;
+    if (!sb || !(await sb.auth.getSession()).data.session) { alertBox('צריך להתחבר קודם למערכת.'); return; }
+    keepAwake();
+    var head = document.createElement('div'); head.className = 'meta'; head.style.marginTop = '12px';
+    head.textContent = ctx.scriptTitle ? 'מעלה לתסריט: ' + ctx.scriptTitle + '. לא לסגור את הדף עד שכל השורות מסומנות ✓.' : 'מעלה ' + files.length + (files.length === 1 ? ' סרטון' : ' סרטונים') + '. לא לסגור את הדף עד שכל השורות מסומנות ✓.';
+    log.insertBefore(head, log.firstChild);
+    var grp = document.createElement('div'); head.after(grp);
+    var rows = files.map(function (f) {
+      var r = document.createElement('div'); r.className = 'upr';
+      var n = document.createElement('span'); n.className = 'nm'; n.textContent = f.name + ' · ' + (f.size / 1048576).toFixed(0) + ' מגה';
+      var st = document.createElement('span'); st.className = 'st'; st.textContent = 'ממתין';
+      r.appendChild(n); r.appendChild(st); grp.appendChild(r); return st;
+    });
+    window.scrollTo(0, $('upWrap').offsetTop - 10);
+    var okN = 0;
+    for (var i = 0; i < files.length; i++) {
+      var f = files[i], st = rows[i];
+      st.className = 'st'; st.textContent = 'בודק...';
+      var m = await vmeta(f);
+      var batch = stamp() + '-u' + (i + 1), day = batch.slice(0, 8);
+      var ext = ((f.name.match(/\.([A-Za-z0-9]{2,4})$/) || [])[1] || (/quicktime/.test(f.type) ? 'mov' : 'mp4')).toLowerCase();
+      var n = Math.max(1, Math.ceil(f.size / CH)), done = [], base = 'rawvideo/' + day + '/' + batch, failed = null;
+      for (var k = 0; k < n; k++) {
+        st.textContent = n > 1 ? 'מעלה ' + Math.round(k / n * 100) + '%' : 'מעלה...';
+        var path = n > 1 ? base + '.p' + String(k + 1).padStart(2, '0') : base + '.' + ext;
+        var r = await upOne(path, f.slice(k * CH, Math.min(f.size, (k + 1) * CH)), n > 1 ? 'application/octet-stream' : (f.type || 'video/mp4'));
+        if (r.error) { failed = r.error; break; }
+        done.push('files/' + path);
+      }
+      if (failed) {
+        if (done.length) { try { await sb.storage.from('files').remove(done.map(function (x) { return x.slice(6); })); } catch (e) {} }
+        st.className = 'st bad'; st.textContent = upErr(failed); continue;
+      }
+      var data = { file: done[0], name: f.name, mime: f.type || '', source: 'upload', script: ctx.script || '', title: ctx.title || ctx.scriptTitle || f.name.replace(/\.[^.]+$/, ''),
+        part: 1, parts: 1, mode: 'full', text: '', sec: m.sec, w: m.w, h: m.h, size: f.size, status: 'new', created: new Date().toISOString() };
+      if (n > 1) data.chunks = done;
+      var ins = await sb.from('docs').insert({ coll: 'rawvid', id: batch, data: data });
+      if (ins.error) { st.className = 'st bad'; st.textContent = 'הסרטון עלה, אבל הרישום במערכת נכשל. נסו שוב.'; continue; }
+      if (ctx.script) await markFilmed(ctx.script);
+      st.className = 'st ok'; st.textContent = 'הועלה ✓'; okN++;
+    }
+    if (okN) { var t = document.createElement('div'); t.className = 'meta'; t.style.color = 'var(--ok)'; t.style.fontWeight = '700'; t.textContent = 'נשלח לעריכה ✓ (' + okN + (okN === 1 ? ' סרטון' : ' סרטונים') + '). אני אערוך משם.'; head.before(t); $('upTitle').value = ''; }
+    head.textContent = (ctx.scriptTitle ? 'תסריט: ' + ctx.scriptTitle + '. ' : '') + 'ההעלאה הסתיימה. אפשר לסגור את הדף.';
+    if (wake) { try { wake.release(); } catch (e) {} wake = null; }
+    loadScripts();
   }
   refreshAcct();
 
@@ -303,6 +452,7 @@ h2{font-size:1.05rem;margin:22px 0 6px;color:var(--brand2)}
       await sb.from('docs').insert({ coll: 'rawvid', id: batch + '-' + (it.idx + 1), data: { file: 'files/' + path, script: curId, title: curTitle || txt.value.trim().split('\n')[0].slice(0, 60), part: it.idx + 1, parts: list.length, mode: cfg.mode ? 'sentences' : 'full', text: it.text || '', sec: Math.round(it.dur), w: it.w, h: it.h, size: it.blob.size, status: 'new', created: new Date().toISOString() } });
       ok++;
     }
+    if (ok && curId && SCR[curId]) await markFilmed(curId);
     if (ok) statusEl.textContent = 'נשלח למערכת ✓ (' + ok + (ok === 1 ? ' צילום' : ' צילומים') + '). אני אערוך משם.';
     return ok > 0;
   }
