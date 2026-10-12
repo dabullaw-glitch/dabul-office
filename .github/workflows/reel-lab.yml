@@ -2,7 +2,7 @@ name: reel lab (internal)
 # Prepares raw talking-head footage for the reel editor v2 (HyperFrames): downloads the raw take from Google Drive,
 # makes a 1080x1920 working copy, and transcribes it word by word in Hebrew (faster-whisper, ivrit-ai model).
 # Trigger: push to branch tools/reel-lab that changes reel-lab.txt (lines: "<name> <driveFileId>").
-# Output (committed back to the same branch, never to main, so nothing is published): reel-lab/<name>/{proxy.mp4,words.json,info.json}
+# Output (committed back to the same branch, never to main, so nothing is published): reel-lab/<name>/{proxy.mp4,words.json,faces.json,info.json}
 on:
   push:
     branches: [tools/reel-lab]
@@ -21,14 +21,14 @@ jobs:
       - name: Tools
         run: |
           command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
-          pip install -q faster-whisper==1.1.1 scipy numpy
+          pip install -q faster-whisper==1.1.1 scipy numpy opencv-python-headless==4.10.0.84
       - name: Download, working copy, transcript
         run: |
           set -e
           mkdir -p reel-lab; exec > >(tee -a reel-lab/_log.txt) 2>&1
           while read -r name id; do
             case "$name" in \#*|"") continue;; esac; [ -n "$id" ] || continue
-            out="reel-lab/$name"; [ -f "$out/words.json" ] && { echo "skip $name"; continue; }
+            out="reel-lab/$name"; [ -f "$out/words.json" ] && [ -f "$out/faces.json" ] && { echo "skip $name"; continue; }
             mkdir -p "$out" /tmp/raw
             curl -fsSL --retry 3 "https://drive.usercontent.google.com/download?id=$id&export=download&confirm=t" -o /tmp/raw/$name.mov
             ls -la /tmp/raw/$name.mov
@@ -44,6 +44,7 @@ jobs:
             done
             ffmpeg -y -v error -i /tmp/raw/$name.mov -vn -ac 1 -ar 16000 /tmp/raw/$name.wav
             python3 tools/reel-lab/transcribe.py "$out" /tmp/raw/$name.wav
+            [ -f "$out/faces.json" ] || python3 tools/reel-lab/facetrack.py "$out/proxy.mp4" "$out/faces.json" 0.2
           done < reel-lab.txt
       - name: Commit
         if: always()
