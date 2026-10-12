@@ -22,7 +22,7 @@
   const all = c => s.all(c);
   const when = a => a ? `${fd(String(a).slice(0, 10))} ${new Date(a).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jerusalem' })}` : '';
   const nis = v => '₪' + Math.round(Number(v) || 0).toLocaleString('he-IL');
-  const PILL = { active: ['פעיל', 'p-ok'], awaiting: ['ממתין', 'p-warn'], approved: ['אושר, ממתין להעברה', 'p-info'], handed: ['מתוזמן, המערכת מפרסמת', 'p-info'], published: ['פורסם', 'p-ok'], rejected: ['לא לפרסם', 'p-mute'], ready: ['מוכן', 'p-ok'], got: ['התקבלה', 'p-ok'] };
+  const PILL = { active: ['פעיל', 'p-ok'], awaiting: ['ממתין', 'p-warn'], approved: ['אושר, ממתין להעברה', 'p-info'], handed: ['מתוזמן, המערכת מפרסמת', 'p-info'], published: ['פורסם ✓', 'p-ok'], rejected: ['לא לפרסם', 'p-mute'], ready: ['מוכן', 'p-ok'], got: ['התקבלה', 'p-ok'] };
   const pill = k => { const [t, c] = PILL[k] || [k || '', 'p-mute']; return `<span class="pill ${c}">${n(t)}</span>`; };
   const course = () => s.get('course', 'first-home') || {};
   const lessonsN = () => (course().lessons || []).length || 10;
@@ -85,8 +85,17 @@
     return `<div class="card card-b"><p class="muted" style="margin-top:0">תמונות אמיתיות שיחזקו את השיעורים. לא חובה: בלי תמונה השיעור מוצג עם תרשים. מסמכים מצלמים רק אחרי שמשחירים שמות, תעודות זהות, כתובות ומספרי גוש וחלקה. מעלים לדרייב לתיקייה "קורס קונים דירה ראשונה/תמונות", בשם שמופיע כאן.</p>${P.map((p, i) => `<div class="ac-row"><div class="grow"><div><b>${n(p.what)}</b>${p.must ? ' <span class="pill p-warn">חשוב</span>' : ''}</div><small class="muted">שיעור ${n(p.n)}: ${n(p.lesson)}${p.why ? ' · ' + n(p.why) : ''} · שם הקובץ: <span dir="ltr">${n(p.file || ('lesson' + String(p.n).padStart(2, '0') + '-' + (i + 1) + '.jpg'))}</span></small></div>${pill(p.have ? 'got' : 'awaiting')}</div>`).join('') || s.empty('עוד אין בקשות לתמונות', 'בקשות יופיעו כאן תוך כדי כתיבת השיעורים.')}</div>`;
   }
   function reelsView() {
-    const R = all('reel').sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
-    return `<div class="card card-b"><p class="muted" style="margin-top:0">רילסים ערוכים: מאשרים בטלגרם, והמערכת מפרסמת אותם בעצמה בכל הרשתות (פייסבוק, אינסטגרם, יוטיוב וטיקטוק) במועדים שבלוח הפרסום: שלישי וחמישי ב-19:00. אין צורך להעלות כלום ידנית.</p>${R.map(r => `<div class="ac-row"><div class="grow"><div><b>${n(r.name || '')}</b></div><small class="muted">${r.publishAt ? 'מתוזמן ל-' + when(r.publishAt) : 'נוצר ' + when(r.created)}</small>${r.link ? `<div><a class="small" href="${n(r.link)}" target="_blank" rel="noopener">לצפייה</a></div>` : ''}</div>${pill(r.status)}</div>`).join('') || s.empty('עוד אין רילסים', 'רילסים חדשים יופיעו כאן אחרי שהמחשב במשרד יערוך אותם.')}</div>`;
+    // 12.10.2026: ordered by the publishing date (the next one first), grouped by month, past ones in a closed section
+    const R = all('reel').filter(r => r.status !== 'rejected');
+    const now = Date.now(), ts = r => r.publishAt ? Date.parse(r.publishAt) : Infinity;
+    const next = R.filter(r => ts(r) >= now).sort((a, b) => ts(a) - ts(b)), past = R.filter(r => ts(r) < now).sort((a, b) => ts(b) - ts(a));
+    const mon = a => new Date(a).toLocaleDateString('he-IL', { month: 'long', year: 'numeric', timeZone: 'Asia/Jerusalem' });
+    const day = a => new Date(a).toLocaleDateString('he-IL', { weekday: 'long', timeZone: 'Asia/Jerusalem' });
+    const row = (r, i) => `<div class="ac-row"><div class="grow"><div><b>${n(r.name || '')}</b>${i === 0 ? ' <span class="pill p-warn">הבא בתור</span>' : ''}</div><small class="muted">${r.publishAt ? 'יום ' + day(r.publishAt) + ' ' + when(r.publishAt) : 'עוד לא נקבע מועד'}</small>${r.link ? `<div><a class="small" href="${n(r.link)}" target="_blank" rel="noopener">לצפייה</a></div>` : ''}</div>${pill(ts(r) < now ? 'published' : r.publishAt ? 'handed' : r.status)}</div>`;
+    let list = '', last = '';
+    next.forEach((r, i) => { const m = r.publishAt ? mon(r.publishAt) : 'בלי מועד'; if (m !== last) { list += `<div class="muted" style="font-weight:700;margin:14px 0 2px">${n(m)}</div>`; last = m; } list += row(r, i); });
+    return `<div class="card card-b"><p class="muted" style="margin-top:0">רילסים ערוכים: מאשרים בטלגרם, והמערכת מפרסמת אותם בעצמה בכל הרשתות (פייסבוק, אינסטגרם, יוטיוב וטיקטוק) במועדים שבלוח הפרסום: שלישי וחמישי ב-19:00. אין צורך להעלות כלום ידנית. ${next.length} רילסים בתור.</p>${list || s.empty('עוד אין רילסים', 'רילסים חדשים יופיעו כאן אחרי שהמחשב במשרד יערוך אותם.')}
+      ${past.length ? `<details style="margin-top:14px"><summary class="muted" style="cursor:pointer;font-weight:700">כבר פורסמו (${past.length})</summary>${past.map(r => row(r, -1)).join('')}</details>` : ''}</div>`;
   }
   s.reelsView = reelsView; // shown in שיווק > רילסים
   s.V.academy = {

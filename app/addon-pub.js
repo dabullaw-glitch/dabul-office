@@ -48,7 +48,7 @@
     const link = cfg.key ? `https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/pubcal?k=${encodeURIComponent(cfg.key)}` : '';
     const ig = cfg.ig || {};
     const conn = (cfg.buffer && cfg.buffer.ok ? bufCard(cfg.buffer) : '') + (cfg.socapi && cfg.socapi.ok ? sapiCard(cfg.socapi) : '') + igCard(ig);
-    return conn + `<div class="card card-b"><p class="muted" style="margin-top:0">לוח אחד לכל מה שמתפרסם: מה, מתי, באיזה ערוץ. מאז 11.10.2026 <b>המערכת</b> מפרסמת הכל בעצמה: פייסבוק, אינסטגרם, יוטיוב, טיקטוק ולינקדאין דרך Postoria, X דרך Buffer, והפוסט לגוגל עסקי נשלח אליך לטלגרם. גרוק בוט כבר לא בתמונה. פריט שמבטלים כאן לא יוצא.</p>
+    return conn + `<div class="card card-b"><p class="muted" style="margin-top:0">לוח אחד לכל מה שמתפרסם: מה, מתי, באיזה ערוץ. מאז 11.10.2026 <b>המערכת</b> מפרסמת הכל בעצמה: פייסבוק, אינסטגרם, יוטיוב, טיקטוק, לינקדאין וגוגל עסקי דרך Postoria, ו-X דרך Buffer. גרוק בוט כבר לא בתמונה. פריט שמבטלים כאן לא יוצא.</p>
       <div class="pb-legend"><span><span class="pb-own" style="background:#a8873f">המערכת</span></span><span><span class="pb-own" style="background:#62797a">יקיר</span></span>${link ? `<a href="${n(link)}" target="_blank" rel="noopener">הלוח המלא (לקריאה)</a>` : ''}
       <a href="#" data-a="pb-past">${showPast ? 'להסתיר פריטים שעברו' : 'להציג גם פריטים שעברו'}</a></div>
       ${list || s.empty('הלוח ריק', 'פריטים חדשים נכנסים לכאן כל שבוע.')}</div>`;
