@@ -1,0 +1,4 @@
+<?php
+// Code Snippets #51 (12.10.2026): Imagify wraps WebP images in <picture>, so the featured image widget in post cards
+// (case stories, blog) shrank to the image's own width instead of the card width. Full-width widget + picture as a block.
+add_action('wp_head', function () { echo '<style id="dbl-picture-fix">.e-con>.elementor-widget-theme-post-featured-image,.e-con-inner>.elementor-widget-theme-post-featured-image{width:100%!important;max-width:100%!important;align-self:stretch!important}.elementor-widget-theme-post-featured-image picture,.elementor-post__thumbnail picture{display:block!important;width:100%!important}.elementor-widget-theme-post-featured-image picture img,.elementor-post__thumbnail picture img{display:block;width:100%!important;max-width:100%!important}</style>'; }, 99);
