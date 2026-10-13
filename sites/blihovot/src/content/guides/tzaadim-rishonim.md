@@ -24,7 +24,7 @@ sources:
     url: "https://www.kolzchut.org.il/he/בקשה_לאיחוד_תיקים_של_חייב_בהוצאה_לפועל"
   - title: "כל זכות: צו לפתיחת הליכי חדלות פירעון ושיקום כלכלי"
     url: "https://www.kolzchut.org.il/he/צו_לפתיחת_הליכי_חדלות_פירעון_ושיקום_כלכלי_(פשיטת_רגל)"
-related: [hesder-im-noshim, ichud-tikim, ma-ze-hadlut-piraon, taktziv]
+related: [hesder-im-noshim, ichud-tikim, ma-ze-hadlut-piraon, taktziv, kadur-sheleg]
 ---
 
 כשהחובות מצטברים, קל להרגיש שאין מאיפה להתחיל. מכתבים שלא נפתחים, טלפונים שלא עונים להם, ותחושה שכל צעד רק מחמיר. אבל כמעט תמיד יש דרך החוצה, והיא מתחילה באותם צעדים. הנה הסדר הנכון.
