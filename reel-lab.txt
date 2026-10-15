@@ -1,2 +1,12 @@
 inherit-siblings 1beWpCQN1ENbh-RBhTZWOMw4uoY5_0Fgs
-# 2
+# 15.10.2026: Yakir's takes from 12.10 (6 scripts + the plot/parcel YouTube script) and the 3 field stories from 13.10
+v01-bli-mashkanta 1C4lUD_IevjyVd9LJ8r0nro7s81n2EkIv
+v02-kesef-horim 1csZ9HgoOgNU3PhTyJSJu9OueIhObb2QH
+v03-nezila 1YLi_8358-bwkVu8cYqu5PrigV50h6YIJ
+v04-mechir-namuch 1RKMgFDZyVIcBTdV-V6ObLmtQdv1H_OE5
+v05-socher 1IojM_kxHGmjkCkwbO9gOvx2KqBhoJRu0
+v06-bait-meshutaf 1uiAcLAV6tceXJdGgjdxJE2zFEphCdlul
+story-a 1PzaOlpj8NKUAv3U-j5_fqU-PSTCxTKff
+story-b 1jVdmPmSGGfxBugHSlGOA0QSxeQnEEq1c
+story-c 1JqC5pfgtdOd7NIER8y0quOzTjGqvBh0-
+yt-gush-chelka 1PeGigNoDkg353UffaPJm-gsFNoj3RjY1
