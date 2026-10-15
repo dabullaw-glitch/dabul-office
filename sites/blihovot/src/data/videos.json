@@ -54,5 +54,19 @@
   "date": "2026-10-15",
   "guide": "ikul-maskoret",
   "lesson": "4-hotzaa"
+ },
+ {
+  "id": "minus-5-tzaadim",
+  "title": "יוצאים מהמינוס ב-5 צעדים",
+  "description": "איך מצמצמים את המינוס בבנק בהדרגה, בלי זעזוע.",
+  "src": "video/minus-5-tzaadim.mp4",
+  "poster": "video/minus-5-tzaadim.jpg",
+  "captions": "video/minus-5-tzaadim.vtt",
+  "w": 1080,
+  "h": 1920,
+  "duration": "PT38S",
+  "date": "2026-10-15",
+  "guide": "minus",
+  "lesson": ""
  }
 ]

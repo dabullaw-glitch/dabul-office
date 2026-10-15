@@ -5,6 +5,7 @@ description: "המינוס הוא אחד האשראים היקרים ביותר,
 hub: kalkala
 published: 2026-10-08
 updated: 2026-10-08
+video: minus-5-tzaadim
 order: 3
 tool: tashlumim
 summary:
