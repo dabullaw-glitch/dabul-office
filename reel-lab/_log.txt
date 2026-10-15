@@ -75,3 +75,96 @@ TypeError: open() got an unexpected keyword argument 'metadata_errors'
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 model ivrit-ai/whisper-large-v3-turbo-ct2
 87 segments
+skip inherit-siblings
+-rw-r--r-- 1 runner runner 72834661 Oct 15 07:46 /tmp/raw/v01-bli-mashkanta.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "r_frame_rate": "30/1",
+            "duration": "45.866667",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "45.812971",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "45.866667"
+    }
+}
+
+Enter command: <target>|all <time>|-1 <command>[ <argument>]
+
+
+Enter command: <target>|all <time>|-1 <command>[ <argument>]
+
+
+Enter command: <target>|all <time>|-1 <command>[ <argument>]
+
+Queuing commands only on filters supporting the specific command is unsupported
+Queuing commands only on filters supporting the specific command is unsupported
+
+Enter command: <target>|all <time>|-1 <command>[ <argument>]
+
+Queuing commands only on filters supporting the specific command is unsupported
+Queuing commands only on filters supporting the specific command is unsupported
+
+Enter command: <target>|all <time>|-1 <command>[ <argument>]
+
+crf 23 -> 5372688 bytes
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+model ivrit-ai/whisper-large-v3-turbo-ct2
+16 segments
+-rw-r--r-- 1 runner runner 79802654 Oct 15 07:47 /tmp/raw/story-b.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "r_frame_rate": "30/1",
+            "duration": "50.001667",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "49.922902",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "50.018911"
+    }
+}
+
+Enter command: <target>|all <time>|-1 <command>[ <argument>]
+
+
+Enter command: <target>|all <time>|-1 <command>[ <argument>]
+
+Queuing commands only on filters supporting the specific command is unsupported
+Queuing commands only on filters supporting the specific command is unsupported
+crf 23 -> 24083431 bytes
+model ivrit-ai/whisper-large-v3-turbo-ct2
+17 segments
