@@ -1,0 +1,93 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "mobile",
+ "at": "2026-10-15T07:54:20.843Z",
+ "runs": [
+  {
+   "score": 56,
+   "fcp": 2685.431,
+   "lcp": 4378.781329017639,
+   "si": 4391.683511392646,
+   "tbt": 1064,
+   "cls": 0.00004742155426984351,
+   "lcpEl": "<div data-rocket-location-hash=\"7154915fcb53ff4d5c4d2716577b2499\" class=\"dbl-ph\" data-rocket-lazy-bg-ce7a0e30-38eb-4077-8197-f265bb4fa1d5=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     1160
+    ],
+    [
+     "resourceLoadDelay",
+     97
+    ],
+    [
+     "resourceLoadDuration",
+     730
+    ],
+    [
+     "elementRenderDelay",
+     87
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-a0e701d elementor-widget elementor-wid…\" data-id=\"a0e701d\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div#content > div.elementor-element > div.elementor-element > div.elementor-element",
+     ""
+    ]
+   ],
+   "bytes": 357302,
+   "docBytes": 171889
+  },
+  {
+   "score": 92,
+   "fcp": 1727.8714999999997,
+   "lcp": 3041.5169999999994,
+   "si": 1727.8714999999997,
+   "tbt": 153.5,
+   "cls": 0,
+   "lcpEl": "<div data-rocket-location-hash=\"7154915fcb53ff4d5c4d2716577b2499\" class=\"dbl-ph\" data-rocket-lazy-bg-ce7a0e30-38eb-4077-8197-f265bb4fa1d5=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     276
+    ],
+    [
+     "resourceLoadDelay",
+     13
+    ],
+    [
+     "resourceLoadDuration",
+     17
+    ],
+    [
+     "elementRenderDelay",
+     130
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 357077,
+   "docBytes": 171652
+  },
+  {
+   "score": 0,
+   "fcp": 2746.1045000000004,
+   "si": 4589.251592373228,
+   "cls": 0,
+   "lcpEl": "",
+   "lcpParts": [],
+   "renderBlocking": [
+    [
+     "https://dabullaw-glitch.github.io/dabul-office/media/widgets/home-reviews.css?ver=20261011d",
+     0
+    ]
+   ],
+   "shifts": [],
+   "bytes": 357895,
+   "docBytes": 172492
+  }
+ ]
+}
