@@ -40,5 +40,19 @@
   "date": "2026-10-08",
   "guide": "ikulim",
   "lesson": "4-hotzaa"
+ },
+ {
+  "id": "ikul-maskoret",
+  "title": "עיקול משכורת: כמה נשאר לכם?",
+  "description": "הסכום המוגן, כלל ה-80% ואיך מבטלים עיקול שכר, בפחות מדקה.",
+  "src": "video/ikul-maskoret.mp4",
+  "poster": "video/ikul-maskoret.jpg",
+  "captions": "video/ikul-maskoret.vtt",
+  "w": 1080,
+  "h": 1920,
+  "duration": "PT33S",
+  "date": "2026-10-15",
+  "guide": "ikul-maskoret",
+  "lesson": "4-hotzaa"
  }
 ]

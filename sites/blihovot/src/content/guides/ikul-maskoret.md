@@ -5,6 +5,7 @@ description: "עיקול משכורת בהוצאה לפועל: הסכום המו
 hub: hotzaa-lapoal
 published: 2026-10-09
 updated: 2026-10-09
+video: ikul-maskoret
 order: 4
 tool: tashlumim
 summary:
