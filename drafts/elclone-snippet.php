@@ -48,4 +48,13 @@ add_action('rest_api_init', function () {
 		if (function_exists('rocket_clean_post')) rocket_clean_post($to);
 		return array('ok' => true, 'hits' => $hits, 'to' => $to);
 	}));
+	/* Admin only check: the Elementor HTML of a page as visitors would get it (works for drafts too). */
+	register_rest_route('dabul/v1', '/elrender', array('methods' => 'GET', 'permission_callback' => function () { return current_user_can('manage_options'); }, 'callback' => function ($req) {
+		$pid = (int) $req->get_param('post');
+		if (!class_exists('\Elementor\Plugin') || !get_post($pid)) return new WP_Error('args', 'missing', array('status' => 400));
+		$GLOBALS['post'] = get_post($pid); setup_postdata($GLOBALS['post']);
+		$html = \Elementor\Plugin::$instance->frontend->get_builder_content_for_display($pid, true);
+		wp_reset_postdata();
+		return array('ok' => true, 'html' => $html);
+	}));
 });
