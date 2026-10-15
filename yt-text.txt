@@ -33,3 +33,4 @@ cand-ach 1iN26ynnvN1LReEIiI2bmNOZD_uVX_FjL
 cand-yerusha 1E-NFud0Kdn7RoWb4ti-DKVbXxZ4jhtzU
 sfwkyRqL1RA 1FjNftURqxMlldC5nlDHk1SbX6LClHQWl
 # run 2 (15.10.2026 21:55)
+cand-madad-raw 1CaG_lgGkpt8mQLl3oRUPoMHxbTDzsCAo
