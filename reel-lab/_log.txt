@@ -365,3 +365,36 @@ crf 23 -> 12132357 bytes
 model ivrit-ai/whisper-large-v3-turbo-ct2
 12 segments
 {"fix": {"roll": 0.0, "n": 0, "cx": 504, "top": 232, "fh": 492, "luma": 147}, "samples": 198, "detected": 198, "W": 1080, "H": 1920, "face_cx": [489, 539], "head_top": [-11, 245], "chin": [600, 813]}
+-rw-r--r-- 1 runner runner 86365769 Oct 15 08:05 /tmp/raw/v06-bait-meshutaf.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "r_frame_rate": "30/1",
+            "duration": "54.400000",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "54.357914",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "54.400000"
+    }
+}
+crf 23 -> 16229576 bytes
+model ivrit-ai/whisper-large-v3-turbo-ct2
+16 segments
+{"fix": {"roll": 2.95, "n": 1, "cx": 516, "top": 226, "fh": 482, "luma": 146}, "samples": 272, "detected": 272, "W": 1080, "H": 1920, "face_cx": [500, 542], "head_top": [-11, 252], "chin": [593, 790]}
