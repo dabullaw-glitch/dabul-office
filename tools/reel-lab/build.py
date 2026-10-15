@@ -366,7 +366,7 @@ for b in beats:
         k = min(1.0, 960 / b['w'], 1000 / max(b['h'], 1)); b.update(mode='full', s=round(k, 3), y=round((H - b['h'] * k) / 2 - 60)); continue
     if b['kind'] == 'hook' and STYLE == 'boxed':
         fl, ft, fr, fb = face_span(b['st'], b['en']); k = min(1.0, 1000 / b['w'])
-        y = fb + 40
+        y = fb + 85   # 15.10: room for the beard
         if y + b['h'] * k <= H - 330:
             b.update(mode='chin', s=round(k, 3), y=round(y), D=0); continue
     fl, ft, fr, fb = face_span(b['st'], b['en'])
@@ -406,6 +406,15 @@ for i, b in enumerate(moving):
     if not (nxt and nxt['st'] - b['en'] < 0.9):
         frame_js.append(f'tl.to("#frame",{{y:0,scale:1,borderRadius:0,duration:.35,ease:"power2.inOut"}},{round(b["en"], 3)});')
         frame_js.append(f'tl.to("#caps",{{y:0,duration:.35,ease:"power2.inOut"}},{round(b["en"], 3)});')
+
+# 15.10.2026: a full-screen proof is tall, so the spoken captions step down below it instead of covering the document
+CAP_TOP_PX = {'boxed': 1470, 'cinematic': 1215}.get(STYLE, 1250)
+for b in beats:
+    if b.get('mode') == 'full' and b['kind'] == 'proof':
+        dy = min(H - 230 - CAP_TOP_PX, max(0, b['y'] + b['h'] * b['s'] + 40 - CAP_TOP_PX))
+        if dy > 0:
+            frame_js += [f'tl.to("#caps",{{y:{round(dy)},duration:.3,ease:"power2.inOut"}},{round(max(0, b["st"] - 0.1), 3)});',
+                         f'tl.to("#caps",{{y:0,duration:.3,ease:"power2.inOut"}},{round(b["en"], 3)});']
 
 ov_html = []
 for b in beats:
