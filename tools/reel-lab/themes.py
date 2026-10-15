@@ -54,13 +54,37 @@ THEMES = {
         v={'--bg-a': '#7A3B2E', '--bg-b': '#3A1F1A', '--pnl': '#FFF6EC', '--pnl-fg': '#3A1F1A', '--acc': '#E8A33D',
            '--acc-fg': '#3A1F1A', '--acc2': '#B5523B', '--muted': '#7A5A4C', '--bd': '0 solid transparent', '--rad': '28px',
            '--shadow': '0 22px 50px rgba(30,10,5,.45)', '--blur': 'none', '--prog': '#E8A33D'}),
+    # 15.10.2026: the two extra looks Yakir asked for (styles/cinematic-gold.md, styles/boxed-navy.md). They are whole styles,
+    # not just colours, so they are picked through pick_style(), never by the v3 theme rotation.
+    'cinematic-gold': dict(
+        label='קולנועי שחור וזהב', style='cinematic', fh='Heebo', fb='Heebo', fhw=900, motion='blur', tilt=0, thirds='pie', num='ring',
+        v={'--bg-a': '#2A2B2E', '--bg-b': '#111214', '--pnl': 'rgba(20,20,22,.78)', '--pnl-fg': '#FFFFFF', '--acc': '#D4AF64',
+           '--acc-fg': '#111214', '--acc2': '#C9A961', '--muted': '#CFCFD2', '--bd': '2px solid rgba(212,175,100,.85)', '--rad': '22px',
+           '--shadow': '0 20px 50px rgba(0,0,0,.55)', '--blur': 'blur(14px)', '--prog': '#D4AF64'}),
+    'boxed-navy': dict(
+        label='קופסאות כחול וזהב', style='boxed', fh='Heebo', fb='Heebo', fhw=900, motion='rise', tilt=0, thirds='house', num='circle',
+        v={'--bg-a': '#1A2C55', '--bg-b': '#0B1530', '--pnl': 'rgba(19,37,74,.93)', '--pnl-fg': '#FFFFFF', '--acc': '#E4B84A',
+           '--acc-fg': '#13254A', '--acc2': '#3F6FC4', '--muted': '#C9D4EE', '--bd': '3px solid #E4B84A', '--rad': '20px',
+           '--shadow': '0 20px 46px rgba(0,0,0,.45)', '--blur': 'none', '--prog': '#E4B84A'}),
 }
+
+STYLES = ['v3', 'cinematic', 'boxed']   # Yakir 12.10.2026: every video one of these three, in turn
+
+
+def pick_style(plan, history=()):
+    """plan['style'] wins. Otherwise the style used longest ago (history = newest first), so the three take turns."""
+    if plan.get('style') in STYLES: return plan['style']
+    hist = [h for h in history if h in STYLES]
+    for st in STYLES:
+        if st not in hist[:2]: return st
+    return STYLES[0]
 
 
 def pick_theme(plan, avoid=()):
     """plan['theme'] wins. Otherwise a stable pick from the title, skipping the recently used themes in `avoid`."""
     if plan.get('theme') in THEMES: return plan['theme']
-    names = [n for n in THEMES if n not in set(avoid)] or list(THEMES)
+    v3 = [n for n in THEMES if not THEMES[n].get('style')]
+    names = [n for n in v3 if n not in set(avoid)] or v3
     h = int(hashlib.md5(plan.get('title', 'x').encode('utf-8')).hexdigest(), 16)
     return names[h % len(names)]
 

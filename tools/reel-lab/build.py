@@ -11,6 +11,12 @@ Rules from Yakir (12.10.2026):
   dark, the picture is fixed first (level, centre, small zoom, brightness), from the measurements in faces.json "fix".
   The plan can override it: "frameFix": {"rotate": deg, "dx": px, "dy": px, "zoom": x, "bright": x}, or false for none.
 
+Three styles take turns (Yakir 12.10.2026, "כל פעם אחד מהם"): "v3" (the approved demo look, 6 colour themes),
+"cinematic" (styles/cinematic-gold.md + the documentary quality bar in refs/README.md: quiet captions, full-screen gold
+explainer cutaways while his voice continues, a stage timeline at the top, gold numbers that count up) and "boxed"
+(styles/boxed-navy.md: name card, topic pill, hook box under the chin, navy caption boxes). --style=v3|cinematic|boxed,
+or plan["style"]; otherwise --history=<styles, newest first> picks the one used longest ago.
+
 The plan lists the source ranges to keep (silences inside them are cut automatically), caption fixes, and overlay
 beats anchored to SOURCE seconds. Everything is mapped to the edited timeline here.
 The project dir needs assets/take.mp4 (the 1080x1920 working copy that faces.json was tracked on); the other assets
@@ -19,7 +25,7 @@ The project dir needs assets/take.mp4 (the 1080x1920 working copy that faces.jso
 import sys, os, json, html, shutil
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from themes import THEMES, MOTION, pick_theme, font_css
+from themes import THEMES, MOTION, pick_theme, pick_style, font_css
 
 args = [a for a in sys.argv[1:] if not a.startswith('--')]
 opts = dict(a[2:].split('=', 1) if '=' in a else (a[2:], '1') for a in sys.argv[1:] if a.startswith('--'))
@@ -33,7 +39,8 @@ for name in ('fonts', 'sfx'):
 for name in ('gsap.min.js', 'logo-d.png', 'logo-full.png'):
     shutil.copy(f'{HERE}/assets/{name}', f'{proj}/assets/{name}')
 
-TNAME = pick_theme(plan, [x for x in opts.get('avoid', '').split(',') if x])
+STYLE = opts.get('style') or pick_style(plan, [x for x in opts.get('history', '').split(',') if x])
+TNAME = {'cinematic': 'cinematic-gold', 'boxed': 'boxed-navy'}.get(STYLE) or pick_theme(plan, [x for x in opts.get('avoid', '').split(',') if x])
 TH = THEMES[TNAME]
 MIN, MOUT = MOTION[TH['motion']]
 MIN = MIN.replace('{T}', str(TH['tilt'])); MOUT = MOUT.replace('{T}', str(TH['tilt']))
@@ -137,7 +144,7 @@ kept = [w for w in words if any(ss - 0.02 <= w['s'] and w['e'] <= ss + d + 0.25 
 chunks, cur = [], []
 for w in kept:
     cur.append(w)
-    if len(cur) >= plan.get('wordsPerChunk', 3) or w['w'][-1:] in '.,?!:' or (cur and w['e'] - cur[0]['s'] > 1.5):
+    if len(cur) >= plan.get('wordsPerChunk', 4 if STYLE == 'cinematic' else 3) or w['w'][-1:] in '.,?!:' or (cur and w['e'] - cur[0]['s'] > 1.5):
         chunks.append(cur); cur = []
 if cur: chunks.append(cur)
 GOLD = set(plan.get('goldWords', []))
@@ -151,6 +158,10 @@ for i, ch in enumerate(chunks):
         cls = 'w gold' if w['w'].strip('.,?!:') in GOLD else 'w'
         spans.append(f'<span class="{cls}" id="c{i}w{j}">{esc(w["w"].rstrip(".,"))}</span>')
     cap_html.append(f'<div class="cap clip" id="c{i}" data-start="{st}" data-duration="{round(en - st, 3)}" data-track-index="20"><div class="capin" id="ci{i}">{" ".join(spans)}</div></div>')
+    if STYLE == 'cinematic':   # quiet captions: one phrase, small, soft fade, key word gold (no karaoke)
+        cap_js.append(f'tl.fromTo("#ci{i}",{{opacity:0,filter:"blur(6px)"}},{{opacity:1,filter:"blur(0px)",duration:.22,ease:"power1.out"}},{st});'); continue
+    if STYLE == 'boxed':       # navy caption box with a gold underline, rises in, no karaoke
+        cap_js.append(f'tl.fromTo("#ci{i}",{{y:30,opacity:0}},{{y:0,opacity:1,duration:.2,ease:"power2.out"}},{st});'); continue
     cap_js.append(f'tl.fromTo("#ci{i}",{{y:26,scale:.92,opacity:0}},{{y:0,scale:1,opacity:1,duration:.16,ease:"back.out(2)"}},{st});')
     for j, w in enumerate(ch):
         ws_ = T(w['s']); g = w['w'].strip('.,?!:') in GOLD
@@ -194,9 +205,41 @@ def add_sfx(name, at, vol): sfx.append((name, max(0, at), vol))
 ov_js = []
 for n, b in enumerate(plan['beats']):
     kind = b['kind']; st = T(b['at']) if 'at' in b else b.get('t', 0); en = T(b['to']) if 'to' in b else st + b.get('dur', 2.5)
+    if STYLE == 'cinematic' and kind not in ('hook', 'name', 'cta') and en - st > 5.0: en = st + 5.0   # cutaways stay short (2-5 s)
     bid = b['id']; P = f'{bid}P'; d = round(en - st, 3); low = False; inner = ''
     out = f'tl.to("#{P}",{{opacity:0,y:-24,duration:.25,ease:"power2.in"}},{round(en - 0.25, 3)});'
-    if kind == 'hook':
+    if kind == 'hook' and STYLE == 'cinematic':   # huge white question, revealed word by word with a soft blur
+        lines = [x for x in (b.get('l1'), b.get('l2'), b.get('l3')) if x]; wid = 0; rows = []
+        for li, ln in enumerate(lines):
+            ws_ = []
+            for wd in ln.split():
+                g = ' gold' if wd.strip('?.!,') in GOLD or (li == len(lines) - 1 and wd == ln.split()[-1]) else ''
+                ws_.append(f'<span class="hw{g}" id="{bid}w{wid}">{esc(wd)}</span>'); wid += 1
+            rows.append('<div class="hbl hf">' + ' '.join(ws_) + '</div>')
+        inner = f'<div class="hookbig" id="{P}">{"".join(rows)}</div>'
+        ov_js += [f'tl.fromTo("#{bid}w{k}",{{opacity:0,filter:"blur(14px)",y:18}},{{opacity:1,filter:"blur(0px)",y:0,duration:.55,ease:"power2.out"}},{round(st + 0.1 + 0.16 * k, 3)});' for k in range(wid)]
+        ov_js.append(f'tl.to("#{P}",{{opacity:0,filter:"blur(10px)",duration:.4,ease:"power1.in"}},{round(en - 0.4, 3)});')
+        add_sfx('whoosh', st, 0.12)
+    elif kind == 'hook' and STYLE == 'boxed':     # wide navy box with a gold bottom line, under the chin (never on the face)
+        inner = (f'<div class="hookbox pnl" id="{P}"><div class="hb1 hf" id="{bid}a">{esc(b["l1"])}</div><div class="hb2 hf" id="{bid}b">{esc(b["l2"])}</div></div>')
+        ov_js += [f'tl.fromTo("#{P}",{{y:50,opacity:0}},{{y:0,opacity:1,duration:.45,ease:"power3.out"}},{st});',
+                  f'tl.fromTo("#{bid}b",{{x:-40,opacity:0}},{{x:0,opacity:1,duration:.4,ease:"power3.out"}},{round(st + 0.35, 3)});', out]
+        add_sfx('whoosh', st, 0.22)
+    elif kind == 'name' and STYLE == 'boxed':
+        continue   # the boxed style has its own name card all through the video
+    elif kind == 'name' and STYLE == 'cinematic':  # small white name beside him, no box
+        low = True
+        inner = f'<div class="qname" id="{P}"><span class="hf">{esc(b["name"])}</span><i></i><small>{esc(b["role"])}</small></div>'
+        ov_js += [f'tl.fromTo("#{P}",{{opacity:0,x:30}},{{opacity:1,x:0,duration:.7,ease:"power2.out"}},{st});',
+                  f'tl.to("#{P}",{{opacity:0,duration:.5}},{round(en - 0.5, 3)});']
+    elif kind == 'count':   # a big number that counts up (days, years, steps). Never prices, never promised results
+        inner = (f'<div class="count pnl" id="{P}"><div class="cnum hf"><span id="{bid}n">0</span>{esc(b.get("suffix", ""))}</div>'
+                 f'<div class="clab hf">{esc(b["label"])}</div>{("<div class=csub>" + esc(b["sub"]) + "</div>") if b.get("sub") else ""}</div>')
+        n_to = b['n']; dec = 1 if isinstance(n_to, float) and n_to % 1 else 0
+        ov_js += [f'tl.fromTo("#{P}",{MIN},{MOUT},{st});',
+                  f'(function(){{const o={{v:0}},el=document.getElementById("{bid}n");tl.fromTo(o,{{v:0}},{{v:{n_to},duration:{min(1.2, max(0.5, d - 0.6))},ease:"power2.out",onUpdate:()=>{{el.textContent=o.v.toFixed({dec})}}}},{round(st + 0.15, 3)});}})();', out]
+        add_sfx('tick', st + 0.2, 0.25); add_sfx('pop', st + 0.15 + min(1.2, max(0.5, d - 0.6)), 0.28)
+    elif kind == 'hook':
         inner = (f'<div class="hook" id="{P}"><div class="pill" id="{bid}p">{esc(b["kicker"])}</div>'
                  f'<div class="big hf" id="{bid}a">{esc(b["l1"])}</div><div class="big acc hf" id="{bid}b">{esc(b["l2"])}</div></div>')
         ov_js += [f'tl.fromTo("#{bid}p",{MIN},{MOUT},{st});',
@@ -256,6 +299,11 @@ for n, b in enumerate(plan['beats']):
         ov_js += [f'tl.fromTo("#{P}",{MIN},{MOUT},{st});', out]
         if b.get('sub'): ov_js.append(f'tl.fromTo("#{bid}s",{{opacity:0,y:12}},{{opacity:1,y:0,duration:.3}},{T(b["subAt"])});')
         add_sfx('whoosh', st, 0.25)
+    elif kind == 'cta' and STYLE == 'cinematic':   # gold outline pill with an arrow
+        low = True
+        inner = f'<div class="ctaq hf" id="{P}"><span>{esc(b.get("label", "פנו אלינו"))}</span><b>{esc(b["text"])}</b><i>&larr;</i></div>'
+        ov_js += [f'tl.fromTo("#{P}",{{opacity:0,y:40}},{{opacity:1,y:0,duration:.6,ease:"power2.out"}},{st});']
+        add_sfx('pop', st, 0.2)
     elif kind == 'cta':
         low = True
         inner = (f'<div class="ctab" id="{P}"><svg viewBox="0 0 24 24" width="54" height="54"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg><span>{esc(b["text"])}</span></div>')
@@ -264,7 +312,8 @@ for n, b in enumerate(plan['beats']):
         add_sfx('pop', st, 0.35)
     else:
         continue
-    beats.append(dict(id=bid, kind=kind, st=st, en=en, d=d, inner=inner, low=low, track=30 + n))
+    full = STYLE == 'cinematic' and kind not in ('hook', 'name', 'cta') and d >= 1.5   # a very short beat stays above his head
+    beats.append(dict(id=bid, kind=kind, st=st, en=en, d=d, inner=inner, low=low, track=30 + n, full=full))
 
 # ---- 5. measure the panels in the real fonts (headless Chromium), so the layout knows their size ----
 CSS = open(f'{HERE}/reel.css', encoding='utf-8').read()
@@ -289,7 +338,7 @@ try:
 except Exception as e:  # fallback estimates
     print('measure fallback:', e, file=sys.stderr)
 EST = {'hook': (1000, 380), 'thirds': (680, 420), 'stack': (900, 420), 'boom': (900, 200), 'title': (700, 200), 'option': (940, 175),
-       'stamp': (440, 430), 'term': (960, 280), 'name': (640, 140), 'cta': (560, 120)}
+       'stamp': (440, 430), 'term': (960, 280), 'name': (640, 140), 'cta': (560, 120), 'count': (700, 420)}
 for b in beats: b['w'], b['h'] = sizes.get(b['id'], EST[b['kind']])
 
 # ---- 6. layout: keep every panel off the face ----
@@ -298,6 +347,13 @@ GAPF = 34; SPLIT = 0.6; PUSH_MAX = 430
 for b in beats:
     if b['low']:
         b['mode'] = 'low'; continue
+    if b.get('full'):   # cinematic cutaway: the picture is dimmed and blurred behind a full-screen scene, the voice goes on
+        k = min(1.0, 960 / b['w'], 1000 / max(b['h'], 1)); b.update(mode='full', s=round(k, 3), y=round((H - b['h'] * k) / 2 - 60)); continue
+    if b['kind'] == 'hook' and STYLE == 'boxed':
+        fl, ft, fr, fb = face_span(b['st'], b['en']); k = min(1.0, 1000 / b['w'])
+        y = fb + 40
+        if y + b['h'] * k <= H - 330:
+            b.update(mode='chin', s=round(k, 3), y=round(y), D=0); continue
     fl, ft, fr, fb = face_span(b['st'], b['en'])
     if b['kind'] == 'boom': ft = 0.34 * H + (ft - 0.34 * H) * 1.12   # the camera punch lifts the head
     space = ft - GAPF - TOP; wfit = min(1.0, 1000 / b['w'])
@@ -339,7 +395,39 @@ for b in beats:
     else:
         style = f'top:{round(b["y"])}px;transform:translateX(-50%) scale({b["s"]})'; cls = 'slot'
     flash = f'<div class="flash" id="{b["id"]}f"></div>' if b['kind'] == 'boom' else ''
+    if b['mode'] == 'full':
+        flash = (f'<div class="cutbg" id="{b["id"]}k"></div><svg class="cutline" viewBox="0 0 1080 40" width="1080" height="40"><path id="{b["id"]}g" d="M60 20 H1020" '
+                 f'stroke="var(--acc)" stroke-width="3" fill="none" stroke-dasharray="960" stroke-dashoffset="960"/></svg>')
+        ov_js.extend([f'tl.fromTo("#{b["id"]}k",{{opacity:0}},{{opacity:1,duration:.45,ease:"power1.out"}},{b["st"]});',
+                      f'tl.to("#{b["id"]}g",{{strokeDashoffset:0,duration:.8,ease:"power2.inOut"}},{round(b["st"] + 0.15, 3)});',
+                      f'tl.to("#{b["id"]}k",{{opacity:0,duration:.4,ease:"power1.in"}},{round(b["en"] - 0.35, 3)});',
+                      f'tl.to("#stage",{{filter:"blur(22px) brightness(.35)",duration:.45,ease:"power1.out"}},{b["st"]});',
+                      f'tl.to("#stage",{{filter:"blur(0px) brightness(1)",duration:.4,ease:"power1.in"}},{round(b["en"] - 0.35, 3)});'])
     ov_html.append(f'<div class="ov clip" id="{b["id"]}" data-start="{b["st"]}" data-duration="{b["d"]}" data-track-index="{b["track"]}">{flash}<div class="{cls}" style="{style}">{b["inner"]}</div></div>')
+
+# ---- 6b. style furniture ----
+if STYLE == 'boxed':
+    topic = plan.get('topic', '')
+    ov_html.append(f'''<div class="ov clip" id="bxcard" data-start="0.2" data-duration="{round(BODY - 0.2, 3)}" data-track-index="85">
+<div class="bxname pnl" id="bxn"><img src="assets/logo-d.png"/><div><b class="hf">עו״ד יקיר דבול</b><small>משרד עורכי דין · נתניה</small></div></div>
+{('<div class="bxtopic hf" id="bxt">' + esc(topic) + '</div>') if topic else ''}</div>''')
+    ov_js += ['tl.fromTo("#bxn",{x:200,opacity:0},{x:0,opacity:1,duration:.5,ease:"power3.out"},0.25);',
+              'tl.fromTo("#bxt",{x:-200,opacity:0},{x:0,opacity:1,duration:.5,ease:"power3.out"},0.4);' if topic else '']
+    busy = []   # the card steps aside while a graphic uses the top of the frame (close graphics are joined into one gap)
+    for b in sorted([b for b in beats if b['mode'] in ('band', 'push', 'split')], key=lambda b: b['st']):
+        if busy and b['st'] - busy[-1][1] < 1.2: busy[-1][1] = max(busy[-1][1], b['en'])
+        else: busy.append([b['st'], b['en']])
+    for a0, a1 in busy:
+        ov_js += [f'tl.to("#bxcard",{{opacity:0,duration:.2}},{round(max(0, a0 - 0.2), 3)});', f'tl.to("#bxcard",{{opacity:1,duration:.3}},{round(a1, 3)});']
+if STYLE == 'cinematic' and plan.get('stages'):
+    stg = plan['stages']; n_ = len(stg)
+    ticks = ''.join(f'<div class="tlk" style="right:{round(60 + i * 960 / max(1, n_ - 1))}px"><i></i><span>{esc(x["label"])}</span></div>' for i, x in enumerate(stg))
+    ov_html.append(f'<div class="ov clip" id="tline" data-start="0" data-duration="{BODY}" data-track-index="86"><div class="tlbar"><div class="tlbase"></div><div class="tlfill" id="tlf"></div>{ticks}<div class="tldot" id="tld"></div></div></div>')
+    for i, x in enumerate(stg):
+        at = T(x['at']) if 'at' in x else 0; xr = round(i * 960 / max(1, n_ - 1))
+        ov_js += [f'tl.to("#tld",{{x:{-xr},duration:.7,ease:"power2.inOut"}},{at});', f'tl.to("#tlf",{{width:{xr},duration:.7,ease:"power2.inOut"}},{at});',
+                  f'tl.to("#tline .tlk:nth-child({i + 3})",{{opacity:1,duration:.3}},{at});']
+        if i: add_sfx('tick', at, 0.18)
 
 # ---- 7. end card ----
 ec = BODY
@@ -366,7 +454,7 @@ for n, (name, at, vol) in enumerate(sorted(sfx, key=lambda x: x[1])):
 
 doc = f'''<!doctype html>
 <html lang="he" data-resolution="portrait"><head>{HEAD.replace('<meta charset="UTF-8"/>', '<meta charset="UTF-8"/><meta name="viewport" content="width=1080, height=1920"/><script src="assets/gsap.min.js"></script>')}</head><body>
-<div id="root" data-composition-id="main" data-start="0" data-duration="{TOTAL}" data-width="1080" data-height="1920" data-theme="{TNAME}">
+<div id="root" data-composition-id="main" data-start="0" data-duration="{TOTAL}" data-width="1080" data-height="1920" data-theme="{TNAME}" data-style="{STYLE}">
 <div id="bg"></div>
 <div id="frame"><div id="stage"><div id="fix" style="position:absolute;inset:0;transform-origin:50% 50%;transform:translate({FF['dx']}px,{FF['dy']}px) rotate({FF['r']}deg) scale({FF['s']}){';filter:brightness(' + str(FF['b']) + ')' if FF['b'] != 1 else ''}">{"".join(vid_html)}</div></div><div class="grade"></div></div>
 {"".join(ov_html)}
@@ -386,5 +474,5 @@ window.__timelines["main"] = tl;
 </script></body></html>'''
 open(proj + '/index.html', 'w', encoding='utf-8').write(doc)
 print(json.dumps({'sizes': {b['id']: [round(b['w']), round(b['h'])] for b in beats}}), file=sys.stderr)
-print(json.dumps({'fix': FF, 'theme': TNAME, 'clips': len(tl_clips), 'body': BODY, 'total': TOTAL, 'captions': len(chunks), 'sfx': len(sfx),
+print(json.dumps({'fix': FF, 'style': STYLE, 'theme': TNAME, 'clips': len(tl_clips), 'body': BODY, 'total': TOTAL, 'captions': len(chunks), 'sfx': len(sfx),
                   'layout': {b['id']: (b['mode'], b.get('s'), b.get('D')) for b in beats}}, ensure_ascii=False))
