@@ -11,3 +11,10 @@ story-b 1jVdmPmSGGfxBugHSlGOA0QSxeQnEEq1c
 story-c 1JqC5pfgtdOd7NIER8y0quOzTjGqvBh0-
 yt-gush-chelka 1PeGigNoDkg353UffaPJm-gsFNoj3RjY1
 # rerun 1792055604 (v01 proxy was cut at 17s)
+# 15.10.2026 16:43-16:48: 6 new takes from the phone folder (names set after the transcript)
+t1015-1 1h6FZ0PHsG2Mb1jg2wHVwn6DapJGCDQnc
+t1015-2 1k06Xj_jRZ9hTpQ8uIvjTFAOxT-KJCbHb
+t1015-3 1ZEJfTaNqGM79bbfEifx7VfF2PRzbpa0c
+t1015-4 13NOLd7-fpxuYEMX9Od-R_ibq7vwD8JBQ
+t1015-5 17gXNToCo6t_O3F5sWTKUD_8ICCj2d2EX
+t1015-6 1JHy0mC42mGTh2eWmtl1hOIGBkuhGA9td
