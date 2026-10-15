@@ -3758,6 +3758,10 @@ header .elementor-button .elementor-button-text { white-space: nowrap; }
 .elementor-622 .elementor-element-07c5106, .elementor-622 .elementor-element-07c5106 > .e-con-inner { display: contents !important; }
 .elementor-622 .elementor-element-02509a1 { display: none !important; }
 .elementor-element-f595e2b .swiper-pagination { display: none !important; }
+.elementor-element-f595e2b .swiper-slide img { width: 100% !important; height: 470px !important; object-fit: cover !important; }
+@media (max-width: 767px) {
+  .elementor-element-f595e2b .swiper-slide img { height: 400px !important; }
+}
 .elementor-element-f595e2b .elementor-swiper-button { width: 64px !important; height: 64px !important; border-radius: 50% !important; border: 1px solid rgb(207, 207, 207) !important; background: rgb(255, 255, 255) !important; display: flex !important; align-items: center !important; justify-content: center !important; }
 .elementor-element-f595e2b .elementor-swiper-button svg { width: 22px !important; height: 22px !important; fill: rgb(20, 20, 20) !important; }
 @media (max-width: 767px) {
