@@ -100,8 +100,8 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05070c}
 [data-style="cinematic"] .capin{font-family:Heebo,sans-serif;font-weight:700;font-size:56px;line-height:1.2;color:#fff;-webkit-text-stroke:0;text-shadow:0 2px 14px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.9);max-width:900px}
 [data-style="cinematic"] .capin .gold{color:#D4AF64}
 [data-style="cinematic"] .prog{height:4px;background:rgba(255,255,255,.12)}
-.hookbig{width:1000px;display:flex;flex-direction:column;align-items:center;gap:4px}
-.hbl{font-size:132px;line-height:1.04;color:#fff;text-align:center;text-shadow:0 10px 40px rgba(0,0,0,.65)}
+.hookbig{width:1040px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:26px 20px;border-radius:40px;background:radial-gradient(ellipse 70% 75% at 50% 50%,rgba(8,9,12,.62) 0%,rgba(8,9,12,.35) 60%,rgba(8,9,12,0) 100%)}
+.hbl{font-size:128px;line-height:1.04;color:#fff;text-align:center;text-shadow:0 4px 0 rgba(0,0,0,.35),0 10px 40px rgba(0,0,0,.75)}
 .hbl .hw{display:inline-block}.hbl .gold{color:#D4AF64}
 .cutbg{position:absolute;inset:0;opacity:0;background:radial-gradient(ellipse 90% 70% at 50% 45%,rgba(30,31,34,.55) 0%,rgba(10,10,12,.88) 100%)}
 .cutbg::after{content:"";position:absolute;inset:0;opacity:.035;background:repeating-radial-gradient(circle at 30% 40%,#fff 0 1px,transparent 1px 3px)}
@@ -111,14 +111,14 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05070c}
 .qname{display:flex;align-items:center;gap:16px;color:#fff;font-size:44px;text-shadow:0 2px 12px rgba(0,0,0,.8);white-space:nowrap}
 .qname i{width:2px;height:40px;background:#D4AF64}.qname small{font-weight:600;font-size:32px;color:#e6e6e8}
 .ctaq{display:flex;align-items:center;gap:18px;border:3px solid #D4AF64;color:#fff;border-radius:999px;padding:16px 40px;background:rgba(14,14,16,.7);font-size:54px;white-space:nowrap}
-.ctaq b{color:#D4AF64;direction:ltr}.ctaq i{font-style:normal;color:#D4AF64}
+.ctaq b{color:#D4AF64}.ctaq i{font-style:normal;color:#D4AF64}
 .tlbar{position:absolute;left:0;right:0;top:44px;height:90px}
-.tlbase{position:absolute;right:60px;left:60px;top:22px;height:2px;background:rgba(255,255,255,.28)}
-.tlfill{position:absolute;right:60px;top:21px;height:4px;width:0;background:#D4AF64}
+.tlbase{position:absolute;right:120px;left:120px;top:22px;height:2px;background:rgba(255,255,255,.28)}
+.tlfill{position:absolute;right:120px;top:21px;height:4px;width:0;background:#D4AF64}
 .tlk{position:absolute;top:14px;width:0;opacity:.55}
 .tlk i{position:absolute;right:-8px;top:0;width:16px;height:16px;border-radius:50%;border:2px solid #D4AF64;background:#111214}
 .tlk span{position:absolute;top:28px;right:-90px;width:180px;text-align:center;font:700 30px Heebo,sans-serif;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.8)}
-.tldot{position:absolute;right:50px;top:12px;width:24px;height:24px;border-radius:50%;background:#D4AF64;box-shadow:0 0 18px rgba(212,175,100,.9)}
+.tldot{position:absolute;right:108px;top:12px;width:24px;height:24px;border-radius:50%;background:#D4AF64;box-shadow:0 0 18px rgba(212,175,100,.9)}
 .count{display:flex;flex-direction:column;align-items:center;padding:34px 70px 30px;gap:6px}
 .cnum{font-size:220px;line-height:1;color:var(--acc);direction:ltr;font-variant-numeric:tabular-nums}
 .clab{font-size:64px;line-height:1.1;text-align:center}
@@ -136,3 +136,10 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05070c}
 .bxname img{width:64px;height:64px;object-fit:contain;background:#E4B84A;border-radius:12px;padding:6px}
 .bxname b{display:block;font-size:40px;color:#fff;line-height:1.1}.bxname small{display:block;font:600 26px Heebo,sans-serif;color:#C9D4EE;margin-top:2px}
 .bxtopic{position:absolute;left:36px;top:168px;background:#E4B84A;color:#13254A;font-size:38px;padding:12px 30px;border-radius:999px;box-shadow:0 10px 26px rgba(0,0,0,.35)}
+
+/* real proof documents (blurred) */
+.proof{width:920px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.pimgw{width:900px;max-height:1180px;overflow:hidden;border-radius:18px;border:3px solid var(--acc);box-shadow:0 30px 70px rgba(0,0,0,.6);background:#fff}
+.pimgw img{display:block;width:100%;height:auto}
+.pnote{font:700 30px Heebo,sans-serif;color:#fff;background:rgba(0,0,0,.55);padding:8px 22px;border-radius:999px}
+.pcap{font-family:var(--fh),Heebo,sans-serif;font-weight:var(--fhw);font-size:58px;color:#fff;text-align:center;text-shadow:0 6px 24px rgba(0,0,0,.7)}

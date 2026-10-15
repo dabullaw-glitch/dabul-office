@@ -221,7 +221,8 @@ for n, b in enumerate(plan['beats']):
         ov_js.append(f'tl.to("#{P}",{{opacity:0,filter:"blur(10px)",duration:.4,ease:"power1.in"}},{round(en - 0.4, 3)});')
         add_sfx('whoosh', st, 0.12)
     elif kind == 'hook' and STYLE == 'boxed':     # wide navy box with a gold bottom line, under the chin (never on the face)
-        inner = (f'<div class="hookbox pnl" id="{P}"><div class="hb1 hf" id="{bid}a">{esc(b["l1"])}</div><div class="hb2 hf" id="{bid}b">{esc(b["l2"])}</div></div>')
+        fs1 = min(84, int(1560 / max(1, len(b['l1'])))); fs2 = min(84, int(1560 / max(1, len(b['l2']))))
+        inner = (f'<div class="hookbox pnl" id="{P}"><div class="hb1 hf" id="{bid}a" style="font-size:{fs1}px">{esc(b["l1"])}</div><div class="hb2 hf" id="{bid}b" style="font-size:{fs2}px">{esc(b["l2"])}</div></div>')
         ov_js += [f'tl.fromTo("#{P}",{{y:50,opacity:0}},{{y:0,opacity:1,duration:.45,ease:"power3.out"}},{st});',
                   f'tl.fromTo("#{bid}b",{{x:-40,opacity:0}},{{x:0,opacity:1,duration:.4,ease:"power3.out"}},{round(st + 0.35, 3)});', out]
         add_sfx('whoosh', st, 0.22)
@@ -232,6 +233,13 @@ for n, b in enumerate(plan['beats']):
         inner = f'<div class="qname" id="{P}"><span class="hf">{esc(b["name"])}</span><i></i><small>{esc(b["role"])}</small></div>'
         ov_js += [f'tl.fromTo("#{P}",{{opacity:0,x:30}},{{opacity:1,x:0,duration:.7,ease:"power2.out"}},{st});',
                   f'tl.to("#{P}",{{opacity:0,duration:.5}},{round(en - 0.5, 3)});']
+    elif kind == 'proof':   # a real document from the case, personal details already blurred; full screen, slow zoom to the key line
+        fn = os.path.basename(b['img']); shutil.copy(b['img'], f'{proj}/assets/{fn}')
+        inner = (f'<div class="proof" id="{P}"><div class="pimgw"><img id="{bid}i" src="assets/{fn}" style="transform-origin:{esc(b.get("focus", "50% 40%"))}"/></div>'
+                 f'<div class="pnote">מקרה אמיתי · פרטים מזהים הוסתרו</div>{("<div class=pcap>" + esc(b["caption"]) + "</div>") if b.get("caption") else ""}</div>')
+        ov_js += [f'tl.fromTo("#{P}",{{opacity:0,y:40,scale:.94}},{{opacity:1,y:0,scale:1,duration:.55,ease:"power2.out"}},{st});',
+                  f'tl.fromTo("#{bid}i",{{scale:1}},{{scale:{b.get("zoom", 1.35)},duration:{max(1.0, d - 0.6)},ease:"sine.inOut"}},{round(st + 0.5, 3)});', out]
+        add_sfx('whoosh', st, 0.18)
     elif kind == 'count':   # a big number that counts up (days, years, steps). Never prices, never promised results
         inner = (f'<div class="count pnl" id="{P}"><div class="cnum hf"><span id="{bid}n">0</span>{esc(b.get("suffix", ""))}</div>'
                  f'<div class="clab hf">{esc(b["label"])}</div>{("<div class=csub>" + esc(b["sub"]) + "</div>") if b.get("sub") else ""}</div>')
@@ -312,7 +320,7 @@ for n, b in enumerate(plan['beats']):
         add_sfx('pop', st, 0.35)
     else:
         continue
-    full = STYLE == 'cinematic' and kind not in ('hook', 'name', 'cta') and d >= 1.5   # a very short beat stays above his head
+    full = (STYLE == 'cinematic' and kind not in ('hook', 'name', 'cta') and d >= 1.5) or kind == 'proof'   # proofs are always full screen
     beats.append(dict(id=bid, kind=kind, st=st, en=en, d=d, inner=inner, low=low, track=30 + n, full=full))
 
 # ---- 5. measure the panels in the real fonts (headless Chromium), so the layout knows their size ----
@@ -338,12 +346,19 @@ try:
 except Exception as e:  # fallback estimates
     print('measure fallback:', e, file=sys.stderr)
 EST = {'hook': (1000, 380), 'thirds': (680, 420), 'stack': (900, 420), 'boom': (900, 200), 'title': (700, 200), 'option': (940, 175),
-       'stamp': (440, 430), 'term': (960, 280), 'name': (640, 140), 'cta': (560, 120), 'count': (700, 420)}
+       'stamp': (440, 430), 'term': (960, 280), 'name': (640, 140), 'cta': (560, 120), 'count': (700, 420), 'proof': (920, 1300)}
 for b in beats: b['w'], b['h'] = sizes.get(b['id'], EST[b['kind']])
 
 # ---- 6. layout: keep every panel off the face ----
 # modes: band (fits above the head, maybe a little smaller), push (picture slides down by D), split (picture shrinks to the bottom)
 GAPF = 34; SPLIT = 0.6; PUSH_MAX = 430
+CAP_Y = {'boxed': 1470, 'cinematic': 1215}.get(STYLE, CAP_TOP)
+def chin_fit(b, fb, wfit):
+    top = fb + 40; room = CAP_Y - 30 - top
+    if room <= 0: return False
+    k = min(wfit, room / b['h'])
+    if k < 0.72 * wfit: return False
+    b.update(mode='chin', s=round(k, 3), y=round(top + max(0, (room - b['h'] * k) / 2)), D=0); return True
 for b in beats:
     if b['low']:
         b['mode'] = 'low'; continue
@@ -362,6 +377,10 @@ for b in beats:
         b.update(mode='band', s=wfit, y=TOP + (space - h) / 2, D=0)
     elif h * 0.82 <= space:
         b.update(mode='band', s=round(wfit * space / h, 3), y=TOP, D=0)
+    elif h - space <= 260:
+        D = h - space + 8; b.update(mode='push', s=wfit, y=TOP, D=round(D))
+    elif chin_fit(b, fb, wfit):
+        pass   # 15.10.2026: no room above the head -> the graphic sits under the chin (on the chest), the picture stays whole
     elif h - space <= PUSH_MAX:
         D = h - space + 8; b.update(mode='push', s=wfit, y=TOP, D=round(D))
     else:
@@ -421,10 +440,10 @@ if STYLE == 'boxed':
         ov_js += [f'tl.to("#bxcard",{{opacity:0,duration:.2}},{round(max(0, a0 - 0.2), 3)});', f'tl.to("#bxcard",{{opacity:1,duration:.3}},{round(a1, 3)});']
 if STYLE == 'cinematic' and plan.get('stages'):
     stg = plan['stages']; n_ = len(stg)
-    ticks = ''.join(f'<div class="tlk" style="right:{round(60 + i * 960 / max(1, n_ - 1))}px"><i></i><span>{esc(x["label"])}</span></div>' for i, x in enumerate(stg))
+    ticks = ''.join(f'<div class="tlk" style="right:{round(120 + i * 840 / max(1, n_ - 1))}px"><i></i><span>{esc(x["label"])}</span></div>' for i, x in enumerate(stg))
     ov_html.append(f'<div class="ov clip" id="tline" data-start="0" data-duration="{BODY}" data-track-index="86"><div class="tlbar"><div class="tlbase"></div><div class="tlfill" id="tlf"></div>{ticks}<div class="tldot" id="tld"></div></div></div>')
     for i, x in enumerate(stg):
-        at = T(x['at']) if 'at' in x else 0; xr = round(i * 960 / max(1, n_ - 1))
+        at = T(x['at']) if 'at' in x else 0; xr = round(i * 840 / max(1, n_ - 1))
         ov_js += [f'tl.to("#tld",{{x:{-xr},duration:.7,ease:"power2.inOut"}},{at});', f'tl.to("#tlf",{{width:{xr},duration:.7,ease:"power2.inOut"}},{at});',
                   f'tl.to("#tline .tlk:nth-child({i + 3})",{{opacity:1,duration:.3}},{at});']
         if i: add_sfx('tick', at, 0.18)

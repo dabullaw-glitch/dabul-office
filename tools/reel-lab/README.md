@@ -9,9 +9,18 @@ word-by-word captions (active word in gold), animated graphics that follow what 
    above the head (smaller if needed), or the picture slides down / shrinks for a moment to make room, then returns.
    If a video has little room above the head, use fewer or smaller graphics there and more where there is room.
 3. **No music at all.** Only light sound effects (whoosh, pop, hit) under the voice.
-4. **A different design in every video.** Six themes in `themes.py` (navy-gold, paper, glass, bold, mono, warm).
-   Never use a theme that was used in the last 3 reels (`--avoid=a,b,c`). Record the theme used in
-   Supabase `docs settings/video.themeHistory` (newest first). New themes are welcome: add them to `themes.py`.
+4. **A different design in every video, three styles in turn** (Yakir 12.10.2026: "כל פעם אחד מהם"):
+   - `v3`: the approved demo look, with six colour themes in `themes.py` (navy-gold, paper, glass, bold, mono, warm);
+     never a theme used in the last 3 v3 reels (`--avoid=a,b,c`).
+   - `cinematic`: black and gold (`styles/cinematic-gold.md`) plus the documentary quality bar (`refs/README.md`):
+     big word-by-word hook, quiet captions, full-screen gold cutaways (2-5 s) while his voice continues, a stage timeline at
+     the top (`"stages"` in the plan), numbers that count up (`count` beat).
+   - `boxed`: navy and gold (`styles/boxed-navy.md`): name card, topic pill (`"topic"`), hook box under the chin, navy caption boxes.
+   Pick with `"style"` in the plan or `--style=`; otherwise `--history=<styles newest first>` takes the one used longest ago.
+   Record style and theme in Supabase `docs settings/video` (`styleHistory`, `themeHistory`, newest first).
+   When there is no room above the head, a graphic goes under the chin (on the chest); the picture shrinks only as a last resort.
+   Real case documents: `proof` beat (always full screen, slow zoom, "מקרה אמיתי · פרטים מזהים הוסתרו"); blur every
+   name, ID, address, parcel, file number, phone and signature BEFORE using the image.
 5. Office rules: name "יקיר דבול - משרד עורכי דין", phone 09-8613413, "המידע כללי ואינו ייעוץ משפטי" on the end card.
    No superlatives, no "מומחה", no promises, no "חינם", no prices.
 
