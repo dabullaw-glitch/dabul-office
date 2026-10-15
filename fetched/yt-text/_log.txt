@@ -3,3 +3,18 @@ model ivrit-ai/whisper-large-v3-turbo-ct2
 ok B70tXNTbuZA
 model ivrit-ai/whisper-large-v3-turbo-ct2
 ok IIOYIeP8EaE
+skip B70tXNTbuZA
+skip IIOYIeP8EaE
+skip f6B99ZScgr0
+skip 6RZ3nWRN864
+skip GkDcw5HXFKQ
+skip Wg5S8hxJV0s
+skip JegPkbwFPrk
+skip TTouohl2dDY
+skip 4nGa0gNA5gM
+skip 0HBDYzo5X9c
+skip I5KYzbYD4RU
+skip IULlXagW0-U
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+model ivrit-ai/whisper-large-v3-turbo-ct2
+ok eqmbEBkkPUQ
