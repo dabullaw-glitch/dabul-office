@@ -40,7 +40,7 @@ for name in ('gsap.min.js', 'logo-d.png', 'logo-full.png'):
     shutil.copy(f'{HERE}/assets/{name}', f'{proj}/assets/{name}')
 
 STYLE = opts.get('style') or pick_style(plan, [x for x in opts.get('history', '').split(',') if x])
-TNAME = {'cinematic': 'cinematic-gold', 'boxed': 'boxed-navy'}.get(STYLE) or pick_theme(plan, [x for x in opts.get('avoid', '').split(',') if x])
+TNAME = opts.get('theme') or {'cinematic': 'cinematic-gold', 'boxed': 'boxed-navy'}.get(STYLE) or pick_theme(plan, [x for x in opts.get('avoid', '').split(',') if x])
 TH = THEMES[TNAME]
 MIN, MOUT = MOTION[TH['motion']]
 MIN = MIN.replace('{T}', str(TH['tilt'])); MOUT = MOUT.replace('{T}', str(TH['tilt']))
@@ -354,7 +354,7 @@ for b in beats: b['w'], b['h'] = sizes.get(b['id'], EST[b['kind']])
 GAPF = 34; SPLIT = 0.6; PUSH_MAX = 430
 CAP_Y = {'boxed': 1470, 'cinematic': 1215}.get(STYLE, CAP_TOP)
 def chin_fit(b, fb, wfit):
-    top = fb + 40; room = CAP_Y - 30 - top
+    top = fb + 85; room = CAP_Y - 30 - top   # 15.10: the face box ends at the lips, the beard needs room
     if room <= 0: return False
     k = min(wfit, room / b['h'])
     if k < 0.72 * wfit: return False
