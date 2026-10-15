@@ -36,12 +36,12 @@ function dabul_watch_html($vid, $w) {
 	$h = '<div class="dblw" dir="rtl">'
 		. '<nav class="dblw-crumbs" aria-label="מיקום בדף"><a href="' . esc_url(home_url('/')) . '">דף הבית</a> / <a href="' . esc_url(get_permalink(5225)) . '">סרטונים</a></nav>'
 		. '<h1>' . $e($w['title']) . '</h1>'
-		. '<div class="dblw-meta">עו״ד יקיר דבול' . (!empty($w['dur']) ? ' · ' . dabul_watch_dur($w['dur']) . ' דקות' : '') . ($date ? ' · ' . $date : '') . '</div>'
+		. '<div class="dblw-meta">עו״ד יקיר דבול' . (!empty($w['dur']) ? ' · ' . ((float) $w['dur'] < 59.5 ? (int) round((float) $w['dur']) . ' שניות' : dabul_watch_dur($w['dur']) . ' דקות') : '') . ($date ? ' · ' . $date : '') . '</div>'
 		. '<div class="dblw-player' . ($short ? ' tall' : '') . '" data-v="' . esc_attr($vid) . '"></div>'
 		. '<div class="dblw-sec"><h2>על מה הסרטון</h2>' . $sum . '</div>'
 		. ($pts ? '<div class="dblw-sec"><h2>הנקודות החשובות</h2><ul class="dblw-pts">' . $pts . '</ul></div>' : '')
 		. ($art ? '<div class="dblw-art"><span>המדריך המלא באתר:</span> <a href="' . esc_url(get_permalink($art)) . '">' . $e(html_entity_decode(get_the_title($art), ENT_QUOTES)) . '</a></div>' : '')
-		. ($tr ? '<details class="dblw-tr"><summary>התמלול המלא של הסרטון</summary><div>' . $tr . '</div></details>' : '')
+		. ($tr ? '<details class="dblw-tr"><summary>מה נאמר בסרטון (בעריכה קלה)</summary><div>' . $tr . '</div></details>' : '')
 		. '<div class="dblw-cta"><div><b>יש לכם שאלה על הנכס שלכם?</b><span>שיחה עם המשרד, ונגיד לכם מה כדאי לבדוק.</span></div>'
 		. '<div class="dblw-btns"><a href="tel:+97298613413">09-8613413</a><a href="https://wa.me/972505580189">וואטסאפ</a></div></div>'
 		. '<p class="dblw-note">המידע בסרטון ובדף כללי ואינו ייעוץ משפטי. כל מקרה נבדק לגופו.</p>'
