@@ -684,3 +684,36 @@ crf 23 -> 13800360 bytes
 model ivrit-ai/whisper-large-v3-turbo-ct2
 17 segments
 {"fix": {"roll": 0.0, "n": 2411, "cx": 512, "top": 559, "fh": 480, "luma": 138}, "samples": 189, "detected": 189, "W": 1080, "H": 1920, "face_cx": [492, 552], "head_top": [542, 568], "chin": [1052, 1096]}
+-rw-r--r-- 1 runner runner 66973722 Oct 15 14:16 /tmp/raw/t1015-4.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "r_frame_rate": "30/1",
+            "duration": "41.968333",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "41.865578",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "41.979569"
+    }
+}
+crf 23 -> 14903361 bytes
+model ivrit-ai/whisper-large-v3-turbo-ct2
+17 segments
+{"fix": {"roll": -0.0, "n": 2216, "cx": 506, "top": 535, "fh": 498, "luma": 141}, "samples": 210, "detected": 210, "W": 1080, "H": 1920, "face_cx": [487, 531], "head_top": [521, 549], "chin": [1058, 1098]}
