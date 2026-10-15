@@ -391,3 +391,7 @@ Traceback (most recent call last):
   File "av/container/core.py", line 479, in av.container.core.open
 TypeError: open() got an unexpected keyword argument 'metadata_errors'
 fail cand-long3
+[in#0 @ 0x55bb525c8e00] Error opening input: Invalid data found when processing input
+Error opening input file /tmp/a/cand-ikul.src.
+Error opening input files: Invalid data found when processing input
+fail cand-ikul
