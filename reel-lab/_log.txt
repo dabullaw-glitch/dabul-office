@@ -168,3 +168,36 @@ Queuing commands only on filters supporting the specific command is unsupported
 crf 23 -> 24083431 bytes
 model ivrit-ai/whisper-large-v3-turbo-ct2
 17 segments
+-rw-r--r-- 1 runner runner 339244564 Oct 15 07:55 /tmp/raw/inherit-siblings.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "video",
+            "width": 720,
+            "height": 1280,
+            "r_frame_rate": "30/1",
+            "duration": "213.106667",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "213.066304",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "213.134309"
+    }
+}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+model ivrit-ai/whisper-large-v3-turbo-ct2
+83 segments
+{"fix": {"roll": 0.0, "n": 9903, "cx": 535, "top": 458, "fh": 495, "luma": 151}, "samples": 1066, "detected": 1066, "W": 1080, "H": 1920, "face_cx": [502, 582], "head_top": [440, 482], "chin": [940, 1030]}
