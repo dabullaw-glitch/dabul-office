@@ -1,0 +1,42 @@
+name: lighthouse trace (LCP debug)
+# 15.10.2026: PageSpeed sometimes shows NO_LCP on the phone home page. Runs Lighthouse 5 times with the trace saved and
+# writes the LCP events (candidates, invalidations, user input, navigations) of every run to tools/lighthouse/<name>-lcp.json.
+on:
+  workflow_dispatch:
+    inputs:
+      url: { description: 'page address', required: true, default: 'https://dabullaw.co.il/' }
+      name: { description: 'result name', required: true, default: 'home-trace' }
+permissions:
+  contents: write
+jobs:
+  lh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Lighthouse x5 with traces
+        run: |
+          mkdir -p tools/lighthouse /tmp/lh
+          for i in 1 2 3 4 5; do
+            npx -y lighthouse@12 "${{ inputs.url }}" --only-categories=performance --save-assets --output=json --output-path=/tmp/lh/r$i.json --chrome-flags="--headless=new --no-sandbox" --quiet || true
+          done
+          node -e '
+            const fs=require("fs"); const out=[];
+            for (const i of [1,2,3,4,5]) { try {
+              const r=JSON.parse(fs.readFileSync(`/tmp/lh/r${i}.json`,"utf8"));
+              const t=JSON.parse(fs.readFileSync(`/tmp/lh/r${i}-0.trace.json`,"utf8")); const ev=t.traceEvents||t;
+              const nav=ev.find(e=>e.name==="navigationStart"&&e.args?.data?.isLoadingMainFrame&&e.args?.data?.documentLoaderURL?.startsWith("http"));
+              const t0=nav?nav.ts:0;
+              const pick=ev.filter(e=>/largestContentfulPaint|firstContentfulPaint|EventDispatch|navigationStart|LayoutShift|domContentLoaded|loadEventEnd|FrameCommittedInBrowser/.test(e.name) && !(e.name==="EventDispatch" && !/^(click|keydown|mousedown|pointerdown|scroll|touchstart|wheel)$/.test(e.args?.data?.type||"")))
+                .map(e=>({n:e.name,ms:Math.round((e.ts-t0)/1000),type:e.args?.data?.type,size:e.args?.data?.size,nodeId:e.args?.data?.nodeId,url:(e.args?.data?.imageUrl||e.args?.data?.documentLoaderURL||"").slice(0,90),cand:e.args?.data?.candidateIndex,frame:(e.args?.frame||"").slice(0,8)}));
+              out.push({run:i, lcp:r.audits["largest-contentful-paint"].numericValue||r.audits["largest-contentful-paint"].errorMessage, events:pick.slice(0,200)});
+            } catch(e) { out.push({run:i,error:String(e)}); } }
+            fs.writeFileSync("tools/lighthouse/${{ inputs.name }}-lcp.json", JSON.stringify(out,null,1)); console.log(out.map(o=>o.lcp));'
+      - name: Save
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add tools/lighthouse
+          git commit -qm "lighthouse trace: ${{ inputs.name }}" || exit 0
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
