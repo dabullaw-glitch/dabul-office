@@ -46,6 +46,14 @@ jobs:
             out=fetched/yt-text/$id; [ -s "$out.txt" ] && { echo "skip $id"; continue; }
             mkdir -p /tmp/a
             curl -fsSL --retry 3 "https://drive.usercontent.google.com/download?id=$drive&export=download&confirm=t" -o /tmp/a/$id.src < /dev/null || { echo "download fail $id"; continue; }
+            if head -c 300 /tmp/a/$id.src | grep -qi '<html\|<!doctype'; then
+              echo "drive page for $id: $(grep -o '<title>[^<]*' /tmp/a/$id.src | head -1) $(grep -o 'uc-error-subcaption[^<]*<[^<]*' /tmp/a/$id.src | head -1)"
+              uuid=$(grep -o 'name="uuid" value="[^"]*"' /tmp/a/$id.src | head -1 | cut -d'"' -f4)
+              at=$(grep -o 'name="at" value="[^"]*"' /tmp/a/$id.src | head -1 | cut -d'"' -f4)
+              curl -fsSL --retry 3 "https://drive.usercontent.google.com/download?id=$drive&export=download&confirm=t&uuid=$uuid&at=$at" -o /tmp/a/$id.src < /dev/null || { echo "download fail 2 $id"; continue; }
+              head -c 300 /tmp/a/$id.src | grep -qi '<html\|<!doctype' && { echo "still a page $id"; continue; }
+            fi
+            ls -la /tmp/a/$id.src
             ffmpeg -nostdin -y -v error -i /tmp/a/$id.src -vn -ac 1 -ar 16000 /tmp/a/$id.wav && python3 /tmp/tr.py /tmp/a/$id.wav "$out.txt" < /dev/null && echo "ok $id" || echo "fail $id"
             ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/a/$id.src > "$out.dur" 2>/dev/null || true
             rm -f /tmp/a/$id.*
