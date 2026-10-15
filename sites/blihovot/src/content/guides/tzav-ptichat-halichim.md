@@ -36,7 +36,7 @@ sources:
     url: "https://www.kolzchut.org.il/he/תשלום_חודשי_(תשלום_נדרש)_של_חייב_בהליכי_חדלות_פירעון_ושיקום_כלכלי_(פשיטת_רגל)"
   - title: "כל זכות: חדלות פירעון ושיקום כלכלי לחובות בסכום נמוך"
     url: "https://www.kolzchut.org.il/he/חדלות_פירעון_ושיקום_כלכלי_(פשיטת_רגל)_לחובות_בסכום_נמוך"
-related: [ma-ze-hadlut-piraon, tkufat-habeinayim, hagbalot, saf-hovot]
+related: [ma-ze-hadlut-piraon, tkufat-habeinayim, hagbalot, saf-hovot, mismachim-bakasha-hadlut]
 ---
 
 **צו לפתיחת הליכים** הוא ההחלטה שפותחת רשמית את הליך חדלות הפירעון של אדם פרטי. הוא משנה את המצב כמעט מיד: הנושים מפסיקים לגבות כל אחד בנפרד, וההליכים נגדכם מוקפאים. מנגד, אתם נכנסים למסגרת מסודרת עם תשלום חודשי, דיווחים קבועים והגבלות.
