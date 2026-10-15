@@ -1,0 +1,947 @@
+{
+ "at": "2026-10-15T10:36:13Z",
+ "sitemapCount": 379,
+ "sitemapBad": [
+  {
+   "url": "https://dabullaw.co.il/איך-לנהל-משא-ומתן-מוצלח-לרכישת-דירה-2/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/איך-לנהל-משא-ומתן-מוצלח-לרכישת-דירה/"
+  },
+  {
+   "url": "https://dabullaw.co.il/כיצד-לבחור-עורך-דין-מקרקעין-2/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/כיצד-לבחור-עורך-דין-מקרקעין/"
+  },
+  {
+   "url": "https://dabullaw.co.il/עורך-דין-נדלן-מחיר-כמה-באמת-עולה-הליוו/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/מחיר-עורך-דין-מקרקעין/"
+  },
+  {
+   "url": "https://dabullaw.co.il/נציגות-דיירים-במתחם-התחדשות-עירונית/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/נציגות-דיירים-במתחם-התחדשות-עירונית-2/"
+  },
+  {
+   "url": "https://dabullaw.co.il/זכויות-בנייה-והצמדת-גגות-בבניינים-משו-2/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/זכויות-בנייה-והצמדת-גגות-בבניינים-משו/"
+  },
+  {
+   "url": "https://dabullaw.co.il/איך-לבחור-עורך-דין-מקרקעין-הנכון-לכם/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/כיצד-לבחור-עורך-דין-מקרקעין/"
+  },
+  {
+   "url": "https://dabullaw.co.il/התקנת-עמדת-טעינה-לרכב-חשמלי-בבית-משותף/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/התקנת-עמדת-טעינה-לרכב-חשמלי-בבית-משותף-2/"
+  },
+  {
+   "url": "https://dabullaw.co.il/רישום-בית-משותף-המהלך-הבירוקרטי-שיקפי/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/תשריט-ותקנון-בית-משותף-2/"
+  },
+  {
+   "url": "https://dabullaw.co.il/הגנה-על-דירת-מגורים-בהליך-חדלות-פירעון-2/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/הגנה-על-דירת-מגורים-בהליך-חדלות-פירעון/"
+  },
+  {
+   "url": "https://dabullaw.co.il/הסכם-שיתוף-במקרקעין-המדריך-המלא-2025/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/הסכם-שיתוף-במקרקעין/"
+  },
+  {
+   "url": "https://dabullaw.co.il/תשריט-בית-משותף-המדריך-המלא-למפת-הבעל/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/תשריט-ותקנון-בית-משותף-2/"
+  },
+  {
+   "url": "https://dabullaw.co.il/apartment-splitting-secondary-unit-legality-tax-2/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/apartment-splitting-secondary-unit-legality-tax/"
+  },
+  {
+   "url": "https://dabullaw.co.il/מחשבון-תשואה-למשקיעים/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/calculators/rental-yield/"
+  },
+  {
+   "url": "https://dabullaw.co.il/המדריך-המלא-לתיק-ותשריט-בית-משותף/",
+   "sitemap": "post-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/תשריט-ותקנון-בית-משותף-2/"
+  },
+  {
+   "url": "https://dabullaw.co.il/אודות/",
+   "sitemap": "page-sitemap.xml",
+   "status": 301,
+   "to": "https://dabullaw.co.il/אודות-המשרד/"
+  }
+ ],
+ "redirectLinks": [
+  {
+   "link": "https://dabullaw.co.il/תכנון-מס-וליווי-במיסוי-מקרקעין-שבח-רכי/",
+   "to": "https://dabullaw.co.il/מיסוי-מקרקעין-המדריך-המלא/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 362,
+   "sitewide": true,
+   "examples": [
+    "https://dabullaw.co.il/",
+    "https://dabullaw.co.il/5-הטעויות-הנפוצות-בחוזי-מכר-דירות-בנתני/",
+    "https://dabullaw.co.il/agreed-compensation-sale-contract-enforceability/",
+    "https://dabullaw.co.il/airbnb-בדירה-מה-מותר-ומה-אסור/",
+    "https://dabullaw.co.il/apartment-exchange-swap-tax-legal-guide/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/מקרקעין-ונדל״ן/",
+   "to": "https://dabullaw.co.il/real-estate-lawyer/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 22,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/אישור-עירייה-לטאבו/",
+    "https://dabullaw.co.il/ביטול-הסכם-תמ״א-38/",
+    "https://dabullaw.co.il/דחיית-מס-שבח/",
+    "https://dabullaw.co.il/דמי-היוון-לרמי/",
+    "https://dabullaw.co.il/הגדלת-זכויות-בנייה/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/14-דרכים-חוקיות-להפחתת-מס-שבח-ומיסוי-מקר/",
+   "to": "https://dabullaw.co.il/דרכים-חוקיות-להפחתת-מס-שבח-ומיסוי/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 14,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/apartment-exchange-swap-tax-legal-guide/",
+    "https://dabullaw.co.il/contract-enforcement-specific-performance-injunction/",
+    "https://dabullaw.co.il/declaring-value-below-market-risks-objections/",
+    "https://dabullaw.co.il/misui-mekarkein-giroshin-dira/",
+    "https://dabullaw.co.il/בדיקת-חוזה-מכר-קבלן-סעיפי-מלכודת/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/תשריט-בית-משותף-המדריך-המלא-למפת-הבעל/",
+   "to": "https://dabullaw.co.il/תשריט-ותקנון-בית-משותף-2/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 14,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/airbnb-בדירה-מה-מותר-ומה-אסור/",
+    "https://dabullaw.co.il/אישור-עירייה-לטאבו/",
+    "https://dabullaw.co.il/בדיקת-חוזה-יזם-פינוי-בינוי/",
+    "https://dabullaw.co.il/הגדלת-זכויות-בנייה/",
+    "https://dabullaw.co.il/ליווי-מלא-עד-חתימת-הסכם-דירה/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/נציגות-דיירים-במתחם-התחדשות-עירונית/",
+   "to": "https://dabullaw.co.il/נציגות-דיירים-במתחם-התחדשות-עירונית-2/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 11,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/betterment-levy-urban-renewal-exemption/",
+    "https://dabullaw.co.il/cancel-pinui-binui-agreement-regret-guide/",
+    "https://dabullaw.co.il/construction-period-rent-pinui-binui-guide/",
+    "https://dabullaw.co.il/developer-lawyer-vs-tenant-lawyer-urban-renewal/",
+    "https://dabullaw.co.il/no-shop-exclusivity-agreement-urban-renewal-guide/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/רישום-בית-משותף-המהלך-הבירוקרטי-שיקפי/",
+   "to": "https://dabullaw.co.il/תשריט-ותקנון-בית-משותף-2/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 10,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/הערה-על-אי-התאמה-תקנה-29/",
+    "https://dabullaw.co.il/חברה-משכנת-המדריך-לרוכשי-דירות-שעדיין/",
+    "https://dabullaw.co.il/ייצוג-דיירים-בפרויקט-תמ״א-38/",
+    "https://dabullaw.co.il/כל-מה-שצריך-לדעת-על-בתים-משותפים-וועדי-ב/",
+    "https://dabullaw.co.il/מפת-אתר/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/קניית-דירה-על-הנייר-מקבלן/",
+   "to": "https://dabullaw.co.il/קניה-מקבלן/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 9,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/אודות-המשרד/",
+    "https://dabullaw.co.il/איחור-במסירת-דירה-מקבלן/",
+    "https://dabullaw.co.il/בדיקת-חוזה-מכר-קבלן-סעיפי-מלכודת/",
+    "https://dabullaw.co.il/בדק-בית-דירה-מקבלן/",
+    "https://dabullaw.co.il/ביטול-הסכם-לקניית-דירה-מקבלן/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/ליקויי-בנייה-מדריך-לרוכש-דירה-חדשה-א/",
+   "to": "https://dabullaw.co.il/ליקויי-בנייה-בדירה-מקבלן/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 9,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/real-estate-lawyer/",
+    "https://dabullaw.co.il/water-damage-lawsuit-new-apartment/",
+    "https://dabullaw.co.il/איחור-במסירת-דירה-מקבלן/",
+    "https://dabullaw.co.il/בדיקת-חוזה-יזם-פינוי-בינוי/",
+    "https://dabullaw.co.il/בדיקת-חוזה-מכר-קבלן-סעיפי-מלכודת/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/עריךת-הסכם-מקרקעין/",
+   "to": "https://dabullaw.co.il/עריכת-הסכם-מקרקעין/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 6,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/בדיקת-חוזה-יזם-פינוי-בינוי/",
+    "https://dabullaw.co.il/בדיקת-חוזה-מכר-קבלן-סעיפי-מלכודת/",
+    "https://dabullaw.co.il/ביטול-הסכם-תמ״א-38/",
+    "https://dabullaw.co.il/ייצוג-דיירים-בפרויקט-תמ״א-38/",
+    "https://dabullaw.co.il/פירוק-שיתוף-במקרקעין-בין-בני-זוג-אגב-גי/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/זכויות-בנייה-והצמדת-גגות-בבניינים-משו-2/",
+   "to": "https://dabullaw.co.il/זכויות-בנייה-והצמדת-גגות-בבניינים-משו/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 6,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/neighbor-built-on-common-property-guide/",
+    "https://dabullaw.co.il/objection-neighbor-building-permit-guide/",
+    "https://dabullaw.co.il/orech-din-mekarkein-givat-hairusim-netanya/",
+    "https://dabullaw.co.il/real-estate-lawyer-ramat-poleg-netanya/",
+    "https://dabullaw.co.il/section-197-planning-compensation-guide/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/המדריך-המלא-לתיק-ותשריט-בית-משותף/",
+   "to": "https://dabullaw.co.il/תשריט-ותקנון-בית-משותף-2/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 5,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/land-registry-title-registration/",
+    "https://dabullaw.co.il/preliminary-checks-before-buying-real-estate-guide/",
+    "https://dabullaw.co.il/yakir-dabul-real-estate-lawyer/",
+    "https://dabullaw.co.il/המדריך-המלא-לעסקת-מקרקעין/",
+    "https://dabullaw.co.il/מפת-אתר/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/מחשבון-תשואה-למשקיעים/",
+   "to": "https://dabullaw.co.il/calculators/rental-yield/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 4,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/calculators/",
+    "https://dabullaw.co.il/commercial-vs-residential-real-estate-investment-guide/",
+    "https://dabullaw.co.il/מפת-אתר/",
+    "https://dabullaw.co.il/עורך-דין-מקרקעין-בנתניה/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/המדריך-למס-רכיה-2025-כמה-תשלמו-למדינה-ואי/",
+   "to": "https://dabullaw.co.il/המדריך-למס-רכישה-2025-כמה-תשלמו-למדינה-ואי/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 3,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/דירה-להשקעה-בשם-חברה-בעמ/",
+    "https://dabullaw.co.il/מכירת-דירה-שהתקבלה-בירושה/",
+    "https://dabullaw.co.il/פירוק-שיתוף-במקרקעין-בין-בני-זוג-אגב-גי/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/קניית-דירה-על-הנייר/",
+   "to": "https://dabullaw.co.il/קניה-מקבלן/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 3,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/איחור-במסירת-דירה-מקבלן/",
+    "https://dabullaw.co.il/עורך-דין-מקרקעין-בחדרה/",
+    "https://dabullaw.co.il/עורך-דין-מקרקעין-בכפר-יונה/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/המדריך-המלא-לרכישת-דירה-מקבלן-מחוזה-וע/",
+   "to": "https://dabullaw.co.il/המדריך-המלא-לרכישת-דירה-מקבלן-2026/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 3,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/אתם-שואלים-עוד-יקיר-דבול-עונה-המדריך/",
+    "https://dabullaw.co.il/דירה-להשקעה-3-אסטרטגיות/",
+    "https://dabullaw.co.il/המדריך-האולטימטיבי-איך-לבחור-עורך-דין/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/משרד-עורכי-דין-מקרקעין-דבול-ושות׳-ליוו/",
+   "to": "https://dabullaw.co.il/yakir-dabul-real-estate-lawyer/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 3,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/misui-mekarkein-giroshin-dira/",
+    "https://dabullaw.co.il/misui-mirkain-yerusha-mas-shevach/",
+    "https://dabullaw.co.il/real-estate-lawyer/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/עורך-דין-סכסוךי-שכנים/",
+   "to": "https://dabullaw.co.il/סכסוכי-שכנים-ובית-משותף-מפקח-רכוש-משות/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/תיקון-צו-רישום-בית-משותף/",
+    "https://dabullaw.co.il/תשריט-לא-תואם-בבית-משותף/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/התמודדות-עם-תשריטים-לא-תואמים/",
+   "to": "https://dabullaw.co.il/תשריט-לא-תואם-בבית-משותף/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מה-לבדוק-לפני-שמפרסמים-דירה-למכירה/",
+    "https://dabullaw.co.il/תיקון-צו-רישום-בית-משותף/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/המדריך-המלא-ומחשבון-להוצאות-לרךישת-די/",
+   "to": "https://dabullaw.co.il/המדריך-המלא-ומחשבון-להוצאות-לרכישת-די/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מע״מ-בעסקת-מקרקעין/",
+    "https://dabullaw.co.il/עורך-דין-מקרקעין-בכפר-סבא-המדריך-המלא-ל/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/סכסוךי-שכנים-ובית-משותף-מפקח-רךוש-משות/",
+   "to": "https://dabullaw.co.il/סכסוכי-שכנים-ובית-משותף-מפקח-רכוש-משות/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/הגדלת-זכויות-בנייה/",
+    "https://dabullaw.co.il/תשריט-לא-תואם-בבית-משותף/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/בדיקת-חוזה-מכר-קבלן/",
+   "to": "https://dabullaw.co.il/בדיקת-חוזה-מכר-קבלן-סעיפי-מלכודת/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/עורך-דין-מקרקעין-בחדרה/",
+    "https://dabullaw.co.il/עורך-דין-מקרקעין-בכפר-יונה/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/בדיקת-חוזה-מכר-קבלן-סעיפי-מלךודת/",
+   "to": "https://dabullaw.co.il/בדיקת-חוזה-מכר-קבלן-סעיפי-מלכודת/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/חובות-הקבלן-איימו-לבטל-מכירה/",
+    "https://dabullaw.co.il/עורך-דין-מקרקעין-בכפר-סבא-המדריך-המלא-ל/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/בדיקות-מקדמיות-לפני-רךישת-דירה-2/",
+   "to": "https://dabullaw.co.il/בדיקות-מקדמיות-לפני-רכישת-דירה-2/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מסמכים-נדרשים-לקבלת-משכנתא/",
+    "https://dabullaw.co.il/סעיף-51-לחוק-מיסוי-מקרקעין/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/זיכרון-דברים-המפית-הךי-יקרה-שתחתמו-עליה/",
+   "to": "https://dabullaw.co.il/זיכרון-דברים-המפית-הכי-יקרה-שתחתמו-עלי/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/בדיקת-חוזה-יזם-פינוי-בינוי/",
+    "https://dabullaw.co.il/ייצוג-דיירים-בפרויקט-תמ״א-38/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/מיסוי-מקרקעין/",
+   "to": "https://dabullaw.co.il/מיסוי-מקרקעין-המדריך-המלא/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/garden-apartment-yard-attachment-guide/",
+    "https://dabullaw.co.il/roof-apartment-extension-rights-consent-registration/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/עורך-דין-נדלן-מחיר-כמה-באמת-עולה-הליוו/",
+   "to": "https://dabullaw.co.il/מחיר-עורך-דין-מקרקעין/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מפת-אתר/",
+    "https://dabullaw.co.il/עריכת-הסכם-מקרקעין/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/איך-לבחור-עורך-דין-מקרקעין-הנכון-לכם/",
+   "to": "https://dabullaw.co.il/כיצד-לבחור-עורך-דין-מקרקעין/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/how-to-choose-urban-renewal-developer/",
+    "https://dabullaw.co.il/מפת-אתר/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/התקנת-עמדת-טעינה-לרכב-חשמלי-בבית-משותף/",
+   "to": "https://dabullaw.co.il/התקנת-עמדת-טעינה-לרכב-חשמלי-בבית-משותף-2/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/neighbor-refuses-house-committee-dues-guide/",
+    "https://dabullaw.co.il/מפת-אתר/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/הגנה-על-דירת-מגורים-בהליך-חדלות-פירעון-2/",
+   "to": "https://dabullaw.co.il/הגנה-על-דירת-מגורים-בהליך-חדלות-פירעון/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/category/מידע-משפטי/הוצאה-לפועל-וחדלות-פירעון/",
+    "https://dabullaw.co.il/מפת-אתר/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/הסכם-שיתוף-במקרקעין-המדריך-המלא-2025/",
+   "to": "https://dabullaw.co.il/הסכם-שיתוף-במקרקעין/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/misui-mekarkein-toshavi-chutz/",
+    "https://dabullaw.co.il/מפת-אתר/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/apartment-splitting-secondary-unit-legality-tax-2/",
+   "to": "https://dabullaw.co.il/apartment-splitting-secondary-unit-legality-tax/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 2,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/הערה-על-אי-התאמה-תקנה-29/",
+    "https://dabullaw.co.il/מפת-אתר/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/מקרקעין-ונדל\"ן/",
+   "to": "https://dabullaw.co.il/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/שימוש-חורג-בנכס/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/התחדשות-עירותית/",
+   "to": "https://dabullaw.co.il/התחדשות-עירונית/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/תיקון-צו-רישום-בית-משותף/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/תשריט-בתי-משותף-המדריך-המלא-למפת-הבעל/",
+   "to": "https://dabullaw.co.il/תשריט-ותקנון-בית-משותף-2/",
+   "hops": 2,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/תיקון-צו-רישום-בית-משותף/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/קניית-חנייה-בנפרד/",
+   "to": "https://dabullaw.co.il/קניית-חניה-בנפרד/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/תיקון-צו-רישום-בית-משותף/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/בדיקת-חוזה-מכר-קבלן-סעלודת/",
+   "to": "https://dabullaw.co.il/בדיקת-חוזה-מכר-קבלן-סעיפי-מלכודת/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מע״מ-בעסקת-מקרקעין/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/דירה-בשמ-חברה-בעלע-מ/",
+   "to": "https://dabullaw.co.il/דירה-להשקעה-בשם-חברה-בעמ/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מע״מ-בעסקת-מקרקעין/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/ליקויי-בנייה-מדריך-לרוךש-דירה-חדשה-א/",
+   "to": "https://dabullaw.co.il/ליקויי-בנייה-בדירה-מקבלן/",
+   "hops": 2,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/נספח-שינויי-דיירים/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/שינוי-ייעוד-קרקש/",
+   "to": "https://dabullaw.co.il/שינוי-ייעוד-קרקע/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/עורך-דין-מקרקעין-בכפר-סבא-המדריך-המלא-ל/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/הגנה-על-דירת-מגורים-בהליך-חדלות-פירק/",
+   "to": "https://dabullaw.co.il/הגנה-על-דירת-מגורים-בהליך-חדלות-פירעון/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/חובות-הקבלן-איימו-לבטל-מכירה/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/דמי-היוון/",
+   "to": "https://dabullaw.co.il/דמי-היוון-לרמי/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/דמי-הסכמה-לרמי/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/עורכי-דין-נדלן/",
+   "to": "https://dabullaw.co.il/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/עורך-דין-נדלן/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/מס-שבח-במךירת-דירה-איך-לא-לתת-למדינה-25-מה/",
+   "to": "https://dabullaw.co.il/מיסוי-מקרקעין-המדריך-המלא/",
+   "hops": 2,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מכירת-דירה-לפני-טופס-4/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/הוצאה-לפועל-וחדלות-פירק/",
+   "to": "https://dabullaw.co.il/הוצאה-לפועל-וחדלות-פירעון/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/ביטול-הסכם-תמ״א-38/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/פירוק-שיתוף-בדירה-בין-אחים-לאחר-ירושה/",
+   "to": "https://dabullaw.co.il/פירוק-שיתוף-במקרקעין/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מכירת-דירה-שהתקבלה-בירושה/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/עסקאות-אקזיט-פליפ-בנדלן/",
+   "to": "https://dabullaw.co.il/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/עסקת-אקראי-במקרקעין/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/רישום-בית-משותף-המהלך-הבירוקרטי-מאחורי/",
+   "to": "https://dabullaw.co.il/תשריט-ותקנון-בית-משותף-2/",
+   "hops": 2,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/land-registry-title-registration/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/בדיקת-חוזה-יזם/",
+   "to": "https://dabullaw.co.il/בדיקת-חוזה-יזם-פינוי-בינוי/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/mou-vs-detailed-agreement-developer-urban-renewal/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/המדריך-לתושבי-חוץ-איך-לקנות-ולמכור-נדלן-בי/",
+   "to": "https://dabullaw.co.il/המדריך-לתושבי-חוץ-איך-לקנות-ולמכור-נד/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/עורך-דין-מקרקעין-בנתניה/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/עורך-דין-מקרקעין-בהרצליה/",
+   "to": "https://dabullaw.co.il/עורך-דין-מקרקעין-בהרצליה-המדריך-המלא-ל/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/עורך-דין-בנתניה/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/תעודות-והסמכות-עוד-יקיר-דבול/",
+   "to": "https://dabullaw.co.il/תעודות-והסמכות-עו״ד-יקיר-דבול/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/עורך-דין-בנתניה/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/עוד-נדלן-בנתניה-ליווי-מקצועי-בעסקאות/",
+   "to": "https://dabullaw.co.il/עורך-דין-מקרקעין-בנתניה/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/how-to-choose-urban-renewal-developer/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/netanya-real-estate-lawyer/",
+   "to": "https://dabullaw.co.il/עורך-דין-מקרקעין-בנתניה/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/hitkhadshut-ironit-tama-38-2-pinui-binui/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/תכנון-מס-וליוי-במיסוי-מקרקעין-שבח-רכי/",
+   "to": "https://dabullaw.co.il/מיסוי-מקרקעין-המדריך-המלא/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/commercial-real-estate-taxation-guide/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/דבול-ושות׳-משרד-עורכי-דין-מקרקעין/",
+   "to": "https://dabullaw.co.il/yakir-dabul-real-estate-lawyer/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/misui-kvutzot-rechisha/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/המדריך-המלא-לרךישת-דירה-מקבלן-מחוזה-וע/",
+   "to": "https://dabullaw.co.il/המדריך-המלא-לרכישת-דירה-מקבלן-2026/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/איחור-במסירת-דירה-מקבלן/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/מדריך-מקיף-לרךישת-דירה-יד-שניה/",
+   "to": "https://dabullaw.co.il/מדריך-מקיף-לרכישת-דירה-יד-שניה/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מסמכים-נדרשים-לקבלת-משכנתא/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/מידע-משפטי/מקרקעין-ונדל״ן/מדריך-מקיף-לרכישת-דירה-יד-שניה/",
+   "to": "https://dabullaw.co.il/מדריך-מקיף-לרכישת-דירה-יד-שניה/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/ביטוח-מבנה-לדירה/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/עורך-דין-מקרקעין-בנתניה-המדריך-המלא-לר/",
+   "to": "https://dabullaw.co.il/עורך-דין-מקרקעין-בנתניה/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מילון-מונחים-משפטי/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/איך-לנהל-משא-ומתן-מוצלח-לרכישת-דירה-2/",
+   "to": "https://dabullaw.co.il/איך-לנהל-משא-ומתן-מוצלח-לרכישת-דירה/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מפת-אתר/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/כיצד-לבחור-עורך-דין-מקרקעין-2/",
+   "to": "https://dabullaw.co.il/כיצד-לבחור-עורך-דין-מקרקעין/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מפת-אתר/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/אודות/",
+   "to": "https://dabullaw.co.il/אודות-המשרד/",
+   "hops": 1,
+   "finalStatus": 200,
+   "fromPages": 1,
+   "sitewide": false,
+   "examples": [
+    "https://dabullaw.co.il/מפת-אתר/"
+   ]
+  }
+ ],
+ "brokenLinks": [
+  {
+   "link": "https://dabullaw.co.il/תיקון-שומה-במיסוי-מקרקעין/",
+   "status": 404,
+   "fromPages": 1,
+   "examples": [
+    "https://dabullaw.co.il/דחיית-מס-שבח/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/בדיקות-מ�%A§דמיות-לפני-רךישת-דירה-2/",
+   "status": 400,
+   "fromPages": 1,
+   "examples": [
+    "https://dabullaw.co.il/עורך-דין-מקרקעין-בכפר-סבא-המדריך-המלא-ל/"
+   ]
+  },
+  {
+   "link": "https://dabullaw.co.il/מדריך-לתושבי-חוץ/",
+   "status": 404,
+   "fromPages": 1,
+   "examples": [
+    "https://dabullaw.co.il/עורך-דין-מקרקעין-ברעננה/"
+   ]
+  }
+ ],
+ "orphans": [
+  "https://dabullaw.co.il/author/itay-admin/"
+ ],
+ "weakInbound": [
+  "https://dabullaw.co.il/דירה-להשקעה-בשם-חברה-בעמ/",
+  "https://dabullaw.co.il/buying-apartment-in-trust-real-estate-legal-guide/",
+  "https://dabullaw.co.il/buying-divided-apartment-legal-guide-real-estate-investment/",
+  "https://dabullaw.co.il/מע״מ-בעסקת-מקרקעין/",
+  "https://dabullaw.co.il/מכירת-דירת-ירושה-בפינוי-בינוי/",
+  "https://dabullaw.co.il/elderly-tenant-rights-in-urban-renewal-projects/",
+  "https://dabullaw.co.il/reverse-mortgage-vs-selling-assisted-living-guide/",
+  "https://dabullaw.co.il/commercial-vs-residential-real-estate-investment-guide/",
+  "https://dabullaw.co.il/קניית-חניה-בנפרד/",
+  "https://dabullaw.co.il/יסודות-הקניין-עסקאות-וזכויות-במקרקעי/",
+  "https://dabullaw.co.il/קניית-קרקע-חקלאית-המדריך-המלא-לתקן-22/",
+  "https://dabullaw.co.il/ליווי-יזמות-פרטית/",
+  "https://dabullaw.co.il/סימנים-לקבלן-שמאחר/",
+  "https://dabullaw.co.il/אסטרטגיות-השקעות-נדלן/",
+  "https://dabullaw.co.il/חשיבות-המיקום-בעסקאות-נדלן/",
+  "https://dabullaw.co.il/המדריך-המלא-למבנה-מסוכן/",
+  "https://dabullaw.co.il/5-הטעויות-הנפוצות-בחוזי-מכר-דירות-בנתני/",
+  "https://dabullaw.co.il/עורך-דין-בחדרה/",
+  "https://dabullaw.co.il/עורך-דין-בכפר-יונה/",
+  "https://dabullaw.co.il/פסק-דין-הצהרתי/",
+  "https://dabullaw.co.il/חשבון-בנק-מוגבל-המשמעות-הדרכים-לביטול/",
+  "https://dabullaw.co.il/התקנת-עמדת-טעינה-לרכב-חשמלי-בבית-משותף-2/",
+  "https://dabullaw.co.il/כיצד-מתנהלת-עסקת-מכר-נדלן-7-השלבים-הקרי/",
+  "https://dabullaw.co.il/מהמינוס-לחובות-כבדים-ממינוס-לפלוס/",
+  "https://dabullaw.co.il/הרפורמה-בתיווך-מקרקעין-2025-מהפכה-של-שקיפ/",
+  "https://dabullaw.co.il/כשהרישום-נתקע-הדרך-להסדרת-זכויות-בדיר/",
+  "https://dabullaw.co.il/דירה-להשקעה-3-אסטרטגיות/",
+  "https://dabullaw.co.il/הערה-בנסח-טאבו-נכס-מוקפא-בהסדר-מה-זה/",
+  "https://dabullaw.co.il/אתם-שואלים-עוד-יקיר-דבול-עונה-המדריך/",
+  "https://dabullaw.co.il/המדריך-לחישוב-שטח-דירה-מקבלן/",
+  "https://dabullaw.co.il/real-estate-lawyer-ir-yamim-netanya/",
+  "https://dabullaw.co.il/cancel-pinui-binui-agreement-regret-guide/",
+  "https://dabullaw.co.il/takan-21-economic-feasibility-pinui-binui-guide/",
+  "https://dabullaw.co.il/no-shop-exclusivity-agreement-urban-renewal-guide/",
+  "https://dabullaw.co.il/selling-apartment-by-tender-guide/",
+  "https://dabullaw.co.il/orech-din-mekarkein-givat-hairusim-netanya/",
+  "https://dabullaw.co.il/no-consideration-transfer-between-spouses-guide/",
+  "https://dabullaw.co.il/boundary-dispute-settlement-neighbors-guide/",
+  "https://dabullaw.co.il/conflicting-transactions-double-sale-guide/",
+  "https://dabullaw.co.il/easement-right-of-way-neighbors-guide/",
+  "https://dabullaw.co.il/trespass-encroachment-neighbor-property-guide/",
+  "https://dabullaw.co.il/objection-neighbor-building-permit-guide/",
+  "https://dabullaw.co.il/taking-possession-seller-delay-handover/",
+  "https://dabullaw.co.il/apartment-exchange-swap-tax-legal-guide/",
+  "https://dabullaw.co.il/hidden-defect-nondisclosure-apartment-sale/",
+  "https://dabullaw.co.il/buying-public-housing-amidar-rights-acquisition/",
+  "https://dabullaw.co.il/קומת-עמודים-מפולשת-הסבת-חניה-ליחידת-די/",
+  "https://dabullaw.co.il/garden-apartment-yard-attachment-guide/",
+  "https://dabullaw.co.il/contract-enforcement-specific-performance-injunction/",
+  "https://dabullaw.co.il/עורך-דין-בנתניה/",
+  "https://dabullaw.co.il/yipui-koach-mitmashech-vs-tsavaa/",
+  "https://dabullaw.co.il/yipui-koach-mitmashech-business-real-estate/",
+  "https://dabullaw.co.il/apartment-splitting-secondary-unit-legality-tax/",
+  "https://dabullaw.co.il/רכישת-דירה-על-ידי-קטין/",
+  "https://dabullaw.co.il/מילון-מונחים-משפטי/",
+  "https://dabullaw.co.il/author/admin/"
+ ],
+ "multiMetaDesc": [
+  "https://dabullaw.co.il/apartment-splitting-secondary-unit-legality-tax/",
+  "https://dabullaw.co.il/איך-לנהל-משא-ומתן-מוצלח-לרכישת-דירה/",
+  "https://dabullaw.co.il/betterment-tax-refund-guide/",
+  "https://dabullaw.co.il/הגנה-על-דירת-מגורים-בהליך-חדלות-פירעון/",
+  "https://dabullaw.co.il/voucher-book-new-apartment-guide/",
+  "https://dabullaw.co.il/כיצד-לבחור-עורך-דין-מקרקעין/"
+ ],
+ "multiH1": [],
+ "noindexInSitemap": []
+}

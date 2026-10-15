@@ -1,0 +1,1 @@
+sitemap 379 | bad in sitemap 15 | links to redirects 62 (pages affected 362) | broken links 3 | orphans 1 | multi meta desc 6 | multi h1 0 | noindex in sitemap 0
