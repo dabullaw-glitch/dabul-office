@@ -496,3 +496,36 @@ crf 23 -> 22955677 bytes
 model ivrit-ai/whisper-large-v3-turbo-ct2
 16 segments
 {"fix": {"roll": 0.0, "n": 249, "cx": 464, "top": 530, "fh": 562, "luma": 140}, "samples": 230, "detected": 230, "W": 1080, "H": 1920, "face_cx": [449, 487], "head_top": [521, 542], "chin": [1120, 1160]}
+-rw-r--r-- 1 runner runner 112335192 Oct 15 08:13 /tmp/raw/yt-gush-chelka.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "r_frame_rate": "30/1",
+            "duration": "70.800000",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "70.751202",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "70.800000"
+    }
+}
+crf 23 -> 21087002 bytes
+model ivrit-ai/whisper-large-v3-turbo-ct2
+17 segments
+{"fix": {"roll": 0.0, "n": 0, "cx": 502, "top": 230, "fh": 470, "luma": 147}, "samples": 354, "detected": 354, "W": 1080, "H": 1920, "face_cx": [479, 525], "head_top": [-6, 242], "chin": [588, 762]}
