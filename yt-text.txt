@@ -35,3 +35,4 @@ sfwkyRqL1RA 1FjNftURqxMlldC5nlDHk1SbX6LClHQWl
 # run 2 (15.10.2026 21:55)
 cand-madad-raw 1CaG_lgGkpt8mQLl3oRUPoMHxbTDzsCAo
 # retry big files 1792091054
+cand-ikul2 1f5Fa2eE-wDO5VKkOpz5r-exNt3WMCnDt
