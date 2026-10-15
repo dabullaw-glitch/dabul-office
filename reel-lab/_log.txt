@@ -529,3 +529,38 @@ crf 23 -> 21087002 bytes
 model ivrit-ai/whisper-large-v3-turbo-ct2
 17 segments
 {"fix": {"roll": 0.0, "n": 0, "cx": 502, "top": 230, "fh": 470, "luma": 147}, "samples": 354, "detected": 354, "W": 1080, "H": 1920, "face_cx": [479, 525], "head_top": [-6, 242], "chin": [588, 762]}
+skip inherit-siblings
+-rw-r--r-- 1 runner runner 72834661 Oct 15 09:14 /tmp/raw/v01-bli-mashkanta.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "r_frame_rate": "30/1",
+            "duration": "45.866667",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "45.812971",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "45.866667"
+    }
+}
+crf 23 -> 14888141 bytes
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+model ivrit-ai/whisper-large-v3-turbo-ct2
+16 segments
+{"fix": {"roll": 0.0, "n": 0, "cx": 527, "top": 374, "fh": 452, "luma": 150}, "samples": 229, "detected": 229, "W": 1080, "H": 1920, "face_cx": [515, 571], "head_top": [116, 399], "chin": [715, 885]}
