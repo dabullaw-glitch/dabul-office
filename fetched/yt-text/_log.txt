@@ -321,3 +321,17 @@ Traceback (most recent call last):
   File "av/container/core.py", line 479, in av.container.core.open
 TypeError: open() got an unexpected keyword argument 'metadata_errors'
 fail WFqWWCQEfew
+model ivrit-ai/whisper-large-v3-turbo-ct2
+Traceback (most recent call last):
+  File "/tmp/tr.py", line 9, in <module>
+    segs, info = m.transcribe(sys.argv[1], language="he", beam_size=5)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/faster_whisper/transcribe.py", line 834, in transcribe
+    audio = decode_audio(audio, sampling_rate=sampling_rate)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/faster_whisper/audio.py", line 46, in decode_audio
+    with av.open(input_file, mode="r", metadata_errors="ignore") as container:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "av/container/core.py", line 479, in av.container.core.open
+TypeError: open() got an unexpected keyword argument 'metadata_errors'
+fail 3mJilPmDGCw
