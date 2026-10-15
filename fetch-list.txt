@@ -1,0 +1,1 @@
+p3760.json https://dabullaw.co.il/wp-json/wp/v2/pages/3760?_fields=content
