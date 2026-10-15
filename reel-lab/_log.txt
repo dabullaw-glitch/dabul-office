@@ -299,3 +299,36 @@ crf 23 -> 11064439 bytes
 model ivrit-ai/whisper-large-v3-turbo-ct2
 15 segments
 {"fix": {"roll": 0.0, "n": 0, "cx": 519, "top": 268, "fh": 470, "luma": 146}, "samples": 190, "detected": 190, "W": 1080, "H": 1920, "face_cx": [507, 537], "head_top": [31, 297], "chin": [615, 805]}
+-rw-r--r-- 1 runner runner 66795776 Oct 15 08:02 /tmp/raw/v04-mechir-namuch.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "r_frame_rate": "30/1",
+            "duration": "42.033333",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "41.981678",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "42.033333"
+    }
+}
+crf 23 -> 15905271 bytes
+model ivrit-ai/whisper-large-v3-turbo-ct2
+16 segments
+{"fix": {"roll": 0.0, "n": 0, "cx": 505, "top": 248, "fh": 503, "luma": 146}, "samples": 210, "detected": 210, "W": 1080, "H": 1920, "face_cx": [484, 525], "head_top": [12, 257], "chin": [613, 840]}
