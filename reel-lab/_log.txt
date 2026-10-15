@@ -463,3 +463,36 @@ model ivrit-ai/whisper-large-v3-turbo-ct2
 model ivrit-ai/whisper-large-v3-turbo-ct2
 17 segments
 {"fix": {"roll": 0.0, "n": 381, "cx": 481, "top": 435, "fh": 458, "luma": 140}, "samples": 250, "detected": 250, "W": 1080, "H": 1920, "face_cx": [468, 509], "head_top": [427, 453], "chin": [907, 953]}
+-rw-r--r-- 1 runner runner 73160501 Oct 15 08:11 /tmp/raw/story-c.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "r_frame_rate": "30/1",
+            "duration": "45.901667",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "45.836190",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "45.930181"
+    }
+}
+crf 23 -> 22955677 bytes
+model ivrit-ai/whisper-large-v3-turbo-ct2
+16 segments
+{"fix": {"roll": 0.0, "n": 249, "cx": 464, "top": 530, "fh": 562, "luma": 140}, "samples": 230, "detected": 230, "W": 1080, "H": 1920, "face_cx": [449, 487], "head_top": [521, 542], "chin": [1120, 1160]}
