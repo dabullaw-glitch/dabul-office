@@ -57,6 +57,19 @@ CAP_MAX = 290                    # captions never go lower than this (room for t
 
 words = [w for s in words_doc['segments'] for w in s['words']]
 for w in words: w['w'] = FIX.get(w['w'], w['w'])
+# "fixAt": {"<source start, 2 decimals>": "word"} fixes one word only (when the same word is right elsewhere);
+# "" joins that word into the one before it (e.g. "ל" + "-20" -> "ל-20")
+FIXAT = plan.get('fixAt', {})
+if FIXAT:
+    out_w = []
+    for w in words:
+        k = f"{w['s']:.2f}"
+        if k in FIXAT:
+            if FIXAT[k] == '' and out_w:
+                out_w[-1]['e'] = w['e']; continue
+            w['w'] = FIXAT[k]
+        out_w.append(w)
+    words = out_w
 
 # ---- 1. cuts: source ranges -> clips without long silences ----
 clips = []
