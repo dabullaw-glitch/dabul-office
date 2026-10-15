@@ -18,3 +18,49 @@ skip IULlXagW0-U
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 model ivrit-ai/whisper-large-v3-turbo-ct2
 ok eqmbEBkkPUQ
+skip B70tXNTbuZA
+skip IIOYIeP8EaE
+skip f6B99ZScgr0
+skip 6RZ3nWRN864
+skip GkDcw5HXFKQ
+skip Wg5S8hxJV0s
+skip JegPkbwFPrk
+skip TTouohl2dDY
+skip 4nGa0gNA5gM
+skip 0HBDYzo5X9c
+skip I5KYzbYD4RU
+skip IULlXagW0-U
+skip eqmbEBkkPUQ
+skip R2rl6zUrMu0
+skip h75VExuuWxw
+skip 8eTrir6n4DA
+skip 8rDcmQQIfew
+skip VJkEqn54Ci4
+skip WP5x0BBBH78
+skip 6rr2oqwTc6s
+skip qxZes0eNrqQ
+skip MytxaVPAMGE
+skip WFqWWCQEfew
+skip 3mJilPmDGCw
+skip DMj19A4uymQ
+skip cand-long1
+skip cand-long2
+skip cand-long3
+drive page for cand-ikul: <title>Google Drive: Sign-in
+             [--timeout SECONDS]
+             url_or_id
+gdown: error: unrecognized arguments: --fuzzy
+gdown fail cand-ikul
+skip cand-yipui
+skip cand-ach
+skip cand-yerusha
+drive page for sfwkyRqL1RA: <title>Google Drive: Sign-in
+             [--timeout SECONDS]
+             url_or_id
+gdown: error: unrecognized arguments: --fuzzy
+gdown fail sfwkyRqL1RA
+skip cand-madad-raw
+-rw-r--r-- 1 runner runner 371229401 Oct 15 23:15 /tmp/a/cand-ikul2.src
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+model ivrit-ai/whisper-large-v3-turbo-ct2
+ok cand-ikul2
