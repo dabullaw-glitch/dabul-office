@@ -1,7 +1,8 @@
 name: youtube text (internal)
 # Gets the spoken text of the office's own YouTube videos, for the video watch pages on dabullaw.co.il (Yakir 15.10.2026).
-# yt-text.txt lines: "<youtube id>". First tries YouTube's Hebrew captions; if there are none, downloads the audio only
-# and transcribes it (faster-whisper, ivrit-ai model). Output: fetched/yt-text/<id>.txt (plain text) + <id>.json (info).
+# yt-text.txt lines: "<name> <Google Drive file id>" (the edited video file in the office Drive; YouTube itself blocks
+# downloads from GitHub). Downloads it, keeps the audio only and transcribes it (faster-whisper, ivrit-ai model).
+# Output: fetched/yt-text/<name>.txt (plain text, one sentence per line).
 # Nothing is published (this branch is internal).
 on:
   push:
@@ -20,7 +21,7 @@ jobs:
       - name: Tools
         run: |
           command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
-          pip install -q yt-dlp faster-whisper==1.1.1
+          pip install -q faster-whisper==1.1.1
       - name: Text
         run: |
           mkdir -p fetched/yt-text; exec > >(tee -a fetched/yt-text/_log.txt) 2>&1
@@ -36,19 +37,14 @@ jobs:
           segs, info = m.transcribe(sys.argv[1], language="he", beam_size=5)
           open(sys.argv[2], "w", encoding="utf-8").write("\n".join(s.text.strip() for s in segs))
           PY
-          while read -r id; do
-            case "$id" in \#*|"") continue;; esac
+          while read -r id drive; do
+            case "$id" in \#*|"") continue;; esac; [ -n "$drive" ] || continue
             out=fetched/yt-text/$id; [ -s "$out.txt" ] && { echo "skip $id"; continue; }
-            u="https://www.youtube.com/watch?v=$id"
-            yt-dlp --skip-download --print-to-file "%(title)s|%(duration)s|%(upload_date)s" "$out.info" "$u" < /dev/null || true
-            yt-dlp --skip-download --write-subs --write-auto-subs --sub-langs "he,iw,he-IL,iw-IL" --sub-format vtt -o "/tmp/s/$id" "$u" < /dev/null || true
-            f=$(ls /tmp/s/$id*.vtt 2>/dev/null | head -1)
-            if [ -n "$f" ]; then
-              grep -v -E '^(WEBVTT|Kind:|Language:|[0-9:.]+ -->|\s*$)' "$f" | sed 's/<[^>]*>//g' | awk '!seen[$0]++' > "$out.txt"; echo "subs $id"
-            else
-              yt-dlp -f bestaudio -x --audio-format wav --postprocessor-args "-ac 1 -ar 16000" -o "/tmp/a/$id.%(ext)s" "$u" < /dev/null && python3 /tmp/tr.py /tmp/a/$id.wav "$out.txt" < /dev/null && echo "whisper $id" || echo "fail $id"
-              rm -f /tmp/a/$id.*
-            fi
+            mkdir -p /tmp/a
+            curl -fsSL --retry 3 "https://drive.usercontent.google.com/download?id=$drive&export=download&confirm=t" -o /tmp/a/$id.src < /dev/null || { echo "download fail $id"; continue; }
+            ffmpeg -nostdin -y -v error -i /tmp/a/$id.src -vn -ac 1 -ar 16000 /tmp/a/$id.wav && python3 /tmp/tr.py /tmp/a/$id.wav "$out.txt" < /dev/null && echo "ok $id" || echo "fail $id"
+            ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/a/$id.src > "$out.dur" 2>/dev/null || true
+            rm -f /tmp/a/$id.*
             git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
             git add fetched/yt-text; git commit -qm "[yt-text] $id" || true
             for i in 1 2 3 4 5; do git pull --rebase -q origin tools/fetch-media < /dev/null && git push -q origin HEAD:tools/fetch-media < /dev/null && break; sleep 6; done

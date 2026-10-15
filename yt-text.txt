@@ -1,33 +1,34 @@
-0HBDYzo5X9c
-2ZJ664F6458
-3f-RcPOcIvY
-3mJilPmDGCw
-4nGa0gNA5gM
-6rr2oqwTc6s
-6RZ3nWRN864
-8eTrir6n4DA
-8rDcmQQIfew
-B70tXNTbuZA
-DMj19A4uymQ
-eqmbEBkkPUQ
-f6B99ZScgr0
-GkDcw5HXFKQ
-h75VExuuWxw
-I5KYzbYD4RU
-IIOYIeP8EaE
-IULlXagW0-U
-JegPkbwFPrk
-K3fbG-jVHRI
-L_-W8Pt-awY
-MytxaVPAMGE
-oqw-Ft0zPMQ
-qxZes0eNrqQ
-R2rl6zUrMu0
-sfwkyRqL1RA
-TTouohl2dDY
-VJkEqn54Ci4
-WFqWWCQEfew
-Wg5S8hxJV0s
-WP5x0BBBH78
-Wvi72eRG6HY
-xWw6RNRxZiA
+# 15.10.2026: spoken text of the site videos, for the video watch pages (youtube id, then the Drive file of the same video)
+B70tXNTbuZA 1zehFoktVIcxGEMU0vet6ySK-lma4ewS7
+IIOYIeP8EaE 1qqX5eKiqSIS2z8EqYlanggoZ3vuSqadP
+f6B99ZScgr0 1G9yQxiVYtI6RUccc4Q9Hg_xrZ3dqmtqO
+6RZ3nWRN864 119Y8kPfbv85MzE3go77OJ3k3lB_3nccA
+GkDcw5HXFKQ 1HkyccqmdPIwZyPNytPOjEo2iI1Tef8TG
+Wg5S8hxJV0s 1jwQuSdyrcXVi7rh9qRKIgvG833tVnQ2Z
+JegPkbwFPrk 1fiNc-yhFL777V3Rd2wwqMaKy9LTrxcKA
+TTouohl2dDY 1YxLxzyyk_WLVwjS1dXqiX5-TShejCnG0
+4nGa0gNA5gM 1lWidV02PetRMZTIPkan75OkOOCdkKadw
+0HBDYzo5X9c 1om9tHm2I6SKaOLdsrX-mMa1EM4Ujk3iM
+I5KYzbYD4RU 1K89OvyJBt2QSMzSVyJR5ZwrLifAIS0WN
+IULlXagW0-U 1OWDjMqxlqWhLJUc38WM_aQDoMsA_f3l1
+eqmbEBkkPUQ 18r4rPFUjlCOcJwdXIyp9H6wU2hEPNaQe
+R2rl6zUrMu0 1Y6wpa7t1dUhmCCaY-GBVyNbkwu1Nv15F
+h75VExuuWxw 1TyDQjJjIqS-MP2NCIs6BGbndX1vl7jG3
+8eTrir6n4DA 1peP_rPllAriPU9ACv_F2lOXjDIVChdyg
+8rDcmQQIfew 1irlI5-UEVSbgBM8C-3tfjakqoVJcaCoV
+VJkEqn54Ci4 1AXuCpjlbCXLAY-ozZlXOEFI9At0DtyHr
+WP5x0BBBH78 1SApeiE-WMQTd9IEQlabjhM46P_uN3gsP
+6rr2oqwTc6s 1PSmOWbAGyxahhx4t02VfAbLBSYsZyI5t
+qxZes0eNrqQ 1fJ5HrEjERf61Mz-G0zB5vvLce1ulK7Cc
+MytxaVPAMGE 1J7aZGwzqcSwbBl0gFXBGMpk053sWlNWc
+WFqWWCQEfew 1LX7l6f5O-8Z46mX6tW3hrnTXnWbu0L8Y
+3mJilPmDGCw 1jrgSg6igncGt57PvhyaD3YfGN4mRq2oM
+DMj19A4uymQ 1soU0B2GIS5IcR_xBWWn7sC8_tx-Br5V8
+cand-long1 1EIN5nOxSnlLXs3Qg_WLGnOgNTLam64_C
+cand-long2 1zeJ8WW2qJ23kIwJ2lK2XIoAyukoEH0ge
+cand-long3 13qFRQTemH7ep-MDDThvRfR635GxIaGTB
+cand-ikul 1Do70nMPMogtiqnmhJzDh8VJsauCedZAR
+cand-yipui 1LXYwxzm0VibUQo8LkKraF4EGeFUYNTsa
+cand-ach 1iN26ynnvN1LReEIiI2bmNOZD_uVX_FjL
+cand-yerusha 1E-NFud0Kdn7RoWb4ti-DKVbXxZ4jhtzU
+sfwkyRqL1RA 1FjNftURqxMlldC5nlDHk1SbX6LClHQWl
