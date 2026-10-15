@@ -564,3 +564,12 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 model ivrit-ai/whisper-large-v3-turbo-ct2
 16 segments
 {"fix": {"roll": 0.0, "n": 0, "cx": 527, "top": 374, "fh": 452, "luma": 150}, "samples": 229, "detected": 229, "W": 1080, "H": 1920, "face_cx": [515, 571], "head_top": [116, 399], "chin": [715, 885]}
+skip v02-kesef-horim
+skip v03-nezila
+skip v04-mechir-namuch
+skip v05-socher
+skip v06-bait-meshutaf
+skip story-a
+skip story-b
+skip story-c
+skip yt-gush-chelka
