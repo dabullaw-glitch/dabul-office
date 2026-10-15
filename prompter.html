@@ -13,6 +13,7 @@
      12.10.2026: the script list is the same as the office system (coll prompt only), upload of videos filmed with the phone camera
      (big files go up in 45 MB pieces, joined back by function rawq), and "won't film" (status skipped, can be undone). -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.0/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.2.3/dist/tus.min.js"></script>
 <script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/config.js"></script>
 <style>
 :root{--bg:#f8f5f0;--card:#fff;--ink:#2b2118;--mute:#7a6852;--line:#d9cdb8;--brand:#8b6f47;--brand2:#5c4528;--gold:#c9a961;--ok:#2f7d4a;--err:#a33a2a;
@@ -70,7 +71,8 @@ details.skipd{margin-top:12px}details.skipd summary{cursor:pointer;color:var(--m
 #cam{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#fff;overflow:hidden;touch-action:none}
 #cam.r90{transform-origin:top left;transform:rotate(90deg) translateY(-100%)}
 #cam.r270{transform-origin:top left;transform:rotate(-90deg) translateX(-100%)}
-#vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+#vid{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;background:#000}
+/* 15.10.2026: the preview shows exactly what is recorded (same shape, nothing hidden at the edges) */
 #vid.mirror{transform:scaleX(-1)}
 #grid{position:absolute;inset:0;pointer-events:none}
 #grid i{position:absolute;background:rgba(255,255,255,.28)}
@@ -375,7 +377,27 @@ details.skipd{margin-top:12px}details.skipd summary{cursor:pointer;color:var(--m
     if (/exceed|quota|too large|payload/i.test(m)) return 'אין כרגע מספיק מקום במערכת. המקום מתפנה אחרי העריכה הבאה.';
     return 'ההעלאה נכשלה (' + (m || 'תקלה ברשת') + '). נסו שוב.';
   }
-  async function upOne(path, blob, type) {
+  // 15.10.2026: each piece goes up with the resumable (TUS) protocol in 6 MB steps: progress moves, and a dropped
+  // connection continues from where it stopped instead of starting again. Falls back to the plain upload if TUS is missing.
+  async function upOne(path, blob, type, onPct) {
+    if (window.tus && window.tus.Upload) {
+      var ses = (await sb.auth.getSession()).data.session, C = window.OFFICE_CONFIG || {};
+      var ep = String(C.url || '').replace(/\/$/, '') + '/storage/v1/upload/resumable';
+      try {
+        await new Promise(function (ok, bad) {
+          var up = new tus.Upload(blob, {
+            endpoint: ep, retryDelays: [0, 2000, 5000, 10000, 20000], chunkSize: 6 * 1024 * 1024,
+            headers: { authorization: 'Bearer ' + (ses ? ses.access_token : ''), apikey: C.anon || '', 'x-upsert': 'true' },
+            uploadDataDuringCreation: true, removeFingerprintOnSuccess: true,
+            metadata: { bucketName: 'files', objectName: path, contentType: type, cacheControl: '3600' },
+            onError: bad, onSuccess: ok,
+            onProgress: function (sent, total) { if (onPct && total) onPct(sent / total); }
+          });
+          up.findPreviousUploads().then(function (prev) { if (prev.length) up.resumeFromPreviousUpload(prev[0]); up.start(); });
+        });
+        return { error: null };
+      } catch (e) { return { error: { message: (e && e.message) || String(e) } }; }
+    }
     var r = null;
     for (var a = 0; a < 3; a++) {
       r = await sb.storage.from('files').upload(path, blob, { contentType: type, upsert: a > 0 });
@@ -408,9 +430,10 @@ details.skipd{margin-top:12px}details.skipd summary{cursor:pointer;color:var(--m
       var ext = ((f.name.match(/\.([A-Za-z0-9]{2,4})$/) || [])[1] || (/quicktime/.test(f.type) ? 'mov' : 'mp4')).toLowerCase();
       var n = Math.max(1, Math.ceil(f.size / CH)), done = [], base = 'rawvideo/' + day + '/' + batch, failed = null;
       for (var k = 0; k < n; k++) {
-        st.textContent = n > 1 ? 'מעלה ' + Math.round(k / n * 100) + '%' : 'מעלה...';
+        st.textContent = 'מעלה ' + Math.round(k / n * 100) + '%';
         var path = n > 1 ? base + '.p' + String(k + 1).padStart(2, '0') : base + '.' + ext;
-        var r = await upOne(path, f.slice(k * CH, Math.min(f.size, (k + 1) * CH)), n > 1 ? 'application/octet-stream' : (f.type || 'video/mp4'));
+        var r = await upOne(path, f.slice(k * CH, Math.min(f.size, (k + 1) * CH)), n > 1 ? 'application/octet-stream' : (f.type || 'video/mp4'),
+          (function (kk, el) { return function (q) { el.textContent = 'מעלה ' + Math.min(99, Math.round((kk + q) / n * 100)) + '%'; }; })(k, st));
         if (r.error) { failed = r.error; break; }
         done.push('files/' + path);
       }
@@ -482,7 +505,7 @@ details.skipd{margin-top:12px}details.skipd summary{cursor:pointer;color:var(--m
     if (cfg.rot) { c.style.width = H + 'px'; c.style.height = W + 'px'; } else { c.style.width = W + 'px'; c.style.height = H + 'px'; }
   }
   function layout() {
-    sizeCam();
+    sizeCam(); try { fitPreview(); } catch (e) {}
     var land = isLand();
     box.style.height = (land ? Math.min(70, cfg.h + 18) : cfg.h) + '%';
     box.style.background = 'rgba(20,20,20,' + (cfg.dark / 100) + ')';
@@ -603,6 +626,21 @@ details.skipd{margin-top:12px}details.skipd summary{cursor:pointer;color:var(--m
       var pl = v.play(); if (pl && pl.catch) pl.catch(function () {});
     });
   }
+  // the shape that recordStream() will save: the camera picture itself, or a centred 9:16 / 16:9 cut of it
+  function recShape() {
+    var v = $('vid'), vw = v.videoWidth, vh = v.videoHeight, land = isLand();
+    if (!vw || !vh) return null;
+    var good = land ? vw >= vh : vh >= vw;
+    return good ? vw / vh : (land ? 16 / 9 : 9 / 16);
+  }
+  // size the preview to that shape, as big as fits the screen, centred (black bars if the screen is longer)
+  function fitPreview() {
+    var v = $('vid'), cam = $('cam'), ar = recShape();
+    var W = cam.clientWidth, H = cam.clientHeight;
+    if (!ar || !W || !H) { v.style.width = '100%'; v.style.height = '100%'; v.style.left = '0'; v.style.top = '0'; return; }
+    var w = W, h = Math.round(W / ar); if (h > H) { h = H; w = Math.round(H * ar); }
+    v.style.width = w + 'px'; v.style.height = h + 'px'; v.style.left = Math.round((W - w) / 2) + 'px'; v.style.top = Math.round((H - h) / 2) + 'px';
+  }
   async function startCam() {
     msg('');
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { msg('הדפדפן הזה לא מאפשר גישה למצלמה. פתחו את הדף בספארי.'); return false; }
@@ -628,6 +666,7 @@ details.skipd{margin-top:12px}details.skipd summary{cursor:pointer;color:var(--m
         await attach(v, vstream);
       }
     }
+    fitPreview();
     startLight();
     return true;
   }
@@ -717,7 +756,7 @@ details.skipd{margin-top:12px}details.skipd summary{cursor:pointer;color:var(--m
     await countdown();
     chunks = []; crop = null;
     var rs = recordStream(); recMeta = { w: rs.w, h: rs.h, idx: cfg.mode ? segIdx : 0, text: cfg.mode && segs[segIdx] ? segs[segIdx].textContent.trim() : '' };
-    var opt = mime ? { mimeType: mime, videoBitsPerSecond: 5000000, audioBitsPerSecond: 128000 } : undefined;
+    var opt = mime ? { mimeType: mime, videoBitsPerSecond: (Math.max(rs.w, rs.h) >= 1600 ? 14000000 : 8000000), audioBitsPerSecond: 160000 } : undefined;
     try { rec = new MediaRecorder(rs.stream, opt); } catch (e) { rec = new MediaRecorder(rs.stream); }
     var recMime = rec.mimeType || mime || 'video/mp4';
     rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
