@@ -136,7 +136,7 @@ ${isAd ? "\u05E7\u05D9\u05D1\u05DC\u05EA \u05D0\u05EA \u05D4\u05DE\u05D9\u05D9\u
     if (!["1", "true", "on", "yes"].includes(String(f.consent || "").toLowerCase())) return json({ ok: false, msg: "\u05DB\u05D3\u05D9 \u05DC\u05D4\u05D9\u05E8\u05E9\u05DD \u05E6\u05E8\u05D9\u05DA \u05DC\u05E1\u05DE\u05DF \u05D0\u05EA \u05EA\u05D9\u05D1\u05EA \u05D4\u05D0\u05D9\u05E9\u05D5\u05E8." }, 400);
     const magnet = hasMagnet(f.magnet || "") ? f.magnet : "buyer-checklist";
     const source = String(f.source || "website").slice(0, 60);
-    const DONE = json({ ok: true, msg: "\u05DB\u05DE\u05E2\u05D8 \u05E1\u05D9\u05D9\u05DE\u05E0\u05D5! \u05D0\u05DD \u05D4\u05DB\u05EA\u05D5\u05D1\u05EA \u05EA\u05E7\u05D9\u05E0\u05D4, \u05E0\u05E9\u05DC\u05D7 \u05D0\u05DC\u05D9\u05D4 \u05DE\u05D9\u05D9\u05DC \u05E2\u05DD \u05DB\u05E4\u05EA\u05D5\u05E8 \u05D0\u05D9\u05E9\u05D5\u05E8, \u05D5\u05DE\u05D9\u05D3 \u05D0\u05D7\u05E8\u05D9\u05D5 \u05D4\u05DE\u05D3\u05E8\u05D9\u05DA. \u05D0\u05DD \u05DC\u05D0 \u05D4\u05D2\u05D9\u05E2 \u05EA\u05D5\u05DA \u05DB\u05DE\u05D4 \u05D3\u05E7\u05D5\u05EA, \u05D1\u05D3\u05E7\u05D5 \u05D2\u05DD \u05D1\u05E1\u05E4\u05D0\u05DD \u05D0\u05D5 \u05D1\u05E7\u05D9\u05D3\u05D5\u05DE\u05D9 \u05DE\u05DB\u05D9\u05E8\u05D5\u05EA." });
+    const DONE = json({ ok: true, msg: "תודה, נרשמת! שלחנו אליך עכשיו את המדריך למייל. אם לא הגיע תוך כמה דקות, כדאי לבדוק גם בספאם או בקידומי מכירות." });
     const ip = (req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for")?.split(",")[0] || "").trim();
     const rk = `ip-${ip.replace(/[^0-9a-f.:]/gi, "")}-${(/* @__PURE__ */ new Date()).toISOString().slice(0, 13)}`;
     const rl = await getDoc("ratelimit", rk) || { n: 0 };
@@ -158,7 +158,8 @@ ${isAd ? "\u05E7\u05D9\u05D1\u05DC\u05EA \u05D0\u05EA \u05D4\u05DE\u05D9\u05D9\u
       return DONE;
     }
     if (prev && prev.status === "test") return DONE;
-    if (prev && prev.status === "pending" && prev.confirmSentAt && Date.now() - Date.parse(prev.confirmSentAt) < 864e5) return DONE;
+    // Yakir 16.10.2026: no confirmation email. Whoever signs up (with the consent box ticked) joins the list at once
+    // and gets the welcome email with the guide; every email has a one-click removal link.
     const t = prev?.tok || tok();
     await db().upsert({ coll: "subs", id: email, data: Object.assign({}, prev || {}, {
       email,
@@ -173,20 +174,31 @@ ${isAd ? "\u05E7\u05D9\u05D1\u05DC\u05EA \u05D0\u05EA \u05D4\u05DE\u05D9\u05D9\u
       consent: { v: CONSENT_V, text: CONSENT_TEXT, at: now, ip, ua: (req.headers.get("user-agent") || "").slice(0, 200), page: (f.page || req.headers.get("referer") || "").slice(0, 200) },
       history: [...prev?.history || [], { at: now, ev: "subscribe", source }].slice(-20)
     }), updated_at: now });
+    await activate(email, true);
+    return DONE;
+  }
+  // joins the list now, sends the welcome email (at most 50 a day, the rest go out with the next round), tells Yakir
+  async function activate(id, fresh) {
+    const s = await getDoc("subs", id);
+    if (!s || s.status === "test" || s.status === "unsub" && !fresh) return false;
+    const now = (/* @__PURE__ */ new Date()).toISOString();
+    const joined = s.status !== "active";
+    if (joined) await merge("subs", id, { status: "active", confirmedAt: now, joinMode: "single", history: [...s.history || [], { at: now, ev: "join" }].slice(-20) });
+    if (s.welcomeAt) return joined;
     const st = await getDoc("nlstate", "confirms") || {};
     const today = ymd(ilNow());
     const cn = st.day === today ? Number(st.n || 0) : 0;
-    const sent = cn < 50 ? await sendConfirm(email, name, t, magnet) : false;
-    if (sent) await db().upsert({ coll: "nlstate", id: "confirms", data: { day: today, n: cn + 1 }, updated_at: now });
-    if (cn === 50 && !st.alerted) {
-      await db().upsert({ coll: "nlstate", id: "confirms", data: { day: today, n: cn, alerted: true }, updated_at: now });
-      await tg("\u26A0\uFE0F \u05D4\u05D2\u05E2\u05E0\u05D5 \u05DC-50 \u05D4\u05E8\u05E9\u05DE\u05D5\u05EA \u05D7\u05D3\u05E9\u05D5\u05EA \u05D4\u05D9\u05D5\u05DD. \u05D0\u05DD \u05D6\u05D4 \u05DC\u05D0 \u05E7\u05DE\u05E4\u05D9\u05D9\u05DF, \u05D9\u05D9\u05EA\u05DB\u05DF \u05E9\u05DE\u05D9\u05E9\u05D4\u05D5 \u05DE\u05E0\u05E6\u05DC \u05D0\u05EA \u05D4\u05D8\u05D5\u05E4\u05E1. \u05D4\u05D4\u05E8\u05E9\u05DE\u05D5\u05EA \u05E0\u05E9\u05DE\u05E8\u05D5\u05EA \u05D5\u05DE\u05D9\u05D9\u05DC\u05D9 \u05D4\u05D0\u05D9\u05E9\u05D5\u05E8 \u05D9\u05D9\u05E9\u05DC\u05D7\u05D5 \u05DE\u05D7\u05E8.");
+    const magnet = hasMagnet(s.magnet) ? s.magnet : "buyer-checklist";
+    const sent = cn < 50 ? await sendWelcome(s.email, s.name, s.tok, magnet) : false;
+    if (sent) {
+      await db().upsert({ coll: "nlstate", id: "confirms", data: { day: today, n: cn + 1 }, updated_at: now });
+      await merge("subs", id, { welcomeAt: now });
     }
-    await merge("subs", email, { confirmSentAt: sent ? now : null });
-    if (!sent) await tg(`\u{1F4E9} \u05E0\u05E8\u05E9\u05DD/\u05D4 \u05D7\u05D3\u05E9/\u05D4 \u05DC\u05E8\u05E9\u05D9\u05DE\u05D4: ${name || ""} ${email}
-\u05DE\u05E7\u05D5\u05E8: ${source}
-\u05E9\u05D9\u05E8\u05D5\u05EA \u05D4\u05DE\u05D9\u05D9\u05DC\u05D9\u05DD \u05E2\u05D5\u05D3 \u05DC\u05D0 \u05DE\u05D7\u05D5\u05D1\u05E8, \u05D5\u05DC\u05DB\u05DF \u05DE\u05D9\u05D9\u05DC \u05D4\u05D0\u05D9\u05E9\u05D5\u05E8 \u05D9\u05D9\u05E9\u05DC\u05D7 \u05D0\u05D5\u05D8\u05D5\u05DE\u05D8\u05D9\u05EA \u05D1\u05E8\u05D2\u05E2 \u05E9\u05D9\u05D7\u05D5\u05D1\u05E8.`);
-    return DONE;
+    if (!joined) return false;
+    const { count } = await db().select("id", { count: "exact", head: true }).eq("coll", "subs").eq("data->>status", "active");
+    await tg(`✅ מנוי/ה חדש/ה ברשימה: ${s.name || ""} ${s.email}
+מקור: ${s.source || "website"} · סה״כ מנויים פעילים: ${count ?? "?"}${sent ? "" : "\nמייל הפתיחה עם המדריך יישלח בסבב הבא."}`);
+    return true;
   }
   async function sendConfirm(email, name, t, magnet) {
     if (!emailReady()) return false;
@@ -371,14 +383,13 @@ ${j.qa.a}` : "",
     }
     return page("?", "", 400);
   }
+  // sign-ups still waiting for the old confirmation email join the list now (Yakir 16.10.2026)
   async function confirmBacklog() {
-    if (!emailReady()) return 0;
-    const pend = (await all("subs")).filter((s) => s.data.status === "pending" && !s.data.confirmSentAt && !s.data.test).slice(0, 50);
+    const pend = (await all("subs")).filter((s) => s.data.status === "pending" && !s.data.test).slice(0, 50);
     let n = 0;
-    for (const s of pend) if (await sendConfirm(s.data.email, s.data.name, s.data.tok, s.data.magnet || "buyer-checklist")) {
-      n++;
-      await merge("subs", s.id, { confirmSentAt: (/* @__PURE__ */ new Date()).toISOString() });
-    }
+    for (const s of pend) if (await activate(s.id, false)) n++;
+    const late = (await all("subs")).filter((s) => s.data.status === "active" && !s.data.welcomeAt && !s.data.test).slice(0, 50);
+    for (const s of late) await activate(s.id, false);
     return n;
   }
   async function sendRound() {
@@ -624,6 +635,7 @@ ${j.qa.a}` : "",
       if (!secret || req.headers.get("x-cron-secret") !== secret) return json({ error: "unauthorized" }, 401);
       if (step === "nl-notify") return json(await notifyIssue(String(url.searchParams.get("id") || "").replace(/[^a-z0-9-]/gi, "")));
       if (step === "nl-send") return json(await sendRound());
+      if (step === "subs-activate") return json({ activated: await confirmBacklog() });
       if (step === "sitepv-shot") return json(await sitePreviewShots(await req.json().catch(() => ({}))));
       if (step === "nl-test") return json(await testIssue(await req.json().catch(() => ({}))));
       if (step === "weekly") return json(await weekly());
