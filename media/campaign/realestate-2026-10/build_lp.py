@@ -244,15 +244,17 @@ def page(key):
     ld = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in p['faq']]}
     js = """(function(){var A='__API__';function q(k){try{return new URLSearchParams(location.search).get(k)||''}catch(e){return ''}}
 var src=q('utm_source')||(q('gclid')?'google':'')||(q('fbclid')?'facebook':'')||'website';var camp=q('utm_campaign');
+function ev(n,p){try{if(window.fbq){window.fbq('track',n,p)}}catch(x){}try{if(window.gtag){window.gtag('event',n=='Lead'?'generate_lead':'contact',p)}}catch(x){}}
+document.addEventListener('click',function(e){var a=e.target.closest?e.target.closest('a'):null;if(!a){return}var h=a.getAttribute('href')||'';if(h.indexOf('tel:')===0){ev('Contact',{method:'phone',page:'lp-__KEY__'})}else if(h.indexOf('wa.me')!==-1){ev('Contact',{method:'whatsapp',page:'lp-__KEY__'})}},true);
 document.querySelectorAll('form[data-dlp]').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();
 var m=f.querySelector('.msg'),b=f.querySelector('.go'),g=function(n){var x=f.elements[n];return x?String(x.value||'').trim():''};
 var k=f.querySelector('input[name=kind]:checked');var tel=g('phone').replace(/[^0-9+]/g,'');
-if(g('website')){return}if(g('name').length<2){m.textContent='כתבו שם, בבקשה.';return}if(tel.replace(/[^0-9]/g,'').length<9){m.textContent='כתבו מספר טלפון תקין, בבקשה.';return}
+if(g('website')){return}if(!(g('name').length>1)){m.textContent='כתבו שם, בבקשה.';return}if(!(tel.replace(/[^0-9]/g,'').length>8)){m.textContent='כתבו מספר טלפון תקין, בבקשה.';return}
 m.textContent='';b.disabled=true;b.textContent='שולחים...';
 var body={name:g('name'),phone:tel,topic:(k?k.value:'__TOPIC__'),source:'ads-'+src,form:'lp-__KEY__',page:location.href.split('#')[0].slice(0,300),notes:(g('msg')?g('msg')+'\\n':'')+'קמפיין: '+(camp||src)};
-var ok=function(){f.parentNode.innerHTML='<div class="ok"><b>תודה, קיבלנו.</b>עורך הדין יחזור אליכם בהקדם, בדרך כלל באותו יום עבודה.<br>דחוף? <a href="tel:__PHONE_INTL__" dir="ltr">__PHONE__</a></div>';try{window.gtag&&window.gtag('event','generate_lead',{form_name:'lp-__KEY__',page_path:location.pathname})}catch(x){}};
+var ok=function(){var d=document.createElement('div');d.className='ok';var t=document.createElement('b');t.textContent='תודה, קיבלנו.';d.appendChild(t);d.appendChild(document.createTextNode('עורך הדין יחזור אליכם בהקדם, בדרך כלל באותו יום עבודה. דחוף? '));var a=document.createElement('a');a.href='tel:__PHONE_INTL__';a.dir='ltr';a.textContent='__PHONE__';d.appendChild(a);var p=f.parentNode;while(p.firstChild){p.removeChild(p.firstChild)}p.appendChild(d);ev('Lead',{content_name:'lp-__KEY__'})};
 var bad=function(){b.disabled=false;b.textContent='שלחו ונחזור אליכם';m.textContent='משהו השתבש. אפשר להתקשר: __PHONE__'};
-fetch(A,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json()}).then(function(j){j&&j.ok?ok():bad()}).catch(bad)})})})();"""
+fetch(A,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json()}).then(function(j){if(j){if(j.ok){ok()}else{bad()}}else{bad()}}).catch(bad)})})})();"""
     js = js.replace('__API__',API).replace('__TOPIC__',p['topic']).replace('__KEY__',key).replace('__PHONE_INTL__',PHONE_INTL).replace('__PHONE__',PHONE)
     body = f'''<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&display=swap">
 <style>{CSS.replace('__IMG__', IMG)}</style>
@@ -277,6 +279,7 @@ fetch(A,{method:'POST',headers:{'content-type':'application/json'},body:JSON.str
 <nav class="bar" aria-label="יצירת קשר"><a href="tel:{PHONE_INTL}">{I_TEL}התקשרו</a><a href="{esc(wa)}">{I_WA}וואטסאפ</a><a class="m" href="#f1">{I_FORM}השאירו פרטים</a></nav>
 </div>
 <script type="application/ld+json">{json.dumps(ld,ensure_ascii=False)}</script>
+<script nowprocket data-no-optimize="1" data-no-minify="1">!function(f,b,e,v,n,t,s){{if(f.fbq)return;n=f.fbq=function(){{n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)}};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','2010050569657680');fbq('track','PageView');fbq('track','ViewContent',{{content_name:'lp-{key}'}});</script>
 <script nowprocket data-no-optimize="1">{js}</script>'''
     return body
 

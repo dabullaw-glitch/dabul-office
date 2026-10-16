@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><title>creatives v2</title>
+<!-- Real estate campaign, round 2 (16.10.2026). Four concepts, each in square (1080) and story (1080x1920).
+     Bar Association rules: no superlatives, no promises, no prices, no "מומחה"/"חינם". Story safe zones: nothing
+     important in the top 250px or the bottom 340px. -->
+<style>
+@font-face{font-family:H;src:url(../../../docs/buyer-checklist/fonts/heebo-hebrew-400-normal.woff2);font-weight:400}
+@font-face{font-family:H;src:url(../../../docs/buyer-checklist/fonts/heebo-hebrew-500-normal.woff2);font-weight:500}
+@font-face{font-family:H;src:url(../../../docs/buyer-checklist/fonts/heebo-hebrew-700-normal.woff2);font-weight:700}
+@font-face{font-family:H;src:url(../../../docs/buyer-checklist/fonts/heebo-hebrew-800-normal.woff2);font-weight:800}
+@font-face{font-family:H;src:url(../../../docs/buyer-checklist/fonts/heebo-latin-500-normal.woff2);font-weight:500;unicode-range:U+0000-00FF}
+@font-face{font-family:H;src:url(../../../docs/buyer-checklist/fonts/heebo-latin-700-normal.woff2);font-weight:700;unicode-range:U+0000-00FF}
+@font-face{font-family:F;src:url(../../../docs/buyer-checklist/fonts/frank-ruhl-libre-hebrew-700-normal.woff2);font-weight:700}
+@font-face{font-family:F;src:url(../../../docs/buyer-checklist/fonts/frank-ruhl-libre-hebrew-500-normal.woff2);font-weight:500}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#555;font-family:H,sans-serif;display:flex;flex-wrap:wrap;gap:40px;padding:40px;align-items:flex-start}
+.c{position:relative;overflow:hidden;flex:none;isolation:isolate;display:flex;flex-direction:column}
+.sq{width:1080px;height:1080px;padding:72px 76px 60px}
+.st{width:1080px;height:1920px;padding:250px 80px 340px}
+:root{--navy:#14213a;--navy2:#1d2d4d;--gold:#c9a85c;--gold2:#e4d19c;--cream:#f6f1e6;--paper:#fffdf8;--ink:#1a1d24;--mut:#5b6170;--mark:#ffe36b}
+.brand{display:flex;align-items:center;gap:14px;font-weight:700;font-size:26px;letter-spacing:.01em}
+.brand i{width:12px;height:12px;border-radius:50%;background:var(--gold);display:inline-block}
+h1{font-family:F,serif;font-weight:700;line-height:1.04;letter-spacing:-.005em}
+h1 em{font-style:normal}
+.sub{font-size:32px;line-height:1.42}
+.cta{display:inline-flex;align-items:center;gap:14px;font-weight:800;font-size:31px;border-radius:999px;padding:20px 40px;align-self:flex-start}
+.cta b{font-size:34px;line-height:1}
+.who{display:flex;align-items:center;gap:16px;font-size:24px;line-height:1.3}
+.who .ph{width:76px;height:76px;border-radius:50%;overflow:hidden;flex:none;background:#c9b48a}
+.who .ph img{width:100%;height:auto;margin-top:-4px}
+.who b{display:block;font-size:27px}
+
+/* 1. buy-tabu: paper, the land registry extract with two marked lines */
+.tabu{background:var(--cream);color:var(--ink)}
+.tabu .brand{color:var(--navy)}
+.tabu h1{color:var(--navy);font-size:76px;margin-top:34px}
+.tabu h1 em{color:#9a7a33}
+.tabu .sub{color:#3b4150;margin-top:20px;max-width:880px}
+.doc{background:var(--paper);border:1px solid #e3dccb;border-radius:18px;box-shadow:0 30px 60px -28px rgba(20,33,58,.45);padding:30px 36px 26px;margin-top:38px;transform:rotate(-1.2deg);font-size:25px}
+.doc .dh{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--navy);padding-bottom:12px;margin-bottom:6px}
+.doc .dh b{font-family:F,serif;font-size:31px;color:var(--navy)}
+.doc .dh span{font-size:20px;color:var(--mut)}
+.doc .r{display:grid;grid-template-columns:170px 1fr;gap:18px;padding:11px 6px;border-bottom:1px dashed #ddd5c2;align-items:center}
+.doc .r:last-child{border-bottom:0}
+.doc .r small{color:var(--mut);font-size:21px}
+.doc .r.hl span{background:linear-gradient(transparent 18%,var(--mark) 18%,var(--mark) 88%,transparent 88%);font-weight:700;padding:0 4px}
+.doc .r .q{display:inline-flex;width:34px;height:34px;border-radius:50%;background:#d6452f;color:#fff;font-weight:800;font-size:22px;align-items:center;justify-content:center;margin-right:10px;vertical-align:middle}
+.tabu .row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto}
+.tabu .cta{background:var(--navy);color:#fff}
+.tabu .who{color:var(--navy)}
+.tabu.st h1{font-size:96px;margin-top:40px}
+.tabu.st .sub{font-size:38px}
+.tabu.st .doc{font-size:29px;margin-top:56px;padding:38px 42px 30px}
+.tabu.st .doc .r{grid-template-columns:200px 1fr;padding:15px 6px}
+.tabu.st .row{flex-direction:column;align-items:flex-start;gap:34px}
+.tabu.st .cta{font-size:36px;padding:24px 48px}
+
+/* 2. buy-list: navy, four checks, portrait */
+.list{background:var(--navy);color:#fff}
+.list .bgph{position:absolute;left:-30px;bottom:0;width:470px;z-index:-1}
+.list .bgph img{width:100%;display:block}
+.list .glow{position:absolute;left:-120px;bottom:-120px;width:720px;height:720px;border-radius:50%;background:radial-gradient(closest-side,rgba(201,168,92,.35),transparent);z-index:-2}
+.list .brand{color:var(--gold2)}
+.list h1{font-size:68px;margin-top:34px;max-width:620px;color:#fff}
+.list h1 em{color:var(--gold)}
+.list ol{list-style:none;margin-top:34px;display:flex;flex-direction:column;gap:16px;max-width:590px}
+.list li{display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(201,168,92,.35);border-radius:16px;padding:14px 20px;font-size:28px;line-height:1.25}
+.list li b{display:flex;width:56px;height:56px;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:800;font-size:30px;align-items:center;justify-content:center}
+.list li small{display:block;font-size:22px;color:#c9d0de;margin-top:2px}
+.list .bot{margin-top:auto;display:flex;flex-direction:column;gap:18px;align-items:flex-start}
+.list .cta{background:var(--gold);color:var(--navy)}
+.list .tag{font-size:24px;color:#c9d0de}
+.list.st h1{font-size:92px;max-width:none;margin-top:30px}
+.list.st ol{max-width:none;gap:22px;margin-top:48px}
+.list.st li{font-size:36px;grid-template-columns:70px 1fr;padding:20px 26px}
+.list.st li b{width:70px;height:70px;font-size:36px}
+.list.st li small{font-size:27px}
+.list.st .bgph{width:430px;left:-10px;bottom:300px;opacity:.95}
+.list.st .glow{bottom:200px}
+.list.st .bot{margin-top:auto;max-width:560px}
+.list.st .cta{font-size:36px;padding:24px 48px}
+
+/* 3. sell-net: cream, a calculation slip without numbers */
+.net{background:#efe7d6;color:var(--ink)}
+.net .brand{color:var(--navy)}
+.net h1{color:var(--navy);font-size:78px;margin-top:34px}
+.net h1 em{color:#9a7a33}
+.net .sub{color:#3b4150;margin-top:18px;max-width:900px}
+.slip{background:var(--paper);border-radius:6px;margin-top:36px;padding:30px 40px 18px;box-shadow:0 26px 50px -24px rgba(20,33,58,.4);position:relative;font-size:28px;width:760px;align-self:center}
+.slip:after{content:"";position:absolute;left:0;right:0;bottom:-16px;height:16px;background:radial-gradient(circle at 12px -2px,transparent 12px,var(--paper) 13px) 0 0/24px 16px repeat-x}
+.slip h3{font-family:F,serif;font-size:32px;color:var(--navy);text-align:center;border-bottom:2px dashed #cfc6b2;padding-bottom:14px;margin-bottom:6px}
+.slip .r{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #eee6d5}
+.slip .r i{font-style:normal;color:#9aa0ab;letter-spacing:.12em;direction:ltr}
+.slip .r.m span:before{content:"− ";color:#c0392b;font-weight:800}
+.slip .r.t{border-bottom:0;border-top:3px double var(--navy);margin-top:6px;font-weight:800;color:var(--navy);font-size:31px}
+.slip .r.t i{color:var(--navy)}
+.net .row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto}
+.net .cta{background:var(--navy);color:#fff}
+.net .who{color:var(--navy)}
+.net.st h1{font-size:98px;margin-top:40px}
+.net.st .sub{font-size:38px}
+.net.st .slip{width:100%;font-size:34px;margin-top:60px;padding:40px 48px 24px}
+.net.st .slip h3{font-size:40px}
+.net.st .row{flex-direction:column;align-items:flex-start;gap:34px}
+.net.st .cta{font-size:36px;padding:24px 48px}
+
+/* 4. sell-quote: portrait, a sentence from the lawyer */
+.quote{background:#0f1729;color:#fff}
+.quote .ph{position:absolute;left:0;bottom:0;width:520px;z-index:-1}
+.quote .ph img{width:100%;display:block}
+.quote .sh{position:absolute;inset:0;background:linear-gradient(270deg,#0f1729 0%,#0f1729 46%,rgba(15,23,41,.2) 75%,rgba(15,23,41,0) 100%);z-index:-1}
+.quote .ln{position:absolute;inset:0;background:url(img/netanya-night.webp) center 70%/cover;opacity:.18;z-index:-3}
+.quote .brand{color:var(--gold2)}
+.quote .mk{font-family:F,serif;font-size:150px;line-height:.6;color:var(--gold);margin-top:60px;height:70px}
+.quote h1{font-size:62px;line-height:1.14;max-width:560px;margin-top:10px}
+.quote h1 em{color:var(--gold)}
+.quote .sig{margin-top:22px;font-size:25px;color:#c9d0de}
+.quote .sig b{color:#fff;font-size:28px}
+.quote .chips{display:flex;flex-direction:column;gap:12px;margin-top:30px;max-width:560px}
+.quote .chips span{font-size:27px;display:flex;gap:14px;align-items:center}
+.quote .chips span:before{content:"";width:26px;height:26px;flex:none;border-radius:50%;background:var(--gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2314213a' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/16px no-repeat}
+.quote .cta{background:var(--gold);color:var(--navy);margin-top:auto}
+.quote.st .ph{width:600px;bottom:300px;left:-20px}
+.quote.st .sh{background:linear-gradient(180deg,#0f1729 0%,#0f1729 40%,rgba(15,23,41,.3) 70%,#0f1729 100%)}
+.quote.st h1{font-size:84px;max-width:none}
+.quote.st .mk{font-size:200px;height:90px}
+.quote.st .sig{font-size:32px}.quote.st .sig b{font-size:36px}
+.quote.st .chips{max-width:none;margin-top:40px}
+.quote.st .chips span{font-size:36px}
+.quote.st .cta{font-size:36px;padding:24px 48px;align-self:flex-end}
+</style></head><body>
+
+<!-- 1 buy-tabu -->
+<section class="c tabu sq" id="buy-tabu-sq">
+ <div class="brand"><i></i>יקיר דבול - משרד עורכי דין</div>
+ <h1>מה כתוב בנסח<br>של הדירה <em>שאתם רוצים?</em></h1>
+ <p class="sub">משכנתא, עיקול או הערת אזהרה לטובת מישהו אחר. את זה בודקים לפני שמציעים מחיר.</p>
+ <div class="doc">
+  <div class="dh"><b>נסח רישום מקרקעין</b><span>גוש ____ חלקה ____</span></div>
+  <div class="r"><small>בעלים</small><span>לפי הרישום</span></div>
+  <div class="r hl"><small>משכנתאות</small><div><span>משכנתא לטובת בנק</span><em class="q">?</em></div></div>
+  <div class="r hl"><small>הערות</small><div><span>הערת אזהרה לטובת צד ג׳</span><em class="q">?</em></div></div>
+  <div class="r"><small>הצמדות</small><span>חניה · מחסן</span></div>
+ </div>
+ <div class="row"><span class="cta">לבדיקה לפני שקונים <b>←</b></span>
+  <div class="who"><div class="ph"><img src="img/yakir-cutout.webp" alt=""></div><div><b>עו״ד יקיר דבול</b>רזיאל 1, נתניה</div></div></div>
+</section>
+
+<section class="c tabu st" id="buy-tabu-st">
+ <div class="brand"><i></i>יקיר דבול - משרד עורכי דין</div>
+ <h1>מה כתוב בנסח<br>של הדירה <em>שאתם רוצים?</em></h1>
+ <p class="sub">משכנתא, עיקול או הערת אזהרה לטובת מישהו אחר. את זה בודקים לפני שמציעים מחיר.</p>
+ <div class="doc">
+  <div class="dh"><b>נסח רישום מקרקעין</b><span>גוש ____ חלקה ____</span></div>
+  <div class="r"><small>בעלים</small><span>לפי הרישום</span></div>
+  <div class="r hl"><small>משכנתאות</small><div><span>משכנתא לטובת בנק</span><em class="q">?</em></div></div>
+  <div class="r hl"><small>הערות</small><div><span>הערת אזהרה לטובת צד ג׳</span><em class="q">?</em></div></div>
+  <div class="r"><small>הצמדות</small><span>חניה · מחסן</span></div>
+ </div>
+ <div class="row" style="margin-top:auto"><div class="who"><div class="ph"><img src="img/yakir-cutout.webp" alt=""></div><div><b>עו״ד יקיר דבול</b>רזיאל 1, נתניה</div></div>
+  <span class="cta">לבדיקה לפני שקונים <b>←</b></span></div>
+</section>
+
+<!-- 2 buy-list -->
+<section class="c list sq" id="buy-list-sq">
+ <div class="glow"></div><div class="bgph"><img src="img/yakir-cutout.webp" alt=""></div>
+ <div class="brand"><i></i>יקיר דבול - משרד עורכי דין</div>
+ <h1>קונים דירה יד שנייה?<br><em>4 בדיקות לפני החתימה</em></h1>
+ <ol>
+  <li><b>1</b><div>נסח טאבו<small>משכנתאות, עיקולים והערות</small></div></li>
+  <li><b>2</b><div>תיק הבניין בעירייה<small>חריגות בנייה והיתרים</small></div></li>
+  <li><b>3</b><div>הערת אזהרה<small>לפני שעובר כסף למוכר</small></div></li>
+  <li><b>4</b><div>מס רכישה<small>יודעים את הסכום לפני שחותמים</small></div></li>
+ </ol>
+ <div class="bot"><span class="cta">לשיחה עם עורך הדין <b>←</b></span><span class="tag">עו״ד יקיר דבול · רזיאל 1, נתניה</span></div>
+</section>
+
+<section class="c list st" id="buy-list-st">
+ <div class="glow"></div><div class="bgph"><img src="img/yakir-cutout.webp" alt=""></div>
+ <div class="brand"><i></i>יקיר דבול - משרד עורכי דין</div>
+ <h1>קונים דירה יד שנייה?<br><em>4 בדיקות לפני החתימה</em></h1>
+ <ol>
+  <li><b>1</b><div>נסח טאבו<small>משכנתאות, עיקולים והערות</small></div></li>
+  <li><b>2</b><div>תיק הבניין בעירייה<small>חריגות בנייה והיתרים</small></div></li>
+  <li><b>3</b><div>הערת אזהרה<small>לפני שעובר כסף למוכר</small></div></li>
+  <li><b>4</b><div>מס רכישה<small>יודעים את הסכום לפני שחותמים</small></div></li>
+ </ol>
+ <div class="bot"><span class="cta">לשיחה עם עורך הדין <b>←</b></span><span class="tag">עו״ד יקיר דבול · רזיאל 1, נתניה</span></div>
+</section>
+
+<!-- 3 sell-net -->
+<section class="c net sq" id="sell-net-sq">
+ <div class="brand"><i></i>יקיר דבול - משרד עורכי דין</div>
+ <h1>מוכרים דירה?<br><em>קודם מחשבים את הנטו.</em></h1>
+ <p class="sub">משכנתא, מס שבח והיטל השבחה בודקים לפני שקובעים מחיר.</p>
+ <div class="slip">
+  <h3>מכירת דירה: מה נשאר ביד</h3>
+  <div class="r"><span>מחיר המכירה</span><i>₪ _______</i></div>
+  <div class="r m"><span>יתרת המשכנתא</span><i>₪ _______</i></div>
+  <div class="r m"><span>מס שבח, אם יש</span><i>₪ _______</i></div>
+  <div class="r m"><span>היטל השבחה, אם יש</span><i>₪ _______</i></div>
+  <div class="r t"><span>נשאר לכם</span><i>₪ _______</i></div>
+ </div>
+ <div class="row"><span class="cta">לבדיקה לפני שמפרסמים <b>←</b></span>
+  <div class="who"><div class="ph"><img src="img/yakir-cutout.webp" alt=""></div><div><b>עו״ד יקיר דבול</b>רזיאל 1, נתניה</div></div></div>
+</section>
+
+<section class="c net st" id="sell-net-st">
+ <div class="brand"><i></i>יקיר דבול - משרד עורכי דין</div>
+ <h1>מוכרים דירה?<br><em>קודם מחשבים את הנטו.</em></h1>
+ <p class="sub">משכנתא, מס שבח והיטל השבחה בודקים לפני שקובעים מחיר.</p>
+ <div class="slip">
+  <h3>מכירת דירה: מה נשאר ביד</h3>
+  <div class="r"><span>מחיר המכירה</span><i>₪ _______</i></div>
+  <div class="r m"><span>יתרת המשכנתא</span><i>₪ _______</i></div>
+  <div class="r m"><span>מס שבח, אם יש</span><i>₪ _______</i></div>
+  <div class="r m"><span>היטל השבחה, אם יש</span><i>₪ _______</i></div>
+  <div class="r t"><span>נשאר לכם</span><i>₪ _______</i></div>
+ </div>
+ <div class="row" style="margin-top:auto"><div class="who"><div class="ph"><img src="img/yakir-cutout.webp" alt=""></div><div><b>עו״ד יקיר דבול</b>רזיאל 1, נתניה</div></div>
+  <span class="cta">לבדיקה לפני שמפרסמים <b>←</b></span></div>
+</section>
+
+<!-- 4 sell-quote -->
+<section class="c quote sq" id="sell-quote-sq">
+ <div class="ln"></div><div class="sh"></div><div class="ph"><img src="img/yakir-cutout.webp" alt=""></div>
+ <div class="brand"><i></i>יקיר דבול - משרד עורכי דין</div>
+ <div class="mk">״</div>
+ <h1>רוב העיכובים במכירת דירה <em>מתגלים מראש,</em> אם בודקים לפני שמפרסמים.</h1>
+ <p class="sig"><b>עו״ד יקיר דבול</b> · עורך דין מקרקעין, נתניה</p>
+ <div class="chips"><span>נסח, משכנתא ותיק בניין</span><span>מס שבח ובדיקת פטור</span><span>חוזה עם ביטחונות לתשלום</span></div>
+ <span class="cta">לשיחה עם עורך הדין <b>←</b></span>
+</section>
+
+<section class="c quote st" id="sell-quote-st">
+ <div class="ln"></div><div class="sh"></div><div class="ph"><img src="img/yakir-cutout.webp" alt=""></div>
+ <div class="brand"><i></i>יקיר דבול - משרד עורכי דין</div>
+ <div class="mk">״</div>
+ <h1>רוב העיכובים במכירת דירה <em>מתגלים מראש,</em> אם בודקים לפני שמפרסמים.</h1>
+ <p class="sig"><b>עו״ד יקיר דבול</b> · עורך דין מקרקעין, נתניה</p>
+ <div class="chips"><span>נסח, משכנתא ותיק בניין</span><span>מס שבח ובדיקת פטור</span><span>חוזה עם ביטחונות לתשלום</span></div>
+ <span class="cta">לשיחה עם עורך הדין <b>←</b></span>
+</section>
+</body></html>
