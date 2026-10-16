@@ -52,7 +52,7 @@ add_action('wp_head', function () {
 .dlb input:focus,.dlb textarea:focus{outline:none;border-color:#c9a85c;box-shadow:0 0 0 3px rgba(201,168,92,.22)}
 .dlb button{grid-column:1 / -1;font:inherit;font-weight:800;font-size:17px;border:0;border-radius:999px;padding:13px 20px;background:#c9a85c;color:#14130f;cursor:pointer}
 .dlb button:hover{background:#e4d19c}
-.dlb .hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
+.dlb{position:relative}.dlb .hp{position:absolute!important;top:0!important;left:0!important;width:1px!important;height:1px!important;padding:0!important;border:0!important;overflow:hidden!important;clip-path:inset(50%)!important;opacity:0!important;pointer-events:none}
 .dlb .ft{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-top:12px;font-size:14.5px;color:#5d5a54}
 .dlb .ft a{color:#16161a!important;font-weight:700;text-decoration:none!important}
 .dlb .ft a.wa{color:#11803d!important}
