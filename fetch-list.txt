@@ -1,0 +1,2 @@
+p219.json https://dabullaw.co.il/wp-json/wp/v2/posts/219?_fields=id,link,title,content,excerpt,modified,yoast_head_json
+p3715.json https://dabullaw.co.il/wp-json/wp/v2/posts/3715?_fields=id,link,title,content,excerpt,modified,yoast_head_json
