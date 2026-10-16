@@ -396,7 +396,7 @@ fetch(A,{method:'POST',headers:{'content-type':'application/json'},body:JSON.str
 <nav class="bar" aria-label="יצירת קשר"><a href="tel:{PHONE_INTL}">{I_TEL}התקשרו</a><a href="{esc(wa)}">{I_WA}וואטסאפ</a><a class="m" href="#f1">{I_FORM}השאירו פרטים</a></nav>
 </div>
 <script type="application/ld+json">{json.dumps(ld,ensure_ascii=False)}</script>
-<script nowprocket data-no-optimize="1" data-no-minify="1">!function(f,b,e,v,n,t,s){{if(f.fbq)return;n=f.fbq=function(){{n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)}};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','2010050569657680');fbq('track','PageView');fbq('track','ViewContent',{{content_name:'lp-{key}'}});</script>
+<script nowprocket data-no-optimize="1" data-no-minify="1">!function(f,b,e,v,n,t,s){{if(f.fbq)return;n=f.fbq=function(){{n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)}};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','2010050569657680');fbq('init','1836257987088375');fbq('track','PageView');fbq('track','ViewContent',{{content_name:'lp-{key}'}});</script>
 <script nowprocket data-no-optimize="1">{js}</script>'''
     return body
 

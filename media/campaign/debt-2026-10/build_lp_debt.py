@@ -173,7 +173,7 @@ fetch(A,{method:'POST',headers:{'content-type':'application/json'},body:JSON.str
 js = js.replace('__API__', API).replace('__WADOCS__', wa_docs).replace('__PHONE__', PHONE)
 assert '&' not in js and '<' not in js
 
-px = "!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','2010050569657680');fbq('track','PageView');fbq('track','ViewContent',{content_name:'lp-debt'});"
+px = "!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','2010050569657680');fbq('init','1836257987088375');fbq('track','PageView');fbq('track','ViewContent',{content_name:'lp-debt'});"
 assert '&' not in px and '<' not in px
 
 pains = ''.join(f'<li>{esc(x)}</li>' for x in PAINS)

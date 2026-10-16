@@ -1,5 +1,5 @@
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','2010050569657680');fbq('track','PageView');
+fbq('init','2010050569657680');fbq('init','1836257987088375');fbq('track','PageView');
 (function(){var slug='__SLUG__';var q;try{q=new URLSearchParams(location.search)}catch(e){q=null}
 if(slug==='thanks'){if(!q){return}var id=(q.get('id')||'').replace(/[^A-Za-z0-9-]/g,'').slice(0,20);if(!id){return}if(q.get('failed')==='1'){return}var k='dbl_px_'+id,seen=false;try{seen=!!sessionStorage.getItem(k);sessionStorage.setItem(k,'1')}catch(e){}if(!seen){fbq('track','Purchase',{currency:'ILS',value:0,content_type:'product',content_ids:[id]},{eventID:'order-'+id})}return}
 fbq('track','ViewContent',{content_name:slug,content_category:'online-legal-services'});
