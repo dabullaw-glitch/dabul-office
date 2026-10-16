@@ -22,3 +22,7 @@
 {"name":"lpdebt","tag":"m","loadCls":0,"afterScrollCls":0,"loadShifts":[],"allShifts":[]}
 {"name":"lpdebt2","tag":"d","loadCls":0.0037,"afterScrollCls":0.0037,"loadShifts":[{"v":0.0036,"t":1755,"src":["div {\"y\":128,\"h\":575}->{\"y\":133,\"h\":575}","div.row2 {\"y\":294,\"h\":76}->{\"y\":299,\"h\":81}","div.press {\"y\":799,\"h\":72}->{\"y\":808,\"h\":72}","section.s {\"y\":871,\"h\":29}->{\"y\":880,\"h\":20}","button.btn.b-d.go {\"y\":533,\"h\":122}->{\"y\":543,\"h\":122}"]},{"v":0,"t":2302,"src":["?","?","?"]}],"allShifts":[{"v":0.0036,"t":1755,"src":["div {\"y\":128,\"h\":575}->{\"y\":133,\"h\":575}","div.row2 {\"y\":294,\"h\":76}->{\"y\":299,\"h\":81}","div.press {\"y\":799,\"h\":72}->{\"y\":808,\"h\":72}","section.s {\"y\":871,\"h\":29}->{\"y\":880,\"h\":20}","button.btn.b-d.go {\"y\":533,\"h\":122}->{\"y\":543,\"h\":122}"]},{"v":0,"t":2302,"src":["?","?","?"]}]}
 {"name":"lpdebt2","tag":"m","loadCls":0,"afterScrollCls":0,"loadShifts":[],"allShifts":[]}
+{"name":"lpbuy2","tag":"d","loadCls":0,"afterScrollCls":0,"loadShifts":[],"allShifts":[]}
+{"name":"lpbuy2","tag":"m","loadCls":0,"afterScrollCls":0,"loadShifts":[],"allShifts":[]}
+{"name":"lpsell2","tag":"d","loadCls":0,"afterScrollCls":0,"loadShifts":[],"allShifts":[]}
+{"name":"lpsell2","tag":"m","loadCls":0,"afterScrollCls":0,"loadShifts":[],"allShifts":[]}
