@@ -1,2 +1,4 @@
-p219.json https://dabullaw.co.il/wp-json/wp/v2/posts/219?_fields=id,link,title,content,excerpt,modified,yoast_head_json
-p3715.json https://dabullaw.co.il/wp-json/wp/v2/posts/3715?_fields=id,link,title,content,excerpt,modified,yoast_head_json
+p3608.html https://dabullaw.co.il/%d7%a1%d7%9b%d7%a1%d7%95%d7%9b%d7%99-%d7%a9%d7%9b%d7%a0%d7%99%d7%9d-%d7%95%d7%91%d7%99%d7%aa-%d7%9e%d7%a9%d7%95%d7%aa%d7%a3-%d7%9e%d7%a4%d7%a7%d7%97-%d7%a8%d7%9b%d7%95%d7%a9-%d7%9e%d7%a9%d7%95%d7%aa/?v=r1
+p3651.html https://dabullaw.co.il/%d7%a2%d7%95%d7%a8%d7%9a-%d7%93%d7%99%d7%9f-%d7%a1%d7%9b%d7%a1%d7%95%d7%9b%d7%99-%d7%a9%d7%9b%d7%a0%d7%99%d7%9d/?v=r1
+p6544.html https://dabullaw.co.il/neighbor-refuses-house-committee-dues-guide/?v=r1
+ptax.html https://dabullaw.co.il/%D7%90%D7%99%D7%9A-%D7%9E%D7%A9%D7%9C%D7%9E%D7%99%D7%9D-%D7%9E%D7%A1-%D7%A8%D7%9B%D7%99%D7%A9%D7%94/?v=r1
