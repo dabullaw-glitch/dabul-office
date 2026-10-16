@@ -19,6 +19,7 @@ PAGES = {
          ('חריגות בנייה','מרפסת שנסגרה או חדר שנוסף בלי היתר. הקונה יורש את הבעיה, ולפעמים גם את הקנס.'),
          ('תשלום בלי הגנה','כסף שעובר למוכר לפני שנרשמה הערת אזהרה לטובתכם חשוף לעסקה נוספת בדירה.'),
          ('מס רכישה לא צפוי','הסכום תלוי במחיר ובשאלה אם זו דירה יחידה. כדאי לדעת אותו לפני שחותמים.')],
+  bridge='כשבודקים לפני שחותמים ולפני שמשלמים, יודעים בדיוק מה קונים ומה צריך לתקן בחוזה.', bridge_cta='בדיקה לפני שחותמים', final_t='בואו נדבר על הדירה שאתם קונים',
   steps_t='איך נראה הליווי, שלב אחרי שלב',
   steps=[('בדיקה לפני הצעת מחיר','נסח טאבו, צו בית משותף, תיק בניין, תוכניות באזור והערכת מס רכישה.'),
          ('משא ומתן וחוזה','בודקים את טיוטת המוכר, ומכניסים לחוזה את ההגנות שלכם: תשלומים בשלבים, ביטחונות ותאריך מסירה.'),
@@ -45,6 +46,7 @@ PAGES = {
          ('מס שבח שלא תוכנן','לפעמים מגיע פטור, ולפעמים כדאי לחכות או לפצל. את זה בודקים לפני שקובעים מחיר.'),
          ('חריגות בנייה','הקונה ועורך הדין שלו יבדקו את התיק בעירייה. עדיף לדעת לפניהם מה יימצא שם.'),
          ('ירושה או כמה בעלים','דירה שעוד רשומה על שם מי שנפטר, או עם כמה בעלים, צריכה הסדרה לפני שאפשר למכור.')],
+  bridge='כשהמסמכים מוכנים לפני שמפרסמים, יודעים כמה יישאר ביד, והעסקה לא נתקעת מול הקונה.', bridge_cta='מה צריך להכין', final_t='בואו נדבר על הדירה שאתם מוכרים',
   steps_t='איך נראה הליווי, שלב אחרי שלב',
   steps=[('הכנה לפני פרסום','נסח טאבו, משכנתאות, תיק הבניין וחישוב מס שבח, כדי לדעת כמה נשאר לכם ביד.'),
          ('הקונה והחוזה','עונים לשאלות של עורך הדין של הקונה, ומנסחים חוזה עם לוח תשלומים וביטחונות שמגנים עליכם.'),
@@ -219,6 +221,111 @@ I_TEL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width
 I_WA = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.4.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.5-.3z"/></svg>'
 I_FORM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>'
 
+# Version 2 (16.10.2026): reviews, press, tighter conversion flow. Same look as the debt page.
+GOOGLE_REVIEWS = 'https://search.google.com/local/reviews?placeid=ChIJFyPNpLBBHRURR161JAMeBb0'
+RATING, RCOUNT = '4.9', '73'
+REVIEWS = {
+ 'buy': [('ע', 'עידו ב.', 'בתור זוג צעיר שקונה נכס בפעם הראשונה... יקיר פישט לנו את הכל, תרגם את המושגים המשפטיים המסובכים לשפה יומיומית וליווה אותנו צעד אחר צעד עד לחתימה'),
+         ('I', 'Ilay E.', 'הוא עבר על החוזה בפינצטה, שינה סעיפים בעייתיים ודאג לאינטרסים שלנו מהרגע הראשון ועד קבלת המפתח'),
+         ('א', 'אורי ד.', 'בדק את הכל מול העירייה והטאבו, וחסך לנו המון כאב ראש'),
+         ('א', 'אורי מ.', 'הוא עבר על הסכם המכר שלנו בפינצטה, תיקן סעיפים לרעתנו והסביר לנו הכל בסבלנות בלתי רגילה')],
+ 'sell': [('I', 'Ivri S.', 'פנינו אל יקיר דבול - משרד עורכי דין כדי שייצגו אותנו במכירת הנכס שלנו. קיבלנו יחס אישי מהשנייה הראשונה... יקיר תקתק את ענייני מיסוי המקרקעין, ניהל את התהליך בשקיפות'),
+          ('G', 'Glemm D.', 'מה שאהבתי במיוחד בעבודה מול עו״ד יקיר דבול זה השקיפות והזמינות... יקיר מעדכן אותך בכל התפתחות בוואטסאפ או בטלפון'),
+          ('א', 'אורי מ.', 'הוא עבר על הסכם המכר שלנו בפינצטה, תיקן סעיפים לרעתנו והסביר לנו הכל בסבלנות בלתי רגילה'),
+          ('א', 'אורלי א.', 'עבודתו מצטיינת באדיבות יושרה ונכונות לסייע')],
+}
+# press items from the site category "המשרד בתקשורת" (category 50)
+PRESS = [('ערוץ 13', 'הסוד לעסקת נדל"ן בטוחה: ליווי משפטי שמדבר בגובה העיניים', 'https://13tv.co.il/item/special/artices/promoted/qyqyi-905188952/'),
+         ('ישראל היום', 'מצו פינוי למפתח לדירה חדשה: עו"ד יקיר דבול בראיון', 'https://www.israelhayom.co.il/mumlazim/article/19786319'),
+         ('ערוץ 7', 'המדריך המשפטי לרכישת דירה: מבדיקת הנאותות ועד רישום הזכויות', 'https://www.inn.co.il/news/687646'),
+         ('וואלה נדל"ן', 'עו"ד יקיר דבול: "בעידן של חוסר ודאות צריך ליווי משפטי בשלבים מוקדמים"', 'https://nadlan.walla.co.il/item/3804913')]
+OUTLETS = ['ערוץ 13', 'ישראל היום', 'מעריב', 'וואלה', 'ביזפורטל', 'ערוץ 7', 'mynet נתניה']
+I_STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3 6.1 20.5l1.3-6.5L2.5 9.4l6.6-.8z"/></svg>'
+STARS = f'<span class="stars" aria-label="5 כוכבים">{I_STAR * 5}</span>'
+I_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>'
+I_G = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.6 12.2c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.3-4.8 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.1a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3 .6 4.2 1.6l3.1-3.1A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg>'
+GI = f'<span class="gi">{I_G}</span>'
+V2_CSS = """
+.dlp .fc select{width:100%;font:inherit;font-size:16px;padding:12px 12px;border:1.5px solid #d9d2c2;border-radius:10px;background:#fffdf8;color:var(--ink);appearance:auto}
+.dlp .fc .row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.dlp .fc .go{background:var(--g);color:#14130f;font-size:18px;min-height:56px;box-shadow:0 8px 22px rgba(140,118,70,.35)}
+.dlp .fc .go:hover{background:var(--g1)}
+.dlp .fc .lock{display:flex;gap:7px;align-items:center;justify-content:center;font-size:13.5px;color:var(--mut);margin-top:12px}
+.dlp .fc .lock svg{width:15px;height:15px;flex:none;color:var(--gd)}
+.dlp .fc .fr{display:flex;gap:8px;align-items:center;justify-content:center;border-top:1px solid var(--line);margin-top:14px;padding-top:12px;font-size:14px;color:var(--mut)}
+.dlp .fc .fr b{color:var(--ink)}
+.dlp .fc .ok .wa{display:flex;margin-top:16px;background:#1f7a4d;color:#fff;border-radius:999px;min-height:50px;align-items:center;justify-content:center;gap:8px;font-weight:700;text-decoration:none;padding:0 18px}
+.dlp .fc .ok small{display:block;color:var(--mut);font-size:13.5px;margin-top:10px;line-height:1.5}
+.dlp .stars{display:inline-flex;gap:1px;color:#f2b33d;vertical-align:-2px}
+.dlp .stars svg{width:16px;height:16px}
+/* hero social proof */
+.dlp .hp-proof{display:flex;flex-wrap:wrap;gap:12px 26px;margin-top:26px;align-items:center}
+.dlp .hp-proof .rt{display:flex;gap:10px;align-items:center;color:#eee7d6;font-size:15px}
+.dlp .hp-proof .rt b{font-size:22px;color:#fff;font-family:'Frank Ruhl Libre',Georgia,serif}
+.dlp .hp-proof .gi{width:26px;height:26px;background:#fff;border-radius:50%;display:grid;place-items:center}
+.dlp .hp-proof .gi svg{width:17px;height:17px}
+.dlp .hp-proof .tv{font-size:14.5px;color:#cfc8b8}
+.dlp .hp-proof .tv b{color:var(--g1);font-weight:700}
+/* press strip */
+.dlp .press{background:#fff;border-bottom:1px solid var(--line)}
+.dlp .press .w{display:flex;gap:14px 34px;align-items:center;justify-content:center;flex-wrap:wrap;padding-block:20px}
+.dlp .press .lb{font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--mut)}
+.dlp .press .o{font-weight:700;font-size:19px;color:#3a3833;opacity:.78;white-space:nowrap}
+/* pains */
+.dlp .pains{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:30px;list-style:none}
+.dlp .pains li{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;gap:12px;align-items:flex-start;font-size:16.5px;font-weight:500}
+.dlp .pains li:before{content:"";flex:none;width:10px;height:10px;margin-top:8px;border-radius:50%;background:#b5483b;box-shadow:0 0 0 4px rgba(181,72,59,.12)}
+.dlp .bridge{margin-top:30px;background:var(--d);color:#eee7d6;border-radius:16px;padding:24px 26px;display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.dlp .bridge p{font-size:18px;max-width:640px}
+.dlp .bridge b{color:var(--g1)}
+/* paths compact */
+.dlp .risks.p4 .risk{padding:20px 20px}
+/* reviews */
+.dlp .rv-s{background:var(--g2)}
+.dlp .rv-head{display:flex;gap:20px 40px;align-items:end;justify-content:space-between;flex-wrap:wrap}
+.dlp .rv-score{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px}
+.dlp .rv-score .big{font-family:'Frank Ruhl Libre',Georgia,serif;font-size:42px;font-weight:700;line-height:1}
+.dlp .rv-score small{display:block;color:var(--mut);font-size:13.5px;margin-top:2px}
+.dlp .rv-score .gi{width:34px;height:34px}
+.dlp .rv-score .gi svg{width:34px;height:34px}
+.dlp .rvs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:30px}
+.dlp .rv{margin:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 20px 18px;display:flex;flex-direction:column;gap:12px}
+.dlp .rv q{font-size:16px;line-height:1.6;quotes:"״" "״";flex:1}
+.dlp .rv .who{display:flex;gap:10px;align-items:center;font-size:14.5px;font-weight:700}
+.dlp .rv .av{width:36px;height:36px;border-radius:50%;background:var(--d);color:var(--g);display:grid;place-items:center;font-family:'Frank Ruhl Libre',Georgia,serif;font-size:17px;flex:none}
+.dlp .rv .who small{display:block;font-weight:400;color:var(--mut);font-size:12.5px}
+.dlp .rv-more{margin-top:20px;font-size:15px}
+.dlp .rv-more a{color:var(--gd);font-weight:700}
+/* press cards */
+.dlp .pcs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:30px}
+.dlp .pc{display:flex;flex-direction:column;gap:10px;background:#fff;border:1px solid var(--line);border-top:3px solid var(--g);border-radius:12px;padding:18px 18px 16px;text-decoration:none}
+.dlp .pc .src{font-weight:800;font-size:18px;color:#24221e}
+.dlp .pc .hd{font-size:15.5px;line-height:1.5;flex:1}
+.dlp .pc em{font-style:normal;font-size:13.5px;font-weight:700;color:var(--gd)}
+/* steps 3 */
+.dlp .steps.s3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.dlp .mid-cta{display:flex;justify-content:center;margin-top:36px}
+@media (max-width:980px){
+ .dlp .pains{grid-template-columns:1fr 1fr}
+ .dlp .rvs,.dlp .pcs{grid-template-columns:1fr 1fr}
+ .dlp .steps.s3{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+ .dlp .hero .sub{font-size:16.5px;margin-top:14px}
+ .dlp .hero .ctas{display:none}
+ .dlp .hp-proof{margin-top:18px;gap:10px 18px}
+ .dlp .press .w{gap:10px 20px;padding-block:16px}
+ .dlp .press .lb{flex:1 1 100%;text-align:center}
+ .dlp .press .o{font-size:16px}
+ .dlp .pains,.dlp .rvs,.dlp .pcs{grid-template-columns:minmax(0,1fr)}
+ .dlp .bridge{padding:20px}
+ .dlp .bridge .btn{flex:1 1 100%}
+ .dlp .fc .row2{grid-template-columns:minmax(0,1fr)}
+ .dlp .rvs{gap:12px}
+ .dlp .rv-head{align-items:flex-start}
+}
+"""
+
 def esc(s): return html.escape(s, quote=True)
 
 def form(p, fid):
@@ -230,8 +337,9 @@ def form(p, fid):
 <label for="{fid}-p">טלפון</label><input id="{fid}-p" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required>
 <label for="{fid}-m">כמה מילים על הדירה (לא חובה)</label><textarea id="{fid}-m" name="msg" placeholder="עיר, שלב בעסקה, שאלה שמטרידה אתכם"></textarea>
 <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-<button class="btn b-d go" type="submit">שלחו ונחזור אליכם</button><p class="msg" aria-live="polite"></p>
-<p class="note">הפרטים משמשים רק כדי לחזור אליכם בנוגע לפנייה. המידע בעמוד כללי ואינו ייעוץ משפטי.</p></form></div>'''
+<button class="btn b-d go" type="submit">שיחזרו אליי</button><p class="msg" aria-live="polite"></p>
+<p class="lock">{I_LOCK}הפרטים משמשים רק כדי לחזור אליכם.</p>
+<div class="fr">{STARS}<span><b>{RATING}</b> · {RCOUNT} ביקורות בגוגל</span></div></form></div>'''
 
 def page(key):
     p = PAGES[key]
@@ -240,7 +348,7 @@ def page(key):
     steps = ''.join(f'<li><h3>{esc(t)}</h3><p>{esc(d)}</p></li>' for t,d in p['steps'])
     incl = ''.join(f'<li>{esc(x)}</li>' for x in p['incl'])
     tools = ''.join(f'<a class="tool" href="https://dabullaw.co.il{u}"><div><b>{esc(t)}</b><span>{esc(d)}</span></div><em>{esc(c)} ←</em></a>' for t,d,c,u in (p['tool'],p['tool2']))
-    faq = ''.join(f'<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q,a in p['faq'])
+    faq = ''.join(f'<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q,a in p['faq'][:4])
     ld = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in p['faq']]}
     js = """(function(){var A='__API__';function q(k){try{return new URLSearchParams(location.search).get(k)||''}catch(e){return ''}}
 var src=q('utm_source')||(q('gclid')?'google':'')||(q('fbclid')?'facebook':'')||'website';var camp=q('utm_campaign');
@@ -253,26 +361,35 @@ if(g('website')){return}if(!(g('name').length>1)){m.textContent='כתבו שם, 
 m.textContent='';b.disabled=true;b.textContent='שולחים...';
 var body={name:g('name'),phone:tel,topic:(k?k.value:'__TOPIC__'),source:'ads-'+src,form:'lp-__KEY__',page:location.href.split('#')[0].slice(0,300),notes:(g('msg')?g('msg')+'\\n':'')+'קמפיין: '+(camp||src)};
 var ok=function(){var d=document.createElement('div');d.className='ok';var t=document.createElement('b');t.textContent='תודה, קיבלנו.';d.appendChild(t);d.appendChild(document.createTextNode('עורך הדין יחזור אליכם בהקדם, בדרך כלל באותו יום עבודה. דחוף? '));var a=document.createElement('a');a.href='tel:__PHONE_INTL__';a.dir='ltr';a.textContent='__PHONE__';d.appendChild(a);var p=f.parentNode;while(p.firstChild){p.removeChild(p.firstChild)}p.appendChild(d);ev('Lead',{content_name:'lp-__KEY__'})};
-var bad=function(){b.disabled=false;b.textContent='שלחו ונחזור אליכם';m.textContent='משהו השתבש. אפשר להתקשר: __PHONE__'};
+var bad=function(){b.disabled=false;b.textContent='שיחזרו אליי';m.textContent='משהו השתבש. אפשר להתקשר: __PHONE__'};
 fetch(A,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json()}).then(function(j){if(j){if(j.ok){ok()}else{bad()}}else{bad()}}).catch(bad)})})})();"""
     js = js.replace('__API__',API).replace('__TOPIC__',p['topic']).replace('__KEY__',key).replace('__PHONE_INTL__',PHONE_INTL).replace('__PHONE__',PHONE)
+    reviews = ''.join(f'<figure class="rv">{STARS}<q>{esc(t)}</q><figcaption class="who"><span class="av">{esc(x)}</span><span>{esc(n)}<small>ביקורת בגוגל</small></span></figcaption></figure>' for x, n, t in REVIEWS[key])
+    press = ''.join(f'<a class="pc" href="{esc(u)}" target="_blank" rel="noopener"><span class="src">{esc(o)}</span><span class="hd">{esc(h)}</span><em>לכתבה ←</em></a>' for o, h, u in PRESS)
+    outlets = ''.join(f'<span class="o">{esc(o)}</span>' for o in OUTLETS)
     body = f'''<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&display=swap">
-<style>{CSS.replace('__IMG__', IMG)}</style>
+<style>{CSS.replace('__IMG__', IMG)}{V2_CSS}</style>
 <div class="dlp">
 <header class="hero"><div class="w top" style="display:flex;padding-block:22px 0"><a class="logo" href="https://dabullaw.co.il/">יקיר דבול<small>משרד עורכי דין · מקרקעין ונדל"ן</small></a><a class="tel" href="tel:{PHONE_INTL}">{PHONE}</a></div>
 <div class="w"><div><span class="kick">{esc(p['kick'])}</span><h1>{p['h1']}</h1><p class="sub">{esc(p['sub'])}</p>
-<div class="ctas"><a class="btn b-g" href="tel:{PHONE_INTL}">{I_TEL}להתקשר עכשיו</a><a class="btn b-o" href="{esc(wa)}">{I_WA}לכתוב בוואטסאפ</a></div>
-<div class="proof"><span><i></i>עורך הדין עצמו מטפל בתיק</span><span><i></i>שכר טרחה בהסכם כתוב מראש</span><span><i></i>משרד ברחוב רזיאל 1, נתניה</span></div></div>
+<div class="hp-proof"><div class="rt">{GI}<b>{RATING}</b>{STARS}<span>{RCOUNT} ביקורות בגוגל</span></div><div class="tv">כתבו עלינו: <b>ערוץ 13 · ישראל היום · וואלה · מעריב</b></div></div>
+<div class="ctas"><a class="btn b-g" href="tel:{PHONE_INTL}">{I_TEL}להתקשר עכשיו</a><a class="btn b-o" href="{esc(wa)}">{I_WA}לכתוב בוואטסאפ</a></div></div>
 {form(p,'f1')}</div></header>
+<div class="press"><div class="w"><span class="lb">המשרד בתקשורת</span>{outlets}</div></div>
+<section class="s"><div class="w"><p class="eyebrow">למה עורך דין מההתחלה</p><h2 class="st">{esc(p['risk_t'])}</h2><p class="ss">{esc(p['risk_s'])}</p><div class="risks">{risks}</div>
+<div class="bridge"><p><b>את רוב הבעיות אפשר לגלות מראש.</b> {esc(p['bridge'])}</p><a class="btn b-g" href="#f1">{I_FORM}{esc(p['bridge_cta'])}</a></div></div></section>
 <div class="trust"><div class="w"><div><b>+100</b><span>עסקאות מקרקעין בכל שנה</span></div><div><b>1 על 1</b><span>מול עורך הדין, מהשיחה הראשונה ועד הטאבו</span></div><div><b>4</b><span>ועדות בלשכת עורכי הדין שבהן הוא חבר</span></div><div><b>באותו יום</b><span>בדרך כלל חוזרים אליכם באותו יום עבודה</span></div></div></div>
-<section class="s"><div class="w"><p class="eyebrow">למה עורך דין מההתחלה</p><h2 class="st">{esc(p['risk_t'])}</h2><p class="ss">{esc(p['risk_s'])}</p><div class="risks">{risks}</div></div></section>
-<section class="s steps-s"><div class="w"><p class="eyebrow">התהליך</p><h2 class="st">{esc(p['steps_t'])}</h2><ol class="steps">{steps}</ol></div></section>
+<section class="s rv-s"><div class="w"><div class="rv-head"><div><p class="eyebrow">המלצות</p><h2 class="st">מה לקוחות כותבים עלינו</h2></div>
+<div class="rv-score">{GI}<div><span class="big">{RATING}</span></div><div>{STARS}<small>{RCOUNT} ביקורות בגוגל</small></div></div></div>
+<div class="rvs">{reviews}</div><p class="rv-more"><a href="{esc(GOOGLE_REVIEWS)}" target="_blank" rel="noopener">לכל הביקורות בגוגל ←</a></p></div></section>
+<section class="s"><div class="w"><p class="eyebrow">התהליך</p><h2 class="st">{esc(p['steps_t'])}</h2><ol class="steps">{steps}</ol>
+<div class="mid-cta"><a class="btn b-d" href="#f1">{I_FORM}{esc(p['bridge_cta'])}</a></div></div></section>
+<section class="s steps-s"><div class="w"><p class="eyebrow">בתקשורת</p><h2 class="st">כתבות על המשרד</h2><p class="ss">מתוך הכתבות שבהן המשרד הופיע.</p><div class="pcs">{press}</div></div></section>
 <section class="s"><div class="w two"><div><p class="eyebrow">מה כולל הליווי</p><h2 class="st">הכל במקום אחד, מול עורך דין אחד</h2><ul class="incl">{incl}</ul></div>
-<div class="about"><div class="ph"><img src="{IMG}yakir-cutout.webp" alt="עו&quot;ד יקיר דבול" width="200" height="399"></div><div class="tx"><h3>עו"ד יקיר דבול</h3><p class="role">עורך דין מקרקעין ונדל"ן, נתניה</p><p>אצלנו את התיק מנהל עורך הדין עצמו, ואיתו אתם מדברים בכל שלב. כשצריך, עובדים יחד עם שמאי, מהנדס או יועץ משכנתאות.</p>
+<div class="about"><div class="ph"><img src="{IMG}yakir-cutout.webp" alt="עו&quot;ד יקיר דבול" width="200" height="399"></div><div class="tx"><h3>עו"ד יקיר דבול</h3><p class="role">יקיר דבול - משרד עורכי דין, נתניה</p><p>אצלנו את התיק מנהל עורך הדין עצמו, ואיתו אתם מדברים בכל שלב. כשצריך, עובדים יחד עם שמאי, מהנדס או יועץ משכנתאות.</p>
 <ul><li>מתמנה על ידי בית המשפט בתיקי רישום בתים משותפים</li><li>חבר ב-4 ועדות בלשכת עורכי הדין</li><li>משרד ברחוב רזיאל 1, נתניה</li></ul></div></div></div></section>
-<section class="s" style="padding-top:0"><div class="w"><p class="eyebrow">כלים בלי הרשמה</p><h2 class="st" style="font-size:clamp(26px,3vw,34px)">אפשר להתחיל לבד</h2><div class="tools">{tools}</div></div></section>
 <section class="s steps-s"><div class="w"><p class="eyebrow">שאלות נפוצות</p><h2 class="st">מה שואלים אותנו לפני שמתחילים</h2><div class="faq">{faq}</div></div></section>
-<section class="s final" id="contact"><div class="w"><div><h2 class="st">בואו נדבר על הדירה שלכם</h2><p class="ss">שיחה ראשונה קצרה, ונגיד לכם מה צריך לבדוק ומה השלב הבא.</p>
+<section class="s final" id="contact"><div class="w"><div><h2 class="st">{esc(p['final_t'])}</h2><p class="ss">שיחה ראשונה קצרה, ונגיד לכם מה צריך לבדוק ומה השלב הבא.</p>
 <div class="ctas"><a class="btn b-g" href="tel:{PHONE_INTL}">{I_TEL}<span dir="ltr">{PHONE}</span></a><a class="btn b-o" href="{esc(wa)}">{I_WA}וואטסאפ</a></div><p class="addr">יקיר דבול - משרד עורכי דין · רזיאל 1, נתניה · ימים א' עד ה'</p></div>
 {form(p,'f2')}</div></section>
 <div class="foot">© יקיר דבול - משרד עורכי דין · <a href="https://dabullaw.co.il/">dabullaw.co.il</a><br>המידע בעמוד הוא מידע כללי ואינו מהווה ייעוץ משפטי. כל מקרה נבדק לגופו.</div>
