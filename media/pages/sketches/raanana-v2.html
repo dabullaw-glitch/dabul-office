@@ -1,0 +1,177 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+@font-face{font-family:Heebo;font-weight:400;src:url(../fonts/package/files/heebo-hebrew-400-normal.woff2)}
+@font-face{font-family:Heebo;font-weight:700;src:url(../fonts/package/files/heebo-hebrew-700-normal.woff2)}
+@font-face{font-family:Heebo;font-weight:800;src:url(../fonts/package/files/heebo-hebrew-800-normal.woff2)}
+:root{--ink:#16161a;--g:#c9a85c;--g2:#8a6d2c;--g3:#e2c983;--mut:#5f5a50;--line:#e7e0d0;--soft:#fbf6ea}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;font-family:Heebo,Arial,sans-serif;color:var(--ink)}
+.n{display:inline-block;background:#ffe14d;color:#3a3000;font-size:11.5px;font-weight:800;border-radius:6px;padding:1px 7px;margin-inline-start:6px;vertical-align:middle}
+.ph{background:#fff7c2;outline:1.5px dashed #d9b400;border-radius:6px;padding:0 4px}
+section{padding:22px 16px}
+.hero{background:radial-gradient(130% 90% at 20% 0%,#3d3527 0%,#16161a 70%);color:#fff;padding:22px 16px 0;position:relative;overflow:hidden}
+.hero .crumb{font-size:12.5px;color:#bdb6a6}
+.hero h1{font-size:30px;line-height:1.2;margin:10px 0 0;font-weight:800;max-width:62%}
+.hero p{font-size:15.5px;line-height:1.55;color:#ddd6c6;margin:10px 0 0;max-width:62%}
+.hero img{position:absolute;left:-6px;bottom:0;height:270px}
+.hero .rt{display:flex;gap:6px;align-items:center;font-size:13.5px;color:#cfc8b8;margin-top:12px}
+.hero .rt em{font-style:normal;color:#f5c542;letter-spacing:1px}
+.hero .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0 0;position:relative;z-index:2;padding-bottom:16px}
+.btn{display:flex;justify-content:center;align-items:center;gap:7px;font-weight:800;font-size:15.5px;border-radius:12px;padding:12px 8px;text-decoration:none}
+.b-g{background:linear-gradient(180deg,#e2c983,#c9a85c);color:#16130c}
+.b-w{background:#14361f;color:#bff0cf;border:1.5px solid #1f7a45}
+.trust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;background:#fff;color:var(--ink);margin:0 -16px;padding:12px 16px;border-radius:18px 18px 0 0;position:relative;z-index:3}
+.trust div{font-size:12.5px;line-height:1.35;color:var(--mut);text-align:center}
+.trust b{display:block;font-size:15px;color:var(--ink)}
+h2{font-size:22px;line-height:1.3;margin:0 0 10px;font-weight:800;border-inline-start:5px solid var(--g);padding-inline-start:10px}
+.ans{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px;font-size:15.5px;line-height:1.65}
+.cards{display:grid;gap:10px}
+.card{display:grid;grid-template-columns:42px minmax(0,1fr);gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:13px}
+.ic{width:42px;height:42px;border-radius:12px;background:var(--ink);color:var(--g3);display:grid;place-items:center;font-weight:800}
+.card h3{margin:0;font-size:16.5px}
+.card p{margin:3px 0 0;font-size:14px;line-height:1.5;color:var(--mut)}
+.loc{display:grid;gap:8px}
+.loc div{border-radius:14px;background:#faf8f3;padding:11px 13px;font-size:14.5px;line-height:1.55}
+.loc b{display:block;font-size:15.5px}
+.case{border:1.5px solid var(--line);border-radius:16px;padding:14px;background:#fff;margin-top:10px}
+.case small{display:inline-block;font-size:12px;font-weight:800;color:var(--g2);background:#f3ead3;border-radius:99px;padding:1px 9px}
+.case p{margin:7px 0 0;font-size:14.5px;line-height:1.6}
+.rvs{display:grid;gap:10px}
+.rv{border:1px solid var(--line);border-radius:14px;padding:12px;font-size:14.5px;line-height:1.55}
+.rv .st{color:#f5a623;letter-spacing:1px;font-size:12px}
+.rv b{display:block;font-size:13.5px;margin-top:6px}
+ol.steps{list-style:none;padding:0;margin:0;display:grid;gap:8px;counter-reset:s}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;font-size:14.5px;line-height:1.5}
+ol.steps li:before{content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--g3);display:grid;place-items:center;font-weight:800}
+.mid{border-radius:16px;background:linear-gradient(135deg,#fbf6ea,#f4ecd9);border:1px solid #eadfc4;padding:14px}
+.mid .hd{display:flex;gap:10px;align-items:center}
+.mid .hd img{width:50px;height:50px;border-radius:50%;border:2px solid var(--g)}
+.mid .hd b{font-size:16.5px}
+.mid .f{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.mid .f span{background:#fff;border:1.5px solid #ddd2b8;border-radius:10px;padding:10px;color:#999;font-size:15px}
+.mid .f i{grid-column:1/-1;font-style:normal;background:var(--ink);color:#fff;border-radius:10px;padding:11px;text-align:center;font-weight:800}
+.faq details{border-bottom:1px solid var(--line);padding:11px 0;font-size:15px}
+.faq summary{font-weight:700;list-style:none}
+.near{display:flex;flex-wrap:wrap;gap:8px}
+.near a{border:1.5px solid var(--line);border-radius:99px;padding:6px 13px;font-size:14px;color:var(--ink);text-decoration:none;font-weight:700}
+.end{background:var(--ink);color:#fff;border-radius:20px;padding:16px;text-align:center}
+.end b{font-size:19px;display:block}
+.end span{font-size:13.5px;color:#cfc8b8}
+.bar{position:relative;display:grid;grid-template-columns:repeat(3,1fr);background:#16161a;border-top:2px solid var(--g);z-index:9}
+.bar a{color:#fff;text-align:center;padding:10px 4px;font-size:13.5px;font-weight:700;text-decoration:none}
+.bar a.m{background:var(--g);color:#16130c}
+.sep{height:8px;background:#f2efe8}
+</style></head><body>
+<style>
+.txt p{font-size:15.5px;line-height:1.75;margin:0 0 10px;color:#2b2a27}
+.txt h3{font-size:17.5px;margin:16px 0 6px}
+.txt ul{margin:0 0 10px;padding-inline-start:20px;font-size:15.5px;line-height:1.7}
+.tbl{overflow-x:auto;margin:10px 0}
+.tbl table{border-collapse:collapse;font-size:13.5px;min-width:460px}
+.tbl th,.tbl td{border:1px solid #e7e0d0;padding:7px 8px;text-align:right;vertical-align:top}
+.tbl th{background:#f3ead3}
+.tip{background:#f5edda;border:1px solid #d9c08a;border-right:4px solid #a8873f;border-radius:10px;padding:12px 14px;margin:12px 0;font-size:15px;line-height:1.7;color:#5c4528}
+.chipsx{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.chipsx div{background:#fff;border:1px solid #e7e0d0;border-radius:12px;padding:9px 10px;font-size:13px;line-height:1.4;color:#5f5a50}
+.chipsx b{display:block;font-size:16px;color:#16161a}
+.faq details p{font-size:14.5px;line-height:1.65;margin:6px 0 0;color:#3d3a33}
+.src{font-size:12.5px;color:#7d786d;line-height:1.6}
+</style>
+
+<div class="hero">
+ <div class="crumb">דף הבית › עורך דין מקרקעין ברעננה</div>
+ <h1>עורך דין מקרקעין ברעננה</h1>
+ <p>קנייה, מכירה, בית פרטי, התחדשות עירונית ועסקאות של תושבי חוץ ועולים, מהבדיקה הראשונה ועד הרישום בטאבו.</p>
+ <div class="rt"><em>★★★★★</em>4.9 · 73 ביקורות בגוגל</div>
+ <img src="../../../../../../home/claude/dabul-office/media/campaign/realestate-2026-10/lp/img/yakir-cutout.webp" alt="">
+ <div class="btns"><a class="btn b-g" href="#">התקשרו 09-8613413</a><a class="btn b-w" href="#">וואטסאפ</a></div>
+ <div class="trust"><div><b>אנגלית וצרפתית</b>ליווי גם בשפות</div><div><b><span class="ph">20 דק׳</span></b>מרעננה למשרד</div><div><b>עו"ד אחד</b>מתחילה ועד סוף</div></div>
+</div>
+
+<section class="txt"><h2>בקצרה <span class="n">חדש</span></h2>
+<div class="ans">עורך דין מקרקעין ברעננה בודק את הנכס לפני החתימה (נסח טאבו, תיק הבניין בעירייה, היטל השבחה ותוכניות), מנסח את החוזה, מדווח לרשות המסים ורושם את הזכויות על שמכם. ברעננה יש שלושה דברים שחוזרים בהרבה עסקאות: בניינים בתהליכי התחדשות עירונית, בתים פרטיים עם זכויות בנייה, וקונים ומוכרים שגרים בחו״ל.</div>
+<div class="chipsx"><div><b>כ־84 אלף</b>תושבים ברעננה <sup style="color:#8a6d2c;font-size:11px">[1]</sup></div><div><b>עד 16 קומות</b>בתוכנית ההתחדשות של אחוזה <sup style="color:#8a6d2c;font-size:11px">[1]</sup></div><div><b>עד 9 קומות</b>בתוכנית ההתחדשות הבניינית <sup style="color:#8a6d2c;font-size:11px">[2]</sup></div><div><b>הריסה ובנייה</b>בלי מסלול חיזוק ותוספות <sup style="color:#8a6d2c;font-size:11px">[2]</sup></div></div>
+</section>
+
+<section><h2>במה אפשר לעזור ברעננה</h2>
+<div class="cards">
+ <div class="card"><span class="ic">1</span><div><h3>קניית דירה</h3><p>יד שנייה או מקבלן: בדיקות, חוזה, מס רכישה ורישום.</p></div></div>
+ <div class="card"><span class="ic">2</span><div><h3>מכירת דירה</h3><p>חוזה, מס שבח, סילוק משכנתא והעברת הבעלות.</p></div></div>
+ <div class="card"><span class="ic">3</span><div><h3>התחדשות עירונית</h3><p>ייצוג דיירים מול יזם, ובדיקת דירה בבניין שבתהליך לפני קנייה.</p></div></div>
+ <div class="card"><span class="ic">4</span><div><h3>תושבי חוץ ועולים</h3><p>ייפוי כוח מחו״ל, הקלות לעולים במס רכישה, ליווי באנגלית.</p></div></div>
+ <div class="card"><span class="ic">5</span><div><h3>בית פרטי וזכויות בנייה</h3><p>היתרים, חריגות, זכויות שלא נוצלו וחכירה ברמ״י.</p></div></div>
+</div></section>
+
+<section class="txt"><h2>שוק הנדל"ן ברעננה: מה חשוב לדעת</h2>
+<p>רעננה התפתחה ממושבה חקלאית לעיר של כ־84 אלף תושבים, עם מחירי דירות מהגבוהים בשרון. העיר מושכת משפחות צעירות, ישראלים ותיקים, וקהילה גדולה של עולים מארה״ב, מבריטניה ומדרום אפריקה.</p>
+<p>בעשור הקרוב העיר עומדת להשתנות: תוכנית ההתחדשות של רחוב אחוזה מתכננת להחליף כ־1,700 דירות ותיקות בכ־5,360 דירות חדשות, עם בניינים של עד 16 קומות, ובמקביל מתוכננות שכונות חדשות. לכן בעסקה ברעננה בודקים לא רק את המצב היום, אלא גם מה מתוכנן לבניין ולרחוב.</p>
+<h3>מרכז העיר ואחוזה</h3>
+<p>בתים פרטיים ותיקים ובניינים מהשנים 70 עד 90. כאן נמצא רוב הפוטנציאל להתחדשות. לפני קנייה בודקים אם הבניין כלול בתוכנית, אם כבר נחתם הסכם עם יזם, ואם רשומה הערת אזהרה לטובתו.</p>
+<h3>שכונות חדשות</h3>
+<p>דירות מקבלן ובניינים שעוד לא נרשמו כבית משותף. בודקים תשריט, הצמדות של חניה ומחסן, ערבויות לפי חוק המכר ומועד המסירה.</p>
+<h3>שכונות בתכנון: רעננה מערב וכפר בתיה</h3>
+<p>לפי ראש העיר, מתוכננת שכונה חדשה על קרקעות רשפון (רעננה מערב), ושכונה נוספת בשטח כפר בתיה. מי שקונה דירה על הנייר בשכונה חדשה צריך לבדוק את החוזה מול הקבלן לעומק. <sup style="color:#8a6d2c;font-size:11px">[1]</sup></p>
+<h3>אזורי התעסוקה</h3>
+<p>פארק התעשייה ואזורי המסחר מביאים עסקאות בנדל״ן מסחרי: שכירות ארוכה, שימוש מותר ומע״מ.</p>
+</section>
+
+<div class="mid" style="margin:0 16px"><div class="hd"><img src="hs.jpg" alt=""><div><b>עסקה ברעננה? בואו נבדוק אותה</b></div></div>
+<div class="f"><span>שם</span><span>טלפון</span><i>חזרו אליי</i></div></div>
+
+<section class="txt"><h2>התחדשות עירונית ברעננה <span class="n">חדש</span></h2>
+<p>ברעננה פועלים שני מסלולים עיקריים, וכדאי להבין את ההבדל לפני שחותמים על משהו או קונים דירה בבניין ותיק:</p>
+<p><strong>תוכנית ההתחדשות הבניינית.</strong> תוכנית שקידמה הרשות הממשלתית להתחדשות עירונית, לבניינים שקיבלו היתר לפני 1992, עם שתי קומות לפחות מעל הקרקע וארבע דירות לפחות בכניסה. התוכנית מאפשרת הריסה ובנייה בלבד, בלי חיזוק ותוספת, ועד 9 קומות. <sup style="color:#8a6d2c;font-size:11px">[2]</sup></p>
+<p><strong>מתחמי פינוי בינוי.</strong> כמו תוכנית אחוזה, שבה כמה בניינים נהרסים יחד ונבנה מתחם חדש. <sup style="color:#8a6d2c;font-size:11px">[1]</sup></p>
+<h3>קונים דירה בבניין שבתהליך? מה בודקים</h3>
+<ul><li>האם הבניין כלול בתוכנית, ובאיזה שלב היא.</li><li>האם המוכר כבר חתם על הסכם עם יזם, ומה כתוב בו.</li><li>האם רשומה הערת אזהרה לטובת היזם בנסח הטאבו.</li><li>מה התמורה שהדירה אמורה לקבל, ומתי.</li></ul>
+<div class="tip"><strong>טיפ מעשי:</strong> דירה בבניין שחתום מול יזם יכולה להיות שווה יותר, אבל גם לבוא עם התחייבויות. החוזה צריך לקבוע מי מקבל את הדירה החדשה ומה קורה אם הפרויקט מתעכב.</div>
+</section>
+
+<section class="txt"><h2>תושבי חוץ ועולים: מה מיוחד ברעננה</h2>
+<p>חלק ניכר מהעסקאות בעיר מערבות קונים או מוכרים שגרים בחו״ל, עולים חדשים או משפחות עם קשר לחו״ל. בעסקאות כאלה בודקים:</p>
+<ul><li>ייפוי כוח לחתימה מרחוק, בקונסוליה או אצל נוטריון.</li><li>העברת כספים מחו״ל, ובדיקות שהבנק מבקש.</li><li>הקלות במס רכישה שעולים חדשים זכאים להן בתנאים מסוימים.</li><li>מיסוי בישראל ובמדינה השנייה, מול רואה חשבון.</li></ul>
+<p>אפשר לנהל את כל העסקה בלי להגיע לארץ, וליווי אפשרי גם באנגלית ובצרפתית.</p>
+</section>
+
+<section class="txt"><h2>בית פרטי ברעננה</h2>
+<p>בבית פרטי השווי תלוי מאוד בזכויות הבנייה ובמה שנבנה בפועל. לפני קנייה בודקים את היתרי הבנייה מול המצב בשטח, זכויות שלא נוצלו לפי התוכנית, וחריגות שהצטברו לאורך השנים. חלק מהנכסים בעיר על קרקע בחכירה מרשות מקרקעי ישראל, ואז בודקים גם היוון ודמי הסכמה.</p>
+</section>
+
+<section class="txt"><h2>טבלה: מה בודקים בכל סוג עסקה ברעננה</h2>
+<div class="tbl"><table><thead><tr><th>סוג עסקה</th><th>מה מיוחד ברעננה</th><th>מה בודקים</th></tr></thead><tbody>
+<tr><td>דירה יד שנייה</td><td>מחירים גבוהים</td><td>נסח טאבו, תיק בניין, היטל השבחה</td></tr>
+<tr><td>דירה בבניין ותיק</td><td>תוכניות התחדשות</td><td>הסכם יזם, הערת אזהרה, שלב התוכנית</td></tr>
+<tr><td>דירה מקבלן</td><td>שכונות חדשות</td><td>חוזה, ערבויות, מועד מסירה</td></tr>
+<tr><td>תושב חוץ או עולה</td><td>קהילה גדולה</td><td>ייפוי כוח, העברת כספים, מס</td></tr>
+<tr><td>בית פרטי</td><td>זכויות בנייה</td><td>היתרים, חריגות, רמ״י</td></tr>
+</tbody></table></div>
+</section>
+
+<section><h2>מקרים מהשטח <span class="n">צריך ממך</span></h2>
+<div class="case"><small>מכירה ברעננה</small><p class="ph">דוגמה: מוכרים שגרים בחו״ל מכרו דירה בלי להגיע לארץ.</p></div>
+<div class="case"><small>בית פרטי</small><p class="ph">דוגמה: בבדיקה לפני קנייה התגלתה תוספת בנייה בלי היתר.</p></div>
+</section>
+
+<section><h2>מה לקוחות כתבו</h2>
+<div class="rvs">
+ <div class="rv"><span class="st">★★★★★</span><br>״הוא עבר על החוזה בפינצטה, שינה סעיפים בעייתיים ודאג לאינטרסים שלנו מהרגע הראשון ועד קבלת המפתח״<b>Ilay E. · גוגל</b></div>
+</div></section>
+
+<section><h2>איך זה עובד</h2>
+<ol class="steps"><li>שיחה קצרה: מספרים על העסקה.</li><li>בדיקות לפני חתימה: טאבו, עירייה, מסים.</li><li>חוזה ומשא ומתן מול הצד השני.</li><li>דיווח לרשות המסים ורישום בטאבו.</li></ol></section>
+
+<section class="faq"><h2>שאלות על עסקאות ברעננה</h2>
+<details open><summary>צריך עורך דין מרעננה כדי לקנות ברעננה?</summary><p>לא. חשוב שעורך הדין יכיר את התוכניות בעיר ויבדוק את תיק הבניין. רוב העבודה מול הרשויות נעשית ממילא באופן מקוון.</p></details>
+<details open><summary>איך יודעים אם הבניין כלול בתוכנית התחדשות?</summary><p>בודקים באתר ההנדסה של העירייה ובמערכות התכנון, ושואלים את נציגות הבניין אם יש הסכם עם יזם.</p></details>
+<details><summary>מה בודקים בבית פרטי לפני שקונים?</summary></details>
+<details><summary>תושב חוץ יכול לקנות בלי להגיע לארץ?</summary></details>
+<details><summary>כמה זמן לוקחת עסקה עד הרישום?</summary></details>
+</section>
+
+<section class="src"><b>מקורות</b><br>[1] נדל״ן סנטר, ראיון עם ראש עיריית רעננה, 21.6.2026<br>[2] נדל״ן סנטר, תוכנית ההתחדשות הבניינית לרעננה, 14.6.2023</section>
+
+<section><div class="e1x" style="display:flex;align-items:center;gap:10px;border:1px solid #eadfc4;background:#fbf6ea;border-radius:14px;padding:10px 12px"><img src="hs.jpg" style="width:40px;height:40px;border-radius:50%;border:2px solid #c9a85c" alt=""><b style="flex:1;font-size:15px">עסקה ברעננה?</b><a href="#" style="background:#16161a;color:#fff;border-radius:99px;padding:8px 12px;font-weight:800;font-size:14px;text-decoration:none">התקשרו</a><a href="#" style="background:#14361f;color:#bff0cf;border-radius:99px;padding:8px 12px;font-weight:800;font-size:14px;text-decoration:none">וואטסאפ</a></div></section>
+
+<section><h2>עורך דין מקרקעין בערים קרובות</h2>
+<div class="near"><a href="#">כפר סבא</a><a href="#">הרצליה</a><a href="#">נתניה</a><a href="#">קדימה צורן</a><a href="#">אבן יהודה</a></div></section>
+</body></html>
