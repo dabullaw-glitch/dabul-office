@@ -6,7 +6,7 @@ name: fetch media (internal)
 on:
   push:
     branches: [tools/fetch-media]
-    paths: [fetch-list.txt, shots.txt, check.txt]
+    paths: [fetch-list.txt, shots.txt, check.txt, lh.txt]
 permissions:
   contents: write
 jobs:
@@ -71,6 +71,16 @@ jobs:
           JS
           OUT=$GITHUB_WORKSPACE/fetched/shots node shot.mjs $GITHUB_WORKSPACE/shots.txt >> $GITHUB_WORKSPACE/fetched/shots/log.txt 2>&1
           ls -la $GITHUB_WORKSPACE/fetched/shots
+      - name: Lighthouse
+        continue-on-error: true
+        run: |
+          [ -s lh.txt ] || exit 0
+          mkdir -p fetched/lh
+          while read -r name url preset; do [ -n "$url" ] || continue; P=""; [ "$preset" = "desktop" ] && P="--preset=desktop"
+            for i in 1 2; do npx -y lighthouse@12 "$url" $P --only-categories=performance,accessibility --output=json --output-path=/tmp/lh-$name-$i.json --chrome-flags="--headless=new --no-sandbox" --quiet || true
+              [ -f /tmp/lh-$name-$i.json ] && gzip -c /tmp/lh-$name-$i.json > fetched/lh/$name-$i.json.gz; done
+          done < lh.txt
+          ls -la fetched/lh
       - name: Commit
         if: always()
         run: |
