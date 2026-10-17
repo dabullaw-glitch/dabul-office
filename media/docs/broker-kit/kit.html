@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>ערכת המתווך · יקיר דבול - משרד עורכי דין</title>
+<style>
+@font-face{font-family:H;src:url(../buyer-checklist/fonts/heebo-hebrew-300-normal.woff2) format('woff2');font-weight:300}
+@font-face{font-family:H;src:url(../buyer-checklist/fonts/heebo-hebrew-400-normal.woff2) format('woff2');font-weight:400}
+@font-face{font-family:H;src:url(../buyer-checklist/fonts/heebo-hebrew-500-normal.woff2) format('woff2');font-weight:500}
+@font-face{font-family:H;src:url(../buyer-checklist/fonts/heebo-hebrew-700-normal.woff2) format('woff2');font-weight:700}
+@font-face{font-family:H;src:url(../buyer-checklist/fonts/heebo-latin-400-normal.woff2) format('woff2');font-weight:400;unicode-range:U+0000-00FF}
+@font-face{font-family:H;src:url(../buyer-checklist/fonts/heebo-latin-700-normal.woff2) format('woff2');font-weight:700;unicode-range:U+0000-00FF}
+@font-face{font-family:F;src:url(../buyer-checklist/fonts/frank-ruhl-libre-hebrew-700-normal.woff2) format('woff2');font-weight:700}
+@font-face{font-family:F;src:url(../buyer-checklist/fonts/frank-ruhl-libre-latin-700-normal.woff2) format('woff2');font-weight:700;unicode-range:U+0000-00FF}
+@page{size:A4;margin:0}
+:root{--dark:#0E0F13;--g:#c9a85c;--gd:#8a6a1f;--g1:#e4d19c;--g2:#f6efdd;--ink:#16161a;--mut:#5d5a54;--line:#e3dccb;--paper:#fffdf8}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#888}
+body{font-family:H,Arial,sans-serif;color:var(--ink);font-size:9.6pt;line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:210mm;height:297mm;position:relative;overflow:hidden;background:var(--paper);page-break-after:always;break-after:page;margin:0 auto}
+.page:last-child{page-break-after:auto;break-after:auto}
+@media screen{.page{margin:10mm auto;box-shadow:0 2mm 8mm rgba(0,0,0,.3)}}
+.in{position:absolute;inset:16mm 16mm 22mm 16mm}
+.rh{position:absolute;top:7mm;right:16mm;left:16mm;display:flex;justify-content:space-between;font-size:7.6pt;color:var(--mut)}
+.rh b{color:var(--gd)}
+.ft{position:absolute;bottom:8mm;right:16mm;left:16mm;display:flex;justify-content:space-between;align-items:center;gap:6mm;font-size:7.2pt;color:var(--mut);border-top:.3mm solid var(--line);padding-top:2.4mm}
+.ft .pn{font-weight:700;color:var(--ink)}
+.ph{direction:ltr;unicode-bidi:isolate}
+/* cover */
+.cover{background:var(--dark);color:#f4efe3}
+.cover .frame{position:absolute;inset:9mm;border:.35mm solid rgba(201,168,92,.55)}
+.cover .frame:after{content:"";position:absolute;inset:1.6mm;border:.2mm solid rgba(201,168,92,.25)}
+.cover .top{position:absolute;top:22mm;right:22mm;left:22mm;display:flex;justify-content:space-between}
+.brand{font-family:F,serif;font-weight:700;font-size:15pt;color:#fff;line-height:1.15}
+.brand small{display:block;font-family:H,sans-serif;font-weight:400;font-size:8.4pt;color:var(--g1);letter-spacing:.06em;margin-top:1.4mm}
+.cover .kick{position:absolute;top:66mm;right:22mm;left:22mm;font-size:9.4pt;letter-spacing:.06em;color:var(--g);font-weight:500}
+.cover h1{position:absolute;top:75mm;right:22mm;left:22mm;font-family:F,serif;font-weight:700;font-size:44pt;line-height:1.05;color:#fff}
+.cover h1 em{font-style:normal;color:var(--g)}
+.cover .lead{position:absolute;top:104mm;right:22mm;width:140mm;font-size:11.4pt;line-height:1.65;color:#d9d3c4;font-weight:300}
+.toc{position:absolute;top:142mm;right:22mm;left:22mm}
+.toc h3{font-size:8.6pt;letter-spacing:.06em;color:var(--g);font-weight:500;margin-bottom:4mm}
+.toc ol{list-style:none;display:grid;gap:3mm}
+.toc li{display:grid;grid-template-columns:9mm 1fr auto;align-items:baseline;gap:3mm;font-size:11pt;color:#eee7d6;border-bottom:.2mm dotted rgba(201,168,92,.35);padding-bottom:2.4mm}
+.toc li i{font-style:normal;font-family:F,serif;font-weight:700;color:var(--g);font-size:13pt}
+.toc li small{color:#9d968a;font-size:8.4pt;white-space:nowrap}
+.cover .who{position:absolute;bottom:22mm;right:22mm;left:22mm;display:flex;justify-content:space-between;align-items:flex-end;font-size:8.8pt;color:#bdb6a7}
+.cover .who b{display:block;color:#fff;font-size:11pt;font-weight:500;margin-bottom:.6mm}
+.cover .who .ph{color:var(--g1);font-weight:700;font-size:10.6pt}
+.note{position:absolute;bottom:40mm;right:22mm;left:22mm;font-size:8.2pt;color:#a9a294;line-height:1.55}
+/* form pages */
+.kick2{font-size:8.4pt;font-weight:700;letter-spacing:.06em;color:var(--gd)}
+h2.t{font-family:F,serif;font-weight:700;font-size:21pt;line-height:1.15;margin:1mm 0 1.2mm}
+.sub{font-size:8.6pt;color:var(--mut);margin-bottom:5mm}
+.sec{border:.3mm solid var(--line);background:#fff;padding:3mm 4.6mm 3.4mm;margin-bottom:2.8mm}
+.sec h3{font-size:10.2pt;font-weight:700;margin-bottom:2mm;display:flex;gap:2mm;align-items:baseline}
+.sec h3 i{font-style:normal;font-family:F,serif;color:var(--g);font-size:12pt}
+.f{display:grid;gap:0 5mm}
+.f2{grid-template-columns:1fr 1fr}.f3{grid-template-columns:1fr 1fr 1fr}.f4{grid-template-columns:1fr 1fr 1fr 1fr}
+.fl{font-size:7.8pt;color:var(--mut);border-bottom:.3mm solid #bdb5a3;height:9mm;display:flex;align-items:flex-start;padding-top:.4mm}
+.chk{display:flex;flex-wrap:wrap;gap:2mm 7mm;font-size:9.4pt;align-items:center}
+.k{display:inline-block;width:3.8mm;height:3.8mm;border:.35mm solid var(--ink);border-radius:.6mm;background:#fff;vertical-align:-0.6mm;margin-left:1.6mm}
+.decl{font-size:9pt;line-height:1.55;display:grid;gap:1.8mm}
+.decl div{display:grid;grid-template-columns:6mm 1fr}
+.sig{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 7mm;margin-top:5mm}
+.sig span{font-size:7.8pt;color:var(--mut);border-top:.35mm solid var(--ink);padding-top:1.2mm}
+.box{background:var(--g2);border-right:1mm solid var(--g);padding:2.8mm 4mm;font-size:8.8pt;color:#3d3b35;margin-bottom:3.4mm}
+.box b{color:var(--ink)}
+table.q{width:100%;border-collapse:collapse;font-size:9.2pt;background:#fff}
+table.q th{background:var(--dark);color:#f4efe3;font-weight:500;font-size:8.4pt;padding:2mm 2.6mm;text-align:right}
+table.q td{border-bottom:.3mm solid var(--line);padding:2.2mm 2.6mm;vertical-align:top}
+table.q td.n{font-family:F,serif;font-weight:700;color:var(--g);width:7mm;font-size:11pt}
+table.q td.yn{width:26mm;white-space:nowrap;font-size:8.6pt}
+table.q td.det{width:62mm}
+table.q td.det span{display:block;border-bottom:.3mm solid #cfc8b8;height:7mm}
+table.q td small{display:block;color:var(--mut);font-size:7.8pt}
+/* checklist */
+.cl{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+.it{display:grid;grid-template-columns:6mm 1fr;gap:0 2.4mm;padding:2.4mm 0;border-bottom:.25mm solid var(--line)}
+.it .b{width:4.6mm;height:4.6mm;border:.4mm solid var(--ink);border-radius:.8mm;margin-top:.6mm;background:#fff}
+.it h4{font-size:9.8pt;font-weight:700;line-height:1.35}
+.it p{font-size:8.6pt;color:#3d3b35;line-height:1.45}
+.col h3{font-family:F,serif;font-weight:700;font-size:13pt;border-bottom:.5mm solid var(--ink);padding-bottom:1.6mm;margin-bottom:1mm}
+/* whatsapp */
+.wa{background:#e7f3e3;border:.3mm solid #c9dfc2;border-radius:3mm;padding:4.6mm 5.4mm;font-size:9.6pt;line-height:1.6;white-space:pre-line;margin-bottom:4mm}
+.wa b{font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- 1. cover -->
+<section class="page cover">
+<div class="frame"></div>
+<div class="top">
+<div class="brand">יקיר דבול<small>משרד עורכי דין · מקרקעין ומיסוי מקרקעין</small></div>
+<div class="brand" style="text-align:left;font-size:10pt;color:var(--g1)">נתניה<small>אוקטובר 2026</small></div>
+</div>
+<div class="kick">כלים לעבודה לפי חוק המתווכים ותקנות האתיקה החדשות</div>
+<h1>ערכת <em>המתווך</em></h1>
+<p class="lead">חמישה כלים מוכנים לעבודה היומיומית: מהחתימה על הזמנת התיווך ועד שהלקוח מגיע לעורך הדין עם כל המסמכים. אפשר להדפיס, לצלם ולשלוח בווטסאפ.</p>
+<div class="toc">
+<h3>מה בערכה</h3>
+<ol>
+<li><i>1</i><span>הזמנת שירותי תיווך במקרקעין</span><small>סעיף 9(א) · תקנה 6</small></li>
+<li><i>2</i><span>הסכם בלעדיות, במסמך נפרד</span><small>סעיף 9(ב) · פעולות שיווק</small></li>
+<li><i>3</i><span>דף מידע לקונה על הנכס</span><small>תקנה 7 · התוספת הראשונה</small></li>
+<li><i>4</i><span>שאלון בעל הנכס</span><small>תקנה 7(ד) · התוספת השנייה</small></li>
+<li><i>5</i><span>כרטיס בדיקות והודעה מוכנה ללקוח</span><small>לפני שמדברים על מחיר</small></li>
+</ol>
+</div>
+<p class="note">הנוסחים בערכה הם דוגמה כללית, נכונה לאוקטובר 2026, ואינם ייעוץ משפטי לעסקה מסוימת. כדאי להתאים אותם לכל עסקה ולבדוק עדכוני חקיקה.</p>
+<div class="who">
+<div><b>עו״ד יקיר דבול</b>רזיאל 1, נתניה · dabullaw.co.il</div>
+<div style="text-align:left">משרד <span class="ph">09-8613413</span><br>ווטסאפ <span class="ph">050-5580189</span></div>
+</div>
+</section>
+
+<!-- 2. order -->
+<section class="page">
+<div class="rh"><span><b>ערכת המתווך</b> · כלי 1</span><span>יקיר דבול - משרד עורכי דין</span></div>
+<div class="in">
+<div class="kick2">כלי 1</div>
+<h2 class="t">הזמנת שירותי תיווך במקרקעין</h2>
+<p class="sub">לפי סעיף 9(א) לחוק המתווכים במקרקעין, התשנ״ו-1996, ותקנות המתווכים במקרקעין (פרטי הזמנה בכתב), התשנ״ז-1997</p>
+<div class="sec"><h3><i>א</i>המתווך</h3>
+<div class="f f4"><span class="fl">שם מלא</span><span class="fl">מספר רישיון</span><span class="fl">מספר זהות</span><span class="fl">טלפון</span></div>
+<div class="f f2"><span class="fl">כתובת</span><span class="fl">שם המשרד</span></div></div>
+<div class="sec"><h3><i>ב</i>הלקוח</h3>
+<div class="f f3"><span class="fl">שם מלא</span><span class="fl">מספר זהות</span><span class="fl">טלפון</span></div>
+<div class="f f3"><span class="fl">שם מלא (לקוח נוסף)</span><span class="fl">מספר זהות</span><span class="fl">טלפון</span></div>
+<div class="f f2"><span class="fl">כתובת</span><span class="fl">דואר אלקטרוני</span></div></div>
+<div class="sec"><h3><i>ג</i>סוג העסקה</h3>
+<div class="chk"><span><span class="k"></span>מכירה</span><span><span class="k"></span>קנייה</span><span><span class="k"></span>השכרה</span><span><span class="k"></span>שכירות</span></div></div>
+<div class="sec"><h3><i>ד</i>הנכס</h3>
+<div class="f f2"><span class="fl">כתובת הנכס</span><span class="fl">גוש · חלקה · תת חלקה (אם ידוע)</span></div>
+<div class="f f4"><span class="fl">מספר חדרים</span><span class="fl">קומה</span><span class="fl">חניה / מחסן</span><span class="fl">תיאור נוסף</span></div></div>
+<div class="sec"><h3><i>ה</i>מחיר ודמי תיווך</h3>
+<div class="f f2"><span class="fl">מחיר העסקה (מותר בקירוב): ₪</span><span class="fl">דמי התיווך: ____% מהמחיר, או סכום של ₪</span></div>
+<div class="chk" style="margin-top:2.6mm"><span><span class="k"></span>הסכום כולל מע״מ</span><span><span class="k"></span>בתוספת מע״מ כדין</span><span style="color:var(--mut);font-size:8.6pt">דמי התיווך ישולמו רק לפי סעיף 14 לחוק, עם חתימת הסכם מחייב</span></div></div>
+<div class="sec"><h3><i>ו</i>הצהרות</h3>
+<div class="decl">
+<div><span class="k"></span><span>המתווך הסביר לי, בשפה פשוטה ובשפה שאני מבין, את מהות עסקת התיווך ואת הפרטים בהזמנה זו (תקנה 6).</span></div>
+<div><span class="k"></span><span>המתווך מייצג גם את הצד השני לעסקה, וקיבלתי על כך הודעה מראש ובכתב (תקנה 17).</span></div>
+<div><span class="k"></span><span>למתווך יש עניין אישי בנכס או בעסקה. הדבר גולה לי, ואני מסכים בכתב שימשיך לתווך (סעיף 10). פירוט: ____________________</span></div>
+<div><span class="k"></span><span>קיבלתי עותק של הזמנה זו. הזמנה זו אינה כוללת בלעדיות: בלעדיות ניתנת רק במסמך נפרד.</span></div>
+</div></div>
+<div class="sig"><span>חתימת הלקוח</span><span>חתימת המתווך</span><span>תאריך</span></div>
+</div>
+<div class="ft"><span>נוסח לדוגמה מאת עו״ד יקיר דבול. המידע כללי ואינו ייעוץ משפטי, ויש להתאים לכל עסקה · שמירת עותק 7 שנים לפחות (תקנה 8)</span><span class="pn">2</span></div>
+</section>
+
+<!-- 3. exclusivity -->
+<section class="page">
+<div class="rh"><span><b>ערכת המתווך</b> · כלי 2</span><span>יקיר דבול - משרד עורכי דין</span></div>
+<div class="in">
+<div class="kick2">כלי 2 · מסמך נפרד</div>
+<h2 class="t">הסכם בלעדיות לתיווך במקרקעין</h2>
+<p class="sub">לפי סעיפים 9(ב) עד 9(ג) לחוק המתווכים במקרקעין, ותקנות המתווכים במקרקעין (פעולות שיווק), התשס״ה-2004 · ממוכר או ממשכיר בלבד</p>
+<div class="sec"><h3><i>א</i>הצדדים והנכס</h3>
+<div class="f f3"><span class="fl">שם בעל הנכס</span><span class="fl">מספר זהות</span><span class="fl">טלפון</span></div>
+<div class="f f3"><span class="fl">שם המתווך</span><span class="fl">מספר רישיון</span><span class="fl">טלפון</span></div>
+<div class="f f2"><span class="fl">כתובת הנכס</span><span class="fl">הזמנת התיווך מיום</span></div></div>
+<div class="sec"><h3><i>ב</i>תקופת הבלעדיות</h3>
+<div class="f f2"><span class="fl">מיום</span><span class="fl">עד יום</span></div>
+<p style="font-size:8.6pt;color:var(--mut);margin-top:2mm">בדירה: לא יותר משישה חודשים מיום ההזמנה. לא נקבעה תקופה: הבלעדיות מסתיימת אחרי 30 ימים מיום החתימה.</p></div>
+<div class="sec"><h3><i>ג</i>פעולות השיווק שהמתווך יבצע (לפחות שתיים)</h3>
+<div class="decl">
+<div><span class="k"></span><span>הצבת שלט על הנכס או בסמוך לו, או בלוח מודעות ציבורי</span></div>
+<div><span class="k"></span><span>פרסום במאגר הלקוחות של המתווך או באתרי נדל״ן באינטרנט</span></div>
+<div><span class="k"></span><span>מודעה בעיתון יומי נפוץ</span></div>
+<div><span class="k"></span><span>מודעה בעיתון מקומי או בעיתון לקהל מסוים, לבחירת הלקוח</span></div>
+<div><span class="k"></span><span>הזמנת קונים או מתווכים לצפות בנכס</span></div>
+<div><span class="k"></span><span>הזמנה של לפחות 5 מתווכים פעילים ביישוב לשתף פעולה</span></div>
+<div><span class="k"></span><span>פעולות אחרות שסוכמו: ________________________________________</span></div>
+</div></div>
+<div class="box"><b>חשוב לדעת:</b> אם עד תום שליש מתקופת הבלעדיות המתווך לא ביצע את פעולות השיווק, הבלעדיות מסתיימת (סעיף 9(ב2)). אם ביצע אותן, חזקה שהוא הגורם היעיל לעסקה שנכרתה בתקופת הבלעדיות (סעיף 14(ב)).</div>
+<div class="sec"><h3><i>ד</i>הצהרת בעל הנכס</h3>
+<div class="decl">
+<div><span class="k"></span><span>הוסבר לי, בשפה שאני מבין, מהי בלעדיות לפי סעיף 9 לחוק ומה משמעותה (תקנה 6).</span></div>
+<div><span class="k"></span><span>אני מאשר את מתן הבלעדיות ואת תקופתה בחתימתי על מסמך נפרד זה, וקיבלתי עותק.</span></div>
+</div></div>
+<div class="sig"><span>חתימת בעל הנכס</span><span>חתימת המתווך</span><span>תאריך</span></div>
+</div>
+<div class="ft"><span>נוסח לדוגמה מאת עו״ד יקיר דבול. המידע כללי ואינו ייעוץ משפטי, ויש להתאים לכל עסקה</span><span class="pn">3</span></div>
+</section>
+
+<!-- 4. info sheet -->
+<section class="page">
+<div class="rh"><span><b>ערכת המתווך</b> · כלי 3</span><span>יקיר דבול - משרד עורכי דין</span></div>
+<div class="in">
+<div class="kick2">כלי 3 · מוסרים לקונה או לשוכר לפני העסקה</div>
+<h2 class="t">דף מידע על הנכס</h2>
+<p class="sub">לפי תקנה 7(ב) והתוספת הראשונה לתקנות המתווכים במקרקעין (אתיקה וחובות מקצועיות), התשפ״ד-2024</p>
+<table class="q">
+<tr><th style="width:7mm"></th><th>הנושא</th><th>המידע</th><th style="width:44mm">המקור</th></tr>
+<tr><td class="n">1</td><td><b>הבעלים וזיהוי הנכס</b><small>שמות הבעלים, גוש, חלקה ותת חלקה</small></td><td class="det"><span></span><span></span></td><td><small>נסח טאבו מיום ___ / אישור זכויות</small></td></tr>
+<tr><td class="n">2</td><td><b>שטח הנכס</b><small>במ״ר</small></td><td class="det"><span></span></td><td><small>ארנונה / טאבו / רמ״י / מדידה</small></td></tr>
+<tr><td class="n">3</td><td><b>מה יש בנכס</b><small>חדרים, מרפסות, חניה, מחסן, קומה, מעלית</small></td><td class="det"><span></span><span></span></td><td></td></tr>
+<tr><td class="n">4</td><td><b>מי מחזיק בנכס</b><small>מי גר בו, מתי יוצא, ומועד מסירת החזקה</small></td><td class="det"><span></span><span></span></td><td></td></tr>
+<tr><td class="n">5</td><td><b>ראויה למגורים</b><small>לפי חוק השכירות והשאילה</small></td><td class="det"><span></span></td><td></td></tr>
+<tr><td class="n">6</td><td><b>המחיר המבוקש</b></td><td class="det"><span></span></td><td></td></tr>
+<tr><td class="n">7</td><td><b>בשכירות: תשלומי חובה</b><small>הערכה של ארנונה, ועד בית ותשלומים נוספים</small></td><td class="det"><span></span></td><td></td></tr>
+<tr><td class="n">8</td><td><b>מידע תכנוני</b><small>רק עם ציון הפרסום הרשמי שעליו הסתמכתם (תקנה 7(ג))</small></td><td class="det"><span></span><span></span></td><td><small>שם התוכנית / הפרסום</small></td></tr>
+</table>
+<div class="box" style="margin-top:4mm"><b>טיפ:</b> שלחו את הדף לקונה בווטסאפ, יחד עם שאלון בעל הנכס (כלי 4). כך המידע אצלו בכתב, ויש לכם תיעוד שמסרתם.</div>
+<div class="sig"><span>קיבלתי את המידע: שם וחתימת הקונה</span><span>חתימת המתווך</span><span>תאריך</span></div>
+</div>
+<div class="ft"><span>נוסח לדוגמה מאת עו״ד יקיר דבול. המידע כללי ואינו ייעוץ משפטי, ויש להתאים לכל עסקה</span><span class="pn">4</span></div>
+</section>
+
+<!-- 5. owner questionnaire -->
+<section class="page">
+<div class="rh"><span><b>ערכת המתווך</b> · כלי 4</span><span>יקיר דבול - משרד עורכי דין</span></div>
+<div class="in">
+<div class="kick2">כלי 4 · בעל הנכס ממלא, הקונה או השוכר מקבל</div>
+<h2 class="t">שאלון בעל הנכס</h2>
+<p class="sub">לפי תקנה 7(ד) והתוספת השנייה לתקנות האתיקה · כתובת הנכס: ________________________________</p>
+<table class="q">
+<tr><th style="width:7mm"></th><th>האם ידוע לך על</th><th style="width:26mm">תשובה</th><th>פירוט</th></tr>
+<tr><td class="n">1</td><td><b>רטיבות בנכס</b></td><td class="yn"><span class="k"></span>כן <span class="k"></span>לא</td><td class="det"><span></span></td></tr>
+<tr><td class="n">2</td><td><b>בנייה בלי היתר</b><small>תוספות, סגירות, שינויים</small></td><td class="yn"><span class="k"></span>כן <span class="k"></span>לא</td><td class="det"><span></span></td></tr>
+<tr><td class="n">3</td><td><b>ליקויים מהותיים בתשתיות</b><small>מים, חשמל, ביוב או גז</small></td><td class="yn"><span class="k"></span>כן <span class="k"></span>לא</td><td class="det"><span></span></td></tr>
+<tr><td class="n">4</td><td><b>מבנה מסוכן</b><small>לפי מידע רשמי ממהנדס העירייה</small></td><td class="yn"><span class="k"></span>כן <span class="k"></span>לא</td><td class="det"><span></span></td></tr>
+<tr><td class="n">5</td><td><b>תביעות או הליכים</b><small>משפטיים או פליליים, על הנכס או על הזכויות בו</small></td><td class="yn"><span class="k"></span>כן <span class="k"></span>לא</td><td class="det"><span></span></td></tr>
+<tr><td class="n">6</td><td><b>חוות דעת מקצועיות</b><small>בנושא מהותי, חוץ משמאות</small></td><td class="yn"><span class="k"></span>כן <span class="k"></span>לא</td><td class="det"><span></span></td></tr>
+<tr><td class="n">7</td><td><b>צורך בטיפול או שימוש מיוחד</b><small>כדי למנוע נזק למשתמש, לאחרים או לנכס</small></td><td class="yn"><span class="k"></span>כן <span class="k"></span>לא</td><td class="det"><span></span></td></tr>
+<tr><td class="n">8</td><td><b>ליקויים אחרים בנכס</b></td><td class="yn"><span class="k"></span>כן <span class="k"></span>לא</td><td class="det"><span></span></td></tr>
+<tr><td class="n">9</td><td><b>מטרדים</b><small>רעש, ריח, קרינה או מטרד אחר</small></td><td class="yn"><span class="k"></span>כן <span class="k"></span>לא</td><td class="det"><span></span></td></tr>
+</table>
+<div class="box" style="margin-top:4mm"><b>בעל הנכס סירב לענות?</b> <span class="k" style="margin-right:2mm"></span>בעל הנכס סירב לענות על שאלות מספר: ________, אחרי מאמץ סביר של המתווך. (את הסירוב מציינים בשאלון שנמסר לקונה)</div>
+<div class="sig"><span>חתימת בעל הנכס</span><span>חתימת המתווך</span><span>קיבלתי עותק: חתימת הקונה</span></div>
+</div>
+<div class="ft"><span>נוסח לדוגמה מאת עו״ד יקיר דבול. המידע כללי ואינו ייעוץ משפטי · בנובמבר 2025 פורסמה טיוטה לשאלון אחיד, ויש לבדוק אם אושרה</span><span class="pn">5</span></div>
+</section>
+
+<!-- 6. checklist + message -->
+<section class="page">
+<div class="rh"><span><b>ערכת המתווך</b> · כלי 5</span><span>יקיר דבול - משרד עורכי דין</span></div>
+<div class="in">
+<div class="kick2">כלי 5</div>
+<h2 class="t">בדיקות לפני שמדברים על מחיר</h2>
+<p class="sub">הבדיקות שמפילות עסקאות, ואיך בודקים כל אחת</p>
+<div class="cl">
+<div class="col"><h3>בצד הנכס והמוכר</h3>
+<div class="it"><span class="b"></span><div><h4>נסח טאבו עדכני</h4><p>בעלים, משכנתא, עיקולים והערות אזהרה. מוציאים באתר gov.il, ושוב ביום החתימה</p></div></div>
+<div class="it"><span class="b"></span><div><h4>דירה שלא רשומה בטאבו</h4><p>אישור זכויות מהחברה המשכנת או מרמ״י, ובדיקה ברשם המשכונות</p></div></div>
+<div class="it"><span class="b"></span><div><h4>חריגות בנייה</h4><p>תיק הבניין בעירייה: היתר ותעודת גמר</p></div></div>
+<div class="it"><span class="b"></span><div><h4>היטל השבחה</h4><p>תשלום ההיטל הוא תנאי לרישום הנכס על שם הקונה</p></div></div>
+<div class="it"><span class="b"></span><div><h4>דירה בירושה</h4><p>צו ירושה או צו קיום צוואה, ורישום היורשים לפני המכירה או במקביל</p></div></div>
+<div class="it"><span class="b"></span><div><h4>קטין או ייפוי כוח מתמשך</h4><p>צריך אישור של בית המשפט מראש. לוקח זמן, ולכן קובעים מועדים בהתאם</p></div></div>
+</div>
+<div class="col"><h3>בצד הקונה</h3>
+<div class="it"><span class="b"></span><div><h4>אישור עקרוני למשכנתא</h4><p>לפני החתימה. בלי עלות, ותקף לפחות 24 ימים</p></div></div>
+<div class="it"><span class="b"></span><div><h4>דירה יחידה או נוספת?</h4><p>קובע את מס הרכישה. סימולטור באתר רשות המסים</p></div></div>
+<div class="it"><span class="b"></span><div><h4>שאלון בעל הנכס ודף מידע</h4><p>הקונה קיבל אותם בכתב (כלים 3 ו־4)</p></div></div>
+<div class="it"><span class="b"></span><div><h4>עורך דין, לפני כל חתימה</h4><p>גם לא על זיכרון דברים. מתווך לא עורך ולא מוסר זיכרון דברים (תקנה 23)</p></div></div>
+</div>
+</div>
+<h3 style="font-family:F,serif;font-weight:700;font-size:13pt;margin:5mm 0 2mm">הודעה מוכנה ללקוח, להעתקה לווטסאפ</h3>
+<div class="wa">היי, כדי שעורך הדין יוכל להתחיל לעבוד מהר, כדאי להכין:
+<b>מוכרים:</b> תעודות זהות של כל הבעלים, נסח טאבו או אישור זכויות, מכתב כוונות מהבנק לסילוק המשכנתא (אם יש), ואם הדירה בירושה: צו ירושה או צו קיום צוואה.
+<b>קונים:</b> תעודות זהות, אישור עקרוני למשכנתא, ופרטים על מקור הכסף לתשלומים.
+עם שאלות על המסמכים אפשר לפנות למשרד עו״ד יקיר דבול: 09-8613413</div>
+</div>
+<div class="ft"><span>נוסח לדוגמה מאת עו״ד יקיר דבול. המידע כללי ואינו ייעוץ משפטי · נכון לאוקטובר 2026</span><span class="pn">6</span></div>
+</section>
+
+</body>
+</html>
