@@ -102,6 +102,12 @@
       if (!have || L.length !== old || (L[0] && cur && cur.textContent !== L[0].name)) build(root, d);
     }).catch(function () { /* the copy from the server stays */ });
   }
-  function all() { Array.prototype.forEach.call(document.querySelectorAll('.dbr'), start); }
+  // 17.10.2026: the carousel is built only when it comes near the screen, so it does not slow down the first view of the page
+  function all() {
+    var els = document.querySelectorAll('.dbr');
+    if (!('IntersectionObserver' in window)) { Array.prototype.forEach.call(els, function (el) { start(el); }); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); start(e.target); } }); }, { rootMargin: '600px 0px' });
+    Array.prototype.forEach.call(els, function (el) { io.observe(el); });
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', all); else all();
 })();
