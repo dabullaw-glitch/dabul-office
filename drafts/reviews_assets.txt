@@ -1,0 +1,198 @@
+
+// 17.10.2026 (speed + accessibility): the carousel's style and script are printed inside the page (no extra download from
+// github.io, which browsers could keep for 10 minutes only). Source files: media/widgets/home-reviews.css + .js in the repo.
+if (!function_exists('dabul_reviews_assets')) {
+  function dabul_reviews_assets() {
+    static $done = false; if ($done) return; $done = true;
+    $css = <<<'DABULCSS'
+/* home-reviews.css: "לקוחות ממליצים" on the home page (11.10.2026). Matches the site: Noto Local, black #141414, gold #C5A25A / #E7CD96. */
+.dbr{--g:#C5A25A;--g2:#E7CD96;--g3:#A88A4C;--ink:#141414;--tx:#54595F;--ln:#E7E7F1;--bg:#fff;--st:#F4B400;
+ direction:rtl;font-family:"Noto Local","Noto Sans Hebrew",Arial,sans-serif;color:var(--ink);width:100%;max-width:1360px;min-width:0;margin:0 auto;position:relative}
+.elementor-widget:has(> .dbr),.e-con-inner:has(.dbr){min-width:0;max-width:100%}
+.dbr .dbr-vp{min-width:0;max-width:100%}.dbr .dbr-track{max-width:100%}
+.dbr *{box-sizing:border-box}
+/* rating badges */
+.dbr .dbr-top{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:0 0 26px}
+.dbr .dbr-badge{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--ln);border-radius:18px;padding:12px 18px 12px 22px;text-decoration:none!important;color:var(--ink)!important;
+ box-shadow:0 14px 34px -24px rgba(20,20,20,.35);transition:transform .2s,box-shadow .2s,border-color .2s;min-width:250px}
+.dbr .dbr-badge:hover{transform:translateY(-2px);border-color:var(--g2);box-shadow:0 22px 40px -26px rgba(168,138,76,.7)}
+.dbr .dbr-logo{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex:none;background:#F8F8FD}
+.dbr .dbr-logo svg{width:26px;height:26px}
+.dbr .dbr-num{font-size:34px;line-height:1;font-weight:700;letter-spacing:-.02em}
+.dbr .dbr-meta{display:flex;flex-direction:column;gap:3px;line-height:1.25}
+.dbr .dbr-meta small{font-size:13.5px;color:var(--tx)}
+.dbr .dbr-meta b{font-size:14.5px;font-weight:700}
+.dbr .dbr-stars{display:inline-flex;gap:1px;color:var(--st)}.dbr .dbr-stars svg{width:15px;height:15px;fill:currentColor}
+.dbr .dbr-badge.lw .dbr-stars{color:#3BA7E6}
+.dbr .dbr-badge.lw .dbr-logo{background:#EAF6FD}
+/* slider */
+.dbr .dbr-vp{position:relative}
+.dbr .dbr-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:8px 4px 26px;margin:0;list-style:none;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.dbr .dbr-track::-webkit-scrollbar{display:none}
+.dbr .dbr-card{scroll-snap-align:start;flex:0 0 calc((100% - 54px)/4);background:var(--bg);border:1px solid var(--ln);border-radius:20px;padding:22px 22px 18px;display:flex;flex-direction:column;gap:12px;
+ box-shadow:0 18px 40px -32px rgba(20,20,20,.45);position:relative;transition:transform .2s,box-shadow .2s,border-color .2s}
+.dbr .dbr-card:hover{transform:translateY(-3px);border-color:var(--g2);box-shadow:0 26px 48px -30px rgba(168,138,76,.6)}
+.dbr .dbr-card::before{content:"\201D";position:absolute;top:6px;left:18px;font-size:76px;line-height:1;color:var(--g2);opacity:.45;font-family:Georgia,serif}
+.dbr .dbr-who{display:flex;align-items:center;gap:12px;min-width:0}
+.dbr .dbr-av{width:46px;height:46px;border-radius:50%;flex:none;object-fit:cover;background:linear-gradient(140deg,var(--g2),var(--g3));color:#fff;display:grid;place-items:center;font-weight:700;font-size:19px;box-shadow:0 0 0 3px #fff,0 0 0 4px var(--ln)}
+.dbr .dbr-nm{min-width:0}
+.dbr .dbr-nm b{display:block;font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dbr .dbr-nm small{display:block;font-size:13px;color:var(--tx)}
+.dbr .dbr-rate{display:flex;align-items:center;gap:8px}
+.dbr .dbr-ver{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:var(--tx)}
+.dbr .dbr-ver svg{width:14px;height:14px}
+.dbr .dbr-txt{font-size:15.5px;line-height:1.65;color:#2b2d31;margin:0;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}
+.dbr .dbr-card.open .dbr-txt{-webkit-line-clamp:unset;display:block}
+.dbr .dbr-more{align-self:flex-start;background:none;border:0;padding:4px 0;min-height:24px;color:#7a6234;font:inherit;font-size:14px;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.dbr .dbr-more:hover{color:var(--ink)}
+.dbr .dbr-src{margin-top:auto;display:flex;align-items:center;justify-content:space-between;border-top:1px dashed var(--ln);padding-top:12px;font-size:12.5px;color:var(--tx)}
+.dbr .dbr-src span{display:inline-flex;align-items:center;gap:6px}.dbr .dbr-src svg{width:16px;height:16px}
+/* arrows + dots */
+.dbr .dbr-arw{position:absolute;top:calc(50% - 30px);width:50px;height:50px;border-radius:50%;border:1px solid var(--ln);background:#fff;color:var(--ink);display:grid;place-items:center;cursor:pointer;z-index:3;
+ box-shadow:0 12px 26px -14px rgba(20,20,20,.5);transition:background .2s,color .2s,transform .2s,opacity .2s;padding:0}
+.dbr .dbr-arw svg{width:22px;height:22px}
+.dbr .dbr-arw:hover{background:var(--ink);color:var(--g2);transform:scale(1.06)}
+.dbr .dbr-arw:focus-visible{outline:3px solid var(--g);outline-offset:3px}
+.dbr .dbr-arw[disabled]{opacity:.35;cursor:default;transform:none;background:#fff;color:var(--ink)}
+.dbr .dbr-prev{right:-24px}.dbr .dbr-next{left:-24px}
+.dbr .dbr-dots{display:flex;justify-content:center;gap:0;margin:2px 0 0}
+.dbr .dbr-dots button{width:24px;height:24px;border:0;padding:0;background:none;cursor:pointer;position:relative}
+.dbr .dbr-dots button::before{content:"";position:absolute;top:8px;left:8px;width:8px;height:8px;border-radius:99px;background:#D5D5E2;transition:transform .25s}
+.dbr .dbr-dots button.on::before{background:var(--g);transform:scaleX(2.6)}
+.dbr .dbr-note{text-align:center;font-size:12.5px;color:#8A8D93;margin:12px 0 0}
+@media (max-width:1100px){.dbr .dbr-card{flex-basis:calc((100% - 36px)/3)}.dbr .dbr-prev{right:-10px}.dbr .dbr-next{left:-10px}}
+@media (max-width:820px){.dbr .dbr-card{flex-basis:calc((100% - 18px)/2)}}
+@media (max-width:600px){
+ .dbr .dbr-top{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .dbr .dbr-badge{min-width:0;flex-wrap:wrap;gap:4px 8px;padding:10px 12px;border-radius:14px;align-content:center}
+ .dbr .dbr-logo{width:30px;height:30px;border-radius:9px}.dbr .dbr-logo svg{width:18px;height:18px}
+ .dbr .dbr-num{font-size:24px}
+ .dbr .dbr-meta{flex:1 1 100%}.dbr .dbr-meta b{font-size:13px}.dbr .dbr-meta small{display:none}.dbr .dbr-stars svg{width:13px;height:13px}
+ .dbr .dbr-card{flex-basis:86%;padding:18px 18px 14px}
+ .dbr .dbr-track{gap:12px;scroll-padding-inline:2px}
+ .dbr .dbr-arw{width:42px;height:42px;top:auto;bottom:-6px}
+ .dbr .dbr-prev{right:calc(50% - 120px)}.dbr .dbr-next{left:calc(50% - 120px)}
+ .dbr .dbr-dots{margin-top:12px;min-height:42px;align-items:center}
+}
+@media (prefers-reduced-motion:reduce){.dbr .dbr-track{scroll-behavior:auto}.dbr .dbr-card,.dbr .dbr-badge,.dbr .dbr-arw{transition:none}}
+
+DABULCSS;
+    $js = <<<'DABULJS'
+/* home-reviews.js: "לקוחות ממליצים" on the home page (11.10.2026, Yakir).
+   A carousel of Google reviews with arrows and dots, plus the Google and LawReviews ratings.
+   Mount: <div class="dbr" data-src="https://.../functions/v1/reviews" data-json='{...}'></div>
+   data-json (optional) is the copy the server already has, so the section shows at once; data-src then brings the
+   newest reviews (the "reviews" function refreshes them from Google every day). No cookies, no outside script. */
+(function () {
+  'use strict';
+  var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4L2.8 9.5l6.4-.8z"/></svg>';
+  var G = '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
+  var GAVEL = '<svg viewBox="0 0 24 24" fill="none" stroke="#2F9BDB" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 4.5l6 6M11 7l6 6M12.2 5.8l-4.6 4.6M18.2 11.8l-4.6 4.6M9.8 13.8L3.6 20"/><path d="M14 20h7"/></svg>';
+  var ARW = function (d) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + d + '"/></svg>'; };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function stars(n) { var s = ''; for (var i = 0; i < Math.round(n || 5); i++) s += STAR; return '<span class="dbr-stars" role="img" aria-label="' + (n || 5) + ' כוכבים">' + s + '</span>'; }
+  function num(n) { return (Math.round((+n || 0) * 10) / 10).toFixed(1); }
+  function ago(iso) {
+    var t = Date.parse(iso); if (!t) return '';
+    var d = Math.max(0, Math.floor((Date.now() - t) / 864e5));
+    if (d < 1) return 'היום'; if (d === 1) return 'אתמול'; if (d < 7) return 'לפני ' + d + ' ימים';
+    var w = Math.floor(d / 7); if (d < 30) return w === 1 ? 'לפני שבוע' : w === 2 ? 'לפני שבועיים' : 'לפני ' + w + ' שבועות';
+    var m = Math.floor(d / 30.4); if (m < 12) return m <= 1 ? 'לפני חודש' : m === 2 ? 'לפני חודשיים' : 'לפני ' + m + ' חודשים';
+    var y = Math.floor(d / 365); return y <= 1 ? 'לפני שנה' : y === 2 ? 'לפני שנתיים' : 'לפני ' + y + ' שנים';
+  }
+  function badge(cls, href, logo, n, label, sub) {
+    return '<a class="dbr-badge ' + cls + '" href="' + esc(href) + '" target="_blank" rel="noopener nofollow"><span class="dbr-logo">' + logo + '</span><span class="dbr-num">' + num(n) + '</span>' +
+      '<span class="dbr-meta">' + stars(5) + '<b>' + esc(label) + '</b><small>' + esc(sub) + '</small></span></a>';
+  }
+  function card(r, i) {
+    var first = String(r.name || '?').trim().charAt(0);
+    var av = r.photo ? '<img class="dbr-av" src="' + esc(r.photo) + '" alt="" width="46" height="46" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.outerHTML=\'<span class=dbr-av>' + esc(first) + '</span>\'">' : '<span class="dbr-av">' + esc(first) + '</span>';
+    return '<li class="dbr-card"><div class="dbr-who">' + av + '<div class="dbr-nm"><b><bdi>' + esc(r.name) + '</bdi></b><small>' + esc(r.ago_he || ago(r.at)) + '</small></div></div>' +
+      '<div class="dbr-rate">' + stars(r.rating) + '</div><p class="dbr-txt">' + esc(r.text) + '</p><button type="button" class="dbr-more" hidden>קרא עוד</button>' +
+      '<div class="dbr-src"><span>' + G + 'ביקורת בגוגל</span></div></li>';
+  }
+  function build(root, d) {
+    var g = d.google || {}, lw = d.lawreviews || {}, list = (g.reviews || []).filter(function (r) { return r && r.text && (r.rating || 5) >= 4; });
+    if (!list.length) return false;
+    var top = '<div class="dbr-top">' +
+      (g.rating ? badge('gg', g.url || 'https://www.google.com/maps', G, g.rating, (g.count || '') + ' ביקורות בגוגל', 'דירוג המשרד בגוגל') : '') +
+      (lw.rating ? badge('lw', lw.url || 'https://www.lawreviews.co.il/', GAVEL, lw.rating, (lw.count || '') + ' חוות דעת ב-LawReviews', 'דירוג המשרד ב-LawReviews') : '') + '</div>';
+    root.innerHTML = top + '<div class="dbr-vp"><button type="button" class="dbr-arw dbr-prev" aria-label="הביקורת הקודמת">' + ARW('M9 6l6 6-6 6') + '</button>' +
+      '<ul class="dbr-track" tabindex="0" aria-label="ביקורות לקוחות">' + list.map(card).join('') + '</ul>' +
+      '<button type="button" class="dbr-arw dbr-next" aria-label="הביקורת הבאה">' + ARW('M15 6l-6 6 6 6') + '</button></div><div class="dbr-dots"></div>' +
+      '<p class="dbr-note">ביקורות שלקוחות המשרד פרסמו בגוגל. כל מקרה שונה.</p>';
+    wire(root);
+    return true;
+  }
+  function wire(root) {
+    var tr = root.querySelector('.dbr-track'), prev = root.querySelector('.dbr-prev'), next = root.querySelector('.dbr-next'), dots = root.querySelector('.dbr-dots');
+    var cards = tr.children;
+    // "read more" only where the text is cut
+    Array.prototype.forEach.call(cards, function (c) {
+      var p = c.querySelector('.dbr-txt'), b = c.querySelector('.dbr-more');
+      if (p.scrollHeight > p.clientHeight + 4) b.hidden = false;
+      b.addEventListener('click', function () { var o = c.classList.toggle('open'); b.textContent = o ? 'פחות' : 'קרא עוד'; stop(); });
+    });
+    function step() { var c = cards[0]; if (!c) return 300; var g = parseFloat(getComputedStyle(tr).columnGap || getComputedStyle(tr).gap) || 0; return c.getBoundingClientRect().width + g; }
+    function per() { return Math.max(1, Math.round(tr.clientWidth / step())); }
+    function pos() { return Math.abs(tr.scrollLeft); }
+    function max() { return tr.scrollWidth - tr.clientWidth; }
+    function go(dir) { tr.scrollBy({ left: (getComputedStyle(tr).direction === 'rtl' ? -1 : 1) * dir * step() * (per() > 2 ? per() - 1 : 1), behavior: 'smooth' }); }
+    function pages() { return Math.max(1, Math.ceil((cards.length - per()) / Math.max(1, per() - (per() > 2 ? 1 : 0))) + 1); }
+    var nP = 0;
+    function drawDots() {
+      nP = pages(); var h = '';
+      for (var i = 0; i < nP; i++) h += '<button type="button" aria-label="קבוצה ' + (i + 1) + '"></button>';
+      dots.innerHTML = h;
+      Array.prototype.forEach.call(dots.children, function (b, i) { b.addEventListener('click', function () { var s = Math.round(i * (max() / Math.max(1, nP - 1))); tr.scrollTo({ left: (getComputedStyle(tr).direction === 'rtl' ? -s : s), behavior: 'smooth' }); stop(); }); });
+      sync();
+    }
+    function sync() {
+      var p = pos(), m = max();
+      prev.disabled = p < 4; next.disabled = p > m - 4;
+      var a = m > 0 ? Math.round(p / m * (nP - 1)) : 0;
+      Array.prototype.forEach.call(dots.children, function (b, i) { b.classList.toggle('on', i === a); if (i === a) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+    }
+    prev.addEventListener('click', function () { go(-1); stop(); });
+    next.addEventListener('click', function () { go(1); stop(); });
+    tr.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { go(1); stop(); } if (e.key === 'ArrowRight') { go(-1); stop(); } });
+    var raf = 0; tr.addEventListener('scroll', function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(sync); }, { passive: true });
+    window.addEventListener('resize', function () { clearTimeout(drawDots.t); drawDots.t = setTimeout(drawDots, 150); });
+    // gentle autoplay while visible, until the visitor touches the carousel
+    var timer = 0, seen = false, stopped = false;
+    function tick() { if (stopped || !seen || document.hidden) return; if (pos() > max() - 4) tr.scrollTo({ left: 0, behavior: 'smooth' }); else go(1); }
+    function stop() { stopped = true; clearInterval(timer); }
+    if (!window.matchMedia || !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      timer = setInterval(tick, 6500);
+      ['pointerdown', 'wheel', 'touchstart', 'focusin'].forEach(function (ev) { root.addEventListener(ev, stop, { passive: true }); });
+      root.addEventListener('mouseenter', function () { seen = false; }); root.addEventListener('mouseleave', function () { seen = true; });
+      if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { seen = es[0].isIntersecting; }, { threshold: .4 }).observe(root); else seen = true;
+    }
+    drawDots();
+  }
+  function start(root) {
+    if (root.__dbr) return; root.__dbr = 1;
+    var have = false;
+    try { var j = root.getAttribute('data-json'); if (j) have = build(root, JSON.parse(j)); } catch (e) { /* ignore */ }
+    var src = root.getAttribute('data-src');
+    if (src && !root.hasAttribute('data-static')) fetch(src, { credentials: 'omit' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      if (!d || !d.google) return;
+      var L = (d.google.reviews || []).filter(function (r) { return r && r.text && (r.rating || 5) >= 4; });
+      var cur = root.querySelector('.dbr-card bdi'), old = root.querySelectorAll('.dbr-card').length;
+      if (!have || L.length !== old || (L[0] && cur && cur.textContent !== L[0].name)) build(root, d);
+    }).catch(function () { /* the copy from the server stays */ });
+  }
+  // 17.10.2026: the carousel is built only when it comes near the screen, so it does not slow down the first view of the page
+  function all() {
+    var els = document.querySelectorAll('.dbr');
+    if (!('IntersectionObserver' in window)) { Array.prototype.forEach.call(els, function (el) { start(el); }); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); start(e.target); } }); }, { rootMargin: '600px 0px' });
+    Array.prototype.forEach.call(els, function (el) { io.observe(el); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', all); else all();
+})();
+
+DABULJS;
+    echo '<style id="dabul-reviews-css">' . $css . '</style><script id="dabul-home-reviews-js">/* home-reviews */' . $js . '</script>';
+  }
+}
