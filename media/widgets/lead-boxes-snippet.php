@@ -195,3 +195,16 @@ add_action('rest_api_init', function () {
 	register_rest_route('dabul/v1', '/formlog', array('methods' => 'GET', 'permission_callback' => function () { return current_user_can('manage_options'); },
 		'callback' => function () { return array('log' => get_option('dabul_form_lead_log', array())); }));
 });
+
+/* 18.10.2026 (Yakir approved): one send per click. The intake takes a few seconds before it returns the reader to the
+   thank-you, so people pressed again and the same lead arrived 2 to 3 times. After the first submit the button is
+   locked and says it is sending; a second submit is ignored. Coming back with the browser's back button unlocks it. */
+add_action('wp_footer', function () {
+	if (!dabul_lb_for_post() && !dabul_lbm_on()) return;
+	echo '<script id="dbl-lb-once">(function(){var Q="form[name=dabul-box],form[name=dabul-mid]";'
+		. 'document.querySelectorAll(Q).forEach(function(f){f.addEventListener("submit",function(e){'
+		. 'if(f.getAttribute("data-sent")){e.preventDefault();return}f.setAttribute("data-sent","1");'
+		. 'var b=f.querySelector("button[type=submit]");if(b){b.setAttribute("data-h",b.innerHTML);b.disabled=true;b.style.opacity=".75";b.style.cursor="wait";b.textContent="שולח, רגע...";}});});'
+		. 'window.addEventListener("pageshow",function(e){if(!e.persisted)return;document.querySelectorAll(Q).forEach(function(f){f.removeAttribute("data-sent");'
+		. 'var b=f.querySelector("button[type=submit]");if(b){if(b.getAttribute("data-h"))b.innerHTML=b.getAttribute("data-h");b.disabled=false;b.style.opacity="";b.style.cursor="";}});});})();</script>';
+}, 30);
