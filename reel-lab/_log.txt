@@ -834,3 +834,55 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 model ivrit-ai/whisper-large-v3-turbo-ct2
 17 segments
 {"fix": {"roll": -4.86, "n": 11, "cx": 496, "top": 590, "fh": 548, "luma": 139}, "samples": 336, "detected": 336, "W": 1080, "H": 1920, "face_cx": [463, 520], "head_top": [546, 678], "chin": [1115, 1255]}
+skip inherit-siblings
+skip v01-bli-mashkanta
+skip v02-kesef-horim
+skip v03-nezila
+skip v04-mechir-namuch
+skip v05-socher
+skip v06-bait-meshutaf
+skip story-a
+skip story-b
+skip story-c
+skip yt-gush-chelka
+skip t1015-1
+skip t1015-2
+skip t1015-3
+skip t1015-4
+skip t1015-5
+skip t1015-6
+skip n01-michtav
+-rw-r--r-- 1 runner runner 112543597 Oct 18 07:13 /tmp/raw/n02-michtav.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "58.985011",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "video",
+            "width": 1078,
+            "height": 1920,
+            "r_frame_rate": "30/1",
+            "duration": "59.000000",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "59.000000"
+    }
+}
+crf 23 -> 21282866 bytes
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+model ivrit-ai/whisper-large-v3-turbo-ct2
+18 segments
+{"fix": {"roll": -5.14, "n": 11, "cx": 497, "top": 589, "fh": 548, "luma": 139}, "samples": 295, "detected": 295, "W": 1080, "H": 1920, "face_cx": [484, 520], "head_top": [546, 618], "chin": [1115, 1220]}

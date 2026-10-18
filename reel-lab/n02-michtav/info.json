@@ -1,0 +1,28 @@
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "58.985011",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "video",
+            "width": 1078,
+            "height": 1920,
+            "r_frame_rate": "30/1",
+            "duration": "59.000000",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "59.000000"
+    }
+}
