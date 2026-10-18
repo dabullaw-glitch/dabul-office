@@ -112,6 +112,20 @@ async function stats(b: Any) {
   if (b.notify !== false) await tg(`📍 גוגל עסקי, חודש ${m.slice(5)}/${m.slice(0, 4)}:\nצפו בפרופיל: ${views}\nלחצו להתקשר: ${res.calls}\nנכנסו לאתר: ${res.website}\nביקשו מסלול הגעה: ${res.directions}`);
   return { ok: true, ...res };
 }
+async function locations() {
+  const { acc, loc } = await ids();
+  const j = await g(`https://mybusinessbusinessinformation.googleapis.com/v1/accounts/${acc}/locations?pageSize=100&readMask=name,title,websiteUri,phoneNumbers,storefrontAddress,metadata,openInfo`);
+  return { ok: true, main: loc, locations: (j.locations || []).map((l: Any) => ({ id: String(l.name || '').replace('locations/', ''), title: l.title, website: l.websiteUri || '', phone: l.phoneNumbers?.primaryPhone || '', address: (l.storefrontAddress?.addressLines || []).join(' ') + ' ' + (l.storefrontAddress?.locality || ''), verified: !!l.metadata?.hasVoiceOfMerchant, mapsUri: l.metadata?.mapsUri || '', status: l.openInfo?.status || '' })) };
+}
+// deletes ONE duplicate location; never the main one (Yakir approved deleting the unverified duplicate on 18.10.2026)
+async function delDup(b: Any) {
+  const { loc } = await ids(); const id = String(b.location || '').replace(/[^0-9]/g, '');
+  if (!id || id === loc) throw new Error('refused: missing id or main location');
+  const r = await fetch(`https://mybusinessbusinessinformation.googleapis.com/v1/locations/${id}`, { method: 'DELETE', headers: { authorization: 'Bearer ' + await access() } });
+  const t = await r.text(); if (!r.ok) throw new Error(`google ${r.status}: ${t.slice(0, 300)}`);
+  await merge('settings', 'gbp', { duplicateDeleted: { id, title: String(b.title || ''), at: new Date().toISOString() } });
+  return { ok: true, deleted: id };
+}
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   await loadSecrets().catch(() => {});
@@ -123,6 +137,8 @@ Deno.serve(async (req) => {
     if (step === 'sync') return json(await sync());
     if (step === 'ask') return json(await ask(b));
     if (step === 'stats') return json(await stats(b));
+    if (step === 'locations') return json(await locations());
+    if (step === 'deldup') return json(await delDup(b));
     if (step === 'ping') { await access(); const { acc, loc } = await ids(); return json({ ok: true, acc: !!acc, loc: !!loc }); }
     return json({ error: 'step?' }, 400);
   } catch (e) { console.error(e); return a ? page('משהו השתבש', '<p>נסו שוב בעוד דקה.</p>', 500) : json({ ok: false, error: String((e as Error).message || e) }, 500); }
