@@ -167,7 +167,7 @@ var ok=function(){var d=document.createElement('div');d.className='ok';var t=doc
 d.appendChild(document.createTextNode('עו״ד יקיר דבול יחזור אליכם'+(g('preferred_time')?' '+g('preferred_time'):' בהקדם')+'. רוצים לחסוך זמן? שלחו כבר עכשיו בוואטסאפ את פירוט התיקים.'));
 var w=document.createElement('a');w.className='wa';w.href='__WADOCS__';w.target='_blank';w.rel='noopener';w.textContent='שליחת פירוט התיקים בוואטסאפ';d.appendChild(w);
 var s=document.createElement('small');s.textContent='את הפירוט מוציאים באזור האישי באתר רשות האכיפה והגבייה. אין פירוט? אפשר לשלוח גם צילום של מכתב שקיבלתם. דחוף? __PHONE__';d.appendChild(s);
-var p=f.parentNode;while(p.firstChild){p.removeChild(p.firstChild)}p.appendChild(d);ev('Lead',{content_name:'lp-debt'})};
+var p=f.parentNode;while(p.firstChild){p.removeChild(p.firstChild)}p.appendChild(d);(function(){var dr=g('debt_range'),V=dr==='מעל 300 אלף'?30000:dr==='100-300 אלף'?10000:dr==='עד 100 אלף'?3000:5000;ev('Lead',{content_name:'lp-debt',value:V,currency:'ILS'});try{if(window.fbq&&V>=10000){window.fbq('trackCustom','LeadHighValue',{value:V,currency:'ILS',content_name:'lp-debt'})}}catch(x){}})()};
 var bad=function(){b.disabled=false;b.textContent='שיחזרו אליי לבדיקה';m.textContent='משהו השתבש. אפשר להתקשר: __PHONE__'};
 fetch(A,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json()}).then(function(j){if(j){if(j.ok){ok()}else{bad()}}else{bad()}}).catch(bad)})})})();"""
 js = js.replace('__API__', API).replace('__WADOCS__', wa_docs).replace('__PHONE__', PHONE)
