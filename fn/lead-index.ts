@@ -3,8 +3,12 @@
 // owner on Telegram with a one-tap WhatsApp welcome message.
 // 18.10.2026 (Yakir approved): a repeat from the same phone within 10 minutes of the last entry (double click,
 // pressing send again) is still logged on the lead, but does not send another Telegram alert.
+// 19.10.2026 (Yakir approved): when the automatic opening message fails inside working hours, the alert says plainly that
+// the send failed (short reason) and that the system retries; a separate message with the ready text, a WhatsApp button and
+// "✓ נשלח" is sent, and the failure is kept in docs coll 'outfail' so the hourly lead run retries without offering it again.
+// The "it will go out at the start of working hours" wording stays only for the real after-hours case.
 import { loadSecrets, json, cors, admin, uid, telegram, env } from '../_shared/common.ts';
-import { provider, send } from '../_shared/send.ts';
+import { provider, send, offerOnTelegram } from '../_shared/send.ts';
 
 // Israeli numbers are stored as 05X..., numbers from abroad (+ or 00 prefix) as +<country><number>
 const normIL = (p: string) => { let x = String(p || '').replace(/\D/g, ''); if (x.startsWith('972')) x = '0' + x.slice(3); return x.length >= 9 && x.length <= 10 ? x : ''; };
@@ -15,6 +19,14 @@ const normPhone = (p: string) => {
 };
 const waNum = (phone: string) => phone.startsWith('+') ? phone.slice(1) : '972' + phone.slice(1);
 const QUIET_MS = 10 * 60e3;
+// a short, readable reason for a failed WhatsApp send
+const whyFail = (err: string) => {
+  const e = String(err || ''), m = e.match(/^green (\d+)/);
+  if (e === 'bad_phone') return 'מספר הטלפון לא תקין';
+  if (m) return m[1] === '466' ? 'נגמרה מכסת ההודעות בוואטסאפ' : m[1] === '401' || m[1] === '403' ? 'החיבור לוואטסאפ נותק' : `שרת הוואטסאפ החזיר שגיאה ${m[1]}`;
+  if (/timed out|timeout|network|fetch|connect/i.test(e)) return 'תקלת תקשורת';
+  return 'תקלה בשליחה';
+};
 
 // flatten any shape (JSON, nested Elementor "fields[x][value]", Meta field_data, form-encoded) into key -> value
 // deno-lint-ignore no-explicit-any
@@ -114,11 +126,13 @@ Deno.serve(async (req) => {
   // (Sun-Thu 08:00-21:00, Fri 08:00-14:00); outside those hours the hourly run sends it when the window opens
   const okey = `sales~${id}~welcome~${now.slice(0, 16)}`, oid = okey.replace(/[^A-Za-z0-9_\-.~:@+]/g, '_');
   const prov = provider(), direct = !!phone && !!prov && prov !== 'telegram';
-  let sentNow = false;
+  let sentNow = false, inHours = false, failErr = '';
   if (direct) {
     const il = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' })), d = il.getDay(), h = il.getHours();
-    if ((d <= 4 && h >= 8 && h < 21) || (d === 5 && h >= 8 && h < 14)) {
+    inHours = (d <= 4 && h >= 8 && h < 21) || (d === 5 && h >= 8 && h < 14);
+    if (inHours) {
       const r = await send(phone, reply, { name });
+      if (!r.ok) failErr = String(r.error || 'unknown');
       if (r.ok) {
         sentNow = true;
         await sb.from('docs').upsert({ coll: 'outbox', id: oid, data: { status: 'sent', via: 'auto', at: now, key: okey, name, type: 'lead', text: reply } });
@@ -126,13 +140,25 @@ Deno.serve(async (req) => {
       }
     }
   }
-  const text = `🆕 ליד חדש · ${srcHe}${langHe}\n👤 ${name}\n📞 ${phone || '-'}${email ? `\n✉️ ${email}` : ''}\n📂 ${topic}${debtRange ? `\n💰 היקף חוב: ${debtRange}` : ''}${preferredTime ? `\n🕐 זמן נוח: ${preferredTime}` : ''}${campaign ? `\n📣 ${campaign}${adName ? ' / ' + adName : ''}` : ''}${notes ? `\n📝 ${notes.slice(0, 400)}` : ''}${sentNow ? '\n\n✅ הודעת פתיחה נשלחה אליו אוטומטית בוואטסאפ.' : direct ? '\n\n🕗 הודעת הפתיחה תצא אוטומטית בתחילת שעות הפעילות.' : ''}\n\nכדאי להתקשר בשעה הקרובה. ליד שמקבל מענה מהיר נסגר הרבה יותר.`;
+  const text = `🆕 ליד חדש · ${srcHe}${langHe}\n👤 ${name}\n📞 ${phone || '-'}${email ? `\n✉️ ${email}` : ''}\n📂 ${topic}${debtRange ? `\n💰 היקף חוב: ${debtRange}` : ''}${preferredTime ? `\n🕐 זמן נוח: ${preferredTime}` : ''}${campaign ? `\n📣 ${campaign}${adName ? ' / ' + adName : ''}` : ''}${notes ? `\n📝 ${notes.slice(0, 400)}` : ''}${sentNow ? '\n\n✅ הודעת פתיחה נשלחה אליו אוטומטית בוואטסאפ.' : direct && inHours ? `\n\n⚠️ השליחה האוטומטית של הודעת הפתיחה נכשלה (${whyFail(failErr)}). המערכת תנסה לשלוח שוב בשעה הקרובה, ואפשר גם לשלוח עכשיו בכפתור "הודעת פתיחה בוואטסאפ".` : direct ? '\n\n🕗 הודעת הפתיחה תצא אוטומטית בתחילת שעות הפעילות.' : ''}\n\nכדאי להתקשר בשעה הקרובה. ליד שמקבל מענה מהיר נסגר הרבה יותר.`;
   if (env('TELEGRAM_BOT_TOKEN') && env('TELEGRAM_CHAT_ID')) {
     const kb = [[...(phone ? [{ text: '💬 הודעת פתיחה בוואטסאפ', url: wa }] : []), ...(env('APP_URL') ? [{ text: '📋 פתיחה במערכת', url: `${env('APP_URL')}#leads/${id}` }] : [])]];
     await fetch(`https://api.telegram.org/bot${env('TELEGRAM_BOT_TOKEN')}/sendMessage`, { method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ chat_id: env('TELEGRAM_CHAT_ID'), text, disable_web_page_preview: true, reply_markup: kb[0].length ? { inline_keyboard: kb } : undefined }) }).catch(() => {});
     // without a WhatsApp sender the opening goes out from the Telegram button; it is marked handled so it is never offered again
     if (phone && !direct) await sb.from('docs').upsert({ coll: 'outbox', id: oid, data: { status: 'sent', via: 'telegram-offer', offered: true, at: now, key: okey, name } });
+  }
+  // the automatic opening failed in working hours: keep the failure (the hourly lead run retries it) and give Yakir one
+  // message with the ready text and "✓ נשלח", so a message he sends himself is not sent again
+  if (direct && inHours && !sentNow) {
+    const at = new Date().toISOString(), label = 'הודעת פתיחה';
+    let offered = false;
+    if (env('TELEGRAM_BOT_TOKEN') && env('TELEGRAM_CHAT_ID')) {
+      const qid = uid('q').slice(2, 14);
+      const o = await offerOnTelegram(qid, { label: `⚠️ לא נשלחה אוטומטית (${whyFail(failErr)}). המערכת תנסה שוב בשעה הקרובה. אם שלחת בעצמך, לחץ "✓ נשלח" כדי שלא תישלח שוב · ${label}`, name, phone, text: reply }).catch(() => ({ ok: false }));
+      if (o.ok) { offered = true; await sb.from('docs').upsert({ coll: 'tgq', id: qid, data: { key: okey, name, phone, leadId: id, type: 'lead', label, text: reply } }); }
+    }
+    await sb.rpc('docs_merge', { p_coll: 'outfail', p_id: oid, p_patch: { key: okey, type: 'lead', label, name, leadId: id, attempts: 1, lastError: failErr.slice(0, 200), firstAt: at, lastAt: at, mode: 'lead-intake', resolved: false, offered, offeredAt: offered ? at : null } });
   }
 
   const back = url.searchParams.get('redirect');
