@@ -12,7 +12,7 @@ EXTRA = """
 .cut{position:absolute;bottom:0}.cut img{display:block;width:100%;height:auto}
 .btn-g{display:flex;align-items:center;justify-content:center;gap:16px;border-radius:16px;font-weight:900;color:#1A1205;
  background:linear-gradient(180deg,#FBE3A0,#E7B44E 55%,#C99332);box-shadow:0 18px 36px -16px rgba(0,0,0,.7),inset 0 2px 0 rgba(255,255,255,.6)}
-.gl{display:flex;align-items:center;gap:18px;font-weight:800;color:#fff}
+.gl{display:flex;align-items:center;gap:18px;font-weight:800;color:#fff;white-space:nowrap}
 .gl i{flex:none;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#FBE3A0,#C99332);color:#1A1205}
 .gl i svg{width:60%;height:60%}
 .rule{height:2px;background:linear-gradient(90deg,rgba(231,180,78,0),#E7B44E,rgba(231,180,78,0))}
@@ -65,7 +65,7 @@ def premium():
            '<div class="K" style="font-size:138px;margin-top:26px;color:#fff">עיכוב הליכים</div>'
            '<div class="K gold" style="font-size:138px">בהוצאה לפועל</div>'
            '<div class="rule" style="margin:30px 20px"></div>'
-           '<div style="display:grid;gap:20px;justify-items:start;padding-right:30px">' + gl('עצירת עיקולים', 40) + gl('תכנית אחת מול כל הנושים', 40) + gl('פגישה בנתניה או בזום', 40) + '</div>'
+           '<div style="display:grid;gap:20px;justify-items:start;padding-right:30px">' + gl('עצירת עיקולים', 38) + gl('תכנית אחת מול כל הנושים', 38) + gl('פגישה בנתניה או בזום', 38) + '</div>'
            '<div style="margin-top:34px;color:#E8DCC0;font-size:26px;font-weight:600;line-height:1.4">חבר בוועדת חדלות פירעון והוצאה לפועל<br>בלשכת עורכי הדין</div></div>'
            f'<div class="btn-g" style="position:absolute;right:56px;width:560px;bottom:60px;height:100px;font-size:46px">השאירו פרטים עכשיו{ARRL}</div>')
     return page(photo + txt, bg)
@@ -73,7 +73,7 @@ def premium():
 
 def yearend():
     bg = 'radial-gradient(900px 900px at 80% 20%,#B3262B 0%,rgba(179,38,43,0) 70%),linear-gradient(170deg,#8E1B1F,#4E0B0E)'
-    photo = f'<div class="cut" style="left:-40px;width:540px;bottom:0;filter:drop-shadow(0 20px 40px rgba(0,0,0,.5))"><img src="{PHOTO}"></div>'
+    photo = f'<div class="cut" style="left:-90px;width:500px;bottom:0;filter:drop-shadow(0 20px 40px rgba(0,0,0,.5))"><img src="{PHOTO}"></div>'
     cal = ('<div style="position:absolute;right:60px;top:70px;width:200px;border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 24px 40px -18px rgba(0,0,0,.6);text-align:center;transform:rotate(4deg)">'
            '<div style="background:#1A1A1A;color:#fff;font-weight:800;font-size:30px;padding:10px 0">דצמבר</div>'
            '<div class="L" style="font-size:120px;color:#B3262B;padding:20px 0 14px">31</div></div>')
@@ -81,7 +81,7 @@ def yearend():
            '<div class="K" style="font-size:150px;color:#fff">סוף שנה.</div>'
            '<div class="K" style="font-size:118px;color:#FFD9D4;margin-top:6px">הזמן להסדר<br>מול הבנקים.</div>'
            '<div style="display:grid;gap:22px;margin-top:44px">'
-           + ''.join(f'<div class="plus" style="font-size:42px"><i style="width:50px;height:50px;font-size:38px">+</i>{t}</div>' for t in ('עיכוב הליכים בהוצאה לפועל', 'עצירת עיקולים', 'הסדר מול הבנקים והנושים')) +
+           + ''.join(f'<div class="plus" style="font-size:38px;white-space:nowrap"><i style="width:50px;height:50px;font-size:38px">+</i>{t}</div>' for t in ('עיכוב הליכים בהוצאה לפועל', 'עצירת עיקולים', 'הסדר מול הבנקים והנושים')) +
            '</div></div>'
            '<div style="position:absolute;right:0;left:0;bottom:0;height:150px;background:#F08A7E;display:flex;align-items:center;justify-content:center;gap:22px">'
            f'<span class="K" style="font-size:84px;color:#4E0B0E">בדיקה ראשונה, ללא התחייבות</span></div>'
