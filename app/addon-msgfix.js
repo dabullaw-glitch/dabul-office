@@ -3,6 +3,7 @@
    2. Fee plans (changed the same day by Yakir): the automatic reminder 3 days before each installment is OFF by default.
       It is switched on per plan (button on the plan card, checkbox in the plan forms: plan.autoRemind) or per client
       (switch in the client card, "כספים" tab: client.autoPayRemind). Rule in engine.js~p20261019c.
+   3. Fully paid fee plans move to a closed section "שולמו במלואם" at the bottom of the list (Yakir 19.10.2026).
    The deal screen toggle "לא לשלוח בקשת ביקורת" lives in remind.js~p20261019a. */
 (function (s) {
   if (!s || s.MSGFIX) return; s.MSGFIX = '20261019a';
@@ -36,6 +37,7 @@
     s.render = function () {
       const r = render0.apply(this, arguments);
       try { sideLeads(); } catch (e) { console.error('msgfix side', e); }
+      try { tidyPlans(); } catch (e) { console.error('msgfix plans', e); }
       return r;
     };
   }
@@ -62,6 +64,52 @@
       } catch (e) { console.error('msgfix plan', e); }
       return h;
     };
+  }
+  // ---------- 3. fully paid plans move to a closed section at the bottom (Yakir 19.10.2026) ----------
+  // Works on the rendered page, so it does not depend on which addon draws the plan card. It also adds the
+  // automatic-reminder button to cards drawn by another addon (addon-plus replaces planCard).
+  const planPaid = p => {
+    try { if (typeof s.planTotals === 'function') { const t = s.planTotals(p); if (t && +t.total > 0) return +t.paid >= +t.total - 0.5; } } catch (e) { /* fall back */ }
+    const inst = (p && p.installments) || [];
+    return inst.length > 0 && inst.every(i => i && i.status === 'paid');
+  };
+  const remBtn = l => {
+    const on = planOn(l), byClient = on && !l.autoRemind;
+    return `<button class="pill plain ${on ? 'p-ok' : 'p-mute'}" style="cursor:pointer" data-a="plan-autorem" data-id="${esc(l.id)}" title="${on ? (byClient ? 'דלוק לכל התוכניות של הלקוח (בכרטיס הלקוח)' : 'לחיצה תכבה את התזכורת האוטומטית לתוכנית הזו') : 'לחיצה תדליק תזכורת אוטומטית ללקוח 3 ימים לפני כל תשלום'}">${icon(on ? 'bell' : 'x', 12)} ${on ? 'תזכורת אוטומטית דלוקה' : 'תזכורת אוטומטית כבויה'}</button>`;
+  };
+  function tidyPlans() {
+    const cards = new Map();
+    document.querySelectorAll('[data-a="plan-edit"][data-id], [data-a="inst-toggle"][data-id], [data-a="plan-autorem"][data-id]').forEach(b => {
+      const c = b.closest('.card'); if (c && !cards.has(c) && s.get('plans', b.getAttribute('data-id'))) cards.set(c, b.getAttribute('data-id'));
+    });
+    if (!cards.size) return;
+    const done = new Map();
+    cards.forEach((id, card) => {
+      const pl = s.get('plans', id); if (!pl) return;
+      if (!card.querySelector('[data-a="plan-autorem"]')) {
+        const eb = card.querySelector('[data-a="plan-edit"]');
+        if (eb) eb.insertAdjacentHTML('beforebegin', remBtn(pl));
+      }
+      if (planPaid(pl) && !card.closest('details.plans-done')) {
+        const par = card.parentNode; if (!par) return;
+        if (!done.has(par)) done.set(par, []);
+        done.get(par).push(card);
+      }
+    });
+    done.forEach((list, par) => {
+      let box = Array.prototype.find.call(par.children, el => el.matches && el.matches('details.plans-done'));
+      if (!box) {
+        box = document.createElement('details');
+        box.className = 'plans-done';
+        box.style.cssText = 'margin:6px 0 12px';
+        box.innerHTML = '<summary style="cursor:pointer;padding:12px 14px;border:1px dashed var(--line, #ccc);border-radius:12px;font-weight:700;color:var(--muted, #666);list-style-position:inside"></summary><div class="plans-done-list" style="margin-top:10px"></div>';
+        par.appendChild(box);
+      }
+      const inner = box.querySelector('.plans-done-list');
+      list.forEach(c => inner.appendChild(c));
+      const n = inner.children.length;
+      box.querySelector('summary').textContent = `שולמו במלואם (${n}) · לחיצה להצגה`;
+    });
   }
   s.act && s.act('plan-autorem', async (el, d) => {
     const p = s.get('plans', d.id); if (!p) return;
@@ -90,6 +138,7 @@
     s.V.client.render = function (p) {
       cr0.call(this, p);
       try {
+        try { tidyPlans(); } catch (e) { console.error('msgfix plans', e); }
         if (s.ui('client', 'tab') !== 'money') return;
         const c = s.R && s.get('clients', s.R.id); if (!c || !p) return;
         if (p.querySelector('[data-a="client-autorem"]')) return;
