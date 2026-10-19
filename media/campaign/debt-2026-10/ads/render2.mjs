@@ -1,7 +1,7 @@
 import { chromium } from '/tmp/claude-0/node_modules/playwright/index.mjs';
 import fs from 'fs'; import path from 'path';
 const dir = path.dirname(new URL(import.meta.url).pathname);
-const files = fs.readdirSync(dir).filter(f => /^v3-.*\.html$/.test(f));
+const files = fs.readdirSync(dir).filter(f => /^v4-.*\.html$/.test(f));
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 for (const f of files) {
   const q = f.endsWith('-q.html');
