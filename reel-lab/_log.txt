@@ -939,3 +939,36 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
 model ivrit-ai/whisper-large-v3-turbo-ct2
 24 segments
 {"fix": {"roll": -4.99, "n": 26, "cx": 570, "top": 160, "fh": 718, "luma": 104}, "samples": 336, "detected": 336, "W": 1080, "H": 1920, "face_cx": [535, 592], "head_top": [121, 481], "chin": [894, 1140]}
+-rw-r--r-- 1 runner runner 95729072 Oct 19 07:59 /tmp/raw/tc590.mov
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "r_frame_rate": "30/1",
+            "duration": "59.970000",
+            "tags": {
+
+            }
+        },
+        {
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "duration": "59.907483",
+            "tags": {
+
+            }
+        }
+    ],
+    "format": {
+        "duration": "60.021474"
+    }
+}
+crf 23 -> 20509023 bytes
+model ivrit-ai/whisper-large-v3-turbo-ct2
+27 segments
+{"fix": {"roll": 0.0, "n": 251, "cx": 559, "top": 526, "fh": 580, "luma": 93}, "samples": 300, "detected": 300, "W": 1080, "H": 1920, "face_cx": [513, 582], "head_top": [495, 591], "chin": [1130, 1183]}
