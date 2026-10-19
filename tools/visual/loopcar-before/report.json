@@ -1,0 +1,2490 @@
+{
+ "iphone": {
+  "errors": [
+   "t.composedPath()[0].getRootNode is not a function. (In 't.composedPath()[0].getRootNode()', 't.composedPath()[0].getRootNode' is undefined)",
+   "/dabullaw.co.il\" from accessing a frame with origin \"https://www.google.com\". Protocols, domains, and ports must match."
+  ],
+  "failed": [],
+  "empty": {},
+  "ok": {
+   "6757": 1,
+   "6761": 1,
+   "6766": 1,
+   "6772": 1,
+   "6776": 1,
+   "6779": 25,
+   "7030": 2,
+   "7360": 1,
+   "7424": 1,
+   "7548": 1,
+   "7556": 1,
+   "7017c": 2
+  },
+  "samples": [
+   {
+    "t": 0,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 1,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 2,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 3,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 4,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 5,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 6,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 7,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 8,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 9,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 10,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 11,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 12,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 13,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 14,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 15,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 16,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 17,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 18,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 19,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 20,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 21,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 22,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 23,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 24,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7017",
+      "clone": true,
+      "src": "ent/uploads/2026/10/legal-sublet-rental-agreement-guide-cover.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 25,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7030",
+      "clone": false,
+      "src": "ontent/uploads/2026/10/house-committee-election-guide-cover-1.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 26,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6757",
+      "clone": false,
+      "src": "content/uploads/2026/08/326e69ae-a5e8-4528-b410-1f6c7d1201eb.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloading"
+     }
+    ]
+   },
+   {
+    "t": 27,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6761",
+      "clone": false,
+      "src": "content/uploads/2026/08/0c2bc9a3-1456-475b-aaf1-6b56a7feb86e.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 28,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "/wp-content/uploads/2026/10/betterment-tax-refund-guide-cover.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 29,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "content/uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 30,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ontent/uploads/2026/10/voucher-book-new-apartment-guide-cover.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 31,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "content/uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 32,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "co.il/wp-content/uploads/2026/10/house-committee-lawyer-cover.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 33,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "content/uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 34,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "nt/uploads/2026/10/purchase-tax-discount-disabled-guide-cover.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 35,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 36,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7017",
+      "clone": true,
+      "src": "ent/uploads/2026/10/legal-sublet-rental-agreement-guide-cover.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 37,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7030",
+      "clone": false,
+      "src": "ontent/uploads/2026/10/house-committee-election-guide-cover-1.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   }
+  ]
+ },
+ "android": {
+  "errors": [
+   "t.composedPath(...)[0].getRootNode is not a function",
+   "t.composedPath(...)[0].getRootNode is not a function"
+  ],
+  "failed": [],
+  "empty": {
+   "7548": 1
+  },
+  "ok": {
+   "6757": 1,
+   "6761": 1,
+   "6766": 1,
+   "6772": 7,
+   "6776": 7,
+   "6779": 1,
+   "7030": 1,
+   "7360": 1,
+   "7424": 4,
+   "7548": 7,
+   "7556": 6,
+   "7017c": 1
+  },
+  "samples": [
+   {
+    "t": 0,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "s/2026/10/purchase-tax-discount-disabled-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 1,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "s/2026/10/purchase-tax-discount-disabled-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 2,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "s/2026/10/purchase-tax-discount-disabled-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 3,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "s/2026/10/purchase-tax-discount-disabled-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 4,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "s/2026/10/purchase-tax-discount-disabled-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 5,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "content/uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 6,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "content/uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 7,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "content/uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 8,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "content/uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 9,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "content/uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 10,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "content/uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "content/uploads/2026/10/house-committee-lawyer-cover-1024x538.png.webp",
+      "loaded": false,
+      "cls": "entered lazyloading"
+     }
+    ]
+   },
+   {
+    "t": 11,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "content/uploads/2026/10/house-committee-lawyer-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 12,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "content/uploads/2026/10/house-committee-lawyer-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 13,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "content/uploads/2026/10/house-committee-lawyer-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 14,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "content/uploads/2026/10/house-committee-lawyer-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 15,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "content/uploads/2026/10/house-committee-lawyer-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 16,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "content/uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 17,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "content/uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 18,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "content/uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 19,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "content/uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 20,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "content/uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 21,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "loads/2026/10/voucher-book-new-apartment-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 22,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "loads/2026/10/voucher-book-new-apartment-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 23,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "loads/2026/10/voucher-book-new-apartment-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 24,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "content/uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 25,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "content/uploads/2026/10/house-committee-lawyer-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 26,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "content/uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 27,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "s/2026/10/purchase-tax-discount-disabled-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 28,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "content/uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 29,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7017",
+      "clone": true,
+      "src": "ds/2026/10/legal-sublet-rental-agreement-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 30,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7030",
+      "clone": false,
+      "src": "loads/2026/10/house-committee-election-guide-cover-1-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 31,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6757",
+      "clone": false,
+      "src": "content/uploads/2026/08/326e69ae-a5e8-4528-b410-1f6c7d1201eb.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 32,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6761",
+      "clone": false,
+      "src": "content/uploads/2026/08/0c2bc9a3-1456-475b-aaf1-6b56a7feb86e.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 33,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "nt/uploads/2026/10/betterment-tax-refund-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 34,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "content/uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 35,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "loads/2026/10/voucher-book-new-apartment-guide-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 36,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "content/uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 37,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "content/uploads/2026/10/house-committee-lawyer-cover-1024x538.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   }
+  ]
+ },
+ "computer": {
+  "errors": [
+   "t.composedPath(...)[0].getRootNode is not a function",
+   "t.composedPath(...)[0].getRootNode is not a function"
+  ],
+  "failed": [],
+  "empty": {
+   "7360": 1,
+   "7424": 1
+  },
+  "ok": {
+   "6757": 4,
+   "6761": 6,
+   "6766": 19,
+   "6772": 28,
+   "6776": 15,
+   "6779": 2,
+   "7017": 3,
+   "7030": 4,
+   "7360": 12,
+   "7424": 24,
+   "7548": 21,
+   "7556": 9,
+   "7017c": 1,
+   "6779c": 2,
+   "7556c": 1
+  },
+  "samples": [
+   {
+    "t": 0,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "ds/2026/10/purchase-tax-discount-disabled-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 1,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "ds/2026/10/purchase-tax-discount-disabled-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 2,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "ds/2026/10/purchase-tax-discount-disabled-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 3,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "ds/2026/10/purchase-tax-discount-disabled-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 4,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "ds/2026/10/purchase-tax-discount-disabled-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 5,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "ds/2026/10/purchase-tax-discount-disabled-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "loads/2026/10/voucher-book-new-apartment-guide-cover-1024x538.png.webp",
+      "loaded": false,
+      "cls": "entered lazyloading"
+     }
+    ]
+   },
+   {
+    "t": 6,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 7,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 8,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 9,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 10,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 11,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 12,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 13,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 14,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 15,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 16,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "nt/uploads/2026/10/betterment-tax-refund-guide-cover-1024x538.png.webp",
+      "loaded": false,
+      "cls": "entered lazyloading"
+     }
+    ]
+   },
+   {
+    "t": 17,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 18,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 19,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 20,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 21,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 22,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6761",
+      "clone": false,
+      "src": "uploads/2026/08/0c2bc9a3-1456-475b-aaf1-6b56a7feb86e-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 23,
+    "how": "wait",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6761",
+      "clone": false,
+      "src": "uploads/2026/08/0c2bc9a3-1456-475b-aaf1-6b56a7feb86e-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 24,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 25,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 26,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 27,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "ds/2026/10/purchase-tax-discount-disabled-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 28,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "ds/2026/10/purchase-tax-discount-disabled-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 29,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7017",
+      "clone": true,
+      "src": "ads/2026/10/legal-sublet-rental-agreement-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6779",
+      "clone": false,
+      "src": "uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7556",
+      "clone": false,
+      "src": "ds/2026/10/purchase-tax-discount-disabled-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6776",
+      "clone": false,
+      "src": "uploads/2026/08/2183e26e-8bcd-42eb-b02d-7e89ee029455-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 30,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7030",
+      "clone": false,
+      "src": "ploads/2026/10/house-committee-election-guide-cover-1-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7017",
+      "clone": false,
+      "src": "ads/2026/10/legal-sublet-rental-agreement-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6779",
+      "clone": true,
+      "src": "uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7556",
+      "clone": true,
+      "src": "ds/2026/10/purchase-tax-discount-disabled-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 31,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6757",
+      "clone": false,
+      "src": "uploads/2026/08/326e69ae-a5e8-4528-b410-1f6c7d1201eb-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7030",
+      "clone": false,
+      "src": "ploads/2026/10/house-committee-election-guide-cover-1-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7017",
+      "clone": false,
+      "src": "ads/2026/10/legal-sublet-rental-agreement-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6779",
+      "clone": true,
+      "src": "uploads/2026/08/10362c07-11ad-45d6-a1af-14f0eb807c05-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 32,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6761",
+      "clone": false,
+      "src": "uploads/2026/08/0c2bc9a3-1456-475b-aaf1-6b56a7feb86e-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6757",
+      "clone": false,
+      "src": "uploads/2026/08/326e69ae-a5e8-4528-b410-1f6c7d1201eb-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7030",
+      "clone": false,
+      "src": "ploads/2026/10/house-committee-election-guide-cover-1-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7017",
+      "clone": false,
+      "src": "ads/2026/10/legal-sublet-rental-agreement-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 33,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6761",
+      "clone": false,
+      "src": "uploads/2026/08/0c2bc9a3-1456-475b-aaf1-6b56a7feb86e-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6757",
+      "clone": false,
+      "src": "uploads/2026/08/326e69ae-a5e8-4528-b410-1f6c7d1201eb-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7030",
+      "clone": false,
+      "src": "ploads/2026/10/house-committee-election-guide-cover-1-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 34,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6761",
+      "clone": false,
+      "src": "uploads/2026/08/0c2bc9a3-1456-475b-aaf1-6b56a7feb86e-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6757",
+      "clone": false,
+      "src": "uploads/2026/08/326e69ae-a5e8-4528-b410-1f6c7d1201eb-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 35,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6761",
+      "clone": false,
+      "src": "uploads/2026/08/0c2bc9a3-1456-475b-aaf1-6b56a7feb86e-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 36,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7360",
+      "clone": false,
+      "src": "ent/uploads/2026/10/betterment-tax-refund-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   },
+   {
+    "t": 37,
+    "how": "next",
+    "swiper": true,
+    "cards": [
+     {
+      "post": "7548",
+      "clone": false,
+      "src": "-content/uploads/2026/10/house-committee-lawyer-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6772",
+      "clone": false,
+      "src": "uploads/2026/08/7890b9e9-5204-404a-8274-57ad4794f128-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "7424",
+      "clone": false,
+      "src": "ploads/2026/10/voucher-book-new-apartment-guide-cover-768x403.png.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     },
+     {
+      "post": "6766",
+      "clone": false,
+      "src": "uploads/2026/08/c1af61bd-1cb3-457b-9dec-bcc8c2d42501-768x429.jpeg.webp",
+      "loaded": true,
+      "cls": "entered lazyloaded"
+     }
+    ]
+   }
+  ]
+ }
+}
