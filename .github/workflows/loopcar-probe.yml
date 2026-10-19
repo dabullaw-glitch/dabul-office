@@ -1,0 +1,34 @@
+name: loop carousel probe
+# Do the cards of a home page post carousel (e.g. "מידע משפטי") show their pictures on iPhone, Android and computer?
+on:
+  workflow_dispatch:
+    inputs:
+      url: { description: 'page address', required: true, default: 'https://dabullaw.co.il/' }
+      heading: { description: 'carousel heading', required: true, default: 'מידע משפטי' }
+      name: { description: 'result folder', required: true, default: 'loopcar' }
+permissions:
+  contents: write
+concurrency: { group: visual, cancel-in-progress: false }
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Probe
+        run: |
+          cd tools/office-video && npm install --no-audit --no-fund && npx playwright install --with-deps chromium webkit && cd ../..
+          cp tools/visual/loopcar.mjs tools/office-video/loopcar.mjs
+          node tools/office-video/loopcar.mjs "${{ inputs.url }}" "${{ inputs.heading }}" "${{ inputs.name }}" 2>&1 | tee /tmp/c.log || true
+          mkdir -p tools/visual/${{ inputs.name }}; cp /tmp/c.log tools/visual/${{ inputs.name }}/log.txt
+          rm tools/office-video/loopcar.mjs
+          sudo apt-get install -yq imagemagick >/dev/null 2>&1 || true
+          for f in tools/visual/${{ inputs.name }}/*.png; do mogrify -resize '60%' -quality 80 "$f" || true; done
+      - name: Save
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add tools/visual
+          git commit -qm "loop carousel probe: ${{ inputs.name }}" || exit 0
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
