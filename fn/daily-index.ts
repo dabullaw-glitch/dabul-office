@@ -10,8 +10,9 @@
 //    ready text and a WhatsApp button; "✓ נשלח" there counts as sent (handled by the inbound function).
 //  - ?mode=preview: a dry run. Nothing is sent and nothing is written; it returns what the next run would do.
 // 19.10.2026 (lead workflow, approved by Yakir): "לחזור אליו ב..." on a lead (lead.callbackAt). Every run of this function
-//    (morning, evening and the hourly lead run, also outside lead hours) looks for callbacks due within the next 30 minutes
-//    and sends Yakir ONE Telegram reminder per callback time: name, topic, last note, the phone number, a dial button
+//    (the 5-minute 'office-callbacks' job with ?mode=callbacks, and also the morning, evening and hourly lead runs, at any
+//    hour, night and Saturday included, since Yakir chose the time) looks for callbacks whose time has come (1 minute
+//    tolerance) and sends Yakir ONE Telegram reminder per callback time: name, topic, last note, the phone number, a dial button
 //    (an https page that opens the phone dialer; Telegram buttons cannot be tel: links) and a button that opens the lead.
 //    Marked on the lead (callbackNotified = the callbackAt it was sent for). ?mode=callbacks runs only this check.
 //    Nothing is ever sent to the lead here.
@@ -220,7 +221,7 @@ const sentLines = (r: any) => [
 ].join('\n');
 
 // ---------- lead callbacks: "לחזור אליו ב..." (a reminder to Yakir, never a message to the lead) ----------
-const CB_AHEAD = 30 * 60e3;
+const CB_AHEAD = 60e3;
 const OPEN_STAGES = ['new', 'contacted', 'meeting_set', 'no_show', 'meeting_done', 'proposal_sent'];
 // deno-lint-ignore no-explicit-any
 export function callbacksDue(rows: { id: string; data: any }[], now = Date.now()) {

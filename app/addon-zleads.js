@@ -17,7 +17,7 @@
    B10. Report: real revenue from the files of leads that became clients, and cost per client per source (Facebook, Google...). */
 (function (O) {
   if (!O || O.LEADFLOW || !O.V || !O.V.leads) return;
-  O.LEADFLOW = '20261019b';
+  O.LEADFLOW = '20261019c';
   const esc = v => (O.esc ? O.esc(v == null ? '' : String(v)) : String(v == null ? '' : v));
   const icon = (n, z) => (O.icon ? O.icon(n, z) : '');
   const money = v => (O.money ? O.money(v) : '₪' + Math.round(+v || 0));
@@ -504,7 +504,7 @@
       body: `<div class="lx-m">${chips('when', ch.map(c => [c[0], c[1]]).concat([['custom', 'מועד אחר']]), '')}
         <div class="lx-f" id="lx_cw" hidden><label for="lx_cat">מועד</label><input id="lx_cat" type="datetime-local" value="${esc(localInput(toMs(l.callbackAt)))}"></div>
         <div class="lx-f"><label for="lx_cn">תזכורת לעצמך (לא חובה)</label><input id="lx_cn" value="${esc(l.callbackNote || '')}" placeholder="למשל: לשאול על המשכנתא"></div>
-        <p class="lx-hint">${icon('bell', 13)} בזמן הזה תגיע אליך הודעה בטלגרם עם השם, הנושא, ההערה האחרונה וכפתור חיוג. התזכורת יוצאת בבדיקה השעתית של המערכת, לכן היא יכולה להגיע עד חצי שעה לפני או אחרי.</p>
+        <p class="lx-hint">${icon('bell', 13)} בזמן הזה תגיע אליך הודעה בטלגרם עם השם, הנושא, ההערה האחרונה וכפתור חיוג (בתוך כמה דקות מהשעה שבחרת, גם בערב ובשבת).</p>
         <p class="lx-err" id="lx_e" hidden></p></div>`,
       foot: `<button class="btn pri" id="lx_go">${icon('bell', 15)} שמירה</button>${l.callbackAt ? '<button class="btn ghost" id="lx_rm">ביטול החזרה</button>' : ''}<button class="btn" data-close>סגירה</button>`,
       onMount: (root, close) => {
