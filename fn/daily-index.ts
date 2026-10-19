@@ -9,6 +9,12 @@
 //    still relevant). After two failures, or when the next run would be too late, Yakir gets ONE Telegram message with the
 //    ready text and a WhatsApp button; "✓ נשלח" there counts as sent (handled by the inbound function).
 //  - ?mode=preview: a dry run. Nothing is sent and nothing is written; it returns what the next run would do.
+// 19.10.2026 (lead workflow, approved by Yakir): "לחזור אליו ב..." on a lead (lead.callbackAt). Every run of this function
+//    (morning, evening and the hourly lead run, also outside lead hours) looks for callbacks due within the next 30 minutes
+//    and sends Yakir ONE Telegram reminder per callback time: name, topic, last note, the phone number, a dial button
+//    (an https page that opens the phone dialer; Telegram buttons cannot be tel: links) and a button that opens the lead.
+//    Marked on the lead (callbackNotified = the callbackAt it was sent for). ?mode=callbacks runs only this check.
+//    Nothing is ever sent to the lead here.
 import { loadSecrets, env, json, cors, loadEngine, loadData, telegram, sanitize } from '../_shared/common.ts';
 import { provider, send, offerOnTelegram, intl } from '../_shared/send.ts';
 import { uid, admin } from '../_shared/common.ts';
@@ -213,6 +219,61 @@ const sentLines = (r: any) => [
   ...(r.failed.length ? [`⚠️ לא נשלחו (${r.failed.length}). המערכת תנסה שוב בריצה הבאה${r.failed.some((x: any) => x.offered) ? ', ומה שסומן ב-📲 נשלח אליך בנפרד עם כפתור שליחה' : ''}:`, ...r.failed.slice(0, 6).map((x: any) => `• ${x.offered ? '📲 ' : ''}${x.label}: ${x.name} (${why(x.error)})`)] : []),
 ].join('\n');
 
+// ---------- lead callbacks: "לחזור אליו ב..." (a reminder to Yakir, never a message to the lead) ----------
+const CB_AHEAD = 30 * 60e3;
+const OPEN_STAGES = ['new', 'contacted', 'meeting_set', 'no_show', 'meeting_done', 'proposal_sent'];
+// deno-lint-ignore no-explicit-any
+export function callbacksDue(rows: { id: string; data: any }[], now = Date.now()) {
+  return rows.filter(r => {
+    const l = r.data || {}, at = Date.parse(l.callbackAt || '');
+    if (!(at > 0) || l.test) return false;
+    if (!OPEN_STAGES.includes(l.stage || 'new')) return false;
+    if (l.callbackNotified && l.callbackNotified === l.callbackAt) return false;
+    return at <= now + CB_AHEAD;
+  }).sort((a, b) => Date.parse(a.data.callbackAt) - Date.parse(b.data.callbackAt));
+}
+const IL_HM = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jerusalem', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+const IL_D = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' });
+export function whenText(at: number, now = Date.now()) {
+  const d = IL_D.format(new Date(at)), t = IL_HM.format(new Date(at));
+  const td = IL_D.format(new Date(now)), tm = IL_D.format(new Date(now + 864e5));
+  return `${d === td ? 'היום' : d === tm ? 'מחר' : `${d.slice(8, 10)}/${d.slice(5, 7)}`} ${t}`;
+}
+const fmtLocal = (p: string) => { let x = String(p || '').replace(/\D/g, ''); if (x.startsWith('972')) x = '0' + x.slice(3); return x.length === 10 ? `${x.slice(0, 3)}-${x.slice(3)}` : x.length === 9 ? `${x.slice(0, 2)}-${x.slice(2)}` : String(p || ''); };
+// deno-lint-ignore no-explicit-any
+export function callbackMessage(id: string, l: any, appUrl: string, now = Date.now()) {
+  const at = Date.parse(l.callbackAt), late = at < now - 10 * 60e3;
+  const log = (l.log || []) as { kind?: string; text?: string }[];
+  const lastNote = l.callbackNote || l.nextStep || ([...log].reverse().find(e => e && ['note', 'talk', 'call'].includes(e.kind || '') && e.text) || {}).text || String(l.notes || '').split('\n').filter(Boolean).pop() || '';
+  const phone = String(l.phone || '');
+  const text = [`📞 ${late ? 'היה צריך לחזור' : 'לחזור'} ל${l.name || 'ליד'} ${whenText(at, now)}`, l.topic || l.area ? `נושא: ${l.topic || l.area}` : '', lastNote ? `הערה אחרונה: ${String(lastNote).slice(0, 300)}` : '', phone ? `טלפון: ${fmtLocal(phone)}` : ''].filter(Boolean).join('\n');
+  const base = String(appUrl || '').replace(/\/?$/, '/');
+  const tel = intl(phone);
+  const kb: { text: string; url: string }[][] = [];
+  if (tel && base.startsWith('https://')) kb.push([{ text: '📞 חיוג', url: `${base}app/call.html?n=${tel}` }]);
+  if (base.startsWith('https://')) kb.push([{ text: 'פתיחת הליד במערכת', url: `${base}#lead=${encodeURIComponent(id)}` }]);
+  return { text, reply_markup: kb.length ? { inline_keyboard: kb } : undefined };
+}
+async function runCallbacks(dry: boolean) {
+  const { data, error } = await admin().from('docs').select('id,data').eq('coll', 'leads').not('data->>callbackAt', 'is', null);
+  if (error) throw error;
+  // deno-lint-ignore no-explicit-any
+  const due = callbacksDue((data || []) as any[]);
+  if (dry) return { due: due.map(r => ({ id: r.id, name: r.data.name, at: r.data.callbackAt })), sent: 0 };
+  const token = env('TELEGRAM_BOT_TOKEN'), chat = env('TELEGRAM_CHAT_ID');
+  if (!token || !chat) return { due: due.length, sent: 0, skipped: 'telegram' };
+  let sent = 0;
+  for (const r of due.slice(0, 10)) {
+    const m = callbackMessage(r.id, r.data, env('APP_URL'));
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, { method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ chat_id: chat, text: m.text.slice(0, 4000), disable_web_page_preview: true, reply_markup: m.reply_markup }) }).catch(() => null);
+    if (!res || !res.ok) continue;
+    await admin().rpc('docs_merge', { p_coll: 'leads', p_id: r.id, p_patch: { callbackNotified: r.data.callbackAt, callbackNotifiedAt: new Date().toISOString() } });
+    sent++;
+  }
+  return { due: due.length, sent };
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   await loadSecrets().catch(() => {});
@@ -224,6 +285,9 @@ Deno.serve(async (req) => {
     const force = qs.get('force') === '1';
     const evening = mode === 'send';
     const il = ilNow();
+    // lead callbacks are checked on every run (they are reminders to Yakir at the time he chose)
+    const cb = await runCallbacks(mode === 'preview').catch(e => { console.error('callbacks', e); return { error: String(e && (e as Error).message || e) }; });
+    if (mode === 'callbacks') return json({ ok: true, callbacks: cb });
     if (mode === 'preview') {
       // dry run: what the runs would do right now. Nothing is sent and nothing is written.
       const O = await loadEngine();
@@ -242,10 +306,10 @@ Deno.serve(async (req) => {
         // deno-lint-ignore no-explicit-any
         autoNow: q.map((x: any) => row(x, nk)), leadsNow: leads.map((x: any) => row(x, lk)), approvals: O.outboxCandidates().length,
         // deno-lint-ignore no-explicit-any
-        openFailures: Object.values(fails).filter((f: any) => !f.resolved).length });
+        openFailures: Object.values(fails).filter((f: any) => !f.resolved).length, callbacks: cb });
     }
     if (mode === 'leads') {
-      if (!force && !isLeadHours(il)) return json({ ok: true, skipped: 'outside lead hours (Israel time)', israel: il });
+      if (!force && !isLeadHours(il)) return json({ ok: true, skipped: 'outside lead hours (Israel time)', israel: il, callbacks: cb });
       // every hour in working hours: lead messages whose time has come are sent by WhatsApp when a sender is connected,
       // otherwise they go to Telegram with a one-tap send button
       const O = await loadEngine(); await loadData(O, ['leads', 'outbox', 'settings']);

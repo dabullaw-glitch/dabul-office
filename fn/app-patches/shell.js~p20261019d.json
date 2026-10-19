@@ -1,0 +1,1 @@
+[["e.all(\"leads\").filter(p=>p.status===\"חדש\").length;m&&(t.leads=m)", "e.all(\"leads\").filter(p=>p.stage===\"new\").length;m&&(t.leads=m)"]]
