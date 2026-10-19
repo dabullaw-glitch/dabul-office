@@ -54,6 +54,7 @@ W, H = 1080, 1920
 TOP = 150                        # keep clear of the app's top bar
 CAP_TOP = 1250                   # captions sit on the chest
 CAP_MAX = 290                    # captions never go lower than this (room for the name tag / phone at the bottom)
+CAPS = plan.get('capShift', 0)   # 19.10.2026: captions a little lower when the beard reaches the caption line
 
 words = [w for s in words_doc['segments'] for w in s['words']]
 for w in words: w['w'] = FIX.get(w['w'], w['w'])
@@ -214,6 +215,7 @@ def thirds_svg(bid):
 
 beats = []   # dicts: id, kind, st, en, inner (html of the panel), low (bottom placement), track
 sfx = []
+QA_STRIP = None
 def add_sfx(name, at, vol): sfx.append((name, max(0, at), vol))
 ov_js = []
 for n, b in enumerate(plan['beats']):
@@ -253,6 +255,23 @@ for n, b in enumerate(plan['beats']):
         ov_js += [f'tl.fromTo("#{P}",{{opacity:0,y:40,scale:.94}},{{opacity:1,y:0,scale:1,duration:.55,ease:"power2.out"}},{st});',
                   f'tl.fromTo("#{bid}i",{{scale:1}},{{scale:{b.get("zoom", 1.35)},duration:{max(1.0, d - 0.6)},ease:"sine.inOut"}},{round(st + 0.5, 3)});', out]
         add_sfx('whoosh', st, 0.18)
+    elif kind == 'news':   # 18.10.2026: a news article (screenshot) fills the top, the speaker shrinks to the bottom and keeps talking
+        fn = os.path.basename(b['img']); shutil.copy(b['img'], f'{proj}/assets/{fn}')
+        pan = b.get('pan', 0); hh = b.get('h', 820)
+        inner = (f'<div class="news" id="{P}"><div class="nwtag hf">{esc(b.get("tag", "חדשות"))}</div><div class="nwimg" style="height:{hh}px"><img id="{bid}i" src="assets/{fn}"/></div>'
+                 f'<div class="nwsrc">{esc(b.get("source", ""))}</div></div>')
+        ov_js += [f'tl.fromTo("#{P}",{{opacity:0,y:-60}},{{opacity:1,y:0,duration:.5,ease:"power3.out"}},{st});']
+        if pan: ov_js.append(f'tl.fromTo("#{bid}i",{{y:0}},{{y:-{pan},duration:{max(1.0, d - 0.8)},ease:"sine.inOut"}},{round(st + 0.5, 3)});')
+        ov_js.append(out); add_sfx('whoosh', st, 0.2)
+    elif kind == 'qa':   # 19.10.2026 viewer question: the original screenshot on top while he reads it, then a small strip at the top to the end
+        fn = os.path.basename(b['img']); shutil.copy(b['img'], f'{proj}/assets/{fn}')
+        qa_inner = lambda pid, pill: (f'<div class="qa" id="{pid}">' + (f'<div class="qapill hf" id="{pid}p">{esc(b.get("label", "קיבלתי שאלה"))}</div>' if pill else '')
+                                      + f'<div class="qaimg"><img src="assets/{fn}"/></div></div>')
+        inner = qa_inner(P, True)
+        ov_js += [f'tl.fromTo("#{P}",{{opacity:0,y:-50,scale:.92}},{{opacity:1,y:0,scale:1,duration:.5,ease:"back.out(1.5)"}},{st});',
+                  f'tl.fromTo("#{P}p",{{opacity:0,x:60}},{{opacity:1,x:0,duration:.4,ease:"power3.out"}},{round(st + 0.25, 3)});']
+        QA_STRIP = dict(fn=fn, st=en, w=b.get('stripW', 470), top=b.get('stripTop', 150), make=qa_inner, P=P, bid=bid)
+        add_sfx('pop', st + 0.05, 0.3); add_sfx('whoosh', en - 0.45, 0.16)
     elif kind == 'count':   # a big number that counts up (days, years, steps). Never prices, never promised results
         inner = (f'<div class="count pnl" id="{P}"><div class="cnum hf"><span id="{bid}n">0</span>{esc(b.get("suffix", ""))}</div>'
                  f'<div class="clab hf">{esc(b["label"])}</div>{("<div class=csub>" + esc(b["sub"]) + "</div>") if b.get("sub") else ""}</div>')
@@ -343,7 +362,7 @@ HEAD = f'<meta charset="UTF-8"/><style>{font_css(TH)}\n{VARS}\n{CSS}</style>'
 sizes = {}
 try:
     from playwright.sync_api import sync_playwright
-    mhtml = f'<!doctype html><html lang="he"><head>{HEAD}</head><body><div id="root">' + ''.join(
+    mhtml = f'<!doctype html><html lang="he"><head>{HEAD}</head><body><div id="root" data-theme="{TNAME}">' + ''.join(
         f'<div class="ov" style="position:absolute;inset:0"><div class="slot" id="m_{b["id"]}" style="transform:translateX(-50%)">{b["inner"]}</div></div>' for b in beats) + '</div></body></html>'
     open(f'{proj}/_measure.html', 'w', encoding='utf-8').write(mhtml)
     exe = os.environ.get('REEL_CHROME') or next((p for p in ('/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',) if os.path.exists(p)), None)
@@ -359,12 +378,13 @@ try:
 except Exception as e:  # fallback estimates
     print('measure fallback:', e, file=sys.stderr)
 EST = {'hook': (1000, 380), 'thirds': (680, 420), 'stack': (900, 420), 'boom': (900, 200), 'title': (700, 200), 'option': (940, 175),
-       'stamp': (440, 430), 'term': (960, 280), 'name': (640, 140), 'cta': (560, 120), 'count': (700, 420), 'proof': (920, 1300)}
+       'stamp': (440, 430), 'term': (960, 280), 'name': (640, 140), 'cta': (560, 120), 'count': (700, 420), 'proof': (920, 1300), 'news': (1000, 940),
+       'qa': (960, 300)}
 for b in beats: b['w'], b['h'] = sizes.get(b['id'], EST[b['kind']])
 
 # ---- 6. layout: keep every panel off the face ----
 # modes: band (fits above the head, maybe a little smaller), push (picture slides down by D), split (picture shrinks to the bottom)
-GAPF = 34; SPLIT = 0.6; PUSH_MAX = 430
+GAPF = 34; SPLIT = 0.6; PUSH_MAX = 430; NEWS_S = 0.47
 CAP_Y = {'boxed': 1470, 'cinematic': 1215}.get(STYLE, CAP_TOP)
 def chin_fit(b, fb, wfit):
     top = fb + 85; room = CAP_Y - 30 - top   # 15.10: the face box ends at the lips, the beard needs room
@@ -377,32 +397,36 @@ for b in beats:
         b['mode'] = 'low'; continue
     if b.get('full'):   # cinematic cutaway: the picture is dimmed and blurred behind a full-screen scene, the voice goes on
         k = min(1.0, 960 / b['w'], 1000 / max(b['h'], 1)); b.update(mode='full', s=round(k, 3), y=round((H - b['h'] * k) / 2 - 60)); continue
+    if b['kind'] == 'news':
+        b.update(mode='news', s=round(min(1.0, 1040 / b['w']), 3), y=110, D=0); continue
     if b['kind'] == 'hook' and STYLE == 'boxed':
         fl, ft, fr, fb = face_span(b['st'], b['en']); k = min(1.0, 1000 / b['w'])
         y = fb + 85   # 15.10: room for the beard
         if y + b['h'] * k <= H - 330:
             b.update(mode='chin', s=round(k, 3), y=round(y), D=0); continue
+    TB = TOP if b['kind'] == 'qa' else plan.get('top', TOP)   # 19.10: room kept at the top for the question strip
     fl, ft, fr, fb = face_span(b['st'], b['en'])
     if b['kind'] == 'boom': ft = 0.34 * H + (ft - 0.34 * H) * 1.12   # the camera punch lifts the head
-    space = ft - GAPF - TOP; wfit = min(1.0, 1000 / b['w'])
+    space = ft - GAPF - TB; wfit = min(1.0, 1000 / b['w'])
     h = b['h'] * wfit   # first make it fit the width, then find room in height
     if h <= space:
-        b.update(mode='band', s=wfit, y=TOP + (space - h) / 2, D=0)
+        b.update(mode='band', s=wfit, y=TB + (space - h) / 2, D=0)
     elif h * 0.82 <= space:
-        b.update(mode='band', s=round(wfit * space / h, 3), y=TOP, D=0)
+        b.update(mode='band', s=round(wfit * space / h, 3), y=TB, D=0)
     elif h - space <= 260:
-        D = h - space + 8; b.update(mode='push', s=wfit, y=TOP, D=round(D))
+        D = h - space + 8; b.update(mode='push', s=wfit, y=TB, D=round(D))
     elif chin_fit(b, fb, wfit):
         pass   # 15.10.2026: no room above the head -> the graphic sits under the chin (on the chest), the picture stays whole
     elif h - space <= PUSH_MAX:
-        D = h - space + 8; b.update(mode='push', s=wfit, y=TOP, D=round(D))
+        D = h - space + 8; b.update(mode='push', s=wfit, y=TB, D=round(D))
     else:
-        ft2 = H - (H - ft) * SPLIT; space2 = ft2 - GAPF - TOP
-        k = min(1.0, space2 / h); b.update(mode='split', s=round(wfit * max(k, 0.55), 3), y=TOP + max(0, (space2 - h * k) / 2), D=0, chin=H - (H - fb) * SPLIT)
+        ft2 = H - (H - ft) * SPLIT; space2 = ft2 - GAPF - TB
+        k = min(1.0, space2 / h); b.update(mode='split', s=round(wfit * max(k, 0.55), 3), y=TB + max(0, (space2 - h * k) / 2), D=0, chin=H - (H - fb) * SPLIT)
 
 # frame moves: one state per beat, smooth in/out, no bouncing between close beats
 def state(b):
     if b['mode'] == 'push': return {'y': b['D'], 'scale': 1, 'r': 0, 'cap': min(b['D'], CAP_MAX)}
+    if b['mode'] == 'news': return {'y': 0, 'scale': NEWS_S, 'r': round(40 / NEWS_S), 'cap': -345}
     if b['mode'] == 'split': return {'y': 0, 'scale': SPLIT, 'r': round(44 / SPLIT), 'cap': min(CAP_MAX, b['chin'] + 40 - CAP_TOP)}
     return None
 NEUTRAL = {'y': 0, 'scale': 1, 'r': 0, 'cap': 0}
@@ -414,11 +438,11 @@ for i, b in enumerate(moving):
     if not (prev and b['st'] - prev['en'] < 0.9):
         pass  # coming from neutral
     frame_js.append(f'tl.to("#frame",{{y:{s["y"]},scale:{s["scale"]},borderRadius:{s["r"]},duration:.35,ease:"power2.inOut"}},{round(t_in, 3)});')
-    frame_js.append(f'tl.to("#caps",{{y:{round(s["cap"])},duration:.35,ease:"power2.inOut"}},{round(t_in, 3)});')
+    frame_js.append(f'tl.to("#caps",{{y:{round(s["cap"] + CAPS)},duration:.35,ease:"power2.inOut"}},{round(t_in, 3)});')
     nxt = moving[i + 1] if i + 1 < len(moving) else None
     if not (nxt and nxt['st'] - b['en'] < 0.9):
         frame_js.append(f'tl.to("#frame",{{y:0,scale:1,borderRadius:0,duration:.35,ease:"power2.inOut"}},{round(b["en"], 3)});')
-        frame_js.append(f'tl.to("#caps",{{y:0,duration:.35,ease:"power2.inOut"}},{round(b["en"], 3)});')
+        frame_js.append(f'tl.to("#caps",{{y:{CAPS},duration:.35,ease:"power2.inOut"}},{round(b["en"], 3)});')
 
 # 15.10.2026: a full-screen proof is tall, so the spoken captions step down below it instead of covering the document
 CAP_TOP_PX = {'boxed': 1470, 'cinematic': 1215}.get(STYLE, 1250)
@@ -426,8 +450,8 @@ for b in beats:
     if b.get('mode') == 'full' and b['kind'] == 'proof':
         dy = min(H - 230 - CAP_TOP_PX, max(0, b['y'] + b['h'] * b['s'] + 40 - CAP_TOP_PX))
         if dy > 0:
-            frame_js += [f'tl.to("#caps",{{y:{round(dy)},duration:.3,ease:"power2.inOut"}},{round(max(0, b["st"] - 0.1), 3)});',
-                         f'tl.to("#caps",{{y:0,duration:.3,ease:"power2.inOut"}},{round(b["en"], 3)});']
+            frame_js += [f'tl.to("#caps",{{y:{round(dy + CAPS)},duration:.3,ease:"power2.inOut"}},{round(max(0, b["st"] - 0.1), 3)});',
+                         f'tl.to("#caps",{{y:{CAPS},duration:.3,ease:"power2.inOut"}},{round(b["en"], 3)});']
 
 ov_html = []
 for b in beats:
@@ -445,6 +469,16 @@ for b in beats:
                       f'tl.to("#stage",{{filter:"blur(22px) brightness(.35)",duration:.45,ease:"power1.out"}},{b["st"]});',
                       f'tl.to("#stage",{{filter:"blur(0px) brightness(1)",duration:.4,ease:"power1.in"}},{round(b["en"] - 0.35, 3)});'])
     ov_html.append(f'<div class="ov clip" id="{b["id"]}" data-start="{b["st"]}" data-duration="{b["d"]}" data-track-index="{b["track"]}">{flash}<div class="{cls}" style="{style}">{b["inner"]}</div></div>')
+
+# 19.10.2026: the question card shrinks into a small strip at the top and stays there until the end card
+if QA_STRIP:
+    q = QA_STRIP; qb = next(b for b in beats if b['id'] == q['bid'])
+    ks = round(q['w'] / qb['w'], 4); t0 = round(qb['en'] - 0.45, 3)
+    ov_js += [f'tl.to("#{q["P"]}p",{{opacity:0,duration:.25}},{t0});',
+              f'tl.to("#{q["P"]}",{{transformOrigin:"50% 0%",scale:{round(ks / qb["s"], 4)},y:{round((q["top"] - qb["y"]) / qb["s"], 1)},duration:.45,ease:"power3.inOut"}},{t0});']
+    ov_html.append(f'<div class="ov clip" id="qastrip" data-start="{qb["en"]}" data-duration="{round(BODY - qb["en"], 3)}" data-track-index="84">'
+                   f'<div class="slot" style="top:{q["top"]}px;transform:translateX(-50%) scale({ks})">{q["make"]("qaS", False)}</div></div>')
+    ov_js.append(f'tl.to("#qaS",{{opacity:0,duration:.3}},{round(BODY - 0.3, 3)});')
 
 # ---- 6b. style furniture ----
 if STYLE == 'boxed':
@@ -505,6 +539,7 @@ doc = f'''<!doctype html>
 </div>
 <script>
 const tl = gsap.timeline({{paused:true}});
+{f'tl.set("#caps",{{y:{CAPS}}},0);' if CAPS else ''}
 {chr(10).join(vid_js)}
 {chr(10).join(frame_js)}
 {chr(10).join(cap_js)}

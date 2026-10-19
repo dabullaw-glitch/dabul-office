@@ -1,0 +1,229 @@
+{
+ "title": "הבניין בפינוי בינוי: להמתין או למכור?",
+ "style": "v3",
+ "theme": "glass",
+ "topic": "שאלה מהקהל · פינוי בינוי",
+ "source": "reel-lab/tc590 (Drive 1MHdAuqkbpuLhhVDMS40g6xQFnRc6VWDr), script q01-pinui-lehamtin-o-limkor",
+ "note": "19.10.2026: cuts only inside real silences (-42 dB, 0.36 s; 0.14 s kept before, 0.12 s after). Dropped the sentence 'החלק האחרון הוא בדרך כלל אישור התוכנית' (script said 'הארוך') and the unclear words after 'יש לכם שאלה?' at the end of the take. Words were re-timed onto the real speech (the take's audio starts 0.09 s late). The question card is the original screenshot as is (with the asker's name), not a crop.",
+ "keep": [
+  [
+   0.61,
+   1.76
+  ],
+  [
+   1.93,
+   4.55
+  ],
+  [
+   4.84,
+   6.4
+  ],
+  [
+   6.66,
+   8.51
+  ],
+  [
+   8.81,
+   11.01
+  ],
+  [
+   11.46,
+   13.26
+  ],
+  [
+   13.58,
+   19.82
+  ],
+  [
+   23.22,
+   24.2
+  ],
+  [
+   24.37,
+   26.75
+  ],
+  [
+   27.05,
+   30.8
+  ],
+  [
+   31.05,
+   33.69
+  ],
+  [
+   33.81,
+   35.24
+  ],
+  [
+   35.64,
+   36.92
+  ],
+  [
+   37.18,
+   40.66
+  ],
+  [
+   40.97,
+   44.47
+  ],
+  [
+   44.76,
+   46.53
+  ],
+  [
+   46.68,
+   51.39
+  ],
+  [
+   52.07,
+   53.46
+  ],
+  [
+   53.64,
+   56.35
+  ],
+  [
+   56.78,
+   58.03
+  ]
+ ],
+ "pad": 5,
+ "gap": 99,
+ "fix": {
+  "-בינוי": "בינוי",
+  "מינהל": "מנהל"
+ },
+ "fixAt": {},
+ "goldWords": [
+  "שלב",
+  "בכתב",
+  "מתקדם",
+  "עולה",
+  "בדיוק",
+  "תלוי",
+  "אושרה"
+ ],
+ "zooms": [
+  1.0,
+  1.08,
+  1.03,
+  1.1
+ ],
+ "top": 365,
+ "frameFix": {
+  "rotate": 0,
+  "dx": 0,
+  "dy": 0,
+  "zoom": 1.0,
+  "bright": 1.06
+ },
+ "endLine": "מקרקעין והתחדשות עירונית · נתניה",
+ "beats": [
+  {
+   "id": "qa",
+   "kind": "qa",
+   "at": 0.7,
+   "to": 8.55,
+   "img": "/tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/work/q01/q01-question-full.png",
+   "label": "קיבלתי שאלה",
+   "stripW": 470,
+   "stripTop": 150
+  },
+  {
+   "id": "stage",
+   "kind": "term",
+   "at": 11.6,
+   "to": 13.2,
+   "kicker": "קודם כל",
+   "text": "באיזה שלב הפרויקט?"
+  },
+  {
+   "id": "steps",
+   "kind": "stack",
+   "at": 15.3,
+   "to": 19.8,
+   "items": [
+    {
+     "at": 15.6,
+     "text": "חתימות הדיירים"
+    },
+    {
+     "at": 16.9,
+     "text": "אישור תוכנית"
+    },
+    {
+     "at": 17.65,
+     "text": "היתר בנייה"
+    },
+    {
+     "at": 18.9,
+     "text": "פינוי ובנייה"
+    }
+   ]
+  },
+  {
+   "id": "check",
+   "kind": "stack",
+   "at": 23.3,
+   "to": 35.2,
+   "items": [
+    {
+     "at": 24.5,
+     "text": "אתר מנהל התכנון"
+    },
+    {
+     "at": 27.9,
+     "text": "בהכנה · הופקדה · אושרה"
+    },
+    {
+     "at": 31.2,
+     "text": "כמה דיירים חתמו? בכתב"
+    }
+   ]
+  },
+  {
+   "id": "value",
+   "kind": "term",
+   "at": 37.3,
+   "to": 40.6,
+   "kicker": "בדרך כלל",
+   "text": "הפרויקט מתקדם",
+   "sub": "וגם שווי הדירה עולה",
+   "subAt": 39.4
+  },
+  {
+   "id": "early",
+   "kind": "term",
+   "at": 41.1,
+   "to": 44.4,
+   "kicker": "מוכרים מוקדם מדי?",
+   "text": "עלולים לוותר על חלק מהשווי"
+  },
+  {
+   "id": "now",
+   "kind": "term",
+   "at": 44.9,
+   "to": 51.3,
+   "kicker": "צריכים את הכסף עכשיו?",
+   "text": "קודם בודקים את מצב הפרויקט",
+   "sub": "ורק אז קובעים מחיר",
+   "subAt": 50.2
+  },
+  {
+   "id": "depends",
+   "kind": "term",
+   "at": 52.2,
+   "to": 56.3,
+   "kicker": "אין תשובה אחת לכולם",
+   "text": "שלב · חוזה · המצב שלכם"
+  },
+  {
+   "id": "cta",
+   "kind": "cta",
+   "at": 56.9,
+   "to": 58.0,
+   "text": "09-8613413"
+  }
+ ],
+ "capShift": 60
+}

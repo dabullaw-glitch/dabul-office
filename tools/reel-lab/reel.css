@@ -143,3 +143,18 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05070c}
 .pimgw img{display:block;width:100%;height:auto}
 .pnote{font:700 30px Heebo,sans-serif;color:#fff;background:rgba(0,0,0,.55);padding:8px 22px;border-radius:999px}
 .pcap{font-family:var(--fh),Heebo,sans-serif;font-weight:var(--fhw);font-size:58px;color:#fff;text-align:center;text-shadow:0 6px 24px rgba(0,0,0,.7)}
+/* 18.10.2026 news cutaway: article on top, speaker small at the bottom */
+.news{width:1000px;display:flex;flex-direction:column;gap:14px;align-items:stretch}
+.nwtag{align-self:flex-end;background:var(--acc);color:var(--acc-fg);font-size:34px;font-weight:800;padding:6px 26px;border-radius:999px;direction:rtl}
+.nwimg{width:1000px;overflow:hidden;border-radius:26px;background:#fff;box-shadow:0 24px 70px rgba(0,0,0,.55);border:3px solid var(--acc)}
+.nwimg img{width:100%;display:block}
+.nwsrc{align-self:flex-end;font-size:26px;color:#fff;background:rgba(0,0,0,.55);padding:6px 18px;border-radius:10px;direction:rtl}
+/* 19.10.2026 viewer question: the original screenshot, then a small strip at the top */
+.qa{position:relative;width:960px}
+.qaimg{width:960px;overflow:hidden;border-radius:34px;background:#fff;border:5px solid var(--acc);box-shadow:0 22px 60px rgba(0,0,0,.5)}
+.qaimg img{width:100%;display:block}
+.qapill{position:absolute;top:-34px;right:36px;z-index:2;background:var(--acc);color:var(--acc-fg);font-size:40px;padding:6px 30px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.35);direction:rtl}
+/* 19.10.2026 paper theme: the hook sits on a paper card (white text was unreadable on the light background) */
+#root[data-theme="paper"] .hook{background:var(--pnl);padding:30px 34px 34px;border-radius:var(--rad);box-shadow:var(--shadow)}
+#root[data-theme="paper"] .big{color:var(--pnl-fg);-webkit-text-stroke:0;text-shadow:none}
+#root[data-theme="paper"] .big.acc{color:var(--acc)}
