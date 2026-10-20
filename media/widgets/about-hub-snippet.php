@@ -16,7 +16,7 @@ function dabul_ah_icon($k) {
 }
 function dabul_ah_wa() { return function_exists('dabul_wa_link') ? dabul_wa_link() : 'https://wa.me/972505580189'; }
 function dabul_ah_reviews() {
-	$g = function_exists('dabul_greviews') ? dabul_greviews() : array('rating' => '4.9', 'count' => 73);
+	$g = function_exists('dabul_greviews') ? dabul_greviews() : array('rating' => '4.9', 'count' => 74);
 	return array(esc_html($g['rating']), (int) $g['count']);
 }
 

@@ -55,7 +55,7 @@ add_action('wp_head', function () {
 function dabul_greviews() {
 	$c = get_transient('dabul_greviews');
 	if (is_array($c)) return $c;
-	$last = get_option('dabul_greviews_last', array('rating' => '4.9', 'count' => 73));
+	$last = get_option('dabul_greviews_last', array('rating' => '4.9', 'count' => 74));
 	set_transient('dabul_greviews', $last, 12 * HOUR_IN_SECONDS); // no second fetch while this one runs
 	$r = wp_remote_get(home_url('/%d7%94%d7%9e%d7%9c%d7%a6%d7%95%d7%aa/'), array('timeout' => 8, 'user-agent' => 'Mozilla/5.0 (dabul-badge)'));
 	if (!is_wp_error($r)) {

@@ -129,7 +129,7 @@ function dabul_lb_box_a($v, $link) {
 	}
 	$back = add_query_arg('dlb', 'sent', $link) . '#dlb';
 	return '<div class="dlb" id="dlb" role="complementary" aria-label="פנייה לעורך הדין"><div class="hd">' . $img . '<div><span class="kk">' . esc_html($v[0]) . '</span><span class="tt">' . esc_html($v[1]) . '</span></div></div>'
-		. '<div class="rt"><span class="g">' . $g . '</span><span class="st">★★★★★</span><span><b>4.9</b> · 73 ביקורות</span><i>' . $chk . 'עו"ד יקיר דבול חוזר אליכם בעצמו</i></div>'
+		. '<div class="rt"><span class="g">' . $g . '</span><span class="st">★★★★★</span><span><b>4.9</b> · 74 ביקורות</span><i>' . $chk . 'עו"ד יקיר דבול חוזר אליכם בעצמו</i></div>'
 		. '<form name="dabul-box" method="post" action="' . dabul_lb_action($back) . '">' . dabul_lb_hidden($v[0], 'אתר · ' . $v[0], $link)
 		. '<input type="text" name="name" placeholder="שם" autocomplete="name" required aria-label="שם">'
 		. '<input type="tel" name="phone" placeholder="טלפון" autocomplete="tel" inputmode="tel" required minlength="9" aria-label="טלפון">'
