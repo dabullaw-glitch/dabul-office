@@ -1,0 +1,26 @@
+/* dabul: a box that leads to the appointment letter page (Yakir 20.10.2026: "from the about page, refer to my appointment letter",
+   and add it to the certificates page). About page: after the "מינויים שיפוטיים ופעילות מקצועית" list.
+   Certificates page: right after the certificates gallery. Page output only, nothing changed in Elementor. Undo: deactivate. */
+add_filter('elementor/frontend/the_content', function ($content) {
+	if (is_admin()) return $content;
+	if (is_page(992)) $anchor = 'elementor-element-8ee068'; elseif (is_page(990)) $anchor = 'elementor-element-7002359'; else return $content;
+	if (strpos($content, 'id="dabul-minui-box"') !== false) return $content;
+	$p = strpos($content, $anchor . ' ');
+	if ($p === false) $p = strpos($content, $anchor . '"');
+	if ($p === false) return $content;
+	$s = strrpos(substr($content, 0, $p), '<div');
+	if ($s === false) return $content;
+	$h = <<<'DBLMINUIBOX'
+<div class="dmb" id="dabul-minui-box"><style>.dmb{--g:#c9a14f;--g2:#e7cd96;--n:#101a33;max-width:1100px;margin:34px auto;padding:0 20px;direction:rtl;text-align:right;font-family:"Noto Local","Heebo",Arial,sans-serif;box-sizing:border-box}
+.dmb a.dmb-in{display:flex;align-items:center;gap:26px;background:linear-gradient(120deg,var(--n),#17223f);border-radius:20px;padding:22px 26px;text-decoration:none!important;color:#fff!important;box-shadow:0 14px 34px rgba(16,26,51,.14);transition:transform .2s,box-shadow .2s}
+.dmb a.dmb-in:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(16,26,51,.2)}
+.dmb img{width:92px;height:auto;flex:none;background:#fff;padding:5px;border-radius:4px;transform:rotate(-3deg);box-shadow:0 8px 18px rgba(0,0,0,.35)}
+.dmb .t{flex:1;min-width:0}
+.dmb small{display:block;color:var(--g2);font-size:13px;font-weight:700;letter-spacing:.3px}
+.dmb b{display:block;font-size:21px;font-weight:800;line-height:1.3;margin-top:4px;color:#fff}
+.dmb p{margin:6px 0 0;color:#c9cedb;font-size:15px;line-height:1.6}
+.dmb .go{flex:none;display:inline-flex;align-items:center;gap:8px;background:var(--g);color:#141414;font-weight:800;font-size:15px;border-radius:999px;padding:12px 20px;white-space:nowrap}
+@media (max-width:767px){.dmb a.dmb-in{flex-wrap:wrap;gap:14px;padding:18px}.dmb img{width:64px}.dmb .t{flex-basis:calc(100% - 90px)}.dmb b{font-size:18px}.dmb .go{width:100%;justify-content:center}}</style><a class="dmb-in" href="https://dabullaw.co.il/%d7%9b%d7%aa%d7%91-%d7%9e%d7%99%d7%a0%d7%95%d7%99-%d7%95%d7%a2%d7%93%d7%95%d7%aa-%d7%9c%d7%a9%d7%9b%d7%aa-%d7%a2%d7%95%d7%a8%d7%9b%d7%99-%d7%94%d7%93%d7%99%d7%9f/"><img src="https://dabullaw.co.il/wp-content/uploads/2026/10/ktav-minui-yakir-dabul-2025.webp" width="92" height="130" alt="כתב המינוי של עו״ד יקיר דבול לוועדות לשכת עורכי הדין" loading="lazy"><span class="t"><small>לשכת עורכי הדין · מחוז מרכז</small><b>כתב מינוי לחמש ועדות של לשכת עורכי הדין</b><p>ועדת קניין ומקרקעין, ועדת התחדשות עירונית, ועדת הקשר נתניה, ועדת הוצאה לפועל וועדת חדלות פירעון. מינוי מיום 7.12.2025.</p></span><span class="go">לכתב המינוי &larr;</span></a></div>
+DBLMINUIBOX;
+	return substr($content, 0, $s) . $h . substr($content, $s);
+}, 21);
