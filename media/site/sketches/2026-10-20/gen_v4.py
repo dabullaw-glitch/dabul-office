@@ -5,14 +5,14 @@ from gen import page, write, S
 from gen_v3 import ITEMS, TAMA, gv, gf
 def u(p): return S + p
 ITEMS4 = ITEMS + [('רישום בטאבו ובית משותף', '/land-registry-title-registration/', 'רישום הזכויות על שמכם, תיקון טעויות ברישום ורישום בית משותף.')]
-CSS = """.dwn4-wrap{padding:72px 20px 64px;background:#fff}
+CSS = """.dwn4-wrap{padding:20px 20px 64px;background:#fff}
 .dwn4{--g:#b8932f;--g2:#d9c08a;--g3:#f0e2bd;--ink:#141311;--txt:#4a4740;--line:#eee6d3;max-width:1140px;margin:0 auto;font-family:"Noto Local","Heebo",Arial,sans-serif;color:var(--txt);direction:rtl;text-align:right}
 .dwn4 *{box-sizing:border-box}
 .dwn4 .hd{text-align:center;max-width:860px;margin:0 auto 34px}
 .dwn4 .k{display:inline-flex;align-items:center;gap:10px;color:var(--g);font-size:14px;font-weight:800;letter-spacing:.04em;margin:0 0 10px}
 .dwn4 .k::before,.dwn4 .k::after{content:"";width:26px;height:2px;background:var(--g)}
 .dwn4 h2{margin:0;font-size:38px;line-height:1.25;font-weight:800;color:var(--ink);text-wrap:balance}
-.dwn4 .hd p{margin:16px 0 0;font-size:18px;line-height:1.85}
+.dwn4 .dwn4-dv{width:200px;height:1px;background:#A8A8A8;margin:16px auto 0;position:relative}.dwn4 .dwn4-dv::after{content:"";position:absolute;width:30px;height:3px;background:#D4B142;top:-1px;left:calc(50% - 15px)}@media (max-width:767px){.dwn4 .dwn4-dv{width:160px}}.dwn4 .hd p{margin:16px 0 0;font-size:18px;line-height:1.85}
 .dwn4 ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:44px;counter-reset:w}
 .dwn4 li{counter-increment:w;display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:14px;padding:18px 0;border-top:1px solid var(--line);font-size:16.5px;line-height:1.75}
 .dwn4 li:nth-child(-n+2){border-top:0}
@@ -41,7 +41,7 @@ def block():
         else:
             lis.append(f'<li><a href="{u(p)}">{t}</a><span>{d}</span></li>')
     return f'''<div class="dwn4-wrap"><section class="dwn4" id="dbl-when" aria-labelledby="dwn4-h">
-<div class="hd"><p class="k">עורך דין מקרקעין בנתניה</p><h2 id="dwn4-h">מתי תצטרכו עורך דין מקרקעין?</h2>
+<div class="hd"><h2 id="dwn4-h">מתי תצטרכו עורך דין מקרקעין?</h2><div class="dwn4-dv" aria-hidden="true"></div>
 <p>קנייה או מכירה של דירה היא בדרך כלל ההחלטה הכלכלית הגדולה בחיים, ויש בה הרבה שלבים משפטיים: בדיקת הנכס, משא ומתן, חוזה, מיסים ורישום בטאבו. אלה המצבים העיקריים שבהם כדאי שיהיה לצידכם עורך דין מקרקעין:</p></div>
 <ol>{''.join(lis)}</ol>
 <div class="fee"><h2>כמה עולה עורך דין מקרקעין?</h2>
