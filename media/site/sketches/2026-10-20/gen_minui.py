@@ -11,25 +11,23 @@ PDF = 'ktav-minui-2025.pdf'
 def u(p): return S + p
 
 COMS = [
-    ('ועדת הקשר נתניה', 'הקשר בין עורכי הדין בנתניה לבין הלשכה וועד המחוז. המשרד פועל בנתניה, ברחוב רזיאל 1.',
-     u('/%d7%a2%d7%95%d7%a8%d7%9a-%d7%93%d7%99%d7%9f-%d7%9e%d7%a7%d7%a8%d7%a7%d7%a2%d7%99%d7%9f-%d7%91%d7%a0%d7%aa%d7%a0%d7%99%d7%94/'), 'עורך דין מקרקעין בנתניה',
-     'M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z'),
-    ('ועדת התחדשות עירונית', 'פינוי בינוי ותמ״א 38. המשרד מייצג דיירים מול יזמים, מהחתימה ועד סיום הפרויקט.',
-     u('/%d7%94%d7%aa%d7%97%d7%93%d7%a9%d7%95%d7%aa-%d7%a2%d7%99%d7%a8%d7%95%d7%a0%d7%99%d7%aa/'), 'התחדשות עירונית',
-     'M4 21V8l6-4v17M10 21V3h10v18M14 7h2M14 11h2M14 15h2M6.5 11h1M6.5 15h1M2 21h20'),
-    ('ועדת חדלות פירעון', 'הליכי חדלות פירעון ליחידים, הסדרי חובות ושיקום כלכלי.',
-     u('/%d7%94%d7%95%d7%a6%d7%90%d7%94-%d7%9c%d7%a4%d7%95%d7%a2%d7%9c-%d7%95%d7%97%d7%93%d7%9c%d7%95%d7%aa-%d7%a4%d7%99%d7%a8%d7%a2%d7%95%d7%9f/'), 'הוצאה לפועל וחדלות פירעון',
-     'M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM8 21h8'),
-    ('ועדת הוצאה לפועל', 'תיקי הוצאה לפועל, עיקולים, הגבלות ואיחוד תיקים.',
-     u('/%d7%a2%d7%95%d7%a8%d7%9a-%d7%93%d7%99%d7%9f-%d7%94%d7%95%d7%a6%d7%90%d7%94-%d7%9c%d7%a4%d7%95%d7%a2%d7%9c-%d7%91%d7%a0%d7%aa%d7%a0%d7%99%d7%94/'), 'עורך דין הוצאה לפועל בנתניה',
-     'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6'),
     ('ועדת קניין ומקרקעין', 'קנייה ומכירה של דירות, רישום בטאבו, מיסוי מקרקעין ופירוק שיתוף.',
      u('/real-estate-lawyer/'), 'עורך דין נדל״ן',
      'M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z'),
+    ('ועדת התחדשות עירונית', 'פינוי בינוי ותמ״א 38. המשרד מייצג דיירים מול יזמים, מהחתימה ועד סיום הפרויקט.',
+     u('/%d7%94%d7%aa%d7%97%d7%93%d7%a9%d7%95%d7%aa-%d7%a2%d7%99%d7%a8%d7%95%d7%a0%d7%99%d7%aa/'), 'התחדשות עירונית',
+     'M4 21V8l6-4v17M10 21V3h10v18M14 7h2M14 11h2M14 15h2M6.5 11h1M6.5 15h1M2 21h20'),
+    ('ועדת הקשר נתניה', 'הקשר בין עורכי הדין בנתניה לבין הלשכה וועד המחוז. המשרד פועל בנתניה, ברחוב רזיאל 1.',
+     u('/%d7%a2%d7%95%d7%a8%d7%9a-%d7%93%d7%99%d7%9f-%d7%9e%d7%a7%d7%a8%d7%a7%d7%a2%d7%99%d7%9f-%d7%91%d7%a0%d7%aa%d7%a0%d7%99%d7%94/'), 'עורך דין מקרקעין בנתניה',
+     'M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z'),
+    ('ועדת הוצאה לפועל', 'ועדה מקצועית של מחוז מרכז בתחום ההוצאה לפועל.', None, None,
+     'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6'),
+    ('ועדת חדלות פירעון', 'ועדה מקצועית של מחוז מרכז בתחום חדלות הפירעון.', None, None,
+     'M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM8 21h8'),
 ]
 
 CSS = """
-.dmn{--g:#c9a14f;--g2:#e7cd96;--n:#101a33;--n2:#17223f;--ln:#e8e2d4;--ink:#141a2b;--mut:#5f6472;font-family:Heebo,Arial,sans-serif;color:var(--ink);background:#fff;overflow:hidden}
+.dmn{--g:#c9a14f;--g2:#e7cd96;--n:#101a33;--n2:#17223f;--ln:#e8e2d4;--ink:#141a2b;--mut:#5f6472;font-family:"Noto Local","Heebo",Arial,sans-serif;color:var(--ink);background:#fff;overflow:hidden}
 .dmn *{box-sizing:border-box}
 .dmn .w{max-width:1180px;margin:0 auto;padding:0 20px}
 .dmn .top{background:radial-gradient(1200px 500px at 85% -10%,#22305a 0,transparent 60%),linear-gradient(180deg,var(--n),#0c1428);color:#fff;padding:26px 0 0;position:relative}
@@ -103,7 +101,7 @@ CSS = """
 ALT = 'כתב מינוי של עו״ד יקיר דבול לחבר בוועדות לשכת עורכי הדין, מחוז מרכז, מיום 22 בדצמבר 2025'
 
 def body(img=IMG, pdf=PDF):
-    cards = ''.join(f'''<article class="cm"><span class="ci"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="{svg}"/></svg></span><h3>{n}</h3><p>{d}</p><a href="{href}">באתר: {lt} {ic('arrow')}</a></article>''' for n, d, href, lt, svg in COMS)
+    cards = ''.join(f'''<article class="cm"><span class="ci"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="{svg}"/></svg></span><h3>{n}</h3><p>{d}</p>{(f'<a href="{href}">באתר: {lt} ' + ic('arrow') + '</a>') if href else ''}</article>''' for n, d, href, lt, svg in COMS)
     links = [('אודות המשרד', '/%d7%90%d7%95%d7%93%d7%95%d7%aa-%d7%94%d7%9e%d7%a9%d7%a8%d7%93/'), ('תעודות והסמכות', '/%d7%aa%d7%a2%d7%95%d7%93%d7%95%d7%aa-%d7%95%d7%94%d7%a1%d7%9e%d7%9b%d7%95%d7%aa-%d7%a2%d7%95%d7%b4%d7%93-%d7%99%d7%a7%d7%99%d7%a8-%d7%93%d7%91%d7%95%d7%9c/'),
              ('משרדנו בתקשורת', '/%d7%9e%d7%94%d7%aa%d7%a7%d7%a9%d7%95%d7%a8%d7%aa/'), ('המלצות לקוחות', '/%d7%94%d7%9e%d7%9c%d7%a6%d7%95%d7%aa/')]
     lk = ''.join(f'<a href="{u(p)}">{t}{ic("arrow")}</a>' for t, p in links)
@@ -113,14 +111,14 @@ def body(img=IMG, pdf=PDF):
 <div class="hg"><div>
 <div class="ey">לשכת עורכי הדין · מחוז מרכז</div>
 <h1>עו״ד יקיר דבול מונה לחבר ב<em>חמש ועדות</em> של לשכת עורכי הדין</h1>
-<p class="lead">ב 7 בדצמבר 2025 מינה <b>ועד מחוז מרכז של לשכת עורכי הדין</b> את עו״ד יקיר דבול לחבר בוועדת הקשר נתניה, ועדת התחדשות עירונית, ועדת חדלות פירעון, ועדת הוצאה לפועל וועדת קניין ומקרקעין. אלה בדיוק התחומים שבהם המשרד עובד כל יום.</p>
+<p class="lead">ב 7 בדצמבר 2025 מינה <b>ועד מחוז מרכז של לשכת עורכי הדין</b> את עו״ד יקיר דבול לחבר בחמש ועדות: ועדת קניין ומקרקעין, ועדת התחדשות עירונית, ועדת הקשר נתניה, ועדת הוצאה לפועל וועדת חדלות פירעון.</p>
 <div class="meta"><span>תאריך המינוי: <b>7.12.2025</b></span><span>כתב המינוי: <b>22.12.2025</b></span><span>חתום בידי <b>יו״ר ועד מחוז מרכז</b></span></div>
 </div>
 <div class="paper"><span class="seal"><b>5</b>ועדות<br>בלשכה</span><a href="{pdf}" target="_blank" rel="noopener" aria-label="פתיחת כתב המינוי המלא"><img src="{img}" width="1406" height="1988" alt="{ALT}" loading="eager"></a></div>
 </div></div></section>
 
 <section class="sec"><div class="w"><div class="sh"><h2>חמש הוועדות שאליהן מונה עו״ד דבול</h2>
-<p>כל אחת מהוועדות קשורה ישירות לתחומי העיסוק של המשרד. ליד כל ועדה תמצאו את המידע הרלוונטי באתר.</p></div>
+<p>כך נראית החברות בוועדות, לפי כתב המינוי. ליד הוועדות שקשורות לתחומי העיסוק של המשרד תמצאו קישור למידע באתר.</p></div>
 <div class="coms">{cards}</div></div></section>
 
 <section><div class="w"><div class="two">
@@ -152,6 +150,16 @@ def schema(img_url, page_url):
          "about": {"@id": S + "/#yakir-dabul"}},
     ]}
 
+IMG_URL = 'https://dabullaw.co.il/wp-content/uploads/2026/10/ktav-minui-yakir-dabul-2025.webp'
+PDF_URL = 'https://dabullaw.co.il/wp-content/uploads/2026/10/ktav-minui-2025.pdf'
+SLUG = 'כתב-מינוי-ועדות-לשכת-עורכי-הדין'
+PAGE_URL = S + '/' + __import__('urllib.parse').parse.quote(SLUG).lower() + '/'
+
+def wp_content():
+    return '<!-- wp:html -->\n<style>' + CSS + '</style>\n' + body(IMG_URL, PDF_URL) + '\n<script type="application/ld+json">' + json.dumps(schema(IMG_URL, PAGE_URL), ensure_ascii=False) + '</script>\n<!-- /wp:html -->'
+
 if __name__ == '__main__':
+    write('minui-page.json', json.dumps({'title': 'כתב מינוי: עו״ד יקיר דבול חבר בחמש ועדות של לשכת עורכי הדין', 'slug': SLUG, 'status': 'publish', 'template': 'elementor_header_footer', 'content': wp_content(),
+        'excerpt': 'ב 7 בדצמבר 2025 מונה עו״ד יקיר דבול על ידי ועד מחוז מרכז של לשכת עורכי הדין לחבר בחמש ועדות: קניין ומקרקעין, התחדשות עירונית, הקשר נתניה, הוצאה לפועל וחדלות פירעון.', 'featured_media': 7662}, ensure_ascii=False))
     write('minui.preview.html', page('כתב מינוי', HDR_CSS + CSS, mock_header().split('<div class="hero"')[0] + body() + '<div style="background:#141414;height:120px;opacity:.85"></div>'))
     print('ok')
