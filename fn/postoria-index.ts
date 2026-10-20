@@ -124,7 +124,15 @@ async function publish() {
   for (const r of rows || []) {
     const row = r.data, t = ilToMs(row.at);
     if (t > now || now - t > 4 * 3600e3) continue;
-    const chans = ((row.channels || []) as string[]).filter(c => NET[c]); if (!chans.length) continue;
+    // Yakir, 20.10.2026: TikTok and Instagram get only his own edited videos where he talks, never videos made by AI
+    // (the YouTube question videos built from a script: row.ytscript, media under {MEDIA}yt/, or row.ai)
+    const isAi = !!row.ytscript || row.ai === true || ((row.media || []) as string[]).some((m) => /\{MEDIA\}yt\//.test(String(m)));
+    let chans = ((row.channels || []) as string[]).filter(c => NET[c]);
+    if (isAi && chans.some(c => c === 'tiktok' || c === 'instagram')) {
+      chans = chans.filter(c => c !== 'tiktok' && c !== 'instagram');
+      if (!chans.length) { await merge('pub', r.id, { status: 'skipped', skipNote: 'סרטון שנוצר בבינה מלאכותית: לא עולה לטיקטוק ולאינסטגרם (יקיר, 20.10.2026)' }); log.push(`${r.id}: skipped (AI video, no TikTok/Instagram)`); continue; }
+    }
+    if (!chans.length) continue;
     const res: any = { ...(row.result || {}) }; let pst = row.pst || null; let changed = false;
     const todo = chans.filter(c => !(res[c] && (res[c].ok || res[c].pending)));
     try {
