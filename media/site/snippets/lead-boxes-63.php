@@ -169,7 +169,7 @@ function dabul_lb_box_a($v, $link) {
 	$arr = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>';
 	$tel = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>';
 	$wai = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.1-1.2l-.4-.3z"/></svg>';
-	if (!empty($v[5]) && $v[5] === 'nowa') {
+	if ((!empty($v[5]) && $v[5] === 'nowa') || get_queried_object_id() === 3328) { // 20.10.2026 Yakir: no WhatsApp in the price page dark box
 		$or = '<div class="or one"><a href="tel:+97298613413">' . $tel . '09-8613413</a></div>';
 	} else {
 		$wa = 'https://wa.me/972505580189?text=' . rawurlencode('שלום, קראתי באתר על ' . $v[0] . ' ואשמח לשאול...');
@@ -190,8 +190,8 @@ function dabul_lb_box_a($v, $link) {
 }
 function dabul_lb_box_m($topic, $link) {
 	$img = '<img src="https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-headshot-circle.webp" alt="עו&quot;ד יקיר דבול" width="56" height="56" loading="lazy">';
-	$wa = 'https://wa.me/972505580189?text=' . rawurlencode('שלום, קראתי באתר על ' . $topic . ' ואשמח לשאול...');
-	$or = '<div class="or"><a href="tel:+97298613413">09-8613413</a><a class="wa" href="' . esc_url($wa) . '" target="_blank" rel="noopener">וואטסאפ</a></div>';
+	// 20.10.2026 Yakir: forms and phone only, no WhatsApp in the general mid-article box
+	$or = '<div class="or"><a href="tel:+97298613413">09-8613413</a></div>';
 	if (isset($_GET['dlbm']) && $_GET['dlbm'] === 'sent') {
 		return '<div class="dlbm" id="dlbm" role="status"><div class="hd">' . $img . '<p class="ok"><b>תודה, קיבלנו.</b>עו"ד יקיר דבול יחזור אליכם בהקדם.</p></div>' . $or . '</div>';
 	}
