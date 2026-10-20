@@ -32,7 +32,7 @@ const map = [
     const k = u.split('?')[0]; const raw = r.request().url().split('?')[0];
     for (const kk of [raw, k]) if (amap[kk]) { const f = path.join(__dirname, amap[kk]); const css = f.endsWith('.css'); await new Promise(x => setTimeout(x, css ? D.css : D.js)); return r.fulfill({ body: fs.readFileSync(f), contentType: css ? 'text/css' : 'application/javascript' }); }
     const ru = r.request().url(); if (imap[ru] && !/yakir-dabul-headshot/.test(ru)) { await new Promise(x => setTimeout(x, D.img)); return r.fulfill({ body: fs.readFileSync(path.join(__dirname, imap[ru])), contentType: 'image/png' }); }
-    for (const [re, f, ct, d] of map) if (re.test(u) && fs.existsSync(f)) { await new Promise(x => setTimeout(x, d)); return r.fulfill({ body: fs.readFileSync(f), contentType: ct }); }
+    for (const [re, f, ct, d] of map) if (re.test(u) && fs.existsSync(f)) { await new Promise(x => setTimeout(x, d)); return r.fulfill({ body: fs.readFileSync(f), contentType: ct, headers: { 'access-control-allow-origin': '*' } }); }
     return r.abort();
   });
   await p.goto('file://' + path.resolve(inp), { waitUntil: 'load', timeout: 90000 });
