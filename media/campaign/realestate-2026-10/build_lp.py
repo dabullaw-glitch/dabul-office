@@ -378,7 +378,7 @@ fetch(A,{method:'POST',headers:{'content-type':'application/json'},body:JSON.str
 <div class="press"><div class="w"><span class="lb">המשרד בתקשורת</span>{outlets}</div></div>
 <section class="s"><div class="w"><p class="eyebrow">למה עורך דין מההתחלה</p><h2 class="st">{esc(p['risk_t'])}</h2><p class="ss">{esc(p['risk_s'])}</p><div class="risks">{risks}</div>
 <div class="bridge"><p><b>את רוב הבעיות אפשר לגלות מראש.</b> {esc(p['bridge'])}</p><a class="btn b-g" href="#f1">{I_FORM}{esc(p['bridge_cta'])}</a></div></div></section>
-<div class="trust"><div class="w"><div><b>+100</b><span>עסקאות מקרקעין בכל שנה</span></div><div><b>1 על 1</b><span>מול עורך הדין, מהשיחה הראשונה ועד הטאבו</span></div><div><b>4</b><span>ועדות בלשכת עורכי הדין שבהן הוא חבר</span></div><div><b>באותו יום</b><span>בדרך כלל חוזרים אליכם באותו יום עבודה</span></div></div></div>
+<div class="trust"><div class="w"><div><b>+100</b><span>עסקאות מקרקעין בכל שנה</span></div><div><b>1 על 1</b><span>מול עורך הדין, מהשיחה הראשונה ועד הטאבו</span></div><div><b>5</b><span>ועדות בלשכת עורכי הדין שבהן הוא חבר</span></div><div><b>באותו יום</b><span>בדרך כלל חוזרים אליכם באותו יום עבודה</span></div></div></div>
 <section class="s rv-s"><div class="w"><div class="rv-head"><div><p class="eyebrow">המלצות</p><h2 class="st">מה לקוחות כותבים עלינו</h2></div>
 <div class="rv-score">{GI}<div><span class="big">{RATING}</span></div><div>{STARS}<small>{RCOUNT} ביקורות בגוגל</small></div></div></div>
 <div class="rvs">{reviews}</div><p class="rv-more"><a href="{esc(GOOGLE_REVIEWS)}" target="_blank" rel="noopener">לכל הביקורות בגוגל ←</a></p></div></section>
@@ -387,7 +387,7 @@ fetch(A,{method:'POST',headers:{'content-type':'application/json'},body:JSON.str
 <section class="s steps-s"><div class="w"><p class="eyebrow">בתקשורת</p><h2 class="st">כתבות על המשרד</h2><p class="ss">מתוך הכתבות שבהן המשרד הופיע.</p><div class="pcs">{press}</div></div></section>
 <section class="s"><div class="w two"><div><p class="eyebrow">מה כולל הליווי</p><h2 class="st">הכל במקום אחד, מול עורך דין אחד</h2><ul class="incl">{incl}</ul></div>
 <div class="about"><div class="ph"><img src="{IMG}yakir-cutout.webp" alt="עו&quot;ד יקיר דבול" width="200" height="399"></div><div class="tx"><h3>עו"ד יקיר דבול</h3><p class="role">יקיר דבול - משרד עורכי דין, נתניה</p><p>אצלנו את התיק מנהל עורך הדין עצמו, ואיתו אתם מדברים בכל שלב. כשצריך, עובדים יחד עם שמאי, מהנדס או יועץ משכנתאות.</p>
-<ul><li>מתמנה על ידי בית המשפט בתיקי רישום בתים משותפים</li><li>חבר ב-4 ועדות בלשכת עורכי הדין</li><li>משרד ברחוב רזיאל 1, נתניה</li></ul></div></div></div></section>
+<ul><li>מתמנה על ידי בית המשפט בתיקי רישום בתים משותפים</li><li>חבר ב-5 ועדות בלשכת עורכי הדין</li><li>משרד ברחוב רזיאל 1, נתניה</li></ul></div></div></div></section>
 <section class="s steps-s"><div class="w"><p class="eyebrow">שאלות נפוצות</p><h2 class="st">מה שואלים אותנו לפני שמתחילים</h2><div class="faq">{faq}</div></div></section>
 <section class="s final" id="contact"><div class="w"><div><h2 class="st">{esc(p['final_t'])}</h2><p class="ss">שיחה ראשונה קצרה, ונגיד לכם מה צריך לבדוק ומה השלב הבא.</p>
 <div class="ctas"><a class="btn b-g" href="tel:{PHONE_INTL}">{I_TEL}<span dir="ltr">{PHONE}</span></a><a class="btn b-o" href="{esc(wa)}">{I_WA}וואטסאפ</a></div><p class="addr">יקיר דבול - משרד עורכי דין · רזיאל 1, נתניה · ימים א' עד ה'</p></div>
