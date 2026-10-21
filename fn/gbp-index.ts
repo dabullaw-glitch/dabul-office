@@ -1,5 +1,5 @@
 // Google Business Profile (18.10.2026, Yakir connected the Business Profile API: secrets GBP_CLIENT_ID / GBP_CLIENT_SECRET / GBP_REFRESH_TOKEN,
-// ids in docs settings/gbp.api {accountId, locationId}). Weekly posts still go out through Postoria; this function handles reviews and stats.
+// ids in docs settings/gbp.api {accountId, locationId}). Handles reviews, stats, and (from 21.10.2026) the weekly posts directly (step=due).
 // Cron (x-cron-secret): POST ?step=sync   reads the reviews into docs coll 'gbprev' (new review -> status 'new'; on the very first sync,
 //                                         reviews without a reply -> 'old', so nothing floods Telegram)
 //                       POST ?step=ask    sends Yakir every review with status 'drafted' (data.draft written by the daily task) with buttons
@@ -126,6 +126,42 @@ async function delDup(b: Any) {
   await merge('settings', 'gbp', { duplicateDeleted: { id, title: String(b.title || ''), at: new Date().toISOString() } });
   return { ok: true, deleted: id };
 }
+
+// ---- weekly posts, published directly through the Business Profile API (Yakir, 21.10.2026: Postoria timed out on Google,
+// so Claude publishes the Google Business posts directly). Calendar rows (docs coll 'pub') with channel 'gbpdirect',
+// status 'planned' and a time that has come (Israel time, up to 6 hours late) are posted as a STANDARD local post with a
+// photo and a "LEARN_MORE" button to the article. Cron: POST ?step=due every 10 minutes. Postoria ignores 'gbpdirect'.
+const ilNow = () => new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jerusalem' }).slice(0, 16).replace(' ', 'T');
+async function postDue(b: Any) {
+  const { acc, loc } = await ids();
+  const now = ilNow(); const minAt = new Date(Date.now() - 6 * 3600e3).toLocaleString('sv-SE', { timeZone: 'Asia/Jerusalem' }).slice(0, 16).replace(' ', 'T');
+  const { data } = await db().select('id,data').eq('coll', 'pub').eq('data->>status', 'planned').contains('data', { channels: ['gbpdirect'] });
+  const set = (await getDoc('settings', 'pub')) || {}; const MEDIA = String(set.media || '');
+  const out: Any[] = [];
+  for (const row of data || []) {
+    const r = row.data; const at = String(r.at || '');
+    if (b.id ? row.id !== b.id : !(at <= now && at >= minAt)) continue;
+    const prev = (r.result && r.result.gbp) || {}; if (prev.ok) continue;
+    const text = String(r.textGbp || r.text || '').trim().slice(0, 1450);
+    const link = r.gbpLink || r.link || 'https://dabullaw.co.il/';
+    const img = ((r.media || []) as string[]).map(u => String(u).replace('{MEDIA}', MEDIA)).find(u => /^https:\/\//.test(u));
+    const body: Any = { languageCode: 'he', topicType: 'STANDARD', summary: text, callToAction: { actionType: 'LEARN_MORE', url: link } };
+    if (img) body.media = [{ mediaFormat: 'PHOTO', sourceUrl: img }];
+    const tries = Number(prev.tries || 0) + 1;
+    try {
+      const j = await g(`https://mybusiness.googleapis.com/v4/accounts/${acc}/locations/${loc}/localPosts`, 'POST', body);
+      await merge('pub', row.id, { status: 'published', result: { ...(r.result || {}), gbp: { ok: true, via: 'gbp-api', name: j.name || '', url: j.searchUrl || '', at: new Date().toISOString() } } });
+      out.push({ id: row.id, ok: true, url: j.searchUrl || '' });
+    } catch (e) {
+      const err = String((e as Error).message || e).slice(0, 300);
+      const late = at < minAt || tries >= 4;
+      await merge('pub', row.id, { status: late ? 'missed' : 'planned', result: { ...(r.result || {}), gbp: { ok: false, via: 'gbp-api', error: err, tries, at: new Date().toISOString() } } });
+      if (tries === 1 || late) await tg(`⚠️ הפוסט לגוגל עסקי ${late ? 'לא עלה' : 'לא עלה בניסיון הראשון, אנסה שוב בעוד 10 דקות'}: ${r.title || row.id}\n${err.slice(0, 200)}`);
+      out.push({ id: row.id, ok: false, error: err });
+    }
+  }
+  return { ok: true, posted: out };
+}
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   await loadSecrets().catch(() => {});
@@ -139,6 +175,7 @@ Deno.serve(async (req) => {
     if (step === 'stats') return json(await stats(b));
     if (step === 'locations') return json(await locations());
     if (step === 'deldup') return json(await delDup(b));
+    if (step === 'due') return json(await postDue(b));
     if (step === 'ping') { await access(); const { acc, loc } = await ids(); return json({ ok: true, acc: !!acc, loc: !!loc }); }
     return json({ error: 'step?' }, 400);
   } catch (e) { console.error(e); return a ? page('משהו השתבש', '<p>נסו שוב בעוד דקה.</p>', 500) : json({ ok: false, error: String((e as Error).message || e) }, 500); }
