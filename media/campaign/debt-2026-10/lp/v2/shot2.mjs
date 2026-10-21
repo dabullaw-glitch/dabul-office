@@ -1,0 +1,11 @@
+import { chromium } from '/opt/node-tools/node_modules/playwright/index.mjs';
+const b = await chromium.launch({executablePath:'/opt/pw-browsers/chromium', args:['--headless=new'], headless:false});
+const p = await b.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+await p.route(/^https?:\/\/(?!localhost)/, r => r.abort());
+await p.goto('file://' + process.cwd() + '/preview.html'); await p.waitForTimeout(300);
+await p.screenshot({ path: 'phone-after-1.png' });
+const d = await b.newPage({ viewport: { width: 1366, height: 820 } });
+await d.route(/^https?:\/\/(?!localhost)/, r => r.abort());
+await d.goto('file://' + process.cwd() + '/preview.html'); await d.waitForTimeout(300);
+await d.screenshot({ path: 'desktop-after-1.png' });
+await b.close();
