@@ -1,0 +1,16 @@
+import { chromium } from '/opt/node-tools/node_modules/playwright/index.mjs';
+const b = await chromium.launch({executablePath:'/opt/pw-browsers/chromium', args:['--headless=new','--allow-file-access-from-files'], headless:false});
+const p = await b.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+await p.route(/^https?:\/\//, r => r.abort());
+await p.goto('file://' + process.cwd() + '/preview.html'); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(400);
+console.log(await p.evaluate(() => [...document.fonts].filter(f=>f.status==='loaded').map(f=>f.family+f.weight).join(',')));
+await p.screenshot({ path: 'phone-after-1.png' });
+const y = await p.evaluate(() => document.getElementById('f1').getBoundingClientRect().top + scrollY - 70);
+await p.evaluate(y => scrollTo(0, y), y);
+await p.evaluate(() => { document.querySelector('#f1 input[value="100-300 אלף"]').checked = true; document.getElementById('f1-n').value = 'ישראל ישראלי'; document.getElementById('f1-p').value = '050-1234567'; });
+await p.waitForTimeout(200); await p.screenshot({ path: 'phone-after-3.png' });
+const d = await b.newPage({ viewport: { width: 1366, height: 820 } });
+await d.route(/^https?:\/\//, r => r.abort());
+await d.goto('file://' + process.cwd() + '/preview.html'); await d.evaluate(() => document.fonts.ready); await d.waitForTimeout(400);
+await d.screenshot({ path: 'desktop-after-1.png' });
+await b.close();

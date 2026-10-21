@@ -71,7 +71,28 @@ r = sub1("var m=f.querySelector('.msg'),b=f.querySelector('.go'),g=function(n){v
 r = sub1(",notes:'מצב: '+g('status')};", ",notes:g('debt_range')?'גובה חובות: '+g('debt_range'):'השאיר שם וטלפון בלבד'};", r)
 # note: the form posts to the same office lead function, with the same Lead event and value as before
 
+# 6) font (Yakir 21.10: "הפונט מזעזע", like his Lovable site): Heebo everywhere instead of Frank Ruhl Libre + the theme font
+r = sub1('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&display=swap">',
+         '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap">', r)
+fr = r.count("'Frank Ruhl Libre',Georgia,serif")
+r = r.replace("'Frank Ruhl Libre',Georgia,serif", "'Heebo',Arial,sans-serif")
+if 'Frank Ruhl' in r: sys.exit('Frank Ruhl left')
+r = sub1('direction:rtl;color:var(--ink);background:var(--paper);', "direction:rtl;font-family:'Heebo',Arial,sans-serif;color:var(--ink);background:var(--paper);", r)
+FONT_CSS = '''
+/* Heebo weights (21.10.2026) */
+.dlp h1{font-weight:800;letter-spacing:-.01em;line-height:1.12}
+.dlp .st,.dlp .fc h2{font-weight:800;letter-spacing:-.01em}
+.dlp .sub{font-weight:400}
+.dlp .btn,.dlp .fc .go{font-weight:700}
+.dlp input,.dlp select,.dlp textarea,.dlp button{font-family:'Heebo',Arial,sans-serif}
+</style>'''
+k = r.index('</style>')
+r = r[:k] + FONT_CSS + r[k + len('</style>'):]
+print('serif uses replaced:', fr)
+
 open('live-after.html', 'w', encoding='utf-8').write(r)
 body = r.replace('<!-- wp:html -->', '').replace('<!-- /wp:html -->', '')
-open('preview.html', 'w', encoding='utf-8').write('<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>lp-debt v2</title><style>body{margin:0}</style></head><body>' + body + '</body></html>')
+# the sketch loads Heebo from local files (this computer cannot reach Google Fonts); the live page loads it from Google
+LOCAL = ''.join(f"@font-face{{font-family:'Heebo';font-weight:{w};src:url('file://{FD}/{w}{n}/Heebo_{w}{n}.ttf')}}" for w, n in [(300, 'Light'), (400, 'Regular'), (500, 'Medium'), (700, 'Bold'), (800, 'ExtraBold'), (900, 'Black')]) if (FD := '/tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/heebo/package') else ''
+open('preview.html', 'w', encoding='utf-8').write('<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>lp-debt v2</title><style>body{margin:0}' + LOCAL + '</style></head><body>' + body + '</body></html>')
 print('ok', n0, len(r))

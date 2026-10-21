@@ -1,12 +1,12 @@
-<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>lp-debt v2</title><style>body{margin:0}</style></head><body>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&display=swap">
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>lp-debt v2</title><style>body{margin:0}@font-face{font-family:'Heebo';font-weight:300;src:url('file:///tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/heebo/package/300Light/Heebo_300Light.ttf')}@font-face{font-family:'Heebo';font-weight:400;src:url('file:///tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/heebo/package/400Regular/Heebo_400Regular.ttf')}@font-face{font-family:'Heebo';font-weight:500;src:url('file:///tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/heebo/package/500Medium/Heebo_500Medium.ttf')}@font-face{font-family:'Heebo';font-weight:700;src:url('file:///tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/heebo/package/700Bold/Heebo_700Bold.ttf')}@font-face{font-family:'Heebo';font-weight:800;src:url('file:///tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/heebo/package/800ExtraBold/Heebo_800ExtraBold.ttf')}@font-face{font-family:'Heebo';font-weight:900;src:url('file:///tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/heebo/package/900Black/Heebo_900Black.ttf')}</style></head><body>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap">
 <style>
 .dlp{--d:#111318;--d2:#1b1e26;--g:#c9a85c;--gd:#8c7646;--g1:#e4d19c;--g2:#f6efdd;--ink:#16161a;--mut:#5d5a54;--line:#e8e2d4;--paper:#fbfaf6;
- direction:rtl;color:var(--ink);background:var(--paper);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:clip}
+ direction:rtl;font-family:'Heebo',Arial,sans-serif;color:var(--ink);background:var(--paper);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:clip}
 .dlp *{box-sizing:border-box}
 .dlp h1,.dlp h2,.dlp h3,.dlp p,.dlp ul,.dlp ol{margin:0;padding:0}
 .dlp .w{max-width:1160px;margin:0 auto;padding-inline:20px}
-.dlp .serif{font-family:'Frank Ruhl Libre',Georgia,serif}
+.dlp .serif{font-family:'Heebo',Arial,sans-serif}
 .dlp a{color:inherit}
 .dlp .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:52px;padding:0 24px;border-radius:999px;font-weight:700;font-size:17px;text-decoration:none;border:1.5px solid transparent;cursor:pointer;transition:transform .15s,background .15s}
 .dlp .btn:hover{transform:translateY(-1px)}
@@ -20,11 +20,11 @@
 .dlp .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(17,19,24,.55),rgba(17,19,24,.94) 62%);z-index:-1}
 .dlp .hero .w{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:48px;align-items:center;padding-block:34px 64px}
 .dlp .top{display:flex;justify-content:space-between;align-items:center;padding-block:22px 0}
-.dlp .logo{font-family:'Frank Ruhl Libre',Georgia,serif;font-weight:700;font-size:22px;color:#fff;line-height:1.1;text-decoration:none}
+.dlp .logo{font-family:'Heebo',Arial,sans-serif;font-weight:700;font-size:22px;color:#fff;line-height:1.1;text-decoration:none}
 .dlp .logo small{display:block;font-family:inherit;font-weight:400;font-size:12.5px;color:var(--g1);letter-spacing:.04em;margin-top:3px}
 .dlp .top .tel{color:var(--g1);font-weight:700;text-decoration:none;direction:ltr;font-size:18px}
 .dlp .kick{display:inline-block;color:var(--g);font-weight:500;font-size:15px;letter-spacing:.03em;margin-bottom:16px;border-bottom:1px solid rgba(201,168,92,.4);padding-bottom:6px}
-.dlp h1{font-family:'Frank Ruhl Libre',Georgia,serif;font-weight:700;font-size:clamp(38px,5.4vw,64px);line-height:1.06;color:#fff;text-wrap:balance}
+.dlp h1{font-family:'Heebo',Arial,sans-serif;font-weight:700;font-size:clamp(38px,5.4vw,64px);line-height:1.06;color:#fff;text-wrap:balance}
 .dlp h1 em{font-style:normal;color:var(--g)}
 .dlp .sub{font-size:18.5px;color:#d6cfbf;max-width:560px;margin-top:20px;font-weight:300}
 .dlp .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
@@ -34,7 +34,7 @@
 /* form */
 .dlp .fc{background:#fff;color:var(--ink);border-radius:18px;padding:30px 28px 26px;box-shadow:0 30px 70px rgba(0,0,0,.35);position:relative}
 .dlp .fc:before{content:"";position:absolute;inset:0 0 auto 0;height:5px;border-radius:18px 18px 0 0;background:linear-gradient(90deg,var(--gd),var(--g),var(--g1))}
-.dlp .fc h2{font-family:'Frank Ruhl Libre',Georgia,serif;font-size:26px;line-height:1.15;font-weight:700}
+.dlp .fc h2{font-family:'Heebo',Arial,sans-serif;font-size:26px;line-height:1.15;font-weight:700}
 .dlp .fc .fs{font-size:15px;color:var(--mut);margin:6px 0 18px}
 .dlp .fc label{display:block;font-size:14px;font-weight:500;margin:12px 0 5px}
 .dlp .fc input,.dlp .fc select,.dlp .fc textarea{width:100%;font:inherit;font-size:17px;padding:12px 14px;border:1.5px solid #d9d2c2;border-radius:10px;background:#fffdf8;color:var(--ink)}
@@ -49,30 +49,30 @@
 .dlp .fc .note{font-size:12.5px;color:var(--mut);margin-top:12px;line-height:1.5}
 .dlp .fc .msg{font-size:14px;color:#a3322a;margin-top:8px;min-height:1px}
 .dlp .fc .ok{text-align:center;padding:26px 6px}
-.dlp .fc .ok b{display:block;font-family:'Frank Ruhl Libre',Georgia,serif;font-size:26px;margin-bottom:8px}
+.dlp .fc .ok b{display:block;font-family:'Heebo',Arial,sans-serif;font-size:26px;margin-bottom:8px}
 .dlp .hp{position:absolute!important;left:-9999px!important}
 /* trust */
 .dlp .trust{background:var(--d2);color:#eee7d6;border-top:1px solid rgba(201,168,92,.25)}
 .dlp .trust .w{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
 .dlp .trust div{padding:22px 18px;border-inline-start:1px solid rgba(201,168,92,.18)}
 .dlp .trust div:first-child{border-inline-start:0}
-.dlp .trust b{display:block;font-family:'Frank Ruhl Libre',Georgia,serif;font-size:26px;color:var(--g);line-height:1.1}
+.dlp .trust b{display:block;font-family:'Heebo',Arial,sans-serif;font-size:26px;color:var(--g);line-height:1.1}
 .dlp .trust span{font-size:14.5px;color:#cfc8b8}
 /* sections */
 .dlp section.s{padding-block:76px}
-.dlp .st{font-family:'Frank Ruhl Libre',Georgia,serif;font-size:clamp(30px,3.6vw,42px);line-height:1.12;font-weight:700;text-wrap:balance}
+.dlp .st{font-family:'Heebo',Arial,sans-serif;font-size:clamp(30px,3.6vw,42px);line-height:1.12;font-weight:700;text-wrap:balance}
 .dlp .ss{color:var(--mut);font-size:18px;margin-top:10px;max-width:640px}
 .dlp .eyebrow{color:var(--gd);font-weight:700;font-size:14px;letter-spacing:.06em;margin-bottom:10px}
 .dlp .risks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:36px}
 .dlp .risk{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 22px;position:relative}
-.dlp .risk .n{font-family:'Frank Ruhl Libre',Georgia,serif;font-size:15px;font-weight:700;color:var(--gd);width:34px;height:34px;border:1.5px solid var(--g);border-radius:50%;display:grid;place-items:center;margin-bottom:14px}
+.dlp .risk .n{font-family:'Heebo',Arial,sans-serif;font-size:15px;font-weight:700;color:var(--gd);width:34px;height:34px;border:1.5px solid var(--g);border-radius:50%;display:grid;place-items:center;margin-bottom:14px}
 .dlp .risk h3{font-size:19px;line-height:1.3;margin-bottom:6px}
 .dlp .risk p{font-size:15.5px;color:#45433d}
 /* steps */
 .dlp .steps-s{background:var(--g2)}
 .dlp .steps{list-style:none;margin-top:38px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:s}
 .dlp .steps li{position:relative;padding:0 0 0 22px;counter-increment:s}
-.dlp .steps li:before{content:counter(s);display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--d);color:var(--g);font-family:'Frank Ruhl Libre',Georgia,serif;font-weight:700;font-size:20px;position:relative;z-index:1;margin-bottom:16px}
+.dlp .steps li:before{content:counter(s);display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--d);color:var(--g);font-family:'Heebo',Arial,sans-serif;font-weight:700;font-size:20px;position:relative;z-index:1;margin-bottom:16px}
 .dlp .steps li:after{content:"";position:absolute;top:23px;right:46px;left:-0px;height:2px;background:linear-gradient(90deg,var(--g1),var(--g))}
 .dlp .steps li:last-child:after{display:none}
 .dlp .steps h3{font-size:18.5px;line-height:1.3;margin-bottom:6px}
@@ -86,7 +86,7 @@
 .dlp .about .ph{align-self:stretch;background:linear-gradient(180deg,#232733,#111318);display:flex;align-items:flex-end;justify-content:center;padding-top:22px}
 .dlp .about .ph img{width:100%;max-width:200px;height:auto;display:block}
 .dlp .about .tx{padding:28px 28px 26px}
-.dlp .about h3{font-family:'Frank Ruhl Libre',Georgia,serif;font-size:26px;color:#fff;line-height:1.15}
+.dlp .about h3{font-family:'Heebo',Arial,sans-serif;font-size:26px;color:#fff;line-height:1.15}
 .dlp .about .role{color:var(--g1);font-size:14.5px;margin:4px 0 12px}
 .dlp .about p{font-size:15.5px;color:#cfc8b8}
 .dlp .about ul{list-style:none;margin-top:14px;display:grid;gap:7px;font-size:14.5px}
@@ -103,7 +103,7 @@
 .dlp .faq details{border-bottom:1px solid var(--line)}
 .dlp .faq summary{list-style:none;cursor:pointer;padding:20px 0;font-weight:700;font-size:18.5px;display:flex;justify-content:space-between;gap:16px;align-items:center}
 .dlp .faq summary::-webkit-details-marker{display:none}
-.dlp .faq summary:after{content:"+";font-family:'Frank Ruhl Libre',Georgia,serif;font-size:28px;color:var(--g);line-height:1;transition:transform .2s}
+.dlp .faq summary:after{content:"+";font-family:'Heebo',Arial,sans-serif;font-size:28px;color:var(--g);line-height:1;transition:transform .2s}
 .dlp .faq details[open] summary:after{transform:rotate(45deg)}
 .dlp .faq p{padding:0 0 20px;color:#45433d;max-width:760px}
 /* final */
@@ -167,7 +167,7 @@
 /* hero social proof */
 .dlp .hp-proof{display:flex;flex-wrap:wrap;gap:12px 26px;margin-top:26px;align-items:center}
 .dlp .hp-proof .rt{display:flex;gap:10px;align-items:center;color:#eee7d6;font-size:15px}
-.dlp .hp-proof .rt b{font-size:22px;color:#fff;font-family:'Frank Ruhl Libre',Georgia,serif}
+.dlp .hp-proof .rt b{font-size:22px;color:#fff;font-family:'Heebo',Arial,sans-serif}
 .dlp .hp-proof .gi{width:26px;height:26px;background:#fff;border-radius:50%;display:grid;place-items:center}
 .dlp .hp-proof .gi svg{width:17px;height:17px}
 .dlp .hp-proof .tv{font-size:14.5px;color:#cfc8b8}
@@ -190,7 +190,7 @@
 .dlp .rv-s{background:var(--g2)}
 .dlp .rv-head{display:flex;gap:20px 40px;align-items:end;justify-content:space-between;flex-wrap:wrap}
 .dlp .rv-score{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px}
-.dlp .rv-score .big{font-family:'Frank Ruhl Libre',Georgia,serif;font-size:42px;font-weight:700;line-height:1}
+.dlp .rv-score .big{font-family:'Heebo',Arial,sans-serif;font-size:42px;font-weight:700;line-height:1}
 .dlp .rv-score small{display:block;color:var(--mut);font-size:13.5px;margin-top:2px}
 .dlp .rv-score .gi{width:34px;height:34px}
 .dlp .rv-score .gi svg{width:34px;height:34px}
@@ -198,7 +198,7 @@
 .dlp .rv{margin:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 20px 18px;display:flex;flex-direction:column;gap:12px}
 .dlp .rv q{font-size:16px;line-height:1.6;quotes:"״" "״";flex:1}
 .dlp .rv .who{display:flex;gap:10px;align-items:center;font-size:14.5px;font-weight:700}
-.dlp .rv .av{width:36px;height:36px;border-radius:50%;background:var(--d);color:var(--g);display:grid;place-items:center;font-family:'Frank Ruhl Libre',Georgia,serif;font-size:17px;flex:none}
+.dlp .rv .av{width:36px;height:36px;border-radius:50%;background:var(--d);color:var(--g);display:grid;place-items:center;font-family:'Heebo',Arial,sans-serif;font-size:17px;flex:none}
 .dlp .rv .who small{display:block;font-weight:400;color:var(--mut);font-size:12.5px}
 .dlp .rv-more{margin-top:20px;font-size:15px}
 .dlp .rv-more a{color:var(--gd);font-weight:700}
@@ -246,6 +246,13 @@
  .dlp .bar a.m{flex-direction:row;gap:8px;font-size:16px;min-height:48px;justify-content:center}
  .dlp .bar a.t{justify-content:center;border:1px solid rgba(201,168,92,.45)}
 }
+
+/* Heebo weights (21.10.2026) */
+.dlp h1{font-weight:800;letter-spacing:-.01em;line-height:1.12}
+.dlp .st,.dlp .fc h2{font-weight:800;letter-spacing:-.01em}
+.dlp .sub{font-weight:400}
+.dlp .btn,.dlp .fc .go{font-weight:700}
+.dlp input,.dlp select,.dlp textarea,.dlp button{font-family:'Heebo',Arial,sans-serif}
 </style>
 <div class="dlp">
 <header class="hero"><div class="w top" style="display:flex;padding-block:22px 0"><a class="logo" href="https://dabullaw.co.il/">יקיר דבול<small>משרד עורכי דין</small></a><a class="tel" href="tel:+97298613413">09-8613413</a></div>
