@@ -90,6 +90,19 @@ k = r.index('</style>')
 r = r[:k] + FONT_CSS + r[k + len('</style>'):]
 print('serif uses replaced:', fr)
 
+# 7) the word "דיסקרטי" appeared 8 times (Yakir 21.10: too many, remove it)
+for old, new, n in [
+    ('<p class="sub">שיחה דיסקרטית עם עו״ד יקיר דבול:', '<p class="sub">שיחה אישית עם עו״ד יקיר דבול:', 1),
+    ('<h2>בדיקה ראשונית, דיסקרטית</h2>', '<h2>בדיקה ראשונית</h2>', 1),
+    ('</svg>שיחה דיסקרטית. הפרטים נשארים במשרד.', '</svg>הפרטים נשארים במשרד בלבד.', 2),
+    ('<h3>שיחה ראשונה, דיסקרטית</h3>', '<h3>שיחה ראשונה</h3>', 1),
+    ('<summary>הפנייה דיסקרטית?</summary><p>כן. הפרטים נשארים במשרד', '<summary>מה קורה עם הפרטים שלי?</summary><p>הפרטים נשארים במשרד', 1),
+    ('"name": "הפנייה דיסקרטית?", "acceptedAnswer": {"@type": "Answer", "text": "כן. הפרטים נשארים במשרד', '"name": "מה קורה עם הפרטים שלי?", "acceptedAnswer": {"@type": "Answer", "text": "הפרטים נשארים במשרד', 1),
+    ('<p class="ss">שיחה ראשונה קצרה ודיסקרטית.', '<p class="ss">שיחה ראשונה קצרה.', 1),
+]:
+    r = sub1(old, new, r, n)
+if 'דיסקרט' in r: sys.exit('discreet left')
+
 open('live-after.html', 'w', encoding='utf-8').write(r)
 body = r.replace('<!-- wp:html -->', '').replace('<!-- /wp:html -->', '')
 # the sketch loads Heebo from local files (this computer cannot reach Google Fonts); the live page loads it from Google
