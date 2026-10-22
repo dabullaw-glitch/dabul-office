@@ -16,8 +16,11 @@
 //    (an https page that opens the phone dialer; Telegram buttons cannot be tel: links) and a button that opens the lead.
 //    Marked on the lead (callbackNotified = the callbackAt it was sent for). ?mode=callbacks runs only this check.
 //    Nothing is ever sent to the lead here.
+// 22.10.2026 (Yakir approved): before an opening message (welcome) the hourly lead run checks that the number has WhatsApp.
+//    No WhatsApp: nothing is sent, the opening is marked cancelled ('dismissed', via 'no-whatsapp') and Telegram says
+//    "⚠️ למספר הזה אין וואטסאפ. צריך להתקשר אליו."
 import { loadSecrets, env, json, cors, loadEngine, loadData, telegram, sanitize } from '../_shared/common.ts';
-import { provider, send, offerOnTelegram, intl } from '../_shared/send.ts';
+import { provider, send, offerOnTelegram, intl, hasWhatsapp } from '../_shared/send.ts';
 import { uid, admin } from '../_shared/common.ts';
 
 export function digest(O: any) {
@@ -317,11 +320,16 @@ Deno.serve(async (req) => {
       const due = (O.salesMessages ? O.salesMessages() : []).slice(0, 15);
       const p = provider();
       if (p && p !== 'telegram') {
-        const st = O.settings(), done: string[] = [], bad: string[] = [];
+        const st = O.settings(), done: string[] = [], bad: string[] = [], nowa: string[] = [];
         const fails = await loadFails().catch(() => ({} as Record<string, Fail>));
         let later: Set<string> | null | undefined;
         const nextKeys = () => later !== undefined ? later : (later = keysAt(O, nextRunAt('leads'), () => (O.salesMessages ? O.salesMessages() : [])));
         for (const x of due) {
+          if (/~welcome~/.test(x.key) && (await hasWhatsapp(x.phone)) === false) {
+            await O.save('outbox', sanitize(x.key), { status: 'dismissed', via: 'no-whatsapp', at: new Date().toISOString(), key: x.key, name: x.name, type: x.type, text: x.text });
+            if (x.leadId) { const l = O.get('leads', x.leadId); if (l) await O.patch('leads', x.leadId, { noWhatsapp: true, log: (l.log || []).concat([{ at: new Date().toISOString(), kind: 'system', text: 'למספר אין וואטסאפ, הודעת הפתיחה לא נשלחה. צריך להתקשר.' }]).slice(-80) }); }
+            nowa.push(`• ${x.name} (${x.phone})`); continue;
+          }
           const r = await send(x.phone, x.text, { name: x.name, signature: st.signature });
           if (!r.ok) {
             const k = nextKeys();
@@ -334,8 +342,8 @@ Deno.serve(async (req) => {
           done.push(`• ${x.label}: ${x.name}`);
         }
         await closeHandled(O, fails, new Set((O.salesMessages ? O.salesMessages() : []).map((x: any) => x.key))).catch(e => console.error('outfail close', e));
-        if (done.length || bad.length) await telegram([done.length ? `📤 נשלחו אוטומטית ללידים (${done.length}):\n${done.join('\n')}` : '', bad.length ? `⚠️ לא נשלחו ללידים (${bad.length}). המערכת תנסה שוב בשעה הבאה:\n${bad.join('\n')}` : ''].filter(Boolean).join('\n\n')).catch(() => false);
-        return json({ ok: true, sent: done.length, failed: bad.length });
+        if (done.length || bad.length || nowa.length) await telegram([done.length ? `📤 נשלחו אוטומטית ללידים (${done.length}):\n${done.join('\n')}` : '', bad.length ? `⚠️ לא נשלחו ללידים (${bad.length}). המערכת תנסה שוב בשעה הבאה:\n${bad.join('\n')}` : '', nowa.length ? `⚠️ למספר הזה אין וואטסאפ. צריך להתקשר אליו:\n${nowa.join('\n')}` : ''].filter(Boolean).join('\n\n')).catch(() => false);
+        return json({ ok: true, sent: done.length, failed: bad.length, noWhatsapp: nowa.length });
       }
       if (!env('TELEGRAM_BOT_TOKEN') || !env('TELEGRAM_CHAT_ID')) return json({ ok: true, skipped: 'telegram' });
       let n = 0;

@@ -7,8 +7,11 @@
 // the send failed (short reason) and that the system retries; a separate message with the ready text, a WhatsApp button and
 // "✓ נשלח" is sent, and the failure is kept in docs coll 'outfail' so the hourly lead run retries without offering it again.
 // The "it will go out at the start of working hours" wording stays only for the real after-hours case.
+// 22.10.2026 (Yakir approved): before the opening message the number is checked for WhatsApp. A number without WhatsApp gets
+// no message (in or out of working hours), the opening is marked cancelled ('dismissed', via 'no-whatsapp') so the hourly run
+// does not send it later, and the Telegram alert says: "⚠️ למספר הזה אין וואטסאפ. צריך להתקשר אליו."
 import { loadSecrets, json, cors, admin, uid, telegram, env } from '../_shared/common.ts';
-import { provider, send, offerOnTelegram } from '../_shared/send.ts';
+import { provider, send, offerOnTelegram, hasWhatsapp } from '../_shared/send.ts';
 
 // Israeli numbers are stored as 05X..., numbers from abroad (+ or 00 prefix) as +<country><number>
 const normIL = (p: string) => { let x = String(p || '').replace(/\D/g, ''); if (x.startsWith('972')) x = '0' + x.slice(3); return x.length >= 9 && x.length <= 10 ? x : ''; };
@@ -126,11 +129,16 @@ Deno.serve(async (req) => {
   // (Sun-Thu 08:00-21:00, Fri 08:00-14:00); outside those hours the hourly run sends it when the window opens
   const okey = `sales~${id}~welcome~${now.slice(0, 16)}`, oid = okey.replace(/[^A-Za-z0-9_\-.~:@+]/g, '_');
   const prov = provider(), direct = !!phone && !!prov && prov !== 'telegram';
-  let sentNow = false, inHours = false, failErr = '';
+  let sentNow = false, inHours = false, failErr = '', noWa = false;
   if (direct) {
     const il = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' })), d = il.getDay(), h = il.getHours();
     inHours = (d <= 4 && h >= 8 && h < 21) || (d === 5 && h >= 8 && h < 14);
-    if (inHours) {
+    noWa = (await hasWhatsapp(phone)) === false;
+    if (noWa) {
+      await sb.from('docs').upsert({ coll: 'outbox', id: oid, data: { status: 'dismissed', via: 'no-whatsapp', at: now, key: okey, name, type: 'lead', text: reply } });
+      await sb.rpc('docs_merge', { p_coll: 'leads', p_id: id, p_patch: { noWhatsapp: true, log: lead.log.concat([{ at: new Date().toISOString(), kind: 'system', text: 'למספר אין וואטסאפ, הודעת הפתיחה לא נשלחה. צריך להתקשר.' }]) } });
+    }
+    if (inHours && !noWa) {
       const r = await send(phone, reply, { name });
       if (!r.ok) failErr = String(r.error || 'unknown');
       if (r.ok) {
@@ -140,9 +148,9 @@ Deno.serve(async (req) => {
       }
     }
   }
-  const text = `🆕 ליד חדש · ${srcHe}${langHe}\n👤 ${name}\n📞 ${phone || '-'}${email ? `\n✉️ ${email}` : ''}\n📂 ${topic}${debtRange ? `\n💰 היקף חוב: ${debtRange}` : ''}${preferredTime ? `\n🕐 זמן נוח: ${preferredTime}` : ''}${campaign ? `\n📣 ${campaign}${adName ? ' / ' + adName : ''}` : ''}${notes ? `\n📝 ${notes.slice(0, 400)}` : ''}${sentNow ? '\n\n✅ הודעת פתיחה נשלחה אליו אוטומטית בוואטסאפ.' : direct && inHours ? `\n\n⚠️ השליחה האוטומטית של הודעת הפתיחה נכשלה (${whyFail(failErr)}). המערכת תנסה לשלוח שוב בשעה הקרובה, ואפשר גם לשלוח עכשיו בכפתור "הודעת פתיחה בוואטסאפ".` : direct ? '\n\n🕗 הודעת הפתיחה תצא אוטומטית בתחילת שעות הפעילות.' : ''}\n\nכדאי להתקשר בשעה הקרובה. ליד שמקבל מענה מהיר נסגר הרבה יותר.`;
+  const text = `🆕 ליד חדש · ${srcHe}${langHe}\n👤 ${name}\n📞 ${phone || '-'}${email ? `\n✉️ ${email}` : ''}\n📂 ${topic}${debtRange ? `\n💰 היקף חוב: ${debtRange}` : ''}${preferredTime ? `\n🕐 זמן נוח: ${preferredTime}` : ''}${campaign ? `\n📣 ${campaign}${adName ? ' / ' + adName : ''}` : ''}${notes ? `\n📝 ${notes.slice(0, 400)}` : ''}${noWa ? '\n\n⚠️ למספר הזה אין וואטסאפ. צריך להתקשר אליו.' : sentNow ? '\n\n✅ הודעת פתיחה נשלחה אליו אוטומטית בוואטסאפ.' : direct && inHours ? `\n\n⚠️ השליחה האוטומטית של הודעת הפתיחה נכשלה (${whyFail(failErr)}). המערכת תנסה לשלוח שוב בשעה הקרובה, ואפשר גם לשלוח עכשיו בכפתור "הודעת פתיחה בוואטסאפ".` : direct ? '\n\n🕗 הודעת הפתיחה תצא אוטומטית בתחילת שעות הפעילות.' : ''}\n\nכדאי להתקשר בשעה הקרובה. ליד שמקבל מענה מהיר נסגר הרבה יותר.`;
   if (env('TELEGRAM_BOT_TOKEN') && env('TELEGRAM_CHAT_ID')) {
-    const kb = [[...(phone ? [{ text: '💬 הודעת פתיחה בוואטסאפ', url: wa }] : []), ...(env('APP_URL') ? [{ text: '📋 פתיחה במערכת', url: `${env('APP_URL')}#leads/${id}` }] : [])]];
+    const kb = [[...(phone && !noWa ? [{ text: '💬 הודעת פתיחה בוואטסאפ', url: wa }] : []), ...(env('APP_URL') ? [{ text: '📋 פתיחה במערכת', url: `${env('APP_URL')}#leads/${id}` }] : [])]];
     await fetch(`https://api.telegram.org/bot${env('TELEGRAM_BOT_TOKEN')}/sendMessage`, { method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ chat_id: env('TELEGRAM_CHAT_ID'), text, disable_web_page_preview: true, reply_markup: kb[0].length ? { inline_keyboard: kb } : undefined }) }).catch(() => {});
     // without a WhatsApp sender the opening goes out from the Telegram button; it is marked handled so it is never offered again
@@ -150,7 +158,7 @@ Deno.serve(async (req) => {
   }
   // the automatic opening failed in working hours: keep the failure (the hourly lead run retries it) and give Yakir one
   // message with the ready text and "✓ נשלח", so a message he sends himself is not sent again
-  if (direct && inHours && !sentNow) {
+  if (direct && inHours && !sentNow && !noWa) {
     const at = new Date().toISOString(), label = 'הודעת פתיחה';
     let offered = false;
     if (env('TELEGRAM_BOT_TOKEN') && env('TELEGRAM_CHAT_ID')) {
