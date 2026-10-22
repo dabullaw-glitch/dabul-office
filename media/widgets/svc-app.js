@@ -349,8 +349,8 @@
       body.insertAdjacentHTML('beforeend', '<div class="sv-sum">' + rows + '</div>');
       if (rv.length) body.insertAdjacentHTML('beforeend', '<div class="sv-review"><b>נבדוק לפני תשלום.</b> לפי מה שמילאתם (' + esc(rv.join(', ')) + ') המקרה צריך בדיקה קצרה. שולחים את הפרטים, ונחזור אליכם בתוך יום עבודה עם אישור ומחיר. שום תשלום לא נגבה עכשיו.</div>');
       var terms = el('div', 'sv-terms' + (st.err.agree ? ' sv-bad' : ''));
-      terms.innerHTML = '<ul>' + cfg.terms.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + (svc.gov ? '<li>' + esc(svc.gov) + '</li>' : '') + '</ul>';
-      var lb = el('label', 'sv-agree', '<input type="checkbox"' + (st.agree ? ' checked' : '') + '> קראתי ואני מסכים לתנאים, ומאשר שהפרטים נכונים');
+      terms.innerHTML = '<ul>' + (svc.cancel ? '<li class="sv-cancel"><b>' + esc(svc.cancel) + '</b></li>' : '') + cfg.terms.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + (svc.gov ? '<li>' + esc(svc.gov) + '</li>' : '') + '</ul>';
+      var lb = el('label', 'sv-agree', '<input type="checkbox"' + (st.agree ? ' checked' : '') + '> קראתי ואני מסכים לתנאים ול<a href="https://dabullaw.co.il/%D7%AA%D7%A7%D7%A0%D7%95%D7%9F-%D7%90%D7%AA%D7%A8/" target="_blank" rel="noopener">תקנון האתר</a>, ומאשר שהפרטים נכונים');
       lb.querySelector('input').onchange = function (e) { st.agree = e.target.checked; delete st.err.agree; };
       terms.appendChild(lb); terms.insertAdjacentHTML('beforeend', errHtml('agree'));
       body.appendChild(terms);
