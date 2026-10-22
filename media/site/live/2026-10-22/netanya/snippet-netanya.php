@@ -113,8 +113,21 @@ fetch(A,{method:'POST',headers:{'content-type':'application/json'},body:JSON.str
 	<?php
 }
 
+/* שלוש תמונות מהצלחות המשרד (לקוחות ביום החתימה), מתוך הגלריה שכבר באתר */
+function dnt_photos_sc() {
+	$ids = array(4424, 4430, 4442);
+	$alts = array('לקוחות חותמים על עסקת מקרקעין במשרד עו״ד יקיר דבול בנתניה', 'חתימה על עסקת דירה בחדר הישיבות של המשרד ברחוב רזיאל 1, נתניה', 'לקוחות ועו״ד יקיר דבול אחרי סגירת עסקת נדל״ן בנתניה');
+	$o = '<div class="ph3"><h3>מהמשרד: לקוחות ביום החתימה</h3><div class="g">';
+	foreach ($ids as $i => $id) {
+		$img = wp_get_attachment_image($id, 'medium_large', false, array('alt' => $alts[$i], 'loading' => 'lazy', 'decoding' => 'async', 'sizes' => '(max-width:767px) 33vw, 360px'));
+		if ($img) $o .= '<figure>' . $img . '</figure>';
+	}
+	return $o . '</div><p>תמונות מעסקאות שהמשרד ליווה. <a href="https://dabullaw.co.il/%d7%94%d7%9e%d7%9c%d7%a6%d7%95%d7%aa/">עוד המלצות והצלחות</a></p></div>';
+}
+
 add_action('init', function () {
 	add_shortcode('dnt_form', 'dnt_form_sc');
+	add_shortcode('dnt_photos', 'dnt_photos_sc');
 	add_shortcode('dnt_checklist_form', 'dnt_checklist_sc');
 });
 
