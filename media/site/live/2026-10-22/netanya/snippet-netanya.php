@@ -120,13 +120,8 @@ add_action('init', function () {
 
 /* פירורי לחם של יוסט: בלי הקטגוריה "מידע משפטי" בעמוד הזה */
 add_filter('wpseo_breadcrumb_links', function ($links) {
-	if (!is_single(DNT_POST)) return $links;
-	$out = array();
-	foreach ($links as $l) {
-		if (!empty($l['term_id']) || !empty($l['term'])) continue;
-		$out[] = $l;
-	}
-	return $out;
+	if (!is_single(DNT_POST) || !is_array($links) || count($links) < 3) return $links;
+	return array(reset($links), end($links));
 }, 20);
 
 /* נתוני העמוד לגוגל: מה להקריא, מי בדק, ועל איזה שירות העמוד */
