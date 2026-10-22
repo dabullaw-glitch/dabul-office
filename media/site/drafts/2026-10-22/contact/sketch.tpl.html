@@ -26,7 +26,7 @@ a{color:inherit}
 .card{background:#fff;border-radius:20px;box-shadow:0 24px 60px rgba(20,20,20,.14);border:1px solid var(--line)}
 .form{padding:30px 30px 26px}
 .who{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.who .av{width:52px;height:52px;border-radius:50%;background:linear-gradient(145deg,#f1ddb0,#c5a25a);display:grid;place-items:center;font-weight:900;color:#141414;font-size:20px}
+.who .av{width:58px;height:58px;border-radius:50%;padding:2px;background:linear-gradient(145deg,#f1ddb0,#c5a25a);flex:none}.who .av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;border:2px solid #fff}
 .who b{display:block;color:var(--ink);font-size:16px}.who small{color:var(--muted);font-size:14px}
 .form h2{margin:0 0 6px;font-size:28px;font-weight:900;color:var(--ink);text-wrap:balance}
 .form .sub{margin:0 0 20px;color:var(--muted);font-size:16px}
@@ -37,9 +37,9 @@ a{color:inherit}
 .f input,.f select,.f textarea{font:inherit;font-size:16px;border:1.5px solid #d9d3c6;border-radius:12px;padding:13px 14px;background:#fff;color:var(--ink);min-height:50px}
 .f textarea{min-height:92px;resize:vertical}
 .f input:focus,.f select:focus,.f textarea:focus{outline:3px solid rgba(197,162,90,.45);border-color:var(--gold)}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chips label{font-weight:500;font-size:15px;border:1.5px solid #d9d3c6;border-radius:999px;padding:9px 16px;cursor:pointer;display:flex;align-items:center;gap:6px;min-height:44px}
-.chips input{accent-color:#c5a25a}
+.chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.chips label{font-weight:600;font-size:15px;border:1.5px solid #d9d3c6;border-radius:12px;padding:10px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:58px;text-align:center;line-height:1.2}.chips label small{font-weight:500;font-size:12.5px;color:var(--muted)}.chips input{position:absolute;opacity:0;pointer-events:none}.chips label:focus-within{outline:3px solid rgba(197,162,90,.45)}
+
 .chips label.on{border-color:var(--gold);background:#fbf4e3;color:var(--ink)}
 .consent{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.6;color:var(--muted);margin:6px 0 16px}
 .consent input{width:20px;height:20px;margin-top:2px;accent-color:#c5a25a;flex:none}
@@ -57,13 +57,18 @@ a{color:inherit}
 .qc b{display:block;color:var(--ink);font-size:16.5px}.qc small{color:var(--muted);font-size:14.5px}
 .qc .arr{margin-inline-start:auto;color:var(--gold);font-weight:900}
 .place{display:grid;grid-template-columns:120px 1fr;gap:14px;padding:14px}
-.place img{width:120px;height:150px;object-fit:cover;border-radius:12px}
+.place .mini{width:120px;height:150px;display:block}
 .place b{color:var(--ink);font-size:17px}.place p{margin:4px 0;font-size:15px;line-height:1.55}
 .place .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .place .btns a{border:1.5px solid var(--gold);color:var(--ink);border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px;text-decoration:none}
 .place .acc{display:inline-flex;gap:6px;align-items:center;background:#eef6ff;color:#1d4f86;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:700;margin-top:6px}
 .hours{padding:14px 18px;display:flex;justify-content:space-between;gap:10px;font-size:15px}
 .hours b{color:var(--ink)}
+.about{max-width:1180px;margin:44px auto 0;padding-inline:20px}
+.ab-in{background:var(--cream);border:1px solid var(--line);border-radius:20px;padding:clamp(22px,4vw,40px)}
+.about h2{margin:0;font-size:clamp(26px,3.4vw,38px);font-weight:900;color:var(--ink);text-wrap:balance}
+.ab-bar{width:120px;height:2px;background:linear-gradient(270deg,var(--gold) 0 40px,#cfc6b3 40px);margin:14px 0 18px}
+.about p{font-size:17.5px;line-height:1.8;margin:0 0 10px;max-width:none}
 /* steps */
 .steps{max-width:1180px;margin:44px auto 0;padding-inline:20px}
 .steps h3{text-align:center;margin:0 0 20px;font-size:28px;color:var(--ink);font-weight:900}
@@ -93,13 +98,14 @@ a{color:inherit}
 .mini summary{cursor:pointer;color:var(--goldd);font-weight:700}
 .mini .consent{margin:0 0 6px}
 @media (max-width:860px){
+ .chips{grid-template-columns:repeat(2,minmax(0,1fr))}
  .hd nav{display:none}
  .wrap{grid-template-columns:1fr;margin-top:-80px}
  .row,.mini .row3{grid-template-columns:1fr}
  .st{grid-template-columns:1fr}
  .band .in{grid-template-columns:1fr}
  .form{padding:22px 18px}
- .place{grid-template-columns:96px 1fr}.place img{width:96px;height:124px}
+ .place{grid-template-columns:96px 1fr}.place .mini{width:96px;height:120px}
 }
 </style>
 
@@ -114,7 +120,7 @@ a{color:inherit}
  </section>
  <div class="wrap">
   <form class="card form" onsubmit="event.preventDefault()" aria-label="טופס פנייה">
-   <div class="who"><div class="av">י״ד</div><div><b>עו״ד יקיר דבול · מייסד המשרד</b><small>הפנייה מגיעה ישירות אליי</small></div></div>
+   <div class="who"><div class="av"><img src="data:image/jpeg;base64,{YAKIR}" alt="עו״ד יקיר דבול"></div><div><b>עו״ד יקיר דבול · מייסד המשרד</b><small>הפנייה מגיעה ישירות אליי</small></div></div>
    <h2>רוצים לדעת מה האפשרויות שלכם?</h2>
    <p class="sub">השאירו פרטים ונחזור אליכם בהקדם.</p>
    <div class="row">
@@ -126,7 +132,7 @@ a{color:inherit}
     <div class="f"><label for="e">מייל (לא חובה)</label><input id="e" type="email" autocomplete="email" placeholder="name@mail.com"></div>
    </div>
    <div class="f"><span style="font-weight:700;font-size:15px;color:var(--ink2)">מתי נוח לכם שנחזור?</span>
-    <div class="chips" role="radiogroup" aria-label="מתי נוח לחזור"><label class="on"><input type="radio" name="w" checked> מתי שנוח</label><label><input type="radio" name="w"> בבוקר</label><label><input type="radio" name="w"> בצהריים</label><label><input type="radio" name="w"> אחרי 17:00</label></div></div>
+    <div class="chips" role="radiogroup" aria-label="מתי נוח לחזור"><label class="on"><input type="radio" name="w" checked>מתי שנוח<small>בהקדם</small></label><label><input type="radio" name="w">בבוקר<small>9:00-12:00</small></label><label><input type="radio" name="w">בצהריים<small>12:00-15:00</small></label><label><input type="radio" name="w">אחר הצהריים<small>15:00-18:00</small></label></div></div>
    <div class="f"><label for="m">ספרו בכמה מילים (לא חובה)</label><textarea id="m" placeholder="למשל: מצאנו דירה בנתניה ורוצים לבדוק אותה לפני שחותמים"></textarea></div>
    <label class="consent"><input type="checkbox"> <span>קראתי ומסכים/ה ל<a href="#">מדיניות הפרטיות</a>. אני מאשר/ת כי ידוע לי ומוסכם עלי כי הפרטים שמסרתי ייאספו, יוחזקו ויעובדו במאגר מידע בהתאם להוראות חוק הגנת הפרטיות, התשמ"א-1981 (כולל תיקון 13), ולמטרות המפורטות במדיניות הפרטיות של האתר. ידוע לי כי מסירת המידע נעשית מרצוני החופשי, וכי עומדות לי הזכויות המוקנות לי לפי החוק.</span></label>
    <button class="go" type="submit">כן, תחזרו אליי</button>
@@ -140,12 +146,23 @@ a{color:inherit}
     <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span><b>שלחו מייל</b><small>dabullaw@gmail.com</small></span><span class="arr">‹</span></a>
    </div>
    <div class="card place">
-    <img src="data:image/jpeg;base64,{ENT}" alt="דלת הכניסה למשרד ברחוב רזיאל 1 בנתניה">
+    <svg class="mini" viewBox="0 0 120 150" role="img" aria-label="מפה קטנה: המשרד ברחוב רזיאל 1, מול בית המשפט"><rect width="120" height="150" rx="12" fill="#f3efe6"/><path d="M0 52h120M0 108h120M38 0v150M86 0v150" stroke="#fff" stroke-width="9"/><path d="M0 52h120M0 108h120M38 0v150M86 0v150" stroke="#e4dccb" stroke-width="1"/><rect x="48" y="62" width="30" height="36" rx="4" fill="#d9d3c6"/><text x="63" y="84" font-size="8" text-anchor="middle" fill="#6b665c" font-family="Heebo,Arial">בית משפט</text><circle cx="62" cy="40" r="15" fill="#141414"/><path d="M62 30c-4.4 0-8 3.3-8 7.6 0 5.6 8 13.4 8 13.4s8-7.8 8-13.4c0-4.3-3.6-7.6-8-7.6z" fill="#c5a25a"/><circle cx="62" cy="37.6" r="2.8" fill="#141414"/><text x="62" y="128" font-size="9" font-weight="700" text-anchor="middle" fill="#141414" font-family="Heebo,Arial">רזיאל 1</text></svg>
     <div><b>המשרד ברזיאל 1, נתניה</b><p>קומת הכניסה, ממש מול בית המשפט.</p><span class="acc">♿ כניסה נגישה, בלי מדרגות</span><div class="btns"><a href="#">ניווט בוויז</a><a href="#">גוגל מפות</a></div></div>
    </div>
    <div class="card hours"><b>שעות פעילות</b><span>ראשון עד חמישי, 9:00-18:00</span></div>
   </div>
  </div>
+<section class="about">
+  <div class="ab-in">
+   <h2>אני כאן לרשותכם - לכל שאלה ופנייה</h2><div class="ab-bar"></div>
+   <p>אני מספק מענה משפטי מקיף, תחת קורת גג אחת, לחברות ויזמים כמו גם ללקוחות פרטיים, בתחומי ההתמחות המרכזיים של המשרד:</p>
+   <p>מקרקעין ונדל"ן, התחדשות עירונית, הוצאה לפועל, חברות ושותפויות,</p>
+   <p>ליטיגציה אזרחית-מסחרית וצוואות וירושות.</p>
+   <p>אני מאמין שמחובתי להעניק שירות אישי, מקצועי, יסודי ומהיר בכל תחומי העיסוק. משרדי ילווה אתכם לאורך כל הדרך – החל משלב המשא ומתן, דרך ההתנהלות השוטפת מול הרשויות, ועד להשלמת המשימה לשביעות רצונכם המלאה.</p>
+   <p>כל זאת, בליווי צמוד ובשימוש בכלים פרקטיים שיסייעו לכם להתמודד עם האתגרים המשפטיים העומדים בפניכם.</p>
+   <p>אני רואה בהצלחתכם את הצלחתיי. פנו אליי היום וקבלו את השקט הנפשי הנדרש בידיעה שיש לכם עורך דין מקצועי שיעמוד לצדכם לאורך כל הדרך.</p>
+  </div>
+ </section>
  <section class="steps">
   <h3>מה קורה אחרי שפונים?</h3>
   <div class="st">
@@ -156,7 +173,7 @@ a{color:inherit}
  </section>
  <div class="map">כאן נשארת מפת גוגל של המשרד, לרוחב העמוד</div>
 </div>
-<p class="note">מה השתנה: הטופס הוא הדבר הראשון שרואים, באותו סגנון של הטופס שבצד המאמרים. הטקסט הארוך על המשרד ירד. נוספו בחירה מתי נוח שנחזור, כפתורי וואטסאפ וזום, תמונת הכניסה עם ניווט, ושלושה צעדים פשוטים. כל השדות עם כותרת גלויה, כפתורים גדולים לאצבע, וניגודיות גבוהה.</p>
+<p class="note">מה השתנה: הטופס הוא הדבר הראשון שרואים, באותו סגנון של הטופס שבצד המאמרים. החלק "אני כאן לרשותכם" נשאר בדיוק כמו שהוא, מתחת לטופס. נוספו בחירה מתי נוח שנחזור, כפתורי וואטסאפ וזום, כרטיס "איך מגיעים" עם מפה קטנה וכפתורי ניווט, ושלושה צעדים פשוטים. כל השדות עם כותרת גלויה, כפתורים גדולים לאצבע, וניגודיות גבוהה.</p>
 
 <div class="label"><span>סקיצה 2</span> החלק "צריכים סיוע משפטי?" בתחתית כל עמוד <small>· עוד לא באתר</small></div>
 <div class="frame">
