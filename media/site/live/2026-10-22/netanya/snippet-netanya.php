@@ -218,7 +218,7 @@ add_action('rest_api_init', function () {
 					$ed = wp_get_image_editor($f);
 					if (is_wp_error($ed)) { $out[$id] = null; continue; }
 					$sz = $ed->get_size();
-					$ed->resize(360, 360, false);
+					$mx = min(1600, max(100, (int) ($r->get_param('max') ?: 360))); $ed->resize($mx, $mx, false);
 					$tmp = wp_tempnam('dnt') . '.jpg';
 					$sv = $ed->save($tmp, 'image/jpeg');
 					if (is_wp_error($sv)) { $out[$id] = null; continue; }
