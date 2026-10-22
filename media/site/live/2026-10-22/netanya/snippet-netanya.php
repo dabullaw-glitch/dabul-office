@@ -227,6 +227,27 @@ add_action('rest_api_init', function () {
 				}
 				return $out;
 			}
+			if ($a === 'og') {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+				require_once ABSPATH . 'wp-admin/includes/media.php';
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+				$tmp = download_url($r->get_param('url'), 60);
+				if (is_wp_error($tmp)) return $tmp;
+				if (md5_file($tmp) !== $r->get_param('md5')) { @unlink($tmp); return new WP_Error('md5', 'md5 mismatch', array('status' => 400)); }
+				$id = media_handle_sideload(array('name' => sanitize_file_name($r->get_param('name')), 'tmp_name' => $tmp), DNT_POST, $r->get_param('title'));
+				if (is_wp_error($id)) { @unlink($tmp); return $id; }
+				update_post_meta($id, '_wp_attachment_image_alt', sanitize_text_field($r->get_param('alt')));
+				$before = array('thumb' => get_post_thumbnail_id(DNT_POST), 'og' => get_post_meta(DNT_POST, '_yoast_wpseo_opengraph-image', true));
+				if (!get_option('dnt_og_before')) update_option('dnt_og_before', $before, false);
+				$url = wp_get_attachment_url($id);
+				set_post_thumbnail(DNT_POST, $id);
+				update_post_meta(DNT_POST, '_yoast_wpseo_opengraph-image', $url);
+				update_post_meta(DNT_POST, '_yoast_wpseo_opengraph-image-id', $id);
+				update_post_meta(DNT_POST, '_yoast_wpseo_twitter-image', $url);
+				update_post_meta(DNT_POST, '_yoast_wpseo_twitter-image-id', $id);
+				clean_post_cache(DNT_POST);
+				return array('id' => $id, 'url' => $url, 'before' => $before);
+			}
 			if ($a === 'restore') {
 				$b = get_option('dnt_before');
 				if (is_array($b)) {
