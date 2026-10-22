@@ -1,0 +1,99 @@
+<title>סקיצת הצלחות</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap">
+<style>
+{FONTFACE}
+:root{--ink:#141414;--text:#3d3b37;--muted:#6b665c;--line:#e6e1d6;--bg:#f4f2ee;--card:#fff;--gold:#c5a25a;--gold2:#e7cd96;--goldd:#8c7646;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Heebo,HeeboLocal,Arial,sans-serif;color:var(--text);direction:rtl}
+.label{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:24px 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-weight:800;color:var(--ink);font-size:19px}
+.label span{background:var(--ink);color:var(--gold2);font-size:14px;border-radius:999px;padding:4px 12px}
+.label small{font-weight:500;color:var(--muted);font-size:15px}
+.sec{max-width:1240px;margin:0 auto;background:#fafaf8;border-radius:20px;box-shadow:0 20px 50px rgba(20,20,20,.08);padding-block:44px 40px;padding-inline:clamp(16px,3vw,40px)}
+.hd{text-align:center;margin-bottom:22px}
+.hd h2{margin:0;font-size:clamp(32px,4vw,46px);font-weight:900;color:var(--ink)}
+.hd .bar{width:120px;height:2px;background:linear-gradient(90deg,transparent,#cfc6b3 20%,var(--gold) 45%,var(--gold) 55%,#cfc6b3 80%,transparent);margin:12px auto 0}
+.hd p{margin:14px auto 0;max-width:560px;font-size:18px;line-height:1.6;color:var(--muted);text-wrap:balance}
+.chips{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:22px 0 26px}
+.chips button{font:inherit;font-size:16px;font-weight:700;border:1.5px solid #d9d3c6;background:#fff;color:var(--ink);border-radius:999px;padding:10px 18px;min-height:46px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--gold2);border-color:var(--ink)}
+.chips button:focus-visible{outline:3px solid rgba(197,162,90,.6);outline-offset:2px}
+.chips b{font-weight:500;opacity:.7;margin-inline-start:6px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;grid-auto-flow:dense}
+.it{position:relative;border-radius:18px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 8px 22px rgba(20,20,20,.06);cursor:pointer;aspect-ratio:4/5;padding:0;font:inherit;text-align:right;transition:transform .2s,box-shadow .2s}
+.it:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(20,20,20,.12)}
+.it:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.it img{width:100%;height:100%;object-fit:cover;display:block}
+.it.msg{background:#efe7dc}
+.it.msg img{object-fit:cover;object-position:top}
+.it.msg:after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(180deg,rgba(239,231,220,0),#efe7dc 70%)}
+.tag{position:absolute;top:12px;right:12px;z-index:2;background:rgba(20,20,20,.82);color:var(--gold2);font-weight:700;font-size:13.5px;border-radius:999px;padding:5px 12px;backdrop-filter:blur(4px)}
+.cap{position:absolute;inset:auto 0 0 0;z-index:2;padding:40px 16px 14px;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.72));color:#fff;font-weight:700;font-size:16px}
+.it.msg .cap{background:none;color:var(--ink);padding-top:0}
+.it.msg .cap small{display:block;color:var(--goldd);font-weight:700;font-size:14px;margin-top:2px}
+.it.video{grid-column:span 2;grid-row:span 2;aspect-ratio:auto;background:#141414}
+.it.video img{opacity:.92}
+.play{position:absolute;inset:0;display:grid;place-items:center;z-index:2}
+.play i{width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.play i:before{content:"";border-style:solid;border-width:16px 0 16px 26px;border-color:transparent transparent transparent #141414;margin-left:6px}
+.it.video .cap{font-size:20px;padding:60px 20px 18px}
+.it.video .cap small{display:block;font-weight:500;font-size:15px;opacity:.85}
+.more{display:flex;justify-content:center;margin-top:26px}
+.more button{font:inherit;font-weight:800;font-size:17px;border:0;border-radius:14px;padding:14px 26px;min-height:52px;background:linear-gradient(90deg,#d6b46a,#e7cd96 50%,#d6b46a);color:#141414;cursor:pointer}
+.lb{position:fixed;inset:0;z-index:50;background:rgba(10,10,10,.88);display:flex;align-items:center;justify-content:center;padding:16px}
+.lb img{max-width:min(92vw,720px);max-height:86vh;border-radius:14px;background:#fff}
+.lb button{position:absolute;top:14px;left:14px;width:48px;height:48px;border-radius:50%;border:0;background:#fff;font-size:24px;font-weight:800;cursor:pointer}
+.note{max-width:1240px;margin:14px auto 0;padding-inline:16px;font-size:16px;line-height:1.75;color:var(--text)}
+.note h3{margin:0 0 6px;font-size:18px;color:var(--ink)}
+.note ul{margin:6px 0 0;padding-inline-start:20px}
+.note li{margin-bottom:4px}
+@media (max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.it.video{grid-column:span 2;grid-row:auto;aspect-ratio:9/12}.tag{font-size:12.5px;top:8px;right:8px}.cap{font-size:14px;padding:30px 10px 10px}.chips button{font-size:15px;padding:9px 14px}}
+</style>
+
+<div class="label"><span>סקיצה</span> החלק "הצלחות" בעמוד ההמלצות <small>· עוד לא באתר</small></div>
+<section class="sec" aria-labelledby="ttl">
+ <div class="hd"><h2 id="ttl">הצלחות</h2><div class="bar"></div><p>רגעים אמיתיים מהמשרד: חתימות, מסירות מפתח, והודעות שלקוחות שלחו לנו.</p></div>
+ <div class="chips" role="group" aria-label="סינון">
+  <button aria-pressed="true" data-f="all">הכל<b>8</b></button>
+  <button aria-pressed="false" data-f="sign">רגעי חתימה<b>3</b></button>
+  <button aria-pressed="false" data-f="msg">הודעות מלקוחות<b>3</b></button>
+  <button aria-pressed="false" data-f="gift">תודה ומתנות<b>2</b></button>
+ </div>
+ <div class="grid" id="grid"></div>
+ <div class="more"><button type="button">לעוד הצלחות</button></div>
+</section>
+<div class="note">
+ <h3>מה השתנה</h3>
+ <ul>
+  <li>במקום ערימה אחת של תמונות: סינון לפי סוג (רגעי חתימה, הודעות מלקוחות, תודה ומתנות).</li>
+  <li>כל הכרטיסים באותו גודל, עם פינות מעוגלות ותווית קטנה שאומרת מה רואים.</li>
+  <li>בהתחלה מוצגות 12 תמונות בלבד, ועוד נטענות בלחיצה על "לעוד הצלחות". העמוד קצר ונקי יותר, וגם נטען מהר יותר.</li>
+  <li>סרטון ההמלצות למעלה, בכרטיס גדול, אחרי שהוא עולה ליוטיוב מחר.</li>
+  <li>הודעות וואטסאפ מוצגות מלמעלה, עם מעבר רך למטה. לחיצה פותחת את ההודעה המלאה בגדול.</li>
+ </ul>
+ <h3 style="margin-top:12px">הצעות נוספות, לאישורך</h3>
+ <ul>
+  <li>להוריד מהגלריה תמונות עם לוגו של משרדי תיווך (סארוסי, BS) ותמונות עם סכומי חובות שנסגרו. הן מבלבלות, ותחום החובות לא מופיע בכותרות האתר.</li>
+  <li>להסתיר פנים בצורה אחידה (טשטוש עדין) במקום אימוג׳ים, כמו בסרטון.</li>
+ </ul>
+</div>
+<script>
+const IMG={IMGS};
+const items=[
+ {k:'poster',t:'video',tag:'סרטון',cap:'מה הלקוחות שלנו אומרים',sub:'39 שניות'},
+ {k:'r30',t:'sign',tag:'רגע החתימה',cap:'עוד עסקה נחתמה'},
+ {k:'r02',t:'msg',tag:'הודעה מלקוח',cap:'״גבר, תודה רבה רבה על הכל״',sub:'לקריאת ההודעה'},
+ {k:'r31',t:'sign',tag:'רגע החתימה',cap:'חתימה במשרד'},
+ {k:'r29',t:'gift',tag:'תודה',cap:'מתנה מלקוחות'},
+ {k:'r21',t:'msg',tag:'הודעה מלקוח',cap:'״קנינו בית!״',sub:'לקריאת ההודעה'},
+ {k:'r24',t:'sign',tag:'רגע החתימה',cap:'ליווי אישי, פנים אל פנים'},
+ {k:'r16',t:'msg',tag:'הודעה מלקוח',cap:'״מצ״ב אישור רישום בטאבו״',sub:'לקריאת ההודעה'},
+ {k:'r06',t:'gift',tag:'תודה',cap:'בקבוק תודה אחרי הסגירה'}];
+const g=document.getElementById('grid');
+function draw(f){g.innerHTML='';items.filter(i=>f==='all'||i.t===f||(f!=='all'&&false)).forEach(i=>{
+ const b=document.createElement('button');b.type='button';b.className='it '+i.t;b.setAttribute('aria-label',i.cap+', הגדלה');
+ b.innerHTML=`<img src="${IMG[i.k]}" alt="${i.cap}"><span class="tag">${i.tag}</span>${i.t==='video'?'<span class="play"><i></i></span>':''}<span class="cap">${i.cap}${i.sub?`<small>${i.sub}</small>`:''}</span>`;
+ b.onclick=()=>{const l=document.createElement('div');l.className='lb';l.innerHTML=`<img src="${IMG[i.k]}" alt="${i.cap}"><button aria-label="סגירה">×</button>`;l.onclick=()=>l.remove();document.body.appendChild(l);l.querySelector('button').focus()};
+ g.appendChild(b)})}
+document.querySelectorAll('.chips button').forEach(c=>c.onclick=()=>{document.querySelectorAll('.chips button').forEach(x=>x.setAttribute('aria-pressed','false'));c.setAttribute('aria-pressed','true');draw(c.dataset.f)});
+draw('all');
+</script>
