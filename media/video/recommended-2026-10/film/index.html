@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="assets/gsap.min.js"></script>
+<style>
+@font-face{font-family:'Heebo';font-weight:700;src:url(assets/fonts/heebo-hebrew-700-normal.woff2) format('woff2'),url(assets/fonts/heebo-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Heebo';font-weight:800;src:url(assets/fonts/heebo-hebrew-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Heebo';font-weight:900;src:url(assets/fonts/heebo-hebrew-900-normal.woff2) format('woff2')}
+@font-face{font-family:'HeeboL';font-weight:700;src:url(assets/fonts/heebo-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'HeeboL';font-weight:800;src:url(assets/fonts/heebo-latin-800-normal.woff2) format('woff2')}
+:root{--gold:#C9A24F;--gold2:#E6CB86;--ink:#F4EFE4;--ground:#111214;--muted:#B9B3A6}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ground)}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:radial-gradient(1200px 900px at 50% 38%,#26221a 0%,#141416 55%,#0d0e10 100%);font-family:'Heebo','HeeboL',sans-serif;color:var(--ink);direction:rtl}
+.scene{position:absolute;inset:0;overflow:hidden}
+.abs{position:absolute}
+.label{position:absolute;top:300px;left:0;right:0;text-align:center;font-weight:700;font-size:34px;letter-spacing:.06em;color:var(--gold)}
+.label i{display:inline-block;width:46px;height:3px;background:var(--gold);vertical-align:middle;margin:0 18px;font-style:normal}
+.quote{position:absolute;top:360px;left:60px;right:60px;text-align:center;font-weight:900;font-size:84px;line-height:1.12;color:var(--ink);text-wrap:balance}
+.card{position:absolute;left:60px;width:960px;background:#fff;border-radius:30px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 2px rgba(201,162,79,.55);overflow:hidden;padding:18px 0}
+.card img{display:block;width:100%;height:auto}
+.chip{position:absolute;height:76px;padding:0 30px;border-radius:40px;background:rgba(255,255,255,.08);border:2px solid rgba(201,162,79,.7);display:flex;align-items:center;gap:16px;white-space:nowrap;font-weight:800;font-size:34px;color:var(--ink)}
+.chip b{font-family:'HeeboL','Heebo';font-weight:800;color:#fff}
+.chip .n{font-family:'HeeboL','Heebo';color:var(--gold2)}
+.chip .sub{font-weight:700;color:var(--muted);font-size:30px}
+.stars{display:inline-flex;gap:4px;direction:ltr}
+.st{width:32px;height:32px;fill:#F5B82E}
+.photo{position:absolute;left:70px;width:940px;border:14px solid #fff;border-radius:10px;box-shadow:0 40px 90px rgba(0,0,0,.6)}
+.photo img{display:block;width:100%;height:100%;object-fit:cover}
+.bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.phone{position:absolute;left:220px;top:620px;width:640px;height:820px;border-radius:56px 56px 0 0;background:#060606;border:3px solid rgba(201,162,79,.8);border-bottom:0;padding:20px 20px 0;-webkit-mask-image:linear-gradient(180deg,#000 62%,rgba(0,0,0,0) 98%);mask-image:linear-gradient(180deg,#000 62%,rgba(0,0,0,0) 98%)}
+.screen{position:relative;width:100%;height:100%;border-radius:38px 38px 0 0;overflow:hidden;background:#efe7dc}
+.screen img{position:absolute;left:0;top:0;width:100%;height:auto}
+.pfade{position:absolute;left:-60px;right:-60px;bottom:-60px;height:340px;background:linear-gradient(180deg,rgba(17,18,20,0),#111214 85%);z-index:4}
+.notch{position:absolute;top:30px;left:50%;width:150px;height:30px;margin-left:-75px;border-radius:20px;background:#060606;z-index:3}
+.logo{position:absolute;top:190px;left:50%;width:300px;margin-left:-150px}
+.gline{position:absolute;left:140px;right:140px;height:3px;background:linear-gradient(90deg,rgba(201,162,79,0),var(--gold),rgba(201,162,79,0))}
+.wipe{position:absolute;top:-200px;width:1500px;height:2400px;background:linear-gradient(90deg,#b8913f,#E6CB86 45%,#b8913f)}
+.big{font-family:'HeeboL','Heebo';font-weight:800}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-width="1080" data-height="1920" data-start="0" data-duration="39.0">
+<img id="dmark" class="clip abs" data-start="0" data-duration="39.0" data-track-index="0" src="assets/img/dmark.png" alt="" style="left:390px;top:1440px;width:300px;opacity:.07">
+<div id="hook" class="scene clip" data-start="0.0" data-duration="2.76" data-track-index="1">
+<div id="hk-f0" class="card" style="left:40px;top:330px;width:748px;transform-origin:50% 50%;opacity:.38"><img src="assets/img/g-1.jpg" alt=""></div>
+<div id="hk-f1" class="card" style="left:120px;top:1330px;width:756px;transform-origin:50% 50%;opacity:.38"><img src="assets/img/lr-2.jpg" alt=""></div>
+<div id="hk-f2" class="card" style="left:60px;top:1080px;width:783px;transform-origin:50% 50%;opacity:.38"><img src="assets/img/fb-1.jpg" alt=""></div>
+<div id="hk-dim" class="abs" style="inset:0;background:radial-gradient(700px 520px at 50% 47%,rgba(13,14,16,.92),rgba(13,14,16,.55))"></div>
+<div id="hk-stars" class="abs" style="top:690px;left:0;right:0;display:flex;justify-content:center"><span class="stars" style="gap:12px"><svg viewBox="0 0 24 24" class="st" style="width:74px;height:74px"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st" style="width:74px;height:74px"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st" style="width:74px;height:74px"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st" style="width:74px;height:74px"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st" style="width:74px;height:74px"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg></span></div>
+<div id="hk-t1" class="abs" style="top:800px;left:40px;right:40px;text-align:center;font-weight:900;font-size:120px;line-height:1.05">מה הלקוחות<br>שלנו אומרים?</div>
+<div id="hk-gl" class="gline" style="top:1090px"></div>
+</div>
+<div id="g1" class="scene clip" data-start="2.76" data-duration="3.28" data-track-index="1">
+<img id="g1-logo" class="logo" src="assets/img/logo-full.png" alt="">
+<div id="g1-lab" class="label"><i></i>ביקורת בגוגל<i></i></div>
+<div id="g1-q" class="quote">״יקיר פישט לנו<br>את הכל״</div>
+<div id="g1-chip" class="chip" style="top:650px;left:0;right:0;margin:0 auto;width:fit-content"><b>Google</b><span class="stars"><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg></span><span class="n">4.9</span><span class="sub">74 ביקורות</span></div>
+<div id="g1-card" class="card" style="top:760px"><img src="assets/img/g-1.jpg" alt="צילום מסך של המלצה"></div>
+</div>
+<div id="p30" class="scene clip" data-start="6.04" data-duration="2.18" data-track-index="1">
+<img id="p30-bg" class="bgimg" src="assets/img/r30-bg.jpg" alt="">
+<img id="p30-logo" class="logo" src="assets/img/logo-full.png" alt="">
+<div id="p30-q" class="quote" style="top:330px;font-size:88px">רגע החתימה</div>
+<div id="p30-ph" class="photo" style="top:535px;height:733px"><img id="p30-img" src="assets/img/r30-blur.jpg" alt="לקוחות במשרד"></div>
+</div>
+<div id="c02" class="scene clip" data-start="8.22" data-duration="3.27" data-track-index="1">
+<img id="c02-logo" class="logo" src="assets/img/logo-full.png" alt="">
+<div id="c02-lab" class="label"><i></i>הודעות שאנחנו מקבלים<i></i></div>
+<div id="c02-q" class="quote">״תודה רבה רבה<br>על הכל״</div>
+<div id="c02-phone" class="phone"><div class="notch"></div><div class="screen"><img id="c02-img" src="assets/img/r02.jpg" alt="הודעה מלקוח"></div></div>
+</div>
+<div id="lr1" class="scene clip" data-start="11.49" data-duration="3.28" data-track-index="1">
+<img id="lr1-logo" class="logo" src="assets/img/logo-full.png" alt="">
+<div id="lr1-lab" class="label"><i></i>המלצה בלוירוויוז<i></i></div>
+<div id="lr1-q" class="quote">״יחס של משפחה״</div>
+<div id="lr1-chip" class="chip" style="top:650px;left:0;right:0;margin:0 auto;width:fit-content"><b>LawReviews</b><span class="stars"><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg></span><span class="n">5.0</span><span class="sub">52 המלצות</span></div>
+<div id="lr1-card" class="card" style="top:760px"><img src="assets/img/lr-1.jpg" alt="צילום מסך של המלצה"></div>
+</div>
+<div id="p31" class="scene clip" data-start="14.77" data-duration="2.18" data-track-index="1">
+<img id="p31-bg" class="bgimg" src="assets/img/r31-bg.jpg" alt="">
+<img id="p31-logo" class="logo" src="assets/img/logo-full.png" alt="">
+<div id="p31-q" class="quote" style="top:330px;font-size:88px">עוד עסקה נחתמה</div>
+<div id="p31-ph" class="photo" style="top:535px;height:733px"><img id="p31-img" src="assets/img/r31-blur.jpg" alt="לקוחות במשרד"></div>
+</div>
+<div id="fb1" class="scene clip" data-start="16.95" data-duration="3.27" data-track-index="1">
+<img id="fb1-logo" class="logo" src="assets/img/logo-full.png" alt="">
+<div id="fb1-lab" class="label"><i></i>המלצה בפייסבוק<i></i></div>
+<div id="fb1-q" class="quote">״נתן לנו ביטחון<br>מלא בתהליך״</div>
+<div id="fb1-chip" class="chip" style="top:650px;left:0;right:0;margin:0 auto;width:fit-content"><b>Facebook</b><span class="stars"><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg></span><span class="n">100%</span><span class="sub">ממליצים</span></div>
+<div id="fb1-card" class="card" style="top:760px"><img src="assets/img/fb-1.jpg" alt="צילום מסך של המלצה"></div>
+</div>
+<div id="c21" class="scene clip" data-start="20.22" data-duration="3.28" data-track-index="1">
+<img id="c21-logo" class="logo" src="assets/img/logo-full.png" alt="">
+<div id="c21-lab" class="label"><i></i>הודעות שאנחנו מקבלים<i></i></div>
+<div id="c21-q" class="quote">״קנינו בית!״</div>
+<div id="c21-phone" class="phone"><div class="notch"></div><div class="screen"><img id="c21-img" src="assets/img/r21.jpg" alt="הודעה מלקוח"></div></div>
+</div>
+<div id="p24" class="scene clip" data-start="23.5" data-duration="2.13" data-track-index="1">
+<img id="p24-bg" class="bgimg" src="assets/img/r24-bg.jpg" alt="">
+<img id="p24-logo" class="logo" src="assets/img/logo-full.png" alt="">
+<div id="p24-q" class="quote" style="top:330px;font-size:88px">ליווי אישי, פנים אל פנים</div>
+<div id="p24-ph" class="photo" style="top:535px;height:733px"><img id="p24-img" src="assets/img/r24-blur.jpg" alt="לקוחות במשרד"></div>
+</div>
+<div id="mont" class="scene clip" data-start="25.63" data-duration="3.33" data-track-index="1">
+<img id="mont-logo" class="logo" src="assets/img/logo-full.png" alt="">
+<div id="mont-q" class="quote" style="top:330px">ועוד עשרות<br>לקוחות ממליצים</div>
+<div id="mont-chips" class="abs" style="top:600px;left:0;right:0;display:flex;justify-content:center;gap:18px;font-weight:800;font-size:30px;color:var(--gold2)"><span>Google</span><span>·</span><span>LawReviews</span><span>·</span><span>Facebook</span></div>
+<div id="mont-c0" class="card" style="top:700px"><img src="assets/img/g-2.jpg" alt="צילום מסך של המלצה"></div>
+<div id="mont-c1" class="card" style="top:820px"><img src="assets/img/fb-2.jpg" alt="צילום מסך של המלצה"></div>
+<div id="mont-c2" class="card" style="top:940px"><img src="assets/img/lr-2.jpg" alt="צילום מסך של המלצה"></div>
+<div id="mont-c3" class="card" style="top:1060px"><img src="assets/img/g-3.jpg" alt="צילום מסך של המלצה"></div>
+</div>
+<div id="c16" class="scene clip" data-start="28.96" data-duration="2.18" data-track-index="1">
+<img id="c16-logo" class="logo" src="assets/img/logo-full.png" alt="">
+<div id="c16-lab" class="label"><i></i>הרגע שכולם מחכים לו<i></i></div>
+<div id="c16-q" class="quote">״מצ״ב אישור<br>רישום בטאבו״</div>
+<div id="c16-phone" class="phone"><div class="notch"></div><div class="screen"><img id="c16-img" src="assets/img/r16.jpg" alt="הודעה מלקוח"></div></div>
+</div>
+<div id="stats" class="scene clip" data-start="31.14" data-duration="3.27" data-track-index="1">
+<div id="stats-q" class="quote" style="top:300px;font-size:80px">מה אומרים עלינו</div>
+<div id="stats-r0" class="abs" style="top:520px;left:90px;right:90px;height:210px;border-radius:28px;background:rgba(255,255,255,.06);border:2px solid rgba(201,162,79,.55);display:flex;align-items:center;justify-content:space-between;padding:0 56px"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:HeeboL,Heebo;font-weight:800;font-size:46px;color:#fff">Google</span><span style="font-weight:700;font-size:34px;color:var(--muted)">74 ביקורות</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span id="stats-n0" class="big" style="font-size:104px;line-height:1;color:var(--gold2)">4.9</span><span class="stars"><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg></span></div></div>
+<div id="stats-r1" class="abs" style="top:770px;left:90px;right:90px;height:210px;border-radius:28px;background:rgba(255,255,255,.06);border:2px solid rgba(201,162,79,.55);display:flex;align-items:center;justify-content:space-between;padding:0 56px"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:HeeboL,Heebo;font-weight:800;font-size:46px;color:#fff">LawReviews</span><span style="font-weight:700;font-size:34px;color:var(--muted)">52 המלצות</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span id="stats-n1" class="big" style="font-size:104px;line-height:1;color:var(--gold2)">5.0</span><span class="stars"><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg></span></div></div>
+<div id="stats-r2" class="abs" style="top:1020px;left:90px;right:90px;height:210px;border-radius:28px;background:rgba(255,255,255,.06);border:2px solid rgba(201,162,79,.55);display:flex;align-items:center;justify-content:space-between;padding:0 56px"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:HeeboL,Heebo;font-weight:800;font-size:46px;color:#fff">Facebook</span><span style="font-weight:700;font-size:34px;color:var(--muted)">ממליצים</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span id="stats-n2" class="big" style="font-size:104px;line-height:1;color:var(--gold2)">100%</span><span class="stars"><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" class="st"><path d="M12 2.6l2.9 6 6.6.8-4.9 4.6 1.2 6.5L12 17.3 6.2 20.5l1.2-6.5L2.5 9.4l6.6-.8z"/></svg></span></div></div>
+</div>
+<div id="end" class="scene clip" data-start="34.41" data-duration="4.59" data-track-index="1">
+<div id="end-glow" class="abs" style="inset:0;background:radial-gradient(800px 700px at 50% 40%,rgba(201,162,79,.22),rgba(0,0,0,0) 70%)"></div>
+<img id="end-logo" class="abs" src="assets/img/logo-full.png" alt="" style="top:430px;left:90px;width:900px">
+<div id="end-gl" class="gline" style="top:720px"></div>
+<div id="end-t" class="abs" style="top:780px;left:0;right:0;text-align:center;font-weight:900;font-size:82px;line-height:1.15">יקיר דבול<br><span style="font-weight:700;font-size:56px;color:var(--muted)">משרד עורכי דין · נתניה</span></div>
+<div id="end-ph" class="abs" style="top:1010px;left:50%;width:640px;margin-left:-320px;height:120px;border-radius:60px;background:linear-gradient(90deg,#b8913f,#E6CB86 50%,#b8913f);display:flex;align-items:center;justify-content:center;font-family:HeeboL,Heebo;font-weight:800;font-size:66px;color:#141414;direction:ltr">09-8613413</div>
+<div id="end-d" class="abs" style="top:1200px;left:0;right:0;text-align:center;font-weight:700;font-size:32px;color:var(--muted)">המידע כללי ואינו ייעוץ משפטי</div>
+</div>
+<div id="wp0" class="clip abs" data-start="2.52" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp0-p" class="wipe" style="left:0"></div></div>
+<div id="wp1" class="clip abs" data-start="5.8" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp1-p" class="wipe" style="left:0"></div></div>
+<div id="wp2" class="clip abs" data-start="7.98" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp2-p" class="wipe" style="left:0"></div></div>
+<div id="wp3" class="clip abs" data-start="11.25" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp3-p" class="wipe" style="left:0"></div></div>
+<div id="wp4" class="clip abs" data-start="14.53" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp4-p" class="wipe" style="left:0"></div></div>
+<div id="wp5" class="clip abs" data-start="16.71" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp5-p" class="wipe" style="left:0"></div></div>
+<div id="wp6" class="clip abs" data-start="19.98" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp6-p" class="wipe" style="left:0"></div></div>
+<div id="wp7" class="clip abs" data-start="23.26" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp7-p" class="wipe" style="left:0"></div></div>
+<div id="wp8" class="clip abs" data-start="25.39" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp8-p" class="wipe" style="left:0"></div></div>
+<div id="wp9" class="clip abs" data-start="28.72" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp9-p" class="wipe" style="left:0"></div></div>
+<div id="wp10" class="clip abs" data-start="30.9" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp10-p" class="wipe" style="left:0"></div></div>
+<div id="wp11" class="clip abs" data-start="34.17" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp11-p" class="wipe" style="left:0"></div></div>
+<audio id="music" class="clip" data-start="0" data-duration="39.0" data-track-index="10" data-volume="0.75" data-fade-out="2.2" src="assets/music.mp3"></audio>
+<audio id="sw0" class="clip" data-start="2.46" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw1" class="clip" data-start="5.74" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw2" class="clip" data-start="7.92" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw3" class="clip" data-start="11.19" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw4" class="clip" data-start="14.47" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw5" class="clip" data-start="16.65" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw6" class="clip" data-start="19.92" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw7" class="clip" data-start="23.2" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw8" class="clip" data-start="25.33" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw9" class="clip" data-start="28.66" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw10" class="clip" data-start="30.84" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw11" class="clip" data-start="34.11" data-duration="0.55" data-track-index="11" data-volume="0.32" src="assets/sfx/whoosh.wav"></audio>
+<audio id="pp0" class="clip" data-start="3.18" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp1" class="clip" data-start="8.64" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp2" class="clip" data-start="11.91" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp3" class="clip" data-start="17.37" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp4" class="clip" data-start="20.64" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp5" class="clip" data-start="25.88" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp6" class="clip" data-start="26.56" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp7" class="clip" data-start="27.24" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp8" class="clip" data-start="27.92" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp9" class="clip" data-start="29.38" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp10" class="clip" data-start="31.39" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp11" class="clip" data-start="31.69" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="pp12" class="clip" data-start="31.99" data-duration="0.16" data-track-index="12" data-volume="0.35" src="assets/sfx/pop.wav"></audio>
+<audio id="endhit" class="clip" data-start="34.510" data-duration="1.2" data-track-index="13" data-volume="0.4" src="assets/sfx/hit.wav"></audio>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+gsap.set("#p30-ph",{rotation:-2});
+gsap.set("#p31-ph",{rotation:2});
+gsap.set("#p24-ph",{rotation:-1.5});
+gsap.set("#mont-c0",{rotation:-3});
+gsap.set("#mont-c1",{rotation:2.5});
+gsap.set("#mont-c2",{rotation:-1.5});
+gsap.set("#mont-c3",{rotation:2});
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#hk-f0",{rotation:-7,y:-40,scale:1},{rotation:-4.2,y:30,scale:1.04,duration:2.76,ease:"none"},0.0);
+tl.fromTo("#hk-f1",{rotation:6,y:40,scale:1},{rotation:3.5999999999999996,y:-30,scale:1.04,duration:2.76,ease:"none"},0.0);
+tl.fromTo("#hk-f2",{rotation:-4,y:-40,scale:1},{rotation:-2.4,y:30,scale:1.04,duration:2.76,ease:"none"},0.0);
+tl.fromTo("#hk-t1",{scale:1.0},{scale:1.06,duration:2.76,ease:"none"},0.0);
+tl.from("#hk-stars .st",{scale:0.4,opacity:0.25,duration:0.35,stagger:0.09,ease:"back.out(3)"},0.05);
+tl.fromTo("#hk-gl",{scaleX:0.2},{scaleX:1,duration:0.8,ease:"power3.out"},0.1);
+tl.from("#g1-lab",{y:-30,opacity:0,duration:0.4,ease:"power2.out"},2.88);
+tl.from("#g1-q",{y:60,opacity:0,duration:0.5,ease:"power3.out"},2.94);
+tl.from("#g1-chip",{scale:0.6,opacity:0,duration:0.45,ease:"back.out(2.2)"},3.1799999999999997);
+tl.from("#g1-chip .st",{scale:0,duration:0.3,stagger:0.06,ease:"back.out(3)"},3.3099999999999996);
+tl.from("#g1-card",{y:260,rotation:-3,opacity:0,duration:0.6,ease:"power3.out"},3.0599999999999996);
+tl.to("#g1-card",{scale:1.035,duration:2.38,ease:"none"},3.6599999999999997);
+tl.from("#g1-logo",{opacity:0,duration:0.3},2.76);
+tl.fromTo("#p30-bg",{scale:1.15},{scale:1.0,duration:2.18,ease:"none"},6.04);
+tl.from("#p30-ph",{y:180,scale:0.86,opacity:0,duration:0.55,ease:"power3.out"},6.09);
+tl.fromTo("#p30-img",{scale:1.12},{scale:1.0,duration:2.18,ease:"none"},6.04);
+tl.from("#p30-q",{y:50,opacity:0,duration:0.45,ease:"power3.out"},6.24);
+tl.from("#p30-logo",{opacity:0,duration:0.3},6.04);
+tl.from("#c02-lab",{y:-30,opacity:0,duration:0.4,ease:"power2.out"},8.34);
+tl.from("#c02-q",{y:60,opacity:0,duration:0.5,ease:"power3.out"},8.4);
+tl.from("#c02-phone",{y:520,duration:0.65,ease:"power3.out"},8.22);
+tl.fromTo("#c02-img",{scale:1.0,transformOrigin:"50% 100%"},{scale:1.06,duration:3.27,ease:"none"},8.22);
+tl.from("#c02-logo",{opacity:0,duration:0.3},8.22);
+tl.from("#lr1-lab",{y:-30,opacity:0,duration:0.4,ease:"power2.out"},11.61);
+tl.from("#lr1-q",{y:60,opacity:0,duration:0.5,ease:"power3.out"},11.67);
+tl.from("#lr1-chip",{scale:0.6,opacity:0,duration:0.45,ease:"back.out(2.2)"},11.91);
+tl.from("#lr1-chip .st",{scale:0,duration:0.3,stagger:0.06,ease:"back.out(3)"},12.040000000000001);
+tl.from("#lr1-card",{y:260,rotation:-3,opacity:0,duration:0.6,ease:"power3.out"},11.790000000000001);
+tl.to("#lr1-card",{scale:1.035,duration:2.38,ease:"none"},12.39);
+tl.from("#lr1-logo",{opacity:0,duration:0.3},11.49);
+tl.fromTo("#p31-bg",{scale:1.15},{scale:1.0,duration:2.18,ease:"none"},14.77);
+tl.from("#p31-ph",{y:180,scale:0.86,opacity:0,duration:0.55,ease:"power3.out"},14.82);
+tl.fromTo("#p31-img",{scale:1.12},{scale:1.0,duration:2.18,ease:"none"},14.77);
+tl.from("#p31-q",{y:50,opacity:0,duration:0.45,ease:"power3.out"},14.969999999999999);
+tl.from("#p31-logo",{opacity:0,duration:0.3},14.77);
+tl.from("#fb1-lab",{y:-30,opacity:0,duration:0.4,ease:"power2.out"},17.07);
+tl.from("#fb1-q",{y:60,opacity:0,duration:0.5,ease:"power3.out"},17.13);
+tl.from("#fb1-chip",{scale:0.6,opacity:0,duration:0.45,ease:"back.out(2.2)"},17.37);
+tl.from("#fb1-chip .st",{scale:0,duration:0.3,stagger:0.06,ease:"back.out(3)"},17.5);
+tl.from("#fb1-card",{y:260,rotation:-3,opacity:0,duration:0.6,ease:"power3.out"},17.25);
+tl.to("#fb1-card",{scale:1.035,duration:2.37,ease:"none"},17.849999999999998);
+tl.from("#fb1-logo",{opacity:0,duration:0.3},16.95);
+tl.from("#c21-lab",{y:-30,opacity:0,duration:0.4,ease:"power2.out"},20.34);
+tl.from("#c21-q",{y:60,opacity:0,duration:0.5,ease:"power3.out"},20.4);
+tl.from("#c21-phone",{y:520,duration:0.65,ease:"power3.out"},20.22);
+tl.to("#c21-img",{y:-191,duration:2.38,ease:"sine.inOut"},20.919999999999998);
+tl.from("#c21-logo",{opacity:0,duration:0.3},20.22);
+tl.fromTo("#p24-bg",{scale:1.15},{scale:1.0,duration:2.13,ease:"none"},23.5);
+tl.from("#p24-ph",{y:180,scale:0.86,opacity:0,duration:0.55,ease:"power3.out"},23.55);
+tl.fromTo("#p24-img",{scale:1.12},{scale:1.0,duration:2.13,ease:"none"},23.5);
+tl.from("#p24-q",{y:50,opacity:0,duration:0.45,ease:"power3.out"},23.7);
+tl.from("#p24-logo",{opacity:0,duration:0.3},23.5);
+tl.from("#mont-q",{y:60,opacity:0,duration:0.45,ease:"power3.out"},25.73);
+tl.from("#mont-chips",{opacity:0,duration:0.4},25.93);
+tl.from("#mont-c0",{x:1200,rotation:-12,duration:0.5,ease:"power3.out"},25.88);
+tl.from("#mont-c1",{x:-1200,rotation:10.0,duration:0.5,ease:"power3.out"},26.56);
+tl.from("#mont-c2",{x:1200,rotation:-6.0,duration:0.5,ease:"power3.out"},27.24);
+tl.from("#mont-c3",{x:-1200,rotation:8,duration:0.5,ease:"power3.out"},27.92);
+tl.from("#mont-logo",{opacity:0,duration:0.3},25.63);
+tl.from("#c16-lab",{y:-30,opacity:0,duration:0.4,ease:"power2.out"},29.080000000000002);
+tl.from("#c16-q",{y:60,opacity:0,duration:0.5,ease:"power3.out"},29.14);
+tl.from("#c16-phone",{y:520,duration:0.65,ease:"power3.out"},28.96);
+tl.fromTo("#c16-img",{scale:1.0,transformOrigin:"50% 100%"},{scale:1.06,duration:2.18,ease:"none"},28.96);
+tl.from("#c16-logo",{opacity:0,duration:0.3},28.96);
+tl.from("#stats-r0",{x:900,opacity:0,duration:0.5,ease:"power3.out"},31.39);
+tl.from("#stats-r1",{x:-900,opacity:0,duration:0.5,ease:"power3.out"},31.69);
+tl.from("#stats-r2",{x:900,opacity:0,duration:0.5,ease:"power3.out"},31.99);
+tl.from("#stats-q",{y:-40,opacity:0,duration:0.45,ease:"power2.out"},31.19);
+tl.from("#end-logo",{y:40,opacity:0,duration:0.6,ease:"power3.out"},34.51);
+tl.fromTo("#end-gl",{scaleX:0},{scaleX:1,duration:0.7,ease:"power3.out"},34.809999999999995);
+tl.from("#end-t",{y:50,opacity:0,duration:0.5,ease:"power3.out"},34.91);
+tl.from("#end-ph",{scale:0.7,opacity:0,duration:0.5,ease:"back.out(2)"},35.209999999999994);
+tl.from("#end-d",{opacity:0,duration:0.5},35.51);
+tl.fromTo("#end-ph",{scale:1},{scale:1.04,duration:0.5,yoyo:true,repeat:5,ease:"sine.inOut"},35.809999999999995);
+tl.fromTo("#wp0-p",{x:1180,skewX:-12},{x:-1600,skewX:-12,duration:0.5,ease:"power2.inOut"},2.52);
+tl.fromTo("#wp1-p",{x:-1180,skewX:12},{x:1600,skewX:12,duration:0.5,ease:"power2.inOut"},5.8);
+tl.fromTo("#wp2-p",{x:1180,skewX:-12},{x:-1600,skewX:-12,duration:0.5,ease:"power2.inOut"},7.98);
+tl.fromTo("#wp3-p",{x:-1180,skewX:12},{x:1600,skewX:12,duration:0.5,ease:"power2.inOut"},11.25);
+tl.fromTo("#wp4-p",{x:1180,skewX:-12},{x:-1600,skewX:-12,duration:0.5,ease:"power2.inOut"},14.53);
+tl.fromTo("#wp5-p",{x:-1180,skewX:12},{x:1600,skewX:12,duration:0.5,ease:"power2.inOut"},16.71);
+tl.fromTo("#wp6-p",{x:1180,skewX:-12},{x:-1600,skewX:-12,duration:0.5,ease:"power2.inOut"},19.98);
+tl.fromTo("#wp7-p",{x:-1180,skewX:12},{x:1600,skewX:12,duration:0.5,ease:"power2.inOut"},23.26);
+tl.fromTo("#wp8-p",{x:1180,skewX:-12},{x:-1600,skewX:-12,duration:0.5,ease:"power2.inOut"},25.39);
+tl.fromTo("#wp9-p",{x:-1180,skewX:12},{x:1600,skewX:12,duration:0.5,ease:"power2.inOut"},28.72);
+tl.fromTo("#wp10-p",{x:1180,skewX:-12},{x:-1600,skewX:-12,duration:0.5,ease:"power2.inOut"},30.9);
+tl.fromTo("#wp11-p",{x:-1180,skewX:12},{x:1600,skewX:12,duration:0.5,ease:"power2.inOut"},34.17);
+tl.set({}, {}, 39.0);
+window.__timelines["root"] = tl;
+</script>
+</body>
+</html>

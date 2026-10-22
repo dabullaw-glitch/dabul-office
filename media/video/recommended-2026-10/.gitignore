@@ -1,0 +1,5 @@
+music/
+film/assets/music.mp3
+*.mp4
+film/.hyperframes/
+film/node_modules/
