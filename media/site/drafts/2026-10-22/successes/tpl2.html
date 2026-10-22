@@ -1,0 +1,77 @@
+<title>סקיצת הצלחות</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;500;600;700;800&display=swap">
+<style>
+{FONTFACE}
+:root{--ink:#141414;--text:#3d3b37;--muted:#6b665c;--line:#e6e1d6;--bg:#e7e7f1;--gold:#c5a25a;--gold2:#e7cd96;--goldd:#8c7646;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:#e9e7e2;font-family:'Noto Sans Hebrew','NotoLocal',Arial,sans-serif;color:var(--text);direction:rtl}
+.label{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:24px 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-weight:800;color:var(--ink);font-size:19px}
+.label span{background:var(--ink);color:var(--gold2);font-size:14px;border-radius:999px;padding:4px 12px}
+.label small{font-weight:500;color:var(--muted);font-size:15px}
+.sec{max-width:1240px;margin:0 auto;background:var(--bg);border-radius:20px;box-shadow:0 20px 50px rgba(20,20,20,.08);padding-block:48px 46px;overflow:hidden}
+.hd{text-align:center;padding-inline:16px}
+.hd h2{margin:0;font-size:40px;font-weight:500;color:var(--ink)}
+.hd .bar{width:120px;height:2px;margin:12px auto 0;background:linear-gradient(90deg,#cfc6b3 0 40%,var(--gold) 40% 60%,#cfc6b3 60%)}
+.hd p{margin:14px auto 0;max-width:560px;font-size:18px;line-height:1.6;color:var(--muted);text-wrap:balance}
+.sub{display:flex;align-items:center;gap:14px;max-width:1160px;margin:34px auto 16px;padding-inline:20px}
+.sub h3{margin:0;font-size:22px;font-weight:600;color:var(--ink);white-space:nowrap}
+.sub i{flex:1;height:1px;background:linear-gradient(270deg,#c9c6d6,transparent)}
+.sub small{color:var(--muted);font-size:15px;white-space:nowrap}
+/* photo rows: slow continuous movement */
+.rows{display:flex;flex-direction:column;gap:14px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.row{overflow:hidden}
+.track{display:flex;gap:14px;width:max-content;animation:slide 70s linear infinite}
+.row.b .track{animation-direction:reverse;animation-duration:80s}
+.rows:hover .track{animation-play-state:paused}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(50%)}}
+.ph{flex:none;width:250px;height:250px;border-radius:16px;overflow:hidden;border:0;padding:0;cursor:pointer;background:#ddd;box-shadow:0 8px 20px rgba(20,20,20,.10)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.ph:hover img{transform:scale(1.05)}
+.ph:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+/* documents and messages: one tidy row with arrows */
+.docs{position:relative;max-width:1160px;margin:0 auto;padding-inline:20px}
+.dtrack{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 4px 18px;scrollbar-width:none}
+.dtrack::-webkit-scrollbar{display:none}
+.doc{flex:none;width:230px;scroll-snap-align:start;background:#fff;border-radius:18px;padding:10px;border:1px solid var(--line);box-shadow:0 10px 24px rgba(20,20,20,.08);cursor:pointer;font:inherit;text-align:right}
+.doc .pic{height:300px;border-radius:12px;overflow:hidden;background:#efe7dc}
+.doc img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.doc span{display:block;padding:10px 4px 2px;font-weight:700;font-size:15px;color:var(--ink)}
+.doc:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.arr{position:absolute;top:120px;width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:#fff;box-shadow:0 8px 20px rgba(20,20,20,.12);font-size:22px;font-weight:900;color:var(--ink);cursor:pointer;z-index:2}
+.arr.p{right:0}.arr.n{left:0}
+.lb{position:fixed;inset:0;z-index:50;background:rgba(10,10,10,.9);display:flex;align-items:center;justify-content:center;padding:16px}
+.lb img{max-width:min(92vw,760px);max-height:88vh;border-radius:14px;background:#fff}
+.lb button{position:absolute;top:14px;left:14px;width:48px;height:48px;border-radius:50%;border:0;background:#fff;font-size:24px;font-weight:800;cursor:pointer}
+.note{max-width:1240px;margin:14px auto 30px;padding-inline:16px;font-size:16px;line-height:1.75}
+.note h3{margin:0 0 6px;font-size:18px;color:var(--ink)}
+.note ul{margin:4px 0 0;padding-inline-start:20px}
+@media (prefers-reduced-motion:reduce){.track{animation:none}.row{overflow-x:auto}}
+@media (max-width:760px){.ph{width:170px;height:170px}.doc{width:200px}.doc .pic{height:240px}.arr{display:none}.sub{flex-wrap:wrap}.sub i{display:none}}
+</style>
+
+<div class="label"><span>סקיצה 2</span> החלק "הצלחות" בעמוד ההמלצות <small>· עוד לא באתר</small></div>
+<section class="sec" aria-labelledby="ttl">
+ <div class="hd"><h2 id="ttl">הצלחות</h2><div class="bar"></div><p>רגעים אמיתיים מהמשרד, והודעות שלקוחות שלחו לנו אחרי שהעסקה הסתיימה.</p></div>
+ <div class="sub"><h3>רגעים מהמשרד</h3><i></i><small>חתימות, מסירות ותודות</small></div>
+ <div class="rows" aria-label="תמונות מהמשרד"><div class="row a"><div class="track" id="t1"></div></div><div class="row b"><div class="track" id="t2"></div></div></div>
+ <div class="sub"><h3>הודעות ומסמכים מלקוחות</h3><i></i><small>לחיצה מגדילה</small></div>
+ <div class="docs"><button class="arr p" aria-label="הקודם">›</button><div class="dtrack" id="dt"></div><button class="arr n" aria-label="הבא">‹</button></div>
+</section>
+<div class="note">
+ <h3>מה השתנה</h3>
+ <ul>
+  <li>אותו רקע ואותו גופן כמו היום. כל התמונות נשארות, כולל המשרדים השותפים והאימוג׳ים, בלי שינוי.</li>
+  <li>הסדר הוא מה שמשנה: התמונות מהמשרד מוצגות בשתי שורות שזזות לאט ובצורה רציפה (נעצרות כשעומדים עליהן), וההודעות והמסמכים מקבלים שורה משלהם, במסגרות לבנות אחידות.</li>
+  <li>במקום קיר צפוף של 32 ריבועים, שלושה פסים נקיים. לחיצה על כל תמונה פותחת אותה בגדול.</li>
+  <li>בנייד: אותו סדר, תמונות קטנות יותר, וגוללים את ההודעות עם האצבע.</li>
+ </ul>
+</div>
+<script>
+const D={DATA};
+function open(src){const l=document.createElement('div');l.className='lb';l.innerHTML='<img src="'+src+'" alt=""><button aria-label="סגירה">×</button>';l.onclick=()=>l.remove();document.body.appendChild(l);l.querySelector('button').focus()}
+function fill(id,list){const t=document.getElementById(id);[...list,...list].forEach((s,i)=>{const b=document.createElement('button');b.className='ph';b.type='button';b.setAttribute('aria-label','תמונה מהמשרד, הגדלה');if(i>=list.length)b.setAttribute('aria-hidden','true'),b.tabIndex=-1;b.innerHTML='<img src="'+s+'" alt="">';b.onclick=()=>open(s);t.appendChild(b)})}
+const h=Math.ceil(D.photos.length/2);fill('t1',D.photos.slice(0,h));fill('t2',D.photos.slice(h));
+const caps=['הודעה מלקוח','הסדר חובות','מכתב תודה','הסדר חובות','אישור רישום בטאבו','הסדר חובות','מכתב תודה','החלטה','מסמך'];
+const dt=document.getElementById('dt');D.docs.forEach((s,i)=>{const b=document.createElement('button');b.className='doc';b.type='button';b.setAttribute('aria-label','הודעה או מסמך מלקוח, הגדלה');b.innerHTML='<div class="pic"><img src="'+s+'" alt=""></div>';b.onclick=()=>open(s);dt.appendChild(b)});
+document.querySelector('.arr.n').onclick=()=>dt.scrollBy({left:-260,behavior:'smooth'});document.querySelector('.arr.p').onclick=()=>dt.scrollBy({left:260,behavior:'smooth'});
+</script>
