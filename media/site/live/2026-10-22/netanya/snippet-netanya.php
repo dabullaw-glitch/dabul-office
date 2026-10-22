@@ -197,6 +197,23 @@ add_action('rest_api_init', function () {
 				update_option('dnt_checklist_pdf', $url, false);
 				return array('id' => $id, 'url' => $url);
 			}
+			if ($a === 'thumbs') {
+				$out = array();
+				foreach ((array) $r->get_param('ids') as $id) {
+					$f = get_attached_file((int) $id);
+					if (!$f || !file_exists($f)) { $out[$id] = null; continue; }
+					$ed = wp_get_image_editor($f);
+					if (is_wp_error($ed)) { $out[$id] = null; continue; }
+					$sz = $ed->get_size();
+					$ed->resize(360, 360, false);
+					$tmp = wp_tempnam('dnt') . '.jpg';
+					$sv = $ed->save($tmp, 'image/jpeg');
+					if (is_wp_error($sv)) { $out[$id] = null; continue; }
+					$out[$id] = array('w' => $sz['width'], 'h' => $sz['height'], 'b64' => base64_encode(file_get_contents($sv['path'])));
+					@unlink($sv['path']); @unlink($tmp);
+				}
+				return $out;
+			}
 			if ($a === 'restore') {
 				$b = get_option('dnt_before');
 				if (is_array($b)) {
