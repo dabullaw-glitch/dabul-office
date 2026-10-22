@@ -1,0 +1,120 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><style>
+@font-face{font-family:'Heebo';font-weight:400;src:url('file:///tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/heebo/package/400Regular/Heebo_400Regular.ttf')}
+@font-face{font-family:'Heebo';font-weight:500;src:url('file:///tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/heebo/package/500Medium/Heebo_500Medium.ttf')}
+@font-face{font-family:'Heebo';font-weight:700;src:url('file:///tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/heebo/package/700Bold/Heebo_700Bold.ttf')}
+@font-face{font-family:'Heebo';font-weight:800;src:url('file:///tmp/claude-0/-home-claude/18c4b77b-4875-5419-b847-7a72812c5e0f/scratchpad/heebo/package/800ExtraBold/Heebo_800ExtraBold.ttf')}
+*{box-sizing:border-box}
+body{margin:0;background:#e9e6df;font-family:'Heebo',Arial,sans-serif;color:#16161a}
+.board{display:grid;grid-template-columns:1fr 430px;gap:34px;padding:28px 34px;align-items:start}
+.lbl{display:inline-block;background:#b5483b;color:#fff;font-size:15px;font-weight:700;padding:5px 14px;border-radius:999px;margin:0 0 12px}
+/* desktop page */
+.page{background:#f7f6f3;border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.top{background:#fff;height:64px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;padding:0 34px}
+.logo{font-weight:800;font-size:19px}.call{background:#2f8f2f;color:#fff;border-radius:8px;padding:9px 14px;font-weight:700}
+.wrap{display:grid;grid-template-columns:1fr 340px;gap:30px;padding:22px 26px 30px}
+.bc{font-size:14px;color:#8a8a8a;margin-bottom:10px}
+.card{background:#fff;border:1px solid #e7e7f1;border-radius:12px;padding:20px 22px}
+h1{font-size:32px;line-height:1.2;margin:0 0 12px;font-weight:800}
+.txt{margin-top:16px;background:#fff;border:1px solid #e7e7f1;border-radius:12px;padding:20px 22px;font-size:17px;line-height:1.8;color:#333}
+/* contact form */
+.cf{background:#121a2e;border-radius:16px;padding:22px 20px 20px;color:#fff;box-shadow:0 14px 34px rgba(8,12,28,.25)}
+.cf .who{display:flex;align-items:center;gap:10px;justify-content:center;color:#d9b770;font-weight:700;font-size:14.5px}
+.cf .who img{width:38px;height:38px;border-radius:50%;border:2px solid #d9b770;object-fit:cover}
+.cf h3{margin:10px 0 4px;text-align:center;font-size:23px;font-weight:800}
+.cf p.s{margin:0 0 14px;text-align:center;font-size:15px;color:#c9cbd4}
+.cf label.f{display:block;font-size:14.5px;font-weight:500;margin:0 0 5px}.cf label.f i{color:#d9b770;font-style:normal;margin-right:3px}.cf label.f small{color:#a6a9b5;font-size:13px}
+.cf .in{width:100%;height:44px;border-radius:10px;background:#fff;border:0;margin:0 0 11px;display:flex;align-items:center;padding:0 12px;color:#9a9a9a;font-size:15px}
+.cf .sel{justify-content:space-between;color:#16161a}.cf .sel:after{content:'⌄';color:#666;font-size:18px;margin-top:-6px}
+.cf .ta{height:74px;align-items:flex-start;padding-top:10px}
+.cf .cons{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.55;color:#d7d9e0;margin:4px 0 14px}
+.cf .cons .bx{flex:0 0 20px;height:20px;border-radius:5px;background:#fff;margin-top:2px}
+.cf .cons a{color:#fff;text-decoration:underline}
+.cf .ch{font-size:14px;font-weight:700;margin:2px 0 6px}.cf .ch i{color:#d9b770;font-style:normal}
+.cf button{width:100%;border:0;border-radius:999px;background:linear-gradient(135deg,#f0d9a0,#c9a14f);color:#141008;font:inherit;font-weight:800;font-size:18px;height:52px}
+.cf .foot{display:flex;justify-content:space-between;margin-top:12px;font-size:13.5px;color:#c9cbd4}.cf .foot b{color:#f2b33d;letter-spacing:1px;font-weight:400}.cf .foot span.t{direction:ltr;color:#fff;font-weight:700}
+.toc{margin-top:16px;background:#fff;border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,.05);padding:14px 18px}
+.toc h4{margin:0 0 8px;font-size:18px}.toc li{list-style:none;font-size:15px;color:#555;padding:6px 0;border-bottom:1px solid #f1eee6}.toc ul{margin:0;padding:0}
+.optb{margin-top:14px;background:#fff;border:2px dashed #b5483b;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.6;color:#333}
+.optb b{color:#b5483b}
+/* phone column */
+.phone{background:#fff;border-radius:34px;border:10px solid #16161a;overflow:hidden;width:410px}
+.ph-in{padding:20px 16px 0;background:#f7f6f3}
+.ab{background:#fff;border-radius:14px;box-shadow:0 0 18px rgba(0,0,0,.06);padding:20px 18px 18px}
+.ab .h{display:flex;gap:14px;align-items:center}
+.ab .h img{width:76px;height:76px;border-radius:50%;border:3px solid #e3cf9c;object-fit:cover}
+.ab .h b{display:block;font-size:22px;font-weight:800}.ab .h span{font-size:14px;color:#8c7646;font-weight:500}
+.ab p{margin:14px 0 12px;font-size:16px;line-height:1.7;color:#444}
+.ab ul{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:7px}
+.ab li{display:flex;gap:8px;align-items:center;font-size:15px;font-weight:500;color:#2a2a2a}
+.ab li:before{content:'';flex:0 0 8px;height:8px;border-radius:50%;background:#c9a14f}
+.ab .row{display:flex;gap:10px;align-items:center;justify-content:space-between;border-top:1px solid #efe9dc;padding-top:14px}
+.ab .about{background:#e3cf9c;color:#16161a;border-radius:10px;padding:10px 16px;font-weight:700;font-size:15.5px;white-space:nowrap}
+.ab .soc{display:flex;gap:8px}
+.ab .soc a{width:40px;height:40px;border-radius:50%;background:#16161a;color:#e3cf9c;display:flex;align-items:center;justify-content:center}
+.ab .soc svg{width:19px;height:19px}
+.bars{padding:18px 12px 20px;background:#2b2f3a;display:grid;gap:10px}
+.bars small{color:#cfd2da;font-size:13px;font-weight:700}
+.bar{display:flex;padding:6px;border-radius:999px;background:#070a14;border:1px solid rgba(231,205,150,.32);box-shadow:0 14px 34px rgba(8,12,28,.45)}
+.bar a{flex:1;display:flex;align-items:center;justify-content:center;gap:9px;height:52px;border-radius:999px;font-weight:800;font-size:16.5px;color:#fff}
+.bar .c{background:linear-gradient(135deg,#f0d9a0,#c9a14f);color:#141008}
+.bar .w{box-shadow:inset 0 0 0 1px rgba(255,255,255,.26);margin-right:6px}
+.bar .ic{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:7px}
+.bar .c .ic{background:rgba(20,16,8,.12)}.bar .wa .ic{background:#25d366}
+.bar .k{box-shadow:inset 0 0 0 1.5px #d9b770;margin-right:6px}.bar .k .ic{border:1.5px solid #d9b770;color:#e8c983;padding:6px}
+.bar svg{width:100%;height:100%;display:block}
+.old{opacity:.55}
+.note{font-size:14px;line-height:1.6;color:#3a3a3a;margin:12px 4px 0}
+</style></head><body>
+<div class="board">
+<div>
+<span class="lbl">1. טופס יצירת קשר בצד המאמר (מחשב)</span>
+<div class="page"><div class="top"><div class="logo">יקיר דבול · משרד עורכי דין</div><div class="call">09-8613413</div></div>
+<div class="wrap">
+<main><div class="bc">דף הבית » מידע משפטי » צו ירושה: איך מגישים בקשה, כמה זה עולה וכמה זמן לוקח</div>
+<div class="card"><h1>צו ירושה: איך מגישים בקשה, כמה זה עולה וכמה זמן לוקח</h1></div>
+<div class="txt">צו ירושה הוא המסמך שקובע מי היורשים של אדם שנפטר בלי צוואה, ובאיזה חלק כל אחד יורש. מגישים אותו לרשם לענייני ירושה, בדרך כלל באופן מקוון, ומקבלים החלטה בתוך כמה שבועות...</div></main>
+<aside>
+<div class="cf">
+<div class="who"><img src="avatar.png">עו״ד יקיר דבול · מייסד המשרד</div>
+<h3>רוצים שנבדוק את המקרה שלכם?</h3>
+<p class="s">השאירו פרטים ונחזור אליכם בהקדם.</p>
+<label class="f">שם מלא<i>*</i></label><div class="in"></div>
+<label class="f">טלפון<i>*</i></label><div class="in"></div>
+<label class="f">דוא״ל</label><div class="in"></div>
+<label class="f">נושא</label><div class="in sel">קנייה או מכירת דירה</div>
+<label class="f">הודעה <small>(לא חובה)</small></label><div class="in ta">ספרו לנו בקצרה במה מדובר</div>
+<div class="ch">הסכמה למדיניות הפרטיות<i>*</i></div>
+<div class="cons"><span class="bx"></span><span>קראתי ואני מסכים/ה ל<a>מדיניות הפרטיות</a> ולשימוש בפרטיי לצורך חזרה אליי בנוגע לפנייתי. מסירת הפרטים אינה חובה על פי חוק ונעשית מרצוני.</span></div>
+<button>שליחה</button>
+<div class="foot"><span><b>★★★★★</b> 4.9 · 74 ביקורות בגוגל</span><span class="t">09-8613413</span></div>
+</div>
+<div class="optb"><b>נוסח ב (הנוסח שיש היום בטפסים באתר):</b> קראתי ומסכימ/ה למדיניות הפרטיות. אני מאשר/ת כי ידוע לי ומוסכם עלי כי הפרטים שמסרתי ייאספו, יוחזקו ויעובדו במאגר מידע בהתאם להוראות חוק הגנת הפרטיות, התשמ"א 1981 (כולל תיקון 13), ולמטרות המפורטות במדיניות הפרטיות של האתר. ידוע לי כי מסירת המידע נעשית מרצוני החופשי, וכי עומדות לי הזכויות המוקנות לי לפי החוק.</div>
+<div class="toc"><h4>תוכן עניינים</h4><ul><li>עיקרי הדברים</li><li>מתי צריך צו ירושה</li><li>איך מגישים: שלב אחרי שלב</li><li>כמה עולה צו ירושה: האגרות</li></ul></div>
+</aside></div></div>
+<p class="note">אפשרויות בשדה "נושא": קנייה או מכירת דירה · דירה מקבלן · מיסוי מקרקעין · ירושה וצוואה · רישום בטאבו · התחדשות עירונית · אחר.</p>
+</div>
+
+<div>
+<span class="lbl">2. תיבת הכותב בסוף המאמר + 3. הכפתורים בנייד</span>
+<div class="phone"><div class="ph-in">
+<div class="ab">
+<div class="h"><img src="avatar.png"><div><b>עו״ד יקיר דבול</b><span>מייסד המשרד</span></div></div>
+<p>מלווה קונים, מוכרים ובעלי דירות בעסקאות מקרקעין, מיסוי מקרקעין והתחדשות עירונית.</p>
+<ul><li>מלווה מעל 100 עסקאות מקרקעין בשנה</li><li>בעל תפקיד מוסמך לרישום בתים משותפים</li><li>חבר בוועדות מקצועיות בלשכת עורכי הדין</li></ul>
+<div class="row"><span class="about">אודות המשרד</span>
+<div class="soc">
+<a title="פייסבוק"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v9h4v-9H17l.5-4h-4V8.8c0-.5.3-.8.5-.8z"/></svg></a>
+<a title="אינסטגרם"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+<a title="יוטיוב"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 8.2c-.2-1.6-1-2.7-2.6-2.9C17 5 12 5 12 5s-5 0-7.4.3C3 5.5 2.2 6.6 2 8.2 1.8 9.6 1.8 12 1.8 12s0 2.4.2 3.8c.2 1.6 1 2.7 2.6 2.9C7 19 12 19 12 19s5 0 7.4-.3c1.6-.2 2.4-1.3 2.6-2.9.2-1.4.2-3.8.2-3.8s0-2.4-.2-3.8zM10 15V9l5.2 3L10 15z"/></svg></a>
+<a title="טיקטוק"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 3c.3 2.2 1.6 3.6 3.9 3.8v3.1c-1.4.1-2.7-.3-3.9-1v6.2c0 3.6-2.6 6-5.9 5.9-3.1-.1-5.4-2.6-5.2-5.7.2-3.2 3.2-5.5 6.5-4.8v3.2c-1.5-.5-3.2.3-3.3 1.9-.1 1.4 1 2.4 2.2 2.4 1.4 0 2.3-1 2.3-2.6V3h3.4z"/></svg></a>
+</div></div>
+</div>
+<div style="height:16px"></div></div>
+<div class="bars">
+<small>היום:</small>
+<div class="bar old"><a class="c"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span>התקשרו עכשיו</a><a class="w wa"><span class="ic"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg></span>וואטסאפ</a></div>
+<small>אחרי השינוי (הכפתור מוביל לעמוד צרו קשר):</small>
+<div class="bar"><a class="c"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span>התקשרו עכשיו</a><a class="k"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 9.5h18M8.5 14.5l2.2 2.2 4.8-4.7"/></svg></span>תיאום ייעוץ</a></div>
+</div></div>
+</div>
+</div></body></html>
