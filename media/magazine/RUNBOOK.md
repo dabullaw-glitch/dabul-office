@@ -18,8 +18,9 @@ https://dabullaw.co.il/magazine/ (page id 7776). NOTHING goes out without Yakir'
 1. Research the week's (Thu to Wed) real estate news in Israel: tax, interest/mortgages, contractors/new apartments,
    urban renewal, land registry, rulings, Netanya and the Sharon. Pick 5 stories that are new and useful to the public.
    Open each source page (WebFetch) and take numbers only from there.
-2. Build `issue-NN/issue.html` from the template (fonts/img paths relative to template), render:
-   `cd media/magazine/template && NODE_PATH=$(npm root -g) node render.js ../issue-NN/issue.html ../issue-NN/out`
+2. Copy `template/issue.html` to `template/issue-NN.html` (it must sit in the template folder so fonts/ and img/
+   resolve), edit the texts, render:
+   `cd media/magazine/template && NODE_PATH=$(npm root -g) node render.js issue-NN.html ../issue-NN/out`
    (render.js uses /opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell). Look at every slide
    (no text overflow, footer visible, nothing cut). Fix and re-render until clean.
 3. Make: `issue-NN/slides/01.jpg..10.jpg` (quality 93), `web/real-estate-magazine-NN.pdf` (Pillow, title/author metadata),
