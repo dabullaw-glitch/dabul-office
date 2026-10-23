@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Builds the HTML of the site page "מגזין הנדל״ן" (dabullaw.co.il/magazine/) from issues.json.
 Approved by Yakir 23.10.2026: site colors (#141414, #E7CD96, #C5A25A, #A88A4C, #F8F8FD), site font (inherit),
-a faint residential-buildings background in the hero, latest issue card, "בגיליון הזה" text with sources,
+a faint residential-buildings background in the hero, latest issue card, "בגיליון הזה" text,
 author box, archive of all issues, contact CTA, disclaimer, and structured data for search engines.
 Usage: python3 build_page.py issues.json > page.html   (newest issue first in the JSON list)
 """
@@ -51,8 +51,6 @@ CSS = """
 .dmag .story h3{font-size:19px;margin-bottom:4px;line-height:1.4}
 .dmag .story p{font-size:16px;line-height:1.65;color:#3a3f45;margin:0}
 .dmag .story p b{color:var(--ink)}
-.dmag .story .src{font-size:14px;color:var(--g3);margin-top:6px}
-.dmag .story .src a{color:var(--g3);text-decoration:underline}
 .dmag .author{margin-top:36px;display:flex;gap:22px;align-items:center;background:#fff;border:1px solid var(--line);border-right:4px solid var(--g2);border-radius:16px;padding:24px 28px}
 .dmag .author img{width:96px!important;height:96px!important;border-radius:50%;object-fit:cover;flex:none}
 .dmag .author b{font-size:20px;display:block}
@@ -64,6 +62,8 @@ CSS = """
 .dmag .card img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;display:block}
 .dmag .card .b{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
 .dmag .card .no{font-size:14px;color:var(--g3);font-weight:800}
+.dmag .card .dt{align-self:flex-start;margin-top:-4px;font-size:13.5px;color:var(--mut);font-weight:500;white-space:nowrap;unicode-bidi:isolate}
+.dmag .meta .dt{white-space:nowrap;unicode-bidi:isolate}
 .dmag .card h3{font-size:19px;line-height:1.35}
 .dmag .card p{font-size:15px;color:var(--mut);line-height:1.55;flex:1;margin:0 0 8px}
 .dmag .cta{margin-top:52px;background:var(--ink);color:#fff;border-radius:16px;padding:30px 36px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
@@ -73,7 +73,7 @@ CSS = """
 .dmag .disc{font-size:14px;color:var(--mut);margin-top:18px}
 @media (max-width:767px){
  .dmag{padding:12px 12px 48px}
- .dmag .hero{padding:34px 20px 38px;border-radius:16px}
+ .dmag .hero{padding:40px 20px 44px;border-radius:0;width:100vw;max-width:100vw;margin:-12px calc(50% - 50vw) 0}
  .dmag .latest{grid-template-columns:1fr;gap:24px;padding:20px}
  .dmag .cover{width:78%;margin:0 auto}
  .dmag ul.heads li{font-size:16.5px}
@@ -104,24 +104,22 @@ def build(d):
 <div class="badges"><a class="badge" href="{e(L["pdf"])}" target="_blank" rel="noopener">צפייה ישירה בדפדפן</a><a class="badge" href="{e(L["pdf"])}" download>הורדה כקובץ PDF</a><a class="badge" href="#archive">ארכיון כל הגיליונות</a></div></header>''')
     heads = ''.join(f'<li>{e(h)}</li>' for h in L['heads'])
     out.append(f'''<div class="st">הגיליון של השבוע</div><section class="latest"><a class="cover" href="{e(L["pdf"])}" target="_blank" rel="noopener"><img src="{e(L["cover"])}" alt="שער מגזין הנדל״ן, גיליון {L["no"]}, {e(L["dates"])}" width="800" height="1000" loading="eager"><span class="new">חדש</span></a>
-<div><div class="meta">גיליון #{L["no"]} · <span dir="ltr">{e(L["dates"])}</span></div><h2>{e(L["title"])}</h2><ul class="heads">{heads}</ul>
+<div><div class="meta">גיליון #{L["no"]} · <span class="dt" dir="ltr">{e(L["dates"])}</span></div><h2>{e(L["title"])}</h2><ul class="heads">{heads}</ul>
 <div class="btns"><a class="btn pri" href="{e(L["pdf"])}" target="_blank" rel="noopener">צפייה במגזין</a><a class="btn sec" href="{e(L["pdf"])}" download>הורדה (PDF)</a></div></div></section>''')
     st = []
     for i, s in enumerate(L['stories'], 1):
-        src = ' · '.join(f'<a href="{e(u)}" target="_blank" rel="noopener">{e(t)}</a>' for t, u in s['sources'])
-        more = f' <a href="{e(s["more"][1])}">{e(s["more"][0])}</a>' if s.get('more') else ''
-        st.append(f'<div class="story"><span class="n">{i}</span><div><h3>{e(s["h"])}</h3><p>{e(s["what"])} <b>מה זה אומר לכם:</b> {e(s["means"])}</p><div class="src">מקור: {src}{(" · להרחבה:" + more) if more else ""}</div></div></div>')
-    out.append(f'<section class="inside" aria-labelledby="dmag-in"><h2 id="dmag-in">בגיליון הזה</h2><p class="sub">עיקרי הדברים בקצרה. כל ידיעה מבוססת על מקור רשמי או כלי תקשורת, עם קישור.</p>{"".join(st)}</section>')
-    out.append(f'''<aside class="author"><img src="{e(a["img"])}" alt="עו״ד יקיר דבול" width="96" height="96" loading="lazy"><div><b>נכתב ונבדק על ידי עו״ד יקיר דבול</b><div class="role">עורך דין מקרקעין ונדל״ן, נתניה</div>
+        st.append(f'<div class="story"><span class="n">{i}</span><div><h3>{e(s["h"])}</h3><p>{e(s["what"])} <b>מה זה אומר לכם:</b> {e(s["means"])}</p></div></div>')
+    out.append(f'<section class="inside" aria-labelledby="dmag-in"><h2 id="dmag-in">בגיליון הזה</h2><p class="sub">עיקרי הדברים בקצרה.</p>{"".join(st)}</section>')
+    out.append(f'''<aside class="author"><img src="{e(a["img"])}" alt="עו״ד יקיר דבול" width="96" height="96" loading="lazy"><div><b>עו״ד יקיר דבול</b><div class="role">יקיר דבול - משרד עורכי דין</div>
 <p>מלווה יותר מ־100 עסקאות נדל״ן בשנה בשרון. חבר בחמש ועדות של לשכת עורכי הדין, מחוז מרכז, ובהן ועדת התחדשות עירונית וועדת מקרקעין. התראיין בחדשות 13, ישראל היום, וואלה נדל״ן וביזפורטל.</p><div class="upd">עודכן לאחרונה: {e(L["updated"])}</div></div></aside>''')
     cards = []
     for it in issues:
-        cards.append(f'''<article class="card"><a href="{e(it["pdf"])}" target="_blank" rel="noopener"><img src="{e(it["cover"])}" alt="שער מגזין הנדל״ן, גיליון {it["no"]}" width="800" height="1000" loading="lazy"></a><div class="b"><span class="no">גיליון #{it["no"]} · <span dir="ltr">{e(it["dates"])}</span></span><h3>{e(it["title"])}</h3><p>{e(it["blurb"])}</p>
+        cards.append(f'''<article class="card"><a href="{e(it["pdf"])}" target="_blank" rel="noopener"><img src="{e(it["cover"])}" alt="שער מגזין הנדל״ן, גיליון {it["no"]}" width="800" height="1000" loading="lazy"></a><div class="b"><span class="no">גיליון #{it["no"]}</span><span class="dt" dir="ltr">{e(it["dates"])}</span><h3>{e(it["title"])}</h3><p>{e(it["blurb"])}</p>
 <div class="btns"><a class="btn pri sm" href="{e(it["pdf"])}" target="_blank" rel="noopener">צפייה</a><a class="btn sec sm" href="{e(it["pdf"])}" download>הורדה</a></div></div></article>''')
     out.append(f'<div class="st" id="archive">כל הגיליונות</div><section class="grid">{"".join(cards)}</section>')
     out.append(f'''<div class="cta"><div><b>יש לכם שאלה על עסקה שראיתם במגזין?</b><span>השאירו פרטים ונחזור אליכם.</span></div><a class="btn" href="{CONTACT}">השארת פרטים</a></div>
 <p class="disc">המידע במגזין כללי ואינו ייעוץ משפטי. לפני החלטה בעסקה, כדאי להתייעץ עם עורך דין.</p></div>''')
-    person = {"@type": "Person", "@id": "https://dabullaw.co.il/#yakir", "name": "עו״ד יקיר דבול", "jobTitle": "עורך דין מקרקעין ונדל״ן", "url": "https://dabullaw.co.il/%d7%90%d7%95%d7%93%d7%95%d7%aa-%d7%94%d7%9e%d7%a9%d7%a8%d7%93/", "image": a["img"]}
+    person = {"@type": "Person", "@id": "https://dabullaw.co.il/#yakir", "name": "עו״ד יקיר דבול", "jobTitle": "עורך דין", "url": "https://dabullaw.co.il/%d7%90%d7%95%d7%93%d7%95%d7%aa-%d7%94%d7%9e%d7%a9%d7%a8%d7%93/", "image": a["img"]}
     periodical = {"@type": "Periodical", "@id": PAGE + "#periodical", "name": "מגזין הנדל״ן", "inLanguage": "he", "url": PAGE, "author": person,
                   "publisher": {"@type": "LegalService", "name": "יקיר דבול - משרד עורכי דין", "url": "https://dabullaw.co.il/"},
                   "description": "מגזין שבועי: החדשות החשובות בנדל״ן, במיסוי ובהתחדשות עירונית, ומה הן אומרות לקוראים."}
