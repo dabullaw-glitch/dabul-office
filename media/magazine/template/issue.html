@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>מגזין הנדל״ן גיליון 1</title>
+<style>
+@font-face{font-family:Heebo;src:url(fonts/heebo-hebrew-300-normal.woff2),url(fonts/heebo-latin-300-normal.woff2);font-weight:300}
+@font-face{font-family:Heebo;src:url(fonts/heebo-hebrew-400-normal.woff2);font-weight:400;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Heebo;src:url(fonts/heebo-latin-400-normal.woff2);font-weight:400;unicode-range:U+0000-024F,U+2000-206F,U+20AA}
+@font-face{font-family:Heebo;src:url(fonts/heebo-hebrew-500-normal.woff2);font-weight:500;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Heebo;src:url(fonts/heebo-latin-500-normal.woff2);font-weight:500;unicode-range:U+0000-024F,U+2000-206F,U+20AA}
+@font-face{font-family:Heebo;src:url(fonts/heebo-hebrew-700-normal.woff2);font-weight:700;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Heebo;src:url(fonts/heebo-latin-700-normal.woff2);font-weight:700;unicode-range:U+0000-024F,U+2000-206F,U+20AA}
+@font-face{font-family:Heebo;src:url(fonts/heebo-hebrew-800-normal.woff2);font-weight:800;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Heebo;src:url(fonts/heebo-latin-800-normal.woff2);font-weight:800;unicode-range:U+0000-024F,U+2000-206F,U+20AA}
+@font-face{font-family:Kar;src:url(fonts/karantina-hebrew-700-normal.woff2);font-weight:700;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Kar;src:url(fonts/karantina-latin-700-normal.woff2);font-weight:700;unicode-range:U+0000-024F,U+2000-206F}
+@font-face{font-family:Frank;src:url(fonts/frank-ruhl-libre-hebrew-900-normal.woff2);font-weight:900;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Frank;src:url(fonts/frank-ruhl-libre-latin-900-normal.woff2);font-weight:900;unicode-range:U+0000-024F,U+2000-206F}
+
+:root{--navy:#17253F;--deep:#0C1524;--gold:#C6A03C;--gold2:#E6CB82;--cream:#F4EEE2;--paper:#FBF8F1;--ink:#18202E;--muted:#5E6676;--line:#DCCFB4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#333;font-family:Heebo,sans-serif;display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px 0}
+.slide{width:1080px;height:1350px;position:relative;overflow:hidden;display:flex;flex-direction:column;padding:56px 72px 48px}
+.dark{background:radial-gradient(120% 80% at 80% 0%,#22355A 0%,var(--navy) 45%,var(--deep) 100%);color:#fff}
+.light{background:var(--paper);color:var(--ink)}
+.light::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(23,37,63,.018) 0 2px,transparent 2px 6px);pointer-events:none}
+
+/* masthead strip */
+.top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3}
+.brand{display:flex;align-items:center;gap:16px;font-weight:800;font-size:27px;letter-spacing:.2px}
+.brand img{height:46px}
+.issue{font-size:22px;font-weight:500;opacity:.8;display:flex;gap:12px;align-items:center}
+.issue b{color:var(--gold);font-weight:700}
+.light .top{padding-bottom:22px;border-bottom:2px solid var(--navy)}
+.dark .top .brand{color:#fff}
+
+.kicker{display:flex;align-items:center;gap:16px;color:var(--gold);font-weight:800;font-size:26px;letter-spacing:1px}
+.kicker .n{font-family:Kar;font-size:44px;line-height:1}
+.kicker::after{content:"";flex:1;height:2px;background:linear-gradient(to left,var(--gold),transparent)}
+
+.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-size:19px;color:var(--muted);position:relative;z-index:3;gap:24px}
+.dark .foot{color:rgba(255,255,255,.62)}
+.foot .src{max-width:620px;line-height:1.4}
+.foot .pg{font-family:Kar;font-size:34px;color:var(--gold);line-height:1}
+.foot .site{font-weight:700;color:var(--navy)}
+.dark .foot .site{color:#fff}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.num.ltr{display:block}
+
+/* article slides */
+.art h2{font-family:Kar;font-weight:700;font-size:118px;line-height:.92;color:var(--navy);margin:24px 0 40px;text-wrap:balance}
+.art h2 em{font-style:normal;color:var(--gold)}
+.sec{margin-bottom:38px}
+.sec h3{display:inline-flex;align-items:center;gap:12px;font-size:33px;font-weight:800;color:var(--navy);margin-bottom:12px}
+.sec h3::before{content:"";width:14px;height:14px;background:var(--gold);transform:rotate(45deg)}
+.sec p{font-size:34px;line-height:1.55;color:var(--ink)}
+.sec p b{font-weight:700;color:var(--navy)}
+.you{background:var(--navy);color:#fff;border-radius:6px;padding:30px 36px 32px;position:relative}
+.you h3{color:var(--gold2)}
+.you h3::before{background:var(--gold2)}
+.you p{color:#EEF1F6}
+.you p b{color:var(--gold2)}
+.note{display:flex;gap:22px;align-items:center;border-top:2px solid var(--line);border-bottom:2px solid var(--line);padding:18px 0;margin-bottom:38px;font-size:30px;line-height:1.35;color:var(--ink)}
+.note .big{font-family:Kar;font-weight:700;font-size:84px;color:var(--gold);line-height:.9;white-space:nowrap}
+
+/* opener slides */
+.op .bgimg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0}
+.op .shade{position:absolute;inset:0;z-index:1}
+.op .body{position:relative;z-index:2;margin-top:auto;margin-bottom:34px}
+.op .num{font-family:Kar;font-weight:700;color:transparent;-webkit-text-stroke:3px var(--gold);line-height:.8;font-size:400px;letter-spacing:-4px;margin-bottom:22px}
+.op .num.fill{color:var(--gold);-webkit-text-stroke:0;background:linear-gradient(180deg,#F1D891,#C6A03C 60%,#9C7A25);-webkit-background-clip:text;background-clip:text;color:transparent}
+.op h2{font-family:Kar;font-weight:700;font-size:128px;line-height:.9;text-wrap:balance;margin:22px 0 26px}
+.op h2 em{font-style:normal;color:var(--gold)}
+.op .sub{font-size:33px;line-height:1.45;color:#DCE2EC;max-width:880px}
+
+/* cover */
+.cover .mast{font-family:Frank;font-weight:900;font-size:176px;line-height:.95;background:linear-gradient(180deg,#F6E3A6 0%,#D7B356 45%,#A9852C 100%);-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:58px;letter-spacing:-1px}
+.cover .tag{font-size:31px;font-weight:500;color:#E9EDF4;margin-top:10px;display:flex;gap:14px;align-items:center}
+.cover .tag i{width:8px;height:8px;background:var(--gold);transform:rotate(45deg);display:inline-block}
+.cover .lead{margin-top:auto;position:relative;z-index:2}
+.cover h1{font-family:Kar;font-weight:700;font-size:136px;line-height:.88;margin:18px 0 30px;text-wrap:balance}
+.cover h1 em{font-style:normal;color:var(--gold)}
+.cover ul{list-style:none;display:grid;gap:12px;margin-bottom:34px}
+.cover li{font-size:31px;font-weight:500;display:flex;gap:16px;align-items:center;color:#F1F3F7}
+.cover li::before{content:"";width:12px;height:12px;border:2px solid var(--gold);transform:rotate(45deg);flex:none}
+.byline{display:flex;align-items:center;gap:18px;border-top:2px solid rgba(198,160,60,.55);padding-top:22px;font-size:26px;color:#fff;font-weight:700;position:relative;z-index:2}
+.byline span{font-weight:400;color:rgba(255,255,255,.75)}
+
+/* split bar graphic */
+.split{display:flex;height:120px;border-radius:6px;overflow:hidden;margin-bottom:26px;font-family:Kar;font-weight:700;font-size:64px}
+.split div{display:flex;align-items:center;padding:0 26px}
+.split .a{flex:20;background:var(--gold);color:var(--deep)}
+.split .b{flex:80;background:rgba(255,255,255,.08);border:2px dashed rgba(230,203,130,.7);border-right:0;color:var(--gold2);justify-content:space-between}
+.split small{font-family:Heebo;font-size:24px;font-weight:500;color:#DCE2EC}
+
+/* chart */
+.chart{display:grid;gap:13px;margin:6px 0 30px}
+.row{display:grid;grid-template-columns:170px 1fr;align-items:center;gap:18px;font-size:28px;font-weight:500}
+.track{position:relative;height:58px}
+.track .mid{position:absolute;top:-6px;bottom:-6px;right:50%;width:2px;background:rgba(255,255,255,.35)}
+.bar{position:absolute;top:9px;height:40px;border-radius:3px;display:flex;align-items:center;font-weight:800;font-size:24px}
+.bar.neg{left:50%;background:linear-gradient(to left,#8C97AB,#C9D0DC);justify-content:flex-start;padding-left:10px;color:var(--deep)}
+.bar.pos{right:50%;background:linear-gradient(to right,#A9852C,#E6CB82);justify-content:flex-end;padding-right:10px;color:var(--deep)}
+.axis{display:flex;justify-content:space-between;font-size:20px;color:rgba(255,255,255,.6);margin:-4px 0 0 0;padding-right:188px}
+.dk .sec p{color:#E3E8F0}
+.dk .sec h3{color:#fff}
+.dk .sec p b{color:var(--gold2)}
+
+/* closing */
+.close .who{position:absolute;left:-30px;bottom:0;height:900px;z-index:1;filter:drop-shadow(0 20px 40px rgba(0,0,0,.45))}
+.close .glow{position:absolute;left:-200px;bottom:-200px;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(198,160,60,.28),transparent 65%);z-index:0}
+.close .txt{position:relative;z-index:2;width:560px;margin-top:70px}
+.close h2{font-family:Kar;font-weight:700;font-size:150px;line-height:.86;margin:18px 0 28px}
+.close h2 em{font-style:normal;color:var(--gold)}
+.close p{font-size:32px;line-height:1.5;color:#DCE2EC;margin-bottom:26px}
+.card{background:rgba(255,255,255,.06);border:2px solid rgba(198,160,60,.6);border-radius:8px;padding:26px 30px;display:grid;gap:10px;font-size:30px}
+.card b{font-size:34px;color:#fff}
+.card .ph{font-family:Kar;font-size:64px;color:var(--gold);line-height:1}
+.disc{font-size:21px;color:rgba(255,255,255,.55);margin-top:22px;line-height:1.45}
+</style>
+</head>
+<body>
+
+<!-- 01 COVER -->
+<section class="slide dark cover" id="s1">
+  <div class="op"><div class="bgimg" style="background-image:url(img/netanya-night.webp);background-position:center 30%"></div>
+  <div class="shade" style="background:linear-gradient(180deg,rgba(12,21,36,.9) 0%,rgba(12,21,36,.2) 34%,rgba(12,21,36,.35) 50%,rgba(12,21,36,.97) 74%,#0C1524 100%)"></div></div>
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">יקיר דבול · משרד עורכי דין</div><div class="issue"><b>גיליון #1</b> <span class="ltr">17-23.10.2026</span></div></div>
+  <div style="position:relative;z-index:2">
+    <div class="mast">מגזין הנדל״ן</div>
+    <div class="tag">החדשות של השבוע <i></i> מה הן אומרות לכם <i></i> בשפה פשוטה</div>
+  </div>
+  <div class="lead">
+    <div class="kicker">הסיפור המרכזי</div>
+    <h1>מס הרכישה על דירה נוספת <em>לא יורד בינואר</em></h1>
+    <ul>
+      <li>הריבית נשארה על 3.25%, ומה עם המשכנתא?</li>
+      <li>קרנות קונות דירות חדשות בסיטונאות, בהנחה</li>
+      <li>רשות ניירות ערך בודקת את מבצעי <span class="ltr">20/80</span></li>
+      <li>ההתחדשות העירונית נעצרת בתל אביב ופורחת בחיפה</li>
+    </ul>
+  </div>
+  <div class="byline"><img src="img/logo-d.png" alt="" style="height:40px">עו״ד יקיר דבול <span>· עורך דין מקרקעין, נתניה</span></div>
+</section>
+
+<!-- 02 STORY 1 ARTICLE -->
+<section class="slide light art" id="s2">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #1</b> <span class="ltr">17-23.10.2026</span></div></div>
+  <div style="margin-top:30px" class="kicker"><span class="n">01</span>מס רכישה</div>
+  <h2>8% על דירה נוספת: <em>נשאר גם בינואר</em></h2>
+  <div class="sec"><h3>מה קרה</h3>
+    <p>רשות המסים הודיעה ב־12.10: בגלל פיזור הכנסת, הוראת השעה על מס רכישה לדירה נוספת לא תפקע בסוף השנה. השיעורים לא משתנים: <b>8%</b> עד <span class="ltr">6,055,070</span> ש״ח, ו־<b>10%</b> על החלק שמעל.</p></div>
+  <div class="note"><span class="big ltr">10.2.27</span><span>עד התאריך הזה המס הנוכחי בתוקף. חוק שאמור לפקוע בתקופת בחירות נשאר בתוקף עד שהכנסת החדשה תדון בו.</span></div>
+  <div class="sec you"><h3>מה זה אומר לכם</h3>
+    <p>מי שדחה קנייה של דירה נוספת לינואר כדי לשלם פחות מס, <b>לא יקבל הקלה בינואר</b>. ההחלטה עוברת לכנסת הבאה. לפני שמתזמנים עסקה לפי המס, כדאי לבדוק את המצב העדכני.</p></div>
+  <div class="foot"><div class="src">מקור: הודעת רשות המסים, אתר אמס 13.10.2026</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">2/10</div></div>
+</section>
+
+<!-- 03 STORY 2 OPENER -->
+<section class="slide dark op" id="s3">
+  <div class="bgimg" style="background-image:url(img/bgfooter.jpg);filter:grayscale(.4) brightness(.55)"></div>
+  <div class="shade" style="background:linear-gradient(180deg,rgba(12,21,36,.55) 0%,rgba(12,21,36,.78) 40%,#0C1524 78%)"></div>
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #1</b> <span class="ltr">17-23.10.2026</span></div></div>
+  <div class="body">
+    <div class="kicker"><span class="n">02</span>ריבית ומשכנתאות</div>
+    <div class="num fill ltr" style="margin-top:30px">3.25%</div>
+    <h2>הריבית לא זזה. <em>מה זה עושה למשכנתא שלכם?</em></h2>
+    <div class="sub">בנק ישראל השאיר את הריבית ללא שינוי, שבוע לפני הבחירות. לפי תחזית הבנק, ירידה נוספת צפויה רק ב־2027.</div>
+  </div>
+  <div class="foot"><div class="src">מקור: הודעת בנק ישראל, מאקו 21.10.2026</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">3/10</div></div>
+</section>
+
+<!-- 04 STORY 2 ARTICLE -->
+<section class="slide light art" id="s4">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #1</b> <span class="ltr">17-23.10.2026</span></div></div>
+  <div style="margin-top:30px" class="kicker"><span class="n">02</span>ריבית ומשכנתאות</div>
+  <h2>הפריים נשאר <em><span class="ltr">4.75%</span></em></h2>
+  <div class="sec"><h3>מה קרה</h3>
+    <p>ב־21.10 השאיר בנק ישראל את הריבית על <b><span class="ltr">3.25%</span></b>. האינפלציה בשנה האחרונה: <b><span class="ltr">1.6%</span></b>. חטיבת המחקר של הבנק צופה ירידה לריבית של <span class="ltr">3%</span> בממוצע רק ברבעון השלישי של 2027.</p></div>
+  <div class="note"><span class="big ltr">-1.8%</span><span>מחירי הדירות בשנה האחרונה, לפי הנתונים שהבנק הציג (יולי ואוגוסט)</span></div>
+  <div class="sec you"><h3>מה זה אומר לכם</h3>
+    <p>מי שיש לו <b>מסלול פריים</b> במשכנתא, ההחזר החודשי לא יורד כרגע. הריבית הקבועה במשכנתא חדשה נקבעת לפי שוק האג״ח ולא ישירות לפי ההחלטה. לפני שלוקחים משכנתא, כדאי להשוות הצעות מכמה בנקים ולבדוק את תמהיל המסלולים.</p></div>
+  <div class="foot"><div class="src">מקור: הודעת בנק ישראל, מאקו 21.10.2026</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">4/10</div></div>
+</section>
+
+<!-- 05 STORY 3 OPENER -->
+<section class="slide dark op" id="s5">
+  <div class="bgimg" style="background-image:url(img/netanya-night.webp);background-position:center 75%;filter:brightness(.8)"></div>
+  <div class="shade" style="background:linear-gradient(180deg,rgba(12,21,36,.75) 0%,rgba(12,21,36,.35) 30%,rgba(12,21,36,.85) 55%,#0C1524 80%)"></div>
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #1</b> <span class="ltr">17-23.10.2026</span></div></div>
+  <div class="body">
+    <div class="kicker"><span class="n">03</span>דירות חדשות</div>
+    <div class="num ltr" style="margin-top:30px">-14%</div>
+    <h2>קרנות קונות דירות <em>בסיטונאות, בהנחה</em></h2>
+    <div class="sub">80 דירות חדשות נמכרו בעסקה אחת, בכ־14% מתחת להערכת השמאי. גם בנתניה כבר נסגרה עסקה דומה.</div>
+  </div>
+  <div class="foot"><div class="src">מקור: ביזפורטל 21.10.2026</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">5/10</div></div>
+</section>
+
+<!-- 06 STORY 3 ARTICLE -->
+<section class="slide light art" id="s6">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #1</b> <span class="ltr">17-23.10.2026</span></div></div>
+  <div style="margin-top:30px" class="kicker"><span class="n">03</span>דירות חדשות</div>
+  <h2><em>85 אלף</em> דירות חדשות מחכות לקונים</h2>
+  <div class="sec"><h3>מה קרה</h3>
+    <p>קרן הריט אזורים ליווינג קונה <b>80 דירות</b> מצרפתי בפרויקט באזור, בכ־198 מיליון ש״ח, כ־14% מתחת להערכת השמאי. קרן אחרת קנתה לאחרונה 50 דירות בנתניה. לפי הלמ״ס, בסוף אוגוסט נותרו <b>כ־85,680</b> דירות חדשות לא מכורות.</p></div>
+  <div class="note"><span class="big">26.7</span><span>חודשים: הזמן שייקח למכור את כל המלאי בקצב הנוכחי</span></div>
+  <div class="sec you"><h3>מה זה אומר לכם</h3>
+    <p>לקונה פרטי יש היום <b>כוח מיקוח</b> מול קבלנים. אבל הנחה במחיר היא רק חלק מהעסקה: חשוב לבדוק את לוח התשלומים, ההצמדה למדד, הבטוחות לכסף שלכם ומועד המסירה.</p></div>
+  <div class="foot"><div class="src">מקור: ביזפורטל 21.10.2026, נתוני הלמ״ס</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">6/10</div></div>
+</section>
+
+<!-- 07 STORY 4 OPENER -->
+<section class="slide dark op" id="s7" style="background:radial-gradient(90% 60% at 20% 20%,#2A3F66 0%,var(--navy) 40%,var(--deep) 100%)">
+  <svg style="position:absolute;inset:0;z-index:0;opacity:.13" width="1080" height="1350"><defs><pattern id="g" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#E6CB82" stroke-width="1"/></pattern></defs><rect width="1080" height="1350" fill="url(#g)"/></svg>
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #1</b> <span class="ltr">17-23.10.2026</span></div></div>
+  <div class="body">
+    <div class="kicker"><span class="n">04</span>קנייה מקבלן</div>
+    <div class="num fill ltr" style="margin-top:30px;font-size:330px">20/80</div>
+    <div class="split" dir="rtl"><div class="a">20%</div><div class="b"><small>משולם רק במסירה</small>80%</div></div>
+    <h2>רשות ניירות ערך <em>בודקת את מבצעי המימון</em></h2>
+    <div class="sub">חברות יזמיות ציבוריות יצטרכו לפרט כמה דירות מכרו במבצעים, וכמה עסקאות בוטלו.</div>
+  </div>
+  <div class="foot"><div class="src">מקור: ביזפורטל 18.10.2026</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">7/10</div></div>
+</section>
+
+<!-- 08 STORY 4 ARTICLE -->
+<section class="slide light art" id="s8">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #1</b> <span class="ltr">17-23.10.2026</span></div></div>
+  <div style="margin-top:30px" class="kicker"><span class="n">04</span>קנייה מקבלן</div>
+  <h2>חוזה חתום הוא <em>עוד לא כסף בקופה</em></h2>
+  <div class="sec"><h3>מה קרה</h3>
+    <p>ב־18.10 פרסמה רשות ניירות ערך מדריך לחברות יזמיות ציבוריות. בתשקיפים יתבקשו לפרט כמה דירות נמכרו במבצעי מימון כמו <span class="ltr">20/80</span> וכמה חוזים בוטלו. בהתחדשות עירונית: כמה דיירים חתמו.</p></div>
+  <div class="note"><span class="big ltr">10%</span><span>ביטולים בפרויקט: מעל זה הרשות תבקש מהחברה פירוט נוסף</span></div>
+  <div class="sec you"><h3>מה זה אומר לכם</h3>
+    <p>מבצע <span class="ltr">20/80</span> נראה נוח, אבל <b>80% מהמחיר משלמים במסירה</b>. לפני שחותמים, כדאי לוודא שתוכלו לקבל אז משכנתא, ושעל כל תשלום לקבלן מקבלים <b>ערבות חוק מכר</b>.</p></div>
+  <div class="foot"><div class="src">מקור: ביזפורטל 18.10.2026, רשות ניירות ערך</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">8/10</div></div>
+</section>
+
+<!-- 09 STORY 5 MERGED -->
+<section class="slide dark dk" id="s9">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #1</b> <span class="ltr">17-23.10.2026</span></div></div>
+  <div style="margin-top:30px" class="kicker"><span class="n">05</span>התחדשות עירונית</div>
+  <h2 style="font-family:Kar;font-size:100px;line-height:.92;margin:18px 0 22px">בקשות ההיתר ירדו <em style="font-style:normal;color:var(--gold)">ב־<span class="ltr">51%</span></em></h2>
+  <p style="font-size:27px;color:#C9D1DD;margin-bottom:18px">יחידות דיור בבקשות להיתר, 8 ערים: חציון ראשון 2026 מול 2025</p>
+  <div class="chart">
+    <div class="row"><span>חיפה</span><div class="track"><div class="mid"></div><div class="bar pos" style="width:47%"><span class="ltr">+465%</span></div></div></div>
+    <div class="row"><span>חולון</span><div class="track"><div class="mid"></div><div class="bar pos" style="width:35%"><span class="ltr">+317%</span></div></div></div>
+    <div class="row"><span>רעננה</span><div class="track"><div class="mid"></div><div class="bar pos" style="width:15%"><span class="ltr">+86%</span></div></div></div>
+    <div class="row"><span>ראשון לציון</span><div class="track"><div class="mid"></div><div class="bar neg" style="width:7%"><span class="ltr">-4%</span></div></div></div>
+    <div class="row"><span>הרצליה</span><div class="track"><div class="mid"></div><div class="bar neg" style="width:8%"><span class="ltr">-7%</span></div></div></div>
+    <div class="row"><span>רמת גן</span><div class="track"><div class="mid"></div><div class="bar neg" style="width:22%"><span class="ltr">-45%</span></div></div></div>
+    <div class="row"><span>ירושלים</span><div class="track"><div class="mid"></div><div class="bar neg" style="width:32%"><span class="ltr">-70%</span></div></div></div>
+    <div class="row"><span>תל אביב</span><div class="track"><div class="mid"></div><div class="bar neg" style="width:38%"><span class="ltr">-83%</span></div></div></div>
+  </div>
+  <div class="sec" style="margin-bottom:0"><h3>מה זה אומר לכם</h3>
+    <p>קצב הפרויקט תלוי מאוד <b>בתוכנית של העירייה</b>. דיירים שקיבלו הצעה מיזם: כדאי לבדוק את מצב התכנון בעיר ואת איתנות היזם, ולהיות מיוצגים על ידי עורך דין מטעם הדיירים לפני שחותמים.</p></div>
+  <div class="foot"><div class="src">מקור: מחלקת המחקר של מדלן, ynet 21.10.2026. הגרף אינו בקנה מידה מלא</div><div class="pg">9/10</div></div>
+</section>
+
+<!-- 10 CLOSING -->
+<section class="slide dark close" id="s10">
+  <div class="glow"></div>
+  <img class="who" src="img/yakir-cutout.webp" alt="">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #1</b> <span class="ltr">17-23.10.2026</span></div></div>
+  <div class="txt">
+    <div class="kicker">נתראה בשבוע הבא</div>
+    <h2>המגזין יוצא <em>בכל יום שישי</em></h2>
+    <p>עקבו אחרינו כדי לקבל כל שבוע את החדשות החשובות בנדל״ן, במיסוי ובהתחדשות עירונית, ומה הן אומרות לכם.</p>
+    <div class="card">
+      <b>עו״ד יקיר דבול</b>
+      <span>עורך דין מקרקעין · רזיאל 1, נתניה</span>
+      <span class="ph ltr">09-8613413</span>
+      <span class="ltr" style="font-weight:700">dabullaw.co.il</span>
+    </div>
+    <div class="disc">המידע במגזין כללי ואינו ייעוץ משפטי. לפני החלטה בעסקה, כדאי להתייעץ עם עורך דין.</div>
+  </div>
+  <div class="foot" style="justify-content:flex-end"><div class="pg">10/10</div></div>
+</section>
+
+</body>
+</html>
