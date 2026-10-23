@@ -74,6 +74,7 @@ CSS = """
 .dmag .cta .btn{background:var(--g1);color:var(--ink);border-color:var(--g1)}
 .dmag .disc{font-size:14px;color:var(--mut);margin-top:18px}
 .dmag .story h3 a{color:inherit}
+.dmag .srcname{font-size:14px;color:var(--mut);margin-top:6px}
 .dmag .more{display:inline-block;margin-top:8px;font-weight:700;color:var(--g3);font-size:15px}
 .dmag .toc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 28px;margin-top:28px}
 .dmag .toc b{display:block;font-size:17px;margin-bottom:8px}
@@ -137,6 +138,12 @@ def rich(t):
     return ''.join(out)
 
 
+def srcname(s):
+    """the source is written by name only, never as a link (Yakir, 23.10.2026)"""
+    names = [t for t, _u in s.get('sources', [])]
+    return f'<div class="srcname">מקור: {e(" · ".join(names))}</div>' if names else ''
+
+
 def plain(t):
     return LINK.sub(lambda m: m.group(1), t)
 
@@ -173,7 +180,7 @@ def build(d):
 <div class="btns"><a class="btn pri" href="{e(Lp)}">לקריאת הגיליון</a><a class="btn sec" href="{e(L["pdf"])}" target="_blank" rel="noopener">צפייה במגזין</a></div></div></section>''')
     st = []
     for i, s in enumerate(L['stories'], 1):
-        st.append(f'<div class="story"><span class="n">{i}</span><div><h3>{e(s["h"])}</h3><p>{e(s["what"])} <b>מה זה אומר לכם:</b> {e(s["means"])}</p></div></div>')
+        st.append(f'<div class="story"><span class="n">{i}</span><div><h3>{e(s["h"])}</h3><p>{e(s["what"])} <b>מה זה אומר לכם:</b> {e(s["means"])}</p>{srcname(s)}</div></div>')
     more = f'<a class="more" href="{e(Lp)}">לקריאת הגיליון המלא ←</a>' if L.get('page') else ''
     out.append(f'<section class="inside" aria-labelledby="dmag-in"><h2 id="dmag-in">בגיליון הזה</h2><p class="sub">עיקרי הדברים בקצרה.</p>{"".join(st)}{more}</section>')
     out.append(author_box(a, L['updated']))
@@ -210,7 +217,7 @@ def build_issue(d, no):
     secs = []
     for i, s in enumerate(I['stories'], 1):
         paras = ''.join(f'<p>{rich(t)}</p>' for t in s.get('body') or [s['what']])
-        secs.append(f'<section id="s{i}"><h2><span class="n">{i}</span><span>{e(s["h"])}</span></h2>{paras}<div class="means"><b>מה זה אומר לכם:</b> {e(s["means"])}</div></section>')
+        secs.append(f'<section id="s{i}"><h2><span class="n">{i}</span><span>{e(s["h"])}</span></h2>{paras}<div class="means"><b>מה זה אומר לכם:</b> {e(s["means"])}</div>{srcname(s)}</section>')
     out.append(f'<article class="art">{"".join(secs)}</article>')
     if I.get('faq'):
         qa = ''.join(f'<h3>{e(q)}</h3><p>{e(x)}</p>' for q, x in I['faq'])
