@@ -1,11 +1,9 @@
 /* dabul: the videos page (5225) in pages of 15 videos (Yakir asked on 25.10.2026: "שכל 15 סרטונים זה עובר לעמוד הבא").
    All the videos stay in the page itself (so Google still sees every one); the browser shows 15 at a time with
-   page buttons under the grid ("הקודם 1 2 3 הבא"). Preview before approval: ?pg=preview. Live after Yakir approves:
-   option dabul_videos_paged = 1. Undo: deactivate this snippet. */
+   page buttons under the grid ("הקודם 1 2 3 הבא"). Approved by Yakir and live on 25.10.2026. Undo: deactivate this snippet. */
 add_action('wp_footer', function () {
 	if (!is_page(5225)) return;
-	$preview = isset($_GET['pg']) && $_GET['pg'] === 'preview';
-	if (!$preview && !get_option('dabul_videos_paged')) return;
+	// live since 25.10.2026 11:26 (Yakir: "מאשר")
 	echo '<style id="dvp-css">.dvp-off{display:none!important}'
 		. '.dvp-nav{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin:36px auto 10px;padding:0 16px;direction:rtl;font-family:"Noto Local","Noto Sans Hebrew",Heebo,Arial,sans-serif}'
 		. '.dvp-nav button{min-width:44px;height:44px;padding:0 14px;border-radius:999px;border:1.5px solid #e2dccd;background:#fff;color:#141414;font:inherit;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s,border-color .2s}'
