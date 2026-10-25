@@ -45,10 +45,13 @@ export async function send(phone: string, text: string, opts: { name?: string; s
       return r.ok ? { ok: true, id: j.messages?.[0]?.id } : { ok: false, error: `meta ${r.status} ${j.error?.message || ''}`.slice(0, 160) };
     }
     if (p === 'green') {
+      // 25.10.2026 (Yakir approved): every message, not only the opening, is sent only to a number that has WhatsApp.
+      // Green API accepts a message to a number without WhatsApp and returns an id, so without this it looked "sent".
+      if ((await hasWhatsapp(phone)) === false) return { ok: false, error: 'no_whatsapp' };
       const r = await fetch(`${greenBase()}/waInstance${env('GREEN_API_INSTANCE')}/sendMessage/${env('GREEN_API_TOKEN')}`, {
         method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ chatId: `${to}@c.us`, message: text }) });
       const j = await r.json().catch(() => ({}));
-      return r.ok && j.idMessage ? { ok: true, id: j.idMessage } : { ok: false, error: `green ${r.status} ${JSON.stringify(j).slice(0, 120)}` };
+      return r.ok && j.idMessage ? { ok: true, id: j.idMessage } : { ok: false, error: hideSecrets(`green ${r.status} ${JSON.stringify(j)}`).slice(0, 120) };
     }
     const sid = env('TWILIO_ACCOUNT_SID');
     const body = new URLSearchParams();
@@ -65,15 +68,27 @@ export async function send(phone: string, text: string, opts: { name?: string; s
       method: 'POST', headers: { authorization: 'Basic ' + btoa(`${sid}:${env('TWILIO_AUTH_TOKEN')}`), 'content-type': 'application/x-www-form-urlencoded' }, body });
     const j = await r.json().catch(() => ({}));
     return r.ok ? { ok: true, id: j.sid } : { ok: false, error: `twilio ${r.status} ${j.message || ''}`.slice(0, 160) };
-  } catch (e) { return { ok: false, error: String((e as Error).message || e).slice(0, 160) }; }
+  } catch (e) { return { ok: false, error: hideSecrets(String((e as Error).message || e)).slice(0, 160) }; }
 }
+// 25.10.2026: an error text never keeps the WhatsApp connection key (Green API puts the request path, with the key, in its errors)
+export const hideSecrets = (s: string) => {
+  let t = String(s || '').replace(/"path":"[^"]*",?/g, '');
+  for (const k of ['GREEN_API_TOKEN', 'META_WA_TOKEN', 'TWILIO_AUTH_TOKEN']) { const v = env(k); if (v) t = t.split(v).join('***'); }
+  return t;
+};
 
 // 22.10.2026 (Yakir approved): before an opening message, check that the number has WhatsApp at all.
 // Green API accepts a message to a number without WhatsApp and returns an id, so it looked "sent" when it was not.
 // Returns false only when the check clearly says there is no WhatsApp; true / null (unknown, check failed) keep the normal send.
+const WA_SEEN = new Map<string, { v: boolean; at: number }>();
 export async function hasWhatsapp(phone: string): Promise<boolean | null> {
   if (provider() !== 'green') return null;
   const to = intl(phone); if (!to) return null;
+  const c = WA_SEEN.get(to); if (c && Date.now() - c.at < 10 * 60e3) return c.v;
+  const v = await checkWa(to); if (v !== null) WA_SEEN.set(to, { v, at: Date.now() });
+  return v;
+}
+async function checkWa(to: string): Promise<boolean | null> {
   try {
     const r = await fetch(`${greenBase()}/waInstance${env('GREEN_API_INSTANCE')}/checkWhatsapp/${env('GREEN_API_TOKEN')}`, {
       method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ phoneNumber: Number(to) }), signal: AbortSignal.timeout(10000) });

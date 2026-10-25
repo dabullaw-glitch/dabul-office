@@ -26,6 +26,7 @@ const QUIET_MS = 10 * 60e3;
 const whyFail = (err: string) => {
   const e = String(err || ''), m = e.match(/^green (\d+)/);
   if (e === 'bad_phone') return 'מספר הטלפון לא תקין';
+  if (e === 'no_whatsapp') return 'למספר אין וואטסאפ';
   if (m) return m[1] === '466' ? 'נגמרה מכסת ההודעות בוואטסאפ' : m[1] === '401' || m[1] === '403' ? 'החיבור לוואטסאפ נותק' : `שרת הוואטסאפ החזיר שגיאה ${m[1]}`;
   if (/timed out|timeout|network|fetch|connect/i.test(e)) return 'תקלת תקשורת';
   return 'תקלה בשליחה';
@@ -114,7 +115,10 @@ Deno.serve(async (req) => {
 
   const id = uid('l');
   const page = pick(f, ['page', 'url', 'referer', 'עמוד']) || req.headers.get('referer') || '';
-  const lead = { name, phone, email, area, topic, debtRange, preferredTime, notes, campaign, adName, metaLeadId, source, lang, stage: 'new', status: 'חדש', stageAt: now, created: now, page, via: source === 'facebook' ? 'facebook-intake' : 'website-form',
+  // 25.10.2026 (Yakir approved): what the lead wrote is kept as it was sent (formText, formFields), separate from the notes
+  // Yakir edits, so the lead window always shows exactly what the person wrote
+  const formFields = Object.entries(f).filter(([k, v]) => !/turnstile|token|^k$|key|secret|_hp|^website$|referer|^url$|^page$|leadgen|^id$|form_id|ad_id|adset|campaign_id|platform/i.test(k) && String(v).length < 1500).slice(0, 25).map(([k, v]) => [k, String(v)]);
+  const lead = { name, phone, email, area, topic, debtRange, preferredTime, notes, formText: notesIn || '', formFields, campaign, adName, metaLeadId, source, lang, stage: 'new', status: 'חדש', stageAt: now, created: now, page, via: source === 'facebook' ? 'facebook-intake' : 'website-form',
     log: [{ at: now, kind: 'created', text: `ליד נכנס ממקור: ${srcHe}${campaign ? ` (${campaign})` : ''}` }] };
   const { error } = await sb.from('docs').insert({ coll: 'leads', id, data: lead });
   if (error) { console.error(error); return json({ ok: false }, 500); }
@@ -133,17 +137,25 @@ Deno.serve(async (req) => {
   if (direct) {
     const il = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' })), d = il.getDay(), h = il.getHours();
     inHours = (d <= 4 && h >= 8 && h < 21) || (d === 5 && h >= 8 && h < 14);
-    noWa = (await hasWhatsapp(phone)) === false;
+    const w = await hasWhatsapp(phone);
+    noWa = w === false;
+    if (w !== null) await sb.rpc('docs_merge', { p_coll: 'leads', p_id: id, p_patch: { wa: w, waCheckedAt: new Date().toISOString() } });
     if (noWa) {
       await sb.from('docs').upsert({ coll: 'outbox', id: oid, data: { status: 'dismissed', via: 'no-whatsapp', at: now, key: okey, name, type: 'lead', text: reply } });
       await sb.rpc('docs_merge', { p_coll: 'leads', p_id: id, p_patch: { noWhatsapp: true, log: lead.log.concat([{ at: new Date().toISOString(), kind: 'system', text: 'למספר אין וואטסאפ, הודעת הפתיחה לא נשלחה. צריך להתקשר.' }]) } });
     }
+    if (!inHours && !noWa) await sb.rpc('docs_merge', { p_coll: 'leads', p_id: id, p_patch: { log: lead.log.concat([{ at: new Date().toISOString(), kind: 'system', text: 'הליד נכנס מחוץ לשעות הפעילות. הודעת הפתיחה תצא לבד בתחילת שעות הפעילות הבאות (א׳ עד ה׳ 08:00 עד 21:00, ו׳ עד 14:00).' }]) } });
     if (inHours && !noWa) {
       const r = await send(phone, reply, { name });
       if (!r.ok) failErr = String(r.error || 'unknown');
+      if (!r.ok && failErr === 'no_whatsapp') {
+        noWa = true;
+        await sb.from('docs').upsert({ coll: 'outbox', id: oid, data: { status: 'dismissed', via: 'no-whatsapp', at: now, key: okey, name, type: 'lead', text: reply } });
+        await sb.rpc('docs_merge', { p_coll: 'leads', p_id: id, p_patch: { noWhatsapp: true, wa: false, log: lead.log.concat([{ at: new Date().toISOString(), kind: 'system', text: 'למספר אין וואטסאפ, הודעת הפתיחה לא נשלחה. צריך להתקשר.' }]) } });
+      }
       if (r.ok) {
         sentNow = true;
-        await sb.from('docs').upsert({ coll: 'outbox', id: oid, data: { status: 'sent', via: 'auto', at: now, key: okey, name, type: 'lead', text: reply } });
+        await sb.from('docs').upsert({ coll: 'outbox', id: oid, data: { status: 'sent', via: 'auto', at: now, key: okey, name, type: 'lead', text: reply, msgId: r.id || '', phone, leadId: id } });
         await sb.rpc('docs_merge', { p_coll: 'leads', p_id: id, p_patch: { log: lead.log.concat([{ at: new Date().toISOString(), kind: 'message', text: 'נשלחה אוטומטית הודעת פתיחה' }]) } });
       }
     }
