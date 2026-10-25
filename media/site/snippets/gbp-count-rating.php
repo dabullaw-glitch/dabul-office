@@ -40,7 +40,7 @@ function dabul_gbp_fix($html) {
 				$at = $g[1];
 				if ($g[0] === $r || !in_array($g[0], dabul_gbp_seen(), true)) continue; // only numbers that were the site's rating
 				$ctx = substr($html, max(0, $at - 250), 500);
-				if (strpos($ctx, '★') === false && strpos($ctx, 'ביקורות') === false && strpos($ctx, 'דירוג') === false) continue;
+				if (!preg_match('/★|ביקורות|דירוג|כוכב|stars|score|rating/u', $ctx)) continue; // 25.10.2026: also stars drawn as pictures ("5 כוכבים")
 				$out .= substr($html, $pos, $at - $pos) . $r; $pos = $at + strlen($g[0]);
 			}
 		}
