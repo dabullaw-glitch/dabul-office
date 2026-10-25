@@ -18,6 +18,8 @@ function dabul_gbp_fix($html) {
 	list($n, $r) = dabul_gbp_vals();
 	if (!is_string($html) || $html === '') return $html;
 	$orig = $html;
+	// a page excerpt that glued "4.9" and "74 ביקורות" together ("4.974 ביקורות")
+	if ($n >= 60 && $r !== '') { $x = preg_replace('/(?<![\d.])[45]\.\d(\d{2,3})(\s+ביקורות)/u', $r . ' · ' . $n . '${2}', $html); if (is_string($x) && $x !== '') $html = $x; }
 	if ($n >= 60 && strpos($html, 'ביקורות') !== false) {
 		$x = preg_replace_callback('/(?<![\d.,])(\d{2,3})(\s+ביקורות)/u', function ($m) use ($n) { $v = (int) $m[1]; return ($v >= 60 && $v < $n) ? $n . $m[2] : $m[0]; }, $html);
 		if (is_string($x) && $x !== '') $html = $x;
@@ -30,6 +32,9 @@ function dabul_gbp_fix($html) {
 		// "דירוג 4.9"
 		$x = preg_replace('/(דירוג\s+)[45]\.\d(?![\d])/u', '${1}' . $r, $html);
 		if (is_string($x) && $x !== '') $html = $x;
+		// "4.9 מתוך 5" (screen reader labels next to the stars)
+		$x = preg_replace('/(?<![\d.])[45]\.\d(?=\s+מתוך\s+5)/u', $r, $html);
+		if (is_string($x) && $x !== '') $html = $x;
 		// rating values inside page data
 		$x = preg_replace('/((?:&quot;|")(?:rating|ratingValue)(?:&quot;|"):\s*(?:&quot;|")?)[45]\.\d+(?![\d])/', '${1}' . $r, $html);
 		if (is_string($x) && $x !== '') $html = $x;
@@ -40,7 +45,7 @@ function dabul_gbp_fix($html) {
 				$at = $g[1];
 				if ($g[0] === $r || !in_array($g[0], dabul_gbp_seen(), true)) continue; // only numbers that were the site's rating
 				$ctx = substr($html, max(0, $at - 250), 500);
-				if (!preg_match('/★|ביקורות|דירוג|כוכב|stars|score|rating/u', $ctx)) continue; // 25.10.2026: also stars drawn as pictures ("5 כוכבים")
+				if (!preg_match('/★|ביקורות|דירוג|כוכב|stars|score|rating/', $ctx)) continue; // no /u: the window may cut a Hebrew letter in half // 25.10.2026: also stars drawn as pictures ("5 כוכבים")
 				$out .= substr($html, $pos, $at - $pos) . $r; $pos = $at + strlen($g[0]);
 			}
 		}

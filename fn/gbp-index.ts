@@ -2,7 +2,7 @@
 // ids in docs settings/gbp.api {accountId, locationId}). Handles reviews, stats, and (from 21.10.2026) the weekly posts directly (step=due).
 // Cron (x-cron-secret): POST ?step=sync   reads the reviews into docs coll 'gbprev' (new review -> status 'new'; on the very first sync,
 //                                         reviews without a reply -> 'old', so nothing floods Telegram)
-//                       POST ?step=ask    sends Yakir every review with status 'drafted' (data.draft written by the daily task) with buttons
+//                       POST ?step=ask    sends Yakir all reviews with status 'drafted' in ONE message (25.10.2026) with one "publish all" button
 //                       POST ?step=stats  {month:'YYYY-MM'} monthly views/calls/website/directions -> docs gbpstats/<month> + Telegram
 // Public (Telegram buttons through portal.html#w=<a>&t=<token>): ?a=ok | no   (ok publishes the reply on Google after a confirm click)
 import { loadSecrets, json, cors, admin, env } from '../_shared/common.ts';
@@ -70,18 +70,44 @@ async function sync() {
   await merge('settings', 'gbp', { api: { ...api, syncedAt: new Date().toISOString(), reviews: count, rating: avg } });
   return { ok: true, first, count, avg, ...out };
 }
-const askText = (r: Any, again = false) => `${again ? '⏳ תזכורת: ' : ''}⭐ ביקורת ${r.stars ? r.stars + ' כוכבים' : ''} בגוגל${r.reviewer ? ' מאת ' + r.reviewer.split(' ')[0] : ''}\n\n"${String(r.comment || '(בלי טקסט, רק דירוג)').slice(0, 1200)}"\n\nטיוטת תשובה:\n${r.draft}\n\nלוחצים "לפרסם את התשובה" כדי שהיא תעלה בגוגל, או "לא לענות". רוצה לשנות נוסח? כתוב לי בצ'אט.`;
-const btns = (t: string) => [[{ text: '✅ לפרסם את התשובה', url: pub('ok', t) }, { text: '✗ לא לענות', url: pub('no', t) }]];
+// 25.10.2026 (Yakir: "למה אתה שולח לי כל אחד בנפרד? שיהיה מרוכז"): all the drafts go in ONE message (up to 6 per message),
+// numbered, with ONE button that publishes them all. To change one, he writes in the chat.
+const firstName = (r: Any) => String(r.reviewer || '').trim().split(/\s+/)[0] || '';
 async function ask(b: Any) {
   const { data } = await db().select('id,data').eq('coll', 'gbprev').eq('data->>status', 'drafted');
+  const rows = (data || []).filter((row: Any) => row.data && row.data.draft && (b.force || !row.data.asked || Date.now() - Date.parse(row.data.asked) >= 20 * 3600e3))
+    .sort((x: Any, y: Any) => String(x.data.created || '').localeCompare(String(y.data.created || '')));
   const out: Any[] = [];
-  for (const row of (data || []).slice(0, 10)) {
-    const r = row.data; if (!r.draft) continue;
-    const last = Date.parse(r.asked || 0); if (r.tok && !b.force && Date.now() - last < 20 * 3600e3) continue;
-    const t = r.tok || tok(); await merge('gbprev', row.id, { tok: t, asked: new Date().toISOString() });
-    await tg(askText(r, !!r.tok), btns(t)); out.push(row.id);
+  for (let i = 0; i < rows.length; i += 6) {
+    const part = rows.slice(i, i + 6); const bt = tok(); const again = part.some((row: Any) => row.data.asked);
+    const lines = part.map((row: Any, k: number) => {
+      const r = row.data; const c = String(r.comment || '').replace(/\n*\(Translated by Google\)[\s\S]*$/, '').trim();
+      return `${i + k + 1}. ${'⭐'.repeat(Math.max(1, Math.min(5, r.stars || 5)))} ${firstName(r)}${c ? `: "${c.slice(0, 300)}"` : ' (רק דירוג, בלי מילים)'}\nהתשובה: ${String(r.draft).replace(/\n+/g, ' ')}`;
+    });
+    const head = `${again ? '⏳ תזכורת: ' : ''}⭐ ${rows.length === 1 ? 'ביקורת חדשה בגוגל מחכה' : rows.length + ' ביקורות חדשות בגוגל מחכות'} לתשובה${rows.length > 6 ? ` (חלק ${i / 6 + 1})` : ''}:`;
+    const tail = 'לוחצים פעם אחת "לפרסם את כל התשובות", וכולן עולות לגוגל. רוצה לשנות תשובה אחת? כתוב לי בצ\'אט את המספר ומה לשנות.';
+    for (const row of part) await merge('gbprev', row.id, { tok: row.data.tok || tok(), btok: bt, asked: new Date().toISOString() });
+    await tg(`${head}\n\n${lines.join('\n\n')}\n\n${tail}`, [[{ text: `✅ לפרסם את כל ${part.length === 1 ? 'התשובה' : part.length + ' התשובות'}`, url: pub('okall', bt) }]]);
+    out.push(...part.map((row: Any) => row.id));
   }
   return { ok: true, sent: out };
+}
+async function byBatch(t: string) { if (!/^[a-f0-9]{40}$/.test(t)) return []; const { data } = await db().select('id,data').eq('coll', 'gbprev').eq('data->>btok', t); return data || []; }
+async function actAll(req: Request, t: string) {
+  const rows = (await byBatch(t)).sort((x: Any, y: Any) => String(x.data.created || '').localeCompare(String(y.data.created || '')));
+  if (!rows.length) return page('הקישור לא תקף', '<p>הביקורות לא נמצאו.</p>', 404);
+  const open = rows.filter((row: Any) => !['replied', 'answered', 'skipped'].includes(row.data.status) && row.data.draft);
+  const list = rows.map((row: Any) => `<blockquote><b>${esc(firstName(row.data))}</b> ${'⭐'.repeat(row.data.stars || 5)}<br>${esc(row.data.reply || row.data.draft)}${['replied', 'answered'].includes(row.data.status) ? '<br><small>✓ כבר בגוגל</small>' : ''}</blockquote>`).join('');
+  if (!open.length) return page('כל התשובות כבר בגוגל', list);
+  if (req.method !== 'POST') return page(`לפרסם ${open.length === 1 ? 'את התשובה' : open.length + ' תשובות'} בגוגל?`, `${list}<form method="post" action="${self()}?a=okall&t=${t}"><button type="submit">✅ לפרסם את כולן בגוגל</button></form>`);
+  let ok = 0; const bad: string[] = [];
+  for (const row of open) {
+    try {
+      await g(`https://mybusiness.googleapis.com/v4/${row.data.name}/reply`, 'PUT', { comment: String(row.data.draft).slice(0, 4000) });
+      await merge('gbprev', row.id, { status: 'replied', reply: row.data.draft, repliedAt: new Date().toISOString() }); ok++;
+    } catch (e) { bad.push(firstName(row.data) + ': ' + String((e as Error).message || e).slice(0, 120)); }
+  }
+  return page(bad.length ? `עלו ${ok} תשובות, ${bad.length} לא עלו` : `${ok === 1 ? 'התשובה עלתה' : ok + ' התשובות עלו'} לגוגל`, `${bad.length ? `<p>לא עלו: ${esc(bad.join(' | '))}. אפשר ללחוץ שוב בעוד כמה דקות.</p>` : '<p>הכל עלה בגוגל, מתחת לביקורות.</p>'}${list}`);
 }
 async function byTok(t: string) { if (!/^[a-f0-9]{40}$/.test(t)) return null; const { data } = await db().select('id,data').eq('coll', 'gbprev').eq('data->>tok', t).limit(1); return data && data[0]; }
 async function act(req: Request, a: string, t: string) {
@@ -167,6 +193,7 @@ Deno.serve(async (req) => {
   await loadSecrets().catch(() => {});
   const url = new URL(req.url); const a = url.searchParams.get('a') || '', t = (url.searchParams.get('t') || '').replace(/[^a-f0-9]/g, '');
   try {
+    if (a === 'okall') return await actAll(req, t);
     if (a === 'ok' || a === 'no') return await act(req, a, t);
     if (!env('CRON_SECRET') || req.headers.get('x-cron-secret') !== env('CRON_SECRET')) return json({ error: 'unauthorized' }, 401);
     const step = url.searchParams.get('step'); const b = await req.json().catch(() => ({}));
