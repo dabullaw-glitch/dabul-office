@@ -7,7 +7,7 @@
      A "חזרה לתיק" button brings him back. Nothing is sent without his click. */
 (function (O) {
   if (!O || O.ZZDEAL || !O.V || !O.V.deal) return;
-  O.ZZDEAL = '20261025a';
+  O.ZZDEAL = '20261025b';
   const esc = v => (O.esc ? O.esc(v == null ? '' : String(v)) : String(v == null ? '' : v));
   const icon = (n, z) => (O.icon ? O.icon(n, z) : '');
   const KEY = 'px-feeagr-draft';
@@ -16,13 +16,43 @@
 
   // the agreement of a deal and its state
   O.dealAgreements = id => (O.all('feeagr') || []).filter(a => a.dealId === id || (a.form && a.form.dealId === id));
+  // signed = an agreement sent from the system and signed, OR a signed fee agreement document in the file / the client's
+  // documents, OR Yakir marked that a paper agreement exists (deal.feeAgr.signedAt)
+  const isAgrDoc = f => /שכ.?ט|שכר טרחה/.test(String(f.title || '') + ' ' + String(f.fileName || '')) && (f.type === 'signed' || /חתום|חתומה|signed/i.test(String(f.title || '') + ' ' + String(f.fileName || '')));
   O.dealAgrState = id => {
-    const list = O.dealAgreements(id); if (!list.length) return { s: 'none' };
-    const reqs = list.flatMap(a => (a.reqs || []).map(r => O.get('signreqs', r.id)).filter(Boolean));
-    if (reqs.length && list.some(a => { const rs = (a.reqs || []).map(r => O.get('signreqs', r.id)).filter(Boolean); return rs.length && rs.every(r => r.status === 'signed'); })) return { s: 'signed', at: (reqs.find(r => r.signedAt) || {}).signedAt };
+    const d = O.get('deals', id) || {};
+    const list = O.dealAgreements(id);
+    const reqsOf = a => (a.reqs || []).map(r => O.get('signreqs', r.id)).filter(Boolean);
+    const signedAgr = list.find(a => { const rs = reqsOf(a); return rs.length && rs.every(r => r.status === 'signed'); });
+    if (signedAgr) return { s: 'signed', at: (reqsOf(signedAgr).find(r => r.signedAt) || {}).signedAt, how: 'system' };
+    const cl = d.clientIds || [];
+    const doc = (O.all('documents') || []).find(f => isAgrDoc(f) && (f.dealId === id || (!f.dealId && cl.includes(f.clientId))));
+    if (doc) return { s: 'signed', at: doc.at || doc.created, how: 'doc', docId: doc.id };
+    if (d.feeAgr && d.feeAgr.signedAt) return { s: 'signed', at: d.feeAgr.signedAt, how: d.feeAgr.manual ? 'manual' : 'system' };
+    const reqs = list.flatMap(reqsOf);
     if (reqs.some(r => r.status !== 'cancelled')) return { s: 'sent', opened: reqs.some(r => r.openedAt) };
-    return { s: 'draft' };
+    return { s: 'none' };
   };
+  const when = x => { const t = Date.parse(x || ''); return t > 0 ? (O.fmtDate ? O.fmtDate(new Date(t).toISOString().slice(0, 10)) : '') : ''; };
+  // the "is there a signed agreement" choice on a deal
+  function agrSheet(id) {
+    const d = O.get('deals', id); if (!d) return;
+    O.modal({
+      title: 'הסכם שכר טרחה בתיק', wide: true,
+      body: `<p style="margin-top:0">בתיק <b>${esc(d.address || '')}</b> עוד לא רשום הסכם שכר טרחה חתום.</p>
+        <div class="btn-row" style="flex-wrap:wrap;gap:8px"><button class="btn pri" id="zz_send">${icon('sign', 15)} שליחת הסכם ללקוח לחתימה</button><button class="btn" id="zz_paper">${icon('check', 15)} יש כבר הסכם חתום (על נייר) - לסמן בתיק</button></div>
+        <p class="small muted" style="margin-bottom:0">אחרי סימון "על נייר", כדאי להעלות את הסריקה בלשונית "מסמכים" של התיק, כדי שתמיד יהיה אפשר לצפות בו ולהוריד אותו.</p>`,
+      foot: '<button class="btn" data-close>סגירה</button>',
+      onMount: (root, close) => {
+        root.querySelector('#zz_send').onclick = () => { close(); O.dealAgreement(id); };
+        root.querySelector('#zz_paper').onclick = async () => {
+          await O.patch('deals', id, { feeAgr: { signedAt: new Date().toISOString(), manual: true } });
+          if (O.log) await O.log('deal', id, 'סומן: יש הסכם שכר טרחה חתום (על נייר)', 'system');
+          close(); O.toast('נרשם בתיק: יש הסכם שכ״ט חתום'); O.render ? O.render() : null;
+        };
+      },
+    });
+  }
 
   O.dealAgreement = id => {
     const d = O.get('deals', id); if (!d) return;
@@ -68,11 +98,15 @@
   function decorate(el) {
     const id = O.R && O.R.id, d = id && O.get('deals', id); if (!d || !el) return;
     const st = O.dealAgrState(id);
-    const pill = st.s === 'signed' ? '<span class="pill p-ok">הסכם שכ״ט נחתם ✓</span>' : st.s === 'sent' ? `<span class="pill p-warn">הסכם שכ״ט: ממתין לחתימה${st.opened ? ' · נפתח' : ''}</span>` : '<span class="pill p-bad">הסכם שכ״ט: לא נשלח</span>';
+    const pill = st.s === 'signed' ? `<span class="pill p-ok" title="${st.how === 'manual' ? 'סומן ידנית: הסכם על נייר' : 'ההסכם החתום שמור בתיק'}">הסכם שכ״ט חתום ✓${st.at ? ' · ' + esc(when(st.at)) : ''}</span>` : st.s === 'sent' ? `<span class="pill p-warn">הסכם שכ״ט: נשלח, עוד לא נחתם${st.opened ? ' · הלקוח פתח' : ''}</span>` : '<button type="button" class="pill p-bad" data-zzagrpill="1" style="border:0;cursor:pointer">אין הסכם שכ״ט חתום</button>';
+    if (st.s === 'signed' && !(d.feeAgr && d.feeAgr.signedAt) && O.S && O.S.canEdit) {
+      O.patch('deals', id, { feeAgr: { signedAt: st.at || new Date().toISOString(), how: st.how, docId: st.docId || '' } }).then(() => O.log && O.log('deal', id, 'הסכם שכר טרחה חתום נשמר בתיק', 'system')).catch(() => {});
+    }
     const feeT = el.querySelector('[data-a="fee-toggle"]');
     if (feeT && !el.querySelector('.zz-agrpill')) feeT.insertAdjacentHTML('afterend', ` <span class="zz-agrpill">${pill}</span>`);
     const compose = el.querySelector('[data-a="compose"]');
     if (compose && !el.querySelector('[data-zzagr]')) compose.insertAdjacentHTML('beforebegin', `<button class="btn${st.s === 'none' ? ' pri' : ''}" data-zzagr="1">${icon('sign', 15)} ${st.s === 'signed' ? 'הסכם שכ״ט (נחתם)' : 'הסכם שכ״ט ללקוח'}</button>`);
+    const pb = el.querySelector('[data-zzagrpill]'); if (pb) pb.onclick = () => agrSheet(id);
     const b = el.querySelector('[data-zzagr]');
     if (b) b.onclick = () => (st.s === 'signed' || st.s === 'sent') ? O.go('feeagr') : O.dealAgreement(id);
     if (st.s === 'none' && !closed(d) && !el.querySelector('.zz-next')) {
@@ -82,6 +116,21 @@
       if (host && host.parentElement) host.insertAdjacentHTML('beforebegin', card); else el.insertAdjacentHTML('afterbegin', card);
       const nb = el.querySelector('[data-zznext]'); if (nb) nb.onclick = () => O.dealAgreement(id);
     }
+  }
+  // the deals list: every open file shows whether it has a signed fee agreement
+  if (O.V.deals && !O.V.deals.zz) {
+    const lr = O.V.deals.render; O.V.deals.zz = 1;
+    O.V.deals.render = function (el) {
+      const r = lr.apply(this, arguments);
+      try {
+        (el || document).querySelectorAll('.deal-c[data-v="deal"][data-id]').forEach(c => {
+          const d = O.get('deals', c.dataset.id); if (!d || closed(d) || c.querySelector('.zz-lb')) return;
+          const st = O.dealAgrState(d.id), top = c.querySelector('.dc-top') || c;
+          top.insertAdjacentHTML('beforeend', st.s === 'signed' ? '<span class="pill p-ok zz-lb" style="font-size:11px">הסכם ✓</span>' : st.s === 'sent' ? '<span class="pill p-warn zz-lb" style="font-size:11px">הסכם לא נחתם</span>' : '<span class="pill p-bad zz-lb" style="font-size:11px">אין הסכם</span>');
+        });
+      } catch (e) { console.error('zzdeal list', e); }
+      return r;
+    };
   }
   // the agreement screen redraws itself when data changes: the bar and the linked deal stay while the agreement is being prepared
   if (O.V.feeagr && !O.V.feeagr.zz) {
