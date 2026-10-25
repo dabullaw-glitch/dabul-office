@@ -10,9 +10,11 @@ add_action('wp_footer', function () {
 	echo function_exists('dabul_lf_css') ? dabul_lf_css() : '';
 	echo '<style id="dsf-css">#dsf{display:none}'
 		. '@media (min-width:1280px){'
-		. '.dnt .in.in{margin-left:max(380px, calc((100vw - 1080px)/2))!important;margin-right:max(28px, calc((100vw - 1080px)/2 - 352px))!important;max-width:1080px}'
-		. '#dsf{display:block;position:fixed;left:28px;top:118px;width:330px;max-height:calc(100vh - 140px);overflow:auto;z-index:50;background:#fff;border:1px solid #e6e1d6;border-top:4px solid #c5a25a;border-radius:16px;box-shadow:0 14px 40px rgba(20,20,20,.14);padding:18px 18px 14px}'
-		. 'body.admin-bar #dsf{top:150px;max-height:calc(100vh - 172px)}'
+		// 25.10 (Yakir): less space between the text and the form; the content sits right next to the form
+		. '.dnt .in.in{margin-left:390px!important;margin-right:auto!important;max-width:min(1080px, calc(100vw - 418px))}'
+		. '#dsf{display:block;position:absolute;left:28px;top:0;width:330px;max-height:calc(100vh - 140px);overflow:auto;z-index:50;background:#fff;border:1px solid #e6e1d6;border-top:4px solid #c5a25a;border-radius:16px;box-shadow:0 14px 40px rgba(20,20,20,.14);padding:18px 18px 14px;visibility:hidden}'
+		. '#dsf.fx{position:fixed;top:118px}#dsf.ok{visibility:visible}'
+		. 'body.admin-bar #dsf.fx{top:150px}body.admin-bar #dsf{max-height:calc(100vh - 172px)}'
 		. '#dsf h3{margin:0 0 4px;font-size:19px;color:#141414;line-height:1.35;font-weight:700}'
 		. '#dsf .sub{margin:0 0 12px;font-size:14px;line-height:1.55;color:#6b665c}'
 		. '#dsf .f{margin-bottom:10px;gap:4px}#dsf .f label{font-size:13.5px}'
@@ -35,6 +37,11 @@ add_action('wp_footer', function () {
 		. '</form></aside>'
 		// hidden while the "צריכים סיוע משפטי" band or the site footer is on screen, so it never covers them
 		. '<style>#dsf{transition:opacity .25s}#dsf.off{opacity:0;pointer-events:none}</style>'
+		// 25.10 (Yakir): not next to the top form; it starts one line below "מה לקוחות כתבו" and from there follows the scroll
+		. '<script>(function(){var s=document.getElementById("dsf"),h=document.getElementById("dnt-reviews");if(!s||!h)return;'
+		. 'var top=function(){return document.body.classList.contains("admin-bar")?150:118};'
+		. 'var place=function(){var a=h.getBoundingClientRect().bottom+window.scrollY+14;if(window.scrollY+top()>=a){s.classList.add("fx");s.style.top=""}else{s.classList.remove("fx");s.style.top=a+"px"}s.classList.add("ok")};'
+		. 'place();window.addEventListener("scroll",place,{passive:true});window.addEventListener("resize",place);window.addEventListener("load",place)})();</script>'
 		. '<script>(function(){var s=document.getElementById("dsf");if(!s||!window.IntersectionObserver)return;var on=new Set();'
 		. 'var io=new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?on.add(e.target):on.delete(e.target)});s.classList.toggle("off",on.size>0)});'
 		. 'document.querySelectorAll(".dhb,.elementor-location-footer,footer").forEach(function(x){io.observe(x)});})();</script>';
