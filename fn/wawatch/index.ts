@@ -30,6 +30,43 @@ const now = () => new Date().toISOString();
 const merge = (coll: string, id: string, patch: Any) => admin().rpc('docs_merge', { p_coll: coll, p_id: id, p_patch: patch });
 const ilTime = (ms: number) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(ms));
 
+// a message that did not arrive: written on the lead (and the lead marked "אין וואטסאפ" when that is why), one Telegram line
+async function markBad(key: string, d: Any, lead: Any, phone: string, st: string, at: number, alerts: string[]) {
+  const why = BAD[st], label = labelOf(key);
+  if (lead) {
+    const cur = (await admin().from('docs').select('data').match({ coll: 'leads', id: lead.id }).maybeSingle()).data?.data || lead;
+    const lp: Any = { log: (cur.log || []).concat([{ at: now(), kind: 'system', text: `ההודעה "${label}" מ־${ilTime(at)} לא הגיעה אליו: ${why}. צריך להתקשר.` }]).slice(-80) };
+    if (st === 'noAccount') Object.assign(lp, { noWhatsapp: true, wa: false, waCheckedAt: now() });
+    await merge('leads', lead.id, lp);
+    alerts.push(`⚠️ ${lead.name} (${phone}): ההודעה "${label}" לא הגיעה. ${why}. צריך להתקשר אליו.`);
+  } else alerts.push(`⚠️ ${d.name || phone}: הודעה מ־${ilTime(at)} לא הגיעה. ${why}.`);
+}
+const RANK: Record<string, number> = { pending: 0, sent: 1, delivered: 2, read: 3, failed: 9, noAccount: 9, notInGroup: 9 };
+
+// a WhatsApp message from the phone of a lead (from the journal or from a live notification)
+async function takeIncoming(leads: Any[], m: { chatId: string; idMessage: string; timestamp: number; text: string }) {
+  const sb = admin();
+  const chat = String(m.chatId || ''); if (!chat.endsWith('@c.us')) return false;
+  const ph = digits(chat);
+  const lead = leads.filter(l => l.phone && intl(l.phone) === ph).sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')))[0];
+  if (!lead) return false; // not a lead: nothing is stored
+  const id = 'wi-' + String(m.idMessage || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 80); if (id === 'wi-') return false;
+  const at = new Date((m.timestamp || 0) * 1000 || Date.now()).toISOString(), text = m.text || '[הודעה]';
+  const ins = await sb.from('docs').upsert({ coll: 'wain', id, data: { leadId: lead.id, at, text } }, { onConflict: 'coll,id', ignoreDuplicates: true }).select('id');
+  if (!ins.data || !ins.data.length) return false; // already recorded
+  const cur = (await sb.from('docs').select('data').match({ coll: 'leads', id: lead.id }).maybeSingle()).data?.data || lead;
+  const p: Any = { waIn: (cur.waIn || []).concat([{ at, text: text.slice(0, 3000), id: m.idMessage }]).slice(-40), lastInAt: at,
+    log: (cur.log || []).concat([{ at, kind: 'reply', text: `הליד כתב בוואטסאפ: "${text.slice(0, 500)}"` }]).slice(-80) };
+  const st = cur.stage || 'new';
+  if (!cur.repliedAt || st === 'lost' && cur.lostAuto) p.repliedAt = at;
+  if (st === 'new' && !cur.repliedAt) Object.assign(p, { stage: 'contacted', status: 'בטיפול', stageAt: now() });
+  if (st === 'lost' && cur.lostAuto) { Object.assign(p, { stage: 'contacted', status: 'בטיפול', stageAt: now(), lostAuto: false }); p.log.push({ at: now(), kind: 'stage', text: 'לא רלוונטי ← נוצר קשר (הליד כתב)' }); }
+  await merge('leads', lead.id, p);
+  const app = env('APP_URL');
+  await telegram(`💬 ${lead.name} כתב בוואטסאפ:\n"${text.slice(0, 1500)}"${st === 'lost' && cur.lostAuto ? '\n\nהליד חזר מ"לא רלוונטי" ל"נוצר קשר".' : !cur.repliedAt && st === 'new' ? '\n\nהודעות המעקב נעצרו, והליד עבר ל"נוצר קשר".' : ''}${app ? `\n\n👉 ${app}#leads/${lead.id}` : ''}`).catch(() => false);
+  return true;
+}
+
 async function run() {
   if (provider() !== 'green') return { ok: true, skipped: 'no green sender' };
   const sb = admin(), out: Any = { checked: 0, updated: 0, bad: 0, replies: 0 }, alerts: string[] = [];
@@ -57,46 +94,17 @@ async function run() {
       if (!m) m = sent.find(x => digits(x.chatId) === to && Math.abs(x.timestamp * 1000 - at) < 15 * 60e3 && (!head || textOf(x).replace(/\s+/g, ' ').startsWith(head.slice(0, 25))));
       let st = m ? String(m.statusMessage || 'sent') : '';
       if (!m && Date.now() - at > 10 * 60e3 && (await hasWhatsapp(phone)) === false) st = 'noAccount';
-      if (!st || st === d.deliv) continue;
+      if (!st || st === d.deliv || (RANK[st] ?? 0) <= (RANK[d.deliv] ?? -1)) { if (m && m.idMessage && !d.msgId) await merge('outbox', r.id, { msgId: m.idMessage }); continue; }
       const patch: Any = { deliv: st, delivAt: now() };
       if (m && m.idMessage && !d.msgId) patch.msgId = m.idMessage;
       await merge('outbox', r.id, patch); out.updated++;
-      if (BAD[st]) {
-        out.bad++;
-        const why = BAD[st], label = labelOf(key);
-        if (lead) {
-          const cur = (await sb.from('docs').select('data').match({ coll: 'leads', id: lead.id }).maybeSingle()).data?.data || lead;
-          const lp: Any = { log: (cur.log || []).concat([{ at: now(), kind: 'system', text: `ההודעה "${label}" מ־${ilTime(at)} לא הגיעה אליו: ${why}. צריך להתקשר.` }]).slice(-80) };
-          if (st === 'noAccount') Object.assign(lp, { noWhatsapp: true, wa: false, waCheckedAt: now() });
-          await merge('leads', lead.id, lp);
-          alerts.push(`⚠️ ${lead.name} (${phone}): ההודעה "${label}" לא הגיעה. ${why}. צריך להתקשר אליו.`);
-        } else alerts.push(`⚠️ ${d.name || phone}: הודעה מ־${ilTime(at)} לא הגיעה. ${why}.`);
-      }
+      if (BAD[st]) { out.bad++; await markBad(key, d, lead, phone, st, at, alerts); }
     }
   }
 
   // ---------- 2. what leads wrote back ----------
   const inc = await journal('lastIncomingMessages', 40).catch(() => [] as Any[]);
-  for (const m of inc) {
-    const chat = String(m.chatId || ''); if (!chat.endsWith('@c.us')) continue;
-    const ph = digits(chat);
-    const lead = leads.filter(l => l.phone && intl(l.phone) === ph).sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')))[0];
-    if (!lead) continue; // not a lead: nothing is stored
-    const id = 'wi-' + String(m.idMessage || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 80); if (id === 'wi-') continue;
-    const at = new Date((m.timestamp || 0) * 1000 || Date.now()).toISOString(), text = textOf(m);
-    const ins = await sb.from('docs').upsert({ coll: 'wain', id, data: { leadId: lead.id, at, text } }, { onConflict: 'coll,id', ignoreDuplicates: true }).select('id');
-    if (!ins.data || !ins.data.length) continue; // already recorded
-    const cur = (await sb.from('docs').select('data').match({ coll: 'leads', id: lead.id }).maybeSingle()).data?.data || lead;
-    const p: Any = { waIn: (cur.waIn || []).concat([{ at, text: text.slice(0, 3000), id: m.idMessage }]).slice(-40), lastInAt: at,
-      log: (cur.log || []).concat([{ at, kind: 'reply', text: `הליד כתב בוואטסאפ: "${text.slice(0, 500)}"` }]).slice(-80) };
-    const st = cur.stage || 'new';
-    if (!cur.repliedAt || st === 'lost' && cur.lostAuto) p.repliedAt = at;
-    if (st === 'new' && !cur.repliedAt) Object.assign(p, { stage: 'contacted', status: 'בטיפול', stageAt: now() });
-    if (st === 'lost' && cur.lostAuto) { Object.assign(p, { stage: 'contacted', status: 'בטיפול', stageAt: now(), lostAuto: false }); p.log.push({ at: now(), kind: 'stage', text: 'לא רלוונטי ← נוצר קשר (הליד כתב)' }); }
-    await merge('leads', lead.id, p); out.replies++;
-    const app = env('APP_URL');
-    await telegram(`💬 ${lead.name} כתב בוואטסאפ:\n"${text.slice(0, 1500)}"${st === 'lost' && cur.lostAuto ? '\n\nהליד חזר מ"לא רלוונטי" ל"נוצר קשר".' : !cur.repliedAt && st === 'new' ? '\n\nהודעות המעקב נעצרו, והליד עבר ל"נוצר קשר".' : ''}${app ? `\n\n👉 ${app}#leads/${lead.id}` : ''}`).catch(() => false);
-  }
+  for (const m of inc) if (await takeIncoming(leads, { chatId: m.chatId, idMessage: m.idMessage, timestamp: m.timestamp, text: textOf(m) })) out.replies++;
   // ---------- 3. three messages and no answer: the lead moves to "לא רלוונטי" (reason "לא ענה") ----------
   // Yakir 25.10.2026: "אחרי פעם שלישית זהו, להעביר ללא ענה". Counted since the last sign of contact (a reply, a call that was
   // answered). If the lead writes back later, step 2 brings him back to "נוצר קשר".
@@ -120,8 +128,44 @@ async function run() {
   return { ok: true, ...out };
 }
 
+// live notifications from the WhatsApp sender (turned on 25.10.2026, Yakir approved): message states and incoming messages
+async function hook(b: Any) {
+  const sb = admin();
+  if (b.typeWebhook === 'outgoingMessageStatus') {
+    const id = String(b.idMessage || ''), st = String(b.status || ''); if (!id || !st) return { ok: true };
+    const { data } = await sb.from('docs').select('id,data').eq('coll', 'outbox').eq('data->>msgId', id).limit(1);
+    const r = data && data[0]; if (!r) return { ok: true, skip: 'not ours' };
+    if ((RANK[st] ?? 0) <= (RANK[r.data.deliv] ?? 0)) return { ok: true, skip: 'older state' };
+    await merge('outbox', r.id, { deliv: st, delivAt: now() });
+    if (BAD[st]) {
+      const d = r.data, key = String(d.key || ''), leadId = d.leadId || (key.startsWith('sales~') ? key.split('~')[1] : '');
+      const lead = leadId ? (await sb.from('docs').select('id,data').match({ coll: 'leads', id: leadId }).maybeSingle()).data : null;
+      const alerts: string[] = [];
+      await markBad(key, d, lead ? Object.assign({ id: lead.id }, lead.data) : null, d.phone || (lead && lead.data.phone) || '', st, Date.parse(d.at) || Date.now(), alerts);
+      if (alerts.length) await telegram(alerts.join('\n\n')).catch(() => false);
+    }
+    return { ok: true };
+  }
+  if (b.typeWebhook === 'incomingMessageReceived') {
+    const md = b.messageData || {}, t = md.typeMessage;
+    if (t === 'reactionMessage') return { ok: true };
+    const text = String(md.textMessageData?.textMessage || md.extendedTextMessageData?.text || md.fileMessageData?.caption || '').trim()
+      || ({ imageMessage: '[תמונה]', videoMessage: '[סרטון]', documentMessage: '[מסמך]', audioMessage: '[הודעה קולית]', locationMessage: '[מיקום]', contactMessage: '[איש קשר]', stickerMessage: '[מדבקה]' } as Record<string, string>)[t] || '[הודעה]';
+    const { data: leadRows } = await sb.from('docs').select('id,data').eq('coll', 'leads');
+    const leads: Any[] = (leadRows || []).map((r: Any) => Object.assign({ id: r.id }, r.data));
+    await takeIncoming(leads, { chatId: b.senderData?.chatId || '', idMessage: b.idMessage || '', timestamp: b.timestamp || 0, text });
+    return { ok: true };
+  }
+  return { ok: true, skip: b.typeWebhook || '' };
+}
+
 Deno.serve(async (req) => {
   await loadSecrets().catch(() => {});
+  const hk = env('WAWATCH_HOOK'), given = new URL(req.url).searchParams.get('k') || '', auth = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
+  if (hk && (given === hk || auth === hk)) {
+    const b = await req.json().catch(() => ({}));
+    try { return json(await hook(b)); } catch (e) { console.error(e); return json({ ok: false }); }
+  }
   if (!env('CRON_SECRET') || req.headers.get('x-cron-secret') !== env('CRON_SECRET')) return json({ error: 'unauthorized' }, 401);
   try { return json(await run()); } catch (e) { console.error(e); return json({ ok: false, error: hideSecrets(String((e as Error).message || e)) }, 500); }
 });
