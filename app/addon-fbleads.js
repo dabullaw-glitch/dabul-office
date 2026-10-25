@@ -7,7 +7,13 @@
    Nothing is ever posted to Facebook by the system; Yakir pastes the reply himself. */
 (function (O) {
   if (!O || !O.V || O.FBLEADS) return;
-  O.FBLEADS = '20261023a';
+  O.FBLEADS = '20261025a';
+  // 25.10.2026: the screen showed nothing because the collection was never loaded; listen to it like the other addons do
+  O.S.data.fbleads = O.S.data.fbleads || {};
+  (function wait(k) {
+    const db = O.S.db; if (!db || !db.collection) { if (k < 240) setTimeout(() => wait(k + 1), 500); return; }
+    db.collection('fbleads').onSnapshot(q => { const r = {}; q.docs.forEach(d => { r[d.id] = Object.assign({ id: d.id }, d.data()); }); O.S.data.fbleads = r; O.S.loaded.fbleads = true; O.bump ? O.bump() : O.render(); }, () => { O.S.loaded.fbleads = true; });
+  })(0);
   const esc = v => (O.esc ? O.esc(v == null ? '' : String(v)) : String(v == null ? '' : v));
   const icon = (n, z) => (O.icon ? O.icon(n, z) : '');
   const items = () => O.all('fbleads').filter(x => x && (x.type === 'seek' || x.type === 'question'));
