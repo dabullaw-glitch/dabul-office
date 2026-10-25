@@ -90,11 +90,32 @@ async function run() {
     const p: Any = { waIn: (cur.waIn || []).concat([{ at, text: text.slice(0, 3000), id: m.idMessage }]).slice(-40), lastInAt: at,
       log: (cur.log || []).concat([{ at, kind: 'reply', text: `הליד כתב בוואטסאפ: "${text.slice(0, 500)}"` }]).slice(-80) };
     const st = cur.stage || 'new';
-    if (!cur.repliedAt) { p.repliedAt = at; if (st === 'new') Object.assign(p, { stage: 'contacted', status: 'בטיפול', stageAt: now() }); }
+    if (!cur.repliedAt || st === 'lost' && cur.lostAuto) p.repliedAt = at;
+    if (st === 'new' && !cur.repliedAt) Object.assign(p, { stage: 'contacted', status: 'בטיפול', stageAt: now() });
+    if (st === 'lost' && cur.lostAuto) { Object.assign(p, { stage: 'contacted', status: 'בטיפול', stageAt: now(), lostAuto: false }); p.log.push({ at: now(), kind: 'stage', text: 'לא רלוונטי ← נוצר קשר (הליד כתב)' }); }
     await merge('leads', lead.id, p); out.replies++;
     const app = env('APP_URL');
-    await telegram(`💬 ${lead.name} כתב בוואטסאפ:\n"${text.slice(0, 1500)}"${!cur.repliedAt && st === 'new' ? '\n\nהודעות המעקב נעצרו, והליד עבר ל"נוצר קשר".' : ''}${app ? `\n\n👉 ${app}#leads/${lead.id}` : ''}`).catch(() => false);
+    await telegram(`💬 ${lead.name} כתב בוואטסאפ:\n"${text.slice(0, 1500)}"${st === 'lost' && cur.lostAuto ? '\n\nהליד חזר מ"לא רלוונטי" ל"נוצר קשר".' : !cur.repliedAt && st === 'new' ? '\n\nהודעות המעקב נעצרו, והליד עבר ל"נוצר קשר".' : ''}${app ? `\n\n👉 ${app}#leads/${lead.id}` : ''}`).catch(() => false);
   }
+  // ---------- 3. three messages and no answer: the lead moves to "לא רלוונטי" (reason "לא ענה") ----------
+  // Yakir 25.10.2026: "אחרי פעם שלישית זהו, להעביר ללא ענה". Counted since the last sign of contact (a reply, a call that was
+  // answered). If the lead writes back later, step 2 brings him back to "נוצר קשר".
+  const STAGE_HE: Record<string, string> = { new: 'ליד חדש', contacted: 'נוצר קשר', no_show: 'לא הגיע' };
+  const lost: string[] = [];
+  for (const l0 of leads) {
+    const stg = l0.stage || 'new'; if (!STAGE_HE[stg]) continue;
+    const l = (await sb.from('docs').select('data').match({ coll: 'leads', id: l0.id }).maybeSingle()).data?.data; if (!l || (l.stage || 'new') !== stg) continue;
+    const touch = Math.max(Date.parse(l.repliedAt || '') || 0, Date.parse(l.lastInAt || '') || 0, ...(l.calls || []).filter((c: Any) => c.ok).map((c: Any) => Date.parse(c.at) || 0),
+      ...(l.log || []).filter((e: Any) => e && ['reply', 'talk'].includes(e.kind)).map((e: Any) => Date.parse(e.at) || 0));
+    const sentCount = (l.log || []).filter((e: Any) => e && e.kind === 'message' && (Date.parse(e.at) || 0) > touch).length;
+    if (sentCount < 3) continue;
+    const at = now(), note = 'נשלחו 3 הודעות בלי מענה. הועבר לבד ל"לא רלוונטי".';
+    await merge('leads', l0.id, { stage: 'lost', status: 'לא רלוונטי', stageAt: at, lostReason: 'לא ענה', lostNote: note, lostAt: at, lostAuto: true,
+      log: (l.log || []).concat([{ at, kind: 'stage', text: `${STAGE_HE[stg]} ← לא רלוונטי` }, { at, kind: 'stage', text: `לא רלוונטי · לא ענה: ${note}` }]).slice(-80) });
+    lost.push(`• ${l.name}${l.phone ? ` (${l.phone})` : ''}`);
+  }
+  if (lost.length) alerts.push(`📕 עברו ל"לא רלוונטי" (לא ענה אחרי 3 הודעות):\n${lost.join('\n')}\nאם מישהו מהם יכתוב, הוא יחזור לבד ל"נוצר קשר".`);
+  out.movedLost = lost.length;
   if (alerts.length) await telegram(alerts.join('\n\n')).catch(() => false);
   return { ok: true, ...out };
 }
