@@ -7,6 +7,8 @@
    the same way. The file's name changes whenever its content changes, so a visitor never gets an old copy.
    Files are kept in wp-content/uploads/dbl-cache/ (the 8 newest are kept).
    To undo: deactivate this snippet. */
+define('DABUL_OTP_LIVE', 1);
+
 function dabul_otp_file($js) {
 	$up = wp_upload_dir();
 	if (!empty($up['error'])) return '';
