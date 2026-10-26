@@ -41,12 +41,13 @@ add_action('template_redirect', function () {
 		$nav = substr($html, $n0, $n1 + 6 - $n0);
 		if (substr_count($nav, '<nav') !== 1) return $html;
 		if (!preg_match('#<script id="accessibility-onetap-js-extra">(.*?)</script>#s', $html, $ex, PREG_OFFSET_CAPTURE)) return $html;
-		if (strpos($html, 'id="accessibility-onetap-js"') === false || stripos($html, 'rocketlazyloadscript') === false) return $html;
+		if (strpos($html, 'id="accessibility-onetap-js"') === false) return $html;
 		$data = trim($ex[1][0]);
 		$js = "(function(){var h=" . wp_json_encode($nav, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . ";var t=document.querySelector('.onetap-container-toggle');if(t&&t.parentNode){t.insertAdjacentHTML('afterend',h)}else{document.body.insertAdjacentHTML('beforeend',h)}})();\n" . $data . "\n";
 		$url = dabul_otp_file($js);
 		if ($url === '') return $html;
-		$tag = '<script type="text/rocketlazyloadscript" data-rocket-src="' . esc_url($url) . '" id="dbl-onetap-panel-js" data-rocket-defer defer></script>';
+		// a plain deferred script: WP Rocket holds it until the first touch like the panel's own script, and keeps the order
+		$tag = '<script src="' . esc_url($url) . '" id="dbl-onetap-panel-js" defer></script>';
 		// the data script is replaced by the loader (same place, right before the panel's own script), then the window is taken out
 		$html = substr($html, 0, $ex[0][1]) . $tag . substr($html, $ex[0][1] + strlen($ex[0][0]));
 		$n0 = strpos($html, '<nav class="onetap-accessibility');
