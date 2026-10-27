@@ -1,3 +1,0 @@
-NotoSansHebrew-Light.woff2 https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Light.woff2
-NotoSansHebrew-Regular.woff2 https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Regular.woff2
-NotoSansHebrew-Bold.woff2 https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2
