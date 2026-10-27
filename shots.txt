@@ -1,1 +1,4 @@
-home-m1027 https://dabullaw.co.il/?v=m1027b
+map-old https://maps.google.com/maps?q=%D7%A2%D7%95%D7%A8%D7%9A%20%D7%93%D7%99%D7%9F%20%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F%20%D7%99%D7%A7%D7%99%D7%A8%20%D7%93%D7%91%D7%95%D7%9C%20%D7%A0%D7%AA%D7%A0%D7%99%D7%94&t=m&z=14&output=embed&iwloc=near
+map-new1 https://maps.google.com/maps?q=%D7%99%D7%A7%D7%99%D7%A8%20%D7%93%D7%91%D7%95%D7%9C%20-%20%D7%9E%D7%A9%D7%A8%D7%93%20%D7%A2%D7%95%D7%A8%D7%9B%D7%99%20%D7%93%D7%99%D7%9F%2C%20%D7%A8%D7%96%D7%99%D7%90%D7%9C%201%2C%20%D7%A0%D7%AA%D7%A0%D7%99%D7%94&t=m&z=16&output=embed&iwloc=near
+map-new2 https://maps.google.com/maps?q=place_id:ChIJFyPNpLBBHRURR161JAMeBb0&t=m&z=16&output=embed
+map-new3 https://maps.google.com/maps?cid=13620325646901534279&t=m&z=16&output=embed
