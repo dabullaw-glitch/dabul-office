@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="assets/gsap.min.js"></script>
+<style>
+@font-face{font-family:'Heebo';font-weight:700;src:url(assets/fonts/heebo-hebrew-700-normal.woff2) format('woff2'),url(assets/fonts/heebo-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Heebo';font-weight:800;src:url(assets/fonts/heebo-hebrew-800-normal.woff2) format('woff2'),url(assets/fonts/heebo-latin-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Heebo';font-weight:900;src:url(assets/fonts/heebo-hebrew-900-normal.woff2) format('woff2'),url(assets/fonts/heebo-latin-900-normal.woff2) format('woff2')}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#0E1A2E}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:#0E1A2E;font-family:'Heebo',sans-serif;color:#fff;direction:rtl}
+.scene{position:absolute;inset:0;overflow:hidden}
+.abs{position:absolute}
+.bg{position:absolute;inset:-40px;width:1160px;height:2000px;object-fit:cover}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,26,46,.55) 0%,rgba(14,26,46,.35) 35%,rgba(14,26,46,.92) 58%,#0E1A2E 75%)}
+.prog{position:absolute;top:118px;left:90px;right:90px;display:flex;gap:14px;direction:rtl}
+.prog i{flex:1;height:10px;border-radius:6px;background:rgba(255,255,255,.18);font-style:normal;overflow:hidden;position:relative}
+.prog i b{position:absolute;inset:0;background:#C6A03C;transform-origin:100% 50%}
+.plab{position:absolute;top:150px;left:0;right:0;text-align:center;font-weight:700;font-size:32px;letter-spacing:.04em;color:#E7CD96}
+.card{position:absolute;border:12px solid #fff;border-radius:14px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 0 2px rgba(198,160,60,.6)}
+.card img{display:block;width:100%;height:100%;object-fit:cover}
+.num{position:absolute;left:465px;width:150px;height:150px;border-radius:50%;border:5px solid #C6A03C;background:#17253F;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:78px;color:#E7CD96;box-shadow:0 0 0 12px rgba(198,160,60,.14);direction:ltr}
+.kick{position:absolute;left:0;right:0;text-align:center;font-weight:800;font-size:40px;color:#C6A03C;letter-spacing:.03em}
+.ttl{position:absolute;left:50px;right:50px;text-align:center;font-weight:900;font-size:80px;line-height:1.08;color:#fff;text-wrap:balance}
+.txt{position:absolute;left:60px;right:60px;text-align:center;font-weight:700;font-size:46px;line-height:1.35;color:#E7CD96}
+.gl{position:absolute;left:440px;width:200px;height:6px;border-radius:3px;background:linear-gradient(90deg,#C6A03C,#E7CD96,#C6A03C)}
+.wipe{position:absolute;top:-200px;width:1400px;height:2400px;background:linear-gradient(90deg,rgba(198,160,60,0),#C6A03C 30%,#E7CD96 50%,#C6A03C 70%,rgba(198,160,60,0))}
+.row{position:absolute;right:150px;left:150px;height:118px;display:flex;align-items:center;gap:34px;font-weight:800;font-size:58px;color:#fff;border-bottom:2px solid rgba(231,205,150,.22)}
+.ck{width:74px;height:74px;flex:none;border-radius:50%;background:#C6A03C;display:flex;align-items:center;justify-content:center}
+.ck svg{width:44px;height:44px}
+.rn{font-weight:900;color:#E7CD96;font-size:44px;width:60px;direction:ltr;text-align:center}
+.pill{position:absolute;display:flex;align-items:center;justify-content:center;gap:22px;height:120px;border-radius:70px;font-weight:900;font-size:62px;direction:ltr}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-width="1080" data-height="1920" data-start="0" data-duration="43.87">
+<img id="dmark" class="clip abs" data-start="0" data-duration="43.87" data-track-index="0" src="assets/img/dmark.png" alt="" style="left:-120px;top:1250px;width:620px;opacity:.05">
+<div id="hook" class="scene clip" data-start="0.0" data-duration="4.47" data-track-index="1">
+<img id="hk-bg" class="bg" src="assets/img/hook-bg.jpg" alt="">
+<div class="abs" style="inset:0;background:linear-gradient(180deg,#0E1A2E 0%,rgba(14,26,46,.75) 40%,rgba(14,26,46,.2) 100%)"></div>
+<img id="hk-cut" class="abs" src="assets/img/yakir-cut.png" alt="" style="left:240px;top:780px;width:600px;height:auto">
+<div class="abs" style="left:0;right:0;bottom:0;height:260px;background:linear-gradient(180deg,rgba(14,26,46,0),#0E1A2E)"></div>
+<div id="hk-k" class="kick" style="top:190px">עו״ד יקיר דבול, עורך דין מקרקעין</div>
+<div id="hk-t" class="ttl" style="top:270px;font-size:150px">קניתם דירה?</div>
+<div id="hk-gl" class="gl" style="top:470px"></div>
+<div id="hk-s" class="ttl" style="top:520px;font-size:66px;font-weight:800;color:#E7CD96">6 שלבים מהחתימה<br>ועד שהיא רשומה על שמכם</div>
+</div>
+<div id="s1" class="scene clip" data-start="4.47" data-duration="4.925" data-track-index="1">
+<img id="s1-bg" class="bg" src="assets/img/s1-bg.jpg" alt="">
+<div class="shade"></div>
+<div class="prog"><i><b id="s1-p0" style="transform:scaleX(0)"></b></i><i><b id="s1-p1" style="transform:scaleX(0)"></b></i><i><b id="s1-p2" style="transform:scaleX(0)"></b></i><i><b id="s1-p3" style="transform:scaleX(0)"></b></i><i><b id="s1-p4" style="transform:scaleX(0)"></b></i><i><b id="s1-p5" style="transform:scaleX(0)"></b></i></div>
+<div id="s1-pl" class="plab">שלב 1 מתוך 6</div>
+<div id="s1-c" class="card" style="left:60px;top:240px;width:960px;height:720px"><img id="s1-i" src="assets/img/s1.jpg" alt=""></div>
+<div id="s1-n" class="num" style="top:1030px">01</div>
+<div id="s1-k" class="kick" style="top:1208px">מיד אחרי החתימה</div>
+<div id="s1-t" class="ttl" style="top:1268px">רושמים הערת אזהרה בטאבו</div>
+<div id="s1-x" class="txt" style="top:1460px">כך אף אחד אחר לא יוכל לקנות<br>את הדירה או לשעבד אותה</div>
+</div>
+<div id="s2" class="scene clip" data-start="9.395" data-duration="4.925" data-track-index="1">
+<img id="s2-bg" class="bg" src="assets/img/s2-bg.jpg" alt="">
+<div class="shade"></div>
+<div class="prog"><i><b id="s2-p0" style="transform:scaleX(1)"></b></i><i><b id="s2-p1" style="transform:scaleX(0)"></b></i><i><b id="s2-p2" style="transform:scaleX(0)"></b></i><i><b id="s2-p3" style="transform:scaleX(0)"></b></i><i><b id="s2-p4" style="transform:scaleX(0)"></b></i><i><b id="s2-p5" style="transform:scaleX(0)"></b></i></div>
+<div id="s2-pl" class="plab">שלב 2 מתוך 6</div>
+<div id="s2-c" class="card" style="left:60px;top:240px;width:960px;height:720px"><img id="s2-i" src="assets/img/s2.jpg" alt=""></div>
+<div id="s2-n" class="num" style="top:1030px">02</div>
+<div id="s2-k" class="kick" style="top:1208px">לפני כל תשלום</div>
+<div id="s2-t" class="ttl" style="top:1268px">בודקים לאן הולך הכסף</div>
+<div id="s2-x" class="txt" style="top:1460px">לחשבון נאמנות, ואם יש משכנתא<br>על הדירה ישירות לבנק של המוכר</div>
+</div>
+<div id="s3" class="scene clip" data-start="14.32" data-duration="4.925" data-track-index="1">
+<img id="s3-bg" class="bg" src="assets/img/s3-bg.jpg" alt="">
+<div class="shade"></div>
+<div class="prog"><i><b id="s3-p0" style="transform:scaleX(1)"></b></i><i><b id="s3-p1" style="transform:scaleX(1)"></b></i><i><b id="s3-p2" style="transform:scaleX(0)"></b></i><i><b id="s3-p3" style="transform:scaleX(0)"></b></i><i><b id="s3-p4" style="transform:scaleX(0)"></b></i><i><b id="s3-p5" style="transform:scaleX(0)"></b></i></div>
+<div id="s3-pl" class="plab">שלב 3 מתוך 6</div>
+<div id="s3-c" class="card" style="left:255px;top:230px;width:570px;height:760px"><img id="s3-i" src="assets/img/s3.jpg" alt=""></div>
+<div id="s3-n" class="num" style="top:1060px">03</div>
+<div id="s3-k" class="kick" style="top:1238px">בתוך 30 יום</div>
+<div id="s3-t" class="ttl" style="top:1298px">מדווחים לרשות המסים</div>
+<div id="s3-x" class="txt" style="top:1490px">מס רכישה אצלכם,<br>מס שבח אצל המוכר</div>
+</div>
+<div id="s4" class="scene clip" data-start="19.245" data-duration="4.925" data-track-index="1">
+<img id="s4-bg" class="bg" src="assets/img/s4-bg.jpg" alt="">
+<div class="shade"></div>
+<div class="prog"><i><b id="s4-p0" style="transform:scaleX(1)"></b></i><i><b id="s4-p1" style="transform:scaleX(1)"></b></i><i><b id="s4-p2" style="transform:scaleX(1)"></b></i><i><b id="s4-p3" style="transform:scaleX(0)"></b></i><i><b id="s4-p4" style="transform:scaleX(0)"></b></i><i><b id="s4-p5" style="transform:scaleX(0)"></b></i></div>
+<div id="s4-pl" class="plab">שלב 4 מתוך 6</div>
+<div id="s4-c" class="card" style="left:255px;top:230px;width:570px;height:760px"><img id="s4-i" src="assets/img/s4.jpg" alt=""></div>
+<div id="s4-n" class="num" style="top:1060px">04</div>
+<div id="s4-k" class="kick" style="top:1238px">לקראת המסירה</div>
+<div id="s4-t" class="ttl" style="top:1298px">אישור עירייה לטאבו</div>
+<div id="s4-x" class="txt" style="top:1490px">המוכר מראה שאין חובות<br>ארנונה והיטל השבחה</div>
+</div>
+<div id="s5" class="scene clip" data-start="24.17" data-duration="4.925" data-track-index="1">
+<img id="s5-bg" class="bg" src="assets/img/s5-bg.jpg" alt="">
+<div class="shade"></div>
+<div class="prog"><i><b id="s5-p0" style="transform:scaleX(1)"></b></i><i><b id="s5-p1" style="transform:scaleX(1)"></b></i><i><b id="s5-p2" style="transform:scaleX(1)"></b></i><i><b id="s5-p3" style="transform:scaleX(1)"></b></i><i><b id="s5-p4" style="transform:scaleX(0)"></b></i><i><b id="s5-p5" style="transform:scaleX(0)"></b></i></div>
+<div id="s5-pl" class="plab">שלב 5 מתוך 6</div>
+<div id="s5-c" class="card" style="left:60px;top:240px;width:960px;height:720px"><img id="s5-i" src="assets/img/s5.jpg" alt=""></div>
+<div id="s5-n" class="num" style="top:1030px">05</div>
+<div id="s5-k" class="kick" style="top:1208px">ביום המסירה</div>
+<div id="s5-t" class="ttl" style="top:1268px">חותמים על פרוטוקול מסירה</div>
+<div id="s5-x" class="txt" style="top:1460px">קוראים מונים ובודקים שהדירה<br>נמסרת כמו שכתוב בחוזה</div>
+</div>
+<div id="s6" class="scene clip" data-start="29.095" data-duration="4.925" data-track-index="1">
+<img id="s6-bg" class="bg" src="assets/img/s6-bg.jpg" alt="">
+<div class="shade"></div>
+<div class="prog"><i><b id="s6-p0" style="transform:scaleX(1)"></b></i><i><b id="s6-p1" style="transform:scaleX(1)"></b></i><i><b id="s6-p2" style="transform:scaleX(1)"></b></i><i><b id="s6-p3" style="transform:scaleX(1)"></b></i><i><b id="s6-p4" style="transform:scaleX(1)"></b></i><i><b id="s6-p5" style="transform:scaleX(0)"></b></i></div>
+<div id="s6-pl" class="plab">שלב 6 מתוך 6</div>
+<div id="s6-c" class="card" style="left:190px;top:240px;width:700px;height:700px"><img id="s6-i" src="assets/img/s6.jpg" alt=""></div>
+<div id="s6-n" class="num" style="top:1010px">06</div>
+<div id="s6-k" class="kick" style="top:1188px">אחרי המסירה</div>
+<div id="s6-t" class="ttl" style="top:1248px">רושמים את הדירה על שמכם</div>
+<div id="s6-x" class="txt" style="top:1440px">בטאבו, בחברה המשכנת או ברשות<br>מקרקעי ישראל. רק אז זה סגור</div>
+</div>
+<div id="recap" class="scene clip" data-start="34.02" data-duration="4.925" data-track-index="1">
+<div class="abs" style="inset:0;background:radial-gradient(1100px 900px at 50% 40%,#17253F 0%,#0E1A2E 70%)"></div>
+<div id="rc-t" class="ttl" style="top:250px;font-size:96px">בקיצור</div>
+<div id="rc-gl" class="gl" style="top:375px"></div>
+<div id="rc-r0" class="row" style="top:470px"><span class="ck" id="rc-c0"><svg viewBox="0 0 24 24" fill="none" stroke="#0E1A2E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></svg></span><span>הערת אזהרה</span><span class="rn" style="margin-right:auto">01</span></div>
+<div id="rc-r1" class="row" style="top:620px"><span class="ck" id="rc-c1"><svg viewBox="0 0 24 24" fill="none" stroke="#0E1A2E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></svg></span><span>תשלום מוגן</span><span class="rn" style="margin-right:auto">02</span></div>
+<div id="rc-r2" class="row" style="top:770px"><span class="ck" id="rc-c2"><svg viewBox="0 0 24 24" fill="none" stroke="#0E1A2E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></svg></span><span>דיווח למסים</span><span class="rn" style="margin-right:auto">03</span></div>
+<div id="rc-r3" class="row" style="top:920px"><span class="ck" id="rc-c3"><svg viewBox="0 0 24 24" fill="none" stroke="#0E1A2E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></svg></span><span>אישור עירייה</span><span class="rn" style="margin-right:auto">04</span></div>
+<div id="rc-r4" class="row" style="top:1070px"><span class="ck" id="rc-c4"><svg viewBox="0 0 24 24" fill="none" stroke="#0E1A2E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></svg></span><span>פרוטוקול מסירה</span><span class="rn" style="margin-right:auto">05</span></div>
+<div id="rc-r5" class="row" style="top:1220px"><span class="ck" id="rc-c5"><svg viewBox="0 0 24 24" fill="none" stroke="#0E1A2E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></svg></span><span>רישום על שמכם</span><span class="rn" style="margin-right:auto">06</span></div>
+<div id="rc-f" class="txt" style="top:1420px;font-size:50px">שלב אחד שמדלגים עליו<br>יכול לעלות הרבה כסף</div>
+</div>
+<div id="end" class="scene clip" data-start="38.945" data-duration="4.925" data-track-index="1">
+<div class="abs" style="inset:0;background:radial-gradient(1200px 1000px at 50% 75%,#22355a 0%,#0E1A2E 65%)"></div>
+<img id="end-logo" class="abs" src="assets/img/logo.png" alt="" style="left:190px;top:170px;width:700px;height:auto">
+<div id="end-t" class="ttl" style="top:420px;font-size:84px">קונים דירה?</div>
+<div id="end-s" class="txt" style="top:540px;font-size:50px;color:#fff">מלווה אתכם בכל שלב,<br>מהבדיקות ועד הטאבו</div>
+<img id="end-cut" class="abs" src="assets/img/yakir-cut.png" alt="" style="left:290px;top:820px;width:500px;height:auto">
+<div class="abs" style="left:0;right:0;top:1500px;bottom:0;background:linear-gradient(180deg,rgba(14,26,46,0),#0E1A2E 30%)"></div>
+<div id="end-ph" class="pill" style="left:200px;width:680px;top:1560px;background:linear-gradient(90deg,#C6A03C,#E7CD96);color:#0E1A2E"><svg viewBox="0 0 24 24" width="58" height="58" fill="#0E1A2E"><path d="M20.1 15.6l-3.3-1.4a1.6 1.6 0 00-1.8.4l-1.3 1.5a12.6 12.6 0 01-5.8-5.8l1.5-1.3a1.6 1.6 0 00.4-1.8L8.4 3.9a1.6 1.6 0 00-1.8-.9L3.6 3.7A1.6 1.6 0 002.4 5.3 16.3 16.3 0 0018.7 21.6a1.6 1.6 0 001.6-1.2l.7-3a1.6 1.6 0 00-.9-1.8z"/></svg><span>09-8613413</span></div>
+<div id="end-w" class="kick" style="top:1720px;font-size:46px;color:#E7CD96;direction:ltr">dabullaw.co.il</div>
+</div>
+<div id="wp0" class="clip abs" data-start="4.22" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp0-p" class="wipe" style="left:0"></div></div>
+<div id="wp1" class="clip abs" data-start="9.145" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp1-p" class="wipe" style="left:0"></div></div>
+<div id="wp2" class="clip abs" data-start="14.07" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp2-p" class="wipe" style="left:0"></div></div>
+<div id="wp3" class="clip abs" data-start="18.995" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp3-p" class="wipe" style="left:0"></div></div>
+<div id="wp4" class="clip abs" data-start="23.92" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp4-p" class="wipe" style="left:0"></div></div>
+<div id="wp5" class="clip abs" data-start="28.845" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp5-p" class="wipe" style="left:0"></div></div>
+<div id="wp6" class="clip abs" data-start="33.77" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp6-p" class="wipe" style="left:0"></div></div>
+<div id="wp7" class="clip abs" data-start="38.695" data-duration="0.5" data-track-index="2" style="inset:0;z-index:20;pointer-events:none"><div id="wp7-p" class="wipe" style="left:0"></div></div>
+<audio id="music" class="clip" data-start="0" data-duration="43.87" data-track-index="10" data-volume="0.8" data-fade-out="2.0" src="assets/music.mp3"></audio>
+<audio id="sw0" class="clip" data-start="4.17" data-duration="0.55" data-track-index="11" data-volume="0.28" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw1" class="clip" data-start="9.095" data-duration="0.55" data-track-index="11" data-volume="0.28" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw2" class="clip" data-start="14.02" data-duration="0.55" data-track-index="11" data-volume="0.28" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw3" class="clip" data-start="18.945" data-duration="0.55" data-track-index="11" data-volume="0.28" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw4" class="clip" data-start="23.87" data-duration="0.55" data-track-index="11" data-volume="0.28" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw5" class="clip" data-start="28.795" data-duration="0.55" data-track-index="11" data-volume="0.28" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw6" class="clip" data-start="33.72" data-duration="0.55" data-track-index="11" data-volume="0.28" src="assets/sfx/whoosh.wav"></audio>
+<audio id="sw7" class="clip" data-start="38.645" data-duration="0.55" data-track-index="11" data-volume="0.28" src="assets/sfx/whoosh.wav"></audio>
+<audio id="pp0" class="clip" data-start="0.53" data-duration="0.16" data-track-index="12" data-volume="0.32" src="assets/sfx/pop.wav"></audio>
+<audio id="pp1" class="clip" data-start="4.87" data-duration="0.16" data-track-index="12" data-volume="0.32" src="assets/sfx/pop.wav"></audio>
+<audio id="pp2" class="clip" data-start="9.795" data-duration="0.16" data-track-index="12" data-volume="0.32" src="assets/sfx/pop.wav"></audio>
+<audio id="pp3" class="clip" data-start="14.72" data-duration="0.16" data-track-index="12" data-volume="0.32" src="assets/sfx/pop.wav"></audio>
+<audio id="pp4" class="clip" data-start="19.645" data-duration="0.16" data-track-index="12" data-volume="0.32" src="assets/sfx/pop.wav"></audio>
+<audio id="pp5" class="clip" data-start="24.57" data-duration="0.16" data-track-index="12" data-volume="0.32" src="assets/sfx/pop.wav"></audio>
+<audio id="pp6" class="clip" data-start="29.495" data-duration="0.16" data-track-index="12" data-volume="0.32" src="assets/sfx/pop.wav"></audio>
+<audio id="tk0" class="clip" data-start="34.52" data-duration="0.2" data-track-index="13" data-volume="0.35" src="assets/sfx/tick.wav"></audio>
+<audio id="tk1" class="clip" data-start="34.85" data-duration="0.2" data-track-index="13" data-volume="0.35" src="assets/sfx/tick.wav"></audio>
+<audio id="tk2" class="clip" data-start="35.18" data-duration="0.2" data-track-index="13" data-volume="0.35" src="assets/sfx/tick.wav"></audio>
+<audio id="tk3" class="clip" data-start="35.51" data-duration="0.2" data-track-index="13" data-volume="0.35" src="assets/sfx/tick.wav"></audio>
+<audio id="tk4" class="clip" data-start="35.84" data-duration="0.2" data-track-index="13" data-volume="0.35" src="assets/sfx/tick.wav"></audio>
+<audio id="tk5" class="clip" data-start="36.17" data-duration="0.2" data-track-index="13" data-volume="0.35" src="assets/sfx/tick.wav"></audio>
+<audio id="endhit" class="clip" data-start="39.045" data-duration="1.2" data-track-index="14" data-volume="0.4" src="assets/sfx/hit.wav"></audio>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+gsap.set("#s1-c",{rotation:-1.6});
+gsap.set("#s2-c",{rotation:1.4});
+gsap.set("#s3-c",{rotation:-1.2});
+gsap.set("#s4-c",{rotation:1.2});
+gsap.set("#s5-c",{rotation:-1.4});
+gsap.set("#s6-c",{rotation:1.5});
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#hk-bg",{scale:1.12},{scale:1.0,duration:4.47,ease:"none"},0.0);
+tl.from("#hk-cut",{y:420,opacity:0,duration:0.9,ease:"power3.out"},0.1);
+tl.fromTo("#hk-cut",{scale:1},{scale:1.05,transformOrigin:"50% 100%",duration:3.47,ease:"none"},1.0);
+tl.from("#hk-k",{y:-30,opacity:0,duration:0.45,ease:"power2.out"},0.2);
+tl.from("#hk-t",{scale:0.6,opacity:0,duration:0.55,ease:"back.out(2)"},0.53);
+tl.fromTo("#hk-gl",{scaleX:0},{scaleX:1,duration:0.6,ease:"power3.out"},1.022);
+tl.from("#hk-s",{y:50,opacity:0,duration:0.5,ease:"power3.out"},1.515);
+tl.fromTo("#s1-bg",{scale:1.1},{scale:1.0,duration:4.925,ease:"none"},4.47);
+tl.from("#s1-c",{y:-260,scale:0.85,opacity:0,duration:0.6,ease:"power3.out"},4.52);
+tl.fromTo("#s1-i",{scale:1.14},{scale:1.0,duration:4.925,ease:"none"},4.47);
+tl.fromTo("#s1-p0",{scaleX:0},{scaleX:1,duration:4.52,ease:"none"},4.67);
+tl.from("#s1-pl",{opacity:0,duration:0.3},4.569999999999999);
+tl.from("#s1-n",{scale:0,rotation:-90,duration:0.5,ease:"back.out(2.4)"},4.819999999999999);
+tl.from("#s1-k",{y:30,opacity:0,duration:0.35,ease:"power2.out"},5.069999999999999);
+tl.from("#s1-t",{y:60,opacity:0,duration:0.45,ease:"power3.out"},5.22);
+tl.from("#s1-x",{y:40,opacity:0,duration:0.45,ease:"power3.out"},5.619999999999999);
+tl.fromTo("#s2-bg",{scale:1.1},{scale:1.0,duration:4.925,ease:"none"},9.395);
+tl.from("#s2-c",{y:-260,scale:0.85,opacity:0,duration:0.6,ease:"power3.out"},9.445);
+tl.fromTo("#s2-i",{scale:1.14},{scale:1.0,duration:4.925,ease:"none"},9.395);
+tl.fromTo("#s2-p1",{scaleX:0},{scaleX:1,duration:4.52,ease:"none"},9.594999999999999);
+tl.from("#s2-pl",{opacity:0,duration:0.3},9.495);
+tl.from("#s2-n",{scale:0,rotation:-90,duration:0.5,ease:"back.out(2.4)"},9.745);
+tl.from("#s2-k",{y:30,opacity:0,duration:0.35,ease:"power2.out"},9.995);
+tl.from("#s2-t",{y:60,opacity:0,duration:0.45,ease:"power3.out"},10.145);
+tl.from("#s2-x",{y:40,opacity:0,duration:0.45,ease:"power3.out"},10.545);
+tl.fromTo("#s3-bg",{scale:1.1},{scale:1.0,duration:4.925,ease:"none"},14.32);
+tl.from("#s3-c",{y:-260,scale:0.85,opacity:0,duration:0.6,ease:"power3.out"},14.370000000000001);
+tl.fromTo("#s3-i",{scale:1.14},{scale:1.0,duration:4.925,ease:"none"},14.32);
+tl.fromTo("#s3-p2",{scaleX:0},{scaleX:1,duration:4.52,ease:"none"},14.52);
+tl.from("#s3-pl",{opacity:0,duration:0.3},14.42);
+tl.from("#s3-n",{scale:0,rotation:-90,duration:0.5,ease:"back.out(2.4)"},14.67);
+tl.from("#s3-k",{y:30,opacity:0,duration:0.35,ease:"power2.out"},14.92);
+tl.from("#s3-t",{y:60,opacity:0,duration:0.45,ease:"power3.out"},15.07);
+tl.from("#s3-x",{y:40,opacity:0,duration:0.45,ease:"power3.out"},15.47);
+tl.fromTo("#s4-bg",{scale:1.1},{scale:1.0,duration:4.925,ease:"none"},19.245);
+tl.from("#s4-c",{y:-260,scale:0.85,opacity:0,duration:0.6,ease:"power3.out"},19.295);
+tl.fromTo("#s4-i",{scale:1.14},{scale:1.0,duration:4.925,ease:"none"},19.245);
+tl.fromTo("#s4-p3",{scaleX:0},{scaleX:1,duration:4.52,ease:"none"},19.445);
+tl.from("#s4-pl",{opacity:0,duration:0.3},19.345000000000002);
+tl.from("#s4-n",{scale:0,rotation:-90,duration:0.5,ease:"back.out(2.4)"},19.595000000000002);
+tl.from("#s4-k",{y:30,opacity:0,duration:0.35,ease:"power2.out"},19.845000000000002);
+tl.from("#s4-t",{y:60,opacity:0,duration:0.45,ease:"power3.out"},19.995);
+tl.from("#s4-x",{y:40,opacity:0,duration:0.45,ease:"power3.out"},20.395);
+tl.fromTo("#s5-bg",{scale:1.1},{scale:1.0,duration:4.925,ease:"none"},24.17);
+tl.from("#s5-c",{y:-260,scale:0.85,opacity:0,duration:0.6,ease:"power3.out"},24.220000000000002);
+tl.fromTo("#s5-i",{scale:1.14},{scale:1.0,duration:4.925,ease:"none"},24.17);
+tl.fromTo("#s5-p4",{scaleX:0},{scaleX:1,duration:4.52,ease:"none"},24.37);
+tl.from("#s5-pl",{opacity:0,duration:0.3},24.270000000000003);
+tl.from("#s5-n",{scale:0,rotation:-90,duration:0.5,ease:"back.out(2.4)"},24.520000000000003);
+tl.from("#s5-k",{y:30,opacity:0,duration:0.35,ease:"power2.out"},24.770000000000003);
+tl.from("#s5-t",{y:60,opacity:0,duration:0.45,ease:"power3.out"},24.92);
+tl.from("#s5-x",{y:40,opacity:0,duration:0.45,ease:"power3.out"},25.32);
+tl.fromTo("#s6-bg",{scale:1.1},{scale:1.0,duration:4.925,ease:"none"},29.095);
+tl.from("#s6-c",{y:-260,scale:0.85,opacity:0,duration:0.6,ease:"power3.out"},29.145);
+tl.fromTo("#s6-i",{scale:1.14},{scale:1.0,duration:4.925,ease:"none"},29.095);
+tl.fromTo("#s6-p5",{scaleX:0},{scaleX:1,duration:4.52,ease:"none"},29.294999999999998);
+tl.from("#s6-pl",{opacity:0,duration:0.3},29.195);
+tl.from("#s6-n",{scale:0,rotation:-90,duration:0.5,ease:"back.out(2.4)"},29.445);
+tl.from("#s6-k",{y:30,opacity:0,duration:0.35,ease:"power2.out"},29.695);
+tl.from("#s6-t",{y:60,opacity:0,duration:0.45,ease:"power3.out"},29.845);
+tl.from("#s6-x",{y:40,opacity:0,duration:0.45,ease:"power3.out"},30.244999999999997);
+tl.from("#rc-r0",{x:-700,opacity:0,duration:0.38,ease:"power3.out"},34.320);
+tl.from("#rc-c0",{scale:0,duration:0.3,ease:"back.out(3)"},34.520);
+tl.from("#rc-r1",{x:-700,opacity:0,duration:0.38,ease:"power3.out"},34.650);
+tl.from("#rc-c1",{scale:0,duration:0.3,ease:"back.out(3)"},34.850);
+tl.from("#rc-r2",{x:-700,opacity:0,duration:0.38,ease:"power3.out"},34.980);
+tl.from("#rc-c2",{scale:0,duration:0.3,ease:"back.out(3)"},35.180);
+tl.from("#rc-r3",{x:-700,opacity:0,duration:0.38,ease:"power3.out"},35.310);
+tl.from("#rc-c3",{scale:0,duration:0.3,ease:"back.out(3)"},35.510);
+tl.from("#rc-r4",{x:-700,opacity:0,duration:0.38,ease:"power3.out"},35.640);
+tl.from("#rc-c4",{scale:0,duration:0.3,ease:"back.out(3)"},35.840);
+tl.from("#rc-r5",{x:-700,opacity:0,duration:0.38,ease:"power3.out"},35.970);
+tl.from("#rc-c5",{scale:0,duration:0.3,ease:"back.out(3)"},36.170);
+tl.from("#rc-t",{y:-40,opacity:0,duration:0.4,ease:"power2.out"},34.07);
+tl.fromTo("#rc-gl",{scaleX:0},{scaleX:1,duration:0.5,ease:"power3.out"},34.220000000000006);
+tl.from("#rc-f",{y:40,opacity:0,duration:0.45,ease:"power3.out"},36.320);
+tl.from("#end-logo",{y:-40,opacity:0,duration:0.6,ease:"power3.out"},39.045);
+tl.from("#end-t",{scale:0.7,opacity:0,duration:0.5,ease:"back.out(2)"},39.345);
+tl.from("#end-s",{y:40,opacity:0,duration:0.45,ease:"power3.out"},39.695);
+tl.from("#end-cut",{y:500,opacity:0,duration:0.8,ease:"power3.out"},39.245);
+tl.from("#end-ph",{scale:0.6,opacity:0,duration:0.5,ease:"back.out(2)"},40.145);
+tl.fromTo("#end-ph",{scale:1},{scale:1.04,duration:0.4925,yoyo:true,repeat:5,ease:"sine.inOut"},40.745);
+tl.from("#end-w",{opacity:0,duration:0.5},40.445);
+tl.fromTo("#wp0-p",{x:1180,skewX:-12},{x:-1600,skewX:-12,duration:0.5,ease:"power2.inOut"},4.22);
+tl.fromTo("#wp1-p",{x:-1180,skewX:12},{x:1600,skewX:12,duration:0.5,ease:"power2.inOut"},9.145);
+tl.fromTo("#wp2-p",{x:1180,skewX:-12},{x:-1600,skewX:-12,duration:0.5,ease:"power2.inOut"},14.07);
+tl.fromTo("#wp3-p",{x:-1180,skewX:12},{x:1600,skewX:12,duration:0.5,ease:"power2.inOut"},18.995);
+tl.fromTo("#wp4-p",{x:1180,skewX:-12},{x:-1600,skewX:-12,duration:0.5,ease:"power2.inOut"},23.92);
+tl.fromTo("#wp5-p",{x:-1180,skewX:12},{x:1600,skewX:12,duration:0.5,ease:"power2.inOut"},28.845);
+tl.fromTo("#wp6-p",{x:1180,skewX:-12},{x:-1600,skewX:-12,duration:0.5,ease:"power2.inOut"},33.77);
+tl.fromTo("#wp7-p",{x:-1180,skewX:12},{x:1600,skewX:12,duration:0.5,ease:"power2.inOut"},38.695);
+tl.set({}, {}, 43.87);
+window.__timelines["root"] = tl;
+</script>
+</body>
+</html>
