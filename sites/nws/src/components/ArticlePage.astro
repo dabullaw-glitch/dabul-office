@@ -67,22 +67,22 @@ const L = {
   he: { wa: 'שיתוף בוואטסאפ', tg: 'שיתוף בטלגרם', fb: 'שיתוף בפייסבוק', copy: 'העתקת קישור', copied: 'הקישור הועתק', read: 'דק׳ קריאה', desk: 'מערכת NWS',
     also: 'עוד בנושא', next: 'מה הלאה', when: 'מתי', where: 'איפה', what: 'מה', until: 'עד מתי', approx: 'בערך', sources: 'מקורות:', how: 'איך אנחנו עובדים',
     fix: 'מצאתם טעות בכתבה? יש לכם מידע נוסף?', report: 'דווחו על טעות', send: 'שלחו ידיעה', aiCap: 'נוצרה בבינה מלאכותית ואינה מתעדת את האירוע', tags: 'נושאים ומקומות',
-    table: 'הטבלה', pts: 'נק׳', tgBtn: 'הצטרפו לערוץ בטלגרם', pros: 'בעלי מקצוע בנושא', inCity: 'בנתניה', crumbs: 'מיקום', ups: 'עדכונים', live: 'מתעדכן',
+    table: 'הטבלה', pts: 'נק׳', tgBtn: 'הצטרפו לערוץ בטלגרם', pros: 'בעלי מקצוע בנושא', inCity: 'בנתניה', crumbs: 'מיקום', bg: 'רקע', svc: 'מה עושים', svcGo: 'למידע הרשמי', ups: 'עדכונים', live: 'מתעדכן',
     spon: 'תוכן שיווקי', with: 'בשיתוף', disclose: 'הכתבה פורסמה כתוכן שיווקי בשיתוף המפרסם' },
   ru: { wa: 'Поделиться в WhatsApp', tg: 'Поделиться в Telegram', fb: 'Поделиться в Facebook', copy: 'Скопировать ссылку', copied: 'Ссылка скопирована', read: 'мин чтения', desk: 'Редакция NWS',
     also: 'По теме', next: 'Что дальше', when: 'Когда', where: 'Где', what: 'Что', until: 'До', approx: 'примерно', sources: 'Источники:', how: 'Как мы работаем',
     fix: 'Нашли ошибку? Есть информация?', report: 'Сообщить об ошибке', send: 'Прислать новость', aiCap: 'создано ИИ, не документирует событие', tags: 'Темы',
-    table: 'Таблица', pts: 'очк.', tgBtn: 'Канал в Telegram', pros: 'Специалисты', inCity: '', crumbs: 'Навигация', ups: 'Обновления', live: 'Обновляется',
+    table: 'Таблица', pts: 'очк.', tgBtn: 'Канал в Telegram', pros: 'Специалисты', inCity: '', crumbs: 'Навигация', bg: 'Контекст', svc: 'Что делать', svcGo: 'Официальная информация', ups: 'Обновления', live: 'Обновляется',
     spon: 'Реклама', with: 'При участии', disclose: 'Материал опубликован на правах рекламы при участии рекламодателя' },
   fr: { wa: 'Partager sur WhatsApp', tg: 'Partager sur Telegram', fb: 'Partager sur Facebook', copy: 'Copier le lien', copied: 'Lien copié', read: 'min de lecture', desk: 'Rédaction NWS',
     also: 'À lire aussi', next: 'La suite', when: 'Quand', where: 'Où', what: 'Quoi', until: 'Jusqu’à', approx: 'environ', sources: 'Sources :', how: 'Notre méthode',
     fix: 'Une erreur ? Une info en plus ?', report: 'Signaler une erreur', send: 'Envoyer une info', aiCap: 'générée par IA, ne documente pas l’événement', tags: 'Thèmes',
-    table: 'Classement', pts: 'pts', tgBtn: 'Rejoindre la chaîne Telegram', pros: 'Professionnels', inCity: '', crumbs: 'Fil d’Ariane', ups: 'Mises à jour', live: 'En direct',
+    table: 'Classement', pts: 'pts', tgBtn: 'Rejoindre la chaîne Telegram', pros: 'Professionnels', inCity: '', crumbs: 'Fil d’Ariane', bg: 'Contexte', svc: 'Que faire', svcGo: 'Information officielle', ups: 'Mises à jour', live: 'En direct',
     spon: 'Contenu sponsorisé', with: 'En partenariat avec', disclose: 'Cet article est publié comme contenu sponsorisé en partenariat avec l’annonceur' },
   en: { wa: 'Share on WhatsApp', tg: 'Share on Telegram', fb: 'Share on Facebook', copy: 'Copy link', copied: 'Link copied', read: 'min read', desk: 'NWS Desk',
     also: 'Related', next: 'What’s next', when: 'When', where: 'Where', what: 'What', until: 'Until', approx: 'about', sources: 'Sources:', how: 'How we work',
     fix: 'Found an error? Have more information?', report: 'Report an error', send: 'Send a tip', aiCap: 'AI generated, it does not document the event', tags: 'Topics',
-    table: 'Table', pts: 'pts', tgBtn: 'Join the Telegram channel', pros: 'Local pros', inCity: '', crumbs: 'Breadcrumbs', ups: 'Updates', live: 'Live',
+    table: 'Table', pts: 'pts', tgBtn: 'Join the Telegram channel', pros: 'Local pros', inCity: '', crumbs: 'Breadcrumbs', bg: 'Background', svc: 'What to do', svcGo: 'Official information', ups: 'Updates', live: 'Live',
     spon: 'Sponsored', with: 'In partnership with', disclose: 'This article was published as sponsored content in partnership with the advertiser' },
 }[lang];
 
@@ -93,6 +93,11 @@ const byName = opinion ? a.author! : sponBy ? `${L.with} ${a.author}` : sponsore
 const initials = opinion || sponBy ? a.author!.split(/\s+/).slice(0, 2).map((w) => w[0]).join('') : 'NWS';
 const showUpd = Date.parse(modified) - Date.parse(a.published) > 60e3;
 const updText = showUpd ? (dayOf(modified) === dayOf(a.published) ? fmtTime(modified) : `${fmtNum(modified)}, ${fmtTime(modified)}`) : '';
+// extras of the engine (hns-feed v8): background links and the "מה עושים" box; Hebrew data, so other languages only when translated
+const ex = lang === 'he' || a.extras !== heA.extras ? a.extras : null;
+const bgLinks = (ex?.related || []).filter((r) => r.url !== path);
+const svc = ex?.service || null;
+const isExt = (u: string) => /^https?:\/\//.test(u);
 const upList = ups.map((x, i) => ({ ...x, n: i + 1, recent: Date.now() - Date.parse(x.at) < 3600e3 })).reverse();
 
 // ---------- picture: the story's AI image, or the section photo ----------
@@ -229,6 +234,17 @@ const hasSrc = !!a.sourceName;
             <time datetime={x.at}><b class="num">{fmtTime(x.at)}</b><span class="num">{fmtNum(x.at).slice(0, 5)}</span></time>
             <p>{x.text}</p>
           </li>)}</ol>
+        </section>}
+
+        {svc && <section class="art-svc" aria-labelledby="sv-h">
+          <h2 id="sv-h"><Icon name="compass" size={20} />{svc.title || L.svc}</h2>
+          {svc.lines.length > 1 ? <ul>{svc.lines.map((x) => <li>{x}</li>)}</ul> : svc.lines.length === 1 && <p>{svc.lines[0]}</p>}
+          {svc.link && <a class="n-btn line" href={svc.link.url} {...(isExt(svc.link.url) ? { target: '_blank', rel: 'noopener' } : {})}>{svc.link.text || L.svcGo}<Icon name="link" size={16} /></a>}
+        </section>}
+
+        {bgLinks.length > 0 && <section class="art-bg" aria-labelledby="bg-h">
+          <h2 id="bg-h">{L.bg}</h2>
+          <ul>{bgLinks.map((r) => <li><a href={r.url} {...(isExt(r.url) ? { target: '_blank', rel: 'noopener' } : {})}>{r.title}</a></li>)}</ul>
         </section>}
 
         {a.faq.length > 0 && <section class="n-faq" aria-labelledby="faq-h"><h2 id="faq-h">{u.faq}</h2>{a.faq.map(([q, x]) => <details><summary>{q}</summary><p>{x}</p></details>)}</section>}

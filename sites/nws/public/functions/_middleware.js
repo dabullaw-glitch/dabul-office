@@ -5,11 +5,16 @@
 // 2. One canonical host: requests through the Pages address (nws-site.pages.dev) or www.nws.co.il get a permanent redirect (301)
 //    to the same path on https://nws.co.il, so Google indexes only nws.co.il.
 //    Preview deployments (<hash>.nws-site.pages.dev) are not redirected; _headers sends them X-Robots-Tag: noindex.
+// 3. Stories the engine merged into another story (hns-feed "merged"): their old address /<section>/n<id>/ (and /ru, /fr, /en)
+//    answers 301 to the main story, never 410. scripts/merged.mjs fills MERGED in the built copy (dist/functions) after every build:
+//    { "<id>": { "he": "/city/n27/", "en": "/en/city/n27/", ... } }; a language without its own page goes to the Hebrew one.
 // _routes.json keeps static files (images, icons) and the _redirects sources out of this function, so it runs only for pages and feeds.
 const CANON = 'nws.co.il';
 const MOVE = new Set(['nws-site.pages.dev', 'www.nws.co.il']);
 const SPAM = /^\/video(\/|$)|adultleak|\/[^/]*leak[^/]*\.xml$/i;
 const SEC = { 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'strict-origin-when-cross-origin', 'Permissions-Policy': 'geolocation=(), camera=(), microphone=()' };
+const MERGED = /*MERGED*/{}/*END*/;
+const STORY = /^\/(?:(ru|fr|en)\/)?[a-z-]+\/n(\d+)\/?$/;
 const GONE_HTML = '<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>העמוד הוסר</title></head>'
   + '<body style="font-family:sans-serif;text-align:center;padding:60px 16px"><h1>העמוד הזה לא קיים באתר</h1><p><a href="https://nws.co.il/">לעמוד הראשי של חדשות נתניה והשרון</a></p></body></html>';
 const gone = (body = GONE_HTML) => new Response(body, { status: 410, headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Robots-Tag': 'noindex', 'Cache-Control': 'public, max-age=3600', ...SEC } });
@@ -22,6 +27,12 @@ export async function onRequest({ request, next }) {
   if (MOVE.has(url.hostname)) {
     url.protocol = 'https:'; url.hostname = CANON; url.port = '';
     return new Response(null, { status: 301, headers: { Location: url.toString(), 'Cache-Control': 'public, max-age=86400' } });
+  }
+  const st = STORY.exec(path);
+  const mg = st && MERGED[st[2]];
+  if (mg) {
+    const to = mg[st[1] || 'he'] || mg.he;
+    if (to) return new Response(null, { status: 301, headers: { Location: 'https://' + CANON + to, 'Cache-Control': 'public, max-age=86400', ...SEC } });
   }
   const res = await next();
   // an address that is not on our site: 410 with our own 404 page (menu, search, latest stories)

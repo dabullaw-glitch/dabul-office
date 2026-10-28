@@ -16,6 +16,29 @@ export interface Article {
   ai?: AiImg | null;
   // live updates of a developing story (hns-feed v7): oldest first; live while the last update is less than 6 hours old
   updates?: { at: string; text: string }[]; live?: boolean;
+  // fields other engine functions add (hns-feed v8 "extras"): background links from our archive and a "מה עושים" service box
+  extras?: Extras | null;
+}
+export interface Extras {
+  related: { title: string; url: string }[];
+  service: { title: string; lines: string[]; link: { text: string; url: string } | null } | null;
+}
+const safeUrl = (u: unknown) => { const x = String(u ?? '').trim(); return /^https?:\/\/[^\s"<>]+$/.test(x) || /^\/[^\s"<>]*$/.test(x) ? x.replace(/^https?:\/\/(www\.)?nws\.co\.il(?=\/)/, '') : ''; };
+/** extras of hns-feed v8, checked and trimmed (tolerant of small shape differences); null when there is nothing to show */
+function extrasOf(e: any): Extras | null {
+  if (!e || typeof e !== 'object') return null;
+  const related = (Array.isArray(e.related) ? e.related : []).map((r: any) => ({ title: clean(r?.title ?? r?.text), url: safeUrl(r?.url ?? r?.href) }))
+    .filter((r: any) => r.title && r.url).slice(0, 6);
+  const sv = e.service && typeof e.service === 'object' ? e.service : null;
+  let service: Extras['service'] = null;
+  if (sv) {
+    const lines = (Array.isArray(sv.lines) ? sv.lines : sv.text ? [sv.text] : []).map(clean).filter(Boolean).slice(0, 8);
+    const lk = sv.link && typeof sv.link === 'object' ? { text: clean(sv.link.text ?? sv.link.title), url: safeUrl(sv.link.url ?? sv.link.href) }
+      : sv.url ? { text: clean(sv.linkText ?? sv.link_text ?? ''), url: safeUrl(sv.url) } : null;
+    const link = lk && lk.url ? { text: lk.text || '', url: lk.url } : null;
+    if (lines.length || link) service = { title: clean(sv.title) || '', lines, link };
+  }
+  return related.length || service ? { related, service } : null;
 }
 export interface AiImg { alt: string; files?: { src: string; w: number }[]; remote?: string; w: number; h: number; model: string }
 
@@ -56,6 +79,7 @@ function fromFeed(s: any): any {
     closure: s.closure && s.closure.place ? { place: clean(s.closure.place), what: clean(s.closure.what), until: String(s.closure.until || ''), approx: !!s.closure.approx } : null,
     ai: aiOf(s),
     updates: (Array.isArray(s.updates) ? s.updates : []).filter((x: any) => x && x.at && x.text).map((x: any) => ({ at: new Date(x.at).toISOString(), text: clean(x.text) })),
+    extras: extrasOf(s.extras),
     live: !!s.live && Array.isArray(s.updates) && s.updates.length > 0 && Date.now() - Date.parse(s.updates[s.updates.length - 1].at) < 6 * 3600e3,
   };
 }
