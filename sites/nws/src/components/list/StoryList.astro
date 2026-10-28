@@ -16,10 +16,15 @@ const L = {
   ru: { by: 'NWS', min: 'мин. чтения', more: 'Другие новости', show: 'Показать ещё', ill: 'Иллюстративное фото', ai: 'Иллюстрация ИИ', upd: 'Обновлено' },
   fr: { by: 'NWS', min: 'min de lecture', more: 'Autres articles', show: 'Afficher plus', ill: 'Photo d’illustration', ai: 'Illustration IA', upd: 'Mis à jour' },
 }[lang];
-const lead = items[0];
-const duo = items.slice(1, 3);
-const cards = items.slice(3, 3 + grid);
-const rest = items.slice(3 + grid);
+// a sponsored story never leads (it keeps its place among the cards, with the "תוכן שיווקי" tag)
+const li = items.findIndex((a) => a.kind !== 'sponsored');
+const list = li > 0 ? [items[li], ...items.filter((_, i) => i !== li)] : items;
+const lead = li >= 0 ? list[0] : undefined;
+const after = lead ? list.slice(1) : list;
+const duo = after.slice(0, 2);
+const cards = after.slice(2, 2 + grid);
+const rest = after.slice(2 + grid);
+const spTag = { he: 'תוכן שיווקי', en: 'Sponsored', ru: 'Реклама', fr: 'Contenu sponsorisé' }[lang];
 const lp = lead ? picOf(lead) : null;
 const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
 const todayIl = ilDay(new Date());
@@ -43,7 +48,7 @@ const by = (a: Article) => (a.kind === 'opinion' && a.author ? a.author : L.by);
 <section class="nl-blk" aria-labelledby="nl-more-h" style={`--c:${color}`}>
   <h2 class="n-sh" id="nl-more-h">{listTitle || L.more}</h2>
   <ol class="nl-tl num" data-more={perPage}>
-    {rest.map((a) => <li class={hot(a.published) ? 'hot' : undefined} style={`--c:${SECTION_BY_KEY[a.section].color}`}><time datetime={a.published}>{when(a.published)}</time><div><a href={articleUrl(a, lang)}>{a.title}</a><small>{kickerOf(a, lang)}</small></div></li>)}
+    {rest.map((a) => <li class={hot(a.published) ? 'hot' : undefined} style={`--c:${SECTION_BY_KEY[a.section].color}`}><time datetime={a.published}>{when(a.published)}</time><div><a href={articleUrl(a, lang)}>{a.title}</a><small>{a.kind === 'sponsored' ? <span class="n-spon">{spTag}</span> : kickerOf(a, lang)}</small></div></li>)}
   </ol>
   <button class="n-btn line nl-more" type="button" hidden data-more-btn>{L.show}</button>
 </section>)}

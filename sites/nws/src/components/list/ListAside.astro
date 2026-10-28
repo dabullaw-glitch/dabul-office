@@ -9,7 +9,7 @@ import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, FLASHES, type A
 interface Props { lang?: Lang; skip?: string; exclude?: string[]; flashes?: boolean }
 const { lang = 'he', skip = '', exclude = [], flashes = true } = Astro.props;
 const u = t(lang); const he = lang === 'he'; const pre = LANG_PREFIX[lang];
-const all = articlesFor(lang);
+const all = articlesFor(lang).filter((a) => a.kind !== 'sponsored');
 const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
 const todayIl = ilDay(new Date());
 const hot = (iso: string) => Date.now() - Date.parse(iso) < 2 * 3600e3;
