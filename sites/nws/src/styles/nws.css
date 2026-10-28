@@ -415,3 +415,19 @@ html.a11y-cursor,html.a11y-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=
 main:focus{outline:0}
 .n-ck [hidden],.n-a11y [hidden],.n-menu [hidden]{display:none!important}
 @media (max-width:760px){.n-util{display:none}}
+/* phone home (Mobile.dc.html): lead, then the live feed, then compact rows with a small photo */
+@media (max-width:760px){
+ .n-top{display:flex;flex-direction:column}.n-top>div:first-child{display:contents}
+ .n-top .n-lead{order:1}.n-top>aside{order:2}.n-top .n-duo{order:3}.n-top .n-tlist{order:4}
+ .n-duo{margin-top:0;padding-top:0;border-top:0;gap:0}
+ .n-duo .n-card,.n-tri .n-card{display:grid;grid-template-columns:minmax(0,1fr) 112px;column-gap:12px;padding:14px 0;border-top:1px solid var(--line2)}
+ .n-duo .n-card>*,.n-tri .n-card>*{grid-column:1}
+ .n-duo .n-card .n-ph,.n-tri .n-card .n-ph{grid-column:2;grid-row:1/5;width:112px;height:80px;aspect-ratio:auto!important}
+ .n-duo .n-card .n-cap,.n-tri .n-card .n-cap,.n-duo .n-card p{display:none}
+ .n-duo .n-card .k,.n-tri .n-card .k{margin-top:0}
+ .n-duo .n-card h3,.n-tri .n-card h3{font-size:17.5px;margin:4px 0}
+ .n-tlist{margin-top:8px}
+ .n-live{border-radius:0;border-inline:0;margin-inline:-16px}
+ .n-dg .n-dc:nth-child(n+5):not(:last-child){display:none}
+ .n-sg>div:first-child:empty{display:none}
+}
