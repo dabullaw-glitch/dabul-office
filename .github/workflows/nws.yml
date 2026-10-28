@@ -7,7 +7,7 @@ name: nws site
 # 28.10.2026: scripts/live.mjs saves a sea and weather snapshot (Open-Meteo), and scripts/img.mjs turns the AI illustrations of the
 # stories into small WebP files; those files are kept in the Actions cache (.imgcache), so each image is downloaded only once.
 on:
-  schedule: [{ cron: '*/15 * * * *' }]
+  schedule: [{ cron: '4,19,34,49 * * * *' }]
   push:
     branches: [main]
     paths: ['sites/nws/**', '.github/workflows/nws.yml']
