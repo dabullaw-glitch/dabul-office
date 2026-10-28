@@ -1,0 +1,6 @@
+-- 28.10.2026: schedules for the new functions (pg_cron runs in UTC).
+--   hns-official every 5 minutes (each source keeps its own poll_min), hns-watch every 15 minutes,
+--   hns-data once a day at 05:40 UTC (07:40 Israel winter time, 08:40 summer time).
+select cron.schedule('hns-official', '1-59/5 * * * *', $$ select net.http_post(url:='https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/hns-official', body:='{"action":"tick"}'::jsonb, headers:=jsonb_build_object('content-type','application/json','x-cron-secret',(select v from public.app_secrets where k='CRON_SECRET')), timeout_milliseconds:=60000) $$);
+select cron.schedule('hns-watch', '2-59/15 * * * *', $$ select net.http_post(url:='https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/hns-watch', body:='{"action":"tick"}'::jsonb, headers:=jsonb_build_object('content-type','application/json','x-cron-secret',(select v from public.app_secrets where k='CRON_SECRET')), timeout_milliseconds:=60000) $$);
+select cron.schedule('hns-data', '40 5 * * *', $$ select net.http_post(url:='https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/hns-data', body:='{"action":"tick"}'::jsonb, headers:=jsonb_build_object('content-type','application/json','x-cron-secret',(select v from public.app_secrets where k='CRON_SECRET')), timeout_milliseconds:=150000) $$);
