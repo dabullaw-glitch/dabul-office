@@ -1,0 +1,49 @@
+---
+// Sidebar of section and listing pages (redesign 28.10.2026): the live flashes (official flashes and flash stories, newest
+// first), more stories from other sections, extra boxes from the page (slot), and the Telegram channel. Empty boxes are not shown.
+import '../../styles/list.css';
+import Icon from '../Icon.astro';
+import { LANG_PREFIX, TG_URL, type Lang } from '../../data/site';
+import { t } from '../../i18n/ui';
+import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, FLASHES, type Article } from '../../lib/content';
+interface Props { lang?: Lang; skip?: string; exclude?: string[]; flashes?: boolean }
+const { lang = 'he', skip = '', exclude = [], flashes = true } = Astro.props;
+const u = t(lang); const he = lang === 'he'; const pre = LANG_PREFIX[lang];
+const all = articlesFor(lang);
+const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
+const todayIl = ilDay(new Date());
+const hot = (iso: string) => Date.now() - Date.parse(iso) < 2 * 3600e3;
+type Feed = { at: string; text: string; href: string; src?: string };
+const feed: Feed[] = !flashes ? [] : [...(he ? FLASHES.map((f) => ({ at: f.at, text: f.text, href: `/flash/#f${f.id}`, src: f.source })) : []),
+  ...all.filter((a) => a.section === 'flash').slice(0, 10).map((a) => ({ at: a.published, text: a.title, href: articleUrl(a, lang) }))]
+  .sort((x, y) => Date.parse(y.at) - Date.parse(x.at)).filter((x, i, arr) => arr.findIndex((y) => y.text === x.text) === i).slice(0, 7);
+const skipSet = new Set(exclude);
+const more: Article[] = all.filter((a) => a.section !== skip && a.section !== 'flash' && !skipSet.has(a.slug)).slice(0, 5);
+const L = {
+  he: { live: 'מבזקים עכשיו', sub: 'מתעדכן כל הזמן', all: 'לכל המבזקים ←', more: 'עוד באתר' },
+  en: { live: 'Breaking now', sub: '', all: 'All breaking news →', more: 'More news' },
+  ru: { live: 'Срочно сейчас', sub: '', all: 'Все срочные →', more: 'Другие новости' },
+  fr: { live: 'Flash en ce moment', sub: '', all: 'Tous les flashs →', more: 'Autres actualités' },
+}[lang];
+const tgHref = TG_URL || `${pre}/join/`;
+const tgAttr = TG_URL ? { target: '_blank', rel: 'noopener' } : {};
+---
+<aside class="n-aside nl-aside">
+  {feed.length > 0 && (
+  <section class="n-live" aria-labelledby="nl-live-h">
+    <div class="lh"><h2 id="nl-live-h"><span class="n-pulse" aria-hidden="true"></span>{L.live}</h2>{L.sub && <span>{L.sub}</span>}</div>
+    <ol class="n-feed num">{feed.map((f) => <li class={hot(f.at) ? 'hot' : undefined}><time datetime={f.at}>{ilDay(new Date(f.at)) === todayIl ? fmtTime(f.at) : `${fmtShort(f.at)} ${fmtTime(f.at)}`}</time><a href={f.href}>{f.src && <small>{f.src}: </small>}{f.text}</a></li>)}</ol>
+    <a class="n-lf" href={sectionUrl('flash', lang)}>{L.all}</a>
+  </section>)}
+  <slot />
+  {more.length > 0 && (
+  <section aria-labelledby="nl-mr-h">
+    <h2 class="n-sh" id="nl-mr-h" style="font-size:19px">{L.more}</h2>
+    <ol class="n-mrl">{more.map((a, i) => <li><span class="n" aria-hidden="true">{i + 1}</span><a href={articleUrl(a, lang)}>{a.title}</a></li>)}</ol>
+  </section>)}
+  <div class="n-tgc">
+    <b>{u.joinTitle}</b>
+    <p>{u.joinText}</p>
+    <a class="n-btn tg" href={tgHref} {...tgAttr}><Icon name="telegram" size={18} color="#fff" />{he ? 'ערוץ הטלגרם' : u.joinTelegram}</a>
+  </div>
+</aside>

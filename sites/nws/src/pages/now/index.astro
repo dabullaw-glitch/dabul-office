@@ -1,8 +1,10 @@
 ---
+// "נתניה עכשיו" (redesign 28.10.2026): the photo band with today's sunrise and sunset, then one card per service page with
+// real data only (Shabbat times computed from the sun, the latest flash stories, the official phone numbers).
 import Base from '../../layouts/Base.astro';
-import Crumbs from '../../components/Crumbs.astro';
-import Wave from '../../components/Wave.astro';
+import ListHero from '../../components/list/ListHero.astro';
 import NowNav from '../../components/NowNav.astro';
+import '../../styles/list.css';
 import { SITE_URL } from '../../data/site';
 import { shabbatTimes, todaySun } from '../../lib/shabbat';
 import { FACTS, articlesFor, articleUrl, fmtTime } from '../../lib/content';
@@ -10,30 +12,24 @@ const sh = shabbatTimes(new Date(), 1)[0]; const sun = todaySun();
 const flash = articlesFor('he').filter((a) => a.section === 'flash').slice(0, 5);
 const hotline = FACTS?.hotline?.number ?? '106';
 const crumbs = [{ name: 'ראשי', href: '/' }, { name: 'נתניה עכשיו', href: '/now/' }];
-const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'נתניה עכשיו', url: SITE_URL + '/now/', about: { '@type': 'City', name: 'נתניה' } }];
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'נתניה עכשיו', url: SITE_URL + '/now/', inLanguage: 'he', isPartOf: { '@id': SITE_URL + '/#website' }, about: { '@type': 'City', name: 'נתניה' },
+  mainEntity: { '@type': 'ItemList', itemListElement: [['/now/shabbat/', 'זמני שבת בנתניה'], ['/now/beaches/', 'החופים של נתניה'], ['/now/pharmacy/', 'בית מרקחת תורן'], ['/now/roads/', 'חסימות ועבודות כביש'], ['/now/alerts/', 'פיקוד העורף'], ['/now/phones/', 'טלפונים חיוניים']].map(([u, n], i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + u, name: n })) } }];
 ---
-<Base title="נתניה עכשיו: זמני שבת, חופים, בית מרקחת תורן וחסימות | חדשות נתניה והשרון" description="כל מה שצריך לדעת היום בנתניה במקום אחד: זמני כניסת ויציאת שבת, החופים, בית מרקחת תורן, חסימות, פיקוד העורף וטלפונים חיוניים." path="/now/" crumbs={crumbs} jsonld={jsonld} current="now" alternates={{ he: '/now/', ru: '/ru/now/', fr: '/fr/now/', en: '/en/now/' }}>
-  <section class="phero" style="--bg:#0B3D6E">
-    <img class="bgi" src="/img/beach.svg" alt="" width="1440" height="400">
-    <div class="wrap in" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
-      <div><Crumbs items={crumbs} light /><h1>נתניה עכשיו</h1><p>כל מה שצריך לדעת היום בעיר, במקום אחד.</p></div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <span style="background:rgba(255,255,255,.14);border-radius:12px;padding:10px 16px;display:flex;flex-direction:column"><span style="font-size:13px;color:#CFE0F2">זריחה</span><b style="font-family:var(--h);font-size:24px">{sun.sunrise}</b></span>
-        <span style="background:rgba(255,255,255,.14);border-radius:12px;padding:10px 16px;display:flex;flex-direction:column"><span style="font-size:13px;color:#CFE0F2">שקיעה</span><b style="font-family:var(--h);font-size:24px">{sun.sunset}</b></span>
-      </div>
-    </div>
-    <Wave top from="transparent" to="#F3F6FA" />
-  </section>
-  <div class="np"><div class="wrap" style="padding-block:18px 40px">
+<Base title="נתניה עכשיו: זמני שבת, חופים, בית מרקחת תורן וחסימות | חדשות נתניה והשרון" description="כל מה שצריך לדעת היום בנתניה במקום אחד: זמני כניסת ויציאת שבת, החופים, בית מרקחת תורן, חסימות, פיקוד העורף וטלפונים חיוניים." path="/now/" crumbs={crumbs} jsonld={jsonld} current="now" alternates={{ he: '/now/', ru: '/ru/now/', fr: '/fr/now/', en: '/en/now/' }} ogImage="/img/stock/og/beach-sunset.jpg">
+  <div class="nl-page">
+  <ListHero crumbs={crumbs} h1="נתניה עכשיו" intro="כל מה שצריך לדעת היום בעיר, במקום אחד." color="#C8102E" photo="beach-sunset" icon="clock">
+    <div class="tiles num"><span class="tile"><span>זריחה היום</span><b>{sun.sunrise}</b></span><span class="tile"><span>שקיעה היום</span><b>{sun.sunset}</b></span><span class="tile"><span>הדלקת נרות, {sh.date}</span><b>{sh.candles}</b></span></div>
+  </ListHero>
+  <div class="n-wrap nl-np">
     <NowNav />
-    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px">
-      <section class="ncard" style="--c:#6D3FC0;--s:#F0EAFB"><h2><a href="/now/shabbat/">זמני שבת בנתניה</a></h2><div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:10px"><div class="kv" style="flex-direction:column"><span>הדלקת נרות</span><b class="big2">{sh.candles}</b></div><div class="kv" style="flex-direction:column"><span>צאת שבת</span><b class="big2">{sh.end}</b></div></div><p class="note" style="margin:8px 0 0">כניסת השבת ביום שישי, {sh.date}. <a href="/now/shabbat/" style="color:#0B5FCC">לזמנים של השבועות הבאים</a></p></section>
-      <section class="ncard" style="--c:#2B8FD8"><h2><a href="/now/beaches/">הים והחופים</a></h2><p style="margin:0 0 10px">החופים המוכרזים של נתניה, שעות ההצלה ומה אומר כל דגל.</p><a class="btn out" href="/now/beaches/">לרשימת החופים</a></section>
-      <section class="ncard" style="--c:#C8102E"><h2><a href="/now/pharmacy/">בית מרקחת תורן</a></h2><p style="margin:0 0 10px">איפה בודקים מי תורן הלילה ובסוף השבוע, ומה עושים במצב דחוף.</p><a class="btn out" href="/now/pharmacy/">לפרטים</a></section>
-      <section class="ncard" style="--c:#E07B00"><h2><a href="/now/roads/">חסימות ועבודות</a></h2>{flash.length ? <ul style="list-style:none;margin:0;padding:0">{flash.map((a) => <li style="padding:8px 0;border-top:1px solid #EEF1F5"><b style="color:#C8102E">{fmtTime(a.published)}</b> <a href={articleUrl(a)}>{a.title}</a></li>)}</ul> : <p class="note">המבזקים יופיעו כאן.</p>}</section>
-      <section class="ncard" style="--c:#1E8A4C"><h2><a href="/now/alerts/">פיקוד העורף</a></h2><p style="margin:0 0 10px">מה עושים כשיש התראה בנתניה, וזמן ההגעה למרחב מוגן.</p><a class="btn out" href="/now/alerts/">להנחיות</a></section>
-      <section class="ncard" style="--c:#F2B544;--s:#FFF6DE"><h2><a href="/now/phones/">טלפונים חיוניים</a></h2><div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:10px"><div class="kv"><span>מוקד עירוני</span><b>{hotline}</b></div><div class="kv"><span>משטרה</span><b>100</b></div><div class="kv"><span>מד״א</span><b>101</b></div><div class="kv"><span>כבאות</span><b>102</b></div></div></section>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px">
+      <section class="ncard" style="--c:#5B3FA8"><h2><a href="/now/shabbat/">זמני שבת בנתניה</a></h2><div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:10px"><div class="kv" style="flex-direction:column"><span>הדלקת נרות</span><b class="big2 num">{sh.candles}</b></div><div class="kv" style="flex-direction:column"><span>צאת שבת</span><b class="big2 num">{sh.end}</b></div></div><p class="note" style="margin:10px 0 0">כניסת השבת ביום שישי, {sh.date}. <a href="/now/shabbat/" style="color:#0B5FCC">לזמנים של השבועות הבאים</a></p></section>
+      <section class="ncard" style="--c:#0B6FA4"><h2><a href="/now/beaches/">הים והחופים</a></h2><p style="margin:0 0 12px">החופים המוכרזים של נתניה, שעות ההצלה ומה אומר כל דגל.</p><a class="btn out" href="/now/beaches/">לרשימת החופים</a></section>
+      <section class="ncard" style="--c:#C8102E"><h2><a href="/now/pharmacy/">בית מרקחת תורן</a></h2><p style="margin:0 0 12px">איפה בודקים מי תורן הלילה ובסוף השבוע, ומה עושים במצב דחוף.</p><a class="btn out" href="/now/pharmacy/">לפרטים</a></section>
+      <section class="ncard" style="--c:#0F6E8C"><h2><a href="/now/roads/">חסימות ועבודות</a></h2>{flash.length ? <ul style="list-style:none;margin:0;padding:0">{flash.map((a) => <li style="padding:9px 0;border-top:1px solid #EFEDE7"><b class="num" style="color:#C8102E">{fmtTime(a.published)}</b> <a href={articleUrl(a)}>{a.title}</a></li>)}</ul> : <><p style="margin:0 0 12px">מה סגור עכשיו בעיר, עד מתי, ואיך עוקפים.</p><a class="btn out" href="/now/roads/">לחסימות</a></>}</section>
+      <section class="ncard" style="--c:#14693A"><h2><a href="/now/alerts/">פיקוד העורף</a></h2><p style="margin:0 0 12px">מה עושים כשיש התראה בנתניה, וזמן ההגעה למרחב מוגן.</p><a class="btn out" href="/now/alerts/">להנחיות</a></section>
+      <section class="ncard" style="--c:#B86E00"><h2><a href="/now/phones/">טלפונים חיוניים</a></h2><div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:10px"><div class="kv"><span>מוקד עירוני</span><b class="num">{hotline}</b></div><div class="kv"><span>משטרה</span><b class="num">100</b></div><div class="kv"><span>מד״א</span><b class="num">101</b></div><div class="kv"><span>כבאות</span><b class="num">102</b></div></div></section>
     </div>
-    <p class="note" style="margin-top:16px">מצב הים, החסימות ובית המרקחת התורן יתעדכנו כאן בזמן אמת אחרי חיבור המקורות לפני ההשקה.</p>
-  </div></div>
+  </div>
+  </div>
 </Base>

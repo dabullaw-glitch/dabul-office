@@ -1,15 +1,60 @@
 ---
-import Page from '../../components/Page.astro';
+// Search (redesign 28.10.2026): a big search field, results that look like the story rows of the site (colored line, title,
+// summary, date, small picture), and before a search the latest stories and all the sections. Runs in the browser on
+// /search-index.json (stories, sections, directory categories and the "now" pages).
+import Base from '../../layouts/Base.astro';
+import ListHero from '../../components/list/ListHero.astro';
+import ListAside from '../../components/list/ListAside.astro';
+import Card from '../../components/Card.astro';
+import Icon from '../../components/Icon.astro';
+import { ARTICLES, liveSections, sectionUrl } from '../../lib/content';
+const crumbs = [{ name: 'ראשי', href: '/' }, { name: 'חיפוש', href: '/search/' }];
+const latest = ARTICLES.filter((a) => a.section !== 'flash').slice(0, 8);
+const secs = liveSections();
 ---
-<Page title="חיפוש | חדשות נתניה והשרון" h1="חיפוש באתר" description="חיפוש חדשות, שכונות ובעלי מקצוע באתר חדשות נתניה והשרון." path="/search/" noindex>
-  <form class="f" role="search" id="sf"><label>מה מחפשים?<input id="sq" name="q" type="search" autocomplete="off"></label></form>
-  <ul id="sr" style="list-style:none;padding:0;margin-top:18px;display:flex;flex-direction:column;gap:12px"></ul>
+<Base title="חיפוש | חדשות נתניה והשרון" description="חיפוש חדשות, שכונות ובעלי מקצוע באתר חדשות נתניה והשרון." path="/search/" crumbs={crumbs} noindex>
+  <div class="nl-page">
+  <ListHero crumbs={crumbs} h1="חיפוש באתר" intro="ידיעות, רחובות, שכונות, מדורים ובעלי מקצוע בנתניה והשרון." color="#0D1321" photo="city-buildings" icon="search" />
+  <div class="n-wrap n-list">
+    <div>
+      <form class="nl-sf" role="search" id="sf" action="/search/">
+        <label for="sq"><Icon name="search" size={20} sw={2} /><span class="sr">מה מחפשים?</span><input id="sq" name="q" type="search" autocomplete="off" placeholder="מה מחפשים? למשל: פולג, חסימה, מכבי נתניה" enterkeyhint="search"></label>
+        <button class="n-btn ink" type="submit">חיפוש</button>
+      </form>
+      <p class="nl-scount" id="sc" role="status" aria-live="polite"></p>
+      <ol class="nl-sres" id="sr"></ol>
+      <div id="s0">
+        {latest.length > 0 && (
+        <section class="nl-blk" aria-labelledby="lt-h" style="margin-top:32px">
+          <h2 class="n-sh" id="lt-h" style="--c:#C8102E">החדשות האחרונות</h2>
+          <div>{latest.map((a, i) => <Card a={a} row eager={i < 3} />)}</div>
+        </section>)}
+        <section class="nl-blk" aria-labelledby="sc-h">
+          <h2 class="n-sh" id="sc-h">כל המדורים</h2>
+          <div class="nl-chips">{secs.map((s) => <a href={sectionUrl(s.key)} style={`--c:${s.color}`}>{s.name.he}</a>)}<a href="/now/" style="--c:#0D1321">נתניה עכשיו</a><a href="/directory/" style="--c:#0D1321">בעלי מקצוע</a></div>
+        </section>
+      </div>
+    </div>
+    <ListAside />
+  </div>
+  </div>
   <script is:inline>
-  (function(){var q=new URLSearchParams(location.search).get('q')||'';var i=document.getElementById('sq'),r=document.getElementById('sr');i.value=q;var idx=[];
-  function run(){var v=i.value.trim();r.innerHTML='';if(!v)return;var hit=idx.filter(function(x){return (x.t+' '+x.d+' '+x.k).indexOf(v)>=0}).slice(0,30);
-  if(!hit.length){r.innerHTML='<li>לא נמצאו תוצאות.</li>';return}
-  hit.forEach(function(x){var li=document.createElement('li');var a=document.createElement('a');a.href=x.u;a.textContent=x.t;a.style.fontWeight='700';a.style.fontSize='18px';var p=document.createElement('div');p.textContent=x.d;p.style.color='#3B4656';li.appendChild(a);li.appendChild(p);r.appendChild(li)})}
+  (function(){var d=document,i=d.getElementById('sq'),r=d.getElementById('sr'),c=d.getElementById('sc'),z=d.getElementById('s0'),idx=null;
+  var q0=new URLSearchParams(location.search).get('q')||'';i.value=q0;
+  var day=function(iso){try{return new Intl.DateTimeFormat('he-IL',{timeZone:'Asia/Jerusalem',day:'numeric',month:'long'}).format(new Date(iso))}catch(e){return''}};
+  function el(t,cl,tx){var e=d.createElement(t);if(cl)e.className=cl;if(tx!=null)e.textContent=tx;return e}
+  function run(){var v=i.value.trim();r.innerHTML='';c.textContent='';z.hidden=!!v;if(!v||!idx)return;
+   var w=v.toLowerCase().split(/\s+/).filter(Boolean);
+   var hit=idx.map(function(x){var all=(x.t+' '+(x.d||'')+' '+(x.k||'')).toLowerCase(),tt=x.t.toLowerCase();if(!w.every(function(y){return all.indexOf(y)>=0}))return null;
+    return{x:x,s:w.filter(function(y){return tt.indexOf(y)>=0}).length*2+(x.p?1:0)}}).filter(Boolean)
+    .sort(function(a,b){return b.s-a.s||String(b.x.p||'').localeCompare(String(a.x.p||''))}).slice(0,40);
+   c.textContent=hit.length?(hit.length===1?'נמצאה תוצאה אחת':'נמצאו '+hit.length+' תוצאות')+' עבור "'+v+'"':'לא נמצאו תוצאות עבור "'+v+'". נסו מילה אחרת, או שם של שכונה או רחוב.';
+   hit.forEach(function(h){var x=h.x,li=el('li'),a=el('a','n-row'+(x.i?'':' nimg'));a.href=x.u;if(x.c)a.style.setProperty('--c',x.c);
+    var tx=el('span');if(x.s)tx.appendChild(el('span','n-k',x.s));tx.appendChild(el('b',null,x.t));if(x.d)tx.appendChild(el('small','d',x.d));if(x.p)tx.appendChild(el('small','num',day(x.p)));a.appendChild(tx);
+    if(x.i){var ph=el('span','n-ph');ph.setAttribute('aria-hidden','true');var im=el('img');im.src=x.i;im.alt='';im.width=224;im.height=152;im.loading='lazy';ph.appendChild(im);a.appendChild(ph)}
+    li.appendChild(a);r.appendChild(li)})}
   fetch('/search-index.json').then(function(x){return x.json()}).then(function(j){idx=j;run()}).catch(function(){});
-  i.addEventListener('input',run);document.getElementById('sf').addEventListener('submit',function(e){e.preventDefault();run()});})();
+  i.addEventListener('input',run);d.getElementById('sf').addEventListener('submit',function(e){e.preventDefault();var v=i.value.trim();try{history.replaceState(null,'',v?'?q='+encodeURIComponent(v):location.pathname)}catch(x){}run()});
+  if(q0)z.hidden=true;})();
   </script>
-</Page>
+</Base>

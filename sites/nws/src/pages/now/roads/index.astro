@@ -9,14 +9,14 @@ const untilTxt = (c: any) => c.until ? `עד ${c.approx ? 'כ-' : ''}${new Intl.
 const items = all.filter((a) => a.section === 'flash');
 const faq: [string, string][] = [['איפה רואים חסימות בנתניה עכשיו?', 'כאן, ובערוץ הטלגרם של חדשות נתניה והשרון. כל חסימה או עבודה שהעירייה או המשטרה מודיעות עליה עולה כמבזק עם השעה והמקום.']];
 ---
-<NowPage title="חסימות ועבודות כביש בנתניה עכשיו | חדשות נתניה והשרון" h1="חסימות ועבודות כביש" description="חסימות כבישים, עבודות והסדרי תנועה בנתניה: מה סגור עכשיו, עד מתי, ואיך עוקפים. מתעדכן לאורך היום." path="/now/roads/" intro="מה סגור עכשיו בעיר, עד מתי, ואיך עוקפים." color="#9A4A00" img="road" faq={faq}>
+<NowPage icon="road" title="חסימות ועבודות כביש בנתניה עכשיו | חדשות נתניה והשרון" h1="חסימות ועבודות כביש" description="חסימות כבישים, עבודות והסדרי תנועה בנתניה: מה סגור עכשיו, עד מתי, ואיך עוקפים. מתעדכן לאורך היום." path="/now/roads/" intro="מה סגור עכשיו בעיר, עד מתי, ואיך עוקפים." color="#9A4A00" img="road" faq={faq}>
   {closures.length > 0 && <section class="ncard" style="--c:#D9480F;margin-bottom:18px">
     <h2>חסימות ועבודות שפורסמו</h2>
     <div class="cls">{closures.map((a) => <a class="cl" href={articleUrl(a)} data-until={a.closure!.until || undefined}><b>{a.closure!.place}</b><span>{[a.closure!.what, untilTxt(a.closure!)].filter(Boolean).join(' · ')}</span></a>)}</div>
   </section>}
-  <section class="ncard" style="--c:#E07B00">
+  {items.length > 0 && <section class="ncard" style="--c:#E07B00">
     <h2>המבזקים האחרונים</h2>
-    {items.length ? <ul style="list-style:none;margin:0;padding:0">{items.map((a) => <li style="padding:10px 0;border-top:1px solid #EEF1F5"><b style="color:#C8102E">{fmtDate(a.published)}, {fmtTime(a.published)}</b> · <a href={articleUrl(a)}>{a.title}</a></li>)}</ul> : <p class="note">לא פורסמו מבזקים לאחרונה.</p>}
+    {<ul style="list-style:none;margin:0;padding:0">{items.map((a) => <li style="padding:10px 0;border-top:1px solid #EEF1F5"><b style="color:#C8102E">{fmtDate(a.published)}, {fmtTime(a.published)}</b> · <a href={articleUrl(a)}>{a.title}</a></li>)}</ul>}
     <p class="note" style="margin:10px 0 0">מידע רשמי על הסדרי תנועה מתפרסם באתר עיריית נתניה.</p>
-  </section>
+  </section>}
 </NowPage>

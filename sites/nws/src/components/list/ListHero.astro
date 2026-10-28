@@ -1,0 +1,25 @@
+---
+// Header band of section and listing pages (redesign 28.10.2026): a section photo from the free-license library
+// (public/img/stock, labelled "צילום אילוסטרציה"), the breadcrumbs, the section icon and title, the intro, a line of real
+// numbers (stories, last update) and the section color bar. The slot takes extra tiles (sunrise and sunset on /now/).
+import '../../styles/list.css';
+import Icon from '../Icon.astro';
+import { type Lang } from '../../data/site';
+interface Props { lang?: Lang; crumbs: { name: string; href: string }[]; h1: string; intro?: string; color?: string; photo?: string; icon?: string; stats?: string[]; crumbLabel?: string }
+const { lang = 'he', crumbs, h1, intro = '', color = '#C8102E', photo = 'city-buildings', icon, stats = [], crumbLabel } = Astro.props;
+const he = lang === 'he';
+const cap = { he: 'צילום אילוסטרציה', en: 'Illustrative photo', ru: 'Иллюстративное фото', fr: 'Photo d’illustration' }[lang];
+---
+<section class="n-shero nl-hero" style={`--c:${color}`}>
+  <div class="bg" aria-hidden="true"><img src={`/img/stock/${photo}-1600.webp`} srcset={`/img/stock/${photo}-800.webp 800w, /img/stock/${photo}-1600.webp 1600w`} sizes="100vw" alt="" width="1600" height="1067" fetchpriority="high" decoding="async"></div>
+  <div class="sh" aria-hidden="true"></div>
+  <div class="n-wrap">
+    <nav aria-label={crumbLabel || (he ? 'מיקום בדף' : 'Breadcrumbs')}><ol class="n-crumb">{crumbs.map((c, i) => <li>{i < crumbs.length - 1 ? <a href={c.href}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>)}</ol></nav>
+    <div class="top">{icon && <span class="ic" aria-hidden="true"><Icon name={icon} size={26} sw={1.9} /></span>}<h1>{h1}</h1></div>
+    {intro && <p>{intro}</p>}
+    {stats.length > 0 && <div class="stat num">{stats.map((s, i) => <>{i > 0 && <i aria-hidden="true"></i>}<span set:html={s} /></>)}</div>}
+    <slot />
+    <span class="bar" aria-hidden="true"></span>
+  </div>
+  <span class="n-cap" aria-hidden="true">{cap}</span>
+</section>

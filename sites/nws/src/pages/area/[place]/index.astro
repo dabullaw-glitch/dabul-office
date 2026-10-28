@@ -1,11 +1,15 @@
 ---
+// Area page (a Netanya neighborhood or a Sharon locality), redesign 28.10.2026: the photo band, the stories that mention the
+// place (lead, cards, text list), nearby places with news, and the sidebar with the flashes. A page exists only once a story mentions the place.
 import Base from '../../../layouts/Base.astro';
-import Crumbs from '../../../components/Crumbs.astro';
-import Card from '../../../components/Card.astro';
+import ListHero from '../../../components/list/ListHero.astro';
+import StoryList from '../../../components/list/StoryList.astro';
+import ListAside from '../../../components/list/ListAside.astro';
 import { PLACES } from '../../../data/places';
 import { CATEGORIES } from '../../../data/directory';
 import { SITE_URL } from '../../../data/site';
-import { ARTICLES, placesOf, articleUrl } from '../../../lib/content';
+import { SECTION_BY_KEY } from '../../../data/sections';
+import { ARTICLES, placesOf, articleUrl, placeUrl, fmtTime, fmtShort } from '../../../lib/content';
 export function getStaticPaths() {
   return PLACES.map((p) => ({ p, items: ARTICLES.filter((a) => placesOf(a).some((x) => x.slug === p.slug)) }))
     .filter((x) => x.items.length > 0).map(({ p, items }) => ({ params: { place: p.slug }, props: { p, items } }));
@@ -15,14 +19,31 @@ const path = `/area/${p.slug}/`;
 const isN = p.kind === 'neighborhood';
 const h1 = isN ? `חדשות ${p.he}, נתניה` : `חדשות ${p.he}`;
 const crumbs = [{ name: 'ראשי', href: '/' }, { name: isN ? 'שכונות נתניה' : 'השרון', href: isN ? '/netanya/' : '/sharon/' }, { name: p.he, href: path }];
-const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: h1, url: SITE_URL + path, about: { '@type': 'Place', name: isN ? `${p.he}, נתניה` : p.he },
-  mainEntity: { '@type': 'ItemList', itemListElement: items.map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a), name: a.title })) } }];
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: h1, url: SITE_URL + path, inLanguage: 'he', isPartOf: { '@id': SITE_URL + '/#website' }, about: { '@type': 'Place', name: isN ? `${p.he}, נתניה` : p.he },
+  mainEntity: { '@type': 'ItemList', numberOfItems: items.length, itemListElement: items.slice(0, 30).map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a), name: a.title })) } }];
+// other places of the same kind that have news
+const others = PLACES.filter((x) => x.slug !== p.slug && x.kind === p.kind && ARTICLES.some((a) => placesOf(a).some((y) => y.slug === x.slug))).slice(0, 12);
+const ilDay = (iso: string) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date(iso));
+const last = items[0]?.published;
+const lastTxt = last ? (ilDay(last) === ilDay(new Date().toISOString()) ? fmtTime(last) : `${fmtShort(last)}, ${fmtTime(last)}`) : '';
+const secs = [...new Set(items.map((a) => a.section))].length;
+const stats = [items.length === 1 ? '<b>ידיעה אחת</b>' : `<b>${items.length}</b> ידיעות`, ...(secs > 1 ? [`מ־<b>${secs}</b> מדורים`] : []), ...(lastTxt ? [`עודכן <b>${lastTxt}</b>`] : [])];
+const color = isN ? '#1F5FBF' : SECTION_BY_KEY.sharon.color;
 ---
-<Base title={`${h1}: מה קורה ${isN ? 'בשכונה' : 'ביישוב'} | חדשות נתניה והשרון`} description={`כל החדשות על ${p.he}${isN ? ' בנתניה' : ''}: תכנון ובנייה, עירייה, תחבורה, קהילה ואירועים. מתעדכן לאורך היום.`} path={path} crumbs={crumbs} jsonld={jsonld}>
-  <section class="phero" style="--bg:#0B3D6E"><img class="bgi" src="/img/city.svg" alt="" width="1440" height="400">
-    <div class="wrap in" style="padding-bottom:28px"><Crumbs items={crumbs} light /><h1>{h1}</h1><p>כל מה שקורה {isN ? `בשכונת ${p.he}` : `ב${p.he}`}, במקום אחד.</p></div></section>
-  <div class="wrap" style="padding-block:26px 10px">
-    <div class="grid">{items.map((a) => <Card a={a} />)}</div>
-    {isN && <section class="sec"><h2 class="sh" style="--c:#0B5FCC"><span class="bar"></span>בעלי מקצוע ב{p.he}</h2><div class="chips">{CATEGORIES.slice(0, 6).map((c) => <a class="chip" href={`/directory/${c.slug}/`} style={`--c:${c.color}`}><i></i>{c.plural}</a>)}</div></section>}
+<Base title={`${h1}: מה קורה ${isN ? 'בשכונה' : 'ביישוב'} | חדשות נתניה והשרון`} description={`כל החדשות על ${p.he}${isN ? ' בנתניה' : ''}: תכנון ובנייה, עירייה, תחבורה, קהילה ואירועים. מתעדכן לאורך היום.`} path={path} crumbs={crumbs} jsonld={jsonld} current={isN ? '' : 'sharon'} ogImage={`/img/stock/og/${isN ? 'city-buildings' : 'road-aerial'}.jpg`}>
+  <div class="nl-page">
+  <ListHero crumbs={crumbs} h1={h1} intro={`כל מה שקורה ${isN ? `בשכונת ${p.he}` : `ב${p.he}`}, במקום אחד.`} color={color} photo={isN ? 'city-buildings' : 'road-aerial'} icon={isN ? 'home' : 'pin'} stats={stats} />
+  <div class="n-wrap n-list">
+    <div style={`--c:${color}`}>
+      <StoryList items={items} listTitle={`עוד מ${p.he}`} color={color} />
+      {others.length > 0 && (
+      <section class="nl-blk" aria-labelledby="ot-h"><h2 id="ot-h" class="n-sh">{isN ? 'שכונות נוספות בנתניה' : 'יישובים נוספים בשרון'}</h2>
+        <div class="nl-chips">{others.map((x) => <a href={placeUrl(x.slug)}>{x.he}</a>)}</div></section>)}
+      {isN && (
+      <section class="nl-blk" aria-labelledby="pr-h" style="--c:#0D1321"><h2 id="pr-h" class="n-sh">בעלי מקצוע ב{p.he}</h2>
+        <div class="nl-chips">{CATEGORIES.slice(0, 6).map((c) => <a href={`/directory/${c.slug}/`} style={`--c:${c.color}`}>{c.plural}</a>)}</div></section>)}
+    </div>
+    <ListAside exclude={items.map((a) => a.slug)} />
+  </div>
   </div>
 </Base>

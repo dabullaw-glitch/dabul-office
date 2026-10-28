@@ -1,0 +1,53 @@
+---
+// The stories of a listing page (redesign 28.10.2026): a lead story (16:10 photo beside a big title), two cards (3:2) with
+// their summary, a grid of cards (16:10), and the rest as a text list with times. The text list shows 12 at a time with a
+// "more" button (all links are in the page for search engines and for browsers without scripts). Blocks without stories are not shown.
+import '../../styles/list.css';
+import Card from '../Card.astro';
+import { type Lang } from '../../data/site';
+import { SECTION_BY_KEY } from '../../data/sections';
+import { articleUrl, picOf, kickerOf, readMin, fmtTime, fmtShort, fmtDay, type Article } from '../../lib/content';
+interface Props { items: Article[]; lang?: Lang; listTitle?: string; color?: string; grid?: number; perPage?: number }
+const { items, lang = 'he', listTitle, color = '#0D1321', grid = 6, perPage = 12 } = Astro.props;
+const he = lang === 'he';
+const L = {
+  he: { by: 'מערכת NWS', min: 'דק׳ קריאה', more: 'עוד ידיעות', show: 'הצגת עוד ידיעות', ill: 'צילום אילוסטרציה', ai: 'תמונה להמחשה', upd: 'עודכן' },
+  en: { by: 'NWS', min: 'min read', more: 'More stories', show: 'Show more stories', ill: 'Illustrative photo', ai: 'AI illustration', upd: 'Updated' },
+  ru: { by: 'NWS', min: 'мин. чтения', more: 'Другие новости', show: 'Показать ещё', ill: 'Иллюстративное фото', ai: 'Иллюстрация ИИ', upd: 'Обновлено' },
+  fr: { by: 'NWS', min: 'min de lecture', more: 'Autres articles', show: 'Afficher plus', ill: 'Photo d’illustration', ai: 'Illustration IA', upd: 'Mis à jour' },
+}[lang];
+const lead = items[0];
+const duo = items.slice(1, 3);
+const cards = items.slice(3, 3 + grid);
+const rest = items.slice(3 + grid);
+const lp = lead ? picOf(lead) : null;
+const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
+const todayIl = ilDay(new Date());
+const when = (iso: string) => (ilDay(new Date(iso)) === todayIl ? fmtTime(iso) : fmtShort(iso));
+const hot = (iso: string) => Date.now() - Date.parse(iso) < 2 * 3600e3;
+const by = (a: Article) => (a.kind === 'opinion' && a.author ? a.author : L.by);
+---
+{lead && lp && (
+<article class="nl-lead" style={`--c:${SECTION_BY_KEY[lead.section].color}`}>
+  <a class="n-ph" href={articleUrl(lead, lang)} tabindex="-1" aria-hidden="true"><img src={lp.src} srcset={lp.srcset} sizes={lp.srcset ? '(max-width: 760px) 100vw, (max-width: 1100px) 55vw, 520px' : undefined} alt="" width={lp.w} height={lp.h} fetchpriority="high" decoding="async"><span class="n-cap">{lp.ai ? L.ai : L.ill}</span></a>
+  <div class="tx">
+    <span class="n-k">{kickerOf(lead, lang)}</span>
+    <h2><a href={articleUrl(lead, lang)}>{lead.title}</a></h2>
+    {lead.dek && <p>{lead.dek}</p>}
+    <div class="n-meta num"><b>{by(lead)}</b><i aria-hidden="true"></i>{lead.updated && lead.updated !== lead.published ? <span class="n-upd">{L.upd} <time datetime={lead.updated} data-ago>{when(lead.updated)}</time></span> : <time datetime={lead.published} data-ago>{fmtDay(lead.published, lang)}</time>}<i aria-hidden="true"></i><span>{readMin(lead)} {L.min}</span></div>
+  </div>
+</article>)}
+{duo.length > 0 && <div class="n-duo">{duo.map((a) => <Card a={a} lang={lang} dek eager={!he} sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 430px" />)}</div>}
+{cards.length > 0 && <div class="nl-cards">{cards.map((a) => <Card a={a} lang={lang} ratio="16/10" sizes="(max-width: 760px) 112px, (max-width: 1100px) 33vw, 290px" />)}</div>}
+{rest.length > 0 && (
+<section class="nl-blk" aria-labelledby="nl-more-h" style={`--c:${color}`}>
+  <h2 class="n-sh" id="nl-more-h">{listTitle || L.more}</h2>
+  <ol class="nl-tl num" data-more={perPage}>
+    {rest.map((a) => <li class={hot(a.published) ? 'hot' : undefined} style={`--c:${SECTION_BY_KEY[a.section].color}`}><time datetime={a.published}>{when(a.published)}</time><div><a href={articleUrl(a, lang)}>{a.title}</a><small>{kickerOf(a, lang)}</small></div></li>)}
+  </ol>
+  <button class="n-btn line nl-more" type="button" hidden data-more-btn>{L.show}</button>
+</section>)}
+<script is:inline>
+(function(){document.querySelectorAll('ol[data-more]').forEach(function(ol){if(ol.getAttribute('data-done'))return;ol.setAttribute('data-done','1');var n=+ol.getAttribute('data-more')||12,li=[].slice.call(ol.children),b=ol.parentNode.querySelector('[data-more-btn]');if(!b||li.length<=n)return;
+li.slice(n).forEach(function(x){x.hidden=true});b.hidden=false;b.addEventListener('click',function(){var h=li.filter(function(x){return x.hidden});h.slice(0,n).forEach(function(x){x.hidden=false});var f=h[0]&&h[0].querySelector('a');if(f)f.focus();if(h.length<=n)b.hidden=true})})})();
+</script>

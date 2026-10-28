@@ -3,7 +3,10 @@
 // keeps its official source (Netanya municipality pages), or is computed (Shabbat times) or comes from an official live listing
 // (Culture Hall calendar). Nothing is added by hand without a source. It links to every section, the "now" pages, the area pages
 // that have stories, the events calendar and the business directory.
-import Page from '../../components/Page.astro';
+import Base from '../../layouts/Base.astro';
+import ListHero from '../../components/list/ListHero.astro';
+import Card from '../../components/Card.astro';
+import '../../styles/list.css';
 import { SITE_URL } from '../../data/site';
 import { SECTIONS } from '../../data/sections';
 import { PLACES } from '../../data/places';
@@ -32,11 +35,15 @@ const jsonld = [
   { '@context': 'https://schema.org', '@type': 'WebPage', name: 'נתניה: מדריך העיר', url: SITE_URL + '/netanya/', description, about: { '@type': 'City', name: 'נתניה' }, isPartOf: { '@id': SITE_URL + '/#website' } },
   { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
 ];
+const crumbs = [{ name: 'ראשי', href: '/' }, { name: 'נתניה: מדריך העיר', href: '/netanya/' }];
 const src = (u: string | null | undefined, t = 'מקור: עיריית נתניה') => (u ? { u, t } : null);
 const S1 = src(F?.bathingBeaches?.source); const S2 = src(F?.neighborhoods?.source); const S3 = src(F?.municipalHotline?.sources?.[0]);
 ---
-<Page title={title} h1="נתניה: מדריך העיר" description={description} path="/netanya/" intro="החופים, האירועים, השכונות והטלפונים החשובים, במקום אחד. כל עובדה עם קישור למקור." img="beach" color="#0B3D6E" jsonld={jsonld} wide>
-  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px">
+<Base title={title} description={description} path="/netanya/" crumbs={crumbs} jsonld={jsonld} ogImage="/img/stock/og/beach-umbrellas.jpg">
+  <div class="nl-page">
+  <ListHero crumbs={crumbs} h1="נתניה: מדריך העיר" intro="החופים, האירועים, השכונות והטלפונים החשובים, במקום אחד. כל עובדה עם קישור למקור." color="#0B6FA4" photo="beach-umbrellas" icon="pin" />
+  <div class="n-wrap nl-np">
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px">
     <section class="ncard" style="--c:#2B8FD8" aria-labelledby="g-beach">
       <h2 id="g-beach"><a href="/now/beaches/">החופים של נתניה</a></h2>
       {beaches.length > 0 && <ul style="columns:2;column-gap:24px;margin:0;padding-inline-start:18px">{beaches.map((b) => <li style="padding:3px 0">{b}</li>)}</ul>}
@@ -79,7 +86,7 @@ const S1 = src(F?.bathingBeaches?.source); const S2 = src(F?.neighborhoods?.sour
 
   <section class="sec" aria-labelledby="g-new">
     <h2 id="g-new" class="sh" style="--c:#C8102E"><span class="bar"></span>החדשות האחרונות מנתניה והשרון</h2>
-    <ul style="margin:0;padding-inline-start:20px">{latest.map((a) => <li style="padding:4px 0"><a href={articleUrl(a)} style="color:#0B5FCC">{a.title}</a></li>)}</ul>
+    <div class="nl-cards" style="border-top:0;padding-top:0;margin-top:8px">{latest.map((a) => <Card a={a} ratio="16/10" sizes="(max-width: 760px) 112px, 400px" />)}</div>
   </section>
 
   <section class="sec" aria-labelledby="g-biz">
@@ -88,4 +95,6 @@ const S1 = src(F?.bathingBeaches?.source); const S2 = src(F?.neighborhoods?.sour
   </section>
 
   <section class="ncard faq" style="--c:#0B5FCC;margin-top:18px"><h2>שאלות ותשובות</h2>{faq.map(([q, a]) => <details open><summary>{q}</summary><p>{a}</p></details>)}</section>
-</Page>
+  </div>
+  </div>
+</Base>

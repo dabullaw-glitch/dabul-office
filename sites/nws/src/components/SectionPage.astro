@@ -1,85 +1,116 @@
 ---
+// Section page (redesign approved by Yakir 28.10.2026, in the language of Main.dc.html, Kit.dc.html and Mobile.dc.html):
+// the section photo band with its color bar, the lead story, cards and a text list with times, and a sidebar with the live
+// flashes and more stories. /flash/ opens with the official flashes of the last hours (refreshed every minute), /events/ with
+// the events calendar of the culture hall, /sports/ shows the next Maccabi Netanya game and the league table in the sidebar.
+// Real data only: a block without data is not shown.
 import Base from '../layouts/Base.astro';
-import Card from './Card.astro';
-import Crumbs from './Crumbs.astro';
+import ListHero from './list/ListHero.astro';
+import StoryList from './list/StoryList.astro';
+import ListAside from './list/ListAside.astro';
+import '../styles/list.css';
 import { IMG, SITE_URL, LANG_PREFIX, LANGS, type Lang } from '../data/site';
 import { SECTION_BY_KEY, type SectionKey } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
-import { articlesFor, articleUrl, sectionUrl, fmtDate, fmtTime, fmtDay, fmtShort, placesOf, placeUrl, picOf, kickerOf, readMin, FLASHES, CALENDAR, calTime, calVenue } from '../lib/content';
+import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, placesOf, placeUrl, FLASHES, CALENDAR, calTime, calVenue, SPORT, tableAround } from '../lib/content';
 
 interface Props { lang: Lang; k: SectionKey }
 const { lang, k } = Astro.props;
-const s = SECTION_BY_KEY[k]; const u = t(lang); const pre = LANG_PREFIX[lang];
+const s = SECTION_BY_KEY[k]; const u = t(lang); const pre = LANG_PREFIX[lang]; const he = lang === 'he';
 const items = articlesFor(lang).filter((a) => a.section === k);
 const name = s.name[lang];
-const title = lang === 'he' ? `${s.title} | חדשות נתניה והשרון` : `${name}: Netanya & Sharon | NWS`;
-const desc = lang === 'he' ? s.desc : ({ ru: `${name}: последние новости Нетании и Шарона на русском языке, с источниками и полезной информацией для жителей.`, fr: `${name} : les dernières actualités de Netanya et du Sharon en français, avec les sources et des infos pratiques.`, en: `${name}: the latest news from Netanya and the Sharon in English, with sources and practical info for residents.` } as any)[lang];
+const title = he ? `${s.title} | חדשות נתניה והשרון` : `${name}: Netanya & Sharon | NWS`;
+const desc = he ? s.desc : ({ ru: `${name}: последние новости Нетании и Шарона на русском языке, с источниками и полезной информацией для жителей.`, fr: `${name} : les dernières actualités de Netanya et du Sharon en français, avec les sources et des infos pratiques.`, en: `${name}: the latest news from Netanya and the Sharon in English, with sources and practical info for residents.` } as any)[lang];
 const path = sectionUrl(k, lang);
 const alternates = Object.fromEntries(LANGS.map((l) => [l, sectionUrl(k, l)]));
 const crumbs = [{ name: u.home, href: pre + '/' }, { name, href: path }];
-const places = [...new Map(items.flatMap((a) => placesOf(a)).map((p) => [p.slug, p])).values()].slice(0, 10);
+const places = [...new Map(items.flatMap((a) => placesOf(a)).map((p) => [p.slug, p])).values()].slice(0, 12);
 const cats = CATEGORIES.filter((c) => c.sections.includes(k)).slice(0, 6);
-const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name, url: SITE_URL + path, description: desc, inLanguage: lang, isPartOf: { '@id': SITE_URL + '/#website' },
-  mainEntity: { '@type': 'ItemList', itemListElement: items.slice(0, 20).map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a, lang), name: a.title })) } }];
-// 28.10.2026: the flash page lists the official flashes of the last hours; the events page holds the events calendar
-const he = lang === 'he';
+const jsonld: any[] = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name, url: SITE_URL + path, description: desc, inLanguage: lang, isPartOf: { '@id': SITE_URL + '/#website' },
+  mainEntity: { '@type': 'ItemList', numberOfItems: Math.min(items.length, 30), itemListElement: items.slice(0, 30).map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a, lang), name: a.title })) } }];
+// /flash/: the official flashes of the last hours; /events/: the events calendar; /sports/: the league data
 const flashes = he && k === 'flash' ? FLASHES : [];
 const cal = he && k === 'leisure' ? CALENDAR.slice(0, 60) : [];
-const calDays = [...new Map(cal.map((c) => [new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date(c.start)), 0])).keys()];
-const dayName = (ymd: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(ymd + 'T12:00:00Z'));
 const ilDayOf = (iso: string) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date(iso));
+const calDays = [...new Set(cal.map((c) => ilDayOf(c.start)))];
+const dayName = (ymd: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(ymd + 'T12:00:00Z'));
 const todayIl = ilDayOf(new Date().toISOString());
 const ftm = (iso: string) => (ilDayOf(iso) === todayIl ? fmtTime(iso) : fmtShort(iso));
 if (cal.length) jsonld.push(...cal.slice(0, 20).map((c) => ({ '@context': 'https://schema.org', '@type': 'Event', name: c.title, startDate: c.start, eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  eventStatus: 'https://schema.org/EventScheduled', location: { '@type': 'Place', name: c.venue || c.source, address: { '@type': 'PostalAddress', addressLocality: 'נתניה', addressCountry: 'IL' } }, url: c.url, organizer: { '@type': 'Organization', name: c.source } })) as any);
-const first = items[0];
-const fp = first ? picOf(first, IMG) : null;
+  eventStatus: 'https://schema.org/EventScheduled', location: { '@type': 'Place', name: c.venue || c.source, address: { '@type': 'PostalAddress', addressLocality: 'נתניה', addressCountry: 'IL' } }, url: c.url, organizer: { '@type': 'Organization', name: c.source } })));
+const sport = he && k === 'sports';
+const tbl = sport ? tableAround(7) : [];
+const nx = sport ? SPORT.next : null;
+const nxDay = nx ? new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'numeric' }).format(new Date(nx.iso)) : '';
+const initials = (n: string) => n.replace(/״/g, '').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('.');
+const played = SPORT.table.find((r) => r.me)?.played;
+// header numbers: how many stories, and when the newest one was published
+const last = items[0]?.updated && Date.parse(items[0].updated!) > Date.parse(items[0].published) ? items[0].updated! : items[0]?.published;
+const lastTxt = last ? (ilDayOf(last) === todayIl ? fmtTime(last) : `${fmtShort(last)}, ${fmtTime(last)}`) : '';
+const n = items.length;
+const stats = [
+  ...(n ? [he ? (n === 1 ? '<b>ידיעה אחת</b> במדור' : `<b>${n}</b> ידיעות במדור`) : lang === 'ru' ? `<b>${n}</b> материалов` : lang === 'fr' ? `<b>${n}</b> articles` : `<b>${n}</b> ${n === 1 ? 'story' : 'stories'}`] : []),
+  ...(flashes.length ? [`<b>${flashes.length}</b> ${flashes.length === 1 ? 'מבזק רשמי' : 'מבזקים רשמיים'} מהשעות האחרונות`] : []),
+  ...(cal.length ? [`<b>${cal.length}</b> אירועים בלוח`] : []),
+  ...(lastTxt ? [he ? `עודכן <b>${lastTxt}</b>` : `${u.updated} <b>${lastTxt}</b>`] : []),
+];
+const L = {
+  he: { more: `עוד ${name}`, empty: 'הידיעות הראשונות במדור יעלו בקרוב', emptyText: 'בינתיים, הנה המבזקים והחדשות האחרונות מנתניה והשרון.', places: `${name} לפי שכונה ויישוב`, pros: 'בעלי מקצוע שקשורים לנושא' },
+  en: { more: `More ${name}`, empty: 'The first stories of this section are on the way', emptyText: 'Meanwhile, here are the latest updates from Netanya and the Sharon.', places: '', pros: '' },
+  ru: { more: 'Ещё в разделе', empty: 'Первые материалы раздела скоро появятся', emptyText: 'А пока последние новости Нетании и Шарона.', places: '', pros: '' },
+  fr: { more: 'Plus dans la rubrique', empty: 'Les premiers articles de la rubrique arrivent bientôt', emptyText: 'En attendant, voici les dernières nouvelles de Netanya et du Sharon.', places: '', pros: '' },
+}[lang];
 ---
-<Base lang={lang} title={title} description={desc} path={path} alternates={alternates} jsonld={jsonld} crumbs={crumbs} current={k}>
-  <section class="phero" style={`--bg:${s.color}`}>
-    <img class="bgi" src={IMG[s.img].src} alt="" width="1440" height="400">
-    <div class="wrap in">
-      <Crumbs items={crumbs} light label={u.breadcrumbs} />
-      <h1>{lang === 'he' ? s.title.split(':')[0] : name}</h1>
-      <p>{lang === 'he' ? s.intro : desc}</p>
+<Base lang={lang} title={title} description={desc} path={path} alternates={alternates} jsonld={jsonld} crumbs={crumbs} current={k} ogImage={`/img/stock/og/${IMG[s.img]?.name || s.photos[0]}.jpg`}>
+  <div class="nl-page">
+  <ListHero lang={lang} crumbs={crumbs} crumbLabel={u.breadcrumbs} h1={he ? s.title.split(':')[0] : name} intro={he ? s.intro : desc} color={s.color} photo={IMG[s.img]?.name || s.photos[0]} icon={s.key} stats={stats} />
+  <div class="n-wrap n-list">
+    <div style={`--c:${s.color}`}>
+      {he && k === 'flash' && (
+      <section class="n-live nl-ofbox" id="official" aria-labelledby="of-h" style="margin-bottom:36px">
+        <div class="lh"><h2 id="of-h"><span class="n-pulse" aria-hidden="true"></span>מבזקים רשמיים מהשעות האחרונות</h2><span>מתעדכן כל דקה</span></div>
+        <p class="nl-note">מד״א, השירות המטאורולוגי, המשטרה ופיקוד העורף, רק מה שנוגע לנתניה ולשרון.</p>
+        <ol class="nl-of num" data-flist>{flashes.map((f) => <li id={`f${f.id}`}><time datetime={f.at}>{ftm(f.at)}</time><span><b>{f.source}</b> {f.text}{f.url && <> <a href={f.url} rel="noopener nofollow" target="_blank">למקור</a></>}</span></li>)}</ol>
+        <p class="empty" data-fempty hidden={flashes.length > 0}>כרגע אין מבזקים רשמיים מהשעות האחרונות. התרעות פיקוד העורף בזמן אמת מתקבלות באפליקציה ובאתר של פיקוד העורף.</p>
+      </section>)}
+      {cal.length > 0 && (
+      <section id="cal" aria-labelledby="cal-h" style="margin-bottom:40px">
+        <h2 id="cal-h" class="n-sh">לוח האירועים בנתניה</h2>
+        <p class="nl-note">מתוך לוח האירועים הרשמי של היכל התרבות נתניה. מתעדכן כמה פעמים ביום.</p>
+        <div class="nl-cal">{calDays.map((d) => (
+          <div class="n-box"><div class="h"><h3>{dayName(d)}</h3></div>
+            <ul class="num">{cal.filter((c) => ilDayOf(c.start) === d).map((c) => <li><time datetime={c.start}>{calTime(c.start) || 'כל היום'}</time><span><a href={c.url} rel="noopener nofollow" target="_blank">{c.title}</a>{calVenue(c) && <small>{calVenue(c)}</small>}</span></li>)}</ul></div>))}</div>
+      </section>)}
+      {items.length === 0 && <div class="nl-empty"><b>{L.empty}</b>{L.emptyText}</div>}
+      <StoryList items={items} lang={lang} listTitle={L.more} color={s.color} />
+      {he && places.length > 0 && (
+      <section class="nl-blk" aria-labelledby="pl-h"><h2 id="pl-h" class="n-sh">{L.places}</h2>
+        <div class="nl-chips">{places.map((p) => <a href={placeUrl(p.slug)}>{p.he}</a>)}</div></section>)}
+      {he && cats.length > 0 && (
+      <section class="nl-blk" aria-labelledby="ct-h" style="--c:#0D1321"><h2 id="ct-h" class="n-sh">{L.pros}</h2>
+        <div class="nl-chips">{cats.map((c) => <a href={`/directory/${c.slug}/`} style={`--c:${c.color}`}>{c.plural} בנתניה</a>)}</div></section>)}
     </div>
-  </section>
-  <div class="wrap" style="padding-top:28px">
-    {he && k === 'flash' && (
-      <section class="sec flists" id="official" aria-labelledby="of-h" style="padding-top:0">
-        <h2 id="of-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>מבזקים רשמיים מהשעות האחרונות</h2>
-        <p class="note" style="margin:0 0 10px">מד״א, השירות המטאורולוגי, המשטרה ופיקוד העורף, רק מה שנוגע לנתניה ולשרון. מתעדכן כל דקה.</p>
-        <ol class="flist" data-flist>{flashes.map((f) => <li id={`f${f.id}`}><time datetime={f.at}>{ftm(f.at)}</time><span><b>{f.source}</b> {f.text}{f.url && <> <a href={f.url} rel="noopener nofollow" target="_blank">למקור</a></>}</span></li>)}</ol>
-        <p class="note" data-fempty hidden={flashes.length > 0}>כרגע לא פורסמו כאן מבזקים רשמיים מהשעות האחרונות. התרעות פיקוד העורף בזמן אמת מתקבלות באפליקציה ובאתר של פיקוד העורף.</p>
-      </section>)}
-    {cal.length > 0 && (
-      <section class="sec" id="cal" aria-labelledby="cal-h" style="padding-top:0">
-        <h2 id="cal-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>לוח האירועים בנתניה</h2>
-        <p class="note" style="margin:0 0 10px">מתוך לוח האירועים הרשמי של היכל התרבות נתניה. מתעדכן אוטומטית כמה פעמים ביום.</p>
-        <div class="cal">{calDays.map((d) => <div class="cald"><h3>{dayName(d)}</h3><ul>{cal.filter((c) => ilDayOf(c.start) === d).map((c) => <li><time datetime={c.start}>{calTime(c.start) || 'כל היום'}</time><span><a href={c.url} rel="noopener nofollow" target="_blank">{c.title}</a>{calVenue(c) && <small>{calVenue(c)}</small>}</span></li>)}</ul></div>)}</div>
-      </section>)}
-    {items.length === 0 && <p class="note">{lang === 'he' ? 'הכתבות הראשונות במדור יעלו בקרוב.' : u.liveSoon}</p>}
-    {first && (
-      <article class="lead" style={`padding-top:0;--c:${s.color}`}>
-        <div class="main">
-          <a class="im" href={articleUrl(first, lang)} tabindex="-1" aria-hidden="true"><img src={fp!.src} srcset={fp!.srcset} sizes={fp!.srcset ? '(max-width: 900px) 100vw, 760px' : undefined} alt={fp!.ai ? fp!.alt : ''} width={fp!.w} height={fp!.h} fetchpriority="high" decoding="async">{fp!.ai && <span class="ill">{lang === 'he' ? 'תמונה להמחשה' : 'AI illustration'}</span>}</a>
-          <span class="kick" style={`--ci:${s.ink}`}><i></i>{kickerOf(first, lang)}</span>
-          <h2 class="h1"><a href={articleUrl(first, lang)}>{first.title}</a></h2>
-          <p>{first.dek}</p>
-          <div class="meta"><b>{lang === 'he' ? 'מערכת חדשות נתניה והשרון' : u.by}</b><i class="sep" aria-hidden="true"></i><time datetime={first.published} data-ago>{fmtDate(first.published, lang)}, {fmtTime(first.published)}</time><i class="sep" aria-hidden="true"></i><span>{readMin(first)} {lang === 'he' ? 'דק׳ קריאה' : 'min'}</span></div>
+    <ListAside lang={lang} skip={k} flashes={k !== 'flash'}>
+      {nx && (
+      <div class="n-fx">
+        <div class="h"><span>המשחק הבא</span><span>{SPORT.league}{nx.round ? `, מחזור ${nx.round}` : ''}</span></div>
+        <div class="m">
+          <div><div class="n-crest me" aria-hidden="true">מ.נ</div><div class="t">מכבי נתניה</div></div>
+          <div class="vs">נגד</div>
+          <div><div class="n-crest" aria-hidden="true">{initials(nx.opponent)}</div><div class="t">{nx.opponent}</div></div>
         </div>
-        <aside class="latest" style={`background:${s.soft};border-color:${s.soft}`}>
-          <div class="hd2"><h2>{lang === 'he' ? 'עוד במדור' : u.more}</h2></div>
-          <ol>{items.slice(1, 7).map((a) => <li><time datetime={a.published}>{fmtTime(a.published)}</time><a href={articleUrl(a, lang)}>{a.title}</a></li>)}</ol>
-        </aside>
-      </article>)}
-    {items.length > 1 && <section class="sec" aria-label={u.more}><div class="grid lst" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">{items.slice(1).map((a) => <Card a={a} lang={lang} read />)}</div></section>}
-    {lang === 'he' && places.length > 0 && (
-      <section class="sec" aria-labelledby="pl-h"><h2 id="pl-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>{name} לפי שכונה ויישוב</h2>
-        <div class="chips">{places.map((p) => <a class="chip" href={placeUrl(p.slug)} style={`--c:${s.color}`}><i></i>{p.he}</a>)}</div></section>)}
-    {lang === 'he' && cats.length > 0 && (
-      <section class="sec" aria-labelledby="ct-h"><h2 id="ct-h" class="sh" style="--c:#0B5FCC"><span class="bar"></span>בעלי מקצוע שקשורים לנושא</h2>
-        <div class="chips">{cats.map((c) => <a class="chip" href={`/directory/${c.slug}/`} style={`--c:${c.color}`}><i></i>{c.plural} בנתניה</a>)}</div></section>)}
+        <div class="when num"><span>{nx.home ? `משחק בית${nx.venue ? `, ${nx.venue}` : ''}` : 'משחק חוץ'}</span><span>{nxDay}{nx.time ? `, ${nx.time}` : ''}</span></div>
+        {SPORT.last && <div class="lr num">במשחק הקודם: {SPORT.last.my}:{SPORT.last.their} {SPORT.last.home ? 'מול' : 'אצל'} {SPORT.last.opponent}</div>}
+      </div>)}
+      {tbl.length > 0 && (
+      <div class="n-fx">
+        <div class="h"><span>טבלת {SPORT.league}</span><span>{played ? `אחרי ${played} מחזורים` : ''}</span></div>
+        <table class="n-tbl num"><caption class="sr">מכבי נתניה בטבלת {SPORT.league}</caption><thead><tr><th scope="col">#</th><th scope="col">קבוצה</th><th scope="col" class="c">מש׳</th><th scope="col" class="pts">נק׳</th></tr></thead>
+          <tbody>{tbl.map((r) => <tr class={r.me ? 'me' : undefined}><td class="p">{r.pos}</td><td>{r.team}</td><td class="c">{r.played}</td><td class="pts">{r.pts}</td></tr>)}</tbody></table>
+      </div>)}
+      {(tbl.length > 0 || nx) && <p class="n-src" style="margin-top:-16px">נתוני הליגה: <a href={SPORT.sourceUrl} rel="noopener nofollow" target="_blank">{SPORT.source}</a></p>}
+    </ListAside>
+  </div>
   </div>
 </Base>
