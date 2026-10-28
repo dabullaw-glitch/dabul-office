@@ -15,6 +15,8 @@
 // POST {action:'rewrite', ids:[...]} (x-cron-secret): hns-publish sends back a draft that failed the check; it is written again once.
 // 28.10.2026 (home redesign): the answer also gives "kicker" (the short colored line above the title on the site, up to 5 words,
 //   never a media outlet name; dropped when it fails) and "closure" for a road closure story ({place, what, until, approx}).
+// 28.10.2026 (fix): national stories that only "looked" local (a village name that is an everyday word) are closed with no AI
+//   call, and an answer that holds no story is closed once as 'rejected' instead of being paid for again every 10 minutes.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -37,6 +39,14 @@ function toks(s: string) {
 }
 function same(a: Set<string>, b: Set<string>) { let n = 0; for (const x of a) if (b.has(x)) n++; return n >= 3 && n / Math.max(1, Math.min(a.size, b.size)) >= 0.35; }
 const NETANYA_PLACES = new Set(['נתניה', 'לניאדו']);
+// 28.10.2026: locality names that are also everyday words (same list as hns-collect). A group whose only places are such
+// names, from sources that are not local, with no local word in the text, is not local news: closed with no AI call.
+const AMBIG = new Set(['אומץ', 'בחן', 'קדימה', 'אודים', 'המעפיל', 'גאולים', 'תנובות', 'ינוב', 'יכיני', 'עולש', 'אחיטוב', 'בת חן']);
+const CONTEXT_RE = /נתני(?!הו)|השרון|עמק חפר|מושב|קיבוץ|יישוב|המועצה|מועצה אזורית|צורן|כביש (?:2|4|57)(?![0-9])/;
+const notLocal = (items: Any[], places: string[], src: Any) => places.length > 0 && places.every((p) => AMBIG.has(p))
+  && items.every((x) => !src[x.source_id].local_only && !CONTEXT_RE.test(norm(`${x.title} ${x.body || ''}`)));
+// the answer did not hold a story (the writer said it is not local, refused, or returned plain text): a final answer, not a glitch
+class NoStory extends Error {}
 const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
 
 const SYSTEM = `אתה עורך חדשות מקומי באתר "חדשות נתניה והשרון". אתה כותב ידיעה קצרה בעברית פשוטה וברורה, רק מהעובדות שמופיעות במקורות שקיבלת.
@@ -60,6 +70,7 @@ const SYSTEM = `אתה עורך חדשות מקומי באתר "חדשות נת�
 - שדה kicker: שורה קצרה מאוד שמופיעה בצבע מעל הכותרת באתר, עד 5 מילים, עובדה מהידיעה ולא חזרה על הכותרת. למשל "חסימות עד 8 בנובמבר", "שני חשודים נעצרו", "צו בתוקף עד 1.11". בלי שם של כלי תקשורת. אם אין משהו טוב, להשאיר ריק.
 - שדה closure: רק כשהידיעה עוסקת בחסימת כביש, סגירת רחוב או עבודות שמשנות את התנועה: place (איפה, קצר), what (מה בדיוק, משפט קצר), until (תאריך סיום בפורמט YYYY-MM-DD רק אם הוא כתוב במקור או מחושב ישירות ממנו, אחרת ריק), approx (true אם התאריך משוער, למשל "כשבועיים"). אחרת closure=null.
 מדורים אפשריים: flash (מבזקים, חירום, תאונות, משטרה), city (עירייה, תשתיות, חינוך), realestate (תכנון ובנייה, נדל״ן), community (קהילה), sports (ספורט), leisure (תרבות ואירועים), sharon (יישובי השרון שאינם נתניה), tourism (חופים ותיירות).
+אם הידיעה לא עוסקת בנתניה או ביישובי השרון (למשל פוליטיקה ארצית, והשם של יישוב הוא בעצם מילה רגילה), אל תכתוב ידיעה. החזר רק {"skip":true,"reason":"סיבה קצרה"}.
 החזר JSON בלבד, בלי טקסט נוסף, במבנה:
 {"section":"","kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""],"places":[""],"basis":"official","closure":null,"needsCheck":false,"checkReason":""}`;
 
@@ -110,15 +121,18 @@ async function claude(user: string) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: Object.assign({ 'x-api-key': S.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' } as Record<string, string>, S.ANTHROPIC_WORKSPACE_ID ? { 'anthropic-workspace-id': S.ANTHROPIC_WORKSPACE_ID } : {}),
-    body: JSON.stringify({ model: MODEL, max_tokens: 1200, system: SYSTEM, messages: [{ role: 'user', content: user }] }),
+    body: JSON.stringify({ model: MODEL, max_tokens: 2500, system: SYSTEM, messages: [{ role: 'user', content: user }] }),
     signal: AbortSignal.timeout(90000),
   });
   const j = await r.json();
   if (!r.ok) throw new Error(`anthropic ${r.status}: ${JSON.stringify(j).slice(0, 200)}`);
   const text = (j.content || []).filter((c: Any) => c.type === 'text').map((c: Any) => c.text).join('');
-  const m = text.match(/\{[\s\S]*\}/);
-  if (!m) throw new Error('no json in answer');
-  return { out: JSON.parse(m[0]), usage: j.usage };
+  const m = text.replace(/```(?:json)?/g, '').match(/\{[\s\S]*\}/);
+  if (!m) throw new NoStory(`no json in answer${j.stop_reason === 'max_tokens' ? ' (cut)' : ''}: ${text.replace(/\s+/g, ' ').slice(0, 160)}`);
+  let out: Any;
+  try { out = JSON.parse(m[0]); } catch { throw new NoStory(`bad json in answer${j.stop_reason === 'max_tokens' ? ' (cut)' : ''}`); }
+  if (out && out.skip) throw new NoStory(`not a local story: ${String(out.reason || '').slice(0, 160)}`);
+  return { out, usage: j.usage };
 }
 
 const clean = (s: string) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s*–\s*/g, ' - ').trim();
@@ -166,7 +180,7 @@ async function rewrite(ids: number[]) {
 
 async function tick() {
   const since = new Date(Date.now() - 12 * 3600e3).toISOString();
-  const { data: srcs } = await sb.from('hns_sources').select('id,name_he,role,trust');
+  const { data: srcs } = await sb.from('hns_sources').select('id,name_he,role,trust,local_only');
   const src = Object.fromEntries((srcs || []).map((s: Any) => [s.id, s]));
   // new local items, not yet in a story, from our sources (never the competitor), not the first backfill
   const { data: items } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,topic,sensitivity,urgent')
@@ -215,6 +229,13 @@ async function tick() {
       res.push({ story: st?.id, tip: true });
       continue;
     }
+    // closed as not local, without spending a call, and the items are tied to it so they are never picked up again
+    const close = async (note: string, model: string | null) => {
+      const { data: st } = await sb.from('hns_stories').insert({ ...base, title: g.items[0].title, state: 'rejected', notes: note, model }).select('id').single();
+      if (st) await sb.from('hns_items').update({ cluster_id: st.id }).in('id', ids);
+      return st?.id;
+    };
+    if (notLocal(g.items, places, src)) { res.push({ story: await close('לא מקומי: שם היישוב הוא מילה רגילה בטקסט', null), notLocal: true }); continue; }
     if (budget <= 0) { res.push({ skipped: 'daily budget', ids }); continue; } // left for tomorrow's budget or a manual run
     budget--;
     const user = promptFor(g.items, src, places);
@@ -234,7 +255,12 @@ async function tick() {
       }).select('id').single();
       if (st) await sb.from('hns_items').update({ cluster_id: st.id }).in('id', ids);
       res.push({ story: st?.id, state });
-    } catch (e) { res.push({ error: String((e as Error).message || e), ids }); }
+    } catch (e) {
+      const msg = String((e as Error).message || e);
+      // a final answer with no story is closed once (and counts in the daily budget); a network or service error is tried again next round
+      if (e instanceof NoStory) res.push({ story: await close(`הכתיבה לא החזירה ידיעה: ${msg}`.slice(0, 300), MODEL), closed: msg });
+      else res.push({ error: msg, ids });
+    }
   }
   return { fresh: fresh.length, groups: groups.length, res };
 }

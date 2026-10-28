@@ -65,12 +65,22 @@ const termRe = (t: string) => new RegExp(`(?<![א-ת])(?:[ובכלמשה]{0,3})$
 const RE_N = NETANYA.map((t) => [t, termRe(t)] as const);
 const RE_L = LOCALITIES.map((t) => [t, termRe(t)] as const);
 const RE_H = HOODS.map((t) => [t, termRe(t)] as const);
+// 28.10.2026: some locality names are also everyday words ("אומץ" courage, "קדימה" forward, "המבחן" read as בחן).
+// National stories were taken as local because of them. Such a name counts only on a local source, next to Netanya,
+// next to another locality, or with a local word (מושב, קיבוץ, השרון, עמק חפר...).
+const AMBIG = new Set(['אומץ', 'בחן', 'קדימה', 'אודים', 'המעפיל', 'גאולים', 'תנובות', 'ינוב', 'יכיני', 'עולש', 'אחיטוב', 'בת חן']);
+const CONTEXT_RE = /נתני(?!הו)|השרון|עמק חפר|מושב|קיבוץ|יישוב|המועצה|מועצה אזורית|צורן|כביש (?:2|4|57)(?![0-9])/;
 function placesIn(text: string, localOnly: boolean, extra: string[]) {
   const t = norm(text);
   const found = new Set<string>();
   let netanya = false;
   for (const [n, re] of RE_N) if (re.test(t)) { netanya = true; found.add('נתניה'); if (n === 'לניאדו') found.add('לניאדו'); }
-  for (const [n, re] of RE_L) if (re.test(t)) found.add(n.replace('כפר הראה', 'כפר הרא"ה').replace('פרדסייה', 'פרדסיה'));
+  const weak: string[] = [];
+  for (const [n, re] of RE_L) if (re.test(t)) {
+    const name = n.replace('כפר הראה', 'כפר הרא"ה').replace('פרדסייה', 'פרדסיה');
+    if (AMBIG.has(n)) weak.push(name); else found.add(name);
+  }
+  if (weak.length && (localOnly || netanya || found.size > 0 || CONTEXT_RE.test(t))) for (const w of weak) found.add(w);
   // neighborhood names are common words, so they count only next to "נתניה" or on a local source
   if (netanya || localOnly) for (const [n, re] of RE_H) if (re.test(t)) found.add(n.replace('קרית', 'קריית'));
   let extraHit = false;
