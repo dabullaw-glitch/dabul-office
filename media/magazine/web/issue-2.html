@@ -1,0 +1,123 @@
+<style>
+.dmag{--ink:#141414;--g1:#E7CD96;--g2:#C5A25A;--g3:#A88A4C;--bg:#F8F8FD;--mut:#54595F;--line:#E7E7F1;
+ color:var(--ink);font-family:inherit;font-size:17px;line-height:1.7;max-width:1192px;margin:0 auto;padding:24px 16px 64px}
+.dmag *{box-sizing:border-box}
+.dmag h1,.dmag h2,.dmag h3{margin:0;font-weight:800;color:inherit;text-wrap:balance}
+.dmag a{text-decoration:none}
+.dmag .hero{position:relative;overflow:hidden;border-radius:22px;background:radial-gradient(120% 140% at 85% 0%,#2a2620 0%,#141414 50%,#0B0B0B 100%);color:#fff;padding:52px 48px 56px}
+.dmag .hero:before{content:"";position:absolute;inset:0;background:var(--heroimg) center 62%/cover no-repeat;opacity:.34;filter:grayscale(.2)}
+.dmag .hero>*{position:relative}
+.dmag .kick{color:var(--g2);font-weight:700;letter-spacing:.06em;font-size:15px;display:flex;align-items:center;gap:12px}
+.dmag .kick:after{content:"";width:110px;height:2px;background:linear-gradient(to left,var(--g2),transparent)}
+.dmag .hero h1{font-size:clamp(40px,6vw,72px);line-height:1.1;margin:12px 0 14px;color:var(--g1)}
+.dmag .hero p{font-size:clamp(17px,2vw,21px);line-height:1.6;max-width:720px;color:#DCE2EC;margin:0}
+.dmag .badges{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.dmag .badge{border:1.5px solid rgba(231,205,150,.6);color:#fff;border-radius:40px;padding:7px 16px;font-size:15px;font-weight:500}
+.dmag .badge:hover{background:rgba(231,205,150,.12)}
+.dmag .st{display:flex;align-items:center;gap:14px;font-size:15px;font-weight:800;color:var(--g3);letter-spacing:.06em;margin:52px 0 18px}
+.dmag .st:after{content:"";flex:1;height:1px;background:var(--line)}
+.dmag .latest{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:48px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:32px;box-shadow:0 10px 30px rgba(20,20,20,.06)}
+.dmag .cover{position:relative;display:block}
+.dmag .cover img{width:100%;height:auto;border-radius:8px;display:block;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.dmag .new{position:absolute;top:-12px;right:-12px;background:var(--g1);color:var(--ink);font-weight:800;font-size:14px;border-radius:30px;padding:5px 14px}
+.dmag .meta{font-size:15px;color:var(--mut);font-weight:500}
+.dmag .latest h2{font-size:clamp(26px,3.2vw,40px);line-height:1.2;margin:8px 0 16px}
+.dmag ul.heads{list-style:none;display:grid;gap:10px;margin:0 0 26px;padding:0}
+.dmag ul.heads li{font-size:18px;display:flex;gap:12px;align-items:baseline}
+.dmag ul.heads li:before{content:"";width:9px;height:9px;background:var(--g2);transform:rotate(45deg);flex:none;margin-top:8px}
+.dmag .btns{display:flex;gap:10px;flex-wrap:wrap}
+.dmag .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:8px;padding:12px 22px;font-weight:700;font-size:16px;border:1.5px solid var(--ink)}
+.dmag .btn.pri{background:var(--ink);color:var(--g1)}
+.dmag .btn.sec{color:var(--ink);background:#fff}
+.dmag .btn.sm{padding:8px 14px;font-size:14.5px}
+.dmag .inside{margin-top:36px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px 32px}
+.dmag .inside h2{font-size:26px;margin-bottom:4px}
+.dmag .inside .sub{color:var(--mut);font-size:15px;margin:0 0 14px}
+.dmag .story{display:grid;grid-template-columns:44px minmax(0,1fr);gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.dmag .story .n{width:40px;height:40px;border-radius:50%;background:var(--ink);color:var(--g1);display:flex;align-items:center;justify-content:center;font-weight:800}
+.dmag .story h3{font-size:19px;margin-bottom:4px;line-height:1.4}
+.dmag .story p{font-size:16px;line-height:1.65;color:#3a3f45;margin:0}
+.dmag .story p b{color:var(--ink)}
+.dmag .author{margin-top:36px;display:flex;gap:22px;align-items:center;background:#fff;border:1px solid var(--line);border-right:4px solid var(--g2);border-radius:16px;padding:24px 28px}
+.dmag .author img{width:96px!important;height:96px!important;border-radius:50%;object-fit:cover;flex:none}
+.dmag .author b{font-size:20px;display:block}
+.dmag .author .role{color:var(--g3);font-weight:700;font-size:15px;margin:2px 0 6px}
+.dmag .author p{font-size:15.5px;color:#3a3f45;line-height:1.6;margin:0}
+.dmag .author .upd{font-size:13.5px;color:var(--mut);margin-top:6px}
+.dmag .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.dmag .card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.dmag .card img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;display:block}
+.dmag .card .b{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.dmag .card .no{font-size:14px;color:var(--g3);font-weight:800}
+.dmag .card .dt{align-self:flex-start;margin-top:-4px;font-size:13.5px;color:var(--mut);font-weight:500;white-space:nowrap;unicode-bidi:isolate}
+.dmag .meta .dt{white-space:nowrap;unicode-bidi:isolate}
+.dmag .card h3{font-size:19px;line-height:1.35}
+.dmag .card p{font-size:15px;color:var(--mut);line-height:1.55;flex:1;margin:0 0 8px}
+.dmag .cta{margin-top:52px;background:var(--ink);color:#fff;border-radius:16px;padding:30px 36px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.dmag .cta b{font-size:23px;display:block}
+.dmag .cta span{display:block;color:#C9D1DD;font-size:16.5px;margin-top:4px}
+.dmag .cta .btn{background:var(--g1);color:var(--ink);border-color:var(--g1)}
+.dmag .disc{font-size:14px;color:var(--mut);margin-top:18px}
+.dmag .story h3 a{color:inherit}
+.dmag .srcname{font-size:14px;color:var(--mut);margin-top:6px}
+.dmag .more{display:inline-block;margin-top:8px;font-weight:700;color:var(--g3);font-size:15px}
+.dmag .toc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 28px;margin-top:28px}
+.dmag .toc b{display:block;font-size:17px;margin-bottom:8px}
+.dmag .toc ol{margin:0;padding:0 22px 0 0;display:grid;gap:6px}
+.dmag .toc a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--g2);text-underline-offset:3px}
+.dmag .art{margin-top:28px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px 32px 28px}
+.dmag .art section{padding-top:26px;scroll-margin-top:110px}
+.dmag .art section+section{border-top:1px solid var(--line);margin-top:22px}
+.dmag .art h2{font-size:clamp(22px,2.6vw,28px);line-height:1.3;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
+.dmag .art h2 .n{flex:none;width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--g1);display:inline-flex;align-items:center;justify-content:center;font-size:16px;margin-top:2px}
+.dmag .art p{margin:0 0 12px;font-size:17px;line-height:1.8;color:#2b2f34}
+.dmag .art p a{color:var(--g3);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.dmag .means{background:var(--bg);border-right:4px solid var(--g2);border-radius:10px;padding:14px 18px;font-size:16.5px;line-height:1.7}
+.dmag .means b{color:var(--g3)}
+.dmag .faq{margin-top:28px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px 32px}
+.dmag .faq h2{font-size:24px;margin-bottom:8px}
+.dmag .faq h3{font-size:18px;margin:16px 0 4px}
+.dmag .faq p{margin:0;font-size:16.5px;color:#3a3f45}
+.dmag .pn{display:flex;justify-content:space-between;gap:12px;margin-top:28px;flex-wrap:wrap}
+.dmag .crumbs{font-size:14px;color:#C9D1DD;margin-bottom:6px}
+.dmag .crumbs a{color:var(--g1)}
+.dmag .hero.small h1{font-size:clamp(30px,4.4vw,52px)}
+@media (max-width:767px){
+ .dmag .art{padding:4px 18px 20px}
+ .dmag .art p{font-size:16px}
+ .dmag .toc,.dmag .faq{padding:18px}
+}
+@media (max-width:767px){
+ .dmag{padding:12px 12px 48px}
+ .dmag .hero{padding:40px 20px 44px;border-radius:0;width:100vw;max-width:100vw;margin:-12px calc(50% - 50vw) 0}
+ .dmag .latest{grid-template-columns:1fr;gap:24px;padding:20px}
+ .dmag .cover{width:78%;margin:0 auto}
+ .dmag ul.heads li{font-size:16.5px}
+ .dmag .latest .btn{flex:1}
+ .dmag .inside{padding:20px}
+ .dmag .story{grid-template-columns:34px minmax(0,1fr);gap:10px}
+ .dmag .story .n{width:32px;height:32px;font-size:14px}
+ .dmag .story p{font-size:15px}
+ .dmag .author{flex-direction:column;text-align:center;padding:20px}
+ .dmag .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .dmag .card .b{padding:12px}
+ .dmag .card h3{font-size:15.5px}
+ .dmag .card p{display:none}
+ .dmag .card .btns{flex-direction:column}
+ .dmag .cta{padding:22px}
+ .dmag .cta .btn{width:100%}
+}
+</style>
+<div class="dmag" style="--heroimg:url(https://dabullaw.co.il/wp-content/uploads/2026/10/magazine-hero-buildings.jpg)">
+<header class="hero small"><div class="crumbs"><a href="https://dabullaw.co.il/magazine/">מגזין הנדל״ן</a> · גיליון #2 · <span dir="ltr" style="unicode-bidi:isolate">24-28.10.2026</span></div><h1>מגזין הנדל״ן, גיליון 2: הקבלן איחר 13 חודשים, והקונה יקבל 107,925 ש״ח</h1>
+<p>קונה שקיבל דירה באיחור של 13 חודשים יקבל 107,925 ש״ח, הורים עוזרים לילדים לקנות דירה ושואלים איך לעשות את זה נכון, שוכר בבניין בשיפוץ קיבל אישור לבטל את החוזה, ארבעה דיירים שסירבו לפינוי בינוי חויבו לחתום, והזיהום בשדה דב מתרחב. אלה החדשות של השבוע 24 עד 28 באוקטובר 2026, ומה הן אומרות לכם.</p>
+<div class="badges"><a class="badge" href="https://dabullaw.co.il/wp-content/uploads/2026/10/real-estate-magazine-2.pdf" target="_blank" rel="noopener">צפייה במגזין המלא</a><a class="badge" href="https://dabullaw.co.il/wp-content/uploads/2026/10/real-estate-magazine-2.pdf" download>הורדה כקובץ PDF</a><a class="badge" href="https://dabullaw.co.il/magazine/#archive">כל הגיליונות</a></div></header>
+<nav class="toc" aria-label="תוכן הגיליון"><b>בגיליון הזה</b><ol><li><a href="#s1">איחור של 13 חודשים במסירה: 107,925 ש״ח לקונה</a></li><li><a href="#s2">ההורים עוזרים לקנות דירה: מתנה, הלוואה או ערבות</a></li><li><a href="#s3">שכירות בבניין בשיפוץ: מתי מותר לבטל את החוזה</a></li><li><a href="#s4">ארבעה סירבו לפינוי בינוי, ובית המשפט חייב אותם לחתום</a></li><li><a href="#s5">הזיהום בשדה דב נמצא גם באזורים שלא סומנו כחשודים</a></li></ol></nav>
+<article class="art"><section id="s1"><h2><span class="n">1</span><span>איחור של 13 חודשים במסירה: 107,925 ש״ח לקונה</span></h2><p>הדירה בפרויקט באריאל הייתה אמורה להימסר עד 30.6.2021, והקונה קיבל את המפתח רק ב־1.8.2022, כ־13 חודשים אחרי המועד. בית משפט השלום בתל אביב קבע שהחברה היזמית תשלם לו 107,925 ש״ח, ועוד הצמדה וריבית מיום המסירה, וגם 20,000 ש״ח הוצאות.</p><p>החברה טענה שסוכם בעל פה עם אבי הקונה לדחות את המסירה בשנה, בגלל עיכוב בהיתר. בית המשפט דחה את הטענה: לא הוצג שום מסמך, החוזה דרש שכל שינוי ייעשה בכתב, וההיתר בכלל ניתן בזמן. הפיצוי חושב לפי <a href="https://dabullaw.co.il/%d7%90%d7%99%d7%97%d7%95%d7%a8-%d7%91%d7%9e%d7%a1%d7%99%d7%a8%d7%aa-%d7%93%d7%99%d7%a8%d7%94-%d7%9e%d7%a7%d7%91%d7%9c%d7%9f/">חוק המכר</a> בנוסח שחל על העסקה: פי 1.5 משכר הדירה על כל אחד מ־8 החודשים הראשונים, ופי 1.25 על כל חודש נוסף.</p><p>מי שהקבלן מאחר לו: לשמור כל מכתב, לא להסכים לדחייה בעל פה, ולא לחתום על ויתור לפני שבודקים. כדי לקבל הערכה ראשונה של הסכום אפשר להיעזר ב<a href="https://dabullaw.co.il/calculators/late-delivery/">מחשבון הפיצוי על איחור במסירה</a>.</p><div class="means"><b>מה זה אומר לכם:</b> הפיצוי על איחור קבוע בחוק המכר. כל שינוי במועד המסירה צריך להיות בכתב, ולא כדאי להסכים לדחייה בשיחה.</div><div class="srcname">מקור: ביזפורטל</div></section><section id="s2"><h2><span class="n">2</span><span>ההורים עוזרים לקנות דירה: מתנה, הלוואה או ערבות</span></h2><p>בדירה ראשונה המימון המקובל הוא עד כ־75% משווי הדירה, ולכן צריך להביא כ־25% מהכיס. בדירה של 2 מיליון ש״ח מדובר בכ־500,000 ש״ח, ועוד מס רכישה, שמאי ועורך דין. לפי הכתבה, זוגות צעירים רבים סוגרים עסקה רק אחרי שההורים עוזרים. כמה הון עצמי צריך במקרה שלכם אפשר לבדוק ב<a href="https://dabullaw.co.il/calculators/equity/">מחשבון הון עצמי ומשכנתא</a>.</p><p>יש שלוש דרכים עיקריות לעזור. מתנה מגדילה את ההון העצמי ומקטינה את המשכנתא, אבל צריך לתעד אותה בבירור מול הבנק ורשות המסים, כדי שלא תיראה כהלוואה. הלוואה בתוך המשפחה גמישה יותר מהלוואה מהבנק, אבל היא חוב לכל דבר. ערבות להורים יכולה לעזור לקבל משכנתא גדולה יותר, אבל ההורה הערב אחראי לחוב אם הילדים לא משלמים.</p><p>כדאי לסכם מראש בהסכם כתוב: האם זו מתנה או הלוואה, מה קורה אם בני הזוג נפרדים, ומה קורה אם יש עוד ילדים במשפחה. כשמעבירים כסף או נכס בין בני משפחה יש גם שאלות של מס, שמוסברות במדריך <a href="https://dabullaw.co.il/%d7%94%d7%a2%d7%91%d7%a8%d7%94-%d7%9c%d7%9c%d7%90-%d7%aa%d7%9e%d7%95%d7%a8%d7%94-%d7%a2%d7%a1%d7%a7%d7%aa-%d7%9e%d7%aa%d7%a0%d7%94-%d7%91%d7%9e%d7%a9%d7%a4%d7%97%d7%94-%d7%94%d7%9e%d7%93%d7%a8/">העברה ללא תמורה במשפחה</a>.</p><div class="means"><b>מה זה אומר לכם:</b> מתנה צריך לתעד בכתב. הורה ערב אחראי לחוב אם הילדים לא משלמים. כדאי לסכם הכול מראש בהסכם כתוב בתוך המשפחה.</div><div class="srcname">מקור: ביזפורטל</div></section><section id="s3"><h2><span class="n">3</span><span>שכירות בבניין בשיפוץ: מתי מותר לבטל את החוזה</span></h2><p>שוכר שכר דירה של שלושה וחצי חדרים בבניין שעובר תמ״א 38. הוא ידע על העבודות, וזה גם נכתב בחוזה. אבל מיד בהתחלה מצא עובש וטיח מתקלף בתקרת המקלחת, חלון שבור ותריסים פגועים, ואחר כך פועלים קדחו בתוך הדירה והתקינו קורות תמיכה בשני חדרים. הוא ביקש לבטל את החוזה.</p><p>בית המשפט לתביעות קטנות בראשון לציון קבע שלדעת על העבודות זה לא להסכים לכל הפרעה. עבודות בתוך חדרי המגורים בתחילת השכירות, יחד עם תריסים שלא תוקנו, הן הפרה יסודית. המשכירים יחזירו לשוכר 5,980 ש״ח: שכר דירה של חודש, הובלה, מכתב של עורך דין והוצאות.</p><p>שוכרים בבניין שבו יש עבודות: כדאי לכתוב בחוזה מה מותר לעשות בתוך הדירה, מתי ולכמה זמן, ומה קורה אם זה חורג. משכירים: לתקן ליקויים מהר ולתעד כל תיקון. הסעיפים החשובים מפורטים ב<a href="https://dabullaw.co.il/%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%94%d7%9e%d7%9c%d7%90-%d7%9c%d7%94%d7%a1%d7%9b%d7%9d-%d7%a9%d7%9b%d7%99%d7%a8%d7%95%d7%aa/">מדריך להסכם שכירות</a>.</p><div class="means"><b>מה זה אומר לכם:</b> לכתוב בחוזה מה מותר לעשות בתוך הדירה ומתי. הסכמה כללית לעבודות היא לא הסכמה לכל הפרעה.</div><div class="srcname">מקור: ביזפורטל</div></section><section id="s4"><h2><span class="n">4</span><span>ארבעה סירבו לפינוי בינוי, ובית המשפט חייב אותם לחתום</span></h2><p>ברחוב המאבק בגבעתיים מתוכנן פרויקט פינוי בינוי: 32 הדירות הקיימות ייהרסו, ובמקומן ייבנה מגדל של כ־20 קומות עם 92 דירות. בעלי 28 דירות חתמו, וארבעה סירבו. בית המשפט המחוזי בתל אביב קבע שהסירוב לא סביר, וחייב אותם לחתום תוך 30 יום. אם לא יחתמו, עורכי דין שמינה בית המשפט יחתמו במקומם.</p><p>הסרבנים טענו שהדירות שלהם גדולות יותר ממה שנכתב בהסכם, ושמגיעות להם זכויות בנייה נוספות. לפי השמאי שמינה בית המשפט, בעלי הדירות הקטנות מקבלים תוספת של כ־10 מ״ר, ומי שהרחיב בעבר מקבל כ־1.7 מ״ר בלבד. בית המשפט קבע ששוויון לא אומר תמורה זהה לכולם, ושכל דירה נבחנת לפי הנתונים שלה. הארבעה ישלמו 40,000 ש״ח הוצאות.</p><p>מי שחושב שההצעה לא הוגנת: כדאי להעלות את הטענה מוקדם, עם חוות דעת של שמאי ודרך עורך הדין של הדיירים. סירוב בלי סיבה סבירה יכול להסתיים בחובה לחתום ובתשלום הוצאות. מה הדין קובע לגבי סירוב מוסבר במדריך <a href="https://dabullaw.co.il/%d7%94%d7%93%d7%99%d7%99%d7%a8-%d7%94%d7%a1%d7%a8%d7%91%d7%9f-%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%94%d7%9e%d7%a9%d7%a4%d7%98%d7%99-%d7%94%d7%9e%d7%9c%d7%90-%d7%9c%d7%94%d7%aa%d7%9e%d7%95%d7%93/">הדייר הסרבן</a>.</p><div class="means"><b>מה זה אומר לכם:</b> סירוב לחתום הוא לא מיקוח בלי סיכון. טענה על התמורה כדאי להעלות מוקדם, עם שמאי ודרך עורך הדין של הדיירים.</div><div class="srcname">מקור: ביזפורטל</div></section><section id="s5"><h2><span class="n">5</span><span>הזיהום בשדה דב נמצא גם באזורים שלא סומנו כחשודים</span></h2><p>לפי סקרי קרקע שפורסמו באתר המשרד להגנת הסביבה, באזור 303 בשדה דב נמצא חומר מזהם עד פי 600 מהסף המותר, בכל הקידוחים שנבדקו. באזור 301 החריגה הגיעה עד פי 100, ב־22 מתוך 23 קידוחים.</p><p>החדש הוא שהזיהום נמצא גם באזורים שלא סומנו קודם כחשודים: עד פי 25 באזור 2270, עד פי 15 באזור 2255 וכפי 10 באזור 2206. המשרד אישר את הממצאים והורה להרחיב את הבדיקות, ואמר שכל מגרש ייבחן בנפרד.</p><p>בשכונה החדשה מתוכננות כ־16,000 דירות, וקרקע לכ־7,000 מהן כבר נמכרה במכרזים. מי שקנה דירה בפרויקט שם, או שוקל לקנות: לשאול את היזם מה מצב בדיקות הקרקע במגרש, ולבדוק מה החוזה אומר על עיכוב במסירה.</p><div class="means"><b>מה זה אומר לכם:</b> מי שקנה או שוקל לקנות שם: לשאול את היזם מה מצב בדיקות הקרקע במגרש, ולבדוק בחוזה מה קורה אם יש עיכוב.</div><div class="srcname">מקור: כלכליסט</div></section></article>
+<section class="faq"><h2>שאלות קצרות על הגיליון</h2><h3>כמה פיצוי מקבלים על איחור במסירת דירה מקבלן?</h3><p>זה תלוי בנוסח חוק המכר שחל על החוזה ובשכר הדירה של דירה דומה. בפסק הדין מאריאל חושב פיצוי של פי 1.5 משכר הדירה לכל אחד מ־8 החודשים הראשונים ופי 1.25 לכל חודש נוסף, ויצא 107,925 ש״ח.</p><h3>אפשר לבטל חוזה שכירות בבניין שעובר תמ״א 38?</h3><p>במקרה שנדון השבוע כן: עבודות בתוך חדרי הדירה בתחילת השכירות, יחד עם ליקויים שלא תוקנו, נחשבו הפרה יסודית. ידיעה כללית על העבודות היא לא הסכמה לכל הפרעה.</p><h3>מה קורה לדייר שמסרב לחתום על פינוי בינוי?</h3><p>אם בית המשפט קובע שהסירוב לא סביר, הוא יכול לחייב את הדייר לחתום ולשלם הוצאות. בגבעתיים חויבו ארבעה דיירים לחתום תוך 30 יום ולשלם 40,000 ש״ח הוצאות.</p></section>
+<aside class="author"><img src="https://dabullaw.co.il/wp-content/uploads/2026/10/magazine-author-yakir.jpg" alt="עו״ד יקיר דבול" width="96" height="96" loading="lazy"><div><b>עו״ד יקיר דבול</b><div class="role">יקיר דבול - משרד עורכי דין</div>
+<p>מלווה יותר מ־100 עסקאות נדל״ן בשנה בשרון. חבר בחמש ועדות של לשכת עורכי הדין, מחוז מרכז, ובהן ועדת התחדשות עירונית וועדת מקרקעין. התראיין בחדשות 13, ישראל היום, וואלה נדל״ן וביזפורטל.</p><div class="upd">עודכן לאחרונה: 30.10.2026</div></div></aside>
+<div class="pn"><a class="btn sec" href="https://dabullaw.co.il/magazine/issue-1/">→ גיליון #1</a><a class="btn pri" href="https://dabullaw.co.il/magazine/#archive">כל הגיליונות</a></div>
+<div class="cta"><div><b>יש לכם שאלה על עסקה שראיתם במגזין?</b><span>השאירו פרטים ונחזור אליכם.</span></div><a class="btn" href="https://dabullaw.co.il/%d7%a6%d7%a8%d7%95-%d7%a7%d7%a9%d7%a8/">השארת פרטים</a></div>
+<p class="disc">המידע במגזין כללי ואינו ייעוץ משפטי. לפני החלטה בעסקה, כדאי להתייעץ עם עורך דין.</p></div>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "NewsArticle", "@id": "https://dabullaw.co.il/magazine/issue-2/#article", "headline": "מגזין הנדל״ן, גיליון 2: הקבלן איחר 13 חודשים, והקונה יקבל 107,925 ש״ח", "description": "החדשות של 24-28.10.2026 בשפה פשוטה: 107,925 ש״ח פיצוי על איחור, עזרה מההורים בקניית דירה, שכירות בבניין בשיפוץ ודיירים סרבנים.", "inLanguage": "he", "datePublished": "2026-10-30", "dateModified": "2026-10-30", "image": "https://dabullaw.co.il/wp-content/uploads/2026/10/real-estate-magazine-2-cover.jpg", "url": "https://dabullaw.co.il/magazine/issue-2/", "mainEntityOfPage": "https://dabullaw.co.il/magazine/issue-2/", "author": {"@type": "Person", "@id": "https://dabullaw.co.il/#yakir", "name": "עו״ד יקיר דבול", "jobTitle": "עורך דין", "url": "https://dabullaw.co.il/%d7%90%d7%95%d7%93%d7%95%d7%aa-%d7%94%d7%9e%d7%a9%d7%a8%d7%93/", "image": "https://dabullaw.co.il/wp-content/uploads/2026/10/magazine-author-yakir.jpg"}, "publisher": {"@type": "Organization", "name": "יקיר דבול - משרד עורכי דין", "url": "https://dabullaw.co.il/"}, "isPartOf": {"@type": "PublicationIssue", "issueNumber": "2", "isPartOf": {"@type": "Periodical", "@id": "https://dabullaw.co.il/magazine/#periodical", "name": "מגזין הנדל״ן", "url": "https://dabullaw.co.il/magazine/"}}, "articleSection": ["איחור של 13 חודשים במסירה: 107,925 ש״ח לקונה", "ההורים עוזרים לקנות דירה: מתנה, הלוואה או ערבות", "שכירות בבניין בשיפוץ: מתי מותר לבטל את החוזה", "ארבעה סירבו לפינוי בינוי, ובית המשפט חייב אותם לחתום", "הזיהום בשדה דב נמצא גם באזורים שלא סומנו כחשודים"]}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "דף הבית", "item": "https://dabullaw.co.il/"}, {"@type": "ListItem", "position": 2, "name": "מגזין הנדל״ן", "item": "https://dabullaw.co.il/magazine/"}, {"@type": "ListItem", "position": 3, "name": "גיליון 2", "item": "https://dabullaw.co.il/magazine/issue-2/"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "כמה פיצוי מקבלים על איחור במסירת דירה מקבלן?", "acceptedAnswer": {"@type": "Answer", "text": "זה תלוי בנוסח חוק המכר שחל על החוזה ובשכר הדירה של דירה דומה. בפסק הדין מאריאל חושב פיצוי של פי 1.5 משכר הדירה לכל אחד מ־8 החודשים הראשונים ופי 1.25 לכל חודש נוסף, ויצא 107,925 ש״ח."}}, {"@type": "Question", "name": "אפשר לבטל חוזה שכירות בבניין שעובר תמ״א 38?", "acceptedAnswer": {"@type": "Answer", "text": "במקרה שנדון השבוע כן: עבודות בתוך חדרי הדירה בתחילת השכירות, יחד עם ליקויים שלא תוקנו, נחשבו הפרה יסודית. ידיעה כללית על העבודות היא לא הסכמה לכל הפרעה."}}, {"@type": "Question", "name": "מה קורה לדייר שמסרב לחתום על פינוי בינוי?", "acceptedAnswer": {"@type": "Answer", "text": "אם בית המשפט קובע שהסירוב לא סביר, הוא יכול לחייב את הדייר לחתום ולשלם הוצאות. בגבעתיים חויבו ארבעה דיירים לחתום תוך 30 יום ולשלם 40,000 ש״ח הוצאות."}}]}]}</script>
