@@ -26,6 +26,7 @@ export function routes(): R[] {
   const nowA = all((l) => (l === 'he' ? '/now/' : `/${l}/now/`));
   for (const l of LANGS) out.push({ loc: nowA[l], alts: nowA, lastmod: now, changefreq: 'hourly', priority: '0.8' });
   for (const p of ['shabbat', 'beaches', 'pharmacy', 'roads', 'alerts', 'phones']) out.push({ loc: `/now/${p}/`, lastmod: now, changefreq: 'daily', priority: '0.7' });
+  out.push({ loc: '/netanya/', lastmod: now, changefreq: 'daily', priority: '0.8' });
   const dirA = all((l) => (l === 'he' ? '/directory/' : `/${l}/directory/`));
   for (const l of LANGS) out.push({ loc: dirA[l], alts: dirA, lastmod: now, priority: '0.7' });
   for (const c of CATEGORIES) out.push({ loc: `/directory/${c.slug}/`, lastmod: now, priority: '0.6' });

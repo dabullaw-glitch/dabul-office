@@ -13,6 +13,7 @@
 //   reason "מבוסס רק על פרסום בכלי תקשורת אחר" (Yakir decides). After writing, the text is checked against the outlet list in the
 //   table hns_outlets (same check as hns-publish); a failing draft is written once more with the reason, and is marked "נכתב מחדש".
 // POST {action:'rewrite', ids:[...]} (x-cron-secret): hns-publish sends back a draft that failed the check; it is written again once.
+// POST {action:'items', ids:[...]} (x-cron-secret): write chosen local items now (up to 10), e.g. today's items of a source added today.
 // 28.10.2026 (home redesign): the answer also gives "kicker" (the short colored line above the title on the site, up to 5 words,
 //   never a media outlet name; dropped when it fails) and "closure" for a road closure story ({place, what, until, approx}).
 // 28.10.2026 (fix): national stories that only "looked" local (a village name that is an everyday word) are closed with no AI
@@ -199,13 +200,16 @@ async function rewrite(ids: number[]) {
   return { res };
 }
 
-async function tick() {
+// ids (28.10.2026): write chosen items that the regular run skips (the first poll of a new source is kept as backfill), same rules
+async function tick(only: number[] = []) {
   const since = new Date(Date.now() - 12 * 3600e3).toISOString();
   const { data: srcs } = await sb.from('hns_sources').select('id,name_he,role,trust,local_only');
   const src = Object.fromEntries((srcs || []).map((s: Any) => [s.id, s]));
   // new local items, not yet in a story, from our sources (never the competitor), not the first backfill
-  const { data: items } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,topic,sensitivity,urgent')
-    .eq('is_local', true).eq('backfill', false).is('cluster_id', null).gte('fetched_at', since).order('id').limit(200);
+  const cols = 'id,source_id,title,body,url,published_at,fetched_at,places,topic,sensitivity,urgent';
+  const { data: items } = only.length
+    ? await sb.from('hns_items').select(cols).in('id', only).eq('is_local', true).is('cluster_id', null).order('id')
+    : await sb.from('hns_items').select(cols).eq('is_local', true).eq('backfill', false).is('cluster_id', null).gte('fetched_at', since).order('id').limit(200);
   const fresh = (items || []).filter((x: Any) => src[x.source_id] && src[x.source_id].role !== 'competitor');
   if (!fresh.length) return { fresh: 0 };
   // stories of the last 12 hours, with the words of their items, to attach follow ups to the same story
@@ -322,6 +326,7 @@ Deno.serve(async (req) => {
   const b: Any = await req.json().catch(() => ({}));
   try {
     if (b.action === 'tick') return J({ ok: true, ...(await tick()) });
+    if (b.action === 'items') return J({ ok: true, ...(await tick((b.ids || []).map(Number).filter(Boolean).slice(0, 10))) });
     if (b.action === 'rewrite') return J({ ok: true, ...(await rewrite((b.ids || []).map(Number).filter(Boolean))) });
     return J({ ok: false, error: 'unknown action' }, 400);
   } catch (e) { return J({ ok: false, error: String((e as Error).message || e) }, 500); }

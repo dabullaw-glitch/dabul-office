@@ -1,0 +1,91 @@
+---
+// "נתניה: מדריך העיר" (28.10.2026): the evergreen hub of the site. Every fact here comes from src/data/facts.json, where each fact
+// keeps its official source (Netanya municipality pages), or is computed (Shabbat times) or comes from an official live listing
+// (Culture Hall calendar). Nothing is added by hand without a source. It links to every section, the "now" pages, the area pages
+// that have stories, the events calendar and the business directory.
+import Page from '../../components/Page.astro';
+import { SITE_URL } from '../../data/site';
+import { SECTIONS } from '../../data/sections';
+import { PLACES } from '../../data/places';
+import { CATEGORIES } from '../../data/directory';
+import { ARTICLES, FACTS, CALENDAR, calTime, calVenue, placesOf, sectionUrl, articleUrl, fmtDate } from '../../lib/content';
+import { shabbatTimes } from '../../lib/shabbat';
+
+const F: any = FACTS;
+const beaches: string[] = F?.bathingBeaches?.names ?? [];
+const hoods: string[] = F?.neighborhoods?.names ?? [];
+const withNews = new Set(PLACES.filter((p) => ARTICLES.some((a) => placesOf(a).some((x) => x.slug === p.slug))).map((p) => p.slug));
+const placeLink = (name: string) => PLACES.find((p) => p.he === name || name.startsWith(p.he));
+const sh = shabbatTimes(new Date(), 1)[0];
+const cal = CALENDAR.slice(0, 6);
+const latest = ARTICLES.slice(0, 6);
+const locs = PLACES.filter((p) => p.kind === 'locality');
+const phones: [string, string][] = [['מוקד עירוני (עיריית נתניה)', F?.municipalHotline?.number ?? '106'], ['משטרה', '100'], ['מד״א', '101'], ['כבאות והצלה', '102'], ['חברת החשמל', '103'], ['פיקוד העורף', '104']];
+const faq: [string, string][] = [
+  ['מה מספר המוקד העירוני של נתניה?', `${F?.municipalHotline?.number ?? '106'}. המוקד העירוני של עיריית נתניה זמין 24 שעות ביממה לכל פנייה או דיווח.`],
+  ['כמה חופים מוכרזים יש בנתניה?', `אתר העירייה מציין ${F?.bathingBeaches?.declaredCount ?? beaches.length} חופים מוכרזים. רוחצים רק בחוף מוכרז ובשעות שבהן יש מציל.`],
+  ['איפה רואים מה קורה בהיכל התרבות?', 'לוח האירועים של היכל התרבות מופיע אצלנו במדור הבילוי והאירועים, ומתעדכן אוטומטית מהלוח הרשמי של ההיכל.'],
+];
+const title = 'נתניה: מדריך העיר, חופים, אירועים, שכונות וטלפונים | חדשות נתניה והשרון';
+const description = 'מדריך לנתניה במקום אחד: החופים המוכרזים, לוח האירועים, זמני שבת, השכונות, טלפונים חיוניים והחדשות האחרונות, עם קישור למקור הרשמי.';
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'WebPage', name: 'נתניה: מדריך העיר', url: SITE_URL + '/netanya/', description, about: { '@type': 'City', name: 'נתניה' }, isPartOf: { '@id': SITE_URL + '/#website' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
+];
+const src = (u: string | null | undefined, t = 'מקור: עיריית נתניה') => (u ? { u, t } : null);
+const S1 = src(F?.bathingBeaches?.source); const S2 = src(F?.neighborhoods?.source); const S3 = src(F?.municipalHotline?.sources?.[0]);
+---
+<Page title={title} h1="נתניה: מדריך העיר" description={description} path="/netanya/" intro="החופים, האירועים, השכונות והטלפונים החשובים, במקום אחד. כל עובדה עם קישור למקור." img="beach" color="#0B3D6E" jsonld={jsonld} wide>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px">
+    <section class="ncard" style="--c:#2B8FD8" aria-labelledby="g-beach">
+      <h2 id="g-beach"><a href="/now/beaches/">החופים של נתניה</a></h2>
+      {beaches.length > 0 && <ul style="columns:2;column-gap:24px;margin:0;padding-inline-start:18px">{beaches.map((b) => <li style="padding:3px 0">{b}</li>)}</ul>}
+      {F?.bathingBeaches?.accessibleBeach && <p style="margin:10px 0 0">{F.bathingBeaches.accessibleBeach}.</p>}
+      {S1 && <p class="note" style="margin:8px 0 0"><a href={S1.u} rel="noopener nofollow" target="_blank" style="color:#0B5FCC">{S1.t}</a> · <a href="/now/beaches/" style="color:#0B5FCC">דגלים ושעות הצלה</a></p>}
+    </section>
+    <section class="ncard" style="--c:#D6337A" aria-labelledby="g-ev">
+      <h2 id="g-ev"><a href="/events/#cal">מה עושים בנתניה השבוע</a></h2>
+      {cal.length ? <ul style="list-style:none;margin:0;padding:0">{cal.map((c) => <li style="padding:7px 0;border-top:1px solid #EEF1F5"><b>{fmtDate(c.start)}{calTime(c.start) ? `, ${calTime(c.start)}` : ''}</b><br>{c.title}{calVenue(c) ? ` · ${calVenue(c)}` : ''}</li>)}</ul> : <p>לוח האירועים מתעדכן מהיכל התרבות.</p>}
+      <p class="note" style="margin:8px 0 0"><a href="/events/#cal" style="color:#0B5FCC">ללוח האירועים המלא</a></p>
+    </section>
+    <section class="ncard" style="--c:#6D3FC0" aria-labelledby="g-sh">
+      <h2 id="g-sh"><a href="/now/shabbat/">זמני שבת בנתניה</a></h2>
+      <p style="margin:0">יום שישי, {sh.date}: הדלקת נרות <b>{sh.candles}</b>, צאת השבת <b>{sh.end}</b>.</p>
+      <p class="note" style="margin:8px 0 0">מחושב לפי מיקום העיר. <a href="/now/shabbat/" style="color:#0B5FCC">לשבועות הבאים</a></p>
+    </section>
+    <section class="ncard" style="--c:#F2B544" aria-labelledby="g-ph">
+      <h2 id="g-ph"><a href="/now/phones/">טלפונים חיוניים</a></h2>
+      <ul style="list-style:none;margin:0;padding:0">{phones.map(([n, v]) => <li style="display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid #EEF1F5"><span>{n}</span><b>{v}</b></li>)}</ul>
+      {S3 && <p class="note" style="margin:8px 0 0"><a href={S3.u} rel="noopener nofollow" target="_blank" style="color:#0B5FCC">{S3.t}</a></p>}
+    </section>
+  </div>
+
+  <section class="sec" aria-labelledby="g-hood">
+    <h2 id="g-hood" class="sh" style="--c:#0B5FCC"><span class="bar"></span>השכונות של נתניה</h2>
+    <p class="note" style="margin:0 0 10px">רשימת השכונות כפי שהיא מופיעה באתר עיריית נתניה. שכונה שיש עליה חדשות אצלנו מקושרת לעמוד החדשות שלה.</p>
+    <div class="chips">{hoods.map((h) => { const p = placeLink(h); return p && withNews.has(p.slug) ? <a class="chip" href={`/area/${p.slug}/`} style="--c:#0B5FCC"><i></i>{h}</a> : <span class="chip" style="--c:#8A94A3"><i></i>{h}</span>; })}</div>
+    {S2 && <p class="note" style="margin:10px 0 0"><a href={S2.u} rel="noopener nofollow" target="_blank" style="color:#0B5FCC">{S2.t}</a></p>}
+  </section>
+
+  <section class="sec" aria-labelledby="g-sharon">
+    <h2 id="g-sharon" class="sh" style="--c:#0E8A8A"><span class="bar"></span>היישובים בשרון סביב נתניה</h2>
+    <div class="chips">{locs.map((p) => withNews.has(p.slug) ? <a class="chip" href={`/area/${p.slug}/`} style="--c:#0E8A8A"><i></i>{p.he}</a> : <a class="chip" href="/sharon/" style="--c:#0E8A8A"><i></i>{p.he}</a>)}</div>
+  </section>
+
+  <section class="sec" aria-labelledby="g-sec">
+    <h2 id="g-sec" class="sh" style="--c:#0E1726"><span class="bar"></span>כל המדורים</h2>
+    <div class="chips">{SECTIONS.map((s) => <a class="chip" href={sectionUrl(s.key)} style={`--c:${s.color}`}><i></i>{s.name.he}</a>)}<a class="chip" href="/now/" style="--c:#0B3D6E"><i></i>נתניה עכשיו</a><a class="chip" href="/directory/" style="--c:#0B5FCC"><i></i>מדריך בעלי מקצוע</a></div>
+  </section>
+
+  <section class="sec" aria-labelledby="g-new">
+    <h2 id="g-new" class="sh" style="--c:#C8102E"><span class="bar"></span>החדשות האחרונות מנתניה והשרון</h2>
+    <ul style="margin:0;padding-inline-start:20px">{latest.map((a) => <li style="padding:4px 0"><a href={articleUrl(a)} style="color:#0B5FCC">{a.title}</a></li>)}</ul>
+  </section>
+
+  <section class="sec" aria-labelledby="g-biz">
+    <h2 id="g-biz" class="sh" style="--c:#0B5FCC"><span class="bar"></span>בעלי מקצוע בנתניה</h2>
+    <div class="chips">{CATEGORIES.slice(0, 12).map((c) => <a class="chip" href={`/directory/${c.slug}/`} style={`--c:${c.color}`}><i></i>{c.plural}</a>)}</div>
+  </section>
+
+  <section class="ncard faq" style="--c:#0B5FCC;margin-top:18px"><h2>שאלות ותשובות</h2>{faq.map(([q, a]) => <details open><summary>{q}</summary><p>{a}</p></details>)}</section>
+</Page>

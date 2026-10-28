@@ -14,7 +14,7 @@ const { p, items } = Astro.props;
 const path = `/area/${p.slug}/`;
 const isN = p.kind === 'neighborhood';
 const h1 = isN ? `חדשות ${p.he}, נתניה` : `חדשות ${p.he}`;
-const crumbs = [{ name: 'ראשי', href: '/' }, { name: isN ? 'שכונות נתניה' : 'השרון', href: isN ? '/now/' : '/sharon/' }, { name: p.he, href: path }];
+const crumbs = [{ name: 'ראשי', href: '/' }, { name: isN ? 'שכונות נתניה' : 'השרון', href: isN ? '/netanya/' : '/sharon/' }, { name: p.he, href: path }];
 const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: h1, url: SITE_URL + path, about: { '@type': 'Place', name: isN ? `${p.he}, נתניה` : p.he },
   mainEntity: { '@type': 'ItemList', itemListElement: items.map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a), name: a.title })) } }];
 ---
