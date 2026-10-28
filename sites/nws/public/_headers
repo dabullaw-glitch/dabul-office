@@ -12,3 +12,7 @@ https://nws-site.pages.dev/*
   X-Robots-Tag: noindex
 https://:version.nws-site.pages.dev/*
   X-Robots-Tag: noindex
+# Management panel: never indexed, never cached
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store

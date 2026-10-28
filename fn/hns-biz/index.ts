@@ -9,19 +9,15 @@
 //                              tap to hns-publish, which passes hns:biz: taps here as {action:'decide'}.
 // POST (x-cron-secret): {action:'decide', data, cq?} | {action:'list', status?} | {action:'purge_test'} |
 //                       {action:'register', test:true, tg?:bool}  (test listing: is_test, never in the feed)
+// 28.10.2026 (business flows): POST {action:'request', type, ...}  every other public form of the site (contact, advertising,
+//   sponsored article, promotion, banner, news tip with photo, correction, newsletter), see requests.ts. Table hns_requests.
+//   Telegram buttons hns:biz:rq:<id> (handled) and hns:biz:sp:<id> (spam) come back here through hns-publish as {action:'decide'}.
+//   A directory registration that asks for promotion or a sponsored article also opens a request (so it shows in the panel).
+//   Confirmation emails go out only when NWS_MAIL_FROM (an nws.co.il sender) exists in app_secrets (lib.ts).
+// The management panel (https://nws.co.il/admin/, edge function hns-panel) uses the same decide logic.
 // No long or medium dash in any saved text.
-import { createClient } from 'npm:@supabase/supabase-js@2';
-
-// deno-lint-ignore no-explicit-any
-type Any = any;
-const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
-let S: Record<string, string> = {};
-async function secrets() {
-  const { data } = await sb.from('app_secrets').select('k,v').in('k', ['CRON_SECRET', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID', 'NWS_TURNSTILE_SECRET']);
-  S = Object.fromEntries((data || []).map((r: Any) => [r.k, String(r.v ?? '').trim()]));
-}
-const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type', 'access-control-allow-methods': 'GET, POST, OPTIONS' };
-const J = (d: unknown, s = 200, extra: Record<string, string> = {}) => new Response(JSON.stringify(d), { status: s, headers: { ...CORS, 'content-type': 'application/json; charset=utf-8', ...extra } });
+import { Any, sb, S, secrets, J, CORS, clean, phoneOf, urlOk, emailOk, sha, ipOf, tg, mail } from './lib.ts';
+import { request, requestDecide } from './requests.ts';
 
 // Netanya (whole city), its neighborhoods and the nearby Sharon: same names as the site's places (sites/nws/src/data/places.ts)
 export const AREAS = ['נתניה', 'מרכז העיר', 'פולג', 'רמת פולג', 'עיר ימים', 'קריית השרון', 'קריית נורדאו', 'אגמים', 'נאות שקד', 'נאות הרצל', 'דורה',
@@ -30,21 +26,7 @@ export const AREAS = ['נתניה', 'מרכז העיר', 'פולג', 'רמת פ�
   'תל מונד', 'פרדסיה'];
 const INTEREST: Record<string, string> = { featured: 'קידום במדריך (מומלץ)', sponsored: 'כתבת תוכן שיווקי' };
 
-const clean = (s: unknown, max = 2000) => String(s ?? '').replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, '').replace(/\s*—\s*/g, ', ').replace(/\s*–\s*/g, ' - ')
-  .replace(/[ \t]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim().slice(0, max);
-const phoneOf = (s: unknown) => {
-  let d = String(s ?? '').replace(/[^\d+]/g, '');
-  if (d.startsWith('+972')) d = '0' + d.slice(4); else if (d.startsWith('972')) d = '0' + d.slice(3);
-  return /^0(?:5\d|7\d|[2-489])\d{7}$/.test(d) ? d : '';
-};
-const urlOk = (s: string) => { try { const u = new URL(s); return u.protocol === 'https:' || u.protocol === 'http:' ? u.toString() : ''; } catch { return ''; } };
-const emailOk = (s: string) => /^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,}$/i.test(s) ? s.toLowerCase() : '';
 const BAR_WORDS = /הכי|הטוב ביותר|הטובים ביותר|מומחה|מומחים|מוביל|מובילים|מספר 1|מס׳ 1|הצלחה מובטחת|מבטיחים|ללא תחרות/;
-async function sha(s: string) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join('').slice(0, 32); }
-
-const tg = (method: string, body: Any) => fetch(`https://api.telegram.org/bot${S.TELEGRAM_BOT_TOKEN}/${method}`, {
-  method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(15000),
-}).then((r) => r.json()).catch((e) => ({ ok: false, description: String(e) }));
 
 async function categories() {
   const { data } = await sb.from('hns_biz_categories').select('slug,name_he,plural_he,sort').eq('active', true).order('sort');
@@ -70,7 +52,7 @@ async function register(b: Any, req: Request, admin: boolean) {
   const test = admin && !!b.test;
   // bots: the hidden field is filled, or the form was sent too fast. They get a normal "thanks" and nothing is saved.
   if (!test && (clean(b.company_fax) || Number(b.t || 0) < 3000)) return { ok: true, id: null };
-  const ip = req.headers.get('cf-connecting-ip') || (req.headers.get('x-forwarded-for') || '').split(',')[0].trim() || 'none';
+  const ip = ipOf(req);
   const ipHash = await sha(`${ip}|${S.CRON_SECRET}`);
   if (!test && S.NWS_TURNSTILE_SECRET) {
     const fd = new FormData(); fd.set('secret', S.NWS_TURNSTILE_SECRET); fd.set('response', String(b.turnstile || '')); if (ip !== 'none') fd.set('remoteip', ip);
@@ -123,25 +105,65 @@ async function register(b: Any, req: Request, admin: boolean) {
       reply_markup: { inline_keyboard: [[{ text: '✅ לאשר', callback_data: `hns:biz:ok:${ins.id}` }, { text: '✗ לדחות', callback_data: `hns:biz:no:${ins.id}` }]] } });
     if (r?.ok) { sent = true; await sb.from('hns_biz_listings').update({ tg_sent_at: new Date().toISOString(), tg_message_id: r.result?.message_id ?? null }).eq('id', ins.id); }
   }
+  // a wish for promotion or a sponsored article is a purchase request: it also goes to hns_requests (shown in the panel,
+  // no second Telegram message: the approval message above already says it)
+  for (const it of L.interest as string[]) {
+    await sb.from('hns_requests').insert({ type: it === 'sponsored' ? 'sponsored' : 'promote', offer: it, name: L.contact_name || null, phone: L.contact_phone || L.phone,
+      email: L.email || null, business: L.name, message: `ביקשו בטופס ההצטרפות למדריך (עסק #${ins.id}).`, page: '/directory/join/', consent: true, consent_at: now,
+      ip_hash: ipHash, is_test: test, extra: { listing_id: ins.id }, tg_sent_at: sent ? new Date().toISOString() : null });
+  }
+  if (L.email && !test) await mail(L.email, 'קיבלנו את הרישום שלכם למדריך העסקים, חדשות נתניה והשרון', [
+    'שלום,', `קיבלנו את הבקשה לרשום את "${L.name}" במדריך העסקים של חדשות נתניה והשרון.`,
+    'אנחנו בודקים כל רישום לפני שהוא עולה לאתר. אחרי האישור העסק יופיע במדריך בתוך זמן קצר.',
+    L.interest.length ? 'ראינו שאתם מתעניינים גם בקידום. התשלום עוד לא מחובר לאתר, ונחזור אליכם עם הפרטים.' : '',
+    'אם לא אתם שלחתם את הטופס, אפשר להתעלם מהמייל הזה.'].filter(Boolean));
   return { ok: true, id: ins.id, sent, ...(test ? { preview: approvalText(ins, cat?.plural_he || L.category) } : {}) };
 }
 
 async function decide(data: string, cq: Any) {
   const [, , act, idStr] = String(data || '').split(':'); // hns:biz:ok:<id>
+  if (act === 'rq' || act === 'sp' || act === 'rn') return requestDecide(act, Number(idStr), cq, cq?.by || 'yakir');
   const answer = (text: string) => cq?.id ? tg('answerCallbackQuery', { callback_query_id: cq.id, text }) : null;
   const edit = (text: string) => cq?.chat_id && cq?.message_id ? tg('editMessageText', { chat_id: cq.chat_id, message_id: cq.message_id, text, disable_web_page_preview: true }) : null;
   const id = Number(idStr);
   if (!['ok', 'no'].includes(act) || !id) { await answer('פעולה לא מוכרת'); return { ok: false, error: 'bad data' }; }
-  const { data: L } = await sb.from('hns_biz_listings').select('id,name,status').eq('id', id).maybeSingle();
+  const { data: L } = await sb.from('hns_biz_listings').select('id,name,status,tg_message_id').eq('id', id).maybeSingle();
   if (!L) { await answer('העסק לא נמצא'); return { ok: false, error: 'not found' }; }
   if (L.status !== 'pending') { await answer(L.status === 'approved' ? 'כבר אושר' : 'כבר נדחה'); return { ok: true, already: L.status }; }
   const now = new Date().toISOString();
   const status = act === 'ok' ? 'approved' : 'rejected';
   const { data: upd } = await sb.from('hns_biz_listings').update({ status, decided_at: now, decided_by: 'yakir', updated_at: now }).eq('id', id).eq('status', 'pending').select('id');
   if (!upd?.length) { await answer('כבר טופל'); return { ok: true, already: true }; }
+  if (!cq?.message_id && L.tg_message_id && S.TELEGRAM_CHAT_ID) cq = { ...(cq || {}), chat_id: S.TELEGRAM_CHAT_ID, message_id: L.tg_message_id }; // decided in the panel
   if (status === 'approved') { await answer('אושר ✓ יופיע באתר תוך כרבע שעה'); await edit(`✅ אושר למדריך העסקים: ${L.name}\nיופיע באתר תוך כרבע שעה.`); }
   else { await answer('נדחה'); await edit(`✗ לא אושר למדריך העסקים: ${L.name}`); }
   return { ok: true, [status]: id };
+}
+
+// panel edit of a listing (any status). Same cleaning and checks as the form; an approved listing changes on the site after the next build.
+async function listingEdit(idIn: unknown, f: Any) {
+  const id = Number(idIn); if (!id) return { ok: false, error: 'id' };
+  const p: Any = {}, errs: Record<string, string> = {};
+  if (f.name !== undefined) { p.name = clean(f.name, 80); if (p.name.length < 2) errs.name = 'שם קצר מדי'; }
+  if (f.description !== undefined) { p.description = clean(f.description, 1200); if (p.description.length < 30) errs.description = 'תיאור של 30 תווים לפחות'; }
+  if (f.category !== undefined) { const cats = await categories(); if (!cats.some((c: Any) => c.slug === f.category)) errs.category = 'קטגוריה לא מוכרת'; else p.category = f.category; }
+  if (f.area !== undefined) { if (!AREAS.includes(f.area)) errs.area = 'אזור לא מוכר'; else p.area = f.area; }
+  if (f.phone !== undefined) { p.phone = phoneOf(f.phone); if (!p.phone) errs.phone = 'טלפון לא תקין'; }
+  if (f.whatsapp !== undefined) { p.whatsapp = f.whatsapp ? phoneOf(f.whatsapp) || null : null; if (f.whatsapp && !p.whatsapp) errs.whatsapp = 'וואטסאפ לא תקין'; }
+  if (f.email !== undefined) { p.email = f.email ? emailOk(clean(f.email, 200)) || null : null; if (f.email && !p.email) errs.email = 'מייל לא תקין'; }
+  if (f.website !== undefined) { p.website = f.website ? urlOk(clean(f.website, 200)) || null : null; if (f.website && !p.website) errs.website = 'אתר לא תקין'; }
+  if (f.logo_url !== undefined) { p.logo_url = f.logo_url ? urlOk(clean(f.logo_url, 400)) || null : null; if (f.logo_url && !p.logo_url) errs.logo_url = 'קישור לא תקין'; }
+  if (f.address !== undefined) p.address = clean(f.address, 120) || null;
+  if (f.license_no !== undefined) p.license_no = clean(f.license_no, 30) || null;
+  if (f.notes !== undefined) p.notes = clean(f.notes, 500) || null;
+  if (f.plan !== undefined) { if (!['free', 'featured'].includes(f.plan)) errs.plan = 'free או featured'; else p.plan = f.plan; }
+  if (f.featured_until !== undefined) p.featured_until = f.featured_until ? new Date(String(f.featured_until)).toISOString() : null;
+  if (Object.keys(errs).length) return { ok: false, error: 'יש שדות שצריך לתקן', fields: errs };
+  if (!Object.keys(p).length) return { ok: false, error: 'אין מה לשנות' };
+  p.updated_at = new Date().toISOString();
+  const { data, error } = await sb.from('hns_biz_listings').update(p).eq('id', id).select('*').maybeSingle();
+  if (error || !data) return { ok: false, error: 'השמירה נכשלה' };
+  return { ok: true, listing: data };
 }
 
 async function feed() {
@@ -168,7 +190,9 @@ Deno.serve(async (req) => {
     const b: Any = await req.json().catch(() => ({}));
     const admin = !!S.CRON_SECRET && req.headers.get('x-cron-secret') === S.CRON_SECRET;
     if (b.action === 'register') { const r: Any = await register(b, req, admin); return J(r, r.status || 200); }
+    if (b.action === 'request') { const r: Any = await request(b, req, admin); return J(r, r.status || 200); }
     if (!admin) return J({ ok: false }, 401);
+    if (b.action === 'listing_edit') return J(await listingEdit(b.id, b.fields || {}));
     if (b.action === 'decide') return J(await decide(b.data, b.cq));
     if (b.action === 'list') {
       const { data } = await sb.from('hns_biz_listings').select('id,created_at,category,name,area,status,plan,is_test,tg_sent_at').eq('status', b.status || 'pending').order('id', { ascending: false }).limit(100);
