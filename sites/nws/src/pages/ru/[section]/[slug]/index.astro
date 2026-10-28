@@ -1,0 +1,8 @@
+---
+import ArticlePage from '../../../../components/ArticlePage.astro';
+import { ARTICLES, localized } from '../../../../lib/content';
+import { SECTION_BY_KEY } from '../../../../data/sections';
+export function getStaticPaths() { return ARTICLES.map((a) => localized(a, 'ru')).filter(Boolean).map((a: any) => ({ params: { section: SECTION_BY_KEY[a.section].slug, slug: a.slug }, props: { a } })); }
+const { a } = Astro.props;
+---
+<ArticlePage lang="ru" a={a} />

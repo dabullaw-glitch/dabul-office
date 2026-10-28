@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from './Crumbs.astro';
+import Wave from './Wave.astro';
+import NowNav from './NowNav.astro';
+import { SITE_URL } from '../data/site';
+interface Props { title: string; h1: string; description: string; path: string; intro: string; color?: string; img?: string; faq?: [string, string][]; jsonld?: any[] }
+const { title, h1, description, path, intro, color = '#0B3D6E', img = 'beach', faq = [], jsonld = [] } = Astro.props;
+const crumbs = [{ name: 'ראשי', href: '/' }, { name: 'נתניה עכשיו', href: '/now/' }, { name: h1, href: path }];
+const ld = [...jsonld, { '@context': 'https://schema.org', '@type': 'WebPage', name: h1, url: SITE_URL + path, description, about: { '@type': 'City', name: 'נתניה' }, isPartOf: { '@id': SITE_URL + '/#website' } }];
+if (faq.length) ld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
+---
+<Base title={title} description={description} path={path} crumbs={crumbs} jsonld={ld} current="now">
+  <section class="phero" style={`--bg:${color}`}>
+    <img class="bgi" src={`/img/${img}.svg`} alt="" width="1440" height="400">
+    <div class="wrap in"><Crumbs items={crumbs} light /><h1>{h1}</h1><p>{intro}</p></div>
+    <Wave top from="transparent" to="#F3F6FA" />
+  </section>
+  <div class="np"><div class="wrap" style="padding-block:18px 40px">
+    <NowNav />
+    <slot />
+    {faq.length > 0 && <section class="ncard faq" style="--c:#0B5FCC;margin-top:18px"><h2>שאלות ותשובות</h2>{faq.map(([q, a]) => <details open><summary>{q}</summary><p>{a}</p></details>)}</section>}
+  </div></div>
+</Base>

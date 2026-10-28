@@ -1,0 +1,22 @@
+---
+import NowPage from '../../../components/NowPage.astro';
+import { FACTS } from '../../../lib/content';
+const raw: any = FACTS?.beaches ?? {};
+const list: string[] = (Array.isArray(raw) ? raw : raw.list ?? raw.names ?? []).map((b: any) => (typeof b === 'string' ? b : b.name)).filter(Boolean);
+const src: string | null = Array.isArray(raw) ? null : raw.source ?? raw.sourceUrl ?? null;
+const faq: [string, string][] = [
+  ['מה אומר כל דגל בחוף?', 'דגל לבן: מותר לרחוץ. דגל אדום: הרחצה מסוכנת ומוגבלת. דגל שחור: אסור לרחוץ.'],
+  ['איפה מותר לרחוץ בנתניה?', 'רק בחוף מוכרז, בשעות שבהן יש מציל. בחוף שאינו מוכרז או בלי מציל הרחצה אסורה ומסוכנת.'],
+];
+---
+<NowPage title="החופים של נתניה: חופים מוכרזים, דגלים ושעות הצלה | חדשות נתניה והשרון" h1="החופים של נתניה" description={`החופים המוכרזים בנתניה${list.length ? ` (${list.length} חופים)` : ''}: רשימת החופים, מה אומר כל דגל, ומתי מותר לרחוץ.`} path="/now/beaches/" intro="איפה מותר לרחוץ, ומה אומר כל דגל." color="#0A5A8F" img="beach" faq={faq}>
+  <section class="ncard" style="--c:#2B8FD8">
+    <h2>החופים המוכרזים</h2>
+    {list.length ? <ul style="columns:2;column-gap:28px;margin:0;padding-inline-start:20px">{list.map((b) => <li style="padding:4px 0">{b}</li>)}</ul> : <p>רשימת החופים המוכרזים תתעדכן מהעירייה.</p>}
+    {raw.accessible && <p style="margin:12px 0 0">{raw.accessible}.</p>}
+    {raw.season && <p style="margin:8px 0 0"><b>בעונת הרחצה:</b> {raw.season}.</p>}
+    {raw.winter && <p style="margin:8px 0 0"><b>בחורף:</b> {raw.winter}.</p>}
+    {src && <p class="note" style="margin:12px 0 0">מקור: <a href={src} rel="noopener nofollow" target="_blank" style="color:#0B5FCC">עיריית נתניה</a></p>}
+    <p class="note" style="margin:8px 0 0">מצב הדגל וגובה הגלים בכל חוף יוצגו כאן בזמן אמת אחרי חיבור המקורות.</p>
+  </section>
+</NowPage>

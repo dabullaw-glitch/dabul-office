@@ -1,0 +1,15 @@
+---
+import Page from '../../components/Page.astro';
+---
+<Page title="חיפוש | חדשות נתניה והשרון" h1="חיפוש באתר" description="חיפוש חדשות, שכונות ובעלי מקצוע באתר חדשות נתניה והשרון." path="/search/" noindex>
+  <form class="f" role="search" id="sf"><label>מה מחפשים?<input id="sq" name="q" type="search" autocomplete="off"></label></form>
+  <ul id="sr" style="list-style:none;padding:0;margin-top:18px;display:flex;flex-direction:column;gap:12px"></ul>
+  <script is:inline>
+  (function(){var q=new URLSearchParams(location.search).get('q')||'';var i=document.getElementById('sq'),r=document.getElementById('sr');i.value=q;var idx=[];
+  function run(){var v=i.value.trim();r.innerHTML='';if(!v)return;var hit=idx.filter(function(x){return (x.t+' '+x.d+' '+x.k).indexOf(v)>=0}).slice(0,30);
+  if(!hit.length){r.innerHTML='<li>לא נמצאו תוצאות.</li>';return}
+  hit.forEach(function(x){var li=document.createElement('li');var a=document.createElement('a');a.href=x.u;a.textContent=x.t;a.style.fontWeight='700';a.style.fontSize='18px';var p=document.createElement('div');p.textContent=x.d;p.style.color='#3B4656';li.appendChild(a);li.appendChild(p);r.appendChild(li)})}
+  fetch('/search-index.json').then(function(x){return x.json()}).then(function(j){idx=j;run()}).catch(function(){});
+  i.addEventListener('input',run);document.getElementById('sf').addEventListener('submit',function(e){e.preventDefault();run()});})();
+  </script>
+</Page>

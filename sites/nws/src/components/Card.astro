@@ -1,0 +1,14 @@
+---
+import { IMG, type Lang } from '../data/site';
+import { SECTION_BY_KEY } from '../data/sections';
+import { articleUrl, type Article } from '../lib/content';
+interface Props { a: Article; lang?: Lang; h?: 'h2' | 'h3' }
+const { a, lang = 'he', h = 'h3' } = Astro.props;
+const s = SECTION_BY_KEY[a.section]; const im = IMG[a.imageHint] ?? IMG[s.img];
+const H = h;
+---
+<a class="card" href={articleUrl(a, lang)} style={`--c:${s.color};--ci:${s.ink}`}>
+  <span class="im"><img src={im.src} alt="" width="800" height="500" loading="lazy"><span class="ln"></span></span>
+  <span class="tagt">{s.name[lang]}</span>
+  <H>{a.title}</H>
+</a>

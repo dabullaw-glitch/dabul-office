@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import Card from './Card.astro';
+import Crumbs from './Crumbs.astro';
+import { IMG, SITE_URL, LANG_PREFIX, LANGS, type Lang } from '../data/site';
+import { SECTION_BY_KEY, type SectionKey } from '../data/sections';
+import { CATEGORIES } from '../data/directory';
+import { t } from '../i18n/ui';
+import { articlesFor, articleUrl, sectionUrl, fmtDate, fmtTime, placesOf, placeUrl } from '../lib/content';
+
+interface Props { lang: Lang; k: SectionKey }
+const { lang, k } = Astro.props;
+const s = SECTION_BY_KEY[k]; const u = t(lang); const pre = LANG_PREFIX[lang];
+const items = articlesFor(lang).filter((a) => a.section === k);
+const name = s.name[lang];
+const title = lang === 'he' ? `${s.title} | חדשות נתניה והשרון` : `${name}: Netanya & Sharon | NWS`;
+const desc = lang === 'he' ? s.desc : ({ ru: `${name}: последние новости Нетании и Шарона на русском языке, с источниками и полезной информацией для жителей.`, fr: `${name} : les dernières actualités de Netanya et du Sharon en français, avec les sources et des infos pratiques.`, en: `${name}: the latest news from Netanya and the Sharon in English, with sources and practical info for residents.` } as any)[lang];
+const path = sectionUrl(k, lang);
+const alternates = Object.fromEntries(LANGS.map((l) => [l, sectionUrl(k, l)]));
+const crumbs = [{ name: u.home, href: pre + '/' }, { name, href: path }];
+const places = [...new Map(items.flatMap((a) => placesOf(a)).map((p) => [p.slug, p])).values()].slice(0, 10);
+const cats = CATEGORIES.filter((c) => c.sections.includes(k)).slice(0, 6);
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name, url: SITE_URL + path, description: desc, inLanguage: lang, isPartOf: { '@id': SITE_URL + '/#website' },
+  mainEntity: { '@type': 'ItemList', itemListElement: items.slice(0, 20).map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a, lang), name: a.title })) } }];
+const first = items[0];
+---
+<Base lang={lang} title={title} description={desc} path={path} alternates={alternates} jsonld={jsonld} crumbs={crumbs} current={k}>
+  <section class="phero" style={`--bg:${s.color}`}>
+    <img class="bgi" src={IMG[s.img].src} alt="" width="1440" height="400">
+    <div class="wrap in">
+      <Crumbs items={crumbs} light label={u.breadcrumbs} />
+      <h1>{lang === 'he' ? s.title.split(':')[0] : name}</h1>
+      <p>{lang === 'he' ? s.intro : desc}</p>
+    </div>
+  </section>
+  <div class="wrap" style="padding-top:28px">
+    {items.length === 0 && <p class="note">{lang === 'he' ? 'הכתבות הראשונות במדור יעלו בקרוב.' : u.liveSoon}</p>}
+    {first && (
+      <article class="lead" style={`padding-top:0;--c:${s.color}`}>
+        <div class="main">
+          <a class="im" href={articleUrl(first, lang)}><img src={(IMG[first.imageHint] ?? IMG[s.img]).src} alt="" width="1200" height="675"></a>
+          <div class="meta"><time datetime={first.published}>{fmtDate(first.published, lang)}, {fmtTime(first.published)}</time></div>
+          <h2 class="h1"><a href={articleUrl(first, lang)}>{first.title}</a></h2>
+          <p>{first.dek}</p>
+        </div>
+        <aside class="latest" style={`background:${s.soft};border-color:${s.soft}`}>
+          <div class="hd2"><h2>{lang === 'he' ? 'עוד במדור' : u.more}</h2></div>
+          <ol>{items.slice(1, 7).map((a) => <li><time datetime={a.published}>{fmtTime(a.published)}</time><a href={articleUrl(a, lang)}>{a.title}</a></li>)}</ol>
+        </aside>
+      </article>)}
+    {items.length > 1 && <section class="sec" aria-label={u.more}><div class="grid">{items.slice(1).map((a) => <Card a={a} lang={lang} />)}</div></section>}
+    {lang === 'he' && places.length > 0 && (
+      <section class="sec" aria-labelledby="pl-h"><h2 id="pl-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>{name} לפי שכונה ויישוב</h2>
+        <div class="chips">{places.map((p) => <a class="chip" href={placeUrl(p.slug)} style={`--c:${s.color}`}><i></i>{p.he}</a>)}</div></section>)}
+    {lang === 'he' && cats.length > 0 && (
+      <section class="sec" aria-labelledby="ct-h"><h2 id="ct-h" class="sh" style="--c:#0B5FCC"><span class="bar"></span>בעלי מקצוע שקשורים לנושא</h2>
+        <div class="chips">{cats.map((c) => <a class="chip" href={`/directory/${c.slug}/`} style={`--c:${c.color}`}><i></i>{c.plural} בנתניה</a>)}</div></section>)}
+  </div>
+</Base>

@@ -1,0 +1,110 @@
+{
+  "verifiedAt": "2026-10-23",
+  "city": "נתניה",
+  "municipalHotline": {
+    "number": "106",
+    "note": "המוקד העירוני של עיריית נתניה, זמין 24 שעות ביממה לכל פנייה או דיווח",
+    "sources": [
+      "https://www.netanya.muni.il/News/Pages/article7650.aspx",
+      "https://90fm.co.il/khshvb-hvdah-ltvshby-ntnyh-bshl-mzg-havvyr/"
+    ]
+  },
+  "officialWebsite": {
+    "url": "https://www.netanya.muni.il",
+    "source": "https://www.netanya.muni.il/News/Pages/article7650.aspx"
+  },
+  "mayor": {
+    "name": "אבי סלמה",
+    "role": "ראש עיריית נתניה",
+    "source": "https://www.news08.net/%D7%AA%D7%A0%D7%99%D7%94-%D7%91%D7%A9%D7%99%D7%90-%D7%A9%D7%9C-%D7%A2%D7%A9%D7%95%D7%A8-%D7%91%D7%96%D7%9B%D7%90%D7%95%D7%AA-%D7%9C%D7%91%D7%92%D7%A8%D7%95%D7%AA-87-5-%D7%90%D7%91%D7%9C/"
+  },
+  "bathingBeaches": {
+    "declaredCount": 9,
+    "names": [
+      "חוף ארגמן לגון",
+      "חוף בלו ביי",
+      "חוף אמפי",
+      "חוף העונות",
+      "חוף הרצל",
+      "חוף סירונית ב'",
+      "חוף סירונית א'",
+      "חוף פולג",
+      "חוף צאנז"
+    ],
+    "seasonHours": "מתחילת העונה ועד מעבר לשעון חורף: 08:30 עד חצי שעה לפני השקיעה; בחוף סירונית מ 06:30",
+    "winterHours": "עמדות ההצלה פועלות מ 08:00 עד השקיעה; אין רחצה בחוף שאין בו מציל",
+    "accessibleBeach": "חוף סירונית (החוף המרכזי) נגיש לאנשים עם מוגבלות",
+    "source": "https://www.netanya.muni.il/beach",
+    "note": "אתר העירייה מציין 9 חופים מוכרזים ומציג רשימה של 9 חופים, אך אינו מסמן במפורש כל חוף כמוכרז",
+    "winter2026": {
+      "lifeguardsAllDeclaredBeachesUntil": "2026-10-24",
+      "winterStation": "חוף סירונית א'",
+      "winterStationHours": "08:00 עד השקיעה, כל השנה",
+      "source": "https://www.maariv.co.il/news/israel/article-1371531"
+    }
+  },
+  "dutyPharmacy": {
+    "officialSource": "https://www.netanya.muni.il/pharmacy",
+    "note": "עמוד בתי המרקחת באתר עיריית נתניה מאפשר חיפוש בית מרקחת תורן לפי תאריך תורנות ולפי שכונה. נכון ל 23/10/2026 הוצג כתורן: פארם פלוס, שדרות ויצמן, טלפון 055-8858198 (מתחלף מדי יום, יש לבדוק בעמוד).",
+    "emergencyMapPdf": null
+  },
+  "emergencyNumbers": {
+    "police": "100",
+    "mada": "101",
+    "fireAndRescue": "102",
+    "electricCompany": "103",
+    "homeFrontCommand": "104",
+    "municipalHotline": "106",
+    "note": "100, 101 ו 102 הם מספרי חירום ארציים",
+    "source": "https://www.b144.co.il/EmergencyNo/"
+  },
+  "population": {
+    "value": 289121,
+    "unit": "תושבים רשומים",
+    "body": "רשות האוכלוסין וההגירה (מרשם האוכלוסין)",
+    "reportedDate": "2026-08-09",
+    "source": "https://www.mako.co.il/news-money/2026_q3/Article-bd871cf0ba5ef91027.htm",
+    "note": "נתון המרשם כולל גם רשומים שמתגוררים בחו״ל דרך קבע ולכן גבוה מאומדן הלמ״ס. לפי הכתבה, נתניה עקפה לפי נתון זה את ראשון לציון ועלתה למקום הרביעי; לפי שיטת הלמ״ס ראשון לציון עדיין לפני נתניה.",
+    "cbsEstimate": null
+  },
+  "neighborhoods": {
+    "names": [
+      "אגמים",
+      "רמת חן",
+      "גבעת האירוסים",
+      "גלי ים",
+      "נאות הרצל",
+      "צפון מזרח מרכז העיר",
+      "צפון מערב מרכז העיר",
+      "מרכז העיר דרום",
+      "משכנות זבולון",
+      "רמת פולג",
+      "נאות גנים",
+      "נאות שקד (אזורים)",
+      "נווה איתמר",
+      "נוף הטיילת",
+      "עין התכלת",
+      "עיר ימים",
+      "פרדס הגדוד",
+      "קריית השרון",
+      "קריית נורדאו",
+      "קריית צאנז",
+      "רמת אפריים",
+      "אופק הים",
+      "קריית רבין",
+      "כוכב הצפון"
+    ],
+    "source": "https://www.netanya.muni.il/City/NB/Neighborhoods/Pages/default.aspx",
+    "note": "הרשימה כפי שמופיעה בעמוד השכונות של אתר העירייה (24 שכונות). שכונות מוכרות נוספות שמוזכרות בכתבות, כגון סלע, דורה, רמת ידין, חפציבה וותיקים, אינן מופיעות ברשימה זו."
+  },
+  "maccabiNetanya": {
+    "homeStadium": "אצטדיון נתניה",
+    "capacity": 13610,
+    "source": "https://en.wikipedia.org/wiki/Maccabi_Netanya_F.C.",
+    "note": "בכתבה של נתניה נט מ 21/10/2026 מוזכר ״אצטדיון מרים״ בנתניה כמקום אירוע ההשקה של ליגת השכונות; לא אומת אם זה שם חדש של אצטדיון נתניה."
+  },
+  "kfarYonaPhone": {
+    "number": "*6769",
+    "source": "https://kfar-yona.muni.il/"
+  }
+}

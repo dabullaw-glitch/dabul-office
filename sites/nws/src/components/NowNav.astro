@@ -1,0 +1,9 @@
+---
+const items = [
+  ['/now/', 'הכל'], ['/now/shabbat/', 'זמני שבת'], ['/now/beaches/', 'החופים'], ['/now/pharmacy/', 'בית מרקחת תורן'], ['/now/roads/', 'חסימות'], ['/now/alerts/', 'פיקוד העורף'], ['/now/phones/', 'טלפונים חיוניים'],
+];
+const cur = Astro.url.pathname;
+---
+<nav aria-label="נתניה עכשיו" class="chips" style="margin-bottom:20px">
+  {items.map(([h, n]) => <a class="chip" href={h} style={`--c:${cur === h ? '#C8102E' : '#0B5FCC'}`} aria-current={cur === h ? 'page' : undefined}><i></i>{n}</a>)}
+</nav>

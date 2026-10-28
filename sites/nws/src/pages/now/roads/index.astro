@@ -1,0 +1,13 @@
+---
+import NowPage from '../../../components/NowPage.astro';
+import { articlesFor, articleUrl, fmtTime, fmtDate } from '../../../lib/content';
+const items = articlesFor('he').filter((a) => a.section === 'flash');
+const faq: [string, string][] = [['איפה רואים חסימות בנתניה עכשיו?', 'כאן, ובערוץ הטלגרם של חדשות נתניה והשרון. כל חסימה או עבודה שהעירייה או המשטרה מודיעות עליה עולה כמבזק עם השעה והמקום.']];
+---
+<NowPage title="חסימות ועבודות כביש בנתניה עכשיו | חדשות נתניה והשרון" h1="חסימות ועבודות כביש" description="חסימות כבישים, עבודות והסדרי תנועה בנתניה: מה סגור עכשיו, עד מתי, ואיך עוקפים. מתעדכן לאורך היום." path="/now/roads/" intro="מה סגור עכשיו בעיר, עד מתי, ואיך עוקפים." color="#9A4A00" img="road" faq={faq}>
+  <section class="ncard" style="--c:#E07B00">
+    <h2>המבזקים האחרונים</h2>
+    {items.length ? <ul style="list-style:none;margin:0;padding:0">{items.map((a) => <li style="padding:10px 0;border-top:1px solid #EEF1F5"><b style="color:#C8102E">{fmtDate(a.published)}, {fmtTime(a.published)}</b> · <a href={articleUrl(a)}>{a.title}</a></li>)}</ul> : <p class="note">אין כרגע חסימות מדווחות.</p>}
+    <p class="note" style="margin:10px 0 0">מפה חיה של החסימות תתחבר כאן לפני ההשקה.</p>
+  </section>
+</NowPage>

@@ -1,0 +1,17 @@
+---
+import NowPage from '../../../components/NowPage.astro';
+import { shabbatTimes } from '../../../lib/shabbat';
+const rows = shabbatTimes(new Date(), 8);
+const faq: [string, string][] = [
+  ['מתי נכנסת השבת בנתניה?', `בשבת הקרובה (כניסה ביום שישי, ${rows[0].date}): הדלקת נרות ב־${rows[0].candles}, והשבת יוצאת ב־${rows[0].end}.`],
+  ['איך מחושבים הזמנים?', 'הזמנים מחושבים לפי מיקום נתניה: הדלקת נרות 20 דקות לפני השקיעה, וצאת השבת כשהשמש 8.5 מעלות מתחת לאופק. יש קהילות שנוהגות אחרת, ומומלץ לבדוק לפי המנהג שלכם.'],
+];
+---
+<NowPage title="זמני שבת בנתניה: כניסת שבת ויציאת שבת השבוע | חדשות נתניה והשרון" h1="זמני שבת בנתניה" description={`זמני שבת בנתניה: השבת הקרובה הדלקת נרות ${rows[0].candles}, צאת שבת ${rows[0].end}. טבלת זמני כניסה ויציאה לשבועות הקרובים.`} path="/now/shabbat/" intro="הדלקת נרות וצאת שבת בנתניה, לשבועות הקרובים." color="#4B2A8C" img="city" faq={faq}>
+  <section class="ncard" style="--c:#6D3FC0">
+    <h2>טבלת זמני שבת</h2>
+    <div style="overflow-x:auto"><table class="tbl" style="min-width:420px"><thead><tr><th>יום שישי</th><th>הדלקת נרות</th><th>שקיעה</th><th>צאת שבת</th></tr></thead>
+    <tbody>{rows.map((r, i) => <tr style={i === 0 ? 'background:#F6F2FD;font-weight:700' : ''}><td>{r.date}</td><td>{r.candles}</td><td>{r.sunset}</td><td>{r.end}</td></tr>)}</tbody></table></div>
+    <p class="note" style="margin:10px 0 0">חישוב לפי מיקום נתניה. הדלקת נרות 20 דקות לפני השקיעה. צאת שבת כשהשמש 8.5 מעלות מתחת לאופק.</p>
+  </section>
+</NowPage>

@@ -1,0 +1,26 @@
+---
+import Page from '../../components/Page.astro';
+const plans = [
+  { n: 'רישום בסיסי', p: '0 ₪', c: '#1E8A4C', i: ['שם, טלפון וקטגוריה', 'אימות טלפון בקוד', 'טקסט מקצועי שנכתב בשבילכם'], cta: 'להרשמה' },
+  { n: 'מומלץ', p: '99 ₪ לחודש', c: '#0B5FCC', i: ['תמונות, וואטסאפ וקישור לאתר', 'תג "מומלץ" ומיקום גבוה ברשימה', 'דוח חודשי: כמה צפו וכמה התקשרו'], cta: 'לתשלום והצטרפות' },
+  { n: 'מוביל בקטגוריה', p: '249 ₪ לחודש', c: '#E08A00', i: ['מקום ראשון בקטגוריה', 'הופעה בדף הבית ובכתבות קשורות', 'רק 3 מקומות בכל קטגוריה'], cta: 'לתשלום והצטרפות' },
+];
+const more = [
+  { n: 'כתבת תוכן שיווקי', d: 'כתבה על העסק, נכתבת בשבילכם, מסומנת, ומקודמת בטלגרם ובפייסבוק.', p: '750 ₪ לכתבה', c: '#E08A00', s: '#FFF7EB' },
+  { n: 'פוסט ממומן בטלגרם', d: 'הודעה אחת בערוץ, מסומנת. עד פוסט אחד ביום בערוץ.', p: '200 ₪ לפוסט', c: '#0B5FCC', s: '#EEF4FC' },
+  { n: 'באנר באתר', d: 'מקום קבוע לחודש, לפי מיקום: דף הבית, כתבות או מדור.', p: 'מ־400 ₪ לחודש', c: '#6D3FC0', s: '#F6F2FD' },
+  { n: 'אירוע מקודם', d: 'בראש "מה עושים בסוף השבוע" ובערוצים.', p: '99 ₪ לאירוע', c: '#D6337A', s: '#FFF6FA' },
+  { n: 'חסות לניוזלטר', d: 'שורת פתיחה במייל "מה קרה בנתניה השבוע".', p: 'מ־300 ₪ לגיליון', c: '#1E8A4C', s: '#EEF8F2' },
+];
+---
+<Page title="פרסום בנתניה: מדריך עסקים, כתבות ובאנרים | חדשות נתניה והשרון" h1="פרסמו אצלנו" description="פרסום לעסקים בנתניה ובשרון: רישום במדריך העסקים, קידום בקטגוריה, כתבות תוכן שיווקי, באנרים ופוסטים בטלגרם. נרשמים ומשלמים לבד." path="/advertise/" intro="נרשמים לבד, משלמים בכרטיס אשראי, והחשבונית מגיעה למייל." color="#0B3D6E" img="city" wide>
+  <h2 class="sh" style="--c:#0B5FCC"><span class="bar"></span>מדריך העסקים</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+    {plans.map((x) => <div class="plan" style={`--c:${x.c}`}><b style="font-family:var(--h);font-size:20px">{x.n}</b><span class="pr">{x.p}</span><ul>{x.i.map((i) => <li>{i}</li>)}</ul><a class="btn pri" href="#" style="margin-top:auto">{x.cta}</a></div>)}
+  </div>
+  <h2 class="sh sec" style="--c:#E08A00"><span class="bar"></span>עוד דרכים להגיע לתושבים</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px">
+    {more.map((m) => <div class="box" style={`background:${m.s};border-top:5px solid ${m.c};display:flex;flex-direction:column;gap:6px`}><b style="font-family:var(--h);font-size:18px">{m.n}</b><span style="color:#3B4656">{m.d}</span><b style="font-family:var(--h);font-size:18px">{m.p}</b></div>)}
+  </div>
+  <p class="note" style="margin-top:18px">כל תוכן ממומן מסומן באתר בבירור כ"תוכן שיווקי". אנחנו מוכרים חשיפה לתושבי נתניה, לא קישורים לקידום בגוגל. התשלום והחשבוניות יתחברו לפני ההשקה. המחירים הם הצעה להתחלה.</p>
+</Page>

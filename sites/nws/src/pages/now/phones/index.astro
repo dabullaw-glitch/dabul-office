@@ -1,0 +1,18 @@
+---
+import NowPage from '../../../components/NowPage.astro';
+import { FACTS } from '../../../lib/content';
+const hot: any = FACTS?.hotline ?? {};
+const hotNum = hot.number ?? '106';
+const site: string | null = FACTS?.officialWebsite ?? FACTS?.cityWebsite ?? hot.website ?? null;
+const rows: [string, string, string][] = [['מוקד עירוני נתניה', hotNum, '#6D3FC0'], ['משטרה', '100', '#0B5FCC'], ['מד״א', '101', '#C8102E'], ['כבאות והצלה', '102', '#E07B00']];
+const faq: [string, string][] = [[`מה המספר של המוקד העירוני בנתניה?`, `${hotNum}. המוקד מקבל פניות על מפגעים, תקלות ושירותים עירוניים.`]];
+---
+<NowPage title="טלפונים חיוניים בנתניה: מוקד עירוני ומספרי חירום | חדשות נתניה והשרון" h1="טלפונים חיוניים בנתניה" description={`מוקד עירוני נתניה ${hotNum}, משטרה 100, מד״א 101, כבאות 102. כל הטלפונים החשובים לתושבי נתניה במקום אחד.`} path="/now/phones/" intro="המספרים שכדאי שיהיו לכם בטלפון." color="#7A5600" img="council" faq={faq}>
+  <section class="ncard" style="--c:#F2B544">
+    <h2>מספרים חשובים</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      {rows.map(([n, num, c]) => <div class="kv" style={`--s:#F3F6FA;border-inline-start:5px solid ${c}`}><span>{n}</span><b style="font-family:var(--h);font-size:22px" dir="ltr">{num}</b></div>)}
+    </div>
+    {site && <p class="note" style="margin:12px 0 0">האתר הרשמי של העירייה: <a href={site} rel="noopener nofollow" target="_blank" style="color:#0B5FCC" dir="ltr">{site.replace(/^https?:\/\//, '')}</a></p>}
+  </section>
+</NowPage>

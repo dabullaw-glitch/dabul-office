@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from './Crumbs.astro';
+import { IMG, type Lang, LANG_PREFIX } from '../data/site';
+import { t } from '../i18n/ui';
+interface Props { lang?: Lang; title: string; h1: string; description: string; path: string; intro?: string; color?: string; img?: string; jsonld?: any[]; alternates?: any; current?: string; noindex?: boolean; wide?: boolean }
+const { lang = 'he', title, h1, description, path, intro = '', color = '#0B3D6E', img = 'city', jsonld = [], alternates = {}, current = '', noindex = false, wide = false } = Astro.props;
+const u = t(lang);
+const crumbs = [{ name: u.home, href: LANG_PREFIX[lang] + '/' }, { name: h1, href: path }];
+---
+<Base lang={lang} title={title} description={description} path={path} jsonld={jsonld} crumbs={crumbs} alternates={alternates} current={current} noindex={noindex}>
+  <section class="phero" style={`--bg:${color}`}>
+    <img class="bgi" src={IMG[img].src} alt="" width="1440" height="400">
+    <div class="wrap in"><Crumbs items={crumbs} light label={u.breadcrumbs} /><h1>{h1}</h1>{intro && <p>{intro}</p>}</div>
+  </section>
+  <div class="wrap" style="padding-block:28px 10px">
+    <div class={wide ? '' : 'prose'}><slot /></div>
+  </div>
+</Base>

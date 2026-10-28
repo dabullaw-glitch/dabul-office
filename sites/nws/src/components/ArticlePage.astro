@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import Card from './Card.astro';
+import Crumbs from './Crumbs.astro';
+import { IMG, SITE_URL, LANG_PREFIX, LANGS, BRAND, type Lang } from '../data/site';
+import { SECTION_BY_KEY } from '../data/sections';
+import { CATEGORIES } from '../data/directory';
+import { t } from '../i18n/ui';
+import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtDate, fmtTime, placesOf, placeUrl, linkify, related, clip, localized, type Article } from '../lib/content';
+
+interface Props { lang: Lang; a: Article }
+const { lang, a } = Astro.props;
+const s = SECTION_BY_KEY[a.section]; const u = t(lang); const pre = LANG_PREFIX[lang];
+const im = IMG[a.imageHint] ?? IMG[s.img];
+const heA = ARTICLES.find((x) => x.slug === a.slug)!;
+const places = placesOf(heA);
+const paras = linkify(a.body, places, lang);
+const pool = articlesFor(lang);
+const rel = related(a, pool, 3);
+const flash = pool.filter((x) => x.slug !== a.slug).slice(0, 5);
+const cats = CATEGORIES.filter((c) => c.sections.includes(a.section)).slice(0, 3);
+const path = articleUrl(a, lang);
+const alternates = Object.fromEntries(LANGS.filter((l) => localized(heA, l)).map((l) => [l, articleUrl(a, l)]));
+const crumbs = [{ name: u.home, href: pre + '/' }, { name: s.name[lang], href: sectionUrl(a.section, lang) }, { name: a.title, href: path }];
+const title = a.title.length > 62 ? clip(a.title, 92) : `${a.title} | ${lang === 'he' ? 'חדשות נתניה והשרון' : 'NWS'}`;
+const desc = clip(a.dek || a.body[0] || a.title, 158);
+const modified = a.updated || a.published;
+const url = SITE_URL + path;
+const words = [a.title, a.dek, ...a.body].join(' ').split(/\s+/).length;
+const jsonld: any[] = [{
+  '@context': 'https://schema.org', '@type': 'NewsArticle', '@id': url + '#article', mainEntityOfPage: url, url,
+  headline: a.title.slice(0, 110), description: desc, image: [SITE_URL + (a.og || `/og/a/${a.slug}.png`)], inLanguage: lang,
+  datePublished: a.published, dateModified: modified, articleSection: s.name[lang], keywords: a.tags.join(', '), wordCount: words,
+  author: { '@type': 'Organization', name: lang === 'he' ? 'מערכת חדשות נתניה והשרון' : 'NWS Desk', url: SITE_URL + '/about/' },
+  publisher: { '@id': SITE_URL + '/#org', '@type': 'NewsMediaOrganization', name: BRAND.he, logo: { '@type': 'ImageObject', url: SITE_URL + '/logo.png' } },
+  isBasedOn: a.sourceUrl, citation: { '@type': 'CreativeWork', name: a.sourceName, url: a.sourceUrl },
+  contentLocation: places.length ? places.map((p) => ({ '@type': 'Place', name: p.he })) : { '@type': 'City', name: 'נתניה' },
+  isAccessibleForFree: true,
+}];
+if (a.faq.length) jsonld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: a.faq.map(([q, x]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: x } })) });
+if (a.event?.startDate) jsonld.push({ '@context': 'https://schema.org', '@type': 'Event', name: a.event.name, startDate: a.event.startDate, eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode', eventStatus: 'https://schema.org/EventScheduled',
+  location: { '@type': 'Place', name: a.event.location, address: { '@type': 'PostalAddress', addressLocality: 'נתניה', addressCountry: 'IL' } }, description: desc, url });
+const share = encodeURIComponent(url); const shareT = encodeURIComponent(a.title);
+---
+<Base lang={lang} title={title} description={desc} path={path} alternates={alternates} jsonld={jsonld} crumbs={crumbs} current={a.section}
+  ogType="article" ogImage={a.og || `/og/a/${a.slug}.png`} published={a.published} modified={modified} section={s.name[lang]} tags={a.tags}>
+  <div style={`background:${s.soft};border-bottom:1px solid #E3E7ED`}><div class="wrap" style={`padding-block:10px;font-size:14px;font-weight:700;color:${s.ink};display:flex;align-items:center;gap:10px`}><span style={`width:6px;height:18px;border-radius:3px;background:${s.color}`}></span><a href={sectionUrl(a.section, lang)}>{s.name[lang]}</a></div></div>
+  <div class="wrap art" style={`--c:${s.color};--ci:${s.ink};--s:${s.soft}`}>
+    <article>
+      <Crumbs items={crumbs} label={u.breadcrumbs} />
+      <h1>{a.title}</h1>
+      <p class="dek">{a.dek}</p>
+      <div class="byl">
+        <div class="who"><a href={`${pre}/about/`}><b>{u.by}</b></a><span>{u.published} <time datetime={a.published}>{fmtDate(a.published, lang)}, {fmtTime(a.published)}</time>{a.updated && a.updated !== a.published && <> · {u.updated} <time datetime={a.updated}>{fmtTime(a.updated)}</time></>}</span></div>
+        <div class="shr">
+          <a href={`https://wa.me/?text=${shareT}%20${share}`} aria-label="WhatsApp" rel="noopener nofollow" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" aria-hidden="true"><path d="M4 20l1.5-4A8 8 0 1112 20a8 8 0 01-4-1z"/></svg></a>
+          <a href={`https://t.me/share/url?url=${share}&text=${shareT}`} aria-label="Telegram" rel="noopener nofollow" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4 2-15z"/></svg></a>
+          <a href={`https://www.facebook.com/sharer/sharer.php?u=${share}`} aria-label="Facebook" rel="noopener nofollow" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 00-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/></svg></a>
+        </div>
+      </div>
+      <figure><img src={im.src} alt={im.alt} width="1200" height="675" fetchpriority="high"><figcaption>{lang === 'he' ? 'איור: חדשות נתניה והשרון' : 'Illustration: NWS'}</figcaption></figure>
+      <div class="body">
+        {paras.slice(0, 2).map((p) => <p set:html={p}></p>)}
+        {a.keyPoints.length > 0 && <div class="kp"><b>{u.keyPoints}</b><ul>{a.keyPoints.map((k) => <li>{k}</li>)}</ul></div>}
+        {paras.slice(2).map((p) => <p set:html={p}></p>)}
+        {a.whatItMeans && <div><h2 style="font-size:22px;margin-bottom:8px">{u.whatItMeans}</h2><p class="mean">{a.whatItMeans}</p></div>}
+      </div>
+      {a.faq.length > 0 && <section class="faq" aria-labelledby="faq-h" style="margin-top:26px"><h2 id="faq-h" style="font-size:22px;margin-bottom:4px">{u.faq}</h2>{a.faq.map(([q, x]) => <details open><summary>{q}</summary><p>{x}</p></details>)}</section>}
+      <aside class="srcbox" aria-label={u.sourceBox}>
+        <b style="font-family:var(--h)">{u.sourceBox}</b>
+        <span>{a.sourceName}. <a href={a.sourceUrl} rel="noopener nofollow" target="_blank">{u.viewSource}</a></span>
+        <span class="note">{u.foundError} <a href={`/corrections/?url=${encodeURIComponent(path)}`}>{u.requestFix}</a> · {u.haveInfo} <a href={`${pre}/send-news/`}>{u.sendUs}</a></span>
+      </aside>
+      {lang === 'he' && places.length > 0 && <div class="chips" style="margin-top:20px">{places.map((p) => <a class="chip" href={placeUrl(p.slug)} style={`--c:${s.color}`}><i></i>חדשות {p.he}</a>)}</div>}
+      {lang === 'he' && a.tags.length > 0 && <p class="note" style="margin-top:14px">נושאים: {a.tags.join(' · ')}</p>}
+      {rel.length > 0 && <section class="sec" aria-labelledby="rel-h"><h2 id="rel-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>{u.related}</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">{rel.map((r) => <Card a={r} lang={lang} />)}</div></section>}
+    </article>
+    <aside>
+      <section class="sidebox" aria-labelledby="fl-h"><h2 id="fl-h"><i></i>{u.flash}</h2><ol>{flash.map((f) => <li><time datetime={f.published}>{fmtTime(f.published)}</time><a href={articleUrl(f, lang)}>{f.title}</a></li>)}</ol></section>
+      {lang === 'he' && cats.length > 0 && <section class="box" style="border:1px solid #E3E7ED" aria-labelledby="ct-h"><h2 id="ct-h" style="font-size:17px;margin-bottom:10px">בעלי מקצוע בנושא</h2><div style="display:flex;flex-direction:column;gap:10px">{cats.map((c) => <a href={`/directory/${c.slug}/`} style="display:flex;align-items:center;gap:10px"><span class="av" style={`--c:${c.color};width:40px;height:40px;font-size:16px`}>{c.plural[0]}</span><b style="font-size:15px">{c.plural} בנתניה</b></a>)}</div></section>}
+      <a class="tgbox" href={`${pre}/join/`}><b style="font-family:var(--h);font-size:19px">{u.joinTitle}</b><span>{u.joinText}</span><b>{lang === 'he' ? 'להצטרפות ←' : '→'}</b></a>
+    </aside>
+  </div>
+</Base>

@@ -1,0 +1,16 @@
+---
+import Page from '../../components/Page.astro';
+---
+<Page title="שלחו ידיעה | חדשות נתניה והשרון" h1="שלחו ידיעה" description="ראיתם משהו בשכונה? שלחו לחדשות נתניה והשרון ידיעה או תמונה מנתניה והשרון. כל ידיעה נבדקת לפני פרסום." path="/send-news/" intro="ראיתם משהו בשכונה? ספרו לנו." alternates={{ he: '/send-news/', ru: '/ru/send-news/', fr: '/fr/send-news/', en: '/en/send-news/' }}>
+  <p>כל ידיעה מקוראים נבדקת לפני פרסום. תמונה נפרסם רק באישור שלכם, ועם קרדיט אם תרצו.</p>
+  <form class="f" action="#" method="post">
+    <div class="hp" aria-hidden="true"><label>אל תמלאו את השדה הזה<input name="website" tabindex="-1" autocomplete="off"></label></div>
+    <label>מה קרה, איפה ומתי<textarea name="story" rows="6" required></textarea></label>
+    <label>תמונה (לא חובה)<input name="photo" type="file" accept="image/*"></label>
+    <label>שם (לא יפורסם בלי רשותכם)<input name="name" autocomplete="name"></label>
+    <label>טלפון לחזרה<input name="phone" type="tel" autocomplete="tel" required></label>
+    <label style="flex-direction:row;font-weight:400;gap:8px"><input type="checkbox" name="photoOk"> אני מאשר/ת לפרסם את התמונה ששלחתי</label>
+    <button class="btn pri" type="submit">שליחה</button>
+    <p class="note">הטופס יתחבר למערכת לפני השקת האתר.</p>
+  </form>
+</Page>

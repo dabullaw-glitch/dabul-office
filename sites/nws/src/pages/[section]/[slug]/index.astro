@@ -1,0 +1,8 @@
+---
+import ArticlePage from '../../../components/ArticlePage.astro';
+import { ARTICLES } from '../../../lib/content';
+import { SECTION_BY_KEY } from '../../../data/sections';
+export function getStaticPaths() { return ARTICLES.map((a) => ({ params: { section: SECTION_BY_KEY[a.section].slug, slug: a.slug }, props: { a } })); }
+const { a } = Astro.props;
+---
+<ArticlePage lang="he" a={a} />

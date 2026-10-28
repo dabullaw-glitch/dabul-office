@@ -1,0 +1,7 @@
+---
+import Page from '../components/Page.astro';
+import { SECTIONS } from '../data/sections';
+---
+<Page title="העמוד לא נמצא | חדשות נתניה והשרון" h1="העמוד לא נמצא" description="העמוד שחיפשתם לא נמצא באתר חדשות נתניה והשרון." path="/404/" noindex intro="אולי הכתובת השתנתה. הנה כמה מקומות טובים להמשיך:">
+  <ul>{SECTIONS.map((s) => <li><a href={`/${s.slug}/`}>{s.name.he}</a></li>)}<li><a href="/now/">נתניה עכשיו</a></li><li><a href="/directory/">מדריך העסקים</a></li><li><a href="/">לדף הבית</a></li></ul>
+</Page>

@@ -1,0 +1,1855 @@
+{
+  "verifiedAt": "2026-10-23T16:00:00+03:00",
+  "verificationMethod": "Each URL opened with an HTTP fetcher running outside Israel (Anthropic WebFetch) on 23 Oct 2026. Direct curl from the build sandbox is blocked by its egress policy, so exact HTTP status codes are usually unavailable; '4xx client error' = the site rejected the request; 'permission timeout' = URL could not be requested in this session and is UNVERIFIED.",
+  "fieldNotes": {
+    "opened_from_here.ok": "yes | partial | no",
+    "geo_blocked_israel_only": "yes | no | unknown ('no' = worked from outside Israel)",
+    "reliability": "official | media | community"
+  },
+  "sources": [
+    {
+      "id": "oref_alerts_live",
+      "name_he": "פיקוד העורף - התרעות בזמן אמת (JSON)",
+      "category": "alerts",
+      "provides": "Active rocket/missile/hostile-aircraft/infiltration alerts with list of areas (cities). The fastest official source.",
+      "access_method": "json_api",
+      "urls": [
+        "https://www.oref.org.il/WarningMessages/alert/alerts.json",
+        "https://www.oref.org.il/warningMessages/alert/History/AlertsHistory.json",
+        "https://alerts-history.oref.org.il/Shared/Ajax/GetAlarmsHistory.aspx?lang=he&mode=1"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "alerts.json: fetch failed with a 4xx client error from our non-Israeli fetcher (consistent with the documented Israel-only restriction). History endpoints not reachable from this sandbox (egress policy) and not separately tested."
+      },
+      "update_frequency": "real time (poll every 2-5 s when used)",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "yes",
+      "legal_terms": "Official public endpoint, no published API/license; unofficial use. Community clients send headers Referer: https://www.oref.org.il/ and X-Requested-With: XMLHttpRequest. Empty body/BOM when no alert.",
+      "reliability": "official",
+      "suggested_poll": "every 3 s, only from an Israeli server/proxy",
+      "notes": "npm package pikud-haoref-api states: 'This API is only accessible from within Israel' and offers an optional Israeli proxy setting. Requires an Israeli VPS (or an Israeli residential/datacenter proxy) - Supabase edge functions outside Israel cannot read it."
+    },
+    {
+      "id": "oref_telegram",
+      "name_he": "פיקוד העורף - ערוץ טלגרם רשמי",
+      "category": "alerts",
+      "provides": "Official Home Front Command channel (verified badge, ~208K subscribers): rocket and missile fire alerts, hostile aircraft, terrorist infiltration, 'event ended' updates, with area names.",
+      "access_method": "telegram_public_channel",
+      "urls": [
+        "https://t.me/s/PikudHaOref_all"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Preview loaded. Newest post id 36063 (19/10/2026 20:31 Israel time). Posts carry rocket alerts ('ירי רקטות וטילים'), infiltration alerts and end-of-event notices."
+      },
+      "update_frequency": "event driven; seconds to ~1 min after the alert",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Public channel of an official body; republish facts with attribution 'פיקוד העורף'. Never present as a replacement for official alerts.",
+      "reliability": "official",
+      "suggested_poll": "every 15-30 s (t.me/s preview, parse data-post ids and <time datetime>)",
+      "notes": "Best option that works from outside Israel. Slower and less structured than the JSON. Filter for Netanya + Sharon locality names."
+    },
+    {
+      "id": "tzofar_api",
+      "name_he": "צופר - צבע אדום (API לא רשמי)",
+      "category": "alerts",
+      "provides": "Third-party alert relay: /notifications (active alerts, returned [] when quiet) and /alerts-history (JSON: id, alerts[time epoch, cities[], threat, isDrill]).",
+      "access_method": "json_api",
+      "urls": [
+        "https://api.tzevaadom.co.il/notifications",
+        "https://api.tzevaadom.co.il/alerts-history"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Both opened from outside Israel. notifications returned []; alerts-history returned JSON, newest id 7670 (2026-10-09 16:57 UTC, ערב אל עראמשה)."
+      },
+      "update_frequency": "real time",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Terms (https://tzevaadom.co.il/en/terms/ s.10-11) PROHIBIT automated access, scraping, redistribution and commercial use of their API/endpoints without prior express written authorization. Do NOT use without written permission.",
+      "reliability": "community",
+      "suggested_poll": "do not poll unless written permission is obtained",
+      "notes": "Technically works abroad; legally blocked. Could ask Tzofar operators for written authorization."
+    },
+    {
+      "id": "tzofar_telegram",
+      "name_he": "צופר - צבע אדום (ערוץ טלגרם)",
+      "category": "alerts",
+      "provides": "Telegram relay of alerts (~142K subscribers) with sequential alert lists and 'event ended' notices.",
+      "access_method": "telegram_public_channel",
+      "urls": [
+        "https://t.me/s/tzevaadomm"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Preview loaded; newest posts 67561-67563 (alerts 10/09/2026)."
+      },
+      "update_frequency": "real time",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Same Tzofar terms (redistribution without authorization prohibited). Use as cross-check only.",
+      "reliability": "community",
+      "suggested_poll": "not recommended; use oref_telegram instead",
+      "notes": ""
+    },
+    {
+      "id": "ims_forecast_netanya",
+      "name_he": "השירות המטאורולוגי - תחזית נתניה (JSON)",
+      "category": "weather_sea",
+      "provides": "7-day forecast for Netanya (location id 7): daily min/max, weather_code, UV; hourly temperature, humidity, wind, gusts, rain, rain_chance, wave_height, pm10; Hebrew country text forecast.",
+      "access_method": "json_api",
+      "urls": [
+        "https://ims.gov.il/he/forecast_data/7",
+        "https://ims.gov.il/he/full_forecast_data/7"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Both returned JSON {data:{YYYY-MM-DD:{country,daily,hourly}}, method:'GET'} for 2026-10-23..29; today min 21 max 34."
+      },
+      "update_frequency": "several times a day",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Undocumented endpoint used by the IMS website (also used by the open-source 'weatheril' library, which maps Netania=7). IMS terms page (https://ims.gov.il/he/termOfuse) is JS-rendered and could not be read; attribute 'השירות המטאורולוגי'.",
+      "reliability": "official",
+      "suggested_poll": "every 60 min",
+      "notes": "lid 7 = Netanya per weatheril; JSON itself has no place name - confirm once in a browser."
+    },
+    {
+      "id": "ims_warnings_rss",
+      "name_he": "השירות המטאורולוגי - אזהרות והתראות מוקדמות (RSS)",
+      "category": "weather_sea",
+      "provides": "Nationwide weather warnings: dangerous sea for bathing, heat stress, fire risk, wind, visibility, floods.",
+      "access_method": "rss",
+      "urls": [
+        "https://ims.gov.il/sites/default/files/ims_data/rss/alert/rssAlert_general_country_he.xml"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "RSS 2.0, 7 items; newest Fri 23 Oct 2026 06:48 GMT: dangerous sea warning, waves 80-140 cm."
+      },
+      "update_frequency": "event driven, several per day",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Official government feed, attribute IMS.",
+      "reliability": "official",
+      "suggested_poll": "every 5 min",
+      "notes": "The IMS RSS index page (https://ims.gov.il/he/RSS_ForecastAlerts) lists 34 feeds incl. separate sea-warning and Center-region flood/storm/fire feeds, but their file paths are template-rendered and were not resolvable here."
+    },
+    {
+      "id": "ims_sea_xml",
+      "name_he": "השירות המטאורולוגי - תחזית ים (XML)",
+      "category": "weather_sea",
+      "provides": "Sea forecast: sea state + wave height range (cm), sea temperature, wind, per coast segment. Netanya = 'Central Coast' LocationId 210.",
+      "access_method": "other",
+      "urls": [
+        "https://ims.gov.il/sites/default/files/ims_data/xml_files/isr_sea.xml"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "XML (ISO-8859-8), issued 2026-10-23 00:07; Central Coast 210: waves 50-180, sea temp 27."
+      },
+      "update_frequency": "twice daily (morning/evening issues)",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Official file, attribute IMS. Decode as ISO-8859-8 (windows-1255).",
+      "reliability": "official",
+      "suggested_poll": "every 3 h",
+      "notes": ""
+    },
+    {
+      "id": "ims_cities_xml",
+      "name_he": "השירות המטאורולוגי - תחזית ערים (XML)",
+      "category": "weather_sea",
+      "provides": "4-day forecast for 15 cities. Netanya NOT included (nearest Tel Aviv 402, Haifa 115).",
+      "access_method": "other",
+      "urls": [
+        "https://ims.gov.il/sites/default/files/ims_data/xml_files/isr_cities.xml"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "XML, issued 2026-10-23 04:20, 15 locations, no Netanya."
+      },
+      "update_frequency": "twice daily",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Official, attribute IMS.",
+      "reliability": "official",
+      "suggested_poll": "not needed (use ims_forecast_netanya)",
+      "notes": ""
+    },
+    {
+      "id": "ims_observation_api",
+      "name_he": "השירות המטאורולוגי - API נתונים עשר-דקתיים (Envista)",
+      "category": "weather_sea",
+      "provides": "Measured station data (10-minute and 1-minute): temperature, rain, wind, etc.",
+      "access_method": "json_api",
+      "urls": [
+        "https://api.ims.gov.il/v1/envista/stations",
+        "https://ims.gov.il/he/ObservationDataAPI"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "api.ims.gov.il returned a 4xx client error without a token (expected 401). Info page is JS-rendered."
+      },
+      "update_frequency": "10 min",
+      "needs_key": {
+        "required": true,
+        "free": true,
+        "how": "Accept terms on https://ims.gov.il/he/ObservationDataAPI and request a token from IMS (community docs say by email to ims@ims.gov.il - unverified). Header: Authorization: ApiToken <token>."
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Requires signing IMS terms of use.",
+      "reliability": "official",
+      "suggested_poll": "every 10 min (after token)",
+      "notes": "Optional; forecasts + warnings cover the news use case."
+    },
+    {
+      "id": "netanya_muni_home",
+      "name_he": "עיריית נתניה - אתר העירייה",
+      "category": "municipality",
+      "provides": "Municipal portal (SharePoint). Static menus render; news/updates widgets are client-side templates ({{...}}). No RSS and no news listing page found.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.netanya.muni.il/",
+        "https://www.netanya.muni.il/Pages/Search.aspx"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Homepage loaded; dynamic sections showed unfilled {{...}} placeholders and a 'JavaScript not available' notice."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Public municipal content; quote with attribution.",
+      "reliability": "official",
+      "suggested_poll": "every 30 min via headless browser (Playwright) if needed",
+      "notes": "Individual articles live under /News/Pages/articleNNNN.aspx (e.g. article3155.aspx). https://www.netanya.muni.il/News/Pages/default.aspx was NOT opened (fetch permission timeout) - check it in a browser."
+    },
+    {
+      "id": "netanya_pharmacy",
+      "name_he": "עיריית נתניה - בית מרקחת תורן",
+      "category": "municipality",
+      "provides": "Today's duty pharmacy (name, street, phone) in static HTML.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.netanya.muni.il/pharmacy",
+        "https://www.netanya.muni.il/City/SecurityAndEmergency/EssentialServices/Pharmacies/Pages/default.aspx"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Static text: 'בית מרקחת תורן לתאריך 23/10/2026 פארם פלוס רח' שד ויצמן טלפון: 055-8858198'. Full search tool is JS."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Public service info.",
+      "reliability": "official",
+      "suggested_poll": "twice daily (00:30 and 08:00 Israel time)",
+      "notes": ""
+    },
+    {
+      "id": "netanya_beaches",
+      "name_he": "עיריית נתניה - חופים",
+      "category": "municipality",
+      "provides": "Beaches page (lifeguard hours, beach list).",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.netanya.muni.il/City/Beaches/Pages/default.aspx"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "Linked from homepage; fetch blocked by permission timeout - not opened."
+      },
+      "update_frequency": "seasonal",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Public municipal info.",
+      "reliability": "official",
+      "suggested_poll": "daily",
+      "notes": "Combine with ims_warnings_rss sea warnings for a daily 'beaches today' item."
+    },
+    {
+      "id": "netanya_council",
+      "name_he": "עיריית נתניה - מועצת העיר ופרוטוקולים",
+      "category": "municipality",
+      "provides": "City council (17th) page, LIVE broadcasts page, protocols as PDFs under /DocLib1/. Regular meetings: first Tuesday of every month 18:30 (decision 460, 18.02.2026).",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.netanya.muni.il/CityHall/transparency/MayorCityCouncil/Pages/CityCouncil17.aspx",
+        "https://www.netanya.muni.il/CityHall/transparency/MayorCityCouncil/Pages/Moazalive.aspx",
+        "https://www.netanya.muni.il/CityHall/transparency/CommitteesProtocols/Pages/default.aspx",
+        "https://www.netanya.muni.il/DocLib1/prot531802.pdf"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "CityCouncil17 loaded but the protocol list is JS-rendered (placeholders). Example PDF found via search: DocLib1/prot531802.pdf (council 17, meeting 53)."
+      },
+      "update_frequency": "monthly",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Public records (transparency).",
+      "reliability": "official",
+      "suggested_poll": "daily via headless browser",
+      "notes": ""
+    },
+    {
+      "id": "netanya_planning_committee",
+      "name_he": "הוועדה המקומית לתכנון ובניה נתניה (בר טכנולוגיות)",
+      "category": "planning_realestate",
+      "provides": "Planning committee meetings, agendas, protocols, publications, plan and permit-application search.",
+      "access_method": "html_page",
+      "urls": [
+        "https://nat.bartech-net.co.il/SearchMeetings",
+        "https://www.netanya.muni.il/CityHall/Engineering/Pages/CommitteeMeetings.aspx",
+        "https://www.netanya.muni.il/CityHall/transparency/CommitteesProtocols/Pages/LPBC.aspx",
+        "https://www.netanya.muni.il/CityHall/Engineering/Pages/Publications.aspx"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Municipal pages loaded (dynamic parts empty) and point to nat.bartech-net.co.il/SearchMeetings, which was NOT opened (permission timeout). Another Bartech committee site (netivot.bartech-net.co.il/SearchMeetings) is server-rendered with an agenda table (meeting 2026009, 28/10/2026) and routes /SearchPublication, /SearchCityPlan, /SearchPermitApplication, /MeetingsArchive."
+      },
+      "update_frequency": "weekly-biweekly",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Public planning records (Planning and Building Law publication duties).",
+      "reliability": "official",
+      "suggested_poll": "daily",
+      "notes": "Strong real-estate story source (Tama 38 / pinui-binui approvals). Verify nat.bartech-net.co.il from a browser."
+    },
+    {
+      "id": "netanya_gis",
+      "name_he": "עיריית נתניה - GIS הנדסי",
+      "category": "planning_realestate",
+      "provides": "Municipal GIS layers (plans, permits).",
+      "access_method": "other",
+      "urls": [
+        "https://v5.gis-net.co.il/v5/netanya?layers=248",
+        "http://gis.netanyagis.co.il/Gis"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "Links seen on the engineering page; not opened."
+      },
+      "update_frequency": "unknown",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Check terms before reuse.",
+      "reliability": "official",
+      "suggested_poll": "not for polling",
+      "notes": ""
+    },
+    {
+      "id": "netanya_social",
+      "name_he": "עיריית נתניה - רשתות חברתיות ווטסאפ",
+      "category": "municipality",
+      "provides": "Facebook, Instagram, YouTube, city WhatsApp service (052-6333106) and neighborhood WhatsApp. No Telegram channel found.",
+      "access_method": "other",
+      "urls": [
+        "https://www.facebook.com/netanya.muni",
+        "https://www.instagram.com/netanya.city/",
+        "https://www.youtube.com/channel/UCrH0nI-swnGxVm2H_QdT8-w",
+        "https://www.youtube.com/feeds/videos.xml?channel_id=UCrH0nI-swnGxVm2H_QdT8-w",
+        "https://api.whatsapp.com/send?phone=972526333106"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Links found on the official homepage. YouTube RSS URL (standard pattern) not opened - permission timeout."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": true,
+        "free": null,
+        "how": "Facebook/Instagram need Meta Graph API with Page Public Content Access (app review) - not practical. YouTube RSS needs no key."
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Facebook/Instagram scraping violates Meta terms; use YouTube RSS only, or follow manually.",
+      "reliability": "official",
+      "suggested_poll": "YouTube RSS every 60 min",
+      "notes": ""
+    },
+    {
+      "id": "netanya_spokesperson",
+      "name_he": "עיריית נתניה - דוברות",
+      "category": "municipality",
+      "provides": "Spokesperson unit: handles journalist inquiries and press releases.",
+      "access_method": "email_press_list",
+      "urls": [
+        "https://www.netanya.muni.il/CityHall/Units/Pages/Spokespersons.aspx"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Page loaded; spokesperson name/email are JS/obfuscated; contact form on the page; general line 106. No press-list sign-up described."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": true,
+        "free": true,
+        "how": "Ask the spokesperson (contact form on the page, or via 106) to add the site's editor email to the press-release list."
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Press releases are intended for publication.",
+      "reliability": "official",
+      "suggested_poll": "inbound email -> parse",
+      "notes": "Most local outlets' municipal stories come from this list."
+    },
+    {
+      "id": "netanya_emergency_info",
+      "name_he": "עיריית נתניה - חירום והפסקות חשמל/מים",
+      "category": "municipality",
+      "provides": "Emergency information hub, power-outage and water-crisis guidance, call center 106 and WhatsApp numbers.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.netanya.muni.il/City/SecurityAndEmergency/Pages/PowerOutage.aspx",
+        "https://www.netanya.muni.il/City/SecurityAndEmergency/Info/Pages/default.aspx",
+        "https://www.netanya.muni.il/City/SecurityAndEmergency/Pages/WaterCrisis.aspx"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "PowerOutage.aspx loaded (static guidance)."
+      },
+      "update_frequency": "rarely",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Public info.",
+      "reliability": "official",
+      "suggested_poll": "weekly (reference only)",
+      "notes": ""
+    },
+    {
+      "id": "police_telegram",
+      "name_he": "משטרת ישראל - ערוץ טלגרם",
+      "category": "police_emergency",
+      "provides": "National police press-release style posts (arrests, seizures, enforcement), ~13.1K subscribers.",
+      "access_method": "telegram_public_channel",
+      "urls": [
+        "https://t.me/s/israelpoliceforce"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Preview loaded; newest post 5892 (Tzurif operation). Describes itself as 'ערוץ הטלגרם של משטרת ישראל'; no verified badge visible."
+      },
+      "update_frequency": "several per day",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Official press material, attribute 'דוברות המשטרה'.",
+      "reliability": "official",
+      "suggested_poll": "every 5 min, keyword filter (נתניה, השרון, אבן יהודה, ...)",
+      "notes": ""
+    },
+    {
+      "id": "police_whatsapp",
+      "name_he": "דוברות משטרת ישראל - ערוץ ווטסאפ",
+      "category": "police_emergency",
+      "provides": "Official spokesperson WhatsApp channel (~138K followers).",
+      "access_method": "other",
+      "urls": [
+        "https://whatsapp.com/channel/0029VaECQkU05MUnP6BPsO2G"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Channel page shows name and follower count only; messages need the WhatsApp app."
+      },
+      "update_frequency": "many per day",
+      "needs_key": {
+        "required": true,
+        "free": true,
+        "how": "Follow manually in WhatsApp; no official read API for channels."
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Automating a WhatsApp client violates WhatsApp terms.",
+      "reliability": "official",
+      "suggested_poll": "manual",
+      "notes": ""
+    },
+    {
+      "id": "police_x",
+      "name_he": "משטרת ישראל / דוברות - X",
+      "category": "police_emergency",
+      "provides": "Official X accounts @IL_police and @Dovrut_Police.",
+      "access_method": "other",
+      "urls": [
+        "https://x.com/IL_police",
+        "https://x.com/dovrut_police"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "Not opened; X needs login/API."
+      },
+      "update_frequency": "many per day",
+      "needs_key": {
+        "required": true,
+        "free": false,
+        "how": "X API paid tier."
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "X terms.",
+      "reliability": "official",
+      "suggested_poll": "not recommended (cost)",
+      "notes": ""
+    },
+    {
+      "id": "police_press_list",
+      "name_he": "דוברות משטרת ישראל - מרחב שרון / מחוז מרכז",
+      "category": "police_emergency",
+      "provides": "Regional police press releases (Sharon area stations incl. Netanya).",
+      "access_method": "email_press_list",
+      "urls": [
+        "https://www.police.gov.il/"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "police.gov.il pages are robots-disallowed for our fetcher."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": true,
+        "free": true,
+        "how": "Request to join the Central District / Sharon area spokesperson press list (contact via police spokesperson unit; requires a registered media outlet)."
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Press material.",
+      "reliability": "official",
+      "suggested_poll": "inbound email",
+      "notes": ""
+    },
+    {
+      "id": "mda_telegram",
+      "name_he": "מגן דוד אדום - ערוץ טלגרם רשמי",
+      "category": "police_emergency",
+      "provides": "Official MDA incident reports nationwide (injuries, locality, street), ~7.8K subscribers.",
+      "access_method": "telegram_public_channel",
+      "urls": [
+        "https://t.me/s/mdaisrael"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Preview loaded; description 'הערוץ הרשמי של מגן דוד אדום'; recent posts 09:36-09:38 (Or Yehuda, Route 40, Ma'ale Adumim)."
+      },
+      "update_frequency": "many per day",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Official press material, attribute 'מד\"א'.",
+      "reliability": "official",
+      "suggested_poll": "every 1-2 min, filter by Netanya/Sharon locality names",
+      "notes": ""
+    },
+    {
+      "id": "fire_official",
+      "name_he": "כבאות והצלה לישראל - דוברות מחוז מרכז",
+      "category": "police_emergency",
+      "provides": "Official fire and rescue statements (Central District covers Netanya/Sharon).",
+      "access_method": "email_press_list",
+      "urls": [],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "No official public Telegram channel found; gov.il pages not tested (fetch permission)."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": true,
+        "free": true,
+        "how": "Request press-list / WhatsApp media group membership from the Fire and Rescue Central District spokesperson."
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Press material.",
+      "reliability": "official",
+      "suggested_poll": "inbound",
+      "notes": ""
+    },
+    {
+      "id": "fire_unofficial_telegram",
+      "name_he": "כבאות והצלה ארצי (ערוץ לא רשמי)",
+      "category": "police_emergency",
+      "provides": "Community real-time fire call reports (~26.1K subscribers). Channel itself states it is NOT official.",
+      "access_method": "telegram_public_channel",
+      "urls": [
+        "https://t.me/s/fireisrael7777"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Preview loaded; disclaimer says not official; posts like 'שריפה' + location."
+      },
+      "update_frequency": "many per day",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Unverified; use only as a tip to verify, never publish as-is.",
+      "reliability": "community",
+      "suggested_poll": "every 2 min as tip feed only",
+      "notes": "Old channel t.me/fireisrael777 moved here."
+    },
+    {
+      "id": "community_reports_telegram",
+      "name_he": "דיווחים חמים מהשטח (ערוץ קהילתי)",
+      "category": "police_emergency",
+      "provides": "Reposts of Home Front Command, United Hatzalah, ZAKA reports (~24.6K).",
+      "access_method": "telegram_public_channel",
+      "urls": [
+        "https://t.me/s/divuhim1234"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Preview loaded (archive page)."
+      },
+      "update_frequency": "many per day",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Unverified aggregator.",
+      "reliability": "community",
+      "suggested_poll": "optional tip feed",
+      "notes": ""
+    },
+    {
+      "id": "iec_outages",
+      "name_he": "חברת החשמל - הפסקות חשמל לפי כתובת",
+      "category": "utilities",
+      "provides": "Planned and current power outages by address; outage portal shows buildings and streets affected.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.iec.co.il/search-outages/",
+        "https://www.iec.co.il/content/businessclients/contentpages/poweroutageportal"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Only <head> returned; body is client-rendered (SPA). No public API documented."
+      },
+      "update_frequency": "continuous",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "No open-data license; scraping their internal API is not authorized.",
+      "reliability": "official",
+      "suggested_poll": "every 30 min via headless browser from Israel only if allowed; better: IEC press office + municipal notices",
+      "notes": "Consider asking IEC spokesperson for regional planned-outage notices by email."
+    },
+    {
+      "id": "mei_netanya",
+      "name_he": "מי נתניה - תאגיד המים",
+      "category": "utilities",
+      "provides": "Water/sewage corporation of Netanya: outage and water-quality notices.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.mei-netanya.co.il/",
+        "https://www.mei-netanya.co.il/search/?s="
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "/search/?s= returned a server error; homepage not opened (fetch permission timeout)."
+      },
+      "update_frequency": "event driven",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Public notices.",
+      "reliability": "official",
+      "suggested_poll": "every 30 min once verified",
+      "notes": "Check in a browser for a news/announcements page or RSS; ask to join their notice list."
+    },
+    {
+      "id": "iplan_xplan_arcgis",
+      "name_he": "מינהל התכנון - שכבת תוכניות (ArcGIS REST)",
+      "category": "planning_realestate",
+      "provides": "Public ArcGIS layer of online plans (plan number, status, polygons) - filter by Netanya jurisdiction for new/changed plans.",
+      "access_method": "json_api",
+      "urls": [
+        "https://ags.iplan.gov.il/arcgisiplan/rest/services/PlanningPublic/xplan_without_77_78/MapServer/1",
+        "https://ags.iplan.gov.il/xplan/"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "Not opened by us (fetch permission timeout); a public GitHub issue (reihlinstinct/ginot-hair-plans #253) reports live queries to this layer working (query?...&f=json)."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "gov.il terms reserve State copyright (incl. maps); fair use with attribution; republishing polygons may need permission. Headlines/facts OK.",
+      "reliability": "official",
+      "suggested_poll": "daily",
+      "notes": ""
+    },
+    {
+      "id": "mavat",
+      "name_he": "מבא\"ת - מידע תכנוני (מינהל התכנון)",
+      "category": "planning_realestate",
+      "provides": "Plan documents, status, deposit/approval notices.",
+      "access_method": "html_page",
+      "urls": [
+        "https://mavat.iplan.gov.il/",
+        "https://www.mavat.iplan.gov.il/SV3?searchEntity=1&searchType=3"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "robots.txt disallows our fetcher; JS application."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "robots disallow + embedded GovMap tokens must not be reused. Use iplan ArcGIS layer + Netanya committee site instead.",
+      "reliability": "official",
+      "suggested_poll": "manual lookups only",
+      "notes": ""
+    },
+    {
+      "id": "nadlan_gov",
+      "name_he": "אתר הנדל\"ן הממשלתי (nadlan.gov.il)",
+      "category": "planning_realestate",
+      "provides": "Real-estate transaction prices by city/street.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.nadlan.gov.il/"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Only <head> returned; SPA. Per GitHub PR (tomerytz-del/ShukNadlan #335) API calls require a domain-bound signed payload and apiToken (GovMap); scraping would mean forging signatures."
+      },
+      "update_frequency": "near real time",
+      "needs_key": {
+        "required": true,
+        "free": null,
+        "how": "Request an official GovMap/nadlan API token from the Planning Administration/GovMap; terms unknown."
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Do not bypass request signing.",
+      "reliability": "official",
+      "suggested_poll": "none until official token",
+      "notes": "For news, a monthly manual 'deals in Netanya' review is enough."
+    },
+    {
+      "id": "nadlan_taxes",
+      "name_he": "רשות המסים - מידע נדל\"ן",
+      "category": "planning_realestate",
+      "provides": "Tax Authority completed-sale database (search by locality or block/parcel). Free, public.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.gov.il/he/service/real_estate_information",
+        "https://nadlan.taxes.gov.il/svinfonadlan2010/startpageNadlanNewDesign.aspx"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "gov.il service page loaded: free, open to the public, no bulk/API mentioned."
+      },
+      "update_frequency": "ongoing",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Interactive search only.",
+      "reliability": "official",
+      "suggested_poll": "manual",
+      "notes": ""
+    },
+    {
+      "id": "iroads",
+      "name_he": "נתיבי ישראל - עבודות והסדרי תנועה",
+      "category": "transport_roads",
+      "provides": "National roads company: road works, closures, traffic arrangements.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.iroads.co.il/"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "4xx client error from our non-Israeli fetcher (likely geo/bot block)."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Public notices.",
+      "reliability": "official",
+      "suggested_poll": "every 30 min from an Israeli server",
+      "notes": "Netivei Israel notices are often reposted on municipal sites (e.g. raanana.muni.il)."
+    },
+    {
+      "id": "kan_traffic",
+      "name_he": "כאן 11 - דיווחי תנועה",
+      "category": "transport_roads",
+      "provides": "Real-time traffic reports.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.kan.org.il/traffic-reports/"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "4xx client error from our fetcher."
+      },
+      "update_frequency": "real time",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Kan content; headlines only.",
+      "reliability": "media",
+      "suggested_poll": "from Israeli server only",
+      "notes": ""
+    },
+    {
+      "id": "mot_gtfs",
+      "name_he": "משרד התחבורה - GTFS תחבורה ציבורית",
+      "category": "transport_roads",
+      "provides": "Full public-transport schedule (GTFS zip, nightly). Diff it to detect Netanya line changes.",
+      "access_method": "other",
+      "urls": [
+        "ftp://gtfs.mot.gov.il/israel-public-transportation.zip",
+        "https://www.gov.il/BlobFolder/generalpage/gtfs_general_transit_feed_specifications/he/GTFS%20-%20Developer%20Information.pdf"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Developer PDF opened (files uploaded nightly to FTP). FTP itself not tested."
+      },
+      "update_frequency": "nightly",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Government open data.",
+      "reliability": "official",
+      "suggested_poll": "daily diff (from a VPS; edge functions cannot do FTP)",
+      "notes": ""
+    },
+    {
+      "id": "mot_siri",
+      "name_he": "משרד התחבורה - SIRI זמן אמת",
+      "category": "transport_roads",
+      "provides": "Real-time bus positions/arrivals.",
+      "access_method": "json_api",
+      "urls": [
+        "https://www.gov.il/he/Departments/General/real_time_information_siri"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "Not opened."
+      },
+      "update_frequency": "real time",
+      "needs_key": {
+        "required": true,
+        "free": true,
+        "how": "Registration with the Ministry of Transport (historically with IP whitelisting)."
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "MOT terms.",
+      "reliability": "official",
+      "suggested_poll": "not needed for news",
+      "notes": ""
+    },
+    {
+      "id": "bus_gov_il",
+      "name_he": "הרשות הארצית לתחבורה ציבורית - עדכוני קווים",
+      "category": "transport_roads",
+      "provides": "Line changes and updates.",
+      "access_method": "html_page",
+      "urls": [
+        "https://bus.gov.il/"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Only <head> returned; SPA."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Public info.",
+      "reliability": "official",
+      "suggested_poll": "daily via headless browser",
+      "notes": ""
+    },
+    {
+      "id": "extra_netanya",
+      "name_he": "אקסטרה - שינויים ברשת התחבורה הציבורית בנתניה",
+      "category": "transport_roads",
+      "provides": "Netanya bus operator Extra: network-change pages and PDFs (reform effective 19.8.22).",
+      "access_method": "html_page",
+      "urls": [
+        "https://extra-pt.co.il/changes",
+        "https://www.netanya.muni.il/tbus"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Both loaded; static content about the 2022 network reform."
+      },
+      "update_frequency": "rare",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Public info.",
+      "reliability": "official",
+      "suggested_poll": "weekly",
+      "notes": ""
+    },
+    {
+      "id": "ynet_news",
+      "name_he": "ynet - חדשות",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://www.ynet.co.il/Integration/StoryRss2.xml"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "RSS 2.0, 30 items, title+teaser only; newest 23 Oct 2026."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "every 5 min, filter by keywords",
+      "notes": ""
+    },
+    {
+      "id": "ynet_flash",
+      "name_he": "ynet - מבזקים",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://www.ynet.co.il/Integration/StoryRss1854.xml"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "RSS 2.0, 30 items; newest 22 Oct 2026 18:22."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "every 2 min, keyword filter",
+      "notes": ""
+    },
+    {
+      "id": "walla_israel",
+      "name_he": "וואלה - חדשות בארץ",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://www.walla.co.il/rss/feed/news/israel",
+        "https://rss.walla.co.il/feed/1"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "rss.walla.co.il/feed/1 302-redirects to www.walla.co.il/rss/feed/news/israel; RSS 2.0, 30 items, newest 23 Oct 10:52 GMT."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "every 5 min",
+      "notes": ""
+    },
+    {
+      "id": "maariv_news",
+      "name_he": "מעריב - חדשות",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://www.maariv.co.il/Rss/RssChadashot"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "RSS 2.0, 20 items, newest 23 Oct 12:42 GMT."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "every 5 min",
+      "notes": ""
+    },
+    {
+      "id": "israelhayom",
+      "name_he": "ישראל היום",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://www.israelhayom.co.il/rss.xml"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "RSS 2.0, 88 items, newest 22 Oct 20:07 GMT."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "every 5 min",
+      "notes": ""
+    },
+    {
+      "id": "globes_markets",
+      "name_he": "גלובס - שוק ההון",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://www.globes.co.il/webservice/rss/rssfeeder.asmx/FeederNode?iID=585"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "RSS 2.0, 15 items (capital markets section), newest 22 Oct."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "every 15 min",
+      "notes": "Other Globes sections use other iID values (not verified)."
+    },
+    {
+      "id": "mako_news",
+      "name_he": "mako - חדשות",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://rcs.mako.co.il/rss/31750a2610f26110VgnVCM1000005201000aRCRD.xml"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "RSS loads (title 'חדשות - mako', 20 items) but newest item 18 Oct 2026 and items are sports - looks stale/wrong section."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "every 15 min",
+      "notes": "Find a current mako/N12 feed before relying on it."
+    },
+    {
+      "id": "haaretz",
+      "name_he": "הארץ",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://www.haaretz.co.il/srv/htz---all-articles"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "Fetch refused: robots.txt disallows."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "robots disallow; paywalled. Do not scrape.",
+      "reliability": "media",
+      "suggested_poll": "do not poll",
+      "notes": ""
+    },
+    {
+      "id": "kan_rss",
+      "name_he": "כאן חדשות",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://www.kan.org.il/rss/"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "4xx client error. A Telegram channel named 'חדשות קאן' (t.me/kann_news) is NOT Kan (spam/investment posts) - do not use."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "from Israeli server only",
+      "notes": ""
+    },
+    {
+      "id": "calcalist",
+      "name_he": "כלכליסט",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://www.calcalist.co.il/GeneralRSS/0,16335,L-8,00.xml"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "4xx client error."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "untested",
+      "notes": ""
+    },
+    {
+      "id": "sport5",
+      "name_he": "ערוץ הספורט",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://www.sport5.co.il/rss.aspx"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "4xx client error."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "untested",
+      "notes": ""
+    },
+    {
+      "id": "one",
+      "name_he": "ONE",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://www.one.co.il/cat/coop/xml/rss/newsfeed.aspx"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "4xx client error."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "untested",
+      "notes": ""
+    },
+    {
+      "id": "sport1",
+      "name_he": "ספורט 1",
+      "category": "media_rss",
+      "provides": "Headlines, short description, link, pubDate.",
+      "access_method": "rss",
+      "urls": [
+        "https://sport1.maariv.co.il/feed/"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "Returned the HTML homepage, not RSS (sport1 now lives at sport1.maariv.co.il)."
+      },
+      "update_frequency": "every few minutes",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Headlines + link only; do not copy body text.",
+      "reliability": "media",
+      "suggested_poll": "none",
+      "notes": ""
+    },
+    {
+      "id": "netanyanet",
+      "name_he": "נתניה נט",
+      "category": "media_rss",
+      "provides": "Main active Netanya local news site (Joomla). Local news, community, real estate, sports.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.netanyanet.co.il/",
+        "https://www.netanyanet.co.il/חדשות-נתניה/חדשות-מקומיות",
+        "https://www.netanyanet.co.il/המייל-הכתום"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Homepage and local-news listing loaded; newest 23 Oct 2026. Joomla feed URL (?format=feed&type=rss) returns HTML - RSS disabled."
+      },
+      "update_frequency": "several per day",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Competitor content: headline monitoring + link only. Operator: לשם בר תקשורת בע\"מ.",
+      "reliability": "media",
+      "suggested_poll": "every 10 min (HTML list, detect new article ids e.g. /17992-...)",
+      "notes": ""
+    },
+    {
+      "id": "news08",
+      "name_he": "חדשות 08 (מהדרום ועד השרון)",
+      "category": "media_rss",
+      "provides": "Regional WordPress news site incl. Netanya/Kfar Saba sections.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.news08.net/",
+        "https://www.news08.net/feed/"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Homepage loaded (WordPress, newest 23/10/2026 15:54). /feed/ NOT opened (fetch permission timeout) - WordPress default, likely works."
+      },
+      "update_frequency": "many per day",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Headlines + link only.",
+      "reliability": "media",
+      "suggested_poll": "every 10 min via /feed/ once verified",
+      "notes": ""
+    },
+    {
+      "id": "ksn",
+      "name_he": "נתניה און ליין (KSN)",
+      "category": "media_rss",
+      "provides": "Netanya local site (WordPress).",
+      "access_method": "rss",
+      "urls": [
+        "https://www.ksn.co.il/feed/"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "RSS 2.0, 20 items, but newest item 07 Aug 2025 - site dormant."
+      },
+      "update_frequency": "dormant",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Headlines only.",
+      "reliability": "media",
+      "suggested_poll": "weekly",
+      "notes": ""
+    },
+    {
+      "id": "mynet_netanya",
+      "name_he": "mynet נתניה",
+      "category": "media_rss",
+      "provides": "ynet group local site for Netanya.",
+      "access_method": "html_page",
+      "urls": [
+        "https://netanya.mynet.co.il/"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Loaded; newest dated items 24-25.12.2025 - appears inactive/stale. No RSS link shown."
+      },
+      "update_frequency": "unclear",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Headlines only.",
+      "reliability": "media",
+      "suggested_poll": "daily",
+      "notes": ""
+    },
+    {
+      "id": "sharonline",
+      "name_he": "שרון אונליין",
+      "category": "media_rss",
+      "provides": "Sharon hyper-local site with Kfar Yona section.",
+      "access_method": "html_page",
+      "urls": [
+        "https://sharonline.co.il/",
+        "https://sharonline.co.il/kfar-yona/"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "kfar-yona page returned a 4xx client error."
+      },
+      "update_frequency": "unknown",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Headlines only.",
+      "reliability": "media",
+      "suggested_poll": "untested",
+      "notes": ""
+    },
+    {
+      "id": "zman_hefer",
+      "name_he": "זמן ישראל - תגית עמק חפר",
+      "category": "media_rss",
+      "provides": "Articles tagged Emek Hefer Regional Council (low frequency).",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.zman.co.il/feed/20524/"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "HTML topic page (not RSS); newest 29/09/2026."
+      },
+      "update_frequency": "monthly",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Headlines only.",
+      "reliability": "media",
+      "suggested_poll": "daily",
+      "notes": ""
+    },
+    {
+      "id": "fcmn",
+      "name_he": "מכבי נתניה - אתר רשמי",
+      "category": "sports",
+      "provides": "Official club news, fixtures, squad (WordPress).",
+      "access_method": "html_page",
+      "urls": [
+        "https://fcmn.co.il/",
+        "https://fcmn.co.il/feed/"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Homepage loaded; newest news 17 Oct 2026. /feed/ not tested (WordPress default)."
+      },
+      "update_frequency": "1-3 per week",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Official club statements; quote with attribution.",
+      "reliability": "official",
+      "suggested_poll": "every 30 min",
+      "notes": ""
+    },
+    {
+      "id": "fcmn_social",
+      "name_he": "מכבי נתניה - רשתות",
+      "category": "sports",
+      "provides": "X @fcmn_il, Instagram fcmn_il, Facebook Fcmn2, YouTube FCMNHistory.",
+      "access_method": "other",
+      "urls": [
+        "https://x.com/fcmn_il",
+        "https://www.instagram.com/fcmn_il",
+        "https://www.facebook.com/Fcmn2",
+        "https://www.youtube.com/user/FCMNHistory"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Links from official site; not opened."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": true,
+        "free": null,
+        "how": "X/Meta APIs (paid or app review)."
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Platform terms.",
+      "reliability": "official",
+      "suggested_poll": "manual",
+      "notes": ""
+    },
+    {
+      "id": "netanya_updates_tg",
+      "name_he": "מכבי נתניה עדכונים (ערוץ אוהדים)",
+      "category": "sports",
+      "provides": "Fan-run Telegram channel (~4.7K) with live match updates.",
+      "access_method": "telegram_public_channel",
+      "urls": [
+        "https://t.me/s/NetanyaUpdates"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Preview loaded; live match posts 6556-6558."
+      },
+      "update_frequency": "match days",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Unofficial; tips only.",
+      "reliability": "community",
+      "suggested_poll": "every 5 min on match days",
+      "notes": ""
+    },
+    {
+      "id": "ifa_club",
+      "name_he": "ההתאחדות לכדורגל - מכבי נתניה",
+      "category": "sports",
+      "provides": "Official fixtures/results.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.football.org.il/clubs/club/?club_id=1068"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "Not opened."
+      },
+      "update_frequency": "weekly",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Facts only.",
+      "reliability": "official",
+      "suggested_poll": "daily",
+      "notes": ""
+    },
+    {
+      "id": "heichal_smarticket",
+      "name_he": "היכל התרבות נתניה - לוח אירועים (סמארטיקט)",
+      "category": "culture_events",
+      "provides": "Official venue ticketing listing: shows, museum activities, conservatory, with dates and links.",
+      "access_method": "html_page",
+      "urls": [
+        "https://netanya.smarticket.co.il/"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Server-rendered listing; e.g. 24 Oct 2026 20:00 'יש לך עדיין סיכוי', Netanya Museum events 25 Oct."
+      },
+      "update_frequency": "weekly",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Event facts + link to buy; no prices in our copy if desired.",
+      "reliability": "official",
+      "suggested_poll": "every 6 h",
+      "notes": ""
+    },
+    {
+      "id": "heichal_site",
+      "name_he": "היכל התרבות נתניה - אתר",
+      "category": "culture_events",
+      "provides": "Venue website.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.netanya-culture.co.il/",
+        "https://www.netanya.muni.il/CityHall/MCN/Pages/CultureHall.aspx"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "netanya-culture.co.il: robots.txt disallows our fetcher."
+      },
+      "update_frequency": "weekly",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "robots disallow - use smarticket listing.",
+      "reliability": "official",
+      "suggested_poll": "none",
+      "notes": ""
+    },
+    {
+      "id": "tickchak_netanya",
+      "name_he": "טיקצ'אק - הופעות בנתניה (אגרגטור)",
+      "category": "culture_events",
+      "provides": "Aggregated show listings for Netanya venues.",
+      "access_method": "html_page",
+      "urls": [
+        "https://live.tickchak.co.il/netanya-culture-hall",
+        "https://live.tickchak.co.il/netanya"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Loaded; states data is AI-updated and may contain errors; not official ticketing."
+      },
+      "update_frequency": "daily",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Third-party; verify before publishing.",
+      "reliability": "community",
+      "suggested_poll": "daily (cross-check only)",
+      "notes": ""
+    },
+    {
+      "id": "laniado",
+      "name_he": "המרכז הרפואי לניאדו - חדשות",
+      "category": "health",
+      "provides": "Hospital announcements (WordPress).",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.laniado.org.il/news/",
+        "https://www.laniado.org.il/en/news/"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "English news page loaded (newest 12.03.2024); Hebrew page linked, not opened. No RSS link shown. Phone 09-860-4666."
+      },
+      "update_frequency": "monthly",
+      "needs_key": {
+        "required": true,
+        "free": true,
+        "how": "Ask the hospital spokesperson (via https://www.laniado.org.il/en/contact/) to add us to press releases."
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Press material.",
+      "reliability": "official",
+      "suggested_poll": "daily",
+      "notes": ""
+    },
+    {
+      "id": "even_yehuda",
+      "name_he": "מועצה מקומית אבן יהודה - חדשות ועדכונים",
+      "category": "sharon_localities",
+      "provides": "Council news (WordPress/Elementor).",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.even-yehuda.muni.il/muni/news/",
+        "https://www.even-yehuda.muni.il/category/updates/page/2/",
+        "https://www.even-yehuda.muni.il/feed/"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "News page loaded; newest 19/08/2026. /feed/ not opened (permission timeout) - WordPress default."
+      },
+      "update_frequency": "weekly",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Public notices.",
+      "reliability": "official",
+      "suggested_poll": "every 60 min",
+      "notes": ""
+    },
+    {
+      "id": "kadima_zoran",
+      "name_he": "מועצה מקומית קדימה צורן",
+      "category": "sharon_localities",
+      "provides": "Council notices (WordPress/Elementor), published as individual posts.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.kadima-zoran.muni.il/"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Homepage loaded; no news listing or RSS link found. WhatsApp: wa.link/erhele; FB kadimazoranmuni; IG kadima_zoran."
+      },
+      "update_frequency": "weekly",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Public notices.",
+      "reliability": "official",
+      "suggested_poll": "every 60 min (try /feed/ - WordPress)",
+      "notes": ""
+    },
+    {
+      "id": "emek_hefer",
+      "name_he": "מועצה אזורית עמק חפר",
+      "category": "sharon_localities",
+      "provides": "Council notices and articles (Binaa CMS); planning committee site separate.",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.hefer.org.il/news/",
+        "https://www.hefer.org.il/articles",
+        "https://handasa.hefer.org.il/"
+      ],
+      "opened_from_here": {
+        "ok": "partial",
+        "detail": "Homepage loaded; news items show no dates; no RSS. WhatsApp groups page https://www.hefer.org.il/678/."
+      },
+      "update_frequency": "weekly",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Public notices.",
+      "reliability": "official",
+      "suggested_poll": "every 60 min",
+      "notes": ""
+    },
+    {
+      "id": "kfar_yona",
+      "name_he": "עיריית כפר יונה - חדשות",
+      "category": "sharon_localities",
+      "provides": "Municipal news with sequential ids (/news/412/).",
+      "access_method": "html_page",
+      "urls": [
+        "https://kfar-yona.muni.il/news/",
+        "https://kfar-yona.complot.co.il/"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Homepage loaded; newest 22.10.2026 https://kfar-yona.muni.il/news/412/. No RSS."
+      },
+      "update_frequency": "several per week",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Public notices.",
+      "reliability": "official",
+      "suggested_poll": "every 60 min (probe next id)",
+      "notes": ""
+    },
+    {
+      "id": "tel_mond",
+      "name_he": "מועצה מקומית תל מונד",
+      "category": "sharon_localities",
+      "provides": "Council site.",
+      "access_method": "html_page",
+      "urls": [
+        "https://tel-mond.muni.il/"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "4xx client error from our fetcher."
+      },
+      "update_frequency": "unknown",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Public notices.",
+      "reliability": "official",
+      "suggested_poll": "from Israeli server",
+      "notes": ""
+    },
+    {
+      "id": "pardesia",
+      "name_he": "מועצה מקומית פרדסיה",
+      "category": "sharon_localities",
+      "provides": "Council news and articles (Binaa CMS, sequential ids).",
+      "access_method": "html_page",
+      "urls": [
+        "https://www.pardesia.muni.il/news/",
+        "https://www.pardesia.muni.il/articles/"
+      ],
+      "opened_from_here": {
+        "ok": "yes",
+        "detail": "Homepage loaded; newest article id 324; no dates on homepage; no RSS."
+      },
+      "update_frequency": "weekly",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "no",
+      "legal_terms": "Public notices.",
+      "reliability": "official",
+      "suggested_poll": "every 2 h",
+      "notes": ""
+    },
+    {
+      "id": "data_gov_il",
+      "name_he": "data.gov.il - מאגרי מידע ממשלתיים (CKAN)",
+      "category": "other",
+      "provides": "Government open datasets (CKAN API).",
+      "access_method": "json_api",
+      "urls": [
+        "https://data.gov.il/api/3/action/package_search?q=נתניה"
+      ],
+      "opened_from_here": {
+        "ok": "no",
+        "detail": "Not opened (fetch permission timeout); odata.org.il mirror returned a 4xx."
+      },
+      "update_frequency": "varies",
+      "needs_key": {
+        "required": false,
+        "free": true,
+        "how": null
+      },
+      "geo_blocked_israel_only": "unknown",
+      "legal_terms": "Mostly open licenses; check per dataset.",
+      "reliability": "official",
+      "suggested_poll": "not for news polling",
+      "notes": ""
+    }
+  ]
+}

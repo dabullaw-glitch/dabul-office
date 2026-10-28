@@ -1,0 +1,28 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Crumbs from '../../../components/Crumbs.astro';
+import Card from '../../../components/Card.astro';
+import { PLACES } from '../../../data/places';
+import { CATEGORIES } from '../../../data/directory';
+import { SITE_URL } from '../../../data/site';
+import { ARTICLES, placesOf, articleUrl } from '../../../lib/content';
+export function getStaticPaths() {
+  return PLACES.map((p) => ({ p, items: ARTICLES.filter((a) => placesOf(a).some((x) => x.slug === p.slug)) }))
+    .filter((x) => x.items.length > 0).map(({ p, items }) => ({ params: { place: p.slug }, props: { p, items } }));
+}
+const { p, items } = Astro.props;
+const path = `/area/${p.slug}/`;
+const isN = p.kind === 'neighborhood';
+const h1 = isN ? `חדשות ${p.he}, נתניה` : `חדשות ${p.he}`;
+const crumbs = [{ name: 'ראשי', href: '/' }, { name: isN ? 'שכונות נתניה' : 'השרון', href: isN ? '/now/' : '/sharon/' }, { name: p.he, href: path }];
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: h1, url: SITE_URL + path, about: { '@type': 'Place', name: isN ? `${p.he}, נתניה` : p.he },
+  mainEntity: { '@type': 'ItemList', itemListElement: items.map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a), name: a.title })) } }];
+---
+<Base title={`${h1}: מה קורה ${isN ? 'בשכונה' : 'ביישוב'} | חדשות נתניה והשרון`} description={`כל החדשות על ${p.he}${isN ? ' בנתניה' : ''}: תכנון ובנייה, עירייה, תחבורה, קהילה ואירועים. מתעדכן לאורך היום.`} path={path} crumbs={crumbs} jsonld={jsonld}>
+  <section class="phero" style="--bg:#0B3D6E"><img class="bgi" src="/img/city.svg" alt="" width="1440" height="400">
+    <div class="wrap in" style="padding-bottom:28px"><Crumbs items={crumbs} light /><h1>{h1}</h1><p>כל מה שקורה {isN ? `בשכונת ${p.he}` : `ב${p.he}`}, במקום אחד.</p></div></section>
+  <div class="wrap" style="padding-block:26px 10px">
+    <div class="grid">{items.map((a) => <Card a={a} />)}</div>
+    {isN && <section class="sec"><h2 class="sh" style="--c:#0B5FCC"><span class="bar"></span>בעלי מקצוע ב{p.he}</h2><div class="chips">{CATEGORIES.slice(0, 6).map((c) => <a class="chip" href={`/directory/${c.slug}/`} style={`--c:${c.color}`}><i></i>{c.plural}</a>)}</div></section>}
+  </div>
+</Base>

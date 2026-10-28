@@ -1,0 +1,55 @@
+---
+// Russian, French and English versions of the service pages (now, directory, about, send-news, join).
+import Page from './Page.astro';
+import { type Lang, BRAND } from '../data/site';
+import { CATEGORIES } from '../data/directory';
+import { shabbatTimes } from '../lib/shabbat';
+import { FACTS } from '../lib/content';
+interface Props { lang: Exclude<Lang, 'he'>; kind: 'now' | 'directory' | 'about' | 'send-news' | 'join' }
+const { lang, kind } = Astro.props;
+const pre = `/${lang}`;
+const alts = { he: `/${kind}/`, ru: `/ru/${kind}/`, fr: `/fr/${kind}/`, en: `/en/${kind}/` };
+const sh = shabbatTimes(new Date(), 4);
+const hotline = FACTS?.hotline?.number ?? '106';
+const T: any = {
+  now: { ru: ['Нетания сейчас: шаббат, пляжи, телефоны', 'Нетания сейчас', 'Время шаббата в Нетании, пляжи, дежурная аптека и важные телефоны.'],
+         fr: ['Netanya maintenant : Chabbat, plages, numéros utiles', 'Netanya maintenant', 'Horaires de Chabbat à Netanya, plages, pharmacie de garde et numéros utiles.'],
+         en: ['Netanya Now: Shabbat times, beaches, useful numbers', 'Netanya Now', 'Shabbat times in Netanya, beaches, duty pharmacy and useful phone numbers.'] },
+  directory: { ru: ['Справочник мастеров Нетании', 'Справочник мастеров', 'Мастера и специалисты Нетании с проверенным телефоном.'],
+         fr: ['Annuaire des artisans de Netanya', 'Annuaire', 'Artisans et professionnels de Netanya au téléphone vérifié.'],
+         en: ['Netanya business directory', 'Business directory', 'Local pros in Netanya with verified phone numbers.'] },
+  about: { ru: ['О сайте NWS', 'О нас', 'NWS: местные новости Нетании и Шарона на четырёх языках.'],
+         fr: ['À propos de NWS', 'À propos', 'NWS : l’actualité locale de Netanya et du Sharon en quatre langues.'],
+         en: ['About NWS', 'About', 'NWS: local news for Netanya and the Sharon in four languages.'] },
+  'send-news': { ru: ['Сообщить новость', 'Сообщить новость', 'Увидели что-то в своём районе Нетании? Напишите нам, мы проверим и опубликуем.'],
+         fr: ['Envoyer une info', 'Envoyer une info', 'Vous avez vu quelque chose dans votre quartier de Netanya ? Écrivez-nous, nous vérifierons.'],
+         en: ['Send a tip', 'Send a tip', 'Saw something in your Netanya neighborhood? Tell us and we will check it and report.'] },
+  join: { ru: ['Срочные новости в Telegram и WhatsApp', 'Подписаться', 'Каналы NWS в Telegram и WhatsApp, уведомления и рассылка.'],
+         fr: ['Les flashs sur Telegram et WhatsApp', 'S’abonner', 'Les canaux NWS sur Telegram et WhatsApp, alertes et newsletter.'],
+         en: ['Breaking news on Telegram and WhatsApp', 'Subscribe', 'NWS channels on Telegram and WhatsApp, alerts and newsletter.'] },
+};
+const [title, h1, desc] = T[kind][lang];
+const L: any = {
+  ru: { sh: 'Шаббат в Нетании', c: 'Зажигание свечей', e: 'Исход шаббата', ph: 'Важные телефоны', hot: 'Горячая линия мэрии', pol: 'Полиция', mda: 'Скорая помощь', fire: 'Пожарные', heb: 'Подробнее на иврите', soon: 'Ссылки на каналы появятся при запуске.', form: 'Форма будет подключена перед запуском.' },
+  fr: { sh: 'Chabbat à Netanya', c: 'Allumage des bougies', e: 'Fin de Chabbat', ph: 'Numéros utiles', hot: 'Hotline municipale', pol: 'Police', mda: 'Secours (MDA)', fire: 'Pompiers', heb: 'Plus de détails en hébreu', soon: 'Les liens des canaux seront ajoutés au lancement.', form: 'Le formulaire sera connecté avant le lancement.' },
+  en: { sh: 'Shabbat in Netanya', c: 'Candle lighting', e: 'Shabbat ends', ph: 'Useful numbers', hot: 'City hotline', pol: 'Police', mda: 'Ambulance (MDA)', fire: 'Fire and rescue', heb: 'More details in Hebrew', soon: 'Channel links will be added at launch.', form: 'The form will be connected before launch.' },
+}[lang];
+const about: any = {
+  ru: ['NWS: местный новостной сайт для жителей Нетании и окрестностей: Эвен-Йегуды, Кадимы-Цорана, Эмек-Хефера, Кфар-Йоны, Тель-Монда и Пардесии.', 'Каждая новость основана на официальном источнике или СМИ, с указанием источника и ссылкой на него. Часть работы по сбору и написанию выполняет автоматическая система; чувствительные новости проверяет редактор.', 'Рекламные материалы всегда помечены.'],
+  fr: ['NWS est un site d’information locale pour les habitants de Netanya et des localités voisines : Even Yehuda, Kadima-Zoran, Emek Hefer, Kfar Yona, Tel Mond et Pardesiya.', 'Chaque information repose sur une source officielle ou un média, cité et lié. Une partie de la collecte et de la rédaction est assistée par un système automatique ; les sujets sensibles sont validés par un éditeur.', 'Les contenus sponsorisés sont toujours signalés.'],
+  en: ['NWS is a local news site for Netanya and nearby towns: Even Yehuda, Kadima-Zoran, Emek Hefer, Kfar Yona, Tel Mond and Pardesiya.', 'Every story is based on an official or media source, credited and linked. Parts of gathering and drafting are assisted by an automated system; sensitive stories are approved by an editor.', 'Sponsored content is always labeled.'],
+}[lang];
+---
+<Page lang={lang} title={`${title} | NWS Netanya & Sharon News`} h1={h1} description={desc} path={`${pre}/${kind}/`} intro={desc} alternates={alts} current={kind === 'now' ? 'now' : kind === 'directory' ? 'directory' : ''} wide={kind === 'directory'}>
+  {kind === 'now' && <>
+    <h2>{L.sh}</h2>
+    <table class="tbl"><thead><tr><th></th><th>{L.c}</th><th>{L.e}</th></tr></thead><tbody>{sh.map((r) => <tr><td>{r.date}</td><td>{r.candles}</td><td>{r.end}</td></tr>)}</tbody></table>
+    <h2>{L.ph}</h2>
+    <ul><li>{L.hot}: <b>{hotline}</b></li><li>{L.pol}: <b>100</b></li><li>{L.mda}: <b>101</b></li><li>{L.fire}: <b>102</b></li></ul>
+    <p><a href="/now/" hreflang="he">{L.heb}</a></p>
+  </>}
+  {kind === 'directory' && <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">{CATEGORIES.map((c) => <a class="pcard" href={`/directory/${c.slug}/`} hreflang="he" style={`--c:${c.color};border:1px solid #E3E7ED`}><span class="av">{c.name[lang][0]}</span><b>{c.name[lang]}</b><span class="note">{c.plural}</span></a>)}</div>}
+  {kind === 'about' && <>{about.map((p: string) => <p>{p}</p>)}<p>Email: <span dir="ltr">{BRAND.email}</span></p></>}
+  {kind === 'send-news' && <form class="f" action="#" method="post"><div class="hp" aria-hidden="true"><input name="website" tabindex="-1" autocomplete="off"></div><label>{h1}<textarea name="story" rows="6" required></textarea></label><label>Tel.<input name="phone" type="tel" required></label><button class="btn pri" type="submit">OK</button><p class="note">{L.form}</p></form>}
+  {kind === 'join' && <><h2 id="telegram">Telegram</h2><p>{L.soon}</p><h2 id="whatsapp">WhatsApp</h2><p>{L.soon}</p><h2 id="alerts">Push</h2><p>{L.soon}</p></>}
+</Page>

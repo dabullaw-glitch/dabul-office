@@ -1,0 +1,112 @@
+---
+import '../styles/global.css';
+import { SITE_URL, PREVIEW, LANGS, LANG_PREFIX, LANG_LOCALE, LANG_DIR, BRAND, type Lang } from '../data/site';
+import { SECTIONS } from '../data/sections';
+import { t } from '../i18n/ui';
+import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime } from '../lib/content';
+
+interface Crumb { name: string; href: string }
+interface Props {
+  lang?: Lang; title: string; description: string; path: string;
+  alternates?: Partial<Record<Lang, string>>; ogImage?: string; ogType?: string; jsonld?: any[]; noindex?: boolean;
+  crumbs?: Crumb[]; current?: string; published?: string; modified?: string; section?: string; tags?: string[];
+}
+const { lang = 'he', title, description, path, alternates = {}, ogImage = '/og/default.png', ogType = 'website', jsonld = [], noindex = false,
+  crumbs = [], current = '', published, modified, section, tags = [] } = Astro.props;
+const u = t(lang);
+const canonical = SITE_URL + path;
+const robots = PREVIEW || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+const alts = Object.entries(alternates) as [Lang, string][];
+const pre = LANG_PREFIX[lang];
+const tickerItems = articlesFor(lang).slice(0, 5);
+const homeHref = (pre || '') + '/';
+const langHref = (l: Lang) => (alternates[l] ?? (LANG_PREFIX[l] + '/'));
+const today = new Intl.DateTimeFormat(lang === 'he' ? 'he-IL' : lang, { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+const crumbLd = crumbs.length ? [{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: SITE_URL + c.href })) }] : [];
+const ld = [...jsonld, ...crumbLd];
+---
+<!doctype html>
+<html lang={lang} dir={LANG_DIR[lang]}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<meta name="description" content={description}>
+<link rel="canonical" href={canonical}>
+<meta name="robots" content={robots}>
+{alts.map(([l, p]) => <link rel="alternate" hreflang={l} href={SITE_URL + p}>)}
+{alts.length > 0 && alternates.he && <link rel="alternate" hreflang="x-default" href={SITE_URL + alternates.he}>}
+<meta property="og:site_name" content={BRAND.he}>
+<meta property="og:type" content={ogType}>
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonical}>
+<meta property="og:image" content={SITE_URL + ogImage}>
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:locale" content={LANG_LOCALE[lang]}>
+{published && <meta property="article:published_time" content={published}>}
+{modified && <meta property="article:modified_time" content={modified}>}
+{section && <meta property="article:section" content={section}>}
+{tags.map((tg) => <meta property="article:tag" content={tg}>)}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0E1726">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title={BRAND.he} href={`${pre}/rss.xml`}>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Rubik:wght@500;600;700;800&display=swap" rel="stylesheet">
+{ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o).replace(/</g, '\\u003c')}></script>)}
+</head>
+<body>
+<a class="skip" href="#main">{lang === 'he' ? 'דלג לתוכן' : lang === 'ru' ? 'К содержанию' : lang === 'fr' ? 'Aller au contenu' : 'Skip to content'}</a>
+{PREVIEW && <div class="preview">{u.previewNote}</div>}
+<div class="ub"><div class="wrap">
+  <div class="l"><span>{today}</span><span>{lang === 'he' ? 'נתניה' : u.city}</span></div>
+  <div class="r">
+    <a href={`${pre}/send-news/`}>{u.sendNews}</a>
+    <a href="/advertise/">{u.advertise}</a>
+    <nav class="langs" aria-label="שפה / Language">
+      {LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l === 'he' ? 'עב' : l.toUpperCase()}</a>)}
+    </nav>
+  </div>
+</div></div>
+<header class="hd">
+  <div class="wrap top">
+    <a class="logo" href={homeHref} aria-label={`NWS ${u.brandName}`}>
+      <span class="mk">NWS<i></i></span>
+      <span class="tx"><b>{u.brandName}</b><span>{u.tagline}</span></span>
+    </a>
+    <form class="srch" role="search" action={`${pre}/search/`} method="get">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B6573" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <label class="sr" for="q">{u.search}</label>
+      <input id="q" name="q" type="search" placeholder={u.searchPh}>
+    </form>
+    <div class="btns">
+      <a class="btn pri" href={`${pre}/join/`}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4 2-15z"/></svg>{u.joinTelegram}</a>
+      <a class="btn out" href={`${pre}/join/#alerts`}>{u.alerts}</a>
+    </div>
+  </div>
+  <nav class="wrap nav" aria-label={u.sectionsH}>
+    {SECTIONS.map((s) => <a href={sectionUrl(s.key, lang)} style={`--c:${s.color}`} aria-current={current === s.key ? 'page' : undefined}>{s.name[lang]}</a>)}
+    <a class="hl" href={`${pre}/now/`} aria-current={current === 'now' ? 'page' : undefined}>{u.now}</a>
+    <a class="hl" href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}>{u.directory}</a>
+  </nav>
+</header>
+{tickerItems.length > 0 && (
+<div class="tk"><div class="wrap">
+  <span class="lb"><i></i>{u.flash}</span>
+  <div class="vp"><ul>{[...tickerItems, ...tickerItems].map((a, i) => <li aria-hidden={i >= tickerItems.length ? 'true' : undefined}><a href={articleUrl(a, lang)} tabindex={i >= tickerItems.length ? -1 : undefined}><b>{fmtTime(a.published)}</b> {a.title}</a></li>)}</ul></div>
+</div></div>)}
+<main id="main"><slot /></main>
+<footer class="ft">
+  <div class="wrap cols">
+    <div><span class="mk">NWS<i>.</i></span><span>{u.footAbout}</span></div>
+    <div><b>{u.sectionsH}</b>{SECTIONS.slice(0, 6).map((s) => <a href={sectionUrl(s.key, lang)}>{s.name[lang]}</a>)}</div>
+    <div><b>{u.usefulH}</b><a href={`${pre}/now/`}>{u.now}</a>{lang === 'he' && <><a href="/now/pharmacy/">בית מרקחת תורן</a><a href="/now/shabbat/">זמני שבת בנתניה</a><a href="/now/beaches/">החופים של נתניה</a><a href="/now/phones/">טלפונים חיוניים</a></>}<a href={`${pre}/directory/`}>{u.directory}</a></div>
+    <div><b>{u.siteH}</b><a href={`${pre}/about/`}>{u.about}</a><a href="/editorial-policy/">{u.editorial}</a><a href="/corrections/">{u.corrections}</a><a href={`${pre}/send-news/`}>{u.sendNews}</a><a href="/advertise/">{u.advertise}</a><a href="/contact/">{u.contact}</a><a href="/terms/">{u.terms}</a><a href="/privacy/">{u.privacy}</a><a href="/accessibility/">{u.accessibility}</a></div>
+  </div>
+  <div class="wrap bt"><span>© {new Date().getFullYear()} NWS. {u.rights}</span><span>{LANGS.map((l, i) => <>{i > 0 && ' · '}<a href={langHref(l)} lang={l}>{l === 'he' ? 'עברית' : l === 'ru' ? 'Русский' : l === 'fr' ? 'Français' : 'English'}</a></>)}</span></div>
+</footer>
+</body>
+</html>

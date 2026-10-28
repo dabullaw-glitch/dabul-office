@@ -1,0 +1,134 @@
+---
+import Base from '../layouts/Base.astro';
+import Card from './Card.astro';
+import Wave from './Wave.astro';
+import { IMG, BRAND, SITE_URL, LANG_PREFIX, LANGS, type Lang } from '../data/site';
+import { SECTIONS, SECTION_BY_KEY } from '../data/sections';
+import { CATEGORIES } from '../data/directory';
+import { t } from '../i18n/ui';
+import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtDate, FACTS } from '../lib/content';
+import { shabbatTimes } from '../lib/shabbat';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const u = t(lang); const pre = LANG_PREFIX[lang];
+const all = articlesFor(lang);
+const LEADS = ['realestate', 'city', 'law', 'community', 'sports'];
+const lead = all.filter((a) => LEADS.includes(a.section)).sort((x, y) => (LEADS.indexOf(x.section) - LEADS.indexOf(y.section)) * 0 + (y.published || '').localeCompare(x.published || ''))
+  .find((a) => a.section === 'realestate' && Date.now() - Date.parse(a.published) < 10 * 864e5) ?? all.find((a) => LEADS.includes(a.section)) ?? all[0];
+const latest = all.slice(0, 6);
+const used = new Set([lead?.slug]);
+const row2: typeof all = [];
+for (const a of all) { if (row2.length >= 4) break; if (used.has(a.slug) || row2.some((r) => r.section === a.section)) continue; row2.push(a); used.add(a.slug); }
+const re = all.filter((a) => a.section === 'realestate');
+const colKeys = (['community', 'sports', 'sharon', 'city', 'tourism', 'law'] as const).filter((k) => all.some((a) => a.section === k && !used.has(a.slug))).slice(0, 3);
+const events = all.filter((a) => a.section === 'leisure' || a.event).slice(0, 4);
+const sh = shabbatTimes(new Date(), 1)[0];
+const hotline = FACTS?.hotline?.number ?? FACTS?.municipalHotline?.number ?? '106';
+const L = {
+  he: { sea: 'הים והחופים', seaB: 'החופים המוכרזים', seaS: 'שעות הצלה ודגלים', roads: 'חסימות ועבודות', roadsB: 'עדכוני תנועה', roadsS: 'מה סגור עכשיו בעיר', ph: 'בית מרקחת תורן', phB: 'מי תורן היום', phS: 'כתובת ושעות', shab: 'שבת בנתניה', shabB: `כניסה ${sh.candles}`, shabS: `יציאה ${sh.end}`, al: 'פיקוד העורף', alB: 'התראות ומקלטים', alS: 'מה עושים כשיש אזעקה', tel: 'מוקד עירוני', telS: 'טלפונים חיוניים', updated: 'מתעדכן לאורך היום', all: 'לכל הנתונים', reTitle: 'נדל״ן ותכנון', eventsTitle: 'מה עושים בנתניה', proText: 'בעלי מקצוע עם טלפון מאומת, לפי שכונה. המדריך נפתח עכשיו: עסקים מצטרפים בחינם.' },
+  ru: { sea: 'Море и пляжи', seaB: 'Пляжи', seaS: 'Спасатели и флаги', roads: 'Перекрытия', roadsB: 'Дорожные новости', roadsS: 'Что закрыто сейчас', ph: 'Дежурная аптека', phB: 'Кто дежурит', phS: 'Адрес и часы', shab: 'Шаббат', shabB: `Вход ${sh.candles}`, shabS: `Выход ${sh.end}`, al: 'Служба тыла', alB: 'Тревоги', alS: 'Убежища', tel: 'Горячая линия', telS: 'Важные телефоны', updated: 'Обновляется в течение дня', all: 'Все данные', reTitle: 'Недвижимость', eventsTitle: 'Куда пойти', proText: 'Мастера с проверенным телефоном, по районам.' },
+  fr: { sea: 'Mer et plages', seaB: 'Plages', seaS: 'Surveillance et drapeaux', roads: 'Routes', roadsB: 'Info trafic', roadsS: 'Ce qui est fermé', ph: 'Pharmacie de garde', phB: 'De garde aujourd’hui', phS: 'Adresse et horaires', shab: 'Chabbat', shabB: `Entrée ${sh.candles}`, shabS: `Sortie ${sh.end}`, al: 'Commandement du front intérieur', alB: 'Alertes', alS: 'Abris', tel: 'Hotline municipale', telS: 'Numéros utiles', updated: 'Mis à jour dans la journée', all: 'Toutes les données', reTitle: 'Immobilier', eventsTitle: 'Que faire à Netanya', proText: 'Des artisans au téléphone vérifié, par quartier.' },
+  en: { sea: 'Sea & beaches', seaB: 'Beaches', seaS: 'Lifeguards and flags', roads: 'Road closures', roadsB: 'Traffic updates', roadsS: 'What is closed now', ph: 'Duty pharmacy', phB: 'Open tonight', phS: 'Address and hours', shab: 'Shabbat', shabB: `Starts ${sh.candles}`, shabS: `Ends ${sh.end}`, al: 'Home Front Command', alB: 'Alerts', alS: 'Public shelters', tel: 'City hotline', telS: 'Useful numbers', updated: 'Updated through the day', all: 'All data', reTitle: 'Real Estate', eventsTitle: 'What’s on in Netanya', proText: 'Local pros with verified phone numbers, by neighborhood.' },
+}[lang];
+const nowHref = (p: string) => (lang === 'he' ? `/now/${p}/` : `${pre}/now/`);
+const titles = {
+  he: 'חדשות נתניה והשרון: מבזקים, עירייה, נדל״ן ומדריך עסקים',
+  ru: 'NWS Новости Нетании и Шарона: срочные новости, мэрия, недвижимость',
+  fr: 'NWS Actualités de Netanya et du Sharon : flashs, mairie, immobilier',
+  en: 'NWS Netanya & Sharon News: breaking news, city hall, real estate',
+}[lang];
+const descs = {
+  he: 'חדשות נתניה והשרון בזמן אמת: מבזקים, חסימות, עירייה, נדל״ן והתחדשות עירונית, ספורט ואירועים, נתונים חיים ומדריך בעלי מקצוע בנתניה.',
+  ru: 'Новости Нетании и Шарона: срочные сообщения, перекрытия дорог, мэрия, недвижимость, спорт и события, полезные данные и справочник мастеров.',
+  fr: 'Actualités de Netanya et du Sharon : flashs, routes, mairie, immobilier, sport et sorties, données pratiques et annuaire des artisans.',
+  en: 'Netanya and Sharon news: breaking updates, road closures, city hall, real estate, sports and events, live local data and a directory of local pros.',
+}[lang];
+const alternates = Object.fromEntries(LANGS.map((l) => [l, LANG_PREFIX[l] + '/'])) as Record<Lang, string>;
+const orgId = SITE_URL + '/#org';
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'NewsMediaOrganization', '@id': orgId, name: BRAND.he, alternateName: ['NWS', 'חדשות נתניה והשרון'], url: SITE_URL + '/', logo: { '@type': 'ImageObject', url: SITE_URL + '/logo.png', width: 512, height: 512 },
+    foundingDate: BRAND.foundingDate, areaServed: [{ '@type': 'City', name: 'נתניה' }, { '@type': 'Place', name: 'השרון' }], email: BRAND.email,
+    publishingPrinciples: SITE_URL + '/editorial-policy/', correctionsPolicy: SITE_URL + '/corrections/', ethicsPolicy: SITE_URL + '/editorial-policy/', actionableFeedbackPolicy: SITE_URL + '/corrections/',
+    masthead: SITE_URL + '/about/', diversityPolicy: SITE_URL + '/about/', noBylinesPolicy: SITE_URL + '/editorial-policy/' },
+  { '@context': 'https://schema.org', '@type': 'WebSite', '@id': SITE_URL + '/#website', url: SITE_URL + '/', name: BRAND.he, inLanguage: ['he', 'ru', 'fr', 'en'], publisher: { '@id': orgId },
+    potentialAction: { '@type': 'SearchAction', target: { '@type': 'EntryPoint', urlTemplate: SITE_URL + '/search/?q={search_term_string}' }, 'query-input': 'required name=search_term_string' } },
+  { '@context': 'https://schema.org', '@type': 'ItemList', name: lang === 'he' ? 'החדשות האחרונות בנתניה' : titles, itemListElement: latest.map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a, lang), name: a.title })) },
+];
+const S = (k: string) => SECTION_BY_KEY[k as keyof typeof SECTION_BY_KEY];
+---
+<Base lang={lang} title={titles} description={descs} path={pre + '/'} alternates={alternates} jsonld={jsonld} current="home">
+  <h1 class="sr">{lang === 'he' ? 'חדשות נתניה והשרון' : u.brandName}</h1>
+  {lead && (
+  <section class="wrap lead" aria-label={lang === 'he' ? 'הכתבה הראשית' : u.latestNow}>
+    <article class="main" style={`--c:${S(lead.section).color}`}>
+      <a class="im" href={articleUrl(lead, lang)}><img src={(IMG[lead.imageHint] ?? IMG[S(lead.section).img]).src} alt={(IMG[lead.imageHint] ?? IMG.city).alt} width="1200" height="675" fetchpriority="high"><span class="tag">{S(lead.section).name[lang]}</span></a>
+      <div class="meta"><time datetime={lead.published}>{fmtDate(lead.published, lang)}, {fmtTime(lead.published)}</time><span aria-hidden="true">·</span><span>{u.source}: {lead.sourceName}</span></div>
+      <h2 class="h1"><a href={articleUrl(lead, lang)}>{lead.title}</a></h2>
+      <p>{lead.dek}</p>
+    </article>
+    <aside class="latest" aria-labelledby="latest-h">
+      <div class="hd2"><h2 id="latest-h"><i></i>{u.latestNow}</h2><a href={sectionUrl('flash', lang)}>{u.allFlash}</a></div>
+      <ol>{latest.map((a) => <li><time datetime={a.published}>{fmtTime(a.published)}</time><span><a href={articleUrl(a, lang)}>{a.title}</a><br><span class="tag" style={`--c:${S(a.section).color}`}>{S(a.section).name[lang]}</span></span></li>)}</ol>
+    </aside>
+  </section>)}
+
+  {row2.length > 0 && <section class="wrap sec" aria-label={u.more}><div class="grid">{row2.map((a) => <Card a={a} lang={lang} />)}</div></section>}
+
+  <section class="nowband" aria-labelledby="now-h">
+    <Wave top from="#FFFFFF" to="#0B3D6E" />
+    <div class="wrap in">
+      <div class="hh"><h2 id="now-h">{u.now}</h2><span>{L.updated} · <a href={`${pre}/now/`}>{L.all}</a></span></div>
+      <div class="tiles">
+        <a class="tile" href={nowHref('beaches')} style="--c:#2B8FD8;--s:#E3F1FC"><span class="lbl"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2B8FD8" stroke-width="2" aria-hidden="true"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg></span>{L.sea}</span><b>{L.seaB}</b><span class="sub">{L.seaS}</span></a>
+        <a class="tile" href={nowHref('roads')} style="--c:#E07B00;--s:#FFF0DD"><span class="lbl"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E07B00" stroke-width="2" aria-hidden="true"><path d="M12 3l9 17H3z"/><path d="M12 10v4M12 17v.5"/></svg></span>{L.roads}</span><b>{L.roadsB}</b><span class="sub">{L.roadsS}</span></a>
+        <a class="tile" href={nowHref('pharmacy')} style="--c:#C8102E;--s:#FCE8EB"><span class="lbl"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg></span>{L.ph}</span><b>{L.phB}</b><span class="sub">{L.phS}</span></a>
+        <a class="tile" href={nowHref('shabbat')} style="--c:#6D3FC0;--s:#F0EAFB"><span class="lbl"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6D3FC0" stroke-width="2" aria-hidden="true"><path d="M12 3c2 3 2 5 0 7-2-2-2-4 0-7z"/><rect x="9" y="10" width="6" height="11" rx="1"/></svg></span>{L.shab}</span><b>{L.shabB}</b><span class="sub">{L.shabS} · {sh.date}</span></a>
+        <a class="tile" href={nowHref('alerts')} style="--c:#1E8A4C;--s:#E3F3E9"><span class="lbl"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E8A4C" stroke-width="2" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span>{L.al}</span><b>{L.alB}</b><span class="sub">{L.alS}</span></a>
+        <a class="tile" href={nowHref('phones')} style="--c:#F2B544;--s:#FFF6DE"><span class="lbl"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C98A00" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></svg></span>{L.tel}</span><b>{hotline}</b><span class="sub">{L.telS}</span></a>
+      </div>
+    </div>
+    <Wave top={false} from="#FFFFFF" to="#0B3D6E" />
+  </section>
+
+  {re.length > 0 && (
+  <section class="wrap sec" aria-labelledby="re-h" style="--c:#E08A00;--ci:#9A5A00;--s:#FFF7EB">
+    <h2 id="re-h" class="sh"><span class="bar"></span>{L.reTitle}<a class="mo" href={sectionUrl('realestate', lang)}>{u.toSection}</a></h2>
+    <div class="feat">
+      <a class="big" href={articleUrl(re[0], lang)}><img src={(IMG[re[0].imageHint] ?? IMG.crane).src} alt="" width="1200" height="675" loading="lazy"><h3>{re[0].title}</h3><span>{re[0].dek}</span></a>
+      <div class="list">{re.slice(1, 5).map((a) => <a class="row" href={articleUrl(a, lang)}><img src={(IMG[a.imageHint] ?? IMG.city).src} alt="" width="96" height="68" loading="lazy"><span><b>{a.title}</b><br><span class="note">{fmtDate(a.published, lang)}</span></span></a>)}</div>
+    </div>
+  </section>)}
+
+  {colKeys.length > 0 && (
+  <section class="wrap sec"><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px">
+    {colKeys.map((k) => { const s = S(k); const items = all.filter((a) => a.section === k); return (
+      <div class="col" style={`--c:${s.color};--ci:${s.ink}`}>
+        <h2>{s.name[lang]}<a class="mo" href={sectionUrl(k, lang)}>{u.more}</a></h2>
+        <a href={articleUrl(items[0], lang)} class="card"><span class="im"><img src={(IMG[items[0].imageHint] ?? IMG[s.img]).src} alt="" width="800" height="500" loading="lazy"></span><h3>{items[0].title}</h3></a>
+        <ul>{items.slice(1, 3).map((a) => <li><a href={articleUrl(a, lang)}>{a.title}</a></li>)}</ul>
+      </div>); })}
+  </div></section>)}
+
+  {events.length > 0 && (
+  <section class="dark" aria-labelledby="ev-h"><div class="wrap in">
+    <h2 id="ev-h">{L.eventsTitle}</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+      {events.map((a) => <a class="vcard" href={articleUrl(a, lang)}><img src={(IMG[a.imageHint] ?? IMG.concert).src} alt="" width="400" height="500" loading="lazy"><span><b>{a.title}</b><small>{a.event?.startDate ? fmtDate(a.event.startDate, lang) : fmtDate(a.published, lang)}{a.event?.location ? ` · ${a.event.location}` : ''}</small></span></a>)}
+    </div>
+  </div></section>)}
+
+  <section class="pros" aria-labelledby="pros-h"><div class="wrap in">
+    <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px">
+      <h2 id="pros-h" style="font-weight:800;font-size:26px">{u.proTitle}</h2>
+      <div style="display:flex;gap:16px;font-size:15px;font-weight:700"><a href={`${pre}/directory/`} style="color:#0B5FCC">{u.toDirectory}</a><a href="/advertise/" style="color:#0B5FCC">{u.addBiz}</a></div>
+    </div>
+    <p style="margin:0 0 16px;color:#3B4656">{L.proText}</p>
+    <div class="chips">{CATEGORIES.map((c) => <a class="chip" href={lang === 'he' ? `/directory/${c.slug}/` : `${pre}/directory/`} style={`--c:${c.color}`}><i></i>{lang === 'he' ? c.plural : c.name[lang]}</a>)}</div>
+  </div></section>
+
+  <section class="wrap" aria-labelledby="join-h"><div class="join">
+    <div style="flex:1 1 380px"><h2 id="join-h">{u.joinTitle}</h2><p>{u.joinText}</p></div>
+    <div class="btns"><a class="btn wh" href={`${pre}/join/`}>{lang === 'he' ? 'טלגרם' : 'Telegram'}</a><a class="btn wh" href={`${pre}/join/#whatsapp`}>{lang === 'he' ? 'וואטסאפ' : 'WhatsApp'}</a><a class="btn ghost" href={`${pre}/join/#alerts`}>{u.alerts}</a></div>
+  </div></section>
+</Base>

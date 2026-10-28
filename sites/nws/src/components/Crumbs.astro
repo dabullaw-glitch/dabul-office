@@ -1,0 +1,7 @@
+---
+interface Props { items: { name: string; href: string }[]; light?: boolean; label?: string }
+const { items, light = false, label = 'מיקום בדף' } = Astro.props;
+---
+<nav aria-label={label}><ol class="crumbs" style={light ? '' : 'color:#5B6573'}>
+  {items.map((c, i) => <li>{i < items.length - 1 ? <a href={c.href} style={light ? '' : 'color:#0B5FCC'}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>)}
+</ol></nav>

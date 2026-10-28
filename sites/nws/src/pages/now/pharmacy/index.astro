@@ -1,0 +1,18 @@
+---
+import NowPage from '../../../components/NowPage.astro';
+import { FACTS } from '../../../lib/content';
+const ph: any = FACTS?.dutyPharmacy ?? FACTS?.pharmacy ?? {};
+const src: string | null = typeof ph === 'string' ? ph : ph.sourceUrl ?? ph.source ?? ph.url ?? null;
+const faq: [string, string][] = [
+  ['איפה בודקים מי בית המרקחת התורן בנתניה?', 'בעמוד הזה. רשימת התורנויות מתעדכנת לפי הפרסום הרשמי.'],
+  ['מה עושים במצב רפואי דחוף בלילה?', 'במצב חירום מתקשרים למד״א בטלפון 101.'],
+];
+---
+<NowPage title="בית מרקחת תורן בנתניה היום | חדשות נתניה והשרון" h1="בית מרקחת תורן בנתניה" description="בית המרקחת התורן בנתניה הלילה ובסוף השבוע: איפה לבדוק, שעות פתיחה, ומה עושים במצב דחוף." path="/now/pharmacy/" intro="מי תורן הלילה ובסוף השבוע." color="#8E0B21" img="city" faq={faq}>
+  <section class="ncard" style="--c:#C8102E">
+    <h2>התורנות היום</h2>
+    <p>כאן יוצג בית המרקחת התורן של היום, עם כתובת, שעות וטלפון, ישירות מהפרסום הרשמי. החיבור יופעל לפני ההשקה.</p>
+    {src && <p>בינתיים אפשר לבדוק ב<a href={src} rel="noopener nofollow" target="_blank" style="color:#0B5FCC;font-weight:700">פרסום הרשמי של התורנויות</a>.</p>}
+    <p class="note">במצב חירום: מד״א 101.</p>
+  </section>
+</NowPage>

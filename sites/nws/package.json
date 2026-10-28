@@ -1,0 +1,14 @@
+{
+  "name": "hns-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/feed.mjs && astro build",
+    "dev": "astro dev",
+    "feed": "node scripts/feed.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.14.0",
+    "suncalc": "^1.9.0"
+  }
+}
