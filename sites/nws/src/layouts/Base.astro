@@ -1,53 +1,66 @@
 ---
+// The frame of every page (redesign approved by Yakir 28.10.2026, Main.dc.html / Article.dc.html / Mobile.dc.html):
+// utility bar (date, Hebrew date, IMS weather and sea, links, channels, languages), a sticky masthead that shrinks on scroll,
+// the section menu, the flash ticker (pauses on hover, focus or the pause button), the event strip while an event is active,
+// the footer, and on phones a fixed tab bar. compact: the short bar of story and directory pages (with a reading progress line).
+// Fixed controls outside the page wrapper: back to top, the accessibility panel (built here, no third-party widget), the cookie
+// banner (Google Analytics loads only after consent, Consent Mode v2), and the "N ידיעות חדשות" pill (the page polls /latest.json).
 import '../styles/global.css';
-import { SITE_URL, PREVIEW, LANGS, LANG_PREFIX, LANG_LOCALE, LANG_DIR, BRAND, TG_URL, type Lang } from '../data/site';
-import { SECTIONS } from '../data/sections';
+import '../styles/nws.css';
+import Icon from '../components/Icon.astro';
+import { SITE_URL, PREVIEW, LANGS, LANG_PREFIX, LANG_LOCALE, LANG_DIR, BRAND, TG_URL, SAME_AS, type Lang } from '../data/site';
 import { t } from '../i18n/ui';
-import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, EVENT, LIVE, hebrewDate, FLASHES, navSections, liveSections } from '../lib/content';
+import { ARTICLES, articlesFor, articleUrl, sectionUrl, placeUrl, placesOf, fmtTime, fmtShort, EVENT, IMS, hebrewDate, FLASHES, navSections, liveSections } from '../lib/content';
+import { PLACES } from '../data/places';
 
 interface Crumb { name: string; href: string }
 interface Props {
   lang?: Lang; title: string; description: string; path: string;
   alternates?: Partial<Record<Lang, string>>; ogImage?: string; ogType?: string; jsonld?: any[]; noindex?: boolean;
   crumbs?: Crumb[]; current?: string; published?: string; modified?: string; section?: string; tags?: string[];
+  compact?: boolean; progress?: boolean; accent?: string;
 }
 const { lang = 'he', title, description, path, alternates = {}, ogImage = '/og/default.png', ogType = 'website', jsonld = [], noindex = false,
-  crumbs = [], current = '', published, modified, section, tags = [] } = Astro.props;
-const u = t(lang);
+  crumbs = [], current = '', published, modified, section, tags = [], compact = false, progress = false, accent = '' } = Astro.props;
+const u = t(lang); const he = lang === 'he';
 const canonical = SITE_URL + path;
 const robots = PREVIEW || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 const alts = Object.entries(alternates) as [Lang, string][];
 const pre = LANG_PREFIX[lang];
-// ticker: the latest flash items (or the latest stories when there are no flash items)
+const ogAbs = /^https?:/.test(ogImage) ? ogImage : SITE_URL + ogImage;
+// ticker: official flashes (hns-feed) and flash stories, newest first; the latest stories when there are fewer than 2
 const pool0 = articlesFor(lang);
-// 28.10.2026: official flashes (hns-feed) first, together with the flash section stories, newest first; when there are fewer than 2,
-// the latest stories. The browser refreshes the official flashes every minute (script at the end of the page).
 const flashOnly = pool0.filter((a) => a.section === 'flash');
 type Tick = { at: string; text: string; href: string; src?: string };
-const tk0: Tick[] = [...(lang === 'he' ? FLASHES.map((f) => ({ at: f.at, text: f.text, href: `/flash/#f${f.id}`, src: f.source })) : []),
+const tk0: Tick[] = [...(he ? FLASHES.map((f) => ({ at: f.at, text: f.text, href: `/flash/#f${f.id}`, src: f.source })) : []),
   ...flashOnly.map((a) => ({ at: a.published, text: a.title, href: articleUrl(a, lang) }))].sort((x, y) => Date.parse(y.at) - Date.parse(x.at));
 const tickerItems: Tick[] = (tk0.length >= 2 ? tk0 : pool0.map((a) => ({ at: a.published, text: a.title, href: articleUrl(a, lang) }))).slice(0, 8);
 const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
 const tickTime = (iso: string) => (ilDay(new Date(iso)) === ilDay(new Date()) ? fmtTime(iso) : fmtShort(iso));
-const hdate = lang === 'he' ? hebrewDate() : '';
-const wx = LIVE?.ok && typeof LIVE.temp === 'number' ? Math.round(LIVE.temp) : null;
-const wxIcon = (c: number | null | undefined) => (c == null ? 'sun' : c <= 1 ? 'sun' : c <= 3 ? 'cloud' : c >= 51 ? 'rain' : 'cloud');
-// event strip (only on Hebrew pages, only while an event is active); its colors follow the kind of event
-const ev = lang === 'he' ? EVENT : null;
-const EVK: Record<string, { bg: string; tagBg: string; tagFg: string }> = {
-  elections: { bg: 'linear-gradient(90deg,#0B3D6E,#0B5FCC)', tagBg: '#FFFFFF', tagFg: '#0B3D6E' },
-  storm: { bg: 'linear-gradient(90deg,#1F2A37,#3B4656)', tagBg: '#F59F00', tagFg: '#0E1726' },
-  holiday: { bg: 'linear-gradient(90deg,#6D28D9,#DB2777)', tagBg: '#FFFFFF', tagFg: '#6D28D9' },
-  emergency: { bg: 'linear-gradient(90deg,#8F0B20,#C8102E)', tagBg: '#FFFFFF', tagFg: '#A60D26' },
-  other: { bg: 'linear-gradient(90deg,#0E1726,#0B3D6E)', tagBg: '#FFFFFF', tagFg: '#0E1726' },
-};
-const evk = ev ? (EVK[ev.kind] ?? EVK.other) : null;
-const flashS = SECTIONS.find((x) => x.key === 'flash')!;
+const flashCount = he ? tk0.filter((x) => Date.now() - Date.parse(x.at) < 6 * 3600e3).length : 0;
+const hdate = he ? hebrewDate() : '';
+const today = new Intl.DateTimeFormat(he ? 'he-IL' : lang, { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+// weather and sea of the IMS (scripts/ims.mjs); shown only when there is data from today
+const todayIl = ilDay(new Date());
+const wxDay = IMS?.day && IMS.day.date === todayIl ? IMS.day : null;
+const wxIcon = (c: number | null | undefined) => (c == null ? 'sun' : [1140, 1020, 1510, 1540, 1560].includes(c) ? 'rain' : [1220, 1230, 1530, 1160, 1570].includes(c) ? 'cloud' : 'sun');
+const sea = IMS?.sea || null;
+const seaWord = (m: number) => (m <= 0.5 ? 'ים שקט' : m <= 1 ? 'ים נוח' : m <= 1.6 ? 'ים גלי' : m <= 2.5 ? 'ים גבוה' : 'ים סוער');
+const ev = he ? EVENT : null;
 const homeHref = (pre || '') + '/';
 const langHref = (l: Lang) => (alternates[l] ?? (LANG_PREFIX[l] + '/'));
-const today = new Intl.DateTimeFormat(lang === 'he' ? 'he-IL' : lang, { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+const langName = (l: Lang) => (l === 'he' ? 'עב' : l.toUpperCase());
 const crumbLd = crumbs.length ? [{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: SITE_URL + c.href })) }] : [];
 const ld = [...jsonld, ...crumbLd];
+const nav = navSections();
+// Sharon localities that have a page (an area page exists once a story mentions the place)
+const sharonAreas = PLACES.filter((p) => p.kind === 'locality' && ARTICLES.some((a) => placesOf(a).some((x) => x.slug === p.slug))).slice(0, 6);
+const tgHref = TG_URL || `${pre}/join/`;
+const tgAttr = TG_URL ? { target: '_blank', rel: 'noopener' } : {};
+const fb = SAME_AS.find((x) => x.includes('facebook.com'));
+const L = he ? { home: 'ראשי', pros: 'בעלי מקצוע', menu: 'תפריט', tg: 'המבזקים בטלגרם', alerts: 'התראות', all: 'כל המבזקים ←', pause: 'עצירת המבזקים', play: 'הפעלת המבזקים',
+  contact: 'צרו קשר', top: 'חזרה לראש העמוד', sharon: 'השרון', newer: 'ידיעות חדשות', newer1: 'ידיעה חדשה' }
+  : { home: u.home, pros: u.directory, menu: 'Menu', tg: 'Telegram', alerts: u.alerts, all: u.allFlash, pause: 'Pause', play: 'Play', contact: u.contact, top: 'Back to top', sharon: 'Sharon', newer: 'new stories', newer1: 'new story' };
 ---
 <!doctype html>
 <html lang={lang} dir={LANG_DIR[lang]}>
@@ -65,7 +78,7 @@ const ld = [...jsonld, ...crumbLd];
 <meta property="og:title" content={title}>
 <meta property="og:description" content={description}>
 <meta property="og:url" content={canonical}>
-<meta property="og:image" content={SITE_URL + ogImage}>
+<meta property="og:image" content={ogAbs}>
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:locale" content={LANG_LOCALE[lang]}>
 {published && <meta property="article:published_time" content={published}>}
@@ -73,90 +86,179 @@ const ld = [...jsonld, ...crumbLd];
 {section && <meta property="article:section" content={section}>}
 {tags.map((tg) => <meta property="article:tag" content={tg}>)}
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0E1726">
+<meta name="theme-color" content="#0D1321">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title={BRAND.he} href={`${pre}/rss.xml`}>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Rubik:wght@500;600;700;800&display=swap" rel="stylesheet">
-{/* a story picture that fails to load (for example a missing AI file) is replaced by the city drawing, so no broken image is shown */}
-{/* Google Analytics 4 (G-N0Q1GZWXF2, added 28.10.2026): loaded async, IP anonymized, no ad signals. window.nwsTrack(name, params)
-   is the one helper for site events, e.g. nwsTrack('generate_lead', {form: 'directory'}) after a form was sent successfully. */}
-{!PREVIEW && <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-N0Q1GZWXF2"></script>}
-<script is:inline>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-N0Q1GZWXF2',{anonymize_ip:true,allow_google_signals:false,allow_ad_personalization_signals:false});
-window.nwsTrack=function(n,p){try{gtag('event',n,p||{})}catch(e){}};</script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+{/* accessibility settings saved by the visitor are applied before the page is drawn */}
+<script is:inline>(function(){try{var a=JSON.parse(localStorage.getItem('nwsA11y')||'{}'),h=document.documentElement;if(a.z)h.classList.add('a11y-z'+a.z);['contrast','gray','links','font','still','cursor'].forEach(function(k){if(a[k])h.classList.add('a11y-'+k)})}catch(e){}})();</script>
+{/* Google Analytics 4 (G-N0Q1GZWXF2) with Consent Mode v2: everything denied by default; the script itself loads only after the
+   visitor agrees to statistics cookies (banner below), or on later visits when that choice is saved. window.nwsTrack(name, params). */}
+<script is:inline define:vars={{ GA: PREVIEW ? '' : 'G-N0Q1GZWXF2' }}>window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',functionality_storage:'granted',security_storage:'granted'});
+gtag('js',new Date());if(GA)gtag('config',GA,{anonymize_ip:true,allow_google_signals:false,allow_ad_personalization_signals:false});
+window.nwsTrack=function(n,p){try{gtag('event',n,p||{})}catch(e){}};
+window.nwsLoadGA=function(){if(window.__nwsga||!GA)return;window.__nwsga=1;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+GA;document.head.appendChild(s)};
+try{var c=JSON.parse(localStorage.getItem('nwsConsent')||'null');if(c&&c.a){gtag('consent','update',{analytics_storage:'granted'});nwsLoadGA()}}catch(e){}</script>
+{/* a story picture that fails to load is replaced by a city photo, so no broken image is shown */}
 <script is:inline>addEventListener('error',function(e){var i=e.target;if(i&&i.tagName==='IMG'&&!i.dataset.fb){i.dataset.fb='1';i.removeAttribute('srcset');i.src='/img/stock/city-buildings-800.webp'}},true)</script>
 {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o).replace(/</g, '\\u003c')}></script>)}
 </head>
 <body>
-<a class="skip" href="#main">{lang === 'he' ? 'דלג לתוכן' : lang === 'ru' ? 'К содержанию' : lang === 'fr' ? 'Aller au contenu' : 'Skip to content'}</a>
+<a class="skip" href="#main">{he ? 'דלג לתוכן' : lang === 'ru' ? 'К содержанию' : lang === 'fr' ? 'Aller au contenu' : 'Skip to content'}</a>
 {PREVIEW && <div class="preview">{u.previewNote}</div>}
-<div class="ub"><div class="wrap">
-  <div class="l"><span>{today}</span>{hdate && <span class="hd2x">{hdate}</span>}<span class="wx" data-wx>{wx !== null ? <><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F2B544" stroke-width="2" aria-hidden="true">{wxIcon(LIVE.code) === 'sun' ? <><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></> : wxIcon(LIVE.code) === 'rain' ? <><path d="M7 15a4 4 0 010-8 5 5 0 019.6 1.5A3.5 3.5 0 0117 15z"/><path d="M8 18l-1 3M12 18l-1 3M16 18l-1 3"/></> : <path d="M7 18a4 4 0 010-8 5 5 0 019.6 1.5A3.5 3.5 0 0117 18z"/>}</svg><b data-wx-t>{wx}°</b> {lang === 'he' ? 'נתניה' : u.city}</> : <span>{lang === 'he' ? 'נתניה' : u.city}</span>}</span></div>
+<div class="n-zoom">
+{!compact && (
+<div class="n-util"><div class="n-wrap">
   <div class="r">
-    <a href={`${pre}/send-news/`}>{u.sendNews}</a>
-    <a href="/advertise/">{u.advertise}</a>
-    <nav class="langs" aria-label="שפה / Language">
-      {LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l === 'he' ? 'עב' : l.toUpperCase()}</a>)}
-    </nav>
+    <span>{today}</span>{hdate && <><span class="sep" aria-hidden="true"></span><span>{hdate}</span></>}
+    {wxDay && wxDay.max !== null && <><span class="sep" aria-hidden="true"></span><a class="wx" href={he ? '/now/' : `${pre}/now/`} title={he ? 'תחזית השירות המטאורולוגי' : 'IMS forecast'}><Icon name={wxIcon(wxDay.code)} size={16} sw={2} color="#FFD66B" /><span class="num">{he ? 'נתניה' : u.city} {wxDay.max}° / {wxDay.min}°</span></a></>}
+    {sea && he && <><span class="sep sep2" aria-hidden="true"></span><a class="lnk" href="/now/beaches/">{seaWord(sea.waveMax)}, גלים עד {sea.waveMax.toFixed(1)} מ׳</a></>}
   </div>
-</div></div>
-<header class="hd">
-  <div class="wrap top">
-    <a class="logo" href={homeHref} aria-label={`NWS ${u.brandName}`}>
-      <span class="mk">NWS<i></i></span>
-      <span class="tx"><b>{u.brandName}</b><span>{u.tagline}</span></span>
-    </a>
-    <form class="srch" role="search" action={`${pre}/search/`} method="get">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B6573" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <label class="sr" for="q">{u.search}</label>
-      <input id="q" name="q" type="search" placeholder={u.searchPh}>
-    </form>
-    <div class="btns">
-      <a class="btn pri pill" href={TG_URL || `${pre}/join/`} {...(TG_URL ? { target: '_blank', rel: 'noopener' } : {})} data-tg><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4 2-15z"/></svg>{u.joinTelegram}</a>
+  <div class="r">
+    <a class="lnk" href={`${pre}/send-news/`}>{u.sendNews}</a><a class="lnk" href="/advertise/">{u.advertise}</a><a class="lnk" href="/contact/">{L.contact}</a><span class="sep sep2" aria-hidden="true"></span>
+    <div class="soc">
+      <a href={tgHref} {...tgAttr} aria-label={he ? 'ערוץ הטלגרם' : 'Telegram'} data-tg><Icon name="telegram" size={16} /></a>
+      {fb && <a href={fb} target="_blank" rel="noopener" aria-label={he ? 'הדף בפייסבוק' : 'Facebook'}><Icon name="facebook" size={16} /></a>}
+      <a href={`${pre}/join/#whatsapp`} aria-label={he ? 'ערוץ הוואטסאפ' : 'WhatsApp'}><Icon name="whatsapp" size={16} /></a>
     </div>
-    <div class="mtools">
-      <a href="/search/" aria-label={u.search}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></a>
-      <details class="mm">
-        <summary aria-label={lang === 'he' ? 'תפריט' : 'Menu'}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
-        <div class="mmp">
-          <nav aria-label={u.sectionsH}>{navSections().map((x) => <a href={sectionUrl(x.key, lang)}>{x.name[lang]}</a>)}<a href={`${pre}/now/`}>{u.now}</a>{lang === 'he' && <a href="/netanya/">מדריך העיר</a>}<a href={`${pre}/directory/`}>{u.directory}</a></nav>
-          <div class="mmb"><a class="btn pri pill" href={TG_URL || `${pre}/join/`} {...(TG_URL ? { target: '_blank', rel: 'noopener' } : {})} data-tg>{u.joinTelegram}</a><a href={`${pre}/send-news/`}>{u.sendNews}</a><a href="/advertise/">{u.advertise}</a></div>
-          <div class="langs">{LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l === 'he' ? 'עב' : l.toUpperCase()}</a>)}</div>
-        </div>
-      </details>
-    </div>
+    <span class="sep sep2" aria-hidden="true"></span>
+    <nav class="lg" aria-label="שפה / Language">{LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{langName(l)}</a>)}</nav>
   </div>
-  <div class="navw"><nav class="wrap nav" aria-label={u.sectionsH}>
-    {navSections().map((s) => <a href={sectionUrl(s.key, lang)} class={s.key === 'flash' ? 'fl' : undefined} style={`--c:${s.color}`} aria-current={current === s.key ? 'page' : undefined}>{s.key === 'flash' && <i aria-hidden="true"></i>}{s.name[lang]}</a>)}
-    <a class="hl" href={`${pre}/now/`} aria-current={current === 'now' ? 'page' : undefined}>{u.now}</a>
-    <a class="hl" href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}>{u.directory}</a>
-  </nav></div>
-</header>
-{ev && evk && (
-<aside class="evs" aria-label={ev.title} style={`background:${evk.bg}`} data-ends={ev.endsAt || undefined}><div class="wrap">
-  <span class="evt"><span class="tg" style={`background:${evk.tagBg};color:${evk.tagFg}`}>{ev.tag || 'אירוע מיוחד'}</span><b>{ev.title}</b></span>
-  {(ev.stat1 || ev.stat2) && <span class="evd" aria-hidden="true"></span>}
-  <span class="evn">{ev.stat1 && <span><b>{ev.stat1}</b> {ev.stat1Label}</span>}{ev.stat2 && <span class="s2"><b>{ev.stat2}</b> {ev.stat2Label}</span>}</span>
-  {ev.ctaText && ev.ctaUrl && <a class="evc" href={ev.ctaUrl}>{ev.ctaText} ←</a>}
-</div></aside>)}
-{tickerItems.length > 0 && (
-<div class="tk"><div class="wrap">
-  <span class="lb">{u.flash}</span>
-  <div class="vp"><ul data-tk={lang === 'he' ? '1' : undefined}>{[...tickerItems, ...tickerItems].map((a, i) => <li aria-hidden={i >= tickerItems.length ? 'true' : undefined} data-at={a.at}><a href={a.href} tabindex={i >= tickerItems.length ? -1 : undefined}><b>{tickTime(a.at)}</b> {a.src ? `${a.src}: ` : ''}{a.text}</a></li>)}</ul></div>
 </div></div>)}
-<main id="main"><slot /></main>
-<footer class="ft">
-  <div class="wrap cols">
-    <div><span class="mk">NWS<i>.</i></span><span>{u.footAbout}</span></div>
-    <div><b>{u.sectionsH}</b>{liveSections().map((s) => <a href={sectionUrl(s.key, lang)}>{s.name[lang]}</a>)}</div>
-    <div><b>{u.usefulH}</b><a href={`${pre}/now/`}>{u.now}</a>{lang === 'he' && <><a href="/now/pharmacy/">בית מרקחת תורן</a><a href="/now/shabbat/">זמני שבת בנתניה</a><a href="/now/beaches/">החופים של נתניה</a><a href="/now/phones/">טלפונים חיוניים</a><a href="/netanya/">נתניה: מדריך העיר</a><a href="/events/#cal">לוח אירועים בנתניה</a><a href="/flash/#official">מבזקים רשמיים</a></>}<a href={`${pre}/directory/`}>{u.directory}</a></div>
-    <div><b>{u.siteH}</b><a href={`${pre}/about/`}>{u.about}</a><a href="/editorial-policy/">{u.editorial}</a><a href="/corrections/">{u.corrections}</a><a href={`${pre}/send-news/`}>{u.sendNews}</a><a href="/advertise/">{u.advertise}</a><a href="/contact/">{u.contact}</a><a href="/terms/">{u.terms}</a><a href="/privacy/">{u.privacy}</a><a href="/accessibility/">{u.accessibility}</a></div>
+<header class={`n-head${compact ? ' cmp' : ''}`} id="nhead">
+  {compact ? (
+  <div class="n-bar"><div class="n-wrap">
+    <a href={homeHref} class="n-logo" style="gap:12px" aria-label={`NWS ${u.brandName}`}><span class="n-mk">NWS<i></i></span><span class="bn">{u.brandName}</span></a>
+    <nav class="nv" aria-label={u.sectionsH}>{nav.slice(0, 8).map((s) => <a href={sectionUrl(s.key, lang)} style={`--c:${s.color}`} aria-current={current === s.key ? 'page' : undefined}>{s.name[lang]}</a>)}<a href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}>{L.pros}</a></nav>
+    <a class="n-btn ink" href={tgHref} {...tgAttr} data-tg><Icon name="telegram" size={17} color="#fff" />{he ? 'טלגרם' : 'Telegram'}</a>
+  </div>{progress && <div class="n-prog" aria-hidden="true"><i id="nprog"></i></div>}</div>
+  ) : (<>
+  <div class="n-mast"><div class="n-wrap">
+    <a class="n-logo" href={homeHref} aria-label={`NWS ${u.brandName}`}><span class="n-mk">NWS<i></i></span><span class="n-lt"><b>{u.brandName}</b><span>{u.tagline}</span></span></a>
+    <div class="n-tools">
+      <form class="n-srch" role="search" action={`${pre}/search/`} method="get"><Icon name="search" size={18} sw={2} /><label class="sr" for="q">{u.search}</label><input id="q" name="q" type="search" placeholder={he ? 'חיפוש ידיעות, רחובות, בעלי מקצוע' : u.searchPh}></form>
+      <a class="n-btn ink" href={tgHref} {...tgAttr} data-tg><Icon name="telegram" size={18} color="#fff" />{L.tg}</a>
+      <a class="n-btn line ico" href={`${pre}/join/#alerts`} aria-label={L.alerts}><Icon name="bell" size={19} /></a>
+    </div>
+    <div class="n-mtools"><a class="n-ib" href={`${pre}/search/`} aria-label={u.search}><Icon name="search" size={22} sw={2} /></a></div>
+  </div></div>
+  <nav class="n-nav" aria-label={u.sectionsH}><div class="n-wrap">
+    <a href={homeHref} aria-current={current === 'home' ? 'page' : undefined}>{L.home}</a>
+    {nav.map((s) => <a href={sectionUrl(s.key, lang)} aria-current={current === s.key ? 'page' : undefined}>{s.key === 'flash' && <span class="dot" aria-hidden="true"></span>}{s.name[lang]}</a>)}
+    <a class="more" href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}>{L.pros}</a>
+  </div></nav></>)}
+</header>
+{!compact && tickerItems.length > 0 && (
+<div class="n-tick" id="ntick"><div class="n-wrap">
+  <span class="tl"><i aria-hidden="true"></i>{u.flash}</span>
+  <div class="vp"><ul class="num" data-tk={he ? '1' : undefined}>{[...tickerItems, ...tickerItems].map((a, i) => <li aria-hidden={i >= tickerItems.length ? 'true' : undefined} data-at={a.at}><a href={a.href} tabindex={i >= tickerItems.length ? -1 : undefined}><b>{tickTime(a.at)}</b> {a.src ? `${a.src}: ` : ''}{a.text}</a></li>)}</ul></div>
+  <button class="pz" type="button" aria-pressed="false" aria-label={L.pause} data-pause><Icon name="pause" size={16} sw={2.2} /></button>
+  <a class="all" href={sectionUrl('flash', lang)}>{L.all}</a>
+</div></div>)}
+{ev && !compact && (
+<aside class="n-ev" aria-label={ev.title} data-ends={ev.endsAt || undefined}><div class="n-wrap">
+  <span class="tag">{ev.tag || 'מיוחד'}</span><b class="t">{ev.title}</b>
+  {ev.stat1 && <span><span class="big num">{ev.stat1}</span> {ev.stat1Label}</span>}
+  {ev.stat2 && <span class="s2 num">{ev.stat2} {ev.stat2Label}</span>}
+  {ev.ctaText && ev.ctaUrl && <a href={ev.ctaUrl}>{ev.ctaText} ←</a>}
+</div></aside>)}
+<main id="main" tabindex="-1"><slot /></main>
+<footer class="n-foot"><div class="n-wrap">
+  <div class="n-fg">
+    <div>
+      <a class="n-logo" href={homeHref} aria-label={`NWS ${u.brandName}`}><span class="n-mk">NWS<i></i></span><span class="n-lt"><b>{u.brandName}</b><span>{he ? 'אתר חדשות מקומי ועצמאי' : u.tagline}</span></span></a>
+      <p style="margin:18px 0 0;max-width:340px;line-height:1.7">{he ? 'חדשות, מבזקים ושירותים לתושבי נתניה והשרון, מסביב לשעון. ראיתם משהו? שלחו לנו ידיעה או תמונה.' : u.footAbout}</p>
+    </div>
+    <div><h2>{u.sectionsH}</h2><ul>{liveSections().map((s) => <li><a href={sectionUrl(s.key, lang)}>{s.name[lang]}</a></li>)}</ul></div>
+    {he ? <div><h2>השרון</h2><ul>{sharonAreas.map((x) => <li><a href={placeUrl(x.slug)}>{x.he}</a></li>)}<li><a href="/sharon/">כל חדשות השרון</a></li></ul></div> : <div></div>}
+    <div><h2>{u.usefulH}</h2><ul><li><a href={`${pre}/directory/`}>{L.pros}</a></li><li><a href={`${pre}/now/`}>{u.now}</a></li>{he && <><li><a href="/now/shabbat/">שבת ומועדים</a></li><li><a href="/now/roads/">כבישים וחסימות</a></li><li><a href="/now/phones/">מספרי חירום</a></li><li><a href="/now/pharmacy/">בית מרקחת תורן</a></li><li><a href="/netanya/">נתניה: מדריך העיר</a></li><li><a href="/events/#cal">לוח אירועים</a></li></>}<li><a href={`${pre}/send-news/`}>{u.sendNews}</a></li></ul></div>
+    <div><h2>{u.siteH}</h2><ul><li><a href={`${pre}/about/`}>{he ? 'אודות ומערכת' : u.about}</a></li><li><a href="/editorial-policy/">{u.editorial}</a></li><li><a href="/corrections/">{u.corrections}</a></li><li><a href="/advertise/">{u.advertise}</a></li><li><a href="/contact/">{u.contact}</a></li><li><a href="/accessibility/">{u.accessibility}</a></li></ul></div>
   </div>
-  {lang === 'he' && <div class="wrap ainote">תמונות שמסומנות "להמחשה" נוצרו בבינה מלאכותית ואינן מתעדות את האירוע. <a href="/editorial-policy/#images">מדיניות התמונות</a></div>}
-  <div class="wrap bt"><span>© {new Date().getFullYear()} NWS. {u.rights}</span><span>{LANGS.map((l, i) => <>{i > 0 && ' · '}<a href={langHref(l)} lang={l}>{l === 'he' ? 'עברית' : l === 'ru' ? 'Русский' : l === 'fr' ? 'Français' : 'English'}</a></>)}</span></div>
-</footer>
+  {he && <p style="margin:28px 0 0;font-size:12.5px;color:#7E8796">תמונות שמסומנות "תמונה להמחשה" נוצרו בבינה מלאכותית ואינן מתעדות את האירוע. תמונות שמסומנות "צילום אילוסטרציה" לקוחות מספריית צילומים חופשית ואינן מהאירוע. <a href="/editorial-policy/#images" style="text-decoration:underline">מדיניות התמונות</a></p>}
+  <div class="n-fb"><span>© {new Date().getFullYear()} NWS {u.brandName}</span><span><a href="/terms/">{he ? 'תנאי שימוש' : u.terms}</a> · <a href="/privacy/">{u.privacy}</a> · <a href="/accessibility/">{he ? 'נגישות' : u.accessibility}</a> · <button class="lk" type="button" data-ck-open>{he ? 'הגדרות עוגיות' : 'Cookie settings'}</button> · {LANGS.map((l, i) => <>{i > 0 && ' · '}<a href={langHref(l)} lang={l}>{l === 'he' ? 'עברית' : l === 'ru' ? 'Русский' : l === 'fr' ? 'Français' : 'English'}</a></>)}</span></div>
+</div></footer>
+</div>
+
+<nav class="n-tab" aria-label={he ? 'ניווט ראשי' : 'Main navigation'}>
+  <a href={homeHref} aria-current={current === 'home' ? 'page' : undefined}><Icon name="home" size={22} sw={1.9} />{L.home}</a>
+  <a href={sectionUrl('flash', lang)} aria-current={current === 'flash' ? 'page' : undefined}><span class="bdg"><Icon name="bolt" size={22} sw={1.9} />{flashCount > 0 && <i class="num" aria-hidden="true">{flashCount > 9 ? '9+' : flashCount}</i>}</span>{u.flash}</a>
+  <a href={sectionUrl('sharon', lang)} aria-current={current === 'sharon' ? 'page' : undefined}><Icon name="pin" size={22} sw={1.9} />{L.sharon}</a>
+  <a href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}><Icon name="wrench" size={22} sw={1.9} />{L.pros}</a>
+  <button type="button" aria-haspopup="dialog" aria-controls="nmenu" aria-expanded="false" data-menu><Icon name="menu" size={22} sw={1.9} />{L.menu}</button>
+</nav>
+<div class="n-menu" id="nmenu" role="dialog" aria-modal="true" aria-label={L.menu} hidden>
+  <div class="hd"><b>{L.menu}</b><button class="n-ib" type="button" data-menu-close aria-label={he ? 'סגירה' : 'Close'}><Icon name="close" size={22} /></button></div>
+  <form class="n-srch" role="search" action={`${pre}/search/`} method="get" style="width:100%"><Icon name="search" size={18} sw={2} /><label class="sr" for="q2">{u.search}</label><input id="q2" name="q" type="search" placeholder={u.searchPh}></form>
+  <nav aria-label={u.sectionsH}>{liveSections().map((s) => <a href={sectionUrl(s.key, lang)} style={`--c:${s.color}`}><Icon name={s.key} size={18} />{s.name[lang]}</a>)}<a href={`${pre}/directory/`}><Icon name="wrench" size={18} />{L.pros}</a><a href={`${pre}/now/`}><Icon name="sun" size={18} />{u.now}</a>{he && <a href="/netanya/"><Icon name="pin" size={18} />מדריך העיר</a>}</nav>
+  <div class="bt"><a class="n-btn tg" href={tgHref} {...tgAttr} data-tg><Icon name="telegram" size={18} color="#fff" />{he ? 'ערוץ הטלגרם' : 'Telegram'}</a><a class="n-btn line" href={`${pre}/send-news/`}>{u.sendNews}</a><a class="n-btn line" href="/advertise/">{u.advertise}</a></div>
+  <div class="lgs">{LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l === 'he' ? 'עברית' : l === 'ru' ? 'Русский' : l === 'fr' ? 'Français' : 'English'}</a>)}</div>
+</div>
+<button class="n-pill" type="button" id="npill" aria-live="polite"><Icon name="up" size={16} sw={2.4} color="#fff" /><span></span></button>
+<button class="n-top-btn" type="button" id="ntop" aria-label={L.top}><Icon name="up" size={20} sw={2.2} color="#fff" /></button>
+<button class="n-a11y-btn" type="button" id="na11yb" aria-haspopup="dialog" aria-controls="na11y" aria-expanded="false" aria-label={he ? 'תפריט נגישות' : 'Accessibility menu'}><Icon name="a11y" size={26} sw={2} color="#fff" /></button>
+<div class="n-a11y" id="na11y" role="dialog" aria-modal="true" aria-labelledby="na11y-h" hidden>
+  <div class="hd"><h2 id="na11y-h">{he ? 'נגישות' : 'Accessibility'}</h2><button class="sq" type="button" data-a11y-close aria-label={he ? 'סגירת תפריט הנגישות' : 'Close'}><Icon name="close" size={20} /></button></div>
+  <div class="row"><span id="na11y-fs">{he ? 'גודל טקסט' : 'Text size'}</span><span class="fs" role="group" aria-labelledby="na11y-fs"><button class="sq" type="button" data-z="-1" aria-label={he ? 'הקטנת טקסט' : 'Smaller text'}>א-</button><button class="sq" type="button" data-z="1" aria-label={he ? 'הגדלת טקסט' : 'Larger text'}>א+</button></span></div>
+  <button class="tg" type="button" data-k="contrast" aria-pressed="false">{he ? 'ניגודיות גבוהה' : 'High contrast'}</button>
+  <button class="tg" type="button" data-k="gray" aria-pressed="false">{he ? 'גווני אפור' : 'Grayscale'}</button>
+  <button class="tg" type="button" data-k="links" aria-pressed="false">{he ? 'הדגשת קישורים' : 'Underline links'}</button>
+  <button class="tg" type="button" data-k="font" aria-pressed="false">{he ? 'גופן קריא' : 'Readable font'}</button>
+  <button class="tg" type="button" data-k="still" aria-pressed="false">{he ? 'עצירת אנימציות' : 'Stop animations'}</button>
+  <button class="tg" type="button" data-k="cursor" aria-pressed="false">{he ? 'סמן גדול' : 'Big cursor'}</button>
+  <div class="ft"><a href="/accessibility/">{he ? 'הצהרת נגישות' : 'Accessibility statement'}</a><button class="n-btn line" type="button" data-a11y-reset style="min-height:40px">{he ? 'איפוס' : 'Reset'}</button></div>
+</div>
+<div class="n-ck" id="nck" role="region" aria-labelledby="nck-h" hidden>
+  <h2 id="nck-h">{he ? 'עוגיות באתר' : 'Cookies'}</h2>
+  <p>{he ? <>אנחנו משתמשים בעוגיות הכרחיות כדי שהאתר יעבוד, ובאישורכם גם בעוגיות סטטיסטיקה (Google Analytics) כדי לדעת אילו ידיעות נקראות. <a href="/privacy/#cookies">מדיניות הפרטיות</a></> : <>We use necessary cookies, and with your consent statistics cookies (Google Analytics). <a href="/privacy/#cookies">Privacy policy</a></>}</p>
+  <div class="set" hidden data-ck-set><label><input type="checkbox" checked disabled> <span><b>{he ? 'הכרחיות' : 'Necessary'}</b>{he ? ': שמירת ההגדרות שלכם באתר. תמיד פעילות.' : ': always on.'}</span></label><label><input type="checkbox" data-ck-a> <span><b>{he ? 'סטטיסטיקה' : 'Statistics'}</b>{he ? ': Google Analytics, בלי פרסום ובלי פרופיל אישי.' : ': Google Analytics, no advertising.'}</span></label></div>
+  <div class="bt"><button class="n-btn ink" type="button" data-ck="all">{he ? 'מאשר הכול' : 'Accept all'}</button><button class="n-btn line" type="button" data-ck="min">{he ? 'רק הכרחיים' : 'Necessary only'}</button><button class="n-btn line" type="button" data-ck="set">{he ? 'הגדרות' : 'Settings'}</button><button class="n-btn ink" type="button" data-ck="save" hidden>{he ? 'שמירת הבחירה' : 'Save'}</button></div>
+</div>
+<script is:inline define:vars={{ T: { newer: L.newer, newer1: L.newer1, pause: L.pause, play: L.play } }}>
+/* page behaviour: shrinking header, back to top, reading progress, ticker pause, phone menu, accessibility panel, cookie consent,
+   and the new stories pill (polls /latest.json every 60 seconds) */
+(function(){
+var d=document,h=d.documentElement,hd=d.getElementById('nhead'),top=d.getElementById('ntop'),prog=d.getElementById('nprog');
+function onScroll(){var y=window.scrollY||0;if(hd)hd.classList.toggle('sm',y>120);if(top)top.classList.toggle('on',y>900);
+ if(prog){var a=d.querySelector('article'),r=a?a.getBoundingClientRect():null;if(r){var p=Math.min(1,Math.max(0,-r.top/Math.max(1,r.height-window.innerHeight)));prog.style.width=(p*100).toFixed(1)+'%'}}}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+if(top)top.addEventListener('click',function(){var still=h.classList.contains('a11y-still')||matchMedia('(prefers-reduced-motion: reduce)').matches;window.scrollTo({top:0,behavior:still?'auto':'smooth'});var m=d.getElementById('main');if(m)m.focus({preventScroll:true})});
+var tk=d.getElementById('ntick'),pz=d.querySelector('[data-pause]');
+if(tk&&pz)pz.addEventListener('click',function(){var on=tk.classList.toggle('paused');pz.setAttribute('aria-pressed',on?'true':'false');pz.setAttribute('aria-label',on?T.play:T.pause)});
+/* dialogs: focus trap, Esc closes, focus returns to the opener */
+function dialog(box,opener,onClose){var last=null;function keys(e){if(e.key==='Escape'){close();return}if(e.key!=='Tab')return;var f=[].slice.call(box.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])')).filter(function(x){return x.offsetParent!==null});if(!f.length)return;var a=f[0],z=f[f.length-1];if(e.shiftKey&&d.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&d.activeElement===z){e.preventDefault();a.focus()}}
+ function open(){last=d.activeElement;box.hidden=false;if(opener)opener.setAttribute('aria-expanded','true');d.addEventListener('keydown',keys);var f=box.querySelector('button,a[href],input');if(f)f.focus()}
+ function close(){box.hidden=true;if(opener)opener.setAttribute('aria-expanded','false');d.removeEventListener('keydown',keys);if(onClose)onClose();if(last&&last.focus)last.focus()}
+ return{open:open,close:close,toggle:function(){box.hidden?open():close()}}}
+var mb=d.querySelector('[data-menu]'),mn=d.getElementById('nmenu');if(mb&&mn){var md=dialog(mn,mb);mb.addEventListener('click',md.toggle);mn.querySelector('[data-menu-close]').addEventListener('click',md.close)}
+/* accessibility panel: settings are classes on <html>, saved in localStorage */
+var ab=d.getElementById('na11yb'),ap=d.getElementById('na11y'),A={};try{A=JSON.parse(localStorage.getItem('nwsA11y')||'{}')||{}}catch(e){A={}}
+function applyA(){['z1','z2','z3'].forEach(function(z){h.classList.remove('a11y-'+z)});if(A.z)h.classList.add('a11y-z'+A.z);['contrast','gray','links','font','still','cursor'].forEach(function(k){h.classList.toggle('a11y-'+k,!!A[k]);var b=ap&&ap.querySelector('[data-k="'+k+'"]');if(b)b.setAttribute('aria-pressed',A[k]?'true':'false')});try{localStorage.setItem('nwsA11y',JSON.stringify(A))}catch(e){}}
+if(ab&&ap){var ad=dialog(ap,ab);ab.addEventListener('click',ad.toggle);ap.querySelector('[data-a11y-close]').addEventListener('click',ad.close);
+ ap.querySelectorAll('[data-k]').forEach(function(b){b.addEventListener('click',function(){var k=b.getAttribute('data-k');A[k]=!A[k];applyA()})});
+ ap.querySelectorAll('[data-z]').forEach(function(b){b.addEventListener('click',function(){A.z=Math.max(0,Math.min(3,(A.z||0)+Number(b.getAttribute('data-z'))));applyA()})});
+ ap.querySelector('[data-a11y-reset]').addEventListener('click',function(){A={};applyA()});applyA()}
+/* cookies: necessary always; statistics (Google Analytics) only with consent */
+var ck=d.getElementById('nck'),C=null;try{C=JSON.parse(localStorage.getItem('nwsConsent')||'null')}catch(e){}
+function saveC(a){C={a:!!a,at:new Date().toISOString(),v:1};try{localStorage.setItem('nwsConsent',JSON.stringify(C))}catch(e){}
+ if(window.gtag)gtag('consent','update',{analytics_storage:a?'granted':'denied'});if(a&&window.nwsLoadGA)nwsLoadGA();ck.hidden=true}
+if(ck){var set=ck.querySelector('[data-ck-set]'),cbA=ck.querySelector('[data-ck-a]'),sv=ck.querySelector('[data-ck="save"]');
+ ck.querySelector('[data-ck="all"]').addEventListener('click',function(){saveC(true)});
+ ck.querySelector('[data-ck="min"]').addEventListener('click',function(){saveC(false)});
+ ck.querySelector('[data-ck="set"]').addEventListener('click',function(){set.hidden=false;sv.hidden=false;cbA.checked=!!(C&&C.a);cbA.focus()});
+ sv.addEventListener('click',function(){saveC(cbA.checked)});
+ d.querySelectorAll('[data-ck-open]').forEach(function(b){b.addEventListener('click',function(){ck.hidden=false;set.hidden=false;sv.hidden=false;cbA.checked=!!(C&&C.a);cbA.focus()})});
+ if(!C)ck.hidden=false}
+/* new stories: the build writes /latest.json (newest stories); a pill appears when there are newer ones than on this page */
+var pill=d.getElementById('npill'),lt=d.querySelector('[data-latest]');if(pill&&window.fetch&&lt){var seen=[];try{seen=JSON.parse(lt.getAttribute('data-latest'))||[]}catch(e){}
+ function poll(){fetch('/latest.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){var ids=(j.items||[]).map(function(x){return x.u});
+  var n=ids.filter(function(u){return seen.indexOf(u)<0}).length;if(n>0){pill.querySelector('span').textContent=n===1?T.newer1:(n+' '+T.newer);pill.classList.add('on')}}).catch(function(){})}
+ pill.addEventListener('click',function(){location.reload()});poll();setInterval(function(){if(!d.hidden)poll()},60000)}
+})();
+</script>
 <script is:inline>
 /* time ago, past road closures, an event that ended, and the live sea and weather (Open-Meteo, free, no key) */
 (function(){var L=document.documentElement.lang||'he',he=L==='he',rtf=null;try{rtf=new Intl.RelativeTimeFormat(L,{numeric:'auto'})}catch(e){}

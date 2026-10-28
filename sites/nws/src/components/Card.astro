@@ -1,41 +1,36 @@
 ---
-// Story card (approved design 28.10.2026, Cards.dc.html): picture with badge ("מבזק" / "סרטון" / "דעה") and the
-// "תמונה להמחשה" label on AI images, a colored kicker line, the title, and a meta line (byline, time ago, reading time).
-// On narrow screens a card inside .lst becomes a row (small picture beside the text), as in the phone design.
-import { IMG, type Lang } from '../data/site';
+// Story card (design kit 28.10.2026): photo (the story's own image labelled "תמונה להמחשה", or a section photo labelled
+// "צילום אילוסטרציה"), the section color line, the title, an optional summary, and the meta line (desk, time, reading time).
+// row: the small-photo row of lists and phones. The whole title is the link; the photo link is hidden from screen readers.
+import { type Lang } from '../data/site';
 import { SECTION_BY_KEY } from '../data/sections';
 import { articleUrl, picOf, kickerOf, readMin, fmtDay, type Article } from '../lib/content';
-interface Props { a: Article; lang?: Lang; h?: 'h2' | 'h3'; eager?: boolean; read?: boolean; sizes?: string }
-const { a, lang = 'he', h = 'h3', eager = false, read = false, sizes = '(max-width: 560px) 118px, (max-width: 900px) 50vw, 300px' } = Astro.props;
+interface Props { a: Article; lang?: Lang; h?: 'h2' | 'h3'; eager?: boolean; read?: boolean; dek?: boolean; ratio?: string; sizes?: string; row?: boolean; size?: number }
+const { a, lang = 'he', h = 'h3', eager = false, read = false, dek = false, ratio = '3/2', sizes = '(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 420px', row = false, size } = Astro.props;
 const s = SECTION_BY_KEY[a.section];
-const p = picOf(a, IMG);
+const p = picOf(a);
 const H = h;
 const he = lang === 'he';
 const flash = a.section === 'flash';
-const opinion = a.kind === 'opinion';
-const video = !!a.video;
-const by = opinion && a.author ? a.author : he ? 'מערכת' : '';
-const T = { ill: he ? 'תמונה להמחשה' : 'AI illustration', flash: he ? 'מבזק' : 'Breaking', video: he ? 'סרטון' : 'Video', op: he ? 'דעה' : 'Opinion', min: he ? 'דק׳ קריאה' : 'min read' };
+const href = articleUrl(a, lang);
+const label = he ? p.label : p.ai ? 'AI illustration' : 'Illustrative photo';
+const by = a.kind === 'opinion' && a.author ? a.author : he ? 'מערכת NWS' : 'NWS';
 ---
-<a class={`card${opinion ? ' op' : ''}`} href={articleUrl(a, lang)} style={`--c:${s.color};--ci:${s.ink}`}>
-  {opinion ? (
-    <span class="im opbox" aria-hidden="true">
-      <span class="badge" style="background:#6D28D9">{T.op}</span>
-      <span class="q">”</span>
-      {a.author && <span class="who"><span class="av2">{a.author.trim()[0]}</span><span><b>{a.author}</b>{a.authorRole && <small>{a.authorRole}</small>}</span></span>}
-    </span>
-  ) : (
-    <span class="im">
-      <img src={p.ai ? p.small : p.src} srcset={p.srcset} sizes={p.srcset ? sizes : undefined} alt={p.ai ? p.alt : ''} width={p.w} height={p.h} loading={eager ? 'eager' : 'lazy'} decoding="async">
-      {flash && <span class="badge fl"><i></i>{T.flash}</span>}
-      {!flash && video && <span class="badge vd"><svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="#fff"/></svg>{T.video}</span>}
-      {video && <span class="play" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 12 12"><path d="M3.5 1.5v9l7-4.5z" fill="#0E1726"/></svg></span>}
-      {p.ai && <span class="ill">{T.ill}</span>}
-    </span>
-  )}
-  <span class="tx">
-    <span class="kick"><i></i>{kickerOf(a, lang)}</span>
-    <H>{a.title}</H>
-    <span class="meta">{by && <><b>{by}</b><i class="sep" aria-hidden="true"></i></>}<time datetime={a.published} data-ago class={flash ? 'hot' : undefined}>{fmtDay(a.published, lang)}</time>{read && <><i class="sep" aria-hidden="true"></i><span>{readMin(a)} {T.min}</span></>}</span>
-  </span>
+{row ? (
+<a class="n-row" href={href} style={`--c:${s.color}`}>
+  <span><span class="n-k">{kickerOf(a, lang)}</span><b>{a.title}</b><small class="num"><time datetime={a.published} data-ago>{fmtDay(a.published, lang)}</time></small></span>
+  <span class="n-ph" aria-hidden="true"><img src={p.small} alt="" width="224" height="152" loading={eager ? 'eager' : 'lazy'} decoding="async"></span>
 </a>
+) : (
+<article class="n-card" style={`--c:${s.color}`}>
+  <a class="n-ph" href={href} tabindex="-1" aria-hidden="true" style={`aspect-ratio:${ratio}`}>
+    <img src={p.src} srcset={p.srcset} sizes={p.srcset ? sizes : undefined} alt="" width={p.w} height={p.h} loading={eager ? 'eager' : 'lazy'} decoding="async">
+    {flash && <span class="n-badge"><i></i>{he ? 'מבזק' : 'Breaking'}</span>}
+    <span class="n-cap">{label}</span>
+  </a>
+  <div class="k"><span class="n-k">{kickerOf(a, lang)}</span></div>
+  <a class="t" href={href}><H style={size ? `font-size:${size}px` : undefined}>{a.title}</H></a>
+  {dek && a.dek && <p>{a.dek}</p>}
+  <div class="n-meta num"><b>{by}</b><i aria-hidden="true"></i><time datetime={a.published} data-ago class={flash ? 'n-upd' : undefined}>{fmtDay(a.published, lang)}</time>{read && <><i aria-hidden="true"></i><span>{readMin(a)} {he ? 'דק׳ קריאה' : 'min read'}</span></>}</div>
+</article>
+)}

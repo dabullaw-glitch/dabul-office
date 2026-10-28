@@ -1,89 +1,78 @@
 ---
-// Home page (redesign approved by Yakir 28.10.2026, sketch Main.dc.html / Phone.dc.html):
-// split lead, a row of 4 cards, "נתניה עכשיו" live data, a dark block (active event or the biggest story cluster),
-// then the blocks that existed: real estate, section columns, what's on, local pros, join, footer.
+// Home page (redesign approved by Yakir 28.10.2026, Main.dc.html and Mobile.dc.html). Every block shows real data only and
+// disappears when it has none: stories from the engine (hns-feed), official flashes, IMS weather and sea, Shabbat times computed
+// from the sun, road closures from published stories, the Ligat HaAl table and next Maccabi Netanya game (sport5, scripts/sport.mjs),
+// the events calendar of the city's culture hall, and the business directory.
 import Base from '../layouts/Base.astro';
 import Card from './Card.astro';
-import { IMG, BRAND, SITE_URL, LANG_PREFIX, LANGS, TG_URL, SAME_AS, type Lang } from '../data/site';
-import { SECTIONS, SECTION_BY_KEY } from '../data/sections';
+import Icon from './Icon.astro';
+import { BRAND, SITE_URL, LANG_PREFIX, LANGS, TG_URL, SAME_AS, type Lang } from '../data/site';
+import { SECTION_BY_KEY, type SectionKey } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
-import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtDate, fmtShort, fmtDay, FACTS, EVENT, LIVE, leadOf, readMin, kickerOf, picOf, placesOf, placeUrl, type Article } from '../lib/content';
+import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, fmtDay, FACTS, EVENT, IMS, SPORT, FLASHES, CALENDAR, calTime, calVenue, leadOf, readMin, kickerOf, picOf, stockPic, stockFor, tableAround, type Article } from '../lib/content';
+import { LISTINGS, countBy } from '../lib/biz';
 import { shabbatTimes } from '../lib/shabbat';
-import { CALENDAR, calTime, calVenue } from '../lib/content';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const u = t(lang); const pre = LANG_PREFIX[lang]; const he = lang === 'he';
 const all = articlesFor(lang);
-const S = (k: string) => SECTION_BY_KEY[k as keyof typeof SECTION_BY_KEY];
+const S = (k: string) => SECTION_BY_KEY[k as SectionKey];
 const ev = he ? EVENT : null;
-const evArts = (ev?.storyIds || []).map((id) => all.find((a) => a.slug === `n${id}`)).filter(Boolean) as Article[];
-const evSet = new Set(evArts.map((a) => a.slug));
+const used = new Set<string>();
+const take = (list: Article[], n: number) => { const out = list.filter((a) => !used.has(a.slug)).slice(0, n); out.forEach((a) => used.add(a.slug)); return out; };
+const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
+const todayIl = ilDay(new Date());
+const when = (iso: string) => (ilDay(new Date(iso)) === todayIl ? fmtTime(iso) : fmtShort(iso));
+const hot = (iso: string) => Date.now() - Date.parse(iso) < 2 * 3600e3;
 
-// 1. lead and the row of 4 (flash items of the event are left to the dark block)
+// 1. the top: lead, two cards, three headlines (flash items go to the live feed)
 const lead = leadOf(all, ev);
-const used = new Set<string>([lead?.slug].filter(Boolean) as string[]);
-const row = all.filter((a) => !used.has(a.slug) && !(evSet.has(a.slug) && a.section === 'flash')).slice(0, 4);
-row.forEach((a) => used.add(a.slug));
-const latest = [lead, ...row].filter(Boolean) as Article[];
-
-// 2. the dark block: the active event, or the section with the most stories of the last 7 days
-type Dark = { kicker: string; headline: string; text: string; href: string; bar?: { pct: number; left?: string; right?: string }; list: Article[]; bg: string; source?: string };
-let dark: Dark | null = null;
-if (ev && (ev.block?.headline || evArts.length)) {
-  const b = ev.block || {};
-  dark = { kicker: b.kicker || ev.title, headline: b.headline || evArts[0].title, text: b.text || evArts[0]?.dek || '', href: ev.ctaUrl || (evArts[0] ? articleUrl(evArts[0], lang) : '/'),
-    bar: b.bar && typeof b.bar.pct === 'number' ? b.bar : undefined, list: evArts.slice(0, 3), bg: '/img/skyline.webp', source: b.source };
-} else {
-  const recent = all.filter((a) => !used.has(a.slug) && a.section !== 'flash' && Date.now() - Date.parse(a.published) < 7 * 864e5);
-  const by = new Map<string, Article[]>(); for (const a of recent) by.set(a.section, [...(by.get(a.section) || []), a]);
-  const best = [...by.values()].sort((x, y) => y.length - x.length)[0];
-  if (best && best.length >= 2) dark = { kicker: S(best[0].section).name[lang], headline: best[0].title, text: best[0].dek, href: articleUrl(best[0], lang), list: best.slice(1, 4), bg: '/img/skyline.webp' };
-}
-dark?.list.forEach((a) => used.add(a.slug));
-if (dark && !ev) used.add(all.find((a) => a.title === dark!.headline)?.slug || '');
-
-// 3. "נתניה עכשיו": road closures from published stories (until date not passed), sea and weather snapshot
-const ilToday = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
-const closures = all.filter((a) => a.closure && (a.closure.until ? a.closure.until >= ilToday : Date.now() - Date.parse(a.published) < 3 * 864e5)).slice(0, 3);
-const untilTxt = (c: NonNullable<Article['closure']>) => c.until ? `עד ${c.approx ? 'כ-' : ''}${new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long' }).format(new Date(c.until + 'T12:00:00Z'))}` : '';
-const seaState = (h: number | null | undefined) => (h == null ? '' : h <= 0.5 ? 'ים שקט' : h <= 1 ? 'ים נוח' : h <= 1.6 ? 'ים גלי' : h <= 2.5 ? 'ים גבוה' : 'ים סוער');
-const liveAt = LIVE?.ok && LIVE.at ? (new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date(LIVE.at)) === ilToday ? fmtTime(LIVE.at) : `${fmtShort(LIVE.at)}, ${fmtTime(LIVE.at)}`) : '';
-const num = (v: number | null | undefined, d = 0) => (typeof v === 'number' ? (d ? v.toFixed(d) : String(Math.round(v))) : '…');
-
-// 4. the blocks that existed
-const re = all.filter((a) => a.section === 'realestate' && !used.has(a.slug));
-const colAll = (['community', 'sports', 'sharon', 'city', 'tourism', 'law'] as const).filter((k) => all.some((a) => a.section === k && !used.has(a.slug)));
-const colKeys = colAll.slice(0, colAll.length >= 6 ? 6 : 3); // full rows of three
-const events = all.filter((a) => a.section === 'leisure' || a.event).slice(0, 4);
-// 28.10.2026: the next events from the official calendar fill the "what's on" block when there are fewer than 4 stories
-const calNext = he ? CALENDAR.slice(0, Math.max(0, 4 - events.length)) : [];
+if (lead) used.add(lead.slug);
+const news = all.filter((a) => a.section !== 'flash');
+const duo = take(news, 2);
+const tlist = take(news, 3);
+// 2. the live feed: official flashes and the newest stories, by time
+type Feed = { at: string; text: string; href: string; src?: string };
+const feed: Feed[] = [...(he ? FLASHES.map((f) => ({ at: f.at, text: f.text, href: `/flash/#f${f.id}`, src: f.source })) : []),
+  ...all.slice(0, 12).map((a) => ({ at: a.published, text: a.title, href: articleUrl(a, lang) }))]
+  .sort((x, y) => Date.parse(y.at) - Date.parse(x.at)).filter((x, i, arr) => arr.findIndex((y) => y.text === x.text) === i).slice(0, 7);
+const moreList = take(news, 5);
+// 3. services (only with real data)
+const wxDay = IMS?.day && IMS.day.date === todayIl ? IMS.day : null;
+const sea = IMS?.sea || null;
+const seaWord = (m: number) => (m <= 0.5 ? 'ים שקט' : m <= 1 ? 'נוח לרחצה' : m <= 1.6 ? 'ים גלי' : m <= 2.5 ? 'ים גבוה' : 'ים סוער');
 const sh = shabbatTimes(new Date(), 1)[0];
-const hotline = FACTS?.hotline?.number ?? FACTS?.municipalHotline?.number ?? '106';
-const L = {
-  he: { now: 'נתניה עכשיו', live: 'נתונים חיים', upd: 'עודכן', sea: 'הים בנתניה', wave: 'מ׳ גובה גלים', water: 'מים', air: 'אוויר', wind: 'קמ״ש רוח', states: 'ים שקט|ים נוח|ים גלי|ים גבוה|ים סוער', wxSrc: 'נתוני ים ומזג אוויר',
-    roads: 'חסימות כבישים', noRoads: 'לא פורסמו אצלנו חסימות פעילות. מידע רשמי על הסדרי תנועה מתפרסם באתר העירייה.', allRoads: 'לכל החסימות והעבודות ←',
-    al: 'התרעות פיקוד העורף', alText: 'התרעות בזמן אמת מתקבלות רק מהמקור הרשמי. התקינו את אפליקציית פיקוד העורף, ובזמן אזעקה פעלו לפי ההנחיות.', alBtn: 'לאתר פיקוד העורף', alHow: 'מה עושים באזעקה ←',
-    shab: 'שבת בנתניה', shabIn: 'כניסה', shabOut: 'יציאה', ph: 'בית מרקחת תורן', tel: 'מוקד עירוני',
-    reTitle: 'נדל״ן ותכנון', eventsTitle: 'מה עושים בנתניה', proText: 'בעלי מקצוע עם טלפון מאומת, לפי שכונה. המדריך נפתח עכשיו: עסקים מצטרפים בחינם.', ill: 'תמונה להמחשה', min: 'דק׳ קריאה', by: 'מערכת חדשות נתניה והשרון', more: 'לכתבה המלאה ←' },
-  ru: { now: 'Нетания сейчас', live: 'Данные в реальном времени', upd: 'Обновлено', sea: 'Море в Нетании', wave: 'м высота волн', water: 'Вода', air: 'Воздух', wind: 'км/ч ветер', states: 'спокойное|умеренное|волны|высокие волны|шторм', wxSrc: 'Данные о море и погоде',
-    roads: 'Перекрытия', noRoads: 'Сейчас у нас нет сообщений о перекрытиях.', allRoads: 'Все перекрытия →',
-    al: 'Служба тыла', alText: 'Тревоги в реальном времени: только в официальном приложении Службы тыла.', alBtn: 'Сайт Службы тыла', alHow: 'Что делать при тревоге →',
-    shab: 'Шаббат', shabIn: 'Вход', shabOut: 'Выход', ph: 'Дежурная аптека', tel: 'Горячая линия',
-    reTitle: 'Недвижимость', eventsTitle: 'Куда пойти', proText: 'Мастера с проверенным телефоном, по районам.', ill: 'AI иллюстрация', min: 'мин', by: 'Редакция NWS', more: 'Читать →' },
-  fr: { now: 'Netanya maintenant', live: 'Données en direct', upd: 'Mis à jour', sea: 'La mer à Netanya', wave: 'm de vagues', water: 'Eau', air: 'Air', wind: 'km/h vent', states: 'calme|belle|agitée|forte|très forte', wxSrc: 'Données mer et météo',
-    roads: 'Routes fermées', noRoads: 'Aucune fermeture signalée chez nous pour le moment.', allRoads: 'Toutes les fermetures →',
-    al: 'Commandement du front intérieur', alText: 'Les alertes en temps réel viennent uniquement de l’application officielle.', alBtn: 'Site officiel', alHow: 'Que faire en cas d’alerte →',
-    shab: 'Chabbat', shabIn: 'Entrée', shabOut: 'Sortie', ph: 'Pharmacie de garde', tel: 'Hotline municipale',
-    reTitle: 'Immobilier', eventsTitle: 'Que faire à Netanya', proText: 'Des artisans au téléphone vérifié, par quartier.', ill: 'Illustration IA', min: 'min', by: 'Rédaction NWS', more: 'Lire →' },
-  en: { now: 'Netanya Now', live: 'Live data', upd: 'Updated', sea: 'The sea in Netanya', wave: 'm waves', water: 'Water', air: 'Air', wind: 'km/h wind', states: 'calm|smooth|choppy|rough|very rough', wxSrc: 'Sea and weather data',
-    roads: 'Road closures', noRoads: 'No active closures reported on our site right now.', allRoads: 'All closures →',
-    al: 'Home Front Command alerts', alText: 'Real time alerts come only from the official Home Front Command app.', alBtn: 'Official site', alHow: 'What to do in an alert →',
-    shab: 'Shabbat', shabIn: 'Starts', shabOut: 'Ends', ph: 'Duty pharmacy', tel: 'City hotline',
-    reTitle: 'Real Estate', eventsTitle: 'What’s on in Netanya', proText: 'Local pros with verified phone numbers, by neighborhood.', ill: 'AI illustration', min: 'min read', by: 'NWS Desk', more: 'Read →' },
-}[lang];
-const nowHref = (p: string) => (he ? `/now/${p}/` : `${pre}/now/`);
+const closures = all.filter((a) => a.closure && (a.closure.until ? a.closure.until >= todayIl : Date.now() - Date.parse(a.published) < 3 * 864e5));
+const hotline = FACTS?.hotline?.number ?? '106';
+// 4. three section columns: police; city and transport; community and health (or other sections with stories)
+const groups: { keys: SectionKey[]; title: string }[] = [
+  { keys: ['police'], title: 'משטרה ופלילים' }, { keys: ['city', 'transport'], title: 'העירייה ותחבורה' }, { keys: ['community', 'health'], title: 'קהילה ובריאות' },
+  { keys: ['sharon'], title: 'השרון' }, { keys: ['tourism'], title: 'חופים ותיירות' }, { keys: ['law'], title: 'חוק ומשפט' }, { keys: ['realestate'], title: 'נדל״ן ותכנון' }];
+const sportsAll = all.filter((a) => a.section === 'sports');
+const reAll = all.filter((a) => a.section === 'realestate');
+const cols = groups.map((g) => ({ ...g, items: all.filter((a) => g.keys.includes(a.section) && !used.has(a.slug) && !(g.keys.length === 1 && g.keys[0] === 'realestate' && reAll.length > 1)) }))
+  .filter((g) => g.items.length > 0).slice(0, he ? 3 : 0);
+cols.forEach((g) => g.items.slice(0, 4).forEach((a) => used.add(a.slug)));
+// 5. sport: stories and the league data
+const sports = take(sportsAll, 5);
+const tbl = tableAround(5);
+const played = SPORT.table.find((r) => r.me)?.played;
+const nx = SPORT.next;
+const nxDay = nx ? new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'numeric' }).format(new Date(nx.iso)) : '';
+const showSport = he && (sports.length > 0 || tbl.length > 0 || !!nx);
+const initials = (n: string) => n.replace(/״/g, '').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('.');
+// 6. real estate
+const re = take(reAll, 6);
+// 7. directory
+const cats = CATEGORIES.slice(0, 9);
+// 8. culture: stories of the section and the next events of the official calendar
+const leis = take(all.filter((a) => a.section === 'leisure'), 2);
+const cal = he ? CALENDAR.slice(0, 4 - leis.length) : [];
+const mon = (iso: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', month: 'short' }).format(new Date(iso));
+const dayN = (iso: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric' }).format(new Date(iso));
+
 const titles = {
   he: 'חדשות נתניה והשרון: מבזקים, עירייה, נדל״ן ומדריך עסקים',
   ru: 'NWS Новости Нетании и Шарона: срочные новости, мэрия, недвижимость',
@@ -91,133 +80,157 @@ const titles = {
   en: 'NWS Netanya & Sharon News: breaking news, city hall, real estate',
 }[lang];
 const descs = {
-  he: 'חדשות נתניה והשרון בזמן אמת: מבזקים, חסימות, עירייה, נדל״ן והתחדשות עירונית, ספורט ואירועים, נתונים חיים ומדריך בעלי מקצוע בנתניה.',
+  he: 'חדשות נתניה והשרון בזמן אמת: מבזקים, חסימות, עירייה, משטרה, נדל״ן והתחדשות עירונית, מכבי נתניה, אירועים, מזג אוויר ומדריך בעלי מקצוע בנתניה.',
   ru: 'Новости Нетании и Шарона: срочные сообщения, перекрытия дорог, мэрия, недвижимость, спорт и события, полезные данные и справочник мастеров.',
   fr: 'Actualités de Netanya et du Sharon : flashs, routes, mairie, immobilier, sport et sorties, données pratiques et annuaire des artisans.',
   en: 'Netanya and Sharon news: breaking updates, road closures, city hall, real estate, sports and events, live local data and a directory of local pros.',
 }[lang];
 const alternates = Object.fromEntries(LANGS.map((l) => [l, LANG_PREFIX[l] + '/'])) as Record<Lang, string>;
 const orgId = SITE_URL + '/#org';
+const latest = [lead, ...duo, ...tlist].filter(Boolean) as Article[];
 const jsonld = [
   { '@context': 'https://schema.org', '@type': 'NewsMediaOrganization', '@id': orgId, name: BRAND.he, alternateName: ['NWS', 'חדשות נתניה והשרון'], url: SITE_URL + '/', logo: { '@type': 'ImageObject', url: SITE_URL + '/logo.png', width: 512, height: 512 },
-    foundingDate: BRAND.foundingDate, areaServed: [{ '@type': 'City', name: 'נתניה' }, { '@type': 'Place', name: 'השרון' }], email: BRAND.email, ...(SAME_AS.length ? { sameAs: SAME_AS } : {}),
+    foundingDate: BRAND.foundingDate, areaServed: [{ '@type': 'City', name: 'נתניה' }, { '@type': 'Place', name: 'השרון' }], ...(SAME_AS.length ? { sameAs: SAME_AS } : {}),
     publishingPrinciples: SITE_URL + '/editorial-policy/', correctionsPolicy: SITE_URL + '/corrections/', ethicsPolicy: SITE_URL + '/editorial-policy/', actionableFeedbackPolicy: SITE_URL + '/corrections/',
     masthead: SITE_URL + '/about/', diversityPolicy: SITE_URL + '/about/', noBylinesPolicy: SITE_URL + '/editorial-policy/' },
   { '@context': 'https://schema.org', '@type': 'WebSite', '@id': SITE_URL + '/#website', url: SITE_URL + '/', name: BRAND.he, inLanguage: ['he', 'ru', 'fr', 'en'], publisher: { '@id': orgId },
     potentialAction: { '@type': 'SearchAction', target: { '@type': 'EntryPoint', urlTemplate: SITE_URL + '/search/?q={search_term_string}' }, 'query-input': 'required name=search_term_string' } },
-  { '@context': 'https://schema.org', '@type': 'ItemList', name: lang === 'he' ? 'החדשות האחרונות בנתניה' : titles, itemListElement: latest.map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a, lang), name: a.title })) },
+  { '@context': 'https://schema.org', '@type': 'ItemList', name: he ? 'החדשות האחרונות בנתניה' : titles, itemListElement: latest.map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a, lang), name: a.title })) },
 ];
+const leadPic = lead ? picOf(lead) : null;
+const tgHref = TG_URL || `${pre}/join/`;
+const tgAttr = TG_URL ? { target: '_blank', rel: 'noopener' } : {};
+const T = he ? { live: 'עכשיו בנתניה והשרון', liveSub: 'מתעדכן כל הזמן', allFlash: 'לכל המבזקים ←', more: 'עוד ידיעות', toAll: 'לכל הידיעות ←', by: 'מערכת NWS', min: 'דק׳ קריאה' }
+  : { live: u.latestNow, liveSub: '', allFlash: u.allFlash + ' →', more: u.more, toAll: u.toSection + ' →', by: 'NWS', min: 'min' };
 ---
-<Base lang={lang} title={titles} description={descs} path={pre + '/'} alternates={alternates} jsonld={jsonld} current="home">
+<Base lang={lang} title={titles} description={descs} path={pre + '/'} alternates={alternates} jsonld={jsonld} current="home" ogImage={lead?.og}>
   <h1 class="sr">{he ? 'חדשות נתניה והשרון' : u.brandName}</h1>
+  <div class="n-wrap" data-latest={he ? JSON.stringify(all.slice(0, 30).map((a) => articleUrl(a))) : undefined}>
+    <section class="n-top" aria-label={he ? 'הידיעות המרכזיות' : 'Top stories'}>
+      <div>
+        {lead && leadPic && (
+        <article class="n-lead" style={`--c:${S(lead.section).color}`}>
+          <a class="n-ph" href={articleUrl(lead, lang)} tabindex="-1" aria-hidden="true"><img src={leadPic.src} srcset={leadPic.srcset} sizes="(max-width: 760px) 100vw, (max-width: 1100px) 100vw, 880px" alt="" width={leadPic.w} height={leadPic.h} fetchpriority="high" decoding="async"><span class="n-cap">{he ? leadPic.label : ''}</span></a>
+          <div class="tx">
+            <div style="margin-top:20px"><span class="n-k">{kickerOf(lead, lang)}</span></div>
+            <h2><a href={articleUrl(lead, lang)}>{lead.title}</a></h2>
+            {lead.dek && <p>{lead.dek}</p>}
+            <div class="n-meta num"><b>{T.by}</b><i aria-hidden="true"></i>{lead.updated && lead.updated !== lead.published ? <span class="n-upd">{he ? 'עודכן ' : ''}<time datetime={lead.updated} data-ago>{when(lead.updated)}</time></span> : <time datetime={lead.published} data-ago>{fmtDay(lead.published, lang)}</time>}<i aria-hidden="true"></i><span>{readMin(lead)} {T.min}</span></div>
+          </div>
+        </article>)}
+        {duo.length > 0 && <div class="n-duo">{duo.map((a) => <Card a={a} lang={lang} dek eager />)}</div>}
+        {tlist.length > 0 && <div class="n-tlist">{tlist.map((a) => <a href={articleUrl(a, lang)} style={`--c:${S(a.section).color}`}><span class="n-k">{kickerOf(a, lang)}</span><b>{a.title}</b></a>)}</div>}
+      </div>
+      <aside>
+        <section class="n-live" aria-labelledby="live-h">
+          <div class="lh"><h2 id="live-h"><span class="n-pulse" aria-hidden="true"></span>{T.live}</h2>{T.liveSub && <span>{T.liveSub}</span>}</div>
+          <ol class="n-feed num">{feed.map((f) => <li class={hot(f.at) ? 'hot' : undefined}><time datetime={f.at}>{ilDay(new Date(f.at)) === todayIl ? fmtTime(f.at) : `${fmtShort(f.at)} ${fmtTime(f.at)}`}</time><a href={f.href}>{f.src && <small>{f.src}: </small>}{f.text}</a></li>)}</ol>
+          <a class="n-lf" href={sectionUrl('flash', lang)}>{T.allFlash}</a>
+        </section>
+        {moreList.length > 0 && (
+        <section class="n-mr" aria-labelledby="mr-h">
+          <h2 class="n-sh" id="mr-h" style="font-size:19px">{T.more}</h2>
+          <ol class="n-mrl">{moreList.map((a, i) => <li><span class="n" aria-hidden="true">{i + 1}</span><a href={articleUrl(a, lang)}>{a.title}</a></li>)}</ol>
+        </section>)}
+      </aside>
+    </section>
+  </div>
 
-  {lead && (() => { const s = S(lead.section); const p = picOf(lead, IMG); const pl = he ? placesOf(lead).slice(0, 2) : []; return (
-  <section class="wrap hl" aria-labelledby="lead-h" style={`--c:${s.color};--ci:${s.ink}`}>
-    <div class="tx">
-      <span class="kick"><i></i>{kickerOf(lead, lang)}</span>
-      <h2 id="lead-h"><a href={articleUrl(lead, lang)}>{lead.title}</a></h2>
-      {lead.dek && <p class="dek">{lead.dek}</p>}
-      <div class="meta"><b>{L.by}</b><i class="sep" aria-hidden="true"></i><time datetime={lead.published} data-ago>{fmtDay(lead.published, lang)}</time><i class="sep" aria-hidden="true"></i><span>{readMin(lead)} {L.min}</span></div>
-      {(pl.length > 0 || lead.closure || (he && lead.sourceName)) && <div class="tags">
-        {lead.closure && <span class="tagc">{lead.closure.place}</span>}
-        {pl.map((x) => <a class="tagc" href={placeUrl(x.slug)}>{x.he}</a>)}
-        {he && lead.sourceName && <span class="tagc">לפי {lead.sourceName}</span>}
-      </div>}
-    </div>
-    <a class="pic" href={articleUrl(lead, lang)} tabindex="-1" aria-hidden="true">
-      <img src={p.src} srcset={p.srcset} sizes={p.srcset ? '(max-width: 900px) 100vw, 680px' : undefined} alt={p.ai ? p.alt : ''} width={p.w} height={p.h} fetchpriority="high" decoding="async">
-      {p.ai && <span class="ill">{L.ill}</span>}
-    </a>
-  </section>); })()}
+  {he && (
+  <section class="n-svc" aria-label="שירותים"><div class="n-wrap">
+    {wxDay && wxDay.max !== null && <a class="n-sv" href="/now/"><span class="ic"><Icon name={wxDay.code && [1140, 1020, 1510, 1540, 1560].includes(wxDay.code) ? 'rain' : wxDay.code && [1220, 1230, 1530, 1160].includes(wxDay.code) ? 'cloud' : 'sun'} /></span><div><small>מזג אוויר בנתניה</small><b class="num">{wxDay.max}° / {wxDay.min}°</b><span>{wxDay.desc || 'השירות המטאורולוגי'}</span></div></a>}
+    {sea && <a class="n-sv" href="/now/beaches/"><span class="ic"><Icon name="wave" /></span><div><small>מצב הים</small><b>{seaWord(sea.waveMax)}</b><span class="num">גלים {sea.waveMin.toFixed(1)} עד {sea.waveMax.toFixed(1)} מ׳{sea.temp ? `, מים ${sea.temp}°` : ''}</span></div></a>}
+    <a class="n-sv" href="/now/shabbat/"><span class="ic"><Icon name="candle" /></span><div><small>שבת בנתניה</small><b class="num">{sh.candles} · {sh.end}</b><span>כניסה ויציאה, {sh.date}</span></div></a>
+    <a class="n-sv" href="/now/pharmacy/"><span class="ic"><Icon name="plus" /></span><div><small>בית מרקחת תורן</small><b>לפי המוקד העירוני</b><span class="num">חיוג {hotline}</span></div></a>
+    <a class="n-sv" href="/now/roads/"><span class="ic"><Icon name="road" /></span><div><small>כבישים</small><b class="num">{closures.length ? `${closures.length} ${closures.length === 1 ? 'חסימה פעילה' : 'חסימות פעילות'}` : 'אין חסימות שפורסמו'}</b><span>{closures.length ? closures.slice(0, 2).map((a) => a.closure!.place).join(', ') : 'לפי הידיעות באתר'}</span></div></a>
+    <a class="n-sv" href="/now/phones/"><span class="ic"><Icon name="phone" /></span><div><small>מספרים חשובים</small><b class="num">{hotline} · 100 · 101</b><span>עירייה, משטרה, מד״א</span></div></a>
+  </div></section>)}
 
-  {row.length > 0 && <section class="wrap r4w" aria-label={u.more}><div class="row4 lst">{row.map((a) => <Card a={a} lang={lang} eager />)}</div></section>}
+  {cols.length > 0 && (
+  <section class="n-sec n-wrap" aria-label="מדורים">
+    <div class="n-tri">{cols.map((g) => { const first = g.items[0]; const k = first.section; return (
+      <div style={`--c:${S(g.keys[0]).color}`}>
+        <h2 class="n-sh">{g.title}<a href={sectionUrl(k, lang)}>{T.toAll}</a></h2>
+        <Card a={first} lang={lang} ratio="16/10" />
+        {g.items.length > 1 && <ul class="n-hl num">{g.items.slice(1, 4).map((a) => <li><time datetime={a.published}>{when(a.published)}</time><a href={articleUrl(a, lang)}>{a.title}</a></li>)}</ul>}
+      </div>); })}</div>
+  </section>)}
 
-  <section class="nw" aria-labelledby="now-h"><div class="wrap">
-    <div class="hh"><h2 id="now-h"><i aria-hidden="true"></i>{L.now}</h2><span>{L.live}{liveAt && <>{` · ${L.upd} `}<span data-live="at">{liveAt}</span></>}</span></div>
-    <div class="row4">
-      <div class="wid ph" data-sea>
-        <div class="wh"><img src="/img/sea.webp" alt="" width="640" height="360" loading="lazy" decoding="async"><b>{L.sea}</b></div>
-        <div class="wb">
-          <div class="bigl"><span class="big" data-live="wave">{num(LIVE.wave, 1)}</span><span>{L.wave}{he && <> · <span data-live="state" data-states={L.states}>{seaState(LIVE.wave)}</span></>}{!he && <span data-states={L.states} hidden></span>}</span></div>
-          <div class="g3"><div><b data-live="sst">{num(LIVE.sst)}°</b>{L.water}</div><div><b data-live="temp">{num(LIVE.temp)}°</b>{L.air}</div><div><b data-live="wind">{num(LIVE.wind)}</b>{L.wind}</div></div>
-          <span class="src">{L.wxSrc}: <a href="https://open-meteo.com/" rel="noopener nofollow" target="_blank">Open-Meteo</a></span>
+  {showSport && (
+  <section class="n-sport" aria-labelledby="sp-h">
+    <div class="bg" aria-hidden="true"><img src="/img/stock/stadium-night-1600.webp" alt="" width="1600" height="1067" loading="lazy" decoding="async"></div><div class="shade" aria-hidden="true"></div>
+    <div class="n-wrap">
+      <h2 class="n-sh" id="sp-h" style="--c:#5BD08A">ספורט<a href={sectionUrl('sports')}>לכל ידיעות הספורט ←</a></h2>
+      <div class="n-sg">
+        {sports[0] ? (() => { const p = picOf(sports[0]); return (
+        <article class="n-sl">
+          <a class="n-ph" href={articleUrl(sports[0])} tabindex="-1" aria-hidden="true" style="aspect-ratio:16/10"><img src={p.src} srcset={p.srcset} sizes="(max-width: 1100px) 100vw, 520px" alt="" width={p.w} height={p.h} loading="lazy" decoding="async"><span class="n-cap">{p.label}</span></a>
+          <div style="margin-top:16px"><span class="n-k" style="--c:#5BD08A">{kickerOf(sports[0])}</span></div>
+          <h3><a href={articleUrl(sports[0])}>{sports[0].title}</a></h3>
+          {sports[0].dek && <p>{sports[0].dek}</p>}
+        </article>); })() : <div></div>}
+        <ul class="n-sll">{sports.slice(1).map((a) => <li><small>{a.kicker || 'מכבי נתניה'}</small><a href={articleUrl(a)}>{a.title}</a></li>)}</ul>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          {nx && (
+          <div class="n-fx">
+            <div class="h"><span>המשחק הבא</span><span>{SPORT.league}{nx.round ? `, מחזור ${nx.round}` : ''}</span></div>
+            <div class="m">
+              <div><div class="n-crest me" aria-hidden="true">מ.נ</div><div class="t">מכבי נתניה</div></div>
+              <div class="vs">נגד</div>
+              <div><div class="n-crest" aria-hidden="true">{initials(nx.opponent)}</div><div class="t">{nx.opponent}</div></div>
+            </div>
+            <div class="when num"><span>{nx.home ? `משחק בית${nx.venue ? `, ${nx.venue}` : ''}` : 'משחק חוץ'}</span><span>{nxDay}{nx.time ? `, ${nx.time}` : ''}</span></div>
+            {SPORT.last && <div class="lr num">במשחק הקודם: {SPORT.last.my}:{SPORT.last.their} {SPORT.last.home ? 'מול' : 'אצל'} {SPORT.last.opponent}</div>}
+          </div>)}
+          {tbl.length > 0 && (
+          <div class="n-fx">
+            <div class="h"><span>טבלת {SPORT.league}</span><span>{played ? `אחרי ${played} מחזורים` : ''}</span></div>
+            <table class="n-tbl num"><caption class="sr">מכבי נתניה בטבלת ליגת העל</caption><thead><tr><th scope="col">#</th><th scope="col">קבוצה</th><th scope="col" class="c">מש׳</th><th scope="col" class="pts">נק׳</th></tr></thead>
+              <tbody>{tbl.map((r) => <tr class={r.me ? 'me' : undefined}><td class="p">{r.pos}</td><td>{r.team}</td><td class="c">{r.played}</td><td class="pts">{r.pts}</td></tr>)}</tbody></table>
+          </div>)}
+          {(tbl.length > 0 || nx) && <p class="n-src">נתוני הליגה: <a href={SPORT.sourceUrl} rel="noopener nofollow" target="_blank">{SPORT.source}</a>{SPORT.notes.length > 0 && <>. {SPORT.notes.join('. ')}.</>}</p>}
         </div>
       </div>
-      <div class="wid">
-        <h3><span class="ico" style="background:#FFF1E6;color:#D9480F" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M7 12h10"/></svg></span>{L.roads}</h3>
-        {closures.length ? <div class="cls">{closures.map((a, i) => <a class="cl" href={articleUrl(a, lang)} data-until={a.closure!.until || undefined} style={i ? '--k:#F59F00' : undefined}><b>{a.closure!.place}</b><span>{[a.closure!.what, untilTxt(a.closure!)].filter(Boolean).join(' · ')}</span></a>)}</div>
-          : <p class="note" style="margin:0">{L.noRoads}</p>}
-        <a class="mo" href={nowHref('roads')}>{L.allRoads}</a>
-      </div>
-      <div class="wid">
-        <h3><span class="ico" style="background:#FFF4DB;color:#9A5A00" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M12 8v5M12 16v.5"/></svg></span>{L.al}</h3>
-        <p class="altx">{L.alText}</p>
-        <a class="btn pri pill alb" href="https://www.oref.org.il/" rel="noopener" target="_blank">{L.alBtn}</a>
-        <a class="mo" href={nowHref('alerts')}>{L.alHow}</a>
-      </div>
-      <div class="wid">
-        <h3><span class="ico" style="background:#F0EAFB;color:#6D3FC0" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3c2 3 2 5 0 7-2-2-2-4 0-7z"/><rect x="9" y="10" width="6" height="11" rx="1"/></svg></span>{L.shab}</h3>
-        <div class="g2"><div><span>{L.shabIn}</span><b>{sh.candles}</b></div><div><span>{L.shabOut}</span><b>{sh.end}</b></div></div>
-        <span class="note" style="font-size:13px">{sh.date}</span>
-        <div class="qk"><a href={nowHref('pharmacy')}>{L.ph}</a><a href={nowHref('phones')}>{L.tel} {hotline}</a></div>
-      </div>
-    </div>
-  </div></section>
-
-  {dark && (
-  <section class="prem" aria-labelledby="prem-h">
-    <img src={dark.bg} alt="" width="1280" height="720" loading="lazy" decoding="async">
-    <div class="wrap">
-      <div class="pt">
-        <span class="kick"><i></i>{dark.kicker}</span>
-        <h2 id="prem-h"><a href={dark.href}>{dark.headline}</a></h2>
-        {dark.text && <p>{dark.text}</p>}
-        {dark.bar && <div class="pb"><div class="pbar" role="img" aria-label={`${dark.bar.pct}%`}><span style={`width:${Math.max(0, Math.min(100, dark.bar.pct))}%`}></span></div><div class="pbl"><span>{dark.bar.left}</span><span>{dark.bar.right}</span></div></div>}
-        {dark.source && <span class="psrc">{he ? 'מקור' : u.source}: {dark.source}</span>}
-      </div>
-      {dark.list.length > 0 && <div class="plist">{dark.list.map((a) => <a href={articleUrl(a, lang)}><small class={a.section === 'flash' ? 'f' : undefined}>{S(a.section).name[lang]}</small><b>{a.title}</b></a>)}</div>}
     </div>
   </section>)}
 
-  {re.length > 0 && (() => { const p0 = picOf(re[0], IMG); return (
-  <section class="wrap sec" aria-labelledby="re-h" style="--c:#E08A00;--ci:#9A5A00;--s:#FFF7EB">
-    <h2 id="re-h" class="sh"><span class="bar"></span>{L.reTitle}<a class="mo" href={sectionUrl('realestate', lang)}>{u.toSection}</a></h2>
-    <div class="feat">
-      <a class="big" href={articleUrl(re[0], lang)}><span class="pw"><img src={p0.src} srcset={p0.srcset} sizes="(max-width: 900px) 100vw, 620px" alt={p0.ai ? p0.alt : ''} width={p0.w} height={p0.h} loading="lazy" decoding="async">{p0.ai && <span class="ill">{L.ill}</span>}</span><span class="kick"><i></i>{kickerOf(re[0], lang)}</span><h3>{re[0].title}</h3><span>{re[0].dek}</span></a>
-      <div class="list">{re.slice(1, 5).map((a) => { const p = picOf(a, IMG); return <a class="row" href={articleUrl(a, lang)}><span class="pw"><img src={p.small} alt={p.ai ? p.alt : ''} width="96" height="68" loading="lazy" decoding="async">{p.ai && <span class="ill sm">{L.ill}</span>}</span><span><b>{a.title}</b><br><span class="note"><time datetime={a.published} data-ago>{fmtDate(a.published, lang)}</time></span></span></a>; })}</div>
+  {he && re.length > 0 && (
+  <section class="n-sec n-wrap" aria-labelledby="re-h" style="--c:#B86E00">
+    <h2 class="n-sh" id="re-h">נדל״ן ותכנון<a href={sectionUrl('realestate')}>לכל ידיעות הנדל״ן ←</a></h2>
+    <div class="n-re">
+      <Card a={re[0]} ratio="16/9" dek size={28} sizes="(max-width: 1100px) 100vw, 700px" />
+      <div class="n-box">
+        <div class="h">עוד מנדל״ן ותכנון בנתניה<span>מהידיעות באתר</span></div>
+        {re.slice(1).map((a) => <a class="pr" href={articleUrl(a)}><div><b>{a.title}</b><span class="num">{fmtDay(a.published)}</span></div><span class="n-st">{a.kicker ? a.kicker.split(' ').slice(0, 2).join(' ') : 'תכנון'}</span></a>)}
+        <a class="n-lf" href="https://mavat.iplan.gov.il/" rel="noopener nofollow" target="_blank">חיפוש תוכניות באתר מנהל התכנון ←</a>
+      </div>
     </div>
-  </section>); })()}
+  </section>)}
 
-  {colKeys.length > 0 && (
-  <section class="wrap sec"><div class="grid cols3">
-    {colKeys.map((k) => { const s = S(k); const items = all.filter((a) => a.section === k && !used.has(a.slug)); return (
-      <div class="col" style={`--c:${s.color};--ci:${s.ink}`}>
-        <h2>{s.name[lang]}<a class="mo" href={sectionUrl(k, lang)}>{u.more}</a></h2>
-        <Card a={items[0]} lang={lang} />
-        <ul>{items.slice(1, 3).map((a) => <li><a href={articleUrl(a, lang)}>{a.title}</a></li>)}</ul>
-      </div>); })}
-  </div></section>)}
-
-  {(events.length > 0 || calNext.length > 0) && (
-  <section class="dark" aria-labelledby="ev-h"><div class="wrap in">
-    <h2 id="ev-h">{L.eventsTitle}</h2>
-    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
-      {events.map((a) => { const p = picOf(a, IMG); return <a class="vcard" href={articleUrl(a, lang)}><img src={p.ai ? p.small : (IMG[a.imageHint] ?? IMG.concert).src} alt={p.ai ? p.alt : ''} width="400" height="500" loading="lazy" decoding="async">{p.ai && <i class="ill">{L.ill}</i>}<span><b>{a.title}</b><small>{a.event?.startDate ? fmtDate(a.event.startDate, lang) : fmtDate(a.published, lang)}{a.event?.location ? ` · ${a.event.location}` : ''}</small></span></a>; })}
-          {calNext.map((c) => <a class="vcard" href="/events/#cal"><img src={IMG.concert.src} alt="" width="400" height="500" loading="lazy" decoding="async"><span><b>{c.title}</b><small>{fmtDate(c.start, lang)}{calTime(c.start) ? `, ${calTime(c.start)}` : ''}{calVenue(c) ? ` · ${calVenue(c)}` : ''}</small></span></a>)}
+  <section class="n-dir" aria-labelledby="dir-h"><div class="n-wrap n-sec">
+    <h2 class="n-sh" id="dir-h">{he ? 'בעלי מקצוע בנתניה והשרון' : u.proTitle}<a href={`${pre}/directory/`}>{he ? 'לכל המדריך ←' : u.toDirectory}</a></h2>
+    <div class="n-dg">
+      {cats.map((c) => <a class="n-dc" href={he ? `/directory/${c.slug}/` : `${pre}/directory/`} style={`--c:${c.color};--t:${c.color}1A`}><span class="ic"><Icon name={c.slug} size={22} /></span><span><b>{he ? c.plural : c.name[lang]}</b><span>{countBy[c.slug] ? `${countBy[c.slug]} ${countBy[c.slug] === 1 ? 'עסק' : 'עסקים'} במדריך` : 'נתניה והסביבה'}</span></span></a>)}
+      <a class="n-dc" href={`${pre}/directory/`} style="--c:#0D1321;--t:#EEF0F4"><span class="ic"><Icon name="list" size={22} /></span><span><b>{he ? `כל ${CATEGORIES.length} הקטגוריות` : u.toDirectory}</b><span>{he ? 'מוסכים, גננים, וטרינרים ועוד' : ''}</span></span></a>
     </div>
-  </div></section>)}
-
-  <section class="pros" aria-labelledby="pros-h"><div class="wrap in">
-    <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px">
-      <h2 id="pros-h" style="font-weight:800;font-size:26px">{u.proTitle}</h2>
-      <div style="display:flex;gap:16px;font-size:15px;font-weight:700"><a href={`${pre}/directory/`} style="color:#0B5FCC">{u.toDirectory}</a><a href="/advertise/" style="color:#0B5FCC">{u.addBiz}</a></div>
-    </div>
-    <p style="margin:0 0 16px;color:#3B4656">{L.proText}</p>
-    <div class="chips">{CATEGORIES.map((c) => <a class="chip" href={he ? `/directory/${c.slug}/` : `${pre}/directory/`} style={`--c:${c.color}`}><i></i>{he ? c.plural : c.name[lang]}</a>)}</div>
+    {he && <div class="n-dcta"><div><b>יש לכם עסק בנתניה או בשרון?</b><span>רישום בסיסי במדריך בלי עלות. הטקסט נכתב בשבילכם, והעסק עולה אחרי בדיקה.</span></div><a class="n-btn wh" href="/directory/join/">הוסיפו את העסק</a></div>}
   </div></section>
 
-  <section class="wrap" aria-labelledby="join-h"><div class="join">
-    <div style="flex:1 1 380px"><h2 id="join-h">{u.joinTitle}</h2><p>{u.joinText}</p></div>
-    <div class="btns"><a class="btn wh" href={TG_URL || `${pre}/join/`} {...(TG_URL ? { target: '_blank', rel: 'noopener' } : {})} data-tg>{he ? 'טלגרם' : 'Telegram'}</a><a class="btn wh" href={`${pre}/join/#whatsapp`}>{he ? 'וואטסאפ' : 'WhatsApp'}</a><a class="btn ghost" href={`${pre}/join/#alerts`}>{u.alerts}</a></div>
+  {(leis.length > 0 || cal.length > 0) && (
+  <section class="n-sec n-wrap" aria-labelledby="cu-h" style="--c:#B4286B">
+    <h2 class="n-sh" id="cu-h">תרבות ובילוי<a href="/events/#cal">כל האירועים ←</a></h2>
+    <div class="n-cult">
+      {leis.map((a) => { const p = picOf(a); return <a class="n-ph" href={articleUrl(a)}><img src={p.small} alt="" width="800" height="533" loading="lazy" decoding="async"><span class="n-ov"><span class="n-k" style="--c:#FF9DC6">{kickerOf(a)}</span><b>{a.title}</b><small class="num">{fmtDay(a.published)}</small></span></a>; })}
+      {cal.map((c) => { const p = stockPic(stockFor('leisure', c.id)); return <a class="n-ph" href={c.url || '/events/#cal'} {...(c.url ? { target: '_blank', rel: 'noopener nofollow' } : {})}><img src={p.small} alt="" width="800" height="533" loading="lazy" decoding="async"><span class="n-date num" aria-hidden="true"><b>{dayN(c.start)}</b><span>{mon(c.start)}</span></span><span class="n-ov"><span class="n-k" style="--c:#FFD66B">{calTime(c.start) ? `${dayN(c.start)} ב${mon(c.start)}, ${calTime(c.start)}` : `${dayN(c.start)} ב${mon(c.start)}`}</span><b>{c.title}</b>{calVenue(c) && <small>{calVenue(c)}</small>}</span></a>; })}
+    </div>
+  </section>)}
+
+  <section class="n-join" aria-labelledby="join-h"><div class="n-wrap">
+    <div><h2 id="join-h">{u.joinTitle}</h2><p>{he ? 'כל ידיעה ברגע שהיא קורית: חסימות, תאונות, הודעות העירייה וספורט. בלי ספאם, יוצאים בלחיצה.' : u.joinText}</p></div>
+    <div class="n-jb">
+      <a class="n-btn tg" href={tgHref} {...tgAttr} data-tg><Icon name="telegram" size={18} color="#fff" />{he ? 'ערוץ הטלגרם' : 'Telegram'}</a>
+      <a class="n-btn wa" href={`${pre}/join/#whatsapp`}><Icon name="whatsapp" size={18} color="#fff" />{he ? 'ערוץ הוואטסאפ' : 'WhatsApp'}</a>
+      <a class="n-btn gh" href={`${pre}/join/#alerts`}>{he ? 'התראות בדפדפן' : u.alerts}</a>
+    </div>
   </div></section>
 </Base>
