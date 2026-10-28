@@ -3,7 +3,7 @@ import { LANGS, type Lang } from '../data/site';
 import { SECTIONS } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { PLACES } from '../data/places';
-import { ARTICLES, localized, articleUrl, sectionUrl, placesOf } from './content';
+import { ARTICLES, localized, articleUrl, sectionUrl, placesOf, liveSections } from './content';
 import { IMG } from '../data/site';
 import { LISTINGS, listingUrl } from './biz';
 
@@ -16,7 +16,7 @@ export function routes(): R[] {
   const out: R[] = [];
   const home = all((l) => (l === 'he' ? '/' : `/${l}/`));
   for (const l of LANGS) out.push({ loc: home[l], alts: home, lastmod: latest, changefreq: 'hourly', priority: l === 'he' ? '1.0' : '0.8' });
-  for (const s of SECTIONS) { const a = all((l) => sectionUrl(s.key, l)); for (const l of LANGS) out.push({ loc: a[l], alts: a, lastmod: ARTICLES.find((x) => x.section === s.key)?.published ?? now, changefreq: 'hourly', priority: '0.8' }); }
+  for (const s of liveSections()) { const a = all((l) => sectionUrl(s.key, l)); for (const l of LANGS) out.push({ loc: a[l], alts: a, lastmod: ARTICLES.find((x) => x.section === s.key)?.published ?? now, changefreq: 'hourly', priority: '0.8' }); }
   for (const art of ARTICLES) {
     const langs = LANGS.filter((l) => localized(art, l));
     const alts = Object.fromEntries(langs.map((l) => [l, articleUrl(art, l)]));

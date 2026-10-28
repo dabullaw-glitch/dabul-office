@@ -8,7 +8,7 @@ import { SITE_URL } from '../../data/site';
 import { SECTIONS } from '../../data/sections';
 import { PLACES } from '../../data/places';
 import { CATEGORIES } from '../../data/directory';
-import { ARTICLES, FACTS, CALENDAR, calTime, calVenue, placesOf, sectionUrl, articleUrl, fmtDate } from '../../lib/content';
+import { ARTICLES, FACTS, CALENDAR, calTime, calVenue, placesOf, sectionUrl, articleUrl, fmtDate, liveSections } from '../../lib/content';
 import { shabbatTimes } from '../../lib/shabbat';
 
 const F: any = FACTS;
@@ -74,7 +74,7 @@ const S1 = src(F?.bathingBeaches?.source); const S2 = src(F?.neighborhoods?.sour
 
   <section class="sec" aria-labelledby="g-sec">
     <h2 id="g-sec" class="sh" style="--c:#0E1726"><span class="bar"></span>כל המדורים</h2>
-    <div class="chips">{SECTIONS.map((s) => <a class="chip" href={sectionUrl(s.key)} style={`--c:${s.color}`}><i></i>{s.name.he}</a>)}<a class="chip" href="/now/" style="--c:#0B3D6E"><i></i>נתניה עכשיו</a><a class="chip" href="/directory/" style="--c:#0B5FCC"><i></i>מדריך בעלי מקצוע</a></div>
+    <div class="chips">{liveSections().map((s) => <a class="chip" href={sectionUrl(s.key)} style={`--c:${s.color}`}><i></i>{s.name.he}</a>)}<a class="chip" href="/now/" style="--c:#0B3D6E"><i></i>נתניה עכשיו</a><a class="chip" href="/directory/" style="--c:#0B5FCC"><i></i>מדריך בעלי מקצוע</a></div>
   </section>
 
   <section class="sec" aria-labelledby="g-new">

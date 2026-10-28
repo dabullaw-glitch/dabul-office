@@ -6,7 +6,7 @@
     "build": "node scripts/feed.mjs && node scripts/biz.mjs && npm run build:site",
     "dev": "astro dev",
     "feed": "node scripts/feed.mjs",
-    "build:site": "node scripts/live.mjs && node scripts/img.mjs && astro build"
+    "build:site": "node scripts/live.mjs && node scripts/ims.mjs && node scripts/sport.mjs && node scripts/img.mjs && astro build"
   },
   "dependencies": {
     "astro": "^5.14.0",

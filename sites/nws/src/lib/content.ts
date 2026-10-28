@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Lang } from '../data/site';
 import { LANG_PREFIX } from '../data/site';
-import { SECTION_BY_KEY, type SectionKey } from '../data/sections';
+import { SECTIONS, SECTION_BY_KEY, NAV_ORDER, CORE_SECTIONS, type SectionKey } from '../data/sections';
 import { PLACES, PLACE_BY_HE } from '../data/places';
 
 export interface Article {
@@ -57,7 +57,9 @@ function fromFeed(s: any): any {
 }
 const FEED_JSON: any = readJson('feed.json', { stories: [] });
 const FEED: any[] = (FEED_JSON.stories || []).filter((s: any) => s && s.id && s.title && (s.body || []).length).map(fromFeed);
-const ogFor = (a: any) => fs.existsSync(path.resolve('public/og/a', `${a.slug}.png`)) ? `/og/a/${a.slug}.png` : `/og/s/${a.section}.png`;
+// social card: a hand made card (public/og/a), else the story's own image, else its section photo (1200x630 JPEG)
+const ogFor = (a: any) => fs.existsSync(path.resolve('public/og/a', `${a.slug}.png`)) ? `/og/a/${a.slug}.png`
+  : a.ai?.files?.length ? a.ai.files[a.ai.files.length - 1].src : `/img/stock/og/${stockFor(a.section, a.engineId ?? a.slug)}.jpg`;
 
 export const ARTICLES: Article[] = [...(readJson('articles.json', { articles: [] }).articles as any[]), ...FEED]
   .filter((a) => a && a.slug && SECTION_BY_KEY[a.section as SectionKey] && live(a))
@@ -149,6 +151,27 @@ export const CALENDAR: CalItem[] = (FEED_JSON.calendar || []).map((c: any) => ({
 export const calTime = (iso: string) => { const t = fmtTime(iso); return t === '00:00' ? '' : t; };
 export const calVenue = (c: CalItem) => c.venue.replace(/^היכל התרבות העירוני נתניה\s*-\s*/, '');
 // sea and weather snapshot (scripts/live.mjs, Open-Meteo); the browser refreshes it
+// weather and sea of the Israel Meteorological Service (scripts/ims.mjs) and Maccabi Netanya data (scripts/sport.mjs), saved before every build
+export interface Ims { ok: boolean; fetchedAt?: string; day?: { date: string; min: number | null; max: number | null; code: number | null; desc: string } | null;
+  now?: { hour: number; temp: number | null; wave: number | null; code: number | null; desc: string } | null; sea?: { waveMin: number; waveMax: number; temp: number | null; from: string; to: string } | null }
+export const IMS: Ims = readJson('ims.json', { ok: false });
+export interface SportRow { pos: number; team: string; played: number; w: number; d: number; l: number; gf: number | null; ga: number | null; diff: number; pts: number; me: boolean }
+export interface Sport { ok: boolean; fetchedAt?: string; tableAt?: string; source: string; sourceUrl: string; league: string; round: number | null; table: SportRow[]; notes: string[];
+  next: { home: boolean; opponent: string; date: string; time: string; iso: string; venue: string; round: number | null } | null;
+  last: { home: boolean; opponent: string; date: string; my: number; their: number; round: number } | null }
+const SP0: Sport = readJson('sport.json', { ok: false, source: '', sourceUrl: '', league: '', round: null, table: [], notes: [], next: null, last: null });
+// a table older than 10 days is not shown; the next game is shown until 3 hours after kickoff
+export const SPORT: Sport = { ...SP0, table: SP0.tableAt && Date.now() - Date.parse(SP0.tableAt) < 10 * 864e5 ? SP0.table || [] : [],
+  next: SP0.next && Date.parse(SP0.next.iso) > Date.now() - 3 * 3600e3 ? SP0.next : null };
+/** the rows of the table around Maccabi Netanya (n rows) */
+export function tableAround(n = 3) {
+  const t = SPORT.table; const i = t.findIndex((r) => r.me); if (i < 0) return [];
+  const s = Math.max(0, Math.min(t.length - n, i - Math.floor(n / 2))); return t.slice(s, s + n);
+}
+/** sections that have a page and a place in the menu: the core ones always, the new ones from their first story */
+export const liveSections = () => SECTIONS.filter((s) => CORE_SECTIONS.includes(s.key) || ARTICLES.some((a) => a.section === s.key));
+export const navSections = () => NAV_ORDER.map((k) => SECTION_BY_KEY[k]).filter((s) => CORE_SECTIONS.includes(s.key) || ARTICLES.some((a) => a.section === s.key));
+
 export const LIVE: { ok: boolean; at?: string; wave?: number | null; sst?: number | null; temp?: number | null; wind?: number | null; code?: number | null } = readJson('live.json', { ok: false });
 
 /** the home page lead: newest story of the last 72 hours that is not a flash item, not an opinion and not in the event block.
@@ -165,16 +188,29 @@ export const readMin = (a: Article) => Math.max(1, Math.round([a.title, a.dek, .
 export const kickerOf = (a: Article, lang: Lang = 'he') => (lang === 'he' && a.kicker) || SECTION_BY_KEY[a.section].name[lang];
 /** short date for a static fallback (the browser replaces it with "לפני X") */
 export const fmtDay = (iso: string, lang: Lang = 'he') => new Intl.DateTimeFormat(LOC[lang], { timeZone: TZ, day: 'numeric', month: 'long' }).format(new Date(iso));
-/** the picture of a story: its AI illustration (with srcset), or the section's drawing */
-export function picOf(a: Article, IMGS: Record<string, { src: string; alt: string }>) {
+/** the picture of a story (28.10.2026 redesign, never a flat drawing): 1. the story's own image (an AI illustration, labelled
+ *  "תמונה להמחשה"), 2. a photo from the section photo library (public/img/stock, labelled "צילום אילוסטרציה"), picked by the story id so
+ *  neighbouring stories get different photos. */
+export interface Pic { src: string; srcset?: string; small: string; alt: string; w: number; h: number; ai: boolean; stock: boolean; label: string; og: string }
+function hashOf(s: string) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
+export function stockPic(name: string, alt = ''): Pic {
+  return { src: `/img/stock/${name}-1600.webp`, srcset: `/img/stock/${name}-800.webp 800w, /img/stock/${name}-1600.webp 1600w`,
+    small: `/img/stock/${name}-800.webp`, alt, w: 1600, h: 1067, ai: false, stock: true, label: 'צילום אילוסטרציה', og: `/img/stock/og/${name}.jpg` };
+}
+export function stockFor(key: SectionKey, seed: string | number) {
+  const ph = SECTION_BY_KEY[key].photos;
+  const n = typeof seed === 'number' ? seed : Number(String(seed).replace(/\D/g, '')) || hashOf(String(seed));
+  return ph[n % ph.length];
+}
+export function picOf(a: Article, _IMGS?: unknown): Pic {
   const ai = a.ai;
   if (ai) {
     const files = ai.files || [];
-    return { src: files.length ? files[files.length - 1].src : ai.remote!, srcset: files.length > 1 ? files.map((f) => `${f.src} ${f.w}w`).join(', ') : undefined,
-      small: files.length ? files[0].src : ai.remote!, alt: ai.alt, w: ai.w, h: ai.h, ai: true };
+    const src = files.length ? files[files.length - 1].src : ai.remote!;
+    return { src, srcset: files.length > 1 ? files.map((f) => `${f.src} ${f.w}w`).join(', ') : undefined,
+      small: files.length ? files[0].src : ai.remote!, alt: ai.alt, w: ai.w, h: ai.h, ai: true, stock: false, label: 'תמונה להמחשה', og: src };
   }
-  const im = IMGS[a.imageHint] ?? IMGS[SECTION_BY_KEY[a.section].img];
-  return { src: im.src, srcset: undefined, small: im.src, alt: im.alt, w: 1200, h: 675, ai: false };
+  return stockPic(stockFor(a.section, a.engineId ?? a.slug));
 }
 /** Hebrew numerals for the Hebrew date (י״ז, תשפ״ז) */
 export function gematria(n: number) {

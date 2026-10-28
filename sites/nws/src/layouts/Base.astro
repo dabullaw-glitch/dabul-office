@@ -3,7 +3,7 @@ import '../styles/global.css';
 import { SITE_URL, PREVIEW, LANGS, LANG_PREFIX, LANG_LOCALE, LANG_DIR, BRAND, TG_URL, type Lang } from '../data/site';
 import { SECTIONS } from '../data/sections';
 import { t } from '../i18n/ui';
-import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, EVENT, LIVE, hebrewDate, FLASHES } from '../lib/content';
+import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, EVENT, LIVE, hebrewDate, FLASHES, navSections, liveSections } from '../lib/content';
 
 interface Crumb { name: string; href: string }
 interface Props {
@@ -86,7 +86,7 @@ const ld = [...jsonld, ...crumbLd];
 {!PREVIEW && <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-N0Q1GZWXF2"></script>}
 <script is:inline>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-N0Q1GZWXF2',{anonymize_ip:true,allow_google_signals:false,allow_ad_personalization_signals:false});
 window.nwsTrack=function(n,p){try{gtag('event',n,p||{})}catch(e){}};</script>
-<script is:inline>addEventListener('error',function(e){var i=e.target;if(i&&i.tagName==='IMG'&&!i.dataset.fb){i.dataset.fb='1';i.removeAttribute('srcset');i.src='/img/city.svg'}},true)</script>
+<script is:inline>addEventListener('error',function(e){var i=e.target;if(i&&i.tagName==='IMG'&&!i.dataset.fb){i.dataset.fb='1';i.removeAttribute('srcset');i.src='/img/stock/city-buildings-800.webp'}},true)</script>
 {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o).replace(/</g, '\\u003c')}></script>)}
 </head>
 <body>
@@ -121,7 +121,7 @@ window.nwsTrack=function(n,p){try{gtag('event',n,p||{})}catch(e){}};</script>
       <details class="mm">
         <summary aria-label={lang === 'he' ? 'תפריט' : 'Menu'}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
         <div class="mmp">
-          <nav aria-label={u.sectionsH}>{SECTIONS.map((x) => <a href={sectionUrl(x.key, lang)}>{x.name[lang]}</a>)}<a href={`${pre}/now/`}>{u.now}</a>{lang === 'he' && <a href="/netanya/">מדריך העיר</a>}<a href={`${pre}/directory/`}>{u.directory}</a></nav>
+          <nav aria-label={u.sectionsH}>{navSections().map((x) => <a href={sectionUrl(x.key, lang)}>{x.name[lang]}</a>)}<a href={`${pre}/now/`}>{u.now}</a>{lang === 'he' && <a href="/netanya/">מדריך העיר</a>}<a href={`${pre}/directory/`}>{u.directory}</a></nav>
           <div class="mmb"><a class="btn pri pill" href={TG_URL || `${pre}/join/`} {...(TG_URL ? { target: '_blank', rel: 'noopener' } : {})} data-tg>{u.joinTelegram}</a><a href={`${pre}/send-news/`}>{u.sendNews}</a><a href="/advertise/">{u.advertise}</a></div>
           <div class="langs">{LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l === 'he' ? 'עב' : l.toUpperCase()}</a>)}</div>
         </div>
@@ -129,7 +129,7 @@ window.nwsTrack=function(n,p){try{gtag('event',n,p||{})}catch(e){}};</script>
     </div>
   </div>
   <div class="navw"><nav class="wrap nav" aria-label={u.sectionsH}>
-    {SECTIONS.map((s) => <a href={sectionUrl(s.key, lang)} class={s.key === 'flash' ? 'fl' : undefined} style={`--c:${s.color}`} aria-current={current === s.key ? 'page' : undefined}>{s.key === 'flash' && <i aria-hidden="true"></i>}{s.name[lang]}</a>)}
+    {navSections().map((s) => <a href={sectionUrl(s.key, lang)} class={s.key === 'flash' ? 'fl' : undefined} style={`--c:${s.color}`} aria-current={current === s.key ? 'page' : undefined}>{s.key === 'flash' && <i aria-hidden="true"></i>}{s.name[lang]}</a>)}
     <a class="hl" href={`${pre}/now/`} aria-current={current === 'now' ? 'page' : undefined}>{u.now}</a>
     <a class="hl" href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}>{u.directory}</a>
   </nav></div>
@@ -150,7 +150,7 @@ window.nwsTrack=function(n,p){try{gtag('event',n,p||{})}catch(e){}};</script>
 <footer class="ft">
   <div class="wrap cols">
     <div><span class="mk">NWS<i>.</i></span><span>{u.footAbout}</span></div>
-    <div><b>{u.sectionsH}</b>{SECTIONS.map((s) => <a href={sectionUrl(s.key, lang)}>{s.name[lang]}</a>)}</div>
+    <div><b>{u.sectionsH}</b>{liveSections().map((s) => <a href={sectionUrl(s.key, lang)}>{s.name[lang]}</a>)}</div>
     <div><b>{u.usefulH}</b><a href={`${pre}/now/`}>{u.now}</a>{lang === 'he' && <><a href="/now/pharmacy/">בית מרקחת תורן</a><a href="/now/shabbat/">זמני שבת בנתניה</a><a href="/now/beaches/">החופים של נתניה</a><a href="/now/phones/">טלפונים חיוניים</a><a href="/netanya/">נתניה: מדריך העיר</a><a href="/events/#cal">לוח אירועים בנתניה</a><a href="/flash/#official">מבזקים רשמיים</a></>}<a href={`${pre}/directory/`}>{u.directory}</a></div>
     <div><b>{u.siteH}</b><a href={`${pre}/about/`}>{u.about}</a><a href="/editorial-policy/">{u.editorial}</a><a href="/corrections/">{u.corrections}</a><a href={`${pre}/send-news/`}>{u.sendNews}</a><a href="/advertise/">{u.advertise}</a><a href="/contact/">{u.contact}</a><a href="/terms/">{u.terms}</a><a href="/privacy/">{u.privacy}</a><a href="/accessibility/">{u.accessibility}</a></div>
   </div>

@@ -1,7 +1,7 @@
 ---
 import SectionPage from '../../../components/SectionPage.astro';
-import { SECTIONS } from '../../../data/sections';
-export function getStaticPaths() { return SECTIONS.map((s) => ({ params: { section: s.slug }, props: { k: s.key } })); }
+import { liveSections } from '../../../lib/content';
+export function getStaticPaths() { return liveSections().map((s) => ({ params: { section: s.slug }, props: { k: s.key } })); }
 const { k } = Astro.props;
 ---
 <SectionPage lang="fr" k={k} />

@@ -19,14 +19,21 @@ export const BRAND = {
   area: { name: 'נתניה', lat: 32.3215, lon: 34.8532 },
 };
 
-export const IMG: Record<string, { src: string; alt: string }> = {
-  beach: { src: '/img/beach.svg', alt: 'איור: חוף הים של נתניה בשקיעה' },
-  city: { src: '/img/city.svg', alt: 'איור: בנייני מגורים בעיר' },
-  stadium: { src: '/img/stadium.svg', alt: 'איור: מגרש כדורגל באצטדיון' },
-  crane: { src: '/img/crane.svg', alt: 'איור: עגורן ובניין בבנייה' },
-  council: { src: '/img/council.svg', alt: 'איור: בניין עירייה' },
-  concert: { src: '/img/concert.svg', alt: 'איור: במה עם אורות והופעה' },
-  road: { src: '/img/road.svg', alt: 'איור: כביש עם קונוסים ועבודות' },
+// Page and section header photos (28.10.2026 redesign: free-license photos from public/img/stock, never the old flat drawings).
+// src is the 1600px WebP; the same name also exists at 800px (-800.webp) and as a 1200x630 JPEG for social cards (stock/og/).
+const ph = (name: string, alt: string) => ({ src: `/img/stock/${name}-1600.webp`, small: `/img/stock/${name}-800.webp`, name, alt });
+export const IMG: Record<string, { src: string; small: string; name: string; alt: string }> = {
+  beach: ph('beach-umbrellas', 'סוככים על חוף הים'),
+  sea: ph('wave', 'גל נשבר על החוף'),
+  city: ph('city-buildings', 'מבט על בנייני מגורים בעיר'),
+  stadium: ph('stadium-night', 'אצטדיון כדורגל מואר בערב'),
+  crane: ph('crane-building', 'עגורן ליד בניין בבנייה'),
+  council: ph('council-chamber', 'אולם ישיבות של מועצה'),
+  concert: ph('concert', 'קהל מול במה מוארת'),
+  road: ph('road-aerial', 'כביש עירוני בלילה, מבט מלמעלה'),
+  police: ph('police-lights', 'אורות של ניידת משטרה'),
+  traffic: ph('traffic-fog', 'תנועת מכוניות בערב'),
+  sunset: ph('beach-sunset', 'שקיעה מעל הים'),
 };
 
 export const abs = (path: string) => SITE_URL + path;

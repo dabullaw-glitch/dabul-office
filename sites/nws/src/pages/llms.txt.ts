@@ -2,7 +2,7 @@
 import { SITE_URL } from '../data/site';
 import { SECTIONS } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
-import { ARTICLES, articleUrl } from '../lib/content';
+import { ARTICLES, articleUrl, liveSections } from '../lib/content';
 export function GET() {
   const lines = [
     '# חדשות נתניה והשרון (Netanya & Sharon News)',
@@ -10,7 +10,7 @@ export function GET() {
     '> אתר חדשות מקומי לנתניה ולשרון: מבזקים, עירייה, נדל״ן והתחדשות עירונית, ספורט, אירועים, נתונים שימושיים ומדריך בעלי מקצוע. כל ידיעה כוללת את שם המקור וקישור אליו. Local news for Netanya, Israel, in Hebrew, Russian, French and English.',
     '',
     '## Sections',
-    ...SECTIONS.map((s) => `- [${s.name.he} / ${s.name.en}](${SITE_URL}/${s.slug}/): ${s.desc}`),
+    ...liveSections().map((s) => `- [${s.name.he} / ${s.name.en}](${SITE_URL}/${s.slug}/): ${s.desc}`),
     '',
     '## Useful (updated automatically)',
     `- [נתניה עכשיו](${SITE_URL}/now/): live local data hub`,
