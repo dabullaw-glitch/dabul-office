@@ -1,0 +1,28 @@
+# media-fetch (28.10.2026): downloads free-license photos (Unsplash license) listed in media/stock/list.txt
+# ("name photo-id" per line) and commits them to the branch media-stock. The workspace can't reach image hosts;
+# the Actions runner can. Manual run only.
+name: media-fetch
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: download
+        run: |
+          mkdir -p out
+          while read -r name id; do
+            [ -z "$name" ] && continue
+            curl -fsSL --retry 3 -o "out/$name.jpg" "https://images.unsplash.com/photo-$id?w=1800&q=82&fm=jpg&fit=max" || echo "FAIL $name $id"
+          done < media/stock/list.txt
+          ls -la out
+      - name: commit to media-stock
+        run: |
+          git config user.name "media-fetch"; git config user.email "media-fetch@users.noreply.github.com"
+          git checkout --orphan media-stock
+          git rm -rfq . >/dev/null
+          mkdir -p stock && mv out/*.jpg stock/ && cp /dev/null stock/.keep
+          git add stock && git commit -qm "stock photos $(date -u +%F)" && git push -f origin media-stock
