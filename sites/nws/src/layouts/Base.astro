@@ -76,6 +76,11 @@ const ld = [...jsonld, ...crumbLd];
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Rubik:wght@500;600;700;800&display=swap" rel="stylesheet">
 {/* a story picture that fails to load (for example a missing AI file) is replaced by the city drawing, so no broken image is shown */}
+{/* Google Analytics 4 (G-N0Q1GZWXF2, added 28.10.2026): loaded async, IP anonymized, no ad signals. window.nwsTrack(name, params)
+   is the one helper for site events, e.g. nwsTrack('generate_lead', {form: 'directory'}) after a form was sent successfully. */}
+{!PREVIEW && <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-N0Q1GZWXF2"></script>}
+<script is:inline>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-N0Q1GZWXF2',{anonymize_ip:true,allow_google_signals:false,allow_ad_personalization_signals:false});
+window.nwsTrack=function(n,p){try{gtag('event',n,p||{})}catch(e){}};</script>
 <script is:inline>addEventListener('error',function(e){var i=e.target;if(i&&i.tagName==='IMG'&&!i.dataset.fb){i.dataset.fb='1';i.removeAttribute('srcset');i.src='/img/city.svg'}},true)</script>
 {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o).replace(/</g, '\\u003c')}></script>)}
 </head>
