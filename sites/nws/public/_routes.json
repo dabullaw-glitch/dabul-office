@@ -27,6 +27,8 @@
   "/shabbat",
   "/pharmacy",
   "/beaches",
-  "/he/*"
+  "/he/*",
+  "/admin/",
+  "/admin/*"
  ]
 }
