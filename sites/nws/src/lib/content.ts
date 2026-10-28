@@ -29,7 +29,7 @@ function sourcesOf(list: unknown, body: string[]): Source[] {
   const credit = body.filter((p) => /^קרדיט:/.test(p.trim())).join(' ');
   const out = new Map<string, Source>();
   for (const x of Array.isArray(list) ? list : []) {
-    const name = clean((x as any)?.name ?? (x as any)?.name_he).replace(/\s*-\s*ערוץ טלגרם( רשמי)?$/, '');
+    const name = clean((x as any)?.name ?? (x as any)?.name_he).replace(/\s*-\s*(ערוץ|עמוד|דף|חשבון)\s+\S+(\s+ה?רשמי)?$/, '');
     const trust = String((x as any)?.trust ?? 'official');
     const url = safeUrl((x as any)?.url);
     if (!name || /^מערכת חדשות נתניה|^NWS$/.test(name) || (x as any)?.id === 'nws_desk') continue;
