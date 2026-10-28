@@ -37,8 +37,13 @@
 //      (no text, no message) until another source arrives.
 //   4. A normal report based on one outlet (basis media_exclusive) is published with one closing credit line; only a sensitive one
 //      waits for Yakir.
-//   POST {action:'redo', ids, at?}: write a waiting story again from its full sources (and related items of the last 7 days), with
+//   POST {action:'redo', ids, at?, drop?}: write a waiting story again from its full sources (and related items of the last 7 days), with
 //      the normal state; 'at' (ISO) sets the story date to the real event date, so an old event is not shown as new.
+// 28.10.2026 (fixes): page text is added to the feed text instead of replacing it; WordPress boilerplate words no longer make two
+//   posts "the same event"; redo takes related items only with a shared place within 3 days, and 'drop' removes wrong items.
+//   The daily cap is in hns_config 'ai' (300 Sonnet calls since 28.10.2026 16:40, Yakir's approval relayed by the coordinator).
+// 28.10.2026 (site redesign): three more sections, police, transport and health; flash stays for short urgent items. A section
+//   key the site does not know is replaced by the item's own topic.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -67,7 +72,9 @@ async function usedToday(dayStart: string) {
 }
 
 const norm = (s: string) => s.replace(/[״“”]/g, '"').replace(/[׳‘’]/g, "'").replace(/[ְ-ׇ]/g, '');
-const STOP = new Set(['נתניה', 'בנתניה', 'מנתניה', 'לנתניה', 'שנתניה', 'ברחוב', 'רחוב', 'היום', 'אתמול', 'הערב', 'הבוקר', 'לאחר', 'במהלך', 'סמוך', 'בסמוך', 'כבן', 'כבת', 'אשר', 'אשה', 'אישה', 'גבר', 'בעיר', 'העיר', 'עדכון', 'דוברות', 'מד"א', 'התקבל', 'דיווח', 'במוקד', 'מעניקים', 'טיפול', 'רפואי', 'ומפנים', 'חובשים', 'ופראמדיקים', 'ופרמדיקים', 'במצב', 'השרון', 'ראשוני', 'עודכן']);
+const STOP = new Set(['נתניה', 'בנתניה', 'מנתניה', 'לנתניה', 'שנתניה', 'ברחוב', 'רחוב', 'היום', 'אתמול', 'הערב', 'הבוקר', 'לאחר', 'במהלך', 'סמוך', 'בסמוך', 'כבן', 'כבת', 'אשר', 'אשה', 'אישה', 'גבר', 'בעיר', 'העיר', 'עדכון', 'דוברות', 'מד"א', 'התקבל', 'דיווח', 'במוקד', 'מעניקים', 'טיפול', 'רפואי', 'ומפנים', 'חובשים', 'ופראמדיקים', 'ופרמדיקים', 'במצב', 'השרון', 'ראשוני', 'עודכן',
+  // WordPress feed boilerplate ("הפוסט ... הופיע לראשונה ב-..."), shared by unrelated posts of the same site
+  'הפוסט', 'הופיע', 'לראשונה']);
 function toks(s: string) {
   return new Set(norm(s).replace(/[^\p{L}\p{N}"\s]/gu, ' ').split(/\s+/).map((w) => w.replace(/^"|"$/g, ''))
     .map((w) => (w.length > 4 && /^[ובלמהש]/.test(w) ? w.slice(1) : w)).filter((w) => w.length >= 3 && !STOP.has(w)));
@@ -84,6 +91,9 @@ const notLocal = (items: Any[], places: string[], src: Any) => places.length > 0
 class NoStory extends Error {}
 // the writer found too few facts: the story waits quietly for another source (no text, no message to Yakir)
 class Hold extends Error {}
+// the site sections (sites/nws/src/data/sections.ts); an answer with another key keeps the item's own topic
+const SECTION_KEYS = new Set(['flash', 'police', 'city', 'transport', 'health', 'realestate', 'community', 'sports', 'leisure', 'sharon', 'tourism', 'law']);
+const sectionOf = (o: Any, fallback: string) => (SECTION_KEYS.has(String(o?.section || '')) ? String(o.section) : fallback);
 const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
 
 const SYSTEM = `אתה עורך חדשות מקומי באתר "חדשות נתניה והשרון". אתה כותב ידיעה קצרה בעברית פשוטה וברורה, רק מהעובדות שמופיעות במקורות שקיבלת.
@@ -109,7 +119,7 @@ const SYSTEM = `אתה עורך חדשות מקומי באתר "חדשות נת�
 - כשהידיעה נשענת על כלי תקשורת אחד בלבד (basis media_exclusive), הפסקה האחרונה מסתיימת בשורת קרדיט אחת: "כפי שפורסם לראשונה ב<שם כלי התקשורת>".
 - שדה kicker: שורה קצרה מאוד שמופיעה בצבע מעל הכותרת באתר, עד 5 מילים, עובדה מהידיעה ולא חזרה על הכותרת. למשל "חסימות עד 8 בנובמבר", "שני חשודים נעצרו", "צו בתוקף עד 1.11". בלי שם של כלי תקשורת. אם אין משהו טוב, להשאיר ריק.
 - שדה closure: רק כשהידיעה עוסקת בחסימת כביש, סגירת רחוב או עבודות שמשנות את התנועה: place (איפה, קצר), what (מה בדיוק, משפט קצר), until (תאריך סיום בפורמט YYYY-MM-DD רק אם הוא כתוב במקור או מחושב ישירות ממנו, אחרת ריק), approx (true אם התאריך משוער, למשל "כשבועיים"). אחרת closure=null.
-מדורים אפשריים: flash (מבזקים, חירום, תאונות, משטרה), city (עירייה, תשתיות, חינוך), realestate (תכנון ובנייה, נדל״ן), community (קהילה), sports (ספורט), leisure (תרבות ואירועים), sharon (יישובי השרון שאינם נתניה), tourism (חופים ותיירות).
+מדורים אפשריים: flash (מבזקים קצרים ודחופים: חירום, תאונות, שריפות, התרעות), police (משטרה, פלילים, בתי משפט בעניין פלילי), city (עירייה, תשתיות, חינוך), transport (תחבורה, כבישים, חסימות, תחבורה ציבורית, חניה), health (בריאות, בתי חולים, קופות חולים, מד״א שאינו מבזק חירום), realestate (תכנון ובנייה, נדל״ן), community (קהילה), sports (ספורט), leisure (תרבות ואירועים), sharon (יישובי השרון שאינם נתניה), tourism (חופים ותיירות).
 אם הידיעה לא עוסקת בנתניה או ביישובי השרון (למשל פוליטיקה ארצית, והשם של יישוב הוא בעצם מילה רגילה), אל תכתוב ידיעה. החזר רק {"skip":true,"reason":"סיבה קצרה"}.
 החזר JSON בלבד, בלי טקסט נוסף, במבנה:
 {"section":"","kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""],"places":[""],"basis":"official","closure":null,"needsCheck":false,"checkReason":""}`;
@@ -170,7 +180,8 @@ async function pageText(url: string) {
 async function enrich(items: Any[]) {
   await Promise.all(items.map(async (x) => {
     if (!x.url || !/^https?:\/\//.test(x.url) || /t\.me\//.test(x.url) || !cut(String(x.body || ''))) return;
-    try { const t = await pageText(x.url); if (t && t.length > String(x.body || '').length + 40) x.body = t; } catch { /* keep the feed text */ }
+    // the page text is added to the feed text (never replaces it): a page can be a live blog that no longer holds the item's facts
+    try { const f = String(x.body || ''); const t = await pageText(x.url); if (t && t.length > f.length + 40) x.body = t.includes(f.slice(0, 80)) ? t : `${f}\n${t}`; } catch { /* keep the feed text */ }
   }));
   return items;
 }
@@ -341,7 +352,7 @@ async function tick(only: number[] = [], at = '') {
         const mediaOnly = basis === 'media_exclusive' && !its.some((x: Any) => src[x.source_id].trust === 'official');
         const state = stateOf(sens, out);
         const sources = [...new Map(its.filter((x: Any) => src[x.source_id].role === 'source').map((x: Any) => [x.source_id, { id: x.source_id, name: src[x.source_id].name_he, url: x.url, trust: src[x.source_id].trust }])).values()];
-        await sb.from('hns_stories').update({ section: out.section || st.section, title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
+        await sb.from('hns_stories').update({ section: sectionOf(out, st.section), title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
           places: out.places?.length ? out.places : places, sources, sensitivity: sens ? 'sensitive' : 'normal', state, notes: notesOf(['אומת: מקור נוסף'], sens, mediaOnly, out, retried, problem), basis, model, usage,
           kicker: kickerOf(out), closure: closureOf(out), item_ids: allIds, tg_sent_at: null, updated_at: new Date().toISOString() }).eq('id', g.story).in('state', ['draft', 'needs_check']);
         res.push({ story: g.story, corroborated: true, state });
@@ -378,7 +389,7 @@ async function tick(only: number[] = [], at = '') {
     try {
       const { out, usage, problem, retried } = await compose(promptFor(g.items, src, places), '', model);
       const isNetanya = places.some((p) => NETANYA_PLACES.has(p));
-      const section = out.section || (isNetanya ? base.section : 'sharon');
+      const section = sectionOf(out, isNetanya ? base.section : 'sharon');
       const basis = ['official', 'public', 'media_exclusive'].includes(out.basis) ? out.basis : null;
       const mediaOnly = basis === 'media_exclusive' && !g.items.some((x) => src[x.source_id].trust === 'official');
       const state = stateOf(sensitive, out);
@@ -401,7 +412,7 @@ async function tick(only: number[] = [], at = '') {
 }
 
 // write waiting stories again from their full sources plus related items of the last 7 days, with the normal state
-async function redo(ids: number[], at = '') {
+async function redo(ids: number[], at = '', drop: number[] = []) {
   await outlets(); await config();
   const { data: srcs } = await sb.from('hns_sources').select('id,name_he,role,trust,local_only');
   const src = Object.fromEntries((srcs || []).map((s: Any) => [s.id, s]));
@@ -409,9 +420,17 @@ async function redo(ids: number[], at = '') {
   const { data: pool } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,sensitivity').eq('is_local', true).gte('fetched_at', sinceDays(7)).limit(3000);
   const res: Any[] = [];
   for (const st of rows || []) {
-    const { data: own } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,sensitivity').in('id', st.item_ids || []);
+    // 'drop': items that were attached by mistake (another event); they leave the story and its sources
+    const keepIds = (st.item_ids || []).map(Number).filter((i: number) => !drop.includes(i));
+    if (drop.length) { st.item_ids = keepIds; await sb.from('hns_items').update({ cluster_id: null }).in('id', drop).eq('cluster_id', st.id); }
+    const { data: own } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,sensitivity').in('id', keepIds);
     const tk = toks(`${storyText(st)} ${(own || []).map((x: Any) => `${x.title} ${x.body || ''}`).join(' ')}`);
-    const related = (pool || []).filter((x: Any) => !(st.item_ids || []).map(Number).includes(Number(x.id)) && src[x.source_id]?.role === 'source' && same(toks(`${x.title} ${x.body || ''}`), tk));
+    // a related item must tell the same event: same words, a shared place, and within 3 days of the story's own items
+    const ownPlaces = new Set([...(st.places || []), ...(own || []).flatMap((x: Any) => x.places || [])]);
+    const ownAt = (own || []).map((x: Any) => Date.parse(x.published_at || x.fetched_at)).filter(Boolean);
+    const near3 = (x: Any) => !ownAt.length || ownAt.some((t: number) => Math.abs(Date.parse(x.published_at || x.fetched_at) - t) < 3 * 864e5);
+    const related = (pool || []).filter((x: Any) => !(st.item_ids || []).map(Number).includes(Number(x.id)) && !drop.includes(Number(x.id)) && src[x.source_id]?.role === 'source'
+      && (x.places || []).some((p: string) => ownPlaces.has(p)) && near3(x) && same(toks(`${x.title} ${x.body || ''}`), tk));
     const its = await enrich([...(own || []), ...related].filter((x: Any) => src[x.source_id]));
     if (!its.length) { res.push({ id: st.id, skipped: 'no items' }); continue; }
     const sens = st.sensitivity === 'sensitive' || its.some((x: Any) => x.sensitivity === 'sensitive');
@@ -421,8 +440,8 @@ async function redo(ids: number[], at = '') {
       const mediaOnly = basis === 'media_exclusive' && !its.some((x: Any) => src[x.source_id].trust === 'official');
       const state = stateOf(sens, out);
       const sources = [...new Map(its.filter((x: Any) => src[x.source_id].role === 'source').map((x: Any) => [x.source_id, { id: x.source_id, name: src[x.source_id].name_he, url: x.url, trust: src[x.source_id].trust }])).values()];
-      const allIds = [...new Set([...(st.item_ids || []), ...its.map((x: Any) => x.id)])];
-      await sb.from('hns_stories').update({ section: out.section || st.section, title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
+      const allIds = [...new Set([...keepIds, ...its.map((x: Any) => Number(x.id))])];
+      await sb.from('hns_stories').update({ section: sectionOf(out, st.section), title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
         places: out.places?.length ? out.places : st.places, sources, state, basis, notes: notesOf(['נכתב מחדש מהמקורות המלאים'], sens, mediaOnly, out, retried, problem), usage: { previous: st.usage, redo: usage },
         kicker: kickerOf(out), closure: closureOf(out), item_ids: allIds, tg_sent_at: null, pub_note: null, updated_at: new Date().toISOString(), ...(at ? { created_at: at } : {}) })
         .eq('id', st.id).in('state', ['draft', 'needs_check']);
@@ -440,7 +459,7 @@ Deno.serve(async (req) => {
   try {
     if (b.action === 'tick') return J({ ok: true, ...(await tick()) });
     if (b.action === 'items') return J({ ok: true, ...(await tick((b.ids || []).map(Number).filter(Boolean).slice(0, 10), String(b.at || ''))) });
-    if (b.action === 'redo') return J({ ok: true, ...(await redo((b.ids || []).map(Number).filter(Boolean).slice(0, 5), String(b.at || ''))) });
+    if (b.action === 'redo') return J({ ok: true, ...(await redo((b.ids || []).map(Number).filter(Boolean).slice(0, 5), String(b.at || ''), (b.drop || []).map(Number).filter(Boolean))) });
     if (b.action === 'rewrite') return J({ ok: true, ...(await rewrite((b.ids || []).map(Number).filter(Boolean))) });
     return J({ ok: false, error: 'unknown action' }, 400);
   } catch (e) { return J({ ok: false, error: String((e as Error).message || e) }, 500); }
