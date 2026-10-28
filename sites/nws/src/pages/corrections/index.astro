@@ -1,16 +1,9 @@
 ---
 import Page from '../../components/Page.astro';
+import ReqForm from '../../components/ReqForm.astro';
 ---
 <Page title="תיקונים והסרות | חדשות נתניה והשרון" h1="תיקונים והסרות" description="מצאתם טעות בידיעה של חדשות נתניה והשרון או רוצים לבקש הסרה? כך מגישים בקשה, ותוך כמה זמן אנחנו עונים." path="/corrections/" intro="טעות בידיעה? בקשה להסרה? אנחנו כאן." img="council">
   <p>אנחנו משתדלים לדייק, ובכל זאת טעויות קורות. כשמגיעה בקשה, אנחנו בודקים אותה מול המקור ועונים בהקדם. ידיעה שתוקנה מסומנת בסוף הכתבה, עם תאריך התיקון ומה תוקן.</p>
   <h2>בקשת תיקון או הסרה</h2>
-  <form class="f" action="#" method="post">
-    <div class="hp" aria-hidden="true"><label>אל תמלאו את השדה הזה<input name="website" tabindex="-1" autocomplete="off"></label></div>
-    <label>הקישור לידיעה<input name="url" type="url" required inputmode="url"></label>
-    <label>מה לא מדויק, ומה הנוסח הנכון<textarea name="details" rows="5" required></textarea></label>
-    <label>שם מלא<input name="name" required autocomplete="name"></label>
-    <label>טלפון או מייל לחזרה<input name="contact" required></label>
-    <button class="btn pri" type="submit">שליחת הבקשה</button>
-    <p class="note">הטופס יתחבר למערכת לפני השקת האתר.</p>
-  </form>
+  <ReqForm type="correction" id="fixf" />
 </Page>

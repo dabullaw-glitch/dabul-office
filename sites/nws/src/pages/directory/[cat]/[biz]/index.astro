@@ -54,6 +54,7 @@ const jsonld = [ld];
         {l.address && <span>כתובת: {l.address}</span>}
         {l.license && <span class="note">מספר רישיון: {l.license}</span>}
       </section>
+      <p class="note" style="margin-top:10px">בעלי העסק? <a href={`/advertise/?offer=featured&biz=${encodeURIComponent(l.name)}#form`}>קידום העסק במדריך</a> או <a href={`/corrections/?url=${encodeURIComponent(path)}`}>עדכון הפרטים</a>.</p>
       {more.length > 0 && <section class="sec"><h2 class="sh" style={`--c:${c.color}`}><span class="bar"></span>עוד {c.plural}</h2><div style="display:flex;flex-direction:column;gap:12px">{more.map((x) => <BizCard l={x} />)}</div></section>}
     </aside>
   </div>

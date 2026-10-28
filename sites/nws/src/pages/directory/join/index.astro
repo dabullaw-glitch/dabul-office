@@ -33,8 +33,8 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'WebPage', name: '�
     <fieldset style="border:1px solid #CBD3DD;border-radius:10px;padding:12px 14px"><legend style="font-weight:700;font-size:15px;padding:0 6px">מעוניינים גם ב (לא חובה)</legend>
       <label style="flex-direction:row;font-weight:400;gap:6px"><input type="checkbox" name="interest" value="featured"> קידום במדריך (עסק מומלץ)</label>
       <label style="flex-direction:row;font-weight:400;gap:6px"><input type="checkbox" name="interest" value="sponsored"> כתבת תוכן שיווקי על העסק</label>
-      <p class="note" style="margin:6px 0 0">התשלום עוד לא מחובר לאתר. נחזור אליכם עם הפרטים.</p></fieldset>
-    <label style="flex-direction:row;font-weight:400;gap:8px"><input type="checkbox" name="consent" value="1" required> אני מאשר/ת לפרסם את פרטי העסק במדריך, והפרטים נכונים.</label>
+      <p class="note" style="margin:6px 0 0">אין תשלום דרך האתר. נחזור אליכם עם הפרטים, ורק אחר כך מתקדמים.</p></fieldset>
+    <label style="flex-direction:row;font-weight:400;gap:8px;align-items:flex-start"><input type="checkbox" name="consent" value="1" required> <span>אני מאשר/ת לפרסם את פרטי העסק במדריך, הפרטים נכונים, וקראתי את <a href="/privacy/" target="_blank">מדיניות הפרטיות</a>.</span></label>
     {TURNSTILE_SITE_KEY && <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-language="he"></div>}
     <button class="btn pri" type="submit">שליחה</button>
     <p id="bizmsg" role="status" aria-live="polite" style="font-weight:700;margin:0"></p>
@@ -57,7 +57,7 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'WebPage', name: '�
       var btn=f.querySelector('button[type=submit]'); btn.disabled=true; msg.style.color=''; msg.textContent='שולחים...';
       fetch(api,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json()}).then(function(j){
         btn.disabled=false;
-        if(j.ok){ msg.style.color='#1E8A4C'; msg.textContent=j.message||'תודה! קיבלנו את הפרטים. אחרי בדיקה העסק יעלה למדריך.'; if(!j.duplicate) f.reset(); sync(); return; }
+        if(j.ok){ msg.style.color='#1E8A4C'; msg.textContent=j.message||'תודה! קיבלנו את הפרטים. אחרי בדיקה העסק יעלה למדריך.'; if(!j.duplicate) f.reset(); sync(); if(window.nwsTrack) try{window.nwsTrack('generate_lead',{form:'directory'})}catch(e){} return; }
         msg.style.color='#C8102E'; msg.textContent=j.error||'השליחה נכשלה, נסו שוב.';
         if(j.fields){ Object.keys(j.fields).forEach(function(k){ var el=f.elements[k]; if(!el) return; if(el.length&&!el.tagName) el=el[0]; var p=document.createElement('span'); p.className='ferr note'; p.style.color='#C8102E'; p.textContent=j.fields[k]; (el.closest('label')||el.parentNode).appendChild(p); }); }
       }).catch(function(){ btn.disabled=false; msg.style.color='#C8102E'; msg.textContent='אין חיבור. נסו שוב בעוד דקה.'; });

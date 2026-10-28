@@ -1,6 +1,7 @@
 ---
 import Page from '../../components/Page.astro';
 import { BRAND } from '../../data/site';
+import ReqForm from '../../components/ReqForm.astro';
 const jsonld = [{ '@context': 'https://schema.org', '@type': 'ContactPage', name: 'צור קשר עם חדשות נתניה והשרון', url: 'https://nws.co.il/contact/' }];
 ---
 <Page title="צור קשר | חדשות נתניה והשרון" h1="צור קשר" description="יצירת קשר עם מערכת חדשות נתניה והשרון: ידיעות, תיקונים, פרסום ושאלות." path="/contact/" intro="נשמח לשמוע מכם." jsonld={jsonld}>
@@ -10,4 +11,7 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'ContactPage', name
     <li><b>רוצים לפרסם?</b> <a href="/advertise/">פרסמו אצלנו</a>.</li>
     <li><b>מייל המערכת:</b> <span dir="ltr">{BRAND.email}</span></li>
   </ul>
+  <h2 id="form">כתבו לנו</h2>
+  <p>שאלה, הצעה או כל דבר אחר. ההודעה מגיעה ישר למערכת, ונחזור אליכם.</p>
+  <ReqForm type="contact" id="contactf" />
 </Page>
