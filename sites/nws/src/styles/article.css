@@ -42,9 +42,6 @@
 .n-art .n-rg a{display:block;color:var(--ink)}
 .n-art .n-rel{margin-top:8px}
 @media (max-width:760px){
- /* the short header bar fits a 400px screen: tighter gaps, a smaller name, the Telegram button shows only its icon (the text stays for screen readers) */
- .n-head.cmp .n-bar .n-wrap{gap:12px}.n-head.cmp .n-bar .n-mk{font-size:30px}.n-head.cmp .n-bar .bn{font-size:15px;padding-right:10px}
- .n-head.cmp .n-bar .n-btn{font-size:0;gap:0;width:44px;padding-inline:0}
  .n-art .n-lay{padding-block:16px 40px;gap:40px}
  .n-art .n-by{align-items:flex-start}
  .n-art .n-brief{padding:16px 18px}
