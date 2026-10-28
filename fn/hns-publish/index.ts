@@ -14,6 +14,8 @@
 //     28.10.2026: taps on business directory buttons (hns:biz:ok:<id> / hns:biz:no:<id>) are passed as they are to hns-biz.
 //   {action:'publish_ids', ids:[...], dry?}  publish chosen drafts that pass every rule except freshness (used once for the launch backlog).
 //   {action:'status'}  counts by state.
+//   {action:'approve', ids, by?}  28.10.2026: Yakir's approval given in chat; publishes with the same checks as his tap (decided_by
+//     'yakir-chat') and marks the Telegram approval message as handled.
 //   {action:'withdraw', ids:[...], note}  takes published stories off the site (state 'withdrawn'; hns-feed returns only 'published').
 //   {action:'revise', id, title?, dek?, body?, key_points?, note}  corrects the text of a published story (same guards as publishing).
 //   {action:'close_dup', id, of, note?}  28.10.2026: a waiting story (draft or needs_check) that tells the same event as a published
@@ -222,6 +224,24 @@ async function decide(data: string, cq: Any) {
   return { ok: true, published: id };
 }
 
+// Yakir's approval given in chat (relayed by the coordinator): the same checks as his tap; the Telegram approval message, when one
+// was sent, is edited to show it was handled
+async function approve(ids: number[], by: string) {
+  await roles(); await outlets();
+  const { data: rows } = await sb.from('hns_stories').select('*').in('id', ids);
+  const out: Any[] = [];
+  for (const st of rows || []) {
+    if (!['draft', 'needs_check', 'approved'].includes(st.state)) { out.push({ id: st.id, skipped: `state ${st.state}` }); continue; }
+    if (!hasBody(st) || tipOnly(st)) { out.push({ id: st.id, skipped: 'no body or tip only' }); continue; }
+    const problem = voiceProblem(st);
+    if (problem) { out.push({ id: st.id, skipped: problem }); continue; }
+    const ok = await publish(st, by);
+    if (ok && st.tg_message_id && S.TELEGRAM_CHAT_ID) await tg('editMessageText', { chat_id: S.TELEGRAM_CHAT_ID, message_id: st.tg_message_id, text: `✅ פורסם (אושר בצ'אט): ${clean(st.title)}`, disable_web_page_preview: true });
+    out.push({ id: st.id, published: ok });
+  }
+  return out;
+}
+
 async function publishIds(ids: number[], dry: boolean) {
   await roles();
   const { data: rows } = await sb.from('hns_stories').select('*').in('id', ids);
@@ -264,7 +284,8 @@ async function closeDup(id: number, of: number, why: string) {
   return { ok: !!data?.length, id, of };
 }
 
-// correct the text of a published story; the new text must pass the same guard
+// correct the text of a published story; the new text must pass the same guard. drop_items (28.10.2026) removes items that were
+// attached by mistake, with their sources (e.g. story 71 got an unrelated council post through shared WordPress boilerplate words).
 async function revise(b: Any) {
   await outlets();
   const { data: st } = await sb.from('hns_stories').select('*').eq('id', Number(b.id)).maybeSingle();
@@ -275,6 +296,14 @@ async function revise(b: Any) {
   if (Array.isArray(b.body)) patch.body = cleanArr(b.body);
   if (Array.isArray(b.key_points)) patch.key_points = cleanArr(b.key_points);
   if (b.basis) patch.basis = String(b.basis);
+  // drop_items: source items attached to the story by mistake (another event); they leave the story, and so do their sources
+  const drop = (Array.isArray(b.drop_items) ? b.drop_items : []).map(Number).filter(Boolean);
+  if (drop.length) {
+    patch.item_ids = (st.item_ids || []).filter((i: unknown) => !drop.includes(Number(i)));
+    const { data: left } = patch.item_ids.length ? await sb.from('hns_items').select('source_id').in('id', patch.item_ids) : { data: [] };
+    const keep = new Set((left || []).map((x: Any) => x.source_id));
+    patch.sources = (Array.isArray(st.sources) ? st.sources : []).filter((x: Any) => keep.has(x.id));
+  }
   const next = { ...st, ...patch };
   const problem = voiceProblem(next);
   if (problem) return { ok: false, error: problem };
@@ -283,6 +312,7 @@ async function revise(b: Any) {
   patch.pub_note = clean(b.note || 'תוקן');
   const { error } = await sb.from('hns_stories').update(patch).eq('id', st.id).eq('state', 'published');
   if (error) return { ok: false, error: error.message };
+  if (drop.length) await sb.from('hns_items').update({ cluster_id: null }).in('id', drop).eq('cluster_id', st.id);
   await log('revise', st.id, { note: patch.pub_note, before: { title: st.title, dek: st.dek }, after: { title: next.title, dek: next.dek } });
   return { ok: true, id: st.id, title: next.title };
 }
@@ -298,6 +328,7 @@ Deno.serve(async (req) => {
     if (b.action === 'revise') return J(await revise(b));
     if (b.action === 'close_dup') return J(await closeDup(Number(b.id), Number(b.of), String(b.note || '')));
     if (b.action === 'check') { await outlets(); const { data } = await sb.from('hns_stories').select('*').in('id', (b.ids || []).map(Number)); return J({ ok: true, res: (data || []).map((st: Any) => ({ id: st.id, state: st.state, problem: voiceProblem(st) })) }); }
+    if (b.action === 'approve') return J({ ok: true, res: await approve((b.ids || []).map(Number).filter(Boolean), clean(b.by || 'yakir-chat').slice(0, 40)) });
     if (b.action === 'publish_ids') return J({ ok: true, res: await publishIds((b.ids || []).map(Number).filter(Boolean), !!b.dry) });
     if (b.action === 'status') {
       const { data } = await sb.from('hns_stories').select('state,sensitivity');
