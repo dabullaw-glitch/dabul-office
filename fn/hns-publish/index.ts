@@ -32,6 +32,7 @@
 //   A story whose only basis is another outlet's report (basis 'media_exclusive', set by hns-write) carries one closing credit
 //   line; since 28.10.2026 it publishes automatically when it is not sensitive (Yakir: only real editorial questions reach him).
 // Published text never contains a long or medium dash (replaced with a comma or a hyphen).
+// 28.10.2026: never published automatically (or sent for approval) when the newest source item is 7+ days older than the story.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -115,6 +116,13 @@ async function askRewrite(st: Any) {
   return await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/hns-write`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': S.CRON_SECRET },
     body: JSON.stringify({ action: 'rewrite', ids: [st.id] }), signal: AbortSignal.timeout(120000) }).then((x) => x.json()).catch((e) => ({ ok: false, error: String(e) }));
 }
+async function staleSource(st: Any) {
+  const ids = (st.item_ids || []).map(Number).filter(Boolean);
+  if (!ids.length) return false;
+  const { data } = await sb.from('hns_items').select('published_at').in('id', ids);
+  const newest = Math.max(...(data || []).map((x: Any) => Date.parse(x.published_at || '') || 0));
+  return newest > 0 && Date.parse(st.created_at) - newest > 7 * 864e5;
+}
 const isWarning = (st: Any) => /אזהרה|אזהרת/.test(st.title || '') || (Array.isArray(st.sources) && st.sources.length > 0 && st.sources.every((s: Any) => s.id === 'ims_warn'));
 
 async function log(action: string, story_id: number | null, detail: Any) { await sb.from('hns_publish_log').insert({ action, story_id, detail }); }
@@ -171,6 +179,9 @@ async function tick(dry: boolean) {
     }
     // 28.10.2026 (Yakir): a normal report based on one outlet (media_exclusive, with its closing credit line) publishes too;
     // only a sensitive story or a real editorial question (needs_check) waits for Yakir
+    // a story whose newest source item is more than 7 days older than the story itself is old news shown as new (story 88): never
+    // published or sent from here. A backlog story written with its real date (created_at = event date) is not caught by this.
+    if (age <= FRESH_H && !(st.state !== 'draft' && st.tg_sent_at) && await staleSource(st)) { const why = 'מקור ישן מ-7 ימים, לא פורסם'; out.skipped.push({ id: st.id, why }); if (!dry) await note(st, why); continue; }
     if (st.state === 'draft' && st.sensitivity === 'normal') {
       const why = !local ? 'לא מקומי, לא פורסם אוטומטית' : isWarning(st) && age > WARN_H ? 'אזהרה שפג תוקפה, לא פורסמה' : age > FRESH_H ? 'ישן מדי לפרסום אוטומטי' : '';
       if (why) { out.skipped.push({ id: st.id, why }); if (!dry) await note(st, why); continue; }

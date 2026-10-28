@@ -10,7 +10,7 @@
 //   warnings, police) about Netanya and the nearby Sharon, as they arrived, newest first. A flash ages out: Home Front Command after
 //   6 hours, the others after 12 hours. Sensitive items (death, minors...) are never shown as a flash; they go through Yakir.
 //   And "calendar": the coming events from official listings (table hns_cal, e.g. the Netanya Culture Hall), up to 45 days ahead.
-//   ?only=flashes returns just the flashes (small and cached 30 seconds), for the live ticker in the browser.
+//   ?only=flashes returns just the flashes (small and cached 15 seconds), for the live ticker in the browser.
 // 28.10.2026 (IndexNow): "updatedAt" is set only for a story updated with new facts (pub_note "עודכן..."), so the site shows the
 //   update time and the sitemap lastmod changes; a wording fix ("תוקן") does not count as an update.
 // 28.10.2026 (live updates): "updates" [{at, text}] oldest first, timestamped new facts on a developing story, and "live" true while
@@ -19,6 +19,7 @@
 //   [text](url) links) that the site renders.
 // 28.10.2026 (quality): "extras" per story (fields other functions add through hns-publish revise, e.g. related links, service
 //   boxes) and a top-level "merged" list [{id, section, into, intoSection}]: stories merged into another one; the site 301s them.
+// 28.10.2026 (enrichment): contextIds, serviceBox, format and formatData per story (written by the enrichment agent).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -26,6 +27,8 @@ type Any = any;
 const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
 const H = { 'content-type': 'application/json; charset=utf-8', 'access-control-allow-origin': '*', 'cache-control': 'public, max-age=60' };
 const clean = (s: unknown) => String(s ?? '').replace(/\s*—\s*/g, ', ').replace(/\s*–\s*/g, ' - ').replace(/ {2,}/g, ' ').trim();
+// json fields (service box, format data) with long and medium dashes replaced like every other text
+const cleanJson = (v: unknown) => (v && typeof v === 'object' ? JSON.parse(JSON.stringify(v).replace(/\s*\u2014\s*/g, ', ').replace(/\s*\u2013\s*/g, ' - ')) : null);
 const arr = (a: unknown) => (Array.isArray(a) ? a : []).map(clean).filter(Boolean);
 const faq = (a: unknown) => (Array.isArray(a) ? a : []).map((x: Any) => Array.isArray(x) ? [clean(x[0]), clean(x[1])] : [clean(x?.q ?? x?.question), clean(x?.a ?? x?.answer)]).filter((x) => x[0] && x[1]);
 
@@ -54,10 +57,10 @@ async function calendar() {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: H });
   const url = new URL(req.url);
-  if (url.searchParams.get('only') === 'flashes') return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), flashes: await flashes() }), { headers: { ...H, 'cache-control': 'public, max-age=30' } });
+  if (url.searchParams.get('only') === 'flashes') return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), flashes: await flashes() }), { headers: { ...H, 'cache-control': 'public, max-age=15' } });
   const limit = Math.min(1000, Math.max(1, Number(url.searchParams.get('limit')) || 300));
   const { data, error } = await sb.from('hns_stories')
-    .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure,pub_note,updates,extras')
+    .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure,pub_note,updates,extras,context_ids,service_box,format,format_data')
     .eq('state', 'published').not('published_at', 'is', null)
     .order('published_at', { ascending: false }).limit(limit);
   if (error) return new Response(JSON.stringify({ ok: false, error: 'db' }), { status: 500, headers: H });
@@ -82,6 +85,7 @@ Deno.serve(async (req) => {
       updates: (Array.isArray(s.updates) ? s.updates : []).map((u: Any) => ({ at: u.at, text: clean(u.text) })).filter((u: Any) => u.at && u.text),
       live: (Array.isArray(s.updates) ? s.updates : []).some((u: Any) => Date.now() - Date.parse(u.at) < 6 * 3600e3),
       extras: s.extras && typeof s.extras === 'object' ? s.extras : {},
+      contextIds: (s.context_ids || []).map(Number), serviceBox: cleanJson(s.service_box), format: s.format || null, formatData: cleanJson(s.format_data),
     };
   });
   // stories merged into another one: the site sends their old URL to the main story (301)

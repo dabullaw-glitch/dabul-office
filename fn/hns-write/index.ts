@@ -49,7 +49,15 @@
 //   EDITOR: a second call checks every written story against a checklist; a failure is written once more with the editor's notes,
 //   failing again keeps the story quietly as a draft ("עורך: נפסל", hns-publish skips it) until a new source arrives. The verdict is
 //   stored in hns_stories.qa. POST {action:'restyle', ids}: published stories are written again under the style book (same URL and
-//   date) through hns-publish 'revise'. Live updates may also refresh the headline and subtitle.
+//   date) through hns-publish 'revise' ({dry:true} returns the proposed text only; a sensitive story needs dry first, then
+//   sensitive_ok:true). Live updates may also refresh the headline and subtitle.
+//   Editor calibration: only hard faults (date, invented fact, headline, duplicate, names) fail a story, style notes never do, and the
+//   editor never asks to name an outlet inside the text. A restyle that still fails replaces the published text only when the editor
+//   scores it at least 10 points above the current one. The daily cap counts real API calls (table hns_ai_usage).
+//   Answers may run to 4096 tokens (a full story in Hebrew with background was cut at 2500). Data stories (notes 'hns-data') are never
+//   matched, updated or restyled: their numbers come from official datasets and stay exact.
+//   Recurring formats (week_roundup, weekend_guide) are never matched either, and an item dated more than 7 days ago is never written
+//   by the regular run (story 88 was an April video seen again).
 // 28.10.2026 (site redesign): three more sections, police, transport and health; flash stays for short urgent items. A section
 //   key the site does not know is replaced by the item's own topic.
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -72,11 +80,15 @@ async function config() {
 }
 const dailyMax = () => Number(CFG.boost ? CFG.boost_max_per_day : CFG.max_per_day) || MAX_PER_DAY;
 const modelFor = (sensitive: boolean, nItems: number) => !CFG.boost ? (CFG.model || MODEL) : (!sensitive && nItems <= 2 ? (CFG.boost_model || MODEL) : (CFG.boost_complex_model || MODEL));
-// AI calls used today (Israel day): new stories with a model, plus tip stories that were corroborated and written today
+// AI calls used today (Israel day). Since 28.10.2026 every Anthropic call (writer, copy editor, rewrite, live update) is counted in
+// the table hns_ai_usage, so the daily cap (hns_config 'ai' max_per_day) is a cap on real calls, not on stories. The older count
+// (stories written today) is kept as a floor for the day the counter started.
+let CALLS = 0; // calls made by this invocation
 async function usedToday(dayStart: string) {
+  CALLS = 0;
+  const { data: u } = await sb.from('hns_ai_usage').select('calls').eq('day', ilDay(new Date())).maybeSingle();
   const { count: a } = await sb.from('hns_stories').select('id', { count: 'exact', head: true }).not('model', 'is', null).gte('created_at', dayStart);
-  const { count: b } = await sb.from('hns_stories').select('id', { count: 'exact', head: true }).not('model', 'is', null).lt('created_at', dayStart).gte('updated_at', dayStart).like('notes', '%אומת%');
-  return (a || 0) + (b || 0);
+  return Math.max(Number(u?.calls || 0), a || 0);
 }
 
 const norm = (s: string) => s.replace(/[״“”]/g, '"').replace(/[׳‘’]/g, "'").replace(/[ְ-ׇ]/g, '');
@@ -151,7 +163,10 @@ const EDITOR = `אתה עורך המשנה בדסק של "חדשות נתניה 
 10. אין שמות של חשודים, נפגעים, הרוגים או קטינים.
 11. אין עובדה שלא מופיעה במקורות.
 12. קרדיט לכלי תקשורת, אם יש, הוא שורה נפרדת "קרדיט: ..." בסוף, ולא בכותרת.
-החזר JSON בלבד: {"pass":true,"score":0,"notes":[""]}. score בין 0 ל-100. pass=true רק אם אין אף בעיה חמורה (סעיפים 1, 4, 7, 10, 11) והציון לפחות 75. notes: הערות קצרות ומעשיות לתיקון, בעברית.`;
+חשוב: אנחנו אתר חדשות עצמאי. עובדות שהגיעו מכלי תקשורת נכתבות כדיווח שלנו. אסור לדרוש "לפי הדיווח ב..." או שם של כלי תקשורת בתוך הטקסט. אם צריך קרדיט, הוא רק שורת "קרדיט:" בסוף.
+בעיה חמורה היא רק: תאריך או יום חסרים או שגויים, עובדה שלא מופיעה במקורות, כותרת שלא תואמת את הידיעה, כפילות עם ידיעה שפרסמנו, שם של חשוד, נפגע או קטין. הצעות ניסוח ושיפורי סגנון הן הערות קלות ואינן פוסלות.
+ציון: מתחילים מ-100, מורידים 15 עד 30 על כל בעיה חמורה ו-2 עד 5 על כל הערה קלה.
+החזר JSON בלבד: {"pass":true,"score":0,"hard":[""],"notes":[""]}. hard: הבעיות החמורות בלבד (ריק אם אין). pass=true רק אם hard ריק והציון לפחות 75. notes: כל ההערות, קצרות ומעשיות לתיקון, בעברית, החמורות קודם.`;
 
 // media outlet names: the one list in the table hns_outlets (same check as hns-publish)
 let OUTLET_RE: RegExp | null = null;
@@ -185,9 +200,12 @@ function voiceProblem(o: Any) {
 }
 const MEDIA_ONLY = 'מבוסס רק על פרסום בכלי תקשורת אחר';
 const KIND = (s: Any) => s.role === 'tip' ? 'רמז לא רשמי' : s.trust === 'official' ? 'גוף רשמי' : 'כלי תקשורת';
+// an item found through Google News names its real outlet (hns_items.outlet); a government or municipal site is an official source
+const OFFICIAL_HOST = /\.gov\.il|\.muni\.il|mda\.org\.il|laniado\.org\.il/i;
+const srcEntry = (x: Any, src: Any) => ({ id: x.source_id, name: x.outlet || src[x.source_id].name_he, url: x.url, trust: OFFICIAL_HOST.test(String(x.outlet_url || '')) ? 'official' : src[x.source_id].trust });
 // Israel wall-clock time with the Hebrew weekday, so the writer can say "אמש (שלישי, 27.10) בסביבות 22:30"
 const ilWhen = (iso: string) => { try { return new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(iso)); } catch { return String(iso || ''); } };
-const promptFor = (items: Any[], src: Any, places: string[], archive = '') => `היום: ${ilWhen(new Date().toISOString())} (שעון ישראל)\n\nהמקורות (מהישן לחדש):\n\n` + items.map((x, i) => `מקור ${i + 1}: ${src[x.source_id].name_he} (${KIND(src[x.source_id])})\nזמן הפרסום: ${ilWhen(x.published_at || x.fetched_at)}\nכותרת: ${x.title}\nתוכן: ${(x.body || '').slice(0, 3000)}`).join('\n\n') + `\n\nמקומות שזוהו: ${places.join(', ') || 'לא זוהה'}`
+const promptFor = (items: Any[], src: Any, places: string[], archive = '') => `היום: ${ilWhen(new Date().toISOString())} (שעון ישראל)\n\nהמקורות (מהישן לחדש):\n\n` + items.map((x, i) => `מקור ${i + 1}: ${x.outlet || src[x.source_id].name_he} (${OFFICIAL_HOST.test(String(x.outlet_url || '')) ? 'גוף רשמי' : KIND(src[x.source_id])})\nזמן הפרסום: ${ilWhen(x.published_at || x.fetched_at)}\nכותרת: ${x.title}\nתוכן: ${(x.body || '').slice(0, 3000)}`).join('\n\n') + `\n\nמקומות שזוהו: ${places.join(', ') || 'לא זוהה'}`
   + (archive ? `\n\nידיעות קודמות שלנו (לרקע בלבד, לא לחזור עליהן ולא להעתיק):\n${archive}` : '');
 // ---------- full sources ----------
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
@@ -233,10 +251,11 @@ async function claude(user: string, model = MODEL, system = SYSTEM) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: Object.assign({ 'x-api-key': S.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' } as Record<string, string>, S.ANTHROPIC_WORKSPACE_ID ? { 'anthropic-workspace-id': S.ANTHROPIC_WORKSPACE_ID } : {}),
-    body: JSON.stringify({ model, max_tokens: 2500, system, messages: [{ role: 'user', content: user }] }),
+    body: JSON.stringify({ model, max_tokens: 4096, system, messages: [{ role: 'user', content: user }] }),
     signal: AbortSignal.timeout(90000),
   });
   const j = await r.json();
+  if (r.ok) { CALLS++; await sb.rpc('hns_ai_bump', { p_day: ilDay(new Date()), p_n: 1 }); }
   if (!r.ok) throw new Error(`anthropic ${r.status}: ${JSON.stringify(j).slice(0, 200)}`);
   const text = (j.content || []).filter((c: Any) => c.type === 'text').map((c: Any) => c.text).join('');
   const m = text.replace(/```(?:json)?/g, '').match(/\{[\s\S]*\}/);
@@ -264,16 +283,15 @@ async function rewrite(ids: number[]) {
   const src = Object.fromEntries((srcs || []).map((s: Any) => [s.id, s]));
   const dayStart = new Date(Date.parse(ilDay(new Date()) + 'T00:00:00+03:00')).toISOString();
   await config();
-  let budget = dailyMax() + 10 - (await usedToday(dayStart)); // a small extra allowance for rewrites
+  const budget = dailyMax() + 10 - (await usedToday(dayStart)); // a small extra allowance for rewrites
   const res: Any[] = [];
   const { data: rows } = await sb.from('hns_stories').select('*').in('id', ids).in('state', ['draft', 'needs_check']);
   for (const st of rows || []) {
     if (/נכתב מחדש/.test(st.notes || '')) { res.push({ id: st.id, skipped: 'already rewritten' }); continue; }
-    if (budget <= 0) { res.push({ id: st.id, skipped: 'daily budget' }); continue; }
-    const { data: items } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at').in('id', st.item_ids || []).order('id');
+    if (budget - CALLS < 6) { res.push({ id: st.id, skipped: 'daily budget' }); continue; }
+    const { data: items } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,outlet,outlet_url').in('id', st.item_ids || []).order('id');
     const its = await enrich((items || []).filter((x: Any) => src[x.source_id]));
     if (!its.length) { res.push({ id: st.id, skipped: 'no items' }); continue; }
-    budget--;
     try {
       const old = { title: st.title, dek: st.dek, body: st.body, keyPoints: st.key_points };
       const { out, usage, problem } = await compose(promptFor(its, src, st.places || []), voiceProblem(old) || 'נכתבה בלי קול עצמאי');
@@ -321,12 +339,15 @@ async function editor(out: Any, sourcesText: string, model: string) {
   const story = JSON.stringify({ title: out.title, dek: out.dek, kicker: out.kicker, body: out.body, keyPoints: out.keyPoints });
   try {
     const { out: v, usage } = await claude(`הידיעה לבדיקה:\n${story}\n\n${sourcesText}\n\nכותרות שפרסמנו ב-72 השעות האחרונות:\n${await recentTitles() || 'אין'}`, model, EDITOR);
-    const notes = [...local, ...(Array.isArray(v.notes) ? v.notes.map((n: unknown) => String(n)).filter(Boolean) : [])].slice(0, 8);
+    const list = (a: unknown) => (Array.isArray(a) ? a : []).map((n: unknown) => String(n ?? '').trim()).filter(Boolean);
+    const hard = [...local, ...list(v.hard)];
+    const notes = [...new Set([...hard, ...list(v.notes)])].slice(0, 8);
     const score = Math.max(0, Math.min(100, Number(v.score) || 0));
-    return { pass: !!v.pass && score >= 75 && !local.length, score, notes, usage };
+    // only a hard fault (date, invented fact, headline, duplicate, names) or a low score fails; style notes alone never do
+    return { pass: !hard.length && score >= 75, score, hard, notes, usage };
   } catch (e) {
     // the editor could not answer: the story is not blocked by a technical failure, only the code checks count
-    return { pass: !local.length, score: null, notes: [...local, `העורך לא ענה: ${String((e as Error).message || e).slice(0, 80)}`], usage: null };
+    return { pass: !local.length, score: null, hard: local, notes: [...local, `העורך לא ענה: ${String((e as Error).message || e).slice(0, 80)}`], usage: null };
   }
 }
 // write, check, and when the editor fails it, write once more with the editor's notes; failing twice means hold (never to Yakir)
@@ -339,10 +360,11 @@ async function writeChecked(user: string, model: string) {
     const qa2 = await editor(w2.out, user, model);
     w = { ...w2, usage: { first: w.usage, second: w2.usage, editor: [qa.usage, qa2.usage] } as Any }; qa = qa2; rounds = 2;
   } else w = { ...w, usage: { write: w.usage, editor: qa.usage } as Any };
-  const verdict = { pass: qa.pass, score: qa.score, notes: qa.notes, rounds, at: new Date().toISOString() };
+  const verdict = { pass: qa.pass, score: qa.score, hard: qa.hard, notes: qa.notes, rounds, at: new Date().toISOString() };
   return { ...w, qa: verdict, held: !qa.pass };
 }
 const EDIT_HOLD = 'עורך: נפסל';
+let SENSITIVE_OK = false; // restyle: a sensitive story is rewritten only when the call says so (after a dry run)
 
 // the state of a written story: Yakir only for a real editorial question (sensitive, or the writer's needsCheck)
 const stateOf = (sensitive: boolean, out: Any) => (sensitive || out.needsCheck ? 'needs_check' : 'draft');
@@ -385,22 +407,40 @@ async function updatePublished(st: Any, its: Any[], src: Any, model: string) {
 // restyle (28.10.2026, Yakir: quality first): a published story is written again under the style book from all its sources and our
 // archive, keeps every fact it already has, passes the copy editor, and replaces the text through hns-publish 'revise' (same URL,
 // same date). A story with no source items (automatic templates, sponsored, hand-written without items) is left as it is.
-async function restyle(ids: number[]) {
+async function restyle(ids: number[], dry = false) {
   await outlets(); await config();
   const { data: srcs } = await sb.from('hns_sources').select('id,name_he,role,trust,local_only');
   const src = Object.fromEntries((srcs || []).map((s: Any) => [s.id, s]));
   const { data: rows } = await sb.from('hns_stories').select('*').in('id', ids).eq('state', 'published');
+  const dayStart = new Date(Date.parse(ilDay(new Date()) + 'T00:00:00+03:00')).toISOString();
+  const budget = dailyMax() - (await usedToday(dayStart));
   const res: Any[] = [];
   for (const st of rows || []) {
-    if (st.kind === 'sponsored' || /^auto:/.test(st.notes || '')) { res.push({ id: st.id, skipped: 'template or sponsored' }); continue; }
-    const { data: items } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places').in('id', (st.item_ids || []).map(Number));
+    // automatic templates, sponsored content and data stories (hns-data: exact numbers) are never rewritten
+    if (st.kind === 'sponsored' || /^(auto:|hns-data)/.test(st.notes || '')) { res.push({ id: st.id, skipped: 'template, data or sponsored' }); continue; }
+    // a sensitive story keeps the wording Yakir approved: only a dry run (proposed text) unless sensitive_ok is passed
+    if (st.sensitivity === 'sensitive' && !dry && !SENSITIVE_OK) { res.push({ id: st.id, skipped: 'sensitive: run with dry first' }); continue; }
+    const { data: items } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,outlet,outlet_url').in('id', (st.item_ids || []).map(Number));
     const its = await enrich((items || []).filter((x: Any) => src[x.source_id]).sort((a: Any, b: Any) => Date.parse(a.published_at || a.fetched_at) - Date.parse(b.published_at || b.fetched_at)));
     if (!its.length) { res.push({ id: st.id, skipped: 'no source items' }); continue; }
     const current = [`כותרת: ${st.title}`, `כותרת משנה: ${st.dek || ''}`, ...(Array.isArray(st.body) ? st.body : []), ...(Array.isArray(st.updates) ? st.updates.map((u: Any) => `עדכון (${ilWhen(u.at)}): ${u.text}`) : [])].join('\n');
     const user = `${promptFor(its, src, st.places || [], await archiveFor(its, st.places || [], st.id))}\n\nהידיעה כפי שפורסמה אצלנו בתאריך ${ilWhen(st.created_at)} (לשמור על כל העובדות הנכונות שבה, להשלים מה שחסר מהמקורות, ולכתוב אותה מחדש לפי ספר הסגנון):\n${current}`;
     try {
-      const { out, qa, held, problem } = await writeChecked(user, modelFor(st.sensitivity === 'sensitive', its.length));
-      if (held || problem) { res.push({ id: st.id, kept: true, qa: qa.score, notes: qa.notes, problem: problem || null }); continue; }
+      if (budget - CALLS < 6) { res.push({ id: st.id, skipped: 'daily budget' }); continue; }
+      const model = modelFor(st.sensitivity === 'sensitive', its.length);
+      // the editor scores the published text at the same time (one call), so a rewrite is never worse than what is on the site
+      const oldP = editor({ title: st.title, dek: st.dek, kicker: st.kicker, body: st.body, keyPoints: st.key_points }, user, model);
+      const { out, qa, held, problem } = await writeChecked(user, model);
+      const old = await oldP;
+      if (problem) { res.push({ id: st.id, kept: true, qa: qa.score, notes: qa.notes, problem }); continue; }
+      // the new text failed the editor: it still replaces the published one when the editor scores it clearly better
+      Object.assign(qa, { previous: { score: old.score, hard: old.hard } });
+      if (held) {
+        const better = qa.score != null && old.score != null && qa.score >= old.score + 10 && qa.hard.length <= old.hard.length;
+        if (!better) { res.push({ id: st.id, kept: true, qa: qa.score, old: old.score, hard: qa.hard, notes: qa.notes }); continue; }
+      }
+      // dry: the proposed text only (used for sensitive stories, whose published wording Yakir approved)
+      if (dry) { res.push({ id: st.id, dry: true, qa, proposed: { title: clean(out.title), dek: clean(out.dek), kicker: kickerOf(out), body: (out.body || []).map(clean), keyPoints: (out.keyPoints || []).map(clean) } }); continue; }
       const r = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/hns-publish`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': S.CRON_SECRET },
         body: JSON.stringify({ action: 'revise', id: st.id, title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
           kicker: kickerOf(out) || '', qa, note: 'תוקן: עריכה לפי ספר הסגנון' }), signal: AbortSignal.timeout(60000) }).then((x) => x.json()).catch((e) => ({ ok: false, error: String(e) }));
@@ -415,16 +455,22 @@ async function tick(only: number[] = [], at = '') {
   const since = new Date(Date.now() - 12 * 3600e3).toISOString();
   const { data: srcs } = await sb.from('hns_sources').select('id,name_he,role,trust,local_only');
   const src = Object.fromEntries((srcs || []).map((s: Any) => [s.id, s]));
-  const cols = 'id,source_id,title,body,url,published_at,fetched_at,places,topic,sensitivity,urgent';
+  const cols = 'id,source_id,title,body,url,published_at,fetched_at,places,topic,sensitivity,urgent,outlet,outlet_url';
   const { data: items } = only.length
     ? await sb.from('hns_items').select(cols).in('id', only).eq('is_local', true).is('cluster_id', null).order('id')
     : await sb.from('hns_items').select(cols).eq('is_local', true).eq('backfill', false).is('cluster_id', null).gte('fetched_at', since).order('id').limit(200);
-  const fresh = (items || []).filter((x: Any) => src[x.source_id] && src[x.source_id].role !== 'competitor');
+  // an item whose own date is more than 7 days old is not news (e.g. an April video seen again in a channel feed): written only on
+  // purpose through 'items' with its real date
+  const stale = (x: Any) => !only.length && x.published_at && Date.now() - Date.parse(x.published_at) > 7 * 864e5;
+  const fresh = (items || []).filter((x: Any) => src[x.source_id] && src[x.source_id].role !== 'competitor' && !stale(x));
   if (!fresh.length) return { fresh: 0 };
   // stories of the last 72 hours (not closed), with the words of their items and of their own text: one story per event.
   // Sponsored stories (kind 'sponsored') are never matched, merged or updated with news.
-  const { data: recent } = await sb.from('hns_stories').select('id,item_ids,state,created_at,updated_at,notes,pub_note,sensitivity,places,section,title,dek,body,key_points,updates')
+  const { data: recentAll } = await sb.from('hns_stories').select('id,item_ids,state,created_at,updated_at,notes,pub_note,sensitivity,places,section,title,dek,body,key_points,updates,format')
     .gte('created_at', sinceDays(3)).in('state', ['draft', 'needs_check', 'approved', 'published']).or('kind.is.null,kind.neq.sponsored').order('id', { ascending: false }).limit(300);
+  // data stories (hns-data, exact numbers from official datasets) are never matched or updated with news items
+  // and recurring formats (week roundup, weekend guide) are not single events either
+  const recent = (recentAll || []).filter((s: Any) => !/^hns-data/.test(s.notes || '') && !['week_roundup', 'weekend_guide'].includes(s.format));
   const rIds = [...new Set((recent || []).flatMap((s: Any) => s.item_ids || []))];
   const { data: rItems } = rIds.length ? await sb.from('hns_items').select('id,title,body,cluster_id').in('id', rIds) : { data: [] };
   // strict match: the words of the story's items and body; loose match (near): only its title, subtitle and key points
@@ -443,7 +489,7 @@ async function tick(only: number[] = [], at = '') {
   }
   const dayStart = new Date(Date.parse(ilDay(new Date()) + 'T00:00:00+03:00')).toISOString();
   await config();
-  let budget = dailyMax() - (await usedToday(dayStart));
+  const budget = dailyMax() - (await usedToday(dayStart));
   const res: Any[] = [];
   if (!OUTLET_RE) await outlets();
   const t0 = Date.now();
@@ -462,8 +508,7 @@ async function tick(only: number[] = [], at = '') {
       if (st?.state === 'published') {
         await sb.from('hns_stories').update(touch).eq('id', g.story);
         const recentlyUpdated = st.updated_at && Date.now() - Date.parse(st.updated_at) < 10 * 60e3 && /עודכן/.test(st.pub_note || '');
-        if (!fromSource || budget <= 0 || recentlyUpdated) { res.push({ story: g.story, attached: ids.length }); continue; }
-        budget--;
+        if (!fromSource || budget - CALLS < 6 || recentlyUpdated) { res.push({ story: g.story, attached: ids.length }); continue; }
         const its = await enrich(g.items.filter((x) => src[x.source_id].role === 'source'));
         try { res.push({ story: g.story, update: await updatePublished(st, its, src, modelFor(st.sensitivity === 'sensitive', its.length)) }); }
         catch (e) { res.push({ story: g.story, error: String((e as Error).message || e) }); }
@@ -471,9 +516,8 @@ async function tick(only: number[] = [], at = '') {
       }
       if (!waiting || !fromSource) { await sb.from('hns_stories').update(touch).eq('id', g.story); res.push({ story: g.story, attached: ids.length }); continue; }
       // a tip, or a story on hold, confirmed by one of our sources: write it now from all its items
-      if (budget <= 0) { await sb.from('hns_stories').update({ ...touch, notes: `${/רמז/.test(st.notes || '') ? 'רמז בלבד' : HOLD}, אומת במקור נוסף, מחכה לתקציב היומי` }).eq('id', g.story); res.push({ story: g.story, skipped: 'daily budget' }); continue; }
-      budget--;
-      const { data: all } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,topic,sensitivity').in('id', allIds).order('id');
+      if (budget - CALLS < 6) { await sb.from('hns_stories').update({ ...touch, notes: `${/רמז/.test(st.notes || '') ? 'רמז בלבד' : HOLD}, אומת במקור נוסף, מחכה לתקציב היומי` }).eq('id', g.story); res.push({ story: g.story, skipped: 'daily budget' }); continue; }
+      const { data: all } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,topic,sensitivity,outlet,outlet_url').in('id', allIds).order('id');
       const its = await enrich((all || []).filter((x: Any) => src[x.source_id]));
       const sens = st.sensitivity === 'sensitive' || its.some((x: Any) => x.sensitivity === 'sensitive');
       const places = [...new Set([...(st.places || []), ...its.flatMap((x: Any) => x.places || [])])];
@@ -483,7 +527,7 @@ async function tick(only: number[] = [], at = '') {
         const basis = ['official', 'public', 'media_exclusive'].includes(out.basis) ? out.basis : null;
         const mediaOnly = basis === 'media_exclusive' && !its.some((x: Any) => src[x.source_id].trust === 'official');
         const state = held ? 'draft' : stateOf(sens, out);
-        const sources = [...new Map(its.filter((x: Any) => src[x.source_id].role === 'source').map((x: Any) => [x.source_id, { id: x.source_id, name: src[x.source_id].name_he, url: x.url, trust: src[x.source_id].trust }])).values()];
+        const sources = [...new Map(its.filter((x: Any) => src[x.source_id].role === 'source').map((x: Any) => [`${x.source_id}|${x.outlet || ''}`, srcEntry(x, src)])).values()];
         await sb.from('hns_stories').update({ section: sectionOf(out, st.section), title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
           places: out.places?.length ? out.places : places, sources, sensitivity: sens ? 'sensitive' : 'normal', state, notes: held ? `${EDIT_HOLD}: ${qa.notes.join('; ')}`.slice(0, 400) : notesOf(['אומת: מקור נוסף'], sens, mediaOnly, out, retried, problem), basis, model, usage, qa,
           kicker: kickerOf(out), closure: closureOf(out), item_ids: allIds, tg_sent_at: null, updated_at: new Date().toISOString() }).eq('id', g.story).in('state', ['draft', 'needs_check']);
@@ -498,7 +542,7 @@ async function tick(only: number[] = [], at = '') {
     const sensitive = g.items.some((x) => x.sensitivity === 'sensitive');
     const official = g.items.some((x) => src[x.source_id].role === 'source');
     const places = [...new Set(g.items.flatMap((x) => x.places || []))];
-    const sources = [...new Map(g.items.map((x) => [x.source_id, { id: x.source_id, name: src[x.source_id].name_he, url: x.url, trust: src[x.source_id].trust }])).values()];
+    const sources = [...new Map(g.items.map((x) => [`${x.source_id}|${x.outlet || ''}`, srcEntry(x, src)])).values()];
     const firstAt = g.items.map((x) => x.published_at || x.fetched_at).filter(Boolean).sort()[0];
     const dated = at ? { created_at: at } : only.length && firstAt ? { created_at: firstAt } : {};
     const base = { item_ids: ids, places, sources, sensitivity: sensitive ? 'sensitive' : 'normal', section: g.items[0].topic, ...dated };
@@ -514,8 +558,7 @@ async function tick(only: number[] = [], at = '') {
       return st?.id;
     };
     if (notLocal(g.items, places, src)) { res.push({ story: await close('לא מקומי: שם היישוב הוא מילה רגילה בטקסט', null), notLocal: true }); continue; }
-    if (budget <= 0) { res.push({ skipped: 'daily budget', ids }); continue; } // left for tomorrow's budget or a manual run
-    budget--;
+    if (budget - CALLS < 6) { res.push({ skipped: 'daily budget', ids }); continue; } // left for tomorrow's budget or a manual run
     await enrich(g.items);
     const model = modelFor(sensitive, g.items.length);
     try {
@@ -550,13 +593,13 @@ async function redo(ids: number[], at = '', drop: number[] = []) {
   const { data: srcs } = await sb.from('hns_sources').select('id,name_he,role,trust,local_only');
   const src = Object.fromEntries((srcs || []).map((s: Any) => [s.id, s]));
   const { data: rows } = await sb.from('hns_stories').select('*').in('id', ids).in('state', ['draft', 'needs_check']);
-  const { data: pool } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,sensitivity').eq('is_local', true).gte('fetched_at', sinceDays(7)).limit(3000);
+  const { data: pool } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,sensitivity,outlet,outlet_url').eq('is_local', true).gte('fetched_at', sinceDays(7)).limit(3000);
   const res: Any[] = [];
   for (const st of rows || []) {
     // 'drop': items that were attached by mistake (another event); they leave the story and its sources
     const keepIds = (st.item_ids || []).map(Number).filter((i: number) => !drop.includes(i));
     if (drop.length) { st.item_ids = keepIds; await sb.from('hns_items').update({ cluster_id: null }).in('id', drop).eq('cluster_id', st.id); }
-    const { data: own } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,sensitivity').in('id', keepIds);
+    const { data: own } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,sensitivity,outlet,outlet_url').in('id', keepIds);
     const tk = toks(`${storyText(st)} ${(own || []).map((x: Any) => `${x.title} ${x.body || ''}`).join(' ')}`);
     // a related item must tell the same event: same words, a shared place, and within 3 days of the story's own items
     const ownPlaces = new Set([...(st.places || []), ...(own || []).flatMap((x: Any) => x.places || [])]);
@@ -572,7 +615,7 @@ async function redo(ids: number[], at = '', drop: number[] = []) {
       const basis = ['official', 'public', 'media_exclusive'].includes(out.basis) ? out.basis : st.basis;
       const mediaOnly = basis === 'media_exclusive' && !its.some((x: Any) => src[x.source_id].trust === 'official');
       const state = held ? 'draft' : stateOf(sens, out);
-      const sources = [...new Map(its.filter((x: Any) => src[x.source_id].role === 'source').map((x: Any) => [x.source_id, { id: x.source_id, name: src[x.source_id].name_he, url: x.url, trust: src[x.source_id].trust }])).values()];
+      const sources = [...new Map(its.filter((x: Any) => src[x.source_id].role === 'source').map((x: Any) => [`${x.source_id}|${x.outlet || ''}`, srcEntry(x, src)])).values()];
       const allIds = [...new Set([...keepIds, ...its.map((x: Any) => Number(x.id))])];
       await sb.from('hns_stories').update({ section: sectionOf(out, st.section), title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
         places: out.places?.length ? out.places : st.places, sources, state, basis, qa, notes: held ? `${EDIT_HOLD}: ${qa.notes.join('; ')}`.slice(0, 400) : notesOf(['נכתב מחדש מהמקורות המלאים'], sens, mediaOnly, out, retried, problem), usage: { previous: st.usage, redo: usage },
@@ -591,7 +634,8 @@ Deno.serve(async (req) => {
   const b: Any = await req.json().catch(() => ({}));
   ARCHIVE = null; // our archive is read fresh on every call
   try {
-    if (b.action === 'restyle') return J({ ok: true, ...(await restyle((b.ids || []).map(Number).filter(Boolean).slice(0, 2))) });
+    SENSITIVE_OK = !!b.sensitive_ok;
+    if (b.action === 'restyle') return J({ ok: true, ...(await restyle((b.ids || []).map(Number).filter(Boolean).slice(0, 2), !!b.dry)) });
     if (b.action === 'tick') return J({ ok: true, ...(await tick()) });
     if (b.action === 'items') return J({ ok: true, ...(await tick((b.ids || []).map(Number).filter(Boolean).slice(0, 10), String(b.at || ''))) });
     if (b.action === 'redo') return J({ ok: true, ...(await redo((b.ids || []).map(Number).filter(Boolean).slice(0, 5), String(b.at || ''), (b.drop || []).map(Number).filter(Boolean))) });
