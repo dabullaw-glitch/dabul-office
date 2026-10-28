@@ -1,9 +1,14 @@
 ---
 import Page from '../../components/Page.astro';
 import ReqForm from '../../components/ReqForm.astro';
+import { TG_URL, TG_USER } from '../../data/site';
 ---
 <Page title="מבזקים בטלגרם, בוואטסאפ ובהתראות | חדשות נתניה והשרון" h1="קבלו את המבזקים של נתניה" description="הצטרפו לערוצי חדשות נתניה והשרון: טלגרם, וואטסאפ, התראות בדפדפן וניוזלטר שבועי. חסימות, הפסקות מים ואזעקות, ברגע שזה קורה." path="/join/" intro="יודעים ראשונים, בלי ספאם." color="#0B5FCC" img="road" alternates={{ he: '/join/', ru: '/ru/join/', fr: '/fr/join/', en: '/en/join/' }}>
-  <h2 id="telegram">ערוץ הטלגרם</h2><p>כל מבזק וכל ידיעה, שורה אחת וקישור. הקישור לערוץ יופיע כאן עם ההשקה.</p>
+  <h2 id="telegram">ערוץ הטלגרם</h2>
+  {TG_URL
+    ? <div class="tgjoin"><img src="/img/brand/telegram.png" alt="" width="72" height="72" loading="lazy"><div><p style="margin:0 0 10px">כל מבזק וכל ידיעה מנתניה והשרון, שורה אחת וקישור לכתבה. אפשר להצטרף מהטלפון או מהמחשב, ולצאת בכל רגע.</p><a class="btn pri" href={TG_URL} target="_blank" rel="noopener" data-tg>להצטרפות לערוץ בטלגרם</a> <span class="note" dir="ltr">@{TG_USER}</span></div></div>
+    : <p>כל מבזק וכל ידיעה, שורה אחת וקישור. הקישור לערוץ יופיע כאן עם ההשקה.</p>}
+  <style>.tgjoin{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}.tgjoin img{border-radius:50%;flex:0 0 auto}.tgjoin>div{flex:1 1 260px;min-width:0}.tgjoin .btn{text-decoration:none}</style>
   <h2 id="whatsapp">ערוץ הוואטסאפ</h2><p>המבזקים החשובים בלבד. הקישור יופיע כאן עם ההשקה.</p>
   <h2 id="alerts">התראות בדפדפן</h2><p>מבזקים דחופים בלבד, עד שלושה ביום.</p>
   <h2 id="newsletter">ניוזלטר שבועי</h2><p>"מה קרה בנתניה השבוע", פעם בשבוע במייל. הניוזלטר עוד לא יצא לדרך: השאירו מייל, ונשלח אליכם כשיתחיל. הסרה בלחיצה.</p>

@@ -31,6 +31,14 @@ export const IMG: Record<string, { src: string; alt: string }> = {
 
 export const abs = (path: string) => SITE_URL + path;
 
+// Social channels (28.10.2026). The Telegram channel "חדשות נתניה והשרון" was created on 28.10.2026; it becomes public
+// with the address below. While TG_USER is empty the site links to /join/ and says the link is coming.
+// Set TG_USER (without @) once the channel is public, and every Telegram button on the site goes straight to it.
+export const TG_USER = '';
+export const TG_URL = TG_USER ? `https://t.me/${TG_USER}` : '';
+// Profiles that represent the site (used in schema.org sameAs). Facebook page id 61595887595391.
+export const SAME_AS = [TG_URL, 'https://www.facebook.com/profile.php?id=61595887595391'].filter(Boolean);
+
 // Supabase functions of the news engine (public endpoints). The business directory form posts to hns-biz.
 export const HNS_API = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1';
 // Cloudflare Turnstile on public forms: off until a site key for nws.co.il is set at build time (and NWS_TURNSTILE_SECRET in app_secrets).

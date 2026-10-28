@@ -2,7 +2,7 @@
 // Russian, French and English versions of the service pages (now, directory, about, send-news, join).
 import ReqForm from './ReqForm.astro';
 import Page from './Page.astro';
-import { type Lang, BRAND } from '../data/site';
+import { type Lang, BRAND, TG_URL, TG_USER } from '../data/site';
 import { CATEGORIES } from '../data/directory';
 import { shabbatTimes } from '../lib/shabbat';
 import { FACTS } from '../lib/content';
@@ -52,5 +52,5 @@ const about: any = {
   {kind === 'directory' && <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">{CATEGORIES.map((c) => <a class="pcard" href={`/directory/${c.slug}/`} hreflang="he" style={`--c:${c.color};border:1px solid #E3E7ED`}><span class="av">{c.name[lang][0]}</span><b>{c.name[lang]}</b><span class="note">{c.plural}</span></a>)}</div>}
   {kind === 'about' && <>{about.map((p: string) => <p>{p}</p>)}<p>Email: <span dir="ltr">{BRAND.email}</span></p></>}
   {kind === 'send-news' && <ReqForm type="tip" lang={lang} id="tipf" />}
-  {kind === 'join' && <><h2 id="telegram">Telegram</h2><p>{L.soon}</p><h2 id="whatsapp">WhatsApp</h2><p>{L.soon}</p><h2 id="alerts">Push</h2><p>{L.soon}</p></>}
+  {kind === 'join' && <><h2 id="telegram">Telegram</h2>{TG_URL ? <p><a class="btn pri" href={TG_URL} target="_blank" rel="noopener" data-tg>Telegram: <span dir="ltr">@{TG_USER}</span></a></p> : <p>{L.soon}</p>}<h2 id="whatsapp">WhatsApp</h2><p>{L.soon}</p><h2 id="alerts">Push</h2><p>{L.soon}</p></>}
 </Page>

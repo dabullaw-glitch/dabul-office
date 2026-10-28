@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Card from './Card.astro';
 import Crumbs from './Crumbs.astro';
-import { IMG, SITE_URL, LANG_PREFIX, LANGS, BRAND, type Lang } from '../data/site';
+import { IMG, SITE_URL, LANG_PREFIX, LANGS, BRAND, TG_URL, type Lang } from '../data/site';
 import { SECTION_BY_KEY } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
@@ -82,7 +82,7 @@ const share = encodeURIComponent(url); const shareT = encodeURIComponent(a.title
     <aside>
       <section class="sidebox" aria-labelledby="fl-h"><h2 id="fl-h"><i></i>{u.flash}</h2><ol>{flash.map((f) => <li><time datetime={f.published}>{fmtTime(f.published)}</time><a href={articleUrl(f, lang)}>{f.title}</a></li>)}</ol></section>
       {lang === 'he' && cats.length > 0 && <section class="box" style="border:1px solid #E3E7ED" aria-labelledby="ct-h"><h2 id="ct-h" style="font-size:17px;margin-bottom:10px">בעלי מקצוע בנושא</h2><div style="display:flex;flex-direction:column;gap:10px">{cats.map((c) => <a href={`/directory/${c.slug}/`} style="display:flex;align-items:center;gap:10px"><span class="av" style={`--c:${c.color};width:40px;height:40px;font-size:16px`}>{c.plural[0]}</span><b style="font-size:15px">{c.plural} בנתניה</b></a>)}</div></section>}
-      <a class="tgbox" href={`${pre}/join/`}><b style="font-family:var(--h);font-size:19px">{u.joinTitle}</b><span>{u.joinText}</span><b>{lang === 'he' ? 'להצטרפות ←' : '→'}</b></a>
+      <a class="tgbox" href={TG_URL || `${pre}/join/`} {...(TG_URL ? { target: '_blank', rel: 'noopener' } : {})} data-tg><b style="font-family:var(--h);font-size:19px">{u.joinTitle}</b><span>{u.joinText}</span><b>{lang === 'he' ? 'להצטרפות ←' : '→'}</b></a>
     </aside>
   </div>
 </Base>

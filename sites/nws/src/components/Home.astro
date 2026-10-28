@@ -4,7 +4,7 @@
 // then the blocks that existed: real estate, section columns, what's on, local pros, join, footer.
 import Base from '../layouts/Base.astro';
 import Card from './Card.astro';
-import { IMG, BRAND, SITE_URL, LANG_PREFIX, LANGS, type Lang } from '../data/site';
+import { IMG, BRAND, SITE_URL, LANG_PREFIX, LANGS, TG_URL, SAME_AS, type Lang } from '../data/site';
 import { SECTIONS, SECTION_BY_KEY } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
@@ -97,7 +97,7 @@ const alternates = Object.fromEntries(LANGS.map((l) => [l, LANG_PREFIX[l] + '/']
 const orgId = SITE_URL + '/#org';
 const jsonld = [
   { '@context': 'https://schema.org', '@type': 'NewsMediaOrganization', '@id': orgId, name: BRAND.he, alternateName: ['NWS', 'חדשות נתניה והשרון'], url: SITE_URL + '/', logo: { '@type': 'ImageObject', url: SITE_URL + '/logo.png', width: 512, height: 512 },
-    foundingDate: BRAND.foundingDate, areaServed: [{ '@type': 'City', name: 'נתניה' }, { '@type': 'Place', name: 'השרון' }], email: BRAND.email,
+    foundingDate: BRAND.foundingDate, areaServed: [{ '@type': 'City', name: 'נתניה' }, { '@type': 'Place', name: 'השרון' }], email: BRAND.email, ...(SAME_AS.length ? { sameAs: SAME_AS } : {}),
     publishingPrinciples: SITE_URL + '/editorial-policy/', correctionsPolicy: SITE_URL + '/corrections/', ethicsPolicy: SITE_URL + '/editorial-policy/', actionableFeedbackPolicy: SITE_URL + '/corrections/',
     masthead: SITE_URL + '/about/', diversityPolicy: SITE_URL + '/about/', noBylinesPolicy: SITE_URL + '/editorial-policy/' },
   { '@context': 'https://schema.org', '@type': 'WebSite', '@id': SITE_URL + '/#website', url: SITE_URL + '/', name: BRAND.he, inLanguage: ['he', 'ru', 'fr', 'en'], publisher: { '@id': orgId },
@@ -214,6 +214,6 @@ const jsonld = [
 
   <section class="wrap" aria-labelledby="join-h"><div class="join">
     <div style="flex:1 1 380px"><h2 id="join-h">{u.joinTitle}</h2><p>{u.joinText}</p></div>
-    <div class="btns"><a class="btn wh" href={`${pre}/join/`}>{he ? 'טלגרם' : 'Telegram'}</a><a class="btn wh" href={`${pre}/join/#whatsapp`}>{he ? 'וואטסאפ' : 'WhatsApp'}</a><a class="btn ghost" href={`${pre}/join/#alerts`}>{u.alerts}</a></div>
+    <div class="btns"><a class="btn wh" href={TG_URL || `${pre}/join/`} {...(TG_URL ? { target: '_blank', rel: 'noopener' } : {})} data-tg>{he ? 'טלגרם' : 'Telegram'}</a><a class="btn wh" href={`${pre}/join/#whatsapp`}>{he ? 'וואטסאפ' : 'WhatsApp'}</a><a class="btn ghost" href={`${pre}/join/#alerts`}>{u.alerts}</a></div>
   </div></section>
 </Base>

@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { SITE_URL, PREVIEW, LANGS, LANG_PREFIX, LANG_LOCALE, LANG_DIR, BRAND, type Lang } from '../data/site';
+import { SITE_URL, PREVIEW, LANGS, LANG_PREFIX, LANG_LOCALE, LANG_DIR, BRAND, TG_URL, type Lang } from '../data/site';
 import { SECTIONS } from '../data/sections';
 import { t } from '../i18n/ui';
 import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, EVENT, LIVE, hebrewDate } from '../lib/content';
@@ -109,7 +109,7 @@ window.nwsTrack=function(n,p){try{gtag('event',n,p||{})}catch(e){}};</script>
       <input id="q" name="q" type="search" placeholder={u.searchPh}>
     </form>
     <div class="btns">
-      <a class="btn pri pill" href={`${pre}/join/`}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4 2-15z"/></svg>{u.joinTelegram}</a>
+      <a class="btn pri pill" href={TG_URL || `${pre}/join/`} {...(TG_URL ? { target: '_blank', rel: 'noopener' } : {})} data-tg><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4 2-15z"/></svg>{u.joinTelegram}</a>
     </div>
     <div class="mtools">
       <a href="/search/" aria-label={u.search}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></a>
@@ -117,7 +117,7 @@ window.nwsTrack=function(n,p){try{gtag('event',n,p||{})}catch(e){}};</script>
         <summary aria-label={lang === 'he' ? 'תפריט' : 'Menu'}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
         <div class="mmp">
           <nav aria-label={u.sectionsH}>{SECTIONS.map((x) => <a href={sectionUrl(x.key, lang)}>{x.name[lang]}</a>)}<a href={`${pre}/now/`}>{u.now}</a><a href={`${pre}/directory/`}>{u.directory}</a></nav>
-          <div class="mmb"><a class="btn pri pill" href={`${pre}/join/`}>{u.joinTelegram}</a><a href={`${pre}/send-news/`}>{u.sendNews}</a><a href="/advertise/">{u.advertise}</a></div>
+          <div class="mmb"><a class="btn pri pill" href={TG_URL || `${pre}/join/`} {...(TG_URL ? { target: '_blank', rel: 'noopener' } : {})} data-tg>{u.joinTelegram}</a><a href={`${pre}/send-news/`}>{u.sendNews}</a><a href="/advertise/">{u.advertise}</a></div>
           <div class="langs">{LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l === 'he' ? 'עב' : l.toUpperCase()}</a>)}</div>
         </div>
       </details>
