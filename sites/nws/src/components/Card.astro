@@ -26,6 +26,7 @@ const by = a.kind === 'opinion' && a.author ? a.author : he ? 'מערכת NWS' :
   <a class="n-ph" href={href} tabindex="-1" aria-hidden="true" style={`aspect-ratio:${ratio}`}>
     <img src={p.src} srcset={p.srcset} sizes={p.srcset ? sizes : undefined} alt="" width={p.w} height={p.h} loading={eager ? 'eager' : 'lazy'} decoding="async">
     {flash && <span class="n-badge"><i></i>{he ? 'מבזק' : 'Breaking'}</span>}
+    {a.video && <span class="n-play" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#0D1321"/></svg></span>}
     <span class="n-cap">{label}</span>
   </a>
   <div class="k"><span class="n-k">{kickerOf(a, lang)}</span></div>

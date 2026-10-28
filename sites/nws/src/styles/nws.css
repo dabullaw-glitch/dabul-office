@@ -431,3 +431,4 @@ main:focus{outline:0}
  .n-dg .n-dc:nth-child(n+5):not(:last-child){display:none}
  .n-sg>div:first-child:empty{display:none}
 }
+.n-play{position:absolute;inset:0;margin:auto;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;z-index:1;box-shadow:0 8px 22px rgba(0,0,0,.3)}

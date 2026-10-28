@@ -57,6 +57,8 @@ const cols = groups.map((g) => ({ ...g, items: all.filter((a) => g.keys.includes
 cols.forEach((g) => g.items.slice(0, 4).forEach((a) => used.add(a.slug)));
 // 5. sport: stories and the league data
 const sports = take(sportsAll, 5);
+// video slot: only stories that carry a real video
+const videos = he ? all.filter((a) => a.video && !used.has(a.slug)).slice(0, 4) : [];
 const tbl = tableAround(5);
 const played = SPORT.table.find((r) => r.me)?.played;
 const nx = SPORT.next;
@@ -154,6 +156,12 @@ const T = he ? { live: 'עכשיו בנתניה והשרון', liveSub: 'מתע�
         <Card a={first} lang={lang} ratio="16/10" />
         {g.items.length > 1 && <ul class="n-hl num">{g.items.slice(1, 4).map((a) => <li><time datetime={a.published}>{when(a.published)}</time><a href={articleUrl(a, lang)}>{a.title}</a></li>)}</ul>}
       </div>); })}</div>
+  </section>)}
+
+  {videos.length > 0 && (
+  <section class="n-sec n-wrap" aria-labelledby="vd-h" style="--c:#C8102E">
+    <h2 class="n-sh" id="vd-h">וידאו מנתניה והשרון</h2>
+    <div class="n-grid n-g4">{videos.map((a) => <Card a={a} lang={lang} ratio="16/9" />)}</div>
   </section>)}
 
   {showSport && (
