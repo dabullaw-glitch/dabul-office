@@ -135,7 +135,7 @@ if(c&&c.a){gtag('consent','update',{analytics_storage:'granted'});nwsLoadGA()}</
   <div class="n-bar"><div class="n-wrap">
     <a href={homeHref} class="n-logo" style="gap:12px" aria-label={`NWS ${u.brandName}`}><span class="n-mk">NWS<i></i></span><span class="bn">{u.brandName}</span></a>
     <nav class="nv" aria-label={u.sectionsH}>{nav.slice(0, 8).map((s) => <a href={sectionUrl(s.key, lang)} style={`--c:${s.color}`} aria-current={current === s.key ? 'page' : undefined}>{s.name[lang]}</a>)}<a href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}>{L.pros}</a></nav>
-    <a class="n-btn ink" href={tgHref} {...tgAttr} data-tg><Icon name="telegram" size={17} color="#fff" />{he ? 'טלגרם' : 'Telegram'}</a>
+    <a class="n-btn ink tgb" href={tgHref} {...tgAttr} data-tg aria-label={he ? 'ערוץ הטלגרם' : 'Telegram'}><Icon name="telegram" size={17} color="#fff" /><span class="tx">{he ? 'טלגרם' : 'Telegram'}</span></a>
   </div>{progress && <div class="n-prog" aria-hidden="true"><i id="nprog"></i></div>}</div>
   ) : (<>
   <div class="n-mast"><div class="n-wrap">

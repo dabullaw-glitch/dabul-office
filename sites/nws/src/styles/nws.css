@@ -444,3 +444,12 @@ main:focus{outline:0}
 .n-sg.only .n-sd .n-src{grid-column:1/-1}
 @media (max-width:760px){.n-sg.only .n-sd{grid-template-columns:minmax(0,1fr)}}
 .n-sg.one{grid-template-columns:minmax(0,1fr) 340px}@media (max-width:1100px){.n-sg.one{grid-template-columns:minmax(0,1fr)}}
+/* compact bar on phones: mark only, icon-only Telegram button (no horizontal scroll at 360px) */
+@media (max-width:760px){
+ .n-bar .n-wrap{height:56px;gap:12px}
+ .n-bar .bn{display:none}
+ .n-bar .n-mk{font-size:30px;letter-spacing:-1.2px}
+ .n-bar .tgb{width:44px;padding:0;flex:none}.n-bar .tgb .tx{display:none}
+ .n-logo{min-width:0}
+}
+@media (max-width:380px){.n-lt b{font-size:14px}.n-mk{font-size:27px}}
