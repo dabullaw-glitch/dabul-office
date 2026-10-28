@@ -28,7 +28,6 @@
   "/pharmacy",
   "/beaches",
   "/he/*",
-  "/admin/",
   "/admin/*"
  ]
 }
