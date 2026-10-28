@@ -63,7 +63,7 @@ const S = (k: string) => SECTION_BY_KEY[k as keyof typeof SECTION_BY_KEY];
   <section class="wrap lead" aria-label={lang === 'he' ? 'הכתבה הראשית' : u.latestNow}>
     <article class="main" style={`--c:${S(lead.section).color}`}>
       <a class="im" href={articleUrl(lead, lang)}><img src={(IMG[lead.imageHint] ?? IMG[S(lead.section).img]).src} alt={(IMG[lead.imageHint] ?? IMG.city).alt} width="1200" height="675" fetchpriority="high"><span class="tag">{S(lead.section).name[lang]}</span></a>
-      <div class="meta"><time datetime={lead.published}>{fmtDate(lead.published, lang)}, {fmtTime(lead.published)}</time><span aria-hidden="true">·</span><span>{u.source}: {lead.sourceName}</span></div>
+      <div class="meta"><time datetime={lead.published}>{fmtDate(lead.published, lang)}, {fmtTime(lead.published)}</time>{lead.sourceName && <><span aria-hidden="true">·</span><span>{u.source}: {lead.sourceName}</span></>}</div>
       <h2 class="h1"><a href={articleUrl(lead, lang)}>{lead.title}</a></h2>
       <p>{lead.dek}</p>
     </article>

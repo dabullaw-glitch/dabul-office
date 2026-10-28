@@ -6,6 +6,13 @@
 //   3. other new stories get one Claude call that writes a short Hebrew item in our own wording, from the facts in the sources only
 //   4. sensitive stories (death, minors, missing people, attacks) are always "needs_check": Yakir approves each one
 // Cost guard: at most MAX_PER_DAY AI calls a day (Israel time), Sonnet 5.5, short prompts.
+// 28.10.2026 (Yakir): we are an independent news site. Stories are our own reporting from primary sources. Another outlet is never
+//   named in a title, subtitle or key point, and the body does not lean on "לפי דיווח ב...". An outlet is credited only when truly
+//   needed (exclusive scoop, their interview or quote, their photo or video, data they produced), as one closing line in the last
+//   paragraph. The answer also gives "basis": official | public | media_exclusive. A media_exclusive story is 'needs_check' with the
+//   reason "מבוסס רק על פרסום בכלי תקשורת אחר" (Yakir decides). After writing, the text is checked against the outlet list in the
+//   table hns_outlets (same check as hns-publish); a failing draft is written once more with the reason, and is marked "נכתב מחדש".
+// POST {action:'rewrite', ids:[...]} (x-cron-secret): hns-publish sends back a draft that failed the check; it is written again once.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -39,10 +46,61 @@ const SYSTEM = `אתה עורך חדשות מקומי באתר "חדשות נת�
 - לא להשתמש בקו מפריד ארוך או בינוני. רק פסיק, נקודה או מקף רגיל.
 - אם מקור הוא רק "רמז" מקבוצה לא רשמית ואין מקור רשמי או כלי תקשורת שמאשר, לסמן needsCheck=true.
 - כותרת עד 70 תווים, עם שם המקום. כותרת משנה משפט אחד.
-- גוף הידיעה: 2 עד 4 פסקאות קצרות. בסוף הפסקה האחרונה לציין את המקור במילים, למשל "כך לפי הודעת דוברות מד״א".
+- גוף הידיעה: 2 עד 4 פסקאות קצרות.
+אנחנו אתר חדשות עצמאי. כותבים את הידיעה כדיווח שלנו, מהעובדות:
+- בכותרת, בכותרת המשנה ובנקודות העיקריות אסור לכתוב שם של כלי תקשורת אחר (למשל ynet, וואלה, מעריב, כאן, N12, חדשות 12, חדשות 13, נתניהנט, ice, גלובס, כלכליסט, ישראל היום, חדשות 08).
+- לא לכתוב "לפי דיווח", "לפי פרסום", "כך לפי דיווח באתר...", "מבזק שפורסם" או "כפי שדווח". לא לבנות את הידיעה על "מישהו פרסם".
+- להעדיף מקורות ראשוניים: עירייה, משטרה, מד״א, כבאות והצלה, חברת החשמל, ועדת הבחירות המרכזית, משרדי ממשלה, בתי משפט, מי נתניה. כשעובדה באה מגוף רשמי, לייחס אותה לגוף, למשל "לפי נתוני ועדת הבחירות המרכזית", "לפי המשטרה", "כך לפי הודעת עיריית נתניה". זה מותר ורצוי, גם כשהגוף צוטט אצלנו דרך כלי תקשורת.
+- עובדות ציבוריות (תוצאות בחירות, חסימות כבישים, מזג אוויר, הודעות רשמיות, אירוע שקרה ברחוב) כותבים כדיווח שלנו, בלי קרדיט לכלי תקשורת.
+- קרדיט לכלי תקשורת אחר רק כשבאמת צריך: סקופ בלעדי שאין לו אישור ממקור ראשוני, ראיון או ציטוט שהם השיגו, צילום או וידאו שלהם, או נתונים שהם הפיקו. אז שורה אחת קצרה בסוף הפסקה האחרונה בלבד, למשל "כפי שפורסם לראשונה ב...". אף פעם לא בכותרת, בכותרת המשנה או בנקודות.
+- שדה basis: "official" כשהעובדות באות מגוף רשמי (גם אם הגיעו דרך כלי תקשורת שמצטט אותו), "public" כשזו עובדה ציבורית שכל אחד יכול לבדוק, "media_exclusive" כשהידיעה כולה נשענת על פרסום בלעדי של כלי תקשורת אחר (סקופ, ראיון, כתבת צבע, נתונים שהם הפיקו).
+- אם המקור הוא רק כותרת של מבזק בלי פרטים, לסמן needsCheck=true.
 מדורים אפשריים: flash (מבזקים, חירום, תאונות, משטרה), city (עירייה, תשתיות, חינוך), realestate (תכנון ובנייה, נדל״ן), community (קהילה), sports (ספורט), leisure (תרבות ואירועים), sharon (יישובי השרון שאינם נתניה), tourism (חופים ותיירות).
 החזר JSON בלבד, בלי טקסט נוסף, במבנה:
-{"section":"","title":"","dek":"","body":["",""],"keyPoints":["",""],"places":[""],"needsCheck":false,"checkReason":""}`;
+{"section":"","title":"","dek":"","body":["",""],"keyPoints":["",""],"places":[""],"basis":"official","needsCheck":false,"checkReason":""}`;
+
+// media outlet names: the one list in the table hns_outlets (same check as hns-publish)
+let OUTLET_RE: RegExp | null = null;
+async function outlets() {
+  const { data } = await sb.from('hns_outlets').select('name');
+  const rx = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const parts = (data || []).map((r: Any) => String(r.name || '').trim()).filter(Boolean).map((n: string) => /^[\x00-\x7F]+$/.test(n)
+    ? `(?<![A-Za-z0-9])${rx(n)}(?![A-Za-z0-9])` : `(?<![\u05D0-\u05EA])(?:[ובלמהשכ]{1,2}-?)?${rx(n)}(?![\u05D0-\u05EA])`);
+  OUTLET_RE = parts.length ? new RegExp(parts.join('|'), 'i') : null;
+}
+const outletIn = (s: unknown) => (OUTLET_RE ? (String(s ?? '').match(OUTLET_RE)?.[0] || '') : '');
+const LEAN_RE = /לפי (?:דיווח|פרסום|מבזק|הדיווח|הפרסום|המבזק)|כפי שדווח|כך דווח|כך לפי (?:דיווח|מבזק|פרסום)|דיווח שפורסם|מבזק שפורסם/;
+const CREDIT_RE = /פורסמ\S* לראשונה|צילום|תמונה|וידאו|סרטון|בראיון ל/;
+function voiceProblem(o: Any) {
+  const arr = (a: unknown) => (Array.isArray(a) ? a : []).map((x) => String(x ?? '').trim()).filter(Boolean);
+  const head = [o.title, o.dek, ...arr(o.keyPoints)].join('\n');
+  const h = outletIn(head);
+  if (h) return `שם של כלי תקשורת (${h}) בכותרת, בכותרת המשנה או בנקודות`;
+  if (LEAN_RE.test(head)) return 'הכותרת נשענת על "לפי דיווח" במקום על עובדות';
+  const body = arr(o.body);
+  for (let i = 0; i < body.length; i++) {
+    const last = i === body.length - 1;
+    for (const sen of body[i].split(/(?<=[.!?])\s+/)) {
+      const m = outletIn(sen);
+      if (m && !(last && CREDIT_RE.test(sen))) return `שם של כלי תקשורת (${m}) בגוף הידיעה, לא כשורת קרדיט אחת בסוף`;
+      if (LEAN_RE.test(sen) && !(last && m && CREDIT_RE.test(sen))) return 'גוף הידיעה נשען על "לפי דיווח" או "לפי פרסום"';
+    }
+  }
+  return '';
+}
+const MEDIA_ONLY = 'מבוסס רק על פרסום בכלי תקשורת אחר';
+const KIND = (s: Any) => s.role === 'tip' ? 'רמז לא רשמי' : s.trust === 'official' ? 'גוף רשמי' : 'כלי תקשורת';
+const promptFor = (items: Any[], src: Any, places: string[]) => 'המקורות (מהישן לחדש):\n\n' + items.map((x, i) => `מקור ${i + 1}: ${src[x.source_id].name_he} (${KIND(src[x.source_id])})\nזמן: ${x.published_at || x.fetched_at}\nכותרת: ${x.title}\nתוכן: ${(x.body || '').slice(0, 1200)}`).join('\n\n') + `\n\nמקומות שזוהו: ${places.join(', ') || 'לא זוהה'}`;
+// one call, and when the text fails the voice check one more call with the reason
+async function compose(user: string, feedback = '') {
+  const first = await claude(feedback ? `${user}\n\nהערה: טיוטה קודמת נפסלה כי ${feedback}. כתוב מחדש לפי כל הכללים, כדיווח שלנו.` : user);
+  let { out, usage } = first; let problem = voiceProblem(out); let retried = !!feedback;
+  if (problem && !feedback) {
+    const second = await claude(`${user}\n\nהערה: הטיוטה הקודמת נפסלה כי ${problem}. כתוב מחדש לפי כל הכללים, כדיווח שלנו.`);
+    out = second.out; usage = { first: usage, second: second.usage }; problem = voiceProblem(out); retried = true;
+  }
+  return { out, usage, problem, retried };
+}
 
 async function claude(user: string) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -57,6 +115,41 @@ async function claude(user: string) {
   const m = text.match(/\{[\s\S]*\}/);
   if (!m) throw new Error('no json in answer');
   return { out: JSON.parse(m[0]), usage: j.usage };
+}
+
+const clean = (s: string) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s*–\s*/g, ' - ').trim();
+
+// a draft that hns-publish could not publish (outlet name, "לפי דיווח"): written once more from its own source items
+async function rewrite(ids: number[]) {
+  await outlets();
+  const { data: srcs } = await sb.from('hns_sources').select('id,name_he,role,trust');
+  const src = Object.fromEntries((srcs || []).map((s: Any) => [s.id, s]));
+  const dayStart = new Date(Date.parse(ilDay(new Date()) + 'T00:00:00+03:00')).toISOString();
+  const { count: used } = await sb.from('hns_stories').select('id', { count: 'exact', head: true }).not('model', 'is', null).gte('created_at', dayStart);
+  let budget = MAX_PER_DAY + 10 - (used || 0); // a small extra allowance for rewrites
+  const res: Any[] = [];
+  const { data: rows } = await sb.from('hns_stories').select('*').in('id', ids).in('state', ['draft', 'needs_check']);
+  for (const st of rows || []) {
+    if (/נכתב מחדש/.test(st.notes || '')) { res.push({ id: st.id, skipped: 'already rewritten' }); continue; }
+    if (budget <= 0) { res.push({ id: st.id, skipped: 'daily budget' }); continue; }
+    const { data: items } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at').in('id', st.item_ids || []).order('id');
+    const its = (items || []).filter((x: Any) => src[x.source_id]);
+    if (!its.length) { res.push({ id: st.id, skipped: 'no items' }); continue; }
+    budget--;
+    try {
+      const old = { title: st.title, dek: st.dek, body: st.body, keyPoints: st.key_points };
+      const { out, usage, problem } = await compose(promptFor(its, src, st.places || []), voiceProblem(old) || 'נכתבה בלי קול עצמאי');
+      const basis = ['official', 'public', 'media_exclusive'].includes(out.basis) ? out.basis : st.basis;
+      const mediaOnly = basis === 'media_exclusive' && !its.some((x: Any) => src[x.source_id].trust === 'official');
+      const state = st.sensitivity === 'sensitive' || out.needsCheck || mediaOnly || st.state === 'needs_check' ? 'needs_check' : 'draft';
+      const notes = [st.sensitivity === 'sensitive' ? 'ידיעה רגישה, רק באישור של יקיר' : '', mediaOnly ? MEDIA_ONLY : '', out.needsCheck ? (out.checkReason || 'צריך בדיקה') : '',
+        'נכתב מחדש', problem ? `עדיין: ${problem}` : ''].filter(Boolean).join('. ');
+      await sb.from('hns_stories').update({ title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
+        basis, state, notes, usage: { previous: st.usage, rewrite: usage }, updated_at: new Date().toISOString(), tg_sent_at: state === 'needs_check' ? null : st.tg_sent_at }).eq('id', st.id).in('state', ['draft', 'needs_check']);
+      res.push({ id: st.id, state, problem: problem || null });
+    } catch (e) { res.push({ id: st.id, error: String((e as Error).message || e) }); }
+  }
+  return { res };
 }
 
 async function tick() {
@@ -112,17 +205,20 @@ async function tick() {
     }
     if (budget <= 0) { res.push({ skipped: 'daily budget', ids }); continue; } // left for tomorrow's budget or a manual run
     budget--;
-    const user = 'המקורות (מהישן לחדש):\n\n' + g.items.map((x, i) => `מקור ${i + 1}: ${src[x.source_id].name_he} (${src[x.source_id].role === 'tip' ? 'רמז לא רשמי' : 'מקור רשמי או כלי תקשורת'})\nזמן: ${x.published_at || x.fetched_at}\nכותרת: ${x.title}\nתוכן: ${(x.body || '').slice(0, 1200)}`).join('\n\n') + `\n\nמקומות שזוהו: ${places.join(', ') || 'לא זוהה'}`;
+    const user = promptFor(g.items, src, places);
     try {
-      const { out, usage } = await claude(user);
+      if (!OUTLET_RE) await outlets();
+      const { out, usage, problem, retried } = await compose(user);
       const isNetanya = places.some((p) => NETANYA_PLACES.has(p));
       const section = out.section || (isNetanya ? base.section : 'sharon');
-      const state = sensitive || out.needsCheck ? 'needs_check' : 'draft';
-      const notes = sensitive ? 'ידיעה רגישה, רק באישור של יקיר' : out.needsCheck ? (out.checkReason || 'צריך בדיקה') : null;
-      const clean = (s: string) => String(s || '').replace(/[—–]/g, '-');
+      const basis = ['official', 'public', 'media_exclusive'].includes(out.basis) ? out.basis : null;
+      const mediaOnly = basis === 'media_exclusive' && !g.items.some((x) => src[x.source_id].trust === 'official');
+      const state = sensitive || out.needsCheck || mediaOnly ? 'needs_check' : 'draft';
+      const notes = [sensitive ? 'ידיעה רגישה, רק באישור של יקיר' : '', mediaOnly ? MEDIA_ONLY : '', out.needsCheck ? (out.checkReason || 'צריך בדיקה') : '',
+        retried ? 'נכתב מחדש' : '', problem ? `עדיין: ${problem}` : ''].filter(Boolean).join('. ') || null;
       const { data: st } = await sb.from('hns_stories').insert({
         ...base, section, title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
-        places: out.places?.length ? out.places : places, state, notes, model: MODEL, usage,
+        places: out.places?.length ? out.places : places, state, notes, basis, model: MODEL, usage,
       }).select('id').single();
       if (st) await sb.from('hns_items').update({ cluster_id: st.id }).in('id', ids);
       res.push({ story: st?.id, state });
@@ -137,6 +233,7 @@ Deno.serve(async (req) => {
   const b: Any = await req.json().catch(() => ({}));
   try {
     if (b.action === 'tick') return J({ ok: true, ...(await tick()) });
+    if (b.action === 'rewrite') return J({ ok: true, ...(await rewrite((b.ids || []).map(Number).filter(Boolean))) });
     return J({ ok: false, error: 'unknown action' }, 400);
   } catch (e) { return J({ ok: false, error: String((e as Error).message || e) }, 500); }
 });

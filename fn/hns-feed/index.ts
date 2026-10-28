@@ -1,6 +1,8 @@
 // hns-feed (28.10.2026): public read endpoint of the HNS news engine for the nws.co.il site build.
 // GET -> published stories only, newest first, with just the fields the site needs. No secrets, no internal notes.
 // ?limit=N (default 300, max 1000). No long or medium dashes in any text.
+// 28.10.2026 (Yakir): an independent news site. Only official sources (municipality, police, MDA, IMS...) are shown as the source
+// of a story; media outlets are never exposed as the source (a needed credit is one line at the end of the body, written by hns-write).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -21,7 +23,7 @@ Deno.serve(async (req) => {
     .order('published_at', { ascending: false }).limit(limit);
   if (error) return new Response(JSON.stringify({ ok: false, error: 'db' }), { status: 500, headers: H });
   const stories = (data || []).map((s: Any) => {
-    const src = (Array.isArray(s.sources) ? s.sources : []).map((x: Any) => ({ name: clean(x.name), url: String(x.url || '') }));
+    const src = (Array.isArray(s.sources) ? s.sources : []).filter((x: Any) => x.trust === 'official').map((x: Any) => ({ name: clean(x.name).replace(/\s*-\s*ערוץ טלגרם( רשמי)?$/, ''), url: String(x.url || '') }));
     return {
       id: s.id, section: s.section || null, title: clean(s.title), dek: clean(s.dek), body: arr(s.body), keyPoints: arr(s.key_points), faq: faq(s.faq),
       places: arr(s.places), date: s.created_at, publishedAt: s.published_at,

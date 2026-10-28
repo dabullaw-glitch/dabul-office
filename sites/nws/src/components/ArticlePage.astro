@@ -33,7 +33,7 @@ const jsonld: any[] = [{
   datePublished: a.published, dateModified: modified, articleSection: s.name[lang], keywords: a.tags.join(', '), wordCount: words,
   author: { '@type': 'Organization', name: lang === 'he' ? 'מערכת חדשות נתניה והשרון' : 'NWS Desk', url: SITE_URL + '/about/' },
   publisher: { '@id': SITE_URL + '/#org', '@type': 'NewsMediaOrganization', name: BRAND.he, logo: { '@type': 'ImageObject', url: SITE_URL + '/logo.png' } },
-  isBasedOn: a.sourceUrl, citation: { '@type': 'CreativeWork', name: a.sourceName, url: a.sourceUrl },
+  ...(a.sourceName && a.sourceUrl ? { isBasedOn: a.sourceUrl, citation: { '@type': 'CreativeWork', name: a.sourceName, url: a.sourceUrl } } : {}),
   contentLocation: places.length ? places.map((p) => ({ '@type': 'Place', name: p.he })) : { '@type': 'City', name: 'נתניה' },
   isAccessibleForFree: true,
 }];
@@ -68,7 +68,7 @@ const share = encodeURIComponent(url); const shareT = encodeURIComponent(a.title
       {a.faq.length > 0 && <section class="faq" aria-labelledby="faq-h" style="margin-top:26px"><h2 id="faq-h" style="font-size:22px;margin-bottom:4px">{u.faq}</h2>{a.faq.map(([q, x]) => <details open><summary>{q}</summary><p>{x}</p></details>)}</section>}
       <aside class="srcbox" aria-label={u.sourceBox}>
         <b style="font-family:var(--h)">{u.sourceBox}</b>
-        <span>{a.sourceName}. <a href={a.sourceUrl} rel="noopener nofollow" target="_blank">{u.viewSource}</a></span>
+        {a.sourceName && <span>{a.sourceName}.{a.sourceUrl && <> <a href={a.sourceUrl} rel="noopener nofollow" target="_blank">{u.viewSource}</a></>}</span>}
         <span class="note">{u.foundError} <a href={`/corrections/?url=${encodeURIComponent(path)}`}>{u.requestFix}</a> · {u.haveInfo} <a href={`${pre}/send-news/`}>{u.sendUs}</a></span>
       </aside>
       {lang === 'he' && places.length > 0 && <div class="chips" style="margin-top:20px">{places.map((p) => <a class="chip" href={placeUrl(p.slug)} style={`--c:${s.color}`}><i></i>חדשות {p.he}</a>)}</div>}
