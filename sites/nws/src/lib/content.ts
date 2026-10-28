@@ -18,6 +18,7 @@ export interface Article {
   updates?: { at: string; text: string }[]; live?: boolean;
   // fields other engine functions add (hns-feed v8 "extras"): background links from our archive and a "מה עושים" service box
   extras?: Extras | null;
+  format?: StoryFormat; formatData?: any;
   // the story's sources as shown in the "מקורות" line (see sourcesOf): official bodies, and media only when the body credits them
   sources?: Source[];
 }
@@ -40,12 +41,19 @@ function sourcesOf(list: unknown, body: string[]): Source[] {
 }
 export interface Extras {
   related: { title: string; url: string }[];
-  service: { title: string; lines: string[]; link: { text: string; url: string } | null } | null;
+  service: { title: string; lines: string[]; link: { text: string; url: string } | null; source: string } | null;
+  // our earlier stories as background (hns-enrich context_ids, up to 3), resolved to links on the story page
+  contextIds: number[];
 }
 const safeUrl = (u: unknown) => { const x = String(u ?? '').trim(); return /^https?:\/\/[^\s"<>]+$/.test(x) || /^\/[^\s"<>]*$/.test(x) ? x.replace(/^https?:\/\/(www\.)?nws\.co\.il(?=\/)/, '') : ''; };
-/** extras of hns-feed v8, checked and trimmed (tolerant of small shape differences); null when there is nothing to show */
-function extrasOf(e: any): Extras | null {
-  if (!e || typeof e !== 'object') return null;
+/** extras of hns-feed v8, checked and trimmed (tolerant of small shape differences); null when there is nothing to show.
+ *  Two shapes: s.extras {related, service}, and the separate fields of hns-enrich: contextIds (number[]) and serviceBox
+ *  {key, title, lines[], link{text,url}, source} (camelCase or snake_case). The separate fields win when both exist. */
+function extrasOf(s: any): Extras | null {
+  const e0 = s?.extras && typeof s.extras === 'object' ? s.extras : {};
+  const box = s?.serviceBox ?? s?.service_box;
+  const e = { ...e0, ...(box && typeof box === 'object' ? { service: box } : {}) };
+  const contextIds = [...new Set((s?.contextIds ?? s?.context_ids ?? e0.contextIds ?? []) as any[])].map(Number).filter((n) => Number.isInteger(n) && n > 0).slice(0, 3);
   const related = (Array.isArray(e.related) ? e.related : []).map((r: any) => ({ title: clean(r?.title ?? r?.text), url: safeUrl(r?.url ?? r?.href) }))
     .filter((r: any) => r.title && r.url).slice(0, 6);
   const sv = e.service && typeof e.service === 'object' ? e.service : null;
@@ -55,9 +63,21 @@ function extrasOf(e: any): Extras | null {
     const lk = sv.link && typeof sv.link === 'object' ? { text: clean(sv.link.text ?? sv.link.title), url: safeUrl(sv.link.url ?? sv.link.href) }
       : sv.url ? { text: clean(sv.linkText ?? sv.link_text ?? ''), url: safeUrl(sv.url) } : null;
     const link = lk && lk.url ? { text: lk.text || '', url: lk.url } : null;
-    if (lines.length || link) service = { title: clean(sv.title) || '', lines, link };
+    if (lines.length || link) service = { title: clean(sv.title) || '', lines, link, source: clean(sv.source ?? sv.source_name) };
   }
-  return related.length || service ? { related, service } : null;
+  return related.length || service || contextIds.length ? { related, service, contextIds } : null;
+}
+// recurring formats of hns-recurring (Maccabi Netanya preview and report, the week's roundup, the weekend guide, council and
+// planning summaries). formatData is passed on checked: match {opponent, home, kickoff, venue, round, competition, table, previous,
+// lastMeeting, stage, score?{netanya, opponent}} (scores of previous and lastMeeting are [home, away]); week {links:[{id, section,
+// title, line}]}; weekend {from, to, events:[{title, start, venue, url, source, line}]}.
+export type StoryFormat = 'match_preview' | 'match_report' | 'week_roundup' | 'weekend_guide' | 'council_summary' | 'planning_summary';
+const FORMATS: StoryFormat[] = ['match_preview', 'match_report', 'week_roundup', 'weekend_guide', 'council_summary', 'planning_summary'];
+function formatOf(s: any): { format?: StoryFormat; formatData?: any } {
+  const f = String(s?.format ?? '') as StoryFormat;
+  if (!FORMATS.includes(f)) return {};
+  const d = s?.formatData ?? s?.format_data;
+  return { format: f, formatData: d && typeof d === 'object' ? d : null };
 }
 export interface AiImg { alt: string; files?: { src: string; w: number }[]; remote?: string; w: number; h: number; model: string }
 
@@ -98,7 +118,8 @@ function fromFeed(s: any): any {
     closure: s.closure && s.closure.place ? { place: clean(s.closure.place), what: clean(s.closure.what), until: String(s.closure.until || ''), approx: !!s.closure.approx } : null,
     ai: aiOf(s),
     updates: (Array.isArray(s.updates) ? s.updates : []).filter((x: any) => x && x.at && x.text).map((x: any) => ({ at: new Date(x.at).toISOString(), text: clean(x.text) })),
-    extras: extrasOf(s.extras),
+    extras: extrasOf(s),
+    ...formatOf(s),
     sources: sourcesOf(s.sources, (s.body || []).map(clean)),
     live: !!s.live && Array.isArray(s.updates) && s.updates.length > 0 && Date.now() - Date.parse(s.updates[s.updates.length - 1].at) < 6 * 3600e3,
   };

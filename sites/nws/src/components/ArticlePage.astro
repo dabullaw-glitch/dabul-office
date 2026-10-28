@@ -97,8 +97,20 @@ const showUpd = Date.parse(modified) - Date.parse(a.published) > 60e3;
 const updText = showUpd ? (dayOf(modified) === dayOf(a.published) ? fmtTime(modified) : `${fmtNum(modified)}, ${fmtTime(modified)}`) : '';
 // extras of the engine (hns-feed v8): background links and the "מה עושים" box; Hebrew data, so other languages only when translated
 const ex = lang === 'he' || a.extras !== heA.extras ? a.extras : null;
-const bgLinks = (ex?.related || []).filter((r) => r.url !== path);
-const svc = ex?.service || null;
+// "רקע": our earlier stories (hns-enrich contextIds, up to 3, only those on the site) and any extras.related links
+const ctxLinks = (ex?.contextIds || []).map((id) => ARTICLES.find((x) => x.engineId === id)).filter((x): x is Article => !!x && x.slug !== a.slug)
+  .map((x) => localized(x, lang)).filter((x): x is Article => !!x).map((x) => ({ title: x.title, url: articleUrl(x, lang) }));
+const bgLinks = [...ctxLinks, ...(ex?.related || [])].filter((r, i, all) => r.url !== path && all.findIndex((y) => y.url === r.url) === i).slice(0, 5);
+// the "מה עושים" box: official guidance, never on a sponsored story
+const svc = sponsored ? null : ex?.service || null;
+// recurring formats (Hebrew data): the match card, the week's list of stories, the weekend's events
+const fd = he && a.formatData ? a.formatData : null;
+const isMatch = !!fd && (a.format === 'match_preview' || a.format === 'match_report') && !!fd.opponent;
+const weekLinks: { id: number; section: string; title: string; line: string }[] = fd && a.format === 'week_roundup' && Array.isArray(fd.links) ? fd.links.filter((x: any) => x && x.line) : [];
+const wkEvents: { title: string; start?: string; venue?: string; url?: string; source?: string; line?: string }[] = fd && a.format === 'weekend_guide' && Array.isArray(fd.events) ? fd.events.filter((x: any) => x && x.title) : [];
+// the body of a roundup repeats each line of the list after its intro; the list shows them, so the body keeps only the rest
+const listed = new Set([...weekLinks.map((x) => x.line), ...wkEvents.map((x) => x.line || '')].map((x) => String(x).trim()).filter(Boolean));
+const bodyParas = listed.size ? a.body.filter((p) => !listed.has(p.trim())) : a.body;
 const isExt = (u: string) => /^https?:\/\//.test(u);
 const upList = ups.map((x, i) => ({ ...x, n: i + 1, recent: Date.now() - Date.parse(x.at) < 3600e3 })).reverse();
 
@@ -133,12 +145,12 @@ const sponBlock = (p: string): Block => {
   if (lines.length && lines.every((x) => /^\d+\.\s/.test(x))) return { k: 'ol', html: lines.map((x) => `<li>${inl(x.replace(/^\d+\.\s*/, ''))}</li>`).join('') };
   return { k: 'p', html: lines.map(inl).join('<br>') };
 };
-const linked = sponsored ? [] : linkify(a.body, places, lang);
-const blocks: Block[] = sponsored ? a.body.map(sponBlock) : a.body.map((_p, i) => ({ k: 'p', html: linked[i] }));
+const linked = sponsored ? [] : linkify(bodyParas, places, lang);
+const blocks: Block[] = sponsored ? bodyParas.map(sponBlock) : bodyParas.map((_p, i) => ({ k: 'p', html: linked[i] }));
 
 // ---------- related: one inside the text, four in the grid, more from the section in the sidebar ----------
 const rel = related(a, pool, 5);
-const inline = rel.length > 0 && a.body.length >= 3 && !sponsored ? rel[0] : null;
+const inline = rel.length > 0 && bodyParas.length >= 3 && !sponsored && !listed.size ? rel[0] : null;
 const grid = (inline ? rel.slice(1) : rel).slice(0, 4);
 const usedSlugs = new Set([a.slug, ...rel.map((r) => r.slug)]);
 const more = pool.filter((x) => x.section === a.section && !usedSlugs.has(x.slug)).slice(0, 4);
@@ -153,6 +165,19 @@ const fmtWhen = (iso: string) => {
   const date = new Intl.DateTimeFormat(LOC[lang], { timeZone: TZ, weekday: 'long', day: 'numeric', month: 'long' }).format(d);
   return /T\d/.test(iso) && fmtTime(iso) !== '00:00' ? `${date}, ${fmtTime(iso)}` : date;
 };
+// match card data: kickoff in Israel time, home or away, venue, the two table rows, the score of a report
+const ME = 'מכבי נתניה';
+const mScore = isMatch && fd.score && Number.isFinite(Number(fd.score.netanya)) && Number.isFinite(Number(fd.score.opponent)) ? { me: Number(fd.score.netanya), them: Number(fd.score.opponent) } : null;
+const mRows: { pos: number; team: string; pts: number; played?: number; me?: boolean }[] = isMatch && Array.isArray(fd.table) ? fd.table.filter((r: any) => r && r.team && Number.isFinite(Number(r.pos))).slice(0, 2) : [];
+const gameLine = (g: any) => g && g.home && g.away && Array.isArray(g.score) && g.score.length === 2 ? `${g.home} ${g.score[0]}, ${g.away} ${g.score[1]}${g.round ? ` (מחזור ${g.round})` : ''}` : '';
+const mPrev = isMatch ? gameLine(fd.previous) : '';
+const mMeet = isMatch ? gameLine(fd.lastMeeting) : '';
+const mWhere = isMatch ? [fd.home ? 'משחק בית' : 'משחק חוץ', fd.venue].filter(Boolean).join(', ') : '';
+const mComp = isMatch ? [fd.competition, fd.round ? `מחזור ${fd.round}` : ''].filter(Boolean).join(', ') : '';
+const mA = isMatch ? (fd.home ? ME : fd.opponent) : ''; const mB = isMatch ? (fd.home ? fd.opponent : ME) : '';
+const sA = mScore ? (fd.home ? mScore.me : mScore.them) : 0; const sB = mScore ? (fd.home ? mScore.them : mScore.me) : 0;
+const wkUrl = (x: { id: number }) => { const t = ARTICLES.find((y) => y.engineId === Number(x.id)); return t ? articleUrl(t, lang) : ''; };
+const okDate = (x?: string) => !!x && !isNaN(Date.parse(x));
 const nextRows: [string, string][] = [];
 if (a.event?.startDate) { nextRows.push([L.when, fmtWhen(a.event.startDate)]); if (a.event.location) nextRows.push([L.where, a.event.location]); }
 if (a.closure?.place) {
@@ -213,6 +238,26 @@ const hasSrc = srcs.length > 0;
 
         {a.keyPoints.length > 0 && <section class="n-brief" aria-labelledby="br-h"><h2 id="br-h">{u.keyPoints}</h2><ul>{a.keyPoints.map((k) => <li>{k}</li>)}</ul></section>}
 
+        {isMatch && <section class="art-match" aria-labelledby="mc-h">
+          <h2 id="mc-h"><Icon name="ball" size={18} />{mComp || 'המשחק'}</h2>
+          {mScore ? (
+            <div class="sc num" role="img" aria-label={`תוצאה: ${mA} ${sA}, ${mB} ${sB}`}>
+              <span class={mA === ME ? 'me' : undefined}><b>{mA}</b><strong>{sA}</strong></span>
+              <i aria-hidden="true">:</i>
+              <span class={mB === ME ? 'me' : undefined}><strong>{sB}</strong><b>{mB}</b></span>
+            </div>
+          ) : (
+            <p class="vs"><b>{mA}</b><span>נגד</span><b>{mB}</b></p>
+          )}
+          <dl>
+            {okDate(fd.kickoff) && <div><dt>{mScore ? 'שוחק' : 'מתי'}</dt><dd><time datetime={fd.kickoff}>{fmtWhen(fd.kickoff)}</time></dd></div>}
+            {mWhere && <div><dt>איפה</dt><dd>{mWhere}</dd></div>}
+            {mPrev && <div><dt>המשחק הקודם</dt><dd>{mPrev}</dd></div>}
+            {mMeet && <div><dt>המפגש האחרון</dt><dd>{mMeet}</dd></div>}
+          </dl>
+          {mRows.length > 0 && <ol class="tb num" aria-label="הטבלה">{mRows.map((r) => <li class={r.me || r.team === ME ? 'me' : undefined}><span>{r.pos}.</span><b>{r.team}</b><span>{r.pts} נק׳{Number.isFinite(Number(r.played)) ? ` · ${r.played} משחקים` : ''}</span></li>)}</ol>}
+        </section>}
+
         <div class="n-body">
           {blocks.map((b, i) => <>
             {b.k === 'p' && <p set:html={b.html}></p>}
@@ -226,6 +271,13 @@ const hasSrc = srcs.length > 0;
                 <span><small>{L.also}</small><b>{inline.title}</b></span>
               </a>)}
           </>)}
+          {weekLinks.length > 0 && <ol class="art-week">{weekLinks.map((x) => { const h = wkUrl(x); return <li><p>{x.line}</p>{h && <a href={h}>לידיעה המלאה</a>}</li>; })}</ol>}
+          {wkEvents.length > 0 && <ul class="art-events">{wkEvents.map((e) => <li>
+            <b>{e.title}</b>
+            {(okDate(e.start) || e.venue) && <span class="when">{okDate(e.start) && <time datetime={e.start}>{fmtWhen(e.start!)}</time>}{okDate(e.start) && e.venue ? ', ' : ''}{e.venue}</span>}
+            {e.line && e.line !== e.title && <p>{e.line}</p>}
+            {e.url && /^https?:\/\//.test(e.url) && <a href={e.url} rel="noopener nofollow" target="_blank">{e.source ? `לפרטים אצל ${e.source}` : 'לפרטים'}</a>}
+          </li>)}</ul>}
           {a.whatItMeans && <><h2>{u.whatItMeans}</h2><p>{a.whatItMeans}</p></>}
           {nextRows.length > 0 && <section class="n-next" aria-labelledby="nx-h"><h3 id="nx-h">{L.next}</h3>{nextRows.map(([k, v]) => <div class="n-nx"><b>{k}</b><span>{v}</span></div>)}</section>}
         </div>
@@ -241,6 +293,7 @@ const hasSrc = srcs.length > 0;
         {svc && <section class="art-svc" aria-labelledby="sv-h">
           <h2 id="sv-h"><Icon name="compass" size={20} />{svc.title || L.svc}</h2>
           {svc.lines.length > 1 ? <ul>{svc.lines.map((x) => <li>{x}</li>)}</ul> : svc.lines.length === 1 && <p>{svc.lines[0]}</p>}
+          {svc.source && <p class="src">מקור: {svc.source}</p>}
           {svc.link && <a class="n-btn line" href={svc.link.url} {...(isExt(svc.link.url) ? { target: '_blank', rel: 'noopener' } : {})}>{svc.link.text || L.svcGo}<Icon name="link" size={16} /></a>}
         </section>}
 

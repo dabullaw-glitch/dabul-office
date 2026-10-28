@@ -13,7 +13,7 @@ const LIGA = `${BASE}/liga.aspx?FolderID=44`;
 const ME = '193'; // Maccabi Netanya on sport5
 const UA = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36', 'Accept-Language': 'he-IL,he;q=0.9' };
 const old = (() => { try { return JSON.parse(fs.readFileSync(OUT, 'utf8')); } catch { return null; } })();
-if (old?.fetchedAt && Date.now() - Date.parse(old.fetchedAt) < 30 * 60e3 && !process.env.SPORT_FORCE) { console.log('sport: fresh copy kept'); process.exit(0); }
+if (old?.fetchedAt && old.v >= 2 && Date.now() - Date.parse(old.fetchedAt) < 30 * 60e3 && !process.env.SPORT_FORCE) { console.log('sport: fresh copy kept'); process.exit(0); }
 
 const ent = (s) => String(s || '').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n));
 const txt = (s) => ent(String(s || '').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
@@ -61,14 +61,19 @@ function parseRound(html) {
     const c = cells(r); if (c.length < 2) continue;
     const tm = [...c[0].matchAll(/<a[^>]*FolderID=(\d+)[^>]*>([\s\S]*?)<\/a>/gi)].map((m) => ({ id: m[1], name: team(m[2]) }));
     if (tm.length < 2) continue;
-    const score = (/(\d+)\s*[-:]\s*(\d+)/.exec(txt(c[0]).replace(tm[0].name, '').replace(tm[1].name, '')) || null);
+    // the score: in the game cell, or (finished rounds: "משחק | תוצאה | תאריך") in its own cell. sport5 writes it in the raw text
+    // as away:home (it is shown right to left); checked on 28.10.2026 against the club's reports of rounds 5 (מכבי נתניה - מכבי
+    // תל אביב "2:1", Netanya lost 1:2) and 7 (מכבי נתניה - הפועל קרית שמונה "0:1", Netanya won 1:0). score = [home, away].
+    // Same parsing as fn/hns-recurring.
+    const sc = /(\d+)\s*[-:]\s*(\d+)/.exec(txt(c[0]).replace(tm[0].name, '').replace(tm[1].name, ''))
+      || (/^\s*\d+\s*[-:]\s*\d+\s*$/.test(txt(c[1] || '')) ? /(\d+)\s*[-:]\s*(\d+)/.exec(txt(c[1])) : null);
     const date = ymd(txt(c[2] || c[1] || '')); const time = (/(\d{1,2}:\d{2})/.exec(txt(c[3] || '')) || [])[1] || '';
-    games.push({ home: tm[0], away: tm[1], date, time, iso: ilIso(date, time), score: score ? [Number(score[1]), Number(score[2])] : null });
+    games.push({ home: tm[0], away: tm[1], date, time, iso: ilIso(date, time), score: sc ? [Number(sc[2]), Number(sc[1])] : null });
   }
   return games;
 }
 
-const out = { ok: false, fetchedAt: new Date().toISOString(), source: 'ערוץ הספורט', sourceUrl: LIGA, league: 'ליגת העל', round: null, table: [], notes: [], next: null, last: null };
+const out = { v: 2, ok: false, fetchedAt: new Date().toISOString(), source: 'ערוץ הספורט', sourceUrl: LIGA, league: 'ליגת העל', round: null, table: [], notes: [], next: null, last: null };
 try {
   const html = process.env.SPORT_HTML ? fs.readFileSync(process.env.SPORT_HTML, 'utf8') : await get(LIGA);
   const tb = parseTable(html);
@@ -85,11 +90,14 @@ try {
   if (round && round > 1 && !process.env.SPORT_HTML) {
     const lsnum = (/getCycle\('[^']+',\s*(\d+),/.exec(html) || [])[1];
     if (lsnum) {
-      try {
-        const prev = await get(`${BASE}/Ajax/GetCycleGames.aspx?LSnum=${lsnum}&CycleNum=${round - 1}`);
-        const g = (parseRound(prev) || []).find((x) => (x.home.id === ME || x.away.id === ME) && x.score);
-        if (g) { const home = g.home.id === ME; const [hs, as] = g.score; out.last = { home, opponent: (home ? g.away : g.home).name, date: g.date, my: home ? hs : as, their: home ? as : hs, round: round - 1 }; }
-      } catch (e) { console.warn(`sport: previous round not loaded (${e.message})`); }
+      // the last round with a Maccabi Netanya score (a postponed game leaves a round without one, so look up to 3 rounds back)
+      for (let n = round - 1; n >= Math.max(1, round - 3) && !out.last; n--) {
+        try {
+          const prev = await get(`${BASE}/Ajax/GetCycleGames.aspx?LSnum=${lsnum}&CycleNum=${n}`);
+          const g = (parseRound(prev) || []).find((x) => (x.home.id === ME || x.away.id === ME) && x.score);
+          if (g) { const home = g.home.id === ME; const [hs, as] = g.score; out.last = { home, opponent: (home ? g.away : g.home).name, date: g.date, my: home ? hs : as, their: home ? as : hs, round: n }; }
+        } catch (e) { console.warn(`sport: round ${n} not loaded (${e.message})`); break; }
+      }
     }
   }
   out.ok = out.table.length > 0;
@@ -99,7 +107,7 @@ try {
 if (old) {
   if (!out.table.length && old.table?.length) { out.table = old.table; out.notes = old.notes || []; out.round = out.round ?? old.round; out.tableAt = old.tableAt || old.fetchedAt; }
   if (!out.next && old.next && Date.parse(old.next.iso) > Date.now() - 3 * 3600e3) out.next = old.next;
-  if (!out.last && old.last) out.last = old.last;
+  if (!out.last && old.last && old.v >= 2) out.last = old.last;
 }
 if (out.table.length && !out.tableAt) out.tableAt = out.fetchedAt;
 out.ok = out.table.length > 0 || !!out.next;
