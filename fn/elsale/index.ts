@@ -54,8 +54,36 @@ async function build() {
   // the short video is added by a content filter on normal pages; in Elementor it must be in the text itself
   const live = await (await fetch(`${SITE}/comprehensive-guide-selling-apartment-israel-legal-tax-stages/`, { headers: { 'user-agent': 'Mozilla/5.0' } })).text();
   const fig = (live.match(/<figure class="dbl-vid[\s\S]*?<\/figure>(?:\s*<p class="dbl-vid-watch[\s\S]*?<\/p>)?/) || [])[0] || '';
-  let html = toHtml(body);
-  if (fig) { const h = [...html.matchAll(/<h2/g)]; if (h[1]) html = html.slice(0, h[1].index) + fig + '\n' + html.slice(h[1].index); }
+  // 28.10.2026 (Yakir: big gaps, black video, add a comparison table). Elementor's text widget turns every line break into
+  // a paragraph, so the text is written as one line per block with no empty "&nbsp;" paragraphs.
+  const cleanFig = fig.replace(/<img src="data:image\/svg[^"]*"([^>]*?)data-lazy-src="([^"]+)"([^>]*)>/, '<img src="$2" loading="lazy"$1$3>').replace(/<noscript>[\s\S]*?<\/noscript>/g, '');
+  const noteBox = (inner: string) => `<div class="dbl-note" style="background:#f7f4ee;border-right:4px solid #c6a03c;border-radius:8px;padding:14px 18px;margin:18px 0;text-align:center">${inner}</div>`;
+  const blocks = body.replace(/\r/g, '').split(/\n\s*\n/).map((p) => p.replace(/^(?:&nbsp;\s*)+|(?:\s*&nbsp;)+$/g, '').trim()).filter((p) => p && p !== '&nbsp;')
+    .map((p) => {
+      if (/^<table/i.test(p) || /^&nbsp;\s*<table/i.test(p)) {
+        const ps = [...p.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)].map((m) => `<p style="margin:0 0 6px">${m[1].replace(/<br[^>]*>/g, '<br>').replace(/\s*\n\s*/g, ' ')}</p>`).join('');
+        return noteBox(ps);
+      }
+      const one = p.replace(/\s*\n\s*/g, ' ');
+      return /^<(h\d|p|ul|ol|figure|div|blockquote)/i.test(one) || /^\[/.test(one) ? one : `<p>${one}</p>`;
+    });
+  // comparison table, built only from facts already written on this page
+  const table = '<h2>טבלת השוואה: התשלומים והחובות של המוכר</h2>'
+    + '<div style="overflow-x:auto;margin:14px 0 18px"><table style="width:100%;border-collapse:collapse;font-size:16px;min-width:560px">'
+    + '<thead><tr style="background:#141414;color:#fff"><th style="padding:10px;text-align:right">נושא</th><th style="padding:10px;text-align:right">מה זה</th><th style="padding:10px;text-align:right">מתי מטפלים</th><th style="padding:10px;text-align:right">מה חשוב לבדוק</th></tr></thead><tbody>'
+    + [
+      ['מס שבח', 'מס על הרווח הריאלי בין מחיר הקנייה למחיר המכירה', 'לפני היציאה לשוק, ודיווח למיסוי מקרקעין לרוב בתוך 30 יום מהחתימה', 'אם יש זכאות לפטור דירה יחידה, שמותנה בין היתר בהחזקה של 18 חודשים לפחות'],
+      ['היטל השבחה', 'תשלום לוועדה המקומית כשתוכנית העלתה את ערך הנכס', 'לפני קביעת מחיר המכירה', 'לקבוע במפורש בחוזה מי משלם, ככל שהיטל יחול'],
+      ['משכנתא קיימת', 'יתרת ההלוואה שרשומה על הדירה', 'לפני החתימה, עם מכתב כוונות מהבנק', 'סילוק מהתשלומים הראשונים של הקונה או גרירת המשכנתא לנכס חלופי'],
+      ['שכר טרחה ותיווך', 'כל צד משלם לעורך הדין ולמתווך מטעמו', 'בזמן קביעת מחיר היעד', 'לכלול את ההוצאות בתחשיב המחיר'],
+      ['ארנונה, ועד בית והיטלים', 'חובות שוטפים על הנכס', 'לפני מסירת החזקה', 'שהכל שולם, ושיש אישורי עירייה לרישום הזכויות'],
+    ].map((r, i) => `<tr style="background:${i % 2 ? '#f7f4ee' : '#fff'}">${r.map((c, j) => `<td style="padding:10px;border-bottom:1px solid #e2e0da;vertical-align:top">${j === 0 ? `<strong>${c}</strong>` : c}</td>`).join('')}</tr>`).join('')
+    + '</tbody></table></div>';
+  const capI = blocks.findIndex((b) => /^\[caption/.test(b));
+  blocks.splice(capI >= 0 ? capI : blocks.length - 3, 0, table);
+  const style = '<style>.elementor-element-ef8aa70 h2{margin:26px 0 10px !important;line-height:1.35}.elementor-element-ef8aa70 p{margin:0 0 12px}.elementor-element-ef8aa70 .dbl-vid{margin:18px auto}</style>';
+  let html = style + blocks.join('');
+  if (cleanFig) { const h = [...html.matchAll(/<h2/g)]; if (h[1]) html = html.slice(0, h[1].index) + cleanFig + html.slice(h[1].index); }
   // text
   const te = find(d, 'ef8aa70'); if (!te) throw new Error('text widget ef8aa70 missing');
   te.settings.editor = html;
