@@ -295,7 +295,7 @@ if(tk){var all=f.map(function(x){return{at:x.at,href:'/flash/#f'+x.id,text:x.sou
 if(all.length>=2){var h=all.map(function(x){return'<li data-at="'+esc(x.at)+'"><a href="'+esc(x.href)+'"><b>'+tm(x.at)+'</b> '+esc(x.text)+'</a></li>'}).join('');tk.innerHTML=h+h.replace(/<li /g,'<li aria-hidden="true" ').replace(/<a /g,'<a tabindex="-1" ')}}
 if(fl){fl.innerHTML=f.map(function(x){return'<li id="f'+x.id+'"><time datetime="'+esc(x.at)+'">'+tm(x.at)+'</time><span><b>'+esc(x.source)+'</b> '+esc(x.text)+(x.url?' <a href="'+esc(x.url)+'" rel="noopener nofollow" target="_blank">למקור</a>':'')+'</span></li>'}).join('');var e=document.querySelector('[data-fempty]');if(e)e.hidden=f.length>0}
 }).catch(function(){})}
-setTimeout(run,4000);setInterval(run,60000);})();
+setTimeout(run,4000);setInterval(function(){if(!document.hidden)run()},30000);})();
 </script>}
 </body>
 </html>
