@@ -6,6 +6,7 @@
 .n-art .n-k{font-size:14px}
 .n-art .n-k:before{width:16px}
 .n-art .n-who a:hover b{color:var(--red)}
+.n-art .n-who span span{display:inline;font-size:inherit}
 .n-art .art-role{display:inline;font-size:13px;color:var(--mut);font-weight:500;margin-inline-start:8px}
 .n-art .n-share{flex-wrap:wrap}
 .n-art .n-share .done{border-color:#17803F;color:#17803F}
@@ -17,6 +18,21 @@
 .art-spon{display:inline-flex;align-items:center;min-height:26px;padding:2px 10px;border-radius:4px;background:#FFF1C2;border:1px solid #D9B44A;color:#4A3500;font-size:13px;font-weight:800;letter-spacing:.2px}
 .art-disc{max-width:760px;margin:22px 0 0;padding:12px 16px;border:1px solid var(--line);border-radius:6px;font-size:14.5px;color:var(--ink2);background:var(--warm2)}
 .n-body ul,.n-body ol{margin:0 0 22px;padding-inline-start:26px;display:flex;flex-direction:column;gap:8px}
+/* live story: the "מתעדכן" badge next to the kicker and the timestamped updates under the body */
+.art-livb{display:inline-flex;align-items:center;gap:6px;min-height:24px;padding:2px 9px;border-radius:4px;background:var(--red);color:#fff;font-size:12.5px;font-weight:800}
+.art-livb i{width:6px;height:6px;border-radius:50%;background:#fff}
+.art-livb[hidden]{display:none}
+.art-ups{max-width:760px;margin-top:8px;border-top:3px solid var(--red);padding-top:16px}
+.art-ups h2{display:flex;align-items:center;gap:10px;margin:0 0 6px;font-size:22px;font-weight:800}
+.art-ups ol{list-style:none;margin:0;padding:0}
+.art-ups li{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;padding:14px 0;border-bottom:1px solid var(--line2)}
+.art-ups li:last-child{border-bottom:0}
+.art-ups time{display:flex;flex-direction:column;gap:2px;position:relative;padding-inline-start:14px}
+.art-ups time b{font-size:16px;font-weight:800;color:var(--ink)}
+.art-ups time span{font-size:12.5px;color:var(--mut)}
+.art-ups li.new time:before{content:'';position:absolute;inset-inline-start:0;top:8px;width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.16)}
+.art-ups li.new time b{color:var(--red)}
+.art-ups p{margin:0;font-size:17.5px;line-height:1.6;color:#1A2130}
 /* pull quote */
 .n-q{margin:32px 0;padding:6px 26px 6px 0;border-right:4px solid var(--red);font-size:28px;font-weight:700;line-height:1.4;color:var(--ink)}
 [dir=ltr] .n-q{padding:6px 0 6px 26px;border-right:0;border-left:4px solid var(--red)}

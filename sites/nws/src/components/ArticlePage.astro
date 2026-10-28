@@ -28,7 +28,11 @@ const alternates = Object.fromEntries(LANGS.filter((l) => localized(heA, l)).map
 const crumbs = [{ name: u.home, href: pre + '/' }, { name: s.name[lang], href: sectionUrl(a.section, lang) }, { name: a.title, href: path }];
 const title = a.title.length > 62 ? clip(a.title, 92) : `${a.title} | ${he ? 'חדשות נתניה והשרון' : 'NWS'}`;
 const desc = clip(a.dek || a.body[0] || a.title, 158);
-const modified = a.updated || a.published;
+// live updates of a developing story (oldest first in the data, shown newest first). On other languages only when translated.
+const ups = (lang === 'he' || a.updates !== heA.updates ? a.updates || [] : []).filter((x) => x.at && x.text);
+const isLive = !!a.live && ups.length > 0;
+const lastUp = ups.length ? ups[ups.length - 1].at : '';
+const modified = [a.updated, lastUp, a.published].filter(Boolean).sort((x, y) => Date.parse(y!) - Date.parse(x!))[0]!;
 const url = SITE_URL + path;
 const words = [a.title, a.dek, ...a.body].join(' ').split(/\s+/).length;
 const ogImage = a.og || pic.og;
@@ -38,7 +42,7 @@ const sponsored = (a.kind as string) === 'sponsored';
 
 // ---------- structured data (NewsArticle, FAQ, Event; the breadcrumb list is added by Base) ----------
 const jsonld: any[] = [{
-  '@context': 'https://schema.org', '@type': sponsored ? 'Article' : 'NewsArticle', '@id': url + '#article', mainEntityOfPage: url, url,
+  '@context': 'https://schema.org', '@type': sponsored ? 'Article' : isLive ? 'LiveBlogPosting' : 'NewsArticle', '@id': url + '#article', mainEntityOfPage: url, url,
   headline: a.title.slice(0, 110), description: desc, image: [...new Set([abs(ogImage), abs(pic.src)])], inLanguage: lang,
   datePublished: a.published, dateModified: modified, articleSection: s.name[lang], ...(a.tags.length ? { keywords: a.tags.join(', ') } : {}), wordCount: words,
   author: a.kind === 'opinion' && a.author ? { '@type': 'Person', name: a.author } : { '@type': 'Organization', name: he ? 'מערכת חדשות נתניה והשרון' : 'NWS Desk', url: SITE_URL + '/about/' },
@@ -47,6 +51,8 @@ const jsonld: any[] = [{
   ...(a.sourceName && a.sourceUrl ? { isBasedOn: a.sourceUrl, citation: { '@type': 'CreativeWork', name: a.sourceName, url: a.sourceUrl } } : {}),
   contentLocation: places.length ? places.map((p) => ({ '@type': 'Place', name: p.he })) : { '@type': 'City', name: 'נתניה' },
   isAccessibleForFree: true,
+  ...(isLive && !sponsored ? { coverageStartTime: ups[0].at < a.published ? ups[0].at : a.published,
+    liveBlogUpdate: [...ups].reverse().map((x, i) => ({ '@type': 'BlogPosting', headline: clip(x.text, 110), articleBody: x.text, datePublished: x.at, url: `${url}#u${ups.length - i}` })) } : {}),
 }];
 if (a.faq.length) jsonld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: a.faq.map(([q, x]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: x } })) });
 if (a.event?.startDate) jsonld.push({ '@context': 'https://schema.org', '@type': 'Event', name: a.event.name, startDate: a.event.startDate, eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode', eventStatus: 'https://schema.org/EventScheduled',
@@ -61,22 +67,22 @@ const L = {
   he: { wa: 'שיתוף בוואטסאפ', tg: 'שיתוף בטלגרם', fb: 'שיתוף בפייסבוק', copy: 'העתקת קישור', copied: 'הקישור הועתק', read: 'דק׳ קריאה', desk: 'מערכת NWS',
     also: 'עוד בנושא', next: 'מה הלאה', when: 'מתי', where: 'איפה', what: 'מה', until: 'עד מתי', approx: 'בערך', sources: 'מקורות:', how: 'איך אנחנו עובדים',
     fix: 'מצאתם טעות בכתבה? יש לכם מידע נוסף?', report: 'דווחו על טעות', send: 'שלחו ידיעה', aiCap: 'נוצרה בבינה מלאכותית ואינה מתעדת את האירוע', tags: 'נושאים ומקומות',
-    table: 'הטבלה', pts: 'נק׳', tgBtn: 'הצטרפו לערוץ בטלגרם', pros: 'בעלי מקצוע בנושא', inCity: 'בנתניה', crumbs: 'מיקום',
+    table: 'הטבלה', pts: 'נק׳', tgBtn: 'הצטרפו לערוץ בטלגרם', pros: 'בעלי מקצוע בנושא', inCity: 'בנתניה', crumbs: 'מיקום', ups: 'עדכונים', live: 'מתעדכן',
     spon: 'תוכן שיווקי', with: 'בשיתוף', disclose: 'הכתבה פורסמה כתוכן שיווקי בשיתוף המפרסם' },
   ru: { wa: 'Поделиться в WhatsApp', tg: 'Поделиться в Telegram', fb: 'Поделиться в Facebook', copy: 'Скопировать ссылку', copied: 'Ссылка скопирована', read: 'мин чтения', desk: 'Редакция NWS',
     also: 'По теме', next: 'Что дальше', when: 'Когда', where: 'Где', what: 'Что', until: 'До', approx: 'примерно', sources: 'Источники:', how: 'Как мы работаем',
     fix: 'Нашли ошибку? Есть информация?', report: 'Сообщить об ошибке', send: 'Прислать новость', aiCap: 'создано ИИ, не документирует событие', tags: 'Темы',
-    table: 'Таблица', pts: 'очк.', tgBtn: 'Канал в Telegram', pros: 'Специалисты', inCity: '', crumbs: 'Навигация',
+    table: 'Таблица', pts: 'очк.', tgBtn: 'Канал в Telegram', pros: 'Специалисты', inCity: '', crumbs: 'Навигация', ups: 'Обновления', live: 'Обновляется',
     spon: 'Реклама', with: 'При участии', disclose: 'Материал опубликован на правах рекламы при участии рекламодателя' },
   fr: { wa: 'Partager sur WhatsApp', tg: 'Partager sur Telegram', fb: 'Partager sur Facebook', copy: 'Copier le lien', copied: 'Lien copié', read: 'min de lecture', desk: 'Rédaction NWS',
     also: 'À lire aussi', next: 'La suite', when: 'Quand', where: 'Où', what: 'Quoi', until: 'Jusqu’à', approx: 'environ', sources: 'Sources :', how: 'Notre méthode',
     fix: 'Une erreur ? Une info en plus ?', report: 'Signaler une erreur', send: 'Envoyer une info', aiCap: 'générée par IA, ne documente pas l’événement', tags: 'Thèmes',
-    table: 'Classement', pts: 'pts', tgBtn: 'Rejoindre la chaîne Telegram', pros: 'Professionnels', inCity: '', crumbs: 'Fil d’Ariane',
+    table: 'Classement', pts: 'pts', tgBtn: 'Rejoindre la chaîne Telegram', pros: 'Professionnels', inCity: '', crumbs: 'Fil d’Ariane', ups: 'Mises à jour', live: 'En direct',
     spon: 'Contenu sponsorisé', with: 'En partenariat avec', disclose: 'Cet article est publié comme contenu sponsorisé en partenariat avec l’annonceur' },
   en: { wa: 'Share on WhatsApp', tg: 'Share on Telegram', fb: 'Share on Facebook', copy: 'Copy link', copied: 'Link copied', read: 'min read', desk: 'NWS Desk',
     also: 'Related', next: 'What’s next', when: 'When', where: 'Where', what: 'What', until: 'Until', approx: 'about', sources: 'Sources:', how: 'How we work',
     fix: 'Found an error? Have more information?', report: 'Report an error', send: 'Send a tip', aiCap: 'AI generated, it does not document the event', tags: 'Topics',
-    table: 'Table', pts: 'pts', tgBtn: 'Join the Telegram channel', pros: 'Local pros', inCity: '', crumbs: 'Breadcrumbs',
+    table: 'Table', pts: 'pts', tgBtn: 'Join the Telegram channel', pros: 'Local pros', inCity: '', crumbs: 'Breadcrumbs', ups: 'Updates', live: 'Live',
     spon: 'Sponsored', with: 'In partnership with', disclose: 'This article was published as sponsored content in partnership with the advertiser' },
 }[lang];
 
@@ -85,8 +91,9 @@ const opinion = a.kind === 'opinion' && !!a.author;
 const sponBy = sponsored && !!a.author;
 const byName = opinion ? a.author! : sponBy ? `${L.with} ${a.author}` : sponsored ? L.spon : L.desk;
 const initials = opinion || sponBy ? a.author!.split(/\s+/).slice(0, 2).map((w) => w[0]).join('') : 'NWS';
-const showUpd = !!a.updated && Date.parse(a.updated) - Date.parse(a.published) > 60e3;
-const updText = showUpd ? (dayOf(a.updated!) === dayOf(a.published) ? fmtTime(a.updated!) : `${fmtNum(a.updated!)}, ${fmtTime(a.updated!)}`) : '';
+const showUpd = Date.parse(modified) - Date.parse(a.published) > 60e3;
+const updText = showUpd ? (dayOf(modified) === dayOf(a.published) ? fmtTime(modified) : `${fmtNum(modified)}, ${fmtTime(modified)}`) : '';
+const upList = ups.map((x, i) => ({ ...x, n: i + 1, recent: Date.now() - Date.parse(x.at) < 3600e3 })).reverse();
 
 // ---------- picture: the story's AI image, or the section photo ----------
 const STOCK_ALT: Record<string, string> = {
@@ -172,7 +179,7 @@ const hasSrc = !!a.sourceName;
           <li><a href={pre + '/'}>{u.home}</a></li>
           <li><a href={sectionUrl(a.section, lang)}>{s.name[lang]}</a></li>
         </ol></nav>
-        <div class="art-k">{sponsored && <span class="art-spon">{L.spon}</span>}<span class="n-k">{sponsored && kickerOf(a, lang) === L.spon ? s.name[lang] : kickerOf(a, lang)}</span></div>
+        <div class="art-k">{sponsored && <span class="art-spon">{L.spon}</span>}<span class="n-k">{sponsored && kickerOf(a, lang) === L.spon ? s.name[lang] : kickerOf(a, lang)}</span>{isLive && <span class="art-livb" data-live-last={lastUp}><i aria-hidden="true"></i>{L.live}</span>}</div>
         <h1 class="n-t" id="art-h">{a.title}</h1>
         {a.dek && <p class="n-dek">{a.dek}</p>}
         <div class="n-by">
@@ -180,7 +187,7 @@ const hasSrc = !!a.sourceName;
             <div class="n-av" aria-hidden="true">{initials}</div>
             <div>
               {opinion || sponsored ? <b>{byName}{(opinion || sponBy) && a.authorRole && a.authorRole !== L.spon && <span class="art-role">{a.authorRole}</span>}</b> : <a href={`${pre}/about/`}><b>{byName}</b></a>}
-              <span class="num">{u.published} <time datetime={a.published}>{fmtNum(a.published)}, {fmtTime(a.published)}</time>{showUpd && <> · <span class="n-upd">{u.updated} <time datetime={a.updated}>{updText}</time></span></>} · {readMin(a)} {L.read}</span>
+              <span class="num">{u.published} <time datetime={a.published}>{fmtNum(a.published)}, {fmtTime(a.published)}</time>{showUpd && <> · <span class="n-upd">{u.updated} <time datetime={modified}>{updText}</time></span></>} · {readMin(a)} {L.read}</span>
             </div>
           </div>
           <div class="n-share" aria-label={u.share} role="group">
@@ -215,6 +222,14 @@ const hasSrc = !!a.sourceName;
           {a.whatItMeans && <><h2>{u.whatItMeans}</h2><p>{a.whatItMeans}</p></>}
           {nextRows.length > 0 && <section class="n-next" aria-labelledby="nx-h"><h3 id="nx-h">{L.next}</h3>{nextRows.map(([k, v]) => <div class="n-nx"><b>{k}</b><span>{v}</span></div>)}</section>}
         </div>
+
+        {upList.length > 0 && <section class="art-ups" aria-labelledby="up-h">
+          <h2 id="up-h">{isLive && <span class="n-pulse" aria-hidden="true"></span>}{L.ups}</h2>
+          <ol>{upList.map((x) => <li id={`u${x.n}`} class={x.recent ? 'new' : undefined} data-at={x.at}>
+            <time datetime={x.at}><b class="num">{fmtTime(x.at)}</b><span class="num">{fmtNum(x.at).slice(0, 5)}</span></time>
+            <p>{x.text}</p>
+          </li>)}</ol>
+        </section>}
 
         {a.faq.length > 0 && <section class="n-faq" aria-labelledby="faq-h"><h2 id="faq-h">{u.faq}</h2>{a.faq.map(([q, x]) => <details><summary>{q}</summary><p>{x}</p></details>)}</section>}
 
@@ -252,6 +267,8 @@ const hasSrc = !!a.sourceName;
         </a>); })}</div>
     </section>}
   </div>
+  <script is:inline>(function(){var now=Date.now();document.querySelectorAll('.art-ups li[data-at]').forEach(function(li){li.classList.toggle('new',now-Date.parse(li.getAttribute('data-at'))<36e5)});
+var lb=document.querySelector('[data-live-last]');if(lb&&now-Date.parse(lb.getAttribute('data-live-last'))>216e5)lb.hidden=true})();</script>
   <script is:inline>(function(){var b=document.querySelector('[data-copy]');if(!b)return;b.addEventListener('click',function(){var u=b.getAttribute('data-copy'),m=document.querySelector('[data-copy-msg]');
 function ok(){if(m){m.textContent=b.getAttribute('data-done');setTimeout(function(){m.textContent=''},2500)}b.classList.add('done');setTimeout(function(){b.classList.remove('done')},2500)}
 if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(ok,function(){prompt('',u)})}else{prompt('',u)}})})();</script>
