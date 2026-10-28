@@ -1,6 +1,5 @@
 ---
 import Page from '../../components/Page.astro';
-import { BRAND } from '../../data/site';
 import ReqForm from '../../components/ReqForm.astro';
 const jsonld = [{ '@context': 'https://schema.org', '@type': 'ContactPage', name: 'צור קשר עם חדשות נתניה והשרון', url: 'https://nws.co.il/contact/' }];
 ---
@@ -9,7 +8,7 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'ContactPage', name
     <li><b>יש לכם ידיעה מהשכונה?</b> <a href="/send-news/">שלחו ידיעה</a>.</li>
     <li><b>מצאתם טעות?</b> <a href="/corrections/">בקשת תיקון או הסרה</a>.</li>
     <li><b>רוצים לפרסם?</b> <a href="/advertise/">פרסמו אצלנו</a>.</li>
-    <li><b>מייל המערכת:</b> <span dir="ltr">{BRAND.email}</span></li>
+    <li><b>כל דבר אחר:</b> <a href="#form">בטופס כאן למטה</a>.</li>
   </ul>
   <h2 id="form">כתבו לנו</h2>
   <p>שאלה, הצעה או כל דבר אחר. ההודעה מגיעה ישר למערכת, ונחזור אליכם.</p>
