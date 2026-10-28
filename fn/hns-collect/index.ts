@@ -13,7 +13,8 @@
 //   reads hns_cal, so the calendar costs no AI calls.
 // 28.10.2026 (more sources): kind 'gnews', Google News RSS searches for local terms (נתניה, כפר יונה, מכבי נתניה...). They bring the
 //   outlets we do not read directly (and that block our servers): each new item keeps its real outlet (hns_items.outlet, outlet_url),
-//   is resolved to the article's own URL, and is dropped when a direct feed or another term already has it. At most 4 terms a minute.
+//   is resolved to the article's own URL, and is dropped when a direct feed or another term already has it. One feed a minute at most
+//   (Google answers 503 to faster polling from our servers); the terms are grouped with OR into 5 feeds limited to the last day (when:1d).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -261,8 +262,8 @@ async function gnewsFresh(raw: GRaw[]) {
   const seen = new Set((had || []).map((x: Any) => x.guid));
   const heads = await recentHeads();
   const fresh = young.filter((x) => !seen.has(x.guid) && !heads.has(headKey(x.title)));
-  // resolve the article URLs (at most 8 a run; the rest keep the Google link)
-  await Promise.all(fresh.slice(0, 8).map(async (x) => { const u = await gnResolve(x.guid); if (u) x.url = u; }));
+  // resolve the article URLs (at most 4 a run, one after another; the rest keep the Google link)
+  for (const x of fresh.slice(0, 4)) { const u = await gnResolve(x.guid); if (u) x.url = u; }
   return fresh;
 }
 
@@ -336,7 +337,8 @@ async function tick() {
   // Google News terms run one after another (after the other sources), so two terms never store the same article twice
   RECENT_HEADS = null;
   const res = await Promise.all(due.filter((s: Any) => s.kind !== 'gnews').map(pollSource));
-  for (const s of due.filter((s: Any) => s.kind === 'gnews').slice(0, 4)) res.push(await pollSource(s));
+  // at most one Google News feed a minute: more than that gets our servers a 503 (rate limit) from Google
+  for (const s of due.filter((s: Any) => s.kind === 'gnews').slice(0, 1)) res.push(await pollSource(s));
   // daily comparison report at 08:00 Israel time for the day before
   let report: Any = null;
   const p = ilParts(new Date());
