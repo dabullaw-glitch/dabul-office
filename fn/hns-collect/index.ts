@@ -11,6 +11,9 @@
 //   kind 'smarticket' (the official listing of the Netanya Culture Hall). Listing events are not news items: they go to the table
 //   hns_cal (one row per show and date, refreshed on every poll) and the site shows them as the events calendar. hns-write never
 //   reads hns_cal, so the calendar costs no AI calls.
+// 28.10.2026 (more sources): kind 'gnews', Google News RSS searches for local terms (נתניה, כפר יונה, מכבי נתניה...). They bring the
+//   outlets we do not read directly (and that block our servers): each new item keeps its real outlet (hns_items.outlet, outlet_url),
+//   is resolved to the article's own URL, and is dropped when a direct feed or another term already has it. At most 4 terms a minute.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -204,6 +207,65 @@ function parseSmarticket(html: string, base: string): CalRow[] {
   return [...out.values()];
 }
 
+// ---------- Google News search feeds (28.10.2026) ----------
+// kind 'gnews': a Google News RSS search for one local term. Each item names its outlet in <source url="...">Name</source> and its
+// title ends with " - Name". The link is a Google redirect, so a NEW item is resolved to the article's own URL (the writer reads the
+// article from there). An item is skipped when it is older than 18 hours, when another Google News term already has it, or when the
+// same headline already came from one of our direct feeds in the last 3 days. Media items are facts only, never copied text.
+interface GRaw extends Raw { outlet: string; outlet_url: string }
+function parseGnews(xml: string): GRaw[] {
+  const out: GRaw[] = [];
+  for (const b of xml.split(/<item[\s>]/i).slice(1)) {
+    const sm = b.match(/<source[^>]*url="([^"]*)"[^>]*>([\s\S]*?)<\/source>/i);
+    const outlet = sm ? strip(sm[2]) : '';
+    let title = strip(tag(b, 'title'));
+    if (outlet && title.endsWith(` - ${outlet}`)) title = title.slice(0, -(outlet.length + 3)).trim();
+    const guid = strip(tag(b, 'guid'));
+    const link = strip(tag(b, 'link'));
+    const t = Date.parse(tag(b, 'pubDate'));
+    if (!title || !guid) continue;
+    out.push({ guid: guid.slice(0, 300), url: link, title: clip(title, 220), body: '', published_at: isFinite(t) ? new Date(t).toISOString() : null, outlet, outlet_url: sm ? sm[1] : '' });
+  }
+  return out;
+}
+// the article's own URL behind a Google News link: the article page gives a signature and a timestamp, and one batchexecute call
+// returns the URL. '' when it fails (the item keeps the Google link).
+async function gnResolve(id: string) {
+  try {
+    const r = await fetch(`https://news.google.com/rss/articles/${id}`, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(10000) });
+    const html = await r.text();
+    const sg = (html.match(/data-n-a-sg="([^"]+)"/) || [])[1]; const ts = (html.match(/data-n-a-ts="([^"]+)"/) || [])[1];
+    if (!sg || !ts) return '';
+    const inner = JSON.stringify(['garturlreq', [['X', 'X', ['X', 'X'], null, null, 1, 1, 'US:en', null, 1, null, null, null, null, null, 0, 1], 'X', 'X', 1, [1, 1, 1], 1, 1, null, 0, 0, null, 0], id, Number(ts), sg]);
+    const r2 = await fetch('https://news.google.com/_/DotsSplashUi/data/batchexecute', { method: 'POST', signal: AbortSignal.timeout(10000),
+      headers: { 'content-type': 'application/x-www-form-urlencoded;charset=UTF-8', 'User-Agent': UA },
+      body: 'f.req=' + encodeURIComponent(JSON.stringify([[['Fbv4je', inner, null, 'generic']]])) });
+    const t = await r2.text();
+    try { const a = JSON.parse(t.split('\n\n')[1]); const u = JSON.parse(a[0][2])[1]; if (/^https?:\/\//.test(u)) return String(u); } catch { /* try the plain match */ }
+    const m = t.match(/garturlres\\",\\"(https?:[^"\\]+)/);
+    return m ? m[1] : '';
+  } catch { return ''; }
+}
+const headKey = (s: string) => norm(s).replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+let RECENT_HEADS: Set<string> | null = null; // headlines of the last 3 days from our other sources, read once per run
+async function recentHeads() {
+  if (RECENT_HEADS) return RECENT_HEADS;
+  const { data } = await sb.from('hns_items').select('title').not('source_id', 'like', 'gn_%').gte('fetched_at', new Date(Date.now() - 3 * 864e5).toISOString()).limit(10000);
+  RECENT_HEADS = new Set((data || []).map((x: Any) => headKey(String(x.title || ''))));
+  return RECENT_HEADS;
+}
+async function gnewsFresh(raw: GRaw[]) {
+  const young = raw.filter((x) => x.published_at && Date.now() - Date.parse(x.published_at) < 18 * 3600e3);
+  if (!young.length) return [];
+  const { data: had } = await sb.from('hns_items').select('guid').like('source_id', 'gn_%').in('guid', young.map((x) => x.guid));
+  const seen = new Set((had || []).map((x: Any) => x.guid));
+  const heads = await recentHeads();
+  const fresh = young.filter((x) => !seen.has(x.guid) && !heads.has(headKey(x.title)));
+  // resolve the article URLs (at most 8 a run; the rest keep the Google link)
+  await Promise.all(fresh.slice(0, 8).map(async (x) => { const u = await gnResolve(x.guid); if (u) x.url = u; }));
+  return fresh;
+}
+
 // ---------- polling ----------
 async function fetchText(url: string, src: Any) {
   const h: Record<string, string> = { 'User-Agent': UA, 'Accept-Language': 'he-IL,he;q=0.9,en;q=0.5' };
@@ -235,18 +297,23 @@ async function pollSource(src: Any) {
       await sb.from('hns_sources').update({ last_run: now, last_ok: now, last_error: null, fails: 0, etag: r.etag || null, last_modified: r.lm || null }).eq('id', src.id);
       return { id: src.id, events: cal.length };
     }
-    const raw = src.kind === 'telegram' ? parseTelegram(r.text, src.url) : src.kind === 'rss' ? parseRss(r.text) : src.kind === 'youtube' ? parseAtom(r.text) : src.kind === 'netanyanet' ? parseNetanyanet(r.text) : [];
-    if (!raw.length) throw new Error('no items parsed');
+    const gn = src.kind === 'gnews' ? parseGnews(r.text) : null;
+    const raw: Raw[] = gn ?? (src.kind === 'telegram' ? parseTelegram(r.text, src.url) : src.kind === 'rss' ? parseRss(r.text) : src.kind === 'youtube' ? parseAtom(r.text) : src.kind === 'netanyanet' ? parseNetanyanet(r.text) : []);
+    if (!raw.length && !(gn && /<channel/i.test(r.text))) throw new Error('no items parsed');
     const first = !src.last_ok;
-    const rows = raw.map((x) => {
+    const keep: Raw[] = gn && !first ? await gnewsFresh(gn) : raw;
+    if (gn) for (const x of keep) RECENT_HEADS?.add(headKey(x.title));
+    const rows = keep.map((x) => {
       const all = `${x.title}\n${x.body || ''}`;
       const { places, local } = placesIn(all, !!src.local_only, [...(src.extra_terms || []), ...(src.id === 'ims_warn' ? IMS_TERMS : [])]);
       const t = norm(all);
       return {
         source_id: src.id, guid: x.guid, url: x.url || null, title: x.title, body: x.body || null, published_at: x.published_at || null,
         backfill: first, places, is_local: local, topic: topicOf(t, src.id), sensitivity: sensitivityOf(t), urgent: urgentOf(src.id, t, local),
+        ...((x as GRaw).outlet !== undefined ? { outlet: (x as GRaw).outlet || null, outlet_url: (x as GRaw).outlet_url || null } : {}),
       };
     });
+    if (!rows.length) { await sb.from('hns_sources').update({ last_run: now, last_ok: now, last_error: null, fails: 0 }).eq('id', src.id); return { id: src.id, parsed: raw.length, new: 0 }; }
     const { data, error } = await sb.from('hns_items').upsert(rows, { onConflict: 'source_id,guid', ignoreDuplicates: true }).select('id,is_local,urgent');
     if (error) throw new Error('db: ' + error.message);
     await sb.from('hns_sources').update({ last_run: now, last_ok: now, last_error: null, fails: 0, etag: r.etag || null, last_modified: r.lm || null }).eq('id', src.id);
@@ -258,14 +325,18 @@ async function pollSource(src: Any) {
 }
 
 async function tick() {
-  const { data: srcs } = await sb.from('hns_sources').select('*').eq('enabled', true);
+  // kind 'html' belongs to hns-official (sources agent); the fastest sources (poll_min) go first so alerts are never starved
+  const { data: srcs } = await sb.from('hns_sources').select('*').eq('enabled', true).neq('kind', 'html').order('poll_min');
   const nowMs = Date.now();
   const due = (srcs || []).filter((s: Any) => {
     // back off after failures: wait poll_min * 2^fails, up to 6 hours
     const wait = Math.min(s.poll_min * Math.pow(2, Math.min(s.fails || 0, 8)), 360) * 60e3 - 20e3;
     return !s.last_run || nowMs - Date.parse(s.last_run) >= wait;
-  }).slice(0, 20);
-  const res = await Promise.all(due.map(pollSource));
+  }).slice(0, 24);
+  // Google News terms run one after another (after the other sources), so two terms never store the same article twice
+  RECENT_HEADS = null;
+  const res = await Promise.all(due.filter((s: Any) => s.kind !== 'gnews').map(pollSource));
+  for (const s of due.filter((s: Any) => s.kind === 'gnews').slice(0, 4)) res.push(await pollSource(s));
   // daily comparison report at 08:00 Israel time for the day before
   let report: Any = null;
   const p = ilParts(new Date());
