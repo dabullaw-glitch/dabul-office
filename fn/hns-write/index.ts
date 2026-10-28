@@ -17,6 +17,14 @@
 //   never a media outlet name; dropped when it fails) and "closure" for a road closure story ({place, what, until, approx}).
 // 28.10.2026 (fix): national stories that only "looked" local (a village name that is an everyday word) are closed with no AI
 //   call, and an answer that holds no story is closed once as 'rejected' instead of being paid for again every 10 minutes.
+// 28.10.2026 (Yakir: publish as fast as possible, automatically): CORROBORATION. A story built only on a community tip waits as
+//   'needs_check'. When a later item from one of our sources (official or media) tells the same event (same grouping rule, within
+//   12 hours), the tip story is written now from all its items with one AI call, and gets the normal state: routine ('draft', so
+//   hns-publish publishes it automatically) or 'needs_check' when sensitive, unclear or based only on another outlet's exclusive.
+// 28.10.2026 (budget switch): the daily cap and the model come from the row 'ai' of the table hns_config. Default (boost=false):
+//   max_per_day 25 with Sonnet, as Yakir approved. boost=true is set only after Yakir approves a bigger budget: up to
+//   boost_max_per_day calls, routine items (not sensitive, one or two source items) with boost_model (cheaper), the rest with
+//   boost_complex_model.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -30,6 +38,19 @@ async function secrets() {
 const J = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { 'content-type': 'application/json; charset=utf-8' } });
 const MAX_PER_DAY = 25;
 const MODEL = 'claude-sonnet-5-5';
+let CFG: Any = { max_per_day: MAX_PER_DAY, model: MODEL, boost: false };
+async function config() {
+  const { data } = await sb.from('hns_config').select('v').eq('k', 'ai').maybeSingle();
+  if (data?.v && typeof data.v === 'object') CFG = { ...CFG, ...data.v };
+}
+const dailyMax = () => Number(CFG.boost ? CFG.boost_max_per_day : CFG.max_per_day) || MAX_PER_DAY;
+const modelFor = (sensitive: boolean, nItems: number) => !CFG.boost ? (CFG.model || MODEL) : (!sensitive && nItems <= 2 ? (CFG.boost_model || MODEL) : (CFG.boost_complex_model || MODEL));
+// AI calls used today (Israel day): new stories with a model, plus tip stories that were corroborated and written today
+async function usedToday(dayStart: string) {
+  const { count: a } = await sb.from('hns_stories').select('id', { count: 'exact', head: true }).not('model', 'is', null).gte('created_at', dayStart);
+  const { count: b } = await sb.from('hns_stories').select('id', { count: 'exact', head: true }).not('model', 'is', null).lt('created_at', dayStart).gte('updated_at', dayStart).like('notes', '%אומת%');
+  return (a || 0) + (b || 0);
+}
 
 const norm = (s: string) => s.replace(/[״“”]/g, '"').replace(/[׳‘’]/g, "'").replace(/[ְ-ׇ]/g, '');
 const STOP = new Set(['נתניה', 'בנתניה', 'מנתניה', 'לנתניה', 'שנתניה', 'ברחוב', 'רחוב', 'היום', 'אתמול', 'הערב', 'הבוקר', 'לאחר', 'במהלך', 'סמוך', 'בסמוך', 'כבן', 'כבת', 'אשר', 'אשה', 'אישה', 'גבר', 'בעיר', 'העיר', 'עדכון', 'דוברות', 'מד"א', 'התקבל', 'דיווח', 'במוקד', 'מעניקים', 'טיפול', 'רפואי', 'ומפנים', 'חובשים', 'ופראמדיקים', 'ופרמדיקים', 'במצב', 'השרון', 'ראשוני', 'עודכן']);
@@ -107,21 +128,21 @@ const MEDIA_ONLY = 'מבוסס רק על פרסום בכלי תקשורת אחר
 const KIND = (s: Any) => s.role === 'tip' ? 'רמז לא רשמי' : s.trust === 'official' ? 'גוף רשמי' : 'כלי תקשורת';
 const promptFor = (items: Any[], src: Any, places: string[]) => 'המקורות (מהישן לחדש):\n\n' + items.map((x, i) => `מקור ${i + 1}: ${src[x.source_id].name_he} (${KIND(src[x.source_id])})\nזמן: ${x.published_at || x.fetched_at}\nכותרת: ${x.title}\nתוכן: ${(x.body || '').slice(0, 1200)}`).join('\n\n') + `\n\nמקומות שזוהו: ${places.join(', ') || 'לא זוהה'}`;
 // one call, and when the text fails the voice check one more call with the reason
-async function compose(user: string, feedback = '') {
-  const first = await claude(feedback ? `${user}\n\nהערה: טיוטה קודמת נפסלה כי ${feedback}. כתוב מחדש לפי כל הכללים, כדיווח שלנו.` : user);
+async function compose(user: string, feedback = '', model = MODEL) {
+  const first = await claude(feedback ? `${user}\n\nהערה: טיוטה קודמת נפסלה כי ${feedback}. כתוב מחדש לפי כל הכללים, כדיווח שלנו.` : user, model);
   let { out, usage } = first; let problem = voiceProblem(out); let retried = !!feedback;
   if (problem && !feedback) {
-    const second = await claude(`${user}\n\nהערה: הטיוטה הקודמת נפסלה כי ${problem}. כתוב מחדש לפי כל הכללים, כדיווח שלנו.`);
+    const second = await claude(`${user}\n\nהערה: הטיוטה הקודמת נפסלה כי ${problem}. כתוב מחדש לפי כל הכללים, כדיווח שלנו.`, model);
     out = second.out; usage = { first: usage, second: second.usage }; problem = voiceProblem(out); retried = true;
   }
   return { out, usage, problem, retried };
 }
 
-async function claude(user: string) {
+async function claude(user: string, model = MODEL) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: Object.assign({ 'x-api-key': S.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' } as Record<string, string>, S.ANTHROPIC_WORKSPACE_ID ? { 'anthropic-workspace-id': S.ANTHROPIC_WORKSPACE_ID } : {}),
-    body: JSON.stringify({ model: MODEL, max_tokens: 2500, system: SYSTEM, messages: [{ role: 'user', content: user }] }),
+    body: JSON.stringify({ model, max_tokens: 2500, system: SYSTEM, messages: [{ role: 'user', content: user }] }),
     signal: AbortSignal.timeout(90000),
   });
   const j = await r.json();
@@ -150,8 +171,8 @@ async function rewrite(ids: number[]) {
   const { data: srcs } = await sb.from('hns_sources').select('id,name_he,role,trust');
   const src = Object.fromEntries((srcs || []).map((s: Any) => [s.id, s]));
   const dayStart = new Date(Date.parse(ilDay(new Date()) + 'T00:00:00+03:00')).toISOString();
-  const { count: used } = await sb.from('hns_stories').select('id', { count: 'exact', head: true }).not('model', 'is', null).gte('created_at', dayStart);
-  let budget = MAX_PER_DAY + 10 - (used || 0); // a small extra allowance for rewrites
+  await config();
+  let budget = dailyMax() + 10 - (await usedToday(dayStart)); // a small extra allowance for rewrites
   const res: Any[] = [];
   const { data: rows } = await sb.from('hns_stories').select('*').in('id', ids).in('state', ['draft', 'needs_check']);
   for (const st of rows || []) {
@@ -188,7 +209,7 @@ async function tick() {
   const fresh = (items || []).filter((x: Any) => src[x.source_id] && src[x.source_id].role !== 'competitor');
   if (!fresh.length) return { fresh: 0 };
   // stories of the last 12 hours, with the words of their items, to attach follow ups to the same story
-  const { data: recent } = await sb.from('hns_stories').select('id,item_ids,state,created_at').gte('created_at', since).order('id', { ascending: false }).limit(200);
+  const { data: recent } = await sb.from('hns_stories').select('id,item_ids,state,created_at,notes,sensitivity,places,section').gte('created_at', since).order('id', { ascending: false }).limit(200);
   const rIds = [...new Set((recent || []).flatMap((s: Any) => s.item_ids || []))];
   const { data: rItems } = rIds.length ? await sb.from('hns_items').select('id,title,body,cluster_id').in('id', rIds) : { data: [] };
   const storyToks = new Map<number, Set<string>>();
@@ -205,17 +226,47 @@ async function tick() {
   }
   // AI calls used today
   const dayStart = new Date(Date.parse(ilDay(new Date()) + 'T00:00:00+03:00')).toISOString();
-  const { count: used } = await sb.from('hns_stories').select('id', { count: 'exact', head: true }).not('model', 'is', null).gte('created_at', dayStart);
-  let budget = MAX_PER_DAY - (used || 0);
+  await config();
+  let budget = dailyMax() - (await usedToday(dayStart));
   const res: Any[] = [];
+  if (!OUTLET_RE) await outlets();
   for (const g of groups) {
     const ids = g.items.map((x) => x.id);
     if (g.story) {
       // follow up item for a story we already have: attach it, mark the story for a look
       const st = (recent || []).find((s: Any) => s.id === g.story);
       await sb.from('hns_items').update({ cluster_id: g.story }).in('id', ids);
-      await sb.from('hns_stories').update({ item_ids: [...new Set([...(st?.item_ids || []), ...ids])], updated_at: new Date().toISOString(), notes: 'נוסף מקור חדש, כדאי לעדכן' }).eq('id', g.story);
-      res.push({ story: g.story, attached: ids.length });
+      const allIds = [...new Set([...(st?.item_ids || []), ...ids])];
+      const corroborates = st && st.state === 'needs_check' && /רמז בלבד/.test(st.notes || '') && g.items.some((x) => src[x.source_id].role === 'source');
+      if (!corroborates) {
+        await sb.from('hns_stories').update({ item_ids: allIds, updated_at: new Date().toISOString(), ...(/^auto:/.test(st?.notes || '') ? {} : { notes: 'נוסף מקור חדש, כדאי לעדכן' }) }).eq('id', g.story);
+        res.push({ story: g.story, attached: ids.length });
+        continue;
+      }
+      // a tip confirmed by one of our sources: write the story now from all its items
+      if (budget <= 0) { await sb.from('hns_stories').update({ item_ids: allIds, updated_at: new Date().toISOString(), notes: 'רמז בלבד, אומת במקור נוסף, מחכה לתקציב היומי' }).eq('id', g.story); res.push({ story: g.story, skipped: 'daily budget' }); continue; }
+      budget--;
+      const { data: all } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places,topic,sensitivity').in('id', allIds).order('id');
+      const its = (all || []).filter((x: Any) => src[x.source_id]);
+      const sens = st.sensitivity === 'sensitive' || its.some((x: Any) => x.sensitivity === 'sensitive');
+      const places = [...new Set([...(st.places || []), ...its.flatMap((x: Any) => x.places || [])])];
+      const model = modelFor(sens, its.length);
+      try {
+        const { out, usage, problem, retried } = await compose(promptFor(its, src, places), '', model);
+        const basis = ['official', 'public', 'media_exclusive'].includes(out.basis) ? out.basis : null;
+        const mediaOnly = basis === 'media_exclusive' && !its.some((x: Any) => src[x.source_id].trust === 'official');
+        const state = sens || out.needsCheck || mediaOnly ? 'needs_check' : 'draft';
+        const sources = [...new Map(its.filter((x: Any) => src[x.source_id].role === 'source').map((x: Any) => [x.source_id, { id: x.source_id, name: src[x.source_id].name_he, url: x.url, trust: src[x.source_id].trust }])).values()];
+        const notes = ['אומת: רמז ומקור נוסף', sens ? 'ידיעה רגישה, רק באישור של יקיר' : '', mediaOnly ? MEDIA_ONLY : '', out.needsCheck ? (out.checkReason || 'צריך בדיקה') : '', retried ? 'נכתב מחדש' : '', problem ? `עדיין: ${problem}` : ''].filter(Boolean).join('. ');
+        await sb.from('hns_stories').update({ section: out.section || st.section, title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
+          places: out.places?.length ? out.places : places, sources, sensitivity: sens ? 'sensitive' : 'normal', state, notes, basis, model, usage, kicker: kickerOf(out), closure: closureOf(out),
+          item_ids: allIds, tg_sent_at: null, updated_at: new Date().toISOString() }).eq('id', g.story).eq('state', 'needs_check');
+        res.push({ story: g.story, corroborated: true, state });
+      } catch (e) {
+        const msg = String((e as Error).message || e);
+        await sb.from('hns_stories').update({ item_ids: allIds, updated_at: new Date().toISOString(), notes: `רמז בלבד, אומת אבל הכתיבה נכשלה: ${msg}`.slice(0, 300) }).eq('id', g.story);
+        res.push({ story: g.story, error: msg });
+      }
       continue;
     }
     const sensitive = g.items.some((x) => x.sensitivity === 'sensitive');
@@ -239,9 +290,9 @@ async function tick() {
     if (budget <= 0) { res.push({ skipped: 'daily budget', ids }); continue; } // left for tomorrow's budget or a manual run
     budget--;
     const user = promptFor(g.items, src, places);
+    const model = modelFor(sensitive, g.items.length);
     try {
-      if (!OUTLET_RE) await outlets();
-      const { out, usage, problem, retried } = await compose(user);
+      const { out, usage, problem, retried } = await compose(user, '', model);
       const isNetanya = places.some((p) => NETANYA_PLACES.has(p));
       const section = out.section || (isNetanya ? base.section : 'sharon');
       const basis = ['official', 'public', 'media_exclusive'].includes(out.basis) ? out.basis : null;
@@ -251,14 +302,14 @@ async function tick() {
         retried ? 'נכתב מחדש' : '', problem ? `עדיין: ${problem}` : ''].filter(Boolean).join('. ') || null;
       const { data: st } = await sb.from('hns_stories').insert({
         ...base, section, title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
-        places: out.places?.length ? out.places : places, state, notes, basis, model: MODEL, usage, kicker: kickerOf(out), closure: closureOf(out),
+        places: out.places?.length ? out.places : places, state, notes, basis, model, usage, kicker: kickerOf(out), closure: closureOf(out),
       }).select('id').single();
       if (st) await sb.from('hns_items').update({ cluster_id: st.id }).in('id', ids);
       res.push({ story: st?.id, state });
     } catch (e) {
       const msg = String((e as Error).message || e);
       // a final answer with no story is closed once (and counts in the daily budget); a network or service error is tried again next round
-      if (e instanceof NoStory) res.push({ story: await close(`הכתיבה לא החזירה ידיעה: ${msg}`.slice(0, 300), MODEL), closed: msg });
+      if (e instanceof NoStory) res.push({ story: await close(`הכתיבה לא החזירה ידיעה: ${msg}`.slice(0, 300), model), closed: msg });
       else res.push({ error: msg, ids });
     }
   }

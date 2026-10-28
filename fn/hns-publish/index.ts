@@ -16,6 +16,9 @@
 //   {action:'status'}  counts by state.
 //   {action:'withdraw', ids:[...], note}  takes published stories off the site (state 'withdrawn'; hns-feed returns only 'published').
 //   {action:'revise', id, title?, dek?, body?, key_points?, note}  corrects the text of a published story (same guards as publishing).
+//   {action:'close_dup', id, of, note?}  28.10.2026: a waiting story (draft or needs_check) that tells the same event as a published
+//     story is closed as 'rejected' with the note "כפילות של ידיעה <of>"; its source items are tied to the published story, so a
+//     later item about the same event is attached there and nothing is written or published twice.
 // 28.10.2026 (Yakir): an independent news site, written as our own reporting.
 //   Hard guard, every publishing path (automatic, Yakir's tap, launch, revise): a story is NOT published when its title, subtitle or
 //   key points name a media outlet (the list is the table hns_outlets), when its body names an outlet anywhere except one closing
@@ -241,6 +244,24 @@ async function withdraw(ids: number[], why: string) {
   }
   return out;
 }
+// close a waiting duplicate of a published story (same event): never published, its items move to the published story
+async function closeDup(id: number, of: number, why: string) {
+  const { data: pub } = await sb.from('hns_stories').select('id,state,item_ids').eq('id', of).maybeSingle();
+  if (!pub || pub.state !== 'published') return { ok: false, error: 'the original is not published' };
+  const { data: st } = await sb.from('hns_stories').select('id,state,item_ids').eq('id', id).maybeSingle();
+  if (!st || !['draft', 'needs_check'].includes(st.state)) return { ok: false, error: 'not a waiting story' };
+  const now = new Date().toISOString();
+  const { data } = await sb.from('hns_stories').update({ state: 'rejected', pub_note: clean(why || `כפילות של ידיעה ${of}`), decided_at: now, decided_by: 'dup', updated_at: now })
+    .eq('id', id).in('state', ['draft', 'needs_check']).select('id');
+  const items = [...new Set([...(pub.item_ids || []), ...(st.item_ids || [])])];
+  if (data?.length) {
+    await sb.from('hns_stories').update({ item_ids: items }).eq('id', of);
+    if ((st.item_ids || []).length) await sb.from('hns_items').update({ cluster_id: of }).in('id', st.item_ids);
+    await log('close_dup', id, { of });
+  }
+  return { ok: !!data?.length, id, of };
+}
+
 // correct the text of a published story; the new text must pass the same guard
 async function revise(b: Any) {
   await outlets();
@@ -273,6 +294,7 @@ Deno.serve(async (req) => {
     if (b.action === 'decide') return J(await decide(b.data, b.cq));
     if (b.action === 'withdraw') return J({ ok: true, res: await withdraw((b.ids || []).map(Number).filter(Boolean), String(b.note || '')) });
     if (b.action === 'revise') return J(await revise(b));
+    if (b.action === 'close_dup') return J(await closeDup(Number(b.id), Number(b.of), String(b.note || '')));
     if (b.action === 'check') { await outlets(); const { data } = await sb.from('hns_stories').select('*').in('id', (b.ids || []).map(Number)); return J({ ok: true, res: (data || []).map((st: Any) => ({ id: st.id, state: st.state, problem: voiceProblem(st) })) }); }
     if (b.action === 'publish_ids') return J({ ok: true, res: await publishIds((b.ids || []).map(Number).filter(Boolean), !!b.dry) });
     if (b.action === 'status') {

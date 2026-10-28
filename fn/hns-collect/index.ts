@@ -7,6 +7,10 @@
 // POST (x-cron-secret) {action:'poll', id}         -> poll one source now (testing).
 // Rules: media feeds keep only the headline, a short teaser and the link (internal use). Community channels are tips only.
 // The competitor (netanyanet) is read only to compare coverage and timing, never to publish from.
+// 28.10.2026 (more official sources): kind 'youtube' (Atom feed of an official channel, e.g. the Netanya municipality channel) and
+//   kind 'smarticket' (the official listing of the Netanya Culture Hall). Listing events are not news items: they go to the table
+//   hns_cal (one row per show and date, refreshed on every poll) and the site shows them as the events calendar. hns-write never
+//   reads hns_cal, so the calendar costs no AI calls.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -96,6 +100,7 @@ const IMS_TERMS = ['ים התיכון', 'הים התיכון', 'מישור הח�
 const has = (t: string, words: string[]) => words.some((w) => t.includes(w));
 function topicOf(t: string, sourceId: string) {
   if (sourceId === 'oref_tg' || sourceId === 'ims_warn') return 'flash';
+  if (sourceId === 'fcmn') return 'sports';
   if (sourceId === 'netanya_updates_tg' || has(t, ['מכבי נתניה', 'כדורגל', 'כדורסל', 'ליגת העל', 'הליגה הלאומית', 'אצטדיון'])) return 'sports';
   if (has(t, ['פינוי בינוי', 'פינוי-בינוי', 'התחדשות עירונית', 'תמ"א', 'ועדה המקומית', 'הוועדה המקומית', 'ועדה מחוזית', 'תב"ע', 'היתר בני', 'יחידות דיור', 'נדל"ן', 'דירות', 'מגדל מגורים', 'שכונה חדשה', 'קבלן'])) return 'realestate';
   if (has(t, ['תאונ', 'נפגע', 'נפצע', 'פצוע', 'שריפ', 'שרפה', 'הצתה', 'ירי', 'דקיר', 'נעצר', 'חשוד', 'שוטר', 'משטרה', 'מד"א', 'כבאות', 'רצח', 'נהרג', 'רוח חיים', 'החייאה', 'דום לב', 'נפל מגובה', 'התרעה', 'אזעקה', 'רקטות', 'כלי טיס'])) return 'flash';
@@ -144,6 +149,19 @@ function parseRss(xml: string): Raw[] {
   }
   return out;
 }
+// Atom (YouTube channel feeds): <entry> with title, link href, published and media:description
+function parseAtom(xml: string): Raw[] {
+  const out: Raw[] = [];
+  for (const b of xml.split(/<entry[\s>]/i).slice(1)) {
+    const title = strip(tag(b, 'title'));
+    const link = (b.match(/<link[^>]*rel="alternate"[^>]*href="([^"]+)"/i) || b.match(/<link[^>]*href="([^"]+)"/i) || [])[1] || '';
+    const guid = strip(tag(b, 'id')) || link || title;
+    const t = Date.parse(tag(b, 'published') || tag(b, 'updated'));
+    if (!title) continue;
+    out.push({ guid: guid.slice(0, 300), url: link, title: clip(title, 220), body: clip(strip(tag(b, 'media:description')), 900), published_at: isFinite(t) ? new Date(t).toISOString() : null });
+  }
+  return out;
+}
 const HMONTHS: Record<string, number> = { 'ינואר': 1, 'פברואר': 2, 'מרץ': 3, 'מרס': 3, 'אפריל': 4, 'מאי': 5, 'יוני': 6, 'יולי': 7, 'אוגוסט': 8, 'ספטמבר': 9, 'אוקטובר': 10, 'נובמבר': 11, 'דצמבר': 12 };
 function parseNetanyanet(html: string): Raw[] {
   const seen = new Map<string, Raw>();
@@ -165,6 +183,25 @@ function parseNetanyanet(html: string): Raw[] {
     seen.set(id, { guid: id, url: 'https://www.netanyanet.co.il' + path, title: clip(text, 200), body: clip(text, 400), published_at: published });
   }
   return [...seen.values()];
+}
+
+// Smarticket listing (Netanya Culture Hall): one "show_cube" per show, with the name, the hall, and the date and time when one is set
+interface CalRow { guid: string; title: string; starts_at: string; venue: string | null; url: string }
+function parseSmarticket(html: string, base: string): CalRow[] {
+  const out = new Map<string, CalRow>();
+  for (const b of html.split('class="show_cube').slice(1)) {
+    const href = (b.match(/<a[^>]+href="([^"]+)"/) || [])[1] || '';
+    const title = strip((b.match(/id="show_name_\d+"[^>]*>([\s\S]*?)<\/div>/) || [])[1] || '');
+    const venue = strip((b.match(/class="theater_name"[^>]*>([\s\S]*?)<\/div>/) || [])[1] || '') || null;
+    const dm = strip((b.match(/class="show_date"[^>]*>([\s\S]*?)<\/div>/) || [])[1] || '').match(/(\d{1,2})\s+ב?([א-ת]+)\s+(\d{4})/);
+    const tm = strip((b.match(/class="event-time"[^>]*>([\s\S]*?)<\/span>/) || [])[1] || '').match(/(\d{1,2}):(\d{2})/);
+    if (!href || !title || !dm || !HMONTHS[dm[2]]) continue; // a series or a product without a date is not an event
+    const ms = ilToMs(+dm[3], HMONTHS[dm[2]], +dm[1], tm ? +tm[1] : 0, tm ? +tm[2] : 0);
+    let url = href; try { url = new URL(href, base).toString(); } catch { /* keep */ }
+    const starts_at = new Date(ms).toISOString();
+    out.set(`${href}|${starts_at}`, { guid: `${href}|${starts_at}`.slice(0, 300), title: clip(title, 200), starts_at, venue, url });
+  }
+  return [...out.values()];
 }
 
 // ---------- polling ----------
@@ -189,7 +226,16 @@ async function pollSource(src: Any) {
     const r = await fetchText(src.url, src);
     if (r.status === 304) { await sb.from('hns_sources').update({ last_run: now, last_ok: now, last_error: null, fails: 0 }).eq('id', src.id); return { id: src.id, new: 0, status: 304 }; }
     if (r.status >= 400) throw new Error(`HTTP ${r.status}`);
-    const raw = src.kind === 'telegram' ? parseTelegram(r.text, src.url) : src.kind === 'rss' ? parseRss(r.text) : src.kind === 'netanyanet' ? parseNetanyanet(r.text) : [];
+    if (src.kind === 'smarticket') {
+      const cal = parseSmarticket(r.text, src.url);
+      if (!cal.length) throw new Error('no events parsed');
+      const rows = cal.map((c) => ({ ...c, source_id: src.id, fetched_at: now }));
+      const { error } = await sb.from('hns_cal').upsert(rows, { onConflict: 'source_id,guid' });
+      if (error) throw new Error('db: ' + error.message);
+      await sb.from('hns_sources').update({ last_run: now, last_ok: now, last_error: null, fails: 0, etag: r.etag || null, last_modified: r.lm || null }).eq('id', src.id);
+      return { id: src.id, events: cal.length };
+    }
+    const raw = src.kind === 'telegram' ? parseTelegram(r.text, src.url) : src.kind === 'rss' ? parseRss(r.text) : src.kind === 'youtube' ? parseAtom(r.text) : src.kind === 'netanyanet' ? parseNetanyanet(r.text) : [];
     if (!raw.length) throw new Error('no items parsed');
     const first = !src.last_ok;
     const rows = raw.map((x) => {
@@ -218,7 +264,7 @@ async function tick() {
     // back off after failures: wait poll_min * 2^fails, up to 6 hours
     const wait = Math.min(s.poll_min * Math.pow(2, Math.min(s.fails || 0, 8)), 360) * 60e3 - 20e3;
     return !s.last_run || nowMs - Date.parse(s.last_run) >= wait;
-  }).slice(0, 14);
+  }).slice(0, 20);
   const res = await Promise.all(due.map(pollSource));
   // daily comparison report at 08:00 Israel time for the day before
   let report: Any = null;
