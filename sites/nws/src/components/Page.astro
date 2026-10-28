@@ -1,19 +1,24 @@
 ---
+// Plain pages (join, contact, policies, 404 and the other service pages), redesign 28.10.2026: a dark header with a section photo
+// (n-shero), the breadcrumbs, the title and the intro, then the page text. img: a key of IMG (stock photos); color: the accent bar.
 import Base from '../layouts/Base.astro';
-import Crumbs from './Crumbs.astro';
 import { IMG, type Lang, LANG_PREFIX } from '../data/site';
 import { t } from '../i18n/ui';
 interface Props { lang?: Lang; title: string; h1: string; description: string; path: string; intro?: string; color?: string; img?: string; jsonld?: any[]; alternates?: any; current?: string; noindex?: boolean; wide?: boolean }
-const { lang = 'he', title, h1, description, path, intro = '', color = '#0B3D6E', img = 'city', jsonld = [], alternates = {}, current = '', noindex = false, wide = false } = Astro.props;
+const { lang = 'he', title, h1, description, path, intro = '', color = '#C8102E', img = 'city', jsonld = [], alternates = {}, current = '', noindex = false, wide = false } = Astro.props;
 const u = t(lang);
 const crumbs = [{ name: u.home, href: LANG_PREFIX[lang] + '/' }, { name: h1, href: path }];
+const im = IMG[img] ?? IMG.city;
 ---
 <Base lang={lang} title={title} description={description} path={path} jsonld={jsonld} crumbs={crumbs} alternates={alternates} current={current} noindex={noindex}>
-  <section class="phero" style={`--bg:${color}`}>
-    <img class="bgi" src={IMG[img].src} alt="" width="1440" height="400">
-    <div class="wrap in"><Crumbs items={crumbs} light label={u.breadcrumbs} /><h1>{h1}</h1>{intro && <p>{intro}</p>}</div>
+  <section class="n-shero" style={`--c:${color}`}>
+    <div class="bg" aria-hidden="true"><img src={im.src} srcset={`${im.small} 800w, ${im.src} 1600w`} sizes="100vw" alt="" width="1600" height="1067" fetchpriority="high" decoding="async"></div><div class="sh" aria-hidden="true"></div>
+    <div class="n-wrap">
+      <nav aria-label={u.breadcrumbs}><ol class="n-crumb">{crumbs.map((c, i) => <li>{i < crumbs.length - 1 ? <a href={c.href}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>)}</ol></nav>
+      <h1>{h1}</h1>{intro && <p>{intro}</p>}<span class="bar" aria-hidden="true"></span>
+    </div>
   </section>
-  <div class="wrap" style="padding-block:28px 10px">
+  <div class="n-wrap n-page" style="padding-block:32px 48px">
     <div class={wide ? '' : 'prose'}><slot /></div>
   </div>
 </Base>

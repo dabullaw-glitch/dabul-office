@@ -454,3 +454,8 @@ main:focus{outline:0}
 }
 @media (max-width:380px){.n-lt b{font-size:14px}.n-mk{font-size:27px}}
 .n-spon{display:inline-flex;align-items:center;font-size:12.5px;font-weight:800;border-radius:4px;padding:2px 8px;background:#EEF0F4;color:#3B4656;line-height:1.5}
+/* plain pages: readable text in the new type */
+.n-page .prose{max-width:760px;font-size:17.5px;line-height:1.75}
+.n-page .prose h2{font-size:24px;font-weight:800;margin:32px 0 10px}
+.n-page .prose a{text-decoration:underline;text-underline-offset:3px}
+.n-page .prose ul{padding-inline-start:22px}
