@@ -1,11 +1,6 @@
-sk-closure-s.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-closure-s.jpg
-sk-closure-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-closure-l.jpg
-sk-vote-s.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-vote-s.jpg
-sk-road-s.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-road-s.jpg
-sk-police-s.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-police-s.jpg
-sk-hospital-s.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-hospital-s.jpg
-sk-phone-s.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-phone-s.jpg
-sk-center-s.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-center-s.jpg
-sk-beach-s.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-beach-s.jpg
-sk-skyline-s.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-skyline-s.jpg
-sk-cranes-s.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-cranes-s.jpg
+sk-vote-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-vote-l.jpg
+sk-police-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-police-l.jpg
+sk-road-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-road-l.jpg
+sk-hospital-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-hospital-l.jpg
+sk-court-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-court-l.jpg
+sk-cityhall-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-cityhall-l.jpg
