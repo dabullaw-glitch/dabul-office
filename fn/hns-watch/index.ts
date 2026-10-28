@@ -72,26 +72,29 @@ async function checks(): Promise<Issue[]> {
     const { data: pubs } = await sb.from('hns_stories').select('id,title,published_at').eq('state', 'published').not('published_at', 'is', null)
       .lte('published_at', new Date(now - 15 * 60e3).toISOString()).order('published_at', { ascending: false }).limit(1);
     const p = pubs?.[0];
-    if (p && Date.parse(p.published_at) > siteNewest + 1000) {
-      out.push({ key: 'site_stale', text: `האתר לא מתעדכן: הידיעה "${String(p.title).slice(0, 80)}" פורסמה לפני ${ago(mins(p.published_at))} ועדיין לא מופיעה ב-nws.co.il. בנייה אחרונה של האתר: לפני ${ago(mins(j.at))}.` });
+    // 28.10.2026: check by the story's address, not by time (the site's "at" can be a little earlier than published_at,
+    // which raised a false alert for story 96). Only stories newer than the site's own newest entry are checked.
+    const onSite = (j.items || []).some((x: Any) => String(x.u || '').includes(`/n${p?.id}/`));
+    if (p && !onSite && Date.parse(p.published_at) > siteNewest + 5 * 60e3) {
+      out.push({ key: 'site_stale', text: `האתר לא מתעדכן: הידיעה "${String(p.title).slice(0, 80)}" פורסמה לפני ${ago(mins(p.published_at))} ועדיין לא מופיעה באתר. בנייה אחרונה של האתר: לפני ${ago(mins(j.at))}.` });
     }
   } catch (e) {
-    out.push({ key: 'site_down', text: `לא הצלחתי לקרוא את האתר nws.co.il (${String((e as Error).message || e).slice(0, 80)}).` });
+    out.push({ key: 'site_down', text: `לא הצלחתי לקרוא את האתר (${String((e as Error).message || e).slice(0, 80)}).` });
   }
 
   // 5 the pipeline functions
   const lastRun = Math.max(0, ...(srcs || []).filter((s: Any) => s.enabled).map((s: Any) => Date.parse(s.last_run) || 0));
-  if (lastRun && now - lastRun > 10 * 60e3) out.push({ key: 'collect_stopped', text: `איסוף הידיעות (hns-collect) לא רץ כבר ${ago(Math.round((now - lastRun) / 60e3))}.` });
+  if (lastRun && now - lastRun > 10 * 60e3) out.push({ key: 'collect_stopped', text: `איסוף הידיעות לא רץ כבר ${ago(Math.round((now - lastRun) / 60e3))}.` });
   const { count: stuckItems } = await sb.from('hns_items').select('id', { count: 'exact', head: true }).eq('is_local', true).eq('backfill', false).is('cluster_id', null)
     .gte('fetched_at', new Date(now - 6 * 3600e3).toISOString()).lte('fetched_at', new Date(now - 40 * 60e3).toISOString());
-  if ((stuckItems || 0) >= 3) out.push({ key: 'write_stuck', text: `${stuckItems} פריטים מקומיים מחכים יותר מ-40 דקות ולא נכתבו לידיעות (hns-write). ייתכן שהכתיבה נתקעה או שהתקציב היומי נגמר.` });
+  if ((stuckItems || 0) >= 3) out.push({ key: 'write_stuck', text: `${stuckItems} פריטים מקומיים מחכים יותר מ-40 דקות ולא נכתבו לידיעות. ייתכן שהכתיבה נתקעה או שהתקציב היומי נגמר.` });
   const { count: stuckDrafts } = await sb.from('hns_stories').select('id', { count: 'exact', head: true }).eq('state', 'draft').eq('sensitivity', 'normal').is('pub_note', null)
     .gte('created_at', new Date(now - 24 * 3600e3).toISOString()).lte('created_at', new Date(now - 20 * 60e3).toISOString()).not('title', 'is', null);
-  if ((stuckDrafts || 0) >= 2) out.push({ key: 'publish_stuck', text: `${stuckDrafts} טיוטות רגילות מחכות יותר מ-20 דקות בלי החלטה של שלב הפרסום (hns-publish).` });
+  if ((stuckDrafts || 0) >= 2) out.push({ key: 'publish_stuck', text: `${stuckDrafts} טיוטות רגילות מחכות יותר מ-20 דקות בלי החלטה של שלב הפרסום.` });
   const { data: http } = await sb.rpc('hns_watch_http', { since: new Date(now - 30 * 60e3).toISOString() });
   const fails = (http || []).filter((x: Any) => !/"ok"\s*:\s*true/.test(x.content || ''));
   if (fails.length >= 3) {
-    const sample = [...new Set(fails.map((x: Any) => (x.timed_out ? 'timeout' : `${x.status_code || ''} ${String(x.content || x.error_msg || '').replace(/\s+/g, ' ').slice(0, 70)}`).trim()))].slice(0, 3);
+    const sample = [...new Set(fails.map((x: Any) => (x.timed_out ? 'לא ענתה בזמן' : `${x.status_code || ''} ${String(x.content || x.error_msg || '').replace(/\s+/g, ' ').slice(0, 70)}`).trim()))].slice(0, 3);
     out.push({ key: 'http_errors', text: `${fails.length} קריאות לפונקציות המערכת נכשלו בחצי השעה האחרונה. דוגמאות: ${sample.join(' | ')}` });
   }
   return out;
