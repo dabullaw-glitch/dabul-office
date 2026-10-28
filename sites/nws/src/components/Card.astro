@@ -26,7 +26,7 @@ const by = a.kind === 'opinion' && a.author ? a.author : spon ? (a.author || (he
 <article class="n-card" style={`--c:${s.color}`}>
   <a class="n-ph" href={href} tabindex="-1" aria-hidden="true" style={`aspect-ratio:${ratio}`}>
     <img src={p.src} srcset={p.srcset} sizes={p.srcset ? sizes : undefined} alt="" width={p.w} height={p.h} loading={eager ? 'eager' : 'lazy'} decoding="async">
-    {flash && <span class="n-badge"><i></i>{he ? 'מבזק' : 'Breaking'}</span>}
+    {a.live ? <span class="n-badge"><i></i>{he ? 'מתעדכן' : 'Live'}</span> : flash && <span class="n-badge"><i></i>{he ? 'מבזק' : 'Breaking'}</span>}
     {a.video && <span class="n-play" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#0D1321"/></svg></span>}
     <span class="n-cap">{label}</span>
   </a>

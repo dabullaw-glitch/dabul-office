@@ -14,6 +14,8 @@ export interface Article {
   kicker?: string; kind?: 'news' | 'opinion' | 'sponsored'; author?: string; authorRole?: string; video?: string;
   closure?: { place: string; what: string; until: string; approx: boolean } | null;
   ai?: AiImg | null;
+  // live updates of a developing story (hns-feed v7): oldest first; live while the last update is less than 6 hours old
+  updates?: { at: string; text: string }[]; live?: boolean;
 }
 export interface AiImg { alt: string; files?: { src: string; w: number }[]; remote?: string; w: number; h: number; model: string }
 
@@ -53,6 +55,8 @@ function fromFeed(s: any): any {
     kicker: clean(s.kicker), kind: s.kind === 'opinion' ? 'opinion' : s.kind === 'sponsored' ? 'sponsored' : 'news', author: clean(s.author), authorRole: clean(s.authorRole), video: s.video || '',
     closure: s.closure && s.closure.place ? { place: clean(s.closure.place), what: clean(s.closure.what), until: String(s.closure.until || ''), approx: !!s.closure.approx } : null,
     ai: aiOf(s),
+    updates: (Array.isArray(s.updates) ? s.updates : []).filter((x: any) => x && x.at && x.text).map((x: any) => ({ at: new Date(x.at).toISOString(), text: clean(x.text) })),
+    live: !!s.live && Array.isArray(s.updates) && s.updates.length > 0 && Date.now() - Date.parse(s.updates[s.updates.length - 1].at) < 6 * 3600e3,
   };
 }
 const FEED_JSON: any = readJson('feed.json', { stories: [] });
