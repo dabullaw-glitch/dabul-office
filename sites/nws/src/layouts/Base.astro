@@ -198,7 +198,6 @@ if(c&&c.a){gtag('consent','update',{analytics_storage:'granted'});nwsLoadGA()}</
   <div class="bt"><a class="n-btn tg" href={tgHref} {...tgAttr} data-tg><Icon name="telegram" size={18} color="#fff" />{he ? 'ערוץ הטלגרם' : 'Telegram'}</a><a class="n-btn line" href={`${pre}/send-news/`}>{u.sendNews}</a><a class="n-btn line" href="/advertise/">{u.advertise}</a></div>
   <div class="lgs">{LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l === 'he' ? 'עברית' : l === 'ru' ? 'Русский' : l === 'fr' ? 'Français' : 'English'}</a>)}</div>
 </div>
-<button class="n-pill" type="button" id="npill" aria-live="polite"><Icon name="up" size={16} sw={2.4} color="#fff" /><span></span></button>
 <button class="n-top-btn" type="button" id="ntop" aria-label={L.top}><Icon name="up" size={20} sw={2.2} color="#fff" /></button>
 <button class="n-a11y-btn" type="button" id="na11yb" aria-haspopup="dialog" aria-controls="na11y" aria-expanded="false" aria-label={he ? 'תפריט נגישות' : 'Accessibility menu'}><Icon name="a11y" size={26} sw={2} color="#fff" /></button>
 <div class="n-a11y" id="na11y" role="dialog" aria-modal="true" aria-labelledby="na11y-h" hidden>
@@ -262,11 +261,7 @@ if(ck){if(!C){try{var mc=d.cookie.match(/(?:^|; )nws_consent=(all|necessary)/);i
  d.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-ck-open],#nws-cookie-settings');if(b){e.preventDefault();nwsCookieSettings(b)}});
  addEventListener('resize',function(){if(!ck.hidden)h.style.setProperty('--ck-h',ck.offsetHeight+'px')},{passive:true});
  if(!C)ckShow(true)}
-/* new stories: the build writes /latest.json (newest stories); a pill appears when there are newer ones than on this page */
-var pill=d.getElementById('npill'),lt=d.querySelector('[data-latest]');if(pill&&window.fetch&&lt){var seen=[];try{seen=JSON.parse(lt.getAttribute('data-latest'))||[]}catch(e){}
- function poll(){fetch('/latest.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){var ids=(j.items||[]).map(function(x){return x.u});
-  var n=ids.filter(function(u){return seen.indexOf(u)<0}).length;if(n>0){pill.querySelector('span').textContent=n===1?T.newer1:(n+' '+T.newer);pill.classList.add('on')}}).catch(function(){})}
- pill.addEventListener('click',function(){location.reload()});poll();setInterval(function(){if(!d.hidden)poll()},60000)}
+/* 28.10.2026: the "new stories" pill was removed at Yakir's request (he doesn't want it). /latest.json is still built. */
 })();
 </script>
 <script is:inline>
