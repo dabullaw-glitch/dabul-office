@@ -1,0 +1,21 @@
+{
+  "title": "Wayback Machine",
+  "loaded": [
+    "Iconochive-Regular normal normal"
+  ],
+  "faces": [],
+  "els": [
+    {
+      "sel": "body",
+      "text": "__wm.rw(0);\n\nThe Wayback Machine - https://web.archive.org/w",
+      "family": "\"Times New Roman\"",
+      "weight": "400",
+      "size": "16px",
+      "lh": "normal",
+      "color": "rgb(0, 0, 0)"
+    }
+  ],
+  "fontReqs": [
+    "https://web-static.archive.org/_static/fonts/Iconochive-Regular.woff"
+  ]
+}
