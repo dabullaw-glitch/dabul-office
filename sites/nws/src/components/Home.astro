@@ -70,8 +70,10 @@ const re = take(reAll, 6);
 // 7. directory
 const cats = CATEGORIES.slice(0, 9);
 // 8. culture: stories of the section and the next events of the official calendar
-const leis = take(all.filter((a) => a.section === 'leisure'), 2);
+const leisAll = all.filter((a) => a.section === 'leisure');
+const leis = take(leisAll, 2);
 const cal = he ? CALENDAR.slice(0, 4 - leis.length) : [];
+if (leis.length + cal.length < 4) leis.push(...take(leisAll, 4 - leis.length - cal.length));
 const mon = (iso: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', month: 'short' }).format(new Date(iso));
 const dayN = (iso: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric' }).format(new Date(iso));
 
@@ -169,16 +171,16 @@ const T = he ? { live: 'עכשיו בנתניה והשרון', liveSub: 'מתע�
     <div class="bg" aria-hidden="true"><img src="/img/stock/stadium-night-1600.webp" alt="" width="1600" height="1067" loading="lazy" decoding="async"></div><div class="shade" aria-hidden="true"></div>
     <div class="n-wrap">
       <h2 class="n-sh" id="sp-h" style="--c:#5BD08A">ספורט<a href={sectionUrl('sports')}>לכל ידיעות הספורט ←</a></h2>
-      <div class="n-sg">
+      <div class={`n-sg${sports.length === 0 ? " only" : sports.length === 1 ? " one" : ""}`}>
         {sports[0] ? (() => { const p = picOf(sports[0]); return (
         <article class="n-sl">
           <a class="n-ph" href={articleUrl(sports[0])} tabindex="-1" aria-hidden="true" style="aspect-ratio:16/10"><img src={p.src} srcset={p.srcset} sizes="(max-width: 1100px) 100vw, 520px" alt="" width={p.w} height={p.h} loading="lazy" decoding="async"><span class="n-cap">{p.label}</span></a>
           <div style="margin-top:16px"><span class="n-k" style="--c:#5BD08A">{kickerOf(sports[0])}</span></div>
           <h3><a href={articleUrl(sports[0])}>{sports[0].title}</a></h3>
           {sports[0].dek && <p>{sports[0].dek}</p>}
-        </article>); })() : <div></div>}
-        <ul class="n-sll">{sports.slice(1).map((a) => <li><small>{a.kicker || 'מכבי נתניה'}</small><a href={articleUrl(a)}>{a.title}</a></li>)}</ul>
-        <div style="display:flex;flex-direction:column;gap:16px">
+        </article>); })() : null}
+        {sports.length > 1 && <ul class="n-sll">{sports.slice(1).map((a) => <li><small>{a.kicker || 'מכבי נתניה'}</small><a href={articleUrl(a)}>{a.title}</a></li>)}</ul>}
+        <div class="n-sd">
           {nx && (
           <div class="n-fx">
             <div class="h"><span>המשחק הבא</span><span>{SPORT.league}{nx.round ? `, מחזור ${nx.round}` : ''}</span></div>
