@@ -1,0 +1,55 @@
+/* Story page only (Article.dc.html, 28.10.2026). The shared parts (n-lay, n-t, n-by, n-hero, n-brief, n-body, n-also, n-next,
+   n-srcl, n-tags, n-fix, n-aside, n-fl, n-tgc, n-rel, n-rg) are in nws.css; this file holds what only the story page uses. */
+.n-art .n-lay{align-items:start}
+.n-art article{min-width:0}
+.n-art .art-k{margin-top:18px}
+.n-art .n-k{font-size:14px}
+.n-art .n-k:before{width:16px}
+.n-art .n-who a:hover b{color:var(--red)}
+.n-art .art-role{display:inline;font-size:13px;color:var(--mut);font-weight:500;margin-inline-start:8px}
+.n-art .n-share{flex-wrap:wrap}
+.n-art .n-share .done{border-color:#17803F;color:#17803F}
+.art-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.n-art .n-hero{margin-inline:0}
+.n-art .n-hero figcaption .art-lbl{flex:none;margin-inline-start:auto}
+/* sponsored content: the label above the kicker and in the byline, the disclosure line at the end */
+.n-art .art-k{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.art-spon{display:inline-flex;align-items:center;min-height:26px;padding:2px 10px;border-radius:4px;background:#FFF1C2;border:1px solid #D9B44A;color:#4A3500;font-size:13px;font-weight:800;letter-spacing:.2px}
+.art-disc{max-width:760px;margin:22px 0 0;padding:12px 16px;border:1px solid var(--line);border-radius:6px;font-size:14.5px;color:var(--ink2);background:var(--warm2)}
+.n-body ul,.n-body ol{margin:0 0 22px;padding-inline-start:26px;display:flex;flex-direction:column;gap:8px}
+/* pull quote */
+.n-q{margin:32px 0;padding:6px 26px 6px 0;border-right:4px solid var(--red);font-size:28px;font-weight:700;line-height:1.4;color:var(--ink)}
+[dir=ltr] .n-q{padding:6px 0 6px 26px;border-right:0;border-left:4px solid var(--red)}
+.n-q p{margin:0}
+.n-q cite{display:block;font-size:14px;font-style:normal;color:var(--mut);font-weight:500;margin-top:8px}
+.n-art .n-also{color:var(--ink)}
+.n-art .n-next{margin-top:28px}
+.n-art .n-tags a{min-height:44px}
+.n-art .n-fix a{display:inline-flex;align-items:center;min-height:44px}
+/* sidebar */
+.n-art .n-aside .bh{font-size:16px}
+.n-art .n-fl a{display:block}
+.n-art .n-fl a:hover{color:var(--red)}
+.n-art .art-bar{width:5px;height:18px;background:var(--c,var(--ink));border-radius:1px;flex:none}
+.n-art .art-src{margin:0;padding:0 18px 12px;font-size:12.5px;color:var(--mut)}
+.n-art .art-src a{text-decoration:underline}
+.n-art .art-pros a{display:flex;align-items:center;gap:10px;font-weight:700;min-height:44px}
+.n-art .art-pros .ic{width:36px;height:36px;border-radius:50%;background:var(--warm);display:inline-flex;align-items:center;justify-content:center;color:var(--c);flex:none}
+/* the Telegram button on the dark card: a darker blue so the white text keeps 4.5:1 */
+.n-art .n-tgc .n-btn.tg{background:#0B6FA4}
+.n-art .n-tgc .n-btn.tg:hover{background:#095A85}
+/* related grid */
+.n-art .n-rg a{display:block;color:var(--ink)}
+.n-art .n-rel{margin-top:8px}
+@media (max-width:760px){
+ /* the short header bar fits a 400px screen: tighter gaps, a smaller name, the Telegram button shows only its icon (the text stays for screen readers) */
+ .n-head.cmp .n-bar .n-wrap{gap:12px}.n-head.cmp .n-bar .n-mk{font-size:30px}.n-head.cmp .n-bar .bn{font-size:15px;padding-right:10px}
+ .n-head.cmp .n-bar .n-btn{font-size:0;gap:0;width:44px;padding-inline:0}
+ .n-art .n-lay{padding-block:16px 40px;gap:40px}
+ .n-art .n-by{align-items:flex-start}
+ .n-art .n-brief{padding:16px 18px}
+ .n-q{font-size:23px}
+ .n-art .n-nx{grid-template-columns:84px minmax(0,1fr);padding-inline:16px}
+ .n-art .n-hero figcaption{flex-direction:column;gap:2px}
+ .n-art .n-hero figcaption .art-lbl{margin-inline-start:0}
+}
