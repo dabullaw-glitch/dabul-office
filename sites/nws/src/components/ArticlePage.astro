@@ -39,6 +39,8 @@ const ogImage = a.og || pic.og;
 const abs = (p: string) => (/^https?:/.test(p) ? p : SITE_URL + p);
 // paid or marketing content (kind 'sponsored'): labelled "תוכן שיווקי", schema Article instead of NewsArticle, mini markup in the body
 const sponsored = (a.kind as string) === 'sponsored';
+// the "מקורות" line: content.ts keeps only official bodies, and media only when the story credits them; never on sponsored stories
+const srcs = sponsored ? [] : (heA.sources || []);
 
 // ---------- structured data (NewsArticle, FAQ, Event; the breadcrumb list is added by Base) ----------
 const jsonld: any[] = [{
@@ -48,7 +50,7 @@ const jsonld: any[] = [{
   author: a.kind === 'opinion' && a.author ? { '@type': 'Person', name: a.author } : { '@type': 'Organization', name: he ? 'מערכת חדשות נתניה והשרון' : 'NWS Desk', url: SITE_URL + '/about/' },
   ...(sponsored && a.author ? { sponsor: { '@type': 'Organization', name: a.author } } : {}),
   publisher: { '@id': SITE_URL + '/#org', '@type': 'NewsMediaOrganization', name: BRAND.he, logo: { '@type': 'ImageObject', url: SITE_URL + '/logo.png' } },
-  ...(a.sourceName && a.sourceUrl ? { isBasedOn: a.sourceUrl, citation: { '@type': 'CreativeWork', name: a.sourceName, url: a.sourceUrl } } : {}),
+  ...(srcs.length ? { citation: srcs.map((x) => ({ '@type': 'CreativeWork', name: x.name, ...(x.url ? { url: x.url } : {}) })), ...(srcs[0].url ? { isBasedOn: srcs[0].url } : {}) } : {}),
   contentLocation: places.length ? places.map((p) => ({ '@type': 'Place', name: p.he })) : { '@type': 'City', name: 'נתניה' },
   isAccessibleForFree: true,
   ...(isLive && !sponsored ? { coverageStartTime: ups[0].at < a.published ? ups[0].at : a.published,
@@ -173,7 +175,7 @@ const tgHref = TG_URL || `${pre}/join/`;
 const tgAttr = TG_URL ? { target: '_blank', rel: 'noopener' } : {};
 
 const share = encodeURIComponent(url); const shareT = encodeURIComponent(a.title);
-const hasSrc = !!a.sourceName;
+const hasSrc = srcs.length > 0;
 ---
 <Base lang={lang} title={title} description={desc} path={path} alternates={alternates} jsonld={jsonld} crumbs={crumbs} current={a.section}
   ogType="article" ogImage={ogImage} published={a.published} modified={modified} section={s.name[lang]} tags={a.tags} compact progress>
@@ -249,7 +251,7 @@ const hasSrc = !!a.sourceName;
 
         {a.faq.length > 0 && <section class="n-faq" aria-labelledby="faq-h"><h2 id="faq-h">{u.faq}</h2>{a.faq.map(([q, x]) => <details><summary>{q}</summary><p>{x}</p></details>)}</section>}
 
-        {hasSrc && <div class="n-srcl"><b>{L.sources}</b> {a.sourceUrl ? <a href={a.sourceUrl} rel="noopener nofollow" target="_blank">{a.sourceName}</a> : a.sourceName}. <a href={he ? '/editorial-policy/' : `${pre}/about/`}>{L.how}</a></div>}
+        {hasSrc && <div class="n-srcl"><b>{L.sources}</b> {srcs.map((x, i) => <>{i > 0 && ', '}{x.url ? <a href={x.url} rel="noopener nofollow" target="_blank">{x.name}</a> : x.name}</>)}. <a href={he ? '/editorial-policy/' : `${pre}/about/`}>{L.how}</a></div>}
 
         {he && (places.length > 0 || a.tags.length > 0) && <nav class="n-tags" aria-label={L.tags}>
           {places.map((p) => <a href={placeUrl(p.slug)}>{p.he}</a>)}

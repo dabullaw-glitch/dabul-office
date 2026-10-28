@@ -64,9 +64,6 @@
 .n-art .art-src a{text-decoration:underline}
 .n-art .art-pros a{display:flex;align-items:center;gap:10px;font-weight:700;min-height:44px}
 .n-art .art-pros .ic{width:36px;height:36px;border-radius:50%;background:var(--warm);display:inline-flex;align-items:center;justify-content:center;color:var(--c);flex:none}
-/* the Telegram button on the dark card: a darker blue so the white text keeps 4.5:1 */
-.n-art .n-tgc .n-btn.tg{background:#0B6FA4}
-.n-art .n-tgc .n-btn.tg:hover{background:#095A85}
 /* related grid */
 .n-art .n-rg a{display:block;color:var(--ink)}
 .n-art .n-rel{margin-top:8px}

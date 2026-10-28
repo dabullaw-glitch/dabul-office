@@ -18,6 +18,25 @@ export interface Article {
   updates?: { at: string; text: string }[]; live?: boolean;
   // fields other engine functions add (hns-feed v8 "extras"): background links from our archive and a "מה עושים" service box
   extras?: Extras | null;
+  // the story's sources as shown in the "מקורות" line (see sourcesOf): official bodies, and media only when the body credits them
+  sources?: Source[];
+}
+export interface Source { name: string; url: string; trust: 'official' | 'media' }
+/** The "מקורות" line (Yakir, 28.10.2026): official bodies by name; a media outlet only when the story carries its credit line
+ *  (a body paragraph "קרדיט: ..." naming it, written by hns-write); never fan, community or tip channels, and never our own desk.
+ *  hns-feed sends only official sources today (without a trust field), so a missing trust counts as official. */
+function sourcesOf(list: unknown, body: string[]): Source[] {
+  const credit = body.filter((p) => /^קרדיט:/.test(p.trim())).join(' ');
+  const out = new Map<string, Source>();
+  for (const x of Array.isArray(list) ? list : []) {
+    const name = clean((x as any)?.name ?? (x as any)?.name_he).replace(/\s*-\s*ערוץ טלגרם( רשמי)?$/, '');
+    const trust = String((x as any)?.trust ?? 'official');
+    const url = safeUrl((x as any)?.url);
+    if (!name || /^מערכת חדשות נתניה|^NWS$/.test(name) || (x as any)?.id === 'nws_desk') continue;
+    if (trust === 'official') { if (!out.has(name)) out.set(name, { name, url: /^https?:/.test(url) ? url : '', trust: 'official' }); }
+    else if (trust === 'media' && credit && credit.includes(name)) { if (!out.has(name)) out.set(name, { name, url: /^https?:/.test(url) ? url : '', trust: 'media' }); }
+  }
+  return [...out.values()].slice(0, 5);
 }
 export interface Extras {
   related: { title: string; url: string }[];
@@ -80,6 +99,7 @@ function fromFeed(s: any): any {
     ai: aiOf(s),
     updates: (Array.isArray(s.updates) ? s.updates : []).filter((x: any) => x && x.at && x.text).map((x: any) => ({ at: new Date(x.at).toISOString(), text: clean(x.text) })),
     extras: extrasOf(s.extras),
+    sources: sourcesOf(s.sources, (s.body || []).map(clean)),
     live: !!s.live && Array.isArray(s.updates) && s.updates.length > 0 && Date.now() - Date.parse(s.updates[s.updates.length - 1].at) < 6 * 3600e3,
   };
 }
@@ -91,7 +111,7 @@ const ogFor = (a: any) => fs.existsSync(path.resolve('public/og/a', `${a.slug}.p
 
 export const ARTICLES: Article[] = [...(readJson('articles.json', { articles: [] }).articles as any[]), ...FEED]
   .filter((a) => a && a.slug && SECTION_BY_KEY[a.section as SectionKey] && live(a))
-  .map((a) => ({ ...a, published: new Date(a.published).toISOString(), ...(a.updated ? { updated: new Date(a.updated).toISOString() } : {}), faq: normFaq(a.faq), neighborhoods: a.neighborhoods || [], tags: a.tags || [], keyPoints: a.keyPoints || [], body: a.body || [], og: ogFor(a) }))
+  .map((a) => ({ ...a, sources: a.sources ?? (a.sourceName ? [{ name: a.sourceName, url: a.sourceUrl || '', trust: 'official' }] : []), published: new Date(a.published).toISOString(), ...(a.updated ? { updated: new Date(a.updated).toISOString() } : {}), faq: normFaq(a.faq), neighborhoods: a.neighborhoods || [], tags: a.tags || [], keyPoints: a.keyPoints || [], body: a.body || [], og: ogFor(a) }))
   .sort((x, y) => (Date.parse(y.published) || 0) - (Date.parse(x.published) || 0));
 
 export const TR: Record<string, Record<string, Partial<Article>>> = {
