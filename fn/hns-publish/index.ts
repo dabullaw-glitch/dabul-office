@@ -18,6 +18,7 @@
 //     'yakir-chat') and marks the Telegram approval message as handled.
 //   {action:'withdraw', ids:[...], note}  takes published stories off the site (state 'withdrawn'; hns-feed returns only 'published').
 //   {action:'revise', id, title?, dek?, body?, key_points?, note}  corrects the text of a published story (same guards as publishing).
+//   {action:'add_update', id, text, at?, source?, note?}  28.10.2026: a live update (timestamped new facts) on a published story.
 //   {action:'close_dup', id, of, note?}  28.10.2026: a waiting story (draft or needs_check) that tells the same event as a published
 //     story is closed as 'rejected' with the note "כפילות של ידיעה <of>"; its source items are tied to the published story, so a
 //     later item about the same event is attached there and nothing is written or published twice.
@@ -284,6 +285,27 @@ async function closeDup(id: number, of: number, why: string) {
   return { ok: !!data?.length, id, of };
 }
 
+// live update (28.10.2026): a timestamped line of new facts added to a published story (a developing event), instead of a new
+// duplicate story. Same voice guard as the body (an outlet only as one closing credit). At most 40 updates per story.
+async function addUpdate(b: Any) {
+  await outlets();
+  const { data: st } = await sb.from('hns_stories').select('id,state,updates').eq('id', Number(b.id)).maybeSingle();
+  if (!st || st.state !== 'published') return { ok: false, error: 'not a published story' };
+  const text = clean(b.text);
+  if (text.length < 15) return { ok: false, error: 'empty update' };
+  const problem = voiceProblem({ title: '', dek: '', key_points: [], body: [text] });
+  if (problem) return { ok: false, error: problem };
+  const list = Array.isArray(st.updates) ? st.updates : [];
+  if (list.some((u: Any) => clean(u.text) === text)) return { ok: true, id: st.id, same: true };
+  const at = b.at && !isNaN(Date.parse(b.at)) ? new Date(b.at).toISOString() : new Date().toISOString();
+  const updates = [...list, { at, text, source: String(b.source || '') }].sort((x: Any, y: Any) => Date.parse(x.at) - Date.parse(y.at)).slice(-40);
+  const now = new Date().toISOString();
+  const { error } = await sb.from('hns_stories').update({ updates, updated_at: now, pub_note: clean(b.note || 'עודכן: עדכון חי') }).eq('id', st.id).eq('state', 'published');
+  if (error) return { ok: false, error: error.message };
+  await log('update', st.id, { at, text });
+  return { ok: true, id: st.id, updates: updates.length };
+}
+
 // correct the text of a published story; the new text must pass the same guard. drop_items (28.10.2026) removes items that were
 // attached by mistake, with their sources (e.g. story 71 got an unrelated council post through shared WordPress boilerplate words).
 async function revise(b: Any) {
@@ -326,6 +348,7 @@ Deno.serve(async (req) => {
     if (b.action === 'decide') return J(await decide(b.data, b.cq));
     if (b.action === 'withdraw') return J({ ok: true, res: await withdraw((b.ids || []).map(Number).filter(Boolean), String(b.note || '')) });
     if (b.action === 'revise') return J(await revise(b));
+    if (b.action === 'add_update') return J(await addUpdate(b));
     if (b.action === 'close_dup') return J(await closeDup(Number(b.id), Number(b.of), String(b.note || '')));
     if (b.action === 'check') { await outlets(); const { data } = await sb.from('hns_stories').select('*').in('id', (b.ids || []).map(Number)); return J({ ok: true, res: (data || []).map((st: Any) => ({ id: st.id, state: st.state, problem: voiceProblem(st) })) }); }
     if (b.action === 'approve') return J({ ok: true, res: await approve((b.ids || []).map(Number).filter(Boolean), clean(b.by || 'yakir-chat').slice(0, 40)) });

@@ -42,6 +42,8 @@
 // 28.10.2026 (fixes): page text is added to the feed text instead of replacing it; WordPress boilerplate words no longer make two
 //   posts "the same event"; redo takes related items only with a shared place within 3 days, and 'drop' removes wrong items.
 //   The daily cap is in hns_config 'ai' (300 Sonnet calls since 28.10.2026 16:40, Yakir's approval relayed by the coordinator).
+// 28.10.2026 (live updates): a new source about a published event adds a timestamped update line (hns-publish 'add_update')
+//   instead of rewriting the story; the site shows them as a live blog under the story.
 // 28.10.2026 (site redesign): three more sections, police, transport and health; flash stays for short urgent items. A section
 //   key the site does not know is replaced by the item's own topic.
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -270,16 +272,20 @@ const storyHead = (s: Any) => [s.title, s.dek, ...(Array.isArray(s.key_points) ?
 const storyText = (s: Any) => [storyHead(s), ...(Array.isArray(s.body) ? s.body : [])].filter(Boolean).join(' ');
 const sinceDays = (d: number) => new Date(Date.now() - d * 864e5).toISOString();
 
-// update a published story with the facts of new sources (one call); the text goes through hns-publish 'revise' (same guards)
+// live update (28.10.2026, Yakir: like the local outlets): a new source about an event we already published adds a timestamped
+// update line to that story (hns-publish 'add_update', same voice guard), instead of a new duplicate story or a silent rewrite
 async function updatePublished(st: Any, its: Any[], src: Any, model: string) {
-  const user = `ידיעה שכבר פרסמנו:\nכותרת: ${st.title}\nכותרת משנה: ${st.dek || ''}\nגוף: ${(Array.isArray(st.body) ? st.body : []).join('\n')}\n\n${promptFor(its, src, st.places || [])}\n\n`
-    + 'עדכן את הידיעה הקיימת: הוסף רק עובדות חדשות שמופיעות במקורות, ושמור על כל העובדות הקודמות. אם אין במקורות שום עובדה חדשה, החזר רק {"nochange":true}.';
-  const { out, usage, problem } = await compose(user, '', model);
-  if (out.nochange || problem || !out.title || !Array.isArray(out.body)) return { nochange: !!out.nochange, problem: problem || null, usage };
+  const prior = [...(Array.isArray(st.body) ? st.body : []), ...(Array.isArray(st.updates) ? st.updates.map((u: Any) => u.text) : [])].join('\n');
+  const user = `ידיעה שכבר פרסמנו, כולל העדכונים הקודמים:\nכותרת: ${st.title}\n${prior}\n\n${promptFor(its, src, st.places || [])}\n\n`
+    + 'כתוב עדכון חי קצר לידיעה: משפט או שניים, רק עם עובדות חדשות שמופיעות במקורות החדשים ולא כתובות כבר בידיעה. בלי לחזור על מה שכבר כתוב ובלי שמות של נפגעים או חשודים. '
+    + 'אם העובדה החדשה באה רק מכלי תקשורת אחד, סיים את העדכון בקרדיט קצר: "כפי שפורסם לראשונה ב...". החזר JSON בלבד: {"update":"..."}, או {"nochange":true} אם אין שום עובדה חדשה.';
+  const { out, usage } = await claude(user, model);
+  if (out.nochange || !out.update) return { nochange: true, usage };
+  const at = its.map((x: Any) => x.published_at || x.fetched_at).filter(Boolean).sort().pop();
   const r = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/hns-publish`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': S.CRON_SECRET },
-    body: JSON.stringify({ action: 'revise', id: st.id, title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean), note: 'עודכן: מקור נוסף' }),
+    body: JSON.stringify({ action: 'add_update', id: st.id, text: clean(out.update), at, source: its[0]?.source_id || '' }),
     signal: AbortSignal.timeout(60000) }).then((x) => x.json()).catch((e) => ({ ok: false, error: String(e) }));
-  return { revised: !!r?.ok, error: r?.error || null, usage };
+  return { updated: !!r?.ok, error: r?.error || null, usage };
 }
 
 // write chosen items now (ids), or the regular run; 'at' sets the story date (real event date) for older items
@@ -294,7 +300,7 @@ async function tick(only: number[] = [], at = '') {
   const fresh = (items || []).filter((x: Any) => src[x.source_id] && src[x.source_id].role !== 'competitor');
   if (!fresh.length) return { fresh: 0 };
   // stories of the last 72 hours (not closed), with the words of their items and of their own text: one story per event
-  const { data: recent } = await sb.from('hns_stories').select('id,item_ids,state,created_at,updated_at,notes,pub_note,sensitivity,places,section,title,dek,body,key_points')
+  const { data: recent } = await sb.from('hns_stories').select('id,item_ids,state,created_at,updated_at,notes,pub_note,sensitivity,places,section,title,dek,body,key_points,updates')
     .gte('created_at', sinceDays(3)).in('state', ['draft', 'needs_check', 'approved', 'published']).order('id', { ascending: false }).limit(300);
   const rIds = [...new Set((recent || []).flatMap((s: Any) => s.item_ids || []))];
   const { data: rItems } = rIds.length ? await sb.from('hns_items').select('id,title,body,cluster_id').in('id', rIds) : { data: [] };
@@ -326,10 +332,10 @@ async function tick(only: number[] = [], at = '') {
       const fromSource = g.items.some((x) => src[x.source_id].role === 'source');
       const waiting = st && ['draft', 'needs_check'].includes(st.state) && /רמז בלבד|ממתין לפרטים/.test(st.notes || '');
       const touch = { item_ids: allIds, updated_at: new Date().toISOString(), ...(/^auto:|רמז|ממתין/.test(st?.notes || '') || st?.state === 'published' ? {} : { notes: 'נוסף מקור חדש, כדאי לעדכן' }) };
-      // a published story: attach, and update it when the new source adds facts (at most once in 30 minutes)
+      // a published story: attach, and add a live update when the new source adds facts (at most one update in 10 minutes)
       if (st?.state === 'published') {
         await sb.from('hns_stories').update(touch).eq('id', g.story);
-        const recentlyUpdated = st.updated_at && Date.now() - Date.parse(st.updated_at) < 30 * 60e3 && /עודכן/.test(st.pub_note || '');
+        const recentlyUpdated = st.updated_at && Date.now() - Date.parse(st.updated_at) < 10 * 60e3 && /עודכן/.test(st.pub_note || '');
         if (!fromSource || budget <= 0 || recentlyUpdated) { res.push({ story: g.story, attached: ids.length }); continue; }
         budget--;
         const its = await enrich(g.items.filter((x) => src[x.source_id].role === 'source'));

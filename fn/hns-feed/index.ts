@@ -13,6 +13,8 @@
 //   ?only=flashes returns just the flashes (small and cached 30 seconds), for the live ticker in the browser.
 // 28.10.2026 (IndexNow): "updatedAt" is set only for a story updated with new facts (pub_note "עודכן..."), so the site shows the
 //   update time and the sitemap lastmod changes; a wording fix ("תוקן") does not count as an update.
+// 28.10.2026 (live updates): "updates" [{at, text}] oldest first, timestamped new facts on a developing story, and "live" true while
+//   the last update is less than 6 hours old (the site shows a live blog and a "מתעדכן" label).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -51,7 +53,7 @@ Deno.serve(async (req) => {
   if (url.searchParams.get('only') === 'flashes') return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), flashes: await flashes() }), { headers: { ...H, 'cache-control': 'public, max-age=30' } });
   const limit = Math.min(1000, Math.max(1, Number(url.searchParams.get('limit')) || 300));
   const { data, error } = await sb.from('hns_stories')
-    .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure,pub_note')
+    .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure,pub_note,updates')
     .eq('state', 'published').not('published_at', 'is', null)
     .order('published_at', { ascending: false }).limit(limit);
   if (error) return new Response(JSON.stringify({ ok: false, error: 'db' }), { status: 500, headers: H });
@@ -73,6 +75,8 @@ Deno.serve(async (req) => {
       kicker: kick(s.kicker), kind: s.kind === 'opinion' ? 'opinion' : 'news', author: clean(s.author), authorRole: clean(s.author_role), video: s.video_url || '',
       closure: s.closure && typeof s.closure === 'object' ? { place: clean(s.closure.place), what: clean(s.closure.what), until: String(s.closure.until || ''), approx: !!s.closure.approx } : null,
       image: s.image_url ? { url: s.image_url, alt: clean(s.image_alt), model: s.image_model || '', ai: true } : null,
+      updates: (Array.isArray(s.updates) ? s.updates : []).map((u: Any) => ({ at: u.at, text: clean(u.text) })).filter((u: Any) => u.at && u.text),
+      live: (Array.isArray(s.updates) ? s.updates : []).some((u: Any) => Date.now() - Date.parse(u.at) < 6 * 3600e3),
     };
   });
   const [fl, cal] = await Promise.all([flashes(), calendar()]);
