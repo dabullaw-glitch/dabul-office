@@ -24,8 +24,8 @@
 //   key points name a media outlet (the list is the table hns_outlets), when its body names an outlet anywhere except one closing
 //   credit line in the last paragraph ("כפי שפורסם לראשונה ב..."), or when the body leans on "לפי דיווח / לפי פרסום / כפי שדווח".
 //   Such a draft is sent back once to hns-write for a rewrite in our own voice (action 'rewrite'); if it still fails it waits, with a note.
-//   A story whose only basis is another outlet's exclusive (basis 'media_exclusive', set by hns-write) is never published
-//   automatically: it goes to Yakir for approval with the reason "מבוסס רק על פרסום בכלי תקשורת אחר".
+//   A story whose only basis is another outlet's report (basis 'media_exclusive', set by hns-write) carries one closing credit
+//   line; since 28.10.2026 it publishes automatically when it is not sensitive (Yakir: only real editorial questions reach him).
 // Published text never contains a long or medium dash (replaced with a comma or a hyphen).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
@@ -161,7 +161,9 @@ async function tick(dry: boolean) {
       if (!/נכתב מחדש/.test(st.notes || '') && rewrites < 1 && local && age <= FRESH_H) { rewrites++; const r = await askRewrite(st); await log('rewrite_asked', st.id, { problem, ok: !!r?.ok }); out.skipped.push({ id: st.id, why, rewrite: true }); continue; }
       out.skipped.push({ id: st.id, why }); await note(st, why); continue;
     }
-    if (st.state === 'draft' && st.sensitivity === 'normal' && st.basis !== 'media_exclusive') {
+    // 28.10.2026 (Yakir): a normal report based on one outlet (media_exclusive, with its closing credit line) publishes too;
+    // only a sensitive story or a real editorial question (needs_check) waits for Yakir
+    if (st.state === 'draft' && st.sensitivity === 'normal') {
       const why = !local ? 'לא מקומי, לא פורסם אוטומטית' : isWarning(st) && age > WARN_H ? 'אזהרה שפג תוקפה, לא פורסמה' : age > FRESH_H ? 'ישן מדי לפרסום אוטומטי' : '';
       if (why) { out.skipped.push({ id: st.id, why }); if (!dry) await note(st, why); continue; }
       if (dry || await publish(st, 'auto')) out.published.push({ id: st.id, title: st.title });
