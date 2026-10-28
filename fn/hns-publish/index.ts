@@ -84,7 +84,7 @@ async function outlets() {
 }
 const outletIn = (s: unknown) => (OUTLET_RE ? (String(s ?? '').match(OUTLET_RE)?.[0] || '') : '');
 const LEAN_RE = /לפי (?:דיווח|פרסום|מבזק|הדיווח|הפרסום|המבזק)|כפי שדווח|כך דווח|כך לפי (?:דיווח|מבזק|פרסום)|דיווח שפורסם|מבזק שפורסם/;
-const CREDIT_RE = /פורסמ\S* לראשונה|צילום|תמונה|וידאו|סרטון|בראיון ל/;
+const CREDIT_RE = /פורס[מם]\S* לראשונה|צילום|תמונה|וידאו|סרטון|בראיון ל/;
 // '' when the story may be published, otherwise the reason (Hebrew, saved as pub_note)
 function voiceProblem(st: Any) {
   const head = [st.title, st.dek, ...(Array.isArray(st.key_points) ? st.key_points : [])].map(clean).join('\n');

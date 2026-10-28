@@ -125,7 +125,7 @@ async function outlets() {
 }
 const outletIn = (s: unknown) => (OUTLET_RE ? (String(s ?? '').match(OUTLET_RE)?.[0] || '') : '');
 const LEAN_RE = /לפי (?:דיווח|פרסום|מבזק|הדיווח|הפרסום|המבזק)|כפי שדווח|כך דווח|כך לפי (?:דיווח|מבזק|פרסום)|דיווח שפורסם|מבזק שפורסם/;
-const CREDIT_RE = /פורסמ\S* לראשונה|צילום|תמונה|וידאו|סרטון|בראיון ל/;
+const CREDIT_RE = /פורס[מם]\S* לראשונה|צילום|תמונה|וידאו|סרטון|בראיון ל/;
 function voiceProblem(o: Any) {
   const arr = (a: unknown) => (Array.isArray(a) ? a : []).map((x) => String(x ?? '').trim()).filter(Boolean);
   const head = [o.title, o.dek, ...arr(o.keyPoints)].join('\n');
