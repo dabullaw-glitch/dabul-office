@@ -13,6 +13,8 @@
 //   reason "מבוסס רק על פרסום בכלי תקשורת אחר" (Yakir decides). After writing, the text is checked against the outlet list in the
 //   table hns_outlets (same check as hns-publish); a failing draft is written once more with the reason, and is marked "נכתב מחדש".
 // POST {action:'rewrite', ids:[...]} (x-cron-secret): hns-publish sends back a draft that failed the check; it is written again once.
+// 28.10.2026 (home redesign): the answer also gives "kicker" (the short colored line above the title on the site, up to 5 words,
+//   never a media outlet name; dropped when it fails) and "closure" for a road closure story ({place, what, until, approx}).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -55,9 +57,11 @@ const SYSTEM = `אתה עורך חדשות מקומי באתר "חדשות נת�
 - קרדיט לכלי תקשורת אחר רק כשבאמת צריך: סקופ בלעדי שאין לו אישור ממקור ראשוני, ראיון או ציטוט שהם השיגו, צילום או וידאו שלהם, או נתונים שהם הפיקו. אז שורה אחת קצרה בסוף הפסקה האחרונה בלבד, למשל "כפי שפורסם לראשונה ב...". אף פעם לא בכותרת, בכותרת המשנה או בנקודות.
 - שדה basis: "official" כשהעובדות באות מגוף רשמי (גם אם הגיעו דרך כלי תקשורת שמצטט אותו), "public" כשזו עובדה ציבורית שכל אחד יכול לבדוק, "media_exclusive" כשהידיעה כולה נשענת על פרסום בלעדי של כלי תקשורת אחר (סקופ, ראיון, כתבת צבע, נתונים שהם הפיקו).
 - אם המקור הוא רק כותרת של מבזק בלי פרטים, לסמן needsCheck=true.
+- שדה kicker: שורה קצרה מאוד שמופיעה בצבע מעל הכותרת באתר, עד 5 מילים, עובדה מהידיעה ולא חזרה על הכותרת. למשל "חסימות עד 8 בנובמבר", "שני חשודים נעצרו", "צו בתוקף עד 1.11". בלי שם של כלי תקשורת. אם אין משהו טוב, להשאיר ריק.
+- שדה closure: רק כשהידיעה עוסקת בחסימת כביש, סגירת רחוב או עבודות שמשנות את התנועה: place (איפה, קצר), what (מה בדיוק, משפט קצר), until (תאריך סיום בפורמט YYYY-MM-DD רק אם הוא כתוב במקור או מחושב ישירות ממנו, אחרת ריק), approx (true אם התאריך משוער, למשל "כשבועיים"). אחרת closure=null.
 מדורים אפשריים: flash (מבזקים, חירום, תאונות, משטרה), city (עירייה, תשתיות, חינוך), realestate (תכנון ובנייה, נדל״ן), community (קהילה), sports (ספורט), leisure (תרבות ואירועים), sharon (יישובי השרון שאינם נתניה), tourism (חופים ותיירות).
 החזר JSON בלבד, בלי טקסט נוסף, במבנה:
-{"section":"","title":"","dek":"","body":["",""],"keyPoints":["",""],"places":[""],"basis":"official","needsCheck":false,"checkReason":""}`;
+{"section":"","kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""],"places":[""],"basis":"official","closure":null,"needsCheck":false,"checkReason":""}`;
 
 // media outlet names: the one list in the table hns_outlets (same check as hns-publish)
 let OUTLET_RE: RegExp | null = null;
@@ -118,6 +122,13 @@ async function claude(user: string) {
 }
 
 const clean = (s: string) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s*–\s*/g, ' - ').trim();
+// card fields: a kicker of up to 5 words without an outlet name, and the road closure details
+const kickerOf = (o: Any) => { const k = clean(o?.kicker || ''); return k && k.split(/\s+/).length <= 5 && !outletIn(k) ? k : null; };
+const closureOf = (o: Any) => {
+  const c = o?.closure; if (!c || typeof c !== 'object' || !c.place) return null;
+  const until = /^\d{4}-\d{2}-\d{2}$/.test(String(c.until || '')) ? String(c.until) : '';
+  return { place: clean(c.place), what: clean(c.what || ''), until, approx: !!c.approx };
+};
 
 // a draft that hns-publish could not publish (outlet name, "לפי דיווח"): written once more from its own source items
 async function rewrite(ids: number[]) {
@@ -145,6 +156,7 @@ async function rewrite(ids: number[]) {
       const notes = [st.sensitivity === 'sensitive' ? 'ידיעה רגישה, רק באישור של יקיר' : '', mediaOnly ? MEDIA_ONLY : '', out.needsCheck ? (out.checkReason || 'צריך בדיקה') : '',
         'נכתב מחדש', problem ? `עדיין: ${problem}` : ''].filter(Boolean).join('. ');
       await sb.from('hns_stories').update({ title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
+        kicker: kickerOf(out), closure: closureOf(out),
         basis, state, notes, usage: { previous: st.usage, rewrite: usage }, updated_at: new Date().toISOString(), tg_sent_at: state === 'needs_check' ? null : st.tg_sent_at }).eq('id', st.id).in('state', ['draft', 'needs_check']);
       res.push({ id: st.id, state, problem: problem || null });
     } catch (e) { res.push({ id: st.id, error: String((e as Error).message || e) }); }
@@ -218,7 +230,7 @@ async function tick() {
         retried ? 'נכתב מחדש' : '', problem ? `עדיין: ${problem}` : ''].filter(Boolean).join('. ') || null;
       const { data: st } = await sb.from('hns_stories').insert({
         ...base, section, title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
-        places: out.places?.length ? out.places : places, state, notes, basis, model: MODEL, usage,
+        places: out.places?.length ? out.places : places, state, notes, basis, model: MODEL, usage, kicker: kickerOf(out), closure: closureOf(out),
       }).select('id').single();
       if (st) await sb.from('hns_items').update({ cluster_id: st.id }).in('id', ids);
       res.push({ story: st?.id, state });
