@@ -14,11 +14,12 @@ const he = lang === 'he';
 const flash = a.section === 'flash';
 const href = articleUrl(a, lang);
 const label = he ? p.label : p.ai ? 'AI illustration' : 'Illustrative photo';
-const by = a.kind === 'opinion' && a.author ? a.author : he ? 'מערכת NWS' : 'NWS';
+const spon = a.kind === 'sponsored';
+const by = a.kind === 'opinion' && a.author ? a.author : spon ? (a.author || (he ? 'תוכן שיווקי' : 'Sponsored')) : he ? 'מערכת NWS' : 'NWS';
 ---
 {row ? (
 <a class="n-row" href={href} style={`--c:${s.color}`}>
-  <span><span class="n-k">{kickerOf(a, lang)}</span><b>{a.title}</b><small class="num"><time datetime={a.published} data-ago>{fmtDay(a.published, lang)}</time></small></span>
+  <span><span class="n-k">{kickerOf(a, lang)}</span><b>{a.title}</b><small class="num">{spon ? <span class="n-spon">{he ? 'תוכן שיווקי' : 'Sponsored'}</span> : <time datetime={a.published} data-ago>{fmtDay(a.published, lang)}</time>}</small></span>
   <span class="n-ph" aria-hidden="true"><img src={p.small} alt="" width="224" height="152" loading={eager ? 'eager' : 'lazy'} decoding="async"></span>
 </a>
 ) : (
@@ -32,6 +33,6 @@ const by = a.kind === 'opinion' && a.author ? a.author : he ? 'מערכת NWS' :
   <div class="k"><span class="n-k">{kickerOf(a, lang)}</span></div>
   <a class="t" href={href}><H style={size ? `font-size:${size}px` : undefined}>{a.title}</H></a>
   {dek && a.dek && <p>{a.dek}</p>}
-  <div class="n-meta num"><b>{by}</b><i aria-hidden="true"></i><time datetime={a.published} data-ago class={flash ? 'n-upd' : undefined}>{fmtDay(a.published, lang)}</time>{read && <><i aria-hidden="true"></i><span>{readMin(a)} {he ? 'דק׳ קריאה' : 'min read'}</span></>}</div>
+  <div class="n-meta num">{spon ? <><span class="n-spon">{he ? 'תוכן שיווקי' : 'Sponsored'}</span>{a.author && <><i aria-hidden="true"></i><b>{a.author}</b></>}</> : <><b>{by}</b><i aria-hidden="true"></i><time datetime={a.published} data-ago class={flash ? 'n-upd' : undefined}>{fmtDay(a.published, lang)}</time></>}{read && <><i aria-hidden="true"></i><span>{readMin(a)} {he ? 'דק׳ קריאה' : 'min read'}</span></>}</div>
 </article>
 )}

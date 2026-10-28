@@ -11,7 +11,7 @@ export interface Article {
   sourceName: string; sourceUrl: string; imageHint: string; event?: { name: string; startDate: string; location: string } | null;
   expires?: string; og?: string; engineId?: number;
   // card fields (28.10.2026 redesign): colored line above the title, opinion/video badges, road closure details, AI illustration
-  kicker?: string; kind?: 'news' | 'opinion'; author?: string; authorRole?: string; video?: string;
+  kicker?: string; kind?: 'news' | 'opinion' | 'sponsored'; author?: string; authorRole?: string; video?: string;
   closure?: { place: string; what: string; until: string; approx: boolean } | null;
   ai?: AiImg | null;
 }
@@ -50,7 +50,7 @@ function fromFeed(s: any): any {
     slug: `n${s.id}`, engineId: s.id, section, title: clean(s.title), dek: clean(s.dek), body: (s.body || []).map(clean).filter(Boolean),
     keyPoints: (s.keyPoints || []).map(clean).filter(Boolean), whatItMeans: '', faq: s.faq || [], neighborhoods: places, tags: [],
     published: new Date(s.date || s.publishedAt).toISOString(), ...(s.updatedAt ? { updated: s.updatedAt } : {}), sourceName: clean(s.sourceName), sourceUrl: s.sourceUrl || '', imageHint: '', event: null,
-    kicker: clean(s.kicker), kind: s.kind === 'opinion' ? 'opinion' : 'news', author: clean(s.author), authorRole: clean(s.authorRole), video: s.video || '',
+    kicker: clean(s.kicker), kind: s.kind === 'opinion' ? 'opinion' : s.kind === 'sponsored' ? 'sponsored' : 'news', author: clean(s.author), authorRole: clean(s.authorRole), video: s.video || '',
     closure: s.closure && s.closure.place ? { place: clean(s.closure.place), what: clean(s.closure.what), until: String(s.closure.until || ''), approx: !!s.closure.approx } : null,
     ai: aiOf(s),
   };
@@ -178,11 +178,13 @@ export const LIVE: { ok: boolean; at?: string; wave?: number | null; sst?: numbe
  *  The same rule is in the Supabase function hns-img (the lead gets the better AI image). */
 export function leadOf(all: Article[], ev: SiteEvent | null = EVENT) {
   const evSlugs = new Set((ev?.storyIds || []).map((id) => `n${id}`));
-  const pool = all.filter((a) => !evSlugs.has(a.slug));
+  const pool = all.filter((a) => !evSlugs.has(a.slug) && a.kind !== 'sponsored');
   const fresh = pool.filter((a) => Date.now() - Date.parse(a.published) < 72 * 3600e3);
   return fresh.find((a) => a.section !== 'flash' && a.kind !== 'opinion') ?? pool.find((a) => a.section !== 'flash' && a.kind !== 'opinion') ?? pool[0] ?? all[0];
 }
 /** reading time in minutes (about 200 words a minute) */
+/** paid or marketing content: labelled "תוכן שיווקי", never in the lead, the ticker, the live feed or the Google News sitemap */
+export const isSponsored = (a: Pick<Article, 'kind'>) => a.kind === 'sponsored';
 export const readMin = (a: Article) => Math.max(1, Math.round([a.title, a.dek, ...a.body].join(' ').split(/\s+/).length / 200));
 /** the colored line above the title: the writer's short phrase, or the section name */
 export const kickerOf = (a: Article, lang: Lang = 'he') => (lang === 'he' && a.kicker) || SECTION_BY_KEY[a.section].name[lang];

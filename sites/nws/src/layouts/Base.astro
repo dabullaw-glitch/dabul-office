@@ -29,7 +29,7 @@ const alts = Object.entries(alternates) as [Lang, string][];
 const pre = LANG_PREFIX[lang];
 const ogAbs = /^https?:/.test(ogImage) ? ogImage : SITE_URL + ogImage;
 // ticker: official flashes (hns-feed) and flash stories, newest first; the latest stories when there are fewer than 2
-const pool0 = articlesFor(lang);
+const pool0 = articlesFor(lang).filter((a) => a.kind !== 'sponsored');
 const flashOnly = pool0.filter((a) => a.section === 'flash');
 type Tick = { at: string; text: string; href: string; src?: string };
 const tk0: Tick[] = [...(he ? FLASHES.map((f) => ({ at: f.at, text: f.text, href: `/flash/#f${f.id}`, src: f.source })) : []),

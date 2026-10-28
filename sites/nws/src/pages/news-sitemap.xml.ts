@@ -4,7 +4,7 @@ import { ARTICLES, articleUrl, localized } from '../lib/content';
 const x = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 export function GET() {
   const cutoff = Date.now() - 48 * 3600e3;
-  const recent = ARTICLES.filter((a) => PREVIEW || Date.parse(a.published) >= cutoff);
+  const recent = ARTICLES.filter((a) => a.kind !== 'sponsored' && (PREVIEW || Date.parse(a.published) >= cutoff));
   const items: string[] = [];
   for (const a of recent) for (const l of ['he', 'ru', 'fr', 'en'] as const) {
     const t = localized(a, l); if (!t) continue;

@@ -17,7 +17,10 @@ import { shabbatTimes } from '../lib/shabbat';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const u = t(lang); const pre = LANG_PREFIX[lang]; const he = lang === 'he';
-const all = articlesFor(lang);
+const all0 = articlesFor(lang);
+// sponsored stories never lead, never enter the feed or the lists; at most one appears in its own slot below the directory
+const all = all0.filter((a) => a.kind !== 'sponsored');
+const spon = he ? all0.find((a) => a.kind === 'sponsored') : undefined;
 const S = (k: string) => SECTION_BY_KEY[k as SectionKey];
 const ev = he ? EVENT : null;
 const used = new Set<string>();
@@ -225,6 +228,12 @@ const T = he ? { live: 'עכשיו בנתניה והשרון', liveSub: 'מתע�
     </div>
     {he && <div class="n-dcta"><div><b>יש לכם עסק בנתניה או בשרון?</b><span>רישום בסיסי במדריך בלי עלות. הטקסט נכתב בשבילכם, והעסק עולה אחרי בדיקה.</span></div><a class="n-btn wh" href="/directory/join/">הוסיפו את העסק</a></div>}
   </div></section>
+
+  {spon && (
+  <section class="n-sec n-wrap n-sponsor" aria-labelledby="sp2-h" style="padding-block:32px 0">
+    <h2 class="n-sh" id="sp2-h" style="--c:#8A6A00;font-size:17px">תוכן שיווקי</h2>
+    <div class="n-grid n-g2" style="max-width:860px"><Card a={spon} lang={lang} dek ratio="16/9" /></div>
+  </section>)}
 
   {(leis.length > 0 || cal.length > 0) && (
   <section class="n-sec n-wrap" aria-labelledby="cu-h" style="--c:#B4286B">
