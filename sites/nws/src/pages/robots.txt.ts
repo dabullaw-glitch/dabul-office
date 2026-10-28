@@ -16,6 +16,7 @@ Allow: /
 Disallow: /search/
 
 Sitemap: ${SITE_URL}/sitemap.xml
+Sitemap: ${SITE_URL}/news-sitemap.xml
 `;
   return new Response(body, { headers: { 'content-type': 'text/plain; charset=utf-8' } });
 }
