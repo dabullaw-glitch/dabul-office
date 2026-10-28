@@ -266,8 +266,9 @@ const notesOf = (pre: string[], sensitive: boolean, mediaOnly: boolean, out: Any
   [...pre, sensitive ? 'ידיעה רגישה, רק באישור של יקיר' : '', mediaOnly ? MEDIA_ONLY : '', out.needsCheck ? (out.checkReason || 'צריך בדיקה') : '',
     retried ? 'נכתב מחדש' : '', problem ? `עדיין: ${problem}` : ''].filter(Boolean).join('. ') || null;
 const HOLD = 'ממתין לפרטים נוספים';
-// a looser match for "same event" against a story's own text: two shared words that are a third of the item's words
-function near(a: Set<string>, b: Set<string>) { let n = 0; for (const x of a) if (b.has(x)) n++; return (n >= 3 && n / Math.max(1, Math.min(a.size, b.size)) >= 0.35) || (n >= 2 && n / Math.max(1, a.size) >= 0.3); }
+// a looser match for "same event" against a story's own title, subtitle and key points: three shared words that are a third of the
+// item's words (two words were too few: "פתח תקווה" tied a road accident on Petah Tikva St to a sports story about Hapoel Petah Tikva)
+function near(a: Set<string>, b: Set<string>) { let n = 0; for (const x of a) if (b.has(x)) n++; return n >= 3 && (n / Math.max(1, Math.min(a.size, b.size)) >= 0.35 || n / Math.max(1, a.size) >= 0.3); }
 const storyHead = (s: Any) => [s.title, s.dek, ...(Array.isArray(s.key_points) ? s.key_points : [])].filter(Boolean).join(' ');
 const storyText = (s: Any) => [storyHead(s), ...(Array.isArray(s.body) ? s.body : [])].filter(Boolean).join(' ');
 const sinceDays = (d: number) => new Date(Date.now() - d * 864e5).toISOString();
@@ -299,9 +300,10 @@ async function tick(only: number[] = [], at = '') {
     : await sb.from('hns_items').select(cols).eq('is_local', true).eq('backfill', false).is('cluster_id', null).gte('fetched_at', since).order('id').limit(200);
   const fresh = (items || []).filter((x: Any) => src[x.source_id] && src[x.source_id].role !== 'competitor');
   if (!fresh.length) return { fresh: 0 };
-  // stories of the last 72 hours (not closed), with the words of their items and of their own text: one story per event
+  // stories of the last 72 hours (not closed), with the words of their items and of their own text: one story per event.
+  // Sponsored stories (kind 'sponsored') are never matched, merged or updated with news.
   const { data: recent } = await sb.from('hns_stories').select('id,item_ids,state,created_at,updated_at,notes,pub_note,sensitivity,places,section,title,dek,body,key_points,updates')
-    .gte('created_at', sinceDays(3)).in('state', ['draft', 'needs_check', 'approved', 'published']).order('id', { ascending: false }).limit(300);
+    .gte('created_at', sinceDays(3)).in('state', ['draft', 'needs_check', 'approved', 'published']).or('kind.is.null,kind.neq.sponsored').order('id', { ascending: false }).limit(300);
   const rIds = [...new Set((recent || []).flatMap((s: Any) => s.item_ids || []))];
   const { data: rItems } = rIds.length ? await sb.from('hns_items').select('id,title,body,cluster_id').in('id', rIds) : { data: [] };
   // strict match: the words of the story's items and body; loose match (near): only its title, subtitle and key points

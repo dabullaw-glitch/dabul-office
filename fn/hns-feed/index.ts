@@ -15,6 +15,8 @@
 //   update time and the sitemap lastmod changes; a wording fix ("תוקן") does not count as an update.
 // 28.10.2026 (live updates): "updates" [{at, text}] oldest first, timestamped new facts on a developing story, and "live" true while
 //   the last update is less than 6 hours old (the site shows a live blog and a "מתעדכן" label).
+// 28.10.2026 (sponsored): kind 'sponsored' ("תוכן שיווקי") passes through as is; its body may hold mini markup (## headings, - lists,
+//   [text](url) links) that the site renders.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -72,7 +74,7 @@ Deno.serve(async (req) => {
       id: s.id, section: s.section || null, title: clean(s.title), dek: clean(s.dek), body: arr(s.body), keyPoints: arr(s.key_points), faq: faq(s.faq),
       places: arr(s.places), date: s.created_at, publishedAt: s.published_at, updatedAt: /^עודכן/.test(String(s.pub_note || '')) ? s.updated_at : null,
       sourceName: src[0]?.name || '', sourceUrl: src[0]?.url || '', sources: src,
-      kicker: kick(s.kicker), kind: s.kind === 'opinion' ? 'opinion' : 'news', author: clean(s.author), authorRole: clean(s.author_role), video: s.video_url || '',
+      kicker: kick(s.kicker), kind: ['opinion', 'sponsored'].includes(s.kind) ? s.kind : 'news', author: clean(s.author), authorRole: clean(s.author_role), video: s.video_url || '',
       closure: s.closure && typeof s.closure === 'object' ? { place: clean(s.closure.place), what: clean(s.closure.what), until: String(s.closure.until || ''), approx: !!s.closure.approx } : null,
       image: s.image_url ? { url: s.image_url, alt: clean(s.image_alt), model: s.image_model || '', ai: true } : null,
       updates: (Array.isArray(s.updates) ? s.updates : []).map((u: Any) => ({ at: u.at, text: clean(u.text) })).filter((u: Any) => u.at && u.text),

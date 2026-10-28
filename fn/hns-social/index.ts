@@ -56,9 +56,9 @@ const CFG: Record<Ch, { perRun: number; perDay: number; gapMin: number; importan
 
 // same section slugs and fallback as the site (sites/nws/src/data/sections.ts, src/lib/content.ts fromFeed + articleUrl)
 const SLUG: Record<string, string> = { flash: 'flash', city: 'city', realestate: 'real-estate', community: 'community', sports: 'sports',
-  leisure: 'events', sharon: 'sharon', tourism: 'tourism', law: 'law' };
+  leisure: 'events', sharon: 'sharon', tourism: 'tourism', law: 'law', police: 'police', transport: 'transport', health: 'health' };
 const TAG: Record<string, string> = { flash: 'מבזק', city: 'עיריית_נתניה', realestate: 'נדלן_נתניה', community: 'קהילה_וחינוך', sports: 'ספורט',
-  leisure: 'אירועים', sharon: 'השרון', tourism: 'תיירות', law: 'חוק_ומשפט' };
+  leisure: 'אירועים', sharon: 'השרון', tourism: 'תיירות', law: 'חוק_ומשפט', police: 'משטרה_ופלילים', transport: 'תחבורה', health: 'בריאות' };
 const sec = (st: Any) => (SLUG[st.section] ? st.section : 'flash');
 const pathOf = (st: Any) => `/${SLUG[sec(st)]}/n${st.id}/`;
 const urlOf = (st: Any) => SITE + pathOf(st);
@@ -157,10 +157,11 @@ async function ready(st: Any, live: boolean) {
 }
 
 // ---------- the run ----------
+// 28.10.2026: sponsored stories (kind 'sponsored', "תוכן שיווקי") are never posted to the channels
 async function candidates() {
   const since = new Date(Date.now() - MAX_AGE_H * 3600e3).toISOString();
   const { data, error } = await sb.from('hns_stories').select('id,created_at,published_at,section,title,dek,body,sources,sensitivity,decided_by,state,ch_tg_at,ch_fb_at,ch_wa_at')
-    .eq('state', 'published').not('published_at', 'is', null).gte('created_at', since).gte('published_at', since).order('published_at', { ascending: true }).limit(200);
+    .eq('state', 'published').or('kind.is.null,kind.neq.sponsored').not('published_at', 'is', null).gte('created_at', since).gte('published_at', since).order('published_at', { ascending: true }).limit(200);
   if (error) throw new Error(error.message);
   return (data || []).filter((st: Any) => st.title && Array.isArray(st.body) && st.body.some((x: Any) => String(x || '').trim()));
 }

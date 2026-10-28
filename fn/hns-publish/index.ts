@@ -323,8 +323,11 @@ async function revise(b: Any) {
   if (drop.length) {
     patch.item_ids = (st.item_ids || []).filter((i: unknown) => !drop.includes(Number(i)));
     const { data: left } = patch.item_ids.length ? await sb.from('hns_items').select('source_id').in('id', patch.item_ids) : { data: [] };
+    const { data: gone } = await sb.from('hns_items').select('source_id').in('id', drop);
     const keep = new Set((left || []).map((x: Any) => x.source_id));
-    patch.sources = (Array.isArray(st.sources) ? st.sources : []).filter((x: Any) => keep.has(x.id));
+    const lost = new Set((gone || []).map((x: Any) => x.source_id).filter((id: string) => !keep.has(id)));
+    // only the sources that came from the dropped items leave; a source given by hand (e.g. the IFA ruling of story 76) stays
+    patch.sources = (Array.isArray(st.sources) ? st.sources : []).filter((x: Any) => !lost.has(x.id));
   }
   const next = { ...st, ...patch };
   const problem = voiceProblem(next);
