@@ -6,7 +6,7 @@ import { IMG, SITE_URL, LANG_PREFIX, LANGS, type Lang } from '../data/site';
 import { SECTION_BY_KEY, type SectionKey } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
-import { articlesFor, articleUrl, sectionUrl, fmtDate, fmtTime, placesOf, placeUrl } from '../lib/content';
+import { articlesFor, articleUrl, sectionUrl, fmtDate, fmtTime, fmtDay, placesOf, placeUrl, picOf, kickerOf, readMin } from '../lib/content';
 
 interface Props { lang: Lang; k: SectionKey }
 const { lang, k } = Astro.props;
@@ -23,6 +23,7 @@ const cats = CATEGORIES.filter((c) => c.sections.includes(k)).slice(0, 6);
 const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name, url: SITE_URL + path, description: desc, inLanguage: lang, isPartOf: { '@id': SITE_URL + '/#website' },
   mainEntity: { '@type': 'ItemList', itemListElement: items.slice(0, 20).map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a, lang), name: a.title })) } }];
 const first = items[0];
+const fp = first ? picOf(first, IMG) : null;
 ---
 <Base lang={lang} title={title} description={desc} path={path} alternates={alternates} jsonld={jsonld} crumbs={crumbs} current={k}>
   <section class="phero" style={`--bg:${s.color}`}>
@@ -38,17 +39,18 @@ const first = items[0];
     {first && (
       <article class="lead" style={`padding-top:0;--c:${s.color}`}>
         <div class="main">
-          <a class="im" href={articleUrl(first, lang)}><img src={(IMG[first.imageHint] ?? IMG[s.img]).src} alt="" width="1200" height="675"></a>
-          <div class="meta"><time datetime={first.published}>{fmtDate(first.published, lang)}, {fmtTime(first.published)}</time></div>
+          <a class="im" href={articleUrl(first, lang)} tabindex="-1" aria-hidden="true"><img src={fp!.src} srcset={fp!.srcset} sizes={fp!.srcset ? '(max-width: 900px) 100vw, 760px' : undefined} alt={fp!.ai ? fp!.alt : ''} width={fp!.w} height={fp!.h} fetchpriority="high" decoding="async">{fp!.ai && <span class="ill">{lang === 'he' ? 'תמונה להמחשה' : 'AI illustration'}</span>}</a>
+          <span class="kick" style={`--ci:${s.ink}`}><i></i>{kickerOf(first, lang)}</span>
           <h2 class="h1"><a href={articleUrl(first, lang)}>{first.title}</a></h2>
           <p>{first.dek}</p>
+          <div class="meta"><b>{lang === 'he' ? 'מערכת חדשות נתניה והשרון' : u.by}</b><i class="sep" aria-hidden="true"></i><time datetime={first.published} data-ago>{fmtDate(first.published, lang)}, {fmtTime(first.published)}</time><i class="sep" aria-hidden="true"></i><span>{readMin(first)} {lang === 'he' ? 'דק׳ קריאה' : 'min'}</span></div>
         </div>
         <aside class="latest" style={`background:${s.soft};border-color:${s.soft}`}>
           <div class="hd2"><h2>{lang === 'he' ? 'עוד במדור' : u.more}</h2></div>
           <ol>{items.slice(1, 7).map((a) => <li><time datetime={a.published}>{fmtTime(a.published)}</time><a href={articleUrl(a, lang)}>{a.title}</a></li>)}</ol>
         </aside>
       </article>)}
-    {items.length > 1 && <section class="sec" aria-label={u.more}><div class="grid">{items.slice(1).map((a) => <Card a={a} lang={lang} />)}</div></section>}
+    {items.length > 1 && <section class="sec" aria-label={u.more}><div class="grid lst" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">{items.slice(1).map((a) => <Card a={a} lang={lang} read />)}</div></section>}
     {lang === 'he' && places.length > 0 && (
       <section class="sec" aria-labelledby="pl-h"><h2 id="pl-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>{name} לפי שכונה ויישוב</h2>
         <div class="chips">{places.map((p) => <a class="chip" href={placeUrl(p.slug)} style={`--c:${s.color}`}><i></i>{p.he}</a>)}</div></section>)}

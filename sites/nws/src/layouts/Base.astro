@@ -3,7 +3,7 @@ import '../styles/global.css';
 import { SITE_URL, PREVIEW, LANGS, LANG_PREFIX, LANG_LOCALE, LANG_DIR, BRAND, type Lang } from '../data/site';
 import { SECTIONS } from '../data/sections';
 import { t } from '../i18n/ui';
-import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime } from '../lib/content';
+import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, EVENT, LIVE, hebrewDate } from '../lib/content';
 
 interface Crumb { name: string; href: string }
 interface Props {
@@ -18,7 +18,26 @@ const canonical = SITE_URL + path;
 const robots = PREVIEW || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 const alts = Object.entries(alternates) as [Lang, string][];
 const pre = LANG_PREFIX[lang];
-const tickerItems = articlesFor(lang).slice(0, 5);
+// ticker: the latest flash items (or the latest stories when there are no flash items)
+const pool0 = articlesFor(lang);
+const flashOnly = pool0.filter((a) => a.section === 'flash');
+const tickerItems = (flashOnly.length >= 2 ? flashOnly : pool0).slice(0, 6);
+const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
+const tickTime = (iso: string) => (ilDay(new Date(iso)) === ilDay(new Date()) ? fmtTime(iso) : fmtShort(iso));
+const hdate = lang === 'he' ? hebrewDate() : '';
+const wx = LIVE?.ok && typeof LIVE.temp === 'number' ? Math.round(LIVE.temp) : null;
+const wxIcon = (c: number | null | undefined) => (c == null ? 'sun' : c <= 1 ? 'sun' : c <= 3 ? 'cloud' : c >= 51 ? 'rain' : 'cloud');
+// event strip (only on Hebrew pages, only while an event is active); its colors follow the kind of event
+const ev = lang === 'he' ? EVENT : null;
+const EVK: Record<string, { bg: string; tagBg: string; tagFg: string }> = {
+  elections: { bg: 'linear-gradient(90deg,#0B3D6E,#0B5FCC)', tagBg: '#FFFFFF', tagFg: '#0B3D6E' },
+  storm: { bg: 'linear-gradient(90deg,#1F2A37,#3B4656)', tagBg: '#F59F00', tagFg: '#0E1726' },
+  holiday: { bg: 'linear-gradient(90deg,#6D28D9,#DB2777)', tagBg: '#FFFFFF', tagFg: '#6D28D9' },
+  emergency: { bg: 'linear-gradient(90deg,#8F0B20,#C8102E)', tagBg: '#FFFFFF', tagFg: '#A60D26' },
+  other: { bg: 'linear-gradient(90deg,#0E1726,#0B3D6E)', tagBg: '#FFFFFF', tagFg: '#0E1726' },
+};
+const evk = ev ? (EVK[ev.kind] ?? EVK.other) : null;
+const flashS = SECTIONS.find((x) => x.key === 'flash')!;
 const homeHref = (pre || '') + '/';
 const langHref = (l: Lang) => (alternates[l] ?? (LANG_PREFIX[l] + '/'));
 const today = new Intl.DateTimeFormat(lang === 'he' ? 'he-IL' : lang, { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
@@ -62,7 +81,7 @@ const ld = [...jsonld, ...crumbLd];
 <a class="skip" href="#main">{lang === 'he' ? 'דלג לתוכן' : lang === 'ru' ? 'К содержанию' : lang === 'fr' ? 'Aller au contenu' : 'Skip to content'}</a>
 {PREVIEW && <div class="preview">{u.previewNote}</div>}
 <div class="ub"><div class="wrap">
-  <div class="l"><span>{today}</span><span>{lang === 'he' ? 'נתניה' : u.city}</span></div>
+  <div class="l"><span>{today}</span>{hdate && <span class="hd2x">{hdate}</span>}<span class="wx" data-wx>{wx !== null ? <><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F2B544" stroke-width="2" aria-hidden="true">{wxIcon(LIVE.code) === 'sun' ? <><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></> : wxIcon(LIVE.code) === 'rain' ? <><path d="M7 15a4 4 0 010-8 5 5 0 019.6 1.5A3.5 3.5 0 0117 15z"/><path d="M8 18l-1 3M12 18l-1 3M16 18l-1 3"/></> : <path d="M7 18a4 4 0 010-8 5 5 0 019.6 1.5A3.5 3.5 0 0117 18z"/>}</svg><b data-wx-t>{wx}°</b> {lang === 'he' ? 'נתניה' : u.city}</> : <span>{lang === 'he' ? 'נתניה' : u.city}</span>}</span></div>
   <div class="r">
     <a href={`${pre}/send-news/`}>{u.sendNews}</a>
     <a href="/advertise/">{u.advertise}</a>
@@ -83,20 +102,37 @@ const ld = [...jsonld, ...crumbLd];
       <input id="q" name="q" type="search" placeholder={u.searchPh}>
     </form>
     <div class="btns">
-      <a class="btn pri" href={`${pre}/join/`}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4 2-15z"/></svg>{u.joinTelegram}</a>
-      <a class="btn out" href={`${pre}/join/#alerts`}>{u.alerts}</a>
+      <a class="btn pri pill" href={`${pre}/join/`}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4 2-15z"/></svg>{u.joinTelegram}</a>
+    </div>
+    <div class="mtools">
+      <a href="/search/" aria-label={u.search}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></a>
+      <details class="mm">
+        <summary aria-label={lang === 'he' ? 'תפריט' : 'Menu'}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
+        <div class="mmp">
+          <nav aria-label={u.sectionsH}>{SECTIONS.map((x) => <a href={sectionUrl(x.key, lang)}>{x.name[lang]}</a>)}<a href={`${pre}/now/`}>{u.now}</a><a href={`${pre}/directory/`}>{u.directory}</a></nav>
+          <div class="mmb"><a class="btn pri pill" href={`${pre}/join/`}>{u.joinTelegram}</a><a href={`${pre}/send-news/`}>{u.sendNews}</a><a href="/advertise/">{u.advertise}</a></div>
+          <div class="langs">{LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l === 'he' ? 'עב' : l.toUpperCase()}</a>)}</div>
+        </div>
+      </details>
     </div>
   </div>
-  <nav class="wrap nav" aria-label={u.sectionsH}>
-    {SECTIONS.map((s) => <a href={sectionUrl(s.key, lang)} style={`--c:${s.color}`} aria-current={current === s.key ? 'page' : undefined}>{s.name[lang]}</a>)}
+  <div class="navw"><nav class="wrap nav" aria-label={u.sectionsH}>
+    {SECTIONS.map((s) => <a href={sectionUrl(s.key, lang)} class={s.key === 'flash' ? 'fl' : undefined} style={`--c:${s.color}`} aria-current={current === s.key ? 'page' : undefined}>{s.key === 'flash' && <i aria-hidden="true"></i>}{s.name[lang]}</a>)}
     <a class="hl" href={`${pre}/now/`} aria-current={current === 'now' ? 'page' : undefined}>{u.now}</a>
     <a class="hl" href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}>{u.directory}</a>
-  </nav>
+  </nav></div>
 </header>
+{ev && evk && (
+<aside class="evs" aria-label={ev.title} style={`background:${evk.bg}`} data-ends={ev.endsAt || undefined}><div class="wrap">
+  <span class="evt"><span class="tg" style={`background:${evk.tagBg};color:${evk.tagFg}`}>{ev.tag || 'אירוע מיוחד'}</span><b>{ev.title}</b></span>
+  {(ev.stat1 || ev.stat2) && <span class="evd" aria-hidden="true"></span>}
+  <span class="evn">{ev.stat1 && <span><b>{ev.stat1}</b> {ev.stat1Label}</span>}{ev.stat2 && <span class="s2"><b>{ev.stat2}</b> {ev.stat2Label}</span>}</span>
+  {ev.ctaText && ev.ctaUrl && <a class="evc" href={ev.ctaUrl}>{ev.ctaText} ←</a>}
+</div></aside>)}
 {tickerItems.length > 0 && (
 <div class="tk"><div class="wrap">
-  <span class="lb"><i></i>{u.flash}</span>
-  <div class="vp"><ul>{[...tickerItems, ...tickerItems].map((a, i) => <li aria-hidden={i >= tickerItems.length ? 'true' : undefined}><a href={articleUrl(a, lang)} tabindex={i >= tickerItems.length ? -1 : undefined}><b>{fmtTime(a.published)}</b> {a.title}</a></li>)}</ul></div>
+  <span class="lb">{u.flash}</span>
+  <div class="vp"><ul>{[...tickerItems, ...tickerItems].map((a, i) => <li aria-hidden={i >= tickerItems.length ? 'true' : undefined}><a href={articleUrl(a, lang)} tabindex={i >= tickerItems.length ? -1 : undefined}><b>{tickTime(a.published)}</b> {a.title}</a></li>)}</ul></div>
 </div></div>)}
 <main id="main"><slot /></main>
 <footer class="ft">
@@ -106,7 +142,26 @@ const ld = [...jsonld, ...crumbLd];
     <div><b>{u.usefulH}</b><a href={`${pre}/now/`}>{u.now}</a>{lang === 'he' && <><a href="/now/pharmacy/">בית מרקחת תורן</a><a href="/now/shabbat/">זמני שבת בנתניה</a><a href="/now/beaches/">החופים של נתניה</a><a href="/now/phones/">טלפונים חיוניים</a></>}<a href={`${pre}/directory/`}>{u.directory}</a></div>
     <div><b>{u.siteH}</b><a href={`${pre}/about/`}>{u.about}</a><a href="/editorial-policy/">{u.editorial}</a><a href="/corrections/">{u.corrections}</a><a href={`${pre}/send-news/`}>{u.sendNews}</a><a href="/advertise/">{u.advertise}</a><a href="/contact/">{u.contact}</a><a href="/terms/">{u.terms}</a><a href="/privacy/">{u.privacy}</a><a href="/accessibility/">{u.accessibility}</a></div>
   </div>
+  {lang === 'he' && <div class="wrap ainote">תמונות שמסומנות "להמחשה" נוצרו בבינה מלאכותית ואינן מתעדות את האירוע. <a href="/editorial-policy/#images">מדיניות התמונות</a></div>}
   <div class="wrap bt"><span>© {new Date().getFullYear()} NWS. {u.rights}</span><span>{LANGS.map((l, i) => <>{i > 0 && ' · '}<a href={langHref(l)} lang={l}>{l === 'he' ? 'עברית' : l === 'ru' ? 'Русский' : l === 'fr' ? 'Français' : 'English'}</a></>)}</span></div>
 </footer>
+<script is:inline>
+/* time ago, past road closures, an event that ended, and the live sea and weather (Open-Meteo, free, no key) */
+(function(){var L=document.documentElement.lang||'he',he=L==='he',rtf=null;try{rtf=new Intl.RelativeTimeFormat(L,{numeric:'auto'})}catch(e){}
+function ago(){var n=Date.now();document.querySelectorAll('time[data-ago]').forEach(function(t){var d=Date.parse(t.getAttribute('datetime'));if(!d||!rtf)return;var s=Math.max(0,(n-d)/1e3);if(s>7*86400)return;
+t.textContent=s<60?(he?'עכשיו':rtf.format(0,'minute')):s<3600?rtf.format(-Math.round(s/60),'minute'):s<86400?rtf.format(-Math.round(s/3600),'hour'):rtf.format(-Math.round(s/86400),'day')});
+document.querySelectorAll('[data-until]').forEach(function(e){var u=Date.parse(e.getAttribute('data-until')+'T23:59:59+02:00');if(u&&u<n)e.remove()});
+document.querySelectorAll('[data-ends]').forEach(function(e){var u=Date.parse(e.getAttribute('data-ends'));if(u&&u<n)e.remove()});}
+ago();setInterval(ago,60000);
+var w=document.querySelectorAll('[data-wx-t],[data-sea]');if(!w.length||!window.fetch)return;
+var q='latitude=32.33&longitude=34.85&timezone=Asia%2FJerusalem';
+Promise.all([fetch('https://marine-api.open-meteo.com/v1/marine?'+q+'&current=wave_height,sea_surface_temperature').then(function(r){return r.json()}),fetch('https://api.open-meteo.com/v1/forecast?'+q+'&current=temperature_2m,wind_speed_10m,weather_code').then(function(r){return r.json()})]).then(function(a){
+var m=a[0].current||{},f=a[1].current||{},set=function(k,v){document.querySelectorAll('[data-live="'+k+'"]').forEach(function(e){e.textContent=v})};
+if(typeof f.temperature_2m==='number'){document.querySelectorAll('[data-wx-t]').forEach(function(e){e.textContent=Math.round(f.temperature_2m)+'°'});set('temp',Math.round(f.temperature_2m)+'°')}
+if(typeof m.wave_height==='number'){set('wave',m.wave_height.toFixed(1));var h=m.wave_height,st=document.querySelector('[data-states]'),S=st?st.getAttribute('data-states').split('|'):[];if(S.length===5)set('state',S[h<=0.5?0:h<=1?1:h<=1.6?2:h<=2.5?3:4])}
+if(typeof m.sea_surface_temperature==='number')set('sst',Math.round(m.sea_surface_temperature)+'°');
+if(typeof f.wind_speed_10m==='number')set('wind',Math.round(f.wind_speed_10m));
+try{set('at',new Intl.DateTimeFormat('he-IL',{timeZone:'Asia/Jerusalem',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date()))}catch(e){}}).catch(function(){});})();
+</script>
 </body>
 </html>

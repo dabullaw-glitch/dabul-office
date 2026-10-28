@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""SEO checks over dist/: one H1, title and description length, canonical, valid JSON-LD, no broken internal links, no dashes."""
+"""SEO checks over dist/: one H1, title and description length, canonical, valid JSON-LD, no broken internal links or images
+(every <img> with width, height and alt), no dashes."""
 import os, re, json, html, sys
 root='dist'; pages={}; bad=[]
 for dp,_,fs in os.walk(root):
@@ -24,6 +25,12 @@ for u,s in pages.items():
     for l in re.findall(r'href="(/[^"]*)"',s):
         if l.startswith('//'): continue
         if not exists(l): bad.append((u,'broken',l))
+    imgs=re.findall(r'<img[^>]*>',s)
+    for tag in imgs:
+        for l in re.findall(r'\ssrc="(/[^"]*)"',tag)+[x.split()[0] for m in re.findall(r'srcset="([^"]*)"',tag) for x in m.split(',') if x.strip().startswith('/')]:
+            if not l.startswith('//') and l.split('?')[0] not in files: bad.append((u,'img',l))
+        if not re.search(r'\swidth="\d+"',tag) or not re.search(r'\sheight="\d+"',tag): bad.append((u,'img-size',tag[:80]))
+        if not re.search(r'\salt(=|\s|>)',tag): bad.append((u,'img-alt',tag[:80]))
     txt=re.sub(r'<[^>]+>',' ',re.sub(r'<(script|style)[^>]*>.*?</\1>','',s,flags=re.S))
     if re.search('[–—]',txt): bad.append((u,'dash'))
 print(len(pages),'pages')

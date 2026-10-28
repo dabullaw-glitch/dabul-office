@@ -6,12 +6,13 @@ import { IMG, SITE_URL, LANG_PREFIX, LANGS, BRAND, type Lang } from '../data/sit
 import { SECTION_BY_KEY } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
-import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtDate, fmtTime, placesOf, placeUrl, linkify, related, clip, localized, type Article } from '../lib/content';
+import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtDate, fmtTime, placesOf, placeUrl, linkify, related, clip, localized, picOf, kickerOf, readMin, type Article } from '../lib/content';
 
 interface Props { lang: Lang; a: Article }
 const { lang, a } = Astro.props;
 const s = SECTION_BY_KEY[a.section]; const u = t(lang); const pre = LANG_PREFIX[lang];
 const im = IMG[a.imageHint] ?? IMG[s.img];
+const pic = picOf(a, IMG);
 const heA = ARTICLES.find((x) => x.slug === a.slug)!;
 const places = placesOf(heA);
 const paras = linkify(a.body, places, lang);
@@ -29,7 +30,7 @@ const url = SITE_URL + path;
 const words = [a.title, a.dek, ...a.body].join(' ').split(/\s+/).length;
 const jsonld: any[] = [{
   '@context': 'https://schema.org', '@type': 'NewsArticle', '@id': url + '#article', mainEntityOfPage: url, url,
-  headline: a.title.slice(0, 110), description: desc, image: [SITE_URL + (a.og || `/og/a/${a.slug}.png`)], inLanguage: lang,
+  headline: a.title.slice(0, 110), description: desc, image: [SITE_URL + (a.og || `/og/a/${a.slug}.png`), ...(pic.ai ? [pic.src.startsWith('http') ? pic.src : SITE_URL + pic.src] : [])], inLanguage: lang,
   datePublished: a.published, dateModified: modified, articleSection: s.name[lang], keywords: a.tags.join(', '), wordCount: words,
   author: { '@type': 'Organization', name: lang === 'he' ? 'מערכת חדשות נתניה והשרון' : 'NWS Desk', url: SITE_URL + '/about/' },
   publisher: { '@id': SITE_URL + '/#org', '@type': 'NewsMediaOrganization', name: BRAND.he, logo: { '@type': 'ImageObject', url: SITE_URL + '/logo.png' } },
@@ -48,17 +49,20 @@ const share = encodeURIComponent(url); const shareT = encodeURIComponent(a.title
   <div class="wrap art" style={`--c:${s.color};--ci:${s.ink};--s:${s.soft}`}>
     <article>
       <Crumbs items={crumbs} label={u.breadcrumbs} />
+      <span class="kick" style="margin-top:6px"><i></i>{kickerOf(a, lang)}</span>
       <h1>{a.title}</h1>
       <p class="dek">{a.dek}</p>
       <div class="byl">
-        <div class="who"><a href={`${pre}/about/`}><b>{u.by}</b></a><span>{u.published} <time datetime={a.published}>{fmtDate(a.published, lang)}, {fmtTime(a.published)}</time>{a.updated && a.updated !== a.published && <> · {u.updated} <time datetime={a.updated}>{fmtTime(a.updated)}</time></>}</span></div>
+        <div class="who"><a href={`${pre}/about/`}><b>{u.by}</b></a><span>{u.published} <time datetime={a.published}>{fmtDate(a.published, lang)}, {fmtTime(a.published)}</time>{a.updated && a.updated !== a.published && <> · {u.updated} <time datetime={a.updated}>{fmtTime(a.updated)}</time></>} · {readMin(a)} {lang === 'he' ? 'דק׳ קריאה' : 'min'}</span></div>
         <div class="shr">
           <a href={`https://wa.me/?text=${shareT}%20${share}`} aria-label="WhatsApp" rel="noopener nofollow" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" aria-hidden="true"><path d="M4 20l1.5-4A8 8 0 1112 20a8 8 0 01-4-1z"/></svg></a>
           <a href={`https://t.me/share/url?url=${share}&text=${shareT}`} aria-label="Telegram" rel="noopener nofollow" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4 2-15z"/></svg></a>
           <a href={`https://www.facebook.com/sharer/sharer.php?u=${share}`} aria-label="Facebook" rel="noopener nofollow" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E1726" stroke-width="2" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 00-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/></svg></a>
         </div>
       </div>
-      <figure><img src={im.src} alt={im.alt} width="1200" height="675" fetchpriority="high"><figcaption>{lang === 'he' ? 'איור: חדשות נתניה והשרון' : 'Illustration: NWS'}</figcaption></figure>
+      {pic.ai
+        ? <figure><span class="pw"><img src={pic.src} srcset={pic.srcset} sizes={pic.srcset ? '(max-width: 820px) 100vw, 760px' : undefined} alt={pic.alt} width={pic.w} height={pic.h} fetchpriority="high" decoding="async"><span class="ill">{lang === 'he' ? 'תמונה להמחשה' : 'AI illustration'}</span></span><figcaption>{lang === 'he' ? 'תמונה להמחשה שנוצרה בבינה מלאכותית. היא אינה מתעדת את האירוע.' : 'AI generated illustration. It does not document the event.'}</figcaption></figure>
+        : <figure><img src={im.src} alt={im.alt} width="1200" height="675" fetchpriority="high"><figcaption>{lang === 'he' ? 'איור: חדשות נתניה והשרון' : 'Illustration: NWS'}</figcaption></figure>}
       <div class="body">
         {paras.slice(0, 2).map((p) => <p set:html={p}></p>)}
         {a.keyPoints.length > 0 && <div class="kp"><b>{u.keyPoints}</b><ul>{a.keyPoints.map((k) => <li>{k}</li>)}</ul></div>}
@@ -73,7 +77,7 @@ const share = encodeURIComponent(url); const shareT = encodeURIComponent(a.title
       </aside>
       {lang === 'he' && places.length > 0 && <div class="chips" style="margin-top:20px">{places.map((p) => <a class="chip" href={placeUrl(p.slug)} style={`--c:${s.color}`}><i></i>חדשות {p.he}</a>)}</div>}
       {lang === 'he' && a.tags.length > 0 && <p class="note" style="margin-top:14px">נושאים: {a.tags.join(' · ')}</p>}
-      {rel.length > 0 && <section class="sec" aria-labelledby="rel-h"><h2 id="rel-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>{u.related}</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">{rel.map((r) => <Card a={r} lang={lang} />)}</div></section>}
+      {rel.length > 0 && <section class="sec" aria-labelledby="rel-h"><h2 id="rel-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>{u.related}</h2><div class="grid lst" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">{rel.map((r) => <Card a={r} lang={lang} />)}</div></section>}
     </article>
     <aside>
       <section class="sidebox" aria-labelledby="fl-h"><h2 id="fl-h"><i></i>{u.flash}</h2><ol>{flash.map((f) => <li><time datetime={f.published}>{fmtTime(f.published)}</time><a href={articleUrl(f, lang)}>{f.title}</a></li>)}</ol></section>

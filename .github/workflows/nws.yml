@@ -4,6 +4,8 @@ name: nws site
 # Before each build, scripts/feed.mjs fetches the stories the news engine published (Supabase function hns-feed),
 # so the schedule below brings new published stories to the site within about 15 minutes.
 # scripts/biz.mjs does the same for the approved business directory listings (Supabase function hns-biz).
+# 28.10.2026: scripts/live.mjs saves a sea and weather snapshot (Open-Meteo), and scripts/img.mjs turns the AI illustrations of the
+# stories into small WebP files; those files are kept in the Actions cache (.imgcache), so each image is downloaded only once.
 on:
   schedule: [{ cron: '*/15 * * * *' }]
   push:
@@ -24,9 +26,21 @@ jobs:
       - name: Install
         working-directory: sites/nws
         run: npm ci --no-audit --no-fund
-      - name: Build (fetches the published stories first)
+      - name: Fetch the published stories and directory listings
         working-directory: sites/nws
-        run: npm run build
+        run: node scripts/feed.mjs && node scripts/biz.mjs
+      - name: Key of the AI images
+        id: imgkey
+        run: echo "key=$(node -e "const j=require('./sites/nws/src/data/feed.json');process.stdout.write((j.stories||[]).map(s=>s.image&&s.image.url||'').filter(Boolean).sort().join('\n'))" | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+      - name: Restore the AI image cache
+        uses: actions/cache@v4
+        with:
+          path: sites/nws/.imgcache
+          key: nwsimg-${{ steps.imgkey.outputs.key }}
+          restore-keys: nwsimg-
+      - name: Build (live snapshot, AI images, site)
+        working-directory: sites/nws
+        run: npm run build:site
       - name: Check the build
         working-directory: sites/nws/dist
         run: |
@@ -40,7 +54,7 @@ jobs:
       - name: Decide whether to publish
         id: key
         run: |
-          STORIES=$(node -e "const j=require('./sites/nws/src/data/feed.json');let b={};try{b=require('./sites/nws/src/data/biz.json')}catch(e){};process.stdout.write(JSON.stringify([j.stories||[],b.listings||[]]))" | sha256sum | cut -c1-16)
+          STORIES=$(node -e "const j=require('./sites/nws/src/data/feed.json');let b={};try{b=require('./sites/nws/src/data/biz.json')}catch(e){};process.stdout.write(JSON.stringify([j.stories||[],b.listings||[],j.event||null]))" | sha256sum | cut -c1-16)
           SRC=$(git rev-parse HEAD:sites/nws | cut -c1-16)
           DAY=$(TZ=Asia/Jerusalem date +%F)
           KEY="$STORIES-$SRC-$DAY"

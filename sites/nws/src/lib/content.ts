@@ -10,7 +10,12 @@ export interface Article {
   faq: [string, string][]; neighborhoods: string[]; tags: string[]; published: string; updated?: string;
   sourceName: string; sourceUrl: string; imageHint: string; event?: { name: string; startDate: string; location: string } | null;
   expires?: string; og?: string; engineId?: number;
+  // card fields (28.10.2026 redesign): colored line above the title, opinion/video badges, road closure details, AI illustration
+  kicker?: string; kind?: 'news' | 'opinion'; author?: string; authorRole?: string; video?: string;
+  closure?: { place: string; what: string; until: string; approx: boolean } | null;
+  ai?: AiImg | null;
 }
+export interface AiImg { alt: string; files?: { src: string; w: number }[]; remote?: string; w: number; h: number; model: string }
 
 const DATA = path.resolve('src/data');
 const readJson = (f: string, d: any) => { try { return JSON.parse(fs.readFileSync(path.join(DATA, f), 'utf8')); } catch { return d; } };
@@ -28,6 +33,16 @@ const live = (a: any) => {
   const d = a.event?.startDate ? String(a.event.startDate).slice(0, 10) : '';
   return !d || d >= ilToday;
 };
+// AI illustrations made small by scripts/img.mjs (story id -> WebP files), or the original address when that failed
+const AIMAP: Record<string, any> = readJson('aiimg.json', {});
+function aiOf(s: any): AiImg | null {
+  const im = s.image; if (!im?.url) return null;
+  const m = AIMAP[s.id];
+  const lucid = im.model === 'lucid';
+  const alt = clean(im.alt) || 'תמונה להמחשה';
+  if (m?.files?.length) return { alt, files: m.files, w: m.w, h: m.h, model: im.model || '' };
+  return { alt, remote: m?.remote || im.url, w: lucid ? 1280 : 1024, h: lucid ? 720 : 1024, model: im.model || '' };
+}
 function fromFeed(s: any): any {
   const section = SECTION_BY_KEY[s.section as SectionKey] ? s.section : 'flash';
   const places = [...new Set((s.places || []).map((p: string) => PLACE_ALIAS[p] || p).filter((p: string) => PLACE_BY_HE[p]))];
@@ -35,9 +50,13 @@ function fromFeed(s: any): any {
     slug: `n${s.id}`, engineId: s.id, section, title: clean(s.title), dek: clean(s.dek), body: (s.body || []).map(clean).filter(Boolean),
     keyPoints: (s.keyPoints || []).map(clean).filter(Boolean), whatItMeans: '', faq: s.faq || [], neighborhoods: places, tags: [],
     published: new Date(s.date || s.publishedAt).toISOString(), sourceName: clean(s.sourceName), sourceUrl: s.sourceUrl || '', imageHint: '', event: null,
+    kicker: clean(s.kicker), kind: s.kind === 'opinion' ? 'opinion' : 'news', author: clean(s.author), authorRole: clean(s.authorRole), video: s.video || '',
+    closure: s.closure && s.closure.place ? { place: clean(s.closure.place), what: clean(s.closure.what), until: String(s.closure.until || ''), approx: !!s.closure.approx } : null,
+    ai: aiOf(s),
   };
 }
-const FEED: any[] = (readJson('feed.json', { stories: [] }).stories || []).filter((s: any) => s && s.id && s.title && (s.body || []).length).map(fromFeed);
+const FEED_JSON: any = readJson('feed.json', { stories: [] });
+const FEED: any[] = (FEED_JSON.stories || []).filter((s: any) => s && s.id && s.title && (s.body || []).length).map(fromFeed);
 const ogFor = (a: any) => fs.existsSync(path.resolve('public/og/a', `${a.slug}.png`)) ? `/og/a/${a.slug}.png` : `/og/s/${a.section}.png`;
 
 export const ARTICLES: Article[] = [...(readJson('articles.json', { articles: [] }).articles as any[]), ...FEED]
@@ -104,6 +123,65 @@ export function related(a: Article, pool: Article[], k = 3) {
   return pool.filter((x) => x.slug !== a.slug)
     .map((x) => ({ x, s: (x.section === a.section ? 2 : 0) + placesOf(x).filter((p) => pl.has(p.slug)).length + x.tags.filter((t) => a.tags.includes(t)).length }))
     .sort((p, q) => q.s - p.s || (q.x.published || '').localeCompare(p.x.published || '')).slice(0, k).map((r) => r.x);
+}
+
+// ---------- home page and cards (redesign approved 28.10.2026) ----------
+export interface SiteEvent {
+  id: number; kind: 'elections' | 'storm' | 'holiday' | 'emergency' | 'other'; title: string; tag: string; stat1: string; stat1Label: string; stat2: string; stat2Label: string;
+  ctaText: string; ctaUrl: string; storyIds: number[]; endsAt: string | null;
+  block: { kicker?: string; headline?: string; text?: string; bar?: { pct: number; left?: string; right?: string }; source?: string };
+}
+// the active event (table hns_event through hns-feed), or null. An event that already ended is dropped at build time too.
+const ev0: any = FEED_JSON.event;
+export const EVENT: SiteEvent | null = ev0 && ev0.title && (!ev0.endsAt || Date.parse(ev0.endsAt) > Date.now()) ? {
+  ...ev0, title: clean(ev0.title), tag: clean(ev0.tag), stat1: clean(ev0.stat1), stat1Label: clean(ev0.stat1Label), stat2: clean(ev0.stat2), stat2Label: clean(ev0.stat2Label),
+  ctaText: clean(ev0.ctaText), ctaUrl: String(ev0.ctaUrl || ''), storyIds: (ev0.storyIds || []).map(Number), block: ev0.block || {},
+} : null;
+// sea and weather snapshot (scripts/live.mjs, Open-Meteo); the browser refreshes it
+export const LIVE: { ok: boolean; at?: string; wave?: number | null; sst?: number | null; temp?: number | null; wind?: number | null; code?: number | null } = readJson('live.json', { ok: false });
+
+/** the home page lead: newest story of the last 72 hours that is not a flash item, not an opinion and not in the event block.
+ *  The same rule is in the Supabase function hns-img (the lead gets the better AI image). */
+export function leadOf(all: Article[], ev: SiteEvent | null = EVENT) {
+  const evSlugs = new Set((ev?.storyIds || []).map((id) => `n${id}`));
+  const pool = all.filter((a) => !evSlugs.has(a.slug));
+  const fresh = pool.filter((a) => Date.now() - Date.parse(a.published) < 72 * 3600e3);
+  return fresh.find((a) => a.section !== 'flash' && a.kind !== 'opinion') ?? pool.find((a) => a.section !== 'flash' && a.kind !== 'opinion') ?? pool[0] ?? all[0];
+}
+/** reading time in minutes (about 200 words a minute) */
+export const readMin = (a: Article) => Math.max(1, Math.round([a.title, a.dek, ...a.body].join(' ').split(/\s+/).length / 200));
+/** the colored line above the title: the writer's short phrase, or the section name */
+export const kickerOf = (a: Article, lang: Lang = 'he') => (lang === 'he' && a.kicker) || SECTION_BY_KEY[a.section].name[lang];
+/** short date for a static fallback (the browser replaces it with "לפני X") */
+export const fmtDay = (iso: string, lang: Lang = 'he') => new Intl.DateTimeFormat(LOC[lang], { timeZone: TZ, day: 'numeric', month: 'long' }).format(new Date(iso));
+/** the picture of a story: its AI illustration (with srcset), or the section's drawing */
+export function picOf(a: Article, IMGS: Record<string, { src: string; alt: string }>) {
+  const ai = a.ai;
+  if (ai) {
+    const files = ai.files || [];
+    return { src: files.length ? files[files.length - 1].src : ai.remote!, srcset: files.length > 1 ? files.map((f) => `${f.src} ${f.w}w`).join(', ') : undefined,
+      small: files.length ? files[0].src : ai.remote!, alt: ai.alt, w: ai.w, h: ai.h, ai: true };
+  }
+  const im = IMGS[a.imageHint] ?? IMGS[SECTION_BY_KEY[a.section].img];
+  return { src: im.src, srcset: undefined, small: im.src, alt: im.alt, w: 1200, h: 675, ai: false };
+}
+/** Hebrew numerals for the Hebrew date (י״ז, תשפ״ז) */
+export function gematria(n: number) {
+  const parts: string[] = [];
+  let x = n;
+  while (x >= 400) { parts.push('ת'); x -= 400; }
+  const H = ['', 'ק', 'ר', 'ש']; const T = ['', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ']; const U = ['', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'];
+  if (x >= 100) { parts.push(H[Math.floor(x / 100)]); x %= 100; }
+  if (x === 15) parts.push('טו'); else if (x === 16) parts.push('טז'); else { if (x >= 10) parts.push(T[Math.floor(x / 10)]); if (x % 10) parts.push(U[x % 10]); }
+  const s = parts.join('');
+  return s.length === 1 ? s + '׳' : s.slice(0, -1) + '״' + s.slice(-1);
+}
+export function hebrewDate(d = new Date()) {
+  const p = new Intl.DateTimeFormat('he-u-ca-hebrew', { timeZone: TZ, day: 'numeric', month: 'long', year: 'numeric' }).formatToParts(d);
+  const day = Number(p.find((x) => x.type === 'day')?.value); const year = Number(p.find((x) => x.type === 'year')?.value);
+  const month = p.find((x) => x.type === 'month')?.value || '';
+  if (!day || !year || !month) return '';
+  return `${gematria(day)} ${month} ${gematria(year % 1000)}`;
 }
 
 export const plain = (s: string) => s.replace(/\s+/g, ' ').trim();
