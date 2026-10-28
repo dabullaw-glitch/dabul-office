@@ -6,3 +6,9 @@
   Cache-Control: public, max-age=31536000, immutable
 /og/*
   Cache-Control: public, max-age=604800
+# The Pages address and preview deployments are never indexed (the site lives at https://nws.co.il; functions/_middleware.js
+# also sends nws-site.pages.dev and www.nws.co.il to it with a 301).
+https://nws-site.pages.dev/*
+  X-Robots-Tag: noindex
+https://:version.nws-site.pages.dev/*
+  X-Robots-Tag: noindex

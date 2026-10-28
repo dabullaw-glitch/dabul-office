@@ -49,6 +49,10 @@ jobs:
           if grep -q 'Disallow: /$' robots.txt; then echo "robots.txt blocks the site"; exit 1; fi
           if grep -q 'name="robots" content="noindex' index.html; then echo "home page is noindex"; exit 1; fi
           grep -q 'https://nws.co.il/' sitemap.xml
+          grep -q 'news-sitemap.xml' robots.txt
+          # the host redirect (nws-site.pages.dev and www -> nws.co.il) must reach the published branch
+          test -f functions/_middleware.js && node -e "JSON.parse(require('fs').readFileSync('_routes.json','utf8'))"
+          if grep -rl --include='*.html' --include='*.xml' 'pages\.dev' . | grep -q .; then echo "a page links to the temporary pages.dev host"; exit 1; fi
       # Every push to nws-site is a new Cloudflare Pages deployment, so a scheduled run publishes only when something changed:
       # the published stories or directory listings, the site source, or the Israel date (daily pages such as Shabbat times and past events).
       - name: Decide whether to publish
