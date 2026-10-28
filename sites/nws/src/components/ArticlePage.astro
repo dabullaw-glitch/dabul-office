@@ -70,14 +70,14 @@ const share = encodeURIComponent(url); const shareT = encodeURIComponent(a.title
         {a.whatItMeans && <div><h2 style="font-size:22px;margin-bottom:8px">{u.whatItMeans}</h2><p class="mean">{a.whatItMeans}</p></div>}
       </div>
       {a.faq.length > 0 && <section class="faq" aria-labelledby="faq-h" style="margin-top:26px"><h2 id="faq-h" style="font-size:22px;margin-bottom:4px">{u.faq}</h2>{a.faq.map(([q, x]) => <details open><summary>{q}</summary><p>{x}</p></details>)}</section>}
-      <aside class="srcbox" aria-label={u.sourceBox}>
-        <b style="font-family:var(--h)">{u.sourceBox}</b>
+      <aside class="srcbox" aria-label={a.sourceName ? u.sourceBox : u.foundError}>
+        {a.sourceName && <b style="font-family:var(--h)">{u.sourceBox}</b>}
         {a.sourceName && <span>{a.sourceName}.{a.sourceUrl && <> <a href={a.sourceUrl} rel="noopener nofollow" target="_blank">{u.viewSource}</a></>}</span>}
         <span class="note">{u.foundError} <a href={`/corrections/?url=${encodeURIComponent(path)}`}>{u.requestFix}</a> · {u.haveInfo} <a href={`${pre}/send-news/`}>{u.sendUs}</a></span>
       </aside>
       {lang === 'he' && places.length > 0 && <div class="chips" style="margin-top:20px">{places.map((p) => <a class="chip" href={placeUrl(p.slug)} style={`--c:${s.color}`}><i></i>חדשות {p.he}</a>)}</div>}
       {lang === 'he' && a.tags.length > 0 && <p class="note" style="margin-top:14px">נושאים: {a.tags.join(' · ')}</p>}
-      {rel.length > 0 && <section class="sec" aria-labelledby="rel-h"><h2 id="rel-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>{u.related}</h2><div class="grid lst" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">{rel.map((r) => <Card a={r} lang={lang} />)}</div></section>}
+      {rel.length > 0 && <section class="sec" aria-labelledby="rel-h"><h2 id="rel-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>{u.related}<a class="mo" href={sectionUrl(a.section, lang)}>{u.toSection}</a></h2><div class="grid lst" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">{rel.map((r) => <Card a={r} lang={lang} />)}</div></section>}
     </article>
     <aside>
       <section class="sidebox" aria-labelledby="fl-h"><h2 id="fl-h"><i></i>{u.flash}</h2><ol>{flash.map((f) => <li><time datetime={f.published}>{fmtTime(f.published)}</time><a href={articleUrl(f, lang)}>{f.title}</a></li>)}</ol></section>

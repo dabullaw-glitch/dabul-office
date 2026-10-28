@@ -5,7 +5,7 @@ import Card from '../../../components/Card.astro';
 import BizCard from '../../../components/BizCard.astro';
 import { CATEGORIES, schemaType } from '../../../data/directory';
 import { SITE_URL } from '../../../data/site';
-import { ARTICLES } from '../../../lib/content';
+import { ARTICLES, clip } from '../../../lib/content';
 import { listingsIn, listingUrl } from '../../../lib/biz';
 export function getStaticPaths() { return CATEGORIES.map((c) => ({ params: { cat: c.slug }, props: { c } })); }
 const { c } = Astro.props;
@@ -21,7 +21,7 @@ const jsonld: any[] = [
   { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: c.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
 ];
 ---
-<Base title={`${c.plural} בנתניה והשרון: מה לבדוק לפני שמזמינים | מדריך העסקים`} description={`${c.plural} בנתניה והשרון במדריך העסקים של חדשות נתניה והשרון. ${c.tips[0]} מה לבדוק לפני שמזמינים ${c.he}, ושאלות נפוצות.`} path={path} crumbs={crumbs} jsonld={jsonld} current="directory">
+<Base title={`${c.plural} בנתניה והשרון: מה לבדוק לפני שמזמינים | מדריך העסקים`} description={clip(`${c.plural} בנתניה והשרון: ${c.tips[0]} מה לבדוק לפני שמזמינים ${c.he}, ושאלות נפוצות.`, 158)} path={path} crumbs={crumbs} jsonld={jsonld} current="directory">
   <section class="phero" style="--bg:#0E1726"><img class="bgi" src="/img/city.svg" alt="" width="1440" height="400">
     <div class="wrap in" style="padding-bottom:30px"><Crumbs items={crumbs} light /><h1>{c.plural} בנתניה והשרון</h1><p>{list.length ? `${list.length} עסקים במדריך. כל עסק נבדק לפני שהוא עולה לאתר.` : 'עסקים מקומיים שנבדקו לפני שעלו לאתר.'}</p>
       {areas.length > 1 && <div class="chips" style="margin-top:14px" id="areas"><button type="button" class="chip" data-a="" style={`--c:${c.color};background:rgba(255,255,255,.12);color:#fff;border-color:transparent;cursor:pointer`}><i></i>הכול</button>{areas.map((a) => <button type="button" class="chip" data-a={a} style={`--c:${c.color};background:rgba(255,255,255,.12);color:#fff;border-color:transparent;cursor:pointer`}><i></i>{a}</button>)}</div>}
