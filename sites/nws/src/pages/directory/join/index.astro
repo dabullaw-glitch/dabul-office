@@ -1,0 +1,67 @@
+---
+// Self-registration for the business directory. Posts to the Supabase function hns-biz (validation, rate limit, honeypot,
+// optional Turnstile). Every new listing waits for Yakir's approval in Telegram. No payment here: payments are not connected.
+import Page from '../../../components/Page.astro';
+import { CATEGORIES } from '../../../data/directory';
+import { PLACES } from '../../../data/places';
+import { HNS_API, TURNSTILE_SITE_KEY } from '../../../data/site';
+const hoods = PLACES.filter((p) => p.kind === 'neighborhood').map((p) => p.he);
+const towns = PLACES.filter((p) => p.kind === 'locality').map((p) => p.he);
+const cats = [...CATEGORIES].sort((a, b) => a.plural.localeCompare(b.plural, 'he'));
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'הוספת עסק למדריך העסקים של נתניה והשרון', url: 'https://nws.co.il/directory/join/' }];
+---
+<Page title="הוספת עסק למדריך העסקים של נתניה והשרון | חדשות נתניה והשרון" h1="הוסיפו את העסק למדריך" description="רישום עסק למדריך העסקים של נתניה והשרון, בלי עלות. ממלאים טופס קצר, ואחרי בדיקה העסק עולה לאתר." path="/directory/join/" intro="רישום בסיסי בלי עלות. אחרי בדיקה העסק עולה לאתר." color="#0B3D6E" img="city" jsonld={jsonld} current="directory">
+  <p>ממלאים את הפרטים, ואנחנו בודקים כל רישום לפני שהוא עולה לאתר. הפרטים שתמלאו (חוץ מפרטי איש הקשר) יופיעו בדף העסק במדריך.</p>
+  <form class="f" id="bizf" novalidate>
+    <div class="hp" aria-hidden="true"><label>אל תמלאו את השדה הזה<input name="company_fax" tabindex="-1" autocomplete="off"></label></div>
+    <label>קטגוריה<select name="category" required><option value="">בחרו קטגוריה</option>{cats.map((c) => <option value={c.slug}>{c.plural}</option>)}</select></label>
+    <p class="note" id="lawnote" hidden>עורכי דין: הפרסום כפוף לכללי לשכת עורכי הדין. בלי מילים כמו "הכי" או "מומחה", בלי הבטחות לתוצאה ובלי מחירים. צריך גם מספר רישיון.</p>
+    <label>שם העסק<input name="name" required maxlength="80" autocomplete="organization"></label>
+    <label>איפה העסק נמצא<select name="area" required><option value="">בחרו אזור</option><option>נתניה</option><optgroup label="שכונות בנתניה">{hoods.map((h) => <option>{h}</option>)}</optgroup><optgroup label="השרון">{towns.map((t) => <option>{t}</option>)}</optgroup></select></label>
+    <fieldset style="border:1px solid #CBD3DD;border-radius:10px;padding:12px 14px"><legend style="font-weight:700;font-size:15px;padding:0 6px">אזורים נוספים שאתם משרתים (לא חובה)</legend>
+      <div style="display:flex;flex-wrap:wrap;gap:8px 16px">{['נתניה', ...towns].map((t) => <label style="flex-direction:row;font-weight:400;gap:6px"><input type="checkbox" name="areas_served" value={t}> {t}</label>)}</div></fieldset>
+    <label>כתובת (לא חובה)<input name="address" maxlength="120" autocomplete="street-address"></label>
+    <label>טלפון של העסק<input name="phone" type="tel" required inputmode="tel" autocomplete="tel" dir="ltr" placeholder="050-0000000"></label>
+    <label>וואטסאפ (לא חובה)<input name="whatsapp" type="tel" inputmode="tel" dir="ltr"></label>
+    <label>מייל (לא חובה)<input name="email" type="email" dir="ltr" autocomplete="email"></label>
+    <label>אתר (לא חובה)<input name="website" type="url" dir="ltr" placeholder="https://"></label>
+    <label>קישור ללוגו או לתמונה (לא חובה)<input name="logo_url" type="url" dir="ltr" placeholder="https://"></label>
+    <label id="licl">מספר רישיון (לעורכי דין, רואי חשבון, חשמלאים ועוד)<input name="license_no" maxlength="30" dir="ltr"></label>
+    <label>תיאור העסק (30 תווים לפחות)<textarea name="description" rows="6" required minlength="30" maxlength="1200" placeholder="מה אתם עושים, לאילו לקוחות, ובאילו אזורים"></textarea></label>
+    <label>שם איש הקשר (לא יפורסם)<input name="contact_name" maxlength="60" autocomplete="name"></label>
+    <label>טלפון לחזרה אליכם (לא יפורסם, לא חובה)<input name="contact_phone" type="tel" inputmode="tel" dir="ltr"></label>
+    <fieldset style="border:1px solid #CBD3DD;border-radius:10px;padding:12px 14px"><legend style="font-weight:700;font-size:15px;padding:0 6px">מעוניינים גם ב (לא חובה)</legend>
+      <label style="flex-direction:row;font-weight:400;gap:6px"><input type="checkbox" name="interest" value="featured"> קידום במדריך (עסק מומלץ)</label>
+      <label style="flex-direction:row;font-weight:400;gap:6px"><input type="checkbox" name="interest" value="sponsored"> כתבת תוכן שיווקי על העסק</label>
+      <p class="note" style="margin:6px 0 0">התשלום עוד לא מחובר לאתר. נחזור אליכם עם הפרטים.</p></fieldset>
+    <label style="flex-direction:row;font-weight:400;gap:8px"><input type="checkbox" name="consent" value="1" required> אני מאשר/ת לפרסם את פרטי העסק במדריך, והפרטים נכונים.</label>
+    {TURNSTILE_SITE_KEY && <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-language="he"></div>}
+    <button class="btn pri" type="submit">שליחה</button>
+    <p id="bizmsg" role="status" aria-live="polite" style="font-weight:700;margin:0"></p>
+    <p class="note">שליחת הטופס כפופה ל<a href="/terms/">תנאי השימוש</a> ול<a href="/privacy/">מדיניות הפרטיות</a>. רוצים לדעת על פרסום? <a href="/advertise/">פרסום במדריך</a>.</p>
+  </form>
+  {TURNSTILE_SITE_KEY && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+  <script is:inline define:vars={{ api: HNS_API + '/hns-biz' }}>
+  (function(){
+    var f=document.getElementById('bizf'), msg=document.getElementById('bizmsg'), t0=Date.now();
+    var cat=f.elements.category, law=document.getElementById('lawnote');
+    try{var sp=new URLSearchParams(location.search), q=sp.get('cat'), pl=sp.get('plan'); if(q){cat.value=q;} if(pl){f.querySelectorAll('input[name=interest]').forEach(function(x){if(x.value===pl)x.checked=true});}}catch(e){}
+    function sync(){law.hidden=cat.value!=='lawyers'; f.elements.license_no.required=cat.value==='lawyers';}
+    cat.addEventListener('change',sync); sync();
+    f.addEventListener('submit',function(ev){
+      ev.preventDefault();
+      f.querySelectorAll('.ferr').forEach(function(x){x.remove()});
+      var d={action:'register',t:Date.now()-t0}, fd=new FormData(f);
+      fd.forEach(function(v,k){ if(k==='areas_served'||k==='interest'){(d[k]=d[k]||[]).push(v)} else if(k==='cf-turnstile-response'){d.turnstile=v} else {d[k]=String(v).trim()} });
+      d.consent=!!f.elements.consent.checked;
+      var btn=f.querySelector('button[type=submit]'); btn.disabled=true; msg.style.color=''; msg.textContent='שולחים...';
+      fetch(api,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json()}).then(function(j){
+        btn.disabled=false;
+        if(j.ok){ msg.style.color='#1E8A4C'; msg.textContent=j.message||'תודה! קיבלנו את הפרטים. אחרי בדיקה העסק יעלה למדריך.'; if(!j.duplicate) f.reset(); sync(); return; }
+        msg.style.color='#C8102E'; msg.textContent=j.error||'השליחה נכשלה, נסו שוב.';
+        if(j.fields){ Object.keys(j.fields).forEach(function(k){ var el=f.elements[k]; if(!el) return; if(el.length&&!el.tagName) el=el[0]; var p=document.createElement('span'); p.className='ferr note'; p.style.color='#C8102E'; p.textContent=j.fields[k]; (el.closest('label')||el.parentNode).appendChild(p); }); }
+      }).catch(function(){ btn.disabled=false; msg.style.color='#C8102E'; msg.textContent='אין חיבור. נסו שוב בעוד דקה.'; });
+    });
+  })();
+  </script>
+</Page>

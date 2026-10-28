@@ -1,25 +1,31 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Crumbs from '../../components/Crumbs.astro';
+import BizCard from '../../components/BizCard.astro';
 import { CATEGORIES } from '../../data/directory';
 import { SITE_URL } from '../../data/site';
+import { LISTINGS, countBy } from '../../lib/biz';
 const crumbs = [{ name: 'ראשי', href: '/' }, { name: 'מדריך עסקים', href: '/directory/' }];
-const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'מדריך העסקים של נתניה', url: SITE_URL + '/directory/', mainEntity: { '@type': 'ItemList', itemListElement: CATEGORIES.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: `${c.plural} בנתניה`, url: SITE_URL + `/directory/${c.slug}/` })) } }];
+const latest = [...LISTINGS].sort((a, b) => Number(b.featured) - Number(a.featured) || (b.created || '').localeCompare(a.created || '')).slice(0, 6);
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'מדריך העסקים של נתניה והשרון', url: SITE_URL + '/directory/',
+  mainEntity: { '@type': 'ItemList', itemListElement: CATEGORIES.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: `${c.plural} בנתניה`, url: SITE_URL + `/directory/${c.slug}/` })) } }];
 ---
-<Base title="מדריך עסקים בנתניה: בעלי מקצוע עם טלפון מאומת | חדשות נתניה והשרון" description="מדריך בעלי מקצוע בנתניה והשרון: אינסטלטורים, חשמלאים, עורכי דין, מיזוג אוויר, שיפוצים ועוד, עם טלפון מאומת וחיפוש לפי שכונה." path="/directory/" crumbs={crumbs} jsonld={jsonld} current="directory" alternates={{ he: '/directory/', ru: '/ru/directory/', fr: '/fr/directory/', en: '/en/directory/' }}>
+<Base title="מדריך עסקים בנתניה והשרון: בעלי מקצוע ועסקים מקומיים | חדשות נתניה והשרון" description="מדריך העסקים של נתניה והשרון: עורכי דין, רואי חשבון, אינסטלטורים, חשמלאים, שיפוצים, מיזוג אוויר ועוד. כל עסק נבדק לפני שהוא עולה לאתר." path="/directory/" crumbs={crumbs} jsonld={jsonld} current="directory" alternates={{ he: '/directory/', ru: '/ru/directory/', fr: '/fr/directory/', en: '/en/directory/' }}>
   <section class="phero" style="--bg:#0E1726"><img class="bgi" src="/img/city.svg" alt="" width="1440" height="400">
-    <div class="wrap in" style="padding-bottom:30px"><Crumbs items={crumbs} light /><h1>מדריך העסקים של נתניה</h1><p>בעלי מקצוע מנתניה והשרון, עם טלפון מאומת. בחרו קטגוריה:</p>
+    <div class="wrap in" style="padding-bottom:30px"><Crumbs items={crumbs} light /><h1>מדריך העסקים של נתניה והשרון</h1><p>עסקים ובעלי מקצוע מנתניה והסביבה. כל עסק נרשם בעצמו ונבדק לפני שהוא עולה. בחרו קטגוריה:</p>
       <form class="dfil" role="search" style="margin-top:16px" onsubmit="return false"><label class="sr" for="dq">חיפוש קטגוריה</label><input id="dq" type="search" placeholder="מה צריך? למשל: חשמלאי, נזילה, עורך דין" style="flex:2 1 280px"></form>
     </div></section>
   <div class="wrap" style="padding-block:26px 10px">
     <div class="grid" id="cats" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
-      {CATEGORIES.map((c) => <a class="pcard" href={`/directory/${c.slug}/`} data-k={`${c.plural} ${c.he}`} style={`--c:${c.color};border:1px solid #E3E7ED`}><span class="av">{c.plural[0]}</span><b style="font-size:18px">{c.plural} בנתניה</b><span class="note">{c.tips[0]}</span></a>)}
+      {CATEGORIES.map((c) => <a class="pcard" href={`/directory/${c.slug}/`} data-k={`${c.plural} ${c.he}`} style={`--c:${c.color};border:1px solid #E3E7ED`}><span class="av">{c.plural[0]}</span><b style="font-size:18px">{c.plural} בנתניה</b><span class="note">{countBy[c.slug] ? `${countBy[c.slug]} עסקים במדריך` : c.tips[0]}</span></a>)}
     </div>
+    {latest.length > 0 && <section class="sec" aria-labelledby="new-h"><h2 id="new-h" class="sh" style="--c:#0B5FCC"><span class="bar"></span>עסקים במדריך</h2>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">{latest.map((l) => <BizCard l={l} showCat />)}</div></section>}
     <section class="box sec" style="background:#FFF7EB;border-inline-start:5px solid #E08A00;margin-top:26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px">
-      <div><b style="font-family:var(--h);font-size:20px">יש לכם עסק בנתניה? הצטרפו למדריך</b><p style="margin:4px 0 0">רישום בסיסי בלי עלות, תוך שתי דקות, עם אימות טלפון.</p></div>
-      <a class="btn pri" href="/advertise/">הוסיפו את העסק</a>
+      <div><b style="font-family:var(--h);font-size:20px">יש לכם עסק בנתניה או בשרון? הצטרפו למדריך</b><p style="margin:4px 0 0">רישום בסיסי בלי עלות, בטופס קצר. אחרי בדיקה העסק עולה לאתר.</p></div>
+      <a class="btn pri" href="/directory/join/">הוסיפו את העסק</a>
     </section>
-    <section class="prose sec"><h2>איך עובד המדריך</h2><p>כל עסק נרשם בעצמו ומאמת את מספר הטלפון שלו בקוד. עסקים שמשלמים על קידום מסומנים "מקודם" או "מומלץ". המידע על העסק נמסר על ידי בעל העסק. מצאתם טעות? <a href="/corrections/">דווחו לנו</a>.</p></section>
+    <section class="prose sec"><h2>איך עובד המדריך</h2><p>כל עסק נרשם בעצמו ומאשר לפרסם את הפרטים שלו. המערכת בודקת כל רישום לפני שהוא עולה לאתר. עסקים שמשלמים על קידום מסומנים "מקודם". המידע על העסק נמסר על ידי בעל העסק. מצאתם טעות? <a href="/corrections/">דווחו לנו</a>. רוצים לקדם עסק? <a href="/advertise/">פרסום במדריך</a>.</p></section>
   </div>
   <script is:inline>(function(){var i=document.getElementById('dq');if(!i)return;i.addEventListener('input',function(){var v=i.value.trim();document.querySelectorAll('#cats a').forEach(function(a){a.hidden=v&&a.getAttribute('data-k').indexOf(v)<0})})})();</script>
 </Base>

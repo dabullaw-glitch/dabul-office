@@ -1,0 +1,23 @@
+---
+// One business in the directory lists (category page, directory home). Featured listings carry a clear "מקודם" label.
+import { CAT_BY_SLUG } from '../data/directory';
+import { listingUrl, phoneShow, telHref, type Listing } from '../lib/biz';
+interface Props { l: Listing; showCat?: boolean }
+const { l, showCat = false } = Astro.props;
+const c = CAT_BY_SLUG[l.category];
+---
+<article class="pcard" style={`--c:${c.color};border:1px solid ${l.featured ? c.color : '#E3E7ED'}`}>
+  <div style="display:flex;gap:12px;align-items:center">
+    {l.logo ? <img src={l.logo} alt="" width="46" height="46" loading="lazy" referrerpolicy="no-referrer" style="width:46px;height:46px;border-radius:12px;object-fit:cover;background:#F3F5F8"> : <span class="av" aria-hidden="true">{l.name[0]}</span>}
+    <div style="min-width:0">
+      <h3 style="font-size:18px;margin:0"><a href={listingUrl(l)}>{l.name}</a></h3>
+      <span class="note">{showCat ? `${c.he}, ` : ''}{l.area}</span>
+    </div>
+    {l.featured && <span class="chip" style={`--c:${c.color};margin-inline-start:auto;padding:4px 10px;font-size:13px`}><i></i>מקודם</span>}
+  </div>
+  <p style="margin:0;color:#3B4656">{l.description.length > 140 ? l.description.slice(0, l.description.lastIndexOf(' ', 139)) + '...' : l.description}</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:auto">
+    <a class="btn pri" href={telHref(l.phone)} dir="ltr">{phoneShow(l.phone)}</a>
+    <a class="btn out" href={listingUrl(l)}>לפרטים</a>
+  </div>
+</article>

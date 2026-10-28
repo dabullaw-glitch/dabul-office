@@ -2,33 +2,41 @@
 import Base from '../../../layouts/Base.astro';
 import Crumbs from '../../../components/Crumbs.astro';
 import Card from '../../../components/Card.astro';
-import { CATEGORIES } from '../../../data/directory';
-import { PLACES } from '../../../data/places';
+import BizCard from '../../../components/BizCard.astro';
+import { CATEGORIES, schemaType } from '../../../data/directory';
 import { SITE_URL } from '../../../data/site';
 import { ARTICLES } from '../../../lib/content';
+import { listingsIn, listingUrl } from '../../../lib/biz';
 export function getStaticPaths() { return CATEGORIES.map((c) => ({ params: { cat: c.slug }, props: { c } })); }
 const { c } = Astro.props;
 const path = `/directory/${c.slug}/`;
 const crumbs = [{ name: 'ראשי', href: '/' }, { name: 'מדריך עסקים', href: '/directory/' }, { name: `${c.plural} בנתניה`, href: path }];
 const arts = ARTICLES.filter((a) => c.sections.includes(a.section)).slice(0, 3);
 const others = CATEGORIES.filter((x) => x.slug !== c.slug);
-const jsonld = [
-  { '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${c.plural} בנתניה`, url: SITE_URL + path, about: { '@type': 'Thing', name: c.plural }, spatialCoverage: { '@type': 'City', name: 'נתניה' } },
+const list = listingsIn(c.slug);
+const areas = [...new Set(list.map((l) => l.area))];
+const jsonld: any[] = [
+  { '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${c.plural} בנתניה`, url: SITE_URL + path, about: { '@type': 'Thing', name: c.plural }, spatialCoverage: { '@type': 'City', name: 'נתניה' },
+    ...(list.length ? { mainEntity: { '@type': 'ItemList', itemListElement: list.map((l, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + listingUrl(l), item: { '@type': schemaType(c), name: l.name, url: SITE_URL + listingUrl(l) } })) } } : {}) },
   { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: c.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
 ];
 ---
-<Base title={`${c.plural} בנתניה: מה לבדוק לפני שמזמינים | מדריך העסקים חדשות נתניה והשרון`} description={`${c.plural} בנתניה והשרון עם טלפון מאומת. ${c.tips[0]} מה לבדוק לפני שמזמינים ${c.he}, ושאלות נפוצות.`} path={path} crumbs={crumbs} jsonld={jsonld} current="directory">
+<Base title={`${c.plural} בנתניה והשרון: מה לבדוק לפני שמזמינים | מדריך העסקים`} description={`${c.plural} בנתניה והשרון במדריך העסקים של חדשות נתניה והשרון. ${c.tips[0]} מה לבדוק לפני שמזמינים ${c.he}, ושאלות נפוצות.`} path={path} crumbs={crumbs} jsonld={jsonld} current="directory">
   <section class="phero" style="--bg:#0E1726"><img class="bgi" src="/img/city.svg" alt="" width="1440" height="400">
-    <div class="wrap in" style="padding-bottom:30px"><Crumbs items={crumbs} light /><h1>{c.plural} בנתניה</h1><p>בעלי מקצוע עם טלפון מאומת, לפי שכונה.</p>
-      <div class="chips" style="margin-top:14px">{PLACES.filter((p) => p.kind === 'neighborhood').slice(0, 6).map((p) => <span class="chip" style={`--c:${c.color};background:rgba(255,255,255,.12);color:#fff;border-color:transparent`}><i></i>{p.he}</span>)}</div>
+    <div class="wrap in" style="padding-bottom:30px"><Crumbs items={crumbs} light /><h1>{c.plural} בנתניה והשרון</h1><p>{list.length ? `${list.length} עסקים במדריך. כל עסק נבדק לפני שהוא עולה לאתר.` : 'עסקים מקומיים שנבדקו לפני שעלו לאתר.'}</p>
+      {areas.length > 1 && <div class="chips" style="margin-top:14px" id="areas"><button type="button" class="chip" data-a="" style={`--c:${c.color};background:rgba(255,255,255,.12);color:#fff;border-color:transparent;cursor:pointer`}><i></i>הכול</button>{areas.map((a) => <button type="button" class="chip" data-a={a} style={`--c:${c.color};background:rgba(255,255,255,.12);color:#fff;border-color:transparent;cursor:pointer`}><i></i>{a}</button>)}</div>}
     </div></section>
   <div class="wrap" style="padding-block:26px 10px;display:flex;flex-wrap:wrap;gap:28px">
     <div style="flex:999 1 600px;min-width:0">
-      <div class="empty"><b style="font-family:var(--h);font-size:20px">הקטגוריה נפתחת עכשיו</b><p style="margin:0">{c.plural} מנתניה מוזמנים להצטרף ראשונים. רישום בסיסי בלי עלות, עם אימות טלפון.</p><a class="btn pri" href="/advertise/">הוסיפו את העסק</a></div>
+      {list.length > 0
+        ? <div class="grid" id="biz" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">{list.map((l) => <div data-a={l.area}><BizCard l={l} /></div>)}</div>
+        : <div class="empty"><b style="font-family:var(--h);font-size:20px">הקטגוריה נפתחת עכשיו</b><p style="margin:0">{c.plural} מנתניה והשרון מוזמנים להצטרף ראשונים. רישום בסיסי בלי עלות.</p><a class="btn pri" href={`/directory/join/?cat=${c.slug}`}>הוסיפו את העסק</a></div>}
+      {list.length > 0 && <p class="note" style="margin-top:12px">יש לכם עסק בתחום? <a href={`/directory/join/?cat=${c.slug}`}>הוסיפו אותו למדריך</a>.</p>}
       <section class="sec" aria-labelledby="tips-h"><h2 id="tips-h" class="sh" style={`--c:${c.color}`}><span class="bar"></span>מה לבדוק לפני שמזמינים {c.he}</h2><ol class="tips">{c.tips.map((t) => <li>{t}</li>)}</ol></section>
       <section class="sec faq" aria-labelledby="faq-h"><h2 id="faq-h" class="sh" style={`--c:${c.color}`}><span class="bar"></span>שאלות נפוצות על {c.plural} בנתניה</h2>{c.faq.map(([q, a]) => <details open><summary>{q}</summary><p>{a}</p></details>)}</section>
       {arts.length > 0 && <section class="sec"><h2 class="sh" style="--c:#0B5FCC"><span class="bar"></span>חדשות קשורות</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">{arts.map((a) => <Card a={a} />)}</div></section>}
     </div>
     <aside style="flex:1 1 260px;min-width:0"><section class="box" style="border:1px solid #E3E7ED"><h2 style="font-size:18px;margin-bottom:10px">קטגוריות נוספות</h2><ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">{others.map((o) => <li><a href={`/directory/${o.slug}/`} style="color:#0B5FCC;font-weight:700">{o.plural} בנתניה</a></li>)}</ul></section></aside>
   </div>
+  <script is:inline>(function(){var b=document.querySelectorAll('#areas [data-a]');b.forEach(function(x){x.addEventListener('click',function(){var a=x.getAttribute('data-a');document.querySelectorAll('#biz [data-a]').forEach(function(d){d.hidden=!!a&&d.getAttribute('data-a')!==a})})})})();</script>
 </Base>

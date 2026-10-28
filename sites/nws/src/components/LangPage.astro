@@ -15,9 +15,9 @@ const T: any = {
   now: { ru: ['Нетания сейчас: шаббат, пляжи, телефоны', 'Нетания сейчас', 'Время шаббата в Нетании, пляжи, дежурная аптека и важные телефоны.'],
          fr: ['Netanya maintenant : Chabbat, plages, numéros utiles', 'Netanya maintenant', 'Horaires de Chabbat à Netanya, plages, pharmacie de garde et numéros utiles.'],
          en: ['Netanya Now: Shabbat times, beaches, useful numbers', 'Netanya Now', 'Shabbat times in Netanya, beaches, duty pharmacy and useful phone numbers.'] },
-  directory: { ru: ['Справочник мастеров Нетании', 'Справочник мастеров', 'Мастера и специалисты Нетании с проверенным телефоном.'],
-         fr: ['Annuaire des artisans de Netanya', 'Annuaire', 'Artisans et professionnels de Netanya au téléphone vérifié.'],
-         en: ['Netanya business directory', 'Business directory', 'Local pros in Netanya with verified phone numbers.'] },
+  directory: { ru: ['Справочник мастеров Нетании', 'Справочник мастеров', 'Мастера и специалисты Нетании и Шарона. Каждая запись проверяется перед публикацией.'],
+         fr: ['Annuaire des artisans de Netanya', 'Annuaire', 'Artisans et professionnels de Netanya et du Sharon, vérifiés avant publication.'],
+         en: ['Netanya business directory', 'Business directory', 'Local businesses and pros in Netanya and the Sharon, checked before they go live.'] },
   about: { ru: ['О сайте NWS', 'О нас', 'NWS: местные новости Нетании и Шарона на четырёх языках.'],
          fr: ['À propos de NWS', 'À propos', 'NWS : l’actualité locale de Netanya et du Sharon en quatre langues.'],
          en: ['About NWS', 'About', 'NWS: local news for Netanya and the Sharon in four languages.'] },
@@ -35,9 +35,9 @@ const L: any = {
   en: { sh: 'Shabbat in Netanya', c: 'Candle lighting', e: 'Shabbat ends', ph: 'Useful numbers', hot: 'City hotline', pol: 'Police', mda: 'Ambulance (MDA)', fire: 'Fire and rescue', heb: 'More details in Hebrew', soon: 'Channel links will be added at launch.', form: 'The form will be connected before launch.' },
 }[lang];
 const about: any = {
-  ru: ['NWS: местный новостной сайт для жителей Нетании и окрестностей: Эвен-Йегуды, Кадимы-Цорана, Эмек-Хефера, Кфар-Йоны, Тель-Монда и Пардесии.', 'Каждая новость основана на официальном источнике или СМИ, с указанием источника и ссылкой на него. Часть работы по сбору и написанию выполняет автоматическая система; чувствительные новости проверяет редактор.', 'Рекламные материалы всегда помечены.'],
-  fr: ['NWS est un site d’information locale pour les habitants de Netanya et des localités voisines : Even Yehuda, Kadima-Zoran, Emek Hefer, Kfar Yona, Tel Mond et Pardesiya.', 'Chaque information repose sur une source officielle ou un média, cité et lié. Une partie de la collecte et de la rédaction est assistée par un système automatique ; les sujets sensibles sont validés par un éditeur.', 'Les contenus sponsorisés sont toujours signalés.'],
-  en: ['NWS is a local news site for Netanya and nearby towns: Even Yehuda, Kadima-Zoran, Emek Hefer, Kfar Yona, Tel Mond and Pardesiya.', 'Every story is based on an official or media source, credited and linked. Parts of gathering and drafting are assisted by an automated system; sensitive stories are approved by an editor.', 'Sponsored content is always labeled.'],
+  ru: ['NWS: местный новостной сайт для жителей Нетании и окрестностей: Эвен-Йегуды, Кадимы-Цорана, Эмек-Хефера, Кфар-Йоны, Тель-Монда и Пардесии.', 'NWS: независимый новостной сайт. Мы пишем новости сами, на основе официальных источников (мэрия, полиция, скорая помощь и другие). Часть работы по сбору и написанию выполняет автоматическая система; чувствительные новости проверяет редактор.', 'Рекламные материалы всегда помечены.'],
+  fr: ['NWS est un site d’information locale pour les habitants de Netanya et des localités voisines : Even Yehuda, Kadima-Zoran, Emek Hefer, Kfar Yona, Tel Mond et Pardesiya.', 'NWS est un média indépendant : nous rédigeons nos propres articles à partir de sources officielles (mairie, police, secours et autres). Une partie de la collecte et de la rédaction est assistée par un système automatique ; les sujets sensibles sont validés par un éditeur.', 'Les contenus sponsorisés sont toujours signalés.'],
+  en: ['NWS is a local news site for Netanya and nearby towns: Even Yehuda, Kadima-Zoran, Emek Hefer, Kfar Yona, Tel Mond and Pardesiya.', 'NWS is an independent news site: we write our own reports from primary sources such as the city, the police and emergency services. Parts of gathering and drafting are assisted by an automated system; sensitive stories are approved by an editor.', 'Sponsored content is always labeled.'],
 }[lang];
 ---
 <Page lang={lang} title={`${title} | NWS Netanya & Sharon News`} h1={h1} description={desc} path={`${pre}/${kind}/`} intro={desc} alternates={alts} current={kind === 'now' ? 'now' : kind === 'directory' ? 'directory' : ''} wide={kind === 'directory'}>

@@ -5,6 +5,7 @@ import { CATEGORIES } from '../data/directory';
 import { PLACES } from '../data/places';
 import { ARTICLES, localized, articleUrl, sectionUrl, placesOf } from './content';
 import { IMG } from '../data/site';
+import { LISTINGS, listingUrl } from './biz';
 
 export interface R { loc: string; lastmod?: string; alts?: Partial<Record<Lang, string>>; images?: { loc: string; title: string }[]; priority?: string; changefreq?: string }
 const now = new Date().toISOString();
@@ -28,6 +29,8 @@ export function routes(): R[] {
   const dirA = all((l) => (l === 'he' ? '/directory/' : `/${l}/directory/`));
   for (const l of LANGS) out.push({ loc: dirA[l], alts: dirA, lastmod: now, priority: '0.7' });
   for (const c of CATEGORIES) out.push({ loc: `/directory/${c.slug}/`, lastmod: now, priority: '0.6' });
+  for (const l of LISTINGS) out.push({ loc: listingUrl(l), lastmod: l.updated || l.created || now, priority: l.featured ? '0.6' : '0.5' });
+  out.push({ loc: '/directory/join/', priority: '0.4' });
   for (const p of PLACES) if (ARTICLES.some((a) => placesOf(a).some((x) => x.slug === p.slug))) out.push({ loc: `/area/${p.slug}/`, lastmod: now, changefreq: 'daily', priority: '0.6' });
   for (const p of ['about', 'send-news', 'join']) { const a = all((l) => (l === 'he' ? `/${p}/` : `/${l}/${p}/`)); for (const l of LANGS) out.push({ loc: a[l], alts: a, priority: '0.4' }); }
   for (const p of ['editorial-policy', 'corrections', 'contact', 'advertise', 'terms', 'privacy', 'accessibility']) out.push({ loc: `/${p}/`, priority: '0.3' });

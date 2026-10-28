@@ -3,6 +3,7 @@ name: nws site
 # nws-site branch, which Cloudflare Pages serves as is (no build there).
 # Before each build, scripts/feed.mjs fetches the stories the news engine published (Supabase function hns-feed),
 # so the schedule below brings new published stories to the site within about 15 minutes.
+# scripts/biz.mjs does the same for the approved business directory listings (Supabase function hns-biz).
 on:
   schedule: [{ cron: '*/15 * * * *' }]
   push:
@@ -35,11 +36,11 @@ jobs:
           if grep -q 'name="robots" content="noindex' index.html; then echo "home page is noindex"; exit 1; fi
           grep -q 'https://nws.co.il/' sitemap.xml
       # Every push to nws-site is a new Cloudflare Pages deployment, so a scheduled run publishes only when something changed:
-      # the published stories, the site source, or the Israel date (daily pages such as Shabbat times and past events).
+      # the published stories or directory listings, the site source, or the Israel date (daily pages such as Shabbat times and past events).
       - name: Decide whether to publish
         id: key
         run: |
-          STORIES=$(node -e "const j=require('./sites/nws/src/data/feed.json');process.stdout.write(JSON.stringify(j.stories||[]))" | sha256sum | cut -c1-16)
+          STORIES=$(node -e "const j=require('./sites/nws/src/data/feed.json');let b={};try{b=require('./sites/nws/src/data/biz.json')}catch(e){};process.stdout.write(JSON.stringify([j.stories||[],b.listings||[]]))" | sha256sum | cut -c1-16)
           SRC=$(git rev-parse HEAD:sites/nws | cut -c1-16)
           DAY=$(TZ=Asia/Jerusalem date +%F)
           KEY="$STORIES-$SRC-$DAY"

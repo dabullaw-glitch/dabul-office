@@ -1,9 +1,9 @@
 ---
 import Page from '../../components/Page.astro';
 const plans = [
-  { n: 'רישום בסיסי', p: '0 ₪', c: '#1E8A4C', i: ['שם, טלפון וקטגוריה', 'אימות טלפון בקוד', 'טקסט מקצועי שנכתב בשבילכם'], cta: 'להרשמה' },
-  { n: 'מומלץ', p: '99 ₪ לחודש', c: '#0B5FCC', i: ['תמונות, וואטסאפ וקישור לאתר', 'תג "מומלץ" ומיקום גבוה ברשימה', 'דוח חודשי: כמה צפו וכמה התקשרו'], cta: 'לתשלום והצטרפות' },
-  { n: 'מוביל בקטגוריה', p: '249 ₪ לחודש', c: '#E08A00', i: ['מקום ראשון בקטגוריה', 'הופעה בדף הבית ובכתבות קשורות', 'רק 3 מקומות בכל קטגוריה'], cta: 'לתשלום והצטרפות' },
+  { n: 'רישום בסיסי', p: '0 ₪', c: '#1E8A4C', i: ['שם, טלפון וקטגוריה', 'בדיקה לפני שהעסק עולה לאתר', 'טקסט מקצועי שנכתב בשבילכם'], cta: 'להרשמה', href: '/directory/join/' },
+  { n: 'מומלץ', p: '99 ₪ לחודש', c: '#0B5FCC', i: ['תמונות, וואטסאפ וקישור לאתר', 'תג "מקודם" ומיקום גבוה ברשימה', 'דוח חודשי: כמה צפו וכמה התקשרו'], cta: 'להשארת פרטים', href: '/directory/join/?plan=featured' },
+  { n: 'מוביל בקטגוריה', p: '249 ₪ לחודש', c: '#E08A00', i: ['מקום ראשון בקטגוריה', 'הופעה בדף הבית ובכתבות קשורות', 'רק 3 מקומות בכל קטגוריה'], cta: 'להשארת פרטים', href: '/directory/join/?plan=featured' },
 ];
 const more = [
   { n: 'כתבת תוכן שיווקי', d: 'כתבה על העסק, נכתבת בשבילכם, מסומנת, ומקודמת בטלגרם ובפייסבוק.', p: '750 ₪ לכתבה', c: '#E08A00', s: '#FFF7EB' },
@@ -13,14 +13,15 @@ const more = [
   { n: 'חסות לניוזלטר', d: 'שורת פתיחה במייל "מה קרה בנתניה השבוע".', p: 'מ־300 ₪ לגיליון', c: '#1E8A4C', s: '#EEF8F2' },
 ];
 ---
-<Page title="פרסום בנתניה: מדריך עסקים, כתבות ובאנרים | חדשות נתניה והשרון" h1="פרסמו אצלנו" description="פרסום לעסקים בנתניה ובשרון: רישום במדריך העסקים, קידום בקטגוריה, כתבות תוכן שיווקי, באנרים ופוסטים בטלגרם. נרשמים ומשלמים לבד." path="/advertise/" intro="נרשמים לבד, משלמים בכרטיס אשראי, והחשבונית מגיעה למייל." color="#0B3D6E" img="city" wide>
+<Page title="פרסום בנתניה: מדריך עסקים, כתבות ובאנרים | חדשות נתניה והשרון" h1="פרסמו אצלנו" description="פרסום לעסקים בנתניה ובשרון: רישום במדריך העסקים, קידום בקטגוריה, כתבות תוכן שיווקי, באנרים ופוסטים בטלגרם." path="/advertise/" intro="נרשמים לבד בטופס קצר. התשלום עוד לא מחובר לאתר: משאירים פרטים ואנחנו חוזרים אליכם." color="#0B3D6E" img="city" wide>
   <h2 class="sh" style="--c:#0B5FCC"><span class="bar"></span>מדריך העסקים</h2>
   <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
-    {plans.map((x) => <div class="plan" style={`--c:${x.c}`}><b style="font-family:var(--h);font-size:20px">{x.n}</b><span class="pr">{x.p}</span><ul>{x.i.map((i) => <li>{i}</li>)}</ul><a class="btn pri" href="#" style="margin-top:auto">{x.cta}</a></div>)}
+    {plans.map((x) => <div class="plan" style={`--c:${x.c}`}><b style="font-family:var(--h);font-size:20px">{x.n}</b><span class="pr">{x.p}</span><ul>{x.i.map((i) => <li>{i}</li>)}</ul><a class="btn pri" href={x.href} style="margin-top:auto">{x.cta}</a></div>)}
   </div>
-  <h2 class="sh sec" style="--c:#E08A00"><span class="bar"></span>עוד דרכים להגיע לתושבים</h2>
+  <h2 class="sh sec" id="sponsored" style="--c:#E08A00"><span class="bar"></span>עוד דרכים להגיע לתושבים</h2>
   <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px">
     {more.map((m) => <div class="box" style={`background:${m.s};border-top:5px solid ${m.c};display:flex;flex-direction:column;gap:6px`}><b style="font-family:var(--h);font-size:18px">{m.n}</b><span style="color:#3B4656">{m.d}</span><b style="font-family:var(--h);font-size:18px">{m.p}</b></div>)}
   </div>
-  <p class="note" style="margin-top:18px">כל תוכן ממומן מסומן באתר בבירור כ"תוכן שיווקי". אנחנו מוכרים חשיפה לתושבי נתניה, לא קישורים לקידום בגוגל. התשלום והחשבוניות יתחברו לפני ההשקה. המחירים הם הצעה להתחלה.</p>
+  <section class="box sec" style="background:#EEF4FC;border-inline-start:5px solid #0B5FCC;margin-top:22px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px"><div><b style="font-family:var(--h);font-size:20px">רוצים קידום או כתבת תוכן שיווקי?</b><p style="margin:4px 0 0">משאירים פרטים בטופס ההצטרפות, מסמנים "קידום" או "כתבת תוכן שיווקי", ואנחנו חוזרים אליכם. אפשר גם לכתוב ל<span dir="ltr">news@nws.co.il</span>.</p></div><a class="btn pri" href="/directory/join/?plan=sponsored">להשארת פרטים</a></section>
+  <p class="note" style="margin-top:18px">כל תוכן ממומן מסומן באתר בבירור כ"תוכן שיווקי", וכך גם עסק מקודם במדריך. אנחנו מוכרים חשיפה לתושבי נתניה, לא קישורים לקידום בגוגל. התשלום והחשבוניות עוד לא מחוברים לאתר, ושום תשלום לא נגבה דרכו. המחירים הם הצעה להתחלה.</p>
 </Page>

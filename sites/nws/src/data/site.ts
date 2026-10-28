@@ -30,3 +30,8 @@ export const IMG: Record<string, { src: string; alt: string }> = {
 };
 
 export const abs = (path: string) => SITE_URL + path;
+
+// Supabase functions of the news engine (public endpoints). The business directory form posts to hns-biz.
+export const HNS_API = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1';
+// Cloudflare Turnstile on public forms: off until a site key for nws.co.il is set at build time (and NWS_TURNSTILE_SECRET in app_secrets).
+export const TURNSTILE_SITE_KEY = process.env.PUBLIC_NWS_TURNSTILE_SITE_KEY || '';

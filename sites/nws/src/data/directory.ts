@@ -1,8 +1,10 @@
-// Business directory categories. Businesses appear only after they register and verify their phone (no listing without consent).
+// Business directory categories. A business appears only after it registers itself (with consent to publish its details)
+// and Yakir approves it. The same slugs exist in the table hns_biz_categories (Supabase), which the registration form uses.
 export interface Category {
   slug: string; he: string; plural: string; color: string; sections: string[];
   tips: string[]; faq: [string, string][];
   name: { ru: string; fr: string; en: string };
+  schema?: string; // schema.org type of a listing page (LocalBusiness subtype)
 }
 
 export const CATEGORIES: Category[] = [
@@ -54,4 +56,54 @@ export const CATEGORIES: Category[] = [
     name: { ru: 'Уборка', fr: 'Nettoyage', en: 'Cleaning' },
     tips: ['סכמו מראש מה כלול בניקיון ובכמה שעות מדובר.', 'בניקיון אחרי שיפוץ בקשו הצעה לפי גודל הדירה.'],
     faq: [['מה כולל ניקיון אחרי שיפוץ?', 'בדרך כלל אבק בנייה, חלונות, מטבח וחדרי רחצה. בקשו פירוט בכתב.']] },
+  { slug: 'mortgage-advisors', he: 'יועץ משכנתאות', plural: 'יועצי משכנתאות', color: '#0B5FCC', sections: ['realestate'], schema: 'FinancialService',
+    name: { ru: 'Ипотечные консультанты', fr: 'Courtiers en prêt immobilier', en: 'Mortgage Advisors' },
+    tips: ['בקשו הסכם בכתב שמפרט את שכר הטרחה ומה כלול בליווי.', 'השוו הצעות של כמה בנקים, לא רק את הריבית אלא גם את ההחזר החודשי והעלות הכוללת.'],
+    faq: [['מה כדאי לבדוק בהצעת משכנתא?', 'את ההחזר החודשי, את סך כל התשלומים לאורך התקופה ואת התנאים לפירעון מוקדם.']] },
+  { slug: 'insurance-agents', he: 'סוכן ביטוח', plural: 'סוכני ביטוח', color: '#1E8A4C', sections: ['city'], schema: 'InsuranceAgency',
+    name: { ru: 'Страховые агенты', fr: 'Agents d’assurance', en: 'Insurance Agents' },
+    tips: ['סוכן ביטוח חייב רישיון מרשות שוק ההון, ביטוח וחיסכון. אפשר לבדוק ברשימת בעלי הרישיונות באתר הרשות.', 'בקשו לראות את תנאי הפוליסה בכתב לפני החתימה.'],
+    faq: [['איך בודקים שסוכן ביטוח מורשה?', 'באתר רשות שוק ההון, ביטוח וחיסכון יש חיפוש של בעלי רישיון.']] },
+  { slug: 'architects', he: 'אדריכל ומעצב פנים', plural: 'אדריכלים ומעצבי פנים', color: '#6D3FC0', sections: ['realestate'], schema: 'ProfessionalService',
+    name: { ru: 'Архитекторы и дизайнеры', fr: 'Architectes et décorateurs', en: 'Architects & Interior Designers' },
+    tips: ['אדריכל רשום מופיע בפנקס המהנדסים והאדריכלים.', 'סכמו מראש מה כלול בשכר הטרחה: תכנון, ליווי ביצוע והגשה להיתר.'],
+    faq: [['מי מגיש בקשה להיתר בנייה?', 'עורך בקשה בעל הרשאה מתאימה, לרוב אדריכל או מהנדס. בדקו מראש שהוא מוסמך לסוג העבודה.']] },
+  { slug: 'pest-control', he: 'מדביר', plural: 'מדבירים', color: '#9A5A00', sections: ['city'], schema: 'LocalBusiness',
+    name: { ru: 'Дезинсекция', fr: 'Désinsectisation', en: 'Pest Control' },
+    tips: ['מדביר חייב היתר מדביר מהמשרד להגנת הסביבה. בקשו לראות אותו.', 'שאלו אילו חומרים ישמשו, ומה צריך לעשות עם ילדים ובעלי חיים בבית.'],
+    faq: [['האם מדביר צריך היתר?', 'כן. עבודת הדברה מחייבת היתר מדביר מהמשרד להגנת הסביבה.']] },
+  { slug: 'garages', he: 'מוסך', plural: 'מוסכים', color: '#3B4656', sections: ['city'], schema: 'AutoRepair',
+    name: { ru: 'Автосервисы', fr: 'Garages', en: 'Car Garages' },
+    tips: ['מוסך חייב רישיון ממשרד התחבורה. הרישיון צריך להיות תלוי במקום גלוי.', 'בקשו הצעת מחיר בכתב לפני התיקון, ואת החלקים הישנים בסיום.'],
+    faq: [['מה מבקשים מהמוסך בסיום?', 'חשבונית מפורטת עם החלקים והעבודה, ופרטי האחריות לתיקון.']] },
+  { slug: 'vets', he: 'וטרינר', plural: 'וטרינרים', color: '#2FA4B8', sections: ['community'], schema: 'VeterinaryCare',
+    name: { ru: 'Ветеринары', fr: 'Vétérinaires', en: 'Vets' },
+    tips: ['שאלו אם יש שירות חירום בלילה ובסוף השבוע, ולאן פונים כשהמרפאה סגורה.', 'בקשו הצעת מחיר לפני טיפול או ניתוח שאינם דחופים.'],
+    faq: [['מה עושים במקרה חירום בלילה?', 'שאלו את הווטרינר הקבוע מראש לאיזה מרכז חירום פונים מחוץ לשעות הפעילות.']] },
+  { slug: 'beauty', he: 'קוסמטיקה וטיפוח', plural: 'קוסמטיקה וטיפוח', color: '#D6337A', sections: ['leisure'], schema: 'BeautySalon',
+    name: { ru: 'Красота и уход', fr: 'Beauté et soins', en: 'Beauty & Care' },
+    tips: ['שאלו מראש על המחיר ועל משך הטיפול.', 'ספרו על רגישויות או אלרגיות לפני הטיפול.'],
+    faq: [['מה כדאי לשאול לפני טיפול?', 'מה כלול במחיר, כמה זמן הטיפול נמשך, ואילו חומרים משמשים בו.']] },
+  { slug: 'fitness', he: 'כושר וסטודיו', plural: 'כושר וסטודיו', color: '#E07B00', sections: ['sports'], schema: 'ExerciseGym',
+    name: { ru: 'Фитнес и студии', fr: 'Sport et studios', en: 'Fitness & Studios' },
+    tips: ['בקשו שיעור ניסיון לפני מנוי.', 'קראו את תנאי הביטול של המנוי לפני החתימה.'],
+    faq: [['האם אפשר לבטל מנוי?', 'זה תלוי בהסכם. בקשו לראות את תנאי הביטול בכתב לפני שנרשמים.']] },
+  { slug: 'tutors', he: 'מורה פרטי', plural: 'מורים פרטיים', color: '#0B5FCC', sections: ['community'], schema: 'ProfessionalService',
+    name: { ru: 'Репетиторы', fr: 'Cours particuliers', en: 'Private Tutors' },
+    tips: ['שאלו על ניסיון בהוראת המקצוע ובשכבת הגיל של הילד.', 'סכמו מראש את המחיר לשיעור ומה קורה בביטול.'],
+    faq: [['כמה שיעורים צריך?', 'זה תלוי במטרה. שיעור היכרות ראשון עוזר להבין מה הילד צריך.']] },
+  { slug: 'photographers', he: 'צלם', plural: 'צלמים', color: '#3B4656', sections: ['leisure'], schema: 'ProfessionalService',
+    name: { ru: 'Фотографы', fr: 'Photographes', en: 'Photographers' },
+    tips: ['בקשו לראות תיק עבודות מאירועים דומים.', 'סכמו בכתב כמה תמונות תקבלו, באיזה פורמט ומתי.'],
+    faq: [['מה כדאי לסכם עם צלם?', 'את שעות הצילום, מספר התמונות הערוכות, מועד המסירה והזכויות בתמונות.']] },
+  { slug: 'restaurants', he: 'מסעדה ובית קפה', plural: 'מסעדות ובתי קפה', color: '#C8102E', sections: ['leisure', 'tourism'], schema: 'Restaurant',
+    name: { ru: 'Рестораны и кафе', fr: 'Restaurants et cafés', en: 'Restaurants & Cafés' },
+    tips: ['אם חשובה לכם כשרות, בקשו לראות תעודת כשרות בתוקף.', 'לקבוצות גדולות כדאי להזמין מקום מראש.'],
+    faq: [['איך יודעים אם מסעדה כשרה?', 'מסעדה כשרה מחזיקה תעודת כשרות בתוקף. אפשר לבקש לראות אותה.']] },
 ];
+
+const SCHEMA: Record<string, string> = { plumbers: 'Plumber', electricians: 'Electrician', 'air-conditioning': 'HVACBusiness', renovation: 'GeneralContractor',
+  lawyers: 'LegalService', accountants: 'AccountingService', 'real-estate-agents': 'RealEstateAgent', appraisers: 'ProfessionalService', locksmiths: 'Locksmith',
+  movers: 'MovingCompany', gardeners: 'LocalBusiness', cleaning: 'LocalBusiness' };
+export const schemaType = (c: Category) => c.schema || SCHEMA[c.slug] || 'LocalBusiness';
+export const CAT_BY_SLUG = Object.fromEntries(CATEGORIES.map((c) => [c.slug, c])) as Record<string, Category>;

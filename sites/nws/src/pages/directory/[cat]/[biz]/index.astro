@@ -1,0 +1,60 @@
+---
+// One business in the directory. Built only for approved listings (scripts/biz.mjs). LocalBusiness schema (subtype per category).
+import Base from '../../../../layouts/Base.astro';
+import Crumbs from '../../../../components/Crumbs.astro';
+import BizCard from '../../../../components/BizCard.astro';
+import { CAT_BY_SLUG, schemaType } from '../../../../data/directory';
+import { SITE_URL } from '../../../../data/site';
+import { LISTINGS, listingsIn, listingUrl, phoneShow, telHref, waHref, intlPhone, placeOf } from '../../../../lib/biz';
+import { placeUrl } from '../../../../lib/content';
+export function getStaticPaths() { return LISTINGS.map((l) => ({ params: { cat: l.category, biz: l.slug }, props: { l } })); }
+const { l } = Astro.props;
+const c = CAT_BY_SLUG[l.category];
+const path = listingUrl(l);
+const crumbs = [{ name: 'ראשי', href: '/' }, { name: 'מדריך עסקים', href: '/directory/' }, { name: `${c.plural} בנתניה`, href: `/directory/${c.slug}/` }, { name: l.name, href: path }];
+const more = listingsIn(c.slug).filter((x) => x.id !== l.id).slice(0, 3);
+const place = placeOf(l.area);
+const where = l.area === 'נתניה' ? 'נתניה' : place?.kind === 'neighborhood' ? `${l.area}, נתניה` : l.area;
+const desc = `${l.name}, ${c.he} ב${where}. ${l.description}`.slice(0, 155);
+const served = [l.area, ...l.areasServed.filter((a) => a !== l.area)];
+const ld: any = { '@context': 'https://schema.org', '@type': schemaType(c), '@id': SITE_URL + path + '#biz', name: l.name, url: SITE_URL + path, description: l.description,
+  telephone: intlPhone(l.phone), areaServed: served.map((a) => ({ '@type': 'Place', name: a })),
+  address: { '@type': 'PostalAddress', ...(l.address ? { streetAddress: l.address } : {}), addressLocality: place?.kind === 'locality' ? l.area : 'נתניה', addressCountry: 'IL' } };
+if (l.logo) ld.image = l.logo;
+if (l.email) ld.email = l.email;
+if (l.website) ld.sameAs = [l.website];
+const jsonld = [ld];
+---
+<Base title={`${l.name}: ${c.he} ב${l.area} | מדריך העסקים חדשות נתניה והשרון`} description={desc} path={path} crumbs={crumbs} jsonld={jsonld} current="directory">
+  <section class="phero" style="--bg:#0E1726"><img class="bgi" src="/img/city.svg" alt="" width="1440" height="400">
+    <div class="wrap in" style="padding-bottom:30px"><Crumbs items={crumbs} light />
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+        {l.logo && <img src={l.logo} alt={`הלוגו של ${l.name}`} width="72" height="72" referrerpolicy="no-referrer" style="width:72px;height:72px;border-radius:16px;object-fit:cover;background:#fff">}
+        <div><h1>{l.name}</h1><p>{c.he}, {where}{l.featured ? '. עסק מקודם' : ''}</p></div>
+      </div>
+    </div></section>
+  <div class="wrap" style="padding-block:26px 10px;display:flex;flex-wrap:wrap;gap:28px">
+    <div style="flex:999 1 600px;min-width:0" class="prose">
+      <h2>על העסק</h2>
+      {l.description.split(/\n+/).map((p) => <p>{p}</p>)}
+      <p class="note">המידע נמסר על ידי בעל העסק ונבדק לפני פרסום. {l.featured ? 'זהו עסק מקודם (תוכן שיווקי). ' : ''}מצאתם טעות? <a href={`/corrections/?url=${encodeURIComponent(path)}`}>דווחו לנו</a>.</p>
+      <h2>אזורי שירות</h2>
+      <p>{served.map((a, i) => { const p = placeOf(a); return <>{i > 0 && ', '}{p ? <a href={placeUrl(p.slug)}>{a}</a> : a}</>; })}</p>
+      <h2>לפני שפונים</h2>
+      <ol class="tips">{c.tips.map((t) => <li>{t}</li>)}</ol>
+      <p><a href={`/directory/${c.slug}/`}>חזרה לרשימת {c.plural} במדריך</a></p>
+    </div>
+    <aside style="flex:1 1 280px;min-width:0">
+      <section class="box" style={`border:1px solid #E3E7ED;border-top:5px solid ${c.color};display:flex;flex-direction:column;gap:10px`}>
+        <h2 style="font-size:18px;margin:0">יצירת קשר</h2>
+        <a class="btn pri" href={telHref(l.phone)}>חיוג: <span dir="ltr">{phoneShow(l.phone)}</span></a>
+        {l.whatsapp && <a class="btn out" href={waHref(l.whatsapp)} rel="noopener nofollow" target="_blank">וואטסאפ</a>}
+        {l.website && <a class="btn out" href={l.website} rel="noopener nofollow" target="_blank">לאתר העסק</a>}
+        {l.email && <a href={`mailto:${l.email}`} dir="ltr" style="color:#0B5FCC;font-weight:700">{l.email}</a>}
+        {l.address && <span>כתובת: {l.address}</span>}
+        {l.license && <span class="note">מספר רישיון: {l.license}</span>}
+      </section>
+      {more.length > 0 && <section class="sec"><h2 class="sh" style={`--c:${c.color}`}><span class="bar"></span>עוד {c.plural}</h2><div style="display:flex;flex-direction:column;gap:12px">{more.map((x) => <BizCard l={x} />)}</div></section>}
+    </aside>
+  </div>
+</Base>

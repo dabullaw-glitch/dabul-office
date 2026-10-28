@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/feed.mjs && astro build",
+    "build": "node scripts/feed.mjs && node scripts/biz.mjs && astro build",
     "dev": "astro dev",
     "feed": "node scripts/feed.mjs"
   },
