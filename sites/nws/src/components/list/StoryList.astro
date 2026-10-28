@@ -6,7 +6,7 @@ import '../../styles/list.css';
 import Card from '../Card.astro';
 import { type Lang } from '../../data/site';
 import { SECTION_BY_KEY } from '../../data/sections';
-import { articleUrl, picOf, kickerOf, readMin, fmtTime, fmtShort, fmtDay, type Article } from '../../lib/content';
+import { articleUrl, picOf, picLabel, kickerOf, readMin, fmtTime, fmtShort, fmtDay, type Article } from '../../lib/content';
 interface Props { items: Article[]; lang?: Lang; listTitle?: string; color?: string; grid?: number; perPage?: number }
 const { items, lang = 'he', listTitle, color = '#0D1321', grid = 6, perPage = 12 } = Astro.props;
 const he = lang === 'he';
@@ -34,7 +34,7 @@ const by = (a: Article) => (a.kind === 'opinion' && a.author ? a.author : L.by);
 ---
 {lead && lp && (
 <article class="nl-lead" style={`--c:${SECTION_BY_KEY[lead.section].color}`}>
-  <a class="n-ph" href={articleUrl(lead, lang)} tabindex="-1" aria-hidden="true"><img src={lp.src} srcset={lp.srcset} sizes={lp.srcset ? '(max-width: 760px) 100vw, (max-width: 1100px) 55vw, 520px' : undefined} alt="" width={lp.w} height={lp.h} fetchpriority="high" decoding="async"><span class="n-cap">{lp.ai ? L.ai : L.ill}</span></a>
+  <a class="n-ph" href={articleUrl(lead, lang)} tabindex="-1" aria-hidden="true"><img src={lp.src} srcset={lp.srcset} sizes={lp.srcset ? '(max-width: 760px) 100vw, (max-width: 1100px) 55vw, 520px' : undefined} alt="" width={lp.w} height={lp.h} fetchpriority="high" decoding="async"><span class="n-cap">{picLabel(lp, lang)}</span></a>
   <div class="tx">
     <span class="n-k">{kickerOf(lead, lang)}</span>
     <h2><a href={articleUrl(lead, lang)}>{lead.title}</a></h2>

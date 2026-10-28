@@ -12,7 +12,7 @@ import { IMG, SITE_URL, LANG_PREFIX, LANGS, BRAND, TG_URL, type Lang } from '../
 import { SECTION_BY_KEY } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
-import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, placesOf, placeUrl, linkify, related, clip, localized, picOf, kickerOf, readMin,
+import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, placesOf, placeUrl, linkify, related, clip, localized, picOf, picLabel, kickerOf, readMin,
   FLASHES, SPORT, tableAround, type Article } from '../lib/content';
 
 interface Props { lang: Lang; a: Article }
@@ -102,10 +102,10 @@ const STOCK_ALT: Record<string, string> = {
   'stadium-day': 'אצטדיון כדורגל ביום', 'traffic-night': 'תנועת מכוניות בלילה',
 };
 const stockName = pic.stock ? (pic.src.match(/\/img\/stock\/(.+)-1600\.webp$/)?.[1] ?? '') : '';
-const picDesc = he ? (pic.ai ? pic.alt : (Object.values(IMG).find((x) => x.name === stockName)?.alt ?? STOCK_ALT[stockName] ?? '')) : '';
-const labelOf = (p: typeof pic) => (he ? p.label : p.ai ? 'AI illustration' : lang === 'ru' ? 'Иллюстративное фото' : lang === 'fr' ? 'Photo d’illustration' : 'Illustrative photo');
-const picLabel = labelOf(pic);
-const picAlt = picDesc || picLabel;
+const picDesc = he ? (pic.own ? pic.alt : (Object.values(IMG).find((x) => x.name === stockName)?.alt ?? STOCK_ALT[stockName] ?? '')) : '';
+const labelOf = (p: typeof pic) => picLabel(p, lang);
+const picLbl = labelOf(pic);
+const picAlt = picDesc || picLbl;
 
 // ---------- body ----------
 // News: plain paragraphs (escaped, the first mention of up to 3 places links to its page), exactly as before.
@@ -201,7 +201,7 @@ const hasSrc = !!a.sourceName;
 
         <figure class="n-hero">
           <div class="n-ph"><img src={pic.src} srcset={pic.srcset} sizes={pic.srcset ? '(max-width: 760px) 100vw, (max-width: 1100px) 94vw, 880px' : undefined} alt={picAlt} width={pic.w} height={pic.h} fetchpriority="high" decoding="async"></div>
-          <figcaption>{picDesc ? <><span>{picDesc}</span><span class="art-lbl">{pic.ai ? `${picLabel}, ${L.aiCap}` : picLabel}</span></> : <span class="art-lbl">{pic.ai ? `${picLabel}, ${L.aiCap}` : picLabel}</span>}</figcaption>
+          <figcaption>{picDesc ? <><span>{picDesc}</span><span class="art-lbl">{pic.ai ? `${picLbl}, ${L.aiCap}` : picLbl}</span></> : <span class="art-lbl">{pic.ai ? `${picLbl}, ${L.aiCap}` : picLbl}</span>}</figcaption>
         </figure>
 
         {a.keyPoints.length > 0 && <section class="n-brief" aria-labelledby="br-h"><h2 id="br-h">{u.keyPoints}</h2><ul>{a.keyPoints.map((k) => <li>{k}</li>)}</ul></section>}

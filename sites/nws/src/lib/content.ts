@@ -41,7 +41,7 @@ function aiOf(s: any): AiImg | null {
   const im = s.image; if (!im?.url) return null;
   const m = AIMAP[s.id];
   const lucid = im.model === 'lucid';
-  const alt = clean(im.alt) || 'תמונה להמחשה';
+  const alt = clean(im.alt) || (im.model ? 'תמונה להמחשה' : '');
   if (m?.files?.length) return { alt, files: m.files, w: m.w, h: m.h, model: im.model || '' };
   return { alt, remote: m?.remote || im.url, w: lucid ? 1280 : 1024, h: lucid ? 720 : 1024, model: im.model || '' };
 }
@@ -194,14 +194,27 @@ export const readMin = (a: Article) => Math.max(1, Math.round([a.title, a.dek, .
 export const kickerOf = (a: Article, lang: Lang = 'he') => (lang === 'he' && a.kicker) || SECTION_BY_KEY[a.section].name[lang];
 /** short date for a static fallback (the browser replaces it with "לפני X") */
 export const fmtDay = (iso: string, lang: Lang = 'he') => new Intl.DateTimeFormat(LOC[lang], { timeZone: TZ, day: 'numeric', month: 'long' }).format(new Date(iso));
-/** the picture of a story (28.10.2026 redesign, never a flat drawing): 1. the story's own image (an AI illustration, labelled
- *  "תמונה להמחשה"), 2. a photo from the section photo library (public/img/stock, labelled "צילום אילוסטרציה"), picked by the story id so
- *  neighbouring stories get different photos. */
-export interface Pic { src: string; srcset?: string; small: string; alt: string; w: number; h: number; ai: boolean; stock: boolean; label: string; og: string }
+/** the picture of a story (28.10.2026 redesign, never a flat drawing): 1. the story's own image: an AI illustration (image_model set)
+ *  is labelled "תמונה להמחשה"; a real photo is labelled "צילום" (with the source name when known), and on a sponsored story
+ *  "צילום: באדיבות המפרסם"; 2. a photo from the section photo library (public/img/stock, labelled "צילום אילוסטרציה"), picked by
+ *  the story id so neighbouring stories get different photos.
+ *  ai: true only for an AI generated image; own: the story's own image (AI or real); kind: which label applies (see picLabel). */
+export type PicKind = 'ai' | 'photo' | 'sponsor' | 'stock';
+export interface Pic { src: string; srcset?: string; small: string; alt: string; w: number; h: number; ai: boolean; own: boolean; stock: boolean; kind: PicKind; credit: string; label: string; og: string }
+/** the picture label in the page language */
+export function picLabel(p: Pic, lang: Lang = 'he') {
+  const L: Record<PicKind, Record<Lang, string>> = {
+    ai: { he: 'תמונה להמחשה', ru: 'Иллюстрация ИИ', fr: 'Illustration IA', en: 'AI illustration' },
+    photo: { he: 'צילום', ru: 'Фото', fr: 'Photo', en: 'Photo' },
+    sponsor: { he: 'צילום: באדיבות המפרסם', ru: 'Фото предоставлено рекламодателем', fr: 'Photo : avec l’aimable autorisation de l’annonceur', en: 'Photo courtesy of the advertiser' },
+    stock: { he: 'צילום אילוסטרציה', ru: 'Иллюстративное фото', fr: 'Photo d’illustration', en: 'Illustrative photo' },
+  };
+  return p.kind === 'photo' && p.credit ? `${L.photo[lang]}: ${p.credit}` : L[p.kind][lang];
+}
 function hashOf(s: string) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
 export function stockPic(name: string, alt = ''): Pic {
   return { src: `/img/stock/${name}-1600.webp`, srcset: `/img/stock/${name}-800.webp 800w, /img/stock/${name}-1600.webp 1600w`,
-    small: `/img/stock/${name}-800.webp`, alt, w: 1600, h: 1067, ai: false, stock: true, label: 'צילום אילוסטרציה', og: `/img/stock/og/${name}.jpg` };
+    small: `/img/stock/${name}-800.webp`, alt, w: 1600, h: 1067, ai: false, own: false, stock: true, kind: 'stock', credit: '', label: 'צילום אילוסטרציה', og: `/img/stock/og/${name}.jpg` };
 }
 export function stockFor(key: SectionKey, seed: string | number) {
   const ph = SECTION_BY_KEY[key].photos;
@@ -213,8 +226,12 @@ export function picOf(a: Article, _IMGS?: unknown): Pic {
   if (ai) {
     const files = ai.files || [];
     const src = files.length ? files[files.length - 1].src : ai.remote!;
-    return { src, srcset: files.length > 1 ? files.map((f) => `${f.src} ${f.w}w`).join(', ') : undefined,
-      small: files.length ? files[0].src : ai.remote!, alt: ai.alt, w: ai.w, h: ai.h, ai: true, stock: false, label: 'תמונה להמחשה', og: src };
+    const kind: PicKind = a.kind === 'sponsored' ? 'sponsor' : ai.model ? 'ai' : 'photo';
+    const credit = kind === 'photo' ? a.sourceName || '' : '';
+    const p: Pic = { src, srcset: files.length > 1 ? files.map((f) => `${f.src} ${f.w}w`).join(', ') : undefined,
+      small: files.length ? files[0].src : ai.remote!, alt: ai.alt, w: ai.w, h: ai.h, ai: kind === 'ai', own: true, stock: false, kind, credit, label: '', og: src };
+    p.label = picLabel(p);
+    return p;
   }
   return stockPic(stockFor(a.section, a.engineId ?? a.slug));
 }
