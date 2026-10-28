@@ -17,7 +17,9 @@
 //   {action:'approve', ids, by?}  28.10.2026: Yakir's approval given in chat; publishes with the same checks as his tap (decided_by
 //     'yakir-chat') and marks the Telegram approval message as handled.
 //   {action:'withdraw', ids:[...], note}  takes published stories off the site (state 'withdrawn'; hns-feed returns only 'published').
-//   {action:'revise', id, title?, dek?, body?, key_points?, note}  corrects the text of a published story (same guards as publishing).
+//   {action:'revise', id, title?, dek?, body?, key_points?, kicker?, qa?, extras?, drop_items?, note}  corrects a published story (same guards).
+//     extras is merged into the story's extras (other functions add fields this way, e.g. extras.related, extras.service).
+//   {action:'merge', into, ids}  28.10.2026: published stories of the same event are merged into one (the others redirect to it).
 //   {action:'add_update', id, text, at?, source?, note?}  28.10.2026: a live update (timestamped new facts) on a published story.
 //   {action:'close_dup', id, of, note?}  28.10.2026: a waiting story (draft or needs_check) that tells the same event as a published
 //     story is closed as 'rejected' with the note "כפילות של ידיעה <of>"; its source items are tied to the published story, so a
@@ -87,7 +89,8 @@ async function outlets() {
 }
 const outletIn = (s: unknown) => (OUTLET_RE ? (String(s ?? '').match(OUTLET_RE)?.[0] || '') : '');
 const LEAN_RE = /לפי (?:דיווח|פרסום|מבזק|הדיווח|הפרסום|המבזק)|כפי שדווח|כך דווח|כך לפי (?:דיווח|מבזק|פרסום)|דיווח שפורסם|מבזק שפורסם/;
-const CREDIT_RE = /פורס[מם]\S* לראשונה|צילום|תמונה|וידאו|סרטון|בראיון ל/;
+// a closing credit: "קרדיט: <outlet>" as its own last line (style book, 28.10.2026), or the older "כפי שפורסם לראשונה ב..."
+const CREDIT_RE = /^קרדיט:|פורס[מם]\S* לראשונה|צילום|תמונה|וידאו|סרטון|בראיון ל/;
 // '' when the story may be published, otherwise the reason (Hebrew, saved as pub_note)
 function voiceProblem(st: Any) {
   const head = [st.title, st.dek, ...(Array.isArray(st.key_points) ? st.key_points : [])].map(clean).join('\n');
@@ -106,6 +109,7 @@ function voiceProblem(st: Any) {
   return '';
 }
 const MEDIA_ONLY = 'מבוסס רק על פרסום בכלי תקשורת אחר';
+const HELD_RE = /עורך: נפסל|ממתין לפרטים/;
 async function askRewrite(st: Any) {
   if (/נכתב מחדש/.test(st.notes || '')) return { ok: false, error: 'already rewritten once' };
   return await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/hns-write`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': S.CRON_SECRET },
@@ -154,6 +158,7 @@ async function tick(dry: boolean) {
   let sent = 0;
   for (const st of rows || []) {
     if (!hasBody(st) || tipOnly(st)) continue; // tips and bodiless stories wait for an official source, never published here
+    if (HELD_RE.test(st.notes || '')) continue; // the copy editor failed it twice: it waits quietly for another source (never to Yakir)
     const age = hours(st.created_at);
     const local = isLocal(st);
     // our own voice: a draft that names another outlet (or leans on "לפי דיווח") is sent back once for a rewrite, never published as is
@@ -306,6 +311,30 @@ async function addUpdate(b: Any) {
   return { ok: true, id: st.id, updates: updates.length };
 }
 
+// merge (28.10.2026): published stories about the same event become one story. The others are withdrawn with merged_into set
+// (hns-feed lists them so the site sends their URLs to the main story with a 301), and their items move to the main story.
+async function merge(into: number, ids: number[]) {
+  const { data: main } = await sb.from('hns_stories').select('id,state,item_ids,sources').eq('id', into).maybeSingle();
+  if (!main || main.state !== 'published') return { ok: false, error: 'the main story is not published' };
+  const { data: rows } = await sb.from('hns_stories').select('id,state,item_ids,sources').in('id', ids.filter((i) => i !== into)).eq('state', 'published');
+  const items = new Set((main.item_ids || []).map(Number));
+  const srcs = new Map((Array.isArray(main.sources) ? main.sources : []).map((x: Any) => [x.id, x]));
+  const done: number[] = [];
+  for (const st of rows || []) {
+    const now = new Date().toISOString();
+    const { data } = await sb.from('hns_stories').update({ state: 'withdrawn', merged_into: into, pub_note: `מוזג לידיעה ${into}`, decided_at: now, decided_by: 'merge', updated_at: now })
+      .eq('id', st.id).eq('state', 'published').select('id');
+    if (!data?.length) continue;
+    for (const i of st.item_ids || []) items.add(Number(i));
+    for (const x of Array.isArray(st.sources) ? st.sources : []) if (!srcs.has(x.id)) srcs.set(x.id, x);
+    if ((st.item_ids || []).length) await sb.from('hns_items').update({ cluster_id: into }).in('id', st.item_ids);
+    await log('merge', st.id, { into });
+    done.push(st.id);
+  }
+  await sb.from('hns_stories').update({ item_ids: [...items], sources: [...srcs.values()], updated_at: new Date().toISOString() }).eq('id', into);
+  return { ok: true, into, merged: done };
+}
+
 // correct the text of a published story; the new text must pass the same guard. drop_items (28.10.2026) removes items that were
 // attached by mistake, with their sources (e.g. story 71 got an unrelated council post through shared WordPress boilerplate words).
 async function revise(b: Any) {
@@ -318,6 +347,10 @@ async function revise(b: Any) {
   if (Array.isArray(b.body)) patch.body = cleanArr(b.body);
   if (Array.isArray(b.key_points)) patch.key_points = cleanArr(b.key_points);
   if (b.basis) patch.basis = String(b.basis);
+  if (typeof b.kicker === 'string') patch.kicker = clean(b.kicker) || null;
+  if (b.qa && typeof b.qa === 'object') patch.qa = b.qa;
+  // extras: fields added by other functions (related links, service boxes...), merged into the story's extras
+  if (b.extras && typeof b.extras === 'object' && !Array.isArray(b.extras)) patch.extras = { ...(st.extras || {}), ...b.extras };
   // drop_items: source items attached to the story by mistake (another event); they leave the story, and so do their sources
   const drop = (Array.isArray(b.drop_items) ? b.drop_items : []).map(Number).filter(Boolean);
   if (drop.length) {
@@ -352,6 +385,7 @@ Deno.serve(async (req) => {
     if (b.action === 'withdraw') return J({ ok: true, res: await withdraw((b.ids || []).map(Number).filter(Boolean), String(b.note || '')) });
     if (b.action === 'revise') return J(await revise(b));
     if (b.action === 'add_update') return J(await addUpdate(b));
+    if (b.action === 'merge') return J(await merge(Number(b.into), (b.ids || []).map(Number).filter(Boolean)));
     if (b.action === 'close_dup') return J(await closeDup(Number(b.id), Number(b.of), String(b.note || '')));
     if (b.action === 'check') { await outlets(); const { data } = await sb.from('hns_stories').select('*').in('id', (b.ids || []).map(Number)); return J({ ok: true, res: (data || []).map((st: Any) => ({ id: st.id, state: st.state, problem: voiceProblem(st) })) }); }
     if (b.action === 'approve') return J({ ok: true, res: await approve((b.ids || []).map(Number).filter(Boolean), clean(b.by || 'yakir-chat').slice(0, 40)) });

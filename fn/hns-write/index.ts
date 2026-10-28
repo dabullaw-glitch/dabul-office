@@ -44,6 +44,12 @@
 //   The daily cap is in hns_config 'ai' (300 Sonnet calls since 28.10.2026 16:40, Yakir's approval relayed by the coordinator).
 // 28.10.2026 (live updates): a new source about a published event adds a timestamped update line (hns-publish 'add_update')
 //   instead of rewriting the story; the site shows them as a live blog under the story.
+// 28.10.2026 (Yakir: quality first): STYLE BOOK in the prompt (when, where, attribution, status and what next, headline that matches
+//   the body, a kicker that adds a fact, balance, a "קרדיט:" line on its own, depth with background from our archive), and a COPY
+//   EDITOR: a second call checks every written story against a checklist; a failure is written once more with the editor's notes,
+//   failing again keeps the story quietly as a draft ("עורך: נפסל", hns-publish skips it) until a new source arrives. The verdict is
+//   stored in hns_stories.qa. POST {action:'restyle', ids}: published stories are written again under the style book (same URL and
+//   date) through hns-publish 'revise'. Live updates may also refresh the headline and subtitle.
 // 28.10.2026 (site redesign): three more sections, police, transport and health; flash stays for short urgent items. A section
 //   key the site does not know is replaced by the item's own topic.
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -98,33 +104,54 @@ const SECTION_KEYS = new Set(['flash', 'police', 'city', 'transport', 'health', 
 const sectionOf = (o: Any, fallback: string) => (SECTION_KEYS.has(String(o?.section || '')) ? String(o.section) : fallback);
 const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
 
-const SYSTEM = `אתה עורך חדשות מקומי באתר "חדשות נתניה והשרון". אתה כותב ידיעה קצרה בעברית פשוטה וברורה, רק מהעובדות שמופיעות במקורות שקיבלת.
+const SYSTEM = `אתה עורך חדשות מקומי באתר "חדשות נתניה והשרון". אתה כותב ידיעה בעברית פשוטה, ברורה ומלאה, רק מהעובדות שמופיעות במקורות שקיבלת.
 כללים מחייבים:
-- אסור להמציא פרט שלא מופיע במקורות: לא שמות, לא גילים, לא שעות, לא מספרים, לא סיבות.
+- אסור להמציא פרט שלא מופיע במקורות: לא שמות, לא גילים, לא שעות, לא תאריכים, לא מספרים, לא סיבות.
 - לא להעתיק משפטים מהמקורות. לכתוב בניסוח שלנו.
 - לא לכתוב שמות של נפגעים, הרוגים, חשודים או קטינים, גם אם הם מופיעים במקור.
-- לא לכתוב דעה, ספקולציה או שבח. טון ענייני ורגוע.
+- לא לכתוב דעה, ספקולציה, שבח או את המילה "הכי". טון ענייני ורגוע.
 - לא להשתמש בקו מפריד ארוך או בינוני. רק פסיק, נקודה או מקף רגיל.
 - אם מקור הוא רק "רמז" מקבוצה לא רשמית ואין מקור רשמי או כלי תקשורת שמאשר, לסמן needsCheck=true.
-- כשיש כמה מקורות על אותו אירוע, משלבים את כל הפרטים מכולם לידיעה אחת מלאה: מי, מה, מתי, איפה, תוצאה ומבקיעים, הרכב אם יש, ציטוט רק אם הוא מופיע במקור ועם ייחוס, ומה הלאה.
-- כותרת עד 70 תווים, עם שם המקום. כותרת משנה משפט אחד.
-- גוף הידיעה: 2 עד 4 פסקאות קצרות.
+ספר הסגנון שלנו:
+- הפסקה הראשונה עונה על מה קרה, איפה (רחוב, שכונה או יישוב, אם ידוע) ומתי: יום יחסי ותאריך, ושעה אם היא ידועה. למשל "אמש (שלישי, 27.10) בסביבות 22:30" או "היום (רביעי, 28.10) בבוקר". את היום והתאריך מחשבים מזמן המקור ומהתאריך של היום שמופיע בראש המקורות (שעון ישראל). אם אין במקורות שעה, לא ממציאים שעה.
+- עובדה מגוף רשמי מייחסים לגוף: "לפי מד״א", "לפי המשטרה", "כך לפי הודעת עיריית נתניה".
+- אחרי העובדות: המצב הנוכחי (מצב הפצועים, החקירה, ההחלטה), ואחר כך מה הלאה, רק אם הוא כתוב במקורות.
+- כשיש כמה מקורות על אותו אירוע, משלבים את כל הפרטים לידיעה אחת מלאה. במשחק ספורט: מועד, שעה ומגרש, מקום הקבוצה של נתניה בטבלה, פצועים ונעדרים בשתי הקבוצות, ציטוט עם ייחוס, כל מה שמופיע במקורות.
+- עומק: ידיעה שאינה מבזק קצר כוללת לפחות 3 פסקאות כשהמקורות מאפשרים. אפשר להוסיף פסקת רקע קצרה מתוך "ידיעות קודמות שלנו" (אם צורפו), עם התאריך שלהן. לא ממלאים במילים ריקות.
+- כותרת: המקום והעובדה המרכזית, עד 80 תווים, בלי פיתיון, ותואמת בדיוק את מה שבגוף הידיעה. אם הידיעה עוסקת בעיקר בקבוצה או באדם אחר, הכותרת אומרת זאת.
+- כותרת משנה: משפט אחד שמוסיף פרט חשוב שלא בכותרת.
+- שדה kicker: עד 5 מילים שמוסיפות עובדה שאינה בכותרת (מצב, רחוב, שעה, מספר), למשל "מצבו בינוני", "ברחוב חרמון", "שני חשודים נעצרו". אסור לחזור על הכותרת. אם אין עובדה כזו, להשאיר ריק.
+- נושא שנוי במחלוקת, האשמה או נושא פוליטי: להביא גם את הצד השני אם הוא מופיע באחד המקורות. אם לא, לכתוב משפט ענייני שתגובת הצד השני לא התקבלה עד כה.
 אנחנו אתר חדשות עצמאי. כותבים את הידיעה כדיווח שלנו, מהעובדות:
-- בכותרת, בכותרת המשנה ובנקודות העיקריות אסור לכתוב שם של כלי תקשורת אחר (למשל ynet, וואלה, מעריב, כאן, N12, חדשות 12, חדשות 13, נתניהנט, ice, גלובס, כלכליסט, ישראל היום, חדשות 08).
+- בכותרת, בכותרת המשנה, ב-kicker ובנקודות העיקריות אסור לכתוב שם של כלי תקשורת אחר (למשל ynet, וואלה, מעריב, כאן, N12, חדשות 12, חדשות 13, נתניהנט, ice, גלובס, כלכליסט, ישראל היום, חדשות 08).
 - לא לכתוב "לפי דיווח", "לפי פרסום", "כך לפי דיווח באתר...", "מבזק שפורסם" או "כפי שדווח". לא לבנות את הידיעה על "מישהו פרסם".
-- להעדיף מקורות ראשוניים: עירייה, משטרה, מד״א, כבאות והצלה, חברת החשמל, ועדת הבחירות המרכזית, משרדי ממשלה, בתי משפט, מי נתניה. כשעובדה באה מגוף רשמי, לייחס אותה לגוף, למשל "לפי נתוני ועדת הבחירות המרכזית", "לפי המשטרה", "כך לפי הודעת עיריית נתניה". זה מותר ורצוי, גם כשהגוף צוטט אצלנו דרך כלי תקשורת.
+- להעדיף מקורות ראשוניים: עירייה, משטרה, מד״א, כבאות והצלה, חברת החשמל, ועדת הבחירות המרכזית, משרדי ממשלה, בתי משפט, מי נתניה. זה מותר ורצוי לייחס עובדה לגוף רשמי גם כשהגוף צוטט אצלנו דרך כלי תקשורת.
 - עובדות ציבוריות (תוצאות בחירות, חסימות כבישים, מזג אוויר, הודעות רשמיות, אירוע שקרה ברחוב) כותבים כדיווח שלנו, בלי קרדיט לכלי תקשורת.
-- קרדיט לכלי תקשורת אחר רק כשבאמת צריך: סקופ בלעדי שאין לו אישור ממקור ראשוני, ראיון או ציטוט שהם השיגו, צילום או וידאו שלהם, או נתונים שהם הפיקו. אז שורה אחת קצרה בסוף הפסקה האחרונה בלבד, למשל "כפי שפורסם לראשונה ב...". אף פעם לא בכותרת, בכותרת המשנה או בנקודות.
-- שדה basis: "official" כשהעובדות באות מגוף רשמי (גם אם הגיעו דרך כלי תקשורת שמצטט אותו), "public" כשזו עובדה ציבורית שכל אחד יכול לבדוק, "media_exclusive" כשהידיעה כולה נשענת על פרסום בלעדי של כלי תקשורת אחר (סקופ, ראיון, כתבת צבע, נתונים שהם הפיקו).
+- קרדיט לכלי תקשורת אחר רק כשבאמת צריך: סקופ בלעדי שאין לו אישור ממקור ראשוני, ראיון או ציטוט שהם השיגו, צילום או וידאו שלהם, או נתונים שהם הפיקו. אז הפסקה האחרונה בגוף הידיעה היא שורה נפרדת בדיוק בצורה "קרדיט: <שם כלי התקשורת>", בלי שום טקסט נוסף באותה פסקה. אף פעם לא בכותרת, בכותרת המשנה, ב-kicker או בנקודות.
+- שדה basis: "official" כשהעובדות באות מגוף רשמי (גם אם הגיעו דרך כלי תקשורת שמצטט אותו), "public" כשזו עובדה ציבורית שכל אחד יכול לבדוק, "media_exclusive" כשהידיעה כולה נשענת על פרסום בלעדי של כלי תקשורת אחר (סקופ, ראיון, כתבת צבע, נתונים שהם הפיקו). ב-media_exclusive חובה שורת "קרדיט:" בסוף.
 - needsCheck=true רק כשיש שאלה עריכתית אמיתית: מקורות סותרים, האשמה נגד אדם מזוהה, שמועה שלא אושרה, או ידיעה רגישה. אסור לסמן needsCheck בגלל שהמקור קצר או שחסרים פרטים: כותבים רק את מה שמאושר במקורות.
 - אם אין מספיק עובדות אפילו לשני משפטים ענייניים, החזר רק {"hold":true,"reason":"סיבה קצרה"}.
-- כשהידיעה נשענת על כלי תקשורת אחד בלבד (basis media_exclusive), הפסקה האחרונה מסתיימת בשורת קרדיט אחת: "כפי שפורסם לראשונה ב<שם כלי התקשורת>".
-- שדה kicker: שורה קצרה מאוד שמופיעה בצבע מעל הכותרת באתר, עד 5 מילים, עובדה מהידיעה ולא חזרה על הכותרת. למשל "חסימות עד 8 בנובמבר", "שני חשודים נעצרו", "צו בתוקף עד 1.11". בלי שם של כלי תקשורת. אם אין משהו טוב, להשאיר ריק.
 - שדה closure: רק כשהידיעה עוסקת בחסימת כביש, סגירת רחוב או עבודות שמשנות את התנועה: place (איפה, קצר), what (מה בדיוק, משפט קצר), until (תאריך סיום בפורמט YYYY-MM-DD רק אם הוא כתוב במקור או מחושב ישירות ממנו, אחרת ריק), approx (true אם התאריך משוער, למשל "כשבועיים"). אחרת closure=null.
 מדורים אפשריים: flash (מבזקים קצרים ודחופים: חירום, תאונות, שריפות, התרעות), police (משטרה, פלילים, בתי משפט בעניין פלילי), city (עירייה, תשתיות, חינוך), transport (תחבורה, כבישים, חסימות, תחבורה ציבורית, חניה), health (בריאות, בתי חולים, קופות חולים, מד״א שאינו מבזק חירום), realestate (תכנון ובנייה, נדל״ן), community (קהילה), sports (ספורט), leisure (תרבות ואירועים), sharon (יישובי השרון שאינם נתניה), tourism (חופים ותיירות).
 אם הידיעה לא עוסקת בנתניה או ביישובי השרון (למשל פוליטיקה ארצית, והשם של יישוב הוא בעצם מילה רגילה), אל תכתוב ידיעה. החזר רק {"skip":true,"reason":"סיבה קצרה"}.
 החזר JSON בלבד, בלי טקסט נוסף, במבנה:
 {"section":"","kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""],"places":[""],"basis":"official","closure":null,"needsCheck":false,"checkReason":""}`;
+
+// the second pass (28.10.2026, Yakir: quality first): a copy editor checks every written story against the style book
+const EDITOR = `אתה עורך המשנה בדסק של "חדשות נתניה והשרון". אתה מקבל ידיעה שנכתבה והמקורות שלה, ובודק אותה מול הרשימה:
+1. מתי: בפסקה הראשונה יש יום ותאריך (ושעה אם היא במקורות), והם נכונים לפי זמני המקורות.
+2. איפה: המקום (יישוב, ואם ידוע רחוב או שכונה).
+3. ייחוס: עובדות רשמיות מיוחסות לגוף (מד״א, המשטרה, העירייה).
+4. הכותרת תואמת את גוף הידיעה ואת העיקר בו, עד 80 תווים, בלי פיתיון.
+5. ה-kicker מוסיף עובדה ולא חוזר על הכותרת (ריק זה בסדר).
+6. איזון: בנושא שנוי במחלוקת או פוליטי יש גם את הצד השני, או משפט שתגובתו לא התקבלה.
+7. אין כפילות עם ידיעה שכבר פרסמנו (רשימת הכותרות האחרונות מצורפת).
+8. עומק: ידיעה שאינה מבזק קצר כוללת מצב נוכחי ומה הלאה ככל שהמקורות מאפשרים, ולא חסרה עובדה חשובה שמופיעה במקורות.
+9. עברית תקינה וטבעית, בלי קו מפריד ארוך או בינוני, בלי המילה "הכי".
+10. אין שמות של חשודים, נפגעים, הרוגים או קטינים.
+11. אין עובדה שלא מופיעה במקורות.
+12. קרדיט לכלי תקשורת, אם יש, הוא שורה נפרדת "קרדיט: ..." בסוף, ולא בכותרת.
+החזר JSON בלבד: {"pass":true,"score":0,"notes":[""]}. score בין 0 ל-100. pass=true רק אם אין אף בעיה חמורה (סעיפים 1, 4, 7, 10, 11) והציון לפחות 75. notes: הערות קצרות ומעשיות לתיקון, בעברית.`;
 
 // media outlet names: the one list in the table hns_outlets (same check as hns-publish)
 let OUTLET_RE: RegExp | null = null;
@@ -137,7 +164,8 @@ async function outlets() {
 }
 const outletIn = (s: unknown) => (OUTLET_RE ? (String(s ?? '').match(OUTLET_RE)?.[0] || '') : '');
 const LEAN_RE = /לפי (?:דיווח|פרסום|מבזק|הדיווח|הפרסום|המבזק)|כפי שדווח|כך דווח|כך לפי (?:דיווח|מבזק|פרסום)|דיווח שפורסם|מבזק שפורסם/;
-const CREDIT_RE = /פורס[מם]\S* לראשונה|צילום|תמונה|וידאו|סרטון|בראיון ל/;
+// a closing credit: "קרדיט: <outlet>" as its own last line (style book), or the older "כפי שפורסם לראשונה ב..."
+const CREDIT_RE = /^קרדיט:|פורס[מם]\S* לראשונה|צילום|תמונה|וידאו|סרטון|בראיון ל/;
 function voiceProblem(o: Any) {
   const arr = (a: unknown) => (Array.isArray(a) ? a : []).map((x) => String(x ?? '').trim()).filter(Boolean);
   const head = [o.title, o.dek, ...arr(o.keyPoints)].join('\n');
@@ -157,7 +185,10 @@ function voiceProblem(o: Any) {
 }
 const MEDIA_ONLY = 'מבוסס רק על פרסום בכלי תקשורת אחר';
 const KIND = (s: Any) => s.role === 'tip' ? 'רמז לא רשמי' : s.trust === 'official' ? 'גוף רשמי' : 'כלי תקשורת';
-const promptFor = (items: Any[], src: Any, places: string[]) => 'המקורות (מהישן לחדש):\n\n' + items.map((x, i) => `מקור ${i + 1}: ${src[x.source_id].name_he} (${KIND(src[x.source_id])})\nזמן: ${x.published_at || x.fetched_at}\nכותרת: ${x.title}\nתוכן: ${(x.body || '').slice(0, 3000)}`).join('\n\n') + `\n\nמקומות שזוהו: ${places.join(', ') || 'לא זוהה'}`;
+// Israel wall-clock time with the Hebrew weekday, so the writer can say "אמש (שלישי, 27.10) בסביבות 22:30"
+const ilWhen = (iso: string) => { try { return new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(iso)); } catch { return String(iso || ''); } };
+const promptFor = (items: Any[], src: Any, places: string[], archive = '') => `היום: ${ilWhen(new Date().toISOString())} (שעון ישראל)\n\nהמקורות (מהישן לחדש):\n\n` + items.map((x, i) => `מקור ${i + 1}: ${src[x.source_id].name_he} (${KIND(src[x.source_id])})\nזמן הפרסום: ${ilWhen(x.published_at || x.fetched_at)}\nכותרת: ${x.title}\nתוכן: ${(x.body || '').slice(0, 3000)}`).join('\n\n') + `\n\nמקומות שזוהו: ${places.join(', ') || 'לא זוהה'}`
+  + (archive ? `\n\nידיעות קודמות שלנו (לרקע בלבד, לא לחזור עליהן ולא להעתיק):\n${archive}` : '');
 // ---------- full sources ----------
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
 const ENT: Record<string, string> = { quot: '"', amp: '&', lt: '<', gt: '>', apos: "'", nbsp: ' ', ndash: '-', mdash: '-', hellip: '...', rsquo: "'", lsquo: "'", rdquo: '"', ldquo: '"' };
@@ -198,11 +229,11 @@ async function compose(user: string, feedback = '', model = MODEL) {
   return { out, usage, problem, retried };
 }
 
-async function claude(user: string, model = MODEL) {
+async function claude(user: string, model = MODEL, system = SYSTEM) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: Object.assign({ 'x-api-key': S.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' } as Record<string, string>, S.ANTHROPIC_WORKSPACE_ID ? { 'anthropic-workspace-id': S.ANTHROPIC_WORKSPACE_ID } : {}),
-    body: JSON.stringify({ model, max_tokens: 2500, system: SYSTEM, messages: [{ role: 'user', content: user }] }),
+    body: JSON.stringify({ model, max_tokens: 2500, system, messages: [{ role: 'user', content: user }] }),
     signal: AbortSignal.timeout(90000),
   });
   const j = await r.json();
@@ -260,6 +291,59 @@ async function rewrite(ids: number[]) {
   return { res };
 }
 
+// ---------- our archive and the copy editor (28.10.2026) ----------
+// published stories of the last 30 days: background for the writer, and the duplicate check for the editor
+let ARCHIVE: Any[] | null = null;
+async function archiveRows() {
+  if (ARCHIVE) return ARCHIVE;
+  const { data } = await sb.from('hns_stories').select('id,title,dek,places,created_at').eq('state', 'published').or('kind.is.null,kind.neq.sponsored')
+    .gte('created_at', sinceDays(30)).order('created_at', { ascending: false }).limit(300);
+  ARCHIVE = (data || []).map((r: Any) => ({ ...r, tk: toks(`${r.title} ${r.dek || ''}`) }));
+  return ARCHIVE;
+}
+const dmy = (iso: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(iso));
+async function archiveFor(items: Any[], places: string[], skipId = 0) {
+  const rows = await archiveRows();
+  const tk = toks(items.map((x) => `${x.title} ${x.body || ''}`).join(' '));
+  const pl = new Set(places);
+  const hits = rows.filter((r: Any) => r.id !== skipId && (r.places || []).some((p: string) => pl.has(p) && p !== 'נתניה')
+    || r.id !== skipId && (() => { let n = 0; for (const w of r.tk) if (tk.has(w)) n++; return n >= 2; })());
+  return hits.slice(0, 4).map((r: Any) => `- ${dmy(r.created_at)}: ${r.title}${r.dek ? `. ${r.dek}` : ''}`).join('\n');
+}
+const recentTitles = async () => (await archiveRows()).filter((r: Any) => Date.parse(r.created_at) > Date.now() - 72 * 3600e3).slice(0, 40).map((r: Any) => `- ${r.title}`).join('\n');
+// the copy editor: one call, a verdict {pass, score, notes}; a hard rule found in code fails the story on its own
+async function editor(out: Any, sourcesText: string, model: string) {
+  const local: string[] = [];
+  const all = [out.title, out.dek, out.kicker, ...(out.body || []), ...(out.keyPoints || [])].join(' ');
+  if (/(^|[^א-ת])הכי([^א-ת]|$)/.test(all)) local.push('המילה "הכי" אסורה');
+  if (String(out.title || '').length > 90) local.push('הכותרת ארוכה מ-80 תווים');
+  if (out.kicker && toks(out.kicker).size && [...toks(out.kicker)].every((w) => toks(out.title || '').has(w))) local.push('ה-kicker חוזר על הכותרת');
+  const story = JSON.stringify({ title: out.title, dek: out.dek, kicker: out.kicker, body: out.body, keyPoints: out.keyPoints });
+  try {
+    const { out: v, usage } = await claude(`הידיעה לבדיקה:\n${story}\n\n${sourcesText}\n\nכותרות שפרסמנו ב-72 השעות האחרונות:\n${await recentTitles() || 'אין'}`, model, EDITOR);
+    const notes = [...local, ...(Array.isArray(v.notes) ? v.notes.map((n: unknown) => String(n)).filter(Boolean) : [])].slice(0, 8);
+    const score = Math.max(0, Math.min(100, Number(v.score) || 0));
+    return { pass: !!v.pass && score >= 75 && !local.length, score, notes, usage };
+  } catch (e) {
+    // the editor could not answer: the story is not blocked by a technical failure, only the code checks count
+    return { pass: !local.length, score: null, notes: [...local, `העורך לא ענה: ${String((e as Error).message || e).slice(0, 80)}`], usage: null };
+  }
+}
+// write, check, and when the editor fails it, write once more with the editor's notes; failing twice means hold (never to Yakir)
+async function writeChecked(user: string, model: string) {
+  let w = await compose(user, '', model);
+  let qa = await editor(w.out, user, model);
+  let rounds = 1;
+  if (!qa.pass) {
+    const w2 = await compose(user, `עורך המשנה החזיר את הטיוטה עם ההערות: ${qa.notes.join('; ')}`, model);
+    const qa2 = await editor(w2.out, user, model);
+    w = { ...w2, usage: { first: w.usage, second: w2.usage, editor: [qa.usage, qa2.usage] } as Any }; qa = qa2; rounds = 2;
+  } else w = { ...w, usage: { write: w.usage, editor: qa.usage } as Any };
+  const verdict = { pass: qa.pass, score: qa.score, notes: qa.notes, rounds, at: new Date().toISOString() };
+  return { ...w, qa: verdict, held: !qa.pass };
+}
+const EDIT_HOLD = 'עורך: נפסל';
+
 // the state of a written story: Yakir only for a real editorial question (sensitive, or the writer's needsCheck)
 const stateOf = (sensitive: boolean, out: Any) => (sensitive || out.needsCheck ? 'needs_check' : 'draft');
 const notesOf = (pre: string[], sensitive: boolean, mediaOnly: boolean, out: Any, retried: boolean, problem: string) =>
@@ -279,14 +363,51 @@ async function updatePublished(st: Any, its: Any[], src: Any, model: string) {
   const prior = [...(Array.isArray(st.body) ? st.body : []), ...(Array.isArray(st.updates) ? st.updates.map((u: Any) => u.text) : [])].join('\n');
   const user = `ידיעה שכבר פרסמנו, כולל העדכונים הקודמים:\nכותרת: ${st.title}\n${prior}\n\n${promptFor(its, src, st.places || [])}\n\n`
     + 'כתוב עדכון חי קצר לידיעה: משפט או שניים, רק עם עובדות חדשות שמופיעות במקורות החדשים ולא כתובות כבר בידיעה. בלי לחזור על מה שכבר כתוב ובלי שמות של נפגעים או חשודים. '
-    + 'אם העובדה החדשה באה רק מכלי תקשורת אחד, סיים את העדכון בקרדיט קצר: "כפי שפורסם לראשונה ב...". החזר JSON בלבד: {"update":"..."}, או {"nochange":true} אם אין שום עובדה חדשה.';
+    + 'ציין בעדכון מתי (יום ושעה) אם זה ידוע. אם העובדה החדשה באה רק מכלי תקשורת אחד, סיים את העדכון בקרדיט קצר: "כפי שפורסם לראשונה ב...". '
+    + 'אם העדכון משנה את העיקר (למשל נעצרו חשודים, מצב הפצוע השתנה, הוטל צו), הצע גם כותרת וכותרת משנה מעודכנות לפי ספר הסגנון, אחרת השאר אותן ריקות. '
+    + 'החזר JSON בלבד: {"update":"...","title":"","dek":""}, או {"nochange":true} אם אין שום עובדה חדשה.';
   const { out, usage } = await claude(user, model);
   if (out.nochange || !out.update) return { nochange: true, usage };
   const at = its.map((x: Any) => x.published_at || x.fetched_at).filter(Boolean).sort().pop();
   const r = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/hns-publish`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': S.CRON_SECRET },
     body: JSON.stringify({ action: 'add_update', id: st.id, text: clean(out.update), at, source: its[0]?.source_id || '' }),
     signal: AbortSignal.timeout(60000) }).then((x) => x.json()).catch((e) => ({ ok: false, error: String(e) }));
-  return { updated: !!r?.ok, error: r?.error || null, usage };
+  // the headline and subtitle follow the developing story when the update changes the main fact
+  let retitled = null;
+  if (r?.ok && out.title && clean(out.title) !== st.title && !voiceProblem({ title: out.title, dek: out.dek || st.dek, body: ['x'] })) {
+    retitled = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/hns-publish`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': S.CRON_SECRET },
+      body: JSON.stringify({ action: 'revise', id: st.id, title: clean(out.title), ...(out.dek ? { dek: clean(out.dek) } : {}), note: 'עודכן: עדכון חי' }), signal: AbortSignal.timeout(60000) })
+      .then((x) => x.json()).then((x) => !!x?.ok).catch(() => false);
+  }
+  return { updated: !!r?.ok, retitled, error: r?.error || null, usage };
+}
+
+// restyle (28.10.2026, Yakir: quality first): a published story is written again under the style book from all its sources and our
+// archive, keeps every fact it already has, passes the copy editor, and replaces the text through hns-publish 'revise' (same URL,
+// same date). A story with no source items (automatic templates, sponsored, hand-written without items) is left as it is.
+async function restyle(ids: number[]) {
+  await outlets(); await config();
+  const { data: srcs } = await sb.from('hns_sources').select('id,name_he,role,trust,local_only');
+  const src = Object.fromEntries((srcs || []).map((s: Any) => [s.id, s]));
+  const { data: rows } = await sb.from('hns_stories').select('*').in('id', ids).eq('state', 'published');
+  const res: Any[] = [];
+  for (const st of rows || []) {
+    if (st.kind === 'sponsored' || /^auto:/.test(st.notes || '')) { res.push({ id: st.id, skipped: 'template or sponsored' }); continue; }
+    const { data: items } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,places').in('id', (st.item_ids || []).map(Number));
+    const its = await enrich((items || []).filter((x: Any) => src[x.source_id]).sort((a: Any, b: Any) => Date.parse(a.published_at || a.fetched_at) - Date.parse(b.published_at || b.fetched_at)));
+    if (!its.length) { res.push({ id: st.id, skipped: 'no source items' }); continue; }
+    const current = [`כותרת: ${st.title}`, `כותרת משנה: ${st.dek || ''}`, ...(Array.isArray(st.body) ? st.body : []), ...(Array.isArray(st.updates) ? st.updates.map((u: Any) => `עדכון (${ilWhen(u.at)}): ${u.text}`) : [])].join('\n');
+    const user = `${promptFor(its, src, st.places || [], await archiveFor(its, st.places || [], st.id))}\n\nהידיעה כפי שפורסמה אצלנו בתאריך ${ilWhen(st.created_at)} (לשמור על כל העובדות הנכונות שבה, להשלים מה שחסר מהמקורות, ולכתוב אותה מחדש לפי ספר הסגנון):\n${current}`;
+    try {
+      const { out, qa, held, problem } = await writeChecked(user, modelFor(st.sensitivity === 'sensitive', its.length));
+      if (held || problem) { res.push({ id: st.id, kept: true, qa: qa.score, notes: qa.notes, problem: problem || null }); continue; }
+      const r = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/hns-publish`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': S.CRON_SECRET },
+        body: JSON.stringify({ action: 'revise', id: st.id, title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
+          kicker: kickerOf(out) || '', qa, note: 'תוקן: עריכה לפי ספר הסגנון' }), signal: AbortSignal.timeout(60000) }).then((x) => x.json()).catch((e) => ({ ok: false, error: String(e) }));
+      res.push({ id: st.id, revised: !!r?.ok, error: r?.error || null, qa: qa.score, title: clean(out.title) });
+    } catch (e) { res.push({ id: st.id, error: String((e as Error).message || e) }); }
+  }
+  return { res };
 }
 
 // write chosen items now (ids), or the regular run; 'at' sets the story date (real event date) for older items
@@ -325,14 +446,17 @@ async function tick(only: number[] = [], at = '') {
   let budget = dailyMax() - (await usedToday(dayStart));
   const res: Any[] = [];
   if (!OUTLET_RE) await outlets();
+  const t0 = Date.now();
   for (const g of groups) {
     const ids = g.items.map((x) => x.id);
+    // writing and checking takes up to a minute a story: what does not fit in this run waits for the next one (5 minutes)
+    if (Date.now() - t0 > 100e3) { res.push({ deferred: ids }); continue; }
     if (g.story) {
       const st = (recent || []).find((s: Any) => s.id === g.story);
       await sb.from('hns_items').update({ cluster_id: g.story }).in('id', ids);
       const allIds = [...new Set([...(st?.item_ids || []), ...ids])];
       const fromSource = g.items.some((x) => src[x.source_id].role === 'source');
-      const waiting = st && ['draft', 'needs_check'].includes(st.state) && /רמז בלבד|ממתין לפרטים/.test(st.notes || '');
+      const waiting = st && ['draft', 'needs_check'].includes(st.state) && /רמז בלבד|ממתין לפרטים|עורך: נפסל/.test(st.notes || '');
       const touch = { item_ids: allIds, updated_at: new Date().toISOString(), ...(/^auto:|רמז|ממתין/.test(st?.notes || '') || st?.state === 'published' ? {} : { notes: 'נוסף מקור חדש, כדאי לעדכן' }) };
       // a published story: attach, and add a live update when the new source adds facts (at most one update in 10 minutes)
       if (st?.state === 'published') {
@@ -355,13 +479,13 @@ async function tick(only: number[] = [], at = '') {
       const places = [...new Set([...(st.places || []), ...its.flatMap((x: Any) => x.places || [])])];
       const model = modelFor(sens, its.length);
       try {
-        const { out, usage, problem, retried } = await compose(promptFor(its, src, places), '', model);
+        const { out, usage, problem, retried, qa, held } = await writeChecked(promptFor(its, src, places, await archiveFor(its, places, g.story)), model);
         const basis = ['official', 'public', 'media_exclusive'].includes(out.basis) ? out.basis : null;
         const mediaOnly = basis === 'media_exclusive' && !its.some((x: Any) => src[x.source_id].trust === 'official');
-        const state = stateOf(sens, out);
+        const state = held ? 'draft' : stateOf(sens, out);
         const sources = [...new Map(its.filter((x: Any) => src[x.source_id].role === 'source').map((x: Any) => [x.source_id, { id: x.source_id, name: src[x.source_id].name_he, url: x.url, trust: src[x.source_id].trust }])).values()];
         await sb.from('hns_stories').update({ section: sectionOf(out, st.section), title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
-          places: out.places?.length ? out.places : places, sources, sensitivity: sens ? 'sensitive' : 'normal', state, notes: notesOf(['אומת: מקור נוסף'], sens, mediaOnly, out, retried, problem), basis, model, usage,
+          places: out.places?.length ? out.places : places, sources, sensitivity: sens ? 'sensitive' : 'normal', state, notes: held ? `${EDIT_HOLD}: ${qa.notes.join('; ')}`.slice(0, 400) : notesOf(['אומת: מקור נוסף'], sens, mediaOnly, out, retried, problem), basis, model, usage, qa,
           kicker: kickerOf(out), closure: closureOf(out), item_ids: allIds, tg_sent_at: null, updated_at: new Date().toISOString() }).eq('id', g.story).in('state', ['draft', 'needs_check']);
         res.push({ story: g.story, corroborated: true, state });
       } catch (e) {
@@ -395,18 +519,19 @@ async function tick(only: number[] = [], at = '') {
     await enrich(g.items);
     const model = modelFor(sensitive, g.items.length);
     try {
-      const { out, usage, problem, retried } = await compose(promptFor(g.items, src, places), '', model);
+      const { out, usage, problem, retried, qa, held } = await writeChecked(promptFor(g.items, src, places, await archiveFor(g.items, places)), model);
       const isNetanya = places.some((p) => NETANYA_PLACES.has(p));
       const section = sectionOf(out, isNetanya ? base.section : 'sharon');
       const basis = ['official', 'public', 'media_exclusive'].includes(out.basis) ? out.basis : null;
       const mediaOnly = basis === 'media_exclusive' && !g.items.some((x) => src[x.source_id].trust === 'official');
-      const state = stateOf(sensitive, out);
+      // the copy editor failed it twice: kept quietly as a draft with the editor's notes (hns-publish skips it, never sent to Yakir)
+      const state = held ? 'draft' : stateOf(sensitive, out);
       const { data: st } = await sb.from('hns_stories').insert({
         ...base, section, title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
-        places: out.places?.length ? out.places : places, state, notes: notesOf([], sensitive, mediaOnly, out, retried, problem), basis, model, usage, kicker: kickerOf(out), closure: closureOf(out),
+        places: out.places?.length ? out.places : places, state, notes: held ? `${EDIT_HOLD}: ${qa.notes.join('; ')}`.slice(0, 400) : notesOf([], sensitive, mediaOnly, out, retried, problem), basis, model, usage, qa, kicker: kickerOf(out), closure: closureOf(out),
       }).select('id').single();
       if (st) await sb.from('hns_items').update({ cluster_id: st.id }).in('id', ids);
-      res.push({ story: st?.id, state });
+      res.push({ story: st?.id, state, qa: qa.score, held });
     } catch (e) {
       const msg = String((e as Error).message || e);
       // too few facts: kept quietly with no text (never published, never sent to Yakir) until another source arrives
@@ -443,18 +568,18 @@ async function redo(ids: number[], at = '', drop: number[] = []) {
     if (!its.length) { res.push({ id: st.id, skipped: 'no items' }); continue; }
     const sens = st.sensitivity === 'sensitive' || its.some((x: Any) => x.sensitivity === 'sensitive');
     try {
-      const { out, usage, problem, retried } = await compose(promptFor(its, src, st.places || []), '', modelFor(sens, its.length));
+      const { out, usage, problem, retried, qa, held } = await writeChecked(promptFor(its, src, st.places || [], await archiveFor(its, st.places || [], st.id)), modelFor(sens, its.length));
       const basis = ['official', 'public', 'media_exclusive'].includes(out.basis) ? out.basis : st.basis;
       const mediaOnly = basis === 'media_exclusive' && !its.some((x: Any) => src[x.source_id].trust === 'official');
-      const state = stateOf(sens, out);
+      const state = held ? 'draft' : stateOf(sens, out);
       const sources = [...new Map(its.filter((x: Any) => src[x.source_id].role === 'source').map((x: Any) => [x.source_id, { id: x.source_id, name: src[x.source_id].name_he, url: x.url, trust: src[x.source_id].trust }])).values()];
       const allIds = [...new Set([...keepIds, ...its.map((x: Any) => Number(x.id))])];
       await sb.from('hns_stories').update({ section: sectionOf(out, st.section), title: clean(out.title), dek: clean(out.dek), body: (out.body || []).map(clean), key_points: (out.keyPoints || []).map(clean),
-        places: out.places?.length ? out.places : st.places, sources, state, basis, notes: notesOf(['נכתב מחדש מהמקורות המלאים'], sens, mediaOnly, out, retried, problem), usage: { previous: st.usage, redo: usage },
+        places: out.places?.length ? out.places : st.places, sources, state, basis, qa, notes: held ? `${EDIT_HOLD}: ${qa.notes.join('; ')}`.slice(0, 400) : notesOf(['נכתב מחדש מהמקורות המלאים'], sens, mediaOnly, out, retried, problem), usage: { previous: st.usage, redo: usage },
         kicker: kickerOf(out), closure: closureOf(out), item_ids: allIds, tg_sent_at: null, pub_note: null, updated_at: new Date().toISOString(), ...(at ? { created_at: at } : {}) })
         .eq('id', st.id).in('state', ['draft', 'needs_check']);
       if (related.length) await sb.from('hns_items').update({ cluster_id: st.id }).in('id', related.map((x: Any) => x.id)).is('cluster_id', null);
-      res.push({ id: st.id, state, sources: its.length, problem: problem || null });
+      res.push({ id: st.id, state, sources: its.length, problem: problem || null, qa: qa.score, notes: qa.notes });
     } catch (e) { res.push({ id: st.id, error: String((e as Error).message || e) }); }
   }
   return { res };
@@ -464,7 +589,9 @@ Deno.serve(async (req) => {
   await secrets();
   if (!S.CRON_SECRET || req.headers.get('x-cron-secret') !== S.CRON_SECRET) return J({ ok: false }, 401);
   const b: Any = await req.json().catch(() => ({}));
+  ARCHIVE = null; // our archive is read fresh on every call
   try {
+    if (b.action === 'restyle') return J({ ok: true, ...(await restyle((b.ids || []).map(Number).filter(Boolean).slice(0, 2))) });
     if (b.action === 'tick') return J({ ok: true, ...(await tick()) });
     if (b.action === 'items') return J({ ok: true, ...(await tick((b.ids || []).map(Number).filter(Boolean).slice(0, 10), String(b.at || ''))) });
     if (b.action === 'redo') return J({ ok: true, ...(await redo((b.ids || []).map(Number).filter(Boolean).slice(0, 5), String(b.at || ''), (b.drop || []).map(Number).filter(Boolean))) });

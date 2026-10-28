@@ -17,6 +17,8 @@
 //   the last update is less than 6 hours old (the site shows a live blog and a "מתעדכן" label).
 // 28.10.2026 (sponsored): kind 'sponsored' ("תוכן שיווקי") passes through as is; its body may hold mini markup (## headings, - lists,
 //   [text](url) links) that the site renders.
+// 28.10.2026 (quality): "extras" per story (fields other functions add through hns-publish revise, e.g. related links, service
+//   boxes) and a top-level "merged" list [{id, section, into, intoSection}]: stories merged into another one; the site 301s them.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -55,7 +57,7 @@ Deno.serve(async (req) => {
   if (url.searchParams.get('only') === 'flashes') return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), flashes: await flashes() }), { headers: { ...H, 'cache-control': 'public, max-age=30' } });
   const limit = Math.min(1000, Math.max(1, Number(url.searchParams.get('limit')) || 300));
   const { data, error } = await sb.from('hns_stories')
-    .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure,pub_note,updates')
+    .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure,pub_note,updates,extras')
     .eq('state', 'published').not('published_at', 'is', null)
     .order('published_at', { ascending: false }).limit(limit);
   if (error) return new Response(JSON.stringify({ ok: false, error: 'db' }), { status: 500, headers: H });
@@ -79,8 +81,13 @@ Deno.serve(async (req) => {
       image: s.image_url ? { url: s.image_url, alt: clean(s.image_alt), model: s.image_model || '', ai: true } : null,
       updates: (Array.isArray(s.updates) ? s.updates : []).map((u: Any) => ({ at: u.at, text: clean(u.text) })).filter((u: Any) => u.at && u.text),
       live: (Array.isArray(s.updates) ? s.updates : []).some((u: Any) => Date.now() - Date.parse(u.at) < 6 * 3600e3),
+      extras: s.extras && typeof s.extras === 'object' ? s.extras : {},
     };
   });
+  // stories merged into another one: the site sends their old URL to the main story (301)
+  const { data: mg } = await sb.from('hns_stories').select('id,section,merged_into').eq('state', 'withdrawn').not('merged_into', 'is', null).limit(500);
+  const secOf = new Map((data || []).map((s: Any) => [s.id, s.section]));
+  const merged = (mg || []).filter((m: Any) => secOf.has(m.merged_into)).map((m: Any) => ({ id: m.id, section: m.section, into: m.merged_into, intoSection: secOf.get(m.merged_into) }));
   const [fl, cal] = await Promise.all([flashes(), calendar()]);
-  return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), count: stories.length, stories, event, flashes: fl, calendar: cal }), { headers: H });
+  return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), count: stories.length, stories, event, flashes: fl, calendar: cal, merged }), { headers: H });
 });
