@@ -1,0 +1,33 @@
+---
+// One business in a directory list (Directory.dc.html): logo or initials, name, "מקודם" only for a paid promoted listing,
+// category and area, the business's own line, facts, and call / WhatsApp / business page buttons. Real listings only.
+import Icon from '../Icon.astro';
+import { CAT_BY_SLUG } from '../../data/directory';
+import { listingUrl, phoneShow, telHref, waHref, type Listing } from '../../lib/biz';
+import { initials, lineOf, servedOf, servedShort } from './util';
+interface Props { l: Listing; showCat?: boolean; compact?: boolean }
+const { l, showCat = true, compact = false } = Astro.props;
+const c = CAT_BY_SLUG[l.category];
+const url = listingUrl(l);
+const areas = '|' + servedOf(l).join('|') + '|';
+---
+<article class={`d-biz${l.featured ? ' pro' : ''}${compact ? ' sm' : ''}`} data-areas={areas} style={`--c:${c.color};--t:${c.tint}`}>
+  <span class="d-lg" aria-hidden="true">{l.logo ? <img src={l.logo} alt="" width="72" height="72" loading="lazy" referrerpolicy="no-referrer"> : initials(l.name)}</span>
+  <div class="d-bd">
+    <h3><a href={url}>{l.name}</a>{l.featured && <span class="d-tag">מקודם</span>}</h3>
+    <div class="d-sub">{showCat ? `${c.he} · ` : ''}{l.area}</div>
+    {!compact && <p>{lineOf(l.description)}</p>}
+    {!compact && (
+      <ul class="d-facts">
+        <li><Icon name="pin" size={15} sw={2} /><span class="sr">אזורי שירות: </span>{servedShort(l)}</li>
+        {l.address && <li><Icon name="home" size={15} sw={2} />{l.address}</li>}
+        {l.license && <li><Icon name="shield" size={15} sw={2} />רישיון <span class="num" dir="ltr">{l.license}</span></li>}
+      </ul>
+    )}
+  </div>
+  <div class="d-act">
+    <a class="n-btn ink" href={telHref(l.phone)} aria-label={`התקשרו אל ${l.name}, ${phoneShow(l.phone)}`}><Icon name="phone" size={17} sw={2} />התקשרו</a>
+    {l.whatsapp && <a class="n-btn wa" href={waHref(l.whatsapp)} rel="noopener nofollow" target="_blank" aria-label={`וואטסאפ אל ${l.name} (נפתח בחלון חדש)`}><Icon name="whatsapp" size={17} sw={2} />וואטסאפ</a>}
+    {!compact && <a class="n-btn line" href={url} aria-label={`לעמוד העסק ${l.name}`}>לעמוד העסק</a>}
+  </div>
+</article>

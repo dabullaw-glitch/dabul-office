@@ -1,0 +1,54 @@
+---
+// Dark photo header of the directory pages (Directory.dc.html): breadcrumbs, title, intro, optional search (what + where)
+// and the three trust lines. The search works without JavaScript (it goes to the site search); with JavaScript a known
+// trade opens its category page, with the chosen area as a filter.
+import Icon from '../Icon.astro';
+import { IMG } from '../../data/site';
+import { CATEGORIES } from '../../data/directory';
+import { WHERE } from './util';
+interface Props { crumbs: { name: string; href: string }[]; h1?: string; intro?: string; search?: boolean; trust?: boolean; img?: string }
+const { crumbs, h1, intro, search = false, trust = true, img = 'city' } = Astro.props;
+const ph = IMG[img] || IMG.city;
+const keys = CATEGORIES.map((c) => ({ s: c.slug, k: `${c.plural} ${c.he}` }));
+---
+<section class="n-shero d-hero">
+  <div class="bg"><img src={ph.src} srcset={`${ph.small} 800w, ${ph.src} 1600w`} sizes="100vw" alt="" width="1600" height="900" fetchpriority="high"></div><div class="sh"></div>
+  <div class="n-wrap">
+    <nav aria-label="מיקום בדף"><ol class="n-crumb">{crumbs.map((c, i) => <li>{i < crumbs.length - 1 ? <a href={c.href}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>)}</ol></nav>
+    <slot name="head" />
+    {h1 && <h1>{h1}</h1>}
+    {intro && <p>{intro}</p>}
+    <slot />
+    {search && (
+      <form class="d-find" role="search" action="/search/" method="get" id="dfind">
+        <div class="d-fld"><label for="dq">מה אתם מחפשים?</label><input id="dq" name="q" type="search" placeholder="למשל: חשמלאי, מנעולן, עורך דין" autocomplete="off" enterkeyhint="search"></div>
+        <div class="d-fld"><label for="da">איפה?</label><select id="da" name="a"><option value="">נתניה וכל השרון</option>{WHERE.map((w) => <option>{w}</option>)}</select></div>
+        <button class="n-btn ink" type="submit"><Icon name="search" size={19} sw={2} />חיפוש</button>
+      </form>
+    )}
+    {trust && (
+      <ul class="d-trust">
+        <li><Icon name="check" size={18} sw={2} />כל עסק נבדק לפני פרסום</li>
+        <li><Icon name="check" size={18} sw={2} />פנייה ישירה, בלי עמלות</li>
+        <li><Icon name="check" size={18} sw={2} />תוכן מקודם מסומן תמיד</li>
+      </ul>
+    )}
+  </div>
+</section>
+{search && <script is:inline define:vars={{ keys }}>
+(function(){
+  var f=document.getElementById('dfind'); if(!f) return;
+  function find(q){
+    q=q.replace(/["״׳']/g,'').trim(); if(!q) return null;
+    var words=q.split(/\s+/).filter(function(w){return w.length>2});
+    for(var i=0;i<keys.length;i++){ var k=keys[i].k.replace(/["״׳']/g,''); if(k.indexOf(q)>=0) return keys[i].s; }
+    for(var j=0;j<keys.length;j++){ var k2=keys[j].k.replace(/["״׳']/g,''); for(var w=0;w<words.length;w++){ if(k2.indexOf(words[w])>=0||k2.indexOf(words[w].replace(/^[הבלמו]/,''))>=0) return keys[j].s; } }
+    return null;
+  }
+  f.addEventListener('submit',function(e){
+    var q=f.elements.q.value.trim(), a=f.elements.a.value, s=find(q), qs=a?'?a='+encodeURIComponent(a):'';
+    if(s){ e.preventDefault(); location.href='/directory/'+s+'/'+qs; return; }
+    if(!q){ e.preventDefault(); var list=document.getElementById('dlist'); if(list&&window.dirArea){ window.dirArea(a); list.scrollIntoView({behavior:'smooth'}); } else location.href='/directory/'+qs; }
+  });
+})();
+</script>}

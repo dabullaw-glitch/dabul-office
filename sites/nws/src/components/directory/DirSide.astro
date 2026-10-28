@@ -1,0 +1,23 @@
+---
+// Sidebar of the directory pages: add-your-business box, how it works, transparency. Extra boxes go in the slot.
+interface Props { cat?: string; join?: boolean }
+const { cat = '', join = true } = Astro.props;
+const href = `/directory/join/${cat ? `?cat=${cat}` : ''}`;
+---
+<aside class="d-side" aria-label="על המדריך">
+  {join && <div class="d-own"><b>יש לכם עסק בנתניה או בשרון?</b><p>רישום בסיסי בלי עלות. אנחנו כותבים לכם טקסט מקצועי, בודקים את הפרטים ומעלים לאתר.</p><a class="n-btn wh" href={href}>הוסיפו את העסק</a></div>}
+  <slot name="top" />
+  <section class="d-box" aria-labelledby="d-how">
+    <h2 id="d-how">איך זה עובד</h2>
+    <ol class="d-steps">
+      <li><b>1</b><span>ממלאים טופס קצר: שם, תחום, טלפון ואזור.</span></li>
+      <li><b>2</b><span>אנחנו בודקים את הפרטים ומכינים את עמוד העסק.</span></li>
+      <li><b>3</b><span>העסק עולה למדריך, ולקוחות פונים אליכם ישירות.</span></li>
+    </ol>
+  </section>
+  <section class="d-box" aria-labelledby="d-tr">
+    <h2 id="d-tr">שקיפות</h2>
+    <p>עסק שמשלם על קידום מסומן "מקודם". הסדר בשאר הרשימה לא תלוי בתשלום. את המידע על כל עסק מסר בעל העסק. מצאתם טעות? <a href="/corrections/">דווחו לנו</a>.</p>
+  </section>
+  <slot />
+</aside>

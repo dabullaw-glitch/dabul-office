@@ -1,0 +1,55 @@
+---
+// List of real listings with area filter chips (only areas the listings serve) and the count. An empty list shows the honest
+// "הקטגוריה נפתחת עכשיו" state with the add-business button, never sample businesses. ?a=<area> preselects a chip.
+import Icon from '../Icon.astro';
+import BizRow from './BizRow.astro';
+import type { Listing } from '../../lib/biz';
+import { areaChips, bizCount } from './util';
+interface Props { list: Listing[]; title: string; showCat?: boolean; cat?: string; icon?: string; emptyTitle?: string; emptyText?: string; c?: string; t?: string }
+const { list, title, showCat = true, cat = '', icon = 'list', emptyTitle = 'הקטגוריה נפתחת עכשיו', emptyText = 'עסקים מנתניה והשרון מוזמנים להצטרף ראשונים. רישום בסיסי בלי עלות.', c = '#0D1321', t = '#EEF0F4' } = Astro.props;
+const chips = areaChips(list);
+const join = `/directory/join/${cat ? `?cat=${cat}` : ''}`;
+---
+<section aria-labelledby="dlist-h" id="dlist" class="d-list">
+  <h2 class="n-sh" id="dlist-h">{title}</h2>
+  {list.length > 0 ? (
+    <>
+      <div class="d-flt">
+        {chips.length > 1 && (
+          <div class="d-chips" role="group" aria-label="סינון לפי אזור">
+            <button type="button" data-a="" aria-pressed="true">כל השרון</button>
+            {chips.map((a) => <button type="button" data-a={a} aria-pressed="false">{a}</button>)}
+          </div>
+        )}
+        <span class="d-cnt num" id="dcnt" aria-live="polite">{bizCount(list.length)}</span>
+      </div>
+      <div id="dbiz">{list.map((l) => <BizRow l={l} showCat={showCat} />)}</div>
+      <div class="d-empty" id="dnone" hidden>
+        <b>עדיין אין כאן עסקים מהאזור הזה</b>
+        <p>אפשר לבחור "כל השרון", או להוסיף עסק מהאזור. רישום בסיסי בלי עלות.</p>
+        <a class="n-btn ink" href={join}>הוסיפו את העסק</a>
+      </div>
+      <script is:inline>
+      (function(){
+        var bs=document.querySelectorAll('.d-chips button'), cards=document.querySelectorAll('#dbiz .d-biz'), cnt=document.getElementById('dcnt'), none=document.getElementById('dnone');
+        function set(a){
+          var n=0;
+          bs.forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-a')===a))});
+          cards.forEach(function(c){var on=!a||c.getAttribute('data-areas').indexOf('|'+a+'|')>=0;c.hidden=!on;if(on)n++});
+          cnt.textContent=n===1?'עסק אחד':n+' עסקים'; none.hidden=n>0;
+        }
+        window.dirArea=set;
+        bs.forEach(function(b){b.addEventListener('click',function(){set(b.getAttribute('data-a'))})});
+        try{var a=new URLSearchParams(location.search).get('a');if(a)window.dirArea(a);}catch(e){}
+      })();
+      </script>
+    </>
+  ) : (
+    <div class="d-empty">
+      <span class="ic" style={`--c:${c};--t:${t}`} aria-hidden="true"><Icon name={icon} size={26} /></span>
+      <b>{emptyTitle}</b>
+      <p>{emptyText}</p>
+      <a class="n-btn ink" href={join}>הוסיפו את העסק</a>
+    </div>
+  )}
+</section>
