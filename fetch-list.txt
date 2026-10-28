@@ -1,6 +1,1 @@
-sk-vote-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-vote-l.jpg
-sk-police-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-police-l.jpg
-sk-road-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-road-l.jpg
-sk-hospital-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-hospital-l.jpg
-sk-court-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-court-l.jpg
-sk-cityhall-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-cityhall-l.jpg
+sk-gavel-l.jpg https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/nws-img/sk-gavel-l.jpg
