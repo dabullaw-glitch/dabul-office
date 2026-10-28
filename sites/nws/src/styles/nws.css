@@ -11,7 +11,7 @@ a:hover{color:var(--red)}
 .n-btn.ink{background:var(--ink);color:#fff}.n-btn.ink:hover{background:#232C3D;color:#fff}
 .n-btn.line{border-color:#D9D6CE;color:var(--ink);background:#fff}.n-btn.line:hover{border-color:var(--ink);color:var(--ink)}
 .n-btn.red{background:var(--red);color:#fff}.n-btn.red:hover{background:var(--red2);color:#fff}
-.n-btn.tg{background:#229ED9;color:#fff}.n-btn.tg:hover{background:#1B8BC0;color:#fff}
+.n-btn.tg{background:#1A6FA0;color:#fff}.n-btn.tg:hover{background:#155B84;color:#fff}
 .n-btn.wa{background:#1FA855;color:#fff}.n-btn.wa:hover{background:#188C46;color:#fff}
 .n-btn.wh{background:#fff;color:var(--ink)}.n-btn.wh:hover{background:#F1EFEA;color:var(--ink)}
 .n-btn.gh{border-color:#3A4558;color:#fff;background:transparent}.n-btn.gh:hover{border-color:#fff;color:#fff}
