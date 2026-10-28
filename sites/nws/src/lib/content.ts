@@ -49,7 +49,7 @@ function fromFeed(s: any): any {
   return {
     slug: `n${s.id}`, engineId: s.id, section, title: clean(s.title), dek: clean(s.dek), body: (s.body || []).map(clean).filter(Boolean),
     keyPoints: (s.keyPoints || []).map(clean).filter(Boolean), whatItMeans: '', faq: s.faq || [], neighborhoods: places, tags: [],
-    published: new Date(s.date || s.publishedAt).toISOString(), sourceName: clean(s.sourceName), sourceUrl: s.sourceUrl || '', imageHint: '', event: null,
+    published: new Date(s.date || s.publishedAt).toISOString(), ...(s.updatedAt ? { updated: s.updatedAt } : {}), sourceName: clean(s.sourceName), sourceUrl: s.sourceUrl || '', imageHint: '', event: null,
     kicker: clean(s.kicker), kind: s.kind === 'opinion' ? 'opinion' : 'news', author: clean(s.author), authorRole: clean(s.authorRole), video: s.video || '',
     closure: s.closure && s.closure.place ? { place: clean(s.closure.place), what: clean(s.closure.what), until: String(s.closure.until || ''), approx: !!s.closure.approx } : null,
     ai: aiOf(s),

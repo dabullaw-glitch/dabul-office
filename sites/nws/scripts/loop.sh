@@ -3,6 +3,8 @@
 # GitHub's own schedule is not reliable, so one workflow run stays up for about LOOP_MIN minutes: every ~45 seconds it fetches the
 # engine feed (published stories, flashes, events calendar) and the directory listings, and when anything changed it builds the
 # site and publishes it to the nws-site branch (Cloudflare Pages serves that branch). At the end the workflow starts the next run.
+# After each publish, scripts/indexnow.mjs tells the IndexNow search engines which pages are new or changed (the list is the
+# difference between this build's sitemap and the manifest .indexnow.tsv kept on the nws-site branch).
 # Runs from sites/nws. Needs GH_TOKEN (the workflow token) and GITHUB_REPOSITORY.
 set -u
 LOOP_MIN="${LOOP_MIN:-55}"
@@ -48,10 +50,12 @@ while :; do
   K="$(key)-$SRC-$(TZ=Asia/Jerusalem date +%F)"
   if [ "$K" != "$LAST" ]; then
     OLD=$(git fetch -q --depth=1 origin nws-site 2>/dev/null && git show FETCH_HEAD:.build-key 2>/dev/null || true)
+    git show FETCH_HEAD:.indexnow.tsv > /tmp/nws-indexnow-old.tsv 2>/dev/null || rm -f /tmp/nws-indexnow-old.tsv
     if [ "$K" != "$OLD" ]; then
       T0=$SECONDS
-      if npm run -s build:site >/tmp/nws-build.log 2>&1 && check && publish "$K"; then
+      if npm run -s build:site >/tmp/nws-build.log 2>&1 && check && node scripts/indexnow.mjs plan /tmp/nws-indexnow-old.tsv && publish "$K"; then
         BUILDS=$((BUILDS + 1)); echo "$(date -u +%T) published ($((SECONDS - T0)) s): $K"
+        node scripts/indexnow.mjs send || true
       else
         echo "$(date -u +%T) build or publish failed"; tail -30 /tmp/nws-build.log; exit 1
       fi

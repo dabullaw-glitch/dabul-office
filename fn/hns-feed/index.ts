@@ -11,6 +11,8 @@
 //   6 hours, the others after 12 hours. Sensitive items (death, minors...) are never shown as a flash; they go through Yakir.
 //   And "calendar": the coming events from official listings (table hns_cal, e.g. the Netanya Culture Hall), up to 45 days ahead.
 //   ?only=flashes returns just the flashes (small and cached 30 seconds), for the live ticker in the browser.
+// 28.10.2026 (IndexNow): "updatedAt" is set only for a story updated with new facts (pub_note "עודכן..."), so the site shows the
+//   update time and the sitemap lastmod changes; a wording fix ("תוקן") does not count as an update.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -49,7 +51,7 @@ Deno.serve(async (req) => {
   if (url.searchParams.get('only') === 'flashes') return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), flashes: await flashes() }), { headers: { ...H, 'cache-control': 'public, max-age=30' } });
   const limit = Math.min(1000, Math.max(1, Number(url.searchParams.get('limit')) || 300));
   const { data, error } = await sb.from('hns_stories')
-    .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure')
+    .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure,pub_note')
     .eq('state', 'published').not('published_at', 'is', null)
     .order('published_at', { ascending: false }).limit(limit);
   if (error) return new Response(JSON.stringify({ ok: false, error: 'db' }), { status: 500, headers: H });
@@ -66,7 +68,7 @@ Deno.serve(async (req) => {
     const src = (Array.isArray(s.sources) ? s.sources : []).filter((x: Any) => x.trust === 'official').map((x: Any) => ({ name: clean(x.name).replace(/\s*-\s*ערוץ טלגרם( רשמי)?$/, ''), url: String(x.url || '') }));
     return {
       id: s.id, section: s.section || null, title: clean(s.title), dek: clean(s.dek), body: arr(s.body), keyPoints: arr(s.key_points), faq: faq(s.faq),
-      places: arr(s.places), date: s.created_at, publishedAt: s.published_at,
+      places: arr(s.places), date: s.created_at, publishedAt: s.published_at, updatedAt: /^עודכן/.test(String(s.pub_note || '')) ? s.updated_at : null,
       sourceName: src[0]?.name || '', sourceUrl: src[0]?.url || '', sources: src,
       kicker: kick(s.kicker), kind: s.kind === 'opinion' ? 'opinion' : 'news', author: clean(s.author), authorRole: clean(s.author_role), video: s.video_url || '',
       closure: s.closure && typeof s.closure === 'object' ? { place: clean(s.closure.place), what: clean(s.closure.what), until: String(s.closure.until || ''), approx: !!s.closure.approx } : null,
