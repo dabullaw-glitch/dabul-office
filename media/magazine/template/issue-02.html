@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>מגזין הנדל״ן גיליון 2</title>
+<style>
+@font-face{font-family:Heebo;src:url(fonts/heebo-hebrew-300-normal.woff2),url(fonts/heebo-latin-300-normal.woff2);font-weight:300}
+@font-face{font-family:Heebo;src:url(fonts/heebo-hebrew-400-normal.woff2);font-weight:400;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Heebo;src:url(fonts/heebo-latin-400-normal.woff2);font-weight:400;unicode-range:U+0000-024F,U+2000-206F,U+20AA}
+@font-face{font-family:Heebo;src:url(fonts/heebo-hebrew-500-normal.woff2);font-weight:500;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Heebo;src:url(fonts/heebo-latin-500-normal.woff2);font-weight:500;unicode-range:U+0000-024F,U+2000-206F,U+20AA}
+@font-face{font-family:Heebo;src:url(fonts/heebo-hebrew-700-normal.woff2);font-weight:700;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Heebo;src:url(fonts/heebo-latin-700-normal.woff2);font-weight:700;unicode-range:U+0000-024F,U+2000-206F,U+20AA}
+@font-face{font-family:Heebo;src:url(fonts/heebo-hebrew-800-normal.woff2);font-weight:800;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Heebo;src:url(fonts/heebo-latin-800-normal.woff2);font-weight:800;unicode-range:U+0000-024F,U+2000-206F,U+20AA}
+@font-face{font-family:Kar;src:url(fonts/karantina-hebrew-700-normal.woff2);font-weight:700;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Kar;src:url(fonts/karantina-latin-700-normal.woff2);font-weight:700;unicode-range:U+0000-024F,U+2000-206F}
+@font-face{font-family:Frank;src:url(fonts/frank-ruhl-libre-hebrew-900-normal.woff2);font-weight:900;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:Frank;src:url(fonts/frank-ruhl-libre-latin-900-normal.woff2);font-weight:900;unicode-range:U+0000-024F,U+2000-206F}
+
+:root{--navy:#17253F;--deep:#0C1524;--gold:#C6A03C;--gold2:#E6CB82;--cream:#F4EEE2;--paper:#FBF8F1;--ink:#18202E;--muted:#5E6676;--line:#DCCFB4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#333;font-family:Heebo,sans-serif;display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px 0}
+.slide{width:1080px;height:1350px;position:relative;overflow:hidden;display:flex;flex-direction:column;padding:56px 72px 48px}
+.dark{background:radial-gradient(120% 80% at 80% 0%,#22355A 0%,var(--navy) 45%,var(--deep) 100%);color:#fff}
+.light{background:var(--paper);color:var(--ink)}
+.light::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(23,37,63,.018) 0 2px,transparent 2px 6px);pointer-events:none}
+
+/* masthead strip */
+.top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3}
+.brand{display:flex;align-items:center;gap:16px;font-weight:800;font-size:27px;letter-spacing:.2px}
+.brand img{height:46px}
+.issue{font-size:22px;font-weight:500;opacity:.8;display:flex;gap:12px;align-items:center}
+.issue b{color:var(--gold);font-weight:700}
+.light .top{padding-bottom:22px;border-bottom:2px solid var(--navy)}
+.dark .top .brand{color:#fff}
+
+.kicker{display:flex;align-items:center;gap:16px;color:var(--gold);font-weight:800;font-size:26px;letter-spacing:1px}
+.kicker .n{font-family:Kar;font-size:44px;line-height:1}
+.kicker::after{content:"";flex:1;height:2px;background:linear-gradient(to left,var(--gold),transparent)}
+
+.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-size:19px;color:var(--muted);position:relative;z-index:3;gap:24px}
+.dark .foot{color:rgba(255,255,255,.62)}
+.foot .src{max-width:620px;line-height:1.4}
+.foot .pg{font-family:Kar;font-size:34px;color:var(--gold);line-height:1}
+.foot .site{font-weight:700;color:var(--navy)}
+.dark .foot .site{color:#fff}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.num.ltr{display:block}
+
+/* article slides */
+.art h2{font-family:Kar;font-weight:700;font-size:118px;line-height:.92;color:var(--navy);margin:24px 0 40px;text-wrap:balance}
+.art h2 em{font-style:normal;color:var(--gold)}
+.sec{margin-bottom:38px}
+.sec h3{display:inline-flex;align-items:center;gap:12px;font-size:33px;font-weight:800;color:var(--navy);margin-bottom:12px}
+.sec h3::before{content:"";width:14px;height:14px;background:var(--gold);transform:rotate(45deg)}
+.sec p{font-size:34px;line-height:1.55;color:var(--ink)}
+.sec p b{font-weight:700;color:var(--navy)}
+.you{background:var(--navy);color:#fff;border-radius:6px;padding:30px 36px 32px;position:relative}
+.you h3{color:var(--gold2)}
+.you h3::before{background:var(--gold2)}
+.you p{color:#EEF1F6}
+.you p b{color:var(--gold2)}
+.note{display:flex;gap:22px;align-items:center;border-top:2px solid var(--line);border-bottom:2px solid var(--line);padding:18px 0;margin-bottom:38px;font-size:30px;line-height:1.35;color:var(--ink)}
+.note .big{font-family:Kar;font-weight:700;font-size:84px;color:var(--gold);line-height:.9;white-space:nowrap}
+
+/* opener slides */
+.op .bgimg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0}
+.op .shade{position:absolute;inset:0;z-index:1}
+.op .body{position:relative;z-index:2;margin-top:auto;margin-bottom:34px}
+.op .num{font-family:Kar;font-weight:700;color:transparent;-webkit-text-stroke:3px var(--gold);line-height:.8;font-size:400px;letter-spacing:-4px;margin-bottom:22px}
+.op .num.fill{color:var(--gold);-webkit-text-stroke:0;background:linear-gradient(180deg,#F1D891,#C6A03C 60%,#9C7A25);-webkit-background-clip:text;background-clip:text;color:transparent}
+.op h2{font-family:Kar;font-weight:700;font-size:128px;line-height:.9;text-wrap:balance;margin:22px 0 26px}
+.op h2 em{font-style:normal;color:var(--gold)}
+.op .sub{font-size:33px;line-height:1.45;color:#DCE2EC;max-width:880px}
+
+/* cover */
+.cover .mast{font-family:Frank;font-weight:900;font-size:176px;line-height:.95;background:linear-gradient(180deg,#F6E3A6 0%,#D7B356 45%,#A9852C 100%);-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:58px;letter-spacing:-1px}
+.cover .tag{font-size:31px;font-weight:500;color:#E9EDF4;margin-top:10px;display:flex;gap:14px;align-items:center}
+.cover .tag i{width:8px;height:8px;background:var(--gold);transform:rotate(45deg);display:inline-block}
+.cover .lead{margin-top:auto;position:relative;z-index:2}
+.cover h1{font-family:Kar;font-weight:700;font-size:136px;line-height:.88;margin:18px 0 30px;text-wrap:balance}
+.cover h1 em{font-style:normal;color:var(--gold)}
+.cover ul{list-style:none;display:grid;gap:12px;margin-bottom:34px}
+.cover li{font-size:31px;font-weight:500;display:flex;gap:16px;align-items:center;color:#F1F3F7}
+.cover li::before{content:"";width:12px;height:12px;border:2px solid var(--gold);transform:rotate(45deg);flex:none}
+.byline{display:flex;align-items:center;gap:18px;border-top:2px solid rgba(198,160,60,.55);padding-top:22px;font-size:26px;color:#fff;font-weight:700;position:relative;z-index:2}
+.byline span{font-weight:400;color:rgba(255,255,255,.75)}
+
+/* split bar graphic */
+.split{display:flex;height:120px;border-radius:6px;overflow:hidden;margin-bottom:26px;font-family:Kar;font-weight:700;font-size:64px}
+.split div{display:flex;align-items:center;padding:0 26px}
+.split .a{flex:20;background:var(--gold);color:var(--deep)}
+.split .b{flex:80;background:rgba(255,255,255,.08);border:2px dashed rgba(230,203,130,.7);border-right:0;color:var(--gold2);justify-content:space-between}
+.split small{font-family:Heebo;font-size:24px;font-weight:500;color:#DCE2EC}
+
+/* chart */
+.chart{display:grid;gap:13px;margin:6px 0 30px}
+.row{display:grid;grid-template-columns:170px 1fr;align-items:center;gap:18px;font-size:28px;font-weight:500}
+.track{position:relative;height:58px}
+.track .mid{position:absolute;top:-6px;bottom:-6px;right:50%;width:2px;background:rgba(255,255,255,.35)}
+.bar{position:absolute;top:9px;height:40px;border-radius:3px;display:flex;align-items:center;font-weight:800;font-size:24px}
+.bar.neg{left:50%;background:linear-gradient(to left,#8C97AB,#C9D0DC);justify-content:flex-start;padding-left:10px;color:var(--deep)}
+.bar.pos{right:50%;background:linear-gradient(to right,#A9852C,#E6CB82);justify-content:flex-end;padding-right:10px;color:var(--deep)}
+.axis{display:flex;justify-content:space-between;font-size:20px;color:rgba(255,255,255,.6);margin:-4px 0 0 0;padding-right:188px}
+.dk .sec p{color:#E3E8F0}
+.dk .sec h3{color:#fff}
+.dk .sec p b{color:var(--gold2)}
+
+/* closing */
+.close .who{position:absolute;left:-30px;bottom:0;height:900px;z-index:1;filter:drop-shadow(0 20px 40px rgba(0,0,0,.45))}
+.close .glow{position:absolute;left:-200px;bottom:-200px;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(198,160,60,.28),transparent 65%);z-index:0}
+.close .txt{position:relative;z-index:2;width:560px;margin-top:70px}
+.close h2{font-family:Kar;font-weight:700;font-size:150px;line-height:.86;margin:18px 0 28px}
+.close h2 em{font-style:normal;color:var(--gold)}
+.close p{font-size:32px;line-height:1.5;color:#DCE2EC;margin-bottom:26px}
+.card{background:rgba(255,255,255,.06);border:2px solid rgba(198,160,60,.6);border-radius:8px;padding:26px 30px;display:grid;gap:10px;font-size:30px}
+.card b{font-size:34px;color:#fff}
+.card .ph{font-family:Kar;font-size:64px;color:var(--gold);line-height:1}
+.disc{font-size:21px;color:rgba(255,255,255,.55);margin-top:22px;line-height:1.45}
+</style>
+</head>
+<body>
+
+<!-- 01 COVER -->
+<section class="slide dark cover" id="s1">
+  <div class="op"><div class="bgimg" style="background-image:url(img/netanya-night.webp);background-position:center 30%"></div>
+  <div class="shade" style="background:linear-gradient(180deg,rgba(12,21,36,.9) 0%,rgba(12,21,36,.2) 34%,rgba(12,21,36,.35) 50%,rgba(12,21,36,.97) 74%,#0C1524 100%)"></div></div>
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">יקיר דבול · משרד עורכי דין</div><div class="issue"><b>גיליון #2</b> <span class="ltr">24-28.10.2026</span></div></div>
+  <div style="position:relative;z-index:2">
+    <div class="mast">מגזין הנדל״ן</div>
+    <div class="tag">החדשות של השבוע <i></i> מה הן אומרות לכם <i></i> בשפה פשוטה</div>
+  </div>
+  <div class="lead">
+    <div class="kicker">הסיפור המרכזי</div>
+    <h1>הקבלן איחר 13 חודשים: <em>הקונה יקבל 107,925 ש״ח</em></h1>
+    <ul>
+      <li>ההורים עוזרים לקנות דירה: מתנה, הלוואה או ערבות</li>
+      <li>שכרתם דירה בבניין בתמ״א? מתי אפשר לבטל</li>
+      <li>ארבעה סירבו לפינוי בינוי, ובית המשפט חייב אותם לחתום</li>
+      <li>הזיהום בשדה דב נמצא גם באזורים חדשים</li>
+    </ul>
+  </div>
+  <div class="byline"><img src="img/logo-d.png" alt="" style="height:40px">עו״ד יקיר דבול</div>
+</section>
+
+<!-- 02 STORY 1 ARTICLE -->
+<section class="slide light art" id="s2">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #2</b> <span class="ltr">24-28.10.2026</span></div></div>
+  <div style="margin-top:30px" class="kicker"><span class="n">01</span>קנייה מקבלן</div>
+  <h2>13 חודשי איחור: <em><span class="ltr">107,925</span> ש״ח לקונה</em></h2>
+  <div class="sec"><h3>מה קרה</h3>
+    <p>בית משפט השלום בתל אביב קבע שחברה יזמית תשלם לקונה דירה באריאל <b><span class="ltr">107,925</span> ש״ח</b>, ועוד הצמדה וריבית. הדירה הייתה אמורה להימסר ב־30.6.2021, והמפתח ניתן רק ב־1.8.2022. החברה טענה שסוכם בעל פה לדחות את המסירה, אבל לא הביאה שום מסמך.</p></div>
+  <div class="note"><span class="big">פי 1.5</span><span>שכר הדירה החודשי, על כל אחד מ־8 החודשים הראשונים של האיחור. אחר כך פי 1.25 לכל חודש.</span></div>
+  <div class="sec you"><h3>מה זה אומר לכם</h3>
+    <p>קבלן מאחר? <b>הפיצוי קבוע בחוק המכר</b>, והוא לא תלוי ברצון הטוב של הקבלן. כל שינוי במועד המסירה צריך להיות <b>בכתב</b>. אל תסכימו לדחייה בשיחה, ואל תחתמו על ויתור לפני שבודקים.</p></div>
+  <div class="foot"><div class="src">מקור: ביזפורטל 27.10.2026, בית משפט השלום בתל אביב</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">2/10</div></div>
+</section>
+
+<!-- 03 STORY 2 OPENER -->
+<section class="slide dark op" id="s3">
+  <div class="bgimg" style="background-image:url(img/bgfooter.jpg);filter:grayscale(.4) brightness(.55)"></div>
+  <div class="shade" style="background:linear-gradient(180deg,rgba(12,21,36,.55) 0%,rgba(12,21,36,.78) 40%,#0C1524 78%)"></div>
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #2</b> <span class="ltr">24-28.10.2026</span></div></div>
+  <div class="body">
+    <div class="kicker"><span class="n">02</span>הון עצמי ומשכנתא</div>
+    <div class="num fill ltr" style="margin-top:30px">25%</div>
+    <h2>ההורים עוזרים לקנות דירה. <em>איך עושים את זה נכון?</em></h2>
+    <div class="sub">בדירה ראשונה המימון המקובל הוא עד כ־75% משווי הדירה. את השאר צריך להביא מהבית, ורבים נעזרים בהורים.</div>
+  </div>
+  <div class="foot"><div class="src">מקור: ביזפורטל 27.10.2026</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">3/10</div></div>
+</section>
+
+<!-- 04 STORY 2 ARTICLE -->
+<section class="slide light art" id="s4">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #2</b> <span class="ltr">24-28.10.2026</span></div></div>
+  <div style="margin-top:30px" class="kicker"><span class="n">02</span>הון עצמי ומשכנתא</div>
+  <h2>מתנה, הלוואה <em>או ערבות?</em></h2>
+  <div class="sec"><h3>מה קרה</h3>
+    <p>על דירה של 2 מיליון ש״ח צריך כ־<b><span class="ltr">500,000</span> ש״ח</b> הון עצמי, ועוד מס רכישה, שמאי ועורך דין. לכן זוגות צעירים רבים נעזרים בהורים: <b>מתנה</b>, <b>הלוואה</b> בתוך המשפחה, או <b>ערבות</b> למשכנתא.</p></div>
+  <div class="note"><span class="big ltr">75%</span><span>המימון המקובל בדירה ראשונה. את השאר מביאים מהון עצמי.</span></div>
+  <div class="sec you"><h3>מה זה אומר לכם</h3>
+    <p>מתנה צריך <b>לתעד בכתב</b>, כדי שהבנק ורשות המסים יבינו שזו לא הלוואה. הורה שחותם <b>כערב</b> אחראי לחוב אם הילדים לא משלמים. כדאי לסכם הכול מראש בהסכם כתוב בתוך המשפחה.</p></div>
+  <div class="foot"><div class="src">מקור: ביזפורטל 27.10.2026</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">4/10</div></div>
+</section>
+
+<!-- 05 STORY 3 OPENER -->
+<section class="slide dark op" id="s5">
+  <div class="bgimg" style="background-image:url(img/netanya-night.webp);background-position:center 75%;filter:brightness(.8)"></div>
+  <div class="shade" style="background:linear-gradient(180deg,rgba(12,21,36,.75) 0%,rgba(12,21,36,.35) 30%,rgba(12,21,36,.85) 55%,#0C1524 80%)"></div>
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #2</b> <span class="ltr">24-28.10.2026</span></div></div>
+  <div class="body">
+    <div class="kicker"><span class="n">03</span>שכירות</div>
+    <div class="num" style="margin-top:30px;font-size:250px">תמ״א <span class="ltr" style="display:inline">38</span></div>
+    <h2>שכרתם דירה בבניין בשיפוץ? <em>מתי אפשר לבטל</em></h2>
+    <div class="sub">שוכר מצא בדירה פועלים, קורות תמיכה ועובש. בית המשפט קבע שהיה מותר לו לבטל את החוזה.</div>
+  </div>
+  <div class="foot"><div class="src">מקור: ביזפורטל 26.10.2026</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">5/10</div></div>
+</section>
+
+<!-- 06 STORY 3 ARTICLE -->
+<section class="slide light art" id="s6">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #2</b> <span class="ltr">24-28.10.2026</span></div></div>
+  <div style="margin-top:30px" class="kicker"><span class="n">03</span>שכירות</div>
+  <h2>לדעת על השיפוץ <em>זה לא להסכים להכול</em></h2>
+  <div class="sec"><h3>מה קרה</h3>
+    <p>השוכר ידע שבבניין יש תמ״א 38, וזה נכתב בחוזה. אבל בתחילת השכירות פועלים קדחו בתוך הדירה והתקינו קורות תמיכה בשני חדרים, והיו גם עובש, חלון שבור ותריסים פגועים. בית המשפט לתביעות קטנות קבע: <b>הפרה יסודית</b>.</p></div>
+  <div class="note"><span class="big ltr">5,980</span><span>ש״ח יחזירו המשכירים: שכר דירה, הובלה ומכתב עורך דין</span></div>
+  <div class="sec you"><h3>מה זה אומר לכם</h3>
+    <p>שוכרים בבניין עם עבודות: לכתוב בחוזה <b>מה מותר לעשות בתוך הדירה</b> ומתי. משכירים: לתקן ליקויים מהר ולתעד. הסכמה כללית לעבודות היא <b>לא הסכמה לכל הפרעה</b>.</p></div>
+  <div class="foot"><div class="src">מקור: ביזפורטל 26.10.2026, בית המשפט לתביעות קטנות בראשון לציון</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">6/10</div></div>
+</section>
+
+<!-- 07 STORY 4 OPENER -->
+<section class="slide dark op" id="s7" style="background:radial-gradient(90% 60% at 20% 20%,#2A3F66 0%,var(--navy) 40%,var(--deep) 100%)">
+  <svg style="position:absolute;inset:0;z-index:0;opacity:.13" width="1080" height="1350"><defs><pattern id="g" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#E6CB82" stroke-width="1"/></pattern></defs><rect width="1080" height="1350" fill="url(#g)"/></svg>
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #2</b> <span class="ltr">24-28.10.2026</span></div></div>
+  <div class="body">
+    <div class="kicker"><span class="n">04</span>התחדשות עירונית</div>
+    <div class="num fill ltr" style="margin-top:30px;font-size:330px">28/32</div>
+    <div class="split" dir="rtl"><div class="a" style="flex:28;gap:18px">28<small style="color:var(--deep);font-weight:700;font-size:28px">חתמו</small></div><div class="b" style="flex:4;justify-content:center">4</div></div>
+    <h2>ארבעה סירבו. <em>בית המשפט חייב אותם לחתום</em></h2>
+    <div class="sub">בפרויקט פינוי בינוי בגבעתיים חתמו בעלי 28 דירות מתוך 32. ארבעת הסרבנים צריכים לחתום תוך 30 יום.</div>
+  </div>
+  <div class="foot"><div class="src">מקור: ביזפורטל 27.10.2026</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">7/10</div></div>
+</section>
+
+<!-- 08 STORY 4 ARTICLE -->
+<section class="slide light art" id="s8">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #2</b> <span class="ltr">24-28.10.2026</span></div></div>
+  <div style="margin-top:30px" class="kicker"><span class="n">04</span>התחדשות עירונית</div>
+  <h2>שוויון זה לא <em>אותה תמורה לכולם</em></h2>
+  <div class="sec"><h3>מה קרה</h3>
+    <p>בית המשפט המחוזי בתל אביב קבע שהסירוב <b>לא סביר</b>. במקום 32 דירות ייבנו 92 דירות במגדל של כ־20 קומות. לפי השמאי של בית המשפט, בעלי הדירות הקטנות מקבלים תוספת של כ־10 מ״ר.</p></div>
+  <div class="note"><span class="big ltr">40,000</span><span>ש״ח הוצאות משפט. אם לא יחתמו, עורכי דין מטעם בית המשפט יחתמו במקומם.</span></div>
+  <div class="sec you"><h3>מה זה אומר לכם</h3>
+    <p>סירוב לחתום הוא <b>לא מיקוח בלי סיכון</b>. מי שמסרב בלי סיבה סבירה יכול להיות מחויב לחתום ולשלם הוצאות. יש לכם טענה על התמורה? להעלות אותה מוקדם, <b>עם שמאי</b> ודרך עורך הדין של הדיירים.</p></div>
+  <div class="foot"><div class="src">מקור: ביזפורטל 27.10.2026, בית המשפט המחוזי בתל אביב</div><div><span class="site">dabullaw.co.il</span></div><div class="pg">8/10</div></div>
+</section>
+
+<!-- 09 STORY 5 DATA -->
+<section class="slide dark dk" id="s9">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #2</b> <span class="ltr">24-28.10.2026</span></div></div>
+  <div style="margin-top:30px" class="kicker"><span class="n">05</span>קרקע ותכנון</div>
+  <h2 style="font-family:Kar;font-size:100px;line-height:.92;margin:18px 0 22px">הזיהום בשדה דב <em style="font-style:normal;color:var(--gold)">מתרחב</em></h2>
+  <p style="font-size:27px;color:#C9D1DD;margin-bottom:18px">פי כמה מעל הסף המותר נמצא החומר המזהם, לפי אזורים שנבדקו. שלושת האזורים התחתונים לא סומנו קודם כחשודים.</p>
+  <div class="chart">
+    <div class="row"><span>אזור 303</span><div class="track"><div class="bar pos" style="right:0;justify-content:flex-start;padding:0 16px;width:100%"><span>פי 600</span></div></div></div>
+    <div class="row"><span>אזור 301</span><div class="track"><div class="bar pos" style="right:0;justify-content:flex-start;padding:0 16px;width:70%"><span>פי 100</span></div></div></div>
+    <div class="row"><span>אזור 2270</span><div class="track"><div class="bar pos" style="right:0;justify-content:flex-start;padding:0 16px;width:48%"><span>פי 25</span></div></div></div>
+    <div class="row"><span>אזור 2255</span><div class="track"><div class="bar pos" style="right:0;justify-content:flex-start;padding:0 16px;width:40%"><span>פי 15</span></div></div></div>
+    <div class="row"><span>אזור 2206</span><div class="track"><div class="bar pos" style="right:0;justify-content:flex-start;padding:0 16px;width:34%"><span>פי 10</span></div></div></div>
+  </div>
+  <div class="sec" style="margin-bottom:0"><h3>מה זה אומר לכם</h3>
+    <p>בשכונה מתוכננות כ־16,000 דירות, וקרקע לכ־7,000 כבר נמכרה. משרד הגנת הסביבה הורה להרחיב את הבדיקות ויבחן כל מגרש בנפרד. קניתם או שוקלים לקנות שם? <b>לשאול את היזם מה מצב בדיקות הקרקע</b> במגרש, ולבדוק בחוזה מה קורה אם יש עיכוב.</p></div>
+  <div class="foot"><div class="src">מקור: כלכליסט 25.10.2026, סקרי קרקע של משרד הגנת הסביבה. הגרף אינו בקנה מידה מלא</div><div class="pg">9/10</div></div>
+</section>
+
+<!-- 10 CLOSING -->
+<section class="slide dark close" id="s10">
+  <div class="glow"></div>
+  <img class="who" src="img/yakir-cutout.webp" alt="">
+  <div class="top"><div class="brand"><img src="img/logo-d.png" alt="">מגזין הנדל״ן</div><div class="issue"><b>גיליון #2</b> <span class="ltr">24-28.10.2026</span></div></div>
+  <div class="txt">
+    <div class="kicker">נתראה בשבוע הבא</div>
+    <h2>המגזין יוצא <em>בכל יום שישי</em></h2>
+    <p>עקבו אחרינו כדי לקבל כל שבוע את החדשות החשובות בנדל״ן, במיסוי ובהתחדשות עירונית, ומה הן אומרות לכם.</p>
+    <div class="card">
+      <b>עו״ד יקיר דבול</b>
+      <span>רזיאל 1, נתניה</span>
+      <span class="ph ltr">09-8613413</span>
+      <span class="ltr" style="font-weight:700">dabullaw.co.il</span>
+    </div>
+    <div class="disc">המידע במגזין כללי ואינו ייעוץ משפטי. לפני החלטה בעסקה, כדאי להתייעץ עם עורך דין.</div>
+  </div>
+  <div class="foot" style="justify-content:flex-end"><div class="pg">10/10</div></div>
+</section>
+
+</body>
+</html>
