@@ -310,7 +310,8 @@ async function pollSource(src: Any) {
       const t = norm(all);
       return {
         source_id: src.id, guid: x.guid, url: x.url || null, title: x.title, body: x.body || null, published_at: x.published_at || null,
-        backfill: first, places, is_local: local, topic: topicOf(t, src.id), sensitivity: sensitivityOf(t), urgent: urgentOf(src.id, t, local),
+        // 28.10.2026: on a source's first run only old items are backfill; anything from the last 6 hours is real news to cover
+        backfill: first && !(x.published_at && Date.parse(x.published_at) > Date.now() - 6 * 3600e3), places, is_local: local, topic: topicOf(t, src.id), sensitivity: sensitivityOf(t), urgent: urgentOf(src.id, t, local),
         ...((x as GRaw).outlet !== undefined ? { outlet: (x as GRaw).outlet || null, outlet_url: (x as GRaw).outlet_url || null } : {}),
       };
     });

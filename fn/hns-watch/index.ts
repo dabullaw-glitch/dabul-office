@@ -12,7 +12,7 @@
 //   5. collect_stopped     hns-collect has not polled any source for 10 minutes.
 //      write_stuck         local items waited more than 40 minutes without being grouped by hns-write.
 //      publish_stuck       routine drafts wait more than 20 minutes with no decision by hns-publish.
-//      http_errors         3 or more failed calls (HTTP 5xx or timeout) by the scheduled jobs in the last 30 minutes.
+//      http_errors         3 or more failed calls of our own functions (JSON answers) in 30 minutes, one of them in the last 10.
 // POST (x-cron-secret): {action:'tick'} check and send.  {action:'check'} check only, return the issues, send nothing.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
@@ -44,7 +44,7 @@ async function checks(): Promise<Issue[]> {
   const active = (srcs || []).filter((s: Any) => s.role !== 'competitor' && (s.enabled || (s.kind === 'html' && !/\bpaused\b/.test(s.notes || ''))));
   for (const s of active) {
     if ((s.fails || 0) >= 5) {
-      out.push({ key: `source_failing:${s.id}`, text: `המקור "${s.name_he}" נכשל ${s.fails} פעמים ברצף (${String(s.last_error || '').slice(0, 120)}). הצלחה אחרונה: לפני ${ago(mins(s.last_ok))}.` });
+      out.push({ key: `source_failing:${s.id}`, text: `המקור "${s.name_he}" נכשל ${s.fails} פעמים ברצף${/403|denied|moment/i.test(String(s.last_error || '')) ? ' (האתר חוסם אותנו)' : /404|410/.test(String(s.last_error || '')) ? ' (הכתובת כבר לא קיימת)' : ''}. הצלחה אחרונה: לפני ${ago(mins(s.last_ok))}.` });
       continue;
     }
     if (Number(s.n14) >= 8 && s.last_item) {
@@ -79,7 +79,8 @@ async function checks(): Promise<Issue[]> {
       out.push({ key: 'site_stale', text: `האתר לא מתעדכן: הידיעה "${String(p.title).slice(0, 80)}" פורסמה לפני ${ago(mins(p.published_at))} ועדיין לא מופיעה באתר. בנייה אחרונה של האתר: לפני ${ago(mins(j.at))}.` });
     }
   } catch (e) {
-    out.push({ key: 'site_down', text: `לא הצלחתי לקרוא את האתר (${String((e as Error).message || e).slice(0, 80)}).` });
+    const m = String((e as Error).message || e);
+    out.push({ key: 'site_down', text: `לא הצלחתי לקרוא את האתר (${/timeout|abort/i.test(m) ? 'האתר לא ענה בזמן' : /HTTP (\d+)/.test(m) ? `קוד שגיאה ${m.match(/HTTP (\d+)/)![1]}` : 'שגיאת חיבור'}).` });
   }
 
   // 5 the pipeline functions
@@ -92,10 +93,15 @@ async function checks(): Promise<Issue[]> {
     .gte('created_at', new Date(now - 24 * 3600e3).toISOString()).lte('created_at', new Date(now - 20 * 60e3).toISOString()).not('title', 'is', null);
   if ((stuckDrafts || 0) >= 2) out.push({ key: 'publish_stuck', text: `${stuckDrafts} טיוטות רגילות מחכות יותר מ-20 דקות בלי החלטה של שלב הפרסום.` });
   const { data: http } = await sb.rpc('hns_watch_http', { since: new Date(now - 30 * 60e3).toISOString() });
-  const fails = (http || []).filter((x: Any) => !/"ok"\s*:\s*true/.test(x.content || ''));
-  if (fails.length >= 3) {
-    const sample = [...new Set(fails.map((x: Any) => (x.timed_out ? 'לא ענתה בזמן' : `${x.status_code || ''} ${String(x.content || x.error_msg || '').replace(/\s+/g, ' ').slice(0, 70)}`).trim()))].slice(0, 3);
-    out.push({ key: 'http_errors', text: `${fails.length} קריאות לפונקציות המערכת נכשלו בחצי השעה האחרונה. דוגמאות: ${sample.join(' | ')}` });
+  // 28.10.2026: only our own functions count. They always answer in JSON; an HTML or XML error page (a news site that blocks
+  // us or has no feed) or a timeout of an outside site is a source problem, covered by checks 1-2. A short burst while a
+  // function is being updated is normal, so the alert needs 3 failures in 30 minutes AND one in the last 10 minutes.
+  const fails = (http || []).filter((x: Any) => /^\s*\{/.test(x.content || '') && !/"ok"\s*:\s*true/.test(x.content || ''));
+  const recent = fails.filter((x: Any) => Date.parse(x.created) > now - 10 * 60e3);
+  if (fails.length >= 3 && recent.length) {
+    const why = (x: Any) => /BOOT_ERROR/.test(x.content) ? 'פונקציה לא הצליחה לעלות' : /WORKER_LIMIT|resource/i.test(x.content) ? 'פונקציה חרגה ממגבלת זיכרון או זמן' : 'שגיאת שרת';
+    const sample = [...new Set(fails.map(why))].slice(0, 3);
+    out.push({ key: 'http_errors', text: `${fails.length} פעולות אוטומטיות של המערכת נכשלו בחצי השעה האחרונה (${sample.join(', ')}). אני בודק ומטפל.` });
   }
   return out;
 }
