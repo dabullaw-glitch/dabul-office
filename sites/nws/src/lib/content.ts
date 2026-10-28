@@ -137,6 +137,17 @@ export const EVENT: SiteEvent | null = ev0 && ev0.title && (!ev0.endsAt || Date.
   ...ev0, title: clean(ev0.title), tag: clean(ev0.tag), stat1: clean(ev0.stat1), stat1Label: clean(ev0.stat1Label), stat2: clean(ev0.stat2), stat2Label: clean(ev0.stat2Label),
   ctaText: clean(ev0.ctaText), ctaUrl: String(ev0.ctaUrl || ''), storyIds: (ev0.storyIds || []).map(Number), block: ev0.block || {},
 } : null;
+// 28.10.2026: official flashes (Home Front Command, MDA, IMS warnings, police) and the events calendar, from hns-feed.
+// A flash older than its ttl (hours) is dropped at build time; the browser drops it too and refreshes the list every minute.
+export interface Flash { id: number; at: string; text: string; source: string; url: string; kind: string; ttl: number }
+export const FLASHES: Flash[] = (FEED_JSON.flashes || []).map((f: any) => ({ ...f, text: clean(f.text) }))
+  .filter((f: Flash) => f.text && Date.now() - Date.parse(f.at) < (Number(f.ttl) || 12) * 3600e3);
+export interface CalItem { id: number; title: string; start: string; venue: string; url: string; source: string }
+export const CALENDAR: CalItem[] = (FEED_JSON.calendar || []).map((c: any) => ({ ...c, title: clean(c.title), venue: clean(c.venue) }))
+  .filter((c: CalItem) => c.title && Date.parse(c.start) > Date.now() - 3 * 3600e3);
+/** time of a calendar item, or '' when the listing gave only a date (stored as 00:00) */
+export const calTime = (iso: string) => { const t = fmtTime(iso); return t === '00:00' ? '' : t; };
+export const calVenue = (c: CalItem) => c.venue.replace(/^היכל התרבות העירוני נתניה\s*-\s*/, '');
 // sea and weather snapshot (scripts/live.mjs, Open-Meteo); the browser refreshes it
 export const LIVE: { ok: boolean; at?: string; wave?: number | null; sst?: number | null; temp?: number | null; wind?: number | null; code?: number | null } = readJson('live.json', { ok: false });
 

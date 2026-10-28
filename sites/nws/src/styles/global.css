@@ -371,3 +371,17 @@ a.tagc:hover{background:#D9E8FB;color:var(--deep)}
  .wid .wh{height:84px}.wid .big{font-size:32px}
  .prem h2{font-size:27px}.prem p{font-size:14.5px}
 }
+/* 28.10.2026: official flashes list (/flash/) and the events calendar (/events/) */
+.flist{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.flist li{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:16px;line-height:1.55}
+.flist time{flex:none;min-width:48px;color:var(--red);font-weight:700;font-family:var(--h)}
+.flist b{margin-inline-end:4px}
+.flist a{color:#0B5FCC;font-size:14px;white-space:nowrap}
+.cal{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.cald{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.cald h3{font-size:16px;margin:0 0 8px;color:#B0245F}
+.cald ul{list-style:none;margin:0;padding:0}
+.cald li{display:flex;gap:12px;padding:8px 0;border-top:1px solid #EEF1F5;font-size:15px;line-height:1.45}
+.cald li:first-child{border-top:0}
+.cald time{flex:none;min-width:44px;font-weight:700;font-family:var(--h)}
+.cald small{display:block;color:#5B6573;font-size:13px}

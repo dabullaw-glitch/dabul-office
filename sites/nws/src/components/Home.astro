@@ -10,6 +10,7 @@ import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
 import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtDate, fmtShort, fmtDay, FACTS, EVENT, LIVE, leadOf, readMin, kickerOf, picOf, placesOf, placeUrl, type Article } from '../lib/content';
 import { shabbatTimes } from '../lib/shabbat';
+import { CALENDAR, calTime, calVenue } from '../lib/content';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -56,6 +57,8 @@ const re = all.filter((a) => a.section === 'realestate' && !used.has(a.slug));
 const colAll = (['community', 'sports', 'sharon', 'city', 'tourism', 'law'] as const).filter((k) => all.some((a) => a.section === k && !used.has(a.slug)));
 const colKeys = colAll.slice(0, colAll.length >= 6 ? 6 : 3); // full rows of three
 const events = all.filter((a) => a.section === 'leisure' || a.event).slice(0, 4);
+// 28.10.2026: the next events from the official calendar fill the "what's on" block when there are fewer than 4 stories
+const calNext = he ? CALENDAR.slice(0, Math.max(0, 4 - events.length)) : [];
 const sh = shabbatTimes(new Date(), 1)[0];
 const hotline = FACTS?.hotline?.number ?? FACTS?.municipalHotline?.number ?? '106';
 const L = {
@@ -195,11 +198,12 @@ const jsonld = [
       </div>); })}
   </div></section>)}
 
-  {events.length > 0 && (
+  {(events.length > 0 || calNext.length > 0) && (
   <section class="dark" aria-labelledby="ev-h"><div class="wrap in">
     <h2 id="ev-h">{L.eventsTitle}</h2>
     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
       {events.map((a) => { const p = picOf(a, IMG); return <a class="vcard" href={articleUrl(a, lang)}><img src={p.ai ? p.small : (IMG[a.imageHint] ?? IMG.concert).src} alt={p.ai ? p.alt : ''} width="400" height="500" loading="lazy" decoding="async">{p.ai && <i class="ill">{L.ill}</i>}<span><b>{a.title}</b><small>{a.event?.startDate ? fmtDate(a.event.startDate, lang) : fmtDate(a.published, lang)}{a.event?.location ? ` · ${a.event.location}` : ''}</small></span></a>; })}
+          {calNext.map((c) => <a class="vcard" href="/events/#cal"><img src={IMG.concert.src} alt="" width="400" height="500" loading="lazy" decoding="async"><span><b>{c.title}</b><small>{fmtDate(c.start, lang)}{calTime(c.start) ? `, ${calTime(c.start)}` : ''}{calVenue(c) ? ` · ${calVenue(c)}` : ''}</small></span></a>)}
     </div>
   </div></section>)}
 

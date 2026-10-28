@@ -239,7 +239,7 @@ async function tick() {
       const allIds = [...new Set([...(st?.item_ids || []), ...ids])];
       const corroborates = st && st.state === 'needs_check' && /רמז בלבד/.test(st.notes || '') && g.items.some((x) => src[x.source_id].role === 'source');
       if (!corroborates) {
-        await sb.from('hns_stories').update({ item_ids: allIds, updated_at: new Date().toISOString(), ...(/^auto:/.test(st?.notes || '') ? {} : { notes: 'נוסף מקור חדש, כדאי לעדכן' }) }).eq('id', g.story);
+        await sb.from('hns_stories').update({ item_ids: allIds, updated_at: new Date().toISOString(), ...(/^auto:|רמז/.test(st?.notes || '') ? {} : { notes: 'נוסף מקור חדש, כדאי לעדכן' }) }).eq('id', g.story);
         res.push({ story: g.story, attached: ids.length });
         continue;
       }

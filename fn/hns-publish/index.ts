@@ -215,8 +215,8 @@ async function decide(data: string, cq: Any) {
   const problem = voiceProblem(st);
   if (problem) { await answer('אי אפשר לפרסם כך, הידיעה תיכתב מחדש'); await edit(`⏸ לא פורסם עדיין: ${clean(st.title)}\n${problem}. הידיעה תיכתב מחדש בניסוח שלנו.`); await askRewrite(st); return { ok: false, error: problem }; }
   await publish(st, 'yakir');
-  await answer('פורסם ✓ יופיע באתר תוך כרבע שעה');
-  await edit(`✅ פורסם: ${clean(st.title)}\nיופיע באתר תוך כרבע שעה.`);
+  await answer('פורסם ✓ יופיע באתר תוך כמה דקות');
+  await edit(`✅ פורסם: ${clean(st.title)}\nיופיע באתר תוך כמה דקות.`);
   return { ok: true, published: id };
 }
 

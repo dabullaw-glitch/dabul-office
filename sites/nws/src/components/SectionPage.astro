@@ -6,7 +6,7 @@ import { IMG, SITE_URL, LANG_PREFIX, LANGS, type Lang } from '../data/site';
 import { SECTION_BY_KEY, type SectionKey } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
-import { articlesFor, articleUrl, sectionUrl, fmtDate, fmtTime, fmtDay, placesOf, placeUrl, picOf, kickerOf, readMin } from '../lib/content';
+import { articlesFor, articleUrl, sectionUrl, fmtDate, fmtTime, fmtDay, fmtShort, placesOf, placeUrl, picOf, kickerOf, readMin, FLASHES, CALENDAR, calTime, calVenue } from '../lib/content';
 
 interface Props { lang: Lang; k: SectionKey }
 const { lang, k } = Astro.props;
@@ -22,6 +22,17 @@ const places = [...new Map(items.flatMap((a) => placesOf(a)).map((p) => [p.slug,
 const cats = CATEGORIES.filter((c) => c.sections.includes(k)).slice(0, 6);
 const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name, url: SITE_URL + path, description: desc, inLanguage: lang, isPartOf: { '@id': SITE_URL + '/#website' },
   mainEntity: { '@type': 'ItemList', itemListElement: items.slice(0, 20).map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a, lang), name: a.title })) } }];
+// 28.10.2026: the flash page lists the official flashes of the last hours; the events page holds the events calendar
+const he = lang === 'he';
+const flashes = he && k === 'flash' ? FLASHES : [];
+const cal = he && k === 'leisure' ? CALENDAR.slice(0, 60) : [];
+const calDays = [...new Map(cal.map((c) => [new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date(c.start)), 0])).keys()];
+const dayName = (ymd: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(ymd + 'T12:00:00Z'));
+const ilDayOf = (iso: string) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date(iso));
+const todayIl = ilDayOf(new Date().toISOString());
+const ftm = (iso: string) => (ilDayOf(iso) === todayIl ? fmtTime(iso) : fmtShort(iso));
+if (cal.length) jsonld.push(...cal.slice(0, 20).map((c) => ({ '@context': 'https://schema.org', '@type': 'Event', name: c.title, startDate: c.start, eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled', location: { '@type': 'Place', name: c.venue || c.source, address: { '@type': 'PostalAddress', addressLocality: 'נתניה', addressCountry: 'IL' } }, url: c.url, organizer: { '@type': 'Organization', name: c.source } })) as any);
 const first = items[0];
 const fp = first ? picOf(first, IMG) : null;
 ---
@@ -35,6 +46,19 @@ const fp = first ? picOf(first, IMG) : null;
     </div>
   </section>
   <div class="wrap" style="padding-top:28px">
+    {he && k === 'flash' && (
+      <section class="sec flists" id="official" aria-labelledby="of-h" style="padding-top:0">
+        <h2 id="of-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>מבזקים רשמיים מהשעות האחרונות</h2>
+        <p class="note" style="margin:0 0 10px">מד״א, השירות המטאורולוגי, המשטרה ופיקוד העורף, רק מה שנוגע לנתניה ולשרון. מתעדכן כל דקה.</p>
+        <ol class="flist" data-flist>{flashes.map((f) => <li id={`f${f.id}`}><time datetime={f.at}>{ftm(f.at)}</time><span><b>{f.source}</b> {f.text}{f.url && <> <a href={f.url} rel="noopener nofollow" target="_blank">למקור</a></>}</span></li>)}</ol>
+        <p class="note" data-fempty hidden={flashes.length > 0}>כרגע לא פורסמו כאן מבזקים רשמיים מהשעות האחרונות. התרעות פיקוד העורף בזמן אמת מתקבלות באפליקציה ובאתר של פיקוד העורף.</p>
+      </section>)}
+    {cal.length > 0 && (
+      <section class="sec" id="cal" aria-labelledby="cal-h" style="padding-top:0">
+        <h2 id="cal-h" class="sh" style={`--c:${s.color}`}><span class="bar"></span>לוח האירועים בנתניה</h2>
+        <p class="note" style="margin:0 0 10px">מתוך לוח האירועים הרשמי של היכל התרבות נתניה. מתעדכן אוטומטית כמה פעמים ביום.</p>
+        <div class="cal">{calDays.map((d) => <div class="cald"><h3>{dayName(d)}</h3><ul>{cal.filter((c) => ilDayOf(c.start) === d).map((c) => <li><time datetime={c.start}>{calTime(c.start) || 'כל היום'}</time><span><a href={c.url} rel="noopener nofollow" target="_blank">{c.title}</a>{calVenue(c) && <small>{calVenue(c)}</small>}</span></li>)}</ul></div>)}</div>
+      </section>)}
     {items.length === 0 && <p class="note">{lang === 'he' ? 'הכתבות הראשונות במדור יעלו בקרוב.' : u.liveSoon}</p>}
     {first && (
       <article class="lead" style={`padding-top:0;--c:${s.color}`}>

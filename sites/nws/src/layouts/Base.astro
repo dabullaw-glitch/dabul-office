@@ -3,7 +3,7 @@ import '../styles/global.css';
 import { SITE_URL, PREVIEW, LANGS, LANG_PREFIX, LANG_LOCALE, LANG_DIR, BRAND, TG_URL, type Lang } from '../data/site';
 import { SECTIONS } from '../data/sections';
 import { t } from '../i18n/ui';
-import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, EVENT, LIVE, hebrewDate } from '../lib/content';
+import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, EVENT, LIVE, hebrewDate, FLASHES } from '../lib/content';
 
 interface Crumb { name: string; href: string }
 interface Props {
@@ -20,8 +20,13 @@ const alts = Object.entries(alternates) as [Lang, string][];
 const pre = LANG_PREFIX[lang];
 // ticker: the latest flash items (or the latest stories when there are no flash items)
 const pool0 = articlesFor(lang);
+// 28.10.2026: official flashes (hns-feed) first, together with the flash section stories, newest first; when there are fewer than 2,
+// the latest stories. The browser refreshes the official flashes every minute (script at the end of the page).
 const flashOnly = pool0.filter((a) => a.section === 'flash');
-const tickerItems = (flashOnly.length >= 2 ? flashOnly : pool0).slice(0, 6);
+type Tick = { at: string; text: string; href: string; src?: string };
+const tk0: Tick[] = [...(lang === 'he' ? FLASHES.map((f) => ({ at: f.at, text: f.text, href: `/flash/#f${f.id}`, src: f.source })) : []),
+  ...flashOnly.map((a) => ({ at: a.published, text: a.title, href: articleUrl(a, lang) }))].sort((x, y) => Date.parse(y.at) - Date.parse(x.at));
+const tickerItems: Tick[] = (tk0.length >= 2 ? tk0 : pool0.map((a) => ({ at: a.published, text: a.title, href: articleUrl(a, lang) }))).slice(0, 8);
 const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
 const tickTime = (iso: string) => (ilDay(new Date(iso)) === ilDay(new Date()) ? fmtTime(iso) : fmtShort(iso));
 const hdate = lang === 'he' ? hebrewDate() : '';
@@ -139,14 +144,14 @@ window.nwsTrack=function(n,p){try{gtag('event',n,p||{})}catch(e){}};</script>
 {tickerItems.length > 0 && (
 <div class="tk"><div class="wrap">
   <span class="lb">{u.flash}</span>
-  <div class="vp"><ul>{[...tickerItems, ...tickerItems].map((a, i) => <li aria-hidden={i >= tickerItems.length ? 'true' : undefined}><a href={articleUrl(a, lang)} tabindex={i >= tickerItems.length ? -1 : undefined}><b>{tickTime(a.published)}</b> {a.title}</a></li>)}</ul></div>
+  <div class="vp"><ul data-tk={lang === 'he' ? '1' : undefined}>{[...tickerItems, ...tickerItems].map((a, i) => <li aria-hidden={i >= tickerItems.length ? 'true' : undefined} data-at={a.at}><a href={a.href} tabindex={i >= tickerItems.length ? -1 : undefined}><b>{tickTime(a.at)}</b> {a.src ? `${a.src}: ` : ''}{a.text}</a></li>)}</ul></div>
 </div></div>)}
 <main id="main"><slot /></main>
 <footer class="ft">
   <div class="wrap cols">
     <div><span class="mk">NWS<i>.</i></span><span>{u.footAbout}</span></div>
-    <div><b>{u.sectionsH}</b>{SECTIONS.slice(0, 6).map((s) => <a href={sectionUrl(s.key, lang)}>{s.name[lang]}</a>)}</div>
-    <div><b>{u.usefulH}</b><a href={`${pre}/now/`}>{u.now}</a>{lang === 'he' && <><a href="/now/pharmacy/">בית מרקחת תורן</a><a href="/now/shabbat/">זמני שבת בנתניה</a><a href="/now/beaches/">החופים של נתניה</a><a href="/now/phones/">טלפונים חיוניים</a></>}<a href={`${pre}/directory/`}>{u.directory}</a></div>
+    <div><b>{u.sectionsH}</b>{SECTIONS.map((s) => <a href={sectionUrl(s.key, lang)}>{s.name[lang]}</a>)}</div>
+    <div><b>{u.usefulH}</b><a href={`${pre}/now/`}>{u.now}</a>{lang === 'he' && <><a href="/now/pharmacy/">בית מרקחת תורן</a><a href="/now/shabbat/">זמני שבת בנתניה</a><a href="/now/beaches/">החופים של נתניה</a><a href="/now/phones/">טלפונים חיוניים</a><a href="/events/#cal">לוח אירועים בנתניה</a><a href="/flash/#official">מבזקים רשמיים</a></>}<a href={`${pre}/directory/`}>{u.directory}</a></div>
     <div><b>{u.siteH}</b><a href={`${pre}/about/`}>{u.about}</a><a href="/editorial-policy/">{u.editorial}</a><a href="/corrections/">{u.corrections}</a><a href={`${pre}/send-news/`}>{u.sendNews}</a><a href="/advertise/">{u.advertise}</a><a href="/contact/">{u.contact}</a><a href="/terms/">{u.terms}</a><a href="/privacy/">{u.privacy}</a><a href="/accessibility/">{u.accessibility}</a></div>
   </div>
   {lang === 'he' && <div class="wrap ainote">תמונות שמסומנות "להמחשה" נוצרו בבינה מלאכותית ואינן מתעדות את האירוע. <a href="/editorial-policy/#images">מדיניות התמונות</a></div>}
@@ -170,5 +175,20 @@ if(typeof m.sea_surface_temperature==='number')set('sst',Math.round(m.sea_surfac
 if(typeof f.wind_speed_10m==='number')set('wind',Math.round(f.wind_speed_10m));
 try{set('at',new Intl.DateTimeFormat('he-IL',{timeZone:'Asia/Jerusalem',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date()))}catch(e){}}).catch(function(){});})();
 </script>
+{lang === 'he' && <script is:inline define:vars={{ API: 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/hns-feed?only=flashes' }}>
+/* official flashes, refreshed every minute: the ticker and the list on /flash/. A flash past its time limit disappears. */
+(function(){if(!window.fetch)return;var tk=document.querySelector('ul[data-tk]'),fl=document.querySelector('[data-flist]');if(!tk&&!fl)return;
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var day=function(d){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Jerusalem'}).format(d)};
+var tm=function(iso){var d=new Date(iso);return day(d)===day(new Date())?new Intl.DateTimeFormat('he-IL',{timeZone:'Asia/Jerusalem',hour:'2-digit',minute:'2-digit',hour12:false}).format(d):new Intl.DateTimeFormat('he-IL',{timeZone:'Asia/Jerusalem',day:'2-digit',month:'2-digit'}).format(d)};
+var stories=tk?[].slice.call(tk.querySelectorAll('li:not([aria-hidden])')).map(function(li){var a=li.querySelector('a');return{at:li.getAttribute('data-at'),href:a.getAttribute('href'),text:a.textContent.replace(/^\s*\S+\s/,'')}}).filter(function(x){return x.href.indexOf('/flash/#f')!==0}):[];
+function run(){fetch(API).then(function(r){return r.json()}).then(function(j){var now=Date.now();
+var f=(j.flashes||[]).filter(function(x){return now-Date.parse(x.at)<(x.ttl||12)*36e5});
+if(tk){var all=f.map(function(x){return{at:x.at,href:'/flash/#f'+x.id,text:x.source+': '+x.text}}).concat(stories).sort(function(a,b){return Date.parse(b.at)-Date.parse(a.at)}).slice(0,8);
+if(all.length>=2){var h=all.map(function(x){return'<li data-at="'+esc(x.at)+'"><a href="'+esc(x.href)+'"><b>'+tm(x.at)+'</b> '+esc(x.text)+'</a></li>'}).join('');tk.innerHTML=h+h.replace(/<li /g,'<li aria-hidden="true" ').replace(/<a /g,'<a tabindex="-1" ')}}
+if(fl){fl.innerHTML=f.map(function(x){return'<li id="f'+x.id+'"><time datetime="'+esc(x.at)+'">'+tm(x.at)+'</time><span><b>'+esc(x.source)+'</b> '+esc(x.text)+(x.url?' <a href="'+esc(x.url)+'" rel="noopener nofollow" target="_blank">למקור</a>':'')+'</span></li>'}).join('');var e=document.querySelector('[data-fempty]');if(e)e.hidden=f.length>0}
+}).catch(function(){})}
+setTimeout(run,4000);setInterval(run,60000);})();
+</script>}
 </body>
 </html>

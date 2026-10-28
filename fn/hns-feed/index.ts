@@ -6,6 +6,11 @@
 // 28.10.2026 (home redesign): also the card fields (kicker, kind, author, video, closure) and the AI illustration (image_url + alt,
 // shown on the site with the label "תמונה להמחשה"), and the active event (table hns_event) as "event" (null when none is active).
 // A kicker that names a media outlet (table hns_outlets) is dropped here as well.
+// 28.10.2026 (flashes and calendar): also "flashes", short lines from OFFICIAL sources only (Home Front Command, MDA, IMS
+//   warnings, police) about Netanya and the nearby Sharon, as they arrived, newest first. A flash ages out: Home Front Command after
+//   6 hours, the others after 12 hours. Sensitive items (death, minors...) are never shown as a flash; they go through Yakir.
+//   And "calendar": the coming events from official listings (table hns_cal, e.g. the Netanya Culture Hall), up to 45 days ahead.
+//   ?only=flashes returns just the flashes (small and cached 30 seconds), for the live ticker in the browser.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -16,9 +21,32 @@ const clean = (s: unknown) => String(s ?? '').replace(/\s*—\s*/g, ', ').replac
 const arr = (a: unknown) => (Array.isArray(a) ? a : []).map(clean).filter(Boolean);
 const faq = (a: unknown) => (Array.isArray(a) ? a : []).map((x: Any) => Array.isArray(x) ? [clean(x[0]), clean(x[1])] : [clean(x?.q ?? x?.question), clean(x?.a ?? x?.answer)]).filter((x) => x[0] && x[1]);
 
+const FLASH_SRC: Record<string, { name: string; hours: number }> = {
+  oref_tg: { name: 'פיקוד העורף', hours: 6 }, mda_tg: { name: 'מד״א', hours: 12 }, ims_warn: { name: 'השירות המטאורולוגי', hours: 12 }, police_tg: { name: 'משטרת ישראל', hours: 12 },
+};
+const clip = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s);
+async function flashes() {
+  const since = new Date(Date.now() - 12 * 3600e3).toISOString();
+  const { data } = await sb.from('hns_items').select('id,source_id,title,url,published_at,fetched_at,sensitivity')
+    .in('source_id', Object.keys(FLASH_SRC)).eq('is_local', true).eq('backfill', false).gte('fetched_at', since).order('id', { ascending: false }).limit(40);
+  const now = Date.now(); const seen = new Set<string>();
+  return (data || []).filter((x: Any) => x.sensitivity !== 'sensitive').map((x: Any) => {
+    const at = x.published_at || x.fetched_at; const src = FLASH_SRC[x.source_id];
+    return { id: x.id, at, text: clip(clean(String(x.title || '').replace(/^[^\p{L}\p{N}]+/u, '')), 150), source: src.name, url: String(x.url || ''), kind: x.source_id.replace(/_.*/, ''), ttl: src.hours };
+  }).filter((f: Any) => f.text && now - Date.parse(f.at) < f.ttl * 3600e3 && !seen.has(f.text) && seen.add(f.text)).slice(0, 15);
+}
+async function calendar() {
+  const { data } = await sb.from('hns_cal').select('id,source_id,title,starts_at,venue,url').gte('starts_at', new Date().toISOString())
+    .lte('starts_at', new Date(Date.now() + 45 * 864e5).toISOString()).order('starts_at').limit(120);
+  const { data: srcs } = await sb.from('hns_sources').select('id,name_he').in('id', [...new Set((data || []).map((r: Any) => r.source_id))]);
+  const nm = Object.fromEntries((srcs || []).map((r: Any) => [r.id, r.name_he]));
+  return (data || []).map((r: Any) => ({ id: r.id, title: clean(r.title), start: r.starts_at, venue: clean(r.venue || ''), url: String(r.url || ''), source: nm[r.source_id] || '' }));
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: H });
   const url = new URL(req.url);
+  if (url.searchParams.get('only') === 'flashes') return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), flashes: await flashes() }), { headers: { ...H, 'cache-control': 'public, max-age=30' } });
   const limit = Math.min(1000, Math.max(1, Number(url.searchParams.get('limit')) || 300));
   const { data, error } = await sb.from('hns_stories')
     .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure')
@@ -45,5 +73,6 @@ Deno.serve(async (req) => {
       image: s.image_url ? { url: s.image_url, alt: clean(s.image_alt), model: s.image_model || '', ai: true } : null,
     };
   });
-  return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), count: stories.length, stories, event }), { headers: H });
+  const [fl, cal] = await Promise.all([flashes(), calendar()]);
+  return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), count: stories.length, stories, event, flashes: fl, calendar: cal }), { headers: H });
 });

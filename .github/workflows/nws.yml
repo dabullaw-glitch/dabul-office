@@ -1,24 +1,31 @@
 name: nws site
 # Builds the news site "חדשות נתניה והשרון" (sites/nws) for https://nws.co.il and publishes the built files to the
 # nws-site branch, which Cloudflare Pages serves as is (no build there).
-# Before each build, scripts/feed.mjs fetches the stories the news engine published (Supabase function hns-feed),
-# so the schedule below brings new published stories to the site within about 15 minutes.
-# scripts/biz.mjs does the same for the approved business directory listings (Supabase function hns-biz).
+# Before each build, scripts/feed.mjs fetches what the news engine published (Supabase function hns-feed: stories, official flashes,
+# events calendar) and scripts/biz.mjs the approved business directory listings (hns-biz).
 # 28.10.2026: scripts/live.mjs saves a sea and weather snapshot (Open-Meteo), and scripts/img.mjs turns the AI illustrations of the
 # stories into small WebP files; those files are kept in the Actions cache (.imgcache), so each image is downloaded only once.
+# 28.10.2026 (Yakir: new stories on the site within minutes, all day): GitHub's schedule alone was not reliable, so one run now
+# stays up for about 55 minutes (scripts/loop.sh): it checks the engine every ~45 seconds and builds and publishes only when
+# something changed. At the end it starts the next run itself (workflow_dispatch with the workflow token, which GitHub allows).
+# The schedule below only restarts the chain if it ever stops. A push to main cancels the running loop and starts one with the
+# new code; a scheduled or dispatched run waits for the running one instead of cancelling it.
 on:
-  schedule: [{ cron: '4,19,34,49 * * * *' }]
+  schedule: [{ cron: '4,34 * * * *' }]
   push:
     branches: [main]
     paths: ['sites/nws/**', '.github/workflows/nws.yml']
   workflow_dispatch:
 permissions:
   contents: write
-concurrency: { group: nws, cancel-in-progress: false }
+  actions: write
+concurrency:
+  group: nws
+  cancel-in-progress: ${{ github.event_name == 'push' }}
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,51 +33,25 @@ jobs:
       - name: Install
         working-directory: sites/nws
         run: npm ci --no-audit --no-fund
-      - name: Fetch the published stories and directory listings
-        working-directory: sites/nws
-        run: node scripts/feed.mjs && node scripts/biz.mjs
-      - name: Key of the AI images
-        id: imgkey
-        run: echo "key=$(node -e "const j=require('./sites/nws/src/data/feed.json');process.stdout.write((j.stories||[]).map(s=>s.image&&s.image.url||'').filter(Boolean).sort().join('\n'))" | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
       - name: Restore the AI image cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: sites/nws/.imgcache
-          key: nwsimg-${{ steps.imgkey.outputs.key }}
+          key: nwsimg-${{ github.run_id }}
           restore-keys: nwsimg-
-      - name: Build (live snapshot, AI images, site)
+      - name: Build and publish whenever the engine has something new (about 55 minutes)
         working-directory: sites/nws
-        run: npm run build:site
-      - name: Check the build
-        working-directory: sites/nws/dist
-        run: |
-          test -f index.html
-          grep -q 'Allow: /' robots.txt
-          if grep -q 'Disallow: /$' robots.txt; then echo "robots.txt blocks the site"; exit 1; fi
-          if grep -q 'name="robots" content="noindex' index.html; then echo "home page is noindex"; exit 1; fi
-          grep -q 'https://nws.co.il/' sitemap.xml
-          grep -q 'news-sitemap.xml' robots.txt
-          # the host redirect (nws-site.pages.dev and www -> nws.co.il) must reach the published branch
-          test -f functions/_middleware.js && node -e "JSON.parse(require('fs').readFileSync('_routes.json','utf8'))"
-          if grep -rl --include='*.html' --include='*.xml' 'pages\.dev' . | grep -q .; then echo "a page links to the temporary pages.dev host"; exit 1; fi
-      # Every push to nws-site is a new Cloudflare Pages deployment, so a scheduled run publishes only when something changed:
-      # the published stories or directory listings, the site source, or the Israel date (daily pages such as Shabbat times and past events).
-      - name: Decide whether to publish
-        id: key
-        run: |
-          STORIES=$(node -e "const j=require('./sites/nws/src/data/feed.json');let b={};try{b=require('./sites/nws/src/data/biz.json')}catch(e){};process.stdout.write(JSON.stringify([j.stories||[],b.listings||[],j.event||null]))" | sha256sum | cut -c1-16)
-          SRC=$(git rev-parse HEAD:sites/nws | cut -c1-16)
-          DAY=$(TZ=Asia/Jerusalem date +%F)
-          KEY="$STORIES-$SRC-$DAY"
-          echo "$KEY" > sites/nws/dist/.build-key
-          OLD=$(git fetch -q --depth=1 origin nws-site 2>/dev/null && git show FETCH_HEAD:.build-key 2>/dev/null || true)
-          echo "key=$KEY old=$OLD"
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$KEY" = "$OLD" ]; then echo "publish=no" >> "$GITHUB_OUTPUT"; else echo "publish=yes" >> "$GITHUB_OUTPUT"; fi
-      - name: Publish to nws-site branch
-        if: steps.key.outputs.publish == 'yes'
-        run: |
-          D=$(mktemp -d); cp -r sites/nws/dist/. "$D"/
-          cd "$D"; git init -q; git checkout -qb nws-site
-          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
-          git add -A; git commit -qm "nws.co.il $(date -u +%FT%TZ)"
-          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" nws-site
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOOP_MIN: ${{ github.event_name == 'push' && '50' || '55' }}
+        run: bash scripts/loop.sh
+      - name: Save the AI image cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: sites/nws/.imgcache
+          key: nwsimg-${{ github.run_id }}
+      - name: Start the next round
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run nws.yml --ref main -R "$GITHUB_REPOSITORY"
