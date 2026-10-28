@@ -328,7 +328,12 @@ h1.n-t{margin:14px 0;font-size:50px;font-weight:900;line-height:1.1;letter-spaci
 .n-a11y .tg[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
 .n-a11y .sq{width:44px;height:44px;border:1px solid #D9D6CE;border-radius:8px;background:#fff;cursor:pointer;font-weight:800;color:var(--ink)}
 .n-a11y .ft{display:flex;justify-content:space-between;gap:10px;margin-top:14px;font-size:14px}
-.n-a11y .ft a{text-decoration:underline;font-weight:700}
+.n-a11y .ft{background:none;color:inherit;align-items:center}
+.n-a11y .ft a{text-decoration:underline;font-weight:700;color:var(--ink)}
+.n-a11y .zl{display:block;font-size:12.5px;font-weight:500;color:var(--mut)}
+/* while the cookie banner is open, the floating buttons sit above it so they stay reachable */
+html.ck-on .n-a11y-btn,html.ck-on .n-top-btn{bottom:calc(var(--ck-h,0px) + 28px)}html.ck-on .n-a11y{bottom:calc(var(--ck-h,0px) + 92px);max-height:calc(100vh - var(--ck-h,0px) - 120px)}
+html.a11y-focus :focus-visible:not(main),html.a11y-focus a:focus:not(main),html.a11y-focus button:focus,html.a11y-focus input:focus,html.a11y-focus select:focus,html.a11y-focus textarea:focus{outline:4px solid #F2B544!important;outline-offset:3px!important;box-shadow:0 0 0 7px var(--ink)!important}
 .n-ck{position:fixed;left:16px;right:16px;bottom:16px;z-index:65;max-width:760px;margin:0 auto;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 50px rgba(13,19,33,.25);padding:18px 20px;font-size:15px;line-height:1.55}
 .n-ck[hidden]{display:none}
 .n-ck h2{margin:0 0 4px;font-size:17px;font-weight:800}
@@ -340,15 +345,15 @@ h1.n-t{margin:14px 0;font-size:50px;font-weight:900;line-height:1.1;letter-spaci
 .n-tab{display:none}
 /* accessibility settings (classes on <html>, chosen in the panel) */
 html.a11y-z1 .n-zoom{zoom:1.12}html.a11y-z2 .n-zoom{zoom:1.25}html.a11y-z3 .n-zoom{zoom:1.4}
-html.a11y-gray .n-zoom{filter:grayscale(1)}
-html.a11y-links .n-zoom a{text-decoration:underline!important;text-underline-offset:3px}
+html.a11y-gray .n-zoom,html.a11y-gray .n-tab,html.a11y-gray .n-menu{filter:grayscale(1)}
+html.a11y-links .n-zoom a,html.a11y-links .n-menu a{text-decoration:underline!important;text-underline-offset:3px}
 html.a11y-font .n-zoom,html.a11y-font .n-zoom *{font-family:Arial,Helvetica,sans-serif!important;letter-spacing:.02em}
-html.a11y-contrast .n-zoom,html.a11y-contrast .n-zoom *{background-color:#000!important;color:#fff!important;border-color:#fff!important;text-shadow:none!important;box-shadow:none!important}
-html.a11y-contrast .n-zoom a,html.a11y-contrast .n-zoom a *{color:#FFEB3B!important}
+html.a11y-contrast .n-zoom,html.a11y-contrast .n-zoom *,html.a11y-contrast .n-tab,html.a11y-contrast .n-tab *,html.a11y-contrast .n-menu,html.a11y-contrast .n-menu *{background-color:#000!important;color:#fff!important;border-color:#fff!important;text-shadow:none!important;box-shadow:none!important}
+html.a11y-contrast .n-zoom a,html.a11y-contrast .n-zoom a *,html.a11y-contrast .n-tab a,html.a11y-contrast .n-tab a *,html.a11y-contrast .n-menu a,html.a11y-contrast .n-menu a *{color:#FFEB3B!important}
 html.a11y-contrast .n-zoom img{opacity:.85}
 html.a11y-still *,html.a11y-still *:before,html.a11y-still *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 html.a11y-cursor,html.a11y-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='48' viewBox='0 0 40 48'%3E%3Cpath d='M2 2l30 22-14 2 8 16-6 3-8-16-10 10z' fill='%23000' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") 2 2,auto!important}
-@media (prefers-reduced-motion:reduce){.n-tick ul{animation:none}.n-tick .tl i{animation:none}*{scroll-behavior:auto!important}}
+@media (prefers-reduced-motion:reduce){.n-tick ul{animation:none}.n-tick .tl i{animation:none}*{scroll-behavior:auto!important}*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 /* layout steps */
 @media (max-width:1100px){
  .n-top,.n-lay,.n-list,.n-sg,.n-re{grid-template-columns:minmax(0,1fr)}
@@ -401,6 +406,7 @@ html.a11y-cursor,html.a11y-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=
  .n-a11y-btn{bottom:80px;left:12px;width:46px;height:46px}
  .n-a11y{bottom:136px;left:12px}
  .n-ck{bottom:76px;left:10px;right:10px;padding:14px 16px}
+ html.ck-on .n-a11y-btn,html.ck-on .n-top-btn{bottom:calc(var(--ck-h,0px) + 88px)}html.ck-on .n-a11y{bottom:calc(var(--ck-h,0px) + 144px);max-height:calc(100vh - var(--ck-h,0px) - 160px)}
 }
 @media print{.n-util,.n-nav,.n-tick,.n-tab,.n-top-btn,.n-a11y-btn,.n-ck,.n-foot,.n-share,.n-aside{display:none!important}.n-head{position:static}}
 /* phone menu (opened from the tab bar) */
