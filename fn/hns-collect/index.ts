@@ -268,7 +268,21 @@ async function gnewsFresh(raw: GRaw[]) {
 }
 
 // ---------- polling ----------
+// 29.10.2026: Google News answers 503 to our edge functions but 200 to the database's own HTTP client, so kind 'gnews' is fetched
+// through pg_net (rpc hns_net_get starts the request, hns_net_res reads the answer when it is ready).
+async function fetchViaDb(url: string) {
+  const { data: id, error } = await sb.rpc('hns_net_get', { u: url });
+  if (error || !id) throw new Error('db fetch: ' + (error?.message || 'no id'));
+  for (let i = 0; i < 12; i++) {
+    await new Promise((r) => setTimeout(r, 1500));
+    const { data } = await sb.rpc('hns_net_res', { rid: id });
+    const row = Array.isArray(data) ? data[0] : data;
+    if (row) { if (row.err && !row.status) throw new Error('db fetch: ' + row.err); return { status: row.status || 0, text: row.body || '', etag: null, lm: null }; }
+  }
+  throw new Error('db fetch: timeout');
+}
 async function fetchText(url: string, src: Any) {
+  if (src.kind === 'gnews') return await fetchViaDb(url);
   const h: Record<string, string> = { 'User-Agent': UA, 'Accept-Language': 'he-IL,he;q=0.9,en;q=0.5' };
   if (src.etag) h['If-None-Match'] = src.etag;
   if (src.last_modified) h['If-Modified-Since'] = src.last_modified;
