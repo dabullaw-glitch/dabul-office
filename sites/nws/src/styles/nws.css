@@ -459,3 +459,24 @@ main:focus{outline:0}
 .n-page .prose h2{font-size:24px;font-weight:800;margin:32px 0 10px}
 .n-page .prose a{text-decoration:underline;text-underline-offset:3px}
 .n-page .prose ul{padding-inline-start:22px}
+/* 29.10.2026: the flashes box on the home page (Yakir's example): red head, a scrolling list of white cards with time and share */
+.n-fl{border:0;border-radius:22px;background:#EFEFEF;overflow:hidden;box-shadow:0 1px 0 var(--line)}
+.n-fl .fh{margin:0;background:var(--red);padding:18px 18px 14px;display:flex;justify-content:center}
+.n-fl .fh span{position:relative;display:inline-block;font-size:34px;font-weight:900;line-height:1;color:var(--ink);letter-spacing:-.5px}
+.n-fl .fh i{position:absolute;top:-6px;left:-12px;width:11px;height:11px;border-radius:50%;background:#fff}
+.n-fls{list-style:none;margin:0;padding:14px 14px 4px 10px;max-height:560px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:#222 transparent}
+.n-fls::-webkit-scrollbar{width:8px}.n-fls::-webkit-scrollbar-thumb{background:#222;border-radius:8px}.n-fls::-webkit-scrollbar-track{background:transparent}
+.n-fls:focus-visible{outline:2px solid var(--red);outline-offset:-2px}
+.n-fls li{background:#fff;border:1px solid #D9D9D9;border-radius:16px;padding:14px 16px 16px}
+.n-fls .fr{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.n-fls .t{display:flex;align-items:center;gap:8px;color:var(--red);font-size:14px;font-weight:600}
+.n-fls .t i{width:13px;height:13px;border-radius:50%;background:var(--red);flex:none}
+.n-fls .sh{border:0;background:none;padding:6px;margin:-6px;cursor:pointer;color:var(--ink);border-radius:50%;position:relative}
+.n-fls .sh svg{fill:none;stroke:currentColor;stroke-width:1.6}
+.n-fls .sh:hover{background:var(--warm)}
+.n-fls .sh.ok:after{content:'הקישור הועתק';position:absolute;left:0;top:100%;white-space:nowrap;font-size:12px;background:var(--ink);color:#fff;padding:3px 8px;border-radius:6px}
+.n-fls a{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-top:8px;font-size:16.5px;line-height:1.55;font-weight:500;color:var(--ink)}
+.n-fls a:hover{color:var(--red2)}
+.n-fls small{font-size:12px;color:var(--mut);font-weight:700}
+.n-fl .n-lf{border-top:0;background:#EFEFEF;padding:10px 12px 14px}
+@media (max-width:760px){.n-fl{margin-inline:0;border-radius:22px}.n-fls{max-height:520px}}
