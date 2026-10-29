@@ -89,12 +89,13 @@ async function budgetLeft() {
 }
 class NoJson extends Error {}
 let CALLS = 0;
+let MAX_TOKENS = 3000; // a longer piece (history) raises it before writing
 async function claude(system: string, user: string) {
   CALLS++;
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: Object.assign({ 'x-api-key': S.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' } as Record<string, string>, S.ANTHROPIC_WORKSPACE_ID ? { 'anthropic-workspace-id': S.ANTHROPIC_WORKSPACE_ID } : {}),
-    body: JSON.stringify({ model: MODEL(), max_tokens: 3000, system, messages: [{ role: 'user', content: user }] }),
+    body: JSON.stringify({ model: MODEL(), max_tokens: MAX_TOKENS, system, messages: [{ role: 'user', content: user }] }),
     signal: AbortSignal.timeout(110000),
   });
   const j = await r.json();
@@ -773,11 +774,13 @@ async function history(b: Any) {
   const user = `${material}
 
 כתוב כתבה למדור "נתניה של פעם" על ${pick.title}, מהחומר שלמעלה בלבד, בעברית פשוטה וקולחת.
-ספר את הסיפור של המקום לפי סדר הזמנים: איך ומתי התחיל, מי היו שם, מה השתנה עם השנים, ומה יש שם היום (רק אם זה כתוב בחומר). 4 עד 6 פסקאות קצרות. כל שנה, מספר ושם חייבים להופיע בחומר. לא להעתיק משפטים, לנסח מחדש. בלי "לפי ויקיפדיה" בטקסט.
+ספר את הסיפור של המקום לפי סדר הזמנים: איך ומתי התחיל, מי היו שם, מה השתנה עם השנים, ומה יש שם היום (רק אם זה כתוב בחומר). 4 עד 6 פסקאות קצרות, עד 350 מילים בסך הכול. כל שנה, מספר ושם חייבים להופיע בחומר. לא להעתיק משפטים, לנסח מחדש. בלי "לפי ויקיפדיה" בטקסט.
 כותרת עד 70 תווים שמתחילה ב"נתניה של פעם:". כותרת משנה משפט אחד. kicker: "נתניה של פעם". 3 נקודות עיקריות.
 JSON: {"kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""]}`;
-  const w = await write(user, material);
-  if (w.hold || w.fail) { await log('history', key, null, CALLS, w.usage, { held: w.hold || w.fail, place: pick.title }); return { held: w.hold || w.fail, key, place: pick.title }; }
+  MAX_TOKENS = 6000;
+  let w: Any;
+  try { w = await write(user, material); } catch (e) { w = { fail: String((e as Error).message || e).slice(0, 200) }; }
+  if (w.hold || w.fail) { await log('history', key, null, CALLS, w.usage || null, { held: w.hold || w.fail, place: pick.title }); return { held: w.hold || w.fail, key, place: pick.title }; }
   const o = w.out;
   let title = clean(o.title); if (!title.startsWith('נתניה של פעם')) title = `נתניה של פעם: ${title}`;
   // war, expulsion, killings or attacks in the story of the place: Yakir approves it before it is published (hns-publish holds
