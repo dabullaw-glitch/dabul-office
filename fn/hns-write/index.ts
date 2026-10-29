@@ -470,7 +470,9 @@ async function tick(only: number[] = [], at = '') {
     .gte('created_at', sinceDays(3)).in('state', ['draft', 'needs_check', 'approved', 'published']).or('kind.is.null,kind.neq.sponsored').order('id', { ascending: false }).limit(300);
   // data stories (hns-data, exact numbers from official datasets) are never matched or updated with news items
   // and recurring formats (week roundup, weekend guide) are not single events either
-  const recent = (recentAll || []).filter((s: Any) => !/^hns-data/.test(s.notes || '') && !['week_roundup', 'weekend_guide'].includes(s.format));
+  // 29.10.2026: the daily roundup, events and weather compilations (notes 'auto:roundup|events|weather') are not events either:
+  // a new item (the Netanya election results) was attached to yesterday's roundup and never became its own story
+  const recent = (recentAll || []).filter((s: Any) => !/^hns-data|^auto:\s*(roundup|events|weather)|^auto:\s*hns-recurring/.test(s.notes || '') && !['week_roundup', 'weekend_guide', 'match_preview'].includes(s.format));
   const rIds = [...new Set((recent || []).flatMap((s: Any) => s.item_ids || []))];
   const { data: rItems } = rIds.length ? await sb.from('hns_items').select('id,title,body,cluster_id').in('id', rIds) : { data: [] };
   // strict match: the words of the story's items and body; loose match (near): only its title, subtitle and key points
