@@ -1,0 +1,406 @@
+{
+ "checked": "2026-10-29",
+ "items": [
+  {
+   "name": "בית הכנסת ע\"ש רבי דוד בן ברוך הכהן",
+   "kind": "בית כנסת",
+   "area": "גבעת האירוסים",
+   "address": "",
+   "lat": 32.282345,
+   "lon": 34.848296,
+   "source": "https://www.openstreetmap.org/node/7024053363",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית כנסת אזוגי יצחק",
+   "kind": "אורתודוקסי",
+   "area": "גבעת האירוסים",
+   "address": "רותם",
+   "lat": 32.284275,
+   "lon": 34.848526,
+   "source": "https://www.openstreetmap.org/way/107678900",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית כנסת היכל שלמה",
+   "kind": "אורתודוקסי",
+   "area": "גבעת האירוסים",
+   "address": "ש\"י עגנון 26",
+   "lat": 32.282819,
+   "lon": 34.849763,
+   "source": "https://www.openstreetmap.org/way/554102569",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת החדש נתניה",
+   "kind": "בית כנסת",
+   "area": "מכנס",
+   "address": "",
+   "lat": 32.333598,
+   "lon": 34.852922,
+   "source": "https://www.openstreetmap.org/way/106185023",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת היכל רפאל",
+   "kind": "בית כנסת",
+   "area": "מכנס",
+   "address": "",
+   "lat": 32.335092,
+   "lon": 34.856136,
+   "source": "https://www.openstreetmap.org/way/44917859",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת ישראל הצעיר",
+   "kind": "בית כנסת",
+   "area": "מכנס",
+   "address": "",
+   "lat": 32.338999,
+   "lon": 34.85407,
+   "source": "https://www.openstreetmap.org/way/104334054",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת מאירים",
+   "kind": "בית כנסת",
+   "area": "מכנס",
+   "address": "",
+   "lat": 32.336676,
+   "lon": 34.857741,
+   "source": "https://www.openstreetmap.org/node/9779642888",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת עמית",
+   "kind": "בית כנסת",
+   "area": "מכנס",
+   "address": "",
+   "lat": 32.334808,
+   "lon": 34.853715,
+   "source": "https://www.openstreetmap.org/way/106180952",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת צעירי ציון",
+   "kind": "בית כנסת",
+   "area": "מכנס",
+   "address": "",
+   "lat": 32.336647,
+   "lon": 34.855891,
+   "source": "https://www.openstreetmap.org/node/616203222",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית ישראל",
+   "kind": "מסורתי (קונסרבטיבי)",
+   "area": "מכנס",
+   "address": "",
+   "lat": 32.338488,
+   "lon": 34.858261,
+   "source": "https://www.openstreetmap.org/node/615659244",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת ישמח משה",
+   "kind": "אורתודוקסי",
+   "area": "משכנות זבולון",
+   "address": "",
+   "lat": 32.31414,
+   "lon": 34.879117,
+   "source": "https://www.openstreetmap.org/node/305478462",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית כנסת שערי צדק",
+   "kind": "בית כנסת",
+   "area": "נאות גנים",
+   "address": "",
+   "lat": 32.315227,
+   "lon": 34.881036,
+   "source": "https://www.openstreetmap.org/way/557798935",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת אבות רבנים",
+   "kind": "בית כנסת",
+   "area": "נאות הרצל",
+   "address": "",
+   "lat": 32.331293,
+   "lon": 34.865323,
+   "source": "https://www.openstreetmap.org/node/662973019",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת אור החיים",
+   "kind": "בית כנסת",
+   "area": "נאות הרצל",
+   "address": "",
+   "lat": 32.334114,
+   "lon": 34.870032,
+   "source": "https://www.openstreetmap.org/node/662973086",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת בני עקיבא - סניף נתניה מרכז",
+   "kind": "בית כנסת",
+   "area": "נאות הרצל",
+   "address": "",
+   "lat": 32.332734,
+   "lon": 34.865733,
+   "source": "https://www.openstreetmap.org/node/1323329165",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת מגן אברהם",
+   "kind": "בית כנסת",
+   "area": "נאות הרצל",
+   "address": "",
+   "lat": 32.332456,
+   "lon": 34.86996,
+   "source": "https://www.openstreetmap.org/node/662973050",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת קיבוץ גלויות",
+   "kind": "בית כנסת",
+   "area": "נאות הרצל",
+   "address": "",
+   "lat": 32.333988,
+   "lon": 34.868003,
+   "source": "https://www.openstreetmap.org/node/662973076",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת שמח ישראל",
+   "kind": "בית כנסת",
+   "area": "נאות הרצל",
+   "address": "",
+   "lat": 32.334152,
+   "lon": 34.869739,
+   "source": "https://www.openstreetmap.org/node/662973115",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת אוהל נחמיה",
+   "kind": "אורתודוקסי",
+   "area": "נאות התכלת",
+   "address": "",
+   "lat": 32.34297,
+   "lon": 34.857009,
+   "source": "https://www.openstreetmap.org/way/109981912",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית כנסת אם כל חי",
+   "kind": "בית כנסת",
+   "area": "נאות מנחם בגין",
+   "address": "",
+   "lat": 32.27259,
+   "lon": 34.844469,
+   "source": "https://www.openstreetmap.org/way/1067098768",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת אוהל יצחק",
+   "kind": "בית כנסת",
+   "area": "נאות שקד",
+   "address": "",
+   "lat": 32.302235,
+   "lon": 34.847617,
+   "source": "https://www.openstreetmap.org/way/414244649",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת שבת אחים",
+   "kind": "אורתודוקסי",
+   "area": "נאות שקד",
+   "address": "אברהם קריניצי 8",
+   "lat": 32.2937,
+   "lon": 34.850248,
+   "source": "https://www.openstreetmap.org/way/107681278",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת חזון עובדיה",
+   "kind": "אורתודוקסי",
+   "area": "קריית השרון",
+   "address": "",
+   "lat": 32.304061,
+   "lon": 34.869977,
+   "source": "https://www.openstreetmap.org/way/886300757",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת שערי ברכה",
+   "kind": "אורתודוקסי",
+   "area": "קריית נורדאו",
+   "address": "קצנלסון יצחק 20",
+   "lat": 32.285235,
+   "lon": 34.852669,
+   "source": "https://www.openstreetmap.org/node/7049580105",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית כנסת אליהו הנביא",
+   "kind": "בית כנסת",
+   "area": "קריית נורדאו",
+   "address": "",
+   "lat": 32.284093,
+   "lon": 34.855949,
+   "source": "https://www.openstreetmap.org/node/14006421601",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית כנסת חובבי ציון",
+   "kind": "אורתודוקסי",
+   "area": "קריית נורדאו",
+   "address": "ש\"י עגנון 10",
+   "lat": 32.281925,
+   "lon": 34.851185,
+   "source": "https://www.openstreetmap.org/way/167450764",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית כנסת שפעת רביבים",
+   "kind": "בית כנסת",
+   "area": "קריית נורדאו",
+   "address": "פרץ",
+   "lat": 32.283451,
+   "lon": 34.855884,
+   "source": "https://www.openstreetmap.org/node/14006717002",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת ר׳ מכיל׳ע מנתניה",
+   "kind": "בית כנסת",
+   "area": "קרית השרון",
+   "address": "",
+   "lat": 32.296876,
+   "lon": 34.881986,
+   "source": "https://www.openstreetmap.org/node/4847375421",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית כנסת נריה ב'",
+   "kind": "בית כנסת",
+   "area": "קרית השרון",
+   "address": "",
+   "lat": 32.300623,
+   "lon": 34.875257,
+   "source": "https://www.openstreetmap.org/way/1562568773",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית כנסת קרית השרון",
+   "kind": "בית כנסת",
+   "area": "קרית השרון",
+   "address": "",
+   "lat": 32.300443,
+   "lon": 34.875257,
+   "source": "https://www.openstreetmap.org/way/1562568772",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית דוד",
+   "kind": "אורתודוקסי",
+   "area": "רמת אפרים",
+   "address": "",
+   "lat": 32.330391,
+   "lon": 34.85846,
+   "source": "https://www.openstreetmap.org/node/564588782",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת אוהל עמנואל",
+   "kind": "בית כנסת",
+   "area": "רמת אפרים",
+   "address": "",
+   "lat": 32.330153,
+   "lon": 34.856041,
+   "source": "https://www.openstreetmap.org/node/1562438297",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת ישמח ישראל",
+   "kind": "בית כנסת",
+   "area": "רמת אפרים",
+   "address": "",
+   "lat": 32.326879,
+   "lon": 34.866928,
+   "source": "https://www.openstreetmap.org/node/662973010",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת מרכז ברסלב",
+   "kind": "ברסלב",
+   "area": "רמת אפרים",
+   "address": "",
+   "lat": 32.32996,
+   "lon": 34.857964,
+   "source": "https://www.openstreetmap.org/node/564588781",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית כנסת ומרכז קהילתי תפארת בחורים",
+   "kind": "בית כנסת",
+   "area": "רמת אפרים",
+   "address": "",
+   "lat": 32.319093,
+   "lon": 34.859714,
+   "source": "https://www.openstreetmap.org/way/147060421",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת ישמח משה",
+   "kind": "בית כנסת",
+   "area": "שיכון המזרחי",
+   "address": "",
+   "lat": 32.330825,
+   "lon": 34.860155,
+   "source": "https://www.openstreetmap.org/node/583257924",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית הכנסת תפארת ישראל",
+   "kind": "בית כנסת",
+   "area": "שיכון המזרחי",
+   "address": "",
+   "lat": 32.330892,
+   "lon": 34.859817,
+   "source": "https://www.openstreetmap.org/node/565448141",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית חב\"ד צפון נתניה",
+   "kind": "בית כנסת",
+   "area": "שיכון המזרחי",
+   "address": "",
+   "lat": 32.338002,
+   "lon": 34.861427,
+   "source": "https://www.openstreetmap.org/way/109983032",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית כנסת - פועלי צדק",
+   "kind": "בית כנסת",
+   "area": "שיכון המזרחי",
+   "address": "",
+   "lat": 32.339973,
+   "lon": 34.864244,
+   "source": "https://www.openstreetmap.org/way/109982092",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  },
+  {
+   "name": "בית מיר",
+   "kind": "אשכנזי",
+   "area": "שיכון המזרחי",
+   "address": "",
+   "lat": 32.336512,
+   "lon": 34.864699,
+   "source": "https://www.openstreetmap.org/node/582029977",
+   "srcName": "OpenStreetMap, מפה פתוחה"
+  }
+ ],
+ "note": "אין רשימה רשמית מלאה של בתי הכנסת בעיר. הרשימה מבוססת על המפה הפתוחה, ובה רק בתי כנסת שיש להם שם. מכירים בית כנסת שחסר? כתבו לנו."
+}

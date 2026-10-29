@@ -75,3 +75,33 @@ for r in lb['records']:
     libs.append({'name': 'הספרייה העירונית נתניה', 'kind': 'ספרייה ציבורית', 'address': addr, 'phone': clean(r.get('טלפון')), 'website': clean(r.get('אתר אינטרנט')),
                  'source': lb['url'], 'srcName': 'משרד התרבות, רשימת הספריות הציבוריות'})
 save('libraries', libs, 'הספרייה המרכזית של נתניה לפי רשימת משרד התרבות. רשימת הסניפים בשכונות תתווסף אחרי בדיקה מול העירייה.')
+
+# synagogues: OpenStreetMap (no official list exists); named ones only, the neighborhood is the nearest mapped neighborhood point
+import math
+def osm(name):
+    p = os.path.join(RAW, f'osm-{name}.json')
+    return json.load(open(p)) if os.path.exists(p) else []
+pt = lambda e: (e.get('lat') or (e.get('center') or {}).get('lat'), e.get('lon') or (e.get('center') or {}).get('lon'))
+subs = [(t['tags'].get('name:he') or t['tags'].get('name'), *pt(t)) for t in osm('suburb') if (t.get('tags') or {}).get('name')]
+subs = [s for s in subs if s[1] and s[2] and re.search(r'[֐-׿]', s[0] or '')]
+def near(lat, lon):
+    if not subs or not lat: return ''
+    best = min(subs, key=lambda s: (s[1] - lat) ** 2 + ((s[2] - lon) * math.cos(math.radians(lat))) ** 2)
+    d = math.hypot(best[1] - lat, (best[2] - lon) * math.cos(math.radians(lat))) * 111
+    return best[0] if d < 1.2 else ''
+DEN = {'orthodox': 'אורתודוקסי', 'ashkenazi_orthodox': 'אשכנזי', 'sephardi': 'ספרדי', 'sefardi': 'ספרדי', 'conservative': 'מסורתי (קונסרבטיבי)', 'reform': 'רפורמי', 'chabad': 'חב״ד', 'breslav': 'ברסלב', 'hasidic': 'חסידי', 'yemenite': 'תימני'}
+syn, seenn = [], set()
+for e in osm('synagogue'):
+    t = e.get('tags') or {}
+    n = clean(t.get('name:he') or t.get('name'))
+    if not n or not re.search(r'[֐-׿]', n): continue
+    lat, lon = pt(e)
+    key = (n, round(lat or 0, 3), round(lon or 0, 3))
+    if key in seenn: continue
+    seenn.add(key)
+    addr = ' '.join(x for x in [clean(t.get('addr:street')), clean(t.get('addr:housenumber'))] if x)
+    syn.append({'name': n if n.startswith('בית') or 'כנסת' in n else f'בית הכנסת {n}', 'kind': DEN.get(t.get('denomination', ''), 'בית כנסת'), 'area': near(lat, lon),
+                'address': addr, 'lat': round(lat, 6) if lat else None, 'lon': round(lon, 6) if lon else None,
+                'source': f"https://www.openstreetmap.org/{e['type']}/{e['id']}", 'srcName': 'OpenStreetMap, מפה פתוחה'})
+syn.sort(key=lambda x: (x['area'] or 'ת', x['name']))
+save('synagogues', syn, 'אין רשימה רשמית מלאה של בתי הכנסת בעיר. הרשימה מבוססת על המפה הפתוחה, ובה רק בתי כנסת שיש להם שם. מכירים בית כנסת שחסר? כתבו לנו.')
