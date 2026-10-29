@@ -1,0 +1,29 @@
+{
+ "checked": "2026-10-29",
+ "items": [
+  {
+   "name": "מפת נתניה ב-OpenStreetMap",
+   "kind": "מפה פתוחה",
+   "website": "https://www.openstreetmap.org/#map=14/32.3215/34.8560",
+   "notes": "מפת רחובות מפורטת וחופשית, עם חיפוש כתובות ומסלולים.",
+   "source": "https://www.openstreetmap.org",
+   "srcName": "OpenStreetMap"
+  },
+  {
+   "name": "govmap, המפה הממשלתית",
+   "kind": "מפה ממשלתית",
+   "website": "https://www.govmap.gov.il/",
+   "notes": "המפה הלאומית של ממשלת ישראל: גושים וחלקות, תצלומי אוויר, תוכניות ושכבות מידע רבות.",
+   "source": "https://www.gov.il/BlobFolder/generalpage/govmap_guide/he/group1_govmap_user_guide.pdf",
+   "srcName": "gov.il, מדריך govmap"
+  },
+  {
+   "name": "מבא\"ת, חיפוש תוכניות בנייה",
+   "kind": "תוכניות בנייה",
+   "website": "https://mavat.iplan.gov.il/",
+   "notes": "האתר של מנהל התכנון: תוכניות בנייה בנתניה, מצבן והמסמכים שלהן.",
+   "source": "https://mavat.iplan.gov.il/",
+   "srcName": "מנהל התכנון"
+  }
+ ]
+}

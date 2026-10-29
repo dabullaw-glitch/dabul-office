@@ -461,7 +461,9 @@ function vStory(id){
     if(!j.ok)return main().innerHTML='<div class="empty">'+esc(j.error)+'</div>';
     var s=j.story,pub=s.state==='published',waiting=['draft','needs_check','approved'].indexOf(s.state)>=0,pinned=j.pin&&j.pin.id===s.id;
     var acts='';
-    if(pub)acts+='<a class="b" href="'+storyUrl(s)+'" target="_blank" rel="noopener">לצפייה באתר</a>'
+    // 29.10.2026: a story is on the site only after the next build (about a minute), so right after publishing say so instead of opening a "not found" page
+    var fresh=pub&&s.published_at&&Date.now()-Date.parse(s.published_at)<150000;
+    if(pub)acts+=(fresh?'<span class="b" style="opacity:.75;cursor:default" title="האתר נבנה מחדש אחרי כל פרסום">עולה לאתר, עוד כדקה</span>':'<a class="b" href="'+storyUrl(s)+'" target="_blank" rel="noopener">לצפייה באתר</a>')
       +(s.kind!=='sponsored'?(pinned?'<button class="b warn" data-a="unpin">ביטול הנעיצה</button>':'<span class="row" style="gap:4px"><select id="pinh" style="width:auto;padding:6px 8px">'+[6,12,24,48,72].map(function(h){return opt(h,h+' שעות',12)}).join('')+'</select><button class="b" data-a="pin">לנעוץ כידיעה הראשית</button></span>'):'')
       +'<button class="b dang" data-a="withdraw">להוריד מהאתר</button>';
     if(waiting)acts+='<button class="b ok" data-a="publish">לפרסם עכשיו</button><button class="b dang" data-a="reject">לא לפרסם</button>';

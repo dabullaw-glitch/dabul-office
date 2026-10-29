@@ -22,6 +22,7 @@ const ld = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: cat.h
 ---
 <GuideFrame title={`${cat.h1 || cat.name}: רשימה מלאה עם כתובות וטלפונים | חדשות נתניה והשרון`} h1={cat.h1 || cat.name} description={`${cat.intro} ${items.length} מקומות, עם כתובת, טלפון ושעות לפי המקור הרשמי.`} path={`/guide/${slug}/`} intro={cat.intro} color={cat.color} icon={cat.icon} current={slug} jsonld={ld} stats={[`<b>${items.length}</b> מקומות`, data.checked ? `נבדק ${fmtD(data.checked)}` : '']}>
   {data.note && <p class="g-note">{data.note}</p>}
+  {slug === 'map' && <div class="g-map"><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=34.8200%2C32.2600%2C34.9050%2C32.3700&amp;layer=mapnik" title="מפת נתניה" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe><p class="g-src">מפה: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener nofollow">© תורמי OpenStreetMap</a></p></div>}
   {(cat.filter || items.length > 12) && (
   <div class="g-tools">
     <label class="g-q"><Icon name="search" size={18} /><input type="search" placeholder="חיפוש לפי שם, רחוב או שכונה" aria-label="חיפוש ברשימה" data-gq></label>

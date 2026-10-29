@@ -1,3 +1,4 @@
+import { liveCats } from '../data/city/guide';
 // llms.txt: a plain summary of the site for AI assistants and answer engines (GEO).
 import { SITE_URL } from '../data/site';
 import { SECTIONS } from '../data/sections';
@@ -7,7 +8,7 @@ export function GET() {
   const lines = [
     '# חדשות נתניה והשרון (Netanya & Sharon News)',
     '',
-    '> אתר חדשות מקומי לנתניה ולשרון: מבזקים, עירייה, נדל״ן והתחדשות עירונית, ספורט, אירועים, נתונים שימושיים ומדריך בעלי מקצוע. כל ידיעה כוללת את שם המקור וקישור אליו. Local news for Netanya, Israel, in Hebrew, Russian, French and English.',
+    '> אתר חדשות מקומי לנתניה ולשרון: מבזקים, עירייה, נדל״ן והתחדשות עירונית, ספורט, אירועים, נתונים שימושיים ומדריך בעלי מקצוע. אתר חדשות עצמאי, עם מדיניות עריכה ותיקונים גלויה. Local news for Netanya, Israel, in Hebrew, Russian, French and English.',
     '',
     '## Sections',
     ...liveSections().map((s) => `- [${s.name.he} / ${s.name.en}](${SITE_URL}/${s.slug}/): ${s.desc}`),
@@ -18,6 +19,8 @@ export function GET() {
     `- [החופים של נתניה](${SITE_URL}/now/beaches/)`,
     `- [בית מרקחת תורן](${SITE_URL}/now/pharmacy/)`,
     `- [טלפונים חיוניים](${SITE_URL}/now/phones/)`,
+    `- [שימושון עירוני](${SITE_URL}/guide/): city guide with addresses, phones and hours from official sources`,
+    ...liveCats().filter((c) => !c.href).map((c) => `- [${c.name}](${SITE_URL}/guide/${c.slug}/)`),
     '',
     '## Business directory',
     ...CATEGORIES.map((c) => `- [${c.plural} בנתניה](${SITE_URL}/directory/${c.slug}/)`),

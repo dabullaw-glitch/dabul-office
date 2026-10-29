@@ -1,3 +1,4 @@
+import { CATS, DATA } from '../data/city/guide';
 // Every public URL of the site, for the sitemaps (with language alternates and images).
 import { LANGS, type Lang } from '../data/site';
 import { SECTIONS } from '../data/sections';
@@ -27,6 +28,9 @@ export function routes(): R[] {
   for (const l of LANGS) out.push({ loc: nowA[l], alts: nowA, lastmod: now, changefreq: 'hourly', priority: '0.8' });
   for (const p of ['shabbat', 'beaches', 'pharmacy', 'roads', 'alerts', 'phones']) out.push({ loc: `/now/${p}/`, lastmod: now, changefreq: 'daily', priority: '0.7' });
   out.push({ loc: '/netanya/', lastmod: now, changefreq: 'daily', priority: '0.8' });
+  // the city guide "שימושון עירוני" (29.10.2026): the hub and every category page that has items
+  out.push({ loc: '/guide/', lastmod: now, changefreq: 'weekly', priority: '0.7' });
+  for (const c of CATS) if (!c.href && (DATA[c.slug]?.items?.length ?? 0) > 0) out.push({ loc: `/guide/${c.slug}/`, lastmod: DATA[c.slug].checked || now, changefreq: 'monthly', priority: '0.6' });
   const dirA = all((l) => (l === 'he' ? '/directory/' : `/${l}/directory/`));
   for (const l of LANGS) out.push({ loc: dirA[l], alts: dirA, lastmod: now, priority: '0.7' });
   for (const c of CATEGORIES) out.push({ loc: `/directory/${c.slug}/`, lastmod: now, priority: '0.6' });

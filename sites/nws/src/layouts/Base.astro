@@ -108,7 +108,8 @@ gtag('js',new Date());if(GA)gtag('config',GA,{anonymize_ip:true,allow_google_sig
 window.nwsTrack=function(n,p){try{gtag('event',n,p||{})}catch(e){}};
 window.nwsLoadGA=function(){if(window.__nwsga||!GA)return;window.__nwsga=1;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+GA;document.head.appendChild(s)};
 var c=null;try{c=JSON.parse(localStorage.getItem('nwsConsent')||'null')}catch(e){}try{if(!c&&/(?:^|; )nws_consent=all/.test(document.cookie))c={a:1}}catch(e){}
-if(c&&c.a){gtag('consent','update',{analytics_storage:'granted'});nwsLoadGA()}</script>
+if(c&&c.a){gtag('consent','update',{analytics_storage:'granted'});nwsLoadGA()}
+if(c&&c.p)gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted'});</script>
 {/* a story picture that fails to load is replaced by a city photo, so no broken image is shown */}
 <script is:inline>addEventListener('error',function(e){var i=e.target;if(i&&i.tagName==='IMG'&&!i.dataset.fb){i.dataset.fb='1';i.removeAttribute('srcset');i.src='/img/stock/city-buildings-800.webp'}},true)</script>
 {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o).replace(/</g, '\\u003c')}></script>)}
@@ -220,8 +221,8 @@ if(c&&c.a){gtag('consent','update',{analytics_storage:'granted'});nwsLoadGA()}</
 </div>
 <div class="n-ck" id="nck" role="region" aria-labelledby="nck-h" hidden>
   <h2 id="nck-h">{he ? 'עוגיות באתר' : 'Cookies'}</h2>
-  <p>{he ? <>אנחנו משתמשים בעוגיות הכרחיות כדי שהאתר יעבוד, ובאישורכם גם בעוגיות סטטיסטיקה (Google Analytics) כדי לדעת אילו ידיעות נקראות. <a href="/privacy/#cookies">מדיניות הפרטיות</a></> : <>We use necessary cookies, and with your consent statistics cookies (Google Analytics). <a href="/privacy/#cookies">Privacy policy</a></>}</p>
-  <div class="set" hidden data-ck-set><label><input type="checkbox" checked disabled> <span><b>{he ? 'הכרחיות' : 'Necessary'}</b>{he ? ': שמירת ההגדרות שלכם באתר. תמיד פעילות.' : ': always on.'}</span></label><label><input type="checkbox" data-ck-a> <span><b>{he ? 'סטטיסטיקה' : 'Statistics'}</b>{he ? ': Google Analytics, בלי פרסום ובלי פרופיל אישי.' : ': Google Analytics, no advertising.'}</span></label></div>
+  <p>{he ? <>אנחנו משתמשים בעוגיות הכרחיות כדי שהאתר יעבוד, ובאישורכם גם בעוגיות סטטיסטיקה (Google Analytics) ובעוגיות פרסום של Google, שמאפשרות להציג מודעות מתאימות יותר. <a href="/privacy/#cookies">מדיניות הפרטיות</a></> : <>We use necessary cookies, and with your consent statistics (Google Analytics) and Google advertising cookies. <a href="/privacy/#cookies">Privacy policy</a></>}</p>
+  <div class="set" hidden data-ck-set><label><input type="checkbox" checked disabled> <span><b>{he ? 'הכרחיות' : 'Necessary'}</b>{he ? ': שמירת ההגדרות שלכם באתר. תמיד פעילות.' : ': always on.'}</span></label><label><input type="checkbox" data-ck-a> <span><b>{he ? 'סטטיסטיקה' : 'Statistics'}</b>{he ? ': Google Analytics, כדי לדעת אילו ידיעות נקראות.' : ': Google Analytics.'}</span></label><label><input type="checkbox" data-ck-p> <span><b>{he ? 'פרסום' : 'Advertising'}</b>{he ? ': מודעות Google מותאמות אישית. בלי אישור יוצגו מודעות כלליות.' : ': personalised Google ads. Without it, ads are general.'}</span></label></div>
   <div class="bt"><button class="n-btn ink" type="button" data-ck="all">{he ? 'מאשר הכול' : 'Accept all'}</button><button class="n-btn line" type="button" data-ck="min">{he ? 'רק הכרחיים' : 'Necessary only'}</button><button class="n-btn line" type="button" data-ck="set">{he ? 'הגדרות' : 'Settings'}</button><button class="n-btn ink" type="button" data-ck="save" hidden>{he ? 'שמירת הבחירה' : 'Save'}</button></div>
 </div>
 <script is:inline define:vars={{ T: { newer: L.newer, newer1: L.newer1, pause: L.pause, play: L.play } }}>
@@ -249,22 +250,22 @@ if(ab&&ap){var ad=dialog(ap,ab);ab.addEventListener('click',ad.toggle);ap.queryS
  ap.querySelectorAll('[data-k]').forEach(function(b){b.addEventListener('click',function(){var k=b.getAttribute('data-k');A[k]=!A[k];applyA()})});
  ap.querySelectorAll('[data-z]').forEach(function(b){b.addEventListener('click',function(){A.z=Math.max(0,Math.min(3,(A.z||0)+Number(b.getAttribute('data-z'))));applyA()})});
  ap.querySelector('[data-a11y-reset]').addEventListener('click',function(){A={};applyA()});applyA()}
-/* cookies: necessary always; statistics (Google Analytics) only with consent */
+/* cookies: necessary always; statistics (Google Analytics) and advertising (personalised Google AdSense ads, 29.10.2026) only with consent */
 var ck=d.getElementById('nck'),C=null;try{C=JSON.parse(localStorage.getItem('nwsConsent')||'null')}catch(e){}
 var ckFrom=null,sec=location.protocol==='https:'?';Secure':'';
 function ckShow(on){ck.hidden=!on;h.classList.toggle('ck-on',on);if(on)h.style.setProperty('--ck-h',ck.offsetHeight+'px')}
-function saveC(a){C={a:!!a,at:new Date().toISOString(),v:1};try{localStorage.setItem('nwsConsent',JSON.stringify(C))}catch(e){}
+function saveC(a,p){if(p===undefined)p=a;C={a:!!a,p:!!p,at:new Date().toISOString(),v:2};try{localStorage.setItem('nwsConsent',JSON.stringify(C))}catch(e){}
  try{d.cookie='nws_consent='+(a?'all':'necessary')+';path=/;max-age=31536000;SameSite=Lax'+sec}catch(e){}
- if(window.gtag)gtag('consent','update',{analytics_storage:a?'granted':'denied'});if(a&&window.nwsLoadGA)nwsLoadGA();
+ if(window.gtag)gtag('consent','update',{analytics_storage:a?'granted':'denied',ad_storage:p?'granted':'denied',ad_user_data:p?'granted':'denied',ad_personalization:p?'granted':'denied'});if(a&&window.nwsLoadGA)nwsLoadGA();
  if(!a){var dm=location.hostname.replace(/^www\./,'');d.cookie.split(';').forEach(function(c){var n=c.split('=')[0].trim();if(/^_ga/.test(n))['','.'+dm,dm].forEach(function(x){d.cookie=n+'=;path=/;max-age=0'+(x?';domain='+x:'')})})}
  ckShow(false);var f=ckFrom;ckFrom=null;if(f&&f.focus&&f.offsetParent!==null)f.focus()}
-if(ck){if(!C){try{var mc=d.cookie.match(/(?:^|; )nws_consent=(all|necessary)/);if(mc)C={a:mc[1]==='all',v:1}}catch(e){}}
- var set=ck.querySelector('[data-ck-set]'),cbA=ck.querySelector('[data-ck-a]'),sv=ck.querySelector('[data-ck="save"]');
+if(ck){if(!C){try{var mc=d.cookie.match(/(?:^|; )nws_consent=(all|necessary)/);if(mc)C={a:mc[1]==='all',p:mc[1]==='all',v:1}}catch(e){}}
+ var set=ck.querySelector('[data-ck-set]'),cbA=ck.querySelector('[data-ck-a]'),cbP=ck.querySelector('[data-ck-p]'),sv=ck.querySelector('[data-ck="save"]');
  ck.querySelector('[data-ck="all"]').addEventListener('click',function(){saveC(true)});
  ck.querySelector('[data-ck="min"]').addEventListener('click',function(){saveC(false)});
- ck.querySelector('[data-ck="set"]').addEventListener('click',function(){set.hidden=false;sv.hidden=false;cbA.checked=!!(C&&C.a);cbA.focus()});
- sv.addEventListener('click',function(){saveC(cbA.checked)});
- window.nwsCookieSettings=function(from){ckFrom=from||d.activeElement;ckShow(true);set.hidden=false;sv.hidden=false;cbA.checked=!!(C&&C.a);cbA.focus()};
+ ck.querySelector('[data-ck="set"]').addEventListener('click',function(){set.hidden=false;sv.hidden=false;cbA.checked=!!(C&&C.a);cbP.checked=!!(C&&C.p);cbA.focus()});
+ sv.addEventListener('click',function(){saveC(cbA.checked,cbP.checked)});
+ window.nwsCookieSettings=function(from){ckFrom=from||d.activeElement;ckShow(true);set.hidden=false;sv.hidden=false;cbA.checked=!!(C&&C.a);cbP.checked=!!(C&&C.p);cbA.focus()};
  d.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-ck-open],#nws-cookie-settings');if(b){e.preventDefault();nwsCookieSettings(b)}});
  addEventListener('resize',function(){if(!ck.hidden)h.style.setProperty('--ck-h',ck.offsetHeight+'px')},{passive:true});
  if(!C)ckShow(true)}
