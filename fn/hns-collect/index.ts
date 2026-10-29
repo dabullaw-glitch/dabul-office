@@ -269,20 +269,23 @@ async function gnewsFresh(raw: GRaw[]) {
 
 // ---------- polling ----------
 // 29.10.2026: Google News answers 503 to our edge functions but 200 to the database's own HTTP client, so kind 'gnews' is fetched
-// through pg_net (rpc hns_net_get starts the request, hns_net_res reads the answer when it is ready).
-async function fetchViaDb(url: string) {
-  const { data: id, error } = await sb.rpc('hns_net_get', { u: url });
-  if (error || !id) throw new Error('db fetch: ' + (error?.message || 'no id'));
-  for (let i = 0; i < 12; i++) {
-    await new Promise((r) => setTimeout(r, 1500));
-    const { data } = await sb.rpc('hns_net_res', { rid: id });
+// through pg_net in two steps across ticks: rpc hns_net_get starts the request and its id is kept in the source's etag field
+// ("net:<id>"); on a later tick rpc hns_net_res reads the answer (status 202 = still waiting, the source is polled again next minute).
+async function fetchViaDb(url: string, src: Any) {
+  const pend = /^net:\d+$/.test(String(src.etag || '')) ? Number(String(src.etag).slice(4)) : 0;
+  if (pend) {
+    const { data } = await sb.rpc('hns_net_res', { rid: pend });
     const row = Array.isArray(data) ? data[0] : data;
     if (row) { if (row.err && !row.status) throw new Error('db fetch: ' + row.err); return { status: row.status || 0, text: row.body || '', etag: null, lm: null }; }
+    return { status: 202, text: '', etag: src.etag, lm: null };
   }
-  throw new Error('db fetch: timeout');
+  const { data: id, error } = await sb.rpc('hns_net_get', { u: url });
+  if (error || !id) throw new Error('db fetch: ' + (error?.message || 'no id'));
+  await sb.from('hns_sources').update({ etag: `net:${id}` }).eq('id', src.id);
+  return { status: 202, text: '', etag: `net:${id}`, lm: null };
 }
 async function fetchText(url: string, src: Any) {
-  if (src.kind === 'gnews') return await fetchViaDb(url);
+  if (src.kind === 'gnews') return await fetchViaDb(url, src);
   const h: Record<string, string> = { 'User-Agent': UA, 'Accept-Language': 'he-IL,he;q=0.9,en;q=0.5' };
   if (src.etag) h['If-None-Match'] = src.etag;
   if (src.last_modified) h['If-Modified-Since'] = src.last_modified;
@@ -301,6 +304,7 @@ async function pollSource(src: Any) {
   const now = new Date().toISOString();
   try {
     const r = await fetchText(src.url, src);
+    if (r.status === 202) return { id: src.id, pending: true };
     if (r.status === 304) { await sb.from('hns_sources').update({ last_run: now, last_ok: now, last_error: null, fails: 0 }).eq('id', src.id); return { id: src.id, new: 0, status: 304 }; }
     if (r.status >= 400) throw new Error(`HTTP ${r.status}`);
     if (src.kind === 'smarticket') {
@@ -335,7 +339,7 @@ async function pollSource(src: Any) {
     await sb.from('hns_sources').update({ last_run: now, last_ok: now, last_error: null, fails: 0, etag: r.etag || null, last_modified: r.lm || null }).eq('id', src.id);
     return { id: src.id, parsed: raw.length, new: (data || []).length, local: (data || []).filter((x: Any) => x.is_local).length };
   } catch (e) {
-    await sb.from('hns_sources').update({ last_run: now, last_error: String((e as Error).message || e).slice(0, 300), fails: (src.fails || 0) + 1 }).eq('id', src.id);
+    await sb.from('hns_sources').update({ last_run: now, last_error: String((e as Error).message || e).slice(0, 300), fails: (src.fails || 0) + 1, ...(src.kind === 'gnews' ? { etag: null } : {}) }).eq('id', src.id);
     return { id: src.id, error: String((e as Error).message || e) };
   }
 }
