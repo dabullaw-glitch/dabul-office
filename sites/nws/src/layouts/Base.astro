@@ -12,6 +12,7 @@ import { SITE_URL, PREVIEW, LANGS, LANG_PREFIX, LANG_LOCALE, LANG_DIR, BRAND, TG
 import { t } from '../i18n/ui';
 import { liveCats, guideHref } from '../data/city/guide';
 import { ADSENSE } from '../data/site';
+import { liveFeed } from '../lib/livefeed';
 import { ARTICLES, articlesFor, articleUrl, sectionUrl, placeUrl, placesOf, fmtTime, fmtShort, EVENT, IMS, hebrewDate, FLASHES, navSections, liveSections } from '../lib/content';
 import { PLACES } from '../data/places';
 
@@ -30,16 +31,13 @@ const robots = PREVIEW || noindex ? 'noindex, nofollow' : 'index, follow, max-im
 const alts = Object.entries(alternates) as [Lang, string][];
 const pre = LANG_PREFIX[lang];
 const ogAbs = /^https?:/.test(ogImage) ? ogImage : SITE_URL + ogImage;
-// ticker: official flashes (hns-feed) and flash stories, newest first; the latest stories when there are fewer than 2
-const pool0 = articlesFor(lang).filter((a) => a.kind !== 'sponsored');
-const flashOnly = pool0.filter((a) => a.section === 'flash');
+// ticker (29.10.2026, Yakir: every flashes list shows the same thing): the same list as the home box and the side boxes
+// (lib/livefeed.ts): official flashes and the newest stories, newest first
 type Tick = { at: string; text: string; href: string; src?: string };
-const tk0: Tick[] = [...(he ? FLASHES.map((f) => ({ at: f.at, text: f.text, href: `/flash/#f${f.id}`, src: f.source })) : []),
-  ...flashOnly.map((a) => ({ at: a.published, text: a.title, href: articleUrl(a, lang) }))].sort((x, y) => Date.parse(y.at) - Date.parse(x.at));
-const tickerItems: Tick[] = (tk0.length >= 2 ? tk0 : pool0.map((a) => ({ at: a.published, text: a.title, href: articleUrl(a, lang) }))).slice(0, 8);
+const tickerItems: Tick[] = liveFeed(lang, 8);
 const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
 const tickTime = (iso: string) => (ilDay(new Date(iso)) === ilDay(new Date()) ? fmtTime(iso) : fmtShort(iso));
-const flashCount = he ? tk0.filter((x) => Date.now() - Date.parse(x.at) < 6 * 3600e3).length : 0;
+const flashCount = he ? tickerItems.filter((x) => Date.now() - Date.parse(x.at) < 6 * 3600e3).length : 0;
 const hdate = he ? hebrewDate() : '';
 const today = new Intl.DateTimeFormat(he ? 'he-IL' : lang, { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
 // weather and sea of the IMS (scripts/ims.mjs); shown only when there is data from today
@@ -291,21 +289,8 @@ if(typeof m.sea_surface_temperature==='number')set('sst',Math.round(m.sea_surfac
 if(typeof f.wind_speed_10m==='number')set('wind',Math.round(f.wind_speed_10m));
 try{set('at',new Intl.DateTimeFormat('he-IL',{timeZone:'Asia/Jerusalem',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date()))}catch(e){}}).catch(function(){});})();
 </script>
-{lang === 'he' && <script is:inline define:vars={{ API: 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/hns-feed?only=flashes' }}>
-/* official flashes, refreshed every minute: the ticker and the list on /flash/. A flash past its time limit disappears. */
-(function(){if(!window.fetch)return;var tk=document.querySelector('ul[data-tk]'),fl=document.querySelector('[data-flist]');if(!tk&&!fl)return;
-var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
-var day=function(d){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Jerusalem'}).format(d)};
-var tm=function(iso){var d=new Date(iso);return day(d)===day(new Date())?new Intl.DateTimeFormat('he-IL',{timeZone:'Asia/Jerusalem',hour:'2-digit',minute:'2-digit',hour12:false}).format(d):new Intl.DateTimeFormat('he-IL',{timeZone:'Asia/Jerusalem',day:'2-digit',month:'2-digit'}).format(d)};
-var stories=tk?[].slice.call(tk.querySelectorAll('li:not([aria-hidden])')).map(function(li){var a=li.querySelector('a');return{at:li.getAttribute('data-at'),href:a.getAttribute('href'),text:a.textContent.replace(/^\s*\S+\s/,'')}}).filter(function(x){return x.href.indexOf('/flash/#f')!==0}):[];
-function run(){fetch(API).then(function(r){return r.json()}).then(function(j){var now=Date.now();
-var f=(j.flashes||[]).filter(function(x){return now-Date.parse(x.at)<(x.ttl||12)*36e5});
-if(tk){var all=f.map(function(x){return{at:x.at,href:'/flash/#f'+x.id,text:x.source+': '+x.text}}).concat(stories).sort(function(a,b){return Date.parse(b.at)-Date.parse(a.at)}).slice(0,8);
-if(all.length>=2){var h=all.map(function(x){return'<li data-at="'+esc(x.at)+'"><a href="'+esc(x.href)+'"><b>'+tm(x.at)+'</b> '+esc(x.text)+'</a></li>'}).join('');tk.innerHTML=h+h.replace(/<li /g,'<li aria-hidden="true" ').replace(/<a /g,'<a tabindex="-1" ')}}
-if(fl){fl.innerHTML=f.map(function(x){return'<li id="f'+x.id+'"><time datetime="'+esc(x.at)+'">'+tm(x.at)+'</time><span><b>'+esc(x.source)+'</b> '+esc(x.text)+(x.url?' <a href="'+esc(x.url)+'" rel="noopener nofollow" target="_blank">למקור</a>':'')+'</span></li>'}).join('');var e=document.querySelector('[data-fempty]');if(e)e.hidden=f.length>0}
-}).catch(function(){})}
-setTimeout(run,4000);setInterval(function(){if(!document.hidden)run()},30000);})();
-</script>}
+{/* 29.10.2026: the flashes refresher in the browser was removed: it showed a different list from the home box. The site is rebuilt
+   within about a minute of every new flash or story, so the ticker, the home box, the side boxes and /flash/ always match. */}
 {/* 29.10.2026: the cookieless visit counter (edge function hns-hit): one beacon per page view with the path, the referring site's
    host, the device type from the screen width and the page language. No cookie, nothing kept in the browser, no IP stored.
    Only on https://nws.co.il, never on a preview build or a noindex page (404, search), never for automated browsers. */}

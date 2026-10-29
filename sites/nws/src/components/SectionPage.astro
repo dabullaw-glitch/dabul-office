@@ -13,6 +13,7 @@ import { IMG, SITE_URL, LANG_PREFIX, LANGS, type Lang } from '../data/site';
 import { SECTION_BY_KEY, type SectionKey } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
+import { liveFeed } from '../lib/livefeed';
 import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, placesOf, placeUrl, FLASHES, CALENDAR, calTime, calVenue, SPORT, tableAround } from '../lib/content';
 
 interface Props { lang: Lang; k: SectionKey }
@@ -30,7 +31,8 @@ const cats = CATEGORIES.filter((c) => c.sections.includes(k)).slice(0, 6);
 const jsonld: any[] = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name, url: SITE_URL + path, description: desc, inLanguage: lang, isPartOf: { '@id': SITE_URL + '/#website' },
   mainEntity: { '@type': 'ItemList', numberOfItems: Math.min(items.length, 30), itemListElement: items.slice(0, 30).map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a, lang), name: a.title })) } }];
 // /flash/: the official flashes of the last hours; /events/: the events calendar; /sports/: the league data
-const flashes = he && k === 'flash' ? FLASHES : [];
+// 29.10.2026: /flash/ shows the same live list as the home box and the ticker (lib/livefeed.ts)
+const flashes = he && k === 'flash' ? liveFeed(lang, 40) : [];
 const cal = he && k === 'leisure' ? CALENDAR.slice(0, 60) : [];
 const ilDayOf = (iso: string) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date(iso));
 const calDays = [...new Set(cal.map((c) => ilDayOf(c.start)))];
@@ -51,7 +53,7 @@ const lastTxt = last ? (ilDayOf(last) === todayIl ? fmtTime(last) : `${fmtShort(
 const n = items.length;
 const stats = [
   ...(n ? [he ? (n === 1 ? '<b>ידיעה אחת</b> במדור' : `<b>${n}</b> ידיעות במדור`) : lang === 'ru' ? `<b>${n}</b> материалов` : lang === 'fr' ? `<b>${n}</b> articles` : `<b>${n}</b> ${n === 1 ? 'story' : 'stories'}`] : []),
-  ...(flashes.length ? [`<b>${flashes.length}</b> ${flashes.length === 1 ? 'מבזק רשמי' : 'מבזקים רשמיים'} מהשעות האחרונות`] : []),
+  ...(flashes.length ? [`<b>${flashes.length}</b> מבזקים וידיעות אחרונות`] : []),
   ...(cal.length ? [`<b>${cal.length}</b> אירועים בלוח`] : []),
   ...(lastTxt ? [he ? `עודכן <b>${lastTxt}</b>` : `${u.updated} <b>${lastTxt}</b>`] : []),
 ];
@@ -69,9 +71,9 @@ const L = {
     <div style={`--c:${s.color}`}>
       {he && k === 'flash' && (
       <section class="n-live nl-ofbox" id="official" aria-labelledby="of-h" style="margin-bottom:36px">
-        <div class="lh"><h2 id="of-h"><span class="n-pulse" aria-hidden="true"></span>מבזקים רשמיים מהשעות האחרונות</h2><span>מתעדכן כל דקה</span></div>
-        <p class="nl-note">מד״א, השירות המטאורולוגי, המשטרה ופיקוד העורף, רק מה שנוגע לנתניה ולשרון.</p>
-        <ol class="nl-of num" data-flist>{flashes.map((f) => <li id={`f${f.id}`}><time datetime={f.at}>{ftm(f.at)}</time><span><b>{f.source}</b> {f.text}{f.url && <> <a href={f.url} rel="noopener nofollow" target="_blank">למקור</a></>}</span></li>)}</ol>
+        <div class="lh"><h2 id="of-h"><span class="n-pulse" aria-hidden="true"></span>המבזקים האחרונים</h2><span>מתעדכן כל הזמן</span></div>
+        <p class="nl-note">הודעות רשמיות של מד״א, השירות המטאורולוגי, המשטרה ופיקוד העורף, והידיעות האחרונות מנתניה ומהשרון.</p>
+        <ol class="nl-of num" data-flist>{flashes.map((f) => <li id={f.href.startsWith('/flash/#') ? f.href.slice(8) : undefined}><time datetime={f.at}>{ftm(f.at)}</time><span>{f.src && <b>{f.src}</b>} {f.href.startsWith('/flash/#') ? f.text : <a href={f.href}>{f.text}</a>}</span></li>)}</ol>
         <p class="empty" data-fempty hidden={flashes.length > 0}>כרגע אין מבזקים רשמיים מהשעות האחרונות. התרעות פיקוד העורף בזמן אמת מתקבלות באפליקציה ובאתר של פיקוד העורף.</p>
       </section>)}
       {cal.length > 0 && (
