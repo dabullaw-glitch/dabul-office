@@ -492,14 +492,14 @@ main:focus{outline:0}
 .n-dd[open] summary svg{transform:rotate(180deg)}
 .n-ddm{position:absolute;top:100%;left:max(16px,calc((100% - 1240px)/2));z-index:60;width:300px;max-width:calc(100vw - 32px);background:#fff;border:1px solid var(--line);box-shadow:0 14px 34px rgba(13,19,33,.16);display:flex;flex-direction:column;max-height:70vh;overflow-y:auto}
 .n-ddm b{background:#9A4722;color:#fff;padding:12px 16px;font-size:16px}
-.n-nav .n-ddm a{height:auto;padding:13px 18px;border-bottom:1px solid var(--line2);margin:0;font-weight:500;font-size:16px;white-space:normal;color:var(--ink)}
-.n-nav .n-ddm a:hover{background:var(--warm);color:var(--red2)}
-.n-nav .n-ddm a.all{font-weight:700;color:#0B5FCC;border-bottom:0}
+.n-ddm a{height:auto;padding:13px 18px;border-bottom:1px solid var(--line2);margin:0;font-weight:500;font-size:16px;white-space:normal;color:var(--ink)}
+.n-ddm a:hover{background:var(--warm);color:var(--red2)}
+.n-ddm a.all{font-weight:700;color:#0B5FCC;border-bottom:0}
 @media (max-width:760px){
  .n-dd summary{height:36px;border-radius:999px;font-size:14px}
  .n-dd.more{margin-right:0}
  .n-ddm{left:16px;right:16px;width:auto;max-width:none}
- .n-nav .n-ddm a{border:0;border-bottom:1px solid var(--line2);border-radius:0;height:auto}
+ .n-ddm a{border:0;border-bottom:1px solid var(--line2);border-radius:0;height:auto}
 }
 /* 29.10.2026: Google AdSense places (off until the account id is set) */
 .n-ad{margin:26px auto;max-width:100%;min-height:280px;background:#F6F5F2;border-radius:8px;padding:8px;display:flex;flex-direction:column;align-items:stretch;overflow:hidden}
@@ -507,3 +507,9 @@ main:focus{outline:0}
 .n-adl{font-size:11px;color:var(--mut);text-align:center;letter-spacing:.3px;margin-bottom:4px}
 .n-ad ins{min-height:250px}
 @media (max-width:760px){.n-ad{margin:20px 0;min-height:260px}}
+
+/* 29.10.2026: the city guide menu sits in the header tools, next to the Telegram button */
+.n-dd.hdd{position:relative}
+.n-dd.hdd summary{height:44px;border-radius:10px;padding:0 16px;font-size:15px}
+.n-dd.hdd .n-ddm{top:calc(100% + 8px);left:0;right:auto;border-radius:12px;overflow-y:auto}
+.n-ddm a{display:block;text-decoration:none}

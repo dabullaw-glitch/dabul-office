@@ -147,6 +147,9 @@ if(c&&c.p)gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',a
     <a class="n-logo" href={homeHref} aria-label={`NWS ${u.brandName}`}><span class="n-mk">NWS<i></i></span><span class="n-lt"><b>{u.brandName}</b><span>{u.tagline}</span></span></a>
     <div class="n-tools">
       <form class="n-srch" role="search" action={`${pre}/search/`} method="get"><Icon name="search" size={18} sw={2} /><label class="sr" for="q">{u.search}</label><input id="q" name="q" type="search" placeholder={he ? 'חיפוש ידיעות, רחובות, בעלי מקצוע' : u.searchPh}></form>
+      {/* 29.10.2026 (Yakir): the city guide menu moved from the sections row to the header, so the sections row is not cut */}
+      {he && guideCats.length > 0 && <details class="n-dd hdd" data-dd><summary aria-current={current === 'guide' ? 'page' : undefined}>שימושון עירוני<Icon name="chev" size={14} sw={2.4} /></summary>
+        <div class="n-ddm"><b>שימושון עירוני</b>{guideCats.map((c) => <a href={guideHref(c)}>{c.name}</a>)}<a class="all" href="/guide/">כל השימושון ←</a></div></details>}
       <a class="n-btn ink" href={tgHref} {...tgAttr} data-tg><Icon name="telegram" size={18} color="#fff" />{L.tg}</a>
       <a class="n-btn line ico" href={`${pre}/join/#alerts`} aria-label={L.alerts}><Icon name="bell" size={19} /></a>
     </div>
@@ -155,9 +158,7 @@ if(c&&c.p)gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',a
   <nav class="n-nav" aria-label={u.sectionsH}><div class="n-wrap">
     <a href={homeHref} aria-current={current === 'home' ? 'page' : undefined}>{L.home}</a>
     {nav.map((s) => <a href={sectionUrl(s.key, lang)} aria-current={current === s.key ? 'page' : undefined}>{s.key === 'flash' && <span class="dot" aria-hidden="true"></span>}{s.name[lang]}</a>)}
-    {he && guideCats.length > 0 && <details class="n-dd more" data-dd><summary aria-current={current === 'guide' ? 'page' : undefined}>שימושון עירוני<Icon name="chev" size={14} sw={2.4} /></summary>
-      <div class="n-ddm"><b>שימושון עירוני</b>{guideCats.map((c) => <a href={guideHref(c)}>{c.name}</a>)}<a class="all" href="/guide/">כל השימושון ←</a></div></details>}
-    <a class={he && guideCats.length > 0 ? undefined : 'more'} href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}>{L.pros}</a>
+    <a class="more" href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}>{L.pros}</a>
   </div></nav></>)}
 </header>
 {!compact && tickerItems.length > 0 && (
