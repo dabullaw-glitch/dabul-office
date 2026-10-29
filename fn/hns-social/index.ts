@@ -1,6 +1,6 @@
 // hns-social (28.10.2026): channel distribution of the HNS (חדשות נתניה והשרון, nws.co.il) news engine.
 // After hns-publish publishes a story, this function sends it to the public channels:
-//   tg  Telegram channel   every published story: title, short summary, link, section hashtag.
+//   tg  Telegram channel   every story at the moment it is published (only the last 45 minutes, never a backlog): title, summary, link.
 //   fb  Facebook page      only IMPORTANT stories (rule below), at most 4 a day, at least 60 minutes apart.
 //   wa  WhatsApp channel   only IMPORTANT stories (same rule), at most 6 a day, at least 30 minutes apart (Green API).
 // Importance rule (score, a story with score >= 50 is important):
@@ -47,6 +47,7 @@ const MIRROR = 'https://nws-site.pages.dev'; // same build, used while the domai
 const FB = 'https://graph.facebook.com/v21.0';
 const MAX_AGE_H = 8; // 29.10.2026: was 24; a story older than 8 hours is no longer news for a new post (the quiet night hours are 7.5)
 const IMPORTANT = 50;
+const TG_FRESH_MIN = 45; // Telegram: only stories published in the last 45 minutes (the site build takes a few minutes); at night it posts silently
 type Ch = 'tg' | 'fb' | 'wa';
 const CFG: Record<Ch, { perRun: number; perDay: number; gapMin: number; important: boolean; col: string }> = {
   tg: { perRun: 3, perDay: 40, gapMin: 0, important: false, col: 'ch_tg_at' },
@@ -108,7 +109,7 @@ async function postJson(url: string, body: Any) {
 async function send(ch: Ch, st: Any, text: string): Promise<{ ok: boolean; resp: Any }> {
   if (ch === 'tg') {
     const r = await postJson(`https://api.telegram.org/bot${S.TELEGRAM_BOT_TOKEN}/sendMessage`,
-      { chat_id: S.NWS_TG_CHANNEL, text, parse_mode: 'HTML', link_preview_options: { url: urlOf(st), prefer_large_media: true } });
+      { chat_id: S.NWS_TG_CHANNEL, text, parse_mode: 'HTML', disable_notification: ilClock().quiet, link_preview_options: { url: urlOf(st), prefer_large_media: true } });
     return { ok: !!r.j?.ok, resp: r.j?.ok ? { message_id: r.j.result?.message_id } : { status: r.status, error: r.j?.description || r.j?.error } };
   }
   if (ch === 'fb') {
@@ -215,8 +216,10 @@ async function run(opts: { dry: boolean; preview?: boolean; all?: boolean }) {
     for (const x of list) {
       const st = x.st, urgent = isWarning(st);
       const wait = (why: string) => res.waiting.push({ id: st.id, title: clean(st.title), why });
+      // 29.10.2026 (Yakir): Telegram gets a story only when it is published, never a backlog of older stories
+      if (ch === 'tg' && !opts.all && Date.now() - Date.parse(st.published_at) > TG_FRESH_MIN * 60e3) continue;
       if (n >= cfg.perRun && !opts.all) { wait('בריצה הבאה'); continue; }
-      if (clock.quiet && !urgent && !opts.all) { wait('שעות שקט 23:00 עד 06:30'); continue; }
+      if (clock.quiet && !urgent && !opts.all && ch !== 'tg') { wait('שעות שקט 23:00 עד 06:30'); continue; }
       if (!urgent && !opts.all && usedToday >= cfg.perDay) { wait(`הגיע למכסה היומית (${cfg.perDay})`); continue; }
       if (!urgent && !opts.all && cfg.gapMin && lastAt && (Date.now() - Date.parse(lastAt)) / 60e3 < cfg.gapMin) { wait(`מרווח של ${cfg.gapMin} דקות בין פוסטים`); continue; }
       if (!(await ready(st, live))) { wait('הכתבה עוד לא עלתה לאתר'); continue; }
