@@ -6,9 +6,17 @@ on:
   workflow_dispatch:
     inputs:
       only:
-        description: all, osm or gov
+        description: all, osm, gov or pages
         required: false
         default: all
+      urls:
+        description: for only=pages, official page addresses separated by |
+        required: false
+        default: ''
+      gtfs:
+        description: for only=pages, also read the Ministry of Transport GTFS (yes/no)
+        required: false
+        default: 'yes'
 permissions:
   contents: write
 jobs:
@@ -19,7 +27,16 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - name: fetch
+        if: inputs.only != 'pages'
         run: node sites/nws/scripts/citydata-fetch.mjs out ${{ inputs.only || 'all' }}
+      - name: official pages and GTFS
+        if: inputs.only == 'pages'
+        env:
+          SKIP_GTFS: ${{ inputs.gtfs == 'no' && '1' || '' }}
+          URLS: ${{ inputs.urls }}
+        run: |
+          cd sites/nws && npm i --no-save --no-audit --no-fund playwright@1.47.2 && npx playwright install --with-deps chromium
+          node scripts/citydata-pages.mjs ../../out "$URLS"
       - name: commit to city-data
         run: |
           git config user.name "city-data"; git config user.email "city-data@users.noreply.github.com"
