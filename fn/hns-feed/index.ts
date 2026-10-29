@@ -77,7 +77,7 @@ async function flashes(all = false) {
 // pieces (Shabbat times, daily weather, weekend guide, events of the week, day summary), culture and leisure, community, real estate,
 // sports, data pieces, blog guides and sponsored content. The site also keeps only the last 24 hours.
 const NO_FLASH_SEC = new Set(['blog', 'leisure', 'community', 'realestate', 'sports', 'tourism', 'law']);
-const URGENT = /נפגע|נפצע|פצוע|פצועים|הרוג|נהרג|נרצח|רצח|תאונ|שריפ|דליק|חסימ|נחסם|נחסמ|ייחסם|ייחסמו|ייסגר|ייסגרו|נסגר|סגירת|הסדרי תנועה|שינויי תנועה|עבודות|הפסק(ת|ות) (מים|חשמל)|אין מים|אין חשמל|אזהר|מזהיר|ריקול|החזרה מהמדפים|אזעק|פיגוע|ירי|דקיר|נדקר|נעצר|עצור|חשוד|כתב אישום|נעדר|חילוץ|לכוד|קרס|קריסת|דליפ|זיהום|חובש|פונה|פונו|החייאה|תגובה אלרגית|תוצאות הבחירות|ספירת|מנדטים|שיעור ההצבעה|אחוז ההצבעה|שביתה|מתקפ|טיל|יירוט|רעידת אדמה/;
+const URGENT = /נפגע|נפצע|פצוע|פצועים|הרוג|נהרג|נרצח|רצח|תאונ|שריפ|דליק|חסימ|נחסם|נחסמ|ייחסם|ייחסמו|ייסגר|ייסגרו|נסגר|סגירת|הסדרי תנועה|שינויי תנועה|עבודות|הפסק(ת|ות) (מים|חשמל)|אין מים|אין חשמל|אזהר|מזהיר|ריקול|החזרה מהמדפים|אזעק|פיגוע|ירי|דקיר|נדקר|תקפ|תקיפ|נעצר|עצור|חשוד|כתב אישום|נעדר|חילוץ|לכוד|קרס|קריסת|דליפ|זיהום|חובש|פונה|פונו|החייאה|תגובה אלרגית|תוצאות הבחירות|ספירת|מנדטים|שיעור ההצבעה|אחוז ההצבעה|שביתה|מתקפ|טיל|יירוט|רעידת אדמה/;
 function isFlash(s: Any) {
   if (s.kind === 'sponsored' || s.kind === 'opinion' || s.format) return false;
   if (/^auto:|hns-recurring|hns-data/.test(String(s.notes || ''))) return false;
