@@ -34,7 +34,7 @@ a:hover{color:var(--red)}
 .n-mk i{display:block;width:10px;height:10px;border-radius:50%;background:var(--red);margin:2px 0 0 4px}
 .n-lt{border-right:1px solid #D9D6CE;padding-right:16px;display:flex;flex-direction:column;gap:2px}
 .n-lt b{font-size:23px;font-weight:700;line-height:1.1;transition:font-size .2s}.n-lt span{font-size:13px;color:var(--mut)}
-.n-head.sm .n-mast .n-wrap{padding-block:8px}.n-head.sm .n-mk{font-size:34px}.n-head.sm .n-lt b{font-size:18px}.n-head.sm .n-lt span{display:none}
+/* 29.10.2026: the masthead no longer shrinks on scroll; the height change moved the page and made the top shake */
 .n-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .n-srch{display:flex;align-items:center;gap:8px;height:44px;width:300px;max-width:100%;border:1px solid #D9D6CE;border-radius:8px;padding-inline:14px;color:var(--mut);background:#fff}
 .n-srch input{border:0;outline:0;font:inherit;font-size:15px;flex:1;min-width:0;background:transparent;color:var(--ink)}
@@ -371,7 +371,7 @@ html.a11y-cursor,html.a11y-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=
  .n-mk{font-size:30px;letter-spacing:-1.2px}.n-mk i{width:7px;height:7px;margin-top:1px}
  .n-lt{padding-right:10px}.n-lt b{font-size:15.5px}.n-lt span{display:none}
  .n-tools{display:none}.n-mtools{display:flex}
- .n-head.sm .n-mk{font-size:28px}.n-head.sm .n-lt b{font-size:15px}
+
  .n-nav{border-top:0;border-bottom:1px solid var(--line2)}
  .n-nav .n-wrap{gap:8px;padding-block:10px}
  .n-nav a{height:36px;padding-inline:14px;border:1px solid #D9D6CE;border-radius:999px;font-size:14px;margin:0}
@@ -460,26 +460,28 @@ main:focus{outline:0}
 .n-page .prose a{text-decoration:underline;text-underline-offset:3px}
 .n-page .prose ul{padding-inline-start:22px}
 /* 29.10.2026: the flashes box on the home page (Yakir's example): red head, a scrolling list of white cards with time and share */
-.n-fl{border:0;border-radius:22px;background:#EFEFEF;overflow:hidden;box-shadow:0 1px 0 var(--line)}
-.n-fl .fh{margin:0;background:var(--red);padding:18px 18px 14px;display:flex;justify-content:center}
-.n-fl .fh span{position:relative;display:inline-block;font-size:34px;font-weight:900;line-height:1;color:var(--ink);letter-spacing:-.5px}
-.n-fl .fh i{position:absolute;top:-6px;left:-12px;width:11px;height:11px;border-radius:50%;background:#fff}
-.n-fls{list-style:none;margin:0;padding:14px 14px 4px 10px;max-height:560px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:#222 transparent}
-.n-fls::-webkit-scrollbar{width:8px}.n-fls::-webkit-scrollbar-thumb{background:#222;border-radius:8px}.n-fls::-webkit-scrollbar-track{background:transparent}
+.n-live.n-fl{padding:0;border:1px solid #E1E1E1;border-radius:20px;background:#F3F3F3;overflow:hidden;box-shadow:0 2px 10px rgba(13,19,33,.05)}
+.n-fl .fh{margin:0;background:var(--red);padding:14px 16px 12px;display:flex;justify-content:center}
+.n-fl .fh span{position:relative;display:inline-block;font-size:30px;font-weight:900;line-height:1.05;color:var(--ink);letter-spacing:-.3px}
+.n-fl .fh i{position:absolute;top:-4px;left:-11px;width:10px;height:10px;border-radius:50%;background:#fff}
+.n-fls{list-style:none;margin:0;padding:12px 12px 26px;max-height:540px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:#B9B9B9 transparent;-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 34px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 34px),transparent)}
+.n-fls::-webkit-scrollbar{width:6px}.n-fls::-webkit-scrollbar-thumb{background:#B9B9B9;border-radius:6px}.n-fls::-webkit-scrollbar-track{background:transparent}
 .n-fls:focus-visible{outline:2px solid var(--red);outline-offset:-2px}
-.n-fls li{background:#fff;border:1px solid #D9D9D9;border-radius:16px;padding:14px 16px 16px}
-.n-fls .fr{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.n-fls .t{display:flex;align-items:center;gap:8px;color:var(--red);font-size:14px;font-weight:600}
-.n-fls .t i{width:13px;height:13px;border-radius:50%;background:var(--red);flex:none}
-.n-fls .sh{border:0;background:none;padding:6px;margin:-6px;cursor:pointer;color:var(--ink);border-radius:50%;position:relative}
-.n-fls .sh svg{fill:none;stroke:currentColor;stroke-width:1.6}
-.n-fls .sh:hover{background:var(--warm)}
-.n-fls .sh.ok:after{content:'הקישור הועתק';position:absolute;left:0;top:100%;white-space:nowrap;font-size:12px;background:var(--ink);color:#fff;padding:3px 8px;border-radius:6px}
-.n-fls a{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-top:8px;font-size:16.5px;line-height:1.55;font-weight:500;color:var(--ink)}
+.n-fls li{flex:none;background:#fff;border:1px solid #E4E4E4;border-radius:14px;padding:12px 14px 13px;box-shadow:0 1px 2px rgba(13,19,33,.04);transition:border-color .15s}
+.n-fls li:hover{border-color:#CFCFCF}
+.n-fls .fr{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:24px}
+.n-fls .t{display:flex;align-items:center;gap:7px;color:var(--red);font-size:13.5px;font-weight:700;min-width:0}
+.n-fls .t i{width:9px;height:9px;border-radius:50%;background:var(--red);flex:none;box-shadow:0 0 0 3px rgba(200,16,46,.14)}
+.n-fls .src{color:var(--mut);font-weight:600;font-size:12px;background:#F1F1F1;border-radius:20px;padding:2px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.n-fls .sh{border:0;background:none;padding:5px;margin:-5px;cursor:pointer;color:#8A8F98;border-radius:50%;position:relative;flex:none;display:flex}
+.n-fls .sh svg{fill:none;stroke:currentColor;stroke-width:1.7;width:19px;height:19px}
+.n-fls .sh:hover{background:var(--warm);color:var(--ink)}
+.n-fls .sh.ok:after{content:'הקישור הועתק';position:absolute;left:0;top:100%;white-space:nowrap;font-size:12px;background:var(--ink);color:#fff;padding:3px 8px;border-radius:6px;z-index:2}
+.n-fls a{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-top:6px;font-size:16px;line-height:1.5;font-weight:600;color:var(--ink)}
 .n-fls a:hover{color:var(--red2)}
-.n-fls small{font-size:12px;color:var(--mut);font-weight:700}
-.n-fl .n-lf{border-top:0;background:#EFEFEF;padding:10px 12px 14px}
-@media (max-width:760px){.n-fl{margin-inline:0;border-radius:22px}.n-fls{max-height:520px}}
+.n-fl .n-lf{border-top:1px solid #E4E4E4;background:#fff;padding:12px;font-size:14.5px}
+.n-fl .n-lf:hover{color:var(--red)}
+@media (max-width:760px){.n-live.n-fl{margin-inline:0;border-radius:18px}.n-fls{max-height:470px}.n-fl .fh span{font-size:27px}}
 /* 29.10.2026: the "שימושון עירוני" dropdown in the section bar (the panel hangs from .n-nav, so the scrolling row does not clip it) */
 .n-nav{position:relative}
 .n-dd{flex:none;display:flex}

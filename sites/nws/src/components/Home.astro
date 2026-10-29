@@ -38,7 +38,9 @@ const duo = take(news, 2);
 const tlist = take(news, 3);
 // 2. the live feed: official flashes and the newest stories, by time
 type Feed = { at: string; text: string; href: string; src?: string };
-const feed: Feed[] = [...(he ? FLASHES.map((f) => ({ at: f.at, text: f.text, href: `/flash/#f${f.id}`, src: f.source })) : []),
+// 29.10.2026: official flash texts often end with their own "עודכן ב-29/10 09:49"; the box already shows the time
+const tidy = (t: string) => t.replace(/\s*[,.]?\s*עודכן\s*ב?-?\s*\d{1,2}[/.]\d{1,2}(?:[/.]\d{2,4})?(?:\s*,?\s*(?:בשעה\s*)?\d{1,2}:\d{2})?\s*\.?\s*$/, '').trim();
+const feed: Feed[] = [...(he ? FLASHES.map((f) => ({ at: f.at, text: tidy(f.text), href: `/flash/#f${f.id}`, src: f.source })) : []),
   ...all.slice(0, 20).map((a) => ({ at: a.published, text: a.title, href: articleUrl(a, lang) }))]
   .sort((x, y) => Date.parse(y.at) - Date.parse(x.at)).filter((x, i, arr) => arr.findIndex((y) => y.text === x.text) === i).slice(0, 20);
 const moreList = take(news, 5);
@@ -132,9 +134,9 @@ const T = he ? { live: 'עכשיו בנתניה והשרון', liveSub: 'מתע�
         <section class="n-live n-fl" aria-labelledby="live-h">
           <h2 class="fh" id="live-h"><span>{he ? 'מבזקים' : T.live}<i aria-hidden="true"></i></span></h2>
           <ol class="n-fls num" tabindex="0" aria-label={he ? 'רשימת המבזקים, אפשר לגלול' : T.live}>{feed.map((f) => (
-            <li><div class="fr"><span class="t"><i aria-hidden="true"></i><time datetime={f.at}>{ilDay(new Date(f.at)) === todayIl ? fmtTime(f.at) : `${fmtShort(f.at)} ${fmtTime(f.at)}`}</time></span>
+            <li><div class="fr"><span class="t"><i aria-hidden="true"></i><time datetime={f.at}>{ilDay(new Date(f.at)) === todayIl ? fmtTime(f.at) : `${fmtShort(f.at)} ${fmtTime(f.at)}`}</time>{f.src && <span class="src">{f.src}</span>}</span>
               <button class="sh" type="button" data-share={f.href} data-title={f.text} aria-label={he ? 'שיתוף' : 'Share'}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.3M8.3 13.2l7.4 4.3"/></svg></button></div>
-              <a href={f.href}>{f.src && <small>{f.src}: </small>}{f.text}</a></li>))}</ol>
+              <a href={f.href}>{f.text}</a></li>))}</ol>
           <a class="n-lf" href={sectionUrl('flash', lang)}>{T.allFlash}</a>
         </section>
         {moreList.length > 0 && (
