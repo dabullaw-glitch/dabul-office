@@ -42,6 +42,10 @@ const faq = (a: unknown) => (Array.isArray(a) ? a : []).map((x: Any) => Array.is
 const FLASH_SRC: Record<string, { name: string; hours: number }> = {
   oref_tg: { name: 'פיקוד העורף', hours: 6 }, mda_tg: { name: 'מד״א', hours: 12 }, ims_warn: { name: 'השירות המטאורולוגי', hours: 12 }, police_tg: { name: 'משטרת ישראל', hours: 12 },
 };
+// 29.10.2026 (Yakir): weather warnings flood the flashes; only the important ones are shown (floods, heavy rain, a dangerous sea
+// for bathing, snow, extreme heat, storms), each type once, and without the "עודכן ב-..." tail the box already shows as a time.
+const WX_KEEP = /שטפונ|הצפ|משקעים משמעותי|משקעים חריג|ים סוער|ים גבוה ומסוכן לרחצה|שלג|סערה|עומס חום כבד|עומס חום קיצוני|חום קיצוני|רוחות חזקות מאוד|סופת אבק/;
+const WX_UPD = /\s*[,.]?\s*עודכן\s*ב?-?\s*\d{1,2}[/.]\d{1,2}(?:[/.]\d{2,4})?(?:\s*,?\s*(?:בשעה\s*)?\d{1,2}:\d{2})?\s*\.?\s*$/;
 const clip = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s);
 const MANUAL_SRC = 'מערכת החדשות';
 async function flashes(all = false) {
@@ -54,11 +58,11 @@ async function flashes(all = false) {
   const now = Date.now(); const seen = new Set<string>();
   const auto = (data || []).filter((x: Any) => x.sensitivity !== 'sensitive').map((x: Any) => {
     const at = x.published_at || x.fetched_at; const src = FLASH_SRC[x.source_id]; const m: Any = mod.get(Number(x.id));
-    const orig = clip(clean(String(x.title || '').replace(/^[^\p{L}\p{N}]+/u, '')), 150);
+    const orig = clip(clean(String(x.title || '').replace(/^[^\p{L}\p{N}]+/u, '').replace(WX_UPD, '')), 150);
     const f: Any = { id: x.id, at, text: m?.text ? clip(clean(m.text), 150) : orig, source: src.name, url: String(x.url || ''), kind: x.source_id.replace(/_.*/, ''), ttl: src.hours };
     if (all) { f.hidden = !!m?.hidden; f.orig = orig; f.edited = !!m?.text; } else if (m?.hidden) f.text = '';
     return f;
-  }).filter((f: Any) => f.text && now - Date.parse(f.at) < f.ttl * 3600e3 && (all || (!seen.has(f.text) && seen.add(f.text))));
+  }).filter((f: Any) => f.text && now - Date.parse(f.at) < f.ttl * 3600e3 && (all || f.kind !== 'ims' || WX_KEEP.test(f.text)) && (all || (!seen.has(f.text) && seen.add(f.text))));
   const { data: man } = await sb.from('hns_flash').select('id,at,text,place,url,ttl_h,hidden').gte('at', new Date(now - 72 * 3600e3).toISOString()).order('at', { ascending: false }).limit(30);
   const manual = (man || []).filter((x: Any) => (all || !x.hidden) && now - Date.parse(x.at) < (x.ttl_h || 12) * 3600e3 && Date.parse(x.at) <= now + 60e3).map((x: Any) => {
     const t = clean(x.text); const pl = clean(x.place || '');
