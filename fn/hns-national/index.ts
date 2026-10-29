@@ -3,12 +3,14 @@
 // The local engine (hns-collect, hns-write, hns-publish) keeps only Netanya and the Sharon, so this function covers the few national
 // events that concern everyone: elections and the government that follows, war and security, home front instructions, and a national
 // emergency. Nothing else national (politics of the day, opinion, gossip, economy, world news) is written.
+// 29.10.2026 (Yakir approved): wider topics (household money, health, education, transport, weather), 25 a day, every 10 minutes,
+//   and a closing "מה זה אומר לתושבי נתניה:" paragraph when there is a practical effect.
 // Cron every 10 minutes. Per run at most ONE story:
 //   1. items of the last 3 hours from national news feeds (already collected by hns-collect, is_local false, cluster_id null) whose
 //      title matches the national topics, without opinion pieces, columns, podcasts or galleries;
 //   2. grouped by event (shared words); a group needs at least 2 different outlets, or the Home Front Command's own channel;
 //   3. a group that matches a national story of the last 6 hours is attached to it (its items get that story's id), not written again;
-//   4. at most 1 national story every 25 minutes and at most MAX_DAY a day (Israel day);
+//   4. at most 1 national story every 10 minutes (25 before 29.10.2026) and at most MAX_DAY a day (Israel day);
 //   5. written by Claude in our own words, strictly neutral (no opinions, both sides of a dispute, numbers with their time), then
 //      published through hns-publish 'approve' (by 'national-auto'), which keeps every publishing guard (outlet names, dashes).
 // POST (x-cron-secret): {action:'tick'} | {action:'tick', dry:true} (shows the groups, writes nothing)
@@ -25,11 +27,14 @@ async function secrets() {
 const J = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { 'content-type': 'application/json; charset=utf-8' } });
 
 const MODEL = 'claude-sonnet-5-5';
-const MAX_DAY = 12;
-const GAP_MIN = 25;
+// 29.10.2026 (Yakir approved): more national news, 15 to 25 a day, on matters that touch every family
+const MAX_DAY = 25;
+const GAP_MIN = 10;
 const NATIONAL_SRC = ['ynet_flash', 'ynet_news', 'walla_israel', 'maariv_news', 'mako_news', 'inn_news', 'kikar', 'srugim', 'haaretz_all', 'jdn', 'news08', 'hm_news', 'oref_tg'];
-const TOPIC_RE = /בחירות|ועדת הבחירות|מנדט|ספירת (?:הקולות|המעטפות)|הקואליציה|הרכבת (?:ה)?ממשלה|הטלת התפקיד|הנשיא (?:הטיל|יטיל)|ממשלה חדשה|השבעת הכנסת|מלחמה|פיקוד העורף|אזעק|ירי (?:רקטות|טילים)|טילים|כטב"ם|כטב״ם|צה"ל תקף|צה״ל תקף|תקיפה (?:ב|נגד)|איראן|חיזבאללה|חמאס|חטופ|הפסקת אש|מבצע צבאי|מצב (?:מיוחד|חירום) בעורף|הנחיות (?:פיקוד )?העורף|רעידת אדמה/;
-const SKIP_RE = /\|\s*[^|]{2,40}$|דעה|טור אישי|פרשנות|פודקאסט|גלריה|צפו:|צפו ב|ראיון|הסקר|סקר:|ציוץ|הורוסקופ|מתכון|בידור|כוכב|זמר|שחקנית|עוקבים/;
+// 29.10.2026: besides elections and security, decisions that touch every household (taxes, benefits, prices, Bank of Israel),
+// health and education (strikes, school holidays), national transport (rail, strikes) and extreme weather
+const TOPIC_RE = /בנק ישראל|הריבית|מדד המחירים|יוקר המחיה|התייקר|ייקור|העלאת (?:ה)?מחיר|מחיר (?:הדלק|הבנזין|החשמל|המים|הלחם|החלב|הגז)|מס הכנסה|מע"מ|נקודות זיכוי|רשות המסים|קצב(?:ה|ת|אות)|ביטוח לאומי|מענק|שכר המינימום|תקציב המדינה|חוק ההסדרים|הכנסת אישרה|אושר בקריאה|הממשלה אישרה|החלטת ממשלה|משרד הבריאות|משרד החינוך|שבית|שובת|עיצומים|לוח החופשות|חופשת (?:חנוכה|הפסח|הקיץ|סוכות)|שנת הלימודים|בגרות|חיסון|תחלוא|רכבת ישראל|קווי הרכבת|תחבורה ציבורית|משרד התחבורה|נתב"ג|רישיון נהיגה|סערה|שיטפו|הצפות|גשם כבד|שלג|שרב|עומס חום|השירות המטאורולוגי|פיגוע|מחבל|ועדת הבחירות|מנדט|ספירת (?:הקולות|המעטפות)|הקואליציה|הרכבת (?:ה)?ממשלה|הטלת התפקיד|הנשיא (?:הטיל|יטיל)|ממשלה חדשה|השבעת הכנסת|מלחמה|פיקוד העורף|אזעק|ירי (?:רקטות|טילים)|טילים|כטב"ם|כטב״ם|צה"ל תקף|צה״ל תקף|תקיפה (?:ב|נגד)|איראן|חיזבאללה|חמאס|חטופ|הפסקת אש|מבצע צבאי|מצב (?:מיוחד|חירום) בעורף|הנחיות (?:פיקוד )?העורף|רעידת אדמה/;
+const SKIP_RE = /\|\s*[^|]{2,40}$|רכילות|ריאליטי|האח הגדול|נוטה למות|דעה|טור אישי|פרשנות|פודקאסט|גלריה|צפו:|צפו ב|ראיון|הסקר|סקר:|ציוץ|הורוסקופ|מתכון|בידור|כוכב|זמר|שחקנית|עוקבים/;
 const OFFICIAL_SRC = new Set(['oref_tg']);
 
 const norm = (s: string) => s.replace(/[״“”]/g, '"').replace(/[׳‘’]/g, "'").replace(/[ְ-ׇ]/g, '');
@@ -63,7 +68,7 @@ async function pageText(url: string) {
   } catch { return ''; }
 }
 
-const SYSTEM = `אתה עורך חדשות באתר "חדשות נתניה והשרון". המדור "חדשות ארציות" מסקר רק אירועים ארציים שנוגעים לכולם: בחירות והרכבת הממשלה, מלחמה וביטחון, הנחיות פיקוד העורף ומצב חירום ארצי.
+const SYSTEM = `אתה עורך חדשות באתר "חדשות נתניה והשרון". המדור "חדשות ארציות" מסקר אירועים ארציים שנוגעים לכל משפחה בישראל: בחירות והרכבת הממשלה, מלחמה וביטחון, הנחיות פיקוד העורף ומצב חירום, החלטות ממשלה וכנסת שמשפיעות על הכיס (מסים, קצבאות, מחירים, שכר), בנק ישראל והריבית, בריאות וחינוך (שביתות, חופשות, חיסונים), תחבורה ארצית (רכבת, שביתות, כבישים ראשיים) ומזג אוויר קיצוני.
 כללים מחייבים:
 - רק עובדות שמופיעות במקורות. אסור להמציא שמות, מספרים, שעות או סיבות.
 - ניטרליות מלאה: בלי דעה, בלי שבח או גנאי, בלי תארים טעונים, בלי "הכי". טענה של צד מייחסים לו ("לדברי..."), ואם יש צד שני במקורות מביאים גם אותו. לא קובעים מי צודק.
@@ -73,10 +78,10 @@ const SYSTEM = `אתה עורך חדשות באתר "חדשות נתניה וה�
 - בכותרת, בכותרת המשנה, ב-kicker ובנקודות אסור שם של כלי תקשורת. לא לכתוב "לפי דיווח" או "כפי שדווח". מייחסים עובדות לגופים רשמיים (ועדת הבחירות המרכזית, צה"ל, פיקוד העורף, המשטרה, משרד ראש הממשלה, בית הנשיא).
 - קרדיט לכלי תקשורת רק אם הידיעה כולה נשענת על פרסום בלעדי שלו: אז הפסקה האחרונה היא שורה נפרדת "קרדיט: <שם>".
 - לא להשתמש בקו מפריד ארוך או בינוני.
-- אם יש השלכה מעשית לתושבי נתניה והשרון שכתובה במקורות (הנחיות התגוננות, קלפיות, תחבורה), להוסיף אותה. לא להמציא קשר מקומי.
+- כשההחלטה או האירוע משפיעים על כל תושב (מס, קצבה, מחיר, ריבית, שביתה, חופשה, הנחיה, תחבורה), הפסקה האחרונה מתחילה במילים "מה זה אומר לתושבי נתניה:" ומסבירה במשפט או שניים את ההשפעה המעשית, רק לפי מה שכתוב במקורות (מתי זה נכנס לתוקף, את מי זה מחייב, מה צריך לעשות). לא להמציא נתון מקומי. אם אין השפעה מעשית ברורה, לא להוסיף את הפסקה.
 - מבנה: פסקה ראשונה עם מה קרה ומתי (יום ותאריך, שעה אם ידועה), אחר כך הפרטים והמצב הנוכחי, ומה הלאה אם כתוב. 2 עד 4 פסקאות.
 - כותרת עד 80 תווים, עובדתית. כותרת משנה: משפט אחד עם פרט חשוב שלא בכותרת. kicker: עד 5 מילים עם עובדה שלא בכותרת, או ריק.
-- אם זה לא אירוע ארצי מהסוג הזה (למשל דעה, רכילות פוליטית, כלכלה, חדשות מחו"ל בלי השפעה ישירה על ישראל), החזר רק {"skip":true,"reason":"..."}.
+- אם זה לא אירוע ארצי מהסוג הזה (למשל דעה, רכילות פוליטית, ויכוח בין פוליטיקאים בלי החלטה, ספורט, בידור, שוק ההון, חדשות מחו"ל בלי השפעה ישירה על ישראל), החזר רק {"skip":true,"reason":"..."}.
 - אם אין מספיק עובדות לשני משפטים ענייניים, החזר רק {"hold":true,"reason":"..."}.
 החזר JSON בלבד: {"kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""],"basis":"official","sensitive":false}`;
 
