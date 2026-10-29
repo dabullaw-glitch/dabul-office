@@ -193,7 +193,7 @@ if(c&&c.p)gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',a
 
 <nav class="n-tab" aria-label={he ? 'ניווט ראשי' : 'Main navigation'}>
   <a href={homeHref} aria-current={current === 'home' ? 'page' : undefined}><Icon name="home" size={22} sw={1.9} />{L.home}</a>
-  <a href={sectionUrl('flash', lang)} aria-current={current === 'flash' ? 'page' : undefined}><span class="bdg"><Icon name="bolt" size={22} sw={1.9} />{flashCount > 0 && <i class="num" aria-hidden="true">{flashCount > 9 ? '9+' : flashCount}</i>}</span>{u.flash}</a>
+  <a href={sectionUrl('flash', lang)} aria-current={current === 'flash' ? 'page' : undefined}><span class="bdg"><Icon name="bolt" size={22} sw={1.9} /></span>{u.flash}</a>
   <a href={sectionUrl('sharon', lang)} aria-current={current === 'sharon' ? 'page' : undefined}><Icon name="pin" size={22} sw={1.9} />{L.sharon}</a>
   <a href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}><Icon name="wrench" size={22} sw={1.9} />{L.pros}</a>
   <button type="button" aria-haspopup="dialog" aria-controls="nmenu" aria-expanded="false" data-menu><Icon name="menu" size={22} sw={1.9} />{L.menu}</button>
