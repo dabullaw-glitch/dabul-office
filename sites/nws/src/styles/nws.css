@@ -513,3 +513,6 @@ main:focus{outline:0}
 .n-dd.hdd summary{height:44px;border-radius:10px;padding:0 16px;font-size:15px}
 .n-dd.hdd .n-ddm{top:calc(100% + 8px);left:0;right:auto;border-radius:12px;overflow-y:auto}
 .n-ddm a{display:block;text-decoration:none}
+
+/* 29.10.2026 (Yakir): on phones the home page has no flashes box, the running ticker at the top is enough */
+@media (max-width: 760px) { .n-live-home { display: none !important; } }

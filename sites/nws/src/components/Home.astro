@@ -24,7 +24,8 @@ const all0 = articlesFor(lang);
 // blog guides (29.10.2026) have their own block, they are not news
 const all = all0.filter((a) => a.kind !== 'sponsored' && (a.section as string) !== 'blog');
 const blogPosts = all0.filter((a) => (a.section as string) === 'blog').slice(0, 3);
-const spon = he ? all0.find((a) => a.kind === 'sponsored') : undefined;
+// 29.10.2026 (Yakir): sponsored stories are not shown on the home page at all; they live on their own pages and in their section
+const spon = undefined as Article | undefined;
 const S = (k: string) => SECTION_BY_KEY[k as SectionKey];
 const ev = he ? EVENT : null;
 const used = new Set<string>();
@@ -133,7 +134,7 @@ const T = he ? { live: 'עכשיו בנתניה והשרון', liveSub: 'מתע�
         {tlist.length > 0 && <div class="n-tlist">{tlist.map((a) => <a href={articleUrl(a, lang)} style={`--c:${S(a.section).color}`}><span class="n-k">{kickerOf(a, lang)}</span><b>{a.title}</b></a>)}</div>}
       </div>
       <aside>
-        <section class="n-live n-fl" aria-labelledby="live-h">
+        <section class="n-live n-fl n-live-home" aria-labelledby="live-h">
           <h2 class="fh" id="live-h"><span>{he ? 'מבזקים' : T.live}<i aria-hidden="true"></i></span></h2>
           <ol class="n-fls num" tabindex="0" aria-label={he ? 'רשימת המבזקים, אפשר לגלול' : T.live}>{feed.map((f) => (
             <li><div class="fr"><span class="t"><i aria-hidden="true"></i><time datetime={f.at}>{ilDay(new Date(f.at)) === todayIl ? fmtTime(f.at) : `${fmtShort(f.at)} ${fmtTime(f.at)}`}</time>{f.src && <span class="src">{f.src}</span>}</span>
