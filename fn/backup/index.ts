@@ -4,7 +4,13 @@
 // The Supabase free plan has no automatic backups, so this is the way back after a mistaken delete or a bad change.
 // Restore: download the file from the bucket, and insert the rows of the needed table (by hand, after checking).
 // POST (x-cron-secret) {action:'run'} | {action:'list'}
+// Off-site copy (29.10.2026, Yakir chose an encrypted copy in a private repository): POST {action:'offsite'} with the header
+// x-gh-oidc = a GitHub Actions identity token of the private repository dabullaw-glitch/dabul-backups (audience 'dabul-backup').
+// No secret is stored on GitHub: GitHub proves which repository and branch is asking. The answer is the newest daily file,
+// encrypted with AES-256-GCM (key BACKUP_ENC_KEY in app_secrets; a copy of the key is kept by Yakir). File format: 'NWSBK1' + 12 byte
+// iv + ciphertext. Decrypt with tools/decrypt.mjs in that repository.
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createRemoteJWKSet, jwtVerify } from 'npm:jose@5.9.6';
 
 // deno-lint-ignore no-explicit-any
 type Any = any;
@@ -69,7 +75,31 @@ async function run() {
   return res;
 }
 
+const GH_JWKS = createRemoteJWKSet(new URL('https://token.actions.githubusercontent.com/.well-known/jwks'));
+const OFFSITE_REPO = 'dabullaw-glitch/dabul-backups';
+async function offsite(tok: string) {
+  const { payload } = await jwtVerify(tok, GH_JWKS, { issuer: 'https://token.actions.githubusercontent.com', audience: 'dabul-backup' });
+  if (payload.repository !== OFFSITE_REPO || payload.ref !== 'refs/heads/main') return J({ ok: false, error: 'repo' }, 403);
+  const { data: files } = await sb.storage.from(BUCKET).list('daily', { limit: 100 });
+  const name = (files || []).map((f: Any) => f.name).filter((n: string) => /\.json\.gz$/.test(n)).sort().pop();
+  if (!name) return J({ ok: false, error: 'no backup' }, 404);
+  const { data: blob, error } = await sb.storage.from(BUCKET).download(`daily/${name}`);
+  if (error || !blob) return J({ ok: false, error: 'download' }, 500);
+  const { data: k } = await sb.from('app_secrets').select('v').eq('k', 'BACKUP_ENC_KEY').maybeSingle();
+  if (!k?.v) return J({ ok: false, error: 'key' }, 500);
+  const raw = Uint8Array.from(atob(k.v), (c) => c.charCodeAt(0));
+  const key = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt']);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, await blob.arrayBuffer()));
+  const out = new Uint8Array(6 + 12 + ct.length);
+  out.set(new TextEncoder().encode('NWSBK1'), 0); out.set(iv, 6); out.set(ct, 18);
+  await sb.from('docs').upsert({ coll: 'ops', id: 'backup-offsite-last', data: { at: new Date().toISOString(), file: name, bytes: out.length, run: payload.run_id || null }, updated_at: new Date().toISOString() }, { onConflict: 'coll,id' });
+  return new Response(out, { headers: { 'content-type': 'application/octet-stream', 'x-backup-file': name.replace('.json.gz', '') } });
+}
+
 Deno.serve(async (req) => {
+  const gh = req.headers.get('x-gh-oidc');
+  if (gh) { try { return await offsite(gh); } catch (_e) { return J({ ok: false }, 401); } }
   const s = await secret();
   if (!s || req.headers.get('x-cron-secret') !== s) return J({ ok: false }, 401);
   const b: Any = await req.json().catch(() => ({}));
