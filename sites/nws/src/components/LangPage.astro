@@ -25,9 +25,9 @@ const T: any = {
   'send-news': { ru: ['Сообщить новость', 'Сообщить новость', 'Увидели что-то в своём районе Нетании? Напишите нам, мы проверим и опубликуем.'],
          fr: ['Envoyer une info', 'Envoyer une info', 'Vous avez vu quelque chose dans votre quartier de Netanya ? Écrivez-nous, nous vérifierons.'],
          en: ['Send a tip', 'Send a tip', 'Saw something in your Netanya neighborhood? Tell us and we will check it and report.'] },
-  join: { ru: ['Срочные новости в Telegram и WhatsApp', 'Подписаться', 'Каналы NWS в Telegram и WhatsApp, уведомления и рассылка.'],
-         fr: ['Les flashs sur Telegram et WhatsApp', 'S’abonner', 'Les canaux NWS sur Telegram et WhatsApp, alertes et newsletter.'],
-         en: ['Breaking news on Telegram and WhatsApp', 'Subscribe', 'NWS channels on Telegram and WhatsApp, alerts and newsletter.'] },
+  join: { ru: ['Срочные новости в Telegram', 'Подписаться', 'Канал NWS в Telegram, уведомления и рассылка.'],
+         fr: ['Les flashs sur Telegram', 'S’abonner', 'Le canal NWS sur Telegram, alertes et newsletter.'],
+         en: ['Breaking news on Telegram', 'Subscribe', 'NWS channel on Telegram, alerts and newsletter.'] },
 };
 const [title, h1, desc] = T[kind][lang];
 const L: any = {
@@ -52,5 +52,5 @@ const about: any = {
   {kind === 'directory' && <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">{CATEGORIES.map((c) => <a class="pcard" href={`/directory/${c.slug}/`} hreflang="he" style={`--c:${c.color};border:1px solid #E3E7ED`}><span class="av">{c.name[lang][0]}</span><b>{c.name[lang]}</b><span class="note">{c.plural}</span></a>)}</div>}
   {kind === 'about' && <>{about.map((p: string) => <p>{p}</p>)}<p>Email: <span dir="ltr">{BRAND.email}</span></p></>}
   {kind === 'send-news' && <ReqForm type="tip" lang={lang} id="tipf" />}
-  {kind === 'join' && <><h2 id="telegram">Telegram</h2>{TG_URL ? <p><a class="btn pri" href={TG_URL} target="_blank" rel="noopener" data-tg>Telegram: <span dir="ltr">@{TG_USER}</span></a></p> : <p>{L.soon}</p>}<h2 id="whatsapp">WhatsApp</h2><p>{L.soon}</p><h2 id="alerts">Push</h2><p>{L.soon}</p></>}
+  {kind === 'join' && <><h2 id="telegram">Telegram</h2>{TG_URL ? <p><a class="btn pri" href={TG_URL} target="_blank" rel="noopener" data-tg>Telegram: <span dir="ltr">@{TG_USER}</span></a></p> : <p>{L.soon}</p>}<h2 id="alerts">Push</h2><p>{L.soon}</p></>}
 </Page>

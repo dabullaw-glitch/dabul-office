@@ -128,7 +128,6 @@ if(c&&c.a){gtag('consent','update',{analytics_storage:'granted'});nwsLoadGA()}</
     <div class="soc">
       <a href={tgHref} {...tgAttr} aria-label={he ? 'ערוץ הטלגרם' : 'Telegram'} data-tg><Icon name="telegram" size={16} /></a>
       {fb && <a href={fb} target="_blank" rel="noopener" aria-label={he ? 'הדף בפייסבוק' : 'Facebook'}><Icon name="facebook" size={16} /></a>}
-      <a href={`${pre}/join/#whatsapp`} aria-label={he ? 'ערוץ הוואטסאפ' : 'WhatsApp'}><Icon name="whatsapp" size={16} /></a>
     </div>
     <span class="sep sep2" aria-hidden="true"></span>
     <nav class="lg" aria-label="שפה / Language">{LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{langName(l)}</a>)}</nav>
