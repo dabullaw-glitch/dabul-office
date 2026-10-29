@@ -12,10 +12,3 @@ https://nws-site.pages.dev/*
   X-Robots-Tag: noindex
 https://:version.nws-site.pages.dev/*
   X-Robots-Tag: noindex
-# Management panel: never indexed, never cached (also excluded from functions/_middleware.js in _routes.json, so these rules apply)
-/admin/
-  X-Robots-Tag: noindex, nofollow
-  Cache-Control: no-store
-/admin/*
-  X-Robots-Tag: noindex, nofollow
-  Cache-Control: no-store

@@ -33,6 +33,24 @@
 //   line; since 28.10.2026 it publishes automatically when it is not sensitive (Yakir: only real editorial questions reach him).
 // Published text never contains a long or medium dash (replaced with a comma or a hyphen).
 // 28.10.2026: never published automatically (or sent for approval) when the newest source item is 7+ days older than the story.
+// 29.10.2026 (management panel https://nws.co.il/yakirdab/, through hns-panel after its session check, by 'yakir-panel'):
+//   {action:'edit', id, fields:{...}, note?, updated?}  full edit of a story in any state (not one merged into another). fields:
+//     title, dek, kicker (up to 5 words), body (paragraphs; a sponsored story may use the mini markup), key_points, faq [{q,a}],
+//     section, places, image_url (https; a new address is a real photo, not AI), image_alt, image_credit (extras), sensitivity
+//     ('normal'|'sensitive'), kind ('news'|'opinion'|'sponsored'), author, author_role, links [{text,url}] (extras, sponsored only),
+//     source_name + source_url (an official source given by hand).
+//     Same guards as every path: no media outlet name in the title, subtitle, key points or kicker, the body only as one closing
+//     credit, no "לפי דיווח", no long or medium dash. A published story that fails is not saved; a waiting one is saved with a warning.
+//     updated=true marks a published story "עודכן" (the site shows the update time), otherwise the note is "תוקן".
+//   {action:'create', fields:{...}, publish?}  a story written by hand in the panel (news, opinion or sponsored), with
+//     extras.manual and extras.hold: the engine never publishes it or sends it to Telegram by itself; only the panel publishes it
+//     (now, with publish=true, or later). A hand written story may have no official source (Yakir is the editor).
+//   {action:'panel_publish', id}  publish a waiting story from the panel: the same checks as his Telegram tap (body, voice guard, and
+//     an official or media source unless the story was written by hand); the Telegram approval message, if any, is marked handled.
+//   {action:'panel_reject', id, note?}  a waiting story is not published (state 'rejected'), the Telegram message is marked handled.
+//   {action:'restore', id}  a withdrawn story goes back to the site (same guards, not a merged one); a rejected story goes back to
+//     waiting as a held draft (extras.hold), to be published from the panel.
+//   tick: a story with extras.hold is skipped (never published or sent automatically).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -165,6 +183,7 @@ async function tick(dry: boolean) {
   const out: Any = { published: [], asked: [], skipped: [] };
   let sent = 0;
   for (const st of rows || []) {
+    if (st.extras?.hold) continue; // held in the management panel (written by hand, or restored there): only the panel publishes it
     if (!hasBody(st) || tipOnly(st)) continue; // tips and bodiless stories wait for an official source, never published here
     if (HELD_RE.test(st.notes || '')) continue; // the copy editor failed it twice: it waits quietly for another source (never to Yakir)
     const age = hours(st.created_at);
@@ -386,6 +405,151 @@ async function revise(b: Any) {
   return { ok: true, id: st.id, title: next.title };
 }
 
+// ---------- 29.10.2026: management panel (/yakirdab/) ----------
+const SECTIONS = ['national', 'flash', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'leisure', 'sharon', 'tourism', 'law'];
+const BY = 'yakir-panel';
+const httpsUrl = (u: unknown) => { const x = String(u ?? '').trim(); return /^https:\/\/[^\s"<>]{3,500}$/.test(x) ? x : ''; };
+const linkUrl = (u: unknown) => { const x = String(u ?? '').trim(); return /^(https?:\/\/[^\s"<>]{3,500}|\/[^\s"<>]{0,300})$/.test(x) ? x : ''; };
+// body: an array of paragraphs, or one text with an empty line between paragraphs (lines inside a paragraph stay, for lists)
+const paras = (v: unknown) => (Array.isArray(v) ? v : String(v ?? '').split(/\n[ \t]*\n/))
+  .map((p) => clean(String(p ?? '').replace(/\r/g, '').split('\n').map((l) => l.trim()).filter(Boolean).join('\n'))).filter(Boolean).slice(0, 80);
+const lines = (v: unknown, n: number) => (Array.isArray(v) ? v : String(v ?? '').split('\n')).map(clean).filter(Boolean).slice(0, n);
+// fields from the panel -> a patch for hns_stories, or {error}
+function fieldsPatch(f: Any, st: Any) {
+  const patch: Any = {}; const ex: Any = { ...(st?.extras || {}) }; let exTouched = false;
+  const has = (k: string) => f[k] !== undefined;
+  if (has('title')) { const t = clean(f.title).slice(0, 220); if (!t) return { error: 'חסרה כותרת' }; patch.title = t; }
+  if (has('dek')) patch.dek = clean(f.dek).slice(0, 500) || null;
+  if (has('kicker')) {
+    const k = clean(f.kicker);
+    if (k && k.split(/\s+/).length > 5) return { error: 'התווית מעל הכותרת: עד 5 מילים' };
+    if (k && outletIn(k)) return { error: `התווית מעל הכותרת לא יכולה לכלול שם של כלי תקשורת (${outletIn(k)})` };
+    patch.kicker = k || null;
+  }
+  if (has('body')) patch.body = paras(f.body);
+  if (has('key_points')) patch.key_points = lines(f.key_points, 8);
+  if (has('faq')) patch.faq = (Array.isArray(f.faq) ? f.faq : []).map((x: Any) => ({ q: clean(x?.q).slice(0, 300), a: clean(x?.a).slice(0, 1500) })).filter((x: Any) => x.q && x.a).slice(0, 12);
+  if (has('section')) { if (!SECTIONS.includes(String(f.section))) return { error: 'מדור לא מוכר' }; patch.section = String(f.section); }
+  if (has('places')) patch.places = lines(Array.isArray(f.places) ? f.places : String(f.places ?? '').split(/[,\n]/), 12);
+  if (has('sensitivity')) patch.sensitivity = f.sensitivity === 'sensitive' ? 'sensitive' : 'normal';
+  if (has('kind')) patch.kind = ['news', 'opinion', 'sponsored'].includes(f.kind) ? f.kind : 'news';
+  if (has('author')) patch.author = clean(f.author).slice(0, 100) || null;
+  if (has('author_role')) patch.author_role = clean(f.author_role).slice(0, 100) || null;
+  if (has('image_url')) {
+    const u = String(f.image_url ?? '').trim();
+    if (u && !httpsUrl(u)) return { error: 'קישור התמונה צריך להתחיל ב-https://' };
+    if ((u || null) !== (st?.image_url || null)) {
+      // a new address given by hand is a real photo (not an AI illustration); an empty one lets hns-img make an AI image again
+      Object.assign(patch, { image_url: u || null, image_model: null, image_prompt: null, image_at: u ? new Date().toISOString() : null, image_note: u ? 'נקבעה בלוח הניהול' : null });
+    }
+  }
+  if (has('image_alt')) patch.image_alt = clean(f.image_alt).slice(0, 250) || null;
+  if (has('image_credit')) { const c = clean(f.image_credit).slice(0, 80); if (c) ex.image_credit = c; else delete ex.image_credit; exTouched = true; }
+  if (has('links')) {
+    const ls = (Array.isArray(f.links) ? f.links : []).map((x: Any) => ({ text: clean(x?.text).slice(0, 120), url: linkUrl(x?.url) })).filter((x: Any) => x.text && x.url).slice(0, 6);
+    if (ls.length) ex.links = ls; else delete ex.links; exTouched = true;
+  }
+  if (has('source_name') || has('source_url')) {
+    const name = clean(f.source_name).slice(0, 120), url = linkUrl(f.source_url);
+    const rest = (Array.isArray(st?.sources) ? st.sources : []).filter((x: Any) => x.id !== 'panel');
+    patch.sources = name ? [{ id: 'panel', name, url, trust: 'official' }, ...rest] : rest;
+  }
+  if (exTouched) patch.extras = ex;
+  return { patch };
+}
+async function edit(b: Any) {
+  await outlets();
+  const { data: st } = await sb.from('hns_stories').select('*').eq('id', Number(b.id)).maybeSingle();
+  if (!st) return { ok: false, error: 'הידיעה לא נמצאה' };
+  if (st.merged_into) return { ok: false, error: `הידיעה מוזגה לידיעה ${st.merged_into}. ערכו את הידיעה הראשית.` };
+  const r: Any = fieldsPatch(b.fields || {}, st);
+  if (r.error) return { ok: false, error: r.error };
+  const patch = r.patch;
+  if (!Object.keys(patch).length) return { ok: true, id: st.id, same: true };
+  const next = { ...st, ...patch };
+  if (!hasBody(next)) return { ok: false, error: 'לידיעה חייבים להיות כותרת וטקסט' };
+  if (next.kind === 'sponsored' && !next.author) return { ok: false, error: 'בתוכן שיווקי חובה לכתוב את שם המפרסם' };
+  const problem = voiceProblem(next);
+  if (problem && st.state === 'published') return { ok: false, error: `לא נשמר: ${problem}` };
+  const now = new Date().toISOString();
+  patch.updated_at = now;
+  if (st.state === 'published') patch.pub_note = b.updated ? 'עודכן' : clean(b.note || 'תוקן בלוח הניהול');
+  const { data, error } = await sb.from('hns_stories').update(patch).eq('id', st.id).eq('state', st.state).select('id');
+  if (error) return { ok: false, error: error.message };
+  if (!data?.length) return { ok: false, error: 'הידיעה השתנתה בינתיים. פתחו אותה שוב.' };
+  await log('panel_edit', st.id, { by: BY, fields: Object.keys(patch), before: { title: st.title, dek: st.dek }, after: { title: next.title, dek: next.dek } });
+  return { ok: true, id: st.id, state: st.state, warning: problem ? `שימו לב: ${problem}. אי אפשר לפרסם כך.` : '' };
+}
+async function create(b: Any) {
+  await outlets();
+  const f = b.fields || {};
+  const kind = ['news', 'opinion', 'sponsored'].includes(f.kind) ? f.kind : 'news';
+  const base: Any = { extras: {}, sources: [] };
+  const r: Any = fieldsPatch({ section: 'city', sensitivity: 'normal', ...f, kind }, base);
+  if (r.error) return { ok: false, error: r.error };
+  const row: Any = { ...r.patch, kind, state: 'draft', verified: true, basis: 'manual', notes: 'נכתב ידנית בלוח הניהול', item_ids: [],
+    extras: { ...(r.patch.extras || {}), manual: true, hold: true }, sources: r.patch.sources || [] };
+  if (kind === 'sponsored') { row.author_role = row.author_role || 'תוכן שיווקי'; if (!row.author) return { ok: false, error: 'בתוכן שיווקי חובה לכתוב את שם המפרסם' }; }
+  if (!hasBody(row)) return { ok: false, error: 'לידיעה חייבים להיות כותרת וטקסט' };
+  const problem = voiceProblem(row);
+  if (problem && b.publish) return { ok: false, error: `לא פורסם: ${problem}` };
+  const { data, error } = await sb.from('hns_stories').insert(row).select('id').single();
+  if (error) return { ok: false, error: error.message };
+  await log('panel_create', data.id, { by: BY, kind, title: row.title });
+  if (b.publish) { const p = await panelPublish(data.id); return { ...p, id: data.id, created: true }; }
+  return { ok: true, id: data.id, created: true, state: 'draft', warning: problem ? `שימו לב: ${problem}. אי אפשר לפרסם כך.` : '' };
+}
+async function panelPublish(id: number) {
+  await roles(); await outlets();
+  const { data: st } = await sb.from('hns_stories').select('*').eq('id', id).maybeSingle();
+  if (!st) return { ok: false, error: 'הידיעה לא נמצאה' };
+  if (st.state === 'published') return { ok: true, already: 'published' };
+  if (!['draft', 'needs_check', 'approved'].includes(st.state)) return { ok: false, error: st.state === 'withdrawn' ? 'הידיעה הורדה מהאתר. כדי להחזיר אותה לחצו "להחזיר לאתר".' : 'הידיעה נדחתה. קודם "להחזיר להמתנה", ואז לפרסם.' };
+  if (!hasBody(st)) return { ok: false, error: 'לידיעה חייבים להיות כותרת וטקסט' };
+  if (!st.extras?.manual && tipOnly(st)) return { ok: false, error: 'לידיעה הזאת אין מקור רשמי או תקשורתי, רק רמז מקורא או מקבוצה. אי אפשר לפרסם אותה כך.' };
+  if (st.kind === 'sponsored' && !st.author) return { ok: false, error: 'בתוכן שיווקי חובה לכתוב את שם המפרסם' };
+  const problem = voiceProblem(st);
+  if (problem) return { ok: false, error: `לא פורסם: ${problem}` };
+  const ok = await publish(st, BY);
+  if (ok && st.tg_message_id && S.TELEGRAM_CHAT_ID) await tg('editMessageText', { chat_id: S.TELEGRAM_CHAT_ID, message_id: st.tg_message_id, text: `✅ פורסם (מלוח הניהול): ${clean(st.title)}`, disable_web_page_preview: true });
+  return ok ? { ok: true, published: id } : { ok: false, error: 'הפרסום לא הצליח. רעננו ונסו שוב.' };
+}
+async function panelReject(id: number, why: string) {
+  const { data: st } = await sb.from('hns_stories').select('id,state,title,tg_message_id').eq('id', id).maybeSingle();
+  if (!st) return { ok: false, error: 'הידיעה לא נמצאה' };
+  if (!['draft', 'needs_check', 'approved'].includes(st.state)) return { ok: false, error: 'אפשר לדחות רק ידיעה שממתינה. ידיעה שבאתר מורידים עם "להוריד מהאתר".' };
+  const now = new Date().toISOString();
+  const { data } = await sb.from('hns_stories').update({ state: 'rejected', decided_at: now, decided_by: BY, pub_note: clean(why || 'יקיר בחר לא לפרסם (לוח הניהול)'), updated_at: now })
+    .eq('id', id).in('state', ['draft', 'needs_check', 'approved']).select('id');
+  if (!data?.length) return { ok: false, error: 'הידיעה השתנתה בינתיים' };
+  await log('reject', id, { by: BY, why });
+  if (st.tg_message_id && S.TELEGRAM_CHAT_ID) await tg('editMessageText', { chat_id: S.TELEGRAM_CHAT_ID, message_id: st.tg_message_id, text: `✗ לא פורסם (לוח הניהול): ${clean(st.title)}`, disable_web_page_preview: true });
+  return { ok: true, rejected: id };
+}
+async function restore(id: number) {
+  await outlets();
+  const { data: st } = await sb.from('hns_stories').select('*').eq('id', id).maybeSingle();
+  if (!st) return { ok: false, error: 'הידיעה לא נמצאה' };
+  const now = new Date().toISOString();
+  if (st.state === 'withdrawn') {
+    if (st.merged_into) return { ok: false, error: `הידיעה מוזגה לידיעה ${st.merged_into}, ולכן לא חוזרת לבד` };
+    if (!hasBody(st) || !st.published_at) return { ok: false, error: 'לידיעה אין טקסט או שלא פורסמה אף פעם' };
+    const problem = voiceProblem(st);
+    if (problem) return { ok: false, error: `לא הוחזרה: ${problem}` };
+    const { data } = await sb.from('hns_stories').update({ state: 'published', decided_at: now, decided_by: BY, pub_note: 'הוחזר לאתר בלוח הניהול', updated_at: now })
+      .eq('id', id).eq('state', 'withdrawn').select('id');
+    if (data?.length) await log('restore', id, { by: BY, to: 'published' });
+    return { ok: !!data?.length, id, state: 'published' };
+  }
+  if (st.state === 'rejected') {
+    const { data } = await sb.from('hns_stories').update({ state: 'draft', decided_at: null, decided_by: null, pub_note: 'הוחזר להמתנה בלוח הניהול', updated_at: now, extras: { ...(st.extras || {}), hold: true } })
+      .eq('id', id).eq('state', 'rejected').select('id');
+    if (data?.length) await log('restore', id, { by: BY, to: 'draft' });
+    return { ok: !!data?.length, id, state: 'draft' };
+  }
+  return { ok: false, error: 'אפשר להחזיר רק ידיעה שהורדה או שנדחתה' };
+}
+
 Deno.serve(async (req) => {
   await secrets();
   if (!S.CRON_SECRET || req.headers.get('x-cron-secret') !== S.CRON_SECRET) return J({ ok: false }, 401);
@@ -401,6 +565,11 @@ Deno.serve(async (req) => {
     if (b.action === 'check') { await outlets(); const { data } = await sb.from('hns_stories').select('*').in('id', (b.ids || []).map(Number)); return J({ ok: true, res: (data || []).map((st: Any) => ({ id: st.id, state: st.state, problem: voiceProblem(st) })) }); }
     if (b.action === 'approve') return J({ ok: true, res: await approve((b.ids || []).map(Number).filter(Boolean), clean(b.by || 'yakir-chat').slice(0, 40)) });
     if (b.action === 'publish_ids') return J({ ok: true, res: await publishIds((b.ids || []).map(Number).filter(Boolean), !!b.dry) });
+    if (b.action === 'edit') return J(await edit(b));
+    if (b.action === 'create') return J(await create(b));
+    if (b.action === 'panel_publish') return J(await panelPublish(Number(b.id)));
+    if (b.action === 'panel_reject') return J(await panelReject(Number(b.id), String(b.note || '')));
+    if (b.action === 'restore') return J(await restore(Number(b.id)));
     if (b.action === 'status') {
       const { data } = await sb.from('hns_stories').select('state,sensitivity');
       const c: Record<string, number> = {}; for (const r of data || []) c[`${r.state}/${r.sensitivity}`] = (c[`${r.state}/${r.sensitivity}`] || 0) + 1;

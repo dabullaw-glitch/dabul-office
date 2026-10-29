@@ -1,4 +1,8 @@
-// hns-panel (28.10.2026): backend of the management panel of nws.co.il (חדשות נתניה והשרון) at https://nws.co.il/admin/.
+// hns-panel (28.10.2026): backend of the management panel of nws.co.il (חדשות נתניה והשרון).
+// 29.10.2026 (Yakir): the panel moved to https://nws.co.il/yakirdab/ (the old /admin/ address no longer exists) and became the full
+// management panel of the site: dashboard, every story (search, filters, full edit, publish, reject, withdraw, restore, pin as the
+// home page lead), stories and sponsored articles written by hand, flashes, the events strip, inquiries, the business directory,
+// sources, visit statistics (cookieless counter, edge function hns-hit) and the log.
 // Security (Yakir, 28.10.2026: a real password and a second factor, no passwordless login):
 //   1. Password: Yakir sets it himself through a one-time setup link that goes ONLY to his Telegram chat (office bot), valid 30 minutes.
 //      Strong password rules (12+ characters, 3 of 4 kinds: small letters, capital letters, digits, symbols, not a common password).
@@ -9,7 +13,9 @@
 //      address. Telegram alert on every failed attempt and on every successful login (time, address, country when known).
 //      Every step is written to hns_admin_log.
 //   5. Every data action checks the session here, on the server. The cron secret stays on the server (calls to hns-biz / hns-publish /
-//      hns-admin are made from this function). Tables are RLS on with no policies (server only).
+//      hns-admin / hns-feed are made from this function). Tables are RLS on with no policies (server only).
+//   6. (29.10.2026) Every action that changes data is written to hns_admin_log (kind 'action', ok, what and which id), and at most
+//      120 such actions are accepted in 10 minutes.
 // POST JSON:
 //   {action:'state'}                      {pw_set, locked_until}
 //   {action:'setup_link'}                 send a password setup / reset link to Yakir's Telegram (3 an hour)
@@ -18,6 +24,8 @@
 //   {action:'otp', pre, code}             step 2: the code. Returns {s} (session)
 //   with {s}:
 //   {action:'summary'}                    counts for the tabs
+//   {action:'dash'}                       the dashboard: today's visits and page views, stories published today, waiting approvals,
+//                                         new inquiries, sources health, the last alerts of hns-watch, the last logins
 //   {action:'requests', status?}          inquiries from the site forms (hns_requests): 'new' (default) | 'handled' | 'spam' | 'all'
 //   {action:'request_set', id, status?, note?}   status 'handled' | 'spam' | 'new' (through hns-biz, which also updates the Telegram message)
 //   {action:'listings', status?}          directory listings: 'pending' (default) | 'approved' | 'rejected'
@@ -26,9 +34,23 @@
 //   {action:'stories'}                    stories waiting for Yakir's approval (sent to him in Telegram and not decided yet)
 //   {action:'story_decide', id, act}      act 'ok' | 'no' (through hns-publish, with every publishing guard)
 //   {action:'published'}                  the latest published stories
+//   {action:'story_list', q?, state?, section?, kind?, from?, to?, offset?}   every story, with search and filters; state 'all' |
+//                                         'published' | 'waiting' (sent for approval or held in the panel) | 'draft' | 'needs_check' |
+//                                         'withdrawn' | 'rejected'. With views of the last 30 days and the pinned lead.
+//   {action:'story_get', id}              one story with everything the editor needs (and its source items)
+//   {action:'story_save', id, fields, note?, updated?}   full edit (hns-publish 'edit', every guard)
+//   {action:'story_new', fields, publish?}   a story or sponsored article written by hand (hns-publish 'create')
+//   {action:'story_publish', id} | {action:'story_reject', id, note?} | {action:'story_restore', id}   (hns-publish)
 //   {action:'story_withdraw', id, note}   take a published story off the site (through hns-publish 'withdraw')
 //   {action:'story_kicker', id, kicker}   the small label above a story title (through hns-admin 'story_meta', up to 5 words)
+//   {action:'story_pin', id?, hours?}     pin a story as the home page lead (no id = no pin) (hns-admin 'pin_set')
+//   {action:'story_img_redo', id}         a new AI illustration for a story (hns-admin 'img_redo')
+//   {action:'flashes'}                    the flashes as the site shows them, plus hidden ones (hns-feed, server to server)
+//   {action:'flash_mod', item_id, hidden?, text?} | {action:'flash_add', ...} | {action:'flash_edit', id, ...}   (hns-admin)
 //   {action:'events'} | {action:'event_set', event} | {action:'event_clear', id?}   the events strip of the home page (through hns-admin)
+//   {action:'sources'}                    every source with its status and last item; {action:'source_set', id, active} (hns-admin)
+//   {action:'stats', days?}               visits and page views (hns_stats over the hns-hit tables), with story titles
+//   {action:'log', kind?}                 the panel log (hns_admin_log) and the publishing log (hns_publish_log)
 //   {action:'logout'}
 //   {action:'test_session'} with x-cron-secret: a 10 minute session for automated checks of the panel (server to server only; whoever
 //                           holds the cron secret can already call every engine function directly).
@@ -119,7 +141,7 @@ async function setupLink(req: Request) {
   await log(req, 'setup_link', true);
   const r = await tg('sendMessage', { chat_id: S.TELEGRAM_CHAT_ID, disable_web_page_preview: true,
     text: `🔑 ${A.pw_hash ? 'איפוס הסיסמה' : 'הגדרת סיסמה'} ללוח הניהול של חדשות נתניה והשרון\n\nלחצו על הכפתור ובחרו סיסמה. הכפתור עובד פעם אחת, בתוך 30 דקות.\nהבקשה נשלחה בשעה ${fmtTime()}, ${where(req)}.\nלא ביקשתם? אל תלחצו, והסיסמה הקיימת נשארת.`,
-    reply_markup: { inline_keyboard: [[{ text: A.pw_hash ? 'לאיפוס הסיסמה' : 'להגדרת הסיסמה', url: `https://nws.co.il/admin/#setup=${k}` }]] } });
+    reply_markup: { inline_keyboard: [[{ text: A.pw_hash ? 'לאיפוס הסיסמה' : 'להגדרת הסיסמה', url: `https://nws.co.il/yakirdab/#setup=${k}` }]] } });
   if (!r?.ok) return { ok: false, error: 'שליחת ההודעה בטלגרם נכשלה. נסו שוב בעוד דקה.' };
   return { ok: true, message: 'שלחנו לכם בטלגרם (בבוט של המשרד) כפתור להגדרת הסיסמה. פתחו אותו בטלפון.' };
 }
@@ -197,7 +219,7 @@ async function summary() {
     ok: true,
     requests: await c(sb.from('hns_requests').select('id', { count: 'exact', head: true }).eq('status', 'new').eq('is_test', false)),
     listings: await c(sb.from('hns_biz_listings').select('id', { count: 'exact', head: true }).eq('status', 'pending').eq('is_test', false)),
-    stories: await c(sb.from('hns_stories').select('id', { count: 'exact', head: true }).in('state', AWAIT).not('tg_sent_at', 'is', null)),
+    stories: await c(sb.from('hns_stories').select('id', { count: 'exact', head: true }).in('state', AWAIT).or('tg_sent_at.not.is.null,extras->>hold.eq.true')),
   };
 }
 
@@ -220,6 +242,218 @@ async function stories() {
   return { ok: true, stories: (data || []).map((s: Any) => ({ ...s, sources: (Array.isArray(s.sources) ? s.sources : []).map((x: Any) => ({ name: x.name || x.source || x.id || '', url: x.url || '' })) })) };
 }
 
+// ---------- 29.10.2026: the full management panel ----------
+// midnight of an Israel calendar day (YYYY-MM-DD) as an ISO time
+function ilMidnight(day: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return '';
+  const noon = new Date(`${day}T12:00:00Z`);
+  const h = Number(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Jerusalem', hour: 'numeric', hourCycle: 'h23' }).format(noon));
+  return new Date(Date.parse(`${day}T00:00:00Z`) - (h - 12) * 3600e3).toISOString();
+}
+const ilToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+const nextDay = (day: string) => new Date(Date.parse(`${day}T12:00:00Z`) + 864e5).toISOString().slice(0, 10);
+
+async function pinNow() {
+  const { data } = await sb.from('hns_config').select('v').eq('k', 'site_pin').maybeSingle();
+  const v: Any = data?.v;
+  return v && v.id && (!v.until || Date.parse(v.until) > Date.now()) ? { id: Number(v.id), until: v.until || null } : null;
+}
+async function viewsOf(ids: number[], days = 30) {
+  if (!ids.length) return {} as Record<number, number>;
+  const { data } = await sb.rpc('hns_story_views', { p_ids: ids, p_days: days });
+  return Object.fromEntries((data || []).map((r: Any) => [Number(r.id), Number(r.views)])) as Record<number, number>;
+}
+const LIST_COLS = 'id,created_at,published_at,updated_at,section,title,dek,kicker,state,sensitivity,kind,pub_note,image_url,image_model,tg_sent_at,decided_by,decided_at,merged_into,extras,basis,author';
+async function storyList(b: Any) {
+  const st = String(b.state || 'all');
+  let q = sb.from('hns_stories').select(LIST_COLS, { count: 'exact' });
+  if (['published', 'withdrawn', 'rejected', 'draft', 'needs_check'].includes(st)) q = q.eq('state', st);
+  else if (st === 'waiting') q = q.in('state', AWAIT).or('tg_sent_at.not.is.null,extras->>hold.eq.true');
+  if (b.section) q = q.eq('section', String(b.section));
+  if (b.kind === 'news') q = q.or('kind.is.null,kind.eq.news');
+  else if (['opinion', 'sponsored'].includes(b.kind)) q = q.eq('kind', b.kind);
+  const from = ilMidnight(String(b.from || '')), to = b.to ? ilMidnight(nextDay(String(b.to))) : '';
+  const dateCol = st === 'published' ? 'published_at' : 'created_at';
+  if (from) q = q.gte(dateCol, from);
+  if (to) q = q.lt(dateCol, to);
+  const qs = String(b.q || '').replace(/[%,()*\\:"']/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80);
+  if (qs) q = /^\d{1,9}$/.test(qs) ? q.or(`id.eq.${qs},title.ilike.%${qs}%`) : q.or(`title.ilike.%${qs}%,dek.ilike.%${qs}%,kicker.ilike.%${qs}%,author.ilike.%${qs}%`);
+  const offset = Math.max(0, Number(b.offset) || 0);
+  q = st === 'published' ? q.order('published_at', { ascending: false, nullsFirst: false }) : q.order('id', { ascending: false });
+  const { data, error, count } = await q.range(offset, offset + 49);
+  if (error) return { ok: false, error: 'החיפוש נכשל. נסו מילה אחרת.' };
+  const rows = (data || []) as Any[];
+  const views = await viewsOf(rows.map((r) => r.id));
+  return { ok: true, total: count || 0, offset, pin: await pinNow(),
+    stories: rows.map((r) => ({ ...r, hold: !!r.extras?.hold, manual: !!r.extras?.manual, extras: undefined, views: views[r.id] || 0 })) };
+}
+async function storyGet(id: number) {
+  const { data: st } = await sb.from('hns_stories').select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,sensitivity,state,notes,pub_note,basis,kicker,kind,author,author_role,image_url,image_alt,image_model,image_note,extras,updates,merged_into,tg_sent_at,decided_by,decided_at,video_url,item_ids')
+    .eq('id', id).maybeSingle();
+  if (!st) return { ok: false, error: 'הידיעה לא נמצאה' };
+  const ids = (st.item_ids || []).map(Number).filter(Boolean).slice(-12);
+  const { data: items } = ids.length ? await sb.from('hns_items').select('id,source_id,title,url,published_at').in('id', ids).order('id', { ascending: false }) : { data: [] };
+  const srcIds = [...new Set((items || []).map((x: Any) => x.source_id))];
+  const { data: srcs } = srcIds.length ? await sb.from('hns_sources').select('id,name_he').in('id', srcIds) : { data: [] };
+  const nm = Object.fromEntries((srcs || []).map((x: Any) => [x.id, x.name_he]));
+  const views = await viewsOf([id], 400);
+  const { data: plog } = await sb.from('hns_publish_log').select('at,action,detail').eq('story_id', id).order('id', { ascending: false }).limit(15);
+  return { ok: true, pin: await pinNow(), views: views[id] || 0,
+    story: { ...st, sources: (Array.isArray(st.sources) ? st.sources : []).map((x: Any) => ({ id: x.id || '', name: x.name || x.id || '', url: x.url || '', trust: x.trust || '' })) },
+    items: (items || []).map((x: Any) => ({ ...x, source: nm[x.source_id] || x.source_id })),
+    history: (plog || []).map((x: Any) => ({ at: x.at, action: x.action, by: x.detail?.by || '', note: String(x.detail?.why || x.detail?.problem || x.detail?.note || '').slice(0, 200) })) };
+}
+async function flashList() {
+  const r: Any = await fetch(`${FN}/hns-feed?only=flashes&all=1`, { headers: { 'x-cron-secret': S.CRON_SECRET }, signal: AbortSignal.timeout(30000) })
+    .then((x) => x.json()).catch((e) => ({ ok: false, error: String(e) }));
+  const { data: man } = await sb.from('hns_flash').select('*').gte('at', new Date(Date.now() - 7 * 864e5).toISOString()).order('at', { ascending: false }).limit(40);
+  return { ok: !!r?.ok, flashes: r?.flashes || [], manual: man || [], error: r?.ok ? undefined : 'טעינת המבזקים נכשלה' };
+}
+async function sourceList() {
+  const { data: srcs } = await sb.from('hns_sources').select('id,name_he,kind,url,role,trust,enabled,last_run,last_ok,last_error,fails,notes,poll_min').order('id');
+  const { data: stats } = await sb.rpc('hns_source_stats');
+  const S2 = new Map<string, Any>();
+  for (const r of (stats || []) as Any[]) { const o = S2.get(r.source_id); if (!o || (r.items_7d || 0) > (o.items_7d || 0)) S2.set(r.source_id, r); }
+  const list = (srcs || []).map((s: Any) => {
+    const x = S2.get(s.id) || {};
+    const active = s.kind === 'html' ? !/\bpaused\b/.test(s.notes || '') : !!s.enabled;
+    const status = s.kind === 'auto' ? 'internal' : !active ? 'paused' : (s.fails || 0) >= 3 ? 'failing' : 'ok';
+    return { id: s.id, name: s.name_he || s.id, kind: s.kind, url: s.url || '', role: s.role || '', trust: s.trust || '', active, status, fails: s.fails || 0,
+      last_ok: s.last_ok, last_run: s.last_run, last_error: s.last_error ? String(s.last_error).slice(0, 160) : '', last_item: x.last_item || null,
+      items_24h: Number(x.items_24h || 0), items_7d: Number(x.items_7d || 0), poll_min: s.poll_min || null };
+  });
+  const sum = { ok: list.filter((s: Any) => s.status === 'ok').length, failing: list.filter((s: Any) => s.status === 'failing').length, paused: list.filter((s: Any) => s.status === 'paused').length };
+  return { ok: true, sources: list, sum };
+}
+// story titles for statistics paths (/<section>/n<id>/ in every language)
+async function titlesFor(paths: string[]) {
+  const ids = [...new Set(paths.map((p) => Number((/\/n(\d+)\/$/.exec(p) || [])[1])).filter(Boolean))].slice(0, 200);
+  if (!ids.length) return {};
+  const { data } = await sb.from('hns_stories').select('id,title').in('id', ids);
+  return Object.fromEntries((data || []).map((r: Any) => [r.id, r.title]));
+}
+async function stats(days: number) {
+  const { data, error } = await sb.rpc('hns_stats', { p_days: Math.min(400, Math.max(1, days || 30)) });
+  if (error) return { ok: false, error: 'טעינת הנתונים נכשלה' };
+  const d: Any = data || {};
+  const paths = [...(d.pages || []), ...(d.pages_today || []), ...(d.now?.pages || [])].map((x: Any) => String(x.path || ''));
+  return { ok: true, stats: d, titles: await titlesFor(paths) };
+}
+async function dash() {
+  const today = ilToday(), start = ilMidnight(today);
+  const c = async (q: Any) => (await q).count || 0;
+  const [sum, st, src] = await Promise.all([summary(), sb.rpc('hns_stats', { p_days: 7 }), sourceList()]);
+  const pubToday = await c(sb.from('hns_stories').select('id', { count: 'exact', head: true }).eq('state', 'published').gte('published_at', start));
+  const { data: latest } = await sb.from('hns_stories').select('id,published_at,section,title,kind').eq('state', 'published').order('published_at', { ascending: false }).limit(6);
+  const { data: waiting } = await sb.from('hns_stories').select('id,created_at,section,title,sensitivity,state').in('state', AWAIT).or('tg_sent_at.not.is.null,extras->>hold.eq.true').order('id', { ascending: false }).limit(6);
+  const { data: alerts } = await sb.from('hns_watch_alerts').select('id,at,issue,text,sent').order('id', { ascending: false }).limit(6);
+  const { data: logins } = await sb.from('hns_admin_log').select('at,kind,ok,country').in('kind', ['login', 'password', 'otp']).order('id', { ascending: false }).limit(5);
+  const s: Any = st.data || {};
+  return { ok: true, today, counts: { ...sum, published_today: pubToday }, visits: { today: s.today || {}, yesterday: s.yesterday || {}, now: { views: s.now?.views || 0, entries: s.now?.entries || 0 }, daily: s.daily || [] },
+    sources: src.sum, failing: (src.sources || []).filter((x: Any) => x.status === 'failing').map((x: Any) => ({ id: x.id, name: x.name, error: x.last_error })).slice(0, 8),
+    latest: latest || [], waiting: waiting || [], alerts: (alerts || []).map((a: Any) => ({ ...a, text: String(a.text || '').slice(0, 400) })), logins: logins || [], pin: await pinNow() };
+}
+async function logList(kind: string) {
+  let q = sb.from('hns_admin_log').select('id,at,kind,ok,ip,country,ua,note').order('id', { ascending: false }).limit(150);
+  if (kind === 'login') q = q.neq('kind', 'action');
+  else if (kind === 'action') q = q.eq('kind', 'action');
+  const { data } = await q;
+  const { data: plog } = await sb.from('hns_publish_log').select('id,at,action,story_id,detail').order('id', { ascending: false }).limit(80);
+  return { ok: true, log: data || [],
+    publish: (plog || []).map((x: Any) => ({ id: x.id, at: x.at, action: x.action, story_id: x.story_id, by: x.detail?.by || '', title: String(x.detail?.title || x.detail?.after?.title || '').slice(0, 160), note: String(x.detail?.why || x.detail?.problem || x.detail?.note || '').slice(0, 160) })) };
+}
+
+// actions that change data: written to the log, and rate limited
+const WRITES = new Set(['request_set', 'listing_decide', 'listing_edit', 'story_decide', 'story_withdraw', 'story_kicker', 'event_set', 'event_clear',
+  'story_save', 'story_new', 'story_publish', 'story_reject', 'story_restore', 'story_pin', 'story_img_redo', 'flash_mod', 'flash_add', 'flash_edit', 'source_set']);
+const idOf = (b: Any) => Number(b.id || b.item_id) || 0;
+
+async function handle(b: Any, h: string): Promise<Any> {
+  switch (b.action) {
+    case 'summary': return await summary();
+    case 'dash': return await dash();
+    case 'requests': return await requests(String(b.status || 'new'));
+    case 'request_set': {
+      const id = Number(b.id); if (!id) return { ok: false, error: 'id' };
+      if (b.note !== undefined) await sb.from('hns_requests').update({ note: String(b.note || '').replace(/\s*—\s*/g, ', ').replace(/\s*–\s*/g, ' - ').slice(0, 1000) || null, updated_at: new Date().toISOString() }).eq('id', id);
+      if (b.status) {
+        const act = b.status === 'handled' ? 'rq' : b.status === 'spam' ? 'sp' : b.status === 'new' ? 'rn' : '';
+        if (!act) return { ok: false, error: 'status' };
+        return await call('hns-biz', { action: 'decide', data: `hns:biz:${act}:${id}`, cq: { by: 'panel' } });
+      }
+      return { ok: true };
+    }
+    case 'listings': {
+      const st = ['pending', 'approved', 'rejected'].includes(b.status) ? b.status : 'pending';
+      const { data } = await sb.from('hns_biz_listings').select('id,created_at,updated_at,category,name,area,areas_served,address,phone,whatsapp,email,website,description,logo_url,license_no,contact_name,contact_phone,interest,status,plan,featured_until,is_test,decided_at,notes')
+        .eq('status', st).order('id', { ascending: false }).limit(100);
+      const { data: cats } = await sb.from('hns_biz_categories').select('slug,plural_he').eq('active', true).order('sort');
+      return { ok: true, listings: data || [], categories: cats || [] };
+    }
+    case 'listing_decide': {
+      const id = Number(b.id); if (!id || !['ok', 'no'].includes(b.act)) return { ok: false, error: 'bad' };
+      return await call('hns-biz', { action: 'decide', data: `hns:biz:${b.act}:${id}`, cq: {} });
+    }
+    case 'listing_edit': return await call('hns-biz', { action: 'listing_edit', id: Number(b.id), fields: b.fields || {} });
+    case 'stories': return await stories();
+    case 'story_decide': {
+      const id = Number(b.id); if (!id || !['ok', 'no'].includes(b.act)) return { ok: false, error: 'bad' };
+      const { data: st } = await sb.from('hns_stories').select('tg_message_id').eq('id', id).maybeSingle();
+      const cq = st?.tg_message_id ? { chat_id: S.TELEGRAM_CHAT_ID, message_id: st.tg_message_id } : undefined;
+      return await call('hns-publish', { action: 'decide', data: `hns:${b.act}:${id}`, cq });
+    }
+    case 'published': {
+      const { data } = await sb.from('hns_stories').select('id,published_at,section,title,dek,kicker,state').eq('state', 'published').order('published_at', { ascending: false }).limit(60);
+      return { ok: true, stories: data || [] };
+    }
+    case 'story_withdraw': {
+      const id = Number(b.id); if (!id) return { ok: false, error: 'id' };
+      const note = String(b.note || '').trim() || 'הורד מהאתר מלוח הניהול';
+      const r = await call('hns-publish', { action: 'withdraw', ids: [id], note });
+      if (r?.ok && !r.res?.[0]?.withdrawn) return { ok: false, error: 'הידיעה לא באתר כרגע' };
+      // a withdrawn story cannot stay pinned
+      const pin = await pinNow(); if (r?.ok && pin?.id === id) await call('hns-admin', { action: 'pin_set' });
+      return r;
+    }
+    case 'story_kicker': return await call('hns-admin', { action: 'story_meta', id: Number(b.id), kicker: String(b.kicker ?? '') });
+    case 'story_list': return await storyList(b);
+    case 'story_get': { const id = Number(b.id); if (!id) return { ok: false, error: 'id' }; return await storyGet(id); }
+    case 'story_save': {
+      const id = Number(b.id); if (!id) return { ok: false, error: 'id' };
+      return await call('hns-publish', { action: 'edit', id, fields: b.fields || {}, note: String(b.note || ''), updated: !!b.updated });
+    }
+    case 'story_new': return await call('hns-publish', { action: 'create', fields: b.fields || {}, publish: !!b.publish });
+    case 'story_publish': { const id = Number(b.id); if (!id) return { ok: false, error: 'id' }; return await call('hns-publish', { action: 'panel_publish', id }); }
+    case 'story_reject': { const id = Number(b.id); if (!id) return { ok: false, error: 'id' }; return await call('hns-publish', { action: 'panel_reject', id, note: String(b.note || '') }); }
+    case 'story_restore': { const id = Number(b.id); if (!id) return { ok: false, error: 'id' }; return await call('hns-publish', { action: 'restore', id }); }
+    case 'story_pin': return await call('hns-admin', { action: 'pin_set', ...(Number(b.id) ? { id: Number(b.id), hours: Number(b.hours) || 12 } : {}) });
+    case 'story_img_redo': {
+      const id = Number(b.id); if (!id) return { ok: false, error: 'id' };
+      const { data: st } = await sb.from('hns_stories').select('image_model,kind').eq('id', id).maybeSingle();
+      if (st?.kind === 'sponsored') return { ok: false, error: 'לתוכן שיווקי לא יוצרים תמונה בבינה מלאכותית. הדביקו קישור לתמונה של המפרסם.' };
+      return await call('hns-admin', { action: 'img_redo', id });
+    }
+    case 'flashes': return await flashList();
+    case 'flash_mod': return await call('hns-admin', { action: 'flash_mod', item_id: Number(b.item_id), ...(b.hidden !== undefined ? { hidden: !!b.hidden } : {}), ...(b.text !== undefined ? { text: String(b.text) } : {}) });
+    case 'flash_add': return await call('hns-admin', { action: 'flash_add', text: String(b.text || ''), place: String(b.place || ''), at: b.at || undefined, ttl_h: Number(b.ttl_h) || 12, url: String(b.url || '') });
+    case 'flash_edit': {
+      const id = Number(b.id); if (!id) return { ok: false, error: 'id' };
+      const e: Any = { action: 'flash_edit', id };
+      for (const k of ['text', 'place', 'at', 'ttl_h', 'url', 'hidden']) if (b[k] !== undefined) e[k] = b[k];
+      return await call('hns-admin', e);
+    }
+    case 'events': return await call('hns-admin', { action: 'events' });
+    case 'event_set': return await call('hns-admin', { action: 'event_set', event: b.event || {} });
+    case 'event_clear': return await call('hns-admin', { action: 'event_clear', ...(b.id ? { id: Number(b.id) } : {}) });
+    case 'sources': return await sourceList();
+    case 'source_set': return await call('hns-admin', { action: 'source_set', id: String(b.id || ''), active: !!b.active });
+    case 'stats': return await stats(Number(b.days) || 30);
+    case 'log': return await logList(String(b.kind || 'all'));
+    case 'logout': await sb.from('hns_admin_sessions').update({ expires_at: new Date().toISOString() }).eq('token_hash', h); return { ok: true };
+  }
+  return { ok: false, error: 'unknown action', status: 400 };
+}
+
 Deno.serve(async (req) => {
   REQ = req;
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors(req) });
@@ -239,53 +473,19 @@ Deno.serve(async (req) => {
     }
     const h = await session(b.s);
     if (!h) return J({ ok: false, auth: false, error: 'צריך להתחבר מחדש' }, 401);
-    switch (b.action) {
-      case 'summary': return J(await summary());
-      case 'requests': return J(await requests(String(b.status || 'new')));
-      case 'request_set': {
-        const id = Number(b.id); if (!id) return J({ ok: false, error: 'id' }, 400);
-        if (b.note !== undefined) await sb.from('hns_requests').update({ note: String(b.note || '').replace(/\s*\u2014\s*/g, ', ').replace(/\s*\u2013\s*/g, ' - ').slice(0, 1000) || null, updated_at: new Date().toISOString() }).eq('id', id);
-        if (b.status) {
-          const act = b.status === 'handled' ? 'rq' : b.status === 'spam' ? 'sp' : b.status === 'new' ? 'rn' : '';
-          if (!act) return J({ ok: false, error: 'status' }, 400);
-          return J(await call('hns-biz', { action: 'decide', data: `hns:biz:${act}:${id}`, cq: { by: 'panel' } }));
-        }
-        return J({ ok: true });
-      }
-      case 'listings': {
-        const st = ['pending', 'approved', 'rejected'].includes(b.status) ? b.status : 'pending';
-        const { data } = await sb.from('hns_biz_listings').select('id,created_at,updated_at,category,name,area,areas_served,address,phone,whatsapp,email,website,description,logo_url,license_no,contact_name,contact_phone,interest,status,plan,featured_until,is_test,decided_at,notes')
-          .eq('status', st).order('id', { ascending: false }).limit(100);
-        const { data: cats } = await sb.from('hns_biz_categories').select('slug,plural_he').eq('active', true).order('sort');
-        return J({ ok: true, listings: data || [], categories: cats || [] });
-      }
-      case 'listing_decide': {
-        const id = Number(b.id); if (!id || !['ok', 'no'].includes(b.act)) return J({ ok: false, error: 'bad' }, 400);
-        return J(await call('hns-biz', { action: 'decide', data: `hns:biz:${b.act}:${id}`, cq: {} }));
-      }
-      case 'listing_edit': return J(await call('hns-biz', { action: 'listing_edit', id: Number(b.id), fields: b.fields || {} }));
-      case 'stories': return J(await stories());
-      case 'story_decide': {
-        const id = Number(b.id); if (!id || !['ok', 'no'].includes(b.act)) return J({ ok: false, error: 'bad' }, 400);
-        const { data: st } = await sb.from('hns_stories').select('tg_message_id').eq('id', id).maybeSingle();
-        const cq = st?.tg_message_id ? { chat_id: S.TELEGRAM_CHAT_ID, message_id: st.tg_message_id } : undefined;
-        return J(await call('hns-publish', { action: 'decide', data: `hns:${b.act}:${id}`, cq }));
-      }
-      case 'published': {
-        const { data } = await sb.from('hns_stories').select('id,published_at,section,title,dek,kicker,state').eq('state', 'published').order('published_at', { ascending: false }).limit(60);
-        return J({ ok: true, stories: data || [] });
-      }
-      case 'story_withdraw': {
-        const id = Number(b.id); if (!id) return J({ ok: false, error: 'id' }, 400);
-        const note = String(b.note || '').trim() || 'הורד מהאתר מלוח הניהול';
-        return J(await call('hns-publish', { action: 'withdraw', ids: [id], note }));
-      }
-      case 'story_kicker': return J(await call('hns-admin', { action: 'story_meta', id: Number(b.id), kicker: String(b.kicker ?? '') }));
-      case 'events': return J(await call('hns-admin', { action: 'events' }));
-      case 'event_set': return J(await call('hns-admin', { action: 'event_set', event: b.event || {} }));
-      case 'event_clear': return J(await call('hns-admin', { action: 'event_clear', ...(b.id ? { id: Number(b.id) } : {}) }));
-      case 'logout': await sb.from('hns_admin_sessions').update({ expires_at: new Date().toISOString() }).eq('token_hash', h); return J({ ok: true });
+    const write = WRITES.has(b.action);
+    if (write) {
+      const { count } = await sb.from('hns_admin_log').select('id', { count: 'exact', head: true }).eq('kind', 'action').gte('at', new Date(Date.now() - 600e3).toISOString());
+      if ((count || 0) >= 120) return J({ ok: false, error: 'יותר מדי פעולות ברצף. חכו כמה דקות ונסו שוב.' }, 429);
     }
-    return J({ ok: false, error: 'unknown action' }, 400);
+    const res: Any = await handle(b, h);
+    if (write) {
+      const id = idOf(b) || Number(res?.id) || 0;
+      const what = `${b.action}${id ? ` #${id}` : ''}${b.action === 'source_set' ? ` ${String(b.id || '')} ${b.active ? 'on' : 'off'}` : ''}`;
+      await log(req, 'action', !!res?.ok, `${what}${res?.ok ? '' : `: ${String(res?.error || 'נכשל').slice(0, 140)}`}`.slice(0, 300));
+    }
+    const status = res?.status === 400 ? 400 : 200;
+    if (res && 'status' in res && typeof res.status === 'number') delete res.status;
+    return J(res, status);
   } catch (e) { return J({ ok: false, error: String((e as Error).message || e) }, 500); }
 });

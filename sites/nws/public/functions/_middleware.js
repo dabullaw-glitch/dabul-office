@@ -8,12 +8,20 @@
 // 3. Stories the engine merged into another story (hns-feed "merged"): their old address /<section>/n<id>/ (and /ru, /fr, /en)
 //    answers 301 to the main story, never 410. scripts/merged.mjs fills MERGED in the built copy (dist/functions) after every build:
 //    { "<id>": { "he": "/city/n27/", "en": "/en/city/n27/", ... } }; a language without its own page goes to the Hebrew one.
+// 4. (29.10.2026) A story whose section was changed in the management panel: its old address /<old section>/n<id>/ (a page that no
+//    longer exists) answers 301 to the story's current page. scripts/merged.mjs fills MOVED with every built story page.
+// 5. (29.10.2026) The management panel (its folder is known here only by the SHA-256 of its name, PANEL_H, so this file does not
+//    reveal the address): never indexed, never cached, never framed, no referrer. The old /admin/ address no longer exists (it
+//    answers like any other missing page).
 // _routes.json keeps static files (images, icons) and the _redirects sources out of this function, so it runs only for pages and feeds.
 const CANON = 'nws.co.il';
 const MOVE = new Set(['nws-site.pages.dev', 'www.nws.co.il']);
 const SPAM = /^\/video(\/|$)|adultleak|\/[^/]*leak[^/]*\.xml$/i;
 const SEC = { 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'strict-origin-when-cross-origin', 'Permissions-Policy': 'geolocation=(), camera=(), microphone=()' };
 const MERGED = /*MERGED*/{}/*END*/;
+const MOVED = /*MOVED*/{}/*END*/;
+const PANEL_H = '33868afa977d9a0ef40e886fe78228240f2540b69d3ec6bcfe4798aa542a0e43';
+const sha = async (t) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)))].map((b) => b.toString(16).padStart(2, '0')).join('');
 const STORY = /^\/(?:(ru|fr|en)\/)?[a-z-]+\/n(\d+)\/?$/;
 const GONE_HTML = '<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>העמוד הוסר</title></head>'
   + '<body style="font-family:sans-serif;text-align:center;padding:60px 16px"><h1>העמוד הזה לא קיים באתר</h1><p><a href="https://nws.co.il/">לעמוד הראשי של חדשות נתניה והשרון</a></p></body></html>';
@@ -36,7 +44,23 @@ export async function onRequest({ request, next }) {
   }
   const res = await next();
   // an address that is not on our site: 410 with our own 404 page (menu, search, latest stories)
-  if (res.status === 404) return gone(await res.text());
+  if (res.status === 404) {
+    const mv = st && MOVED[st[2]];
+    const to = mv && (mv[st[1] || 'he'] || mv.he);
+    if (to && to !== path) return new Response(null, { status: 301, headers: { Location: 'https://' + CANON + to, 'Cache-Control': 'public, max-age=3600', ...SEC } });
+    return gone(await res.text());
+  }
+  const seg = path.split('/')[1] || '';
+  if (seg && !seg.includes('.') && (await sha(seg.toLowerCase())) === PANEL_H) {
+    const out = new Response(res.body, res);
+    for (const [k, v] of Object.entries(SEC)) out.headers.set(k, v);
+    out.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    out.headers.set('Cache-Control', 'no-store');
+    out.headers.set('Referrer-Policy', 'no-referrer');
+    out.headers.set('X-Frame-Options', 'DENY');
+    out.headers.set('Content-Security-Policy', "frame-ancestors 'none'");
+    return out;
+  }
   // keep the site wide headers of _headers on pages that pass through here
   let out = res;
   for (const [k, v] of Object.entries(SEC)) {

@@ -21,6 +21,8 @@ export interface Article {
   format?: StoryFormat; formatData?: any;
   // the story's sources as shown in the "מקורות" line (see sourcesOf): official bodies, and media only when the body credits them
   sources?: Source[];
+  // 29.10.2026 (management panel): the photo credit given by hand (extras.image_credit), and the links of a sponsored article (extras.links)
+  imageCredit?: string; links?: { text: string; url: string }[];
 }
 export interface Source { name: string; url: string; trust: 'official' | 'media' }
 /** The "מקורות" line (Yakir, 28.10.2026): official bodies by name; a media outlet only when the story carries its credit line
@@ -121,6 +123,8 @@ function fromFeed(s: any): any {
     extras: extrasOf(s),
     ...formatOf(s),
     sources: sourcesOf(s.sources, (s.body || []).map(clean)),
+    imageCredit: clean(s.extras?.image_credit).slice(0, 80),
+    links: (Array.isArray(s.extras?.links) ? s.extras.links : []).map((l: any) => ({ text: clean(l?.text), url: safeUrl(l?.url) })).filter((l: any) => l.text && l.url).slice(0, 6),
     live: !!s.live && Array.isArray(s.updates) && s.updates.length > 0 && Date.now() - Date.parse(s.updates[s.updates.length - 1].at) < 6 * 3600e3,
   };
 }
@@ -210,7 +214,7 @@ export const EVENT: SiteEvent | null = ev0 && ev0.title && (!ev0.endsAt || Date.
 } : null;
 // 28.10.2026: official flashes (Home Front Command, MDA, IMS warnings, police) and the events calendar, from hns-feed.
 // A flash older than its ttl (hours) is dropped at build time; the browser drops it too and refreshes the list every minute.
-export interface Flash { id: number; at: string; text: string; source: string; url: string; kind: string; ttl: number }
+export interface Flash { id: number | string; at: string; text: string; source: string; url: string; kind: string; ttl: number }
 export const FLASHES: Flash[] = (FEED_JSON.flashes || []).map((f: any) => ({ ...f, text: clean(f.text) }))
   .filter((f: Flash) => f.text && Date.now() - Date.parse(f.at) < (Number(f.ttl) || 12) * 3600e3);
 export interface CalItem { id: number; title: string; start: string; venue: string; url: string; source: string }
@@ -243,10 +247,16 @@ export const navSections = () => NAV_ORDER.map((k) => SECTION_BY_KEY[k]).filter(
 
 export const LIVE: { ok: boolean; at?: string; wave?: number | null; sst?: number | null; temp?: number | null; wind?: number | null; code?: number | null } = readJson('live.json', { ok: false });
 
+/** the home page lead pinned in the management panel (hns-feed "pin" {id, until}), while its time has not passed */
+const PIN: { id: number; until: string | null } | null = FEED_JSON.pin && Number(FEED_JSON.pin.id) && (!FEED_JSON.pin.until || Date.parse(FEED_JSON.pin.until) > Date.now())
+  ? { id: Number(FEED_JSON.pin.id), until: FEED_JSON.pin.until || null } : null;
 /** the home page lead: newest story of the last 72 hours that is not a flash item, not an opinion and not in the event block.
  *  The same rule is in the Supabase function hns-img (the lead gets the better AI image). */
 export function leadOf(all: Article[], ev: SiteEvent | null = EVENT) {
   const evSlugs = new Set((ev?.storyIds || []).map((id) => `n${id}`));
+  // 29.10.2026: a story pinned in the management panel leads until its time passes (Yakir's choice, also a national one; never sponsored)
+  const pinned = PIN ? all.find((a) => a.slug === `n${PIN.id}` && a.kind !== 'sponsored') : undefined;
+  if (pinned) return pinned;
   // 29.10.2026: national stories (section 'national') get their own column and never take the local lead
   const pool = all.filter((a) => !evSlugs.has(a.slug) && a.kind !== 'sponsored' && a.section !== 'national');
   const fresh = pool.filter((a) => Date.now() - Date.parse(a.published) < 72 * 3600e3);
@@ -275,7 +285,7 @@ export function picLabel(p: Pic, lang: Lang = 'he') {
     sponsor: { he: 'צילום: באדיבות המפרסם', ru: 'Фото предоставлено рекламодателем', fr: 'Photo : avec l’aimable autorisation de l’annonceur', en: 'Photo courtesy of the advertiser' },
     stock: { he: 'צילום אילוסטרציה', ru: 'Иллюстративное фото', fr: 'Photo d’illustration', en: 'Illustrative photo' },
   };
-  return p.kind === 'photo' && p.credit ? `${L.photo[lang]}: ${p.credit}` : L[p.kind][lang];
+  return (p.kind === 'photo' || p.kind === 'sponsor') && p.credit ? `${L.photo[lang]}: ${p.credit}` : L[p.kind][lang];
 }
 function hashOf(s: string) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
 export function stockPic(name: string, alt = ''): Pic {
@@ -292,8 +302,9 @@ export function picOf(a: Article, _IMGS?: unknown): Pic {
   if (ai) {
     const files = ai.files || [];
     const src = files.length ? files[files.length - 1].src : ai.remote!;
-    const kind: PicKind = a.kind === 'sponsored' ? 'sponsor' : ai.model ? 'ai' : 'photo';
-    const credit = kind === 'photo' ? a.sourceName || '' : '';
+    // 29.10.2026: an AI illustration is always labelled as one (also on a sponsored story); a credit given in the panel wins
+    const kind: PicKind = ai.model ? 'ai' : a.kind === 'sponsored' ? 'sponsor' : 'photo';
+    const credit = kind === 'photo' ? a.imageCredit || a.sourceName || '' : kind === 'sponsor' ? a.imageCredit || '' : '';
     const p: Pic = { src, srcset: files.length > 1 ? files.map((f) => `${f.src} ${f.w}w`).join(', ') : undefined,
       small: files.length ? files[0].src : ai.remote!, alt: ai.alt, w: ai.w, h: ai.h, ai: kind === 'ai', own: true, stock: false, kind, credit, label: '', og: src };
     p.label = picLabel(p);

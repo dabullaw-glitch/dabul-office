@@ -12,6 +12,16 @@
 //   {action:'story_meta', id, kicker?, closure?, kind?, author?, author_role?, video_url?}   card fields of a story.
 //                                           kicker: up to 5 words, never a media outlet name; closure: {place, what, until:'YYYY-MM-DD', approx}
 //   {action:'img_redo', id}                 forget a story's AI image (and its prompt), so hns-img makes a new one on its next run
+// 29.10.2026 (management panel /yakirdab/, called by hns-panel after its session check):
+//   {action:'pin_set', id?, hours?}         pin a published story (not sponsored) as the home page lead for 1 to 72 hours (default 12);
+//                                           no id = no pin ({}). Saved in hns_config 'site_pin' {id, until}; hns-feed sends it as "pin".
+//   {action:'source_set', id, active}       switch a source on or off. Sources of kind 'html' (polled by hns-official, enabled stays
+//                                           false) are switched with the word "paused" in notes; every other kind with enabled.
+//   {action:'flash_mod', item_id, hidden?, text?}   hide or show an automatic flash (an hns_items row), or replace its text
+//                                           (empty text = back to the original). Table hns_flash_mod, read by hns-feed.
+//   {action:'flash_add', text, place?, at?, ttl_h?, url?}   a flash written by hand (table hns_flash), 10 to 150 characters.
+//   {action:'flash_edit', id, text?, place?, at?, ttl_h?, url?, hidden?}   change or hide a hand written flash.
+//   Texts: no long or medium dash, no media outlet name.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -81,6 +91,84 @@ Deno.serve(async (req) => {
   if (b.action === 'img_redo' && b.id) {
     const { data, error } = await sb.from('hns_stories').update({ image_url: null, image_prompt: null, image_alt: null, image_model: null, image_at: null, image_note: null }).eq('id', Number(b.id)).select('id');
     return J({ ok: !error && !!data?.length, error: error?.message });
+  }
+  // ---------- 29.10.2026: management panel ----------
+  const outletHit = async (t: string) => {
+    const { data: outl } = await sb.from('hns_outlets').select('name');
+    // the same matching as hns-publish: Latin names as whole words, Hebrew names also with a prefix letter
+    const rx = (n: string) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return (outl || []).map((r: Any) => String(r.name || '').trim()).find((n: string) => n.length >= 2 && new RegExp(/^[\x00-\x7F]+$/.test(n)
+      ? `(?<![A-Za-z0-9])${rx(n)}(?![A-Za-z0-9])` : `(?<![\u05D0-\u05EA])(?:[ובלמהשכ]{1,2}-?)?${rx(n)}(?![\u05D0-\u05EA])`, 'i').test(t)) || '';
+  };
+  if (b.action === 'pin_set') {
+    const id = Number(b.id) || 0;
+    const now = new Date().toISOString();
+    if (!id) {
+      const { error } = await sb.from('hns_config').upsert({ k: 'site_pin', v: {}, note: 'home page lead pinned in the panel (hns-admin pin_set)', updated_at: now }, { onConflict: 'k' });
+      return J({ ok: !error, pin: null, error: error?.message });
+    }
+    const { data: st } = await sb.from('hns_stories').select('id,state,kind,section').eq('id', id).maybeSingle();
+    if (!st || st.state !== 'published') return J({ ok: false, error: 'אפשר לנעוץ רק ידיעה שמופיעה באתר' });
+    if (st.kind === 'sponsored') return J({ ok: false, error: 'תוכן שיווקי לא מופיע כידיעה הראשית' });
+    const hours = Math.min(72, Math.max(1, Number(b.hours) || 12));
+    const v = { id, until: new Date(Date.now() + hours * 3600e3).toISOString() };
+    const { error } = await sb.from('hns_config').upsert({ k: 'site_pin', v, note: 'home page lead pinned in the panel (hns-admin pin_set)', updated_at: now }, { onConflict: 'k' });
+    return J({ ok: !error, pin: v, error: error?.message });
+  }
+  if (b.action === 'source_set' && b.id) {
+    const { data: src } = await sb.from('hns_sources').select('id,kind,enabled,notes').eq('id', String(b.id)).maybeSingle();
+    if (!src) return J({ ok: false, error: 'המקור לא נמצא' });
+    if (src.kind === 'auto') return J({ ok: false, error: 'זה מקור פנימי של המערכת, אין מה להפעיל או לכבות' });
+    const on = !!b.active;
+    const patch: Any = {};
+    if (src.kind === 'html') {
+      const notes = String(src.notes || '').replace(/\s*\bpaused\b\s*/g, ' ').trim();
+      patch.notes = on ? (notes || null) : `${notes} paused`.trim();
+    } else {
+      patch.enabled = on;
+      if (on) patch.fails = 0;
+    }
+    const { data, error } = await sb.from('hns_sources').update(patch).eq('id', src.id).select('id,enabled,notes,fails');
+    return J({ ok: !error && !!data?.length, source: data?.[0], error: error?.message });
+  }
+  if (b.action === 'flash_mod' && b.item_id) {
+    const item_id = Number(b.item_id);
+    const { data: it } = await sb.from('hns_items').select('id').eq('id', item_id).maybeSingle();
+    if (!it) return J({ ok: false, error: 'המבזק לא נמצא' });
+    const { data: cur } = await sb.from('hns_flash_mod').select('*').eq('item_id', item_id).maybeSingle();
+    const row: Any = { item_id, hidden: cur?.hidden ?? false, text: cur?.text ?? null, updated_at: new Date().toISOString() };
+    if (b.hidden !== undefined) row.hidden = !!b.hidden;
+    if (b.text !== undefined) {
+      const t = clean(b.text).slice(0, 150);
+      if (t && t.length < 10) return J({ ok: false, error: 'הטקסט קצר מדי' });
+      const hit = t ? await outletHit(t) : '';
+      if (hit) return J({ ok: false, error: `בלי שם של כלי תקשורת (${hit})` });
+      row.text = t || null;
+    }
+    const { data, error } = await sb.from('hns_flash_mod').upsert(row, { onConflict: 'item_id' }).select('*').single();
+    return J({ ok: !error, mod: data, error: error?.message });
+  }
+  if (b.action === 'flash_add' || (b.action === 'flash_edit' && b.id)) {
+    const row: Any = { updated_at: new Date().toISOString() };
+    if (b.text !== undefined || b.action === 'flash_add') {
+      const t = clean(b.text).slice(0, 150);
+      if (t.length < 10) return J({ ok: false, error: 'כתבו מבזק של 10 תווים לפחות' });
+      const hit = await outletHit(t);
+      if (hit) return J({ ok: false, error: `בלי שם של כלי תקשורת (${hit})` });
+      row.text = t;
+    }
+    if (b.place !== undefined) row.place = clean(b.place).slice(0, 40) || null;
+    if (b.url !== undefined) {
+      const u = String(b.url || '').trim();
+      if (u && !/^(https:\/\/[^\s"<>]{3,400}|\/[^\s"<>]{0,300})$/.test(u)) return J({ ok: false, error: 'הקישור צריך להתחיל ב-https://' });
+      row.url = u || null;
+    }
+    if (b.at !== undefined && b.at) { const t = Date.parse(b.at); if (isNaN(t)) return J({ ok: false, error: 'שעה לא תקינה' }); row.at = new Date(Math.min(t, Date.now() + 60e3)).toISOString(); }
+    if (b.ttl_h !== undefined) row.ttl_h = Math.min(48, Math.max(1, Number(b.ttl_h) || 12));
+    if (b.hidden !== undefined) row.hidden = !!b.hidden;
+    const q = b.action === 'flash_add' ? sb.from('hns_flash').insert(row) : sb.from('hns_flash').update(row).eq('id', Number(b.id));
+    const { data, error } = await q.select('*').single();
+    return J({ ok: !error, flash: data, error: error?.message });
   }
   if (b.action === 'outlets') {
     const { data } = await sb.from('hns_outlets').select('name').order('name');

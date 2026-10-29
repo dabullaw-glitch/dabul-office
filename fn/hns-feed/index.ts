@@ -20,6 +20,13 @@
 // 28.10.2026 (quality): "extras" per story (fields other functions add through hns-publish revise, e.g. related links, service
 //   boxes) and a top-level "merged" list [{id, section, into, intoSection}]: stories merged into another one; the site 301s them.
 // 28.10.2026 (enrichment): contextIds, serviceBox, format and formatData per story (written by the enrichment agent).
+// 29.10.2026 (management panel /yakirdab/, hns-panel through hns-admin):
+//   flashes: a flash the panel hid (table hns_flash_mod, hidden) is left out, a flash whose text the panel changed shows the new text,
+//   and flashes written by hand in the panel (table hns_flash) join the list with id "m<id>" and source "מערכת החדשות", until their
+//   own time limit (ttl_h). All sorted by time, newest first. ?only=flashes&all=1 with x-cron-secret (server to server, for the panel)
+//   also returns the hidden ones, marked hidden, with the original text.
+//   "pin": the story the panel pinned as the home page lead ({id, until}, hns_config 'site_pin'), or null; only while it is published.
+//   extras: the internal panel flags (hold, manual) are not sent.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -36,15 +43,30 @@ const FLASH_SRC: Record<string, { name: string; hours: number }> = {
   oref_tg: { name: 'פיקוד העורף', hours: 6 }, mda_tg: { name: 'מד״א', hours: 12 }, ims_warn: { name: 'השירות המטאורולוגי', hours: 12 }, police_tg: { name: 'משטרת ישראל', hours: 12 },
 };
 const clip = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s);
-async function flashes() {
+const MANUAL_SRC = 'מערכת החדשות';
+async function flashes(all = false) {
   const since = new Date(Date.now() - 12 * 3600e3).toISOString();
   const { data } = await sb.from('hns_items').select('id,source_id,title,url,published_at,fetched_at,sensitivity')
     .in('source_id', Object.keys(FLASH_SRC)).eq('is_local', true).eq('backfill', false).gte('fetched_at', since).order('id', { ascending: false }).limit(40);
+  const ids = (data || []).map((x: Any) => x.id);
+  const { data: mods } = ids.length ? await sb.from('hns_flash_mod').select('item_id,hidden,text').in('item_id', ids) : { data: [] };
+  const mod = new Map((mods || []).map((m: Any) => [Number(m.item_id), m]));
   const now = Date.now(); const seen = new Set<string>();
-  return (data || []).filter((x: Any) => x.sensitivity !== 'sensitive').map((x: Any) => {
-    const at = x.published_at || x.fetched_at; const src = FLASH_SRC[x.source_id];
-    return { id: x.id, at, text: clip(clean(String(x.title || '').replace(/^[^\p{L}\p{N}]+/u, '')), 150), source: src.name, url: String(x.url || ''), kind: x.source_id.replace(/_.*/, ''), ttl: src.hours };
-  }).filter((f: Any) => f.text && now - Date.parse(f.at) < f.ttl * 3600e3 && !seen.has(f.text) && seen.add(f.text)).slice(0, 15);
+  const auto = (data || []).filter((x: Any) => x.sensitivity !== 'sensitive').map((x: Any) => {
+    const at = x.published_at || x.fetched_at; const src = FLASH_SRC[x.source_id]; const m: Any = mod.get(Number(x.id));
+    const orig = clip(clean(String(x.title || '').replace(/^[^\p{L}\p{N}]+/u, '')), 150);
+    const f: Any = { id: x.id, at, text: m?.text ? clip(clean(m.text), 150) : orig, source: src.name, url: String(x.url || ''), kind: x.source_id.replace(/_.*/, ''), ttl: src.hours };
+    if (all) { f.hidden = !!m?.hidden; f.orig = orig; f.edited = !!m?.text; } else if (m?.hidden) f.text = '';
+    return f;
+  }).filter((f: Any) => f.text && now - Date.parse(f.at) < f.ttl * 3600e3 && (all || (!seen.has(f.text) && seen.add(f.text))));
+  const { data: man } = await sb.from('hns_flash').select('id,at,text,place,url,ttl_h,hidden').gte('at', new Date(now - 72 * 3600e3).toISOString()).order('at', { ascending: false }).limit(30);
+  const manual = (man || []).filter((x: Any) => (all || !x.hidden) && now - Date.parse(x.at) < (x.ttl_h || 12) * 3600e3 && Date.parse(x.at) <= now + 60e3).map((x: Any) => {
+    const t = clean(x.text); const pl = clean(x.place || '');
+    const f: Any = { id: `m${x.id}`, at: x.at, text: clip(pl && !t.includes(pl) ? `${t} (${pl})` : t, 150), source: MANUAL_SRC, url: String(x.url || ''), kind: 'nws', ttl: x.ttl_h || 12 };
+    if (all) { f.hidden = !!x.hidden; f.manual = true; f.place = pl; f.raw = t; }
+    return f;
+  });
+  return [...auto, ...manual].sort((a: Any, b: Any) => Date.parse(b.at) - Date.parse(a.at)).slice(0, all ? 60 : 15);
 }
 async function calendar() {
   const { data } = await sb.from('hns_cal').select('id,source_id,title,starts_at,venue,url').gte('starts_at', new Date().toISOString())
@@ -57,7 +79,15 @@ async function calendar() {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: H });
   const url = new URL(req.url);
-  if (url.searchParams.get('only') === 'flashes') return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), flashes: await flashes() }), { headers: { ...H, 'cache-control': 'public, max-age=15' } });
+  if (url.searchParams.get('only') === 'flashes') {
+    // the panel's view (hidden flashes too) only server to server, with the cron secret
+    if (url.searchParams.get('all') === '1') {
+      const { data: sec } = await sb.from('app_secrets').select('v').eq('k', 'CRON_SECRET').maybeSingle();
+      if (!sec?.v || req.headers.get('x-cron-secret') !== sec.v) return new Response(JSON.stringify({ ok: false }), { status: 401, headers: H });
+      return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), flashes: await flashes(true) }), { headers: { ...H, 'cache-control': 'no-store' } });
+    }
+    return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), flashes: await flashes() }), { headers: { ...H, 'cache-control': 'public, max-age=15' } });
+  }
   const limit = Math.min(1000, Math.max(1, Number(url.searchParams.get('limit')) || 300));
   const { data, error } = await sb.from('hns_stories')
     .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure,pub_note,updates,extras,context_ids,service_box,format,format_data')
@@ -84,7 +114,7 @@ Deno.serve(async (req) => {
       image: s.image_url ? { url: s.image_url, alt: clean(s.image_alt), model: s.image_model || '', ai: true } : null,
       updates: (Array.isArray(s.updates) ? s.updates : []).map((u: Any) => ({ at: u.at, text: clean(u.text) })).filter((u: Any) => u.at && u.text),
       live: (Array.isArray(s.updates) ? s.updates : []).some((u: Any) => Date.now() - Date.parse(u.at) < 6 * 3600e3),
-      extras: s.extras && typeof s.extras === 'object' ? s.extras : {},
+      extras: s.extras && typeof s.extras === 'object' ? Object.fromEntries(Object.entries(s.extras).filter(([k]) => k !== 'hold' && k !== 'manual')) : {},
       contextIds: (s.context_ids || []).map(Number), serviceBox: cleanJson(s.service_box), format: s.format || null, formatData: cleanJson(s.format_data),
     };
   });
@@ -92,6 +122,10 @@ Deno.serve(async (req) => {
   const { data: mg } = await sb.from('hns_stories').select('id,section,merged_into').eq('state', 'withdrawn').not('merged_into', 'is', null).limit(500);
   const secOf = new Map((data || []).map((s: Any) => [s.id, s.section]));
   const merged = (mg || []).filter((m: Any) => secOf.has(m.merged_into)).map((m: Any) => ({ id: m.id, section: m.section, into: m.merged_into, intoSection: secOf.get(m.merged_into) }));
+  // the home page lead pinned in the panel, while it is published and the time has not passed
+  const { data: pinRow } = await sb.from('hns_config').select('v').eq('k', 'site_pin').maybeSingle();
+  const pv: Any = pinRow?.v;
+  const pin = pv && pv.id && secOf.has(Number(pv.id)) && (!pv.until || Date.parse(pv.until) > nowMs) ? { id: Number(pv.id), until: pv.until || null } : null;
   const [fl, cal] = await Promise.all([flashes(), calendar()]);
-  return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), count: stories.length, stories, event, flashes: fl, calendar: cal, merged }), { headers: H });
+  return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), count: stories.length, stories, event, flashes: fl, calendar: cal, merged, pin }), { headers: H });
 });

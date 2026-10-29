@@ -26,8 +26,24 @@ for (const m of merged) {
   for (const [l, pre] of Object.entries(LANGS)) if (l !== 'he') { const p = pageOf(into, pre); if (p) to[l] = p; }
   map[id] = to;
 }
+// 29.10.2026 (management panel): every built story page by id, so an old address of a story whose section was changed in the
+// panel (/<old section>/n<id>/) answers 301 to its current page instead of 410. Used by the middleware only when the requested
+// page does not exist (placeholder /*MOVED*/{}/*END*/).
+const moved = {};
+for (const [l, pre] of Object.entries(LANGS)) {
+  const root = path.join('dist', pre);
+  let dirs = [];
+  try { dirs = fs.readdirSync(root, { withFileTypes: true }).filter((d) => d.isDirectory()); } catch { continue; }
+  for (const d of dirs) {
+    let subs = [];
+    try { subs = fs.readdirSync(path.join(root, d.name), { withFileTypes: true }).filter((x) => x.isDirectory() && /^n\d+$/.test(x.name)); } catch { continue; }
+    for (const x of subs) if (fs.existsSync(path.join(root, d.name, x.name, 'index.html'))) (moved[x.name.slice(1)] ||= {})[l] = `${pre}/${d.name}/${x.name}/`;
+  }
+}
 if (!fs.existsSync(MW)) { console.warn('merged: no built middleware'); process.exit(0); }
-const src = fs.readFileSync(MW, 'utf8');
+let src = fs.readFileSync(MW, 'utf8');
 if (!src.includes('/*MERGED*/{}/*END*/')) { console.warn('merged: placeholder not found'); process.exit(0); }
-fs.writeFileSync(MW, src.replace('/*MERGED*/{}/*END*/', JSON.stringify(map)));
-console.log(`merged: ${Object.keys(map).length} redirects`);
+src = src.replace('/*MERGED*/{}/*END*/', JSON.stringify(map));
+if (src.includes('/*MOVED*/{}/*END*/')) src = src.replace('/*MOVED*/{}/*END*/', JSON.stringify(moved));
+fs.writeFileSync(MW, src);
+console.log(`merged: ${Object.keys(map).length} redirects, ${Object.keys(moved).length} story pages known`);

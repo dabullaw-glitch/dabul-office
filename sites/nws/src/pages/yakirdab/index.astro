@@ -1,0 +1,755 @@
+---
+// The management panel of nws.co.il for Yakir (28.10.2026; moved and rebuilt 29.10.2026). Address: /yakirdab/ (Yakir: not /admin/,
+// so it is not found easily). noindex, nofollow, not linked from the site, not in any sitemap, not in robots.txt; the middleware
+// adds X-Robots-Tag, no-store, no-referrer and no framing.
+// A static page; all data comes from the Supabase function hns-panel, which checks the session on every action.
+// Login: a password Yakir chose himself (set through a one-time link that hns-panel sends only to his Telegram, #setup=<token>),
+// then a 6 digit code sent to his Telegram. The session token (ends after 12 hours idle) is kept in this browser.
+// No secret is in this page. Sections (hash routes): #dash, #stories, #story/<id>, #new, #flashes, #events, #requests, #listings,
+// #sources, #stats, #log. Hebrew only, right to left, phone and computer. Never a long or medium dash in any text.
+import { HNS_API } from '../../data/site';
+import { SECTIONS } from '../../data/sections';
+import { PLACES } from '../../data/places';
+const api = HNS_API + '/hns-panel';
+const secs = SECTIONS.map((s) => ({ k: s.key, n: s.name.he, slug: s.slug, c: s.color }));
+const places = ['נתניה', 'השרון', ...PLACES.map((p) => p.he)];
+---
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0D1321">
+<title>ניהול | חדשות נתניה והשרון</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style is:inline>
+:root{--ink:#0D1321;--ink2:#3A4352;--txt:#4A5362;--mut:#5E6776;--line:#E4E1D9;--line2:#EFEDE7;--warm:#F5F3EE;--warm2:#FBFAF7;--paper:#fff;--red:#C8102E;--ok:#17803F;--oks:#E7F4EC;--amb:#8A5200;--ambs:#FFF1DB;--gry:#EEF0F4;--f:'Noto Sans Hebrew',Arial,sans-serif}
+*{box-sizing:border-box}html,body{margin:0}[hidden]{display:none!important}
+body{font-family:var(--f);background:var(--warm2);color:var(--ink);font-size:15.5px;line-height:1.55;-webkit-text-size-adjust:100%}
+a{color:inherit}button,input,select,textarea{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* layout */
+.app{min-height:100vh;display:grid;grid-template-columns:236px minmax(0,1fr)}
+.side{background:var(--ink);color:#C3CAD5;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;padding:18px 12px}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 8px 18px;color:#fff;text-decoration:none}
+.mk{direction:ltr;font-weight:800;font-size:26px;letter-spacing:-1px;line-height:1;display:flex}.mk i{width:6px;height:6px;border-radius:50%;background:var(--red);margin:2px 0 0 2px}
+.brand b{font-size:14px;font-weight:700;line-height:1.2}.brand span{display:block;font-size:12px;color:#8E98A8;font-weight:500}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14.5px;color:#C3CAD5}
+.nav a:hover{background:#1C2433;color:#fff}.nav a[aria-current]{background:#fff;color:var(--ink)}
+.nav svg{flex:none;width:19px;height:19px}.nav i{font-style:normal;margin-inline-start:auto;min-width:22px;text-align:center;font-size:12px;font-weight:700;border-radius:99px;padding:0 6px;background:#2A3346;color:#fff}
+.nav a[aria-current] i{background:var(--ink);color:#fff}
+.side .foot{margin-top:auto;padding:14px 8px 0;display:grid;gap:8px;font-size:13px}
+.side .foot a,.side .foot button{color:#C3CAD5;background:none;border:1px solid #2E3747;border-radius:8px;padding:7px 10px;text-align:center;text-decoration:none;cursor:pointer}
+.side .foot a:hover,.side .foot button:hover{color:#fff;border-color:#8E98A8}
+.top{display:none}
+main{padding:26px 30px 80px;max-width:1240px;width:100%}
+@media (max-width:980px){
+ .app{display:block}.side{display:none}
+ .top{display:block;position:sticky;top:0;z-index:20;background:var(--ink);color:#fff}
+ .top .r{display:flex;align-items:center;justify-content:space-between;padding:10px 16px}
+ .top .r a,.top .r button{color:#C3CAD5;background:none;border:1px solid #2E3747;border-radius:8px;padding:5px 10px;font-size:13px;text-decoration:none}
+ .top .brand{padding:0}
+ .tabs{display:flex;gap:4px;overflow-x:auto;padding:0 10px 10px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+ .tabs a{flex:none;display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:99px;color:#C3CAD5;text-decoration:none;font-weight:600;font-size:14px;border:1px solid #2E3747}
+ .tabs a[aria-current]{background:#fff;color:var(--ink);border-color:#fff}
+ .tabs i{font-style:normal;font-size:11.5px;font-weight:700;background:var(--red);color:#fff;border-radius:99px;padding:0 6px}
+ main{padding:16px 16px 70px}
+}
+/* page head */
+.ph{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.ph h1{margin:0;font-size:24px;font-weight:800;letter-spacing:-.3px}
+.ph p{margin:2px 0 0;color:var(--mut);font-size:14px}
+h2.h{font-size:16px;font-weight:700;margin:0 0 10px}
+.note{color:var(--mut);font-size:13.5px}
+/* cards, tiles */
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px;overflow-wrap:anywhere}
+.grid{display:grid;gap:14px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:860px){.g2,.g3{grid-template-columns:1fr}}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-decoration:none;display:block}
+.kpi span{display:block;color:var(--mut);font-size:13px;font-weight:600}.kpi b{display:block;font-size:26px;font-weight:800;line-height:1.2;margin-top:2px}
+.kpi small{color:var(--mut);font-size:12.5px}.kpi.hot b{color:var(--amb)}
+a.kpi:hover{border-color:var(--ink)}
+/* buttons */
+.b{min-height:40px;border-radius:8px;border:1px solid #D9D6CE;background:#fff;font-weight:700;font-size:14.5px;padding:0 14px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;white-space:nowrap}
+.b:hover{border-color:var(--ink)}.b:disabled{opacity:.5;cursor:default}
+.b.pri{background:var(--ink);border-color:var(--ink);color:#fff}.b.pri:hover{background:#232C3D}
+.b.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.b.warn{color:var(--amb);border-color:#E5C48C}
+.b.dang{color:#7A1220;border-color:#E3B5BD}
+.b.sm{min-height:32px;font-size:13px;padding:0 10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+/* badges */
+.bdg{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;border-radius:6px;padding:1px 7px;background:var(--gry);color:var(--ink2);white-space:nowrap}
+.bdg.published{background:var(--oks);color:var(--ok)}.bdg.waiting,.bdg.needs_check,.bdg.draft.hold{background:var(--ambs);color:var(--amb)}
+.bdg.withdrawn{background:#E4E7EC;color:#3A4352}.bdg.rejected{background:#F1EFEA;color:#7E8796}.bdg.spon{background:#FFF1DB;color:#8A5200}
+.bdg.sens{background:#F3E8F7;color:#6B2A85}.bdg.pin{background:var(--ink);color:#fff}.bdg.flash{background:#FDECEE;color:var(--red)}
+.sec{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--ink2)}.sec::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--c,#999)}
+/* lists */
+.list{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-top:1px solid var(--line2);text-decoration:none}
+.li:first-child{border-top:0}a.li:hover{background:var(--warm2)}
+.li .m{flex:1;min-width:0}.li .t{font-weight:700;font-size:15.5px;line-height:1.4}.li .d{color:var(--txt);font-size:13.5px;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.li .x{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--mut);font-size:12.5px;margin-bottom:3px}
+.li .v{flex:none;text-align:center;min-width:56px}.li .v b{display:block;font-size:17px}.li .v span{font-size:11.5px;color:var(--mut)}
+.li img{flex:none;width:76px;height:52px;object-fit:cover;border-radius:6px;background:var(--warm)}
+@media (max-width:600px){.li img{display:none}}
+.empty{text-align:center;color:var(--mut);padding:34px 10px}
+/* filters */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chips button{border:1px solid #D9D6CE;background:#fff;border-radius:99px;padding:5px 12px;font-size:13.5px;font-weight:600;cursor:pointer}
+.chips button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.filters{display:grid;grid-template-columns:2fr repeat(4,minmax(0,1fr)) auto;gap:8px;align-items:end}
+@media (max-width:980px){.filters{grid-template-columns:1fr 1fr}.filters .q{grid-column:1/-1}}
+/* forms */
+label.f{display:grid;gap:4px;font-size:13.5px;font-weight:700;color:var(--ink2)}
+label.f small{font-weight:400;color:var(--mut)}
+input[type=text],input[type=search],input[type=url],input[type=password],input[type=date],input[type=datetime-local],input[type=number],input:not([type]),select,textarea{border:1px solid #D9D6CE;border-radius:8px;padding:9px 11px;width:100%;background:#fff;font-weight:400;font-size:15px}
+textarea{resize:vertical;line-height:1.6}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:0;border-color:var(--ink)}
+.fg{display:grid;gap:12px}.fg2{display:grid;gap:12px;grid-template-columns:1fr 1fr}@media (max-width:700px){.fg2{grid-template-columns:1fr}}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:12px;margin:0;display:grid;gap:10px}legend{font-weight:700;font-size:14px;padding:0 6px}
+.chk{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:600}.chk input{width:18px;height:18px}
+details.more>summary{cursor:pointer;font-weight:700;font-size:14px;padding:4px 0}
+.pls{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.pls button{border:1px solid #D9D6CE;background:#fff;border-radius:99px;padding:3px 10px;font-size:13px;cursor:pointer}.pls button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cnt{font-size:12px;color:var(--mut);font-weight:400}
+.help{background:var(--warm);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--ink2);line-height:1.7}
+.help code{background:#fff;border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:12.5px}
+/* editor */
+.ed{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;align-items:start}
+.ed .pv{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+@media (max-width:1100px){.ed{grid-template-columns:1fr}.ed .pv{position:static;max-height:none}}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:14px}
+.bar .st{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13.5px;color:var(--mut)}
+.save{position:sticky;bottom:0;z-index:5;background:linear-gradient(transparent,var(--warm2) 30%);padding:14px 0 6px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+/* preview (like the site) */
+.pvw{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.pvw .lb{font-size:12px;color:var(--mut);font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between}
+.pvw .k{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:700;color:var(--c,#5B3FA8)}
+.pvw .spon{background:#FFF1DB;color:#8A5200;border-radius:4px;padding:1px 7px;font-size:12px}
+.pvw h1{font-size:26px;line-height:1.25;margin:8px 0;font-weight:800;letter-spacing:-.3px}
+.pvw .dk{font-size:17px;color:var(--ink2);margin:0 0 12px;line-height:1.5}
+.pvw .by{font-size:13px;color:var(--mut);margin-bottom:12px}
+.pvw figure{margin:0 0 14px}.pvw figure img{width:100%;border-radius:8px;display:block;aspect-ratio:16/9;object-fit:cover;background:var(--warm)}
+.pvw figcaption{font-size:12px;color:var(--mut);margin-top:4px}
+.pvw .bd{font-size:17px;line-height:1.75}.pvw .bd p{margin:0 0 14px}.pvw .bd h2{font-size:20px;margin:20px 0 8px}
+.pvw .bd blockquote{margin:16px 0;padding:6px 14px;border-inline-start:3px solid var(--ink);font-size:18px;font-weight:600}
+.pvw .bd a{text-decoration:underline}
+.pvw .kp{background:var(--warm);border-radius:8px;padding:10px 14px;margin:0 0 14px}.pvw .kp ul{margin:0;padding-inline-start:18px}
+.pvw .faq{margin-top:16px}.pvw .faq b{display:block;margin-top:8px}
+.pvw .disc{font-size:13px;border:1px solid var(--line);background:var(--warm2);border-radius:6px;padding:8px 12px;margin-top:14px}
+.tabs2{display:none;gap:6px;margin-bottom:12px}
+@media (max-width:1100px){.tabs2{display:flex}.ed[data-v=edit] .pv,.ed[data-v=view] .fm{display:none}}
+/* tables */
+table.tb{width:100%;border-collapse:collapse;font-size:14px}
+.tb th{text-align:start;font-size:12.5px;color:var(--mut);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line)}
+.tb td{padding:8px;border-bottom:1px solid var(--line2);vertical-align:top}
+.tb tr:last-child td{border-bottom:0}
+.tb td.n{text-align:end;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:700}
+.barr{display:flex;height:6px;border-radius:3px;background:var(--line2);margin-top:4px;overflow:hidden}.barr i{display:block;height:100%;background:var(--ink)}
+.chart{width:100%;height:auto;display:block;direction:ltr}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--mut);margin-top:6px}.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-inline-end:5px;vertical-align:-1px;background:var(--c)}
+/* flashes */
+.fl{display:flex;gap:10px;padding:10px 14px;border-top:1px solid var(--line2);align-items:flex-start}.fl:first-child{border-top:0}
+.fl time{flex:none;font-weight:800;color:var(--red);font-size:14px;min-width:44px}
+.fl .m{flex:1;min-width:0}.fl .s{font-size:12.5px;color:var(--mut)}.fl.off{opacity:.55}.fl.off .tx{text-decoration:line-through}
+/* events strip preview */
+.evp{background:#14213D;color:#fff;border-radius:8px;padding:12px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:14px}
+.evp .tg{background:var(--red);border-radius:4px;padding:1px 8px;font-weight:700;font-size:12.5px}.evp .big{font-size:20px;font-weight:800}
+/* login */
+.login{max-width:420px;margin:8vh auto 0;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 22px;text-align:center}
+.login .brand{justify-content:center;color:var(--ink);padding:0 0 14px}.login .brand span{color:var(--mut)}
+.login h1{font-size:21px;margin:0 0 8px}.login p{color:var(--mut);font-size:14.5px}
+.login form{text-align:right;display:grid;gap:12px;margin-top:14px}
+#lm{font-weight:700;min-height:1.5em;margin:12px 0 0}
+/* toast */
+.toast{position:fixed;inset-inline:16px;bottom:16px;z-index:50;max-width:520px;margin:0 auto;background:var(--ink);color:#fff;border-radius:10px;padding:12px 16px;font-weight:700;box-shadow:0 8px 24px rgba(13,19,33,.25);display:none}
+.toast.bad{background:#7A1220}
+.ld{color:var(--mut);padding:30px 0;text-align:center}
+.warnbox{background:var(--ambs);color:#5A3800;border-radius:8px;padding:10px 12px;font-size:14px;font-weight:600}
+.okbox{background:var(--oks);color:#0F5A2B;border-radius:8px;padding:10px 12px;font-size:14px;font-weight:600}
+.alert{border-inline-start:3px solid var(--amb);padding:4px 10px;margin:8px 0;font-size:13.5px;white-space:pre-wrap}
+.pager{display:flex;justify-content:space-between;align-items:center;margin-top:12px;color:var(--mut);font-size:13.5px}
+.thumb{max-width:220px;border-radius:8px;display:block;margin-top:6px}
+</style>
+</head>
+<body>
+<div id="root"><div class="ld">טוען...</div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script is:inline define:vars={{ api, secs, places }}>
+(function(){
+'use strict';
+var KEY='nwsPanelS', S=null, SUM={}, DIRTY=false, TIMER=null;
+try{S=localStorage.getItem(KEY)}catch(e){}
+var root=document.getElementById('root'), toastEl=document.getElementById('toast');
+var SEC={}; secs.forEach(function(s){SEC[s.k]=s});
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function href(u){u=String(u||'').trim();return /^(https?:\/\/|\/)[^\s"<>]*$/.test(u)?u:'#'}
+function fmt(t,o){if(!t)return'';try{return new Intl.DateTimeFormat('he-IL',Object.assign({timeZone:'Asia/Jerusalem'},o)).format(new Date(t))}catch(e){return''}}
+function when(t){return fmt(t,{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})}
+function hm(t){return fmt(t,{hour:'2-digit',minute:'2-digit',hour12:false})}
+function dayName(t){return fmt(t,{weekday:'short',day:'numeric',month:'numeric'})}
+function ago(t){if(!t)return'';var s=(Date.now()-Date.parse(t))/1e3;if(s<0)return when(t);if(s<60)return'עכשיו';if(s<3600)return'לפני '+Math.round(s/60)+' דק׳';if(s<86400)return'לפני '+Math.round(s/3600)+' שע׳';if(s<7*86400)return'לפני '+Math.round(s/86400)+' ימים';return when(t)}
+function num(n){return Number(n||0).toLocaleString('he-IL')}
+function toast(t,bad){toastEl.textContent=t;toastEl.className='toast'+(bad?' bad':'');toastEl.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){toastEl.style.display='none'},bad?6000:3500)}
+function post(body){return fetch(api,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json().catch(function(){return{ok:false,error:'שגיאת שרת'}})})}
+function call(action,data){
+  return post(Object.assign({action:action,s:S},data||{})).then(function(j){
+    if(j&&j.auth===false){loginView('החיבור הסתיים (אחרי 12 שעות בלי פעילות, או יציאה). התחברו שוב.');throw new Error('auth')}
+    return j;
+  },function(e){toast('אין חיבור לשרת. בדקו את האינטרנט ונסו שוב.',true);throw e});
+}
+// run an action from a button: busy state, error toast, then done(j)
+function act(btn,p,done){if(btn)btn.disabled=true;return p.then(function(j){if(btn)btn.disabled=false;if(j&&j.ok){done&&done(j)}else{toast((j&&j.error)||'הפעולה נכשלה',true)}return j}).catch(function(){if(btn)btn.disabled=false})}
+var SITE_NOTE='שינוי מופיע באתר תוך דקה בערך (האתר נבנה מחדש לבד).';
+
+// ---------- icons ----------
+var IC={dash:'M3 12l9-8 9 8M5 10v10h5v-6h4v6h5V10',stories:'M5 4h14v16H5zM8 8h8M8 12h8M8 16h5',new:'M12 5v14M5 12h14',flashes:'M13 3L5 14h6l-1 7 8-11h-6z',events:'M4 6h16v12H4zM4 10h16M8 3v4M16 3v4',requests:'M4 6h16v12H4zM4 7l8 6 8-6',listings:'M4 9l2-5h12l2 5M4 9v11h16V9M4 9h16M9 20v-6h6v6',sources:'M5 19a1 1 0 100-2 1 1 0 000 2zM4 11a9 9 0 019 9M4 4a16 16 0 0116 16',stats:'M4 20V10M10 20V4M16 20v-7M22 20H2',log:'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01'};
+function icon(k){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+IC[k]+'"/></svg>'}
+var TABS=[['dash','סקירה'],['stories','כתבות','stories'],['new','כתבה חדשה'],['flashes','מבזקים'],['events','אירוע מיוחד'],['requests','פניות','requests'],['listings','מדריך עסקים','listings'],['sources','מקורות'],['stats','סטטיסטיקה'],['log','יומן']];
+
+// ---------- login (password, then a code from Telegram) ----------
+function brand(){return '<span class="brand"><span class="mk">NWS<i></i></span><span><b>חדשות נתניה והשרון</b><span>לוח ניהול</span></span></span>'}
+function box(inner){stopTimer();root.innerHTML='<div class="login">'+brand()+inner+'<p id="lm" role="alert"></p></div>'}
+function say(t,ok){var m=document.getElementById('lm');if(m){m.style.color=ok?'#17803F':'#7A1220';m.textContent=t||''}}
+function busy(btn,p,then){btn.disabled=true;say('רגע...',true);p.then(function(j){btn.disabled=false;then(j)}).catch(function(){btn.disabled=false;say('אין חיבור. נסו שוב.')})}
+function setupBtn(id){var b=document.getElementById(id);if(!b)return;b.onclick=function(){busy(b,post({action:'setup_link'}),function(j){say(j.ok?j.message:(j.error||'נכשל'),j.ok)})}}
+var pwRules='לפחות 12 תווים, ולפחות 3 מתוך 4: אותיות קטנות (או עברית), אותיות גדולות באנגלית, ספרות, סימנים. לא סיסמה שאתם משתמשים בה במקום אחר.';
+function setupView(k){
+  box('<h1>בחירת סיסמה ללוח הניהול</h1><p>'+pwRules+'</p><form id="sf"><label class="f">סיסמה חדשה<input type="password" name="p1" autocomplete="new-password" required minlength="12" dir="ltr"></label>'
+    +'<label class="f">שוב את אותה סיסמה<input type="password" name="p2" autocomplete="new-password" required dir="ltr"></label><label class="chk"><input type="checkbox" id="sh"> להציג את הסיסמה</label>'
+    +'<button class="b pri">שמירת הסיסמה</button></form>');
+  var f=document.getElementById('sf');
+  document.getElementById('sh').onchange=function(){f.p1.type=f.p2.type=this.checked?'text':'password'};
+  f.onsubmit=function(e){e.preventDefault();if(f.p1.value!==f.p2.value)return say('שתי הסיסמאות לא זהות');
+    busy(f.querySelector('button'),post({action:'set_password',k:k,password:f.p1.value}),function(j){if(j.ok){f.reset();loginView(j.message,true)}else say(j.error||'נכשל')})};
+}
+function loginView(note,good){
+  try{localStorage.removeItem(KEY)}catch(e){}S=null;DIRTY=false;
+  box('<h1>כניסה ללוח הניהול</h1><div id="lv"><div class="ld">טוען...</div></div>');
+  if(note)say(note,good);
+  post({action:'state'}).then(function(st){
+    var lv=document.getElementById('lv');
+    if(!st.pw_set){lv.innerHTML='<p>עוד לא נבחרה סיסמה. לוחצים על הכפתור, ומקבלים בטלגרם (בבוט של המשרד) כפתור לבחירת סיסמה. רק אתם מקבלים אותו.</p><button class="b pri" id="su" style="width:100%">הגדרת סיסמה</button>';return setupBtn('su')}
+    lv.innerHTML='<form id="lf"><label class="f">סיסמה<input type="password" name="pw" autocomplete="current-password" required dir="ltr"></label><button class="b pri">המשך</button></form>'
+      +'<p class="note" style="margin-top:14px">אחרי הסיסמה יישלח אליכם קוד בן 6 ספרות בטלגרם.</p><button class="b" id="fg">שכחתי את הסיסמה</button>';
+    setupBtn('fg');
+    var f=document.getElementById('lf');f.pw.focus();
+    f.onsubmit=function(e){e.preventDefault();busy(f.querySelector('button'),post({action:'login',password:f.pw.value}),function(j){if(j.ok){f.pw.value='';codeView(j.pre)}else say(j.error||'נכשל')})};
+  }).catch(function(){say('אין חיבור. נסו שוב.')});
+}
+function codeView(pre){
+  box('<h1>קוד מטלגרם</h1><p>שלחנו לכם קוד בן 6 ספרות בטלגרם (בבוט של המשרד). הקוד תקף ל-5 דקות.</p><form id="cf"><label class="f">הקוד<input name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required dir="ltr" style="font-size:26px;letter-spacing:8px;text-align:center"></label><button class="b pri">כניסה</button></form>');
+  var f=document.getElementById('cf');f.code.focus();
+  f.onsubmit=function(e){e.preventDefault();busy(f.querySelector('button'),post({action:'otp',pre:pre,code:f.code.value}),function(j){
+    if(j.ok){S=j.s;try{localStorage.setItem(KEY,S)}catch(e){}if(!location.hash||/setup/.test(location.hash))history.replaceState(null,'',location.pathname+'#dash');shell();route()}else if(j.again){loginView(j.error)}else{f.code.value='';say(j.error||'נכשל')}})};
+}
+
+// ---------- the frame ----------
+function badge(t){return t[2]&&SUM[t[2]]?'<i>'+SUM[t[2]]+'</i>':''}
+function shell(){
+  if(document.getElementById('main'))return;
+  var nav=TABS.map(function(t){return '<a href="#'+t[0]+'" data-t="'+t[0]+'">'+icon(t[0])+'<span>'+t[1]+'</span>'+badge(t)+'</a>'}).join('');
+  root.innerHTML='<div class="app"><aside class="side"><a class="brand" href="#dash"><span class="mk">NWS<i></i></span><span><b>חדשות נתניה והשרון</b><span>לוח ניהול</span></span></a><nav class="nav" aria-label="אזורי הניהול">'+nav+'</nav>'
+    +'<div class="foot"><a href="/" target="_blank" rel="noopener">לאתר</a><button type="button" data-out>יציאה</button></div></aside>'
+    +'<header class="top"><div class="r"><a class="brand" href="#dash" style="border:0;color:#fff"><span class="mk">NWS<i></i></span><span><b>לוח ניהול</b></span></a><span class="row"><a href="/" target="_blank" rel="noopener">לאתר</a><button type="button" data-out>יציאה</button></span></div>'
+    +'<nav class="tabs" aria-label="אזורי הניהול">'+TABS.map(function(t){return '<a href="#'+t[0]+'" data-t="'+t[0]+'">'+t[1]+badge(t)+'</a>'}).join('')+'</nav></header>'
+    +'<main id="main"></main></div>';
+  root.querySelectorAll('[data-out]').forEach(function(b){b.onclick=function(){if(!confirm('לצאת מלוח הניהול?'))return;call('logout').catch(function(){}).then(function(){loginView('יצאתם מלוח הניהול.',true)})}});
+  summary();
+}
+function setNav(tab){
+  root.querySelectorAll('[data-t]').forEach(function(a){if(a.getAttribute('data-t')===tab)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  var c=root.querySelector('.tabs [aria-current]');if(c&&c.scrollIntoView)c.scrollIntoView({inline:'center',block:'nearest'});
+}
+function summary(){return call('summary').then(function(j){if(!j.ok)return;SUM=j;TABS.forEach(function(t){if(!t[2])return;root.querySelectorAll('[data-t="'+t[0]+'"]').forEach(function(a){var i=a.querySelector('i');if(i)i.remove();if(SUM[t[2]])a.insertAdjacentHTML('beforeend','<i>'+SUM[t[2]]+'</i>')})})}).catch(function(){})}
+function main(){return document.getElementById('main')}
+function page(h,sub,right){return '<div class="ph"><div><h1>'+h+'</h1>'+(sub?'<p>'+sub+'</p>':'')+'</div>'+(right||'')+'</div>'}
+function stopTimer(){if(TIMER){clearInterval(TIMER);TIMER=null}}
+function every(ms,fn){stopTimer();TIMER=setInterval(function(){if(!document.hidden)fn()},ms)}
+var LAST_HASH='';
+function route(){
+  if(!S)return;
+  var h=(location.hash||'').replace(/^#\/?/,'');
+  if(DIRTY&&h!==LAST_HASH){if(!confirm('יש שינויים שלא נשמרו. לצאת בלי לשמור?')){history.replaceState(null,'','#'+LAST_HASH);return}DIRTY=false}
+  LAST_HASH=h;stopTimer();shell();
+  var p=h.split('/'),t=p[0]||'dash',arg=p[1]||'';
+  var V={dash:vDash,stories:vStories,story:vStory,new:vNew,flashes:vFlashes,events:vEvents,requests:vRequests,listings:vListings,sources:vSources,stats:vStats,log:vLog}[t];
+  if(!V){location.hash='#dash';return}
+  setNav(t==='story'?'stories':t);
+  main().innerHTML='<div class="ld">טוען...</div>';window.scrollTo(0,0);
+  V(arg);
+}
+addEventListener('hashchange',route);
+addEventListener('beforeunload',function(e){if(DIRTY){e.preventDefault();e.returnValue=''}});
+
+// ---------- shared story bits ----------
+var STATE={published:'באתר',draft:'טיוטה',needs_check:'לבדיקה',approved:'מאושרת',withdrawn:'הורדה מהאתר',rejected:'נדחתה'};
+var KIND={news:'חדשות',opinion:'דעה',sponsored:'תוכן שיווקי'};
+function stBadge(s){var w=(s.state==='draft'||s.state==='needs_check')&&(s.tg_sent_at||s.hold);return '<span class="bdg '+esc(s.state)+(s.hold?' hold':'')+'">'+(w?'ממתינה לאישור':STATE[s.state]||esc(s.state))+'</span>'}
+function secTag(k){var s=SEC[k];return s?'<span class="sec" style="--c:'+s.c+'">'+esc(s.n)+'</span>':''}
+function storyUrl(s){var x=SEC[s.section]||SEC.flash;return '/'+x.slug+'/n'+s.id+'/'}
+function storyRow(s,pin){
+  return '<a class="li" href="#story/'+s.id+'">'+(s.image_url?'<img src="'+esc(href(s.image_url))+'" alt="" loading="lazy">':'')+'<div class="m"><div class="x">'+stBadge(s)+secTag(s.section)
+    +(s.kind==='sponsored'?'<span class="bdg spon">תוכן שיווקי</span>':s.kind==='opinion'?'<span class="bdg">דעה</span>':'')
+    +(s.sensitivity==='sensitive'?'<span class="bdg sens">רגישה</span>':'')+(pin&&pin.id===s.id?'<span class="bdg pin">נעוצה בראש האתר</span>':'')
+    +'<span>#'+s.id+'</span><span>'+(s.published_at&&s.state==='published'?'פורסמה '+when(s.published_at):'נוצרה '+when(s.created_at))+'</span></div>'
+    +'<div class="t">'+esc(s.title||'בלי כותרת')+'</div>'+(s.dek?'<div class="d">'+esc(s.dek)+'</div>':'')+(s.pub_note&&s.state!=='published'?'<div class="d note">'+esc(s.pub_note)+'</div>':'')+'</div>'
+    +(s.views!=null?'<div class="v"><b class="num">'+num(s.views)+'</b><span>צפיות</span></div>':'')+'</a>';
+}
+// the site's mini markup for sponsored articles (## heading, - list, 1. list, > quote | source, [text](https://...))
+function inl(x){return esc(x).replace(/\[([^\]\n]{1,200})\]\(((?:https?:\/\/|\/)[^\s()<>"]+)\)/g,function(m,t,h){return '<a href="'+h+'" target="_blank" rel="sponsored noopener">'+t+'</a>'})}
+function blocks(paras,spon){return paras.map(function(p){
+  if(!spon)return '<p>'+esc(p).replace(/\n/g,'<br>')+'</p>';
+  var ls=p.split(/\n+/).map(function(x){return x.trim()}).filter(Boolean);
+  if(/^##\s/.test(p))return '<h2>'+inl(p.replace(/^##\s*/,''))+'</h2>';
+  if(/^>\s/.test(p)){var q=p.replace(/^>\s*/,'').split(/\s*\|\s*/);return '<blockquote>'+esc(q[0])+(q[1]?'<div class="note">'+esc(q[1])+'</div>':'')+'</blockquote>'}
+  if(ls.length&&ls.every(function(x){return /^-\s/.test(x)}))return '<ul>'+ls.map(function(x){return '<li>'+inl(x.replace(/^-\s*/,''))+'</li>'}).join('')+'</ul>';
+  if(ls.length&&ls.every(function(x){return /^\d+\.\s/.test(x)}))return '<ol>'+ls.map(function(x){return '<li>'+inl(x.replace(/^\d+\.\s*/,''))+'</li>'}).join('')+'</ol>';
+  return '<p>'+ls.map(inl).join('<br>')+'</p>';
+}).join('')}
+function splitParas(t){return String(t||'').replace(/\r/g,'').split(/\n[ \t]*\n/).map(function(p){return p.split('\n').map(function(l){return l.trim()}).filter(Boolean).join('\n')}).filter(Boolean)}
+function dashes(t){return String(t||'').replace(/\s*\u2014\s*/g,', ').replace(/\s*\u2013\s*/g,' - ')}
+function preview(f){
+  var spon=f.kind==='sponsored',s=SEC[f.section]||SEC.city,paras=(Array.isArray(f.body)?f.body:splitParas(f.body)).map(dashes);
+  var lbl=f.image_url?(f.image_model?'תמונה להמחשה':f.image_credit?'צילום: '+f.image_credit:spon?'צילום: באדיבות המפרסם':'צילום'):'';
+  return '<div class="pvw"><div class="lb"><span>תצוגה מקדימה (בערך כמו באתר)</span><span>'+esc(KIND[f.kind]||'')+'</span></div>'
+    +'<div class="k" style="--c:'+s.c+'">'+(spon?'<span class="spon">תוכן שיווקי</span>':'')+'<span>'+esc(dashes(f.kicker)||s.n)+'</span></div>'
+    +'<h1>'+esc(dashes(f.title)||'כותרת')+'</h1>'+(f.dek?'<p class="dk">'+esc(dashes(f.dek))+'</p>':'')
+    +'<div class="by">'+(spon?(f.author?'בשיתוף '+esc(f.author):'תוכן שיווקי'):f.kind==='opinion'?esc(f.author||'כותב הטור'):'מערכת חדשות נתניה והשרון')+'</div>'
+    +(f.image_url?'<figure><img src="'+esc(href(f.image_url))+'" alt="'+esc(f.image_alt||'')+'"><figcaption>'+esc(f.image_alt?f.image_alt+' · ':'')+esc(lbl)+'</figcaption></figure>':'')
+    +(f.key_points&&f.key_points.length?'<div class="kp"><b>בקצרה</b><ul>'+f.key_points.map(function(k){return '<li>'+esc(dashes(k))+'</li>'}).join('')+'</ul></div>':'')
+    +'<div class="bd">'+(paras.length?blocks(paras,spon):'<p class="note">הטקסט יופיע כאן</p>')+'</div>'
+    +(spon&&f.links&&f.links.length?'<div class="kp"><b>לפרטים נוספים אצל המפרסם</b><ul>'+f.links.map(function(l){return '<li><a href="'+esc(href(l.url))+'" target="_blank" rel="sponsored noopener">'+esc(l.text)+'</a></li>'}).join('')+'</ul></div>':'')
+    +(f.faq&&f.faq.length?'<div class="faq"><h2 class="h">שאלות ותשובות</h2>'+f.faq.map(function(x){return '<b>'+esc(x.q)+'</b><div>'+esc(x.a)+'</div>'}).join('')+'</div>':'')
+    +(spon?'<p class="disc">הכתבה פורסמה כתוכן שיווקי בשיתוף המפרסם</p>':'')+'</div>';
+}
+function faqOf(a){return (Array.isArray(a)?a:[]).map(function(x){return Array.isArray(x)?{q:x[0],a:x[1]}:{q:x&&(x.q||x.question)||'',a:x&&(x.a||x.answer)||''}}).filter(function(x){return x.q||x.a})}
+function opt(v,l,cur){return '<option value="'+esc(v)+'"'+(String(v)===String(cur)?' selected':'')+'>'+esc(l)+'</option>'}
+function faqRow(x){return '<div class="fg2 fq" style="border-top:1px dashed var(--line);padding-top:8px"><label class="f">שאלה<input name="fq" value="'+esc(x.q)+'"></label><label class="f">תשובה<textarea name="fa" rows="2">'+esc(x.a)+'</textarea></label></div>'}
+function linkRow(x){return '<div class="fg2 lk"><label class="f">טקסט הקישור<input name="lt" value="'+esc(x.text)+'" placeholder="למשל: לאתר המשרד"></label><label class="f">כתובת<input name="lu" dir="ltr" value="'+esc(x.url)+'" placeholder="https://"></label></div>'}
+// the story form (edit and new)
+function storyForm(st,isNew){
+  var k=st.kind||'news',spon=k==='sponsored';
+  var body=Array.isArray(st.body)?st.body.join('\n\n'):(st.body||'');
+  var kp=Array.isArray(st.key_points)?st.key_points.join('\n'):'';
+  var pls=(st.places||[]);
+  var src=(st.sources||[]).filter(function(x){return x.id==='panel'})[0]||{};
+  return '<form class="fg" id="sf" autocomplete="off">'
+    +'<div class="fg2"><label class="f">סוג<select name="kind">'+opt('news','ידיעה (חדשות)',k)+opt('opinion','טור דעה',k)+opt('sponsored','תוכן שיווקי (כתבה ממומנת)',k)+'</select></label>'
+    +'<label class="f">מדור<select name="section">'+secs.map(function(s){return opt(s.k,s.n,st.section||'city')}).join('')+'</select>'+(!isNew&&st.state==='published'?'<small>שינוי מדור משנה את כתובת הכתבה. הכתובת הישנה תפנה לחדשה.</small>':'')+'</label></div>'
+    +'<label class="f">תווית מעל הכותרת <small>עד 5 מילים, לא חובה</small><input name="kicker" value="'+esc(st.kicker||'')+'"></label>'
+    +'<label class="f">כותרת <span class="cnt" data-c="title"></span><textarea name="title" rows="2" required maxlength="220">'+esc(st.title||'')+'</textarea></label>'
+    +'<label class="f">כותרת משנה (תיאור קצר) <span class="cnt" data-c="dek"></span><textarea name="dek" rows="3" maxlength="500">'+esc(st.dek||'')+'</textarea></label>'
+    +'<label class="f">הטקסט <small>שורה ריקה בין פסקאות</small><textarea name="body" rows="16" required>'+esc(body)+'</textarea></label>'
+    +'<div class="help" data-spon'+(spon?'':' hidden')+'>בתוכן שיווקי אפשר לעצב: <code>## כותרת ביניים</code> בתחילת פסקה, שורות שמתחילות ב-<code>- </code> הן רשימה, <code>1. </code> רשימה ממוספרת, <code>&gt; ציטוט | שם הדובר</code> ציטוט מודגש, וקישור: <code>[טקסט](https://...)</code>. באתר הקישורים יוצאים עם rel="sponsored", והכתבה מסומנת "תוכן שיווקי".</div>'
+    +'<label class="f">נקודות עיקריות <small>שורה לכל נקודה, עד 8, לא חובה</small><textarea name="key_points" rows="4">'+esc(kp)+'</textarea></label>'
+    +'<fieldset><legend>תמונה</legend><label class="f">קישור לתמונה <small>מתחיל ב-https://. ריק = המערכת תיצור תמונה להמחשה (לא בתוכן שיווקי)</small><input name="image_url" dir="ltr" value="'+esc(st.image_url||'')+'" placeholder="https://"></label>'
+    +'<div class="fg2"><label class="f">תיאור התמונה (לנגישות)<input name="image_alt" value="'+esc(st.image_alt||'')+'"></label><label class="f">קרדיט <small>למשל: באדיבות המפרסם, או שם הצלם</small><input name="image_credit" value="'+esc((st.extras&&st.extras.image_credit)||'')+'"></label></div>'
+    +(st.image_url&&st.image_model?'<div class="note">התמונה הנוכחית נוצרה בבינה מלאכותית ('+esc(st.image_model)+') ומסומנת באתר "תמונה להמחשה".</div>':'')+'<div data-thumb></div></fieldset>'
+    +'<fieldset data-spon'+(spon?'':' hidden')+'><legend>פרטי המפרסם</legend><div class="fg2"><label class="f">שם המפרסם <small>חובה בתוכן שיווקי</small><input name="adv" value="'+esc(spon?st.author||'':'')+'"></label><label class="f">שורה מתחת לשם<input name="adv_role" value="'+esc(spon?st.author_role||'תוכן שיווקי':'תוכן שיווקי')+'"></label></div>'
+    +'<div class="f" style="font-weight:700;font-size:13.5px">קישורים של המפרסם <small style="font-weight:400;color:var(--mut)">(יופיעו בתיבה בסוף הכתבה)</small></div><div data-links>'+((st.extras&&st.extras.links)||[]).concat([{text:'',url:''}]).map(linkRow).join('')+'</div><button type="button" class="b sm" data-addlink>+ עוד קישור</button></fieldset>'
+    +'<fieldset data-op'+(k==='opinion'?'':' hidden')+'><legend>כותב הטור</legend><div class="fg2"><label class="f">שם<input name="op" value="'+esc(k==='opinion'?st.author||'':'')+'"></label><label class="f">תפקיד<input name="op_role" value="'+esc(k==='opinion'?st.author_role||'':'')+'"></label></div></fieldset>'
+    +'<fieldset><legend>מקומות</legend><input name="places" value="'+esc(pls.join(', '))+'" placeholder="נתניה, פולג"><div class="pls">'+places.map(function(p){return '<button type="button" data-pl="'+esc(p)+'" aria-pressed="'+(pls.indexOf(p)>=0)+'">'+esc(p)+'</button>'}).join('')+'</div></fieldset>'
+    +'<details class="more"'+(faqOf(st.faq).length?' open':'')+'><summary>שאלות ותשובות (לא חובה)</summary><div data-faq>'+faqOf(st.faq).concat([{q:'',a:''}]).map(faqRow).join('')+'</div><button type="button" class="b sm" data-addfaq style="margin-top:8px">+ עוד שאלה</button></details>'
+    +'<details class="more"><summary>מתקדם</summary><div class="fg" style="margin-top:8px">'
+    +'<label class="f">רגישות<select name="sensitivity">'+opt('normal','רגילה',st.sensitivity||'normal')+opt('sensitive','רגישה (מוות, קטינים, פגיעה)',st.sensitivity)+'</select></label>'
+    +'<div class="fg2"><label class="f">מקור רשמי שנוסף ידנית <small>שם הגוף, למשל: עיריית נתניה</small><input name="source_name" value="'+esc(src.name||'')+'"></label><label class="f">קישור למקור<input name="source_url" dir="ltr" value="'+esc(src.url||'')+'" placeholder="https://"></label></div>'
+    +'</div></details>'
+    +'</form>';
+}
+function readForm(f){
+  var kind=f.kind.value,spon=kind==='sponsored',op=kind==='opinion';
+  var faq=[].map.call(f.querySelectorAll('.fq'),function(r){return{q:r.querySelector('[name=fq]').value.trim(),a:r.querySelector('[name=fa]').value.trim()}}).filter(function(x){return x.q&&x.a});
+  var links=[].map.call(f.querySelectorAll('.lk'),function(r){return{text:r.querySelector('[name=lt]').value.trim(),url:r.querySelector('[name=lu]').value.trim()}}).filter(function(x){return x.text&&x.url});
+  var o={kind:kind,section:f.section.value,kicker:f.kicker.value.trim(),title:f.title.value.trim(),dek:f.dek.value.trim(),body:splitParas(f.body.value),
+    key_points:f.key_points.value.split('\n').map(function(x){return x.trim()}).filter(Boolean),faq:faq,places:f.places.value.split(/[,\n]/).map(function(x){return x.trim()}).filter(Boolean),
+    image_url:f.image_url.value.trim(),image_alt:f.image_alt.value.trim(),image_credit:f.image_credit.value.trim(),sensitivity:f.sensitivity.value,
+    source_name:f.source_name.value.trim(),source_url:f.source_url.value.trim(),links:spon?links:[]};
+  if(spon){o.author=f.adv.value.trim();o.author_role=f.adv_role.value.trim()||'תוכן שיווקי'}
+  else if(op){o.author=f.op.value.trim();o.author_role=f.op_role.value.trim()}
+  else{o.author='';o.author_role=''}
+  return o;
+}
+function bindForm(f,onChange){
+  var pv=function(){onChange&&onChange()};
+  var t=null;f.addEventListener('input',function(){DIRTY=true;clearTimeout(t);t=setTimeout(function(){counts();thumb();pv()},150)});
+  f.addEventListener('change',function(){DIRTY=true;kindVis();pv()});
+  function kindVis(){var k=f.kind.value;f.querySelectorAll('[data-spon]').forEach(function(x){x.hidden=k!=='sponsored'});f.querySelectorAll('[data-op]').forEach(function(x){x.hidden=k!=='opinion'})}
+  function counts(){f.querySelectorAll('[data-c]').forEach(function(c){var v=f[c.getAttribute('data-c')].value.length;c.textContent=v?v+' תווים':''})}
+  function thumb(){var u=f.image_url.value.trim(),d=f.querySelector('[data-thumb]');d.innerHTML=/^https:\/\//.test(u)?'<img class="thumb" src="'+esc(u)+'" alt="">':''}
+  f.querySelector('[data-addfaq]').onclick=function(){f.querySelector('[data-faq]').insertAdjacentHTML('beforeend',faqRow({q:'',a:''}))};
+  f.querySelector('[data-addlink]').onclick=function(){f.querySelector('[data-links]').insertAdjacentHTML('beforeend',linkRow({text:'',url:''}))};
+  f.querySelectorAll('[data-pl]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-pl'),list=f.places.value.split(/[,\n]/).map(function(x){return x.trim()}).filter(Boolean),i=list.indexOf(p);
+    if(i>=0)list.splice(i,1);else list.push(p);f.places.value=list.join(', ');b.setAttribute('aria-pressed',String(i<0));DIRTY=true;pv()}});
+  f.places.addEventListener('input',function(){var list=f.places.value.split(/[,\n]/).map(function(x){return x.trim()});f.querySelectorAll('[data-pl]').forEach(function(b){b.setAttribute('aria-pressed',String(list.indexOf(b.getAttribute('data-pl'))>=0))})});
+  kindVis();counts();thumb();
+}
+
+// ---------- סקירה ----------
+function kpi(label,val,sub,link,hot){return '<'+(link?'a href="'+link+'"':'div')+' class="kpi'+(hot?' hot':'')+'"><span>'+label+'</span><b class="num">'+val+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</'+(link?'a':'div')+'>'}
+function bars(daily,h){
+  daily=daily||[];if(!daily.length)return '';
+  var W=Math.max(300,daily.length*22),H=h||160,pad=22,max=Math.max(1,Math.max.apply(null,daily.map(function(d){return d.views||0})));
+  var bw=(W-8)/daily.length,out='';
+  daily.forEach(function(d,i){var x=W-4-(i+1)*bw+2,v=(d.views||0)/max*(H-pad-8),e=(d.entries||0)/max*(H-pad-8);
+    out+='<g><title>'+esc(dayName(d.day+'T12:00:00Z'))+': '+num(d.views)+' צפיות, '+num(d.entries)+' ביקורים</title><rect x="'+x.toFixed(1)+'" y="'+(H-pad-v).toFixed(1)+'" width="'+Math.max(2,bw-4).toFixed(1)+'" height="'+v.toFixed(1)+'" rx="2" fill="#C9CED8"/>'
+      +'<rect x="'+x.toFixed(1)+'" y="'+(H-pad-e).toFixed(1)+'" width="'+Math.max(2,bw-4).toFixed(1)+'" height="'+e.toFixed(1)+'" rx="2" fill="#0D1321"/></g>';
+    if(daily.length<=10||i%Math.ceil(daily.length/8)===0)out+='<text x="'+(x+bw/2-2).toFixed(1)+'" y="'+(H-6)+'" font-size="10" text-anchor="middle" fill="#5E6776">'+esc(fmt(d.day+'T12:00:00Z',{day:'numeric',month:'numeric'}))+'</text>';
+  });
+  out+='<text x="'+(W-4)+'" y="11" font-size="10" text-anchor="end" fill="#5E6776">'+num(max)+'</text><line x1="0" x2="'+W+'" y1="'+(H-pad)+'" y2="'+(H-pad)+'" stroke="#E4E1D9"/>';
+  return '<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="צפיות וביקורים לפי יום">'+out+'</svg><div class="legend"><span style="--c:#C9CED8">צפיות בעמודים</span><span style="--c:#0D1321">ביקורים (כניסות לאתר)</span></div>';
+}
+function vDash(){
+  var draw=function(){return call('dash').then(function(j){
+    if(!j.ok)return main().innerHTML='<div class="empty">'+esc(j.error||'נכשל')+'</div>';
+    var c=j.counts||{},v=j.visits||{},src=j.sources||{};
+    main().innerHTML=page('סקירה','היום, '+esc(fmt(new Date(),{weekday:'long',day:'numeric',month:'long'}))+'. '+SITE_NOTE,'<a class="b pri" href="#new">+ כתבה חדשה</a>')
+      +'<div class="kpis">'+kpi('ביקורים היום',num(v.today.entries),'אתמול '+num(v.yesterday.entries),'#stats')+kpi('צפיות היום',num(v.today.views),'אתמול '+num(v.yesterday.views),'#stats')
+      +kpi('עכשיו באתר',num(v.now.views),'צפיות ב-30 הדקות האחרונות','#stats')+kpi('פורסמו היום',num(c.published_today),'','#stories/published')
+      +kpi('ממתינות לאישור',num(c.stories),'','#stories/waiting',c.stories>0)+kpi('פניות חדשות',num(c.requests),'','#requests',c.requests>0)+kpi('עסקים ממתינים',num(c.listings),'','#listings',c.listings>0)+'</div>'
+      +'<div class="grid g2"><div class="card"><h2 class="h">7 הימים האחרונים</h2>'+bars(v.daily,150)+'</div>'
+      +'<div class="card"><h2 class="h">מקורות המידע</h2><div class="row" style="margin-bottom:8px"><span class="bdg published">'+num(src.ok)+' תקינים</span>'+(src.failing?'<span class="bdg waiting">'+num(src.failing)+' נכשלים</span>':'')+'<span class="bdg">'+num(src.paused)+' מושבתים</span></div>'
+      +((j.failing||[]).length?(j.failing||[]).map(function(s){return '<div class="alert"><b>'+esc(s.name)+'</b>'+(s.error?': '+esc(s.error):'')+'</div>'}).join(''):'<p class="note">כל המקורות הפעילים עובדים.</p>')+'<a class="b sm" href="#sources">לכל המקורות</a></div></div>'
+      +'<div class="grid g2"><div><h2 class="h">ממתינות לאישור שלכם</h2><div class="list">'+((j.waiting||[]).length?j.waiting.map(function(s){return storyRow(Object.assign({tg_sent_at:1},s),j.pin)}).join(''):'<div class="empty">אין ידיעות שממתינות.</div>')+'</div></div>'
+      +'<div><h2 class="h">פורסמו לאחרונה</h2><div class="list">'+(j.latest||[]).map(function(s){return storyRow(Object.assign({state:'published'},s),j.pin)}).join('')+'</div></div></div>'
+      +'<div class="grid g2" style="margin-top:14px"><div class="card"><h2 class="h">התראות אחרונות של המערכת</h2>'+((j.alerts||[]).length?j.alerts.map(function(a){return '<div class="alert"><span class="note">'+when(a.at)+'</span>\n'+esc(a.text)+'</div>'}).join(''):'<p class="note">אין התראות.</p>')+'</div>'
+      +'<div class="card"><h2 class="h">כניסות אחרונות ללוח</h2>'+((j.logins||[]).length?'<table class="tb"><tbody>'+j.logins.map(function(l){return '<tr><td>'+when(l.at)+'</td><td>'+esc(LOGK[l.kind]||l.kind)+'</td><td>'+(l.ok?'הצליח':'<b style="color:#7A1220">נכשל</b>')+'</td><td>'+esc(l.country||'')+'</td></tr>'}).join('')+'</tbody></table>':'<p class="note">אין.</p>')+'<a class="b sm" href="#log">ליומן המלא</a></div></div>';
+  })};
+  draw().catch(function(){});every(60000,function(){draw().catch(function(){})});
+}
+
+// ---------- כתבות ----------
+var F={q:'',state:'all',section:'',kind:'',from:'',to:'',offset:0};
+var STATES=[['all','הכל'],['published','באתר'],['waiting','ממתינות לאישור'],['draft','טיוטות'],['needs_check','לבדיקה'],['withdrawn','הורדו מהאתר'],['rejected','נדחו']];
+function vStories(arg){
+  if(arg&&STATES.some(function(x){return x[0]===arg})){F.state=arg;F.offset=0}
+  main().innerHTML=page('כתבות','כל הכתבות באתר ובמערכת. לחיצה על כתבה פותחת אותה לצפייה, עריכה ופעולות.','<a class="b pri" href="#new">+ כתבה חדשה</a>')
+    +'<div class="chips" id="stc">'+STATES.map(function(s){return '<button type="button" data-s="'+s[0]+'" aria-pressed="'+(F.state===s[0])+'">'+s[1]+'</button>'}).join('')+'</div>'
+    +'<form class="card filters" id="ff"><label class="f q">חיפוש<input type="search" name="q" value="'+esc(F.q)+'" placeholder="מילה מהכותרת, או מספר כתבה"></label>'
+    +'<label class="f">מדור<select name="section">'+opt('','כל המדורים',F.section)+secs.map(function(s){return opt(s.k,s.n,F.section)}).join('')+'</select></label>'
+    +'<label class="f">סוג<select name="kind">'+opt('','הכל',F.kind)+opt('news','חדשות',F.kind)+opt('opinion','דעה',F.kind)+opt('sponsored','תוכן שיווקי',F.kind)+'</select></label>'
+    +'<label class="f">מתאריך<input type="date" name="from" value="'+esc(F.from)+'"></label><label class="f">עד תאריך<input type="date" name="to" value="'+esc(F.to)+'"></label>'
+    +'<button class="b pri">חיפוש</button></form><div id="sl"><div class="ld">טוען...</div></div>';
+  var f=document.getElementById('ff');
+  f.onsubmit=function(e){e.preventDefault();F.q=f.q.value.trim();F.section=f.section.value;F.kind=f.kind.value;F.from=f.from.value;F.to=f.to.value;F.offset=0;load()};
+  f.section.onchange=f.kind.onchange=function(){f.requestSubmit?f.requestSubmit():f.onsubmit(new Event('submit'))};
+  document.querySelectorAll('#stc [data-s]').forEach(function(b){b.onclick=function(){F.state=b.getAttribute('data-s');F.offset=0;document.querySelectorAll('#stc [data-s]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});load()}});
+  function load(){
+    var sl=document.getElementById('sl');sl.innerHTML='<div class="ld">טוען...</div>';
+    call('story_list',F).then(function(j){
+      if(!j.ok)return sl.innerHTML='<div class="empty">'+esc(j.error)+'</div>';
+      sl.innerHTML=(j.stories.length?'<div class="list">'+j.stories.map(function(s){return storyRow(s,j.pin)}).join('')+'</div>':'<div class="card empty">לא נמצאו כתבות.</div>')
+        +'<div class="pager"><span>'+(j.total?'מציג '+num(j.offset+1)+' עד '+num(j.offset+j.stories.length)+' מתוך '+num(j.total):'')+' · צפיות: 30 הימים האחרונים</span><span class="row">'
+        +(j.offset>0?'<button class="b sm" data-p="-1">הקודמות</button>':'')+(j.offset+j.stories.length<j.total?'<button class="b sm" data-p="1">הבאות</button>':'')+'</span></div>';
+      sl.querySelectorAll('[data-p]').forEach(function(b){b.onclick=function(){F.offset=Math.max(0,F.offset+Number(b.getAttribute('data-p'))*50);load();window.scrollTo(0,0)}});
+    }).catch(function(){});
+  }
+  load();
+}
+
+// ---------- one story: view, edit, actions ----------
+function vStory(id){
+  id=Number(id);if(!id){location.hash='#stories';return}
+  call('story_get',{id:id}).then(function(j){
+    if(!j.ok)return main().innerHTML='<div class="empty">'+esc(j.error)+'</div>';
+    var s=j.story,pub=s.state==='published',waiting=['draft','needs_check','approved'].indexOf(s.state)>=0,pinned=j.pin&&j.pin.id===s.id;
+    var acts='';
+    if(pub)acts+='<a class="b" href="'+storyUrl(s)+'" target="_blank" rel="noopener">לצפייה באתר</a>'
+      +(s.kind!=='sponsored'?(pinned?'<button class="b warn" data-a="unpin">ביטול הנעיצה</button>':'<span class="row" style="gap:4px"><select id="pinh" style="width:auto;padding:6px 8px">'+[6,12,24,48,72].map(function(h){return opt(h,h+' שעות',12)}).join('')+'</select><button class="b" data-a="pin">לנעוץ כידיעה הראשית</button></span>'):'')
+      +'<button class="b dang" data-a="withdraw">להוריד מהאתר</button>';
+    if(waiting)acts+='<button class="b ok" data-a="publish">לפרסם עכשיו</button><button class="b dang" data-a="reject">לא לפרסם</button>';
+    if(s.state==='withdrawn'&&!s.merged_into)acts+='<button class="b ok" data-a="restore">להחזיר לאתר</button>';
+    if(s.state==='rejected')acts+='<button class="b" data-a="restore">להחזיר להמתנה</button>';
+    if(s.kind!=='sponsored'&&(pub||waiting))acts+='<button class="b" data-a="img">תמונה חדשה להמחשה</button>';
+    var info='<div class="card"><h2 class="h">פרטים</h2><table class="tb"><tbody>'
+      +'<tr><td>מצב</td><td>'+stBadge(Object.assign({hold:s.extras&&s.extras.hold},s))+(pinned?' <span class="bdg pin">נעוצה עד '+hm(j.pin.until)+'</span>':'')+'</td></tr>'
+      +'<tr><td>נוצרה</td><td>'+when(s.created_at)+'</td></tr>'+(s.published_at?'<tr><td>פורסמה</td><td>'+when(s.published_at)+'</td></tr>':'')
+      +(s.updated_at?'<tr><td>עודכנה</td><td>'+when(s.updated_at)+'</td></tr>':'')+'<tr><td>צפיות</td><td class="num"><b>'+num(j.views)+'</b></td></tr>'
+      +(s.pub_note?'<tr><td>הערה</td><td>'+esc(s.pub_note)+'</td></tr>':'')+(s.notes?'<tr><td>הערות המערכת</td><td>'+esc(String(s.notes).slice(0,400))+'</td></tr>':'')
+      +(s.merged_into?'<tr><td>מוזגה</td><td><a href="#story/'+s.merged_into+'">לכתבה '+s.merged_into+'</a></td></tr>':'')
+      +((s.sources||[]).length?'<tr><td>מקורות</td><td>'+s.sources.map(function(x){return x.url?'<a href="'+esc(href(x.url))+'" target="_blank" rel="noopener noreferrer">'+esc(x.name)+'</a>':esc(x.name)}).join(', ')+'</td></tr>':'')
+      +'</tbody></table>'
+      +((j.items||[]).length?'<details class="more" style="margin-top:8px"><summary>הידיעות המקוריות שעליהן נכתבה ('+j.items.length+')</summary>'+j.items.map(function(x){return '<div class="alert"><b>'+esc(x.source)+'</b> · '+when(x.published_at)+'\n'+(x.url?'<a href="'+esc(href(x.url))+'" target="_blank" rel="noopener noreferrer">'+esc(x.title||x.url)+'</a>':esc(x.title))+'</div>'}).join('')+'</details>':'')
+      +((j.history||[]).length?'<details class="more"><summary>היסטוריה</summary><table class="tb"><tbody>'+j.history.map(function(h){return '<tr><td>'+when(h.at)+'</td><td>'+esc(PUBK[h.action]||h.action)+'</td><td>'+esc(BYK[h.by]||h.by)+'</td><td>'+esc(h.note)+'</td></tr>'}).join('')+'</tbody></table></details>':'')+'</div>';
+    main().innerHTML='<div class="ph"><div><a href="#stories" class="note">חזרה לרשימה</a><h1>כתבה #'+s.id+'</h1></div></div>'
+      +'<div class="bar"><div class="st">'+stBadge(Object.assign({hold:s.extras&&s.extras.hold},s))+secTag(s.section)+(s.kind==='sponsored'?'<span class="bdg spon">תוכן שיווקי</span>':'')+'<span>'+num(j.views)+' צפיות</span></div><div class="row">'+acts+'</div></div>'
+      +(s.merged_into?'<div class="warnbox" style="margin-bottom:12px">הכתבה מוזגה לכתבה אחרת ולכן אי אפשר לערוך אותה כאן.</div>':'')
+      +'<div class="tabs2 chips"><button type="button" data-v="edit" aria-pressed="true">עריכה</button><button type="button" data-v="view" aria-pressed="false">תצוגה מקדימה</button></div>'
+      +'<div class="ed" data-v="edit"><div class="fm">'+storyForm(s,false)
+      +'<div class="save">'+(pub?'<label class="chk"><input type="checkbox" id="upd"> זה עדכון עם עובדות חדשות (באתר יופיע "עודכן")</label>':'')+'<button class="b pri" id="sv"'+(s.merged_into?' disabled':'')+'>שמירת השינויים</button><span class="note">'+(pub?SITE_NOTE:'נשמר בלי לפרסם.')+'</span></div></div>'
+      +'<div class="pv"><div id="pv"></div>'+info+'</div></div>';
+    var f=document.getElementById('sf'),pv=document.getElementById('pv');
+    var draw=function(){pv.innerHTML=preview(Object.assign({image_model:s.image_url===f.image_url.value.trim()?s.image_model:null},readForm(f)))};
+    bindForm(f,draw);draw();DIRTY=false;
+    document.querySelectorAll('.tabs2 [data-v]').forEach(function(b){b.onclick=function(){document.querySelector('.ed').setAttribute('data-v',b.getAttribute('data-v'));document.querySelectorAll('.tabs2 [data-v]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))})}});
+    document.getElementById('sv').onclick=function(){
+      var d=readForm(f);if(!d.title||!d.body.length)return toast('חסרים כותרת או טקסט',true);
+      if(d.kind==='sponsored'&&!d.author)return toast('בתוכן שיווקי חובה לכתוב את שם המפרסם',true);
+      var u=document.getElementById('upd');
+      act(this,call('story_save',{id:s.id,fields:d,updated:!!(u&&u.checked)}),function(r){DIRTY=false;toast(r.warning?r.warning:pub?'נשמר. '+SITE_NOTE:'נשמר',!!r.warning);vStory(s.id)});
+    };
+    document.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){
+      var a=b.getAttribute('data-a');
+      if(DIRTY&&a!=='pin'&&a!=='unpin'&&!confirm('יש שינויים שלא נשמרו בטופס. להמשיך בלי לשמור אותם?'))return;
+      var done=function(msg){return function(){DIRTY=false;toast(msg);summary();vStory(s.id)}};
+      if(a==='publish'){if(!confirm('לפרסם את הכתבה באתר עכשיו?'))return;act(b,call('story_publish',{id:s.id}),done('פורסם. '+SITE_NOTE))}
+      if(a==='reject'){var n=prompt('לא לפרסם. למה? (לרישום פנימי, לא חובה)','');if(n===null)return;act(b,call('story_reject',{id:s.id,note:n}),done('סומן: לא לפרסם'))}
+      if(a==='withdraw'){var w=prompt('להוריד את הכתבה מהאתר. למה? (לרישום פנימי)','');if(w===null)return;act(b,call('story_withdraw',{id:s.id,note:w}),done('הכתבה תרד מהאתר תוך דקה בערך'))}
+      if(a==='restore')act(b,call('story_restore',{id:s.id}),done(s.state==='withdrawn'?'הכתבה חוזרת לאתר. '+SITE_NOTE:'הכתבה חזרה להמתנה. אפשר לפרסם אותה מכאן.'));
+      if(a==='pin')act(b,call('story_pin',{id:s.id,hours:Number(document.getElementById('pinh').value)}),done('הכתבה נעוצה כידיעה הראשית. '+SITE_NOTE));
+      if(a==='unpin')act(b,call('story_pin',{}),done('הנעיצה בוטלה'));
+      if(a==='img'){if(!confirm('ליצור לכתבה תמונה חדשה להמחשה? התמונה הנוכחית תימחק, והחדשה תופיע תוך כמה דקות.'))return;act(b,call('story_img_redo',{id:s.id}),done('תמונה חדשה תיווצר בדקות הקרובות'))}
+    }});
+  }).catch(function(){});
+}
+
+// ---------- כתבה חדשה / תוכן שיווקי ----------
+function vNew(kind){
+  var k=['news','opinion','sponsored'].indexOf(kind)>=0?kind:'news';
+  var st={kind:k,section:k==='sponsored'?'realestate':'city',places:['נתניה'],extras:{}};
+  main().innerHTML=page('כתבה חדשה','ידיעה, טור דעה או תוכן שיווקי שכותבים כאן ביד. אפשר לפרסם מיד או לשמור כטיוטה (טיוטה לא מתפרסמת לבד).')
+    +'<div class="chips">'+[['news','ידיעה'],['sponsored','תוכן שיווקי'],['opinion','טור דעה']].map(function(x){return '<button type="button" data-k="'+x[0]+'" aria-pressed="'+(x[0]===k)+'">'+x[1]+'</button>'}).join('')+'</div>'
+    +'<div class="tabs2 chips"><button type="button" data-v="edit" aria-pressed="true">כתיבה</button><button type="button" data-v="view" aria-pressed="false">תצוגה מקדימה</button></div>'
+    +'<div class="ed" data-v="edit"><div class="fm">'+storyForm(st,true)
+    +'<div class="save"><button class="b ok" id="pubnow">לפרסם עכשיו</button><button class="b" id="draft">לשמור כטיוטה</button><span class="note">כל כתבה עוברת את אותן בדיקות כמו באתר: בלי שמות של כלי תקשורת בכותרת, בלי קו ארוך.</span></div></div>'
+    +'<div class="pv"><div id="pv"></div></div></div>';
+  var f=document.getElementById('sf'),pv=document.getElementById('pv');
+  var draw=function(){pv.innerHTML=preview(readForm(f))};
+  bindForm(f,draw);draw();DIRTY=false;
+  document.querySelectorAll('[data-k]').forEach(function(b){b.onclick=function(){f.kind.value=b.getAttribute('data-k');f.dispatchEvent(new Event('change'));if(f.kind.value==='sponsored'&&f.section.value==='city')f.section.value='realestate';
+    document.querySelectorAll('[data-k]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});draw()}});
+  document.querySelectorAll('.tabs2 [data-v]').forEach(function(b){b.onclick=function(){document.querySelector('.ed').setAttribute('data-v',b.getAttribute('data-v'));document.querySelectorAll('.tabs2 [data-v]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))})}});
+  function save(btn,publish){
+    var d=readForm(f);if(!d.title||!d.body.length)return toast('חסרים כותרת או טקסט',true);
+    if(d.kind==='sponsored'&&!d.author)return toast('בתוכן שיווקי חובה לכתוב את שם המפרסם',true);
+    if(d.kind==='sponsored'&&!d.image_url&&!confirm('אין תמונה. תוכן שיווקי בלי תמונה של המפרסם יוצג עם צילום כללי מהמדור. להמשיך?'))return;
+    if(publish&&!confirm('לפרסם את הכתבה באתר עכשיו?'))return;
+    act(btn,call('story_new',{fields:d,publish:publish}),function(r){DIRTY=false;toast(publish?'פורסם. '+SITE_NOTE:(r.warning||'נשמר כטיוטה'),!!r.warning);location.hash='#story/'+r.id}).then(function(r){
+      if(r&&!r.ok&&r.id){DIRTY=false;toast('הכתבה נשמרה כטיוטה (#'+r.id+') אבל לא פורסמה: '+(r.error||''),true);location.hash='#story/'+r.id}});
+  }
+  document.getElementById('pubnow').onclick=function(){save(this,true)};
+  document.getElementById('draft').onclick=function(){save(this,false)};
+}
+
+// ---------- מבזקים ----------
+function vFlashes(){
+  var nowLocal=function(){var d=new Date(Date.now()-new Date().getTimezoneOffset()*6e4);return d.toISOString().slice(0,16)};
+  main().innerHTML=page('מבזקים','המבזקים שמופיעים בפס המבזקים ובעמוד המבזקים. מבזקים אוטומטיים מגיעים ממקורות רשמיים (פיקוד העורף, מד״א, השירות המטאורולוגי, משטרה). באתר הם מתעדכנים תוך דקה.')
+    +'<div class="card"><h2 class="h">מבזק חדש</h2><form class="fg" id="nf"><label class="f">הטקסט <span class="cnt" id="nfc"></span><textarea name="text" rows="2" maxlength="150" required placeholder="למשל: רחוב הרצל חסום לתנועה בין סמילנסקי לשטמפפר בגלל עבודות"></textarea></label>'
+    +'<div class="fg2"><label class="f">מקום (לא חובה)<input name="place" list="plc" placeholder="נתניה"></label><label class="f">שעה<input type="datetime-local" name="at" value="'+nowLocal()+'"></label></div>'
+    +'<div class="fg2"><label class="f">כמה זמן יופיע<select name="ttl_h">'+[[2,'שעתיים'],[3,'3 שעות'],[6,'6 שעות'],[12,'12 שעות'],[24,'יממה'],[48,'יומיים']].map(function(x){return opt(x[0],x[1],12)}).join('')+'</select></label><label class="f">קישור (לא חובה)<input name="url" dir="ltr" placeholder="https://"></label></div>'
+    +'<datalist id="plc">'+places.map(function(p){return '<option value="'+esc(p)+'">'}).join('')+'</datalist><div><button class="b pri">פרסום המבזק</button></div></form></div>'
+    +'<h2 class="h">המבזקים עכשיו</h2><div id="fl"><div class="ld">טוען...</div></div>';
+  var nf=document.getElementById('nf');
+  nf.text.oninput=function(){document.getElementById('nfc').textContent=nf.text.value.length+'/150'};
+  nf.onsubmit=function(e){e.preventDefault();var at=nf.at.value?new Date(nf.at.value).toISOString():'';
+    act(nf.querySelector('button'),call('flash_add',{text:nf.text.value,place:nf.place.value,at:at,ttl_h:Number(nf.ttl_h.value),url:nf.url.value}),function(){toast('המבזק פורסם. יופיע באתר תוך דקה.');nf.text.value='';load()})};
+  function load(){call('flashes').then(function(j){
+    var el=document.getElementById('fl');if(!el)return;
+    if(!j.ok)return el.innerHTML='<div class="empty">'+esc(j.error||'נכשל')+'</div>';
+    var list=j.flashes||[];
+    el.innerHTML=(list.length?'<div class="list">'+list.map(function(x){
+      var id=String(x.id),man=!!x.manual;
+      return '<div class="fl'+(x.hidden?' off':'')+'" data-id="'+esc(id)+'"><time>'+hm(x.at)+'</time><div class="m"><div class="s">'+esc(x.source)+(man?' · <span class="bdg">נכתב כאן</span>':'')+(x.hidden?' · <span class="bdg">מוסתר</span>':'')+(x.edited?' · <span class="bdg">הטקסט שונה</span>':'')+' · מוצג עד '+hm(Date.parse(x.at)+(x.ttl||12)*36e5)+'</div>'
+        +'<div class="tx">'+esc(x.text)+'</div>'+(x.edited?'<div class="note">במקור: '+esc(x.orig)+'</div>':'')
+        +'<details class="more"><summary class="note">עריכה</summary><form class="fg" data-ef style="margin-top:6px"><textarea name="text" rows="2" maxlength="150">'+esc(man?x.raw:x.text)+'</textarea>'+(man?'<input name="place" value="'+esc(x.place||'')+'" placeholder="מקום">':'')+'<div class="row"><button class="b sm pri">שמירה</button>'+(!man&&x.edited?'<button type="button" class="b sm" data-orig>חזרה לטקסט המקורי</button>':'')+'</div></form></details></div>'
+        +'<div><button class="b sm'+(x.hidden?'':' dang')+'" data-h>'+(x.hidden?'להציג':'להסתיר')+'</button></div></div>';
+    }).join('')+'</div>':'<div class="card empty">אין מבזקים פעילים כרגע.</div>');
+    var byId={};list.forEach(function(x){byId[String(x.id)]=x});
+    el.querySelectorAll('.fl').forEach(function(r){
+      var x=byId[r.getAttribute('data-id')],man=!!x.manual,mid=man?Number(String(x.id).slice(1)):Number(x.id);
+      var send=function(d){return man?call('flash_edit',Object.assign({id:mid},d)):call('flash_mod',Object.assign({item_id:mid},d))};
+      r.querySelector('[data-h]').onclick=function(){act(this,send({hidden:!x.hidden}),function(){toast(x.hidden?'המבזק מוצג שוב':'המבזק הוסתר מהאתר');load()})};
+      var ef=r.querySelector('[data-ef]');ef.onsubmit=function(e){e.preventDefault();var d={text:ef.text.value};if(man)d.place=ef.place.value;act(ef.querySelector('button'),send(d),function(){toast('נשמר');load()})};
+      var o=r.querySelector('[data-orig]');if(o)o.onclick=function(){act(o,send({text:''}),function(){toast('חזר לטקסט המקורי');load()})};
+    });
+  }).catch(function(){})}
+  load();every(60000,load);
+}
+
+// ---------- אירוע מיוחד ----------
+var EVK={elections:'בחירות',storm:'סערה',holiday:'חג',emergency:'חירום',other:'אחר'};
+function localDT(t){if(!t)return'';var d=new Date(Date.parse(t)-new Date().getTimezoneOffset()*6e4);return d.toISOString().slice(0,16)}
+function evForm(e){
+  e=e||{};var f=function(n,l,d,ph){return '<label class="f">'+l+'<input name="'+n+'" value="'+esc(e[n]||'')+'"'+(d?' dir="ltr"':'')+(ph?' placeholder="'+esc(ph)+'"':'')+'></label>'};
+  return '<form class="fg" data-ev="'+(e.id||'')+'"><div class="fg2"><label class="f">סוג<select name="kind">'+Object.keys(EVK).map(function(k){return opt(k,EVK[k],e.kind||'other')}).join('')+'</select></label>'+f('tag','תגית קצרה',0,'למשל: בחירות 2026')+'</div>'
+    +f('title','כותרת הפס',0,'למשל: ליל הבחירות בנתניה')+'<div class="fg2">'+f('stat1','נתון 1',0,'למשל: 61%')+f('stat1_label','מה זה נתון 1',0,'אחוז הצבעה')+f('stat2','נתון 2')+f('stat2_label','מה זה נתון 2')+'</div>'
+    +'<div class="fg2">'+f('cta_text','טקסט הכפתור',0,'לכל העדכונים')+f('cta_url','קישור הכפתור',1,'/city/')+'</div>'
+    +'<div class="fg2"><label class="f">מתחיל<input type="datetime-local" name="starts_at" value="'+esc(localDT(e.starts_at))+'"></label><label class="f">נגמר <small>ריק = עד שמכבים</small><input type="datetime-local" name="ends_at" value="'+esc(localDT(e.ends_at))+'"></label></div>'
+    +'<label class="f">כתבות שקשורות לאירוע <small>מספרי כתבות מופרדים בפסיק</small><input name="story_ids" dir="ltr" value="'+esc((e.story_ids||[]).join(', '))+'"></label>'
+    +'<label class="chk"><input type="checkbox" name="active"'+(e.active?' checked':'')+'> פעיל באתר (מכבה כל אירוע אחר)</label><div class="evp" data-evp></div><div class="row"><button class="b pri">שמירה</button></div></form>';
+}
+function evPrev(f){var v=function(n){return f[n].value.trim()};return '<span class="tg">'+esc(v('tag')||'מיוחד')+'</span><b>'+esc(v('title')||'כותרת הפס')+'</b>'+(v('stat1')?'<span><span class="big">'+esc(v('stat1'))+'</span> '+esc(v('stat1_label'))+'</span>':'')+(v('stat2')?'<span>'+esc(v('stat2'))+' '+esc(v('stat2_label'))+'</span>':'')+(v('cta_text')?'<span style="text-decoration:underline">'+esc(v('cta_text'))+'</span>':'')}
+function vEvents(){
+  main().innerHTML=page('אירוע מיוחד','פס מודגש בראש כל עמוד באתר בזמן אירוע (בחירות, סערה, חג, חירום). רק אירוע אחד פעיל בכל רגע. '+SITE_NOTE)
+    +'<div class="card"><details class="more"><summary>+ אירוע חדש</summary><div style="margin-top:10px">'+evForm({active:true,starts_at:new Date().toISOString()})+'</div></details></div><div id="evl"><div class="ld">טוען...</div></div>';
+  function bind(){document.querySelectorAll('form[data-ev]').forEach(function(f){
+    var p=f.querySelector('[data-evp]');var up=function(){p.innerHTML=evPrev(f)};f.addEventListener('input',up);up();
+    f.onsubmit=function(ev){ev.preventDefault();var d={};['kind','title','tag','stat1','stat1_label','stat2','stat2_label','cta_text','cta_url'].forEach(function(k){d[k]=f[k].value.trim()||null});
+      d.active=f.active.checked;d.starts_at=f.starts_at.value?new Date(f.starts_at.value).toISOString():new Date().toISOString();d.ends_at=f.ends_at.value?new Date(f.ends_at.value).toISOString():null;
+      d.story_ids=f.story_ids.value.split(/[,\s]+/).map(Number).filter(Boolean);if(f.getAttribute('data-ev'))d.id=Number(f.getAttribute('data-ev'));
+      if(!d.title)return toast('חסרה כותרת לפס',true);
+      act(f.querySelector('button:not([type=button])'),call('event_set',{event:d}),function(){toast('נשמר. '+SITE_NOTE);vEvents()})};
+  })}
+  call('events').then(function(j){
+    var el=document.getElementById('evl');
+    el.innerHTML=(j.events||[]).length?j.events.map(function(e){
+      var on=e.active&&(!e.ends_at||Date.parse(e.ends_at)>Date.now());
+      return '<div class="card" data-id="'+e.id+'"><div class="row" style="justify-content:space-between"><div><span class="bdg '+(on?'published':'')+'">'+(on?'פעיל באתר':'כבוי')+'</span> <b>'+esc(e.title||'בלי כותרת')+'</b><div class="note">#'+e.id+' · '+esc(EVK[e.kind]||e.kind||'')+' · עודכן '+when(e.updated_at)+(e.ends_at?' · נגמר '+when(e.ends_at):'')+'</div></div>'
+        +(e.active?'<button class="b dang" data-off>לכבות</button>':'')+'</div><details class="more" style="margin-top:8px"><summary>עריכה</summary><div style="margin-top:10px">'+evForm(e)+'</div></details></div>';
+    }).join(''):'<div class="card empty">עוד לא נוצרו אירועים.</div>';
+    bind();
+    el.querySelectorAll('[data-off]').forEach(function(b){b.onclick=function(){if(!confirm('לכבות את הפס באתר?'))return;act(b,call('event_clear',{id:b.closest('.card').getAttribute('data-id')}),function(){toast('כובה');vEvents()})}});
+  }).catch(function(){});
+  bind();
+}
+
+// ---------- פניות ----------
+var RQS='new',LSS='pending',CATS=[];
+var TYPE={contact:'פנייה כללית',advertise:'בקשת פרסום',sponsored:'כתבת תוכן שיווקי',promote:'קידום במדריך',banner:'באנר',tip:'ידיעה מקורא',correction:'תיקון או הסרה',newsletter:'הרשמה לניוזלטר'};
+var OFFER={featured:'קידום במדריך (מומלץ)',leader:'מוביל בקטגוריה',sponsored:'כתבת תוכן שיווקי',tgpost:'פוסט ממומן בטלגרם',banner:'באנר באתר',event:'אירוע מקודם',newsletter:'חסות לניוזלטר',other:'משהו אחר'};
+function wa(p){return /^05\d{8}$/.test(p||'')?'https://wa.me/972'+p.slice(1):''}
+function subChips(opts,cur,on){return '<div class="chips">'+opts.map(function(o){return '<button type="button" data-v="'+o[0]+'" aria-pressed="'+(cur===o[0])+'">'+o[1]+'</button>'}).join('')+'</div>'}
+function vRequests(){
+  main().innerHTML=page('פניות','פניות מהטפסים באתר: צור קשר, ידיעות מקוראים, בקשות פרסום ותיקונים.')+subChips([['new','חדשות'],['handled','טופלו'],['spam','ספאם'],['all','הכל']],RQS)+'<div id="rl"><div class="ld">טוען...</div></div>';
+  main().querySelectorAll('.chips [data-v]').forEach(function(b){b.onclick=function(){RQS=b.getAttribute('data-v');vRequests()}});
+  call('requests',{status:RQS}).then(function(j){
+    var el=document.getElementById('rl');if(!j.ok)return el.innerHTML='<div class="empty">'+esc(j.error)+'</div>';
+    el.innerHTML=j.requests.length?j.requests.map(function(r){
+      var paid=['advertise','sponsored','promote','banner'].indexOf(r.type)>=0;
+      return '<div class="card" data-id="'+r.id+'"><div class="row" style="justify-content:space-between"><div><span class="bdg'+(paid?' spon':'')+'">'+esc(TYPE[r.type]||r.type)+'</span> <b>'+esc(r.business||r.name||'בלי שם')+'</b></div><span class="note">#'+r.id+' · '+when(r.created_at)+(r.is_test?' · בדיקה':'')+(r.status!=='new'?' · '+(r.status==='handled'?'טופל':'ספאם')+' '+when(r.handled_at):'')+'</span></div>'
+        +(r.offer?'<p><b>במה מתעניינים:</b> '+esc(OFFER[r.offer]||r.offer)+'</p>':'')+(r.name&&r.business?'<p><b>שם:</b> '+esc(r.name)+'</p>':'')
+        +(r.phone?'<p><b>טלפון:</b> <a href="tel:'+esc(r.phone)+'" dir="ltr">'+esc(r.phone)+'</a></p>':'')+(r.email?'<p><b>מייל:</b> <a href="mailto:'+esc(r.email)+'" dir="ltr">'+esc(r.email)+'</a></p>':'')
+        +(r.url?'<p><b>קישור:</b> <a href="'+esc(href(r.url))+'" target="_blank" rel="noopener noreferrer">'+esc(r.url)+'</a></p>':'')+(r.message?'<p style="white-space:pre-wrap">'+esc(r.message)+'</p>':'')
+        +(r.photo_url?'<img class="thumb" style="max-width:320px" src="'+esc(r.photo_url)+'" alt="התמונה שצורפה"><div class="note">'+(r.photo_ok?'השולח אישר לפרסם את התמונה':'השולח לא אישר לפרסם את התמונה')+'</div>':'')
+        +(r.page?'<div class="note">נשלח מהדף '+esc(r.page)+(r.lang&&r.lang!=='he'?' ('+esc(r.lang)+')':'')+'</div>':'')+(paid?'<div class="note">התשלום לא מחובר לאתר. חוזרים אליהם ידנית.</div>':'')
+        +'<details class="more"><summary>הערה פנימית'+(r.note?': '+esc(r.note.slice(0,40)):'')+'</summary><form class="fg" data-note><textarea name="note" rows="2">'+esc(r.note||'')+'</textarea><div><button class="b sm">שמירת ההערה</button></div></form></details>'
+        +'<div class="row" style="margin-top:10px">'+(r.phone?'<a class="b" href="tel:'+esc(r.phone)+'">חיוג</a>':'')+(wa(r.phone)?'<a class="b" href="'+wa(r.phone)+'" target="_blank" rel="noopener">וואטסאפ</a>':'')
+        +(r.type==='sponsored'||r.offer==='sponsored'?'<a class="b" href="#new/sponsored">כתיבת תוכן שיווקי</a>':'')
+        +(r.status!=='handled'?'<button class="b ok" data-s="handled">טופל</button>':'')+(r.status!=='spam'?'<button class="b dang" data-s="spam">ספאם</button>':'')+(r.status!=='new'?'<button class="b" data-s="new">להחזיר לחדשות</button>':'')+'</div></div>';
+    }).join(''):'<div class="card empty">אין כאן פניות כרגע.</div>';
+    el.querySelectorAll('.card[data-id]').forEach(function(c){var id=c.getAttribute('data-id');
+      c.querySelectorAll('[data-s]').forEach(function(b){b.onclick=function(){act(b,call('request_set',{id:id,status:b.getAttribute('data-s')}),function(){toast('נשמר');c.remove();summary()})}});
+      var f=c.querySelector('[data-note]');if(f)f.onsubmit=function(e){e.preventDefault();act(f.querySelector('button'),call('request_set',{id:id,note:f.note.value}),function(){toast('ההערה נשמרה')})};
+    });
+  }).catch(function(){});
+}
+
+// ---------- מדריך עסקים ----------
+function vListings(){
+  main().innerHTML=page('מדריך עסקים','עסקים שנרשמו למדריך בעלי המקצוע. אישור או עריכה מופיעים באתר תוך דקה בערך.')+subChips([['pending','ממתינים לאישור'],['approved','באתר'],['rejected','נדחו']],LSS)+'<div id="ll"><div class="ld">טוען...</div></div>';
+  main().querySelectorAll('.chips [data-v]').forEach(function(b){b.onclick=function(){LSS=b.getAttribute('data-v');vListings()}});
+  call('listings',{status:LSS}).then(function(j){
+    var el=document.getElementById('ll');if(!j.ok)return el.innerHTML='<div class="empty">'+esc(j.error)+'</div>';
+    CATS=j.categories||[];var cn={};CATS.forEach(function(c){cn[c.slug]=c.plural_he});
+    var fld=function(n,label,v,t){return '<label class="f">'+label+(t==='ta'?'<textarea name="'+n+'" rows="5">'+esc(v||'')+'</textarea>':'<input name="'+n+'" value="'+esc(v||'')+'"'+(t?' dir="ltr"':'')+'>')+'</label>'};
+    el.innerHTML=j.listings.length?j.listings.map(function(l){
+      var url='/directory/'+l.category+'/b'+l.id+'/';
+      return '<div class="card" data-id="'+l.id+'"><div class="row" style="justify-content:space-between"><b style="font-size:16px">'+esc(l.name)+'</b><span class="note">#'+l.id+' · '+esc(cn[l.category]||l.category)+' · '+esc(l.area)+' · '+when(l.created_at)+(l.is_test?' · בדיקה':'')+(l.plan==='featured'?' · <span class="bdg spon">מקודם</span>':'')+'</span></div>'
+        +'<p style="white-space:pre-wrap">'+esc(l.description)+'</p><p><b>טלפון:</b> <a href="tel:'+esc(l.phone)+'" dir="ltr">'+esc(l.phone)+'</a>'+(l.whatsapp?' · וואטסאפ '+esc(l.whatsapp):'')+(l.email?' · '+esc(l.email):'')+'</p>'
+        +(l.website?'<p><a href="'+esc(href(l.website))+'" target="_blank" rel="noopener nofollow noreferrer">'+esc(l.website)+'</a></p>':'')+(l.address?'<p>כתובת: '+esc(l.address)+'</p>':'')+(l.license_no?'<p>רישיון: '+esc(l.license_no)+'</p>':'')
+        +(l.contact_name||l.contact_phone?'<p class="note">איש קשר (לא מפורסם): '+esc(l.contact_name||'')+' '+esc(l.contact_phone||'')+'</p>':'')
+        +(l.interest&&l.interest.length?'<p><span class="bdg spon">מתעניינים גם ב: '+l.interest.map(function(i){return esc(OFFER[i]||i)}).join(', ')+'</span></p>':'')
+        +(l.status==='approved'?'<p><a href="'+url+'" target="_blank" rel="noopener">לדף העסק באתר</a></p>':'')
+        +'<details class="more"><summary>עריכה</summary><form class="fg" data-edit style="margin-top:8px"><div class="fg2">'+fld('name','שם העסק',l.name)+'<label class="f">קטגוריה<select name="category">'+CATS.map(function(c){return opt(c.slug,c.plural_he,l.category)}).join('')+'</select></label>'
+        +fld('area','אזור',l.area)+fld('phone','טלפון',l.phone,1)+fld('whatsapp','וואטסאפ',l.whatsapp,1)+fld('email','מייל',l.email,1)+fld('website','אתר',l.website,1)+fld('address','כתובת',l.address)+fld('license_no','מספר רישיון',l.license_no)+fld('logo_url','קישור ללוגו',l.logo_url,1)+'</div>'
+        +fld('description','תיאור',l.description,'ta')+'<div class="fg2"><label class="f">מסלול<select name="plan">'+opt('free','רגיל',l.plan==='featured'?'':'free')+opt('featured','מקודם (מומלץ)',l.plan)+'</select></label>'
+        +'<label class="f">מקודם עד (לא חובה)<input type="date" name="featured_until" value="'+(l.featured_until?l.featured_until.slice(0,10):'')+'"></label></div>'+fld('notes','הערה פנימית',l.notes)+'<div><button class="b pri">שמירה</button></div></form></details>'
+        +(l.status==='pending'?'<div class="row" style="margin-top:10px"><button class="b ok" data-a="ok">לאשר</button><button class="b dang" data-a="no">לדחות</button></div>':'')+'</div>';
+    }).join(''):'<div class="card empty">אין כאן עסקים כרגע.</div>';
+    el.querySelectorAll('.card[data-id]').forEach(function(c){var id=c.getAttribute('data-id');
+      c.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){if(b.getAttribute('data-a')==='no'&&!confirm('לדחות את העסק?'))return;act(b,call('listing_decide',{id:id,act:b.getAttribute('data-a')}),function(r){toast(r.already?'כבר טופל':(b.getAttribute('data-a')==='ok'?'אושר. יופיע באתר תוך דקה בערך':'נדחה'));c.remove();summary()})}});
+      var f=c.querySelector('[data-edit]');f.onsubmit=function(e){e.preventDefault();var d={};new FormData(f).forEach(function(v,k){d[k]=String(v).trim()});if(!d.featured_until)d.featured_until=null;act(f.querySelector('button'),call('listing_edit',{id:id,fields:d}),function(){toast('נשמר')})};
+    });
+  }).catch(function(){});
+}
+
+// ---------- מקורות ----------
+var SRCF='all';
+var SKIND={rss:'RSS',telegram:'טלגרם',html:'אתר',gnews:'חיפוש גוגל',facebook:'פייסבוק',youtube:'יוטיוב',auto:'פנימי',netanyanet:'אתר',smarticket:'כרטיסים'};
+var SST={ok:['published','תקין'],failing:['waiting','נכשל'],paused:['','מושבת'],internal:['','פנימי']};
+function vSources(){
+  main().innerHTML=page('מקורות','מאיפה המערכת אוספת ידיעות. מקור מושבת לא נאסף עד שמפעילים אותו שוב.')+'<div id="srl"><div class="ld">טוען...</div></div>';
+  function load(){call('sources').then(function(j){
+    var el=document.getElementById('srl');if(!el)return;if(!j.ok)return el.innerHTML='<div class="empty">'+esc(j.error)+'</div>';
+    var list=j.sources.filter(function(s){return SRCF==='all'||s.status===SRCF});
+    el.innerHTML='<div class="kpis">'+kpi('תקינים',num(j.sum.ok))+kpi('נכשלים',num(j.sum.failing),'3 כישלונות ברצף ומעלה','',j.sum.failing>0)+kpi('מושבתים',num(j.sum.paused))+'</div>'
+      +subChips([['all','הכל'],['ok','תקינים'],['failing','נכשלים'],['paused','מושבתים'],['internal','פנימיים']],SRCF)
+      +'<div class="list">'+list.map(function(s){var st=SST[s.status]||['',s.status];
+        return '<div class="li"><div class="m"><div class="x"><span class="bdg '+st[0]+'">'+st[1]+'</span><span>'+esc(SKIND[s.kind]||s.kind)+'</span>'+(s.role==='tip'?'<span class="bdg">רמזים בלבד</span>':'')+(s.trust==='official'?'<span class="bdg">רשמי</span>':'')+'<span dir="ltr">'+esc(s.id)+'</span></div>'
+          +'<div class="t">'+esc(s.name)+'</div><div class="d">ידיעה אחרונה: '+(s.last_item?ago(s.last_item):'אין')+' · ב-24 שעות: '+num(s.items_24h)+' · בשבוע: '+num(s.items_7d)+(s.last_ok?' · בדיקה מוצלחת אחרונה '+ago(s.last_ok):'')+'</div>'
+          +(s.status==='failing'&&s.last_error?'<div class="d" style="color:#7A1220">'+esc(s.last_error)+' ('+num(s.fails)+' כישלונות)</div>':'')+'</div>'
+          +(s.status!=='internal'?'<div><button class="b sm'+(s.active?' dang':' ok')+'" data-src="'+esc(s.id)+'" data-on="'+(s.active?0:1)+'">'+(s.active?'להשבית':'להפעיל')+'</button></div>':'')+'</div>'}).join('')+'</div>';
+    el.querySelectorAll('.chips [data-v]').forEach(function(b){b.onclick=function(){SRCF=b.getAttribute('data-v');load()}});
+    el.querySelectorAll('[data-src]').forEach(function(b){b.onclick=function(){var on=b.getAttribute('data-on')==='1';if(!confirm(on?'להפעיל את המקור?':'להשבית את המקור? המערכת תפסיק לאסוף ממנו.'))return;
+      act(b,call('source_set',{id:b.getAttribute('data-src'),active:on}),function(){toast(on?'המקור הופעל':'המקור הושבת');load()})}});
+  }).catch(function(){})}
+  load();
+}
+
+// ---------- סטטיסטיקה ----------
+var DAYS=30;
+var DEV={mobile:'טלפון',tablet:'טאבלט',desktop:'מחשב',other:'אחר'};
+var LANGN={he:'עברית',ru:'רוסית',fr:'צרפתית',en:'אנגלית','':'לא ידוע'};
+var REFN={'':'כניסה ישירה (בלי אתר מפנה)',google:'Google',bing:'Bing','facebook.com':'Facebook','instagram.com':'Instagram','x.com':'X','telegram':'Telegram','whatsapp':'WhatsApp',other:'אחר'};
+function pathName(p,titles){var m=/\/n(\d+)\/$/.exec(p);if(m&&titles[m[1]])return esc(titles[m[1]]);if(p==='/')return 'דף הבית';var s=secs.filter(function(x){return p==='/'+x.slug+'/'})[0];if(s)return 'מדור: '+esc(s.n);return '<span dir="ltr">'+esc(p)+'</span>'}
+function share(list,key,val,names){var tot=list.reduce(function(a,x){return a+(x[val]||0)},0)||1;return '<table class="tb"><tbody>'+list.map(function(x){var pc=Math.round((x[val]||0)/tot*100);return '<tr><td>'+esc(names?names[x[key]]||x[key]:x[key])+'<div class="barr"><i style="width:'+pc+'%"></i></div></td><td class="n">'+num(x[val])+'<div class="note">'+pc+'%</div></td></tr>'}).join('')+'</tbody></table>'}
+function vStats(){
+  main().innerHTML=page('סטטיסטיקה','ספירה של האתר עצמו, בלי עוגיות ובלי מידע אישי. "ביקור" הוא כניסה לאתר מבחוץ (מגוגל, מרשת חברתית או ישירות); "צפייה" היא כל עמוד שנפתח.',
+    '<select id="days" style="width:auto">'+[[7,'7 ימים'],[30,'30 יום'],[90,'90 יום'],[365,'שנה']].map(function(x){return opt(x[0],x[1],DAYS)}).join('')+'</select>')+'<div id="stt"><div class="ld">טוען...</div></div>';
+  document.getElementById('days').onchange=function(){DAYS=Number(this.value);load()};
+  function load(){call('stats',{days:DAYS}).then(function(j){
+    var el=document.getElementById('stt');if(!el)return;if(!j.ok)return el.innerHTML='<div class="empty">'+esc(j.error)+'</div>';
+    var s=j.stats||{},t=j.titles||{},td=s.today||{},yd=s.yesterday||{},tot=s.total||{},now=s.now||{};
+    var hours=(s.hours||[]),hmax=Math.max(1,Math.max.apply(null,hours.map(function(h){return h.views}).concat([1])));
+    el.innerHTML='<div class="kpis">'+kpi('עכשיו (30 דקות)',num(now.views),num(now.entries)+' ביקורים חדשים')+kpi('ביקורים היום',num(td.entries),'אתמול '+num(yd.entries))+kpi('צפיות היום',num(td.views),'אתמול '+num(yd.views))
+      +kpi('ביקורים ב-'+DAYS+' ימים',num(tot.entries))+kpi('צפיות ב-'+DAYS+' ימים',num(tot.views),tot.entries?(tot.views/tot.entries).toFixed(1)+' עמודים לביקור':'')+'</div>'
+      +'<div class="card"><h2 class="h">לפי יום</h2>'+bars(s.daily,200)+'</div>'
+      +'<div class="grid g2"><div class="card"><h2 class="h">העמודים הנצפים ('+DAYS+' ימים)</h2>'+((s.pages||[]).length?'<table class="tb"><thead><tr><th>עמוד</th><th style="text-align:end">צפיות</th><th style="text-align:end">ביקורים</th></tr></thead><tbody>'+s.pages.map(function(p){var m=/\/n(\d+)\/$/.exec(p.path);return '<tr><td><a href="'+(m?'#story/'+m[1]:esc(href(p.path)))+'"'+(m?'':' target="_blank" rel="noopener"')+'>'+pathName(p.path,t)+'</a></td><td class="n">'+num(p.views)+'</td><td class="n">'+num(p.entries)+'</td></tr>'}).join('')+'</tbody></table>':'<p class="note">עוד אין נתונים. הספירה התחילה ב-29.10.2026.</p>')+'</div>'
+      +'<div><div class="card"><h2 class="h">עכשיו באתר (30 דקות)</h2>'+((now.pages||[]).length?'<table class="tb"><tbody>'+now.pages.map(function(p){return '<tr><td>'+pathName(p.path,t)+'</td><td class="n">'+num(p.views)+'</td></tr>'}).join('')+'</tbody></table>':'<p class="note">אין צפיות בדקות האחרונות.</p>')
+      +(hours.length?'<h2 class="h" style="margin-top:14px">24 השעות האחרונות</h2><svg class="chart" viewBox="0 0 480 70" aria-label="צפיות לפי שעה">'+hours.map(function(h,i){var v=h.views/hmax*56;var x=480-(i+1)*(480/24);return '<rect x="'+x.toFixed(1)+'" y="'+(60-v).toFixed(1)+'" width="'+(480/24-3).toFixed(1)+'" height="'+v.toFixed(1)+'" rx="2" fill="#0D1321"><title>'+hm(h.h)+': '+num(h.views)+'</title></rect>'}).join('')+'</svg>':'')+'</div>'
+      +'<div class="card"><h2 class="h">היום</h2>'+((s.pages_today||[]).length?'<table class="tb"><tbody>'+s.pages_today.map(function(p){return '<tr><td>'+pathName(p.path,t)+'</td><td class="n">'+num(p.views)+'</td></tr>'}).join('')+'</tbody></table>':'<p class="note">עוד אין צפיות היום.</p>')+'</div></div></div>'
+      +'<div class="grid g3"><div class="card"><h2 class="h">מאיפה מגיעים</h2>'+((s.refs||[]).length?share(s.refs,'host','entries',REFN):'<p class="note">אין נתונים.</p>')+'</div>'
+      +'<div class="card"><h2 class="h">מכשירים</h2>'+((s.devices||[]).length?share(s.devices,'device','views',DEV):'<p class="note">אין נתונים.</p>')+'</div>'
+      +'<div class="card"><h2 class="h">שפות</h2>'+((s.langs||[]).length?share(s.langs,'lang','views',LANGN):'<p class="note">אין נתונים.</p>')+'</div></div>'
+      +'<p class="note">רובוטים של מנועי חיפוש לא נספרים. Google Analytics (למי שאישר עוגיות) סופר בנפרד ולכן המספרים שם יכולים להיות שונים.</p>';
+  }).catch(function(){})}
+  load();every(60000,load);
+}
+
+// ---------- יומן ----------
+var LOGF='all';
+var LOGK={login:'כניסה',password:'סיסמה',otp:'קוד מטלגרם',setup_link:'קישור להגדרת סיסמה',set_password:'הגדרת סיסמה',action:'פעולה'};
+var ACTK={request_set:'פנייה',listing_decide:'החלטה על עסק',listing_edit:'עריכת עסק',story_decide:'החלטה על כתבה',story_withdraw:'הורדת כתבה',story_kicker:'תווית כתבה',event_set:'שמירת אירוע',event_clear:'כיבוי אירוע',
+  story_save:'עריכת כתבה',story_new:'כתבה חדשה',story_publish:'פרסום כתבה',story_reject:'דחיית כתבה',story_restore:'החזרת כתבה',story_pin:'נעיצה',story_img_redo:'תמונה חדשה',flash_mod:'שינוי מבזק',flash_add:'מבזק חדש',flash_edit:'עריכת מבזק',source_set:'הפעלה או השבתה של מקור'};
+var PUBK={publish:'פורסמה',reject:'נדחתה',withdraw:'הורדה מהאתר',revise:'תוקנה',panel_edit:'נערכה בלוח',panel_create:'נכתבה בלוח',restore:'הוחזרה',blocked:'נחסמה בבדיקה',ask:'נשלחה לאישור בטלגרם',ask_failed:'שליחה לאישור נכשלה',merge:'מוזגה',update:'עדכון חי',close_dup:'נסגרה ככפילות',rewrite_asked:'נשלחה לכתיבה מחדש',ping:'בדיקה'};
+var BYK={'yakir-panel':'יקיר (לוח הניהול)',yakir:'יקיר (טלגרם)','yakir-chat':'יקיר (צ׳אט)',auto:'אוטומטי',launch:'השקה',dup:'כפילות',merge:'מיזוג'};
+function actNote(n){n=String(n||'');var m=/^(\w+)(.*)$/.exec(n);return m&&ACTK[m[1]]?ACTK[m[1]]+m[2]:n}
+function vLog(){
+  main().innerHTML=page('יומן','כל כניסה ללוח, כל ניסיון שנכשל וכל פעולה שנעשתה כאן, וגם מה שהמערכת פרסמה.')+subChips([['all','הכל'],['login','כניסות'],['action','פעולות']],LOGF)+'<div id="lg"><div class="ld">טוען...</div></div>';
+  main().querySelectorAll('.chips [data-v]').forEach(function(b){b.onclick=function(){LOGF=b.getAttribute('data-v');vLog()}});
+  call('log',{kind:LOGF}).then(function(j){
+    var el=document.getElementById('lg');if(!j.ok)return el.innerHTML='<div class="empty">'+esc(j.error)+'</div>';
+    el.innerHTML='<div class="grid g2"><div class="card"><h2 class="h">לוח הניהול</h2><table class="tb"><thead><tr><th>מתי</th><th>מה</th><th>תוצאה</th><th>מאיפה</th></tr></thead><tbody>'+(j.log||[]).map(function(l){
+        return '<tr><td style="white-space:nowrap">'+when(l.at)+'</td><td>'+esc(LOGK[l.kind]||l.kind)+(l.note?'<div class="note">'+esc(l.kind==='action'?actNote(l.note):l.note)+'</div>':'')+'</td><td>'+(l.ok?'הצליח':'<b style="color:#7A1220">נכשל</b>')+'</td><td class="note" dir="ltr" style="text-align:end">'+esc(l.ip||'')+(l.country?' '+esc(l.country):'')+'</td></tr>'}).join('')+'</tbody></table></div>'
+      +'<div class="card"><h2 class="h">פרסום כתבות (המערכת ואתם)</h2><table class="tb"><tbody>'+(j.publish||[]).map(function(p){
+        return '<tr><td style="white-space:nowrap">'+when(p.at)+'</td><td>'+esc(PUBK[p.action]||p.action)+(p.by?'<div class="note">'+esc(BYK[p.by]||p.by)+'</div>':'')+'</td><td>'+(p.story_id?'<a href="#story/'+p.story_id+'">#'+p.story_id+'</a> ':'')+esc(p.title)+(p.note?'<div class="note">'+esc(p.note)+'</div>':'')+'</td></tr>'}).join('')+'</tbody></table></div></div>';
+  }).catch(function(){});
+}
+
+// ---------- start ----------
+var m=/[#&]setup=([A-Za-z0-9_-]{20,})/.exec(location.hash||'');
+if(m){history.replaceState(null,'',location.pathname);setupView(m[1])}
+else if(S){shell();route()}else loginView();
+setInterval(function(){if(S&&!document.hidden&&document.getElementById('main'))summary()},120000);
+})();
+</script>
+</body>
+</html>

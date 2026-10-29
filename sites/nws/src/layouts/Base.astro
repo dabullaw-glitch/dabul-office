@@ -297,5 +297,14 @@ if(fl){fl.innerHTML=f.map(function(x){return'<li id="f'+x.id+'"><time datetime="
 }).catch(function(){})}
 setTimeout(run,4000);setInterval(function(){if(!document.hidden)run()},30000);})();
 </script>}
+{/* 29.10.2026: the cookieless visit counter (edge function hns-hit): one beacon per page view with the path, the referring site's
+   host, the device type from the screen width and the page language. No cookie, nothing kept in the browser, no IP stored.
+   Only on https://nws.co.il, never on a preview build or a noindex page (404, search), never for automated browsers. */}
+{!PREVIEW && <script is:inline define:vars={{ HIT: 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/hns-hit' }}>
+(function(){try{if(location.hostname!=='nws.co.il'||navigator.webdriver)return;var m=document.querySelector('meta[name="robots"]');if(m&&/noindex/.test(m.content))return;
+var r='';try{r=document.referrer?new URL(document.referrer).hostname:''}catch(e){}var w=Math.min(screen.width||9999,innerWidth||9999);
+var b=JSON.stringify({p:location.pathname,r:r,d:w<768?'m':w<1100?'t':'d',l:document.documentElement.lang||''});
+if(navigator.sendBeacon&&navigator.sendBeacon(HIT,new Blob([b],{type:'text/plain'})))return;fetch(HIT,{method:'POST',body:b,keepalive:true,mode:'no-cors',credentials:'omit'}).catch(function(){})}catch(e){}})();
+</script>}
 </body>
 </html>

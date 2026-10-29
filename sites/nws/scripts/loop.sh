@@ -28,7 +28,7 @@ key() {
   node -e "
     const fs=require('fs');const r=(f,d)=>{try{return JSON.parse(fs.readFileSync(f,'utf8'))}catch(e){return d}};
     const j=r('src/data/feed.json',{});const b=r('src/data/biz.json',{});
-    process.stdout.write(JSON.stringify([j.stories||[],b.listings||[],j.event||null,(j.flashes||[]).map(f=>f.id),(j.calendar||[]).map(c=>c.id+c.start)]))" | sha256sum | cut -c1-16
+    process.stdout.write(JSON.stringify([j.stories||[],b.listings||[],j.event||null,(j.flashes||[]).map(f=>f.id+':'+f.text),(j.calendar||[]).map(c=>c.id+c.start),j.pin||null]))" | sha256sum | cut -c1-16
 }
 
 check() {

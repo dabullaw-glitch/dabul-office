@@ -16,6 +16,7 @@
 /* sponsored content: the label above the kicker and in the byline, the disclosure line at the end */
 .n-art .art-k{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .art-spon{display:inline-flex;align-items:center;min-height:26px;padding:2px 10px;border-radius:4px;background:#FFF1C2;border:1px solid #D9B44A;color:#4A3500;font-size:13px;font-weight:800;letter-spacing:.2px}
+.art-spl{max-width:760px;margin:26px 0 0;padding:16px 18px;border:1px solid var(--line);border-radius:8px;background:#fff}.art-spl h2{margin:0 0 8px;font-size:17px}.art-spl ul{margin:0;padding-inline-start:20px;display:grid;gap:6px}.art-spl a{font-weight:600;text-decoration:underline}
 .art-disc{max-width:760px;margin:22px 0 0;padding:12px 16px;border:1px solid var(--line);border-radius:6px;font-size:14.5px;color:var(--ink2);background:var(--warm2)}
 .n-body ul,.n-body ol{margin:0 0 22px;padding-inline-start:26px;display:flex;flex-direction:column;gap:8px}
 /* live story: the "מתעדכן" badge next to the kicker and the timestamped updates under the body */
