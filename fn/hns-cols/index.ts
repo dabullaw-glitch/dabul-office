@@ -26,7 +26,7 @@ const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SE
 const FN = `${Deno.env.get('SUPABASE_URL')}/functions/v1`;
 const S: Record<string, string> = {};
 async function secrets() {
-  const { data } = await sb.from('app_secrets').select('k,v').in('k', ['CRON_SECRET', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID']);
+  const { data } = await sb.from('app_secrets').select('k,v').in('k', ['CRON_SECRET', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID', 'RESEND_API_KEY', 'NWS_MAIL_FROM']);
   for (const r of data || []) S[(r as Any).k] = String((r as Any).v ?? '').trim();
 }
 const J = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
@@ -199,7 +199,7 @@ async function colPublish(id: number, by: string) {
   if (!c) return { ok: false, error: 'הטור לא נמצא' };
   if (c.status === 'published') return { ok: true, already: 'published', story_id: c.story_id };
   if (c.status !== 'waiting') return { ok: false, error: c.status === 'checking' ? 'הבדיקה האוטומטית עוד רצה. נסו שוב בעוד דקה.' : 'הטור לא ממתין לאישור' };
-  const { data: w } = await sb.from('hns_writers').select('id,name,role').eq('id', c.writer_id).maybeSingle();
+  const { data: w } = await sb.from('hns_writers').select('id,name,role,email,is_test').eq('id', c.writer_id).maybeSingle();
   if (!w) return { ok: false, error: 'הכותב לא נמצא' };
   // one publish at a time: claim the column (a claim older than 3 minutes is stale)
   const now = new Date().toISOString();
@@ -225,8 +225,26 @@ async function colPublish(id: number, by: string) {
     await sb.from('hns_columns').update({ status: 'published', story_id: sid, published_at: at, decided_by: by, updated_at: at, history: hist(c, 'publish', by, { story_id: sid }) }).eq('id', id);
     if (c.tg_message_id && S.TELEGRAM_CHAT_ID) await tg('editMessageText', { chat_id: S.TELEGRAM_CHAT_ID, message_id: c.tg_message_id, disable_web_page_preview: true,
       text: `✅ טור הדעה פורסם${by === 'yakir' ? '' : ' (מלוח הניהול)'}: ${clean(c.title)}\nכותב: ${w.name}\nיופיע באתר תוך דקה בערך.` });
-    return { ok: true, id, story_id: sid, url: `/${SLUG[c.section] || 'city'}/n${sid}/` };
+    const path = `/${SLUG[c.section] || 'city'}/n${sid}/`;
+    try { await mailWriter(w, clean(c.title), `https://nws.co.il${path}`); } catch { /* the email is a bonus, never blocks publishing */ }
+    return { ok: true, id, story_id: sid, url: path };
   } catch (e) { await release(); return { ok: false, error: String((e as Error).message || e) }; }
+}
+// 29.10.2026 (approved promotion plan): when a column is published, its writer gets an email with the link and ready share links,
+// so they bring their own readers. Only to the writer of that column, only when an nws.co.il sender exists (NWS_MAIL_FROM), never to a test writer.
+const escH = (x: string) => x.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+async function mailWriter(w: Any, title: string, url: string) {
+  if (!S.RESEND_API_KEY || !S.NWS_MAIL_FROM || !/@nws\.co\.il>?$/i.test(S.NWS_MAIL_FROM) || !w?.email || w.is_test) return false;
+  const enc = encodeURIComponent;
+  const links: [string, string][] = [['בוואטסאפ', `https://wa.me/?text=${enc(`${title}\n${url}`)}`], ['בפייסבוק', `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`], ['בטלגרם', `https://t.me/share/url?url=${enc(url)}&text=${enc(title)}`]];
+  const html = `<div dir="rtl" style="font-family:Arial,sans-serif;font-size:16px;line-height:1.6;color:#0E1726"><p>שלום ${escH(w.name || '')},</p>`
+    + `<p>הטור שלך פורסם באתר: <a href="${escH(url)}">${escH(title)}</a></p><p>רוצים שיותר אנשים יקראו? אפשר לשתף אותו בלחיצה: `
+    + links.map(([t, h]) => `<a href="${escH(h)}">${t}</a>`).join(' · ') + `</p><p>תודה על הכתיבה.</p>`
+    + `<p style="color:#5B6676;font-size:13px">חדשות נתניה והשרון, <a href="https://nws.co.il/">nws.co.il</a>. קיבלת את המייל הזה כי אתה כותב טורים באתר.</p></div>`;
+  const text = `שלום ${w.name || ''},\n\nהטור שלך פורסם באתר: ${title}\n${url}\n\nאפשר לשתף אותו:\n${links.map(([t, h]) => `${t}: ${h}`).join('\n')}\n\nתודה על הכתיבה.`;
+  const r = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { authorization: `Bearer ${S.RESEND_API_KEY}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ from: S.NWS_MAIL_FROM, to: [w.email], subject: `הטור שלך פורסם: ${title}`.slice(0, 150), html, text }), signal: AbortSignal.timeout(15000) }).catch(() => null);
+  return !!r?.ok;
 }
 async function colReturn(id: number, note: string, by: string) {
   const { data: c } = await sb.from('hns_columns').select('*').eq('id', id).maybeSingle();

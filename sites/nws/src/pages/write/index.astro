@@ -89,6 +89,14 @@ var root=document.getElementById('root'),toastEl=document.getElementById('toast'
 var STATUS={draft:'טיוטה',checking:'בבדיקה',waiting:'ממתין לאישור',returned:'הוחזר עם הערות',published:'פורסם'};
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function when(t){if(!t)return'';try{return new Intl.DateTimeFormat('he-IL',{timeZone:'Asia/Jerusalem',day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(t))}catch(e){return''}}
+// 29.10.2026: a published column gets ready share links, so the writer brings their own readers (approved promotion plan)
+function shareBox(u,t){var tx=encodeURIComponent((t?t+'\n':'')+u);return '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:10px"><span class="note">לשתף את הטור:</span>'
+  +'<a class="b sm" href="https://wa.me/?text='+tx+'" target="_blank" rel="noopener">בוואטסאפ</a>'
+  +'<a class="b sm" href="https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(u)+'" target="_blank" rel="noopener">בפייסבוק</a>'
+  +'<a class="b sm" href="https://t.me/share/url?url='+encodeURIComponent(u)+'&text='+encodeURIComponent(t||'')+'" target="_blank" rel="noopener">בטלגרם</a>'
+  +'<button type="button" class="b sm" data-copy="'+esc(u)+'">העתקת הקישור</button></div>'}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-copy]');if(!b)return;var v=b.getAttribute('data-copy');
+  if(navigator.clipboard)navigator.clipboard.writeText(v).then(function(){toast('הקישור הועתק')},function(){toast('לא הצלחתי להעתיק. אפשר לסמן ולהעתיק מהכתובת.',1)});else toast('אפשר לסמן ולהעתיק את הקישור',1)});
 function toast(t,bad){toastEl.textContent=t;toastEl.className='toast'+(bad?' bad':'');toastEl.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){toastEl.style.display='none'},bad?6000:3500)}
 function post(body){return fetch(api,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json().catch(function(){return{ok:false,error:'שגיאת שרת'}})})}
 function call(action,data){return post(Object.assign({action:action,s:S},data||{})).then(function(j){if(j&&j.auth===false){loginView('החיבור הסתיים. התחברו שוב.');throw new Error('auth')}return j},function(e){toast('אין חיבור לשרת. בדקו את האינטרנט ונסו שוב.',true);throw e})}
@@ -168,7 +176,7 @@ function vEdit(id){
     var msg=c.status==='returned'&&c.return_note?'<div class="warnbox" style="margin-bottom:14px">הערת העורך:\n'+esc(c.return_note)+'</div>'
       :c.status==='checking'?'<div class="warnbox" style="margin-bottom:14px">הטור נשלח, והבדיקה האוטומטית רצה עכשיו. אחר כך הוא יעבור לעורך. אי אפשר לערוך בזמן הזה.</div>'
       :c.status==='waiting'?'<div class="warnbox" style="margin-bottom:14px">הטור ממתין לאישור העורך. אי אפשר לערוך אותו עד שיפורסם או יוחזר אליכם.</div>'
-      :c.status==='published'?'<div class="okbox" style="margin-bottom:14px">הטור פורסם'+(c.url?': <a href="'+esc(c.url)+'" target="_blank" rel="noopener">לטור באתר</a>':'')+'</div>':'';
+      :c.status==='published'?'<div class="okbox" style="margin-bottom:14px">הטור פורסם'+(c.url?': <a href="'+esc(c.url)+'" target="_blank" rel="noopener">לטור באתר</a>'+shareBox(c.url,c.title):'')+'</div>':'';
     var dis=ed?'':' disabled';
     main().innerHTML=head+msg+'<div class="tabs2"><button type="button" data-v="edit" aria-pressed="true">כתיבה</button><button type="button" data-v="view" aria-pressed="false">תצוגה מקדימה</button></div>'
       +'<div class="ed" data-v="edit"><div class="fm"><form class="fg" id="cf" autocomplete="off">'
