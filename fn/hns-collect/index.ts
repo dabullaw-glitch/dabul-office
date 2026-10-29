@@ -231,21 +231,24 @@ function parseGnews(xml: string): GRaw[] {
 }
 // the article's own URL behind a Google News link: the article page gives a signature and a timestamp, and one batchexecute call
 // returns the URL. '' when it fails (the item keeps the Google link).
+// 29.10.2026: Google blocks our edge functions, so the resolution runs in the database (rpc hns_gn_resolve, http extension):
+// the article page gives a signature and a timestamp, and one batchexecute POST returns the URL. '' when it fails.
+const gnId = (x: Raw) => ((x.url || '').match(/\/articles\/([A-Za-z0-9_-]+)/) || [])[1] || x.guid;
 async function gnResolve(id: string) {
-  try {
-    const r = await fetch(`https://news.google.com/rss/articles/${id}`, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(10000) });
-    const html = await r.text();
-    const sg = (html.match(/data-n-a-sg="([^"]+)"/) || [])[1]; const ts = (html.match(/data-n-a-ts="([^"]+)"/) || [])[1];
-    if (!sg || !ts) return '';
-    const inner = JSON.stringify(['garturlreq', [['X', 'X', ['X', 'X'], null, null, 1, 1, 'US:en', null, 1, null, null, null, null, null, 0, 1], 'X', 'X', 1, [1, 1, 1], 1, 1, null, 0, 0, null, 0], id, Number(ts), sg]);
-    const r2 = await fetch('https://news.google.com/_/DotsSplashUi/data/batchexecute', { method: 'POST', signal: AbortSignal.timeout(10000),
-      headers: { 'content-type': 'application/x-www-form-urlencoded;charset=UTF-8', 'User-Agent': UA },
-      body: 'f.req=' + encodeURIComponent(JSON.stringify([[['Fbv4je', inner, null, 'generic']]])) });
-    const t = await r2.text();
-    try { const a = JSON.parse(t.split('\n\n')[1]); const u = JSON.parse(a[0][2])[1]; if (/^https?:\/\//.test(u)) return String(u); } catch { /* try the plain match */ }
-    const m = t.match(/garturlres\\",\\"(https?:[^"\\]+)/);
-    return m ? m[1] : '';
-  } catch { return ''; }
+  const { data, error } = await sb.rpc('hns_gn_resolve', { gid: id });
+  return !error && typeof data === 'string' && /^https?:\/\//.test(data) ? data : '';
+}
+// items stored before the resolution worked (or when it failed once) keep the Google link: a few are retried each poll
+async function gnBackfill() {
+  const { data } = await sb.from('hns_items').select('id,url').like('source_id', 'gn_%').like('url', 'https://news.google.com/%')
+    .gte('fetched_at', new Date(Date.now() - 18 * 3600e3).toISOString()).order('is_local', { ascending: false }).order('id', { ascending: false }).limit(4);
+  let n = 0;
+  for (const x of data || []) {
+    const id = (String(x.url).match(/\/articles\/([A-Za-z0-9_-]+)/) || [])[1];
+    const u = id ? await gnResolve(id) : '';
+    if (u) { await sb.from('hns_items').update({ url: u }).eq('id', x.id); n++; }
+  }
+  return n;
 }
 const headKey = (s: string) => norm(s).replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 let RECENT_HEADS: Set<string> | null = null; // headlines of the last 3 days from our other sources, read once per run
@@ -263,7 +266,7 @@ async function gnewsFresh(raw: GRaw[]) {
   const heads = await recentHeads();
   const fresh = young.filter((x) => !seen.has(x.guid) && !heads.has(headKey(x.title)));
   // resolve the article URLs (at most 4 a run, one after another; the rest keep the Google link)
-  for (const x of fresh.slice(0, 4)) { const u = await gnResolve(x.guid); if (u) x.url = u; }
+  for (const x of fresh.slice(0, 4)) { const u = await gnResolve(gnId(x)); if (u) x.url = u; }
   return fresh;
 }
 
@@ -322,6 +325,7 @@ async function pollSource(src: Any) {
     const first = !src.last_ok;
     const keep: Raw[] = gn && !first ? await gnewsFresh(gn) : raw;
     if (gn) for (const x of keep) RECENT_HEADS?.add(headKey(x.title));
+    if (gn) await gnBackfill();
     const rows = keep.map((x) => {
       const all = `${x.title}\n${x.body || ''}`;
       const { places, local } = placesIn(all, !!src.local_only, [...(src.extra_terms || []), ...(src.id === 'ims_warn' ? IMS_TERMS : [])]);
