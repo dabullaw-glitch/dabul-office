@@ -79,10 +79,14 @@ const NADLAN = 'https://data.nadlan.gov.il/api/pages';
 // CBS settlement codes (the same codes as the government site): nearby Sharon towns
 const SHARON_TOWNS: [string, number][] = [['כפר יונה', 168], ['אבן יהודה', 182], ['קדימה צורן', 195], ['תל מונד', 154], ['פרדסיה', 171]];
 type Pt = { y: number; m: number; v: number; c: number | null };
-function series(page: Any, rooms: number): Pt[] {
+// 29.10.2026 fix: a neighborhood page also carries the city price (settlementPrice) in every point, and a quarter with too few
+// deals in the neighborhood has neighborhoodPrice null; the old "neighborhoodPrice ?? settlementPrice" then showed the city average
+// as the neighborhood's. For a neighborhood page (hood=true) only neighborhoodPrice counts.
+function series(page: Any, rooms: number, hood = false): Pt[] {
   const r = (page?.trends?.rooms || []).find((x: Any) => Number(x.numRooms) === rooms);
-  return (r?.graphData || []).filter((g: Any) => g.settlementPrice != null || g.neighborhoodPrice != null)
-    .map((g: Any) => ({ y: +g.year, m: +g.month, v: Number(g.neighborhoodPrice ?? g.settlementPrice), c: g.countryPrice != null ? Number(g.countryPrice) : null }))
+  const val = (g: Any) => (hood ? g.neighborhoodPrice : g.settlementPrice);
+  return (r?.graphData || []).filter((g: Any) => val(g) != null)
+    .map((g: Any) => ({ y: +g.year, m: +g.month, v: Number(val(g)), c: g.countryPrice != null ? Number(g.countryPrice) : null }))
     .sort((a: Pt, b: Pt) => b.y - a.y || b.m - a.m);
 }
 const at = (s: Pt[], y: number, m: number) => s.find((p) => p.y === y && p.m === m);
@@ -110,7 +114,7 @@ async function nadlanStory() {
   const list = (city.otherNeighborhoods || []).filter((h: Any) => h?.id && !/אזור תעשיה|בתכנון/.test(h.title || ''));
   for (let i = 0; i < list.length; i += 6) {
     const pages = await Promise.all(list.slice(i, i + 6).map((h: Any) => getJson(`${NADLAN}/neighborhood/buy/${h.id}.json`).catch(() => null)));
-    pages.forEach((pg, k) => { const p = pg && at(series(pg, 4), last.y, last.m); if (p) hoods.push({ name: hoodName(list[i + k].title), v: p.v }); });
+    pages.forEach((pg, k) => { const p = pg && at(series(pg, 4, true), last.y, last.m); if (p) hoods.push({ name: hoodName(list[i + k].title), v: p.v }); });
   }
   hoods.sort((a, b) => b.v - a.v);
   // nearby towns, same quarter
@@ -169,7 +173,7 @@ async function pricesLive(b: Any) {
     const pages = await Promise.all(list.slice(i, i + 6).map((h: Any) => getJson(`${NADLAN}/neighborhood/buy/${h.id}.json`).catch(() => null)));
     pages.forEach((pg, k) => {
       if (!pg) return;
-      const r3 = row(series(pg, 3)), r4 = row(series(pg, 4)), r5 = row(series(pg, 5));
+      const r3 = row(series(pg, 3, true)), r4 = row(series(pg, 4, true)), r5 = row(series(pg, 5, true));
       if (r3 || r4 || r5) hoods.push({ id: list[i + k].id, name: hoodName(list[i + k].title), r3: r3?.v ?? null, r4: r4?.v ?? null, r5: r5?.v ?? null, yoy4: r4?.yoy ?? null });
     });
   }
