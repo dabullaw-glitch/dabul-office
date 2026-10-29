@@ -58,11 +58,12 @@ const groups: { keys: SectionKey[]; title: string }[] = [
   { keys: ['sharon'], title: 'השרון' }, { keys: ['tourism'], title: 'חופים ותיירות' }, { keys: ['law'], title: 'חוק ומשפט' }, { keys: ['realestate'], title: 'נדל״ן ותכנון' }];
 const sportsAll = all.filter((a) => a.section === 'sports');
 const reAll = all.filter((a) => a.section === 'realestate');
-const cols = groups.map((g) => ({ ...g, items: all.filter((a) => g.keys.includes(a.section) && !used.has(a.slug) && !(g.keys.length === 1 && g.keys[0] === 'realestate' && reAll.length > 1)) }))
+// 29.10.2026 (Yakir): every section block shows the newest stories of its section, even when they also appear at the top
+const cols = groups.map((g) => ({ ...g, items: all.filter((a) => g.keys.includes(a.section) && !(g.keys.length === 1 && g.keys[0] === 'realestate' && reAll.length > 1)) }))
   .filter((g) => g.items.length > 0).slice(0, he ? 3 : 0);
 cols.forEach((g) => g.items.slice(0, 4).forEach((a) => used.add(a.slug)));
 // 5. sport: stories and the league data
-const sports = take(sportsAll, 5);
+const sports = sportsAll.slice(0, 5);
 // video slot: only stories that carry a real video
 const videos = he ? all.filter((a) => a.video && !used.has(a.slug)).slice(0, 4) : [];
 const tbl = tableAround(5);
@@ -72,14 +73,14 @@ const nxDay = nx ? new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem'
 const showSport = he && (sports.length > 0 || tbl.length > 0 || !!nx);
 const initials = (n: string) => n.replace(/״/g, '').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('.');
 // 6. real estate
-const re = take(reAll, 6);
+const re = reAll.slice(0, 6);
 // 7. directory
 const cats = CATEGORIES.slice(0, 9);
 // 8. culture: stories of the section and the next events of the official calendar
 const leisAll = all.filter((a) => a.section === 'leisure');
-const leis = take(leisAll, 2);
+const leis = leisAll.slice(0, 2);
 const cal = he ? CALENDAR.slice(0, 4 - leis.length) : [];
-if (leis.length + cal.length < 4) leis.push(...take(leisAll, 4 - leis.length - cal.length));
+if (leis.length + cal.length < 4) leis.push(...leisAll.slice(leis.length, 4 - cal.length));
 const mon = (iso: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', month: 'short' }).format(new Date(iso));
 const dayN = (iso: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric' }).format(new Date(iso));
 
