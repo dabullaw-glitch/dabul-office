@@ -6,6 +6,7 @@ import Icon from '../../../../components/Icon.astro';
 import DirHero from '../../../../components/directory/DirHero.astro';
 import BizRow from '../../../../components/directory/BizRow.astro';
 import DirSide from '../../../../components/directory/DirSide.astro';
+import BizBadge from '../../../../components/directory/BizBadge.astro';
 import '../../../../components/directory/dir.css';
 import { CAT_BY_SLUG, schemaType } from '../../../../data/directory';
 import { SITE_URL } from '../../../../data/site';
@@ -69,6 +70,7 @@ const jsonld = [ld];
         <ol class="d-steps lg">{c.tips.map((t, i) => <li><b class="num">{i + 1}</b><span>{t}</span></li>)}</ol>
         <p class="d-note"><a href={`/directory/${c.slug}/`}>חזרה לרשימת {c.plural} במדריך</a></p>
       </section>
+      <BizBadge path={path} />
     </div>
     <DirSide cat={c.slug}>
       <section class="d-box" aria-labelledby="own-h" slot="top">

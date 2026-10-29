@@ -96,7 +96,7 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'WebPage', name: '�
       var btn=f.querySelector('button[type=submit]'); btn.disabled=true; msg.style.color=''; msg.textContent='שולחים...';
       fetch(api,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json()}).then(function(j){
         btn.disabled=false;
-        if(j.ok){ msg.style.color='#14693A'; msg.textContent=j.message||'תודה! קיבלנו את הפרטים. אחרי בדיקה העסק יעלה למדריך.'; if(!j.duplicate) f.reset(); sync(); if(window.nwsTrack) try{window.nwsTrack('generate_lead',{form:'directory'})}catch(e){} return; }
+        if(j.ok){ msg.style.color='#14693A'; msg.textContent=j.message||'תודה! קיבלנו את הפרטים. אחרי בדיקה העסק יעלה למדריך.'; if(!j.duplicate){ var bl=document.createElement('span'); bl.style.cssText='display:block;font-weight:400;margin-top:4px'; bl.textContent='אחרי האישור תוכלו להוסיף לאתר שלכם תג "מופיעים במדריך", מתוך דף העסק במדריך.'; msg.appendChild(bl); } if(!j.duplicate) f.reset(); sync(); if(window.nwsTrack) try{window.nwsTrack('generate_lead',{form:'directory'})}catch(e){} return; }
         msg.style.color='#A50D26'; msg.textContent=j.error||'השליחה נכשלה, נסו שוב.';
         if(j.fields){ Object.keys(j.fields).forEach(function(k){ var el=f.elements[k]; if(!el) return; if(el.length&&!el.tagName) el=el[0]; var p=document.createElement('span'); p.className='ferr note'; p.textContent=j.fields[k]; (el.closest('label')||el.parentNode).appendChild(p); }); }
       }).catch(function(){ btn.disabled=false; msg.style.color='#A50D26'; msg.textContent='אין חיבור. נסו שוב בעוד דקה.'; });

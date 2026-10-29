@@ -1,0 +1,47 @@
+---
+// "Featured in the directory" badge box on a business page (approved by Yakir 29.10.2026). The business copies a ready HTML
+// snippet: a normal (followed) link to its own page on nws.co.il with the badge image from /badge/ (static SVG, the Hebrew
+// text is drawn as paths so it looks the same on any site, with no web font). Light and dark versions.
+import { SITE_URL } from '../../data/site';
+interface Props { path: string }
+const { path } = Astro.props;
+const href = SITE_URL + encodeURI(path);
+const ALT = 'מופיעים במדריך בעלי המקצוע של חדשות נתניה והשרון';
+const snip = (t: 'light' | 'dark') =>
+  `<a href="${href}" target="_blank" rel="noopener"><img src="${SITE_URL}/badge/nws-${t}.svg" alt="${ALT}" width="220" height="64" style="border:0"></a>`;
+---
+<section class="d-blk d-bdg" id="bdg" aria-labelledby="bdg-h" data-light={snip('light')} data-dark={snip('dark')}>
+  <h2 id="bdg-h">הוסיפו את התג לאתר שלכם</h2>
+  <p>התג מראה ללקוחות שהעסק שלכם מופיע במדריך בעלי המקצוע של אתר החדשות המקומי.</p>
+  <div class="d-bdg-top">
+    <div class="pv"><img src="/badge/nws-light.svg" alt={ALT} width="220" height="64" loading="lazy"></div>
+    <div class="sw" role="group" aria-label="צבע התג">
+      <button type="button" data-t="light" aria-pressed="true">בהיר</button>
+      <button type="button" data-t="dark" aria-pressed="false">כהה</button>
+    </div>
+  </div>
+  <label for="bdg-code">קוד להדבקה באתר</label>
+  <textarea id="bdg-code" readonly rows="3" dir="ltr" spellcheck="false" autocomplete="off">{snip('light')}</textarea>
+  <div class="d-bdg-cp">
+    <button type="button" class="n-btn ink cp">העתקה</button>
+    <span class="st" role="status" aria-live="polite"></span>
+  </div>
+</section>
+<script is:inline>
+(function(){
+  var s=document.getElementById('bdg'); if(!s) return;
+  var ta=s.querySelector('textarea'), pv=s.querySelector('.pv'), img=pv.querySelector('img'), st=s.querySelector('.st'), bs=s.querySelectorAll('[data-t]');
+  bs.forEach(function(b){ b.addEventListener('click',function(){
+    var t=b.getAttribute('data-t');
+    bs.forEach(function(x){ x.setAttribute('aria-pressed', String(x===b)); });
+    ta.value=s.getAttribute('data-'+t); img.src='/badge/nws-'+t+'.svg'; st.textContent='';
+  }); });
+  function pick(){ try{ ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length); }catch(e){} }
+  ta.addEventListener('focus', pick); ta.addEventListener('click', pick);
+  s.querySelector('.cp').addEventListener('click',function(){
+    var ok=function(){ st.textContent='הקוד הועתק. הדביקו אותו באתר שלכם.'; };
+    var fb=function(){ pick(); var done=false; try{ done=document.execCommand('copy'); }catch(e){} st.textContent=done?'הקוד הועתק. הדביקו אותו באתר שלכם.':'הקוד מסומן. העתיקו אותו והדביקו באתר שלכם.'; };
+    if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(ta.value).then(ok, fb); } else fb();
+  });
+})();
+</script>
