@@ -1,0 +1,36 @@
+---
+// חנייה בנתניה (29.10.2026, the plan Yakir approved): the residents' parking permits, the discounts at the industrial zones and
+// at the beaches, and the official links, as the municipality's parking pages state them (read on 29.10.2026). The latest stories
+// about parking and traffic in the city are added from the site's own news.
+import NowPage from '../../../components/NowPage.astro';
+import SV from '../../../data/now/services.json';
+import { articlesFor, articleUrl, fmtShort } from '../../../lib/content';
+const P = SV.parking;
+const checked = new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric', year: 'numeric' }).format(new Date(P.checked + 'T12:00:00+02:00'));
+const RE = /חני(?:י)?ה|חניון|תו חני|כחול לבן|פנגו|סלופארק/;
+const news = articlesFor('he').filter((a) => Date.now() - Date.parse(a.published) < 30 * 864e5 && RE.test(`${a.title} ${a.dek || ''}`)).slice(0, 8);
+const faq: [string, string][] = [
+  ['כמה עולה תו חנייה לתושב נתניה?', '20 ש״ח, בתשלום בכרטיס אשראי, בטופס מקוון באתר העירייה. התו דיגיטלי ותקף עד 3 שנים קלנדריות.'],
+  ['מה ההנחה בחנייה לתושבי נתניה?', 'עם תו חנייה ברחבי העיר מקבלים 50% הנחה בחנייה בכחול לבן ובחניונים העירוניים. עדיין צריך להפעיל את פנגו או סלופארק.'],
+  ['כמה עולה חנייה בחוף סירונית ובחוף פולג?', 'לתושבי נתניה עם תו: בחוף סירונית 15 ש״ח במקום 20 ש״ח בימי חול, ו־20 ש״ח במקום 30 ש״ח בשבת ובחג. בחוף פולג שעתיים בלי תשלום, ומהשעה השלישית 50% הנחה.'],
+];
+---
+<NowPage icon="car" title="חנייה בנתניה: תו חנייה לתושב, הנחות וחניה בחופים | חדשות נתניה והשרון" h1="חנייה בנתניה" description="איך מוציאים תו חנייה בנתניה, כמה זה עולה, מה ההנחה לתושבים, תו גיל הזהב, וחנייה בחוף סירונית ובחוף פולג. לפי עיריית נתניה." path="/now/parking/" intro="תו חנייה, הנחות לתושבים, וחנייה בחופים." color="#0F6E8C" img="traffic" faq={faq} updated={P.checked + 'T12:00:00+02:00'}>
+  <section class="ncard" style="--c:#0F6E8C">
+    <h2>סוגי תווי החנייה</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px">
+      {P.permits.map((x) => <div class="kv" style="flex-direction:column;align-items:flex-start;gap:6px;padding:14px 16px"><b>{x.name}</b><span>{x.text}</span></div>)}
+    </div>
+  </section>
+  <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>מה חשוב לדעת</h2>
+    <ul style="margin:0;padding-inline-start:20px">{P.facts.map((f) => <li style="padding:4px 0">{f}</li>)}</ul>
+  </section>
+  {news.length > 0 && <section class="ncard" style="--c:#C8102E;margin-top:18px"><h2>חדשות חנייה ותנועה בעיר</h2><ul style="list-style:none;margin:0;padding:0">{news.map((a) => <li style="padding:8px 0;border-top:1px solid #EFEDE7"><b class="num" style="color:#C8102E">{fmtShort(a.published)}</b> <a href={articleUrl(a)}>{a.title}</a></li>)}</ul></section>}
+  <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>קישורים רשמיים</h2>
+    <ul style="margin:0;padding-inline-start:20px">{P.links.map((l) => <li style="padding:4px 0"><a href={l.url} rel="noopener nofollow" target="_blank" style="color:#0B5FCC">{l.name}</a></li>)}</ul>
+    <p class="note" style="margin:10px 0 0">חסימות ועבודות בכבישים: <a href="/now/roads/" style="color:#0B5FCC">בעמוד החסימות</a>.</p>
+  </section>
+  <p class="note" style="margin:14px 0 0">מקור: <a href={P.source} rel="noopener nofollow" target="_blank" style="color:#0B5FCC">{P.srcName}</a>, נבדק ב־{checked}. תעריפים והנחות יכולים להשתנות, כדאי לבדוק באתר העירייה לפני שמגיעים.</p>
+</NowPage>

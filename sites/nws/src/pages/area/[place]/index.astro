@@ -1,46 +1,87 @@
 ---
-// Area page (a Netanya neighborhood or a Sharon locality), redesign 28.10.2026: the photo band, the stories that mention the
-// place (lead, cards, text list), nearby places with news, and the sidebar with the flashes. A page exists only once a story mentions the place.
+// Area page (a Netanya neighborhood or a Sharon locality). Redesign 28.10.2026; 29.10.2026 (the plan Yakir approved): a page for
+// EVERY Netanya neighborhood, not only those with stories: a short description from the national neighborhood dictionary (with
+// its source), the stories that mention the place, its events, its businesses from the directory, its community centers,
+// libraries and synagogues from the city guide, its public shelters and waste pickup day (municipality data), and the official
+// links. A page with nothing of its own yet is shown but not indexed (noindex) until it has content. Data: src/lib/area.ts.
 import Base from '../../../layouts/Base.astro';
 import ListHero from '../../../components/list/ListHero.astro';
 import StoryList from '../../../components/list/StoryList.astro';
 import ListAside from '../../../components/list/ListAside.astro';
-import { PLACES } from '../../../data/places';
-import { CATEGORIES } from '../../../data/directory';
+import { CATEGORIES, CAT_BY_SLUG } from '../../../data/directory';
 import { SITE_URL } from '../../../data/site';
 import { SECTION_BY_KEY } from '../../../data/sections';
-import { ARTICLES, placesOf, articleUrl, placeUrl, fmtTime, fmtShort } from '../../../lib/content';
+import { articleUrl, placeUrl, fmtTime, fmtShort, fmtDate, calTime, calVenue, FACTS } from '../../../lib/content';
+import { listingUrl, phoneShow } from '../../../lib/biz';
+import { AREA_PAGES, type AreaInfo } from '../../../lib/area';
 export function getStaticPaths() {
-  return PLACES.map((p) => ({ p, items: ARTICLES.filter((a) => placesOf(a).some((x) => x.slug === p.slug)) }))
-    .filter((x) => x.items.length > 0).map(({ p, items }) => ({ params: { place: p.slug }, props: { p, items } }));
+  return AREA_PAGES.map((info) => ({ params: { place: info.p.slug }, props: { info } }));
 }
-const { p, items } = Astro.props;
+const { info } = Astro.props as { info: AreaInfo };
+const { p, items, listings, events, guide, shelters, waste, about, index } = info;
 const path = `/area/${p.slug}/`;
 const isN = p.kind === 'neighborhood';
-const h1 = isN ? `חדשות ${p.he}, נתניה` : `חדשות ${p.he}`;
-const crumbs = [{ name: 'ראשי', href: '/' }, { name: isN ? 'שכונות נתניה' : 'השרון', href: isN ? '/netanya/' : '/sharon/' }, { name: p.he, href: path }];
-const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: h1, url: SITE_URL + path, inLanguage: 'he', isPartOf: { '@id': SITE_URL + '/#website' }, about: { '@type': 'Place', name: isN ? `${p.he}, נתניה` : p.he },
-  mainEntity: { '@type': 'ItemList', numberOfItems: items.length, itemListElement: items.slice(0, 30).map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a), name: a.title })) } }];
-// other places of the same kind that have news
-const others = PLACES.filter((x) => x.slug !== p.slug && x.kind === p.kind && ARTICLES.some((a) => placesOf(a).some((y) => y.slug === x.slug))).slice(0, 12);
+const h1 = isN ? `שכונת ${p.he} בנתניה` : p.he;
+const title = isN ? `שכונת ${p.he} בנתניה: חדשות, אירועים ועסקים | חדשות נתניה והשרון` : `${p.he}: חדשות, אירועים ועסקים | חדשות נתניה והשרון`;
+const description = isN
+  ? `כל מה שקורה בשכונת ${p.he} בנתניה: חדשות, אירועים, עסקים ובעלי מקצוע, מתנ״סים ובתי כנסת, מקלטים ציבוריים וימי פינוי גזם.`
+  : `החדשות מ${p.he}: עירייה ומועצה, תכנון ובנייה, תחבורה, קהילה ואירועים, ועסקים מהאזור.`;
+const crumbs = [{ name: 'ראשי', href: '/' }, { name: isN ? 'שכונות נתניה' : 'השרון', href: isN ? '/netanya/' : '/sharon/' }, { name: isN ? p.he : p.he, href: path }];
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: h1, url: SITE_URL + path, inLanguage: 'he', isPartOf: { '@id': SITE_URL + '/#website' },
+  about: { '@type': 'Place', name: isN ? `${p.he}, נתניה` : p.he, ...(isN ? { containedInPlace: { '@type': 'City', name: 'נתניה' } } : {}) },
+  ...(items.length ? { mainEntity: { '@type': 'ItemList', numberOfItems: items.length, itemListElement: items.slice(0, 30).map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + articleUrl(a), name: a.title })) } } : {}) }];
+const others = AREA_PAGES.filter((x) => x.p.slug !== p.slug && x.p.kind === p.kind).map((x) => x.p).slice(0, 40);
 const ilDay = (iso: string) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date(iso));
 const last = items[0]?.published;
 const lastTxt = last ? (ilDay(last) === ilDay(new Date().toISOString()) ? fmtTime(last) : `${fmtShort(last)}, ${fmtTime(last)}`) : '';
-const secs = [...new Set(items.map((a) => a.section))].length;
-const stats = [items.length === 1 ? '<b>ידיעה אחת</b>' : `<b>${items.length}</b> ידיעות`, ...(secs > 1 ? [`מ־<b>${secs}</b> מדורים`] : []), ...(lastTxt ? [`עודכן <b>${lastTxt}</b>`] : [])];
+const stats = [
+  ...(items.length ? [items.length === 1 ? '<b>ידיעה אחת</b>' : `<b>${items.length}</b> ידיעות`] : []),
+  ...(listings.length ? [`<b>${listings.length}</b> עסקים`] : []),
+  ...(lastTxt ? [`עודכן <b>${lastTxt}</b>`] : []),
+];
 const color = isN ? '#1F5FBF' : SECTION_BY_KEY.sharon.color;
+const hoodsSrc: string | undefined = (FACTS as any)?.neighborhoods?.source;
+const sentence = (s: string) => s.replace(/"/g, '״').replace(/\s*\.$/, '') + '.';
+const byCat = (cat: string) => guide.filter((g) => g.cat === cat);
 ---
-<Base title={`${h1}: מה קורה ${isN ? 'בשכונה' : 'ביישוב'} | חדשות נתניה והשרון`} description={`כל החדשות על ${p.he}${isN ? ' בנתניה' : ''}: תכנון ובנייה, עירייה, תחבורה, קהילה ואירועים. מתעדכן לאורך היום.`} path={path} crumbs={crumbs} jsonld={jsonld} current={isN ? '' : 'sharon'} ogImage={`/img/stock/og/${isN ? 'city-buildings' : 'road-aerial'}.jpg`}>
+<Base title={title} description={description} path={path} crumbs={crumbs} jsonld={jsonld} current={isN ? '' : 'sharon'} noindex={!index} ogImage={`/img/stock/og/${isN ? 'city-buildings' : 'road-aerial'}.jpg`}>
   <div class="nl-page">
-  <ListHero crumbs={crumbs} h1={h1} intro={`כל מה שקורה ${isN ? `בשכונת ${p.he}` : `ב${p.he}`}, במקום אחד.`} color={color} photo={isN ? 'city-buildings' : 'road-aerial'} icon={isN ? 'home' : 'pin'} stats={stats} />
+  <ListHero crumbs={crumbs} h1={h1} intro={isN ? `חדשות, אירועים, עסקים ושירותים בשכונת ${p.he}, במקום אחד.` : `כל מה שקורה ב${p.he}, במקום אחד.`} color={color} photo={isN ? 'city-buildings' : 'road-aerial'} icon={isN ? 'home' : 'pin'} stats={stats} />
   <div class="n-wrap n-list">
     <div style={`--c:${color}`}>
-      <StoryList items={items} listTitle={`עוד מ${p.he}`} color={color} />
+      {about && (
+      <section class="nl-blk" aria-labelledby="ab-h"><h2 id="ab-h" class="n-sh">על השכונה</h2>
+        <p style="margin:0 0 6px">{about.area ? `שכונת ${p.he} נמצאת ב${about.area === 'מרכז העיר' ? 'מרכז העיר' : about.area.replace('העיר', 'נתניה')}. ` : ''}{about.notes.map(sentence).join(' ')}</p>
+        <p class="note" style="margin:0;color:var(--mut);font-size:13.5px">מקור: <a href={about.source} rel="noopener nofollow" target="_blank" style="color:#0B5FCC">{about.srcName}</a></p></section>)}
+      {items.length > 0 ? <StoryList items={items} listTitle={`עוד מ${p.he}`} color={color} />
+        : <section class="nl-blk"><h2 class="n-sh">חדשות {isN ? 'השכונה' : p.he}</h2><p style="margin:0">עוד לא פורסמו אצלנו ידיעות על {p.he}. ראיתם משהו? <a href="/send-news/" style="color:#0B5FCC;font-weight:700">שלחו לנו דיווח</a>.</p></section>}
+      {events.length > 0 && (
+      <section class="nl-blk" aria-labelledby="ev-h"><h2 id="ev-h" class="n-sh">אירועים</h2>
+        <ul style="list-style:none;margin:0;padding:0">{events.map((c) => <li style="padding:8px 0;border-top:1px solid #EFEDE7"><b class="num">{fmtDate(c.start)}{calTime(c.start) ? `, ${calTime(c.start)}` : ''}</b> {c.url ? <a href={c.url} rel="noopener" target="_blank">{c.title}</a> : c.title}{calVenue(c) ? <span style="color:var(--mut)"> · {calVenue(c)}</span> : ''}</li>)}</ul></section>)}
+      {listings.length > 0 && (
+      <section class="nl-blk" aria-labelledby="bz-h"><h2 id="bz-h" class="n-sh">עסקים ובעלי מקצוע ב{p.he}</h2>
+        <ul style="list-style:none;margin:0;padding:0">{listings.slice(0, 24).map((l) => <li style="padding:8px 0;border-top:1px solid #EFEDE7"><a href={listingUrl(l)} style="font-weight:700">{l.name}</a> <span style="color:var(--mut)">· {CAT_BY_SLUG[l.category]?.he || ''}</span>{l.phone && <span class="num" dir="ltr" style="color:var(--mut)"> · {phoneShow(l.phone)}</span>}</li>)}</ul></section>)}
+      {isN && guide.length > 0 && (
+      <section class="nl-blk" aria-labelledby="cm-h"><h2 id="cm-h" class="n-sh">בשכונה</h2>
+        {['מתנ״ס', 'ספרייה', 'בית כנסת'].filter((c) => byCat(c).length).map((c) => <div><h3 style="font-size:16px;margin:10px 0 4px">{c === 'מתנ״ס' ? 'מתנ״סים' : c === 'ספרייה' ? 'ספריות' : 'בתי כנסת'}</h3>
+          <ul style="margin:0;padding-inline-start:20px">{byCat(c).map((g) => <li style="padding:3px 0">{g.name}{g.address ? `, ${g.address}` : ''}</li>)}</ul></div>)}
+        <p class="note" style="margin:8px 0 0;color:var(--mut);font-size:13.5px">מתוך <a href="/guide/" style="color:#0B5FCC">השימושון העירוני</a>, כל פריט לפי המקור הרשמי שלו.</p></section>)}
+      {isN && (shelters.length > 0 || waste) && (
+      <section class="nl-blk" aria-labelledby="sv-h"><h2 id="sv-h" class="n-sh">שירותים בשכונה</h2>
+        {waste && <p style="margin:0 0 8px"><b>פינוי גזם ופסולת גושית:</b> בימי {waste.day}. מוציאים לרחוב רק בערב שלפני. <a href="/now/waste/" style="color:#0B5FCC">לכללים</a></p>}
+        {shelters.length > 0 && <><p style="margin:0 0 4px"><b>מקלטים ציבוריים בשכונה ({shelters.length}):</b></p><ul style="margin:0;padding-inline-start:20px">{shelters.map((s) => <li style="padding:3px 0"><span class="num">מקלט {s.n}:</span> {s.where}</li>)}</ul><p class="note" style="margin:6px 0 0"><a href="/now/shelters/" style="color:#0B5FCC">לכל המקלטים בעיר</a></p></>}
+      </section>)}
+      <section class="nl-blk" aria-labelledby="ln-h"><h2 id="ln-h" class="n-sh">קישורים שימושיים</h2>
+        <div class="nl-chips">
+          {isN && <a href="/now/phones/">מוקד עירוני 106</a>}
+          {isN && hoodsSrc && <a href={hoodsSrc} rel="noopener nofollow" target="_blank">השכונות באתר העירייה</a>}
+          <a href="/now/">נתניה עכשיו</a><a href="/now/pharmacy/">בית מרקחת תורן</a><a href="/now/roads/">חסימות</a><a href="/send-news/">שלחו דיווח</a>
+        </div></section>
       {others.length > 0 && (
       <section class="nl-blk" aria-labelledby="ot-h"><h2 id="ot-h" class="n-sh">{isN ? 'שכונות נוספות בנתניה' : 'יישובים נוספים בשרון'}</h2>
         <div class="nl-chips">{others.map((x) => <a href={placeUrl(x.slug)}>{x.he}</a>)}</div></section>)}
       {isN && (
-      <section class="nl-blk" aria-labelledby="pr-h" style="--c:#0D1321"><h2 id="pr-h" class="n-sh">בעלי מקצוע ב{p.he}</h2>
+      <section class="nl-blk" aria-labelledby="pr-h" style="--c:#0D1321"><h2 id="pr-h" class="n-sh">בעלי מקצוע בנתניה</h2>
         <div class="nl-chips">{CATEGORIES.slice(0, 6).map((c) => <a href={`/directory/${c.slug}/`} style={`--c:${c.color}`}>{c.plural}</a>)}</div></section>)}
     </div>
     <ListAside exclude={items.map((a) => a.slug)} />

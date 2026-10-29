@@ -7,6 +7,7 @@ import { PLACES } from '../data/places';
 import { ARTICLES, localized, articleUrl, sectionUrl, placesOf, liveSections, WRITERS, writerUrl } from './content';
 import { IMG } from '../data/site';
 import { LISTINGS, listingUrl } from './biz';
+import { AREA_PAGES } from './area';
 
 export interface R { loc: string; lastmod?: string; alts?: Partial<Record<Lang, string>>; images?: { loc: string; title: string }[]; priority?: string; changefreq?: string }
 const now = new Date().toISOString();
@@ -28,7 +29,7 @@ export function routes(): R[] {
   }
   const nowA = all((l) => (l === 'he' ? '/now/' : `/${l}/now/`));
   for (const l of LANGS) out.push({ loc: nowA[l], alts: nowA, lastmod: now, changefreq: 'hourly', priority: '0.8' });
-  for (const p of ['weather', 'shabbat', 'weekend', 'beaches', 'pharmacy', 'roads', 'outages', 'alerts', 'phones']) out.push({ loc: `/now/${p}/`, lastmod: now, changefreq: 'daily', priority: '0.7' });
+  for (const p of ['weather', 'shabbat', 'weekend', 'beaches', 'pharmacy', 'roads', 'outages', 'alerts', 'phones', 'shelters', 'waste', 'parking']) out.push({ loc: `/now/${p}/`, lastmod: now, changefreq: 'daily', priority: '0.7' });
   out.push({ loc: '/netanya/', lastmod: now, changefreq: 'daily', priority: '0.8' });
   // the city guide "שימושון עירוני" (29.10.2026): the hub and every category page that has items
   out.push({ loc: '/guide/', lastmod: now, changefreq: 'weekly', priority: '0.7' });
@@ -38,7 +39,8 @@ export function routes(): R[] {
   for (const c of CATEGORIES) out.push({ loc: `/directory/${c.slug}/`, lastmod: now, priority: '0.6' });
   for (const l of LISTINGS) out.push({ loc: listingUrl(l), lastmod: l.updated || l.created || now, priority: l.featured ? '0.6' : '0.5' });
   out.push({ loc: '/directory/join/', priority: '0.4' });
-  for (const p of PLACES) if (ARTICLES.some((a) => placesOf(a).some((x) => x.slug === p.slug))) out.push({ loc: `/area/${p.slug}/`, lastmod: now, changefreq: 'daily', priority: '0.6' });
+  // 29.10.2026: every neighborhood page with content of its own (src/lib/area.ts decides; an empty page is noindex and left out)
+  for (const x of AREA_PAGES) if (x.index) out.push({ loc: `/area/${x.p.slug}/`, lastmod: x.items[0]?.published ?? now, changefreq: 'daily', priority: '0.6' });
   // 29.10.2026: the columnists' pages (only writers with a published column)
   for (const w of WRITERS) out.push({ loc: writerUrl(w), lastmod: w.columns[0]?.published ?? now, priority: '0.4' });
   for (const p of ['about', 'send-news', 'join']) { const a = all((l) => (l === 'he' ? `/${p}/` : `/${l}/${p}/`)); for (const l of LANGS) out.push({ loc: a[l], alts: a, priority: '0.4' }); }

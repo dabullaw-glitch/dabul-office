@@ -1,0 +1,45 @@
+---
+// מקלטים ציבוריים בנתניה (29.10.2026, the promotion and content plan Yakir approved): the municipality's public list of public
+// shelters (read on 29.10.2026 from the official page, through Yakir's browser, since the site blocks servers abroad), grouped by
+// neighborhood, plus the public sheltering spaces in parking garages. Only what the official page states; the date is shown.
+import NowPage from '../../../components/NowPage.astro';
+import SH from '../../../data/now/shelters.json';
+import SV from '../../../data/now/services.json';
+import { placeUrl } from '../../../lib/content';
+const items = (SH.items as { n: number; wifi: boolean; where: string; hood: string; hoodSlug: string | null }[]);
+const order = [...new Set(items.map((x) => x.hood))].sort((a, b) => (a === 'מקלטים נוספים בעיר' ? 1 : b === 'מקלטים נוספים בעיר' ? -1 : items.filter((x) => x.hood === b).length - items.filter((x) => x.hood === a).length));
+const groups = order.map((h) => ({ h, slug: items.find((x) => x.hood === h)?.hoodSlug || null, list: items.filter((x) => x.hood === h) }));
+const checked = new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric', year: 'numeric' }).format(new Date(SH.checked + 'T12:00:00+02:00'));
+const sp = SV.shelterSpaces; const ed = SV.emergencyDept;
+const faq: [string, string][] = [
+  ['איפה המקלט הציבורי הקרוב אליי בנתניה?', `ברשימה שבעמוד הזה מופיעים ${items.length} מקלטים ציבוריים לפי שכונה, כפי שהם מופיעים באתר עיריית נתניה. באתר העירייה יש גם מפה וחיפוש לפי רחוב.`],
+  ['מה עושים כשיש התרעה?', 'נכנסים למרחב המוגן הקרוב בזמן ההתגוננות של נתניה, ופועלים לפי הנחיות פיקוד העורף. ההנחיות המלאות בעמוד פיקוד העורף שלנו.'],
+  ['מי אחראי על המקלטים בעיר?', `אגף ביטחון וחירום של עיריית נתניה, בטלפון ${ed.phone}. מקלט פרטי או משותף בבניין הוא באחריות הבעלים והדיירים, וצריך להיות פנוי ומוכן לשימוש.`],
+];
+---
+<NowPage icon="shield" title="מקלטים ציבוריים בנתניה: רשימה לפי שכונה וכתובת | חדשות נתניה והשרון" h1="מקלטים ציבוריים בנתניה" description={`רשימת ${items.length} המקלטים הציבוריים בנתניה לפי שכונה ורחוב, והמחסות הציבוריים בחניונים, לפי אתר עיריית נתניה.`} path="/now/shelters/" intro="איפה המקלט הציבורי הקרוב, לפי שכונה ורחוב." color="#14693A" img="city" faq={faq} updated={SH.checked + 'T12:00:00+02:00'}>
+  <section class="ncard" style="--c:#14693A">
+    <h2>כדאי לדעת עכשיו, לא בזמן אזעקה</h2>
+    <p style="margin:0">בדקו מראש איפה המקלט הציבורי הקרוב לבית, לעבודה ולבית הספר של הילדים. מי שיש לו ממ״ד או מקלט בבניין נכנס אליו. <a href="/now/alerts/" style="color:#0B5FCC">להנחיות פיקוד העורף</a></p>
+    <p class="note" style="margin:10px 0 0">לפי עיריית נתניה, מקלט פרטי או משותף צריך להיות פנוי מחפצים ומוכן לכניסה בכל רגע, ובבניין משותף כל דייר רשאי להיכנס אליו.</p>
+  </section>
+  <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>המקלטים לפי שכונה</h2>
+    <p class="note" style="margin:0 0 6px">באתר העירייה מופיעים {SH.total} מקלטים. כאן {items.length} מהם, כל מי שהופיע ברשימה בבדיקה ב־{checked}, כולם בסטטוס ״תקין״.</p>
+    {groups.map((g) => <div>
+      <h3 style="font-size:17px;margin:16px 0 6px">{g.slug ? <a href={placeUrl(g.slug)}>{g.h}</a> : g.h} <span class="num" style="color:var(--mut);font-weight:400">({g.list.length})</span></h3>
+      <ul style="list-style:none;margin:0;padding:0">{g.list.map((x) => <li style="padding:7px 0;border-top:1px solid #EFEDE7"><b class="num">מקלט {x.n}:</b> {x.where}{x.wifi && <span style="color:var(--mut)"> · יש אינטרנט אלחוטי</span>}</li>)}</ul>
+    </div>)}
+  </section>
+  <section class="ncard" style="--c:#B86E00;margin-top:18px">
+    <h2>מחסות ציבוריים בחניונים ובבניינים</h2>
+    <p style="margin:0 0 8px">העירייה מפרסמת גם מחסות ציבוריים לשעת חירום:</p>
+    <ul style="margin:0;padding-inline-start:20px;columns:2;column-gap:24px">{sp.names.map((n) => <li style="padding:3px 0">{n}</li>)}</ul>
+    <p class="note" style="margin:10px 0 0"><a href={sp.source} rel="noopener nofollow" target="_blank" style="color:#0B5FCC">{sp.srcName}</a></p>
+  </section>
+  <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>אגף ביטחון וחירום</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px"><div class="kv"><span>טלפון</span><b class="num" dir="ltr">{ed.phone}</b></div><div class="kv"><span>כתובת</span><b>{ed.address}</b></div><div class="kv"><span>מוקד עירוני</span><b class="num">106</b></div></div>
+  </section>
+  <p class="note" style="margin:14px 0 0">מקור: <a href={SH.source} rel="noopener nofollow" target="_blank" style="color:#0B5FCC">{SH.srcName}</a>, נבדק ב־{checked}. באתר העירייה יש מפה וחיפוש לפי רחוב.</p>
+</NowPage>

@@ -1,0 +1,51 @@
+---
+// פינוי גזם ופסולת גושית בנתניה (29.10.2026, the plan Yakir approved): the municipality's pickup days by neighborhood (read on
+// 29.10.2026 from the official page), with today's and tomorrow's areas computed at build time (the site rebuilds all day), the
+// rules, and the department's contact details. Nothing beyond what the official page says.
+import NowPage from '../../../components/NowPage.astro';
+import SV from '../../../data/now/services.json';
+import { placeUrl } from '../../../lib/content';
+import { PLACES } from '../../../data/places';
+const W = SV.waste;
+const dowOf = (d: Date) => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Jerusalem', weekday: 'short' }).format(d));
+const today = dowOf(new Date()); const tomorrow = (today + 1) % 7;
+const tDay = W.days.find((d) => d.dow === today); const mDay = W.days.find((d) => d.dow === tomorrow);
+const checked = new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric', year: 'numeric' }).format(new Date(W.checked + 'T12:00:00+02:00'));
+const pname = (s: string) => PLACES.find((p) => p.slug === s)?.he || s;
+const faq: [string, string][] = [
+  ['מתי מפנים גזם בנתניה?', `לפי עיריית נתניה הפינוי לפי אזורים: ${W.days.map((d) => `ביום ${d.day} ב${d.areas.split(',').slice(0, 3).join(',')} ועוד`).join('; ')}. מוציאים את הגזם רק בערב שלפני יום הפינוי.`],
+  ['כמה פסולת מותר להוציא לרחוב?', 'עד שני שקים של גזם צמחייה, ועד 2 או 3 פריטים מהבית. תכולת בית שלמה או פסולת משיפוץ מפנים במכולה פרטית.'],
+  ['איך מזמינים פינוי גדול יותר?', 'גזם עד רבע משאית מפנים בתיאום עם המוקד העירוני 106.'],
+];
+---
+<NowPage icon="leaf" title="פינוי גזם ופסולת גושית בנתניה: ימי פינוי לפי שכונה | חדשות נתניה והשרון" h1="פינוי גזם ופסולת גושית בנתניה" description="באיזה יום מפנים גזם ופסולת גושית בשכונה שלכם בנתניה, מתי מוציאים לרחוב, כמה מותר ולמי פונים. לפי עיריית נתניה." path="/now/waste/" intro="באיזה יום מפנים בשכונה שלכם, ומתי מוציאים לרחוב." color="#17803F" img="city" faq={faq} updated={W.checked + 'T12:00:00+02:00'}>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px">
+    <section class="ncard" style="--c:#17803F">
+      <h2>היום</h2>
+      {tDay ? <p style="margin:0">יום {tDay.day}: פינוי גזם ופסולת גושית ב{tDay.areas}.</p> : <p style="margin:0">היום אין יום פינוי קבוע לפי לוח העירייה.</p>}
+    </section>
+    <section class="ncard" style="--c:#C8102E">
+      <h2>מחר, מוציאים הערב</h2>
+      {mDay ? <p style="margin:0">יום {mDay.day}: פינוי ב{mDay.areas}. את הגזם והפסולת מוציאים הערב, לא לפני.</p> : <p style="margin:0">מחר אין יום פינוי קבוע לפי לוח העירייה.</p>}
+    </section>
+  </div>
+  <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>ימי הפינוי לפי שכונה</h2>
+    {W.days.map((d) => <div style="padding:10px 0;border-top:1px solid #EFEDE7">
+      <h3 style="font-size:17px;margin:0 0 4px">יום {d.day}</h3>
+      <p style="margin:0">{d.areas}.</p>
+      <p class="note" style="margin:4px 0 0">גבולות האזור: {d.bounds.join(' · ')}</p>
+      {d.slugs.length > 0 && <p class="note" style="margin:4px 0 0">חדשות השכונות: {d.slugs.map((s, i) => <>{i > 0 && ', '}<a href={placeUrl(s)} style="color:#0B5FCC">{pname(s)}</a></>)}</p>}
+    </div>)}
+    <p class="note" style="margin:10px 0 0">אפשר לבדוק לפי רחוב בעמוד ״הסביבה שלי״ באתר העירייה.</p>
+  </section>
+  <section class="ncard" style="--c:#B86E00;margin-top:18px">
+    <h2>הכללים</h2>
+    <ul style="margin:0;padding-inline-start:20px">{W.rules.map((r) => <li style="padding:4px 0">{r}</li>)}</ul>
+  </section>
+  <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>{W.dept.name}</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px"><div class="kv"><span>טלפון</span><b class="num" dir="ltr">{W.dept.phone}</b></div><div class="kv"><span>כתובת</span><b>{W.dept.address}</b></div><div class="kv"><span>שעות קבלה</span><b>{W.dept.hours}</b></div><div class="kv"><span>מוקד עירוני</span><b class="num">106</b></div></div>
+  </section>
+  <p class="note" style="margin:14px 0 0">מקור: <a href={W.source} rel="noopener nofollow" target="_blank" style="color:#0B5FCC">{W.srcName}</a>, נבדק ב־{checked}.</p>
+</NowPage>

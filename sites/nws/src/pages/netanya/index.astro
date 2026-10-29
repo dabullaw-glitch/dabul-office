@@ -13,11 +13,13 @@ import { PLACES } from '../../data/places';
 import { CATEGORIES } from '../../data/directory';
 import { ARTICLES, FACTS, CALENDAR, calTime, calVenue, placesOf, sectionUrl, articleUrl, fmtDate, liveSections } from '../../lib/content';
 import { shabbatTimes } from '../../lib/shabbat';
+import { AREA_SLUGS } from '../../lib/area';
 
 const F: any = FACTS;
 const beaches: string[] = F?.bathingBeaches?.names ?? [];
 const hoods: string[] = F?.neighborhoods?.names ?? [];
-const withNews = new Set(PLACES.filter((p) => ARTICLES.some((a) => placesOf(a).some((x) => x.slug === p.slug))).map((p) => p.slug));
+// 29.10.2026: every place that has a page (all neighborhoods, and localities with stories or businesses)
+const withNews = AREA_SLUGS;
 const placeLink = (name: string) => PLACES.find((p) => p.he === name || name.startsWith(p.he));
 const sh = shabbatTimes(new Date(), 1)[0];
 const cal = CALENDAR.slice(0, 6);
@@ -69,7 +71,7 @@ const S1 = src(F?.bathingBeaches?.source); const S2 = src(F?.neighborhoods?.sour
 
   <section class="sec" aria-labelledby="g-hood">
     <h2 id="g-hood" class="sh" style="--c:#0B5FCC"><span class="bar"></span>השכונות של נתניה</h2>
-    <p class="note" style="margin:0 0 10px">רשימת השכונות כפי שהיא מופיעה באתר עיריית נתניה. שכונה שיש עליה חדשות אצלנו מקושרת לעמוד החדשות שלה.</p>
+    <p class="note" style="margin:0 0 10px">רשימת השכונות כפי שהיא מופיעה באתר עיריית נתניה. כל שכונה מקושרת לעמוד שלה אצלנו.</p>
     <div class="chips">{hoods.map((h) => { const p = placeLink(h); return p && withNews.has(p.slug) ? <a class="chip" href={`/area/${p.slug}/`} style="--c:#0B5FCC"><i></i>{h}</a> : <span class="chip" style="--c:#8A94A3"><i></i>{h}</span>; })}</div>
     {S2 && <p class="note" style="margin:10px 0 0"><a href={S2.u} rel="noopener nofollow" target="_blank" style="color:#0B5FCC">{S2.t}</a></p>}
   </section>
