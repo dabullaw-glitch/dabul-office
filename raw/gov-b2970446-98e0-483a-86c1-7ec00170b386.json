@@ -1,0 +1,236 @@
+{
+ "package": "מוסדות אקדמאיים",
+ "org": "המרכז למיפוי ישראל",
+ "resource": "מוסדות אקדמאיים",
+ "url": "https://data.gov.il/dataset/academic",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "UNIQ_ID",
+   "type": "text"
+  },
+  {
+   "id": "FCODE_TYPE",
+   "type": "text"
+  },
+  {
+   "id": "SETL_CODE",
+   "type": "text"
+  },
+  {
+   "id": "SETL_NAME",
+   "type": "text"
+  },
+  {
+   "id": "NAME",
+   "type": "text"
+  },
+  {
+   "id": "LATIN_NAME",
+   "type": "text"
+  },
+  {
+   "id": "USG_GROUP",
+   "type": "text"
+  },
+  {
+   "id": "USG_CODE",
+   "type": "text"
+  },
+  {
+   "id": "E_ORD",
+   "type": "text"
+  },
+  {
+   "id": "N_ORD",
+   "type": "text"
+  },
+  {
+   "id": "DATA_YEAR",
+   "type": "text"
+  },
+  {
+   "id": "PRDCT_VER",
+   "type": "text"
+  },
+  {
+   "id": "X",
+   "type": "text"
+  },
+  {
+   "id": "Y",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 61,
+   "UNIQ_ID": "54446481",
+   "FCODE_TYPE": "252",
+   "SETL_CODE": "7400",
+   "SETL_NAME": "נתניה",
+   "NAME": "המכללה - האקדמית נתניה",
+   "LATIN_NAME": null,
+   "USG_GROUP": "13",
+   "USG_CODE": "5370",
+   "E_ORD": "188840.32392699999",
+   "N_ORD": "690474.19409400003",
+   "DATA_YEAR": "2014",
+   "PRDCT_VER": "2015-07",
+   "X": "188840.32392699999",
+   "Y": "690474.19409400003",
+   "rank": 0.0706241
+  },
+  {
+   "_id": 80,
+   "UNIQ_ID": "54446131",
+   "FCODE_TYPE": "252",
+   "SETL_CODE": "7400",
+   "SETL_NAME": "נתניה",
+   "NAME": "אולפן עקיבא",
+   "LATIN_NAME": "Ulpan Akiva",
+   "USG_GROUP": "13",
+   "USG_CODE": "5370",
+   "E_ORD": "184826.34792700000",
+   "N_ORD": "686293.24319399998",
+   "DATA_YEAR": "2014",
+   "PRDCT_VER": "2015-07",
+   "X": "184826.34792700000",
+   "Y": "686293.24319399998",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 116,
+   "UNIQ_ID": "53949574",
+   "FCODE_TYPE": "222",
+   "SETL_CODE": "7400",
+   "SETL_NAME": "נתניה",
+   "NAME": "בית ספר - לסיעוד ע\"ש טסלר",
+   "LATIN_NAME": null,
+   "USG_GROUP": "13",
+   "USG_CODE": "5370",
+   "E_ORD": "186968.07822699999",
+   "N_ORD": "694615.96669399994",
+   "DATA_YEAR": "0",
+   "PRDCT_VER": null,
+   "X": "186968.07822699999",
+   "Y": "694615.96669399994",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 140,
+   "UNIQ_ID": "53952088",
+   "FCODE_TYPE": "222",
+   "SETL_CODE": "7400",
+   "SETL_NAME": "נתניה",
+   "NAME": "מכללת - אורט",
+   "LATIN_NAME": null,
+   "USG_GROUP": "13",
+   "USG_CODE": "5370",
+   "E_ORD": "187102.58852700001",
+   "N_ORD": "693072.36559399997",
+   "DATA_YEAR": "0",
+   "PRDCT_VER": null,
+   "X": "187102.58852700001",
+   "Y": "693072.36559399997",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 305,
+   "UNIQ_ID": "54022539",
+   "FCODE_TYPE": "222",
+   "SETL_CODE": "7400",
+   "SETL_NAME": "נתניה",
+   "NAME": "מכללת - בית חנה למורים וגננות",
+   "LATIN_NAME": null,
+   "USG_GROUP": "13",
+   "USG_CODE": "5370",
+   "E_ORD": "187024.83332700000",
+   "N_ORD": "694625.02919399994",
+   "DATA_YEAR": "0",
+   "PRDCT_VER": null,
+   "X": "187024.83332700000",
+   "Y": "694625.02919399994",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 346,
+   "UNIQ_ID": "54448111",
+   "FCODE_TYPE": "252",
+   "SETL_CODE": "7400",
+   "SETL_NAME": "נתניה",
+   "NAME": "המכללה - למינהל",
+   "LATIN_NAME": null,
+   "USG_GROUP": "13",
+   "USG_CODE": "5370",
+   "E_ORD": "186330.10682700001",
+   "N_ORD": "693307.22719400004",
+   "DATA_YEAR": "0",
+   "PRDCT_VER": null,
+   "X": "186330.10682700001",
+   "Y": "693307.22719400004",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 352,
+   "UNIQ_ID": "54453253",
+   "FCODE_TYPE": "252",
+   "SETL_CODE": "7400",
+   "SETL_NAME": "נתניה",
+   "NAME": "מכללה - מכון וינגייט",
+   "LATIN_NAME": null,
+   "USG_GROUP": "13",
+   "USG_CODE": "5370",
+   "E_ORD": "184651.92522700000",
+   "N_ORD": "685185.60459400003",
+   "DATA_YEAR": "2014",
+   "PRDCT_VER": "2015-07",
+   "X": "184651.92522700000",
+   "Y": "685185.60459400003",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 44,
+   "UNIQ_ID": "54446512",
+   "FCODE_TYPE": "252",
+   "SETL_CODE": "7400",
+   "SETL_NAME": "נתניה",
+   "NAME": "המכללה - הטכנולוגית אורט",
+   "LATIN_NAME": null,
+   "USG_GROUP": "13",
+   "USG_CODE": "5370",
+   "E_ORD": "187432.41092699999",
+   "N_ORD": "688734.11369400006",
+   "DATA_YEAR": "2014",
+   "PRDCT_VER": "2015-07",
+   "X": "187432.41092699999",
+   "Y": "688734.11369400006",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 363,
+   "UNIQ_ID": "54005863",
+   "FCODE_TYPE": "222",
+   "SETL_CODE": "7400",
+   "SETL_NAME": "נתניה",
+   "NAME": "מכללת - בית חנה למורות",
+   "LATIN_NAME": null,
+   "USG_GROUP": "13",
+   "USG_CODE": "5370",
+   "E_ORD": "187079.62032700001",
+   "N_ORD": "694544.67139399995",
+   "DATA_YEAR": "0",
+   "PRDCT_VER": null,
+   "X": "187079.62032700001",
+   "Y": "694544.67139399995",
+   "rank": 0.057308756
+  }
+ ]
+}

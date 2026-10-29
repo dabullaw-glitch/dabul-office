@@ -1,0 +1,68 @@
+{
+ "package": "רכבת כבדה - תחנות נוסעים",
+ "org": "משרד התחבורה והבטיחות בדרכים",
+ "resource": "RAIL_STAT_CSV",
+ "url": "https://data.gov.il/dataset/rail_stat",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "OID",
+   "type": "numeric"
+  },
+  {
+   "id": "ASSET_NO",
+   "type": "numeric"
+  },
+  {
+   "id": "ASSET_NAME",
+   "type": "text"
+  },
+  {
+   "id": "MAAGAN_ID",
+   "type": "numeric"
+  },
+  {
+   "id": "SOURCE",
+   "type": "text"
+  },
+  {
+   "id": "YEARMONTH",
+   "type": "numeric"
+  },
+  {
+   "id": "STATUS",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 1,
+   "OID": -1,
+   "ASSET_NO": 3300,
+   "ASSET_NAME": "נתניה",
+   "MAAGAN_ID": 1,
+   "SOURCE": "נת/ 400/ 7",
+   "YEARMONTH": 202607,
+   "STATUS": "נוסעים",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 48,
+   "OID": -1,
+   "ASSET_NO": 3310,
+   "ASSET_NAME": "קרית ספיר נתניה",
+   "MAAGAN_ID": 100,
+   "SOURCE": "נת/ 368/ 20",
+   "YEARMONTH": 202607,
+   "STATUS": "נוסעים",
+   "rank": 0.057308756
+  }
+ ]
+}

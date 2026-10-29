@@ -1,0 +1,42 @@
+{
+ "package": "ספריית מילוני נתונים - טרמינולוגיית נתוני אדם",
+ "org": "מערך הדיגיטל הלאומי",
+ "resource": "מילון מוסדות להשכלה גבוהה",
+ "url": "https://data.gov.il/dataset/data-dictionary-person",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "Code",
+   "type": "numeric"
+  },
+  {
+   "id": "Name_Hebrew",
+   "type": "text"
+  },
+  {
+   "id": "Name_English",
+   "type": "text"
+  },
+  {
+   "id": "Description_Hebrew",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 24,
+   "Code": 24,
+   "Name_Hebrew": "המכללה האקדמית נתניה",
+   "Name_English": "Netanya Academic College",
+   "Description_Hebrew": "מכללה אקדמית",
+   "rank": 0.057308756
+  }
+ ]
+}

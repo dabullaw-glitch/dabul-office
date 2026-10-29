@@ -1,0 +1,117 @@
+{
+ "package": "לשכות מידע - Tourist Information",
+ "org": "משרד התיירות",
+ "resource": "Tourist_Information_GOISRAEL_Hebrew",
+ "url": "https://data.gov.il/dataset/lishkot-tayarut-eng",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "Id",
+   "type": "numeric"
+  },
+  {
+   "id": "Name",
+   "type": "text"
+  },
+  {
+   "id": "ShortDescription",
+   "type": "text"
+  },
+  {
+   "id": "FullDescription",
+   "type": "text"
+  },
+  {
+   "id": "VendorId",
+   "type": "numeric"
+  },
+  {
+   "id": "Vendor_Name",
+   "type": "text"
+  },
+  {
+   "id": "Product_Url",
+   "type": "text"
+  },
+  {
+   "id": "Address",
+   "type": "text"
+  },
+  {
+   "id": "City",
+   "type": "text"
+  },
+  {
+   "id": "Directions",
+   "type": "text"
+  },
+  {
+   "id": "Email",
+   "type": "text"
+  },
+  {
+   "id": "Notes_for_opening_hours",
+   "type": "text"
+  },
+  {
+   "id": "Office_Type",
+   "type": "text"
+  },
+  {
+   "id": "Opening_Hours",
+   "type": "text"
+  },
+  {
+   "id": "Phone",
+   "type": "text"
+  },
+  {
+   "id": "Region",
+   "type": "text"
+  },
+  {
+   "id": "URL",
+   "type": "text"
+  },
+  {
+   "id": "X",
+   "type": "numeric"
+  },
+  {
+   "id": "Y",
+   "type": "numeric"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 7,
+   "Id": 4917,
+   "Name": "מרכז מידע תיירות נתניה",
+   "ShortDescription": "סוג לשכה: פרטי, אזור: צפון, כתובת: כיכר העצמאות 1",
+   "FullDescription": "",
+   "VendorId": 38,
+   "Vendor_Name": "לשכת מידע פרטית נתניה",
+   "Product_Url": "https://info.goisrael.com/he/לשכת-מידע-תיירות-נתניה",
+   "Address": "כיכר העצמאות 1",
+   "City": "נתניה",
+   "Directions": "",
+   "Email": "<a href=\"mailto:gonetanya@gmail.com\">gonetanya@gmail.com</a>",
+   "Notes_for_opening_hours": "",
+   "Office_Type": "פרטי",
+   "Opening_Hours": "יום ראשון:  08:00 - 19:00, יום שני: 08:00 - 16:00, יום שלישי:  08:00 - 19:00, יום רביעי: 08:00 - 19:00, יום חמישי: 08:00 - 19:00, יום שישי:  09:00 - 12:00, יום שבת: סגור",
+   "Phone": "<a href=\"tel:+972-9-8827286\">+972-9-8827286</a>",
+   "Region": "צפון",
+   "URL": "https://gonetanya.com/",
+   "X": 34.85184,
+   "Y": 32.330025,
+   "rank": 0.0796517
+  }
+ ]
+}

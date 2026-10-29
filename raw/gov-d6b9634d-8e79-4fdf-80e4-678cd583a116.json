@@ -1,0 +1,412 @@
+{
+ "package": "ספריית מילוני נתונים - טרמינולוגיית נתוני אדם",
+ "org": "מערך הדיגיטל הלאומי",
+ "resource": "מילון שכונות",
+ "url": "https://data.gov.il/dataset/data-dictionary-person",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "Code_City",
+   "type": "numeric"
+  },
+  {
+   "id": "Name_City_Hebrew",
+   "type": "text"
+  },
+  {
+   "id": "Code_Neighborhood",
+   "type": "numeric"
+  },
+  {
+   "id": "Name_Neighborhood_Hebrew",
+   "type": "text"
+  },
+  {
+   "id": "Name_Neighborhood_English",
+   "type": "text"
+  },
+  {
+   "id": "Description_Hebrew",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 342,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "נווה עוז (נתניה)",
+   "Name_Neighborhood_English": "Neve Oz (Netanya)",
+   "Description_Hebrew": "מזרח; שכונה ותיקה",
+   "rank": 0.0706241
+  },
+  {
+   "_id": 322,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "אוסישקין",
+   "Name_Neighborhood_English": "Avsyshkyn",
+   "Description_Hebrew": "צפון נתניה; שכונה ותיקה",
+   "rank": 0.0706241
+  },
+  {
+   "_id": 339,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "עמידר (נתניה)",
+   "Name_Neighborhood_English": "Amidar (Netanya)",
+   "Description_Hebrew": "תת-שכונה של נאות הרצל; שיכוני עולים",
+   "rank": 0.0706241
+  },
+  {
+   "_id": 327,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "רמת חן (נתניה)",
+   "Name_Neighborhood_English": "Ramat Chen (Netanya)",
+   "Description_Hebrew": "מרכז העיר; שכונה ותיקה",
+   "rank": 0.0706241
+  },
+  {
+   "_id": 321,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "מכבי",
+   "Name_Neighborhood_English": "Mkhby",
+   "Description_Hebrew": "צפון נתניה; שכונת מגורים ותיקה",
+   "rank": 0.0706241
+  },
+  {
+   "_id": 328,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "עין התכלת",
+   "Name_Neighborhood_English": "Ein Htkhlt",
+   "Description_Hebrew": "מרכז העיר; שכונה ותיקה ליד החוף",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 329,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "גלי הים",
+   "Name_Neighborhood_English": "Galei HaYam",
+   "Description_Hebrew": "מרכז; ע\"י החוף הצפוני",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 330,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "רמת התשבי",
+   "Name_Neighborhood_English": "Ramat Htshby",
+   "Description_Hebrew": "מרכז העיר; שכונה ותיקה",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 331,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "שיכון ותיקים",
+   "Name_Neighborhood_English": "Shikun Vatikim",
+   "Description_Hebrew": "מרכז; שכונה ותיקה",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 332,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "שיכון הפועל המזרחי",
+   "Name_Neighborhood_English": "Shikun HaPoel HaMizrahi",
+   "Description_Hebrew": "מרכז; שכונה דתית-לאומית ותיקה",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 333,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "שיכון חיילים",
+   "Name_Neighborhood_English": "Shikun Hyylym",
+   "Description_Hebrew": "מרכז; שיכון לחיילים משוחררים",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 334,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "מכנס משה",
+   "Name_Neighborhood_English": "Mkhns Moshe",
+   "Description_Hebrew": "מרכז; שכונה ותיקה",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 335,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "בן ציון",
+   "Name_Neighborhood_English": "Ben Tzion",
+   "Description_Hebrew": "מרכז; שכונה ותיקה",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 336,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "נאות הרצל",
+   "Name_Neighborhood_English": "Neot Herzl",
+   "Description_Hebrew": "מזרח; איחוד 4 שכונות: שיכון סלע, גן ברכה, עמידר, רמת הרצל",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 337,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "שיכון סלע",
+   "Name_Neighborhood_English": "Shikun Sela",
+   "Description_Hebrew": "תת-שכונה של נאות הרצל",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 338,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "גן ברכה",
+   "Name_Neighborhood_English": "Gan Brkh",
+   "Description_Hebrew": "תת-שכונה של נאות הרצל",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 340,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "רמת הרצל",
+   "Name_Neighborhood_English": "Ramat Herzl",
+   "Description_Hebrew": "תת-שכונה של נאות הרצל",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 341,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "אום חאלד / שכונת אום חאלד",
+   "Name_Neighborhood_English": "Umm Khaled / Shkhunat Umm Khaled",
+   "Description_Hebrew": "מזרח; על אדמות הכפר אום חאלד; השקמה העתיקה ברחוב מינץ",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 343,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "שכונת טוברוק",
+   "Name_Neighborhood_English": "Shkhunat Tvbrvk",
+   "Description_Hebrew": "מזרח; ע\"ש קרב טוברוק",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 344,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "קריית השרון",
+   "Name_Neighborhood_English": "Kiryat HaSharon",
+   "Description_Hebrew": "מזרח; שכונה גדולה",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 345,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "נאות גנים",
+   "Name_Neighborhood_English": "Neot Ganim",
+   "Description_Hebrew": "מזרח; שכונה ותיקה",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 346,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "רמת ידין (\"שיכון דורה\")",
+   "Name_Neighborhood_English": "Ramat Ydyn (\"Shikun Dvrh\")",
+   "Description_Hebrew": "דרום; ע\"ש יגאל ידין; השיכון הראשון בדרום; הוקם על מחנה אלכסנדרוני הבריטי",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 347,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "קריית רבין",
+   "Name_Neighborhood_English": "Kiryat Rabin",
+   "Description_Hebrew": "מזרח; שכונה ע\"ש יצחק רבין",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 348,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "קריית עובד",
+   "Name_Neighborhood_English": "Kiryat Oved",
+   "Description_Hebrew": "מזרח; שכונת פועלים",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 349,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "נווה גולדה (קריית נורדאו)",
+   "Name_Neighborhood_English": "Neve Golda (Kiryat Nordau)",
+   "Description_Hebrew": "דרום; הוקמה ב-1950 כ\"דיור לעולה\"; הורחבה ב-60 ושמה שונה ל\"קריית נורדאו\" ע\"ש מקס נורדאו",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 350,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "נאות שקד",
+   "Name_Neighborhood_English": "Neot Shaked",
+   "Description_Hebrew": "דרום; הוקמה 1964; שמה היה \"אזורים\"; עולים ממרוקו וברה\"מ",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 351,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "רמת פולג (פולג הישנה)",
+   "Name_Neighborhood_English": "Ramat Poleg (Poleg HaYeshana)",
+   "Description_Hebrew": "דרום; שכונה הדרומית; ווילות ישנות; לאנשי קבע ונכי צה\"ל",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 352,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "רמת פולג החדשה (נאות בגין)",
+   "Name_Neighborhood_English": "Ramat Poleg HaHadasha (Neot Begin)",
+   "Description_Hebrew": "דרום; הרחבה משנות ה-90; ע\"ש מנחם בגין; בני 18 קומות + ווילות",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 353,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "עיר ימים",
+   "Name_Neighborhood_English": "Ir Ymym",
+   "Description_Hebrew": "דרום; שכונה חדשה (בנייה משנות ה-2000); קניון עיר ימים; חוף פולג",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 354,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "אופק הים",
+   "Name_Neighborhood_English": "Avpk HaYam",
+   "Description_Hebrew": "דרום; שכונה חדשה במתחם נת/542; שמות חסידי אומות עולם",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 355,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "גבעת האירוסים",
+   "Name_Neighborhood_English": "Givat Hayrvsym",
+   "Description_Hebrew": "דרום; שכונת יוקרה (משנת 2006); סמוכה לרמת פולג ושמורת האירוסים",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 320,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "פרדס הגדוד",
+   "Name_Neighborhood_English": "Pardes Hgdvd",
+   "Description_Hebrew": "צפון; הוקמה 1928 ע\"י יוצאי הגדודים העבריים; חווה חקלאית; צורפה לנתניה ב-1948",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 356,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "קריית צאנז",
+   "Name_Neighborhood_English": "Kiryat Tzanz",
+   "Description_Hebrew": "שכונה חרדית; מרכז חסידות צאנז; הוקמה ב-15 במרץ 1955 ע\"י האדמו\"ר מצאנז",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 323,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "נווה איתמר",
+   "Name_Neighborhood_English": "Neve Aytmr",
+   "Description_Hebrew": "צפון; שכונה ותיקה",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 324,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "רמת אפרים",
+   "Name_Neighborhood_English": "Ramat Efraim",
+   "Description_Hebrew": "צפון; שכונה ותיקה",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 325,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "בית ישראל",
+   "Name_Neighborhood_English": "Beit Yisrael",
+   "Description_Hebrew": "צפון; שכונה ותיקה",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 326,
+   "Code_City": 7400,
+   "Name_City_Hebrew": "נתניה",
+   "Code_Neighborhood": 6,
+   "Name_Neighborhood_Hebrew": "מרכז העיר",
+   "Name_Neighborhood_English": "City Center",
+   "Description_Hebrew": "מרכז; כיכר העצמאות; הוותיק והמרכזי; מסחר ובידור",
+   "rank": 0.057308756
+  }
+ ]
+}

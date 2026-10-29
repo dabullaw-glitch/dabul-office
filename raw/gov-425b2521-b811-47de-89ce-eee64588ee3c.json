@@ -1,0 +1,62 @@
+{
+ "package": "מילוני מאסטר (Code Lists)",
+ "org": "הלשכה המרכזית לסטטיסטיקה",
+ "resource": "מילון רשויות מקומיות",
+ "url": "https://data.gov.il/dataset/dictionaries",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "LocalAuthorityCode",
+   "type": "numeric",
+   "info": {
+    "label": "סמל רשות מקומית",
+    "notes": "סמל רשות מקומית",
+    "type_override": "numeric"
+   }
+  },
+  {
+   "id": "LocalAuthorityName",
+   "type": "text",
+   "info": {
+    "label": "שם רשות מקומית",
+    "notes": "שם רשות מקומית",
+    "type_override": "text"
+   }
+  },
+  {
+   "id": "LocalAuthorityEngName",
+   "type": "text",
+   "info": {
+    "label": "שם רשות מקומית באנגלית",
+    "notes": "שם רשות מקומית באנגלית",
+    "type_override": "text"
+   }
+  },
+  {
+   "id": "LocalAuthorityTypeCode",
+   "type": "numeric",
+   "info": {
+    "label": "סמל מעמד מוניציפלי",
+    "notes": "סמל מעמד מוניציפלי:\r\n1 - עירייה\r\n2 - מועצה מקומית\r\n3 - מועצה אזורית\r\n4 - חסר מעמד מוניציפלי\r\n",
+    "type_override": "numeric"
+   }
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 236,
+   "LocalAuthorityCode": 7400,
+   "LocalAuthorityName": "נתניה",
+   "LocalAuthorityEngName": "Netanya",
+   "LocalAuthorityTypeCode": 1,
+   "rank": 0.057308756
+  }
+ ]
+}

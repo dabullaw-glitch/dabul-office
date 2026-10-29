@@ -1,0 +1,47 @@
+{
+ "package": "איתור לשכות וטרינריות לפי ישובים",
+ "org": "משרד החקלאות וביטחון המזון",
+ "resource": "lishka.csv",
+ "url": "https://data.gov.il/dataset/veterinary_chambers",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "SEMEL",
+   "type": "numeric"
+  },
+  {
+   "id": "HEBREW_NAME",
+   "type": "text"
+  },
+  {
+   "id": "ENGLISH_NAME",
+   "type": "text"
+  },
+  {
+   "id": "LISHKA",
+   "type": "text"
+  },
+  {
+   "id": "InfoLink",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 1116,
+   "SEMEL": 7400,
+   "HEBREW_NAME": "נתניה",
+   "ENGLISH_NAME": "NETANYA",
+   "LISHKA": "השרון והמרכז",
+   "InfoLink": "<a href=\"https://www.gov.il/he/departments/bureaus/sharon-veterinary-office\" target=\"_blank\">למידע נוסף</a>",
+   "rank": 0.057308756
+  }
+ ]
+}

@@ -1,0 +1,136 @@
+{
+ "package": "מיפוי מאגרי מידע במשרדי הממשלה",
+ "org": "מערך הדיגיטל הלאומי",
+ "resource": "מיפוי מאגרי מידע במשרדי הממשלה ",
+ "url": "https://data.gov.il/dataset/datasetlist",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "Organization",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "הארגון המפרסם",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "DataSetStoke",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "שם המאגר",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "DataSetType",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "שם ה DataSet",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "APIAvailability",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "האם ניתן לצרוך ב API",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "FileType",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "סוג קובץ ה DataSet",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "DataSetLink",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "קישור ישיר",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "DataSetNotes",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "תיאור ה Dataset",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 3209,
+   "Organization": "המרכז למיפוי ישראל",
+   "DataSetStoke": "תצלום אויר 2015 2 מטר - גליון נתניה",
+   "DataSetType": "תצלום אויר 2015 2 מטר - גליון נתניה",
+   "APIAvailability": "לא",
+   "FileType": "ZIP",
+   "DataSetLink": "https://data.gov.il/dataset/ntn/resource/7d27b330-0d4b-43c8-bdc6-f23c641ba97f",
+   "DataSetNotes": "",
+   "rank": 0.0706241
+  },
+  {
+   "_id": 1497,
+   "Organization": "משרד התחבורה והבטיחות בדרכים",
+   "DataSetStoke": "הסעת המונים חדרה נתניה - 2050",
+   "DataSetType": "MATAAN_HDR_NTN_SHP",
+   "APIAvailability": "לא",
+   "FileType": "ZIP",
+   "DataSetLink": "https://data.gov.il/dataset/mataan_hdr_ntn/resource/0b3cc1f9-629e-492b-99d8-d04d36ca8514",
+   "DataSetNotes": "שכבת GIS בפורמט SHP  ,LYR",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 1498,
+   "Organization": "משרד התחבורה והבטיחות בדרכים",
+   "DataSetStoke": "הסעת המונים חדרה נתניה - 2050",
+   "DataSetType": "MATAAN_HDR_NTN_KMZ",
+   "APIAvailability": "לא",
+   "FileType": "ZIP",
+   "DataSetLink": "https://data.gov.il/dataset/mataan_hdr_ntn/resource/e8281995-f09a-494a-8d11-004c3f0112ef",
+   "DataSetNotes": "שכבת GIS בפורמט KMZ לשימוש במוצרי גוגל ועוד",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 1499,
+   "Organization": "משרד התחבורה והבטיחות בדרכים",
+   "DataSetStoke": "הסעת המונים חדרה נתניה - 2050",
+   "DataSetType": "MATAAN_HDR_NTN_CSV",
+   "APIAvailability": "כן",
+   "FileType": "CSV",
+   "DataSetLink": "https://data.gov.il/dataset/mataan_hdr_ntn/resource/03bcb366-0468-4cbe-8f89-eac1e7866356",
+   "DataSetNotes": "טבלת נתונים בפורמט CSV",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 1500,
+   "Organization": "משרד התחבורה והבטיחות בדרכים",
+   "DataSetStoke": "הסעת המונים חדרה נתניה - 2050",
+   "DataSetType": "מטאדאטה",
+   "APIAvailability": "כן",
+   "FileType": "XLSX",
+   "DataSetLink": "https://data.gov.il/dataset/mataan_hdr_ntn/resource/656aa53f-6018-4a64-adee-6092c2839059",
+   "DataSetNotes": "מידע המתאר את הנתונים - קובץ XLSX",
+   "rank": 0.057308756
+  }
+ ]
+}

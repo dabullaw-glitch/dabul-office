@@ -1,0 +1,87 @@
+{
+ "package": "בתי חולים פסיכיאטריים ומחלקות פסיכיאטריות בבתי חולים כלליים",
+ "org": "משרד הבריאות",
+ "resource": "בתי חולים פסיכיאטריים ומחלקות פסיכיאטריות בבתי חולים כלליים",
+ "url": "https://data.gov.il/dataset/hospitals_psyc",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "Code",
+   "type": "numeric"
+  },
+  {
+   "id": "hospital_name",
+   "type": "text"
+  },
+  {
+   "id": "district",
+   "type": "text"
+  },
+  {
+   "id": "city",
+   "type": "text"
+  },
+  {
+   "id": "age_description",
+   "type": "text"
+  },
+  {
+   "id": "age_code",
+   "type": "numeric"
+  },
+  {
+   "id": "type_code",
+   "type": "numeric"
+  },
+  {
+   "id": "ownership",
+   "type": "text"
+  },
+  {
+   "id": "Institute_type",
+   "type": "text"
+  },
+  {
+   "id": "address",
+   "type": "text"
+  },
+  {
+   "id": "phone",
+   "type": "text"
+  },
+  {
+   "id": "fax",
+   "type": "text"
+  },
+  {
+   "id": "website",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 29,
+   "Code": 11105,
+   "hospital_name": "לב השרון",
+   "district": "השרון          ",
+   "city": "נתניה",
+   "age_description": "כל הגילאים",
+   "age_code": 1,
+   "type_code": 1,
+   "ownership": "ממשלתי ",
+   "Institute_type": "בריאות הנפש     ",
+   "address": "ת.ד. 90000, נתניה",
+   "phone": "09-8981221",
+   "fax": "09-8945054",
+   "website": "<p><a title=\"מעבר לאתר חיצוני, פתיחה בטאב חדש\" href=\"https://www.lev-hasharon.co.il/\" target=\"_blank\">לאתר האינטרנט של בית החולים</a></p>",
+   "rank": 0.0706241
+  }
+ ]
+}

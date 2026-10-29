@@ -1,0 +1,72 @@
+{
+ "package": "רכבת כבדה - תכנית אסטרטגית - תחנות",
+ "org": "משרד התחבורה והבטיחות בדרכים",
+ "resource": "RAIL_STRAT_STATION_CSV",
+ "url": "https://data.gov.il/dataset/rail_strat_station",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "OBJECTID",
+   "type": "text"
+  },
+  {
+   "id": "STAT_NAME",
+   "type": "text"
+  },
+  {
+   "id": "STAT_CODE",
+   "type": "text"
+  },
+  {
+   "id": "ON_0700",
+   "type": "text"
+  },
+  {
+   "id": "OFF_0700",
+   "type": "text"
+  },
+  {
+   "id": "ON_1700",
+   "type": "text"
+  },
+  {
+   "id": "OFF_1700",
+   "type": "text"
+  },
+  {
+   "id": "ID",
+   "type": "text"
+  },
+  {
+   "id": "NAME",
+   "type": "text"
+  },
+  {
+   "id": "YEAR",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 9,
+   "OBJECTID": "35",
+   "STAT_NAME": "Natania College",
+   "STAT_CODE": "8065",
+   "ON_0700": "0",
+   "OFF_0700": "0",
+   "ON_1700": "0",
+   "OFF_1700": "0",
+   "ID": "984862",
+   "NAME": "נתניה מכללה",
+   "YEAR": "2040",
+   "rank": 0.057308756
+  }
+ ]
+}

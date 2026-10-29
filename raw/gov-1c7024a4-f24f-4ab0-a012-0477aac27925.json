@@ -1,0 +1,72 @@
+{
+ "package": "מרכזי מידע לקבלת קהל - הרשות לזכויות ניצולי השואה",
+ "org": "הרשות לזכויות ניצולי השואה",
+ "resource": "מרכזי מידע ושירות - הרשות לזכויות ניצולי השואה",
+ "url": "https://data.gov.il/dataset/holocaust-survivors-right-bureaus",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "Branch name",
+   "type": "text"
+  },
+  {
+   "id": "Address",
+   "type": "text"
+  },
+  {
+   "id": "Service areas",
+   "type": "text"
+  },
+  {
+   "id": "Phone",
+   "type": "text"
+  },
+  {
+   "id": "Fax",
+   "type": "text"
+  },
+  {
+   "id": "Telephone Answer",
+   "type": "text"
+  },
+  {
+   "id": "Activity days",
+   "type": "text"
+  },
+  {
+   "id": "Activity time",
+   "type": "text"
+  },
+  {
+   "id": "Accessibility",
+   "type": "text"
+  },
+  {
+   "id": "More info",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 14,
+   "Branch name": "הרשות לזכויות ניצולי השואה – מרכז מידע נתניה",
+   "Address": "שטמפפר 9, נתניה\nמועדון סביונים (קומה 5, מול העירייה, מעל בנק לאומי)",
+   "Service areas": "זימון ועדות רפואיות, מתן טפסים, מתן מידע, סיוע במילוי טפסים, קבלת מסמכים",
+   "Phone": "___",
+   "Fax": "___",
+   "Telephone Answer": "___",
+   "Activity days": "קבלת קהל בימי ה' במועדים שנקבעו מראש",
+   "Activity time": "9:00-13:00",
+   "Accessibility": "נגישות מלאה",
+   "More info": "מועדי פעילות לחצי שנה הקרובה: 27.7.2023; 10.8.2023; 24.8.2023; 7.9.2023; 21.9.2023; 12.10.2023; 26.10.2023; 9.11.2023; 23.11.2023; 7.12.2023; 28.12.2023; 11.1.2024; 25.1.2024; 8.2.2024; 22.2.2024; 14.3.2024; 28.3.2024",
+   "rank": 0.0706241
+  }
+ ]
+}

@@ -1,0 +1,50 @@
+{
+ "package": "ספריית מילוני נתונים - טרמינולוגיית נתוני אדם",
+ "org": "מערך הדיגיטל הלאומי",
+ "resource": "מילון רחובות",
+ "url": "https://data.gov.il/dataset/data-dictionary-person",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "Code",
+   "type": "numeric"
+  },
+  {
+   "id": "Name_Hebrew",
+   "type": "text"
+  },
+  {
+   "id": "Name_English",
+   "type": "text"
+  },
+  {
+   "id": "Decription_Hebrew",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 46407,
+   "Code": 6507,
+   "Name_Hebrew": "רמות נתניה",
+   "Name_English": "",
+   "Decription_Hebrew": "",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 41159,
+   "Code": 9000,
+   "Name_Hebrew": "נתניה",
+   "Name_English": "",
+   "Decription_Hebrew": "",
+   "rank": 0.057308756
+  }
+ ]
+}

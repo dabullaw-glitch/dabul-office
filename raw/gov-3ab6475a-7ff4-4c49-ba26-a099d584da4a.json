@@ -1,0 +1,78 @@
+{
+ "package": "מילוני מאסטר (Code Lists)",
+ "org": "הלשכה המרכזית לסטטיסטיקה",
+ "resource": "מילון בתי חולים ומרכזי טראומה",
+ "url": "https://data.gov.il/dataset/dictionaries",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "Hospital_Code",
+   "type": "numeric",
+   "info": {
+    "label": "סמל בית חולים",
+    "notes": "מספר מזהה של בית החולים או מרכז טראומה\r\n",
+    "type_override": "numeric"
+   }
+  },
+  {
+   "id": "Heb_Description_Hospital",
+   "type": "text",
+   "info": {
+    "label": "שם בית חולים או מרכז טראומה",
+    "notes": "שם בית החולים או מרכז טראומה\r\n",
+    "type_override": "text"
+   }
+  },
+  {
+   "id": "Eng_Description_Hospital",
+   "type": "text",
+   "info": {
+    "label": "שם בית חולים  או מרכז טראומה באנגלית",
+    "notes": "שם בית החולים או מרכז טראומה באנגלית",
+    "type_override": "text"
+   }
+  },
+  {
+   "id": "Type",
+   "type": "numeric",
+   "info": {
+    "label": "סיווג בית חולים או מרכז טראומה",
+    "notes": "סיווג בית חולים או מרכז טראומה.\r\nערכים של סיווג בית חוים:\r\n0 - אחר\r\n1 - בית חולים פעיל, קוד של \"אביב\" ושם של משרד הבריאות \r\n2 - מרכז חירום, קוד ושם מהמשטרה\r\n3 - קוד בית חולים פנימי ושם של משרד הבריאות\r\n4 - קוד בית חולים ישן/נסגר/אוחד",
+    "type_override": "numeric"
+   }
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 94,
+   "Hospital_Code": 4711,
+   "Heb_Description_Hospital": "מרפא יצחק - נתניה",
+   "Eng_Description_Hospital": "",
+   "Type": 4,
+   "rank": 0.057308756
+  },
+  {
+   "_id": 101,
+   "Hospital_Code": 4745,
+   "Heb_Description_Hospital": "חמדה - נתניה",
+   "Eng_Description_Hospital": "",
+   "Type": 4,
+   "rank": 0.057308756
+  },
+  {
+   "_id": 261,
+   "Hospital_Code": 4145,
+   "Heb_Description_Hospital": "מרכז לבריאות הנפש לב השרון, נתניה",
+   "Eng_Description_Hospital": "",
+   "Type": 3,
+   "rank": 0.057308756
+  }
+ ]
+}

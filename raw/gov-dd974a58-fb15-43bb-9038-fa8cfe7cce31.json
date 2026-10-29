@@ -1,0 +1,77 @@
+{
+ "package": "מרכזי טראומה",
+ "org": "משרד הבריאות",
+ "resource": "מרכזי טראומה",
+ "url": "https://data.gov.il/dataset/trauma-centers",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "institute_code",
+   "type": "numeric"
+  },
+  {
+   "id": "institute_name",
+   "type": "text"
+  },
+  {
+   "id": "cityCode",
+   "type": "numeric"
+  },
+  {
+   "id": "city",
+   "type": "text"
+  },
+  {
+   "id": "streetCode",
+   "type": "numeric"
+  },
+  {
+   "id": "street",
+   "type": "text"
+  },
+  {
+   "id": "address",
+   "type": "text"
+  },
+  {
+   "id": "email",
+   "type": "text"
+  },
+  {
+   "id": "phone",
+   "type": "text"
+  },
+  {
+   "id": "phone2",
+   "type": "text"
+  },
+  {
+   "id": "website",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 13,
+   "institute_code": 59913,
+   "institute_name": "מרפאה לטראומה - חוסן",
+   "cityCode": 7400,
+   "city": "נתניה",
+   "streetCode": 1028,
+   "street": "הצורן",
+   "address": "רח' הצורן 2, אזור תעשיה פולג, נתניה",
+   "email": "ntm@lev-hasharon.co.il",
+   "phone": "09-8345666",
+   "phone2": "",
+   "website": "https://www.lev-hasharon.co.il/?clinic=marpeot-mevugarim-natanya",
+   "rank": 0.0706241
+  }
+ ]
+}

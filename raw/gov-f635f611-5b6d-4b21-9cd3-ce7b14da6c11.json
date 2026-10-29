@@ -1,0 +1,202 @@
+{
+ "package": "בתי מרקחת המורשים למכור קנביס רפואי",
+ "org": "משרד הבריאות",
+ "resource": "בתי מרקחת המורשים למכור קנביס רפואי",
+ "url": "https://data.gov.il/dataset/cannabis_pharmacies",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "pharmacy_name",
+   "type": "text"
+  },
+  {
+   "id": "pharmacy_delivery",
+   "type": "text"
+  },
+  {
+   "id": "pharmacy_street",
+   "type": "text"
+  },
+  {
+   "id": "pharmacy_city",
+   "type": "text"
+  },
+  {
+   "id": "pharmacy_notes",
+   "type": "text"
+  },
+  {
+   "id": "map",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 328,
+   "pharmacy_name": "בית מרקחת פולג (נתניה)",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "פנחס לבון 30",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%A9%D7%93%D7%A8%D7%95%D7%AA+%D7%A4%D7%A0%D7%97%D7%A1+%D7%9C%D7%91%D7%95%D7%9F+30,+%D7%A0%D7%AA%D7%A0%D7%99%D7%94%E2%80%AD\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.0706241
+  },
+  {
+   "_id": 348,
+   "pharmacy_name": "פארם פלוס נתניה",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "ויצמן 5",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%A9%D7%93%D7%A8%D7%95%D7%AA+%D7%97%D7%99%D7%99%D7%9D+%D7%95%D7%99%D7%99%D7%A6%D7%9E%D7%9F+5,+%D7%A0%D7%AA%D7%A0%D7%99%D7%94%E2%80%AD\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.0706241
+  },
+  {
+   "_id": 301,
+   "pharmacy_name": "בית מרקחת רפאל – נתניה",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "דיזנגוף 28",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=דיזנגוף+28,+נתניה%E2%80%AD\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.0706241
+  },
+  {
+   "_id": 72,
+   "pharmacy_name": "פארם ירוק",
+   "pharmacy_delivery": "לא",
+   "pharmacy_street": "הגביש 1",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%94%D7%92%D7%91%D7%99%D7%A9%201%2C%20%D7%A0%D7%AA%D7%A0%D7%99%D7%94\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 138,
+   "pharmacy_name": "גרין פארם",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "אמנון ותמר 6",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%90%D7%9E%D7%A0%D7%95%D7%9F+%D7%95%D7%AA%D7%9E%D7%A8+6,+%D7%A0%D7%AA%D7%A0%D7%99%D7%94%E2%80%AD\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 145,
+   "pharmacy_name": "סופר פארם קרית השרון",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "שדרות טום לנטוס 60 קריית השרון",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%A9%D7%93%D7%A8%D7%95%D7%AA+%D7%98%D7%95%D7%9D+%D7%9C%D7%A0%D7%98%D7%95%D7%A1+60,+%D7%A0%D7%AA%D7%A0%D7%99%D7%94%E2%80%AD\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 263,
+   "pharmacy_name": "סופר פארם רמז",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "רמז 16",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": "פינת סמילנסקי",
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%93%D7%95%D7%93+%D7%A8%D7%9E%D7%96+16,+%D7%A0%D7%AA%D7%A0%D7%99%D7%94%E2%80%AD/\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 269,
+   "pharmacy_name": "האר\"י",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "האר\"י 1",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%94%D7%90%D7%A8%22%D7%99+1,+%D7%A0%D7%AA%D7%A0%D7%99%D7%94%E2%80%AD/\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 283,
+   "pharmacy_name": "ביפארם סינמה סיטי",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "המחקר 3",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": "מתחם סינמה סיטי",
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%94%D7%9E%D7%97%D7%A7%D7%A8+3,+%D7%A0%D7%AA%D7%A0%D7%99%D7%94%E2%80%AD/\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 284,
+   "pharmacy_name": "ביפארם ק. השרון",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "שכונת קרית השרון",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=Be+%7C+%D7%A7%D7%A8%D7%99%D7%99%D7%AA+%D7%94%D7%A9%D7%A8%D7%95%D7%9F+%D7%A0%D7%AA%D7%A0%D7%99%D7%94,+%D7%A9%D7%93%D7%A8%D7%95%D7%AA+%D7%98%D7%95%D7%9D+%D7%9C%D7%A0%D7%98%D7%95%D7%A1+26,+%D7%A0%D7%AA%D7%A0%D7%99%D7%94,+4276001%E2%80%AD/\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 345,
+   "pharmacy_name": "בית מרקחת קרית השרון",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "קלאוזנר 9 פינת דגניה 49",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%A7%D7%9C%D7%90%D7%95%D7%96%D7%A0%D7%A8+9,+%D7%A8%D7%A2%D7%A0%D7%A0%D7%94%E2%80%AD/\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 346,
+   "pharmacy_name": "סופר פארם קניון השרון",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "הרצל 58, קניון השרון",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%94%D7%A8%D7%A6%D7%9C+58,+%D7%A0%D7%AA%D7%A0%D7%99%D7%94,+4239222%E2%80%AD/\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 5,
+   "pharmacy_name": "סופר פארם ביג פולג",
+   "pharmacy_delivery": "לא",
+   "pharmacy_street": "גיבורי ישראל 5",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%92%D7%99%D7%91%D7%95%D7%A8%D7%99%20%D7%99%D7%A9%D7%A8%D7%90%D7%9C%205%2C%D7%A0%D7%AA%D7%A0%D7%99%D7%94\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 409,
+   "pharmacy_name": "בית מרקחת ווייט וולף - הזאב הלבן",
+   "pharmacy_delivery": null,
+   "pharmacy_street": "הקדר 4",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%94%D7%A7%D7%93%D7%A8+4,+%D7%A0%D7%AA%D7%A0%D7%99%D7%94%E2%80%AD\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 18,
+   "pharmacy_name": "רצפט בע\"מ",
+   "pharmacy_delivery": "לא",
+   "pharmacy_street": "שדרות ניצה 8",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%92%D7%99%D7%91%D7%95%D7%A8%D7%99%20%D7%99%D7%A9%D7%A8%D7%90%D7%9C%205%2C%D7%A0%D7%AA%D7%A0%D7%99%D7%94\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 26,
+   "pharmacy_name": "סופר פארם קניון עיר ימים",
+   "pharmacy_delivery": "לא",
+   "pharmacy_street": "בני ברמן 2",
+   "pharmacy_city": "נתניה",
+   "pharmacy_notes": null,
+   "map": "<a href=\"https://www.google.com/maps/dir/?api=1&destination=%D7%91%D7%A0%D7%99%20%D7%91%D7%A8%D7%9E%D7%9F%202%2C%D7%A0%D7%AA%D7%A0%D7%99%D7%94\" target=\"_blank\"><img src=\"https://www.gov.il/files/health/moh-pics/maps_pointer.jpg\" widht=50px height=50px></a>",
+   "rank": 0.057308756
+  }
+ ]
+}

@@ -1,0 +1,42 @@
+{
+ "package": "ספריית מילוני נתונים - טרמינולוגיית נתוני אדם",
+ "org": "מערך הדיגיטל הלאומי",
+ "resource": "מילון רשויות מקומיות",
+ "url": "https://data.gov.il/dataset/data-dictionary-person",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "Code",
+   "type": "numeric"
+  },
+  {
+   "id": "Name_Hebrew",
+   "type": "text"
+  },
+  {
+   "id": "Authority_Type_Code",
+   "type": "numeric"
+  },
+  {
+   "id": "Description_Hebrew",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 236,
+   "Code": 7400,
+   "Name_Hebrew": "נתניה",
+   "Authority_Type_Code": 1,
+   "Description_Hebrew": "עירייה",
+   "rank": 0.057308756
+  }
+ ]
+}

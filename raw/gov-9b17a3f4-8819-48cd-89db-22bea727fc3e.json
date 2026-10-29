@@ -1,0 +1,62 @@
+{
+ "package": "ספריית מילוני נתונים - טרמינולוגיית נתוני אדם",
+ "org": "מערך הדיגיטל הלאומי",
+ "resource": "מילון יישובים בישראל",
+ "url": "https://data.gov.il/dataset/data-dictionary-person",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "Code",
+   "type": "numeric"
+  },
+  {
+   "id": "Name_Hebrew",
+   "type": "text"
+  },
+  {
+   "id": "District",
+   "type": "text"
+  },
+  {
+   "id": "נפה",
+   "type": "text"
+  },
+  {
+   "id": "צורת יישוב",
+   "type": "text"
+  },
+  {
+   "id": "מעמד מוניציפלי",
+   "type": "text"
+  },
+  {
+   "id": "Natural_Region",
+   "type": "text"
+  },
+  {
+   "id": "אשכול רשויות מקומיות",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 901,
+   "Code": 7400,
+   "Name_Hebrew": "נתניה",
+   "District": "המרכז",
+   "נפה": "השרון",
+   "צורת יישוב": "יישובים יהודיים 499999-200000 תושבים",
+   "מעמד מוניציפלי": "עירייה",
+   "Natural_Region": "מערב השרון",
+   "אשכול רשויות מקומיות": "ללא שיוך לאשכול               ",
+   "rank": 0.057308756
+  }
+ ]
+}

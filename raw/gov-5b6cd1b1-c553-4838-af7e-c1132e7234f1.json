@@ -1,0 +1,162 @@
+{
+ "package": "מעקב אחר ביצוע משימות החלטות ממשלה לשנת 2023",
+ "org": "משרד ראש הממשלה ",
+ "resource": "כלל הנתונים - משימות 2023",
+ "url": "https://data.gov.il/dataset/2023",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "Decision Number ‏",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "מספר החלטה ",
+    "type_override": "text"
+   }
+  },
+  {
+   "id": "Task Number ‏",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "מספר משימה",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Section In The Decision",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "סעיף בהחלטה",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Name Of Government Decision",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "החלטת ממשלה",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Task",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "נוסח המשימה",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Responsible Unit",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "משרד ממשלתי",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Deadline",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "תאריך יעד לביצוע",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Execution Status",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "סטטוס ביצוע (בוצע / לא בוצע)",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Explanation",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "ביאור ציבורי",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Budget Task Yes/No",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "פעולה תקציבית (כן / לא)",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Type Of Budget Task",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "סוג המשימה התקציבית (הקצאה / העברה / ניצול)",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Budget Source",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "מקור התקציב המועבר במשימה ‏(מקורות המשרד / מקורות משרד אחר / תוספתי)",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Budget ‏",
+   "type": "numeric",
+   "info": {
+    "label": "",
+    "notes": "סכום התקציב המועבר במשימה (מלש\"ח)",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "Date Published",
+   "type": "text",
+   "info": {
+    "label": "",
+    "notes": "תאריך פרסום",
+    "type_override": ""
+   }
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 1694,
+   "Decision Number ‏": "1357.0",
+   "Task Number ‏": "75-1357-36 ",
+   "Section In The Decision": "24.א..",
+   "Name Of Government Decision": "המשך סיוע להקמה ולפיתוח בר קיימא של היישוב חריש לשנים 2025-2022 ותיקון החלטת ממשלה",
+   "Task": "להקצות בהרשאה להתחייב 20 מלש\"ח בשנת 2023 עבור תכנון ראשוני לציר העדפה לתחבורה ממתע\"ן כביש 65 דרך 6353 ועד למתחמי המגורים והתעסוקה של חריש ולתכנון חיבור מערכות הסעת המונים בחריש בהתאם לתוכנית האסטרטגית המקודמת ע\"י משרד התחבורה למרחב חדרה-נתניה, הכולל בתוכו גם את חריש.",
+   "Responsible Unit": "משרד התחבורה והבטיחות בדרכים",
+   "Deadline": "2023-12-31 00:00:00",
+   "Execution Status": "בוצע",
+   "Explanation": "",
+   "Budget Task Yes/No": "כן",
+   "Type Of Budget Task": "הקצאה",
+   "Budget Source": "מקורות המשרד",
+   "Budget ‏": 20,
+   "Date Published": "2024-06-24 00:00:00",
+   "rank": 0.057308756
+  }
+ ]
+}

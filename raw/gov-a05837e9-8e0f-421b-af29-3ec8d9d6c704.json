@@ -1,0 +1,82 @@
+{
+ "package": "מרפאות לטיפול בהתמכרות לתרופות מרשם",
+ "org": "משרד הבריאות",
+ "resource": "מרפאות לטיפול בהתמכרות לתרופות מרשם",
+ "url": "https://data.gov.il/dataset/prescription-drug-addiction-treatment-clinics",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "institute_code",
+   "type": "numeric"
+  },
+  {
+   "id": "institute_name",
+   "type": "text"
+  },
+  {
+   "id": "cityCode",
+   "type": "numeric"
+  },
+  {
+   "id": "city",
+   "type": "text"
+  },
+  {
+   "id": "streetCode",
+   "type": "numeric"
+  },
+  {
+   "id": "street",
+   "type": "text"
+  },
+  {
+   "id": "address",
+   "type": "text"
+  },
+  {
+   "id": "email",
+   "type": "text"
+  },
+  {
+   "id": "phone",
+   "type": "text"
+  },
+  {
+   "id": "phone2",
+   "type": "text"
+  },
+  {
+   "id": "website",
+   "type": "text"
+  },
+  {
+   "id": "Manager_first_name",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 1,
+   "institute_code": 49901,
+   "institute_name": "מרפאת נס",
+   "cityCode": 7400,
+   "city": "נתניה",
+   "streetCode": 963,
+   "street": "יד חרוצים",
+   "address": "רח' יד חרוצים 19, נתניה",
+   "email": "",
+   "phone": "",
+   "phone2": "",
+   "website": "",
+   "Manager_first_name": "",
+   "rank": 0.0706241
+  }
+ ]
+}

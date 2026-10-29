@@ -1,0 +1,128 @@
+{
+ "package": "רשימת בתי חולים פסיכיאטריים ממשלתי וכללית - האגף לשעת חירום",
+ "org": "משרד הבריאות",
+ "resource": "רשימת בתי חולים פסיכיאטריים ממשלתי וכללית - האגף לשעת חירום",
+ "url": "https://data.gov.il/dataset/psychiatric-hospitals-emergency-health-unit",
+ "fields": [
+  {
+   "id": "_id",
+   "type": "int"
+  },
+  {
+   "id": "מס' מפעל חיוני",
+   "type": "numeric"
+  },
+  {
+   "id": "hospital_name",
+   "type": "text"
+  },
+  {
+   "id": "hp_num",
+   "type": "numeric"
+  },
+  {
+   "id": "supervisor",
+   "type": "text"
+  },
+  {
+   "id": "authority",
+   "type": "text"
+  },
+  {
+   "id": "address",
+   "type": "text"
+  },
+  {
+   "id": "city",
+   "type": "text"
+  },
+  {
+   "id": "rh",
+   "type": "text"
+  },
+  {
+   "id": "mk",
+   "type": "text"
+  },
+  {
+   "id": "service",
+   "type": "text"
+  },
+  {
+   "id": "branch",
+   "type": "text"
+  },
+  {
+   "id": "declaration",
+   "type": "timestamp"
+  },
+  {
+   "id": "last_visit",
+   "type": "timestamp"
+  },
+  {
+   "id": "contact",
+   "type": "text"
+  },
+  {
+   "id": "עמודה1",
+   "type": "text"
+  },
+  {
+   "id": "phone",
+   "type": "text"
+  },
+  {
+   "id": "email",
+   "type": "text"
+  },
+  {
+   "id": "rank",
+   "type": "float"
+  }
+ ],
+ "records": [
+  {
+   "_id": 5,
+   "מס' מפעל חיוני": 267301,
+   "hospital_name": "מרכז לבריאות הנפש לב השרון",
+   "hp_num": 500100904,
+   "supervisor": "ענת עבו",
+   "authority": "רשות עליונה לאשפוז ובריאות",
+   "address": "2     הצורן",
+   "city": "נתניה",
+   "rh": "ב",
+   "mk": "X",
+   "service": "מרפאה לבריאות הנפש",
+   "branch": "בית חולים פסיכיאטרי",
+   "declaration": "1985-01-01T00:00:00",
+   "last_visit": "2016-10-10T00:00:00",
+   "contact": "קרן עוז",
+   "עמודה1": "0522850200",
+   "phone": "09-8610142",
+   "email": "OZ.KEREN@LEV-HASHARON.CO.IL",
+   "rank": 0.057308756
+  },
+  {
+   "_id": 6,
+   "מס' מפעל חיוני": 267302,
+   "hospital_name": "מרכז לבריאות הנפש לב השרון",
+   "hp_num": 500100904,
+   "supervisor": "ענת עבו",
+   "authority": "רשות עליונה לאשפוז ובריאות",
+   "address": "2     הצורן א'",
+   "city": "נתניה",
+   "rh": "ב",
+   "mk": "X",
+   "service": "תחנה לבריאות הנפש למבוגרים",
+   "branch": "בית חולים פסיכיאטרי",
+   "declaration": "1990-04-18T00:00:00",
+   "last_visit": "2016-10-10T00:00:00",
+   "contact": "קרן עוז",
+   "עמודה1": "0522850200",
+   "phone": "09-8345666",
+   "email": "OZ.KEREN@LEV-HASHARON.CO.IL",
+   "rank": 0.057308756
+  }
+ ]
+}
