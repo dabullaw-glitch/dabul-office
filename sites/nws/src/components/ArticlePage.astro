@@ -354,6 +354,11 @@ const hasSrc = srcs.length > 0;
         {sponsored && <p class="art-disc">{L.disclose}</p>}
         {opCol && <p class="art-disc">{opDisc}</p>}
         {!sponsored && <AdSlot place="afterArticle" />}
+        {!sponsored && <div class="art-join">
+          <span class="ic" aria-hidden="true"><Icon name="telegram" size={22} color="#fff" /></span>
+          <p>{he ? <><b>רוצים לדעת ראשונים?</b> כל הידיעות של נתניה והשרון מגיעות לערוץ הטלגרם שלנו ברגע שהן עולות.</> : <b>{L.tgBtn}</b>}</p>
+          <a class="n-btn tg" href={tgHref} {...tgAttr} data-tg>{he ? 'להצטרפות לערוץ' : L.tgBtn}</a>
+        </div>}
         <div class="n-fix"><span>{L.fix}</span><span><a href={`/corrections/?url=${encodeURIComponent(path)}`}>{L.report}</a> · <a href={`${pre}/send-news/`}>{L.send}</a></span></div>
       </article>
 

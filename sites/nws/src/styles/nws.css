@@ -295,6 +295,12 @@ h1.n-t{margin:14px 0;font-size:50px;font-weight:900;line-height:1.1;letter-spaci
 .n-tgc b{display:block;font-size:21px;font-weight:700;margin-bottom:6px}
 .n-tgc p{margin:0 0 16px;color:#AEB6C3;font-size:14.5px}
 .n-tgc .n-btn{width:100%}
+/* 29.10.2026: the Telegram join box at the end of every article (Telegram only) */
+.art-join{display:flex;align-items:center;gap:14px;margin:26px 0 8px;padding:14px 16px;border:1px solid var(--line,#E4E1DA);border-radius:8px;background:#F4F7FB}
+.art-join .ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#229ED9}
+.art-join p{margin:0;flex:1;font-size:15.5px;line-height:1.5}
+.art-join .n-btn{flex:none;white-space:nowrap}
+@media (max-width:560px){.art-join{flex-wrap:wrap}.art-join .n-btn{width:100%}}
 .n-rel{border-top:1px solid var(--ink);padding-block:36px 56px}
 .n-rel h2{margin:0 0 20px;font-size:22px;font-weight:800}
 .n-rg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
