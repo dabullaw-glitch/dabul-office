@@ -138,6 +138,8 @@ Deno.serve(async (req) => {
       live: (Array.isArray(s.updates) ? s.updates : []).some((u: Any) => Date.now() - Date.parse(u.at) < 6 * 3600e3),
       extras: s.extras && typeof s.extras === 'object' ? Object.fromEntries(Object.entries(s.extras).filter(([k]) => k !== 'hold' && k !== 'manual')) : {},
       contextIds: (s.context_ids || []).map(Number), serviceBox: cleanJson(s.service_box), format: s.format || null, formatData: cleanJson(s.format_data), flash: isFlash(s),
+      // 29.10.2026: fixed recurring pieces (Shabbat times, weather, weekend guide, events, day summary, data pieces) never lead the home page
+      routine: !!s.format || /^auto:|hns-recurring|hns-data/.test(String(s.notes || '')),
     };
   });
   // stories merged into another one: the site sends their old URL to the main story (301)

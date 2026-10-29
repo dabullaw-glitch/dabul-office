@@ -38,7 +38,9 @@ const hot = (iso: string) => Date.now() - Date.parse(iso) < 2 * 3600e3;
 // 1. the top: lead, two cards, three headlines (flash items go to the live feed)
 const lead = leadOf(all, ev);
 if (lead) used.add(lead.slug);
-const news = all.filter((a) => a.section !== 'flash');
+// 29.10.2026: the fixed recurring pieces (Shabbat times, weather...) come after the real news in the top cards and headlines
+const news0 = all.filter((a) => a.section !== 'flash');
+const news = [...news0.filter((a) => !a.routine), ...news0.filter((a) => a.routine)];
 const duo = take(news, 2);
 const tlist = take(news, 3);
 // 2. the live feed: official flashes and the newest stories, by time

@@ -21,6 +21,8 @@ export interface Article {
   format?: StoryFormat; formatData?: any;
   /** 29.10.2026: true when the engine marked the story as urgent news for the flashes (hns-feed isFlash) */
   flash?: boolean;
+  /** 29.10.2026: a fixed recurring piece (Shabbat times, weather, weekend guide, day summary); never the home page lead */
+  routine?: boolean;
   // the story's sources as shown in the "מקורות" line (see sourcesOf): official bodies, and media only when the body credits them
   sources?: Source[];
   // 29.10.2026 (management panel): the photo credit given by hand (extras.image_credit), and the links of a sponsored article (extras.links)
@@ -127,6 +129,7 @@ function fromFeed(s: any): any {
     extras: extrasOf(s),
     ...formatOf(s),
     flash: s?.flash === true,
+    routine: s?.routine === true,
     sources: sourcesOf(s.sources, (s.body || []).map(clean)),
     imageCredit: clean(s.extras?.image_credit).slice(0, 80),
     links: (Array.isArray(s.extras?.links) ? s.extras.links : []).map((l: any) => ({ text: clean(l?.text), url: safeUrl(l?.url) })).filter((l: any) => l.text && l.url).slice(0, 6),
@@ -276,7 +279,8 @@ export function leadOf(all: Article[], ev: SiteEvent | null = EVENT) {
   const pinned = PIN ? all.find((a) => a.slug === `n${PIN.id}` && a.kind !== 'sponsored') : undefined;
   if (pinned) return pinned;
   // 29.10.2026: national stories (section 'national') get their own column and never take the local lead
-  const pool = all.filter((a) => !evSlugs.has(a.slug) && a.kind !== 'sponsored' && a.section !== 'national');
+  // 29.10.2026 (Yakir): fixed recurring pieces (Shabbat times, weather, weekend guide...) never lead either
+  const pool = all.filter((a) => !evSlugs.has(a.slug) && a.kind !== 'sponsored' && a.section !== 'national' && !a.routine);
   const fresh = pool.filter((a) => Date.now() - Date.parse(a.published) < 72 * 3600e3);
   return fresh.find((a) => a.section !== 'flash' && a.kind !== 'opinion') ?? pool.find((a) => a.section !== 'flash' && a.kind !== 'opinion') ?? pool[0] ?? all[0];
 }
