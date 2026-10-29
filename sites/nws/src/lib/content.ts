@@ -247,7 +247,8 @@ export const LIVE: { ok: boolean; at?: string; wave?: number | null; sst?: numbe
  *  The same rule is in the Supabase function hns-img (the lead gets the better AI image). */
 export function leadOf(all: Article[], ev: SiteEvent | null = EVENT) {
   const evSlugs = new Set((ev?.storyIds || []).map((id) => `n${id}`));
-  const pool = all.filter((a) => !evSlugs.has(a.slug) && a.kind !== 'sponsored');
+  // 29.10.2026: national stories (section 'national') get their own column and never take the local lead
+  const pool = all.filter((a) => !evSlugs.has(a.slug) && a.kind !== 'sponsored' && a.section !== 'national');
   const fresh = pool.filter((a) => Date.now() - Date.parse(a.published) < 72 * 3600e3);
   return fresh.find((a) => a.section !== 'flash' && a.kind !== 'opinion') ?? pool.find((a) => a.section !== 'flash' && a.kind !== 'opinion') ?? pool[0] ?? all[0];
 }

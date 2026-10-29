@@ -3,7 +3,7 @@
 // picture of a story without its own image, picked per story so neighbouring stories do not repeat.
 // 28.10.2026: police, transport and health were added (the engine, hns-write v10, fills them). A section without stories is left out
 // of the menu and gets no page until its first story is published (liveSections in lib/content.ts).
-export type SectionKey = 'flash' | 'city' | 'police' | 'realestate' | 'sports' | 'transport' | 'community' | 'health' | 'leisure' | 'sharon' | 'tourism' | 'law';
+export type SectionKey = 'national' | 'flash' | 'city' | 'police' | 'realestate' | 'sports' | 'transport' | 'community' | 'health' | 'leisure' | 'sharon' | 'tourism' | 'law';
 
 export interface Section {
   key: SectionKey; slug: string; color: string; ink: string; soft: string; img: string; photos: string[]; icon: string;
@@ -17,6 +17,13 @@ export const SECTIONS: Section[] = [
     title: 'מבזקים מנתניה: חסימות, עבודות, מים וחשמל',
     desc: 'המבזקים של נתניה והסביבה: חסימות כבישים, עבודות, הפסקות מים וחשמל והודעות דחופות, מתעדכן לאורך היום.',
     intro: 'כל מה שקורה עכשיו בנתניה ובסביבה, בקצרה: חסימות ועבודות כביש, הפסקות מים וחשמל, הודעות של העירייה וגופי החירום.' },
+  // 29.10.2026 (Yakir): national events that concern everyone (elections, war, a national emergency) are covered too, even when
+  // they are not about Netanya. Filled by the engine function hns-national; the section appears with its first story.
+  { key: 'national', slug: 'israel', color: '#1B3A6B', ink: '#142C52', soft: '#E8EEF8', img: 'council', photos: ['council-chamber', 'city-buildings', 'road-aerial'], icon: 'city',
+    name: { he: 'חדשות ארציות', ru: 'Новости Израиля', fr: 'Israël', en: 'Israel' },
+    title: 'חדשות ארציות: בחירות, ביטחון ואירועים שנוגעים לכולם',
+    desc: 'החדשות הארציות החשובות שנוגעות גם לתושבי נתניה והשרון: בחירות, ביטחון, מצבי חירום והחלטות ממשלה, בקצרה ובשפה פשוטה.',
+    intro: 'האירועים הארציים שנוגעים לכולם, בקצרה, בשפה פשוטה ובלי דעות.' },
   { key: 'city', slug: 'city', color: '#5B3FA8', ink: '#4A3290', soft: '#EFEAFA', img: 'council', photos: ['council-chamber', 'city-buildings', 'road-aerial'], icon: 'city',
     name: { he: 'העירייה', ru: 'Мэрия', fr: 'Municipalité', en: 'City Hall' },
     title: 'עיריית נתניה: החלטות, תקציב, שירותים ועבודות',
@@ -76,6 +83,6 @@ export const SECTIONS: Section[] = [
 
 export const SECTION_BY_KEY = Object.fromEntries(SECTIONS.map((s) => [s.key, s])) as Record<SectionKey, Section>;
 /** the main menu, in the order of the approved design (בעלי מקצוע is added by the layout) */
-export const NAV_ORDER: SectionKey[] = ['flash', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'leisure', 'sharon'];
+export const NAV_ORDER: SectionKey[] = ['flash', 'national', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'leisure', 'sharon'];
 /** sections that always have a page, even before their first story (the rest appear with their first story) */
 export const CORE_SECTIONS: SectionKey[] = ['flash', 'city', 'realestate', 'sports', 'community', 'leisure', 'sharon', 'tourism', 'law'];

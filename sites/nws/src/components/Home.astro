@@ -51,7 +51,7 @@ const closures = all.filter((a) => a.closure && (a.closure.until ? a.closure.unt
 const hotline = FACTS?.hotline?.number ?? '106';
 // 4. three section columns: police; city and transport; community and health (or other sections with stories)
 const groups: { keys: SectionKey[]; title: string }[] = [
-  { keys: ['police'], title: 'משטרה ופלילים' }, { keys: ['city', 'transport'], title: 'העירייה ותחבורה' }, { keys: ['community', 'health'], title: 'קהילה ובריאות' },
+  { keys: ['national'], title: 'חדשות ארציות' }, { keys: ['police'], title: 'משטרה ופלילים' }, { keys: ['city', 'transport'], title: 'העירייה ותחבורה' }, { keys: ['community', 'health'], title: 'קהילה ובריאות' },
   { keys: ['sharon'], title: 'השרון' }, { keys: ['tourism'], title: 'חופים ותיירות' }, { keys: ['law'], title: 'חוק ומשפט' }, { keys: ['realestate'], title: 'נדל״ן ותכנון' }];
 const sportsAll = all.filter((a) => a.section === 'sports');
 const reAll = all.filter((a) => a.section === 'realestate');
