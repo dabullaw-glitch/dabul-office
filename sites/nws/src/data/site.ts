@@ -38,10 +38,10 @@ export const IMG: Record<string, { src: string; small: string; name: string; alt
 
 export const abs = (path: string) => SITE_URL + path;
 
-// Social channels (28.10.2026). The Telegram channel "חדשות נתניה והשרון" was created on 28.10.2026; it becomes public
+// Social channels (28.10.2026). The Telegram channel "חדשות נתניה והשרון" was created on 28.10.2026 and became public on 29.10.2026
 // with the address below. While TG_USER is empty the site links to /join/ and says the link is coming.
 // Set TG_USER (without @) once the channel is public, and every Telegram button on the site goes straight to it.
-export const TG_USER = '';
+export const TG_USER = 'nws_netanya';
 export const TG_URL = TG_USER ? `https://t.me/${TG_USER}` : '';
 // Profiles that represent the site (used in schema.org sameAs). Facebook page id 61595887595391.
 export const SAME_AS = [TG_URL, 'https://www.facebook.com/profile.php?id=61595887595391'].filter(Boolean);
