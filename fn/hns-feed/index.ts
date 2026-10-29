@@ -72,6 +72,19 @@ async function flashes(all = false) {
   });
   return [...auto, ...manual].sort((a: Any, b: Any) => Date.parse(b.at) - Date.parse(a.at)).slice(0, all ? 60 : 15);
 }
+// 29.10.2026 (Yakir approved): which published stories are flashes. In: police and crime, accidents and injuries, road closures and
+// traffic changes, water and power outages, public warnings, election results, and urgent national news. Out: the fixed recurring
+// pieces (Shabbat times, daily weather, weekend guide, events of the week, day summary), culture and leisure, community, real estate,
+// sports, data pieces, blog guides and sponsored content. The site also keeps only the last 24 hours.
+const NO_FLASH_SEC = new Set(['blog', 'leisure', 'community', 'realestate', 'sports', 'tourism', 'law']);
+const URGENT = /נפגע|נפצע|פצוע|פצועים|הרוג|נהרג|נרצח|רצח|תאונ|שריפ|דליק|חסימ|נחסם|נחסמ|ייחסם|ייחסמו|ייסגר|ייסגרו|נסגר|סגירת|הסדרי תנועה|שינויי תנועה|עבודות|הפסק(ת|ות) (מים|חשמל)|אין מים|אין חשמל|אזהר|מזהיר|ריקול|החזרה מהמדפים|אזעק|פיגוע|ירי|דקיר|נדקר|נעצר|עצור|חשוד|כתב אישום|נעדר|חילוץ|לכוד|קרס|קריסת|דליפ|זיהום|חובש|פונה|פונו|החייאה|תגובה אלרגית|תוצאות הבחירות|ספירת|מנדטים|שיעור ההצבעה|אחוז ההצבעה|שביתה|מתקפ|טיל|יירוט|רעידת אדמה/;
+function isFlash(s: Any) {
+  if (s.kind === 'sponsored' || s.kind === 'opinion' || s.format) return false;
+  if (/^auto:|hns-recurring|hns-data/.test(String(s.notes || ''))) return false;
+  if (NO_FLASH_SEC.has(s.section)) return false;
+  if (s.section === 'flash' || s.section === 'police' || (s.closure && typeof s.closure === 'object')) return true;
+  return URGENT.test(`${s.title || ''} ${s.dek || ''}`);
+}
 async function calendar() {
   const { data } = await sb.from('hns_cal').select('id,source_id,title,starts_at,venue,url').gte('starts_at', new Date().toISOString())
     .lte('starts_at', new Date(Date.now() + 45 * 864e5).toISOString()).order('starts_at').limit(120);
@@ -94,7 +107,7 @@ Deno.serve(async (req) => {
   }
   const limit = Math.min(1000, Math.max(1, Number(url.searchParams.get('limit')) || 300));
   const { data, error } = await sb.from('hns_stories')
-    .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure,pub_note,updates,extras,context_ids,service_box,format,format_data')
+    .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure,pub_note,updates,extras,context_ids,service_box,format,format_data,notes')
     .eq('state', 'published').not('published_at', 'is', null)
     .order('published_at', { ascending: false }).limit(limit);
   if (error) return new Response(JSON.stringify({ ok: false, error: 'db' }), { status: 500, headers: H });
@@ -119,7 +132,7 @@ Deno.serve(async (req) => {
       updates: (Array.isArray(s.updates) ? s.updates : []).map((u: Any) => ({ at: u.at, text: clean(u.text) })).filter((u: Any) => u.at && u.text),
       live: (Array.isArray(s.updates) ? s.updates : []).some((u: Any) => Date.now() - Date.parse(u.at) < 6 * 3600e3),
       extras: s.extras && typeof s.extras === 'object' ? Object.fromEntries(Object.entries(s.extras).filter(([k]) => k !== 'hold' && k !== 'manual')) : {},
-      contextIds: (s.context_ids || []).map(Number), serviceBox: cleanJson(s.service_box), format: s.format || null, formatData: cleanJson(s.format_data),
+      contextIds: (s.context_ids || []).map(Number), serviceBox: cleanJson(s.service_box), format: s.format || null, formatData: cleanJson(s.format_data), flash: isFlash(s),
     };
   });
   // stories merged into another one: the site sends their old URL to the main story (301)

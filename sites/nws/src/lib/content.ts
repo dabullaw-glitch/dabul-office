@@ -19,6 +19,8 @@ export interface Article {
   // fields other engine functions add (hns-feed v8 "extras"): background links from our archive and a "מה עושים" service box
   extras?: Extras | null;
   format?: StoryFormat; formatData?: any;
+  /** 29.10.2026: true when the engine marked the story as urgent news for the flashes (hns-feed isFlash) */
+  flash?: boolean;
   // the story's sources as shown in the "מקורות" line (see sourcesOf): official bodies, and media only when the body credits them
   sources?: Source[];
   // 29.10.2026 (management panel): the photo credit given by hand (extras.image_credit), and the links of a sponsored article (extras.links)
@@ -122,6 +124,7 @@ function fromFeed(s: any): any {
     updates: (Array.isArray(s.updates) ? s.updates : []).filter((x: any) => x && x.at && x.text).map((x: any) => ({ at: new Date(x.at).toISOString(), text: clean(x.text) })),
     extras: extrasOf(s),
     ...formatOf(s),
+    flash: s?.flash === true,
     sources: sourcesOf(s.sources, (s.body || []).map(clean)),
     imageCredit: clean(s.extras?.image_credit).slice(0, 80),
     links: (Array.isArray(s.extras?.links) ? s.extras.links : []).map((l: any) => ({ text: clean(l?.text), url: safeUrl(l?.url) })).filter((l: any) => l.text && l.url).slice(0, 6),
