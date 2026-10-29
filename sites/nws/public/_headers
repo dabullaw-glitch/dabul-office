@@ -6,6 +6,9 @@
   Cache-Control: public, max-age=31536000, immutable
 /og/*
   Cache-Control: public, max-age=604800
+# the notifications service worker (29.10.2026): always checked for a new version
+/sw.js
+  Cache-Control: no-cache
 # the directory badge that businesses embed on their own sites (29.10.2026): cached, usable from any site
 /badge/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400

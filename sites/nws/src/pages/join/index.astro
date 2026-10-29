@@ -9,7 +9,9 @@ import { TG_URL, TG_USER } from '../../data/site';
     ? <div class="tgjoin"><img src="/img/brand/telegram.png" alt="" width="72" height="72" loading="lazy"><div><p style="margin:0 0 10px">כל מבזק וכל ידיעה מנתניה והשרון, שורה אחת וקישור לכתבה. אפשר להצטרף מהטלפון או מהמחשב, ולצאת בכל רגע.</p><a class="btn pri" href={TG_URL} target="_blank" rel="noopener" data-tg>להצטרפות לערוץ בטלגרם</a> <span class="note" dir="ltr">@{TG_USER}</span></div></div>
     : <p>כל מבזק וכל ידיעה, שורה אחת וקישור. הקישור לערוץ יופיע כאן עם ההשקה.</p>}
   <style>.tgjoin{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}.tgjoin img{border-radius:50%;flex:0 0 auto}.tgjoin>div{flex:1 1 260px;min-width:0}.tgjoin .btn{text-decoration:none}</style>
-  <h2 id="alerts">התראות בדפדפן</h2><p>מבזקים דחופים בלבד, עד שלושה ביום.</p>
+  <h2 id="alerts">התראות בדפדפן</h2><p>התראה קופצת בטלפון או במחשב כשיש מבזק דחוף בנתניה ובשרון: חסימות, תאונות, הפסקות מים וחשמל ואזהרות. רק מבזקים דחופים, לא יותר משמונה ביום, ובלילה רק במקרה חירום. אפשר לכבות בכל רגע, כאן או בכפתור "התראות" בתחתית כל עמוד.</p>
+  <p><button class="btn pri" type="button" data-push-toggle data-long aria-pressed="false">הפעלת התראות על מבזקים דחופים</button></p>
+  <p class="note">באייפון: מוסיפים קודם את האתר למסך הבית (כפתור השיתוף ואז "הוספה למסך הבית"), פותחים אותו משם ומפעילים את ההתראות.</p>
   <h2 id="newsletter">ניוזלטר שבועי</h2><p>"מה קרה בנתניה השבוע", פעם בשבוע במייל. הניוזלטר עוד לא יצא לדרך: השאירו מייל, ונשלח אליכם כשיתחיל. הסרה בלחיצה.</p>
   <ReqForm type="newsletter" id="nlf" />
 </Page>

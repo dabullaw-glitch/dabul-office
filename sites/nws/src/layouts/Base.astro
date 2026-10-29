@@ -187,7 +187,7 @@ if(c&&c.p)gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',a
     <div><h2>{u.siteH}</h2><ul><li><a href={`${pre}/about/`}>{he ? 'אודות ומערכת' : u.about}</a></li><li><a href="/editorial-policy/">{u.editorial}</a></li><li><a href="/corrections/">{u.corrections}</a></li><li><a href="/advertise/">{u.advertise}</a></li><li><a href="/contact/">{u.contact}</a></li><li><a href="/accessibility/">{u.accessibility}</a></li></ul></div>
   </div>
   {he && <p style="margin:28px 0 0;font-size:12.5px;color:#7E8796">תמונות שמסומנות "תמונה להמחשה" נוצרו בבינה מלאכותית ואינן מתעדות את האירוע. תמונות שמסומנות "צילום אילוסטרציה" לקוחות מספריית צילומים חופשית ואינן מהאירוע. <a href="/editorial-policy/#images" style="text-decoration:underline">מדיניות התמונות</a></p>}
-  <div class="n-fb"><span>© {new Date().getFullYear()} NWS {u.brandName}</span><span><a href="/terms/">{he ? 'תנאי שימוש' : u.terms}</a> · <a href="/privacy/">{u.privacy}</a> · <a href="/accessibility/">{he ? 'נגישות' : u.accessibility}</a> · <button class="lk" type="button" data-ck-open>{he ? 'הגדרות עוגיות' : 'Cookie settings'}</button> · {LANGS.map((l, i) => <>{i > 0 && ' · '}<a href={langHref(l)} lang={l}>{l === 'he' ? 'עברית' : l === 'ru' ? 'Русский' : l === 'fr' ? 'Français' : 'English'}</a></>)}</span></div>
+  <div class="n-fb"><span>© {new Date().getFullYear()} NWS {u.brandName}</span><span><a href="/terms/">{he ? 'תנאי שימוש' : u.terms}</a> · <a href="/privacy/">{u.privacy}</a> · <a href="/accessibility/">{he ? 'נגישות' : u.accessibility}</a> · <button class="lk" type="button" data-ck-open>{he ? 'הגדרות עוגיות' : 'Cookie settings'}</button> · {he && <><button class="lk" type="button" data-push-toggle aria-pressed="false">התראות</button> · </>}{LANGS.map((l, i) => <>{i > 0 && ' · '}<a href={langHref(l)} lang={l}>{l === 'he' ? 'עברית' : l === 'ru' ? 'Русский' : l === 'fr' ? 'Français' : 'English'}</a></>)}</span></div>
 </div></footer>
 </div>
 
@@ -300,6 +300,88 @@ try{set('at',new Intl.DateTimeFormat('he-IL',{timeZone:'Asia/Jerusalem',hour:'2-
 var r='';try{r=document.referrer?new URL(document.referrer).hostname:''}catch(e){}var w=Math.min(screen.width||9999,innerWidth||9999);
 var b=JSON.stringify({p:location.pathname,r:r,d:w<768?'m':w<1100?'t':'d',l:document.documentElement.lang||''});
 if(navigator.sendBeacon&&navigator.sendBeacon(HIT,new Blob([b],{type:'text/plain'})))return;fetch(HIT,{method:'POST',body:b,keepalive:true,mode:'no-cors',credentials:'omit'}).catch(function(){})}catch(e){}})();
+</script>}
+{/* 29.10.2026 (approved by Yakir): free browser notifications for urgent flashes only (edge function nws-push, service worker
+   /sw.js). Never the browser's own prompt right away: a small card asks first, once, after 20 seconds of reading a story or on the
+   second visit, and only after the cookie banner was answered. The browser prompt appears only after "כן, תודיעו לי". "לא עכשיו"
+   hides it for 14 days. On an iPhone, Safari can notify only from a site added to the home screen, so there a one time tip shows
+   how. The footer button "התראות" turns them on or off at any time. Hebrew pages only (the notifications are in Hebrew). */}
+{he && <div class="n-push" id="npush" role="dialog" aria-labelledby="npush-h" aria-describedby="npush-p" hidden>
+  <span class="ic" aria-hidden="true"><Icon name="bell" size={22} sw={2} color="#fff" /></span>
+  <div class="tx">
+    <h2 id="npush-h" data-t-ask>רוצים לקבל התראה על מבזק דחוף בנתניה?</h2>
+    <p id="npush-p" data-msg>רק מבזקים דחופים, בלי ספאם. אפשר לבטל בכל רגע.</p>
+    <div class="bt" data-btns><button class="n-btn red" type="button" data-push-yes>כן, תודיעו לי</button><button class="n-btn line" type="button" data-push-no>לא עכשיו</button></div>
+    <div class="bt" data-ok hidden><button class="n-btn line" type="button" data-push-close>הבנתי</button></div>
+  </div>
+</div>}
+{he && <script is:inline define:vars={{ KEY: 'BJxRa_tfNNHinWk2J84gFmbDbHTnYTK-3dTXPgDhTCFJfatCNaxO05_ORXwlOGWJHf_GM0IbGupUlVVwak7oVl0', API: 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/nws-push' }}>
+(function(){
+var d=document,h=d.documentElement,box=d.getElementById('npush');if(!box)return;
+var LS='nwsPush',DAY=864e5,st={};
+function get(){try{return JSON.parse(localStorage.getItem(LS)||'{}')||{}}catch(e){return{}}}
+function put(o){st=o;try{localStorage.setItem(LS,JSON.stringify(o))}catch(e){}}
+st=get();
+var ua=navigator.userAgent||'',ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+var standalone=navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
+var can=window.isSecureContext&&'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
+var iosTip=ios&&!standalone&&!can;
+var msg=box.querySelector('[data-msg]'),hd=box.querySelector('[data-t-ask]'),btns=box.querySelector('[data-btns]'),okb=box.querySelector('[data-ok]');
+var T={ask:hd.textContent,askP:msg.textContent,
+ tipH:'התראות באייפון',tip:'באייפון אפשר לקבל התראות רק מאתר שנוסף למסך הבית: לוחצים למטה על כפתור השיתוף, בוחרים "הוספה למסך הבית", ואז פותחים את האתר מהמסך הבית ולוחצים בתחתית העמוד על "התראות".',
+ on:'מעולה, נעדכן אתכם רק כשיש מבזק דחוף.',off:'ההתראות כובו. אפשר להפעיל אותן שוב בתחתית העמוד.',blocked:'ההתראות חסומות בדפדפן הזה. כדי לקבל אותן, מאפשרים התראות לאתר בהגדרות הדפדפן.',
+ none:'הדפדפן הזה לא תומך בהתראות. אפשר לקבל את המבזקים בערוץ הטלגרם שלנו.',err:'משהו השתבש ולא הצלחנו להפעיל את ההתראות. נסו שוב מאוחר יותר.',wait:'רגע...'};
+function b64(s){var p=(s+'===').slice(0,s.length+(4-s.length%4)%4).replace(/-/g,'+').replace(/_/g,'/'),b=atob(p),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+function post(o){return fetch(API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(o),credentials:'omit'}).then(function(r){if(!r.ok)throw new Error('api '+r.status);return r.json()})}
+function lift(){h.style.setProperty('--push-h',box.offsetHeight+'px')}
+function show(mode){box.hidden=false;h.classList.add('push-on');
+ if(mode==='ask'){hd.textContent=T.ask;msg.textContent=T.askP;btns.hidden=false;okb.hidden=true}
+ else{hd.textContent=mode==='tip'?T.tipH:'התראות';msg.textContent=mode==='tip'?T.tip:mode;btns.hidden=true;okb.hidden=false}
+ lift();requestAnimationFrame(function(){box.classList.add('in')})}
+function hide(){box.classList.remove('in');box.hidden=true;h.classList.remove('push-on')}
+function note(text,ms){show(text);if(ms)setTimeout(function(){if(msg.textContent===text)hide()},ms)}
+addEventListener('resize',function(){if(!box.hidden)lift()},{passive:true});
+function reg(){return navigator.serviceWorker.register('/sw.js',{scope:'/'}).then(function(){return navigator.serviceWorker.ready})}
+function current(){if(!can)return Promise.resolve(null);return navigator.serviceWorker.getRegistration('/').then(function(r){return r?r.pushManager.getSubscription():null}).catch(function(){return null})}
+var tg=[].slice.call(d.querySelectorAll('[data-push-toggle]'));
+function mark(on){tg.forEach(function(b){b.setAttribute('aria-pressed',on?'true':'false');b.textContent=b.hasAttribute('data-long')?(on?'כיבוי ההתראות':'הפעלת התראות על מבזקים דחופים'):(on?'התראות: פועלות':'התראות')})}
+function subscribe(){
+ if(!can){if(iosTip)show('tip');else note(T.none);return Promise.resolve(false)}
+ if(Notification.permission==='denied'){note(T.blocked);return Promise.resolve(false)}
+ msg.textContent=T.wait;
+ return Notification.requestPermission().then(function(p){
+  if(p!=='granted'){put({s:'no',at:Date.now()});note(p==='denied'?T.blocked:T.off,p==='denied'?0:4000);mark(false);return false}
+  return reg().then(function(r){return r.pushManager.getSubscription().then(function(s){return s||r.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64(KEY)})})})
+   .then(function(s){return post({action:'sub',sub:s.toJSON()})}).then(function(){put({s:'yes',at:Date.now()});mark(true);note(T.on,4500);try{nwsTrack('push_on')}catch(e){}return true})
+ }).catch(function(){note(T.err,6000);return false})}
+function unsubscribe(){return current().then(function(s){if(!s)return;var ep=s.endpoint;return s.unsubscribe().catch(function(){}).then(function(){return post({action:'unsub',endpoint:ep}).catch(function(){})})})
+ .then(function(){put({s:'off',at:Date.now()});mark(false);note(T.off,4500);try{nwsTrack('push_off')}catch(e){}})}
+current().then(function(s){mark(!!s);if(s&&Notification.permission==='granted')post({action:'sub',sub:s.toJSON()}).catch(function(){})});
+tg.forEach(function(b){b.addEventListener('click',function(){current().then(function(s){if(s)unsubscribe();else{show('ask');subscribe()}})})});
+box.querySelector('[data-push-yes]').addEventListener('click',function(){subscribe()});
+box.querySelector('[data-push-no]').addEventListener('click',function(){put({s:'no',at:Date.now()});hide();try{nwsTrack('push_later')}catch(e){}});
+box.querySelector('[data-push-close]').addEventListener('click',hide);
+d.addEventListener('keydown',function(e){if(e.key==='Escape'&&!box.hidden){if(!btns.hidden)put({s:'no',at:Date.now()});hide()}});
+/* when to ask: only once, never while the cookie banner is open, never again for 14 days after "לא עכשיו" */
+if(navigator.webdriver&&!/[?&]pushdemo=1/.test(location.search))return;
+var visits=0;try{visits=Number(localStorage.getItem('nwsVisits')||0);if(!sessionStorage.getItem('nwsVisit')){sessionStorage.setItem('nwsVisit','1');visits++;localStorage.setItem('nwsVisits',String(visits))}}catch(e){}
+function eligible(){
+ if(st.s==='yes'||st.s==='off'||st.s==='shown'&&Date.now()-st.at<14*DAY||st.s==='no'&&Date.now()-st.at<14*DAY)return false;
+ if(iosTip)return !st.tip;
+ if(!can||Notification.permission!=='default')return false;
+ return true}
+if(!eligible())return;
+function consentDone(){var ck=d.getElementById('nck');return !h.classList.contains('ck-on')&&(!ck||ck.hidden)}
+var fired=false;
+function go(){if(fired)return;fired=true;
+ (function wait(){if(!consentDone()){setTimeout(wait,1500);return}
+  current().then(function(s){if(s||!eligible())return;
+   if(iosTip){put({s:st.s||'',at:st.at||0,tip:1});show('tip')}else{put({s:'shown',at:Date.now()});show('ask')}})})()}
+var art=d.getElementById('art-h'),demo=/[?&]pushdemo=1/.test(location.search);
+if(demo)setTimeout(go,300);
+else if(visits>=2)setTimeout(go,4000);
+else if(art){var read=0,last=Date.now(),t=setInterval(function(){var n=Date.now();if(!d.hidden)read+=n-last;last=n;if(read>=20000){clearInterval(t);go()}},1000)}
+})();
 </script>}
 </body>
 </html>

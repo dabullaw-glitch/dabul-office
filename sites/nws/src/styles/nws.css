@@ -516,3 +516,23 @@ main:focus{outline:0}
 
 /* 29.10.2026 (Yakir): on phones the home page has no flashes box, the running ticker at the top is enough */
 @media (max-width: 760px) { .n-live-home { display: none !important; } }
+
+/* 29.10.2026: the notifications card (Base.astro, #npush): a small card at the bottom, above the phone tab bar, never with the cookie banner */
+.n-push{position:fixed;bottom:24px;left:50%;z-index:64;width:min(460px,calc(100% - 32px));transform:translate(-50%,12px);opacity:0;transition:transform .25s ease,opacity .25s ease;display:flex;gap:14px;align-items:flex-start;background:#fff;color:var(--ink);border:1px solid var(--line);border-top:4px solid var(--red);border-radius:12px;box-shadow:0 18px 50px rgba(13,19,33,.25);padding:16px 18px;font-family:var(--f);line-height:1.5}
+.n-push.in{transform:translate(-50%,0);opacity:1}
+.n-push[hidden]{display:none}
+.n-push .ic{flex:none;width:40px;height:40px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center}
+.n-push .tx{flex:1;min-width:0}
+.n-push h2{margin:0 0 4px;font-size:17px;font-weight:800;line-height:1.35}
+.n-push p{margin:0;font-size:14.5px;color:var(--ink2)}
+.n-push .bt{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.n-push .bt[hidden]{display:none}
+.n-push .n-btn{min-height:44px}
+@media (max-width:760px){
+ .n-push{bottom:calc(76px + env(safe-area-inset-bottom));left:10px;right:10px;width:auto;transform:translateY(12px);padding:14px 14px}
+ .n-push.in{transform:none}
+ .n-push .ic{width:34px;height:34px}
+ .n-push .bt .n-btn{flex:1 1 auto;justify-content:center}
+ html.push-on .n-a11y-btn,html.push-on .n-top-btn{bottom:calc(var(--push-h,0px) + 88px)}
+}
+@media print{.n-push{display:none!important}}
