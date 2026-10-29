@@ -55,9 +55,9 @@ const CFG: Record<Ch, { perRun: number; perDay: number; gapMin: number; importan
 };
 
 // same section slugs and fallback as the site (sites/nws/src/data/sections.ts, src/lib/content.ts fromFeed + articleUrl)
-const SLUG: Record<string, string> = { flash: 'flash', city: 'city', realestate: 'real-estate', community: 'community', sports: 'sports',
+const SLUG: Record<string, string> = { flash: 'flash', national: 'israel', city: 'city', realestate: 'real-estate', community: 'community', sports: 'sports',
   leisure: 'events', sharon: 'sharon', tourism: 'tourism', law: 'law', police: 'police', transport: 'transport', health: 'health' };
-const TAG: Record<string, string> = { flash: 'מבזק', city: 'עיריית_נתניה', realestate: 'נדלן_נתניה', community: 'קהילה_וחינוך', sports: 'ספורט',
+const TAG: Record<string, string> = { flash: 'מבזק', national: 'חדשות_ארציות', city: 'עיריית_נתניה', realestate: 'נדלן_נתניה', community: 'קהילה_וחינוך', sports: 'ספורט',
   leisure: 'אירועים', sharon: 'השרון', tourism: 'תיירות', law: 'חוק_ומשפט', police: 'משטרה_ופלילים', transport: 'תחבורה', health: 'בריאות' };
 const sec = (st: Any) => (SLUG[st.section] ? st.section : 'flash');
 const pathOf = (st: Any) => `/${SLUG[sec(st)]}/n${st.id}/`;
@@ -81,6 +81,8 @@ function score(st: Any): { score: number; why: string[] } {
   if (UTIL_RE.test(t)) { n += 60; why.push('הפסקת מים או חשמל'); }
   if (MUNI_RE.test(t)) { n += 50; why.push('החלטה של העירייה או של ועדה'); }
   if (st.sensitivity === 'sensitive' && st.decided_by === 'yakir') { n += 40; why.push('ידיעה רגישה שיקיר אישר'); }
+  // 29.10.2026: national stories (elections, war, security) go to the page too
+  if (sec(st) === 'national') { n += 50; why.push('חדשות ארציות'); }
   if (sec(st) === 'flash') { n += 10; why.push('מבזק'); }
   if (clean(st.title).includes('נתניה')) n += 5;
   return { score: n, why };
@@ -265,7 +267,9 @@ async function fbLink() {
   await setSecret('NWS_FB_STATE', `${state}|${Date.now() + 30 * 60e3}`);
   const u = new URL('https://www.facebook.com/v21.0/dialog/oauth');
   u.searchParams.set('client_id', S.META_APP_ID); u.searchParams.set('redirect_uri', REDIRECT()); u.searchParams.set('state', state);
-  u.searchParams.set('scope', 'pages_show_list,pages_manage_posts,pages_read_engagement'); u.searchParams.set('response_type', 'code');
+  // 29.10.2026: the app uses Facebook Login for Business, which takes a configuration id instead of a scope list. Configuration
+  // "NWS Page Publisher" asks for pages_show_list, pages_manage_posts and pages_read_engagement.
+  u.searchParams.set('config_id', '1147940477892707'); u.searchParams.set('response_type', 'code');
   return { ok: true, url: u.toString(), redirect_uri: REDIRECT(), expires_min: 30 };
 }
 async function fbCallback(url: URL) {
