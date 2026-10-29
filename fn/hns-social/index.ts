@@ -36,7 +36,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 type Any = any;
 const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
 const KEYS = ['CRON_SECRET', 'TELEGRAM_BOT_TOKEN', 'NWS_SOCIAL_LIVE', 'NWS_TG_CHANNEL', 'NWS_FB_PAGE_ID', 'NWS_FB_PAGE_TOKEN', 'NWS_WA_CHANNEL',
-  'GREEN_API_URL', 'GREEN_API_INSTANCE', 'GREEN_API_TOKEN', 'META_APP_ID', 'META_APP_SECRET', 'NWS_FB_STATE'];
+  'GREEN_API_URL', 'GREEN_API_INSTANCE', 'GREEN_API_TOKEN', 'META_APP_ID', 'META_APP_SECRET', 'NWS_FB_STATE', 'TELEGRAM_CHAT_ID'];
 let S: Record<string, string> = {};
 async function secrets() {
   const { data } = await sb.from('app_secrets').select('k,v').in('k', KEYS);
@@ -315,6 +315,75 @@ async function fbCallback(url: URL) {
   return page('הדף חובר', `<p>הדף "${esc(p.name)}" חובר לאתר החדשות. הפרסום בפועל יתחיל רק אחרי שיופעל המתג הראשי.</p>`);
 }
 
+// ---------- weekly report to Yakir (29.10.2026, approved) ----------
+// Every Sunday at 09:00 Israel time (cron 06:02 and 07:02 UTC, runs only at 09:xx in Israel), one short Telegram message to Yakir
+// about the 7 days that ended on Saturday: stories published (local, national, recurring formats), site visits from our own counter
+// (hns_hits), where visitors came from, Telegram and Facebook followers (read from the platforms), and push subscribers.
+// A line whose number cannot be read is left out (never guessed). Sent once a week (docs coll 'nwsreport', id = the Sunday).
+// {action:'weekly_report', force?, dry?}: dry returns the text without sending.
+const ilYmd = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
+const nf = (n: number) => new Intl.NumberFormat('he-IL').format(n);
+const REF_NAME: Record<string, string> = { google: 'גוגל', facebook: 'פייסבוק', telegram: 'טלגרם', bing: 'בינג', instagram: 'אינסטגרם', whatsapp: 'וואטסאפ', twitter: 'אקס', yahoo: 'יאהו', duckduckgo: 'דאקדאקגו' };
+function refName(h: string) {
+  const x = String(h || '').toLowerCase().replace(/^www\./, '');
+  if (!x || /nws\.co\.il|nws-site/.test(x)) return '';
+  for (const k of Object.keys(REF_NAME)) if (x.includes(k) || (k === 'telegram' && /^t\.me$/.test(x)) || (k === 'facebook' && /^(l\.|m\.)?fb\.|^lm\.facebook/.test(x))) return REF_NAME[k];
+  return x;
+}
+async function weeklyReport(b: Any) {
+  const c = ilClock();
+  const now = new Date();
+  const wd = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' })).getDay();
+  if (!b.force && !(wd === 0 && Math.floor(c.hm / 60) === 9)) return { skipped: `not Sunday 09:xx in Israel (${c.day})` };
+  const id = c.day;
+  if (!b.force && !b.dry) { const { data: had } = await sb.from('docs').select('id').eq('coll', 'nwsreport').eq('id', id).maybeSingle(); if (had) return { skipped: 'already sent', id }; }
+  // the 7 days that ended yesterday (Sunday to Saturday), and the 7 before them
+  const days = (k: number) => Array.from({ length: 7 }, (_, i) => ilYmd(new Date(now.getTime() - (k + 7 - i) * 864e5)));
+  const w1 = days(0), w0 = days(7);
+  const from = new Date(now.getTime() - 7 * 864e5 - 12 * 3600e3).toISOString();
+  const lines: string[] = [];
+  const dm = (y: string) => `${Number(y.slice(8))}.${Number(y.slice(5, 7))}`;
+  lines.push(`📊 חדשות נתניה והשרון, השבוע שעבר (${dm(w1[0])} עד ${dm(w1[6])})`);
+  const { data: st } = await sb.from('hns_stories').select('section,format,kind,published_at').eq('state', 'published').gte('published_at', from).limit(5000);
+  const inW = (st || []).filter((x: Any) => w1.includes(ilYmd(new Date(x.published_at))));
+  if (inW.length) {
+    const nat = inW.filter((x: Any) => x.section === 'national').length;
+    const fmt = inW.filter((x: Any) => x.format && x.section !== 'national').length;
+    const other = inW.filter((x: Any) => ['blog', 'sponsored'].includes(x.section) || ['sponsored', 'opinion'].includes(x.kind)).length;
+    const local = inW.length - nat - fmt - other;
+    lines.push(`ידיעות: ${nf(inW.length)} (${nf(local)} מקומיות, ${nf(nat)} ארציות, ${nf(fmt)} פורמטים קבועים${other ? `, ${nf(other)} בלוג, טורים ותוכן שיווקי` : ''})`);
+  }
+  const { data: hits } = await sb.from('hns_hits').select('day,ref_host,views,entries').gte('day', w0[0]).lte('day', w1[6]).limit(20000);
+  if (hits && hits.length) {
+    const sum = (ds: string[], f: 'views' | 'entries') => hits.filter((h: Any) => ds.includes(String(h.day))).reduce((a: number, h: Any) => a + (Number(h[f]) || 0), 0);
+    const e1 = sum(w1, 'entries'), v1 = sum(w1, 'views'), e0 = sum(w0, 'entries');
+    if (e1 || v1) lines.push(`כניסות לאתר: ${nf(e1)} (צפיות בעמודים: ${nf(v1)})${e0 ? `. בשבוע שלפניו: ${nf(e0)}` : ''}`);
+    const by: Record<string, number> = {};
+    for (const h of hits) if (w1.includes(String(h.day))) { const n = refName(h.ref_host); if (n) by[n] = (by[n] || 0) + (Number(h.entries) || 0); }
+    const top = Object.entries(by).filter(([, n]) => n > 0).sort((a, z) => z[1] - a[1]).slice(0, 3);
+    if (top.length) lines.push(`הגיעו בעיקר מ: ${top.map(([k, n]) => `${k} (${nf(n)})`).join(', ')}`);
+  }
+  const fol: string[] = [];
+  if (S.TELEGRAM_BOT_TOKEN && S.NWS_TG_CHANNEL) {
+    const r = await fetch(`https://api.telegram.org/bot${S.TELEGRAM_BOT_TOKEN}/getChatMemberCount?chat_id=${encodeURIComponent(S.NWS_TG_CHANNEL)}`, { signal: AbortSignal.timeout(10000) }).then((x) => x.json()).catch(() => null);
+    if (r?.ok && Number.isFinite(Number(r.result))) fol.push(`טלגרם ${nf(Number(r.result))}`);
+  }
+  if (S.NWS_FB_PAGE_ID && S.NWS_FB_PAGE_TOKEN) {
+    const r = await fetch(`${FB}/${S.NWS_FB_PAGE_ID}?fields=followers_count,fan_count&access_token=${encodeURIComponent(S.NWS_FB_PAGE_TOKEN)}`, { signal: AbortSignal.timeout(10000) }).then((x) => x.json()).catch(() => null);
+    const n = Number(r?.followers_count ?? r?.fan_count);
+    if (r && !r.error && Number.isFinite(n)) fol.push(`פייסבוק ${nf(n)}`);
+  }
+  if (fol.length) lines.push(`עוקבים: ${fol.join(', ')}`);
+  const { count } = await sb.from('nws_push_subs').select('id', { count: 'exact', head: true }).lt('fails', 3);
+  if (typeof count === 'number') lines.push(`נרשמים להתראות בטלפון: ${nf(count)}`);
+  const text = lines.join('\n');
+  if (b.dry) return { dry: true, text };
+  const r = await fetch(`https://api.telegram.org/bot${S.TELEGRAM_BOT_TOKEN}/sendMessage`, { method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ chat_id: S.TELEGRAM_CHAT_ID, text, disable_web_page_preview: true }), signal: AbortSignal.timeout(15000) }).then((x) => x.json()).catch((e) => ({ ok: false, description: String(e) }));
+  if (r?.ok) await sb.from('docs').upsert({ coll: 'nwsreport', id, data: { text, sentAt: new Date().toISOString() } }, { onConflict: 'coll,id' });
+  return { sent: !!r?.ok, error: r?.ok ? undefined : r?.description, text };
+}
+
 Deno.serve(async (req) => {
   await secrets();
   const url = new URL(req.url);
@@ -328,6 +397,7 @@ Deno.serve(async (req) => {
     if (b.action === 'tick') return J({ ok: true, ...(await run({ dry: !!b.dry })) });
     if (b.action === 'preview') return J({ ok: true, ...(await run({ dry: true, preview: true, all: !!b.all })) });
     if (b.action === 'fb_link') return J(await fbLink());
+    if (b.action === 'weekly_report') return J({ ok: true, ...(await weeklyReport(b)) });
     if (b.action === 'status') {
       const dayStart = ilDayStart();
       const { data } = await sb.from('hns_social_log').select('channel,mode,status').gte('at', dayStart);
