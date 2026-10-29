@@ -13,7 +13,7 @@ const data = DATA[slug!];
 const items: Entry[] = data.items;
 const areas = [...new Set(items.map((i) => i.area).filter(Boolean))] as string[];
 const kinds = [...new Set(items.map((i) => i.kind).filter(Boolean))] as string[];
-const maps = (e: Entry) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${e.name} ${e.address || ''} נתניה`)}`;
+const maps = (e: Entry) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.lat && e.lon ? `${e.lat},${e.lon}` : `${e.name} ${e.address || ''} נתניה`)}`;
 const tel = (p: string) => p.replace(/[^\d*+]/g, '');
 const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
 const fmtD = (d?: string) => (d ? d.split('-').reverse().join('.') : '');
@@ -34,7 +34,7 @@ const ld = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: cat.h
       <div class="hd"><h2>{e.name}</h2>{e.kind && <span class="g-kind" style={`--c:${cat.color}`}>{e.kind}</span>}</div>
       {e.area && <p class="g-area">{e.area}</p>}
       <dl>
-        {e.address && <div><dt><Icon name="pin" size={16} /><span class="sr">כתובת</span></dt><dd><a href={maps(e)} target="_blank" rel="noopener nofollow">{e.address}</a></dd></div>}
+        {(e.address || (e.lat && e.lon)) && <div><dt><Icon name="pin" size={16} /><span class="sr">כתובת</span></dt><dd><a href={maps(e)} target="_blank" rel="noopener nofollow">{e.address ? `${e.address}${/נתניה/.test(e.address) ? '' : ', נתניה'}` : 'מיקום במפה'}</a></dd></div>}
         {e.phone && <div><dt><Icon name="phone" size={16} /><span class="sr">טלפון</span></dt><dd><a href={`tel:${tel(e.phone)}`} dir="ltr" class="num">{e.phone}</a></dd></div>}
         {e.hours && <div><dt><Icon name="clock" size={16} /><span class="sr">שעות</span></dt><dd>{e.hours}</dd></div>}
         {e.website && <div><dt><Icon name="link" size={16} /><span class="sr">אתר</span></dt><dd><a href={e.website} target="_blank" rel="noopener nofollow" dir="ltr">{host(e.website)}</a></dd></div>}

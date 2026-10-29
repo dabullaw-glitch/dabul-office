@@ -2,7 +2,7 @@
 // Each list category has a file src/data/city/<slug>.json: { checked, note?, items: Entry[] }. Every item keeps its source
 // (an official page, data.gov.il or OpenStreetMap) and only facts that source states. A category without items is not
 // shown in the menu and gets no page. Categories with href point to an existing live page of the site.
-export type Entry = { name: string; kind?: string; area?: string; address?: string; phone?: string; hours?: string; website?: string; notes?: string; source?: string; srcName?: string };
+export type Entry = { name: string; kind?: string; area?: string; address?: string; phone?: string; hours?: string; website?: string; notes?: string; source?: string; srcName?: string; lat?: number | null; lon?: number | null };
 export type Cat = { slug: string; name: string; h1?: string; icon: string; intro: string; href?: string; color: string; img?: string; filter?: boolean };
 export const CATS: Cat[] = [
   { slug: 'service-centers', name: 'תשלומים ומוקדי שירות', icon: 'calc', color: '#6D3FC0', intro: 'איפה משלמים ארנונה ומים, ואיפה מקבלים שירות מהעירייה ומתאגיד המים.' },

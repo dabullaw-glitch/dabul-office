@@ -1,0 +1,264 @@
+{
+ "checked": "2026-10-29",
+ "items": [
+  {
+   "name": "אום חאלד / שכונת אום חאלד",
+   "area": "מזרח העיר",
+   "notes": "על אדמות הכפר אום חאלד; השקמה העתיקה ברחוב מינץ",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "אוסישקין",
+   "area": "צפון העיר",
+   "notes": "שכונה ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "אופק הים",
+   "area": "דרום העיר",
+   "notes": "שכונה חדשה במתחם נת/542; שמות חסידי אומות עולם",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "בית ישראל",
+   "area": "צפון העיר",
+   "notes": "שכונה ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "בן ציון",
+   "area": "מרכז העיר",
+   "notes": "שכונה ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "גבעת האירוסים",
+   "area": "דרום העיר",
+   "notes": "שכונת יוקרה (משנת 2006); סמוכה לרמת פולג ושמורת האירוסים",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "גלי הים",
+   "area": "מרכז העיר",
+   "notes": "ע\"י החוף הצפוני",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "גן ברכה",
+   "area": "",
+   "notes": "תת-שכונה של נאות הרצל",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "מכבי",
+   "area": "צפון העיר",
+   "notes": "שכונת מגורים ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "מכנס משה",
+   "area": "מרכז העיר",
+   "notes": "שכונה ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "מרכז העיר",
+   "area": "מרכז העיר",
+   "notes": "כיכר העצמאות; הוותיק והמרכזי; מסחר ובידור",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "נאות גנים",
+   "area": "מזרח העיר",
+   "notes": "שכונה ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "נאות הרצל",
+   "area": "מזרח העיר",
+   "notes": "איחוד 4 שכונות: שיכון סלע, גן ברכה, עמידר, רמת הרצל",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "נאות שקד",
+   "area": "דרום העיר",
+   "notes": "הוקמה 1964; שמה היה \"אזורים\"; עולים ממרוקו וברה\"מ",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "נווה איתמר",
+   "area": "צפון העיר",
+   "notes": "שכונה ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "נווה גולדה (קריית נורדאו)",
+   "area": "דרום העיר",
+   "notes": "הוקמה ב-1950 כ\"דיור לעולה\"; הורחבה ב-60 ושמה שונה ל\"קריית נורדאו\" ע\"ש מקס נורדאו",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "נווה עוז",
+   "area": "מזרח העיר",
+   "notes": "שכונה ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "עין התכלת",
+   "area": "מרכז העיר",
+   "notes": "שכונה ותיקה ליד החוף",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "עיר ימים",
+   "area": "דרום העיר",
+   "notes": "שכונה חדשה (בנייה משנות ה-2000); קניון עיר ימים; חוף פולג",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "עמידר",
+   "area": "",
+   "notes": "תת-שכונה של נאות הרצל; שיכוני עולים",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "פרדס הגדוד",
+   "area": "צפון העיר",
+   "notes": "הוקמה 1928 ע\"י יוצאי הגדודים העבריים; חווה חקלאית; צורפה לנתניה ב-1948",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "קריית השרון",
+   "area": "מזרח העיר",
+   "notes": "שכונה גדולה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "קריית עובד",
+   "area": "מזרח העיר",
+   "notes": "שכונת פועלים",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "קריית צאנז",
+   "area": "",
+   "notes": "שכונה חרדית; מרכז חסידות צאנז; הוקמה ב-15 במרץ 1955 ע\"י האדמו\"ר מצאנז",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "קריית רבין",
+   "area": "מזרח העיר",
+   "notes": "שכונה ע\"ש יצחק רבין",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "רמת אפרים",
+   "area": "צפון העיר",
+   "notes": "שכונה ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "רמת הרצל",
+   "area": "",
+   "notes": "תת-שכונה של נאות הרצל",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "רמת התשבי",
+   "area": "מרכז העיר",
+   "notes": "שכונה ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "רמת חן",
+   "area": "מרכז העיר",
+   "notes": "שכונה ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "רמת ידין (\"שיכון דורה\")",
+   "area": "דרום העיר",
+   "notes": "ע\"ש יגאל ידין; השיכון הראשון בדרום; הוקם על מחנה אלכסנדרוני הבריטי",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "רמת פולג (פולג הישנה)",
+   "area": "דרום העיר",
+   "notes": "שכונה הדרומית; ווילות ישנות; לאנשי קבע ונכי צה\"ל",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "רמת פולג החדשה (נאות בגין)",
+   "area": "דרום העיר",
+   "notes": "הרחבה משנות ה-90; ע\"ש מנחם בגין; בני 18 קומות + ווילות",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "שיכון הפועל המזרחי",
+   "area": "מרכז העיר",
+   "notes": "שכונה דתית-לאומית ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "שיכון ותיקים",
+   "area": "מרכז העיר",
+   "notes": "שכונה ותיקה",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "שיכון חיילים",
+   "area": "מרכז העיר",
+   "notes": "שיכון לחיילים משוחררים",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "שיכון סלע",
+   "area": "",
+   "notes": "תת-שכונה של נאות הרצל",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  },
+  {
+   "name": "שכונת טוברוק",
+   "area": "מזרח העיר",
+   "notes": "ע\"ש קרב טוברוק",
+   "source": "https://data.gov.il/dataset/data-dictionary-person",
+   "srcName": "מערך הדיגיטל הלאומי, מילון שכונות"
+  }
+ ]
+}
