@@ -3,7 +3,7 @@
 // picture of a story without its own image, picked per story so neighbouring stories do not repeat.
 // 28.10.2026: police, transport and health were added (the engine, hns-write v10, fills them). A section without stories is left out
 // of the menu and gets no page until its first story is published (liveSections in lib/content.ts).
-export type SectionKey = 'national' | 'flash' | 'city' | 'police' | 'realestate' | 'sports' | 'transport' | 'community' | 'health' | 'leisure' | 'sharon' | 'tourism' | 'law';
+export type SectionKey = 'blog' | 'national' | 'flash' | 'city' | 'police' | 'realestate' | 'sports' | 'transport' | 'community' | 'health' | 'leisure' | 'sharon' | 'tourism' | 'law';
 
 export interface Section {
   key: SectionKey; slug: string; color: string; ink: string; soft: string; img: string; photos: string[]; icon: string;
@@ -21,8 +21,8 @@ export const SECTIONS: Section[] = [
   // they are not about Netanya. Filled by the engine function hns-national; the section appears with its first story.
   { key: 'national', slug: 'israel', color: '#1B3A6B', ink: '#142C52', soft: '#E8EEF8', img: 'council', photos: ['council-chamber', 'city-buildings', 'road-aerial'], icon: 'city',
     name: { he: 'חדשות ארציות', ru: 'Новости Израиля', fr: 'Israël', en: 'Israel' },
-    title: 'חדשות ארציות: בחירות, ביטחון ואירועים שנוגעים לכולם',
-    desc: 'החדשות הארציות החשובות שנוגעות גם לתושבי נתניה והשרון: בחירות, ביטחון, מצבי חירום והחלטות ממשלה, בקצרה ובשפה פשוטה.',
+    title: 'חדשות ארציות: החלטות, כלכלת המשפחה, ביטחון ואירועים שנוגעים לכולם',
+    desc: 'החדשות הארציות שנוגעות גם לתושבי נתניה והשרון: החלטות ממשלה וכנסת, מסים, קצבאות ומחירים, בריאות וחינוך, תחבורה, ביטחון ומזג אוויר, בקצרה ובשפה פשוטה.',
     intro: 'האירועים הארציים שנוגעים לכולם, בקצרה, בשפה פשוטה ובלי דעות.' },
   { key: 'city', slug: 'city', color: '#5B3FA8', ink: '#4A3290', soft: '#EFEAFA', img: 'council', photos: ['council-chamber', 'city-buildings', 'road-aerial'], icon: 'city',
     name: { he: 'העירייה', ru: 'Мэрия', fr: 'Municipalité', en: 'City Hall' },
@@ -79,10 +79,17 @@ export const SECTIONS: Section[] = [
     title: 'חוק ומשפט בנתניה: פסקי דין והחלטות בשפה פשוטה',
     desc: 'חוק ומשפט בנתניה: פסקי דין והחלטות שנוגעים לתושבים, לתכנון ולעירייה, מוסברים בשפה פשוטה.',
     intro: 'פסקי דין והחלטות שנוגעים לתושבי העיר, בלי שמות של אנשים פרטיים, ובשפה פשוטה.' },
+  // 29.10.2026 (Yakir approved): the blog, long guides that stay useful (arnona, parking, neighborhoods, history), from official sources
+  // only, two a day by the engine function hns-blog from the topic list Yakir approved
+  { key: 'blog', slug: 'blog', color: '#2E6B4F', ink: '#245A41', soft: '#E7F2EC', img: 'beach', photos: ['city-buildings', 'beach-sunset', 'road-aerial'], icon: 'book',
+    name: { he: 'בלוג', ru: 'Блог', fr: 'Blog', en: 'Blog' },
+    title: 'הבלוג של נתניה: מדריכים לתושבים, שכונות והיסטוריה',
+    desc: 'מדריכים מעשיים לתושבי נתניה: ארנונה, חניה, רישום לבתי ספר, השכונות, החופים וההיסטוריה של העיר, לפי מקורות רשמיים.',
+    intro: 'כל מה ששימושי לדעת על החיים בנתניה, בשפה פשוטה ולפי מקורות רשמיים.' },
 ];
 
 export const SECTION_BY_KEY = Object.fromEntries(SECTIONS.map((s) => [s.key, s])) as Record<SectionKey, Section>;
 /** the main menu, in the order of the approved design (בעלי מקצוע is added by the layout) */
-export const NAV_ORDER: SectionKey[] = ['flash', 'national', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'leisure', 'sharon'];
+export const NAV_ORDER: SectionKey[] = ['flash', 'national', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'leisure', 'sharon', 'blog'];
 /** sections that always have a page, even before their first story (the rest appear with their first story) */
 export const CORE_SECTIONS: SectionKey[] = ['flash', 'city', 'realestate', 'sports', 'community', 'leisure', 'sharon', 'tourism', 'law'];

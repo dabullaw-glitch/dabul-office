@@ -42,12 +42,15 @@ const ogImage = a.og || pic.og;
 const abs = (p: string) => (/^https?:/.test(p) ? p : SITE_URL + p);
 // paid or marketing content (kind 'sponsored'): labelled "תוכן שיווקי", schema Article instead of NewsArticle, mini markup in the body
 const sponsored = (a.kind as string) === 'sponsored';
+// 29.10.2026: the blog (section 'blog', long evergreen guides) uses the same small markup as sponsored stories (subheadings, lists, links)
+const blogPost = (a.section as string) === 'blog';
+const rich = sponsored || blogPost;
 // the "מקורות" line: content.ts keeps only official bodies, and media only when the story credits them; never on sponsored stories
 const srcs = sponsored ? [] : (heA.sources || []);
 
 // ---------- structured data (NewsArticle, FAQ, Event; the breadcrumb list is added by Base) ----------
 const jsonld: any[] = [{
-  '@context': 'https://schema.org', '@type': sponsored ? 'Article' : isLive ? 'LiveBlogPosting' : 'NewsArticle', '@id': url + '#article', mainEntityOfPage: url, url,
+  '@context': 'https://schema.org', '@type': sponsored ? 'Article' : blogPost ? 'BlogPosting' : isLive ? 'LiveBlogPosting' : 'NewsArticle', '@id': url + '#article', mainEntityOfPage: url, url,
   headline: a.title.slice(0, 110), description: desc, image: [...new Set([abs(ogImage), abs(pic.src)])], inLanguage: lang,
   datePublished: a.published, dateModified: modified, articleSection: s.name[lang], ...(a.tags.length ? { keywords: a.tags.join(', ') } : {}), wordCount: words,
   author: a.kind === 'opinion' && a.author ? { '@type': 'Person', name: a.author } : { '@type': 'Organization', name: he ? 'מערכת חדשות נתניה והשרון' : 'NWS Desk', url: SITE_URL + '/about/' },
@@ -148,8 +151,8 @@ const sponBlock = (p: string): Block => {
   if (lines.length && lines.every((x) => /^\d+\.\s/.test(x))) return { k: 'ol', html: lines.map((x) => `<li>${inl(x.replace(/^\d+\.\s*/, ''))}</li>`).join('') };
   return { k: 'p', html: lines.map(inl).join('<br>') };
 };
-const linked = sponsored ? [] : linkify(bodyParas, places, lang);
-const blocks: Block[] = sponsored ? bodyParas.map(sponBlock) : bodyParas.map((_p, i) => ({ k: 'p', html: linked[i] }));
+const linked = rich ? [] : linkify(bodyParas, places, lang);
+const blocks: Block[] = rich ? bodyParas.map(sponBlock) : bodyParas.map((_p, i) => ({ k: 'p', html: linked[i] }));
 
 // ---------- related: one inside the text, four in the grid, more from the section in the sidebar ----------
 const rel = related(a, pool, 5);

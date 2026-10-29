@@ -13,6 +13,7 @@ import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
 import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, fmtDay, FACTS, EVENT, IMS, SPORT, FLASHES, CALENDAR, calTime, calVenue, leadOf, readMin, kickerOf, picOf, picLabel, stockPic, stockFor, tableAround, type Article } from '../lib/content';
 import { LISTINGS, countBy } from '../lib/biz';
+import { liveFeed } from '../lib/livefeed';
 import { shabbatTimes } from '../lib/shabbat';
 
 interface Props { lang: Lang }
@@ -20,7 +21,9 @@ const { lang } = Astro.props;
 const u = t(lang); const pre = LANG_PREFIX[lang]; const he = lang === 'he';
 const all0 = articlesFor(lang);
 // sponsored stories never lead, never enter the feed or the lists; at most one appears in its own slot below the directory
-const all = all0.filter((a) => a.kind !== 'sponsored');
+// blog guides (29.10.2026) have their own block, they are not news
+const all = all0.filter((a) => a.kind !== 'sponsored' && (a.section as string) !== 'blog');
+const blogPosts = all0.filter((a) => (a.section as string) === 'blog').slice(0, 3);
 const spon = he ? all0.find((a) => a.kind === 'sponsored') : undefined;
 const S = (k: string) => SECTION_BY_KEY[k as SectionKey];
 const ev = he ? EVENT : null;
@@ -39,11 +42,8 @@ const duo = take(news, 2);
 const tlist = take(news, 3);
 // 2. the live feed: official flashes and the newest stories, by time
 type Feed = { at: string; text: string; href: string; src?: string };
-// 29.10.2026: official flash texts often end with their own "עודכן ב-29/10 09:49"; the box already shows the time
-const tidy = (t: string) => t.replace(/\s*[,.]?\s*עודכן\s*ב?-?\s*\d{1,2}[/.]\d{1,2}(?:[/.]\d{2,4})?(?:\s*,?\s*(?:בשעה\s*)?\d{1,2}:\d{2})?\s*\.?\s*$/, '').trim();
-const feed: Feed[] = [...(he ? FLASHES.map((f) => ({ at: f.at, text: tidy(f.text), href: `/flash/#f${f.id}`, src: f.source })) : []),
-  ...all.slice(0, 20).map((a) => ({ at: a.published, text: a.title, href: articleUrl(a, lang) }))]
-  .sort((x, y) => Date.parse(y.at) - Date.parse(x.at)).filter((x, i, arr) => arr.findIndex((y) => y.text === x.text) === i).slice(0, 20);
+// 29.10.2026: the same list as the side box of the other pages (lib/livefeed.ts)
+const feed: Feed[] = liveFeed(lang, 20);
 const moreList = take(news, 5);
 // 3. services (only with real data)
 const wxDay = IMS?.day && IMS.day.date === todayIl ? IMS.day : null;
@@ -170,6 +170,11 @@ const T = he ? { live: 'עכשיו בנתניה והשרון', liveSub: 'מתע�
       </div>); })}</div>
   </section>)}
 
+  {blogPosts.length > 0 && (
+  <section class="n-sec n-wrap" aria-labelledby="bl-h" style={`--c:${S('blog').color}`}>
+    <h2 class="n-sh" id="bl-h">מדריכים לתושבים<a href={sectionUrl('blog', lang)}>{T.toAll}</a></h2>
+    <div class="n-grid n-g3">{blogPosts.map((a) => <Card a={a} lang={lang} ratio="16/10" dek />)}</div>
+  </section>)}
   {he && <div class="n-wrap"><AdSlot place="home2" /></div>}
   {videos.length > 0 && (
   <section class="n-sec n-wrap" aria-labelledby="vd-h" style="--c:#C8102E">

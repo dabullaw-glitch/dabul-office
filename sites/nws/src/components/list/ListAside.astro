@@ -5,7 +5,8 @@ import '../../styles/list.css';
 import Icon from '../Icon.astro';
 import { LANG_PREFIX, TG_URL, type Lang } from '../../data/site';
 import { t } from '../../i18n/ui';
-import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, FLASHES, type Article } from '../../lib/content';
+import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, type Article } from '../../lib/content';
+import { liveFeed } from '../../lib/livefeed';
 interface Props { lang?: Lang; skip?: string; exclude?: string[]; flashes?: boolean }
 const { lang = 'he', skip = '', exclude = [], flashes = true } = Astro.props;
 const u = t(lang); const he = lang === 'he'; const pre = LANG_PREFIX[lang];
@@ -14,9 +15,8 @@ const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Je
 const todayIl = ilDay(new Date());
 const hot = (iso: string) => Date.now() - Date.parse(iso) < 2 * 3600e3;
 type Feed = { at: string; text: string; href: string; src?: string };
-const feed: Feed[] = !flashes ? [] : [...(he ? FLASHES.map((f) => ({ at: f.at, text: f.text, href: `/flash/#f${f.id}`, src: f.source })) : []),
-  ...all.filter((a) => a.section === 'flash').slice(0, 10).map((a) => ({ at: a.published, text: a.title, href: articleUrl(a, lang) }))]
-  .sort((x, y) => Date.parse(y.at) - Date.parse(x.at)).filter((x, i, arr) => arr.findIndex((y) => y.text === x.text) === i).slice(0, 7);
+// 29.10.2026 (Yakir): the same list as the home page box (lib/livefeed.ts), so both show the newest items
+const feed: Feed[] = !flashes ? [] : liveFeed(lang, 7);
 const skipSet = new Set(exclude);
 const more: Article[] = all.filter((a) => a.section !== skip && a.section !== 'flash' && !skipSet.has(a.slug)).slice(0, 5);
 const L = {
