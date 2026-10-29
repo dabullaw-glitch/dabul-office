@@ -1,0 +1,161 @@
+{
+ "checked": "2026-10-29",
+ "items": [
+  {
+   "name": "מרכז רפואי נתניה",
+   "kind": "מכבי",
+   "address": "שד בנימין 21, נתניה",
+   "phone": "09-8605252",
+   "hours": "א'-ה' 08:00-19:00; ו'-ש' סגור",
+   "website": "https://www.maccabi4u.co.il",
+   "source": "https://serguide.maccabi4u.co.il/heb/medicalcentres/medicalcentressearchresults/medicalcentresinfopage/?ItemKeyIndex=6721CB24648954069DD24DA8E706DB96&RequestId=00000000-0000-0000-0001-000000000212",
+   "notes": "שעות כלליות של המרכז; שעות שירותים ספציפיים (משרד, מעבדה, אחיות) עשויות להיות שונות."
+  },
+  {
+   "name": "מרכז רפואי נתניה עיר ימים",
+   "kind": "מכבי",
+   "address": "דודו דותן 8, נתניה (מרכז פיאנו, קומה 1)",
+   "phone": "09-8868470",
+   "hours": "א'-ד' 08:00-19:00; ה' 08:00-13:00; ו'-ש' סגור",
+   "website": "https://www.maccabi4u.co.il",
+   "source": "https://go.serguide.maccabi4u.co.il/heb/medicalcentres/medicalcentressearchresults/medicalcentresinfopage/?ItemKeyIndex=E9A37B904F472FB6231663C105745E5E&RequestId=00000000-0000-0000-0005-000000000267",
+   "notes": "שעות כלליות של המרכז."
+  },
+  {
+   "name": "מרכז רפואי נתניה צפון",
+   "kind": "מכבי",
+   "address": "דוד המלך 23, נתניה",
+   "phone": "09-8309100",
+   "hours": "א'-ה' 08:00-12:00; ג' גם 16:00-18:00; ו'-ש' סגור",
+   "website": "https://www.maccabi4u.co.il",
+   "source": "https://serguide.maccabi4u.co.il/heb/medicalcentres/medicalcentressearchresults/medicalcentresinfopage/?ItemKeyIndex=DF10FB67ACF26194B3AAC235CCCCF000&RequestId=00000000-0000-0000-0005-000000000107",
+   "notes": "שעות כלליות של המרכז."
+  },
+  {
+   "name": "מרכז רפואי נתניה דרום",
+   "kind": "מכבי",
+   "address": "לבון פנחס 18, נתניה",
+   "phone": "09-8924222",
+   "hours": "א', ג', ד', ה' 08:00-12:00; ב' סגור; ו'-ש' סגור",
+   "website": "https://www.maccabi4u.co.il",
+   "source": "https://serguide.maccabi4u.co.il/heb/medicalcentres/medicalcentressearchresults/medicalcentresinfopage/?ItemKey=kHkU%2FouCR3pK8gUi%2FlMkJKSPHo8UHQ4ClA%2BfjrzYa9702DRsSW88WoZv5IexGBiHpiowWvPEcRY696OdNhSV4Q%3D%3D",
+   "notes": "שעות כלליות של המרכז."
+  },
+  {
+   "name": "מרכז רפואי נתניה קריית השרון",
+   "kind": "מכבי",
+   "address": "שד לנטוס טום 26, נתניה",
+   "phone": "09-8924222",
+   "hours": "א' 07:00-21:00; ב' 07:00-20:00; ג' 07:00-19:30; ד'-ה' 07:00-20:00; ו'-ש' סגור",
+   "website": "https://www.maccabi4u.co.il",
+   "source": "https://serguide.maccabi4u.co.il/heb/medicalcentres/medicalcentressearchresults/medicalcentresinfopage/?ItemKeyIndex=D2A0AB08753A7B8555406085657B2D28&RequestId=00000000-0005-0000-0000-000000000197",
+   "notes": "שעות כלליות של המרכז."
+  },
+  {
+   "name": "נתניה פולג",
+   "kind": "מכבי",
+   "address": "אמנון ותמר 6, נתניה",
+   "phone": "09-7447322",
+   "hours": "א'-ה' 08:00-19:00; ו'-ש' סגור",
+   "website": "https://www.maccabi4u.co.il",
+   "source": "https://serguide.maccabi4u.co.il/heb/medicalcentres/medicalcentressearchresults/medicalcentresinfopage/?ItemKeyIndex=6BB7F1FBA0B8500063EE7398763E94D9&RequestId=00000000-0000-0000-0005-000000000211",
+   "notes": "שעות כלליות של המרכז."
+  },
+  {
+   "name": "מכבי נתניה, מוקד רפואה דחופה מבוגרים",
+   "kind": "מוקד רפואה דחופה (מכבי)",
+   "address": "שד בנימין 21, נתניה, קומה 3",
+   "phone": "09-8605252",
+   "hours": "א'-ה' 19:00-22:30; ו' 15:00-21:30; ש' 15:30-22:00",
+   "website": "https://www.maccabi4u.co.il",
+   "source": "https://serguide.maccabi4u.co.il/heb/urgenttreatment/urgenttreatmentsearchresults/urgenttreatmentinfopage/?ItemKeyIndex=3DFF6F3ED74A6BB7232FF5CC09136A70&RequestId=00000000-0000-0000-0008-000000000026",
+   "notes": "מוקד למבוגרים של מכבי."
+  },
+  {
+   "name": "מוקד מכבי ללא הפסקה",
+   "kind": "מוקד טלפוני (מכבי)",
+   "phone": "3555*",
+   "hours": "מוקד אחיות 24/7 כולל שבת וחג; מוקד מידע וזימון: א'-ה' 07:00-21:00, ו' וערבי חג 07:00-13:00, מוצ\"ש ומוצאי חג עד 23:00",
+   "website": "https://www.maccabi4u.co.il",
+   "source": "https://www.maccabi4u.co.il/contact-us/call_center/32732/moked-maccabi-non-stop/",
+   "notes": "מחו\"ל: +972-3-5143999. במצב מסכן חיים - מד\"א 101 או חדר מיון."
+  },
+  {
+   "name": "נתניה לב העיר",
+   "kind": "לאומית",
+   "address": "שטמפפר 17, נתניה",
+   "phone": "09-8607222",
+   "hours": "א' 08:00-15:45; ב' 08:00-12:45; ג' 08:00-12:45 ו-16:00-18:45; ד' 08:00-12:45; ה' 08:00-15:45; ו' 08:00-11:45; ש' סגור",
+   "website": "https://www.leumit.co.il",
+   "source": "https://www.leumit.co.il/medicalcenterssearch/medicalcenterssearchresults/medicalcenter/?medicalCenterTypeId=1&branchNum=6&subBranchNum=1",
+   "notes": "פקס 09-8607219. במרכז: בית מרקחת לאומית, מיון נשים, מוקד חרום, מעבדה, רנטגן, אולטרסאונד ועוד."
+  },
+  {
+   "name": "לאומית, ייעוץ רפואי טלפוני 24/7",
+   "kind": "מוקד טלפוני (לאומית)",
+   "phone": "507* / 1-700-507507",
+   "hours": "24 שעות ביממה כולל שבתות וחגים, ללא עלות",
+   "website": "https://www.leumit.co.il",
+   "source": "https://www.leumit.co.il/leumit-for-you/off-hours-emergency-medicine/",
+   "notes": "בחירת 'מוקד ייעוץ רפואי' בתפריט. ביקור רופא בבית (נטלי): 1700-505066 או 9101*, בימי חול 19:00-07:00, ובערבי שבת וחג מ-14:00."
+  },
+  {
+   "name": "מאוחדת נתניה (סמילנסקי)",
+   "kind": "מאוחדת",
+   "address": "סמילנסקי 20, נתניה",
+   "website": "https://www.meuhedet.co.il",
+   "source": "https://www.meuhedet.co.il/media/7192/%D7%9E%D7%97%D7%95%D7%96-%D7%9E%D7%A8%D7%9B%D7%96.pdf"
+  },
+  {
+   "name": "מאוחדת קרית השרון",
+   "kind": "מאוחדת",
+   "address": "שד' טום לנטוס 26 נתניה",
+   "website": "https://www.meuhedet.co.il",
+   "source": "https://www.meuhedet.co.il/media/7192/%D7%9E%D7%97%D7%95%D7%96-%D7%9E%D7%A8%D7%9B%D7%96.pdf"
+  },
+  {
+   "name": "מאוחדת עיר ימים",
+   "kind": "מאוחדת",
+   "address": "דודו דותן 10 נתניה",
+   "website": "https://www.meuhedet.co.il",
+   "source": "https://www.meuhedet.co.il/media/7192/%D7%9E%D7%97%D7%95%D7%96-%D7%9E%D7%A8%D7%9B%D7%96.pdf"
+  },
+  {
+   "name": "מוקד מאוחדת",
+   "kind": "מוקד טלפוני (מאוחדת)",
+   "phone": "3833*",
+   "hours": "24/7",
+   "website": "https://www.meuhedet.co.il",
+   "source": "https://www.meuhedet.co.il/%D7%9E%D7%99%D7%93%D7%A2-%D7%9C%D7%9C%D7%A7%D7%95%D7%97/%D7%99%D7%A6%D7%99%D7%A8%D7%AA-%D7%A7%D7%A9%D7%A8-%D7%9E%D7%90%D7%95%D7%97%D7%93%D7%AA/",
+   "notes": "מחו\"ל: +972-77-2703833. מאוחדת מפעילה גם רפואה דחופה מקוונת 24/7. המוקד הקרוב של מאוחדת עצמה ברשימה הרשמית הוא בחדרה (ויוה, תרנ\"א 20)."
+  },
+  {
+   "name": "טרם נתניה",
+   "kind": "מוקד רפואה דחופה (טרם)",
+   "address": "יהושע שטמפפר 17, נתניה (בתוך לאומית, קומה 3)",
+   "phone": "1-599-520-520",
+   "hours": "א', ב', ה' 19:00-00:00; ג' 19:30-00:00; ד' 16:00-00:00; ו' 13:00-00:00; ש' 09:00-00:00",
+   "website": "https://www.terem.com",
+   "source": "https://www.terem.com/clinic/netanya/?lang=en",
+   "notes": "השתתפות עצמית משתנה לפי קופת החולים."
+  },
+  {
+   "name": "ביקורופא, מוקד לרפואה דחופה נתניה",
+   "kind": "מוקד רפואה דחופה (ביקורופא)",
+   "address": "רחוב גיבורי ישראל 24, קומה 2 (בניין \"בית רעים\")",
+   "phone": "09-7890803",
+   "hours": "א'-ה' 18:00-23:30; ו' וערבי חג 14:00-22:00; שבתות וחגים 14:00-24:00",
+   "website": "https://www.bikurofe.co.il",
+   "source": "https://www.bikurofe.co.il/kfar-3/"
+  },
+  {
+   "name": "מגן דוד אדום, חירום",
+   "kind": "חירום",
+   "phone": "101",
+   "hours": "24/7",
+   "source": "https://www.maccabi4u.co.il/contact-us/call_center/32732/moked-maccabi-non-stop/",
+   "notes": "במצב מסכן חיים מתקשרים למד\"א 101 או פונים לחדר מיון (כך מנחה מוקד מכבי)."
+  }
+ ],
+ "note": "במצב מסכן חיים: מד״א 101 או חדר מיון."
+}

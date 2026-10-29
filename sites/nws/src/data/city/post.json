@@ -1,0 +1,228 @@
+{
+ "checked": "2026-10-29",
+ "items": [
+  {
+   "name": "היחידה המרכזית נתניה (630)",
+   "kind": "סניף דואר",
+   "address": "הרצל 59 נתניה",
+   "phone": "171",
+   "hours": "א' 08:00-18:00; ב' 08:00-15:00; ג' 08:00-18:00; ד' 08:00-15:00; ה' 08:00-15:00; ו'-ש' סגור",
+   "website": "https://doar.israelpost.co.il/branch/630",
+   "source": "https://doar.israelpost.co.il/branch/630",
+   "notes": "יש להזמין תור מראש. פקס 076-8156309."
+  },
+  {
+   "name": "פולג (476)",
+   "kind": "סניף דואר",
+   "address": "אמנון ותמר 6 נתניה (קניון רמת פולג)",
+   "phone": "171",
+   "hours": "א'-ג' 08:00-15:00; ד' 13:00-18:00; ה' 08:00-14:00; ו'-ש' סגור",
+   "website": "https://doar.israelpost.co.il/branch/476",
+   "source": "https://doar.israelpost.co.il/branch/476",
+   "notes": "יש להזמין תור מראש. פקס 09-8855011."
+  },
+  {
+   "name": "חנות הסלולר \"נתניה צפון\" (633)",
+   "kind": "סניף דואר",
+   "address": "גולומב 1 נתניה",
+   "phone": "171",
+   "hours": "א'-ה' 10:00-18:00; ו' 09:00-13:00; ש' סגור",
+   "website": "https://doar.israelpost.co.il/branch/633",
+   "source": "https://doar.israelpost.co.il/branch/633",
+   "notes": "יש להזמין תור מראש."
+  },
+  {
+   "name": "סמילנסקי (636)",
+   "kind": "סניף דואר",
+   "address": "סמילנסקי 8 נתניה",
+   "phone": "171",
+   "hours": "א' 08:00-18:00; ב' 08:00-14:00; ג' 08:00-16:00; ד' 08:00-14:00; ה' 08:00-16:00; ו'-ש' סגור",
+   "website": "https://doar.israelpost.co.il/branch/636",
+   "source": "https://doar.israelpost.co.il/branch/636",
+   "notes": "יש להזמין תור מראש. פקס 076-8156363."
+  },
+  {
+   "name": "שכון ותיקים (638)",
+   "kind": "סניף דואר",
+   "address": "ויתקין 53 נתניה",
+   "phone": "171",
+   "hours": "א' 08:30-15:00; ב' 08:30-14:30; ג' 10:00-18:00; ד' סגור; ה' 08:30-16:30; ו' 08:30-12:00; ש' סגור",
+   "website": "https://doar.israelpost.co.il/branch/638",
+   "source": "https://doar.israelpost.co.il/branch/638",
+   "notes": "יש להזמין תור מראש. פקס 09-8627874."
+  },
+  {
+   "name": "אזור תעשיה נורדאו (655)",
+   "kind": "סניף דואר",
+   "address": "יד חרוצים 11 נתניה",
+   "phone": "171",
+   "hours": "א'-ד' 08:00-15:00; ה' 08:00-14:00 ו-17:00-18:00; ו'-ש' סגור",
+   "website": "https://doar.israelpost.co.il/branch/655",
+   "source": "https://doar.israelpost.co.il/branch/655",
+   "notes": "יש להזמין תור מראש. פקס 09-8853911."
+  },
+  {
+   "name": "שכונת אזורים נתניה (627)",
+   "kind": "מרכז מסירה (איסוף בלבד)",
+   "address": "קריניצי 19 נתניה (שכ' אזורים)",
+   "phone": "09-8652952",
+   "hours": "א' 14:00-18:00; ב' 08:00-12:00; ג' 14:00-18:00; ד' 08:00-12:00; ה' 14:00-18:00; ו' 08:00-12:00; ש' סגור",
+   "website": "https://doar.israelpost.co.il/branch/627",
+   "source": "https://doar.israelpost.co.il/branch/627",
+   "notes": "איסוף דברי דואר בלבד."
+  },
+  {
+   "name": "שוק פירות וירקות (2524)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "ד\"ר אבו שדיד אברהם 17 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "זול פה (2530)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "ספיר יוסף 9 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "אם בי מארקט (2537)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "דיזנגוף 12 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "טריפל מרקט (2544)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "קצנלסון יצחק 24 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "פיצה מאמה מיה (2549)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "האר\"י 12 נתניה (פינת חותם סופר)",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "שליחים נתניה (2550)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "הפלדה 8 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "הקולה (2567)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "המחקר 2 נתניה (ליד רמי לוי)",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "מינימרקט אושר (2601)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "סנש חנה 1 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "מינימרקט צמח (2615)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "ארלוזורוב 22 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "מינימרקט ממוקה (2627)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "פינס 8 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "אולטרה פון (2643)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "הנביאים 1 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "חנות החיות של יוסי (2675)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "ברקת ראובן 6 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "מורל פלוס איסוף חבילות (2896)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "האוניברסיטה 1 נתניה (מרכז דוד)",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "מינימרקט לוזון (2913)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "ז'בוטינסקי 2 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "טנג'יר (3506)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "יחזקאל 15 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "ברג הספקה טכנית (3569)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "פנקס דוד 15 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "סופר פארם ק. השרון (3589)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "שד לנטוס טום 60 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "אביב בקר (3611)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "שוהם 24 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  },
+  {
+   "name": "קליית חממה נתניה (3629)",
+   "kind": "נקודת איסוף חבילות",
+   "address": "גבורי ישראל 11 נתניה",
+   "website": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "source": "https://doar.israelpost.co.il/locatebranch?cid=%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "notes": "נקודת איסוף בלבד (לא סניף מלא)."
+  }
+ ],
+ "note": "הטלפון של דואר ישראל לכל הסניפים הוא 171. נקודות המסירה בחנויות פועלות לפי שעות החנות."
+}

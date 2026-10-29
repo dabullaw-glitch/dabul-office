@@ -64,3 +64,14 @@ for r in n['records']:
     hoods.append({'name': name, 'area': f'{area} העיר' if area else '', 'notes': '; '.join(parts), 'source': n['url'], 'srcName': 'מערך הדיגיטל הלאומי, מילון שכונות'})
 hoods.sort(key=lambda x: x['name'])
 save('neighborhoods', hoods)
+
+# libraries: Ministry of Culture list of public libraries
+lb = load('daea8017-f845-49db-ac7b-7823bf9a4135')
+libs = []
+for r in lb['records']:
+    if r.get('שם היישוב') != 'נתניה': continue
+    addr = clean(r.get('כתובת הספרייה')).replace('ספריה עירונית, ', '').replace('רח ', '')
+    addr = re.sub(r',?\s*נתניה\s*\d*$', '', addr)
+    libs.append({'name': 'הספרייה העירונית נתניה', 'kind': 'ספרייה ציבורית', 'address': addr, 'phone': clean(r.get('טלפון')), 'website': clean(r.get('אתר אינטרנט')),
+                 'source': lb['url'], 'srcName': 'משרד התרבות, רשימת הספריות הציבוריות'})
+save('libraries', libs, 'הספרייה המרכזית של נתניה לפי רשימת משרד התרבות. רשימת הסניפים בשכונות תתווסף אחרי בדיקה מול העירייה.')

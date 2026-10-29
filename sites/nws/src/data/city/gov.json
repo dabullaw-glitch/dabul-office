@@ -1,0 +1,186 @@
+{
+ "checked": "2026-10-29",
+ "items": [
+  {
+   "name": "ביטוח לאומי, סניף נתניה",
+   "kind": "ביטוח לאומי",
+   "address": "רחוב הרצל 68, נתניה (מיקוד 4239226)",
+   "phone": "*6050 / 04-8812345",
+   "hours": "קבלת קהל: א', ג', ה' 08:30-13:00. מוקד טלפוני: א'-ה' 08:00-17:00",
+   "website": "https://www.btl.gov.il/snifim/Pages/Netanya.aspx",
+   "source": "https://www.btl.gov.il/snifim/Pages/Netanya.aspx",
+   "notes": "שירות מנציג הסניף בתיאום תור מראש. חניה בתשלום בקניון השרון."
+  },
+  {
+   "name": "מרשם ודרכונים, נתניה (רשות האוכלוסין וההגירה)",
+   "kind": "רשות האוכלוסין",
+   "address": "שדרות בן צבי 18 נתניה",
+   "phone": "*3450",
+   "hours": "א', ב', ג', ה' 08:00-12:00; ב' ו-ד' גם 14:30-17:00",
+   "website": "https://www.gov.il/he/government-service-branches/netania_piba-registration-and-passports",
+   "source": "https://www.gov.il/he/government-service-branches/netania_piba-registration-and-passports",
+   "notes": "דרכון ותעודת זהות בזימון תור בלבד. תשלום בכרטיס אשראי בלבד. פקס 02-6469555. לשכת אשרות, מעמד ואזרחות של רשות האוכלוסין נמצאת באותה כתובת."
+  },
+  {
+   "name": "שירות התעסוקה, לשכת נתניה",
+   "kind": "שירות התעסוקה",
+   "address": "בן צבי 18, נתניה",
+   "phone": "077-2718800",
+   "hours": "א', ג', ד', ה': 08:30-10:30 פגישות למוזמנים בתיאום מראש, 10:30-13:00 קבלת קהל כללית; ב' 08:30-13:00 קבלת קהל כללית",
+   "website": "https://www.taasuka.gov.il/he/about/employmentoffices/netanya/",
+   "source": "https://www.taasuka.gov.il/he/about/employmentoffices/netanya/",
+   "notes": "מענה טלפוני א'-ה' 08:00-16:00. מוקד שירות לקוחות *9687. שעות לנוער: ב', ד' 11:30-12:30."
+  },
+  {
+   "name": "פקיד שומה נתניה (מס הכנסה)",
+   "kind": "רשות המסים",
+   "address": "שדרות בן צבי 18 נתניה",
+   "phone": "074-7616928",
+   "hours": "ב', ד', ה' 08:30-13:00; ב', ד' גם 15:00-18:00",
+   "website": "https://www.gov.il/he/government-service-branches/tax-office-assessor-netanya",
+   "source": "https://www.gov.il/he/government-service-branches/tax-office-assessor-netanya"
+  },
+  {
+   "name": "מע\"מ נתניה",
+   "kind": "רשות המסים",
+   "address": "שדרות בן צבי 18 נתניה, קומה 8",
+   "hours": "ב', ד', ה' 08:30-13:00; ב', ד' גם 15:00-18:00",
+   "website": "https://www.gov.il/he/government-service-branches/vat-netanya",
+   "source": "https://www.gov.il/he/government-service-branches/vat-netanya",
+   "notes": "בזימון תור בלבד."
+  },
+  {
+   "name": "מיסוי מקרקעין נתניה",
+   "kind": "רשות המסים",
+   "address": "קריית הממשלה, שדרות בן צבי 18 נתניה",
+   "phone": "074-7616814",
+   "hours": "ב', ד' 08:30-13:00 ו-15:00-18:00",
+   "website": "https://www.gov.il/he/government-service-branches/real-estate-taxation-netanya",
+   "source": "https://www.gov.il/he/government-service-branches/real-estate-taxation-netanya",
+   "notes": "בזימון תור בלבד."
+  },
+  {
+   "name": "משרד הרישוי נתניה",
+   "kind": "משרד התחבורה",
+   "address": "שדרות בן צבי 18 נתניה, קומה 11",
+   "hours": "א'-ה' 08:00-13:00; ג' גם 15:30-17:30",
+   "website": "https://www.gov.il/he/government-service-branches/licence-bureau-netanya",
+   "source": "https://www.gov.il/he/government-service-branches/licence-bureau-netanya",
+   "notes": "כניסה בזימון תור מראש ב-GoVisit בלבד (בעלי תעודת פטור מתור לא נדרשים לתור)."
+  },
+  {
+   "name": "לשכת רישום מקרקעין (טאבו) נתניה",
+   "kind": "משרד המשפטים",
+   "address": "שד' בן צבי 18 נתניה, קומה 4, קריית הממשלה",
+   "phone": "*8653",
+   "hours": "א', ד' 08:30-12:30, בזימון תור מראש בלבד",
+   "website": "https://www.gov.il/he/government-service-branches/moj_land_registration_netanya",
+   "source": "https://www.gov.il/he/government-service-branches/moj_land_registration_netanya",
+   "notes": "מענה טלפוני א'-ה' 08:00-16:00 (שלוחה 1). פקס 02-6467988."
+  },
+  {
+   "name": "לשכת ההוצאה לפועל, נתניה",
+   "kind": "רשות האכיפה והגבייה",
+   "address": "שדרות בן צבי 18 נתניה, קומה 2",
+   "phone": "*35592 / 073-2055000",
+   "hours": "א', ב', ד', ה' 08:30-13:30; ג' 08:30-11:00",
+   "website": "https://www.gov.il/he/government-service-branches/execution_chamber_natanya",
+   "source": "https://www.gov.il/he/government-service-branches/execution_chamber_natanya",
+   "notes": "פגישה עם נציג בזימון תור מראש בלבד. גזברות ההוצאה לפועל נתניה: פינסקר 18 נתניה."
+  },
+  {
+   "name": "בית משפט השלום, נתניה",
+   "kind": "בית משפט",
+   "address": "רחוב הרצל 57 נתניה",
+   "phone": "077-2703333 (מוקד המידע והשירות הארצי)",
+   "hours": "מזכירות (כולל אישורי תצהירים ואפוסטיל): א'-ה' 08:30-13:30",
+   "website": "https://www.gov.il/he/government-service-branches/magistrates_courts_reception_of_the_public_netanya",
+   "source": "https://www.gov.il/he/government-service-branches/magistrates_courts_reception_of_the_public_netanya",
+   "notes": "פקס 074-7937834. באותה כתובת פועלים גם בית המשפט לנוער ובית המשפט לתביעות קטנות."
+  },
+  {
+   "name": "בית המשפט לעניינים מקומיים, נתניה",
+   "kind": "בית משפט",
+   "address": "רחוב הרצל 57 נתניה",
+   "phone": "077-2703333 (מוקד המידע והשירות הארצי)",
+   "hours": "מזכירות: א'-ה' 08:30-13:30",
+   "website": "https://www.gov.il/he/government-service-branches/local_affairs_court_reception_of_the_public_netanya",
+   "source": "https://www.gov.il/he/government-service-branches/local_affairs_court_reception_of_the_public_netanya",
+   "notes": "פקס 074-7937835. בפגרות סוכות ופסח אין קבלת קהל."
+  },
+  {
+   "name": "בית הדין לתעבורה נתניה",
+   "kind": "בית משפט",
+   "address": "שד' בן צבי 18 נתניה, קריית הממשלה, קומה 4",
+   "phone": "*2317",
+   "hours": "ג', ה' 09:00-13:00, בזימון תור מראש",
+   "website": "https://www.gov.il/he/government-service-branches/traffic-court-netanya",
+   "source": "https://www.gov.il/he/government-service-branches/traffic-court-netanya",
+   "notes": "קבלת הקהל מיועדת לסיוע טכני בהגשת ערר מקוון. מענה טלפוני א'-ה' 08:00-16:00."
+  },
+  {
+   "name": "בית הדין הרבני האזורי נתניה",
+   "kind": "בית דין רבני",
+   "address": "בן צבי 18 נתניה, קומה 3",
+   "phone": "*5889",
+   "hours": "א'-ה' 08:30-13:30 (פרט לערבי חג ומועדים)",
+   "website": "https://www.gov.il/he/government-service-branches/netanya1",
+   "source": "https://www.gov.il/he/government-service-branches/netanya1",
+   "notes": "פקס 09-8613225."
+  },
+  {
+   "name": "לשכת בריאות נפת השרון, נתניה",
+   "kind": "משרד הבריאות",
+   "address": "שד' בן צבי 18 נתניה, קרית הממשלה",
+   "website": "https://www.gov.il/he/government-service-branches/health_bureau_netanya",
+   "source": "https://www.gov.il/he/government-service-branches/health_bureau_netanya",
+   "notes": "לכל מחלקה בלשכה שעות קבלה שונות. דוא\"ל info@nty.health.gov.il."
+  },
+  {
+   "name": "תחנת שירות ייעוץ לאזרח (שי\"ל), נתניה",
+   "kind": "משרד הרווחה",
+   "address": "תל חי 8 נתניה",
+   "phone": "09-8621118",
+   "hours": "א'-ה' 09:00-12:00",
+   "website": "https://www.gov.il/he/government-service-branches/molsa-consultation-service-netanya",
+   "source": "https://www.gov.il/he/government-service-branches/molsa-consultation-service-netanya",
+   "notes": "טלפונים נוספים: 09-8603335, 09-8851339."
+  },
+  {
+   "name": "משרד העלייה והקליטה, מרחב נתניה",
+   "kind": "משרד העלייה והקליטה",
+   "address": "שדרות בן צבי 18 נתניה, קריית הממשלה, קומה 9",
+   "phone": "03-9733333",
+   "hours": "א', ב', ד', ה' 08:30-13:30; ב', ד' גם 15:00-18:00",
+   "website": "https://www.gov.il/he/government-service-branches/aliyah_and_integration_netania",
+   "source": "https://www.gov.il/he/government-service-branches/aliyah_and_integration_netania"
+  },
+  {
+   "name": "הרשות לזכויות ניצולי השואה, מרכז שירות נתניה",
+   "kind": "משרד ממשלתי",
+   "address": "שטמפפר 9 נתניה, מועדון סביונים (קומה 5, מול העירייה, מעל בנק לאומי)",
+   "hours": "ימי ה' בתאריכים שנקבעו מראש, 09:00-13:00",
+   "website": "https://www.gov.il/he/government-service-branches/branch_info_netanya",
+   "source": "https://www.gov.il/he/government-service-branches/branch_info_netanya"
+  },
+  {
+   "name": "תחנת משטרה נתניה",
+   "kind": "משטרה",
+   "address": "רחוב נחמה וינר 6, רמת ידין, נתניה",
+   "phone": "09-8864444",
+   "website": "https://www.gov.il/he/pages/police_cetnral_district_station?chapterIndex=2",
+   "source": "https://www.gov.il/he/pages/police_cetnral_district_station?chapterIndex=2",
+   "notes": "חירום: 100. פקס 09-7697872."
+  },
+  {
+   "name": "כבאות והצלה, תחנה אזורית נתניה",
+   "kind": "כבאות והצלה",
+   "address": "דרך הרכבת 1, נתניה (מיקוד 4260101)",
+   "phone": "102 (חירום)",
+   "website": "https://www.gov.il/he/pages/fire_stations_telephones",
+   "source": "https://www.gov.il/he/pages/fire_stations_telephones",
+   "notes": "הכתובת מפורסמת לפניות מנהליות בלבד."
+  }
+ ],
+ "note": "בחגים ובפגרות שעות הקבלה משתנות. כדאי לבדוק לפני ההגעה ולקבוע תור כשאפשר."
+}

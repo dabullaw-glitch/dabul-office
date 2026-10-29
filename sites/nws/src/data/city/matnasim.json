@@ -1,0 +1,131 @@
+{
+ "checked": "2026-10-29",
+ "items": [
+  {
+   "name": "מרכז קהילתי מזרח נתניה (ע\"ר)",
+   "kind": "רשת מרכזים קהילתיים (עמותה)",
+   "area": "מזרח נתניה",
+   "address": "עובדיה אברהם הכהן 33, נתניה",
+   "phone": "09-8619911",
+   "website": "https://matnasgan.org.il/",
+   "source": "https://matnasgan.org.il/%D7%A6%D7%A8%D7%95-%D7%A7%D7%A9%D7%A8/",
+   "notes": "פקס 09-8617418. סניפים: נאות גנים, נווה איתמר, קריית השרון, היכל התרבות ספי ריבלין, רמת חן, חפציבה, רבין."
+  },
+  {
+   "name": "מרכז קהילתי נאות גנים",
+   "kind": "מרכז קהילתי",
+   "area": "נאות גנים",
+   "address": "רחוב עובדיה אברהם 33, שכונת נאות גנים, נתניה",
+   "phone": "09-8619911",
+   "hours": "א'-ה' 7:30-16:00",
+   "website": "https://matnasgan.org.il/",
+   "source": "https://matnasgan.org.il/88",
+   "notes": "חלק ממרכז קהילתי מזרח נתניה."
+  },
+  {
+   "name": "מרכז קהילתי נווה איתמר",
+   "kind": "מרכז קהילתי",
+   "area": "נווה איתמר",
+   "address": "משמר הירדן 16, נתניה",
+   "phone": "09-8619911",
+   "hours": "א', ב', ג', ד' 17:00-19:00",
+   "website": "https://matnasgan.org.il/",
+   "source": "https://matnasgan.org.il/90",
+   "notes": "חלק ממרכז קהילתי מזרח נתניה."
+  },
+  {
+   "name": "מרכז קהילתי קריית השרון",
+   "kind": "מרכז קהילתי",
+   "area": "קריית השרון",
+   "address": "שדרות טום לנטוס 31, נתניה",
+   "phone": "09-8619911",
+   "hours": "א'-ה' 9:00-20:00",
+   "website": "https://matnasgan.org.il/",
+   "source": "https://matnasgan.org.il/85",
+   "notes": "חלק ממרכז קהילתי מזרח נתניה."
+  },
+  {
+   "name": "היכל התרבות \"ספי ריבלין\"",
+   "kind": "היכל תרבות",
+   "area": "קריית השרון",
+   "address": "שדרות טום לנטוס 31, נתניה",
+   "phone": "09-8619911",
+   "hours": "א'-ה' 8:00-20:00, ו'-ש' סגור",
+   "website": "https://matnasgan.org.il/",
+   "source": "https://matnasgan.org.il/87",
+   "notes": "מופעל על ידי מרכז קהילתי מזרח נתניה."
+  },
+  {
+   "name": "מרכז קהילתי רמת חן",
+   "kind": "מרכז קהילתי",
+   "area": "רמת חן",
+   "address": "רחוב רמב\"ם 25, נתניה",
+   "phone": "09-8619911",
+   "website": "https://matnasgan.org.il/",
+   "source": "https://matnasgan.org.il/89",
+   "notes": "חלק ממרכז קהילתי מזרח נתניה."
+  },
+  {
+   "name": "מרכז קהילתי חפציבה",
+   "kind": "מרכז קהילתי",
+   "phone": "09-8619911",
+   "website": "https://matnasgan.org.il/",
+   "source": "https://matnasgan.org.il/91",
+   "notes": "חלק ממרכז קהילתי מזרח נתניה."
+  },
+  {
+   "name": "מרכז קהילתי רבין - בית הגיל הרך",
+   "kind": "מרכז קהילתי / גיל רך",
+   "area": "עמליה (קריית רבין)",
+   "address": "רחוב נרי יצחק 1, שכונת עמליה, נתניה",
+   "phone": "09-8619911",
+   "hours": "א'-ה' 8:30-16:45",
+   "website": "https://matnasgan.org.il/",
+   "source": "https://matnasgan.org.il/92",
+   "notes": "חלק ממרכז קהילתי מזרח נתניה."
+  },
+  {
+   "name": "רשת המרכזים הקהילתיים מרכז צפון נתניה",
+   "kind": "רשת מרכזים קהילתיים",
+   "area": "מרכז וצפון נתניה",
+   "address": "נחום 35, נתניה",
+   "phone": "09-8356845",
+   "website": "https://www.cnnc.org.il/",
+   "source": "https://www.cnnc.org.il/page.php?type=contactUs",
+   "notes": "מרכזים: דורה (רמת ידין), נאות הרצל, גל ים, בית גינסבורג לגיל הרך, צהרונים."
+  },
+  {
+   "name": "מרכז קהילתי דורה",
+   "kind": "מרכז קהילתי",
+   "area": "רמת ידין (דורה)",
+   "address": "נחום 35, נתניה",
+   "phone": "09-8356845",
+   "website": "https://www.cnnc.org.il/",
+   "source": "https://www.cnnc.org.il/page.php?type=matClass&id=25&m=552&bc=AC2"
+  },
+  {
+   "name": "מרכז קהילתי נאות הרצל",
+   "kind": "מרכז קהילתי",
+   "area": "נאות הרצל",
+   "phone": "09-8356845",
+   "website": "https://www.cnnc.org.il/",
+   "source": "https://www.cnnc.org.il/page.php?type=matClass&id=22&m=552&bc=AC3"
+  },
+  {
+   "name": "מרכז קהילתי גל ים",
+   "kind": "מרכז קהילתי",
+   "phone": "09-8356845",
+   "website": "https://www.cnnc.org.il/",
+   "source": "https://www.cnnc.org.il/",
+   "notes": "אין כתובת. הטלפון הוא של הרשת."
+  },
+  {
+   "name": "בית גינסבורג המרכז לגיל הרך",
+   "kind": "מרכז לגיל הרך",
+   "phone": "09-8356845",
+   "website": "https://www.cnnc.org.il/",
+   "source": "https://www.cnnc.org.il/page.php?type=matClass&id=23&m=552&bc=AC4",
+   "notes": "חלק מרשת מרכז צפון נתניה."
+  }
+ ]
+}

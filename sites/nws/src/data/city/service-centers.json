@@ -1,0 +1,82 @@
+{
+ "checked": "2026-10-29",
+ "items": [
+  {
+   "name": "מוקד עירוני 106",
+   "kind": "מוקד עירוני",
+   "phone": "106 / 09-8604400",
+   "hours": "24 שעות ביממה, כל ימות השנה",
+   "website": "https://www.netanya.muni.il/CityHall/ServicesInnovation/Pages/CallCenter.aspx",
+   "source": "https://www.netanya.muni.il/CityHall/ServicesInnovation/Pages/CallCenter.aspx",
+   "notes": "ווטסאפ: 052-6333106. מטפל במפגעים, תברואה, תאורה, פרצי מים וביוב, רמזורים ועוד."
+  },
+  {
+   "name": "מרכז שירות לתושב, עיריית נתניה",
+   "kind": "קבלת קהל עירונית",
+   "address": "הצורן 2, קומה 1, נתניה",
+   "phone": "09-8604400 שלוחה 3 (או 106 שלוחה 3)",
+   "hours": "קבלת קהל: א'-ה' 08:30-11:30, יום ד' גם 16:30-18:30. מענה טלפוני: א' אין; ב'-ג' 11:30-13:30; ד'-ה' 11:30-12:30",
+   "website": "https://www.netanya.muni.il/CityHall/ServicesInnovation/Pages/ServiceCenter.aspx",
+   "source": "https://www.netanya.muni.il/CityHall/ServicesInnovation/Pages/ServiceCenter.aspx",
+   "notes": "מפגש בתיאום מראש (זימון תור): פניות הציבור, חופש המידע, תווי חניה, כרטיס תושב. לא ניתנים במרכז שירותי ארנונה. תשלום בכרטיס אשראי בלבד. במקום עמדת שירות עצמי ממשלתית. פקס 09-8870084."
+  },
+  {
+   "name": "ארנונה, מחלקת שירות לקוחות, הנחות וגבייה",
+   "kind": "ארנונה וגבייה",
+   "address": "הצורן 4, קומה 2, מעלית 7, נתניה",
+   "phone": "076-5300943",
+   "hours": "קבלת קהל: א', ב', ד', ה' 08:30-13:00; יום ד' גם 16:30-18:00; יום ג' סגור. מענה טלפוני: א'-ה' 08:00-20:00, ו' 08:00-12:00",
+   "website": "https://www.netanya.muni.il/Residents/Arnona/CSRC/Pages/default.aspx",
+   "source": "https://www.netanya.muni.il/Residents/Arnona/CSRC/Pages/default.aspx",
+   "notes": "פקס 09-8649000. מחלקת שירות לקוחות שומה (חילופי מחזיקים, אישורים לטאבו) פועלת באותה כתובת, באותן שעות ובאותו טלפון."
+  },
+  {
+   "name": "תשלום ארנונה מקוון, עיריית נתניה",
+   "kind": "תשלום מקוון",
+   "website": "https://www.city4u.co.il/PortalServicesSite/cityPay/274000/mislaka/1",
+   "source": "https://www.netanya.muni.il/Residents/Arnona/Pages/default.aspx"
+  },
+  {
+   "name": "מינהל הנדסה, עיריית נתניה",
+   "kind": "הנדסה ורישוי בנייה",
+   "address": "הצורן 6, קומה 1, איזור תעשייה פולג, נתניה",
+   "phone": "09-8603331/2",
+   "hours": "מענה טלפוני 08:00-16:00",
+   "website": "https://www.netanya.muni.il/CityHall/Engineering/Pages/default.aspx",
+   "source": "https://www.netanya.muni.il/CityHall/Engineering/Pages/default.aspx",
+   "notes": "פקס 09-8856307."
+  },
+  {
+   "name": "אגף רישוי עסקים, מכרזים ושילוט, עיריית נתניה",
+   "kind": "רישוי עסקים",
+   "website": "https://www.netanya.muni.il/Business/BLTS/Pages/default.aspx",
+   "source": "https://www.netanya.muni.il/Business/BLTS/Pages/default.aspx"
+  },
+  {
+   "name": "מי נתניה, מחלקת שירות לקוחות וגבייה",
+   "kind": "תאגיד מים",
+   "address": "רחוב המחשב 1, קומת כניסה, אזור התעשייה קרית ספיר, נתניה",
+   "phone": "1-800-20-20-84 (חינם)",
+   "hours": "קבלת קהל: א', ב', ה' 08:30-14:30; ד' 08:30-18:30; ג' אין קבלת קהל. מענה טלפוני: א', ב', ג', ה' 08:00-16:00; ד' 08:00-18:00; ו' 08:00-12:00",
+   "website": "https://www.mei-netanya.co.il",
+   "source": "https://www.meinetanya.co.il/template/default.aspx?CatId=4&PageId=38",
+   "notes": "לקבלת קהל יש להזמין תור דרך myvisit. פקס 077-4703070. דוא\"ל info@mei-netanya.co.il."
+  },
+  {
+   "name": "מי נתניה, מוקד תקלות מים וביוב",
+   "kind": "מוקד תקלות",
+   "phone": "1-800-20-20-84 (חינם)",
+   "hours": "24 שעות ביממה",
+   "website": "https://www.mei-netanya.co.il/template/default.aspx?CatId=5&PageId=43",
+   "source": "https://www.mei-netanya.co.il/template/default.aspx?CatId=5&PageId=43",
+   "notes": "תקלות בצנרת המים, איכות המים ותקלות ביוב."
+  },
+  {
+   "name": "מי נתניה, תשלום חשבון מים",
+   "kind": "תשלום מקוון",
+   "phone": "1-800-20-20-84",
+   "website": "https://www.paybill.co.il/Payment/WaterPayment?p=58",
+   "source": "https://www.mei-netanya.co.il/template/default.aspx?CatId=3&PageId=36"
+  }
+ ]
+}

@@ -1,0 +1,50 @@
+{
+ "checked": "2026-10-29",
+ "items": [
+  {
+   "name": "ער\"ן - עזרה ראשונה נפשית",
+   "kind": "קו חם לתמיכה נפשית",
+   "area": "ארצי (מטה העמותה בנתניה)",
+   "address": "ת\"ד 7137 נתניה 4217002 (כתובת דואר של המטה)",
+   "phone": "1201 (קו חם); מטה: 076-8844400",
+   "hours": "24/7",
+   "website": "https://www.eran.org.il/",
+   "source": "https://www.eran.org.il/",
+   "notes": "צ'אט בוואטסאפ: 052-8451201. מוקד תרומות: 1-700-70-1201."
+  },
+  {
+   "name": "איחוד הצלה",
+   "kind": "ארגון הצלה רפואי מתנדב",
+   "area": "ארצי",
+   "phone": "1221 (מוקד); משרדים: 02-5002020",
+   "website": "https://www.1221.org.il/",
+   "source": "http://1221.org.il//%d7%a6%d7%95%d7%a8-%d7%a7%d7%a9%d7%a8/",
+   "notes": "משרדים: רח' ירמיהו 78, ירושלים."
+  },
+  {
+   "name": "זק\"א",
+   "kind": "ארגון חילוץ והצלה מתנדב",
+   "area": "ארצי",
+   "phone": "1220 (מוקד); משרדים: 02-5015120",
+   "website": "https://zaka.org.il/",
+   "source": "https://zaka.org.il/",
+   "notes": "משרדים: יפו 184, ירושלים."
+  },
+  {
+   "name": "מגן דוד אדום",
+   "kind": "שירותי חירום רפואיים",
+   "area": "ארצי",
+   "phone": "101",
+   "source": "https://www.kolzchut.org.il/he/%D7%9E%D7%92%D7%9F_%D7%93%D7%95%D7%93_%D7%90%D7%93%D7%95%D7%9D_(%D7%9E%D7%93%22%D7%90)"
+  },
+  {
+   "name": "יד שרה",
+   "kind": "השאלת ציוד רפואי ושירותי שיקום",
+   "area": "נתניה והסביבה",
+   "phone": "*6444 / 02-644-4444",
+   "website": "https://yadsarah.org/",
+   "source": "https://yadsarah.org/yad-sarah-dedicates-the-susser-center-for-enhanced-healthcare-and-rehabilitation-services-in-netanya-area/ ; https://yadsarah.org/contact-us/",
+   "notes": "זהו מרכז אזורי לבריאות, שיקום ורווחה, וכולל השאלת ציוד, גינה טיפולית ותוכניות קהילתיות."
+  }
+ ]
+}
