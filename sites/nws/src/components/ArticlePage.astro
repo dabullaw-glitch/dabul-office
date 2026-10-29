@@ -189,7 +189,8 @@ const grid = (inline ? rel.slice(1) : rel).slice(0, 4);
 const usedSlugs = new Set([a.slug, ...rel.map((r) => r.slug)]);
 const more = pool.filter((x) => x.section === a.section && !usedSlugs.has(x.slug)).slice(0, 4);
 // after the second paragraph (never right after a subheading), or after the last block
-const pIdx = blocks.map((b, i) => (b.k === 'p' ? i : -1)).filter((i) => i >= 0);
+// a box never goes between a paragraph and the list it introduces (29.10.2026)
+const pIdx = blocks.map((b, i) => (b.k === 'p' && !['ul', 'ol'].includes(blocks[i + 1]?.k || '') ? i : -1)).filter((i) => i >= 0);
 const alsoAt = inline ? (pIdx[1] ?? blocks.length - 1) + 1 : -1;
 // 29.10.2026: the in-text ad goes after the 4th paragraph (only in a text long enough), away from the "also" box
 const adAt = pIdx.length >= 6 ? (pIdx[3] === alsoAt - 1 ? pIdx[4] : pIdx[3]) : -1;
