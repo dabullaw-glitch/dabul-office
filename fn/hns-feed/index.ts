@@ -81,6 +81,11 @@ const URGENT = /נפגע|נפצע|פצוע|פצועים|הרוג|נהרג|נרצ
 function isFlash(s: Any) {
   if (s.kind === 'sponsored' || s.kind === 'opinion' || s.format) return false;
   if (/^auto:|hns-recurring|hns-data/.test(String(s.notes || ''))) return false;
+  // 29.10.2026 (Yakir): a result of the Maccabi Netanya senior team is a flash too (not youth teams, transfers or previews)
+  if (s.section === 'sports') {
+    const t = `${s.title || ''}`;
+    return /מכבי נתניה/.test(t) && /\d+\s*:\s*\d+|ניצח|הפסיד|סיימה|תיקו|גברה|נוצחה/.test(t) && !/נערים|נוער|ילדים|ילדות|נשים|נערות|עד גיל|U\d|קבוצת המילואים|לפני המשחק|הרכב/.test(t);
+  }
   if (NO_FLASH_SEC.has(s.section)) return false;
   if (s.section === 'flash' || s.section === 'police' || (s.closure && typeof s.closure === 'object')) return true;
   return URGENT.test(`${s.title || ''} ${s.dek || ''}`);
@@ -144,5 +149,8 @@ Deno.serve(async (req) => {
   const pv: Any = pinRow?.v;
   const pin = pv && pv.id && secOf.has(Number(pv.id)) && (!pv.until || Date.parse(pv.until) > nowMs) ? { id: Number(pv.id), until: pv.until || null } : null;
   const [fl, cal] = await Promise.all([flashes(), calendar()]);
-  return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), count: stories.length, stories, event, flashes: fl, calendar: cal, merged, pin }), { headers: H });
+  // 29.10.2026: live service data for the /now/ pages (docs coll 'nwslive', e.g. id 'pharmacy' written by the municipality task)
+  const { data: lv } = await sb.from('docs').select('id,data').eq('coll', 'nwslive');
+  const live = Object.fromEntries((lv || []).map((r: Any) => [r.id, cleanJson(r.data)]));
+  return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), count: stories.length, stories, event, flashes: fl, calendar: cal, merged, pin, live }), { headers: H });
 });
