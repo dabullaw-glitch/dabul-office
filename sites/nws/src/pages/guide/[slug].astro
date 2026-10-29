@@ -1,0 +1,51 @@
+---
+// One category of the city guide "שימושון עירוני" (29.10.2026). Built only for categories that have items in
+// src/data/city/<slug>.json. Every card shows the facts its source states, and the source itself.
+import GuideFrame from '../../components/GuideFrame.astro';
+import Icon from '../../components/Icon.astro';
+import { CATS, DATA, type Entry } from '../../data/city/guide';
+export function getStaticPaths() {
+  return CATS.filter((c) => !c.href && (DATA[c.slug]?.items?.length ?? 0) > 0).map((c) => ({ params: { slug: c.slug } }));
+}
+const { slug } = Astro.params;
+const cat = CATS.find((c) => c.slug === slug)!;
+const data = DATA[slug!];
+const items: Entry[] = data.items;
+const areas = [...new Set(items.map((i) => i.area).filter(Boolean))] as string[];
+const kinds = [...new Set(items.map((i) => i.kind).filter(Boolean))] as string[];
+const maps = (e: Entry) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${e.name} ${e.address || ''} נתניה`)}`;
+const tel = (p: string) => p.replace(/[^\d*+]/g, '');
+const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+const fmtD = (d?: string) => (d ? d.split('-').reverse().join('.') : '');
+const ld = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: cat.h1 || cat.name, numberOfItems: items.length,
+  itemListElement: items.slice(0, 100).map((e, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'Place', name: e.name, ...(e.address ? { address: { '@type': 'PostalAddress', streetAddress: e.address, addressLocality: 'נתניה', addressCountry: 'IL' } } : {}), ...(e.phone ? { telephone: e.phone } : {}) } })) }];
+---
+<GuideFrame title={`${cat.h1 || cat.name}: רשימה מלאה עם כתובות וטלפונים | חדשות נתניה והשרון`} h1={cat.h1 || cat.name} description={`${cat.intro} ${items.length} מקומות, עם כתובת, טלפון ושעות לפי המקור הרשמי.`} path={`/guide/${slug}/`} intro={cat.intro} color={cat.color} icon={cat.icon} current={slug} jsonld={ld} stats={[`<b>${items.length}</b> מקומות`, data.checked ? `נבדק ${fmtD(data.checked)}` : '']}>
+  {data.note && <p class="g-note">{data.note}</p>}
+  {(cat.filter || items.length > 12) && (
+  <div class="g-tools">
+    <label class="g-q"><Icon name="search" size={18} /><input type="search" placeholder="חיפוש לפי שם, רחוב או שכונה" aria-label="חיפוש ברשימה" data-gq></label>
+    {areas.length > 1 && <select data-ga aria-label="סינון לפי שכונה"><option value="">כל השכונות</option>{areas.sort().map((a) => <option>{a}</option>)}</select>}
+    {kinds.length > 1 && <select data-gk aria-label="סינון לפי סוג"><option value="">כל הסוגים</option>{kinds.sort().map((k) => <option>{k}</option>)}</select>}
+    <span class="g-cnt num" data-gc aria-live="polite">{items.length} מקומות</span>
+  </div>)}
+  <ul class="g-list">{items.map((e) => (
+    <li class="g-item" data-a={e.area || ''} data-k={e.kind || ''} data-s={`${e.name} ${e.address || ''} ${e.area || ''} ${e.kind || ''}`.toLowerCase()}>
+      <div class="hd"><h2>{e.name}</h2>{e.kind && <span class="g-kind" style={`--c:${cat.color}`}>{e.kind}</span>}</div>
+      {e.area && <p class="g-area">{e.area}</p>}
+      <dl>
+        {e.address && <div><dt><Icon name="pin" size={16} /><span class="sr">כתובת</span></dt><dd><a href={maps(e)} target="_blank" rel="noopener nofollow">{e.address}</a></dd></div>}
+        {e.phone && <div><dt><Icon name="phone" size={16} /><span class="sr">טלפון</span></dt><dd><a href={`tel:${tel(e.phone)}`} dir="ltr" class="num">{e.phone}</a></dd></div>}
+        {e.hours && <div><dt><Icon name="clock" size={16} /><span class="sr">שעות</span></dt><dd>{e.hours}</dd></div>}
+        {e.website && <div><dt><Icon name="link" size={16} /><span class="sr">אתר</span></dt><dd><a href={e.website} target="_blank" rel="noopener nofollow" dir="ltr">{host(e.website)}</a></dd></div>}
+      </dl>
+      {e.notes && <p class="g-notes">{e.notes}</p>}
+      {e.source && <p class="g-src">מקור: <a href={e.source} target="_blank" rel="noopener nofollow">{e.srcName || host(e.source)}</a></p>}
+    </li>))}</ul>
+  <p class="g-fix">מצאתם פרט שהשתנה? <a href="/contact/">כתבו לנו</a> ונתקן.</p>
+  <script is:inline>
+  (function(){var q=document.querySelector('[data-gq]');if(!q)return;var a=document.querySelector('[data-ga]'),k=document.querySelector('[data-gk]'),c=document.querySelector('[data-gc]'),L=[].slice.call(document.querySelectorAll('.g-item'));
+  function f(){var s=q.value.trim().toLowerCase(),av=a?a.value:'',kv=k?k.value:'',n=0;L.forEach(function(li){var ok=(!s||li.dataset.s.indexOf(s)>-1)&&(!av||li.dataset.a===av)&&(!kv||li.dataset.k===kv);li.hidden=!ok;if(ok)n++});c.textContent=n+' מקומות'}
+  q.addEventListener('input',f);a&&a.addEventListener('change',f);k&&k.addEventListener('change',f)})();
+  </script>
+</GuideFrame>

@@ -10,6 +10,7 @@ import '../styles/nws.css';
 import Icon from '../components/Icon.astro';
 import { SITE_URL, PREVIEW, LANGS, LANG_PREFIX, LANG_LOCALE, LANG_DIR, BRAND, TG_URL, SAME_AS, type Lang } from '../data/site';
 import { t } from '../i18n/ui';
+import { liveCats, guideHref } from '../data/city/guide';
 import { ARTICLES, articlesFor, articleUrl, sectionUrl, placeUrl, placesOf, fmtTime, fmtShort, EVENT, IMS, hebrewDate, FLASHES, navSections, liveSections } from '../lib/content';
 import { PLACES } from '../data/places';
 
@@ -53,6 +54,7 @@ const langName = (l: Lang) => (l === 'he' ? 'עב' : l.toUpperCase());
 const crumbLd = crumbs.length ? [{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: SITE_URL + c.href })) }] : [];
 const ld = [...jsonld, ...crumbLd];
 const nav = navSections();
+const guideCats = liveCats();
 // Sharon localities that have a page (an area page exists once a story mentions the place)
 const sharonAreas = PLACES.filter((p) => p.kind === 'locality' && ARTICLES.some((a) => placesOf(a).some((x) => x.slug === p.slug))).slice(0, 6);
 const tgHref = TG_URL || `${pre}/join/`;
@@ -150,7 +152,9 @@ if(c&&c.a){gtag('consent','update',{analytics_storage:'granted'});nwsLoadGA()}</
   <nav class="n-nav" aria-label={u.sectionsH}><div class="n-wrap">
     <a href={homeHref} aria-current={current === 'home' ? 'page' : undefined}>{L.home}</a>
     {nav.map((s) => <a href={sectionUrl(s.key, lang)} aria-current={current === s.key ? 'page' : undefined}>{s.key === 'flash' && <span class="dot" aria-hidden="true"></span>}{s.name[lang]}</a>)}
-    <a class="more" href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}>{L.pros}</a>
+    {he && guideCats.length > 0 && <details class="n-dd more" data-dd><summary aria-current={current === 'guide' ? 'page' : undefined}>שימושון עירוני<Icon name="chev" size={14} sw={2.4} /></summary>
+      <div class="n-ddm"><b>שימושון עירוני</b>{guideCats.map((c) => <a href={guideHref(c)}>{c.name}</a>)}<a class="all" href="/guide/">כל השימושון ←</a></div></details>}
+    <a class={he && guideCats.length > 0 ? undefined : 'more'} href={`${pre}/directory/`} aria-current={current === 'directory' ? 'page' : undefined}>{L.pros}</a>
   </div></nav></>)}
 </header>
 {!compact && tickerItems.length > 0 && (
@@ -194,7 +198,7 @@ if(c&&c.a){gtag('consent','update',{analytics_storage:'granted'});nwsLoadGA()}</
 <div class="n-menu" id="nmenu" role="dialog" aria-modal="true" aria-label={L.menu} hidden>
   <div class="hd"><b>{L.menu}</b><button class="n-ib" type="button" data-menu-close aria-label={he ? 'סגירה' : 'Close'}><Icon name="close" size={22} /></button></div>
   <form class="n-srch" role="search" action={`${pre}/search/`} method="get" style="width:100%"><Icon name="search" size={18} sw={2} /><label class="sr" for="q2">{u.search}</label><input id="q2" name="q" type="search" placeholder={u.searchPh}></form>
-  <nav aria-label={u.sectionsH}>{liveSections().map((s) => <a href={sectionUrl(s.key, lang)} style={`--c:${s.color}`}><Icon name={s.key} size={18} />{s.name[lang]}</a>)}<a href={`${pre}/directory/`}><Icon name="wrench" size={18} />{L.pros}</a><a href={`${pre}/now/`}><Icon name="sun" size={18} />{u.now}</a>{he && <a href="/netanya/"><Icon name="pin" size={18} />מדריך העיר</a>}</nav>
+  <nav aria-label={u.sectionsH}>{liveSections().map((s) => <a href={sectionUrl(s.key, lang)} style={`--c:${s.color}`}><Icon name={s.key} size={18} />{s.name[lang]}</a>)}<a href={`${pre}/directory/`}><Icon name="wrench" size={18} />{L.pros}</a><a href={`${pre}/now/`}><Icon name="sun" size={18} />{u.now}</a>{he && <a href="/netanya/"><Icon name="pin" size={18} />מדריך העיר</a>}{he && guideCats.length > 0 && <a href="/guide/"><Icon name="list" size={18} />שימושון עירוני</a>}</nav>
   <div class="bt"><a class="n-btn tg" href={tgHref} {...tgAttr} data-tg><Icon name="telegram" size={18} color="#fff" />{he ? 'ערוץ הטלגרם' : 'Telegram'}</a><a class="n-btn line" href={`${pre}/send-news/`}>{u.sendNews}</a><a class="n-btn line" href="/advertise/">{u.advertise}</a></div>
   <div class="lgs">{LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l === 'he' ? 'עברית' : l === 'ru' ? 'Русский' : l === 'fr' ? 'Français' : 'English'}</a>)}</div>
 </div>
@@ -234,6 +238,7 @@ function dialog(box,opener,onClose){var last=null;function keys(e){if(e.key==='E
  function open(){last=d.activeElement;box.hidden=false;if(opener)opener.setAttribute('aria-expanded','true');d.addEventListener('keydown',keys);var f=box.querySelector('button,a[href],input');if(f)f.focus()}
  function close(){box.hidden=true;if(opener)opener.setAttribute('aria-expanded','false');d.removeEventListener('keydown',keys);if(onClose)onClose();if(last&&last.focus)last.focus()}
  return{open:open,close:close,toggle:function(){box.hidden?open():close()}}}
+var dd=d.querySelector('[data-dd]');if(dd){d.addEventListener('click',function(e){if(dd.open&&!dd.contains(e.target))dd.open=false});d.addEventListener('keydown',function(e){if(e.key==='Escape'&&dd.open){dd.open=false;dd.querySelector('summary').focus()}})}
 var mb=d.querySelector('[data-menu]'),mn=d.getElementById('nmenu');if(mb&&mn){var md=dialog(mn,mb);mb.addEventListener('click',md.toggle);mn.querySelector('[data-menu-close]').addEventListener('click',md.close)}
 /* accessibility panel: settings are classes on <html>, saved in localStorage */
 var ab=d.getElementById('na11yb'),ap=d.getElementById('na11y'),A={};try{A=JSON.parse(localStorage.getItem('nwsA11y')||'{}')||{}}catch(e){A={}}

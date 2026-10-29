@@ -480,3 +480,22 @@ main:focus{outline:0}
 .n-fls small{font-size:12px;color:var(--mut);font-weight:700}
 .n-fl .n-lf{border-top:0;background:#EFEFEF;padding:10px 12px 14px}
 @media (max-width:760px){.n-fl{margin-inline:0;border-radius:22px}.n-fls{max-height:520px}}
+/* 29.10.2026: the "שימושון עירוני" dropdown in the section bar (the panel hangs from .n-nav, so the scrolling row does not clip it) */
+.n-nav{position:relative}
+.n-dd{flex:none;display:flex}
+.n-dd.more{margin-right:auto}
+.n-dd summary{list-style:none;display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:50px;font-weight:800;font-size:15.5px;white-space:nowrap;cursor:pointer;background:#B85A2E;color:#fff}
+.n-dd summary::-webkit-details-marker{display:none}
+.n-dd summary svg{transition:transform .15s}
+.n-dd[open] summary svg{transform:rotate(180deg)}
+.n-ddm{position:absolute;top:100%;left:max(16px,calc((100% - 1240px)/2));z-index:60;width:300px;max-width:calc(100vw - 32px);background:#fff;border:1px solid var(--line);box-shadow:0 14px 34px rgba(13,19,33,.16);display:flex;flex-direction:column;max-height:70vh;overflow-y:auto}
+.n-ddm b{background:#9A4722;color:#fff;padding:12px 16px;font-size:16px}
+.n-nav .n-ddm a{height:auto;padding:13px 18px;border-bottom:1px solid var(--line2);margin:0;font-weight:500;font-size:16px;white-space:normal;color:var(--ink)}
+.n-nav .n-ddm a:hover{background:var(--warm);color:var(--red2)}
+.n-nav .n-ddm a.all{font-weight:700;color:#0B5FCC;border-bottom:0}
+@media (max-width:760px){
+ .n-dd summary{height:36px;border-radius:999px;font-size:14px}
+ .n-dd.more{margin-right:0}
+ .n-ddm{left:16px;right:16px;width:auto;max-width:none}
+ .n-nav .n-ddm a{border:0;border-bottom:1px solid var(--line2);border-radius:0;height:auto}
+}

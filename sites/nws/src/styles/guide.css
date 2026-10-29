@@ -1,0 +1,44 @@
+/* the city guide "שימושון עירוני" (29.10.2026) */
+.g-wrap{display:grid;grid-template-columns:260px minmax(0,1fr);gap:28px;padding-block:24px 48px;align-items:start}
+.g-side{position:sticky;top:90px;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.g-st{display:block;background:#B85A2E;color:#fff;font-weight:800;font-size:17px;padding:12px 16px}
+.g-side ul{list-style:none;margin:0;padding:0}
+.g-side li a{display:flex;align-items:center;gap:10px;padding:11px 16px;border-top:1px solid var(--line2);font-size:15px;color:var(--ink)}
+.g-side li a:hover,.g-side li a[aria-current]{background:var(--warm);color:var(--red2);font-weight:700}
+.g-main{min-width:0}
+.g-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.g-tile{display:flex;flex-direction:column;gap:8px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--c);border-radius:10px;padding:16px;min-height:118px}
+.g-tile:hover{box-shadow:0 6px 18px rgba(13,19,33,.08)}
+.g-tile .ic{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--warm);color:var(--c)}
+.g-tile b{font-size:17px;line-height:1.3}
+.g-tile small{color:var(--mut);font-size:13px}
+.g-note{background:var(--warm2);border:1px solid var(--line2);border-radius:8px;padding:12px 14px;margin:0 0 14px;font-size:15px}
+.g-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.g-q{flex:1 1 260px;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:0 12px;color:var(--mut)}
+.g-q input{border:0;outline:0;flex:1;padding:11px 0;font:inherit;font-size:15px;background:transparent;min-width:0}
+.g-tools select{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:inherit;font-size:15px;background:#fff}
+.g-cnt{font-size:14px;color:var(--mut)}
+.g-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.g-item{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.g-item .hd{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.g-item h2{font-size:18px;font-weight:800;line-height:1.35;margin:0}
+.g-kind{flex:none;font-size:12.5px;font-weight:700;color:var(--c);background:var(--warm);border-radius:20px;padding:3px 10px;white-space:nowrap}
+.g-area{margin:0;font-size:14px;color:var(--mut)}
+.g-item dl{margin:4px 0 0;display:flex;flex-direction:column;gap:6px}
+.g-item dl div{display:flex;gap:8px;align-items:flex-start;font-size:15px}
+.g-item dt{color:var(--mut);flex:none;margin-top:2px}
+.g-item dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.g-item dd a{color:#0B5FCC}
+.g-notes{margin:2px 0 0;font-size:14.5px;color:var(--txt);line-height:1.55}
+.g-src{margin:auto 0 0;padding-top:8px;font-size:12.5px;color:var(--mut)}
+.g-src a{color:var(--mut);text-decoration:underline}
+.g-fix{margin-top:22px;font-size:14.5px;color:var(--mut)}
+.g-fix a{color:#0B5FCC}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:900px){
+ .g-wrap{grid-template-columns:minmax(0,1fr);gap:16px;padding-block:16px 36px}
+ .g-side{position:static;border-radius:10px}
+ .g-side ul{display:flex;overflow-x:auto;gap:0}
+ .g-side li a{white-space:nowrap;border-top:0;border-inline-start:1px solid var(--line2)}
+ .g-list{grid-template-columns:minmax(0,1fr)}
+}

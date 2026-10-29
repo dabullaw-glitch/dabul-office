@@ -1,0 +1,12 @@
+---
+// The hub of the city guide "שימושון עירוני" (29.10.2026): one tile per category that has data or a live page.
+import GuideFrame from '../../components/GuideFrame.astro';
+import Icon from '../../components/Icon.astro';
+import { liveCats, guideHref, DATA } from '../../data/city/guide';
+const cats = liveCats();
+const count = (slug: string) => DATA[slug]?.items?.length ?? 0;
+---
+<GuideFrame title="שימושון עירוני נתניה: דואר, בנקים, קופות חולים, משרדי ממשלה ועוד | חדשות נתניה והשרון" h1="שימושון עירוני נתניה" description="כל המקומות והשירותים בנתניה במקום אחד: סניפי דואר, בנקים, קופות חולים, בתי חולים, משרדי ממשלה, תחבורה ציבורית, מתנ״סים, בתי כנסת, בתי ספר ושכונות." path="/guide/" intro="כל המקומות והשירותים בעיר במקום אחד. כל פרט כאן מגיע ממקור רשמי, והמקור מופיע ליד הפרט." icon="pin">
+  <div class="g-tiles">{cats.map((c) => (
+    <a class="g-tile" href={guideHref(c)} style={`--c:${c.color}`}><span class="ic" aria-hidden="true"><Icon name={c.icon} size={22} /></span><b>{c.name}</b>{count(c.slug) > 0 && <small class="num">{count(c.slug)} מקומות</small>}</a>))}</div>
+</GuideFrame>

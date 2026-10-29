@@ -1,0 +1,28 @@
+---
+// Frame of the city guide pages "שימושון עירוני" (29.10.2026): the photo band, the list of all guide categories (side on
+// desktop, a scrolling row on phones), the page content.
+import Base from '../layouts/Base.astro';
+import ListHero from './list/ListHero.astro';
+import Icon from './Icon.astro';
+import '../styles/list.css';
+import '../styles/guide.css';
+import { SITE_URL } from '../data/site';
+import { liveCats, guideHref } from '../data/city/guide';
+interface Props { title: string; h1: string; description: string; path: string; intro: string; color?: string; icon?: string; photo?: string; current?: string; jsonld?: any[]; stats?: string[] }
+const { title, h1, description, path, intro, color = '#0F7C7C', icon = 'pin', photo = 'city-buildings', current, jsonld = [], stats = [] } = Astro.props;
+const crumbs = [{ name: 'ראשי', href: '/' }, { name: 'שימושון עירוני', href: '/guide/' }, ...(path === '/guide/' ? [] : [{ name: h1, href: path }])];
+const ld = [...jsonld, { '@context': 'https://schema.org', '@type': 'WebPage', name: h1, url: SITE_URL + path, description, inLanguage: 'he', about: { '@type': 'City', name: 'נתניה' }, isPartOf: { '@id': SITE_URL + '/#website' } }];
+const cats = liveCats();
+---
+<Base title={title} description={description} path={path} crumbs={crumbs} jsonld={ld} current="guide">
+  <div class="nl-page">
+  <ListHero crumbs={crumbs} h1={h1} intro={intro} color={color} photo={photo} icon={icon} stats={stats} />
+  <div class="n-wrap g-wrap">
+    <nav class="g-side" aria-label="שימושון עירוני">
+      <b class="g-st">שימושון עירוני</b>
+      <ul>{cats.map((c) => <li><a href={guideHref(c)} aria-current={current === c.slug ? 'page' : undefined}><Icon name={c.icon} size={17} />{c.name}</a></li>)}</ul>
+    </nav>
+    <div class="g-main"><slot /></div>
+  </div>
+  </div>
+</Base>
