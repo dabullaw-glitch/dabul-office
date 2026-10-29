@@ -12,6 +12,17 @@ END=$((SECONDS + LOOP_MIN * 60))
 SRC=$(git rev-parse HEAD:sites/nws | cut -c1-16)
 LAST=""
 BUILDS=0
+FAILS=0
+
+savelog() {
+  local d; d=$(mktemp -d)
+  { echo "failed at $(date -u +%FT%TZ), run ${GITHUB_RUN_ID:-?}"; echo; tail -200 /tmp/nws-build.log 2>/dev/null; echo; echo "check:"; check 2>&1; } > "$d/build.log"
+  ( cd "$d" && git init -q && git checkout -qb nws-buildlog \
+    && git config user.name "site-bot" && git config user.email "site-bot@users.noreply.github.com" \
+    && git add -A && git commit -qm "build log $(date -u +%FT%TZ)" \
+    && git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" nws-buildlog ) || true
+  rm -rf "$d"
+}
 
 key() {
   node -e "
@@ -57,7 +68,12 @@ while :; do
         BUILDS=$((BUILDS + 1)); echo "$(date -u +%T) published ($((SECONDS - T0)) s): $K"
         node scripts/indexnow.mjs send || true
       else
-        echo "$(date -u +%T) build or publish failed"; tail -30 /tmp/nws-build.log; exit 1
+        # 29.10.2026: a failed build no longer ends the run (an exit here stopped the whole chain for 4 hours). The log goes to the
+        # branch nws-buildlog so it can be read from outside, and the next round tries again; LAST stays as it was.
+        echo "$(date -u +%T) build or publish failed"; tail -30 /tmp/nws-build.log
+        FAILS=$((FAILS + 1)); savelog
+        [ "$SECONDS" -ge "$END" ] && break
+        sleep 90; continue
       fi
     fi
     LAST="$K"
@@ -65,4 +81,4 @@ while :; do
   [ "$SECONDS" -ge "$END" ] && break
   sleep 45
 done
-echo "loop done: $BUILDS builds"
+echo "loop done: $BUILDS builds, $FAILS failed"
