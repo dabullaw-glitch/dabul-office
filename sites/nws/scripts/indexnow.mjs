@@ -11,7 +11,7 @@
 // The key is public by design: the key file public/<key>.txt holds the same value, and IndexNow checks it there.
 import fs from 'node:fs';
 
-const KEY = '5d1b37d04885b22d480b85a11d509971';
+const KEY = '19d5b4b0c4c6f12dc0c0bf92a3ee4cb7'; // 29.10.2026: new key (Bing kept answering 403 for the first one)
 const HOST = 'nws.co.il';
 const SITE = `https://${HOST}`;
 const LIST = '.indexnow-urls';
