@@ -14,7 +14,7 @@ import { SECTION_BY_KEY } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
 import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, placesOf, placeUrl, linkify, related, clip, localized, picOf, picLabel, kickerOf, readMin,
-  FLASHES, SPORT, tableAround, type Article } from '../lib/content';
+  FLASHES, SPORT, tableAround, isoIL, type Article } from '../lib/content';
 
 interface Props { lang: Lang; a: Article }
 const { lang, a } = Astro.props;
@@ -40,6 +40,14 @@ const url = SITE_URL + path;
 const words = [a.title, a.dek, ...a.body].join(' ').split(/\s+/).length;
 const ogImage = a.og || pic.og;
 const abs = (p: string) => (/^https?:/.test(p) ? p : SITE_URL + p);
+// 29.10.2026 (Google News and Discover): the og image's real size (hand made cards and library cards are 1200x630), and the large
+// images for the structured data: the 16:9, 4:3 and 1:1 crops (1200 wide where the original allows), then the og image
+const ogSize = /^\/(og|img\/stock\/og)\//.test(ogImage) ? { w: 1200, h: 630 } : ogImage === pic.og && pic.ogW ? { w: pic.ogW, h: pic.ogH! } : null;
+const ldImages = [...new Set([...(pic.ld || []).map((x) => abs(x.src)), abs(ogImage), ...(pic.ld?.length ? [] : [abs(pic.src)])])];
+// the desk as named in the byline and in the editorial policy page (one name in the page and in the structured data)
+const DESK: Record<Lang, string> = { he: 'מערכת חדשות נתניה והשרון', ru: 'Редакция NWS', fr: 'Rédaction NWS', en: 'NWS Desk' };
+// a headline of up to 110 characters, cut at a word
+const headline = a.title.length <= 110 ? a.title : a.title.slice(0, a.title.lastIndexOf(' ', 110) > 60 ? a.title.lastIndexOf(' ', 110) : 110);
 // paid or marketing content (kind 'sponsored'): labelled "תוכן שיווקי", schema Article instead of NewsArticle, mini markup in the body
 const sponsored = (a.kind as string) === 'sponsored';
 // 29.10.2026: the blog (section 'blog', long evergreen guides) uses the same small markup as sponsored stories (subheadings, lists, links)
@@ -51,16 +59,17 @@ const srcs = sponsored ? [] : (heA.sources || []);
 // ---------- structured data (NewsArticle, FAQ, Event; the breadcrumb list is added by Base) ----------
 const jsonld: any[] = [{
   '@context': 'https://schema.org', '@type': sponsored ? 'Article' : blogPost ? 'BlogPosting' : isLive ? 'LiveBlogPosting' : 'NewsArticle', '@id': url + '#article', mainEntityOfPage: url, url,
-  headline: a.title.slice(0, 110), description: desc, image: [...new Set([abs(ogImage), abs(pic.src)])], inLanguage: lang,
-  datePublished: a.published, dateModified: modified, articleSection: s.name[lang], ...(a.tags.length ? { keywords: a.tags.join(', ') } : {}), wordCount: words,
-  author: a.kind === 'opinion' && a.author ? { '@type': 'Person', name: a.author } : { '@type': 'Organization', name: he ? 'מערכת חדשות נתניה והשרון' : 'NWS Desk', url: SITE_URL + '/about/' },
+  headline, description: desc, image: ldImages, inLanguage: lang,
+  datePublished: isoIL(a.published), dateModified: isoIL(modified), articleSection: s.name[lang], ...(a.tags.length ? { keywords: a.tags.join(', ') } : {}), wordCount: words,
+  author: a.kind === 'opinion' && a.author ? { '@type': 'Person', name: a.author } : { '@type': 'Organization', name: DESK[lang], url: SITE_URL + pre + '/about/' },
   ...(sponsored && a.author ? { sponsor: { '@type': 'Organization', name: a.author } } : {}),
-  publisher: { '@id': SITE_URL + '/#org', '@type': 'NewsMediaOrganization', name: BRAND.he, logo: { '@type': 'ImageObject', url: SITE_URL + '/logo.png' } },
+  publisher: { '@id': SITE_URL + '/#org', '@type': 'NewsMediaOrganization', name: BRAND.he, url: SITE_URL + '/', logo: { '@type': 'ImageObject', url: SITE_URL + '/logo.png', width: 512, height: 512 },
+    publishingPrinciples: SITE_URL + '/editorial-policy/', correctionsPolicy: SITE_URL + '/corrections/' },
   ...(srcs.length ? { citation: srcs.map((x) => ({ '@type': 'CreativeWork', name: x.name, ...(x.url ? { url: x.url } : {}) })), ...(srcs[0].url ? { isBasedOn: srcs[0].url } : {}) } : {}),
   contentLocation: places.length ? places.map((p) => ({ '@type': 'Place', name: p.he })) : { '@type': 'City', name: 'נתניה' },
   isAccessibleForFree: true,
-  ...(isLive && !sponsored ? { coverageStartTime: ups[0].at < a.published ? ups[0].at : a.published,
-    liveBlogUpdate: [...ups].reverse().map((x, i) => ({ '@type': 'BlogPosting', headline: clip(x.text, 110), articleBody: x.text, datePublished: x.at, url: `${url}#u${ups.length - i}` })) } : {}),
+  ...(isLive && !sponsored ? { coverageStartTime: isoIL(Date.parse(ups[0].at) < Date.parse(a.published) ? ups[0].at : a.published),
+    liveBlogUpdate: [...ups].reverse().map((x, i) => ({ '@type': 'BlogPosting', headline: clip(x.text, 110), articleBody: x.text, datePublished: isoIL(x.at), url: `${url}#u${ups.length - i}` })) } : {}),
 }];
 if (a.faq.length) jsonld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: a.faq.map(([q, x]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: x } })) });
 if (a.event?.startDate) jsonld.push({ '@context': 'https://schema.org', '@type': 'Event', name: a.event.name, startDate: a.event.startDate, eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode', eventStatus: 'https://schema.org/EventScheduled',
@@ -72,22 +81,22 @@ const LOC: Record<Lang, string> = { he: 'he-IL', ru: 'ru-RU', fr: 'fr-FR', en: '
 const fmtNum = (iso: string) => new Intl.DateTimeFormat(LOC[lang], { timeZone: TZ, day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(iso)).replace(/\//g, '.');
 const dayOf = (iso: string) => new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date(iso));
 const L = {
-  he: { wa: 'שיתוף בוואטסאפ', tg: 'שיתוף בטלגרם', fb: 'שיתוף בפייסבוק', copy: 'העתקת קישור', copied: 'הקישור הועתק', read: 'דק׳ קריאה', desk: 'מערכת NWS',
+  he: { wa: 'שיתוף בוואטסאפ', tg: 'שיתוף בטלגרם', fb: 'שיתוף בפייסבוק', copy: 'העתקת קישור', copied: 'הקישור הועתק', read: 'דק׳ קריאה', desk: DESK.he,
     also: 'עוד בנושא', next: 'מה הלאה', when: 'מתי', where: 'איפה', what: 'מה', until: 'עד מתי', approx: 'בערך', sources: 'מקורות:', how: 'איך אנחנו עובדים',
     fix: 'מצאתם טעות בכתבה? יש לכם מידע נוסף?', report: 'דווחו על טעות', send: 'שלחו ידיעה', aiCap: 'נוצרה בבינה מלאכותית ואינה מתעדת את האירוע', tags: 'נושאים ומקומות',
     table: 'הטבלה', pts: 'נק׳', tgBtn: 'הצטרפו לערוץ בטלגרם', pros: 'בעלי מקצוע בנושא', inCity: 'בנתניה', crumbs: 'מיקום', bg: 'רקע', svc: 'מה עושים', svcGo: 'למידע הרשמי', ups: 'עדכונים', live: 'מתעדכן',
     spon: 'תוכן שיווקי', with: 'בשיתוף', disclose: 'הכתבה פורסמה כתוכן שיווקי בשיתוף המפרסם' },
-  ru: { wa: 'Поделиться в WhatsApp', tg: 'Поделиться в Telegram', fb: 'Поделиться в Facebook', copy: 'Скопировать ссылку', copied: 'Ссылка скопирована', read: 'мин чтения', desk: 'Редакция NWS',
+  ru: { wa: 'Поделиться в WhatsApp', tg: 'Поделиться в Telegram', fb: 'Поделиться в Facebook', copy: 'Скопировать ссылку', copied: 'Ссылка скопирована', read: 'мин чтения', desk: DESK.ru,
     also: 'По теме', next: 'Что дальше', when: 'Когда', where: 'Где', what: 'Что', until: 'До', approx: 'примерно', sources: 'Источники:', how: 'Как мы работаем',
     fix: 'Нашли ошибку? Есть информация?', report: 'Сообщить об ошибке', send: 'Прислать новость', aiCap: 'создано ИИ, не документирует событие', tags: 'Темы',
     table: 'Таблица', pts: 'очк.', tgBtn: 'Канал в Telegram', pros: 'Специалисты', inCity: '', crumbs: 'Навигация', bg: 'Контекст', svc: 'Что делать', svcGo: 'Официальная информация', ups: 'Обновления', live: 'Обновляется',
     spon: 'Реклама', with: 'При участии', disclose: 'Материал опубликован на правах рекламы при участии рекламодателя' },
-  fr: { wa: 'Partager sur WhatsApp', tg: 'Partager sur Telegram', fb: 'Partager sur Facebook', copy: 'Copier le lien', copied: 'Lien copié', read: 'min de lecture', desk: 'Rédaction NWS',
+  fr: { wa: 'Partager sur WhatsApp', tg: 'Partager sur Telegram', fb: 'Partager sur Facebook', copy: 'Copier le lien', copied: 'Lien copié', read: 'min de lecture', desk: DESK.fr,
     also: 'À lire aussi', next: 'La suite', when: 'Quand', where: 'Où', what: 'Quoi', until: 'Jusqu’à', approx: 'environ', sources: 'Sources :', how: 'Notre méthode',
     fix: 'Une erreur ? Une info en plus ?', report: 'Signaler une erreur', send: 'Envoyer une info', aiCap: 'générée par IA, ne documente pas l’événement', tags: 'Thèmes',
     table: 'Classement', pts: 'pts', tgBtn: 'Rejoindre la chaîne Telegram', pros: 'Professionnels', inCity: '', crumbs: 'Fil d’Ariane', bg: 'Contexte', svc: 'Que faire', svcGo: 'Information officielle', ups: 'Mises à jour', live: 'En direct',
     spon: 'Contenu sponsorisé', with: 'En partenariat avec', disclose: 'Cet article est publié comme contenu sponsorisé en partenariat avec l’annonceur' },
-  en: { wa: 'Share on WhatsApp', tg: 'Share on Telegram', fb: 'Share on Facebook', copy: 'Copy link', copied: 'Link copied', read: 'min read', desk: 'NWS Desk',
+  en: { wa: 'Share on WhatsApp', tg: 'Share on Telegram', fb: 'Share on Facebook', copy: 'Copy link', copied: 'Link copied', read: 'min read', desk: DESK.en,
     also: 'Related', next: 'What’s next', when: 'When', where: 'Where', what: 'What', until: 'Until', approx: 'about', sources: 'Sources:', how: 'How we work',
     fix: 'Found an error? Have more information?', report: 'Report an error', send: 'Send a tip', aiCap: 'AI generated, it does not document the event', tags: 'Topics',
     table: 'Table', pts: 'pts', tgBtn: 'Join the Telegram channel', pros: 'Local pros', inCity: '', crumbs: 'Breadcrumbs', bg: 'Background', svc: 'What to do', svcGo: 'Official information', ups: 'Updates', live: 'Live',
@@ -211,7 +220,7 @@ const share = encodeURIComponent(url); const shareT = encodeURIComponent(a.title
 const hasSrc = srcs.length > 0;
 ---
 <Base lang={lang} title={title} description={desc} path={path} alternates={alternates} jsonld={jsonld} crumbs={crumbs} current={a.section}
-  ogType="article" ogImage={ogImage} published={a.published} modified={modified} section={s.name[lang]} tags={a.tags} compact progress>
+  ogType="article" ogImage={ogImage} ogW={ogSize?.w} ogH={ogSize?.h} published={isoIL(a.published)} modified={isoIL(modified)} section={s.name[lang]} tags={a.tags} compact progress>
   <div class="n-wrap n-art" style={`--c:${s.ink}`}>
     <div class="n-lay">
       <article aria-labelledby="art-h">
@@ -227,7 +236,7 @@ const hasSrc = srcs.length > 0;
             <div class="n-av" aria-hidden="true">{initials}</div>
             <div>
               {opinion || sponsored ? <b>{byName}{(opinion || sponBy) && a.authorRole && a.authorRole !== L.spon && <span class="art-role">{a.authorRole}</span>}</b> : <a href={`${pre}/about/`}><b>{byName}</b></a>}
-              <span class="num">{u.published} <time datetime={a.published}>{fmtNum(a.published)}, {fmtTime(a.published)}</time>{showUpd && <> · <span class="n-upd">{u.updated} <time datetime={modified}>{updText}</time></span></>} · {readMin(a)} {L.read}</span>
+              <span class="num">{u.published} <time datetime={isoIL(a.published)}>{fmtNum(a.published)}, {fmtTime(a.published)}</time>{showUpd && <> · <span class="n-upd">{u.updated} <time datetime={isoIL(modified)}>{updText}</time></span></>} · {readMin(a)} {L.read}</span>
             </div>
           </div>
           <div class="n-share" aria-label={u.share} role="group">

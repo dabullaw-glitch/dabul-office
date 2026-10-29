@@ -83,7 +83,9 @@ function formatOf(s: any): { format?: StoryFormat; formatData?: any } {
   const d = s?.formatData ?? s?.format_data;
   return { format: f, formatData: d && typeof d === 'object' ? d : null };
 }
-export interface AiImg { alt: string; files?: { src: string; w: number }[]; remote?: string; w: number; h: number; model: string }
+export interface AiImg { alt: string; files?: { src: string; w: number }[]; remote?: string; w: number; h: number; model: string;
+  /** 29.10.2026 (Google News and Discover): 16:9, 4:3 and 1:1 crops, 1200 wide where the original allows (scripts/img.mjs) */
+  crops?: { src: string; w: number; h: number }[] }
 
 const DATA = path.resolve('src/data');
 const readJson = (f: string, d: any) => { try { return JSON.parse(fs.readFileSync(path.join(DATA, f), 'utf8')); } catch { return d; } };
@@ -108,7 +110,7 @@ function aiOf(s: any): AiImg | null {
   const m = AIMAP[s.id];
   const lucid = im.model === 'lucid';
   const alt = clean(im.alt) || (im.model ? 'תמונה להמחשה' : '');
-  if (m?.files?.length) return { alt, files: m.files, w: m.w, h: m.h, model: im.model || '' };
+  if (m?.files?.length) return { alt, files: m.files, w: m.w, h: m.h, model: im.model || '', ...(m.crops?.length ? { crops: m.crops } : {}) };
   return { alt, remote: m?.remote || im.url, w: lucid ? 1280 : 1024, h: lucid ? 720 : 1024, model: im.model || '' };
 }
 function fromFeed(s: any): any {
@@ -135,7 +137,7 @@ const FEED_JSON: any = readJson('feed.json', { stories: [] });
 const FEED: any[] = (FEED_JSON.stories || []).filter((s: any) => s && s.id && s.title && (s.body || []).length).map(fromFeed);
 // social card: a hand made card (public/og/a), else the story's own image, else its section photo (1200x630 JPEG)
 const ogFor = (a: any) => fs.existsSync(path.resolve('public/og/a', `${a.slug}.png`)) ? `/og/a/${a.slug}.png`
-  : a.ai?.files?.length ? a.ai.files[a.ai.files.length - 1].src : `/img/stock/og/${stockFor(a.section, a.engineId ?? a.slug)}.jpg`;
+  : a.ai?.crops?.length ? a.ai.crops[0].src : a.ai?.files?.length ? a.ai.files[a.ai.files.length - 1].src : `/img/stock/og/${stockFor(a.section, a.engineId ?? a.slug)}.jpg`;
 
 export const ARTICLES: Article[] = [...(readJson('articles.json', { articles: [] }).articles as any[]), ...FEED]
   .filter((a) => a && a.slug && SECTION_BY_KEY[a.section as SectionKey] && live(a))
@@ -168,6 +170,15 @@ export const placeUrl = (slug: string, lang: Lang = 'he') => `${LANG_PREFIX[lang
 
 const TZ = 'Asia/Jerusalem';
 const LOC: Record<Lang, string> = { he: 'he-IL', ru: 'ru-RU', fr: 'fr-FR', en: 'en-GB' };
+/** 29.10.2026 (Google News): an ISO time with the Israel offset (2026-10-29T11:53:54+02:00) for the structured data, the article
+ *  meta tags, the news sitemap and <time datetime>; the stored times stay in UTC. Anything that is not a date is returned as is. */
+export const isoIL = (iso: string) => {
+  const d = new Date(iso); if (!iso || isNaN(+d)) return iso;
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).formatToParts(d).map((x) => [x.type, x.value]));
+  const local = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second);
+  const off = Math.round((local - Math.floor(+d / 1000) * 1000) / 60000); const ab = Math.abs(off);
+  return `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:${p.second}${off < 0 ? '-' : '+'}${String(Math.floor(ab / 60)).padStart(2, '0')}:${String(ab % 60).padStart(2, '0')}`;
+};
 export const fmtTime = (iso: string) => new Intl.DateTimeFormat('he-IL', { timeZone: TZ, hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(iso));
 export const fmtDate = (iso: string, lang: Lang = 'he') => new Intl.DateTimeFormat(LOC[lang], { timeZone: TZ, day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso));
 export const fmtShort = (iso: string) => new Intl.DateTimeFormat('he-IL', { timeZone: TZ, day: '2-digit', month: '2-digit' }).format(new Date(iso));
@@ -279,7 +290,9 @@ export const fmtDay = (iso: string, lang: Lang = 'he') => new Intl.DateTimeForma
  *  the story id so neighbouring stories get different photos.
  *  ai: true only for an AI generated image; own: the story's own image (AI or real); kind: which label applies (see picLabel). */
 export type PicKind = 'ai' | 'photo' | 'sponsor' | 'stock';
-export interface Pic { src: string; srcset?: string; small: string; alt: string; w: number; h: number; ai: boolean; own: boolean; stock: boolean; kind: PicKind; credit: string; label: string; og: string }
+export interface Pic { src: string; srcset?: string; small: string; alt: string; w: number; h: number; ai: boolean; own: boolean; stock: boolean; kind: PicKind; credit: string; label: string; og: string;
+  /** the large images for the structured data (16:9, 4:3, 1:1) and the size of the og image when known */
+  ld?: { src: string; w: number; h: number }[]; ogW?: number; ogH?: number }
 /** the picture label in the page language */
 export function picLabel(p: Pic, lang: Lang = 'he') {
   const L: Record<PicKind, Record<Lang, string>> = {
@@ -291,8 +304,12 @@ export function picLabel(p: Pic, lang: Lang = 'he') {
   return (p.kind === 'photo' || p.kind === 'sponsor') && p.credit ? `${L.photo[lang]}: ${p.credit}` : L[p.kind][lang];
 }
 function hashOf(s: string) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
+// the 1:1 crop of the library photos is 1200 wide, except two whose original is not tall enough (public/img/stock/x)
+const STOCK_SQ: Record<string, number> = { 'police-lights': 980, 'police-street': 1012 };
+const stockLd = (name: string) => [{ src: `/img/stock/x/${name}-16x9.jpg`, w: 1200, h: 675 }, { src: `/img/stock/x/${name}-4x3.jpg`, w: 1200, h: 900 },
+  { src: `/img/stock/x/${name}-1x1.jpg`, w: STOCK_SQ[name] ?? 1200, h: STOCK_SQ[name] ?? 1200 }];
 export function stockPic(name: string, alt = ''): Pic {
-  return { src: `/img/stock/${name}-1600.webp`, srcset: `/img/stock/${name}-800.webp 800w, /img/stock/${name}-1600.webp 1600w`,
+  return { ld: stockLd(name), ogW: 1200, ogH: 630, src: `/img/stock/${name}-1600.webp`, srcset: `/img/stock/${name}-800.webp 800w, /img/stock/${name}-1600.webp 1600w`,
     small: `/img/stock/${name}-800.webp`, alt, w: 1600, h: 1067, ai: false, own: false, stock: true, kind: 'stock', credit: '', label: 'צילום אילוסטרציה', og: `/img/stock/og/${name}.jpg` };
 }
 export function stockFor(key: SectionKey, seed: string | number) {
@@ -309,7 +326,8 @@ export function picOf(a: Article, _IMGS?: unknown): Pic {
     const kind: PicKind = ai.model ? 'ai' : a.kind === 'sponsored' ? 'sponsor' : 'photo';
     const credit = kind === 'photo' ? a.imageCredit || a.sourceName || '' : kind === 'sponsor' ? a.imageCredit || '' : '';
     const p: Pic = { src, srcset: files.length > 1 ? files.map((f) => `${f.src} ${f.w}w`).join(', ') : undefined,
-      small: files.length ? files[0].src : ai.remote!, alt: ai.alt, w: ai.w, h: ai.h, ai: kind === 'ai', own: true, stock: false, kind, credit, label: '', og: src };
+      small: files.length ? files[0].src : ai.remote!, alt: ai.alt, w: ai.w, h: ai.h, ai: kind === 'ai', own: true, stock: false, kind, credit, label: '', og: ai.crops?.length ? ai.crops[0].src : src,
+      ...(ai.crops?.length ? { ld: ai.crops, ogW: ai.crops[0].w, ogH: ai.crops[0].h } : files.length ? { ogW: ai.w, ogH: ai.h } : {}) };
     p.label = picLabel(p);
     return p;
   }

@@ -22,7 +22,9 @@ export function routes(): R[] {
     const langs = LANGS.filter((l) => localized(art, l));
     const alts = Object.fromEntries(langs.map((l) => [l, articleUrl(art, l)]));
     const img = IMG[art.imageHint] ?? IMG.city;
-    for (const l of langs) out.push({ loc: alts[l], alts, lastmod: art.updated || art.published, priority: '0.7', images: [{ loc: art.og || `/og/a/${art.slug}.png`, title: (localized(art, l) as any).title }] });
+    // 29.10.2026: lastmod is the story's last change (an edit or the newest live update), as in its dateModified
+    const lastmod = [art.updated, art.updates?.[art.updates.length - 1]?.at, art.published].filter((d): d is string => !!d && !isNaN(Date.parse(d))).sort((p, q) => Date.parse(q) - Date.parse(p))[0];
+    for (const l of langs) out.push({ loc: alts[l], alts, lastmod, priority: '0.7', images: [{ loc: art.og || `/og/a/${art.slug}.png`, title: (localized(art, l) as any).title }] });
   }
   const nowA = all((l) => (l === 'he' ? '/now/' : `/${l}/now/`));
   for (const l of LANGS) out.push({ loc: nowA[l], alts: nowA, lastmod: now, changefreq: 'hourly', priority: '0.8' });
