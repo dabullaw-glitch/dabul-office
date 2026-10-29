@@ -11,6 +11,11 @@
 //   mot       "תאונות הדרכים בנתניה ובשרון": the Ministry of Transport open dataset accidents_municipal on data.gov.il (5-year totals
 //             per municipality: accidents with injuries, killed, seriously and lightly injured, pedestrians, e-bikes and scooters).
 //             One story per dataset period (field YEARMONTH).
+//   prices    (29.10.2026, live page, not a story) the data behind /now/prices/ on nws.co.il: the latest quarter of the same nadlan pages,
+//             average price by room count for Netanya with the change from a year earlier and the national figure, a 3/4/5-room table
+//             for every neighborhood with enough deals, the nearby Sharon towns and the last 8 quarters of the 4-room average. Written to
+//             docs coll 'nwslive' id 'prices' (docs_merge), which hns-feed passes to the site as live.prices. Rewritten only when the
+//             dataset version changes.
 //   roadsafety monthly roundup of the road accidents we published during the previous month (counts from our own published
 //             stories only). Needs at least MIN_ROUNDUP stories, otherwise it is skipped for that month.
 //
@@ -18,6 +23,7 @@
 //   {action:'tick'}                         cron daily 07:40 Israel time: nadlan and mot when the data changed, roadsafety on days 1-3.
 //   {action:'nadlan'|'mot', dry?, force?}   build now (dry: return the story, write nothing; force: even if this version was done).
 //   {action:'roadsafety', month?:'YYYY-MM', dry?, force?}
+//   {action:'prices', dry?, force?}         rebuild docs nwslive 'prices' (also run by tick).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -143,6 +149,45 @@ async function nadlanStory() {
   return { key: `${version}|${last.y}-${last.m}`, story, detail: { version, quarter: `${last.y}-${last.m}`, city4: last, yoy, vsCountry, hoods: hoods.length, towns } };
 }
 
+// ---------- prices: the live page /now/prices/ ----------
+async function pricesLive(b: Any) {
+  const city = await getJson(`${NADLAN}/settlement/buy/7400.json`);
+  const version = String(city.version || '');
+  const s4 = series(city, 4);
+  if (!version || !s4.length) throw new Error('no version or 4-room data for Netanya');
+  const last = s4[0];
+  if (!b.force && !b.dry) {
+    const { data: cur } = await sb.from('docs').select('data').eq('coll', 'nwslive').eq('id', 'prices').maybeSingle();
+    if ((cur?.data as Any)?.version === version) return { skipped: 'same version', version };
+  }
+  const row = (s: Pt[]) => { const p = at(s, last.y, last.m); if (!p) return null; const a = at(s, last.y - 1, last.m); return { v: Math.round(p.v), yoy: a ? +pct(p.v, a.v).toFixed(1) : null, country: p.c != null ? Math.round(p.c) : null }; };
+  const rooms = [3, 4, 5, 6].map((n) => ({ rooms: n, ...(row(series(city, n)) || {}) })).filter((r: Any) => r.v);
+  const history = s4.slice(0, 8).map((p) => ({ y: p.y, m: p.m, label: qName(p.y, p.m), v: Math.round(p.v), country: p.c != null ? Math.round(p.c) : null }));
+  const list = (city.otherNeighborhoods || []).filter((h: Any) => h?.id && !/אזור תעשיה|בתכנון/.test(h.title || ''));
+  const hoods: Any[] = [];
+  for (let i = 0; i < list.length; i += 6) {
+    const pages = await Promise.all(list.slice(i, i + 6).map((h: Any) => getJson(`${NADLAN}/neighborhood/buy/${h.id}.json`).catch(() => null)));
+    pages.forEach((pg, k) => {
+      if (!pg) return;
+      const r3 = row(series(pg, 3)), r4 = row(series(pg, 4)), r5 = row(series(pg, 5));
+      if (r3 || r4 || r5) hoods.push({ id: list[i + k].id, name: hoodName(list[i + k].title), r3: r3?.v ?? null, r4: r4?.v ?? null, r5: r5?.v ?? null, yoy4: r4?.yoy ?? null });
+    });
+  }
+  hoods.sort((a, b) => (b.r4 ?? 0) - (a.r4 ?? 0) || a.name.localeCompare(b.name, 'he'));
+  const towns: Any[] = [];
+  for (const [name, code] of SHARON_TOWNS) {
+    const pg = await getJson(`${NADLAN}/settlement/buy/${code}.json`).catch(() => null);
+    const r4 = pg && row(series(pg, 4));
+    if (r4) towns.push({ name, code, v: r4.v, yoy: r4.yoy });
+  }
+  const data = { version, quarter: { y: last.y, m: last.m, label: qName(last.y, last.m), in: qIn(last.y, last.m) }, rooms, history, hoods, towns,
+    source: 'אתר הנדל״ן הממשלתי (רשות המסים)', sourceUrl: 'https://www.nadlan.gov.il/?view=settlement&id=7400&page=deals', updatedAt: new Date().toISOString() };
+  if (b.dry) return { dry: true, data };
+  const { error } = await sb.rpc('docs_merge', { p_coll: 'nwslive', p_id: 'prices', p_patch: data });
+  if (error) throw new Error('db: ' + error.message);
+  return { ok: true, version, quarter: data.quarter.label, hoods: hoods.length, towns: towns.length };
+}
+
 // ---------- mot: 5-year road accident totals per municipality ----------
 const MOT_RES = 'b17b1634-c001-4d37-96c6-a661b2ecd98c';
 const MOT_TOWNS = ['נתניה', 'כפר יונה', 'אבן יהודה', 'קדימה - צורן', 'קדימה-צורן', 'תל מונד', 'פרדסיה', 'פרדסייה', 'עמק חפר', 'לב השרון', 'חוף השרון'];
@@ -234,6 +279,7 @@ async function run(kind: string, b: Any) {
 async function tick() {
   const out: Any[] = [];
   for (const k of ['nadlan', 'mot']) { try { out.push(await run(k, {})); } catch (e) { out.push({ kind: k, error: String((e as Error).message || e) }); } }
+  try { out.push({ kind: 'prices', ...(await pricesLive({})) }); } catch (e) { out.push({ kind: 'prices', error: String((e as Error).message || e) }); }
   if (+ilParts(new Date()).day <= 3) { try { out.push(await run('roadsafety', {})); } catch (e) { out.push({ kind: 'roadsafety', error: String((e as Error).message || e) }); } }
   return out;
 }
@@ -244,6 +290,7 @@ Deno.serve(async (req) => {
   const b: Any = await req.json().catch(() => ({}));
   try {
     if (b.action === 'tick') return J({ ok: true, res: await tick() });
+    if (b.action === 'prices') return J({ ok: true, res: await pricesLive(b) });
     if (['nadlan', 'mot', 'roadsafety'].includes(b.action)) return J({ ok: true, res: await run(b.action, b) });
     return J({ ok: false, error: 'unknown action' }, 400);
   } catch (e) { return J({ ok: false, error: String((e as Error).message || e) }, 500); }
