@@ -1,0 +1,54 @@
+---
+// תוצאות הבחירות בנתניה (29.10.2026, task #391): the results of the 26th Knesset elections in Netanya from the Central Elections
+// Committee (votes26.bechirot.gov.il, read in a browser because the site blocks servers), compared with the official 25th Knesset
+// results on data.gov.il, plus the nearby Sharon towns. Data in docs coll 'nwslive' id 'elections', passed through hns-feed 'live'.
+// Neighborhood or ballot-box level is not shown: the committee publishes ballots without addresses and its ballot file is blocked.
+import NowPage from '../../../components/NowPage.astro';
+import { SERVICES as LIVE } from '../../../lib/content';
+const E: any = LIVE.elections || {};
+const C: any = E.city || {};
+const prev: any = C.prev || {};
+const lists: any[] = C.lists || [];
+const towns: any[] = E.towns || [];
+const n = (x: number | null | undefined) => (x == null ? '' : Math.round(x).toLocaleString('en-US'));
+const p = (x: number | null | undefined) => (x == null ? '' : `${x.toFixed(2).replace(/0$/, '').replace(/\.0$/, '')}%`);
+const turn = (v: number, e: number) => (v && e ? (v / e) * 100 : null);
+const dt = (iso: string) => (iso ? new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(iso)) : '');
+const dd = (ymd: string) => (ymd ? ymd.split('-').reverse().map(Number).join('.') : '');
+const lead = lists[0];
+const t26 = turn(C.voted, C.eligible), t25 = turn(prev.voted, prev.eligible);
+const faq: [string, string][] = lead ? [
+  ['מי ניצח בבחירות בנתניה?', `${lead.n} היא הרשימה הגדולה בנתניה בבחירות לכנסת ה-${E.knesset}, עם ${p(lead.pct)} מהקולות הכשרים (${n(lead.v)} קולות), לפי ועדת הבחירות המרכזית.`],
+  ['מה היה שיעור ההצבעה בנתניה?', `הצביעו ${n(C.voted)} מתוך ${n(C.eligible)} בעלי זכות בחירה, כלומר כ-${p(t26)}.${t25 ? ` בבחירות הקודמות השיעור בעיר היה כ-${p(t25)}.` : ''} קולות במעטפות כפולות, כמו קולות של חיילים, לא משויכים ליישוב.`],
+  ['האם התוצאות סופיות?', E.final ? 'כן, אלה התוצאות הסופיות שפורסמו.' : `עוד לא. לפי ועדת הבחירות המרכזית, התוצאות הסופיות יפורסמו ברשומות עד ${dd(E.finalBy)}, ועד אז הן עשויות להשתנות.`],
+] : [];
+---
+<NowPage icon="city" title="תוצאות הבחירות בנתניה לכנסת ה-26, והשוואה לבחירות הקודמות | חדשות נתניה והשרון" h1="תוצאות הבחירות בנתניה" description={lead ? `תוצאות הבחירות לכנסת ה-${E.knesset} בנתניה: ${lead.n} ${p(lead.pct)}, שיעור ההצבעה כ-${p(t26)}. השוואה לבחירות 2022 ותוצאות יישובי השרון, מנתוני ועדת הבחירות המרכזית.` : 'תוצאות הבחירות לכנסת בנתניה ובשרון, לפי ועדת הבחירות המרכזית.'} path="/now/elections/" intro="איך הצביעה נתניה, ומה השתנה מאז הבחירות הקודמות." color="#1B3A6B" img="council" faq={faq} updated={E.updatedAt}>
+  {lead ? <>
+  <section class="ncard" style="--c:#1B3A6B">
+    <h2>הבחירות לכנסת ה-{E.knesset}, {dd(E.date)}</h2>
+    <div class="grid num" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px">
+      <div class="kv" style="flex-direction:column"><span>בעלי זכות בחירה</span><b>{n(C.eligible)}</b></div>
+      <div class="kv" style="flex-direction:column"><span>הצביעו</span><b>{n(C.voted)}</b></div>
+      <div class="kv" style="flex-direction:column"><span>שיעור ההצבעה</span><b>{p(t26)}</b></div>
+      <div class="kv" style="flex-direction:column"><span>קלפיות</span><b>{n(C.ballots)}</b></div>
+    </div>
+    {!E.final && <p class="note" style="margin:10px 0 0">תוצאות נכון ל-{dt(E.asOf)}. התוצאות הסופיות יפורסמו ברשומות עד {dd(E.finalBy)}, ועד אז הן עשויות להשתנות.</p>}
+  </section>
+  <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>התוצאות בנתניה, והשוואה ל-{prev.date ? prev.date.slice(0, 4) : 'בחירות הקודמות'}</h2>
+    <p class="note" style="margin:0 0 10px">אחוז מהקולות הכשרים בעיר. השוואה מוצגת רק לרשימות שהתמודדו גם בבחירות הקודמות באותו שם.</p>
+    <div style="overflow-x:auto"><table class="tbl num" style="min-width:460px"><thead><tr><th>רשימה</th><th>קולות</th><th>אחוז</th><th>בבחירות הקודמות</th></tr></thead>
+      <tbody>{lists.map((l) => <tr><td>{l.n} <span style="color:var(--mut)">({l.l})</span></td><td>{n(l.v)}</td><td><b>{p(l.pct)}</b></td><td>{l.prev ? `${p(l.prev.pct)} (${n(l.prev.v)})` : ''}</td></tr>)}</tbody></table></div>
+    {E.joint?.text && <p style="margin:12px 0 0">{E.joint.text}</p>}
+    {prev.eligible && <p style="margin:12px 0 0">בבחירות לכנסת ה-{prev.knesset} ({dd(prev.date)}) היו בעיר {n(prev.eligible)} בעלי זכות בחירה והצביעו {n(prev.voted)}, כ-{p(t25)}. הפעם: {n(C.eligible)} בעלי זכות בחירה ו-{n(C.voted)} מצביעים, כ-{p(t26)}.</p>}
+  </section>
+  {towns.length > 0 && <section class="ncard" style="--c:#0F7C7C;margin-top:18px">
+    <h2>ביישובי השרון הסמוכים</h2>
+    <div style="overflow-x:auto"><table class="tbl num" style="min-width:460px"><thead><tr><th>יישוב</th><th>שיעור ההצבעה</th><th>הרשימות הגדולות</th></tr></thead>
+      <tbody>{towns.map((t) => <tr><td>{t.name}</td><td>{p(turn(t.voted, t.eligible))}</td><td>{(t.top || []).map((x: any) => `${x[0]} ${p(x[1])}`).join(', ')}</td></tr>)}</tbody></table></div>
+  </section>}
+  {E.country && <p class="note" style="margin:14px 0 0">בכל הארץ: {(E.country.top || []).map((x: any) => `${x[0]} ${p(x[1])}`).join(', ')}. שיעור ההצבעה הארצי כולל את הקולות במעטפות כפולות, ולכן הוא לא בר השוואה ישירה לשיעור ביישוב.</p>}
+  </> : <section class="ncard" style="--c:#1B3A6B"><h2>התוצאות מתעדכנות</h2><p style="margin:0">אפשר לראות את התוצאות באתר <a href="https://www.bechirot.gov.il" rel="noopener" target="_blank" style="color:#0B5FCC;font-weight:700">ועדת הבחירות המרכזית</a>.</p></section>}
+  <p class="note" style="margin:14px 0 0">מקור: <a href={E.sourceUrl || 'https://www.bechirot.gov.il'} rel="noopener" target="_blank" style="color:#0B5FCC">{E.source || 'ועדת הבחירות המרכזית'}</a>{E.prevSourceUrl && <>; הבחירות הקודמות: <a href={E.prevSourceUrl} rel="noopener" target="_blank" style="color:#0B5FCC">{E.prevSource}</a></>}.</p>
+</NowPage>

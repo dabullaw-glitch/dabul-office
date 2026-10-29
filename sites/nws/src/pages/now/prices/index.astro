@@ -1,0 +1,51 @@
+---
+// מחירי הדירות בנתניה לפי שכונה (29.10.2026, task #391): the latest quarter of the government real estate site (Tax Authority deal
+// reports), written daily by hns-data {action:'prices'} into docs coll 'nwslive' id 'prices' and passed through hns-feed 'live'.
+// Averages only: deal-by-deal data (street, buyer) is behind reCAPTCHA on nadlan.gov.il and is never used. No buyer names, ever.
+import NowPage from '../../../components/NowPage.astro';
+import { SERVICES as LIVE } from '../../../lib/content';
+const P: any = LIVE.prices || {};
+const nis = (n: number | null | undefined) => (n ? `${Math.round(n).toLocaleString('en-US')} ש״ח` : '');
+const short = (n: number | null | undefined) => (!n ? '' : n >= 1e6 ? `${(n / 1e6).toFixed(2).replace(/0$/, '').replace(/\.0$/, '')} מיליון ש״ח` : `${Math.round(n / 1e3)} אלף ש״ח`);
+const chg = (p: number | null | undefined) => (p == null ? '' : Math.abs(p) < 0.5 ? 'כמעט ללא שינוי' : `${p > 0 ? 'עלייה' : 'ירידה'} של ${Math.abs(p).toFixed(1).replace(/\.0$/, '')}%`);
+const rooms: any[] = P.rooms || [];
+const r4 = rooms.find((r) => r.rooms === 4);
+const hoods: any[] = P.hoods || [];
+const towns: any[] = P.towns || [];
+const hist: any[] = P.history || [];
+const q = P.quarter?.label || '';
+const qin = P.quarter?.in || '';
+const src: string = P.sourceUrl || 'https://www.nadlan.gov.il/?view=settlement&id=7400&page=deals';
+const top = hoods.find((h) => h.r4);
+const faq: [string, string][] = [
+  ['כמה עולה דירת 4 חדרים בנתניה?', r4 ? `${qin} נמכרה דירת 4 חדרים בנתניה בממוצע ב-${short(r4.v)}${r4.yoy != null ? `, ${chg(r4.yoy)} לעומת הרבעון המקביל אשתקד` : ''}, לפי נתוני העסקאות של רשות המסים באתר הנדל״ן הממשלתי.` : 'המחיר הממוצע לפי גודל דירה מתעדכן כאן מנתוני העסקאות של רשות המסים באתר הנדל״ן הממשלתי.'],
+  ['באיזו שכונה בנתניה הדירות יקרות יותר?', top ? `${qin} המחיר הממוצע הגבוה ביותר לדירת 4 חדרים נרשם בשכונת ${top.name} (${short(top.r4)}). הטבלה בעמוד מציגה את כל השכונות שבהן היו מספיק עסקאות.` : 'הטבלה בעמוד מציגה את המחיר הממוצע בכל שכונה שבה היו מספיק עסקאות.'],
+  ['מאיפה הנתונים?', 'מאתר הנדל״ן הממשלתי של רשות המסים, שמפרסם ממוצעים רבעוניים של עסקאות מכירה שדווחו. אנחנו מציגים ממוצעים בלבד, בלי פרטים של עסקה בודדת ובלי שמות של קונים או מוכרים.'],
+  ['למה המחיר בשכונה שלי לא מופיע?', 'האתר הממשלתי לא מציג ממוצע לשכונה או לגודל דירה שבהם היו מעט מדי עסקאות באותו רבעון. במקרה כזה התא בטבלה ריק.'],
+];
+---
+<NowPage icon="building" title={`מחירי הדירות בנתניה לפי שכונה${q ? `, ${q}` : ''} | חדשות נתניה והשרון`} h1="מחירי הדירות בנתניה לפי שכונה" description={r4 ? `דירת 4 חדרים בנתניה נמכרה בממוצע ב-${short(r4.v)} ${qin}. המחיר הממוצע לפי גודל דירה ולפי שכונה, והשוואה ליישובי השרון, מנתוני רשות המסים.` : 'המחיר הממוצע של דירה בנתניה לפי גודל ולפי שכונה, והשוואה ליישובי השרון, מנתוני העסקאות של רשות המסים.'} path="/now/prices/" intro="כמה נמכרה דירה בכל שכונה, לפי נתוני העסקאות של רשות המסים." color="#8A5200" img="crane" faq={faq} updated={P.updatedAt}>
+  {rooms.length > 0 ? <section class="ncard" style="--c:#B86E00">
+    <h2>המחיר הממוצע בנתניה, {q}</h2>
+    <div style="overflow-x:auto"><table class="tbl num" style="min-width:420px"><thead><tr><th>גודל הדירה</th><th>מחיר ממוצע</th><th>לעומת שנה קודם</th><th>הממוצע הארצי</th></tr></thead>
+      <tbody>{rooms.map((r) => <tr><td>{r.rooms} חדרים</td><td><b>{nis(r.v)}</b></td><td>{chg(r.yoy)}</td><td>{nis(r.country)}</td></tr>)}</tbody></table></div>
+  </section> : <section class="ncard" style="--c:#B86E00"><h2>המחירים מתעדכנים</h2><p style="margin:0">הנתונים של הרבעון האחרון עוד לא נטענו כאן. אפשר לראות אותם ב<a href={src} rel="noopener" target="_blank" style="color:#0B5FCC;font-weight:700">אתר הנדל״ן הממשלתי</a>.</p></section>}
+  {hoods.length > 0 && <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>לפי שכונה, {q}</h2>
+    <p class="note" style="margin:0 0 10px">ממוצע המחיר בכל שכונה שבה היו מספיק עסקאות, מהיקרה לזולה לפי דירת 4 חדרים. תא ריק: לא היו מספיק עסקאות.</p>
+    <div style="overflow-x:auto"><table class="tbl num" style="min-width:520px"><thead><tr><th>שכונה</th><th>3 חדרים</th><th>4 חדרים</th><th>5 חדרים</th><th>4 חדרים, לעומת שנה קודם</th></tr></thead>
+      <tbody>{hoods.map((h) => <tr><td>{h.name}</td><td>{short(h.r3)}</td><td><b>{short(h.r4)}</b></td><td>{short(h.r5)}</td><td>{chg(h.yoy4)}</td></tr>)}</tbody></table></div>
+  </section>}
+  {towns.length > 0 && <section class="ncard" style="--c:#0F7C7C;margin-top:18px">
+    <h2>ביישובי השרון הסמוכים</h2>
+    <div style="overflow-x:auto"><table class="tbl num" style="min-width:380px"><thead><tr><th>יישוב</th><th>דירת 4 חדרים</th><th>לעומת שנה קודם</th></tr></thead>
+      <tbody>{r4 && <tr><td><b>נתניה</b></td><td><b>{short(r4.v)}</b></td><td>{chg(r4.yoy)}</td></tr>}{towns.map((t) => <tr><td>{t.name}</td><td>{short(t.v)}</td><td>{chg(t.yoy)}</td></tr>)}</tbody></table></div>
+  </section>}
+  {hist.length > 1 && <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>דירת 4 חדרים בנתניה לאורך זמן</h2>
+    <div style="overflow-x:auto"><table class="tbl num" style="min-width:380px"><thead><tr><th>רבעון</th><th>נתניה</th><th>הממוצע הארצי</th></tr></thead>
+      <tbody>{hist.map((h) => <tr><td>{String(h.label).replace('הרבעון ', 'רבעון ')}</td><td>{nis(h.v)}</td><td>{nis(h.country)}</td></tr>)}</tbody></table></div>
+  </section>}
+  <p class="note" style="margin:14px 0 0">איך לקרוא את המספרים: אלה ממוצעים רבעוניים של עסקאות מכירה שדווחו לרשות המסים. ממוצע מושפע מסוג הדירות שנמכרו באותו רבעון, ולכן שינוי ברבעון אחד לא תמיד מעיד על מגמה. העמוד לא מציג פרטים של עסקה בודדת.</p>
+  <p class="note" style="margin:8px 0 0">מקור: <a href={src} rel="noopener" target="_blank" style="color:#0B5FCC">אתר הנדל״ן הממשלתי, רשות המסים</a>{P.version ? `, הנתונים עודכנו שם ב-${String(P.version).replace(/-/g, '.')}` : ''}.</p>
+</NowPage>
