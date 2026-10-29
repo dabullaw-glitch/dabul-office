@@ -1,0 +1,968 @@
+[
+ {
+  "type": "node",
+  "id": 288553679,
+  "lat": 32.2705816,
+  "lon": 34.8368976,
+  "tags": {
+   "amenity": "school",
+   "created_by": "Potlatch 0.10f",
+   "name": "עקיבא",
+   "name:en": "Akiva",
+   "name:he": "עקיבא",
+   "wikidata": "Q11289335"
+  }
+ },
+ {
+  "type": "node",
+  "id": 410288873,
+  "lat": 32.3119984,
+  "lon": 34.8812688,
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "node",
+  "id": 553102362,
+  "lat": 32.3395246,
+  "lon": 34.863097,
+  "tags": {
+   "amenity": "school",
+   "name": "הלל צור",
+   "name:he": "הלל צור"
+  }
+ },
+ {
+  "type": "node",
+  "id": 553102625,
+  "lat": 32.349662,
+  "lon": 34.8627537,
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "node",
+  "id": 600866623,
+  "lat": 32.3369585,
+  "lon": 34.8615446,
+  "tags": {
+   "addr:postcode": "42***",
+   "amenity": "school",
+   "name": "בית ספר \"בארי\"",
+   "name:en": "Beeri",
+   "name:he": "בית ספר \"בארי\""
+  }
+ },
+ {
+  "type": "node",
+  "id": 893250876,
+  "lat": 32.3369044,
+  "lon": 34.8671684,
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "node",
+  "id": 904134370,
+  "lat": 32.3442191,
+  "lon": 34.8605418,
+  "tags": {
+   "amenity": "school",
+   "name": "The Balit Complex",
+   "name:en": "The Balit Complex"
+  }
+ },
+ {
+  "type": "node",
+  "id": 13989750803,
+  "lat": 32.2950276,
+  "lon": 34.8565058,
+  "tags": {
+   "amenity": "school",
+   "name": "גן חב\"ד נתניה"
+  }
+ },
+ {
+  "type": "node",
+  "id": 13989751302,
+  "lat": 32.2949578,
+  "lon": 34.8556519,
+  "tags": {
+   "addr:street": "בעל התניא",
+   "amenity": "school",
+   "name": "תלמוד תורה חב\"ד בנים"
+  }
+ },
+ {
+  "type": "node",
+  "id": 13989752002,
+  "lat": 32.2946083,
+  "lon": 34.8553161,
+  "tags": {
+   "addr:street": "בעל התניא",
+   "amenity": "school",
+   "name": "בית ספר בנות חב\"ד"
+  }
+ },
+ {
+  "type": "way",
+  "id": 27061356,
+  "center": {
+   "lat": 32.2997547,
+   "lon": 34.870499
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בית ספר הרצוג",
+   "name:en": "Hertzog School",
+   "name:he": "בית ספר הרצוג"
+  }
+ },
+ {
+  "type": "way",
+  "id": 27578488,
+  "center": {
+   "lat": 32.3106139,
+   "lon": 34.8732705
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בי\"ס לאה גולדברג"
+  }
+ },
+ {
+  "type": "way",
+  "id": 48458000,
+  "center": {
+   "lat": 32.3381975,
+   "lon": 34.8546063
+  },
+  "tags": {
+   "amenity": "school",
+   "area": "yes",
+   "check_date": "2024-10-06",
+   "name": "אולפן נתניה",
+   "name:en": "Natanya Ulpan",
+   "name:he": "אולפן נתניה",
+   "name:ru": "Ульпан"
+  }
+ },
+ {
+  "type": "way",
+  "id": 48458648,
+  "center": {
+   "lat": 32.3364052,
+   "lon": 34.8613534
+  },
+  "tags": {
+   "amenity": "school",
+   "check_date": "2025-09-26",
+   "name": "בארי",
+   "name:en": "Beeri",
+   "name:he": "בארי"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106375167,
+  "center": {
+   "lat": 32.3393706,
+   "lon": 34.8684976
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106375168,
+  "center": {
+   "lat": 32.3433445,
+   "lon": 34.8663519
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "תיכון משה שרת",
+   "name:en": "Moshe Sharet High School",
+   "name:he": "תיכון משה שרת"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106375169,
+  "center": {
+   "lat": 32.3412553,
+   "lon": 34.8732003
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בי\"ס שש-שנתי ש\"י עגנון"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106375236,
+  "center": {
+   "lat": 32.3351713,
+   "lon": 34.855344
+  },
+  "tags": {
+   "amenity": "school",
+   "check_date": "2025-10-04",
+   "name": "בית-הספר יסודי ממלכתי דתי ישורון",
+   "name:he": "בית-הספר יסודי ממלכתי דתי ישורון"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106375325,
+  "center": {
+   "lat": 32.3203582,
+   "lon": 34.8530824
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בי\"ס איתמר"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106375363,
+  "center": {
+   "lat": 32.320658,
+   "lon": 34.8573073
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106375364,
+  "center": {
+   "lat": 32.3179744,
+   "lon": 34.851358
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בי\"ס יונתן"
+  }
+ },
+ {
+  "type": "way",
+  "id": 107674439,
+  "center": {
+   "lat": 32.2852824,
+   "lon": 34.8465295
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בי\"ס רזיאל",
+   "name:en": "Raziel School",
+   "name:he": "בי\"ס רזיאל"
+  }
+ },
+ {
+  "type": "way",
+  "id": 107681354,
+  "center": {
+   "lat": 32.2963405,
+   "lon": 34.8499679
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "7",
+   "addr:street": "ד\"ר סטופ",
+   "amenity": "school",
+   "check_date": "2024-11-05",
+   "denomination": "orthodox",
+   "name": "בי\"ס שז\"ר",
+   "name:en": "Shazar School",
+   "name:he": "בי\"ס שז\"ר",
+   "name:ru": "Начальная Школа Шезар",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "way",
+  "id": 107681398,
+  "center": {
+   "lat": 32.2939327,
+   "lon": 34.8458217
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "40א",
+   "addr:street": "לוי אשכול",
+   "amenity": "school",
+   "denomination": "orthodox",
+   "name": "עוז והדר",
+   "name:he": "עוז והדר",
+   "phone": "09-835-9661",
+   "religion": "jewish",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 109982088,
+  "center": {
+   "lat": 32.339562,
+   "lon": 34.8631681
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "ביה\"ס הילל צור",
+   "name:en": "Hillel Zur school",
+   "name:he": "ביה\"ס הילל צור"
+  }
+ },
+ {
+  "type": "way",
+  "id": 110556811,
+  "center": {
+   "lat": 32.3463559,
+   "lon": 34.8620772
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בית ספר חמ\"ד נועם צביע",
+   "name:he": "בית ספר חמ\"ד נועם צביע"
+  }
+ },
+ {
+  "type": "way",
+  "id": 115796856,
+  "center": {
+   "lat": 32.3294851,
+   "lon": 34.8685011
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 115827056,
+  "center": {
+   "lat": 32.3309625,
+   "lon": 34.8661683
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 132257690,
+  "center": {
+   "lat": 32.2939092,
+   "lon": 34.8488839
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 167448190,
+  "center": {
+   "lat": 32.2998142,
+   "lon": 34.8601509
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "קמפוס יצחק נבון לאמנויות"
+  }
+ },
+ {
+  "type": "way",
+  "id": 171607711,
+  "center": {
+   "lat": 32.3264991,
+   "lon": 34.8660786
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "אולפנית בר אילן"
+  }
+ },
+ {
+  "type": "way",
+  "id": 171749803,
+  "center": {
+   "lat": 32.3111705,
+   "lon": 34.8578052
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 171749804,
+  "center": {
+   "lat": 32.311344,
+   "lon": 34.8562415
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 171749915,
+  "center": {
+   "lat": 32.3096052,
+   "lon": 34.8573466
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 171749916,
+  "center": {
+   "lat": 32.3089818,
+   "lon": 34.8573037
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 171749921,
+  "center": {
+   "lat": 32.3094805,
+   "lon": 34.8559097
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "תיכון טשרניחובסקי"
+  }
+ },
+ {
+  "type": "way",
+  "id": 171750506,
+  "center": {
+   "lat": 32.3129078,
+   "lon": 34.8638858
+  },
+  "tags": {
+   "amenity": "school",
+   "check_date": "2026-07-09",
+   "name": "כפר עידוד",
+   "name:he": "כפר עידוד"
+  }
+ },
+ {
+  "type": "way",
+  "id": 383574742,
+  "center": {
+   "lat": 32.3177596,
+   "lon": 34.8627719
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "יהודה הלוי",
+   "name:en": "Yehuda HaLevi",
+   "name:he": "יהודה הלוי"
+  }
+ },
+ {
+  "type": "way",
+  "id": 383575207,
+  "center": {
+   "lat": 32.317653,
+   "lon": 34.8652341
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 383575209,
+  "center": {
+   "lat": 32.3195679,
+   "lon": 34.8646668
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 383575213,
+  "center": {
+   "lat": 32.3192475,
+   "lon": 34.8651523
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 553035778,
+  "center": {
+   "lat": 32.2804815,
+   "lon": 34.8454289
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "8",
+   "addr:street": "בני ברמן",
+   "amenity": "school",
+   "name": "בית הספר ע\"ש חיים חפר",
+   "name:en": "The Haim Hefer Elementary School",
+   "name:he": "בית הספר ע\"ש חיים חפר",
+   "name:ru": "Начальная школа им. Хаима Хефера",
+   "phone": "+97297498427",
+   "religion": "jewish",
+   "website": "https://haimhefer.tik-tak.net",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "way",
+  "id": 554095727,
+  "center": {
+   "lat": 32.2836308,
+   "lon": 34.8564794
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "18",
+   "addr:street": "נורדאו",
+   "amenity": "school",
+   "name": "בית ספר יסודי הבית של תמר"
+  }
+ },
+ {
+  "type": "way",
+  "id": 556310920,
+  "center": {
+   "lat": 32.3009032,
+   "lon": 34.8757902
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "בי\"ס שמרית"
+  }
+ },
+ {
+  "type": "way",
+  "id": 556598041,
+  "center": {
+   "lat": 32.3111194,
+   "lon": 34.871771
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בי\"ס רועי קליין"
+  }
+ },
+ {
+  "type": "way",
+  "id": 628669650,
+  "center": {
+   "lat": 32.3036152,
+   "lon": 34.870499
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בית ספר ממ\"ד אביחי",
+   "name:he": "בית ספר ממ\"ד אביחי"
+  }
+ },
+ {
+  "type": "way",
+  "id": 749238513,
+  "center": {
+   "lat": 32.3008163,
+   "lon": 34.8515443
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "8",
+   "addr:street": "חטיבת אלכסנדרוני",
+   "amenity": "school",
+   "denomination": "orthodox",
+   "name": "ביה\"ס יסודי אילן רמון",
+   "name:he": "ביה\"ס יסודי אילן רמון",
+   "religion": "jewish",
+   "website": "http://www.ramon.netanya-edu.org.il/BRPortal/br/P106.jsp?id=240335"
+  }
+ },
+ {
+  "type": "way",
+  "id": 749238514,
+  "center": {
+   "lat": 32.3018455,
+   "lon": 34.8517697
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "1",
+   "addr:street": "חטיבת אלכסנדרוני",
+   "amenity": "school",
+   "denomination": "orthodox",
+   "name": "חט\"ב תיכון ריגלר",
+   "name:he": "חט\"ב תיכון ריגלר",
+   "religion": "jewish",
+   "website": "https://rigler.tik-tak.net/"
+  }
+ },
+ {
+  "type": "way",
+  "id": 792995600,
+  "center": {
+   "lat": 32.2833243,
+   "lon": 34.851541
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "2",
+   "addr:postcode": "42347",
+   "addr:street": "וייסלברגר טיודור",
+   "amenity": "school",
+   "denomination": "orthodox",
+   "description": "רשת אורט ישראל – רשת החינוך הטכנולוגית-מדעית המובילה בישראל בית הספר אורט ע\"ש גוטמן הוא בית חינוך מקיף שש שנתי המחנך לערכי כבוד האדם, מורשת יהודית-ציונית ושאיפה למצוינות. העשייה החינוכית מתאפיינת בשותפות משמעותית בין כל בכלי העניין בביה\"ס המקיימים בינהם",
+   "email": "school@guttman.ort.org.il",
+   "fax": "09-8354808",
+   "fee": "yes",
+   "internet_access": "wlan",
+   "level": "0",
+   "name": "בית ספר מקיף אורט ע\"ש גוטמן",
+   "name:en": "ORT Guttman High and Junior High School",
+   "name:he": "בית ספר מקיף אורט ע\"ש גוטמן",
+   "name:ru": "Государственная средняя и старшая школа \"ОРТ\" имени Гутмана",
+   "phone": "09-8636700",
+   "religion": "jewish",
+   "start_date": "1.9.1983",
+   "website": "https://guttman.ort.org.il/",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "way",
+  "id": 793226986,
+  "center": {
+   "lat": 32.2896695,
+   "lon": 34.8506183
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:street": "שמורת נחל שניר",
+   "amenity": "school",
+   "denomination": "orthodox",
+   "email": "davidiagamim@gmail.com",
+   "fax": "09-7664413",
+   "fee": "yes",
+   "internet_access": "yes",
+   "level": "0",
+   "name": "בית ספר ע\"ש אהרון דוידי",
+   "name:en": "Aaron Davidi Elementary School",
+   "name:he": "בית ספר ע\"ש אהרון דוידי",
+   "name:ru": "Начальная школа им. Аарона Давиди",
+   "phone": "09-7664413",
+   "religion": "jewish",
+   "start_date": "1.9.2013",
+   "website": "http://net.sisma.org.il/school/davidi/Pages/home-page.aspx"
+  }
+ },
+ {
+  "type": "way",
+  "id": 863549323,
+  "center": {
+   "lat": 32.2792831,
+   "lon": 34.8425645
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בי\"ס קרליבך",
+   "name:en": "Carlibach School"
+  }
+ },
+ {
+  "type": "way",
+  "id": 863549357,
+  "center": {
+   "lat": 32.282386,
+   "lon": 34.8446213
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "4",
+   "addr:street": "בני ברמן",
+   "amenity": "school",
+   "name": "חטיבת ביניים ע\"ש חיים גורי",
+   "name:en": "Haim Guri Junior High School",
+   "name:he": "חטיבת ביניים ע\"ש חיים גורי",
+   "name:ru": "Средняя школа им. Хаима Гури",
+   "phone": "09-789-9333",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "way",
+  "id": 893073706,
+  "center": {
+   "lat": 32.2741104,
+   "lon": 34.8466849
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בית ספר יסודי רימלט",
+   "name:he": "בית ספר יסודי רימלט"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1064892447,
+  "center": {
+   "lat": 32.3421361,
+   "lon": 34.8639637
+  },
+  "tags": {
+   "amenity": "school",
+   "name": "בי\"ס הלל צור"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1065047198,
+  "center": {
+   "lat": 32.3411287,
+   "lon": 34.8577133
+  },
+  "tags": {
+   "amenity": "school",
+   "check_date": "2026-06-08",
+   "name": "בי\"ס נעמי שמר",
+   "name:en": "Naomi Shemer School",
+   "name:he": "בי\"ס נעמי שמר"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1365979918,
+  "center": {
+   "lat": 32.3170237,
+   "lon": 34.8650043
+  },
+  "tags": {
+   "amenity": "school"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1531609498,
+  "center": {
+   "lat": 32.3125366,
+   "lon": 34.8869213
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "ישיבת בני עקיבא \"יד אברהם\""
+  }
+ },
+ {
+  "type": "way",
+  "id": 1554740454,
+  "center": {
+   "lat": 32.2786405,
+   "lon": 34.8539012
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "בי\"ס צליל למצוינות"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1554740455,
+  "center": {
+   "lat": 32.2781035,
+   "lon": 34.8550489
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "בי\"ס שש-שנתי אלדד"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1554751860,
+  "center": {
+   "lat": 32.2729544,
+   "lon": 34.8431099
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "בי\"ס בגין"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1554751866,
+  "center": {
+   "lat": 32.3189351,
+   "lon": 34.8601232
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "בי\"ס שורשים"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1554751868,
+  "center": {
+   "lat": 32.331761,
+   "lon": 34.8548707
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "בי\"ס ביאליק"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1554751870,
+  "center": {
+   "lat": 32.3195364,
+   "lon": 34.8902402
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "ביה\"ס הדמוקרטי אלומות"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1554751873,
+  "center": {
+   "lat": 32.3062209,
+   "lon": 34.8838644
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "בי\"ס רבין"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562506574,
+  "center": {
+   "lat": 32.2924816,
+   "lon": 34.8549546
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "בי\"ס נתן אלבז",
+   "name:en": "Natan Elbaz School"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562506606,
+  "center": {
+   "lat": 32.2956297,
+   "lon": 34.8724398
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "בי\"ס תשרי"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562568766,
+  "center": {
+   "lat": 32.2981356,
+   "lon": 34.8765992
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "בי\"ס דבורה עומר"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562568769,
+  "center": {
+   "lat": 32.2994171,
+   "lon": 34.8768101
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "חט\"ב נתן אלתרמן"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562568778,
+  "center": {
+   "lat": 32.3041593,
+   "lon": 34.8715599
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "חט\"ב מרים ילן שטקליס"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562576798,
+  "center": {
+   "lat": 32.3216192,
+   "lon": 34.8881231
+  },
+  "tags": {
+   "amenity": "school",
+   "education": "school",
+   "name": "בי\"ס אמירים"
+  }
+ },
+ {
+  "type": "relation",
+  "id": 18079178,
+  "center": {
+   "lat": 32.2959459,
+   "lon": 34.8550597
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "7",
+   "addr:street": "הנביאים",
+   "amenity": "school",
+   "grades": "7-12",
+   "name": "בית הספר בר אילן בנים",
+   "operator": "רשת אמי\"ת",
+   "operator:type": "school",
+   "religion": "jewish",
+   "type": "multipolygon"
+  }
+ }
+]

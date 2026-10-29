@@ -1,0 +1,79 @@
+[
+ {
+  "type": "node",
+  "id": 3703591031,
+  "lat": 32.3199544,
+  "lon": 34.8693256,
+  "tags": {
+   "internet_access": "wlan",
+   "internet_access:fee": "no",
+   "name": "נתניה",
+   "name:en": "Netanya",
+   "name:he": "נתניה",
+   "operator": "Israel Railways",
+   "public_transport": "station",
+   "railway": "station",
+   "train": "yes",
+   "wheelchair": "yes",
+   "wikidata": "Q2915701",
+   "wikipedia": "he:תחנת הרכבת נתניה",
+   "wikipedia:he": "תחנת הרכבת נתניה"
+  }
+ },
+ {
+  "type": "node",
+  "id": 4482054540,
+  "lat": 32.2796735,
+  "lon": 34.865508,
+  "tags": {
+   "name": "נתניה – ספיר",
+   "name:en": "Netanya Sapir",
+   "name:he": "נתניה – ספיר",
+   "operator": "Israel Railways",
+   "public_transport": "station",
+   "railway": "station",
+   "train": "yes",
+   "website": "https://www.rail.co.il/?page=stationinfo&stationname=3310",
+   "wikidata": "Q6587064",
+   "wikipedia": "he:תחנת הרכבת נתניה - ספיר",
+   "wikipedia:he": "תחנת הרכבת נתניה - ספיר"
+  }
+ },
+ {
+  "type": "way",
+  "id": 30809475,
+  "center": {
+   "lat": 32.3271395,
+   "lon": 34.8586198
+  },
+  "tags": {
+   "amenity": "bus_station",
+   "building": "yes",
+   "bus": "yes",
+   "name": "תחנה מרכזית נתניה",
+   "name:en": "Netanya Central Bus Station",
+   "name:he": "תחנה מרכזית נתניה",
+   "name:ru": "Центральная автостанция",
+   "public_transport": "station",
+   "wheelchair": "yes",
+   "wikidata": "Q6671870"
+  }
+ },
+ {
+  "type": "way",
+  "id": 779085446,
+  "center": {
+   "lat": 32.2821607,
+   "lon": 34.8531659
+  },
+  "tags": {
+   "addr:street": "פנחס לבון",
+   "amenity": "bus_station",
+   "building": "yes",
+   "bus": "yes",
+   "name": "לבון/עגנון",
+   "name:he": "לבון/עגנון",
+   "public_transport": "station"
+  }
+ }
+]

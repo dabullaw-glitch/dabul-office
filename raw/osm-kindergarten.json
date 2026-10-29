@@ -1,0 +1,365 @@
+[
+ {
+  "type": "node",
+  "id": 288277516,
+  "lat": 32.2964652,
+  "lon": 34.8742028,
+  "tags": {
+   "amenity": "kindergarten",
+   "name": "בית גיא",
+   "name:he": "בית גיא"
+  }
+ },
+ {
+  "type": "node",
+  "id": 297857410,
+  "lat": 32.3098582,
+  "lon": 34.8764795,
+  "tags": {
+   "amenity": "kindergarten"
+  }
+ },
+ {
+  "type": "node",
+  "id": 298531496,
+  "lat": 32.3040024,
+  "lon": 34.8832847,
+  "tags": {
+   "amenity": "kindergarten"
+  }
+ },
+ {
+  "type": "node",
+  "id": 305464328,
+  "lat": 32.313774,
+  "lon": 34.8840447,
+  "tags": {
+   "amenity": "kindergarten"
+  }
+ },
+ {
+  "type": "node",
+  "id": 448661097,
+  "lat": 32.3204189,
+  "lon": 34.8500012,
+  "tags": {
+   "amenity": "kindergarten"
+  }
+ },
+ {
+  "type": "node",
+  "id": 1244259014,
+  "lat": 32.2815703,
+  "lon": 34.8536009,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "57",
+   "addr:street": "פנחס לבון",
+   "amenity": "kindergarten",
+   "name": "קפיטושקה",
+   "name:he": "קפיטושקה",
+   "name:ru": "Капитошка"
+  }
+ },
+ {
+  "type": "node",
+  "id": 1671803271,
+  "lat": 32.2866203,
+  "lon": 34.8478726,
+  "tags": {
+   "amenity": "kindergarten"
+  }
+ },
+ {
+  "type": "node",
+  "id": 2422186632,
+  "lat": 32.3263911,
+  "lon": 34.8566558,
+  "tags": {
+   "amenity": "kindergarten",
+   "name": "גן נעמ\"ת",
+   "name:en": "Gan Na'amat",
+   "name:he": "גן נעמ\"ת"
+  }
+ },
+ {
+  "type": "node",
+  "id": 7049649595,
+  "lat": 32.2823546,
+  "lon": 34.8543651,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "19",
+   "addr:street": "בר יהודה",
+   "amenity": "kindergarten",
+   "name": "גן מעון פעמון",
+   "name:he": "גן מעון פעמון",
+   "name:ru": "Колокольчик"
+  }
+ },
+ {
+  "type": "way",
+  "id": 26954979,
+  "center": {
+   "lat": 32.2965275,
+   "lon": 34.8710022
+  },
+  "tags": {
+   "amenity": "kindergarten"
+  }
+ },
+ {
+  "type": "way",
+  "id": 27130392,
+  "center": {
+   "lat": 32.2999111,
+   "lon": 34.8711197
+  },
+  "tags": {
+   "amenity": "kindergarten"
+  }
+ },
+ {
+  "type": "way",
+  "id": 109534684,
+  "center": {
+   "lat": 32.3382504,
+   "lon": 34.861746
+  },
+  "tags": {
+   "amenity": "kindergarten",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 118271932,
+  "center": {
+   "lat": 32.3353086,
+   "lon": 34.8639444
+  },
+  "tags": {
+   "amenity": "kindergarten",
+   "name": "אשת",
+   "name:he": "אשת",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 120123602,
+  "center": {
+   "lat": 32.3353155,
+   "lon": 34.8642428
+  },
+  "tags": {
+   "amenity": "kindergarten",
+   "check_date": "2023-09-06",
+   "name": "גן ארז",
+   "name:he": "גן ארז",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 352783155,
+  "center": {
+   "lat": 32.3345586,
+   "lon": 34.8602058
+  },
+  "tags": {
+   "amenity": "kindergarten",
+   "check_date": "2025-09-26",
+   "name": "גן חמ\"ד חחבלוב",
+   "name:he": "גן חמ\"ד חחבלוב"
+  }
+ },
+ {
+  "type": "way",
+  "id": 439873186,
+  "center": {
+   "lat": 32.335113,
+   "lon": 34.8536597
+  },
+  "tags": {
+   "addr:housenumber": "26",
+   "addr:street": "מקדולנד",
+   "amenity": "kindergarten",
+   "check_date": "2026-03-17",
+   "name": "גן הרימון",
+   "name:en": "Gan Harimon",
+   "name:he": "גן הרימון"
+  }
+ },
+ {
+  "type": "way",
+  "id": 554095720,
+  "center": {
+   "lat": 32.2797464,
+   "lon": 34.8501055
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "16",
+   "addr:street": "אדם הכהן",
+   "amenity": "kindergarten",
+   "name": "גן ג'ני",
+   "name:he": "גן ג'ני",
+   "phone": "0509523051"
+  }
+ },
+ {
+  "type": "way",
+  "id": 728210295,
+  "center": {
+   "lat": 32.2894547,
+   "lon": 34.8522758
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "5",
+   "addr:street": "שמורת נחל שורק",
+   "amenity": "kindergarten",
+   "level": "0",
+   "max_age": "4",
+   "min_age": "3",
+   "name": "גן דקלים",
+   "name:en": "Dekelim Kindergarten",
+   "name:he": "גן דקלים",
+   "name:ru": "Детский сад \"Декелим\"",
+   "phone": "09-8352087",
+   "preschool": "yes",
+   "source": "https://www.baderechlagan.co.il/gans/6a8d56d596;https://www.allschool.co.il/%D7%9E%D7%95%D7%A1%D7%93%D7%95%D7%AA/515783/%D7%93%D7%A7%D7%9C%D7%99%D7%9D-%D7%A0%D7%AA%D7%A0%D7%99%D7%94",
+   "start_date": "2014-09-01"
+  }
+ },
+ {
+  "type": "way",
+  "id": 728210296,
+  "center": {
+   "lat": 32.2887926,
+   "lon": 34.8526717
+  },
+  "tags": {
+   "amenity": "kindergarten",
+   "name": "גן",
+   "name:he": "גן",
+   "name:ru": "Детский сад"
+  }
+ },
+ {
+  "type": "way",
+  "id": 747441302,
+  "center": {
+   "lat": 32.2923227,
+   "lon": 34.8507935
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:street": "שמורת נחל דולב",
+   "amenity": "kindergarten",
+   "name": "גן ילדים",
+   "name:en": "Kindergarten",
+   "name:he": "גן ילדים",
+   "preschool": "yes"
+  }
+ },
+ {
+  "type": "way",
+  "id": 893073704,
+  "center": {
+   "lat": 32.2741728,
+   "lon": 34.8477356
+  },
+  "tags": {
+   "amenity": "kindergarten",
+   "building": "kindergarten",
+   "name": "גן ילדים",
+   "name:en": "Kindergarten",
+   "name:he": "גן ילדים"
+  }
+ },
+ {
+  "type": "way",
+  "id": 893073705,
+  "center": {
+   "lat": 32.274609,
+   "lon": 34.8474366
+  },
+  "tags": {
+   "amenity": "kindergarten",
+   "building": "kindergarten",
+   "name": "גן ילדים",
+   "name:en": "Kindergarten",
+   "name:he": "גן ילדים"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1241599201,
+  "center": {
+   "lat": 32.2923095,
+   "lon": 34.8514928
+  },
+  "tags": {
+   "amenity": "kindergarten"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1241599207,
+  "center": {
+   "lat": 32.2894106,
+   "lon": 34.852639
+  },
+  "tags": {
+   "amenity": "kindergarten"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1241627296,
+  "center": {
+   "lat": 32.2982808,
+   "lon": 34.8436546
+  },
+  "tags": {
+   "amenity": "kindergarten"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1365979903,
+  "center": {
+   "lat": 32.3186728,
+   "lon": 34.8651836
+  },
+  "tags": {
+   "amenity": "kindergarten"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562506590,
+  "center": {
+   "lat": 32.3365284,
+   "lon": 34.861794
+  },
+  "tags": {
+   "amenity": "kindergarten",
+   "education": "kindergarten"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562568767,
+  "center": {
+   "lat": 32.2979034,
+   "lon": 34.8772405
+  },
+  "tags": {
+   "amenity": "kindergarten",
+   "education": "kindergarten"
+  }
+ }
+]

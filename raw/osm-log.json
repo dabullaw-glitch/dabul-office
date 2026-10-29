@@ -1,0 +1,134 @@
+[
+ {
+  "k": "post",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "status": 502,
+  "body": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F"
+ },
+ {
+  "k": "post",
+  "ep": "https://overpass.private.coffee/api/interpreter",
+  "err": "TimeoutError: The operation was aborted due to timeout"
+ },
+ {
+  "k": "post",
+  "ep": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+  "status": 504,
+  "body": "<html>\r\n<head><title>504 Gateway Time-out</title></head>\r\n<body>\r\n<center><h1>504 Gateway Time-out</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n"
+ },
+ {
+  "k": "post",
+  "ep": "https://overpass.kumi.systems/api/interpreter",
+  "err": "TimeoutError: The operation was aborted due to timeout"
+ },
+ {
+  "k": "bank",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "status": 502,
+  "body": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F"
+ },
+ {
+  "k": "bank",
+  "ep": "https://overpass.private.coffee/api/interpreter",
+  "n": 17
+ },
+ {
+  "k": "synagogue",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "n": 64
+ },
+ {
+  "k": "school",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "n": 71
+ },
+ {
+  "k": "kindergarten",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "n": 28
+ },
+ {
+  "k": "community",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "n": 10
+ },
+ {
+  "k": "library",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "n": 3
+ },
+ {
+  "k": "health",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "n": 36
+ },
+ {
+  "k": "pharmacy",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "status": 502,
+  "body": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F"
+ },
+ {
+  "k": "pharmacy",
+  "ep": "https://overpass.private.coffee/api/interpreter",
+  "err": "TimeoutError: The operation was aborted due to timeout"
+ },
+ {
+  "k": "pharmacy",
+  "ep": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+  "status": 504,
+  "body": "<html>\r\n<head><title>504 Gateway Time-out</title></head>\r\n<body>\r\n<center><h1>504 Gateway Time-out</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n"
+ },
+ {
+  "k": "pharmacy",
+  "ep": "https://overpass.kumi.systems/api/interpreter",
+  "err": "TimeoutError: The operation was aborted due to timeout"
+ },
+ {
+  "k": "gov",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "status": 502,
+  "body": "# 502 Gateway Timeout\n\nThis Overpass API server is currently at capacity. All query workers are busy\nand the request queue is full.\n\n## What to do\n\nRetry your request using exponential backoff: wait a short interval, then retry.\nIf the request fails again, double the wait time and retry again.\n\n## F"
+ },
+ {
+  "k": "gov",
+  "ep": "https://overpass.private.coffee/api/interpreter",
+  "err": "TimeoutError: The operation was aborted due to timeout"
+ },
+ {
+  "k": "gov",
+  "ep": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+  "status": 504,
+  "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n<head>\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" lan"
+ },
+ {
+  "k": "gov",
+  "ep": "https://overpass.kumi.systems/api/interpreter",
+  "err": "TimeoutError: The operation was aborted due to timeout"
+ },
+ {
+  "k": "transport",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "n": 4
+ },
+ {
+  "k": "ngo",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "n": 2
+ },
+ {
+  "k": "sport",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "n": 62
+ },
+ {
+  "k": "culture",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "n": 6
+ },
+ {
+  "k": "suburb",
+  "ep": "https://overpass-api.de/api/interpreter",
+  "n": 33
+ }
+]

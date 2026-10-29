@@ -1,0 +1,890 @@
+[
+ {
+  "type": "node",
+  "id": 268161833,
+  "lat": 32.3101859,
+  "lon": 34.8765959,
+  "tags": {
+   "amenity": "place_of_worship",
+   "denomination": "orthodox",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 305478462,
+  "lat": 32.3141395,
+  "lon": 34.8791165,
+  "tags": {
+   "amenity": "place_of_worship",
+   "created_by": "Potlatch 0.10f",
+   "denomination": "orthodox",
+   "name": "בית הכנסת ישמח משה",
+   "name:en": "Ismach Moshe",
+   "name:he": "בית הכנסת ישמח משה",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 448572120,
+  "lat": 32.3214046,
+  "lon": 34.8507269,
+  "tags": {
+   "addr:housenumber": "23",
+   "addr:street": "השבעה",
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 542704178,
+  "lat": 32.3196262,
+  "lon": 34.853508,
+  "tags": {
+   "addr:housenumber": "17",
+   "addr:street": "יאיר אברהם שטרן",
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 556904601,
+  "lat": 32.3242963,
+  "lon": 34.8607945,
+  "tags": {
+   "addr:housenumber": "23",
+   "addr:street": "פתח-תקווה",
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 560544085,
+  "lat": 32.3230681,
+  "lon": 34.8586336,
+  "tags": {
+   "addr:housenumber": "10",
+   "addr:street": "ד\"ר שרייבר מרדכי",
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 560544086,
+  "lat": 32.3222342,
+  "lon": 34.8595689,
+  "tags": {
+   "addr:housenumber": "36",
+   "addr:street": "פתח-תקווה",
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 564588766,
+  "lat": 32.3315696,
+  "lon": 34.8561613,
+  "tags": {
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 564588781,
+  "lat": 32.3299595,
+  "lon": 34.8579637,
+  "tags": {
+   "amenity": "place_of_worship",
+   "denomination": "breslav",
+   "name": "מרכז ברסלב",
+   "name:en": "Breslav center",
+   "name:he": "מרכז ברסלב",
+   "religion": "jewish",
+   "wheelchair": "no"
+  }
+ },
+ {
+  "type": "node",
+  "id": 564588782,
+  "lat": 32.3303906,
+  "lon": 34.8584604,
+  "tags": {
+   "amenity": "place_of_worship",
+   "check_date": "2026-07-03",
+   "denomination": "orthodox",
+   "name": "בית דוד",
+   "name:en": "Bet David",
+   "name:he": "בית דוד",
+   "religion": "jewish",
+   "wheelchair": "no"
+  }
+ },
+ {
+  "type": "node",
+  "id": 564589732,
+  "lat": 32.3269424,
+  "lon": 34.8550111,
+  "tags": {
+   "amenity": "place_of_worship",
+   "denomination": "chabad",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 565448141,
+  "lat": 32.3308917,
+  "lon": 34.8598172,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "תפארת ישראל",
+   "name:en": "Tiferet Israel",
+   "name:he": "תפארת ישראל",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 582029977,
+  "lat": 32.336512,
+  "lon": 34.8646985,
+  "tags": {
+   "amenity": "place_of_worship",
+   "denomination": "ashkenazi_orthodox",
+   "name": "בית מיר",
+   "name:en": "Beit Meir",
+   "name:he": "בית מיר",
+   "religion": "jewish",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 583257924,
+  "lat": 32.3308248,
+  "lon": 34.8601552,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "ישמח משה",
+   "name:en": "Ishma Moshe",
+   "name:he": "ישמח משה",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 600864193,
+  "lat": 32.3429774,
+  "lon": 34.8584332,
+  "tags": {
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 600864338,
+  "lat": 32.3441059,
+  "lon": 34.858101,
+  "tags": {
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 615659244,
+  "lat": 32.3384883,
+  "lon": 34.8582614,
+  "tags": {
+   "amenity": "place_of_worship",
+   "check_date": "2024-10-06",
+   "denomination": "conservative",
+   "name": "בית ישראל",
+   "name:en": "Bet Israel",
+   "name:he": "בית ישראל",
+   "religion": "jewish",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 616203222,
+  "lat": 32.3366475,
+  "lon": 34.8558912,
+  "tags": {
+   "amenity": "place_of_worship",
+   "check_date": "2026-07-27",
+   "name": "צעירי ציון",
+   "name:he": "צעירי ציון",
+   "religion": "jewish",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 662740007,
+  "lat": 32.3218929,
+  "lon": 34.8532667,
+  "tags": {
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 662973010,
+  "lat": 32.3268792,
+  "lon": 34.8669283,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "ישמח ישראל",
+   "name:en": "Ismach Israel",
+   "name:he": "ישמח ישראל",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 662973019,
+  "lat": 32.3312926,
+  "lon": 34.865323,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "אבות רבנים",
+   "name:en": "Avot Rabanim",
+   "name:he": "אבות רבנים",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 662973050,
+  "lat": 32.3324556,
+  "lon": 34.8699598,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "מגן אברהם",
+   "name:en": "Magen Avraham",
+   "name:he": "מגן אברהם",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 662973076,
+  "lat": 32.3339882,
+  "lon": 34.8680027,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "קיבוץ גלויות",
+   "name:en": "Kibbutz Galuyot",
+   "name:he": "קיבוץ גלויות",
+   "religion": "jewish",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 662973086,
+  "lat": 32.3341136,
+  "lon": 34.8700322,
+  "tags": {
+   "alt_name:en": "Or HaHaim",
+   "amenity": "place_of_worship",
+   "name": "אור החיים",
+   "name:en": "Or HaHayim",
+   "name:he": "אור החיים",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 662973115,
+  "lat": 32.334152,
+  "lon": 34.869739,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "שמח ישראל",
+   "name:en": "Samah Israel",
+   "name:he": "שמח ישראל",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 824064647,
+  "lat": 32.3304943,
+  "lon": 34.8521769,
+  "tags": {
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 824064649,
+  "lat": 32.3301861,
+  "lon": 34.8521662,
+  "tags": {
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 824064650,
+  "lat": 32.3293513,
+  "lon": 34.8527823,
+  "tags": {
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 824064651,
+  "lat": 32.3294926,
+  "lon": 34.8497898,
+  "tags": {
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 824064656,
+  "lat": 32.3303855,
+  "lon": 34.8522359,
+  "tags": {
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 824066786,
+  "lat": 32.3307805,
+  "lon": 34.8535575,
+  "tags": {
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 1323329165,
+  "lat": 32.3327336,
+  "lon": 34.8657329,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "בני עקיבא - סניף נתניה מרכז",
+   "name:he": "בני עקיבא - סניף נתניה מרכז",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 1562438297,
+  "lat": 32.3301529,
+  "lon": 34.8560407,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "אוהל עמנואל",
+   "name:en": "Ohel Immanuel",
+   "name:he": "אוהל עמנואל",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 2422177028,
+  "lat": 32.3215579,
+  "lon": 34.8532033,
+  "tags": {
+   "amenity": "place_of_worship",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 4847375421,
+  "lat": 32.2968761,
+  "lon": 34.8819856,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "ר׳ מכיל׳ע מנתניה",
+   "name:he": "ר׳ מכיל׳ע מנתניה",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 5721949433,
+  "lat": 32.3314629,
+  "lon": 34.8534699,
+  "tags": {
+   "amenity": "place_of_worship",
+   "denomination": "jewish",
+   "name": "Bet Haknesset Chabad Bnei Romi",
+   "name:en": "Bet Haknesset Chabad Bnei Romi",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 5721949434,
+  "lat": 32.3313956,
+  "lon": 34.8533503,
+  "tags": {
+   "amenity": "place_of_worship",
+   "check_date": "2026-03-17",
+   "denomination": "jewish",
+   "name": "Bet Chabat - Russian",
+   "name:en": "Bet Chabat - Russian",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 7024053363,
+  "lat": 32.2823449,
+  "lon": 34.848296,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "בית הכנסת ע\"ש רבי דוד בן ברוך הכהן",
+   "name:he": "בית הכנסת ע\"ש רבי דוד בן ברוך הכהן",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 7049580105,
+  "lat": 32.285235,
+  "lon": 34.8526689,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "20",
+   "addr:street": "קצנלסון יצחק",
+   "amenity": "place_of_worship",
+   "denomination": "orthodox",
+   "name": "שערי ברכה",
+   "name:he": "שערי ברכה",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 9779642888,
+  "lat": 32.3366762,
+  "lon": 34.8577413,
+  "tags": {
+   "amenity": "place_of_worship",
+   "check_date": "2026-05-29",
+   "name": "מאירים",
+   "name:he": "מאירים",
+   "religion": "jewish",
+   "wheelchair": "no"
+  }
+ },
+ {
+  "type": "node",
+  "id": 14006421601,
+  "lat": 32.2840926,
+  "lon": 34.8559494,
+  "tags": {
+   "amenity": "place_of_worship",
+   "name": "בית כנסת אליהו הנביא",
+   "name:he": "בית כנסת אליהו הנביא",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "node",
+  "id": 14006717002,
+  "lat": 32.2834509,
+  "lon": 34.8558844,
+  "tags": {
+   "addr:street": "פרץ",
+   "amenity": "place_of_worship",
+   "name": "בית כנסת שפעת רביבים",
+   "name:he": "בית כנסת שפעת רביבים",
+   "opening_hours": "24/7",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "way",
+  "id": 44917859,
+  "center": {
+   "lat": 32.3350917,
+   "lon": 34.8561364
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "check_date": "2025-10-04",
+   "name": "היכל רפאל",
+   "name:en": "Heichal Refael",
+   "name:he": "היכל רפאל",
+   "religion": "jewish",
+   "wheelchair": "no"
+  }
+ },
+ {
+  "type": "way",
+  "id": 104334054,
+  "center": {
+   "lat": 32.3389991,
+   "lon": 34.85407
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "building:levels": "2",
+   "check_date": "2024-12-04",
+   "name": "ישראל הצעיר",
+   "name:en": "Young Israel of North Netanya",
+   "name:he": "ישראל הצעיר",
+   "religion": "jewish",
+   "source": "bing",
+   "website": "https://www.yinn.org/"
+  }
+ },
+ {
+  "type": "way",
+  "id": 104336159,
+  "center": {
+   "lat": 32.3397183,
+   "lon": 34.8613725
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "synagogue",
+   "religion": "jewish",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106180952,
+  "center": {
+   "lat": 32.334808,
+   "lon": 34.8537148
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "building:levels": "1",
+   "check_date": "2026-03-17",
+   "name": "עמית",
+   "name:en": "Amit",
+   "name:he": "עמית",
+   "religion": "jewish",
+   "roof:shape": "flat",
+   "source": "bing",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106185023,
+  "center": {
+   "lat": 32.3335975,
+   "lon": 34.8529223
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "check_date": "2024-12-04",
+   "name": "בית הכנסת החדש נתניה",
+   "name:en": "New synagogue",
+   "name:he": "בית הכנסת החדש נתניה",
+   "religion": "jewish",
+   "source": "bing",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "way",
+  "id": 107678900,
+  "center": {
+   "lat": 32.2842751,
+   "lon": 34.8485259
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:street": "רותם",
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "denomination": "orthodox",
+   "name": "בית כנסת אזוגי יצחק",
+   "name:he": "בית כנסת אזוגי יצחק",
+   "religion": "jewish",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 107681278,
+  "center": {
+   "lat": 32.2936999,
+   "lon": 34.8502478
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "8",
+   "addr:street": "אברהם קריניצי",
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "denomination": "orthodox",
+   "name": "בית הכנסת שבת אחים",
+   "name:he": "בית הכנסת שבת אחים",
+   "religion": "jewish",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 109981912,
+  "center": {
+   "lat": 32.3429701,
+   "lon": 34.8570092
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "check_date": "2025-08-16",
+   "denomination": "orthodox",
+   "name": "אוהל נחמיה",
+   "name:en": "Ohel Nehemiah",
+   "name:he": "אוהל נחמיה",
+   "religion": "jewish",
+   "source": "bing",
+   "wheelchair": "limited"
+  }
+ },
+ {
+  "type": "way",
+  "id": 109982092,
+  "center": {
+   "lat": 32.3399725,
+   "lon": 34.8642435
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "name": "בית כנסת - פועלי צדק",
+   "religion": "jewish",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 109983032,
+  "center": {
+   "lat": 32.3380017,
+   "lon": 34.8614266
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "name": "בית חב\"ד צפון נתניה",
+   "religion": "jewish",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 115880594,
+  "center": {
+   "lat": 32.3381387,
+   "lon": 34.8550322
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "denomination": "sephardi",
+   "religion": "jewish",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 147060421,
+  "center": {
+   "lat": 32.3190928,
+   "lon": 34.8597143
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "name": "בית כנסת ומרכז קהילתי תפארת בחורים",
+   "religion": "jewish",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 167450764,
+  "center": {
+   "lat": 32.2819249,
+   "lon": 34.8511848
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "10",
+   "addr:street": "ש\"י עגנון",
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "denomination": "orthodox",
+   "name": "בית כנסת חובבי ציון",
+   "name:he": "בית כנסת חובבי ציון",
+   "religion": "jewish",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 414244649,
+  "center": {
+   "lat": 32.3022348,
+   "lon": 34.8476175
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "name": "אוהל יצחק",
+   "name:he": "אוהל יצחק",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "way",
+  "id": 554095761,
+  "center": {
+   "lat": 32.2753962,
+   "lon": 34.8489072
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "way",
+  "id": 554102569,
+  "center": {
+   "lat": 32.2828186,
+   "lon": 34.8497634
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "26",
+   "addr:street": "ש\"י עגנון",
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "denomination": "orthodox",
+   "name": "בית כנסת היכל שלמה",
+   "name:he": "בית כנסת היכל שלמה",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "way",
+  "id": 557798935,
+  "center": {
+   "lat": 32.3152265,
+   "lon": 34.8810359
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "name": "בית כנסת שערי צדק",
+   "name:en": "Shaarey Zedek",
+   "name:he": "בית כנסת שערי צדק",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "way",
+  "id": 863552604,
+  "center": {
+   "lat": 32.27866,
+   "lon": 34.8401753
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "kindergarten",
+   "building:levels": "2",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "way",
+  "id": 886300757,
+  "center": {
+   "lat": 32.3040606,
+   "lon": 34.8699768
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "denomination": "orthodox",
+   "name": "חזון עובדיה",
+   "name:he": "חזון עובדיה",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1067098768,
+  "center": {
+   "lat": 32.2725904,
+   "lon": 34.8444693
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "name": "בית כנסת אם כל חי",
+   "name:he": "בית כנסת אם כל חי",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562568772,
+  "center": {
+   "lat": 32.3004425,
+   "lon": 34.8752568
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "name": "בית כנסת קרית השרון",
+   "religion": "jewish"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562568773,
+  "center": {
+   "lat": 32.3006234,
+   "lon": 34.8752575
+  },
+  "tags": {
+   "amenity": "place_of_worship",
+   "building": "yes",
+   "name": "בית כנסת נריה ב'",
+   "religion": "jewish"
+  }
+ }
+]

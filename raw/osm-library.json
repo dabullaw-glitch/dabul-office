@@ -1,0 +1,47 @@
+[
+ {
+  "type": "node",
+  "id": 2422181307,
+  "lat": 32.3198768,
+  "lon": 34.8550593,
+  "tags": {
+   "amenity": "library",
+   "name": "ספריה עירונית",
+   "name:he": "ספריה עירונית"
+  }
+ },
+ {
+  "type": "node",
+  "id": 8405552750,
+  "lat": 32.3330929,
+  "lon": 34.8544626,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "2",
+   "addr:street": "יואל סלומון",
+   "amenity": "library",
+   "contact:email": "debby@sifrianet.org.il",
+   "contact:phone": "+97298337187",
+   "contact:website": "https://www.sifrianet.org.il/html5/?_id=11925&did=1124&title=english",
+   "internet_access": "yes",
+   "internet_access:fee": "no",
+   "name": "Devorah Ben - Yehuda",
+   "name:en": "Devorah Ben - Yehuda",
+   "wikidata": "Q5375469"
+  }
+ },
+ {
+  "type": "way",
+  "id": 556598048,
+  "center": {
+   "lat": 32.3060261,
+   "lon": 34.8831675
+  },
+  "tags": {
+   "amenity": "library",
+   "building": "library",
+   "name": "מדיה-טק קריית השרון",
+   "name:en": "Media-Tech Kiryat HaSharon"
+  }
+ }
+]

@@ -1,0 +1,27 @@
+[
+ {
+  "type": "node",
+  "id": 5393456570,
+  "lat": 32.3365251,
+  "lon": 34.8559548,
+  "tags": {
+   "name": "בית הכנסת ציירי נתניה",
+   "name:he": "בית הכנסת ציירי נתניה",
+   "office": "religion"
+  }
+ },
+ {
+  "type": "way",
+  "id": 383409985,
+  "center": {
+   "lat": 32.307378,
+   "lon": 34.8764798
+  },
+  "tags": {
+   "amenity": "social_facility",
+   "building": "yes",
+   "social_facility": "group_home",
+   "social_facility:for": "senior"
+  }
+ }
+]

@@ -1,0 +1,563 @@
+[
+ {
+  "type": "node",
+  "id": 306011885,
+  "lat": 32.3030057,
+  "lon": 34.8700106,
+  "tags": {
+   "alt_name:en": "Clalit clinic",
+   "amenity": "clinic",
+   "name": "קופת חולים כללית",
+   "name:en": "Kupat Holim Clalit",
+   "name:he": "קופת חולים כללית",
+   "operator": "קופת חולים כללית",
+   "operator:en": "Clalit"
+  }
+ },
+ {
+  "type": "node",
+  "id": 306011887,
+  "lat": 32.3030346,
+  "lon": 34.8702337,
+  "tags": {
+   "alt_name:en": "Meuhedet clinic",
+   "amenity": "clinic",
+   "name": "קופת חולים מאוחדת",
+   "name:en": "Kupat Holim Meuhedet",
+   "name:he": "קופת חולים מאוחדת",
+   "operator": "קופת חולים מאוחדת",
+   "operator:en": "Meuhedet"
+  }
+ },
+ {
+  "type": "node",
+  "id": 306011889,
+  "lat": 32.2962962,
+  "lon": 34.8452104,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "6",
+   "addr:street": "החפץ חיים",
+   "alt_name:en": "Clalit",
+   "amenity": "clinic",
+   "healthcare": "clinic",
+   "name": "קופת חולים כללית",
+   "name:en": "Kupat Holim Clalit",
+   "name:he": "קופת חולים כללית",
+   "operator": "קופת חולים כללית",
+   "operator:en": "Clalit"
+  }
+ },
+ {
+  "type": "node",
+  "id": 453260261,
+  "lat": 32.3273708,
+  "lon": 34.8534293,
+  "tags": {
+   "amenity": "doctors",
+   "name": "כללית",
+   "name:en": "Clalit",
+   "name:he": "כללית"
+  }
+ },
+ {
+  "type": "node",
+  "id": 457135181,
+  "lat": 32.327829,
+  "lon": 34.8541449,
+  "tags": {
+   "amenity": "clinic",
+   "name": "לאומית",
+   "name:en": "Leumit",
+   "name:he": "לאומית"
+  }
+ },
+ {
+  "type": "node",
+  "id": 457135768,
+  "lat": 32.3271544,
+  "lon": 34.8548203,
+  "tags": {
+   "addr:housenumber": "15",
+   "addr:street": "משה סמילנסקי",
+   "amenity": "doctors",
+   "name": "מכבי",
+   "name:en": "Maccabi",
+   "name:he": "מכבי"
+  }
+ },
+ {
+  "type": "node",
+  "id": 542710540,
+  "lat": 32.3227046,
+  "lon": 34.8552061,
+  "tags": {
+   "addr:housenumber": "31",
+   "addr:street": "ברודצקי",
+   "amenity": "clinic",
+   "healthcare": "clinic",
+   "name": "קופת חולים כללית",
+   "name:en": "Kupat Holim Clalit",
+   "name:he": "קופת חולים כללית"
+  }
+ },
+ {
+  "type": "node",
+  "id": 550245370,
+  "lat": 32.3289015,
+  "lon": 34.8620921,
+  "tags": {
+   "amenity": "doctors",
+   "name": "קופת חולים כללית"
+  }
+ },
+ {
+  "type": "node",
+  "id": 564588902,
+  "lat": 32.33075,
+  "lon": 34.8585216,
+  "tags": {
+   "amenity": "doctors",
+   "check_date:opening_hours": "2026-07-03",
+   "name": "Clalit Healthcare",
+   "name:en": "Clalit Healthcare",
+   "opening_hours": "Su 08:00-13:00,16:00-18:30, Tu 15:00-19:00, Fr 08:00-12:00, Mo,Th 08:00-14:00, We 08:00-13:00, Tu 08:00-12:00",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 564588909,
+  "lat": 32.3271858,
+  "lon": 34.8540163,
+  "tags": {
+   "amenity": "doctors",
+   "name": "מאוחדת",
+   "name:en": "Meuhedet",
+   "name:he": "מאוחדת",
+   "opening_hours": "Th,Su-Tu 08:00-19:00, We,Fr 08:00-12:00"
+  }
+ },
+ {
+  "type": "node",
+  "id": 570691404,
+  "lat": 32.2837586,
+  "lon": 34.8533003,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "18",
+   "addr:street": "פנחס לבון",
+   "amenity": "clinic",
+   "healthcare": "clinic",
+   "name": "קופת חולים מכבי",
+   "name:en": "Kupat Holim Maccabi",
+   "name:he": "קופת חולים מכבי",
+   "name:ru": "Маккаби",
+   "operator": "מכבי",
+   "operator:en": "Maccabi Healthcare Services",
+   "operator:he": "מכבי",
+   "operator:wikidata": "Q2907040",
+   "operator:wikipedia": "he:מכבי שירותי בריאות",
+   "website": "https://serguide.maccabi4u.co.il/heb/medicalcentres/medicalcentressearchresults/medicalcentresinfopage/?ItemKey=c3um2tqSpncsTLPqkbs4wyYNZVUfxLcoylNoXMr1UC1UTPRozgVFde52yWvCD1VexFzfYbwQqj6GhUcVIaIMlA=="
+  }
+ },
+ {
+  "type": "node",
+  "id": 608366017,
+  "lat": 32.3370906,
+  "lon": 34.8610885,
+  "tags": {
+   "alt_name:en": "Clalit Health Center",
+   "amenity": "clinic",
+   "name": "קופת חולים כללית",
+   "name:en": "Kupat Holim Clalit",
+   "name:he": "קופת חולים כללית"
+  }
+ },
+ {
+  "type": "node",
+  "id": 697011194,
+  "lat": 32.2835545,
+  "lon": 34.8538262,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "18",
+   "addr:street": "פנחס לבון",
+   "amenity": "pharmacy",
+   "dispensing": "yes",
+   "drive_through": "no",
+   "healthcare": "pharmacy",
+   "name": "מכבי פארם",
+   "name:en": "Maccabi Pharm",
+   "name:he": "מכבי פארם",
+   "name:ru": "Макаби Фарм",
+   "operator": "מכבי",
+   "website": "https://www.maccabi4u.co.il/1123-he/Maccabi.aspx",
+   "wikidata": "Q2907040",
+   "wikipedia": "he:מכבי שירותי בריאות",
+   "wikipedia:he": "מכבי שירותי בריאות"
+  }
+ },
+ {
+  "type": "node",
+  "id": 904190525,
+  "lat": 32.3423865,
+  "lon": 34.8589757,
+  "tags": {
+   "amenity": "clinic",
+   "name": "מרפאת מכבי",
+   "name:en": "Maccabi clinic",
+   "name:he": "מרפאת מכבי"
+  }
+ },
+ {
+  "type": "node",
+  "id": 1244259016,
+  "lat": 32.2810102,
+  "lon": 34.8532776,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "77",
+   "addr:street": "פנחס לבון",
+   "amenity": "pharmacy",
+   "dispensing": "yes",
+   "healthcare": "pharmacy",
+   "name": "מאוחדת",
+   "name:en": "Meuhedet",
+   "name:he": "מאוחדת",
+   "operator": "מאוחדת",
+   "wikidata": "Q2906716",
+   "wikipedia": "he:קופת חולים מאוחדת",
+   "wikipedia:he": "קופת חולים מאוחדת"
+  }
+ },
+ {
+  "type": "node",
+  "id": 1244259053,
+  "lat": 32.2814513,
+  "lon": 34.8535332,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "63",
+   "addr:street": "פנחס לבון",
+   "amenity": "dentist",
+   "healthcare": "dentist",
+   "name": "מרפאת שיניים",
+   "name:he": "מרפאת שיניים"
+  }
+ },
+ {
+  "type": "node",
+  "id": 1455237491,
+  "lat": 32.2843316,
+  "lon": 34.8615775,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "44",
+   "addr:street": "שדרות גיבורי ישראל",
+   "healthcare": "laboratory",
+   "name": "כמיפל",
+   "name:en": "Chemipal ltd",
+   "name:he": "כמיפל",
+   "website": "https://www.chemipal.co.il/"
+  }
+ },
+ {
+  "type": "node",
+  "id": 2133573555,
+  "lat": 32.2782311,
+  "lon": 34.8478519,
+  "tags": {
+   "amenity": "pharmacy",
+   "brand": "סופר-פארם",
+   "brand:he": "סופר-פארם",
+   "brand:wikidata": "Q13220217",
+   "brand:wikipedia": "en:Super-Pharm",
+   "healthcare": "pharmacy",
+   "name": "סופר-פארם",
+   "name:en": "Super-Pharm",
+   "name:he": "סופר-פארם",
+   "name:ru": "Супер-Фарм",
+   "website": "http://www.super-pharm.co.il",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 4100001218,
+  "lat": 32.3200296,
+  "lon": 34.8552184,
+  "tags": {
+   "amenity": "clinic",
+   "name": "Night Clinic",
+   "name:en": "Night Clinic"
+  }
+ },
+ {
+  "type": "node",
+  "id": 5302301821,
+  "lat": 32.3225701,
+  "lon": 34.8564793,
+  "tags": {
+   "addr:housenumber": "43",
+   "addr:postcode": "4231204",
+   "addr:street": "שדרות בנימין",
+   "amenity": "clinic",
+   "internet_access": "wlan",
+   "name": "ד״ר רותם אביטוב, פסיכולוג קוגניטיבי התנהגותי",
+   "name:en": "Dr. Rotem Avituv, CBT Psychologist",
+   "name:he": "ד״ר רותם אביטוב, פסיכולוג קוגניטיבי התנהגותי",
+   "opening_hours": "Su-Th 09:00-19:00",
+   "operator": "ד״ר רותם אביטוב",
+   "phone": "+972-502481472",
+   "website": "https://www.cbt-psychology.com/"
+  }
+ },
+ {
+  "type": "node",
+  "id": 7020712424,
+  "lat": 32.2814726,
+  "lon": 34.8525827,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "30",
+   "addr:street": "פנחס לבון",
+   "amenity": "pharmacy",
+   "dispensing": "yes",
+   "healthcare": "pharmacy",
+   "name": "בית מרקחת פולג",
+   "name:en": "Pharmacy Poleg",
+   "name:he": "בית מרקחת פולג"
+  }
+ },
+ {
+  "type": "node",
+  "id": 7024022474,
+  "lat": 32.282261,
+  "lon": 34.8539325,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "49",
+   "addr:street": "פנחס לבון",
+   "amenity": "dentist",
+   "healthcare": "dentist",
+   "name": "ד\"ר כעכש סמיר",
+   "name:he": "ד\"ר כעכש סמיר"
+  }
+ },
+ {
+  "type": "node",
+  "id": 7049683107,
+  "lat": 32.2820659,
+  "lon": 34.854904,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "13",
+   "addr:street": "בר יהודה",
+   "healthcare": "yes",
+   "name": "מגן דוד אדום",
+   "name:en": "Magen David Adom",
+   "name:he": "מגן דוד אדום"
+  }
+ },
+ {
+  "type": "node",
+  "id": 7120412866,
+  "lat": 32.2834741,
+  "lon": 34.8535325,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "18",
+   "addr:street": "מרכז מסחרי לב יסמין",
+   "amenity": "doctors",
+   "healthcare": "doctor",
+   "healthcare:speciality": "otolaryngology",
+   "name": "דר רחימה דויד",
+   "name:he": "דר רחימה דויד"
+  }
+ },
+ {
+  "type": "node",
+  "id": 7139637852,
+  "lat": 32.2858128,
+  "lon": 34.8505908,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "129",
+   "addr:street": "רותם",
+   "amenity": "clinic",
+   "healthcare": "clinic",
+   "name": "לשכת הבריאות טיפת חלב",
+   "name:he": "לשכת הבריאות טיפת חלב",
+   "operator": "משרד הבריאות",
+   "operator:type": "government"
+  }
+ },
+ {
+  "type": "node",
+  "id": 7425471497,
+  "lat": 32.2844205,
+  "lon": 34.8610232,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:street": "המלאכה",
+   "amenity": "pharmacy",
+   "dispensing": "no",
+   "healthcare": "pharmacy",
+   "name": "ד\"ר פישר",
+   "name:en": "Dr Fischer",
+   "name:he": "ד\"ר פישר"
+  }
+ },
+ {
+  "type": "node",
+  "id": 7912939685,
+  "lat": 32.3499753,
+  "lon": 34.8609701,
+  "tags": {
+   "addr:housenumber": "19",
+   "addr:street": "הגפן",
+   "amenity": "clinic",
+   "internet_access": "wlan",
+   "name": "קופת חולים כללית",
+   "name:en": "Kupat Holim Clalit",
+   "name:he": "קופת חולים כללית",
+   "opening_hours": "Su-Fr 08:00-15:00",
+   "operator": "ד״ר יקטרינה אביטוב פרנקל",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 8021571488,
+  "lat": 32.2903397,
+  "lon": 34.8510537,
+  "tags": {
+   "amenity": "clinic",
+   "healthcare": "clinic",
+   "level": "2",
+   "name": "מכבי בית רופאים אגמים",
+   "name:he": "מכבי בית רופאים אגמים",
+   "operator": "מכבי"
+  }
+ },
+ {
+  "type": "node",
+  "id": 8021589287,
+  "lat": 32.2903062,
+  "lon": 34.8512027,
+  "tags": {
+   "amenity": "clinic",
+   "healthcare": "clinic",
+   "level": "2",
+   "name": "כללית - מרפאת אגמים",
+   "name:he": "כללית - מרפאת אגמים",
+   "operator": "כללית"
+  }
+ },
+ {
+  "type": "node",
+  "id": 8021662024,
+  "lat": 32.2904219,
+  "lon": 34.8514057,
+  "tags": {
+   "amenity": "pharmacy",
+   "brand": "סופר-פארם",
+   "brand:he": "סופר-פארם",
+   "dispensing": "yes",
+   "healthcare": "pharmacy",
+   "level": "0",
+   "name": "סופר-פארם",
+   "name:en": "Super-Pharm",
+   "name:he": "סופר-פארם",
+   "operator": "סופר-פארם"
+  }
+ },
+ {
+  "type": "node",
+  "id": 9045464617,
+  "lat": 32.3064052,
+  "lon": 34.868884,
+  "tags": {
+   "amenity": "clinic",
+   "healthcare": "clinic",
+   "name": "מכבי",
+   "name:en": "Maccabi",
+   "name:he": "מכבי",
+   "survey:date": "2021-08-29"
+  }
+ },
+ {
+  "type": "node",
+  "id": 9827056326,
+  "lat": 32.32773,
+  "lon": 34.8542066,
+  "tags": {
+   "amenity": "clinic",
+   "healthcare": "clinic",
+   "healthcare:speciality": "general",
+   "level": "3,4",
+   "name": "Terem",
+   "website": "https://www.teremi.com"
+  }
+ },
+ {
+  "type": "way",
+  "id": 43261506,
+  "center": {
+   "lat": 32.3252899,
+   "lon": 34.8575937
+  },
+  "tags": {
+   "amenity": "clinic",
+   "building": "civic",
+   "name": "Maccabi Health Center",
+   "name:en": "Maccabi Health Center"
+  }
+ },
+ {
+  "type": "way",
+  "id": 295008136,
+  "center": {
+   "lat": 32.3453934,
+   "lon": 34.8570722
+  },
+  "tags": {
+   "amenity": "hospital",
+   "check_date": "2025-08-16",
+   "emergency": "yes",
+   "name": "בית חולים לניאדו",
+   "name:en": "Laniado Hospital",
+   "name:he": "בית חולים לניאדו",
+   "wheelchair": "yes",
+   "wikidata": "Q2918008"
+  }
+ },
+ {
+  "type": "way",
+  "id": 555821283,
+  "center": {
+   "lat": 32.3416992,
+   "lon": 34.8570021
+  },
+  "tags": {
+   "amenity": "clinic",
+   "building": "yes",
+   "healthcare": "clinic",
+   "name": "טיפת חלב",
+   "name:he": "טיפת חלב"
+  }
+ },
+ {
+  "type": "way",
+  "id": 555943753,
+  "center": {
+   "lat": 32.3450598,
+   "lon": 34.8577509
+  },
+  "tags": {
+   "amenity": "hospital",
+   "healthcare": "hospital"
+  }
+ }
+]

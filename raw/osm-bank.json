@@ -1,0 +1,329 @@
+[
+ {
+  "type": "node",
+  "id": 268162811,
+  "lat": 32.3074539,
+  "lon": 34.8752599,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "47",
+   "addr:street": "דגניה",
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "בנק הפועלים",
+   "brand:en": "Bank Hapoalim",
+   "brand:he": "בנק הפועלים",
+   "brand:wikidata": "Q2666775",
+   "brand:wikipedia": "en:Bank Hapoalim",
+   "drive_through": "no",
+   "name": "בנק הפועלים",
+   "name:ar": "بنك هبوعليم",
+   "name:en": "Bank Hapoalim",
+   "name:he": "בנק הפועלים",
+   "name:ru": "Банк Апоалим",
+   "website": "https://www.bankhapoalim.co.il"
+  }
+ },
+ {
+  "type": "node",
+  "id": 268281446,
+  "lat": 32.2843879,
+  "lon": 34.8607629,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "בנק הפועלים",
+   "brand:en": "Bank Hapoalim",
+   "brand:he": "בנק הפועלים",
+   "brand:wikidata": "Q2666775",
+   "brand:wikipedia": "en:Bank Hapoalim",
+   "name": "בנק הפועלים",
+   "name:ar": "بنك هبوعليم",
+   "name:en": "Bank Hapoalim",
+   "name:he": "בנק הפועלים",
+   "name:ru": "Банк Апоалим",
+   "ref": "459",
+   "website": "https://www.bankhapoalim.co.il"
+  }
+ },
+ {
+  "type": "node",
+  "id": 310591137,
+  "lat": 32.2750291,
+  "lon": 34.8445349,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "Bank Leumi",
+   "brand:wikidata": "Q806641",
+   "brand:wikipedia": "en:Bank Leumi",
+   "name": "בנק לאומי",
+   "name:ar": "بنك ليئومي",
+   "name:en": "Bank Leumi",
+   "name:he": "בנק לאומי",
+   "name:ru": "Банк Леуми",
+   "website": "https://www.leumi.co.il",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 365360179,
+  "lat": 32.3284613,
+  "lon": 34.85812,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 390156409,
+  "lat": 32.2803788,
+  "lon": 34.8606567,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "Union Bank",
+   "brand:wikidata": "Q2903265",
+   "brand:wikipedia": "en:Union Bank of Israel",
+   "name": "בנק איגוד",
+   "name:en": "Union Bank",
+   "name:he": "בנק איגוד",
+   "name:ru": "Банк Игуд",
+   "website": "https://www.unionbank.co.il"
+  }
+ },
+ {
+  "type": "node",
+  "id": 401285183,
+  "lat": 32.3283226,
+  "lon": 34.8558941,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "Discount Bank",
+   "brand:wikidata": "Q250362",
+   "brand:wikipedia": "en:Israel Discount Bank",
+   "name": "בנק דיסקונט",
+   "name:en": "Discount Bank",
+   "name:he": "בנק דיסקונט",
+   "name:ru": "Банк Дисконт",
+   "opening_hours": "Mo,Th 08:30-13:00,16:00-18:30, Tu,We 08:30-14:00, Fr 08:30-12:30",
+   "website": "https://www.discountbank.co.il"
+  }
+ },
+ {
+  "type": "node",
+  "id": 408481836,
+  "lat": 32.2884956,
+  "lon": 34.8662677,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "Bank Leumi",
+   "brand:wikidata": "Q806641",
+   "brand:wikipedia": "en:Bank Leumi",
+   "name": "בנק לאומי",
+   "name:ar": "بنك ليئومي",
+   "name:en": "Bank Leumi",
+   "name:he": "בנק לאומי",
+   "name:ru": "Банк Леуми",
+   "website": "https://www.leumi.co.il"
+  }
+ },
+ {
+  "type": "node",
+  "id": 408740935,
+  "lat": 32.3279184,
+  "lon": 34.8541906,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "Union Bank",
+   "brand:wikidata": "Q2903265",
+   "brand:wikipedia": "en:Union Bank of Israel",
+   "name": "בנק איגוד",
+   "name:en": "Union Bank",
+   "name:he": "בנק איגוד",
+   "name:ru": "Банк Игуд",
+   "opening_hours": "Mo,Th 08:30-13:00,15:30-18:00; Tu,We 08:30-14:00; Fr 08:30-12:00",
+   "website": "https://www.unionbank.co.il"
+  }
+ },
+ {
+  "type": "node",
+  "id": 437200459,
+  "lat": 32.2800888,
+  "lon": 34.8613176,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "Discount Bank",
+   "brand:wikidata": "Q250362",
+   "brand:wikipedia": "en:Israel Discount Bank",
+   "name": "בנק דיסקונט",
+   "name:en": "Discount Bank",
+   "name:he": "בנק דיסקונט",
+   "name:ru": "Банк Дисконт",
+   "opening_hours": "Tu,Th,Su 08:30-14:00; Mo,We 08:30-14:00,15:30-17:00; PH 08:30-12:00",
+   "website": "https://www.discountbank.co.il"
+  }
+ },
+ {
+  "type": "node",
+  "id": 442117085,
+  "lat": 32.330002,
+  "lon": 34.8537243,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "הבנק הבינלאומי",
+   "brand:en": "First International Bank of Israel",
+   "brand:he": "הבנק הבינלאומי",
+   "brand:wikidata": "Q2777497",
+   "brand:wikipedia": "en:First International Bank of Israel",
+   "name": "הבנק הבינלאומי",
+   "name:en": "First International Bank of Israel",
+   "name:he": "הבנק הבינלאומי",
+   "name:ru": "Банк Бейнлеуми",
+   "opening_hours": "Su-Th 08:30-13:30, Mo,We 16:00-18:30, Fr 08:30-11:30",
+   "website": "https://www.fibi.co.il",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 442648136,
+  "lat": 32.3282862,
+  "lon": 34.8575633,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "בנק הפועלים",
+   "brand:en": "Bank Hapoalim",
+   "brand:he": "בנק הפועלים",
+   "brand:wikidata": "Q2666775",
+   "brand:wikipedia": "en:Bank Hapoalim",
+   "name": "בנק הפועלים",
+   "name:ar": "بنك هبوعليم",
+   "name:en": "Bank Hapoalim",
+   "name:he": "בנק הפועלים",
+   "name:ru": "Банк Апоалим",
+   "opening_hours": "Tu,We,Su 08:30-13:16, Mo,Th 08:30-13:00,16:00-18:30",
+   "website": "https://www.bankhapoalim.co.il"
+  }
+ },
+ {
+  "type": "node",
+  "id": 531599215,
+  "lat": 32.3308004,
+  "lon": 34.8566916,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "Bank Hapoalim",
+   "brand:wikidata": "Q2666775",
+   "brand:wikipedia": "en:Bank Hapoalim",
+   "name": "בנק הפועלים",
+   "name:ar": "بنك هبوعليم",
+   "name:en": "Bank Hapoalim",
+   "name:he": "בנק הפועלים",
+   "name:ru": "Банк Апоалим",
+   "opening_hours": "\"סניף סגור\"",
+   "website": "https://www.bankhapoalim.co.il"
+  }
+ },
+ {
+  "type": "node",
+  "id": 544824744,
+  "lat": 32.330274,
+  "lon": 34.8539917,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "Bank Otsar Ha-Hayal",
+   "brand:wikidata": "Q2900674",
+   "brand:wikipedia": "en:Bank Otsar Ha-Hayal",
+   "name": "בנק אוצר החייל",
+   "name:en": "Bank Otsar Ha-Hayal",
+   "name:he": "בנק אוצר החייל",
+   "name:ru": "Банк Оцар Ха-Хайаль",
+   "opening_hours": "Tu,We 09:00-14:00, Mo,Th 09:00-13:30,16:00-18:00, Fr 08:15-11:30",
+   "website": "https://online.bankotsar.co.il",
+   "wheelchair": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 559663686,
+  "lat": 32.3304134,
+  "lon": 34.8520924,
+  "tags": {
+   "addr:street": "כיכר העצמאות",
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "Bank Hapoalim",
+   "brand:wikidata": "Q2666775",
+   "brand:wikipedia": "en:Bank Hapoalim",
+   "name": "בנק הפועלים",
+   "name:ar": "بنك هبوعليم",
+   "name:en": "Bank Hapoalim",
+   "name:he": "בנק הפועלים",
+   "name:ru": "Банк Апоалим",
+   "website": "https://www.bankhapoalim.co.il"
+  }
+ },
+ {
+  "type": "node",
+  "id": 570691413,
+  "lat": 32.2808078,
+  "lon": 34.8523977,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "בנק הפועלים",
+   "brand:en": "Bank Hapoalim",
+   "brand:he": "בנק הפועלים",
+   "brand:wikidata": "Q2666775",
+   "brand:wikipedia": "en:Bank Hapoalim",
+   "name": "בנק הפועלים",
+   "name:ar": "بنك هبوعليم",
+   "name:en": "Bank Hapoalim",
+   "name:he": "בנק הפועלים",
+   "name:ru": "Банк Апоалим",
+   "ref": "771",
+   "website": "https://www.bankhapoalim.co.il"
+  }
+ },
+ {
+  "type": "node",
+  "id": 824064655,
+  "lat": 32.3289329,
+  "lon": 34.8567735,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes"
+  }
+ },
+ {
+  "type": "node",
+  "id": 5721903387,
+  "lat": 32.3286555,
+  "lon": 34.854957,
+  "tags": {
+   "amenity": "bank",
+   "atm": "yes",
+   "brand": "Bank Leumi",
+   "brand:wikidata": "Q806641",
+   "brand:wikipedia": "en:Bank Leumi",
+   "name": "בנק לאומי",
+   "name:ar": "بنك ليئومي",
+   "name:en": "Bank Leumi",
+   "name:he": "בנק לאומי",
+   "name:ru": "Банк Леуми",
+   "opening_hours": "Tu,Th,Su 08:30-13:30, Mo,We 08:30-13:00, Mo,We 16:00-18:00",
+   "website": "https://www.leumi.co.il"
+  }
+ }
+]

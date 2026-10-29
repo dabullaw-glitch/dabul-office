@@ -1,0 +1,103 @@
+[
+ {
+  "type": "node",
+  "id": 405816983,
+  "lat": 32.2809448,
+  "lon": 34.8624163,
+  "tags": {
+   "amenity": "cinema"
+  }
+ },
+ {
+  "type": "node",
+  "id": 3280707413,
+  "lat": 32.3325378,
+  "lon": 34.852677,
+  "tags": {
+   "addr:housenumber": "3",
+   "addr:street": "מקדולנד",
+   "email": "museum.netanya@gmail.com",
+   "fee": "yes",
+   "name": "מוזיאון העיר נתניה",
+   "name:en": "Netanya Municipal Museum",
+   "name:he": "מוזיאון העיר נתניה",
+   "name:ru": "Музей города Нетания",
+   "opening_hours": "Su, Tu-Th 10:00-16:00; Mo 12:00-19:00",
+   "tourism": "museum",
+   "website": "https://gonetanya.com/?p=14888&lang=en"
+  }
+ },
+ {
+  "type": "way",
+  "id": 47126142,
+  "center": {
+   "lat": 32.3422404,
+   "lon": 34.8606966
+  },
+  "tags": {
+   "addr:housenumber": "17",
+   "addr:street": "נחום סוקולוב",
+   "building": "yes",
+   "fee": "no",
+   "name": "בית הבאר",
+   "name:en": "Beit HaBeer",
+   "name:he": "בית הבאר",
+   "opening_hours": "Su-Fr 09:00-14:00",
+   "tourism": "museum",
+   "website": "https://biltiformali.org.il/",
+   "wheelchair": "limited",
+   "wikidata": "Q45841952"
+  }
+ },
+ {
+  "type": "way",
+  "id": 702522147,
+  "center": {
+   "lat": 32.2912372,
+   "lon": 34.8620618
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "3",
+   "addr:street": "המחקר",
+   "amenity": "cinema",
+   "brand": "Cinema City",
+   "brand:wikidata": "Q543651",
+   "brand:wikipedia": "en:Cinema City International",
+   "building": "yes",
+   "name": "Cinema City",
+   "name:en": "Cinema City",
+   "payment:cash": "yes",
+   "payment:credit_cards": "yes"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1053979051,
+  "center": {
+   "lat": 32.2990412,
+   "lon": 34.8760794
+  },
+  "tags": {
+   "amenity": "theatre",
+   "lit": "yes",
+   "name": "אמפיתאטרון גן ברוש",
+   "name:he": "אמפיתאטרון גן ברוש",
+   "operator": "עיריית נתניה",
+   "theatre:type": "amphi"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562595990,
+  "center": {
+   "lat": 32.3281181,
+   "lon": 34.8625812
+  },
+  "tags": {
+   "amenity": "theatre",
+   "building": "yes",
+   "name": "היכל התרבות נתניה"
+  }
+ }
+]

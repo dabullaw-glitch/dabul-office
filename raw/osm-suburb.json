@@ -1,0 +1,474 @@
+[
+ {
+  "type": "node",
+  "id": 414936637,
+  "lat": 32.304418,
+  "lon": 34.8732309,
+  "tags": {
+   "name": "קריית השרון",
+   "name:en": "Kiryat HaSharon",
+   "name:fr": "Kiryat Hasharon",
+   "name:he": "קריית השרון",
+   "place": "suburb",
+   "wikidata": "Q136212416"
+  }
+ },
+ {
+  "type": "node",
+  "id": 414936638,
+  "lat": 32.3152367,
+  "lon": 34.8867034,
+  "tags": {
+   "name": "נאות גנים",
+   "name:en": "Ne'ot Ganim",
+   "name:fr": "Ne'ot Ganim",
+   "name:he": "נאות גנים",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 414936640,
+  "lat": 32.309351,
+  "lon": 34.8788445,
+  "tags": {
+   "name": "משכנות זבולון",
+   "name:en": "Mishkenot Zevulon",
+   "name:fr": "Mishkenot Zevulun",
+   "name:he": "משכנות זבולון",
+   "place": "suburb",
+   "wikidata": "Q135114649",
+   "wikipedia": "en:Mishkenot Zevulun, Netanya"
+  }
+ },
+ {
+  "type": "node",
+  "id": 1671800962,
+  "lat": 32.2839532,
+  "lon": 34.8561016,
+  "tags": {
+   "name": "קריית נורדאו",
+   "name:en": "Kiryat Nordau",
+   "name:fr": "Kiryat Nordau",
+   "name:he": "קריית נורדאו",
+   "place": "suburb",
+   "wikidata": "Q16133227",
+   "wikipedia": "he:קריית נורדאו"
+  }
+ },
+ {
+  "type": "node",
+  "id": 1671805744,
+  "lat": 32.2771149,
+  "lon": 34.8530342,
+  "tags": {
+   "name": "נאות גולדה",
+   "name:en": "Neot Golda",
+   "name:fr": "Ne'ot Golda",
+   "name:he": "נאות גולדה",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 2392636626,
+  "lat": 32.3055499,
+  "lon": 34.8825127,
+  "tags": {
+   "name": "קריית רבין",
+   "name:en": "Kiryat Rabin",
+   "name:fr": "Kiryat Rabin",
+   "name:he": "קריית רבין",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 2392639415,
+  "lat": 32.2958474,
+  "lon": 34.8505601,
+  "tags": {
+   "name": "נאות שקד",
+   "name:en": "Neot Shaked",
+   "name:fr": "Neot Shaked",
+   "name:he": "נאות שקד",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 2392639424,
+  "lat": 32.2973883,
+  "lon": 34.8570189,
+  "tags": {
+   "name": "רמת ידין",
+   "name:en": "Ramat Yadin",
+   "name:fr": "Ramat Yadin",
+   "name:he": "רמת ידין",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 3824810209,
+  "lat": 32.3397709,
+  "lon": 34.8583114,
+  "tags": {
+   "name": "מכנס",
+   "name:en": "Makhnes",
+   "name:fr": "Machnes",
+   "name:he": "מכנס",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 3824810210,
+  "lat": 32.345396,
+  "lon": 34.8595458,
+  "tags": {
+   "name": "נאות התכלת",
+   "name:en": "Ne'ot HaTkhelet",
+   "name:fr": "Ne'ot HaTkhelet",
+   "name:he": "נאות התכלת",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 3824810211,
+  "lat": 32.3470084,
+  "lon": 34.8595994,
+  "tags": {
+   "name": "נווה שלום",
+   "name:en": "Neve Shalom",
+   "name:fr": "Neve Shalom",
+   "name:he": "נווה שלום",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 3824810212,
+  "lat": 32.3434482,
+  "lon": 34.8664282,
+  "tags": {
+   "name": "פרדס הגדוד",
+   "name:en": "Pardes HaGdud",
+   "name:fr": "Pardes HaGdud",
+   "name:he": "פרדס הגדוד",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 3824810213,
+  "lat": 32.3427327,
+  "lon": 34.861602,
+  "tags": {
+   "name": "קריית צאנז",
+   "name:en": "Kiryat Zanz",
+   "name:fr": "Kiryat Sanz",
+   "name:he": "קריית צאנז",
+   "place": "neighbourhood",
+   "wikidata": "Q6416327",
+   "wikipedia": "he:קריית צאנז (נתניה)"
+  }
+ },
+ {
+  "type": "node",
+  "id": 3824810214,
+  "lat": 32.3240623,
+  "lon": 34.8641735,
+  "tags": {
+   "name": "רמת אפרים",
+   "name:en": "Ramat Efrayim",
+   "name:fr": "Ramat Ephraim",
+   "name:he": "רמת אפרים",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 3824810215,
+  "lat": 32.3377014,
+  "lon": 34.8634074,
+  "tags": {
+   "name": "שיכון המזרחי",
+   "name:en": "East Shikun",
+   "name:fr": "East Shikun",
+   "name:he": "שיכון המזרחי",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 3824810369,
+  "lat": 32.3352606,
+  "lon": 34.8686785,
+  "tags": {
+   "name": "נאות הרצל",
+   "name:en": "Ne'ot Herzl",
+   "name:fr": "Ne'ot Hertsel",
+   "name:he": "נאות הרצל",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 3824810370,
+  "lat": 32.3502883,
+  "lon": 34.8606767,
+  "tags": {
+   "name": "עין התכלת",
+   "name:en": "Ein HaTkhelet",
+   "name:fr": "Ein HaTkhelet",
+   "name:he": "עין התכלת",
+   "place": "suburb"
+  }
+ },
+ {
+  "type": "node",
+  "id": 8849513289,
+  "lat": 32.2618719,
+  "lon": 34.8348821,
+  "tags": {
+   "description": "מכון וינגייט הוא תאגיד ממשלתי באחריות משרד הספורט. יש בו אימונים בענפי הספורט האולימפיים והפראלימפיים, פועלים ממנו חלק מאיגודי הספורט, בית הספר למאמנים ומדריכים, היחידות לספורט הישגי וקידום נשים בספורט. מאידך, המרכז האקדמי לוינסקי־וינגייט הוא גוף נפרד.",
+   "description:he": "מכון וינגייט הוא תאגיד ממשלתי באחריות משרד הספורט. יש בו אימונים בענפי הספורט האולימפיים והפראלימפיים, פועלים ממנו חלק מאיגודי הספורט, בית הספר למאמנים ומדריכים, היחידות לספורט הישגי וקידום נשים בספורט. מאידך, המרכז האקדמי לוינסקי־וינגייט הוא גוף נפרד.",
+   "image": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Wingate_Institute_(3144).jpg",
+   "name": "מכון וינגייט",
+   "name:en": "Wingate Institute",
+   "name:he": "מכון וינגייט",
+   "place": "suburb",
+   "wikidata": "Q863827",
+   "wikipedia": "he:מכון וינגייט",
+   "wikipedia:he": "מכון וינגייט"
+  }
+ },
+ {
+  "type": "node",
+  "id": 13194312122,
+  "lat": 32.2726362,
+  "lon": 34.8457613,
+  "tags": {
+   "description": "רמת פולג היום כוללת את רמת פולג המקורית ואת \"נאות מנחם בגין\"",
+   "name:en": "Ramat Poleg",
+   "name:he": "רמת פולג",
+   "place": "neighbourhood"
+  }
+ },
+ {
+  "type": "node",
+  "id": 14325110351,
+  "lat": 32.2784916,
+  "lon": 34.8428085,
+  "tags": {
+   "name": "עיר ימים",
+   "name:en": "Ir Yamim",
+   "name:he": "עיר ימים",
+   "place": "neighbourhood",
+   "wikidata": "Q113305226",
+   "wikipedia": "he:עיר ימים (נתניה)"
+  }
+ },
+ {
+  "type": "way",
+  "id": 139424122,
+  "center": {
+   "lat": 32.2828069,
+   "lon": 34.8527011
+  },
+  "tags": {
+   "name": "קריית נורדאו",
+   "name:en": "Kiryat Nordau",
+   "name:he": "קריית נורדאו",
+   "place": "neighbourhood"
+  }
+ },
+ {
+  "type": "way",
+  "id": 430591164,
+  "center": {
+   "lat": 32.310307,
+   "lon": 34.8582107
+  },
+  "tags": {
+   "admin_level": "10",
+   "fixme": "not accurate",
+   "name:en": "Ramat Hen",
+   "place": "neighbourhood"
+  }
+ },
+ {
+  "type": "way",
+  "id": 430591165,
+  "center": {
+   "lat": 32.2973868,
+   "lon": 34.8464079
+  },
+  "tags": {
+   "admin_level": "10",
+   "fixme": "not accurate",
+   "name": "נאות שקד",
+   "name:en": "Neot Shaked - Azorim",
+   "name:fr": "Neot Shaked - Azorim",
+   "name:he": "נאות שקד",
+   "place": "neighbourhood"
+  }
+ },
+ {
+  "type": "way",
+  "id": 430591166,
+  "center": {
+   "lat": 32.2739019,
+   "lon": 34.8472809
+  },
+  "tags": {
+   "admin_level": "10",
+   "description": "נאות מנחם בגין היא מתחם / שכונה בתוך שכונת רמת פולג",
+   "name": "נאות מנחם בגין",
+   "name:en": "Neot Manachem Begin",
+   "name:fr": "Neot Manachem Begin",
+   "name:he": "נאות מנחם בגין",
+   "place": "neighbourhood"
+  }
+ },
+ {
+  "type": "way",
+  "id": 430591168,
+  "center": {
+   "lat": 32.2711529,
+   "lon": 34.8404446
+  },
+  "tags": {
+   "name": "רמת פולג",
+   "name:en": "Ramat Poleg",
+   "name:fr": "Ramat Poleg",
+   "name:he": "רמת פולג",
+   "place": "neighbourhood"
+  }
+ },
+ {
+  "type": "way",
+  "id": 430591173,
+  "center": {
+   "lat": 32.2788959,
+   "lon": 34.8432523
+  },
+  "tags": {
+   "admin_level": "10",
+   "name": "עיר ימים",
+   "name:en": "Ir Yamim",
+   "name:fr": "Ir Yamim",
+   "name:he": "עיר ימים",
+   "place": "neighbourhood",
+   "wikidata": "Q113305226",
+   "wikipedia": "he:עיר ימים (נתניה)"
+  }
+ },
+ {
+  "type": "way",
+  "id": 430591174,
+  "center": {
+   "lat": 32.2851982,
+   "lon": 34.8490338
+  },
+  "tags": {
+   "admin_level": "10",
+   "name": "גבעת האירוסים",
+   "name:en": "Givat HaIrisim",
+   "name:fr": "Givat Hairusim",
+   "name:he": "גבעת האירוסים",
+   "place": "neighbourhood",
+   "source": "https://www.netanya.muni.il/?CategoryID=2573&ArticleID=6608"
+  }
+ },
+ {
+  "type": "way",
+  "id": 430591175,
+  "center": {
+   "lat": 32.3136664,
+   "lon": 34.8604332
+  },
+  "tags": {
+   "admin_level": "10",
+   "fixme": "not accurate",
+   "name:en": "Ben Zion",
+   "place": "neighbourhood"
+  }
+ },
+ {
+  "type": "way",
+  "id": 764282428,
+  "center": {
+   "lat": 32.2911546,
+   "lon": 34.8535109
+  },
+  "tags": {
+   "admin_level": "10",
+   "description": "במיקום האטרקטיבי, מרחק הליכה מהים בלב שכונת אגמים בסמוך לשמורת האירוסים ומתחם \"השלולית\" נבנה בימים אלו שלב חדש , שלב הפרמיום של פרויקט \"אשדר אגמים\". הפרויקט מציע דירות 4, 5 חדרים ופנטהאוזים עם חניה ומחסן לכל דירה ולכולם נוף פתוח לכיוון מזרח ולשמורה.",
+   "name": "אגמים",
+   "name:en": "Agamim",
+   "name:fr": "Agamim",
+   "name:he": "אגמים",
+   "place": "neighbourhood",
+   "source": "https://www.ashdar.co.il/project/%D7%A4%D7%A8%D7%95%D7%99%D7%99%D7%A7%D7%98-%D7%90%D7%92%D7%9E%D7%99%D7%9D-%D7%A0%D7%AA%D7%A0%D7%99%D7%94"
+  }
+ },
+ {
+  "type": "way",
+  "id": 897967327,
+  "center": {
+   "lat": 32.2967906,
+   "lon": 34.8577477
+  },
+  "tags": {
+   "name": "רמת ידין",
+   "name:en": "Ramat Yadin",
+   "name:fr": "Ramat Yadin",
+   "name:he": "רמת ידין",
+   "place": "neighbourhood"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1010040276,
+  "center": {
+   "lat": 32.3031827,
+   "lon": 34.8756672
+  },
+  "tags": {
+   "name": "קרית השרון",
+   "name:en": "Kiryat Hasharon",
+   "name:he": "קרית השרון",
+   "place": "neighbourhood"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1010042388,
+  "center": {
+   "lat": 32.3060734,
+   "lon": 34.883195
+  },
+  "tags": {
+   "name": "קרית רבין",
+   "name:he": "קרית רבין",
+   "place": "neighbourhood"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1010044908,
+  "center": {
+   "lat": 32.3089053,
+   "lon": 34.8780545
+  },
+  "tags": {
+   "name": "משכנות זבולון",
+   "name:en": "Mishkenot Zevulun",
+   "name:he": "משכנות זבולון",
+   "place": "neighbourhood"
+  }
+ }
+]

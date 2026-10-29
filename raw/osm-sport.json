@@ -1,0 +1,837 @@
+[
+ {
+  "type": "node",
+  "id": 462577041,
+  "lat": 32.2874058,
+  "lon": 34.8660783,
+  "tags": {
+   "leisure": "sports_centre",
+   "sport": "10pin"
+  }
+ },
+ {
+  "type": "node",
+  "id": 462577046,
+  "lat": 32.281378,
+  "lon": 34.8607694,
+  "tags": {
+   "leisure": "sports_centre",
+   "note": "fixme",
+   "sport": "gocart"
+  }
+ },
+ {
+  "type": "node",
+  "id": 1455237440,
+  "lat": 32.2817678,
+  "lon": 34.8610753,
+  "tags": {
+   "addr:housenumber": "30",
+   "addr:street": "שדרות גיבורי ישראל",
+   "leisure": "sports_centre",
+   "name": "jorkyball",
+   "name:en": "jorkyball",
+   "sport": "soccer"
+  }
+ },
+ {
+  "type": "node",
+  "id": 1556185385,
+  "lat": 32.3382435,
+  "lon": 34.8504457,
+  "tags": {
+   "leisure": "swimming_pool",
+   "name": "חוף עונות",
+   "name:en": "HaOnot (Seasons) Beach",
+   "name:he": "חוף עונות"
+  }
+ },
+ {
+  "type": "node",
+  "id": 6745840987,
+  "lat": 32.2768687,
+  "lon": 34.861596,
+  "tags": {
+   "climbing:boulder": "yes",
+   "contact:facebook": "MonkeysClimbingGym",
+   "contact:instagram": "monkeysclimbinggym",
+   "fee": "yes",
+   "leisure": "sports_centre",
+   "name": "Monkeys",
+   "name:en": "Monkeys",
+   "name:he": "מאנקיז",
+   "opening_hours": "Sa-Th 10:00-23:00; Fr 09:00-17:00",
+   "phone": "+972 9 788 9933",
+   "sport": "climbing",
+   "website": "https://www.monkeysclimbinggym.co.il/"
+  }
+ },
+ {
+  "type": "way",
+  "id": 28195197,
+  "center": {
+   "lat": 32.2609331,
+   "lon": 34.8372837
+  },
+  "tags": {
+   "leisure": "stadium",
+   "note": "fixme"
+  }
+ },
+ {
+  "type": "way",
+  "id": 33881887,
+  "center": {
+   "lat": 32.3291515,
+   "lon": 34.8484117
+  },
+  "tags": {
+   "leisure": "sports_centre",
+   "name:signed": "no",
+   "note": "public fitness area"
+  }
+ },
+ {
+  "type": "way",
+  "id": 44917860,
+  "center": {
+   "lat": 32.3349889,
+   "lon": 34.8564318
+  },
+  "tags": {
+   "building": "sports_centre",
+   "leisure": "sports_centre",
+   "sport": "basketball",
+   "wikidata": "Q8052910"
+  }
+ },
+ {
+  "type": "way",
+  "id": 104332266,
+  "center": {
+   "lat": 32.3435467,
+   "lon": 34.8669407
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 104333346,
+  "center": {
+   "lat": 32.3412884,
+   "lon": 34.8574639
+  },
+  "tags": {
+   "building": "sports_hall",
+   "check_date": "2024-10-06",
+   "leisure": "sports_centre",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 104520550,
+  "center": {
+   "lat": 32.3199549,
+   "lon": 34.8529013
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106178991,
+  "center": {
+   "lat": 32.32678,
+   "lon": 34.8663832
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106179328,
+  "center": {
+   "lat": 32.3360629,
+   "lon": 34.8611505
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106249503,
+  "center": {
+   "lat": 32.3323173,
+   "lon": 34.8550115
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 106375166,
+  "center": {
+   "lat": 32.3405607,
+   "lon": 34.8726826
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 107674061,
+  "center": {
+   "lat": 32.2784061,
+   "lon": 34.8538894
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 107674097,
+  "center": {
+   "lat": 32.2780225,
+   "lon": 34.8556319
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 107674128,
+  "center": {
+   "lat": 32.28328,
+   "lon": 34.8566448
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 107678878,
+  "center": {
+   "lat": 32.283699,
+   "lon": 34.8472333
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 107681294,
+  "center": {
+   "lat": 32.3011368,
+   "lon": 34.8520216
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 143541287,
+  "center": {
+   "lat": 32.3109674,
+   "lon": 34.8565962
+  },
+  "tags": {
+   "building": "sport_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 147060491,
+  "center": {
+   "lat": 32.318969,
+   "lon": 34.8599164
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 167448229,
+  "center": {
+   "lat": 32.3011628,
+   "lon": 34.8602302
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "name": "אולם ספורט דורה",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 167449892,
+  "center": {
+   "lat": 32.2944314,
+   "lon": 34.8644709
+  },
+  "tags": {
+   "capacity": "13610",
+   "leisure": "stadium",
+   "name": "אצטדיון נתניה",
+   "name:en": "Netanya Stadium",
+   "name:he": "אצטדיון נתניה",
+   "name:ru": "Стадион Нетания",
+   "source": "survey;gps",
+   "sport": "soccer",
+   "start_date": "30/10/2012",
+   "website": "https://www.netanya.muni.il/?CategoryID=2523",
+   "wikidata": "Q1849789",
+   "wikipedia": "he:אצטדיון נתניה",
+   "wikipedia:he": "אצטדיון נתניה"
+  }
+ },
+ {
+  "type": "way",
+  "id": 171601153,
+  "center": {
+   "lat": 32.3513059,
+   "lon": 34.855148
+  },
+  "tags": {
+   "leisure": "swimming_pool"
+  }
+ },
+ {
+  "type": "way",
+  "id": 173249946,
+  "center": {
+   "lat": 32.3133403,
+   "lon": 34.8469354
+  },
+  "tags": {
+   "leisure": "swimming_pool",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 181443359,
+  "center": {
+   "lat": 32.3018049,
+   "lon": 34.8778895
+  },
+  "tags": {
+   "access": "customers",
+   "leisure": "swimming_pool",
+   "name": "קאנטרי קריית השרון",
+   "name:en": "Country Kiryat Hasharon",
+   "name:he": "קאנטרי קריית השרון"
+  }
+ },
+ {
+  "type": "way",
+  "id": 181443446,
+  "center": {
+   "lat": 32.2955635,
+   "lon": 34.8728493
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 183397142,
+  "center": {
+   "lat": 32.2629971,
+   "lon": 34.8346309
+  },
+  "tags": {
+   "building": "yes",
+   "building:levels": "3",
+   "leisure": "sports_centre",
+   "sport": "swimming"
+  }
+ },
+ {
+  "type": "way",
+  "id": 183397147,
+  "center": {
+   "lat": 32.2635486,
+   "lon": 34.8348542
+  },
+  "tags": {
+   "building": "yes",
+   "leisure": "sports_centre",
+   "sport": "swimming",
+   "wikidata": "Q29855458"
+  }
+ },
+ {
+  "type": "way",
+  "id": 183397150,
+  "center": {
+   "lat": 32.2636081,
+   "lon": 34.8343439
+  },
+  "tags": {
+   "building": "yes",
+   "leisure": "sports_centre",
+   "sport": "swimming",
+   "wikidata": "Q29855458"
+  }
+ },
+ {
+  "type": "way",
+  "id": 277881960,
+  "center": {
+   "lat": 32.2597768,
+   "lon": 34.8344657
+  },
+  "tags": {
+   "amenity": "college",
+   "leisure": "sports_centre",
+   "name": "מכון וינגייט",
+   "name:en": "Wingate Institute",
+   "name:he": "מכון וינגייט",
+   "wikidata": "Q863827"
+  }
+ },
+ {
+  "type": "way",
+  "id": 383410011,
+  "center": {
+   "lat": 32.3071389,
+   "lon": 34.8781977
+  },
+  "tags": {
+   "heated": "yes",
+   "leisure": "swimming_pool",
+   "length": "25",
+   "lifeguard": "yes",
+   "lit": "yes",
+   "location": "indoor",
+   "swimming_lanes": "6",
+   "swimming_pool": "swimming"
+  }
+ },
+ {
+  "type": "way",
+  "id": 383410024,
+  "center": {
+   "lat": 32.3071309,
+   "lon": 34.8778609
+  },
+  "tags": {
+   "building": "yes",
+   "leisure": "sports_centre",
+   "name": "מועדון ספורט קולג'ים"
+  }
+ },
+ {
+  "type": "way",
+  "id": 406278499,
+  "center": {
+   "lat": 32.3063059,
+   "lon": 34.8847766
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 552381226,
+  "center": {
+   "lat": 32.2774625,
+   "lon": 34.8411722
+  },
+  "tags": {
+   "leisure": "swimming_pool",
+   "sport": "swimming"
+  }
+ },
+ {
+  "type": "way",
+  "id": 552383466,
+  "center": {
+   "lat": 32.2780991,
+   "lon": 34.8383877
+  },
+  "tags": {
+   "leisure": "swimming_pool",
+   "sport": "swimming"
+  }
+ },
+ {
+  "type": "way",
+  "id": 552388450,
+  "center": {
+   "lat": 32.2814555,
+   "lon": 34.8408114
+  },
+  "tags": {
+   "access": "private",
+   "addr:city": "נתניה",
+   "leisure": "swimming_pool"
+  }
+ },
+ {
+  "type": "way",
+  "id": 552388452,
+  "center": {
+   "lat": 32.28068,
+   "lon": 34.8393491
+  },
+  "tags": {
+   "access": "private",
+   "addr:city": "נתניה",
+   "addr:street": "נתן יונתן",
+   "leisure": "swimming_pool"
+  }
+ },
+ {
+  "type": "way",
+  "id": 552389488,
+  "center": {
+   "lat": 32.2820618,
+   "lon": 34.842032
+  },
+  "tags": {
+   "access": "private",
+   "addr:city": "נתניה",
+   "leisure": "swimming_pool"
+  }
+ },
+ {
+  "type": "way",
+  "id": 553850328,
+  "center": {
+   "lat": 32.3007711,
+   "lon": 34.8520668
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 665023930,
+  "center": {
+   "lat": 32.3386951,
+   "lon": 34.8530236
+  },
+  "tags": {
+   "leisure": "swimming_pool",
+   "sport": "swimming"
+  }
+ },
+ {
+  "type": "way",
+  "id": 720529575,
+  "center": {
+   "lat": 32.2815674,
+   "lon": 34.8459609
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "170",
+   "addr:street": "בן גוריון",
+   "fee": "yes",
+   "leisure": "sports_centre",
+   "name": "\"מועדון הטניס \"מכבי נתניה",
+   "name:en": "Tennis club \"Maccabi Netanya\"",
+   "name:he": "\"מועדון הטניס \"מכבי נתניה",
+   "name:ru": "Теннисный клуб \"Маккаби Нетания\"",
+   "sport": "tennis",
+   "website": "https://gonetanya.com/?p=16200"
+  }
+ },
+ {
+  "type": "way",
+  "id": 743687722,
+  "center": {
+   "lat": 32.2901303,
+   "lon": 34.8505098
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:street": "אגם כנרת",
+   "building": "sports_hall",
+   "leisure": "sports_centre",
+   "name": "אולם ספורט אגמים",
+   "name:he": "אולם ספורט אגמים",
+   "name:ru": "Спорт Комплекс",
+   "sport": "basketball"
+  }
+ },
+ {
+  "type": "way",
+  "id": 863549410,
+  "center": {
+   "lat": 32.2767099,
+   "lon": 34.8377232
+  },
+  "tags": {
+   "leisure": "swimming_pool",
+   "sport": "swimming"
+  }
+ },
+ {
+  "type": "way",
+  "id": 863549412,
+  "center": {
+   "lat": 32.2756082,
+   "lon": 34.8383864
+  },
+  "tags": {
+   "leisure": "swimming_pool",
+   "sport": "swimming"
+  }
+ },
+ {
+  "type": "way",
+  "id": 893073703,
+  "center": {
+   "lat": 32.274047,
+   "lon": 34.8462297
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1009669333,
+  "center": {
+   "lat": 32.3114724,
+   "lon": 34.8451407
+  },
+  "tags": {
+   "leisure": "swimming_pool"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1241627295,
+  "center": {
+   "lat": 32.2980289,
+   "lon": 34.8432419
+  },
+  "tags": {
+   "leisure": "swimming_pool"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1554737526,
+  "center": {
+   "lat": 32.3174292,
+   "lon": 34.8514966
+  },
+  "tags": {
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1554751859,
+  "center": {
+   "lat": 32.2725136,
+   "lon": 34.8434492
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562506572,
+  "center": {
+   "lat": 32.2831723,
+   "lon": 34.851997
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562506573,
+  "center": {
+   "lat": 32.280813,
+   "lon": 34.8456049
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562506579,
+  "center": {
+   "lat": 32.3096202,
+   "lon": 34.8564814
+  },
+  "tags": {
+   "building": "sport_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562506585,
+  "center": {
+   "lat": 32.3178815,
+   "lon": 34.851754
+  },
+  "tags": {
+   "building": "sport_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562506605,
+  "center": {
+   "lat": 32.299494,
+   "lon": 34.8702069
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562568768,
+  "center": {
+   "lat": 32.2989048,
+   "lon": 34.8770447
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562568775,
+  "center": {
+   "lat": 32.3046971,
+   "lon": 34.8709731
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562576796,
+  "center": {
+   "lat": 32.3215433,
+   "lon": 34.8877325
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "way",
+  "id": 1562595964,
+  "center": {
+   "lat": 32.3108913,
+   "lon": 34.8726344
+  },
+  "tags": {
+   "building": "sports_hall",
+   "leisure": "sports_centre"
+  }
+ },
+ {
+  "type": "relation",
+  "id": 3916231,
+  "center": {
+   "lat": 32.2944314,
+   "lon": 34.8644709
+  },
+  "tags": {
+   "leisure": "stadium",
+   "name": "איצטדיון נתניה",
+   "name:en": "Netanya Stadium",
+   "name:he": "איצטדיון נתניה",
+   "name:ru": "Стадион Нетания",
+   "sport": "soccer",
+   "start_date": "30/10/2012",
+   "type": "multipolygon",
+   "wikidata": "Q1849789",
+   "wikipedia": "en:Netanya Stadium",
+   "wikipedia:en": "Netanya Stadium"
+  }
+ },
+ {
+  "type": "relation",
+  "id": 20803039,
+  "center": {
+   "lat": 32.307338,
+   "lon": 34.8782993
+  },
+  "tags": {
+   "access": "customers",
+   "addr:city": "נתניה",
+   "addr:housenumber": "1",
+   "addr:street": "האוניברסיטה",
+   "contact:email": "collegym1234@gmail.com",
+   "contact:phone": "+972-09-8622591",
+   "contact:website": "https://collegym.co.il/",
+   "fee": "yes",
+   "leisure": "sports_centre",
+   "name": "Collegym",
+   "sport": "soccer;tennis;basketball;swimming;fitness;table_tennis;yoga",
+   "type": "multipolygon"
+  }
+ }
+]

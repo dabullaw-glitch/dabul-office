@@ -1,0 +1,148 @@
+[
+ {
+  "type": "node",
+  "id": 7020724519,
+  "lat": 32.281329,
+  "lon": 34.8448092,
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "6",
+   "addr:street": "בני ברמן",
+   "amenity": "community_centre",
+   "name": "מרכז תרבות וקהילה ע\"ש אריק אינשטיין",
+   "name:en": "Cultural and Community Center - Ir Yamim",
+   "name:he": "מרכז תרבות וקהילה ע\"ש אריק אינשטיין",
+   "name:ru": "Культурно-общественный центр им. Арика Айнштейна"
+  }
+ },
+ {
+  "type": "node",
+  "id": 14053812501,
+  "lat": 32.2827065,
+  "lon": 34.856639,
+  "tags": {
+   "amenity": "community_centre",
+   "name": "שיכון חב\"ד נתניה"
+  }
+ },
+ {
+  "type": "way",
+  "id": 87513232,
+  "center": {
+   "lat": 32.2780793,
+   "lon": 34.8536878
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:street": "גולדה מאיר",
+   "amenity": "community_centre",
+   "building": "yes",
+   "name": "אשכול פיס",
+   "name:en": "Eshkol Pais",
+   "name:he": "אשכול פיס",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 104520541,
+  "center": {
+   "lat": 32.3208039,
+   "lon": 34.8529631
+  },
+  "tags": {
+   "amenity": "community_centre",
+   "building": "school",
+   "name": "מרכז קהילתי אופק",
+   "source": "bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 107678880,
+  "center": {
+   "lat": 32.2782549,
+   "lon": 34.8548927
+  },
+  "tags": {
+   "amenity": "community_centre",
+   "building": "school",
+   "name": "מתנ\"ס קריית נורדאו",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 167448192,
+  "center": {
+   "lat": 32.3010465,
+   "lon": 34.8598178
+  },
+  "tags": {
+   "amenity": "community_centre",
+   "building": "yes",
+   "name": "מתנ\"ס רמת ידין",
+   "source": "Bing"
+  }
+ },
+ {
+  "type": "way",
+  "id": 554102509,
+  "center": {
+   "lat": 32.2819898,
+   "lon": 34.8504776
+  },
+  "tags": {
+   "addr:city": "נתניה",
+   "addr:housenumber": "30",
+   "addr:street": "זלמן ארן",
+   "amenity": "community_centre",
+   "building": "yes",
+   "name": "מרכז תרבות וחברה לעולה",
+   "name:en": "Cultural and Social Center for Ole",
+   "name:he": "מרכז תרבות וחברה לעולה",
+   "name:ru": "Культурный Центр и Общество Иммигрантов"
+  }
+ },
+ {
+  "type": "way",
+  "id": 557931365,
+  "center": {
+   "lat": 32.3152229,
+   "lon": 34.8876868
+  },
+  "tags": {
+   "amenity": "community_centre",
+   "building": "yes",
+   "name": "מרכז קהילתי נאות גנים",
+   "name:en": "Neot Ganim Community Center"
+  }
+ },
+ {
+  "type": "way",
+  "id": 628669649,
+  "center": {
+   "lat": 32.3045941,
+   "lon": 34.8701748
+  },
+  "tags": {
+   "amenity": "community_centre",
+   "building": "yes",
+   "name": "מרכז קהילתי קריית השרון ע\"ש ספי ריבלין"
+  }
+ },
+ {
+  "type": "way",
+  "id": 893073702,
+  "center": {
+   "lat": 32.2735309,
+   "lon": 34.8465044
+  },
+  "tags": {
+   "amenity": "community_centre",
+   "building": "yes",
+   "name": "מתנ\"ס פולג",
+   "name:he": "מתנ\"ס פולג"
+  }
+ }
+]
