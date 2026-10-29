@@ -1,0 +1,102 @@
+---
+// House banners (29.10.2026, Yakir): until Google ads run in a place, the place shows our own "רוצים לפרסם כאן? צרו קשר" banner.
+// Pure HTML and CSS (sharp on every screen, no image to load), same size as the ad place so nothing jumps when real ads arrive.
+// No prices, no promises, no superlatives. Every banner leads to /advertise/#form.
+interface Props { kind: 'wide' | 'light' | 'side' | 'inline' }
+const { kind } = Astro.props;
+const href = '/advertise/#form';
+---
+<aside class={`ha ha-${kind}`} aria-label="שטח פרסום">
+  <span class="ha-tag">שטח פרסום</span>
+  {kind === 'wide' && (
+    <a class="ha-in" href={href}>
+      <svg class="ha-sea" viewBox="0 0 600 160" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120 Q75 100 150 120 T300 120 T450 120 T600 120" /><path d="M0 138 Q75 118 150 138 T300 138 T450 138 T600 138" /><path d="M0 102 Q75 82 150 102 T300 102 T450 102 T600 102" /></svg>
+      <span class="ha-dot" aria-hidden="true"></span>
+      <span class="ha-txt"><span class="ha-k">חדשות נתניה והשרון</span><b>רוצים לפרסם כאן?</b><span class="ha-s">העסק שלכם מול הקוראים של נתניה והשרון, בכל עמוד באתר.</span></span>
+      <span class="ha-btn">צרו קשר לפרטים <span aria-hidden="true">←</span></span>
+    </a>)}
+  {kind === 'light' && (
+    <a class="ha-in" href={href}>
+      <span class="ha-mk" aria-hidden="true">NWS<i></i></span>
+      <span class="ha-txt"><b>המקום הזה יכול להיות של העסק שלכם</b><span class="ha-s">באנר באתר, כתבת תוכן שיווקי או קידום במדריך בעלי המקצוע.</span></span>
+      <span class="ha-btn">רוצים לפרסם? צרו קשר <span aria-hidden="true">←</span></span>
+    </a>)}
+  {kind === 'side' && (
+    <a class="ha-in" href={href}>
+      <span class="ha-mk" aria-hidden="true">NWS<i></i></span>
+      <b>רוצים לפרסם כאן?</b>
+      <span class="ha-s">הגיעו לתושבי נתניה והשרון, ישר מהאתר שהם קוראים כל יום.</span>
+      <span class="ha-list"><span>באנר באתר</span><span>כתבת תוכן שיווקי</span><span>קידום במדריך בעלי המקצוע</span></span>
+      <span class="ha-btn">צרו קשר <span aria-hidden="true">←</span></span>
+      <svg class="ha-sea" viewBox="0 0 300 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 Q37 25 75 40 T150 40 T225 40 T300 40" /><path d="M0 58 Q37 43 75 58 T150 58 T225 58 T300 58" /></svg>
+    </a>)}
+  {kind === 'inline' && (
+    <a class="ha-in" href={href}>
+      <span class="ha-txt"><b>רוצים לפרסם כאן?</b><span class="ha-s">כתבה, באנר או קידום במדריך. משאירים פרטים ואנחנו חוזרים אליכם.</span></span>
+      <span class="ha-btn">צרו קשר <span aria-hidden="true">←</span></span>
+    </a>)}
+</aside>
+<style>
+  .ha{margin:26px auto;max-width:100%;display:flex;flex-direction:column;gap:4px}
+  .ha-tag{font-size:11px;color:var(--mut);text-align:center;letter-spacing:.3px}
+  .ha-in{position:relative;display:flex;align-items:center;gap:20px 28px;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;isolation:isolate}
+  .ha-in:hover{color:inherit}
+  .ha-txt{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+  .ha b{font-weight:800;line-height:1.2;text-wrap:balance}
+  .ha-s{line-height:1.5}
+  .ha-btn{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding-inline:22px;border-radius:999px;font-weight:700;font-size:16px;white-space:nowrap;transition:transform .15s}
+  .ha-in:hover .ha-btn{transform:translateX(-3px)}
+  .ha-mk{font-weight:900;letter-spacing:-1px;position:relative;line-height:1;direction:ltr}
+  .ha-mk i{position:absolute;top:-2px;right:-9px;width:8px;height:8px;border-radius:50%;background:var(--red)}
+  .ha-sea{position:absolute;inset:auto 0 0 0;width:100%;height:70%;z-index:-1;fill:none;stroke-width:1.4}
+
+  /* wide: dark ink with sea lines and the red dot of the logo */
+  .ha-wide .ha-in{background:linear-gradient(100deg,#0D1321 0%,#16213A 60%,#1B2A4A 100%);color:#fff;min-height:150px;padding:26px 40px}
+  .ha-wide .ha-sea{stroke:rgba(255,255,255,.09)}
+  .ha-wide .ha-dot{width:58px;height:58px;border-radius:50%;background:var(--red);flex:none;box-shadow:0 0 0 10px rgba(200,16,46,.18),0 0 0 22px rgba(200,16,46,.07)}
+  .ha-wide .ha-k{font-size:13px;font-weight:700;color:#AEB8C8;letter-spacing:.3px}
+  .ha-wide b{font-size:34px}
+  .ha-wide .ha-s{color:#C9D1DD;font-size:16px}
+  .ha-wide .ha-btn{background:#fff;color:var(--ink)}
+  .ha-wide .ha-in:hover .ha-btn{background:#F1EFEA}
+
+  /* light: warm paper, ink type, red button */
+  .ha-light .ha-in{background:var(--warm);border:1px solid var(--line);min-height:150px;padding:26px 40px}
+  .ha-light .ha-in:before{content:"";position:absolute;inset:0 0 0 auto;width:6px;background:var(--red)}
+  .ha-light .ha-mk{font-size:46px;color:var(--ink);flex:none}
+  .ha-light b{font-size:28px;color:var(--ink)}
+  .ha-light .ha-s{color:var(--ink2);font-size:16px}
+  .ha-light .ha-btn{background:var(--red);color:#fff}
+  .ha-light .ha-in:hover .ha-btn{background:var(--red2)}
+
+  /* side: tall dark card next to the article */
+  .ha-side{margin:0}
+  .ha-side .ha-in{flex-direction:column;align-items:flex-start;gap:14px;background:#0D1321;color:#fff;padding:30px 26px 90px;min-height:420px}
+  .ha-side .ha-sea{height:80px;stroke:rgba(255,255,255,.12)}
+  .ha-side .ha-mk{font-size:36px;color:#fff}
+  .ha-side b{font-size:30px}
+  .ha-side .ha-s{color:#C9D1DD;font-size:15.5px}
+  .ha-side .ha-list{display:flex;flex-direction:column;gap:8px;font-size:15px;font-weight:600}
+  .ha-side .ha-list span{display:flex;align-items:center;gap:10px}
+  .ha-side .ha-list span:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--red);flex:none}
+  .ha-side .ha-btn{background:var(--red);color:#fff;margin-top:6px}
+  .ha-side .ha-in:hover .ha-btn{background:var(--red2)}
+
+  /* inline: quiet card inside the article text */
+  .ha-inline .ha-in{background:#fff;border:1px solid var(--line);border-top:3px solid var(--ink);padding:20px 24px}
+  .ha-inline b{font-size:21px;color:var(--ink)}
+  .ha-inline .ha-s{color:var(--ink2);font-size:15.5px}
+  .ha-inline .ha-btn{background:var(--ink);color:#fff;min-height:42px;font-size:15px}
+
+  @media (max-width:760px){
+    .ha{margin:20px 0}
+    .ha-wide .ha-in,.ha-light .ha-in{flex-direction:column;align-items:flex-start;padding:24px 22px;gap:14px;min-height:0}
+    .ha-wide .ha-dot{width:34px;height:34px;box-shadow:0 0 0 7px rgba(200,16,46,.18),0 0 0 15px rgba(200,16,46,.07);margin:6px 6px 0}
+    .ha-wide b{font-size:26px}
+    .ha-light .ha-mk{font-size:32px}
+    .ha-light b{font-size:22px}
+    .ha-inline .ha-in{flex-direction:column;align-items:flex-start;gap:12px}
+    .ha-btn{min-height:44px}
+  }
+  @media (prefers-reduced-motion:reduce){.ha-btn{transition:none}.ha-in:hover .ha-btn{transform:none}}
+</style>

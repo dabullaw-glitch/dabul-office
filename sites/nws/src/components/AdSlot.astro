@@ -1,13 +1,17 @@
 ---
 // One Google AdSense place (29.10.2026). Renders nothing until ADSENSE.client is set in data/site.ts. The box keeps a fixed
 // minimum height so a late ad never pushes the page (no jumping), and it is labelled "פרסומת" as the rules require.
-import { ADSENSE, PREVIEW } from '../data/site';
+import { ADSENSE, PREVIEW, HOUSE_ADS } from '../data/site';
+import HouseAd from './HouseAd.astro';
 interface Props { place: keyof typeof ADSENSE.slots; side?: boolean }
 const { place, side = false } = Astro.props;
 const slot = ADSENSE.slots[place];
 // a place shows only once it has its own ad unit id (after Google approves the site), so no empty boxes before that
 const on = !!ADSENSE.client && !!slot && !PREVIEW;
+// until then (29.10.2026, Yakir): our own "רוצים לפרסם כאן?" banner, a different look per place
+const house = !on && HOUSE_ADS ? ({ home1: 'wide', home2: 'light', afterArticle: 'wide', side: 'side', inArticle: 'inline', list: 'light' } as const)[place] : null;
 ---
+{house && <HouseAd kind={house} />}
 {on && (
 <div class={`n-ad${side ? ' side' : ''}`} data-ad={place}>
   <span class="n-adl">פרסומת</span>

@@ -56,6 +56,8 @@ export const TURNSTILE_SITE_KEY = process.env.PUBLIC_NWS_TURNSTILE_SITE_KEY || '
 // is filled by AdSense's own sizing). With an empty client no ad code, no script and no empty box is rendered anywhere.
 // Places: home (after the top stories, between the section blocks), article (inside the text after the 4th paragraph, after the
 // text, the sidebar), section lists. Never inside sponsored stories, never on the panel, legal or form pages.
+// 29.10.2026: our own "רוצים לפרסם כאן? צרו קשר" banners in the ad places until Google ads run there (components/HouseAd.astro)
+export const HOUSE_ADS = process.env.NWS_HOUSE_ADS === '1';
 export const ADSENSE: { client: string; slots: Record<'home1' | 'home2' | 'inArticle' | 'afterArticle' | 'side' | 'list', string> } = {
   client: 'ca-pub-1818310219775941',
   slots: { home1: '', home2: '', inArticle: '', afterArticle: '', side: '', list: '' },
