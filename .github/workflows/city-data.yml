@@ -1,0 +1,24 @@
+# city-data (29.10.2026): raw data for the nws.co.il city guide ("שימושון עירוני"): OpenStreetMap places inside Netanya and
+# official data.gov.il datasets that mention Netanya. The workspace can't reach these hosts; the runner can. Output goes to the
+# branch city-data (raw/*.json). Manual run only. Nothing here is published on the site directly.
+name: city-data
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: fetch
+        run: node sites/nws/scripts/citydata-fetch.mjs out
+      - name: commit to city-data
+        run: |
+          git config user.name "city-data"; git config user.email "city-data@users.noreply.github.com"
+          git checkout --orphan city-data
+          git rm -rfq . >/dev/null
+          mkdir -p raw && mv out/*.json raw/
+          git add raw && git commit -qm "city data $(date -u +%F)" && git push -f origin city-data
