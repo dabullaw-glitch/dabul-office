@@ -93,7 +93,8 @@ async function checks(): Promise<Issue[]> {
   if ((stuckItems || 0) >= 3) out.push({ key: 'write_stuck', text: `${stuckItems} פריטים מקומיים מחכים יותר מ-40 דקות ולא נכתבו לידיעות. ייתכן שהכתיבה נתקעה או שהתקציב היומי נגמר.` });
   const { count: stuckDrafts } = await sb.from('hns_stories').select('id', { count: 'exact', head: true }).eq('state', 'draft').eq('sensitivity', 'normal').is('pub_note', null)
     .gte('created_at', new Date(now - 24 * 3600e3).toISOString()).lte('created_at', new Date(now - 20 * 60e3).toISOString()).not('title', 'is', null)
-    .or('notes.is.null,notes.not.like.ממתין לפרטים*'); // a draft the writer held for lack of details is waiting on purpose
+    // a draft the writer held for lack of details, or one the copy editor turned down ("עורך: נפסל"), is not waiting for a decision (29.10.2026)
+    .or('notes.is.null,and(notes.not.like.ממתין לפרטים*,notes.not.like.עורך: נפסל*)');
   if ((stuckDrafts || 0) >= 2) out.push({ key: 'publish_stuck', text: `${stuckDrafts} טיוטות רגילות מחכות יותר מ-20 דקות בלי החלטה של שלב הפרסום.` });
   const { data: http } = await sb.rpc('hns_watch_http', { since: new Date(now - 30 * 60e3).toISOString() });
   // 28.10.2026: only our own functions count. They always answer in JSON; an HTML or XML error page (a news site that blocks
