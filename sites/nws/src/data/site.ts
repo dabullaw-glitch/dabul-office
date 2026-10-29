@@ -48,8 +48,9 @@ export const SAME_AS = [TG_URL, 'https://www.facebook.com/profile.php?id=6159588
 
 // Supabase functions of the news engine (public endpoints). The business directory form posts to hns-biz.
 export const HNS_API = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1';
-// Cloudflare Turnstile on public forms: off until a site key for nws.co.il is set at build time (and NWS_TURNSTILE_SECRET in app_secrets).
-export const TURNSTILE_SITE_KEY = process.env.PUBLIC_NWS_TURNSTILE_SITE_KEY || '';
+// Cloudflare Turnstile on public forms (29.10.2026): the public site key of the free widget "nws.co.il forms" (managed mode). The
+// matching secret is NWS_TURNSTILE_SECRET in app_secrets, used only by the Supabase function hns-biz. The site key is not a secret.
+export const TURNSTILE_SITE_KEY = process.env.PUBLIC_NWS_TURNSTILE_SITE_KEY || '0x4AAAAAAFq8cXO_8G8zLoLz';
 
 // 29.10.2026 (Yakir: "connect Google ads and put them in the right places"): Google AdSense. Everything is ready and stays off
 // until the account exists: put the publisher id (ca-pub-...) in client, and optionally a slot id per place (otherwise the place

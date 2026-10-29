@@ -15,8 +15,10 @@
 //   A directory registration that asks for promotion or a sponsored article also opens a request (so it shows in the panel).
 //   Confirmation emails go out only when NWS_MAIL_FROM (an nws.co.il sender) exists in app_secrets (lib.ts).
 // The management panel (https://nws.co.il/admin/, edge function hns-panel) uses the same decide logic.
+// 29.10.2026 (security hardening): every public form goes through gate() (5 saved forms an hour per sender and form type, 20 attempts)
+//   and Turnstile (widget "nws.co.il forms"; NWS_TURNSTILE_SECRET in app_secrets), checked after field validation. See lib.ts.
 // No long or medium dash in any saved text.
-import { Any, sb, S, secrets, J, CORS, clean, phoneOf, urlOk, emailOk, sha, ipOf, tg, mail } from './lib.ts';
+import { Any, sb, S, secrets, J, CORS, clean, phoneOf, urlOk, emailOk, sha, ipOf, tg, mail, gate, gateOk, turnstile } from './lib.ts';
 import { request, requestDecide } from './requests.ts';
 
 // Netanya (whole city), its neighborhoods and the nearby Sharon: same names as the site's places (sites/nws/src/data/places.ts)
@@ -54,11 +56,8 @@ async function register(b: Any, req: Request, admin: boolean) {
   if (!test && (clean(b.company_fax) || Number(b.t || 0) < 3000)) return { ok: true, id: null };
   const ip = ipOf(req);
   const ipHash = await sha(`${ip}|${S.CRON_SECRET}`);
-  if (!test && S.NWS_TURNSTILE_SECRET) {
-    const fd = new FormData(); fd.set('secret', S.NWS_TURNSTILE_SECRET); fd.set('response', String(b.turnstile || '')); if (ip !== 'none') fd.set('remoteip', ip);
-    const v = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: fd, signal: AbortSignal.timeout(10000) }).then((r) => r.json()).catch(() => ({ success: false }));
-    if (!v.success) return { ok: false, status: 400, error: 'בדיקת האבטחה לא עברה. רעננו את הדף ונסו שוב.' };
-  }
+  const g = test ? { blocked: false, id: null } : await gate(ipHash, 'directory');
+  if (g.blocked) return { ok: false, status: 429, error: 'נשלחו יותר מדי טפסים. נסו שוב מאוחר יותר.' };
   const cats = await categories();
   const cat = cats.find((c: Any) => c.slug === b.category);
   const L: Any = {
@@ -84,6 +83,11 @@ async function register(b: Any, req: Request, admin: boolean) {
   if (L.category === 'lawyers' && !L.license_no) errs.license_no = 'לעורכי דין צריך מספר רישיון בלשכה';
   if (!L.consent) errs.consent = 'צריך לאשר את פרסום הפרטים';
   if (Object.keys(errs).length) return { ok: false, status: 400, error: 'יש שדות שצריך לתקן', fields: errs };
+  if (!test) {
+    const ts = await turnstile(b.turnstile, ip);
+    if (ts !== 'ok') return { ok: false, status: 400, security: true,
+      error: ts === 'missing' ? 'בדיקת האבטחה עוד לא הסתיימה. חכו כמה שניות ונסו שוב.' : 'בדיקת האבטחה לא עברה. רעננו את הדף ונסו שוב.' };
+  }
 
   if (!test) {
     const hourAgo = new Date(Date.now() - 3600e3).toISOString(), dayAgo = new Date(Date.now() - 24 * 3600e3).toISOString();
@@ -99,6 +103,7 @@ async function register(b: Any, req: Request, admin: boolean) {
     status: 'pending', plan: 'free', consent_at: now, ip_hash: ipHash, is_test: test, notes: test ? 'test' : null };
   const { data: ins, error } = await sb.from('hns_biz_listings').insert(row).select('*').single();
   if (error) return { ok: false, status: 500, error: 'שמירה נכשלה, נסו שוב בעוד דקה' };
+  await gateOk(g.id);
   let sent = false;
   if (!test || b.tg) {
     const r = await tg('sendMessage', { chat_id: S.TELEGRAM_CHAT_ID, text: approvalText(ins, cat?.plural_he || L.category), disable_web_page_preview: true,

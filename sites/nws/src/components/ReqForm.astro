@@ -1,9 +1,11 @@
 ---
 // One form component for every inquiry on the site (28.10.2026, business flows). Posts JSON to the Supabase function hns-biz
 // ({action:'request'}), which validates, rate limits, saves to hns_requests and notifies Yakir in Telegram (requests.ts).
-// Spam protection: hidden field company_fax, minimum fill time, server rate limits, optional Turnstile. Privacy consent required.
+// Spam protection: hidden field company_fax, minimum fill time, server rate limits (5 an hour per sender and form type) and Cloudflare
+// Turnstile (components/Turnstile.astro, loaded only near the form; 29.10.2026). Privacy consent required.
 // No payment anywhere: purchase requests are saved and Yakir follows up himself.
-import { HNS_API, TURNSTILE_SITE_KEY, type Lang } from '../data/site';
+import { HNS_API, type Lang } from '../data/site';
+import Turnstile from './Turnstile.astro';
 interface Props { type: 'contact' | 'advertise' | 'tip' | 'correction' | 'newsletter'; lang?: Lang; id?: string; offer?: string }
 const { type, lang = 'he', id = 'rqf', offer = '' } = Astro.props;
 const OFFERS: [string, string][] = [['featured', 'קידום במדריך העסקים (עסק מומלץ)'], ['leader', 'מוביל בקטגוריה במדריך'], ['sponsored', 'כתבת תוכן שיווקי'],
@@ -12,23 +14,24 @@ const T: Record<string, Record<string, string>> = {
   he: { story: 'מה קרה, איפה ומתי', photo: 'תמונה (לא חובה)', name: 'שם', nameTip: 'שם (לא יפורסם בלי רשותכם)', phone: 'טלפון', phoneTip: 'טלפון לחזרה', email: 'מייל',
     opt: ' (לא חובה)', photoOk: 'אני מאשר/ת לפרסם את התמונה ששלחתי', send: 'שליחה', sending: 'שולחים...', offline: 'אין חיבור. נסו שוב בעוד דקה.', fail: 'השליחה נכשלה, נסו שוב.',
     consentA: 'קראתי את ', privacy: 'מדיניות הפרטיות', consentB: ' ואני מסכים/ה שתשמרו את הפרטים ותחזרו אליי בעניין הפנייה.',
-    consentNl: ' ואני מסכים/ה לקבל מכם במייל את הניוזלטר. אפשר להסיר בכל עת.', bigPhoto: 'התמונה גדולה מדי או לא נתמכת. נסו תמונה אחרת.' },
+    consentNl: ' ואני מסכים/ה לקבל מכם במייל את הניוזלטר. אפשר להסיר בכל עת.', bigPhoto: 'התמונה גדולה מדי או לא נתמכת. נסו תמונה אחרת.',
+    wait: 'בדיקת האבטחה עוד לא הסתיימה. חכו כמה שניות ונסו שוב.' },
   en: { story: 'What happened, where and when', photo: 'Photo (optional)', nameTip: 'Name (not published without your permission)', phoneTip: 'Phone for a callback', opt: ' (optional)',
     photoOk: 'I allow you to publish the photo I sent', send: 'Send', sending: 'Sending...', offline: 'No connection. Try again in a minute.', fail: 'Sending failed, try again.',
-    consentA: 'I have read the ', privacy: 'privacy policy (Hebrew)', consentB: ' and agree that you keep these details to handle my message.', bigPhoto: 'The photo is too big or not supported.' },
+    consentA: 'I have read the ', privacy: 'privacy policy (Hebrew)', consentB: ' and agree that you keep these details to handle my message.', bigPhoto: 'The photo is too big or not supported.', wait: 'The security check is not finished yet. Wait a few seconds and try again.' },
   ru: { story: 'Что случилось, где и когда', photo: 'Фото (необязательно)', nameTip: 'Имя (не публикуется без вашего согласия)', phoneTip: 'Телефон для связи', opt: ' (необязательно)',
     photoOk: 'Я разрешаю опубликовать отправленное фото', send: 'Отправить', sending: 'Отправляем...', offline: 'Нет связи. Попробуйте через минуту.', fail: 'Не удалось отправить.',
-    consentA: 'Я прочитал(а) ', privacy: 'политику конфиденциальности (на иврите)', consentB: ' и согласен(на) на хранение этих данных для ответа.', bigPhoto: 'Фото слишком большое или не поддерживается.' },
+    consentA: 'Я прочитал(а) ', privacy: 'политику конфиденциальности (на иврите)', consentB: ' и согласен(на) на хранение этих данных для ответа.', bigPhoto: 'Фото слишком большое или не поддерживается.', wait: 'Проверка безопасности ещё идёт. Подождите несколько секунд.' },
   fr: { story: 'Que s’est-il passé, où et quand', photo: 'Photo (facultatif)', nameTip: 'Nom (jamais publié sans votre accord)', phoneTip: 'Téléphone pour vous rappeler', opt: ' (facultatif)',
     photoOk: 'J’autorise la publication de la photo envoyée', send: 'Envoyer', sending: 'Envoi...', offline: 'Pas de connexion. Réessayez dans une minute.', fail: 'Envoi impossible.',
-    consentA: 'J’ai lu la ', privacy: 'politique de confidentialité (en hébreu)', consentB: ' et j’accepte que ces données soient conservées pour traiter mon message.', bigPhoto: 'Photo trop grande ou non prise en charge.' },
+    consentA: 'J’ai lu la ', privacy: 'politique de confidentialité (en hébreu)', consentB: ' et j’accepte que ces données soient conservées pour traiter mon message.', bigPhoto: 'Photo trop grande ou non prise en charge.', wait: 'La vérification de sécurité n’est pas terminée. Patientez quelques secondes.' },
 };
 const t = T[lang] || T.he;
 const he = lang === 'he';
 const api = HNS_API + '/hns-biz';
 const row = 'flex-direction:row;font-weight:400;gap:8px;align-items:flex-start';
 ---
-<form class="f rq" id={id} novalidate data-type={type} data-lang={lang} data-api={api} data-msg={JSON.stringify({ sending: t.sending, offline: t.offline, fail: t.fail, big: t.bigPhoto })}>
+<form class="f rq" id={id} novalidate data-type={type} data-lang={lang} data-api={api} data-msg={JSON.stringify({ sending: t.sending, offline: t.offline, fail: t.fail, big: t.bigPhoto, wait: t.wait })}>
   <div class="hp" aria-hidden="true"><label>אל תמלאו את השדה הזה<input name="company_fax" tabindex="-1" autocomplete="off"></label></div>
   {type === 'advertise' && <>
     <label>במה אתם מתעניינים<select name="offer" required><option value="">בחרו</option>{OFFERS.map(([v, l]) => <option value={v} selected={v === offer}>{l}</option>)}</select></label>
@@ -62,12 +65,11 @@ const row = 'flex-direction:row;font-weight:400;gap:8px;align-items:flex-start';
     <label>{t.email}<input name="email" type="email" required dir="ltr" autocomplete="email"></label>
   </>}
   <label style={row}><input type="checkbox" name="consent" value="1" required> <span>{t.consentA}<a href="/privacy/" target="_blank">{t.privacy}</a>{type === 'newsletter' ? t.consentNl : t.consentB}</span></label>
-  {TURNSTILE_SITE_KEY && <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-language={lang}></div>}
+  <Turnstile lang={lang} />
   <button class="btn pri" type="submit">{t.send}</button>
   <p class="rqmsg" role="status" aria-live="polite" style="font-weight:700;margin:0"></p>
   {he && type !== 'newsletter' && <p class="note" style="margin:0">הפרטים מגיעים רק למערכת האתר ולא מועברים לאחרים. לא נגבה תשלום דרך האתר.</p>}
 </form>
-{TURNSTILE_SITE_KEY && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
 <script is:inline>
 (function(){
   if (window.__rqInit) return; window.__rqInit = 1;
@@ -80,6 +82,7 @@ const row = 'flex-direction:row;font-weight:400;gap:8px;align-items:flex-start';
     img.onerror=function(){ URL.revokeObjectURL(url); rej('big'); }; img.src=url; }); }
   function init(f){
     var t0=Date.now(), M=JSON.parse(f.dataset.msg||'{}'), msg=f.querySelector('.rqmsg');
+    if(window.nwsTs) window.nwsTs.attach(f);
     try{ var sp=new URLSearchParams(location.search); if(f.elements.offer&&sp.get('offer')) f.elements.offer.value=sp.get('offer');
       if(f.elements.url&&sp.get('url')){ var u=sp.get('url'); f.elements.url.value=u.charAt(0)==='/'?location.origin+u:u; }
       if(f.elements.business&&sp.get('biz')) f.elements.business.value=sp.get('biz'); }catch(e){}
@@ -89,16 +92,18 @@ const row = 'flex-direction:row;font-weight:400;gap:8px;align-items:flex-start';
       var d={action:'request',type:f.dataset.type,lang:f.dataset.lang,page:location.pathname,t:Date.now()-t0}, fd=new FormData(f);
       fd.forEach(function(v,k){ if(k==='photo') return; if(k==='cf-turnstile-response'){d.turnstile=v} else {d[k]=String(v).trim()} });
       d.consent=!!(f.elements.consent&&f.elements.consent.checked); if(f.elements.photo_ok) d.photo_ok=f.elements.photo_ok.checked;
+      var tk=window.nwsTs?window.nwsTs.token(f):null; if(tk==='' ){ msg.style.color='#C8102E'; msg.textContent=M.wait; return; } if(tk) d.turnstile=tk;
       var btn=f.querySelector('button[type=submit]'); btn.disabled=true; msg.style.color=''; msg.textContent=M.sending;
       var file=f.elements.photo&&f.elements.photo.files&&f.elements.photo.files[0];
       shrink(file).then(function(p){ if(p) d.photo=p;
         return fetch(f.dataset.api,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json()});
       }).then(function(j){
         btn.disabled=false;
-        if(j.ok){ msg.style.color='#1E8A4C'; msg.textContent=j.message||'✓'; f.reset(); t0=Date.now(); if(window.nwsTrack) try{window.nwsTrack('generate_lead',{form:f.dataset.type})}catch(e){} return; }
+        if(j.ok){ msg.style.color='#1E8A4C'; msg.textContent=j.message||'✓'; f.reset(); t0=Date.now(); if(window.nwsTs) window.nwsTs.reset(f); if(window.nwsTrack) try{window.nwsTrack('generate_lead',{form:f.dataset.type})}catch(e){} return; }
+        if(window.nwsTs) window.nwsTs.reset(f);
         msg.style.color='#C8102E'; msg.textContent=j.error||M.fail;
         if(j.fields){ Object.keys(j.fields).forEach(function(k){ var el=f.elements[k]; if(!el) return; if(el.length&&!el.tagName) el=el[0]; var s=document.createElement('span'); s.className='ferr note'; s.style.color='#C8102E'; s.textContent=j.fields[k]; (el.closest('label')||el.parentNode).appendChild(s); }); }
-      }).catch(function(e){ btn.disabled=false; msg.style.color='#C8102E'; msg.textContent=e==='big'?M.big:M.offline; });
+      }).catch(function(e){ btn.disabled=false; if(window.nwsTs) window.nwsTs.reset(f); msg.style.color='#C8102E'; msg.textContent=e==='big'?M.big:M.offline; });
     });
   }
   function all(){ document.querySelectorAll('form.rq').forEach(init); }

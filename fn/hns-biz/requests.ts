@@ -5,7 +5,9 @@
 // overall 60 an hour) and a repeat of the same text within 10 minutes (answered "thanks" without saving again).
 // Telegram: one message per request with buttons "✓ טופל" (hns:biz:rq:<id>) and "🗑 ספאם" (hns:biz:sp:<id>), plus a WhatsApp
 // button when the phone is a mobile number. A tip photo is saved in the private bucket hns-tips and sent under the message.
-import { Any, sb, S, clean, phoneOf, urlOk, emailOk, sha, ipOf, tg, tgPhoto, waLink, mail } from './lib.ts';
+// 29.10.2026 (security hardening): order is hidden field and fill time, then gate() (5 saved forms an hour per sender and form type,
+// 20 attempts an hour), then field validation, then Turnstile (after validation, so a typo does not burn the one-time token).
+import { Any, sb, S, clean, phoneOf, urlOk, emailOk, sha, ipOf, tg, tgPhoto, waLink, mail, gate, gateOk, turnstile } from './lib.ts';
 
 export const OFFERS: Record<string, string> = {
   featured: 'קידום במדריך (עסק מומלץ)', leader: 'מוביל בקטגוריה במדריך', sponsored: 'כתבת תוכן שיווקי', tgpost: 'פוסט ממומן בטלגרם',
@@ -22,19 +24,19 @@ const LANGS = ['he', 'ru', 'fr', 'en'];
 
 const MSG: Record<string, Record<string, string>> = {
   he: { ok: 'תודה! קיבלנו את הפנייה ונחזור אליכם בהקדם.', tip: 'תודה! הידיעה הגיעה למערכת. נבדוק אותה לפני כל פרסום.', newsletter: 'תודה! נעדכן אתכם במייל כשהניוזלטר יתחיל.',
-    fix: 'יש שדות שצריך לתקן', many: 'נשלחו יותר מדי פניות. נסו שוב מאוחר יותר.', fail: 'השליחה נכשלה, נסו שוב בעוד דקה.', sec: 'בדיקת האבטחה לא עברה. רעננו את הדף ונסו שוב.',
+    fix: 'יש שדות שצריך לתקן', many: 'נשלחו יותר מדי פניות. נסו שוב מאוחר יותר.', fail: 'השליחה נכשלה, נסו שוב בעוד דקה.', sec: 'בדיקת האבטחה לא עברה. רעננו את הדף ונסו שוב.', wait: 'בדיקת האבטחה עוד לא הסתיימה. חכו כמה שניות ונסו שוב.',
     phone: 'מספר טלפון לא תקין', email: 'כתובת מייל לא תקינה', reach: 'השאירו טלפון או מייל כדי שנוכל לחזור אליכם', msg: 'כתבו כמה מילים על הפנייה',
     story: 'ספרו מה קרה, איפה ומתי (לפחות 10 תווים)', name: 'כתבו שם', url: 'הדביקו את הקישור לידיעה', consent: 'צריך לאשר את מדיניות הפרטיות', offer: 'בחרו במה אתם מתעניינים', photo: 'אפשר לצרף תמונה אחת עד 6MB (JPG, PNG או WEBP)' },
   en: { ok: 'Thank you! We received your message and will get back to you soon.', tip: 'Thank you! Your tip reached the newsroom. We check every tip before publishing.', newsletter: 'Thank you!',
-    fix: 'Please fix the marked fields', many: 'Too many messages. Please try again later.', fail: 'Sending failed, please try again in a minute.', sec: 'Security check failed. Reload the page and try again.',
+    fix: 'Please fix the marked fields', many: 'Too many messages. Please try again later.', fail: 'Sending failed, please try again in a minute.', sec: 'Security check failed. Reload the page and try again.', wait: 'The security check is not finished yet. Wait a few seconds and try again.',
     phone: 'Invalid phone number', email: 'Invalid email', reach: 'Leave a phone or email so we can reply', msg: 'Write a few words', story: 'Tell us what happened, where and when',
     name: 'Write your name', url: 'Paste the link', consent: 'Please accept the privacy policy', offer: 'Choose an option', photo: 'One image up to 6MB (JPG, PNG or WEBP)' },
   ru: { ok: 'Спасибо! Мы получили ваше сообщение и скоро ответим.', tip: 'Спасибо! Новость получена. Мы проверяем каждое сообщение перед публикацией.', newsletter: 'Спасибо!',
-    fix: 'Исправьте отмеченные поля', many: 'Слишком много сообщений. Попробуйте позже.', fail: 'Не удалось отправить, попробуйте через минуту.', sec: 'Проверка безопасности не пройдена. Обновите страницу.',
+    fix: 'Исправьте отмеченные поля', many: 'Слишком много сообщений. Попробуйте позже.', fail: 'Не удалось отправить, попробуйте через минуту.', sec: 'Проверка безопасности не пройдена. Обновите страницу.', wait: 'Проверка безопасности ещё идёт. Подождите несколько секунд.',
     phone: 'Неверный номер телефона', email: 'Неверный email', reach: 'Оставьте телефон или email', msg: 'Напишите несколько слов', story: 'Расскажите, что, где и когда произошло',
     name: 'Укажите имя', url: 'Вставьте ссылку', consent: 'Подтвердите политику конфиденциальности', offer: 'Выберите вариант', photo: 'Одно фото до 6 МБ (JPG, PNG или WEBP)' },
   fr: { ok: 'Merci ! Nous avons bien reçu votre message et vous répondrons bientôt.', tip: 'Merci ! Votre info est arrivée à la rédaction. Chaque info est vérifiée avant publication.', newsletter: 'Merci !',
-    fix: 'Corrigez les champs indiqués', many: 'Trop de messages. Réessayez plus tard.', fail: 'Envoi impossible, réessayez dans une minute.', sec: 'Vérification de sécurité échouée. Rechargez la page.',
+    fix: 'Corrigez les champs indiqués', many: 'Trop de messages. Réessayez plus tard.', fail: 'Envoi impossible, réessayez dans une minute.', sec: 'Vérification de sécurité échouée. Rechargez la page.', wait: 'La vérification de sécurité n’est pas terminée. Patientez quelques secondes.',
     phone: 'Numéro de téléphone invalide', email: 'Email invalide', reach: 'Laissez un téléphone ou un email', msg: 'Écrivez quelques mots', story: 'Dites-nous quoi, où et quand',
     name: 'Indiquez votre nom', url: 'Collez le lien', consent: 'Acceptez la politique de confidentialité', offer: 'Choisissez une option', photo: 'Une image jusqu’à 6 Mo (JPG, PNG ou WEBP)' },
 };
@@ -76,11 +78,8 @@ export async function request(b: Any, req: Request, admin: boolean) {
   if (!test && (clean(b.company_fax) || Number(b.t || 0) < 3000)) return { ok: true, id: null, message: M.ok };
   const ip = ipOf(req);
   const ipHash = await sha(`${ip}|${S.CRON_SECRET}`);
-  if (!test && S.NWS_TURNSTILE_SECRET) {
-    const fd = new FormData(); fd.set('secret', S.NWS_TURNSTILE_SECRET); fd.set('response', String(b.turnstile || '')); if (ip !== 'none') fd.set('remoteip', ip);
-    const v = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: fd, signal: AbortSignal.timeout(10000) }).then((r) => r.json()).catch(() => ({ success: false }));
-    if (!v.success) return { ok: false, status: 400, error: M.sec };
-  }
+  const g = test ? { blocked: false, id: null } : await gate(ipHash, ['contact', 'advertise', 'tip', 'correction', 'newsletter'].includes(b.type) ? b.type : 'other');
+  if (g.blocked) return { ok: false, status: 429, error: M.many };
   let type = String(b.type || '');
   const offer = OFFERS[b.offer] ? String(b.offer) : '';
   if (type === 'advertise' && offer) type = TYPE_OF_OFFER[offer] || 'advertise';
@@ -119,6 +118,10 @@ export async function request(b: Any, req: Request, admin: boolean) {
   const photo = type === 'tip' ? photoOf(b.photo) : null;
   if (photo === 'bad') errs.photo = M.photo;
   if (Object.keys(errs).length) return { ok: false, status: 400, error: M.fix, fields: errs };
+  if (!test) {
+    const ts = await turnstile(b.turnstile, ip);
+    if (ts !== 'ok') return { ok: false, status: 400, error: ts === 'missing' ? M.wait : M.sec, security: true };
+  }
 
   if (!test) {
     const hourAgo = new Date(Date.now() - 3600e3).toISOString(), dayAgo = new Date(Date.now() - 24 * 3600e3).toISOString(), tenAgo = new Date(Date.now() - 600e3).toISOString();
@@ -135,6 +138,7 @@ export async function request(b: Any, req: Request, admin: boolean) {
   const row = { ...R, phone: R.phone || null, email: R.email || null, consent_at: now, ip_hash: ipHash, is_test: test, extra: b.listing_id ? { listing_id: Number(b.listing_id) || null } : {} };
   const { data: ins, error } = await sb.from('hns_requests').insert(row).select('*').single();
   if (error) return { ok: false, status: 500, error: M.fail };
+  await gateOk(g.id);
   if (photo && photo !== 'bad') {
     const path = `${now.slice(0, 7)}/${ins.id}.${photo.mime.split('/')[1].replace('jpeg', 'jpg')}`;
     const up = await sb.storage.from('hns-tips').upload(path, photo.bytes, { contentType: photo.mime, upsert: true });

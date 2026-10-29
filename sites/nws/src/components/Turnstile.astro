@@ -1,0 +1,61 @@
+---
+// Cloudflare Turnstile ("אני לא רובוט") for the public forms of nws.co.il (29.10.2026, security hardening approved by Yakir).
+// Free, managed mode, widget "nws.co.il forms". The script of Cloudflare is loaded only on pages that have a form, and only when
+// the visitor gets near the form (scrolls to it, focuses or taps in it), so it does not slow the page. The widget sits right
+// above the submit button. The form scripts call window.nwsTs.token(form) before sending and window.nwsTs.reset(form) after
+// every answer that is not a success (each token works once). The server (Supabase function hns-biz) checks the token.
+import { TURNSTILE_SITE_KEY } from '../data/site';
+interface Props { lang?: string }
+const { lang = 'he' } = Astro.props;
+const NOTE: Record<string, string> = {
+  he: 'בדיקת אבטחה קצרה נגד רובוטים. ברוב המקרים היא עוברת לבד.',
+  en: 'A short security check against bots. It usually passes by itself.',
+  ru: 'Короткая проверка безопасности от ботов. Обычно проходит сама.',
+  fr: 'Une courte vérification contre les robots. Elle passe en général toute seule.',
+};
+---
+{TURNSTILE_SITE_KEY && <>
+  <div class="ts-wrap">
+    <div class="ts-box" data-sitekey={TURNSTILE_SITE_KEY} data-lang={lang}></div>
+    <p class="note ts-note" style="margin:4px 0 0;font-size:13px">{NOTE[lang] || NOTE.he}</p>
+  </div>
+  <script is:inline>
+  (function(){
+    if (window.nwsTs) return;
+    var loading = false, ready = false, queue = [];
+    function load(){
+      if (loading) return; loading = true;
+      window.nwsTsOnload = function(){ ready = true; queue.splice(0).forEach(function(f){ f(); }); };
+      var s = document.createElement('script');
+      s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=nwsTsOnload';
+      s.async = true; s.defer = true; document.head.appendChild(s);
+    }
+    function render(box){
+      if (box.dataset.wid || !window.turnstile) return;
+      box.dataset.wid = window.turnstile.render(box, { sitekey: box.dataset.sitekey, language: box.dataset.lang || 'he', theme: 'light',
+        'response-field-name': 'cf-turnstile-response', 'refresh-expired': 'auto' });
+    }
+    function boxOf(form){ return form && form.querySelector('.ts-box'); }
+    function want(box){ if (!box) return; if (ready) render(box); else { queue.push(function(){ render(box); }); load(); } }
+    window.nwsTs = {
+      attach: function(form){
+        var box = boxOf(form); if (!box) return;
+        var go = function(){ want(box); };
+        form.addEventListener('focusin', go, { once: true });
+        form.addEventListener('pointerdown', go, { once: true });
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function(es){ if (es.some(function(e){ return e.isIntersecting; })) { io.disconnect(); go(); } }, { rootMargin: '300px' });
+          io.observe(form);
+        } else go();
+      },
+      // '' while the check has not finished (the form then asks to wait a few seconds), null when the page has no widget
+      token: function(form){
+        var box = boxOf(form); if (!box) return null;
+        if (!box.dataset.wid || !window.turnstile) { want(box); return ''; }
+        return window.turnstile.getResponse(box.dataset.wid) || '';
+      },
+      reset: function(form){ var box = boxOf(form); if (box && box.dataset.wid && window.turnstile) try { window.turnstile.reset(box.dataset.wid); } catch (e) {} },
+    };
+  })();
+  </script>
+</>}

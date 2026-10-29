@@ -1,6 +1,6 @@
 ---
 // Self-registration for the business directory. Posts to the Supabase function hns-biz (validation, rate limit, honeypot,
-// optional Turnstile). Every new listing waits for Yakir's approval in Telegram. No payment here: payments are not connected.
+// Cloudflare Turnstile through components/Turnstile.astro since 29.10.2026). Every new listing waits for Yakir's approval in Telegram. No payment here: payments are not connected.
 // 28.10.2026: restyled to the directory design; the fields, their names and the sending script are unchanged.
 import Base from '../../../layouts/Base.astro';
 import DirHero from '../../../components/directory/DirHero.astro';
@@ -8,7 +8,8 @@ import DirSide from '../../../components/directory/DirSide.astro';
 import '../../../components/directory/dir.css';
 import { CATEGORIES } from '../../../data/directory';
 import { PLACES } from '../../../data/places';
-import { HNS_API, TURNSTILE_SITE_KEY } from '../../../data/site';
+import { HNS_API } from '../../../data/site';
+import Turnstile from '../../../components/Turnstile.astro';
 const hoods = PLACES.filter((p) => p.kind === 'neighborhood').map((p) => p.he);
 const towns = PLACES.filter((p) => p.kind === 'locality').map((p) => p.he);
 const cats = [...CATEGORIES].sort((a, b) => a.plural.localeCompare(b.plural, 'he'));
@@ -71,7 +72,7 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'WebPage', name: '�
           <p class="hint">אין תשלום דרך האתר. נחזור אליכם עם הפרטים, ורק אחר כך מתקדמים.</p>
         </fieldset>
         <label class="ck top"><input type="checkbox" name="consent" value="1" required><span>אני מאשר/ת לפרסם את פרטי העסק במדריך, הפרטים נכונים, וקראתי את <a href="/privacy/" target="_blank">מדיניות הפרטיות</a>.</span></label>
-        {TURNSTILE_SITE_KEY && <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-language="he"></div>}
+        <Turnstile />
         <button class="n-btn ink" type="submit">שליחה</button>
         <p id="bizmsg" role="status" aria-live="polite" style="font-weight:700;margin:0"></p>
         <p class="fine">שליחת הטופס כפופה ל<a href="/terms/">תנאי השימוש</a> ול<a href="/privacy/">מדיניות הפרטיות</a>. רוצים לדעת על פרסום? <a href="/advertise/">פרסום במדריך</a>.</p>
@@ -79,11 +80,11 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'WebPage', name: '�
     </section>
     <DirSide join={false} />
   </div>
-  {TURNSTILE_SITE_KEY && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
   <script is:inline define:vars={{ api: HNS_API + '/hns-biz' }}>
   (function(){
     var f=document.getElementById('bizf'), msg=document.getElementById('bizmsg'), t0=Date.now();
     var cat=f.elements.category, law=document.getElementById('lawnote');
+    if(window.nwsTs) window.nwsTs.attach(f);
     try{var sp=new URLSearchParams(location.search), q=sp.get('cat'), pl=sp.get('plan'); if(q){cat.value=q;} if(pl){f.querySelectorAll('input[name=interest]').forEach(function(x){if(x.value===pl)x.checked=true});}}catch(e){}
     function sync(){law.hidden=cat.value!=='lawyers'; f.elements.license_no.required=cat.value==='lawyers';}
     cat.addEventListener('change',sync); sync();
@@ -93,13 +94,15 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'WebPage', name: '�
       var d={action:'register',t:Date.now()-t0}, fd=new FormData(f);
       fd.forEach(function(v,k){ if(k==='areas_served'||k==='interest'){(d[k]=d[k]||[]).push(v)} else if(k==='cf-turnstile-response'){d.turnstile=v} else {d[k]=String(v).trim()} });
       d.consent=!!f.elements.consent.checked;
+      var tk=window.nwsTs?window.nwsTs.token(f):null; if(tk===''){ msg.style.color='#A50D26'; msg.textContent='בדיקת האבטחה עוד לא הסתיימה. חכו כמה שניות ונסו שוב.'; return; } if(tk) d.turnstile=tk;
       var btn=f.querySelector('button[type=submit]'); btn.disabled=true; msg.style.color=''; msg.textContent='שולחים...';
       fetch(api,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json()}).then(function(j){
         btn.disabled=false;
-        if(j.ok){ msg.style.color='#14693A'; msg.textContent=j.message||'תודה! קיבלנו את הפרטים. אחרי בדיקה העסק יעלה למדריך.'; if(!j.duplicate){ var bl=document.createElement('span'); bl.style.cssText='display:block;font-weight:400;margin-top:4px'; bl.textContent='אחרי האישור תוכלו להוסיף לאתר שלכם תג "מופיעים במדריך", מתוך דף העסק במדריך.'; msg.appendChild(bl); } if(!j.duplicate) f.reset(); sync(); if(window.nwsTrack) try{window.nwsTrack('generate_lead',{form:'directory'})}catch(e){} return; }
+        if(j.ok){ msg.style.color='#14693A'; msg.textContent=j.message||'תודה! קיבלנו את הפרטים. אחרי בדיקה העסק יעלה למדריך.'; if(!j.duplicate){ var bl=document.createElement('span'); bl.style.cssText='display:block;font-weight:400;margin-top:4px'; bl.textContent='אחרי האישור תוכלו להוסיף לאתר שלכם תג "מופיעים במדריך", מתוך דף העסק במדריך.'; msg.appendChild(bl); } if(!j.duplicate) f.reset(); sync(); if(window.nwsTs) window.nwsTs.reset(f); if(window.nwsTrack) try{window.nwsTrack('generate_lead',{form:'directory'})}catch(e){} return; }
+        if(window.nwsTs) window.nwsTs.reset(f);
         msg.style.color='#A50D26'; msg.textContent=j.error||'השליחה נכשלה, נסו שוב.';
         if(j.fields){ Object.keys(j.fields).forEach(function(k){ var el=f.elements[k]; if(!el) return; if(el.length&&!el.tagName) el=el[0]; var p=document.createElement('span'); p.className='ferr note'; p.textContent=j.fields[k]; (el.closest('label')||el.parentNode).appendChild(p); }); }
-      }).catch(function(){ btn.disabled=false; msg.style.color='#A50D26'; msg.textContent='אין חיבור. נסו שוב בעוד דקה.'; });
+      }).catch(function(){ btn.disabled=false; if(window.nwsTs) window.nwsTs.reset(f); msg.style.color='#A50D26'; msg.textContent='אין חיבור. נסו שוב בעוד דקה.'; });
     });
   })();
   </script>
