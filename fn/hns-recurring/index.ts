@@ -743,6 +743,7 @@ async function freeImage(file: string) {
   if (!/^https:\/\/upload\.wikimedia\.org\//.test(url)) return null;
   return { url, credit: clean(`ויקישיתוף${artist ? `, ${artist}` : ''}, ${lic}`).slice(0, 80), lic, page: String(ii.descriptionurl || '') };
 }
+const HIST_AVOID = /נכבש|כיבוש|התרוקן|ננטש|נהרס|גורש|גירוש|פליט|טבח|פיגוע|נהרג|הרוגים|נרצח|נטבח|(?<![א-ת])[בהו]?קרב(?:ות)?(?![א-ת])|לחימה|מלחמ|כפר ערבי|הכפר הערבי|ישוב ערבי|יישוב ערבי|מחנה מעצר|הוצאה להורג|מבצע צבאי|פלמ"ח|אצ"ל|לח"י/;
 async function history(b: Any) {
   const now = il(new Date());
   if (!b.force && !(now.wd === 2 && now.hh === 10)) return { skipped: `not Tuesday 10:00 in Israel (${now.ymd} ${now.hm})` };
@@ -756,12 +757,15 @@ async function history(b: Any) {
   }
   const cands = [...titles].filter((t) => !usedT.has(t) && t !== 'נתניה' && (!b.place || t === b.place)).sort(() => Math.random() - 0.5);
   let pick: Any = null;
-  for (const t of cands.slice(0, 10)) {
+  for (const t of cands.slice(0, 40)) {
     const j = await wiki({ action: 'query', titles: t, prop: 'extracts|pageimages|info', explaintext: '1', exsectionformat: 'plain', piprop: 'name', inprop: 'url', redirects: '1' }).catch(() => null);
     const pg = j?.query?.pages?.[0];
     const ex = clean(String(pg?.extract || '').replace(/\n{2,}/g, '\n'));
     // a place with a past: its article tells about years before 1980
     if (!pg || pg.missing || ex.length < 1500 || !/(?<!\d)(?:18\d\d|19[0-7]\d)(?!\d)/.test(ex)) continue;
+    // 29.10.2026 (Yakir: "ממש לא!!!"): the series is light local nostalgia only. A place whose article tells about war, conquest,
+    // villages emptied, expulsion, refugees, killings or attacks is never chosen (not even for approval).
+    if (HIST_AVOID.test(norm(ex))) continue;
     pick = { title: String(pg.title), url: String(pg.fullurl || `https://he.wikipedia.org/wiki/${encodeURIComponent(pg.title)}`), text: ex.slice(0, 7000), image: pg.pageimage ? String(pg.pageimage) : '' };
     break;
   }
@@ -785,7 +789,9 @@ JSON: {"kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""]}`;
   let title = clean(o.title); if (!title.startsWith('נתניה של פעם')) title = `נתניה של פעם: ${title}`;
   // war, expulsion, killings or attacks in the story of the place: Yakir approves it before it is published (hns-publish holds
   // a 'sensitive' story for approval)
-  const sensitive = /נכבש|התרוקן|גורשו|גירוש|פליטים|טבח|פיגוע|נהרג|נרצח|נטבח/.test(norm([title, o.dek, ...cleanArr(o.body)].join(' ')));
+  // never publish (and never send for approval) a piece that drifted into war or violence: it is dropped and logged
+  if (HIST_AVOID.test(norm([title, o.dek, ...cleanArr(o.body)].join(' ')))) { await log('history', key, null, CALLS, w.usage || null, { held: 'avoided topic', place: pick.title }); return { held: 'avoided topic', key, place: pick.title }; }
+  const sensitive = false;
   const id = await insertStory(b, { section: 'community', kicker: 'נתניה של פעם', title, dek: o.dek, body: o.body, key_points: o.keyPoints, ...(sensitive ? { sensitivity: 'sensitive' } : {}),
     places: ['נתניה'], sources: [{ id: 'wikipedia', name: 'ויקיפדיה', url: pick.url, trust: 'media' }], basis: 'public', item_ids: [], format: 'history', format_key: key,
     format_data: { kind: 'history', place: pick.title, url: pick.url, image: img ? { license: img.lic, page: img.page } : null },
