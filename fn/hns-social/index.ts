@@ -351,7 +351,8 @@ async function weeklyReport(b: Any) {
     const fmt = inW.filter((x: Any) => x.format && x.section !== 'national').length;
     const other = inW.filter((x: Any) => ['blog', 'sponsored'].includes(x.section) || ['sponsored', 'opinion'].includes(x.kind)).length;
     const local = inW.length - nat - fmt - other;
-    lines.push(`ידיעות: ${nf(inW.length)} (${nf(local)} מקומיות, ${nf(nat)} ארציות, ${nf(fmt)} פורמטים קבועים${other ? `, ${nf(other)} בלוג, טורים ותוכן שיווקי` : ''})`);
+    const parts = [local ? `${nf(local)} מקומיות` : '', nat ? `${nf(nat)} ארציות` : '', fmt ? `${nf(fmt)} פורמטים קבועים` : '', other ? `${nf(other)} בלוג, טורים ותוכן שיווקי` : ''].filter(Boolean);
+    lines.push(`ידיעות: ${nf(inW.length)}${parts.length ? ` (${parts.join(', ')})` : ''}`);
   }
   const { data: hits } = await sb.from('hns_hits').select('day,ref_host,views,entries').gte('day', w0[0]).lte('day', w1[6]).limit(20000);
   if (hits && hits.length) {
