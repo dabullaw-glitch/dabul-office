@@ -7,6 +7,11 @@
 // button when the phone is a mobile number. A tip photo is saved in the private bucket hns-tips and sent under the message.
 // 29.10.2026 (security hardening): order is hidden field and fill time, then gate() (5 saved forms an hour per sender and form type,
 // 20 attempts an hour), then field validation, then Turnstile (after validation, so a typo does not burn the one-time token).
+// 29.10.2026 (the plan Yakir approved, "שלחו דיווח"): a reader report has a place field and the contact details are optional. A
+// report also enters the news engine as an item of the source reader_tip (role tip, trust community, never polled), so the
+// engine's own rule applies: a tip alone becomes a story "needs_check" (רמז בלבד) and is written only when an official source or
+// another source tells the same event. The item holds only the text and the place: no name, phone, email or photo. The photo
+// stays in the private bucket and is never published automatically. Marking a report as spam takes its item out of the engine.
 import { Any, sb, S, clean, phoneOf, urlOk, emailOk, sha, ipOf, tg, tgPhoto, waLink, mail, gate, gateOk, turnstile } from './lib.ts';
 
 export const OFFERS: Record<string, string> = {
@@ -46,11 +51,12 @@ function requestText(r: Any) {
     `${ICON[r.type] || '📩'} ${TYPE_HE[r.type] || r.type}, חדשות נתניה והשרון (פנייה #${r.id})`, '',
     r.offer ? `במה מתעניינים: ${OFFERS[r.offer] || r.offer}` : '',
     r.business ? `עסק: ${r.business}` : '', r.name ? `שם: ${r.name}` : '', r.phone ? `טלפון: ${r.phone}` : '', r.email ? `מייל: ${r.email}` : '',
-    r.url ? `קישור: ${r.url}` : '', '',
+    r.url ? `קישור: ${r.url}` : '', r.extra?.place ? `מקום: ${r.extra.place}` : '', '',
     r.message ? (r.type === 'tip' ? 'הידיעה:' : 'ההודעה:') : '', r.message || '', '',
     r.type === 'tip' ? (r.photo_path ? `צורפה תמונה (${r.photo_ok ? 'מאשרים לפרסם אותה' : 'בלי אישור לפרסם אותה'})` : '') : '',
     ['advertise', 'sponsored', 'promote', 'banner'].includes(r.type) ? 'התשלום לא מחובר לאתר: צריך לחזור אליהם ידנית.' : '',
     r.lang && r.lang !== 'he' ? `שפת הטופס: ${r.lang}` : '',
+    r.type === 'tip' && r.extra?.item_id ? 'נכנס למנוע הידיעות כרמז: יפורסם רק אחרי אישור ממקור רשמי או ממקור נוסף.' : '',
     r.page ? `נשלח מהדף: ${r.page}` : '', r.is_test ? '\n🧪 פנייה לבדיקת המערכת, אין צורך לטפל' : '',
   ];
   return L.filter((x, i, a) => x !== '' || (a[i - 1] !== '' && i > 0)).join('\n').trim().slice(0, 4000);
@@ -69,6 +75,38 @@ function photoOf(s: unknown): { bytes: Uint8Array; mime: string } | null | 'bad'
   if (bin.length > 6 * 1024 * 1024 || bin.length < 200) return 'bad';
   const bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
   return { bytes, mime: m[1] };
+}
+
+// ---------- a reader report as an engine item ----------
+const NETANYA_PLACES = ['פולג', 'רמת פולג', 'עיר ימים', 'קריית השרון', 'קריית נורדאו', 'אגמים', 'נאות שקד', 'נאות הרצל', 'דורה', 'קריית צאנז', 'ותיקים',
+  'גבעת האירוסים', 'רמת חן', 'גלי ים', 'נאות גנים', 'נווה איתמר', 'נוף הטיילת', 'עין התכלת', 'פרדס הגדוד', 'רמת אפריים', 'אופק הים', 'קריית רבין',
+  'כוכב הצפון', 'משכנות זבולון', 'סלע', 'רמת ידין', 'מרכז העיר', 'קריית ספיר', 'קריית אליעזר'];
+const SHARON_PLACES = ['בית ינאי', 'אבן יהודה', 'קדימה', 'צורן', 'עמק חפר', 'כפר יונה', 'תל מונד', 'פרדסיה', 'מכמורת', 'כפר ויתקין', 'בית יצחק'];
+const has = (t: string, w: string[]) => w.some((x) => t.includes(x));
+function tipTopic(t: string) {
+  if (has(t, ['תאונ', 'נפגע', 'נפצע', 'פצוע', 'שריפ', 'שרפה', 'ירי', 'משטרה', 'שוטר', 'מד"א', 'מד״א', 'כבאות', 'אזעקה'])) return 'flash';
+  if (has(t, ['פינוי בינוי', 'התחדשות עירונית', 'תמ"א', 'תמ״א', 'קבלן', 'מגדל', 'בנייה', 'בניה', 'מנוף'])) return 'realestate';
+  if (has(t, ['פקק', 'כביש', 'רמזור', 'אוטובוס', 'חסימה', 'חסום', 'חנייה', 'חניה'])) return 'transport';
+  if (has(t, ['עירייה', 'עיריית', 'ביוב', 'פנס', 'מדרכה', 'פסולת', 'זבל', 'גזם', 'עבודות', 'בית ספר', 'גן ילדים'])) return 'city';
+  return 'community';
+}
+const SENSITIVE = ['רצח', 'נרצח', 'נהרג', 'נהרגה', 'נפטר', 'מוות', 'התאבד', 'אונס', 'מינית', 'קטין', 'קטינה', 'פעוט', 'תינוק', 'נעדר', 'נעדרת', 'פיגוע', 'אנוש', 'אלימות'];
+async function tipItem(r: Any): Promise<number | null> {
+  const msg = String(r.message || ''), place = String(r.extra?.place || '');
+  const all = `${msg} ${place}`;
+  const places = new Set<string>();
+  for (const n of NETANYA_PLACES) if (all.includes(n)) { places.add('נתניה'); places.add(n); }
+  for (const n of SHARON_PLACES) if (all.includes(n)) places.add(n);
+  if (/נתני(?!הו)/.test(all) || !places.size) places.add('נתניה'); // the form is a Netanya and Sharon form: no place given means the city
+  const first = msg.split(/(?<=[.!?])\s|\n/)[0].trim();
+  const title = (first.length > 12 ? first : msg).slice(0, 140);
+  const now = new Date().toISOString();
+  const { data, error } = await sb.from('hns_items').insert({
+    source_id: 'reader_tip', guid: `req-${r.id}`, url: null, title, body: `${msg}${place ? `\nהמקום לפי הקורא: ${place}` : ''}`.slice(0, 3200),
+    published_at: now, backfill: false, places: [...places], is_local: true, topic: tipTopic(all), sensitivity: has(all, SENSITIVE) ? 'sensitive' : 'normal',
+    urgent: false, outlet: 'דיווח קורא',
+  }).select('id').single();
+  return error ? null : Number(data.id);
 }
 
 export async function request(b: Any, req: Request, admin: boolean) {
@@ -103,7 +141,6 @@ export async function request(b: Any, req: Request, admin: boolean) {
     if (!R.phone && !R.email && !errs.reach) errs.reach = M.reach;
   } else if (type === 'tip') {
     if (!R.message || R.message.length < 10) errs.message = M.story;
-    if (!R.phone && !errs.phone) errs.phone = M.phone;
   } else if (type === 'newsletter') {
     if (!R.email && !errs.email) errs.email = M.email;
   } else if (type === 'contact') {
@@ -135,7 +172,7 @@ export async function request(b: Any, req: Request, admin: boolean) {
     if (lastHour >= 5 || (mine || []).length >= 12 || phoneDay >= 4 || (all || 0) >= 60) return { ok: false, status: 429, error: M.many };
   }
   const now = new Date().toISOString();
-  const row = { ...R, phone: R.phone || null, email: R.email || null, consent_at: now, ip_hash: ipHash, is_test: test, extra: b.listing_id ? { listing_id: Number(b.listing_id) || null } : {} };
+  const row = { ...R, phone: R.phone || null, email: R.email || null, consent_at: now, ip_hash: ipHash, is_test: test, extra: b.listing_id ? { listing_id: Number(b.listing_id) || null } : type === 'tip' && clean(b.place, 120) ? { place: clean(b.place, 120) } : {} };
   const { data: ins, error } = await sb.from('hns_requests').insert(row).select('*').single();
   if (error) return { ok: false, status: 500, error: M.fail };
   await gateOk(g.id);
@@ -143,6 +180,10 @@ export async function request(b: Any, req: Request, admin: boolean) {
     const path = `${now.slice(0, 7)}/${ins.id}.${photo.mime.split('/')[1].replace('jpeg', 'jpg')}`;
     const up = await sb.storage.from('hns-tips').upload(path, photo.bytes, { contentType: photo.mime, upsert: true });
     if (!up.error) { ins.photo_path = path; await sb.from('hns_requests').update({ photo_path: path }).eq('id', ins.id); }
+  }
+  if (type === 'tip' && !test) {
+    const item = await tipItem(ins);
+    if (item) { ins.extra = { ...(ins.extra || {}), item_id: item }; await sb.from('hns_requests').update({ extra: ins.extra }).eq('id', ins.id); }
   }
   let sent = false;
   if (!test || b.tg) {
@@ -175,6 +216,8 @@ export async function requestDecide(act: string, id: number, cq: Any, by = 'yaki
   const patch: Any = { status, updated_at: now, handled_at: status === 'new' ? null : now, handled_by: status === 'new' ? null : by };
   const { data: upd, error } = await sb.from('hns_requests').update(patch).eq('id', id).select('*').single();
   if (error) { await answer('הפעולה נכשלה'); return { ok: false, error: 'db' }; }
+  // a reader report marked as spam leaves the news engine (and comes back if it is returned to the new requests)
+  if (upd.type === 'tip' && upd.extra?.item_id) await sb.from('hns_items').update({ is_local: status !== 'spam', backfill: status === 'spam' }).eq('id', upd.extra.item_id).eq('source_id', 'reader_tip');
   await answer(status === 'handled' ? 'סומן כטופל ✓' : status === 'spam' ? 'סומן כספאם' : 'הוחזר לפניות החדשות');
   const chat = cq?.chat_id || (upd.tg_message_id ? S.TELEGRAM_CHAT_ID : ''), mid = cq?.message_id || upd.tg_message_id;
   if (chat && mid) {

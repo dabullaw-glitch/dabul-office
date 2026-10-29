@@ -1,8 +1,11 @@
 ---
+// שלחו דיווח (29.10.2026, the plan Yakir approved): a reader report with the place, an optional photo and optional contact details.
+// The report reaches the newsroom (panel and Telegram) and the news engine as a tip: it is published only after an official source
+// or another source confirms it. A photo stays private and is published only with the sender's permission and an editor's choice.
 import Page from '../../components/Page.astro';
 import ReqForm from '../../components/ReqForm.astro';
 ---
-<Page title="שלחו ידיעה | חדשות נתניה והשרון" h1="שלחו ידיעה" description="ראיתם משהו בשכונה? שלחו לחדשות נתניה והשרון ידיעה או תמונה מנתניה והשרון. כל ידיעה נבדקת לפני פרסום." path="/send-news/" intro="ראיתם משהו בשכונה? ספרו לנו." alternates={{ he: '/send-news/', ru: '/ru/send-news/', fr: '/fr/send-news/', en: '/en/send-news/' }}>
-  <p>כל ידיעה מקוראים נבדקת לפני פרסום. תמונה נפרסם רק באישור שלכם, ועם קרדיט אם תרצו.</p>
+<Page title="שלחו דיווח: ראיתם משהו בנתניה? | חדשות נתניה והשרון" h1="שלחו דיווח" description="ראיתם משהו בשכונה? שלחו לחדשות נתניה והשרון דיווח, עם המקום ותמונה אם יש. כל דיווח נבדק מול מקור רשמי או מקור נוסף לפני פרסום." path="/send-news/" intro="ראיתם משהו בשכונה? ספרו לנו מה, איפה ומתי." alternates={{ he: '/send-news/', ru: '/ru/send-news/', fr: '/fr/send-news/', en: '/en/send-news/' }}>
+  <p>כל דיווח מקוראים נבדק לפני פרסום: מפרסמים רק אחרי אישור ממקור רשמי או ממקור נוסף. תמונה נפרסם רק באישור שלכם, ועם קרדיט אם תרצו.</p>
   <ReqForm type="tip" id="tipf" />
 </Page>

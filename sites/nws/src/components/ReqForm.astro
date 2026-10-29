@@ -6,23 +6,24 @@
 // No payment anywhere: purchase requests are saved and Yakir follows up himself.
 import { HNS_API, type Lang } from '../data/site';
 import Turnstile from './Turnstile.astro';
+import { PLACES } from '../data/places';
 interface Props { type: 'contact' | 'advertise' | 'tip' | 'correction' | 'newsletter'; lang?: Lang; id?: string; offer?: string }
 const { type, lang = 'he', id = 'rqf', offer = '' } = Astro.props;
 const OFFERS: [string, string][] = [['featured', 'קידום במדריך העסקים (עסק מומלץ)'], ['leader', 'מוביל בקטגוריה במדריך'], ['sponsored', 'כתבת תוכן שיווקי'],
   ['tgpost', 'פוסט ממומן בטלגרם'], ['banner', 'באנר באתר'], ['event', 'אירוע מקודם'], ['newsletter', 'חסות לניוזלטר'], ['other', 'משהו אחר']];
 const T: Record<string, Record<string, string>> = {
-  he: { story: 'מה קרה, איפה ומתי', photo: 'תמונה (לא חובה)', name: 'שם', nameTip: 'שם (לא יפורסם בלי רשותכם)', phone: 'טלפון', phoneTip: 'טלפון לחזרה', email: 'מייל',
+  he: { story: 'מה קרה, איפה ומתי', photo: 'תמונה (לא חובה)', name: 'שם', nameTip: 'שם (לא יפורסם בלי רשותכם)', phone: 'טלפון', phoneTip: 'טלפון לחזרה (לא חובה)', place: 'איפה זה קרה (שכונה, רחוב או יישוב)', tipPriv: 'השם והטלפון לא מתפרסמים ולא עוברים לאף אחד. דיווח מתפרסם רק אחרי שאימתנו אותו ממקור רשמי או ממקור נוסף, ותמונה מתפרסמת רק באישורכם.', email: 'מייל',
     opt: ' (לא חובה)', photoOk: 'אני מאשר/ת לפרסם את התמונה ששלחתי', send: 'שליחה', sending: 'שולחים...', offline: 'אין חיבור. נסו שוב בעוד דקה.', fail: 'השליחה נכשלה, נסו שוב.',
     consentA: 'קראתי את ', privacy: 'מדיניות הפרטיות', consentB: ' ואני מסכים/ה שתשמרו את הפרטים ותחזרו אליי בעניין הפנייה.',
     consentNl: ' ואני מסכים/ה לקבל מכם במייל את הניוזלטר. אפשר להסיר בכל עת.', bigPhoto: 'התמונה גדולה מדי או לא נתמכת. נסו תמונה אחרת.',
     wait: 'בדיקת האבטחה עוד לא הסתיימה. חכו כמה שניות ונסו שוב.' },
-  en: { story: 'What happened, where and when', photo: 'Photo (optional)', nameTip: 'Name (not published without your permission)', phoneTip: 'Phone for a callback', opt: ' (optional)',
+  en: { story: 'What happened, where and when', photo: 'Photo (optional)', nameTip: 'Name (not published without your permission)', phoneTip: 'Phone for a callback (optional)', place: 'Where did it happen (neighborhood, street or town)', tipPriv: 'Your name and phone are never published or shared. A report is published only after we confirm it with an official or second source, and a photo only with your permission.', opt: ' (optional)',
     photoOk: 'I allow you to publish the photo I sent', send: 'Send', sending: 'Sending...', offline: 'No connection. Try again in a minute.', fail: 'Sending failed, try again.',
     consentA: 'I have read the ', privacy: 'privacy policy (Hebrew)', consentB: ' and agree that you keep these details to handle my message.', bigPhoto: 'The photo is too big or not supported.', wait: 'The security check is not finished yet. Wait a few seconds and try again.' },
-  ru: { story: 'Что случилось, где и когда', photo: 'Фото (необязательно)', nameTip: 'Имя (не публикуется без вашего согласия)', phoneTip: 'Телефон для связи', opt: ' (необязательно)',
+  ru: { story: 'Что случилось, где и когда', photo: 'Фото (необязательно)', nameTip: 'Имя (не публикуется без вашего согласия)', phoneTip: 'Телефон для связи (необязательно)', place: 'Где это произошло (район, улица или населенный пункт)', tipPriv: 'Имя и телефон не публикуются и никому не передаются. Сообщение публикуется только после проверки по официальному или второму источнику, фото только с вашего согласия.', opt: ' (необязательно)',
     photoOk: 'Я разрешаю опубликовать отправленное фото', send: 'Отправить', sending: 'Отправляем...', offline: 'Нет связи. Попробуйте через минуту.', fail: 'Не удалось отправить.',
     consentA: 'Я прочитал(а) ', privacy: 'политику конфиденциальности (на иврите)', consentB: ' и согласен(на) на хранение этих данных для ответа.', bigPhoto: 'Фото слишком большое или не поддерживается.', wait: 'Проверка безопасности ещё идёт. Подождите несколько секунд.' },
-  fr: { story: 'Que s’est-il passé, où et quand', photo: 'Photo (facultatif)', nameTip: 'Nom (jamais publié sans votre accord)', phoneTip: 'Téléphone pour vous rappeler', opt: ' (facultatif)',
+  fr: { story: 'Que s’est-il passé, où et quand', photo: 'Photo (facultatif)', nameTip: 'Nom (jamais publié sans votre accord)', phoneTip: 'Téléphone pour vous rappeler (facultatif)', place: 'Où cela s’est passé (quartier, rue ou localité)', tipPriv: 'Votre nom et votre téléphone ne sont jamais publiés ni transmis. Une info est publiée seulement après confirmation par une source officielle ou une deuxième source, et une photo seulement avec votre accord.', opt: ' (facultatif)',
     photoOk: 'J’autorise la publication de la photo envoyée', send: 'Envoyer', sending: 'Envoi...', offline: 'Pas de connexion. Réessayez dans une minute.', fail: 'Envoi impossible.',
     consentA: 'J’ai lu la ', privacy: 'politique de confidentialité (en hébreu)', consentB: ' et j’accepte que ces données soient conservées pour traiter mon message.', bigPhoto: 'Photo trop grande ou non prise en charge.', wait: 'La vérification de sécurité n’est pas terminée. Patientez quelques secondes.' },
 };
@@ -50,10 +51,13 @@ const row = 'flex-direction:row;font-weight:400;gap:8px;align-items:flex-start';
   </>}
   {type === 'tip' && <>
     <label>{t.story}<textarea name="message" rows="6" required minlength="10" maxlength="3000"></textarea></label>
+    <label>{t.place}{t.opt}<input name="place" maxlength="120" list={`${id}-pl`} autocomplete="off"></label>
+    <datalist id={`${id}-pl`}>{PLACES.map((p) => <option value={p.kind === 'neighborhood' ? `${p.he}, נתניה` : p.he} />)}</datalist>
     <label>{t.photo}<input name="photo" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/*"></label>
     <label>{t.nameTip}<input name="name" maxlength="80" autocomplete="name"></label>
-    <label>{t.phoneTip}<input name="phone" type="tel" required inputmode="tel" autocomplete="tel" dir="ltr"></label>
+    <label>{t.phoneTip}<input name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr"></label>
     <label style={row}><input type="checkbox" name="photo_ok" value="1"> {t.photoOk}</label>
+    <p class="note" style="margin:0">{t.tipPriv}</p>
   </>}
   {type === 'correction' && <>
     <label>הקישור לידיעה<input name="url" type="url" required inputmode="url" dir="ltr" placeholder="https://nws.co.il/..."></label>
