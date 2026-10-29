@@ -11,6 +11,7 @@ import Icon from '../components/Icon.astro';
 import { SITE_URL, PREVIEW, LANGS, LANG_PREFIX, LANG_LOCALE, LANG_DIR, BRAND, TG_URL, SAME_AS, type Lang } from '../data/site';
 import { t } from '../i18n/ui';
 import { liveCats, guideHref } from '../data/city/guide';
+import { ADSENSE } from '../data/site';
 import { ARTICLES, articlesFor, articleUrl, sectionUrl, placeUrl, placesOf, fmtTime, fmtShort, EVENT, IMS, hebrewDate, FLASHES, navSections, liveSections } from '../lib/content';
 import { PLACES } from '../data/places';
 
@@ -99,6 +100,7 @@ const L = he ? { home: 'ראשי', pros: 'בעלי מקצוע', menu: 'תפרי�
 <script is:inline>(function(){try{var a=JSON.parse(localStorage.getItem('nwsA11y')||'{}'),h=document.documentElement;if(a.z)h.classList.add('a11y-z'+a.z);['contrast','gray','links','font','still','cursor','focus'].forEach(function(k){if(a[k])h.classList.add('a11y-'+k)})}catch(e){}})();</script>
 {/* Google Analytics 4 (G-N0Q1GZWXF2) with Consent Mode v2: everything denied by default; the script itself loads only after the
    visitor agrees to statistics cookies (banner below), or on later visits when that choice is saved. window.nwsTrack(name, params). */}
+{ADSENSE.client && !PREVIEW && !noindex && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE.client}`} crossorigin="anonymous"></script>}
 <script is:inline define:vars={{ GA: PREVIEW ? '' : 'G-N0Q1GZWXF2' }}>window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};
 gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',functionality_storage:'granted',security_storage:'granted'});
 gtag('js',new Date());if(GA)gtag('config',GA,{anonymize_ip:true,allow_google_signals:false,allow_ad_personalization_signals:false});

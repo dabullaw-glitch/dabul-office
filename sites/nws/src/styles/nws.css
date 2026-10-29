@@ -501,3 +501,9 @@ main:focus{outline:0}
  .n-ddm{left:16px;right:16px;width:auto;max-width:none}
  .n-nav .n-ddm a{border:0;border-bottom:1px solid var(--line2);border-radius:0;height:auto}
 }
+/* 29.10.2026: Google AdSense places (off until the account id is set) */
+.n-ad{margin:26px auto;max-width:100%;min-height:280px;background:#F6F5F2;border-radius:8px;padding:8px;display:flex;flex-direction:column;align-items:stretch;overflow:hidden}
+.n-ad.side{min-height:250px;margin:0}
+.n-adl{font-size:11px;color:var(--mut);text-align:center;letter-spacing:.3px;margin-bottom:4px}
+.n-ad ins{min-height:250px}
+@media (max-width:760px){.n-ad{margin:20px 0;min-height:260px}}

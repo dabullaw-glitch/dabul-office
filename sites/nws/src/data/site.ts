@@ -50,3 +50,13 @@ export const SAME_AS = [TG_URL, 'https://www.facebook.com/profile.php?id=6159588
 export const HNS_API = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1';
 // Cloudflare Turnstile on public forms: off until a site key for nws.co.il is set at build time (and NWS_TURNSTILE_SECRET in app_secrets).
 export const TURNSTILE_SITE_KEY = process.env.PUBLIC_NWS_TURNSTILE_SITE_KEY || '';
+
+// 29.10.2026 (Yakir: "connect Google ads and put them in the right places"): Google AdSense. Everything is ready and stays off
+// until the account exists: put the publisher id (ca-pub-...) in client, and optionally a slot id per place (otherwise the place
+// is filled by AdSense's own sizing). With an empty client no ad code, no script and no empty box is rendered anywhere.
+// Places: home (after the top stories, between the section blocks), article (inside the text after the 4th paragraph, after the
+// text, the sidebar), section lists. Never inside sponsored stories, never on the panel, legal or form pages.
+export const ADSENSE: { client: string; slots: Record<'home1' | 'home2' | 'inArticle' | 'afterArticle' | 'side' | 'list', string> } = {
+  client: '',
+  slots: { home1: '', home2: '', inArticle: '', afterArticle: '', side: '', list: '' },
+};

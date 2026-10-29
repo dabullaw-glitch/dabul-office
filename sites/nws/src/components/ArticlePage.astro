@@ -7,6 +7,7 @@
 // Shared classes come from src/styles/nws.css (n- prefix); the few article-only rules are in src/styles/article.css.
 import Base from '../layouts/Base.astro';
 import Icon from './Icon.astro';
+import AdSlot from './AdSlot.astro';
 import '../styles/article.css';
 import { IMG, SITE_URL, LANG_PREFIX, LANGS, BRAND, TG_URL, type Lang } from '../data/site';
 import { SECTION_BY_KEY } from '../data/sections';
@@ -159,6 +160,8 @@ const more = pool.filter((x) => x.section === a.section && !usedSlugs.has(x.slug
 // after the second paragraph (never right after a subheading), or after the last block
 const pIdx = blocks.map((b, i) => (b.k === 'p' ? i : -1)).filter((i) => i >= 0);
 const alsoAt = inline ? (pIdx[1] ?? blocks.length - 1) + 1 : -1;
+// 29.10.2026: the in-text ad goes after the 4th paragraph (only in a text long enough), away from the "also" box
+const adAt = pIdx.length >= 6 ? (pIdx[3] === alsoAt - 1 ? pIdx[4] : pIdx[3]) : -1;
 const relHead = he ? `עוד מ${s.name.he}${places[0] ? ` ומ${places[0].he}` : ''}` : u.related;
 
 // ---------- "מה הלאה": the story's event or road closure ----------
@@ -267,6 +270,7 @@ const hasSrc = srcs.length > 0;
             {b.k === 'ul' && <ul set:html={b.html}></ul>}
             {b.k === 'ol' && <ol set:html={b.html}></ol>}
             {b.k === 'q' && <blockquote class="n-q"><p>{b.text}</p>{b.cite && <cite>{b.cite}</cite>}</blockquote>}
+            {!sponsored && i === adAt && <AdSlot place="inArticle" />}
             {inline && i === alsoAt - 1 && (
               <a class="n-also" href={articleUrl(inline, lang)}>
                 <span class="n-ph" aria-hidden="true"><img src={picOf(inline).small} alt="" width="240" height="160" loading="lazy" decoding="async"></span>
@@ -316,6 +320,7 @@ const hasSrc = srcs.length > 0;
         {sponsored && spLinks.length > 0 && <section class="art-spl" aria-labelledby="spl-h"><h2 id="spl-h">{he ? 'לפרטים נוספים אצל המפרסם' : lang === 'ru' ? 'Подробнее у рекламодателя' : lang === 'fr' ? 'En savoir plus chez l’annonceur' : 'More from the advertiser'}</h2>
           <ul>{spLinks.map((l) => <li><a href={l.url} {...(/^https?:\/\//.test(l.url) && !/^https?:\/\/(www\.)?nws\.co\.il(\/|$)/.test(l.url) ? { rel: 'sponsored noopener', target: '_blank' } : {})}>{l.text}</a></li>)}</ul></section>}
         {sponsored && <p class="art-disc">{L.disclose}</p>}
+        {!sponsored && <AdSlot place="afterArticle" />}
         <div class="n-fix"><span>{L.fix}</span><span><a href={`/corrections/?url=${encodeURIComponent(path)}`}>{L.report}</a> · <a href={`${pre}/send-news/`}>{L.send}</a></span></div>
       </article>
 
@@ -323,6 +328,7 @@ const hasSrc = srcs.length > 0;
         {flashList.length > 0 && <section class="n-box" aria-labelledby="fl-h"><h2 class="bh" id="fl-h"><span class="n-pulse" aria-hidden="true"></span>{flashes.length >= 3 ? u.flash : u.latestNow}</h2>
           <ol class="n-fl num">{flashList.map((f) => <li><time datetime={f.at}>{flTime(f.at)}</time><a href={f.href}>{f.text}</a></li>)}</ol></section>}
         <div class="n-tgc"><b>{u.joinTitle}</b><p>{u.joinText}</p><a class="n-btn tg" href={tgHref} {...tgAttr} data-tg><Icon name="telegram" size={18} color="#fff" />{L.tgBtn}</a></div>
+        {!sponsored && <AdSlot place="side" side />}
         {table.length > 0 && <section class="n-box" aria-labelledby="tb-h"><h2 class="bh" id="tb-h">{L.table}</h2>
           <ol class="n-fl num">{table.map((r) => <li class={r.me ? 'me' : undefined}>{r.pos}. {r.team} · {r.pts} {L.pts}</li>)}</ol>
           {SPORT.source && <p class="art-src">{SPORT.sourceUrl ? <a href={SPORT.sourceUrl} rel="noopener nofollow" target="_blank">{SPORT.source}</a> : SPORT.source}</p>}</section>}

@@ -1,0 +1,16 @@
+---
+// One Google AdSense place (29.10.2026). Renders nothing until ADSENSE.client is set in data/site.ts. The box keeps a fixed
+// minimum height so a late ad never pushes the page (no jumping), and it is labelled "פרסומת" as the rules require.
+import { ADSENSE, PREVIEW } from '../data/site';
+interface Props { place: keyof typeof ADSENSE.slots; side?: boolean }
+const { place, side = false } = Astro.props;
+const on = !!ADSENSE.client && !PREVIEW;
+const slot = ADSENSE.slots[place];
+---
+{on && (
+<div class={`n-ad${side ? ' side' : ''}`} data-ad={place}>
+  <span class="n-adl">פרסומת</span>
+  <ins class="adsbygoogle" style="display:block" data-ad-client={ADSENSE.client} {...(slot ? { 'data-ad-slot': slot } : {})}
+    data-ad-format={place === 'inArticle' ? 'fluid' : 'auto'} {...(place === 'inArticle' ? { 'data-ad-layout': 'in-article' } : { 'data-full-width-responsive': 'true' })}></ins>
+  <script is:inline>(window.adsbygoogle=window.adsbygoogle||[]).push({});</script>
+</div>)}

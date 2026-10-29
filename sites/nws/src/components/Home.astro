@@ -5,6 +5,7 @@
 // the events calendar of the city's culture hall, and the business directory.
 import Base from '../layouts/Base.astro';
 import Card from './Card.astro';
+import AdSlot from './AdSlot.astro';
 import Icon from './Icon.astro';
 import { BRAND, SITE_URL, LANG_PREFIX, LANGS, TG_URL, SAME_AS, type Lang } from '../data/site';
 import { SECTION_BY_KEY, type SectionKey } from '../data/sections';
@@ -158,6 +159,7 @@ const T = he ? { live: 'עכשיו בנתניה והשרון', liveSub: 'מתע�
     <a class="n-sv" href="/now/phones/"><span class="ic"><Icon name="phone" /></span><div><small>מספרים חשובים</small><b class="num">{hotline} · 100 · 101</b><span>עירייה, משטרה, מד״א</span></div></a>
   </div></section>)}
 
+  {he && <div class="n-wrap"><AdSlot place="home1" /></div>}
   {cols.length > 0 && (
   <section class="n-sec n-wrap" aria-label="מדורים">
     <div class="n-tri">{cols.map((g) => { const first = g.items[0]; const k = first.section; return (
@@ -168,6 +170,7 @@ const T = he ? { live: 'עכשיו בנתניה והשרון', liveSub: 'מתע�
       </div>); })}</div>
   </section>)}
 
+  {he && <div class="n-wrap"><AdSlot place="home2" /></div>}
   {videos.length > 0 && (
   <section class="n-sec n-wrap" aria-labelledby="vd-h" style="--c:#C8102E">
     <h2 class="n-sh" id="vd-h">וידאו מנתניה והשרון</h2>
