@@ -14,7 +14,8 @@
 // Daily budget (the free allowance resets at 00:00 UTC):
 //   'lucid' (1280x720, expensive) only for the home page lead story, at most LUCID_MAX a day; everything else 'schnell' (cheap).
 //   When the worker answers with the quota error (4006 / daily free allocation): lucid falls back to schnell; when schnell also hits
-//   the quota, nothing more is tried that day; the story gets image_note and the next try is after 00:10 UTC.
+//   the quota, nothing more is tried for an hour (29.10.2026: the allowance turned out not to free up exactly at 00:00 UTC, so a
+//   whole-day block left the stories without images all day); the story gets image_note and the next try is an hour later.
 // The site shows every AI image with the label "תמונה להמחשה"; the alt text (Hebrew) describes the scene.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
@@ -135,19 +136,20 @@ async function log(story_id: number | null, model: string, ok: boolean, quota: b
   await sb.from('hns_img_log').insert({ story_id, model, ok, quota, note: note.slice(0, 300) });
 }
 async function budget() {
-  const { data } = await sb.from('hns_img_log').select('story_id,model,ok,quota').gte('at', dayStartUTC());
+  const { data } = await sb.from('hns_img_log').select('at,story_id,model,ok,quota').gte('at', dayStartUTC());
   const rows = data || [];
+  const fresh = (r: Any) => Date.now() - Date.parse(r.at) < 60 * 60e3; // a quota answer blocks for one hour, not the whole day
   const fails: Record<string, number> = {};
   for (const r of rows) if (!r.ok && !r.quota && r.story_id) fails[r.story_id] = (fails[r.story_id] || 0) + 1;
   return {
     fails,
-    schnellBlocked: rows.some((r: Any) => r.quota && r.model === 'schnell'),
-    lucidBlocked: rows.some((r: Any) => r.quota && r.model === 'lucid') || rows.filter((r: Any) => r.ok && r.model === 'lucid').length >= LUCID_MAX,
+    schnellBlocked: rows.some((r: Any) => r.quota && r.model === 'schnell' && fresh(r)),
+    lucidBlocked: rows.some((r: Any) => r.quota && r.model === 'lucid' && fresh(r)) || rows.filter((r: Any) => r.ok && r.model === 'lucid').length >= LUCID_MAX,
     lucidUsed: rows.filter((r: Any) => r.ok && r.model === 'lucid').length,
     tries: rows.length,
   };
 }
-const WAIT_NOTE = 'ממתין למכסה החינמית, ניסיון נוסף אחרי 00:10 UTC';
+const WAIT_NOTE = 'ממתין למכסה החינמית, ניסיון נוסף בעוד שעה';
 
 async function makeOne(st: Any, want: 'schnell' | 'lucid', b: Any) {
   // the prompt is written once per story and kept (a retry the next day does not call Claude again)
@@ -189,7 +191,7 @@ async function tick() {
   if (!todo.length) return { todo: 0 };
   if (b.schnellBlocked) {
     for (const st of todo) if (st.image_note !== WAIT_NOTE) await sb.from('hns_stories').update({ image_note: WAIT_NOTE }).eq('id', st.id);
-    return { todo: todo.length, waiting: 'daily free allowance used, next try after 00:10 UTC' };
+    return { todo: todo.length, waiting: 'free allowance used, next try in an hour' };
   }
   const lead = await leadId();
   todo.sort((x: Any, y: Any) => (Number(y.id) === lead ? 1 : 0) - (Number(x.id) === lead ? 1 : 0)); // the lead first
@@ -213,7 +215,7 @@ Deno.serve(async (req) => {
       const { data: st } = await sb.from('hns_stories').select('id,section,kind,title,dek,body,places,image_prompt,image_alt,image_note,state').eq('id', Number(body.id)).maybeSingle();
       if (!st || st.state !== 'published') return J({ ok: false, error: 'not a published story' });
       const b = await budget();
-      if (b.schnellBlocked) return J({ ok: false, error: 'daily free allowance used, next try after 00:10 UTC' });
+      if (b.schnellBlocked) return J({ ok: false, error: 'free allowance used, next try in an hour' });
       return J(await makeOne(st, body.model === 'lucid' ? 'lucid' : 'schnell', b));
     }
     if (body.action === 'status') {
