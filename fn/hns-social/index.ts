@@ -45,7 +45,7 @@ const J = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, 
 const SITE = 'https://nws.co.il';
 const MIRROR = 'https://nws-site.pages.dev'; // same build, used while the domain is not live yet
 const FB = 'https://graph.facebook.com/v21.0';
-const MAX_AGE_H = 24;
+const MAX_AGE_H = 8; // 29.10.2026: was 24; a story older than 8 hours is no longer news for a new post (the quiet night hours are 7.5)
 const IMPORTANT = 50;
 type Ch = 'tg' | 'fb' | 'wa';
 const CFG: Record<Ch, { perRun: number; perDay: number; gapMin: number; important: boolean; col: string }> = {
