@@ -30,7 +30,13 @@ const MODEL = 'claude-sonnet-5-5';
 // 29.10.2026 (Yakir approved): more national news, 15 to 25 a day, on matters that touch every family
 const MAX_DAY = 25;
 const GAP_MIN = 10;
-const NATIONAL_SRC = ['ynet_flash', 'ynet_news', 'walla_israel', 'maariv_news', 'mako_news', 'inn_news', 'kikar', 'srugim', 'haaretz_all', 'jdn', 'news08', 'hm_news', 'oref_tg'];
+const NATIONAL_SRC = ['ynet_flash', 'ynet_news', 'walla_israel', 'maariv_news', 'mako_news', 'inn_news', 'kikar', 'srugim', 'haaretz_all', 'jdn', 'news08', 'hm_news', 'oref_tg',
+  'walla_money', 'globes_markets', 'ice_news'];
+// 29.10.2026: too few national stories (3 a day instead of 15 to 25): different outlets word the same event differently, so few
+// events reached two outlets. An announcement of an official body (a ministry, Bank of Israel, the Knesset, the IDF, the rail...)
+// reported by one of the large outlets is enough, after waiting 30 minutes for a second outlet to join the group.
+const MAJOR_SRC = new Set(['ynet_flash', 'ynet_news', 'walla_israel', 'maariv_news', 'mako_news', 'haaretz_all', 'walla_money', 'globes_markets', 'inn_news']);
+const OFFICIAL_BODY_RE = /משרד (?:ה|ל)|בנק ישראל|רשות (?:ה|ל)|ועדת הבחירות|ביטוח לאומי|הממשלה (?:אישרה|החליטה)|הכנסת (?:אישרה|אישר)|אושר בקריאה|החלטת ממשלה|פיקוד העורף|השירות המטאורולוגי|רכבת ישראל|צה"ל|דובר צה|המשטרה|הלמ"ס|הלשכה המרכזית לסטטיסטיקה|ההסתדרות|מדד המחירים|הריבית/;
 // 29.10.2026: besides elections and security, decisions that touch every household (taxes, benefits, prices, Bank of Israel),
 // health and education (strikes, school holidays), national transport (rail, strikes) and extreme weather
 const TOPIC_RE = /בנק ישראל|הריבית|מדד המחירים|יוקר המחיה|התייקר|ייקור|העלאת (?:ה)?מחיר|מחיר (?:הדלק|הבנזין|החשמל|המים|הלחם|החלב|הגז)|מס הכנסה|מע"מ|נקודות זיכוי|רשות המסים|קצב(?:ה|ת|אות)|ביטוח לאומי|מענק|שכר המינימום|תקציב המדינה|חוק ההסדרים|הכנסת אישרה|אושר בקריאה|הממשלה אישרה|החלטת ממשלה|משרד הבריאות|משרד החינוך|שבית|שובת|עיצומים|לוח החופשות|חופשת (?:חנוכה|הפסח|הקיץ|סוכות)|שנת הלימודים|בגרות|חיסון|תחלוא|רכבת ישראל|קווי הרכבת|תחבורה ציבורית|משרד התחבורה|נתב"ג|רישיון נהיגה|סערה|שיטפו|הצפות|גשם כבד|שלג|שרב|עומס חום|השירות המטאורולוגי|פיגוע|מחבל|ועדת הבחירות|מנדט|ספירת (?:הקולות|המעטפות)|הקואליציה|הרכבת (?:ה)?ממשלה|הטלת התפקיד|הנשיא (?:הטיל|יטיל)|ממשלה חדשה|השבעת הכנסת|מלחמה|פיקוד העורף|אזעק|ירי (?:רקטות|טילים)|טילים|כטב"ם|כטב״ם|צה"ל תקף|צה״ל תקף|תקיפה (?:ב|נגד)|איראן|חיזבאללה|חמאס|חטופ|הפסקת אש|מבצע צבאי|מצב (?:מיוחד|חירום) בעורף|הנחיות (?:פיקוד )?העורף|רעידת אדמה/;
@@ -117,7 +123,9 @@ async function tick(dry: boolean) {
     const g = groups.find((g) => same(g.t, t));
     if (g) { g.items.push(x); for (const w of t) g.t.add(w); } else groups.push({ items: [x], t });
   }
-  const ok = groups.filter((g) => new Set(g.items.map((x) => x.source_id)).size >= 2 || g.items.some((x) => OFFICIAL_SRC.has(x.source_id)))
+  const solo = (g: { items: Any[] }) => g.items.some((x) => MAJOR_SRC.has(x.source_id) && OFFICIAL_BODY_RE.test(norm(x.title || ''))
+    && now - Date.parse(x.published_at || x.fetched_at) >= 30 * 60e3);
+  const ok = groups.filter((g) => new Set(g.items.map((x) => x.source_id)).size >= 2 || g.items.some((x) => OFFICIAL_SRC.has(x.source_id)) || solo(g))
     .sort((a, b) => new Set(b.items.map((x) => x.source_id)).size - new Set(a.items.map((x) => x.source_id)).size);
   // national stories of the last 6 hours: a matching group is attached, not written again
   const { data: recent } = await sb.from('hns_stories').select('id,title,dek,created_at,state').eq('section', 'national').gte('created_at', new Date(now - 6 * 3600e3).toISOString());
