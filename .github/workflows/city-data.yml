@@ -4,6 +4,11 @@
 name: city-data
 on:
   workflow_dispatch:
+    inputs:
+      only:
+        description: all, osm or gov
+        required: false
+        default: all
 permissions:
   contents: write
 jobs:
@@ -14,11 +19,10 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - name: fetch
-        run: node sites/nws/scripts/citydata-fetch.mjs out
+        run: node sites/nws/scripts/citydata-fetch.mjs out ${{ inputs.only || 'all' }}
       - name: commit to city-data
         run: |
           git config user.name "city-data"; git config user.email "city-data@users.noreply.github.com"
-          git checkout --orphan city-data
-          git rm -rfq . >/dev/null
-          mkdir -p raw && mv out/*.json raw/
-          git add raw && git commit -qm "city data $(date -u +%F)" && git push -f origin city-data
+          git fetch -q origin city-data && git checkout -q -B city-data origin/city-data || { git checkout --orphan city-data; git rm -rfq . >/dev/null; }
+          mkdir -p raw && cp out/*.json raw/
+          git add raw && git commit -qm "city data $(date -u +%F)" && git push origin city-data

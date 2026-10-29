@@ -35,13 +35,27 @@ const OSM = {
   suburb: 'nwr["place"~"^(suburb|neighbourhood|quarter)$"](area.a);',
 };
 const AREA = 'area["boundary"="administrative"]["name"="נתניה"]->.a;';
-for (const [k, q] of Object.entries(OSM)) {
+const ENDPOINTS = ['https://overpass-api.de/api/interpreter', 'https://overpass.private.coffee/api/interpreter', 'https://maps.mail.ru/osm/tools/overpass/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
+const osmLog = [];
+const ONLY = process.argv[3] || 'all';
+for (const [k, q] of Object.entries(ONLY === 'gov' ? {} : OSM)) {
   const body = `[out:json][timeout:110];${AREA}(${q});out center tags;`;
-  const j = await get('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(body), headers: { 'content-type': 'application/x-www-form-urlencoded' } });
+  let j = null;
+  for (const ep of ENDPOINTS) {
+    try {
+      const r = await fetch(ep, { method: 'POST', body: 'data=' + encodeURIComponent(body), headers: { 'content-type': 'application/x-www-form-urlencoded', 'user-agent': 'nws.co.il city guide (news@nws.co.il)' }, signal: AbortSignal.timeout(120000) });
+      const t = await r.text();
+      if (r.ok && t.trim().startsWith('{')) { j = JSON.parse(t); osmLog.push({ k, ep, n: j.elements?.length }); break; }
+      osmLog.push({ k, ep, status: r.status, body: t.slice(0, 300) });
+    } catch (e) { osmLog.push({ k, ep, err: String(e).slice(0, 200) }); }
+    await sleep(2000);
+  }
   console.log('osm', k, j?.elements?.length ?? 'fail');
   if (j) save(`osm-${k}`, j.elements);
-  await sleep(3000);
+  await sleep(2000);
 }
+save('osm-log', osmLog);
+if (ONLY === 'osm') process.exit(0);
 // 2. data.gov.il
 const CK = 'https://data.gov.il/api/3/action';
 const QUERIES = ['מוסדות חינוך', 'סניפי בנקים', 'סניפים', 'בתי מרקחת', 'בתי חולים', 'קופות חולים', 'מרפאות', 'סניפי דואר', 'תחנות רכבת', 'מתנ"סים', 'ספריות', 'עמותות', 'בתי כנסת', 'משרדי ממשלה', 'לשכות'];
