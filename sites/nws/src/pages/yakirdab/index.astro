@@ -304,7 +304,7 @@ function storyRow(s,pin){
     +(s.views!=null?'<div class="v"><b class="num">'+num(s.views)+'</b><span>צפיות</span></div>':'')+'</a>';
 }
 // the site's mini markup for sponsored articles (## heading, - list, 1. list, > quote | source, [text](https://...))
-function inl(x){return esc(x).replace(/\[([^\]\n]{1,200})\]\(((?:https?:\/\/|\/)[^\s()<>"]+)\)/g,function(m,t,h){return '<a href="'+h+'" target="_blank" rel="sponsored noopener">'+t+'</a>'})}
+function inl(x){return esc(x).replace(/\[([^\]\n]{1,200})\]\(((?:https?:\/\/|\/)[^\s()<>"]+)\)/g,function(m,t,h){return '<a href="'+h+'" target="_blank" rel="noopener">'+t+'</a>'})}
 function blocks(paras,spon){return paras.map(function(p){
   if(!spon)return '<p>'+esc(p).replace(/\n/g,'<br>')+'</p>';
   var ls=p.split(/\n+/).map(function(x){return x.trim()}).filter(Boolean);
@@ -326,7 +326,7 @@ function preview(f){
     +(f.image_url?'<figure><img src="'+esc(href(f.image_url))+'" alt="'+esc(f.image_alt||'')+'"><figcaption>'+esc(f.image_alt?f.image_alt+' · ':'')+esc(lbl)+'</figcaption></figure>':'')
     +(f.key_points&&f.key_points.length?'<div class="kp"><b>בקצרה</b><ul>'+f.key_points.map(function(k){return '<li>'+esc(dashes(k))+'</li>'}).join('')+'</ul></div>':'')
     +'<div class="bd">'+(paras.length?blocks(paras,spon):'<p class="note">הטקסט יופיע כאן</p>')+'</div>'
-    +(spon&&f.links&&f.links.length?'<div class="kp"><b>לפרטים נוספים אצל המפרסם</b><ul>'+f.links.map(function(l){return '<li><a href="'+esc(href(l.url))+'" target="_blank" rel="sponsored noopener">'+esc(l.text)+'</a></li>'}).join('')+'</ul></div>':'')
+    +(spon&&f.links&&f.links.length?'<div class="kp"><b>לפרטים נוספים אצל המפרסם</b><ul>'+f.links.map(function(l){return '<li><a href="'+esc(href(l.url))+'" target="_blank" rel="noopener">'+esc(l.text)+'</a></li>'}).join('')+'</ul></div>':'')
     +(f.faq&&f.faq.length?'<div class="faq"><h2 class="h">שאלות ותשובות</h2>'+f.faq.map(function(x){return '<b>'+esc(x.q)+'</b><div>'+esc(x.a)+'</div>'}).join('')+'</div>':'')
     +(spon?'<p class="disc">הכתבה פורסמה כתוכן שיווקי בשיתוף המפרסם</p>':'')+'</div>';
 }
@@ -348,7 +348,7 @@ function storyForm(st,isNew){
     +'<label class="f">כותרת <span class="cnt" data-c="title"></span><textarea name="title" rows="2" required maxlength="220">'+esc(st.title||'')+'</textarea></label>'
     +'<label class="f">כותרת משנה (תיאור קצר) <span class="cnt" data-c="dek"></span><textarea name="dek" rows="3" maxlength="500">'+esc(st.dek||'')+'</textarea></label>'
     +'<label class="f">הטקסט <small>שורה ריקה בין פסקאות</small><textarea name="body" rows="16" required>'+esc(body)+'</textarea></label>'
-    +'<div class="help" data-spon'+(spon?'':' hidden')+'>בתוכן שיווקי אפשר לעצב: <code>## כותרת ביניים</code> בתחילת פסקה, שורות שמתחילות ב-<code>- </code> הן רשימה, <code>1. </code> רשימה ממוספרת, <code>&gt; ציטוט | שם הדובר</code> ציטוט מודגש, וקישור: <code>[טקסט](https://...)</code>. באתר הקישורים יוצאים עם rel="sponsored", והכתבה מסומנת "תוכן שיווקי".</div>'
+    +'<div class="help" data-spon'+(spon?'':' hidden')+'>בתוכן שיווקי אפשר לעצב: <code>## כותרת ביניים</code> בתחילת פסקה, שורות שמתחילות ב-<code>- </code> הן רשימה, <code>1. </code> רשימה ממוספרת, <code>&gt; ציטוט | שם הדובר</code> ציטוט מודגש, וקישור: <code>[טקסט](https://...)</code>. באתר הקישורים יוצאים מסוג FOLLOW, והכתבה מסומנת "תוכן שיווקי".</div>'
     +'<label class="f">נקודות עיקריות <small>שורה לכל נקודה, עד 8, לא חובה</small><textarea name="key_points" rows="4">'+esc(kp)+'</textarea></label>'
     +'<fieldset><legend>תמונה</legend><label class="f">קישור לתמונה <small>מתחיל ב-https://. ריק = המערכת תיצור תמונה להמחשה (לא בתוכן שיווקי)</small><input name="image_url" dir="ltr" value="'+esc(st.image_url||'')+'" placeholder="https://"></label>'
     +'<div class="fg2"><label class="f">תיאור התמונה (לנגישות)<input name="image_alt" value="'+esc(st.image_alt||'')+'"></label><label class="f">קרדיט <small>למשל: באדיבות המפרסם, או שם הצלם</small><input name="image_credit" value="'+esc((st.extras&&st.extras.image_credit)||'')+'"></label></div>'

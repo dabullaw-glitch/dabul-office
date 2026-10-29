@@ -22,7 +22,7 @@ const he = lang === 'he';
 const s = SECTION_BY_KEY[a.section]; const u = t(lang); const pre = LANG_PREFIX[lang];
 const pic = picOf(a);
 const heA = ARTICLES.find((x) => x.slug === a.slug)!;
-// 29.10.2026: links of a sponsored article given in the management panel (extras.links), shown in their own box with rel="sponsored"
+// 29.10.2026: links of a sponsored article given in the management panel (extras.links), shown in their own box (FOLLOW links since 29.10.2026)
 const spLinks = (a.kind as string) === 'sponsored' ? (heA.links || []) : [];
 const places = placesOf(heA);
 const pool = articlesFor(lang);
@@ -132,13 +132,13 @@ const picAlt = picDesc || picLbl;
 // ---------- body ----------
 // News: plain paragraphs (escaped, the first mention of up to 3 places links to its page), exactly as before.
 // Sponsored only, a small markup: "## " opens a subheading, lines starting "- " make a list, lines starting "1. " a numbered list,
-// "> " a pull quote (optional "| source" at the end), [text](https://...) a link (outside links get rel="sponsored noopener").
+// "> " a pull quote (optional "| source" at the end), [text](https://...) a link (outside links are FOLLOW, rel="noopener" only, Yakir 29.10.2026: the paid-links market requires it).
 // Everything else is escaped; no raw HTML.
 type Block = { k: 'p' | 'h2' | 'ul' | 'ol'; html: string } | { k: 'q'; text: string; cite: string };
 const escA = (x: string) => x.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const inl = (x: string) => escA(x).replace(/\[([^\]\n]{1,200})\]\(((?:https?:\/\/|\/)[^\s()<>"]+)\)/g, (_m, t, h) => {
   const ext = /^https?:\/\//.test(h) && !/^https?:\/\/(www\.)?nws\.co\.il(\/|$)/.test(h);
-  return `<a href="${h}"${ext ? ' rel="sponsored noopener" target="_blank"' : ''}>${t}</a>`;
+  return `<a href="${h}"${ext ? ' rel="noopener" target="_blank"' : ''}>${t}</a>`;
 });
 const sponBlock = (p: string): Block => {
   const lines = p.split(/\n+/).map((x) => x.trim()).filter(Boolean);
@@ -318,7 +318,7 @@ const hasSrc = srcs.length > 0;
         </nav>}
 
         {sponsored && spLinks.length > 0 && <section class="art-spl" aria-labelledby="spl-h"><h2 id="spl-h">{he ? 'לפרטים נוספים אצל המפרסם' : lang === 'ru' ? 'Подробнее у рекламодателя' : lang === 'fr' ? 'En savoir plus chez l’annonceur' : 'More from the advertiser'}</h2>
-          <ul>{spLinks.map((l) => <li><a href={l.url} {...(/^https?:\/\//.test(l.url) && !/^https?:\/\/(www\.)?nws\.co\.il(\/|$)/.test(l.url) ? { rel: 'sponsored noopener', target: '_blank' } : {})}>{l.text}</a></li>)}</ul></section>}
+          <ul>{spLinks.map((l) => <li><a href={l.url} {...(/^https?:\/\//.test(l.url) && !/^https?:\/\/(www\.)?nws\.co\.il(\/|$)/.test(l.url) ? { rel: 'noopener', target: '_blank' } : {})}>{l.text}</a></li>)}</ul></section>}
         {sponsored && <p class="art-disc">{L.disclose}</p>}
         {!sponsored && <AdSlot place="afterArticle" />}
         <div class="n-fix"><span>{L.fix}</span><span><a href={`/corrections/?url=${encodeURIComponent(path)}`}>{L.report}</a> · <a href={`${pre}/send-news/`}>{L.send}</a></span></div>

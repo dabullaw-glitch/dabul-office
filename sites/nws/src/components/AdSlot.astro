@@ -4,8 +4,9 @@
 import { ADSENSE, PREVIEW } from '../data/site';
 interface Props { place: keyof typeof ADSENSE.slots; side?: boolean }
 const { place, side = false } = Astro.props;
-const on = !!ADSENSE.client && !PREVIEW;
 const slot = ADSENSE.slots[place];
+// a place shows only once it has its own ad unit id (after Google approves the site), so no empty boxes before that
+const on = !!ADSENSE.client && !!slot && !PREVIEW;
 ---
 {on && (
 <div class={`n-ad${side ? ' side' : ''}`} data-ad={place}>
