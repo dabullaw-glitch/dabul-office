@@ -14,7 +14,7 @@ import { SECTION_BY_KEY } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
 import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, placesOf, placeUrl, linkify, related, clip, localized, picOf, picLabel, kickerOf, readMin,
-  FLASHES, SPORT, tableAround, isoIL, type Article } from '../lib/content';
+  FLASHES, SPORT, tableAround, isoIL, writerUrl, type Article } from '../lib/content';
 
 interface Props { lang: Lang; a: Article }
 const { lang, a } = Astro.props;
@@ -52,7 +52,11 @@ const headline = a.title.length <= 110 ? a.title : a.title.slice(0, a.title.last
 const sponsored = (a.kind as string) === 'sponsored';
 // 29.10.2026: the blog (section 'blog', long evergreen guides) uses the same small markup as sponsored stories (subheadings, lists, links)
 const blogPost = (a.section as string) === 'blog';
-const rich = sponsored || blogPost;
+// 29.10.2026 (opinion columns): a column of the writers' area (kind 'opinion') uses the same markup without links (subheadings,
+// quotes and **bold**), the label "טור דעה", the writer's byline (linked to the writer's page) and the disclaimer at the end
+const opCol = (a.kind as string) === 'opinion';
+const rich = sponsored || blogPost || opCol;
+const wr = opCol ? heA.writer || null : null;
 // the "מקורות" line: content.ts keeps only official bodies, and media only when the story credits them; never on sponsored stories
 const srcs = sponsored ? [] : (heA.sources || []);
 
@@ -61,7 +65,7 @@ const jsonld: any[] = [{
   '@context': 'https://schema.org', '@type': sponsored ? 'Article' : blogPost ? 'BlogPosting' : isLive ? 'LiveBlogPosting' : 'NewsArticle', '@id': url + '#article', mainEntityOfPage: url, url,
   headline, description: desc, image: ldImages, inLanguage: lang,
   datePublished: isoIL(a.published), dateModified: isoIL(modified), articleSection: s.name[lang], ...(a.tags.length ? { keywords: a.tags.join(', ') } : {}), wordCount: words,
-  author: a.kind === 'opinion' && a.author ? { '@type': 'Person', name: a.author } : { '@type': 'Organization', name: DESK[lang], url: SITE_URL + pre + '/about/' },
+  author: a.kind === 'opinion' && a.author ? { '@type': 'Person', name: a.author, ...(wr ? { url: SITE_URL + writerUrl(wr) } : {}) } : { '@type': 'Organization', name: DESK[lang], url: SITE_URL + pre + '/about/' },
   ...(sponsored && a.author ? { sponsor: { '@type': 'Organization', name: a.author } } : {}),
   publisher: { '@id': SITE_URL + '/#org', '@type': 'NewsMediaOrganization', name: BRAND.he, url: SITE_URL + '/', logo: { '@type': 'ImageObject', url: SITE_URL + '/logo.png', width: 512, height: 512 },
     publishingPrinciples: SITE_URL + '/editorial-policy/', correctionsPolicy: SITE_URL + '/corrections/' },
@@ -107,6 +111,8 @@ const L = {
 const opinion = a.kind === 'opinion' && !!a.author;
 const sponBy = sponsored && !!a.author;
 const byName = opinion ? a.author! : sponBy ? `${L.with} ${a.author}` : sponsored ? L.spon : L.desk;
+const opL = he ? 'טור דעה' : lang === 'ru' ? 'Мнение' : lang === 'fr' ? 'Opinion' : 'Opinion';
+const opDisc = he ? 'הדעות בטור הן של הכותב ואינן מייצגות את עמדת המערכת' : lang === 'ru' ? 'Мнение автора может не совпадать с позицией редакции' : lang === 'fr' ? 'Les opinions exprimées sont celles de l’auteur et ne reflètent pas la position de la rédaction' : 'The views in this column are the writer’s own and do not represent the newsroom';
 const initials = opinion || sponBy ? a.author!.split(/\s+/).slice(0, 2).map((w) => w[0]).join('') : 'NWS';
 const showUpd = Date.parse(modified) - Date.parse(a.published) > 60e3;
 const updText = showUpd ? (dayOf(modified) === dayOf(a.published) ? fmtTime(modified) : `${fmtNum(modified)}, ${fmtTime(modified)}`) : '';
@@ -148,7 +154,9 @@ const picAlt = picDesc || picLbl;
 // Everything else is escaped; no raw HTML.
 type Block = { k: 'p' | 'h2' | 'ul' | 'ol'; html: string } | { k: 'q'; text: string; cite: string };
 const escA = (x: string) => x.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const inl = (x: string) => escA(x).replace(/\[([^\]\n]{1,200})\]\(((?:https?:\/\/|\/)[^\s()<>"]+)\)/g, (_m, t, h) => {
+const bold = (h: string) => h.replace(/\*\*([^*\n]{1,300}?)\*\*/g, '<strong>$1</strong>');
+// a column never carries links (Yakir 29.10.2026: no link to the writer's site or business): only escaping and bold
+const inl = (x: string) => opCol ? bold(escA(x)) : escA(x).replace(/\[([^\]\n]{1,200})\]\(((?:https?:\/\/|\/)[^\s()<>"]+)\)/g, (_m, t, h) => {
   const ext = /^https?:\/\//.test(h) && !/^https?:\/\/(www\.)?nws\.co\.il(\/|$)/.test(h);
   return `<a href="${h}"${ext ? ' rel="noopener" target="_blank"' : ''}>${t}</a>`;
 });
@@ -228,14 +236,14 @@ const hasSrc = srcs.length > 0;
           <li><a href={pre + '/'}>{u.home}</a></li>
           <li><a href={sectionUrl(a.section, lang)}>{s.name[lang]}</a></li>
         </ol></nav>
-        <div class="art-k">{sponsored && <span class="art-spon">{L.spon}</span>}<span class="n-k">{sponsored && kickerOf(a, lang) === L.spon ? s.name[lang] : kickerOf(a, lang)}</span>{isLive && <span class="art-livb" data-live-last={lastUp}><i aria-hidden="true"></i>{L.live}</span>}</div>
+        <div class="art-k">{sponsored && <span class="art-spon">{L.spon}</span>}{opCol && <span class="art-op">{opL}</span>}<span class="n-k">{sponsored && kickerOf(a, lang) === L.spon ? s.name[lang] : kickerOf(a, lang)}</span>{isLive && <span class="art-livb" data-live-last={lastUp}><i aria-hidden="true"></i>{L.live}</span>}</div>
         <h1 class="n-t" id="art-h">{a.title}</h1>
         {a.dek && <p class="n-dek">{a.dek}</p>}
         <div class="n-by">
           <div class="n-who">
-            <div class="n-av" aria-hidden="true">{initials}</div>
+            {wr?.photo ? <img class="n-av art-avi" src={wr.photo} alt="" width="44" height="44" loading="lazy" decoding="async"> : <div class="n-av" aria-hidden="true">{initials}</div>}
             <div>
-              {opinion || sponsored ? <b>{byName}{(opinion || sponBy) && a.authorRole && a.authorRole !== L.spon && <span class="art-role">{a.authorRole}</span>}</b> : <a href={`${pre}/about/`}><b>{byName}</b></a>}
+              {wr ? <b><a href={writerUrl(wr)} rel="author">{byName}</a>{a.authorRole && <span class="art-role">{a.authorRole}</span>}</b> : opinion || sponsored ? <b>{byName}{(opinion || sponBy) && a.authorRole && a.authorRole !== L.spon && <span class="art-role">{a.authorRole}</span>}</b> : <a href={`${pre}/about/`}><b>{byName}</b></a>}
               <span class="num">{u.published} <time datetime={isoIL(a.published)}>{fmtNum(a.published)}, {fmtTime(a.published)}</time>{showUpd && <> · <span class="n-upd">{u.updated} <time datetime={isoIL(modified)}>{updText}</time></span></>} · {readMin(a)} {L.read}</span>
             </div>
           </div>
@@ -332,6 +340,7 @@ const hasSrc = srcs.length > 0;
         {sponsored && spLinks.length > 0 && <section class="art-spl" aria-labelledby="spl-h"><h2 id="spl-h">{he ? 'לפרטים נוספים אצל המפרסם' : lang === 'ru' ? 'Подробнее у рекламодателя' : lang === 'fr' ? 'En savoir plus chez l’annonceur' : 'More from the advertiser'}</h2>
           <ul>{spLinks.map((l) => <li><a href={l.url} {...(/^https?:\/\//.test(l.url) && !/^https?:\/\/(www\.)?nws\.co\.il(\/|$)/.test(l.url) ? { rel: 'noopener', target: '_blank' } : {})}>{l.text}</a></li>)}</ul></section>}
         {sponsored && <p class="art-disc">{L.disclose}</p>}
+        {opCol && <p class="art-disc">{opDisc}</p>}
         {!sponsored && <AdSlot place="afterArticle" />}
         <div class="n-fix"><span>{L.fix}</span><span><a href={`/corrections/?url=${encodeURIComponent(path)}`}>{L.report}</a> · <a href={`${pre}/send-news/`}>{L.send}</a></span></div>
       </article>

@@ -27,7 +27,16 @@ export interface Article {
   sources?: Source[];
   // 29.10.2026 (management panel): the photo credit given by hand (extras.image_credit), and the links of a sponsored article (extras.links)
   imageCredit?: string; links?: { text: string; url: string }[];
+  /** 29.10.2026 (opinion columns): the columnist's public profile (hns-feed extras.writer); the byline links to the writer's page */
+  writer?: Writer | null;
 }
+export interface Writer { id: number; slug: string; name: string; role: string; bio: string; photo: string }
+const writerOf = (s: any): Writer | null => {
+  const w = s?.kind === 'opinion' ? s?.extras?.writer : null;
+  const id = Number(w?.id);
+  if (!w || !Number.isInteger(id) || id <= 0 || !clean(w.name)) return null;
+  return { id, slug: `w${id}`, name: clean(w.name), role: clean(w.role), bio: clean(w.bio), photo: /^https:\/\/[^\s"<>]+$/.test(String(w.photo || '')) ? String(w.photo) : '' };
+};
 export interface Source { name: string; url: string; trust: 'official' | 'media' }
 /** The "מקורות" line (Yakir, 28.10.2026): official bodies by name; a media outlet only when the story carries its credit line
  *  (a body paragraph "קרדיט: ..." naming it, written by hns-write); never fan, community or tip channels, and never our own desk.
@@ -132,6 +141,7 @@ function fromFeed(s: any): any {
     routine: s?.routine === true,
     sources: sourcesOf(s.sources, (s.body || []).map(clean)),
     imageCredit: clean(s.extras?.image_credit).slice(0, 80),
+    writer: writerOf(s),
     links: (Array.isArray(s.extras?.links) ? s.extras.links : []).map((l: any) => ({ text: clean(l?.text), url: safeUrl(l?.url) })).filter((l: any) => l.text && l.url).slice(0, 6),
     live: !!s.live && Array.isArray(s.updates) && s.updates.length > 0 && Date.now() - Date.parse(s.updates[s.updates.length - 1].at) < 6 * 3600e3,
   };
@@ -148,6 +158,11 @@ export const ARTICLES: Article[] = [...(readJson('articles.json', { articles: []
   .filter((a) => a && a.slug && SECTION_BY_KEY[a.section as SectionKey] && live(a))
   .map((a) => ({ ...a, sources: a.sources ?? (a.sourceName ? [{ name: a.sourceName, url: a.sourceUrl || '', trust: 'official' }] : []), published: new Date(a.published).toISOString(), ...(a.updated ? { updated: new Date(a.updated).toISOString() } : {}), faq: normFaq(a.faq), neighborhoods: a.neighborhoods || [], tags: a.tags || [], keyPoints: a.keyPoints || [], body: a.body || [], og: ogFor(a) }))
   .sort((x, y) => (Date.parse(y.published) || 0) - (Date.parse(x.published) || 0));
+
+/** 29.10.2026: the columnists who have at least one published column, each with their columns (newest first). Page /writers/w<id>/. */
+export const WRITERS: (Writer & { columns: Article[] })[] = [...new Map(ARTICLES.filter((a) => a.writer).map((a) => [a.writer!.id, a.writer!])).values()]
+  .map((w) => ({ ...w, columns: ARTICLES.filter((a) => a.writer?.id === w.id) }));
+export const writerUrl = (w: Pick<Writer, 'slug'>) => `/writers/${w.slug}/`;
 
 export const TR: Record<string, Record<string, Partial<Article>>> = {
   ru: readJson('tr/ru.json', {}), fr: readJson('tr/fr.json', {}), en: readJson('tr/en.json', {}),

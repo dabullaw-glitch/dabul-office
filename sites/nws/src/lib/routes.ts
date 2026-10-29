@@ -4,7 +4,7 @@ import { LANGS, type Lang } from '../data/site';
 import { SECTIONS } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { PLACES } from '../data/places';
-import { ARTICLES, localized, articleUrl, sectionUrl, placesOf, liveSections } from './content';
+import { ARTICLES, localized, articleUrl, sectionUrl, placesOf, liveSections, WRITERS, writerUrl } from './content';
 import { IMG } from '../data/site';
 import { LISTINGS, listingUrl } from './biz';
 
@@ -39,6 +39,8 @@ export function routes(): R[] {
   for (const l of LISTINGS) out.push({ loc: listingUrl(l), lastmod: l.updated || l.created || now, priority: l.featured ? '0.6' : '0.5' });
   out.push({ loc: '/directory/join/', priority: '0.4' });
   for (const p of PLACES) if (ARTICLES.some((a) => placesOf(a).some((x) => x.slug === p.slug))) out.push({ loc: `/area/${p.slug}/`, lastmod: now, changefreq: 'daily', priority: '0.6' });
+  // 29.10.2026: the columnists' pages (only writers with a published column)
+  for (const w of WRITERS) out.push({ loc: writerUrl(w), lastmod: w.columns[0]?.published ?? now, priority: '0.4' });
   for (const p of ['about', 'send-news', 'join']) { const a = all((l) => (l === 'he' ? `/${p}/` : `/${l}/${p}/`)); for (const l of LANGS) out.push({ loc: a[l], alts: a, priority: '0.4' }); }
   for (const p of ['editorial-policy', 'corrections', 'contact', 'advertise', 'terms', 'privacy', 'accessibility']) out.push({ loc: `/${p}/`, priority: '0.3' });
   return out;

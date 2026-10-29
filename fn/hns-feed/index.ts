@@ -27,6 +27,9 @@
 //   also returns the hidden ones, marked hidden, with the original text.
 //   "pin": the story the panel pinned as the home page lead ({id, until}, hns_config 'site_pin'), or null; only while it is published.
 //   extras: the internal panel flags (hold, manual) are not sent.
+// 29.10.2026 (opinion columns): an opinion story published from the writers' area carries extras.writer_id; the feed adds
+//   extras.writer {id, name, role, bio, photo} from hns_writers (public profile only: never the email or anything else), so the
+//   site shows the byline link and the writer's page, and a change in the profile rebuilds the site.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -142,6 +145,13 @@ Deno.serve(async (req) => {
       routine: !!s.format || /^auto:|hns-recurring|hns-data/.test(String(s.notes || '')),
     };
   });
+  // opinion columns: the writer's public profile (name, role, short bio, photo)
+  const wIds = [...new Set(stories.map((s: Any) => Number(s.kind === 'opinion' && s.extras?.writer_id)).filter((n: number) => Number.isInteger(n) && n > 0))];
+  if (wIds.length) {
+    const { data: ws } = await sb.from('hns_writers').select('id,name,role,bio,photo_url').in('id', wIds);
+    const wm = new Map((ws || []).map((w: Any) => [w.id, { id: w.id, name: clean(w.name), role: clean(w.role), bio: clean(w.bio), photo: /^https:\/\//.test(w.photo_url || '') ? w.photo_url : '' }]));
+    for (const st of stories as Any[]) { const w = st.kind === 'opinion' && wm.get(Number(st.extras?.writer_id)); if (w) st.extras.writer = w; }
+  }
   // stories merged into another one: the site sends their old URL to the main story (301)
   const { data: mg } = await sb.from('hns_stories').select('id,section,merged_into').eq('state', 'withdrawn').not('merged_into', 'is', null).limit(500);
   const secOf = new Map((data || []).map((s: Any) => [s.id, s.section]));

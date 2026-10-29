@@ -27,6 +27,9 @@
 //   {action:'fb_link'}             a one-time Facebook login link (30 minutes) that saves the news page token
 // GET ?code=&state=                Facebook redirects here after the login (Meta app redirect URI must include this URL)
 // No long or medium dash in any posted text.
+// 29.10.2026 (opinion columns of the writers' area, kind 'opinion'): never on Telegram or WhatsApp (those are for news that just
+//   happened); on Facebook at most ONE column a day, even without an importance score (it still counts in the daily cap of 4 and the
+//   60 minute spacing). The post says "טור דעה" and the writer's name.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -94,6 +97,7 @@ function textFor(ch: Ch, st: Any) {
   const title = clean(st.title), dek = clip(clean(st.dek), 260), url = urlOf(st);
   const tags = `#${TAG[sec(st)]} #חדשות_נתניה`;
   if (ch === 'tg') return `<b>${esc(title)}</b>\n\n${esc(dek)}\n\n<a href="${esc(url)}">לכתבה המלאה באתר</a>\n\n${tags}`;
+  if (ch === 'fb' && st.kind === 'opinion') return `טור דעה${st.author ? `, מאת ${clean(st.author)}` : ''}\n\n${title}\n\n${dek}\n\nלטור המלא: ${url}\n\n${tags}`;
   if (ch === 'fb') return `${title}\n\n${dek}\n\nלכתבה המלאה: ${url}\n\n${tags}`;
   return `*${title.replace(/\*/g, '')}*\n\n${dek}\n\nלכתבה המלאה: ${url}`;
 }
@@ -163,7 +167,7 @@ async function ready(st: Any, live: boolean) {
 // 28.10.2026: sponsored stories (kind 'sponsored', "תוכן שיווקי") are never posted to the channels
 async function candidates() {
   const since = new Date(Date.now() - MAX_AGE_H * 3600e3).toISOString();
-  const { data, error } = await sb.from('hns_stories').select('id,created_at,published_at,section,title,dek,body,sources,sensitivity,decided_by,state,ch_tg_at,ch_fb_at,ch_wa_at')
+  const { data, error } = await sb.from('hns_stories').select('id,created_at,published_at,section,title,dek,body,sources,sensitivity,decided_by,state,ch_tg_at,ch_fb_at,ch_wa_at,kind,author')
     .eq('state', 'published').or('kind.is.null,kind.neq.sponsored').not('published_at', 'is', null).gte('created_at', since).gte('published_at', since).order('published_at', { ascending: true }).limit(200);
   if (error) throw new Error(error.message);
   return (data || []).filter((st: Any) => st.title && Array.isArray(st.body) && st.body.some((x: Any) => String(x || '').trim()));
@@ -201,8 +205,15 @@ async function run(opts: { dry: boolean; preview?: boolean; all?: boolean }) {
     let usedToday = opts.all ? 0 : (today || []).length;
     const lastAt = opts.all ? null : today?.[0]?.at ?? null;
 
+    // opinion columns already on this channel today (Facebook only: one a day)
+    let opToday = 0;
+    if (ch === 'fb') {
+      const { data: tl } = await sb.from('hns_social_log').select('story_id').eq('channel', ch).eq('mode', mode).in('status', doneStatus).gte('at', dayStart).not('story_id', 'is', null);
+      const tIds = [...new Set((tl || []).map((r: Any) => r.story_id))];
+      if (tIds.length) { const { count } = await sb.from('hns_stories').select('id', { count: 'exact', head: true }).in('id', tIds).eq('kind', 'opinion'); opToday = count || 0; }
+    }
     const list = rows.map((st: Any) => ({ st, ...score(st) }))
-      .filter((x: Any) => !cfg.important || x.score >= IMPORTANT)
+      .filter((x: Any) => x.st.kind === 'opinion' ? ch === 'fb' : !cfg.important || x.score >= IMPORTANT)
       .filter((x: Any) => {
         if (opts.all) return true;
         const h = hist.filter((r: Any) => r.story_id === x.st.id && r.channel === ch);
@@ -219,6 +230,7 @@ async function run(opts: { dry: boolean; preview?: boolean; all?: boolean }) {
       // 29.10.2026 (Yakir): Telegram gets a story only when it is published, never a backlog of older stories
       // 29.10.2026: blog guides go to Facebook only, the Telegram channel is for news that just happened
       if (ch === 'tg' && sec(st) === 'blog') continue;
+      if (st.kind === 'opinion' && !opts.all && opToday >= 1) { wait('טור דעה אחד ביום בפייסבוק'); continue; }
       if (ch === 'tg' && !opts.all && Date.now() - Date.parse(st.published_at) > TG_FRESH_MIN * 60e3) continue;
       if (n >= cfg.perRun && !opts.all) { wait('בריצה הבאה'); continue; }
       if (clock.quiet && !urgent && !opts.all && ch !== 'tg') { wait('שעות שקט 23:00 עד 06:30'); continue; }
@@ -227,7 +239,7 @@ async function run(opts: { dry: boolean; preview?: boolean; all?: boolean }) {
       if (!(await ready(st, live))) { wait('הכתבה עוד לא עלתה לאתר'); continue; }
       const text = textFor(ch, st), url = urlOf(st);
       const item = { id: st.id, score: x.score, why: x.why, url, text };
-      n++; usedToday++;
+      n++; usedToday++; if (st.kind === 'opinion') opToday++;
       if (opts.preview) { res.would.push(item); continue; }
       if (!live) {
         const { error } = await sb.from('hns_social_log').insert({ story_id: st.id, channel: ch, mode, status: 'would_send', score: x.score, reason: x.why.join(', ') || null, text, url,

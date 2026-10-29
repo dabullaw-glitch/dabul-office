@@ -6,7 +6,7 @@
 // Login: a password Yakir chose himself (set through a one-time link that hns-panel sends only to his Telegram, #setup=<token>),
 // then a 6 digit code sent to his Telegram. The session token (ends after 12 hours idle) is kept in this browser.
 // No secret is in this page. Sections (hash routes): #dash, #stories, #story/<id>, #new, #flashes, #events, #requests, #listings,
-// #sources, #stats, #log. Hebrew only, right to left, phone and computer. Never a long or medium dash in any text.
+// #sources, #stats, #log, #columns (opinion columns and writers, 29.10.2026), #col/<id>. Hebrew only, right to left, phone and computer. Never a long or medium dash in any text.
 import { HNS_API } from '../../data/site';
 import { SECTIONS } from '../../data/sections';
 import { PLACES } from '../../data/places';
@@ -210,9 +210,9 @@ function act(btn,p,done){if(btn)btn.disabled=true;return p.then(function(j){if(b
 var SITE_NOTE='שינוי מופיע באתר תוך דקה בערך (האתר נבנה מחדש לבד).';
 
 // ---------- icons ----------
-var IC={dash:'M3 12l9-8 9 8M5 10v10h5v-6h4v6h5V10',stories:'M5 4h14v16H5zM8 8h8M8 12h8M8 16h5',new:'M12 5v14M5 12h14',flashes:'M13 3L5 14h6l-1 7 8-11h-6z',events:'M4 6h16v12H4zM4 10h16M8 3v4M16 3v4',requests:'M4 6h16v12H4zM4 7l8 6 8-6',listings:'M4 9l2-5h12l2 5M4 9v11h16V9M4 9h16M9 20v-6h6v6',sources:'M5 19a1 1 0 100-2 1 1 0 000 2zM4 11a9 9 0 019 9M4 4a16 16 0 0116 16',stats:'M4 20V10M10 20V4M16 20v-7M22 20H2',log:'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01'};
+var IC={columns:'M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4',dash:'M3 12l9-8 9 8M5 10v10h5v-6h4v6h5V10',stories:'M5 4h14v16H5zM8 8h8M8 12h8M8 16h5',new:'M12 5v14M5 12h14',flashes:'M13 3L5 14h6l-1 7 8-11h-6z',events:'M4 6h16v12H4zM4 10h16M8 3v4M16 3v4',requests:'M4 6h16v12H4zM4 7l8 6 8-6',listings:'M4 9l2-5h12l2 5M4 9v11h16V9M4 9h16M9 20v-6h6v6',sources:'M5 19a1 1 0 100-2 1 1 0 000 2zM4 11a9 9 0 019 9M4 4a16 16 0 0116 16',stats:'M4 20V10M10 20V4M16 20v-7M22 20H2',log:'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01'};
 function icon(k){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+IC[k]+'"/></svg>'}
-var TABS=[['dash','סקירה'],['stories','כתבות','stories'],['new','כתבה חדשה'],['flashes','מבזקים'],['events','אירוע מיוחד'],['requests','פניות','requests'],['listings','מדריך עסקים','listings'],['sources','מקורות'],['stats','סטטיסטיקה'],['log','יומן']];
+var TABS=[['dash','סקירה'],['stories','כתבות','stories'],['new','כתבה חדשה'],['columns','טורי דעה','columns'],['flashes','מבזקים'],['events','אירוע מיוחד'],['requests','פניות','requests'],['listings','מדריך עסקים','listings'],['sources','מקורות'],['stats','סטטיסטיקה'],['log','יומן']];
 
 // ---------- login (password, then a code from Telegram) ----------
 function brand(){return '<span class="brand"><span class="mk">NWS<i></i></span><span><b>חדשות נתניה והשרון</b><span>לוח ניהול</span></span></span>'}
@@ -280,9 +280,9 @@ function route(){
   if(DIRTY&&h!==LAST_HASH){if(!confirm('יש שינויים שלא נשמרו. לצאת בלי לשמור?')){history.replaceState(null,'','#'+LAST_HASH);return}DIRTY=false}
   LAST_HASH=h;stopTimer();shell();
   var p=h.split('/'),t=p[0]||'dash',arg=p[1]||'';
-  var V={dash:vDash,stories:vStories,story:vStory,new:vNew,flashes:vFlashes,events:vEvents,requests:vRequests,listings:vListings,sources:vSources,stats:vStats,log:vLog}[t];
+  var V={columns:vColumns,col:vCol,dash:vDash,stories:vStories,story:vStory,new:vNew,flashes:vFlashes,events:vEvents,requests:vRequests,listings:vListings,sources:vSources,stats:vStats,log:vLog}[t];
   if(!V){location.hash='#dash';return}
-  setNav(t==='story'?'stories':t);
+  setNav(t==='story'?'stories':t==='col'?'columns':t);
   main().innerHTML='<div class="ld">טוען...</div>';window.scrollTo(0,0);
   V(arg);
 }
@@ -729,7 +729,7 @@ function vStats(){
 // ---------- יומן ----------
 var LOGF='all';
 var LOGK={login:'כניסה',password:'סיסמה',otp:'קוד מטלגרם',setup_link:'קישור להגדרת סיסמה',set_password:'הגדרת סיסמה',action:'פעולה'};
-var ACTK={request_set:'פנייה',listing_decide:'החלטה על עסק',listing_edit:'עריכת עסק',story_decide:'החלטה על כתבה',story_withdraw:'הורדת כתבה',story_kicker:'תווית כתבה',event_set:'שמירת אירוע',event_clear:'כיבוי אירוע',
+var ACTK={col_edit:'תיקון טור דעה',col_publish:'פרסום טור דעה',col_return:'החזרת טור לכותב',writer_save:'שמירת כותב',writer_code:'קוד חדש לכותב',writer_block:'חסימה או שחרור של כותב',request_set:'פנייה',listing_decide:'החלטה על עסק',listing_edit:'עריכת עסק',story_decide:'החלטה על כתבה',story_withdraw:'הורדת כתבה',story_kicker:'תווית כתבה',event_set:'שמירת אירוע',event_clear:'כיבוי אירוע',
   story_save:'עריכת כתבה',story_new:'כתבה חדשה',story_publish:'פרסום כתבה',story_reject:'דחיית כתבה',story_restore:'החזרת כתבה',story_pin:'נעיצה',story_img_redo:'תמונה חדשה',flash_mod:'שינוי מבזק',flash_add:'מבזק חדש',flash_edit:'עריכת מבזק',source_set:'הפעלה או השבתה של מקור'};
 var PUBK={publish:'פורסמה',reject:'נדחתה',withdraw:'הורדה מהאתר',revise:'תוקנה',panel_edit:'נערכה בלוח',panel_create:'נכתבה בלוח',restore:'הוחזרה',blocked:'נחסמה בבדיקה',ask:'נשלחה לאישור בטלגרם',ask_failed:'שליחה לאישור נכשלה',merge:'מוזגה',update:'עדכון חי',close_dup:'נסגרה ככפילות',rewrite_asked:'נשלחה לכתיבה מחדש',ping:'בדיקה'};
 var BYK={'yakir-panel':'יקיר (לוח הניהול)',yakir:'יקיר (טלגרם)','yakir-chat':'יקיר (צ׳אט)',auto:'אוטומטי',launch:'השקה',dup:'כפילות',merge:'מיזוג'};
@@ -743,6 +743,105 @@ function vLog(){
         return '<tr><td style="white-space:nowrap">'+when(l.at)+'</td><td>'+esc(LOGK[l.kind]||l.kind)+(l.note?'<div class="note">'+esc(l.kind==='action'?actNote(l.note):l.note)+'</div>':'')+'</td><td>'+(l.ok?'הצליח':'<b style="color:#7A1220">נכשל</b>')+'</td><td class="note" dir="ltr" style="text-align:end">'+esc(l.ip||'')+(l.country?' '+esc(l.country):'')+'</td></tr>'}).join('')+'</tbody></table></div>'
       +'<div class="card"><h2 class="h">פרסום כתבות (המערכת ואתם)</h2><table class="tb"><tbody>'+(j.publish||[]).map(function(p){
         return '<tr><td style="white-space:nowrap">'+when(p.at)+'</td><td>'+esc(PUBK[p.action]||p.action)+(p.by?'<div class="note">'+esc(BYK[p.by]||p.by)+'</div>':'')+'</td><td>'+(p.story_id?'<a href="#story/'+p.story_id+'">#'+p.story_id+'</a> ':'')+esc(p.title)+(p.note?'<div class="note">'+esc(p.note)+'</div>':'')+'</td></tr>'}).join('')+'</tbody></table></div></div>';
+  }).catch(function(){});
+}
+
+// ---------- טורי דעה (29.10.2026): writers and their columns. Data through hns-panel -> hns-cols (server only) ----------
+var CST={draft:'טיוטה אצל הכותב',checking:'בבדיקה אוטומטית',waiting:'ממתין לאישור',returned:'הוחזר לכותב',published:'פורסם'};
+var CFLAG={defamation:'חשש ללשון הרע',facts:'טענה עובדתית לבדיקה',copying:'חשש להעתקה',ad:'חשש לפרסומת סמויה',hate:'הסתה או שנאה',privacy:'פרטים אישיים',check:'הבדיקה האוטומטית'};
+var COLF='waiting';
+var CHW={create:'נוצר',save:'נשמר',image:'תמונה הועלתה',image_del:'התמונה הוסרה',submit:'נשלח לאישור',checked:'נבדק אוטומטית',telegram_dry:'הודעה לטלגרם (כותב בדיקה, לא נשלחה)',edit:'תוקן בלוח',publish:'פורסם',return:'הוחזר לכותב'};
+function cInl(x){return esc(x).replace(/\*\*([^*\n]{1,300}?)\*\*/g,'<b>$1</b>')}
+function cBody(list){return (list||[]).map(function(p){if(/^##\s/.test(p))return '<h2>'+esc(p.replace(/^##\s*/,''))+'</h2>';if(/^>\s/.test(p))return '<blockquote>'+cInl(p.replace(/^>\s*/,''))+'</blockquote>';return '<p>'+cInl(p)+'</p>'}).join('')}
+function fileData(input,cb){var f=input&&input.files&&input.files[0];if(!f)return cb(null);if(!/^image\/(jpeg|png|webp)$/.test(f.type)){toast('רק JPG, PNG או WEBP',true);return cb(false)}
+  var rd=new FileReader();rd.onload=function(){var url=rd.result;if(f.size<=2.5*1024*1024)return cb({data:url});var im=new Image();im.onload=function(){var k=Math.min(1,800/im.naturalWidth),cv=document.createElement('canvas');cv.width=Math.round(im.naturalWidth*k);cv.height=Math.round(im.naturalHeight*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);cb({data:cv.toDataURL('image/jpeg',.88)})};im.src=url};rd.readAsDataURL(f)}
+function showCode(name,code){
+  main().insertAdjacentHTML('afterbegin','<div class="card" id="codebox" style="border:2px solid var(--ok)"><h2 class="h">הקוד האישי של '+esc(name)+'</h2><p style="font-size:26px;font-weight:800;letter-spacing:3px;direction:ltr;text-align:center;margin:8px 0" class="num">'+esc(code)+'</p>'
+    +'<p class="note">מעבירים לכותב את הקוד ואת הכתובת <b dir="ltr">nws.co.il/write/</b>. הכותב נכנס עם המייל שלו והקוד הזה. <b>הקוד מוצג רק עכשיו</b> ולא נשמר במערכת. אם הוא ילך לאיבוד, לוחצים "קוד חדש".</p>'
+    +'<div class="row"><button class="b" type="button" id="cpy">העתקת הקוד</button><button class="b" type="button" id="cpy2">העתקת הודעה מוכנה לכותב</button><button class="b" type="button" id="cclose">סגירה</button></div></div>');
+  var msg='שלום '+name+',\nהצטרפת לכותבי טורי הדעה באתר חדשות נתניה והשרון.\nכניסה: https://nws.co.il/write/\nהמייל שלך, והקוד האישי: '+code+'\nאת הקוד לא מעבירים לאף אחד.';
+  var cp=function(t){if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){toast('הועתק')},function(){prompt('',t)});else prompt('',t)};
+  document.getElementById('cpy').onclick=function(){cp(code)};document.getElementById('cpy2').onclick=function(){cp(msg)};
+  document.getElementById('cclose').onclick=function(){var b=document.getElementById('codebox');if(b)b.remove()};window.scrollTo(0,0);
+}
+function vColumns(arg){
+  if(arg)COLF=arg;
+  main().innerHTML=page('טורי דעה','טורים של כותבים מתנדבים. טור מתפרסם בתוך המדור שלו, עם התווית "טור דעה" ושם הכותב, ולא נכנס למבזקים.','<a class="b" href="#columns/writers">הכותבים</a>')
+    +subChips([['waiting','ממתינים לאישור'],['returned','הוחזרו לכותב'],['published','פורסמו'],['all','הכל'],['writers','כותבים']],COLF)+'<div id="cl"><div class="ld">טוען...</div></div>';
+  main().querySelectorAll('.chips [data-v]').forEach(function(b){b.onclick=function(){location.hash='#columns/'+b.getAttribute('data-v')}});
+  if(COLF==='writers')return vWriters();
+  call('cols',{status:COLF}).then(function(j){
+    var el=document.getElementById('cl');if(!j.ok)return el.innerHTML='<div class="empty">'+esc(j.error)+'</div>';
+    el.innerHTML=j.columns.length?'<div class="list">'+j.columns.map(function(c){
+      return '<a class="li" href="#col/'+c.id+'"><div class="m"><div class="x"><span class="bdg '+(c.status==='published'?'published':c.status==='waiting'||c.status==='checking'?'waiting':'')+'">'+esc(CST[c.status]||c.status)+'</span>'+secTag(c.section)
+        +'<span>'+esc(c.writer?c.writer.name:'')+(c.writer&&c.writer.is_test?' (בדיקה)':'')+'</span><span>#'+c.id+'</span><span>'+(c.submitted_at?'נשלח '+when(c.submitted_at):'נוצר '+when(c.created_at))+'</span>'
+        +(c.flags?'<span class="bdg '+(c.high?'waiting':'')+'">'+c.flags+' סימונים</span>':'')+(c.has_image?'<span>עם תמונה</span>':'')+'</div><div class="t">'+esc(c.title||'בלי כותרת')+'</div>'+(c.dek?'<div class="d">'+esc(c.dek)+'</div>':'')+'</div></a>'}).join('')+'</div>'
+      :'<div class="card empty">'+(COLF==='waiting'?'אין טורים שממתינים לאישור.':'אין טורים כאן.')+'</div>';
+  }).catch(function(){});
+}
+function writerForm(w,secList){
+  w=w||{sections:[]};
+  return '<form class="fg" data-wf="'+(w.id||'')+'"><div class="fg2"><label class="f">שם מלא<input name="name" required value="'+esc(w.name||'')+'"></label><label class="f">מייל <small>איתו הכותב נכנס</small><input name="email" type="email" dir="ltr" required value="'+esc(w.email||'')+'"></label></div>'
+    +'<label class="f">שורת תפקיד <small>קצר, מופיע ליד השם. למשל: תושב פולג, מאמן כדורגל</small><input name="role" maxlength="80" value="'+esc(w.role||'')+'"></label>'
+    +'<label class="f">כמה מילים על הכותב <small>מופיע בדף הכותב. בלי קישורים ובלי פרסום לעסק</small><textarea name="bio" rows="3" maxlength="600">'+esc(w.bio||'')+'</textarea></label>'
+    +'<fieldset><legend>המדורים שבהם הכותב יכול לכתוב</legend><div class="row">'+secList.map(function(s){return '<label class="chk"><input type="checkbox" name="sec" value="'+esc(s.key)+'"'+((w.sections||[]).indexOf(s.key)>=0?' checked':'')+'> '+esc(s.name)+'</label>'}).join('')+'</div></fieldset>'
+    +'<fieldset><legend>תמונה של הכותב (לא חובה)</legend>'+(w.photo_url?'<img class="thumb" style="max-width:110px;border-radius:50%" src="'+esc(href(w.photo_url))+'" alt="">':'')+'<input type="file" name="photo" accept="image/jpeg,image/png,image/webp">'+(w.photo_url?'<label class="chk"><input type="checkbox" name="photo_remove"> להסיר את התמונה</label>':'')+'</fieldset>'
+    +'<div class="row"><button class="b pri">'+(w.id?'שמירת השינויים':'הוספת הכותב ויצירת קוד')+'</button></div></form>';
+}
+function vWriters(){
+  call('writers').then(function(j){
+    var el=document.getElementById('cl');if(!j.ok)return el.innerHTML='<div class="empty">'+esc(j.error)+'</div>';
+    var secList=j.sections||[];
+    el.innerHTML='<div class="card"><details class="more"'+(j.writers.length?'':' open')+'><summary>+ כותב חדש</summary><div style="margin-top:10px">'+writerForm(null,secList)+'</div></details></div>'
+      +(j.writers.length?j.writers.map(function(w){var n=w.counts||{};
+        return '<div class="card" data-id="'+w.id+'"><div class="row" style="justify-content:space-between"><div class="row">'+(w.photo_url?'<img src="'+esc(href(w.photo_url))+'" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover">':'')
+          +'<div><b style="font-size:16px">'+esc(w.name)+'</b>'+(w.role?' <span class="note">'+esc(w.role)+'</span>':'')+'<div class="note"><span dir="ltr">'+esc(w.email)+'</span> · #'+w.id+(w.is_test?' · בדיקה':'')+' · '+(w.last_login_at?'כניסה אחרונה '+when(w.last_login_at):'עוד לא נכנס')+'</div></div></div>'
+          +'<span class="bdg '+(w.status==='active'?'published':'withdrawn')+'">'+(w.status==='active'?'פעיל':'חסום')+'</span></div>'
+          +'<p class="note">מדורים: '+((w.sections||[]).map(function(k){var s=secList.filter(function(x){return x.key===k})[0];return s?s.name:k}).join(', ')||'אין')+' · פורסמו '+(n.published||0)+' · ממתינים '+((n.waiting||0)+(n.checking||0))+' · טיוטות '+(n.draft||0)+'</p>'
+          +'<div class="row"><button class="b sm" data-a="code">קוד חדש</button>'+(w.status==='active'?'<button class="b sm dang" data-a="block">חסימה</button>':'<button class="b sm ok" data-a="unblock">ביטול החסימה</button>')+'</div>'
+          +'<details class="more" style="margin-top:8px"><summary>עריכת הפרטים</summary><div style="margin-top:8px">'+writerForm(w,secList)+'</div></details></div>'}).join(''):'<div class="card empty">עוד אין כותבים.</div>');
+    el.querySelectorAll('form[data-wf]').forEach(function(f){f.onsubmit=function(e){e.preventDefault();
+      var secs=[].map.call(f.querySelectorAll('[name=sec]:checked'),function(x){return x.value});if(!secs.length)return toast('בחרו לפחות מדור אחד',true);
+      var btn=f.querySelector('button.pri');
+      fileData(f.photo,function(ph){if(ph===false)return;
+        var d={name:f.name.value.trim(),email:f.email.value.trim(),role:f.role.value.trim(),bio:f.bio.value.trim(),sections:secs};var id=f.getAttribute('data-wf');if(id)d.id=Number(id);if(ph)d.photo=ph;if(f.photo_remove&&f.photo_remove.checked)d.photo_remove=true;
+        act(btn,call('writer_save',d),function(r){if(r.warning)toast(r.warning,true);else toast('נשמר');vColumns('writers');if(r.code)setTimeout(function(){showCode(d.name,r.code)},400)})})}});
+    el.querySelectorAll('.card[data-id]').forEach(function(c){var id=Number(c.getAttribute('data-id')),nm=c.querySelector('b').textContent;
+      c.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){var a=b.getAttribute('data-a');
+        if(a==='code'){if(!confirm('ליצור לכותב קוד חדש? הקוד הישן יפסיק לעבוד מיד, והכותב ינותק.'))return;act(b,call('writer_code',{id:id}),function(r){vColumns('writers');setTimeout(function(){showCode(nm,r.code)},400)})}
+        if(a==='block'){if(!confirm('לחסום את הכותב? הוא ינותק ולא יוכל להיכנס. הטורים שכבר פורסמו נשארים באתר.'))return;act(b,call('writer_block',{id:id,blocked:true}),function(){toast('הכותב נחסם');vColumns('writers')})}
+        if(a==='unblock')act(b,call('writer_block',{id:id,blocked:false}),function(){toast('החסימה בוטלה');vColumns('writers')});
+      }})});
+  }).catch(function(){});
+}
+function vCol(id){
+  id=Number(id);if(!id){location.hash='#columns';return}
+  call('col_get',{id:id}).then(function(j){
+    if(!j.ok)return main().innerHTML='<div class="empty">'+esc(j.error)+'</div>';
+    var c=j.column,w=j.writer||{},ck=c.check_result||{},flags=ck.flags||[],wait=c.status==='waiting',sec=SEC[c.section]||SEC.city;
+    var pvw='<div class="pvw"><div class="lb"><span>תצוגה מקדימה (בערך כמו באתר)</span><span>טור דעה</span></div><div class="k" style="--c:'+sec.c+'"><span class="spon" style="background:var(--ink);color:#fff">טור דעה</span><span>'+esc(sec.n)+'</span></div>'
+      +'<h1>'+esc(c.title||'')+'</h1>'+(c.dek?'<p class="dk">'+esc(c.dek)+'</p>':'')+'<div class="by"><b>'+esc(w.name||'')+'</b>'+(w.role?' · '+esc(w.role):'')+'</div>'
+      +(c.image_url?'<figure><img src="'+esc(c.image_url)+'" alt="'+esc(c.image_alt||'')+'"><figcaption>'+esc(c.image_alt?c.image_alt+' · ':'')+'צילום: באדיבות הכותב</figcaption></figure>':'')
+      +'<div class="bd">'+cBody(c.body)+'</div><p class="disc">הדעות בטור הן של הכותב ואינן מייצגות את עמדת המערכת</p></div>';
+    var fl='<div class="card"><h2 class="h">מה הבדיקה האוטומטית סימנה</h2><p class="note">הבדיקה רק מסמנת נקודות לבדיקה שלכם. היא לא שינתה את הטקסט.</p>'
+      +(c.status==='checking'?'<p class="note">הבדיקה עוד רצה. רעננו בעוד דקה.</p>':flags.length?flags.map(function(f){return '<div class="alert" style="border-color:'+(f.level==='high'?'#C8102E':'#8A5200')+'"><b>'+esc(CFLAG[f.type]||f.type)+'</b>'+(f.quote?': "'+esc(f.quote)+'"':'')+(f.note?'\n'+esc(f.note):'')+'</div>'}).join(''):'<p class="okbox">לא נמצא משהו לסמן.</p>')
+      +(ck.summary?'<p class="note">'+esc(ck.summary)+'</p>':'')+'</div>';
+    var info='<div class="card"><h2 class="h">פרטים</h2><table class="tb"><tbody><tr><td>מצב</td><td>'+esc(CST[c.status]||c.status)+'</td></tr><tr><td>כותב</td><td>'+esc(w.name||'')+(w.status==='blocked'?' (חסום)':'')+'<div class="note" dir="ltr" style="text-align:end">'+esc(w.email||'')+'</div></td></tr>'
+      +'<tr><td>מדור</td><td>'+esc(c.section_he||'')+'</td></tr>'+(c.submitted_at?'<tr><td>נשלח</td><td>'+when(c.submitted_at)+'</td></tr>':'')+(c.return_note?'<tr><td>הערה לכותב</td><td>'+esc(c.return_note)+'</td></tr>':'')
+      +(j.story?'<tr><td>באתר</td><td><a href="#story/'+j.story.id+'">כתבה #'+j.story.id+'</a> ('+esc(j.story.state)+')</td></tr>':'')+'</tbody></table>'
+      +((c.history||[]).length?'<details class="more"><summary>היסטוריה</summary><table class="tb"><tbody>'+c.history.slice().reverse().map(function(h){return '<tr><td>'+when(h.at)+'</td><td>'+esc(h.what)+'</td><td>'+esc(BYK[h.by]||h.by||'')+'</td><td>'+esc(h.note||'')+'</td></tr>'}).join('')+'</tbody></table></details>':'')+'</div>';
+    var acts=wait?'<button class="b ok" id="cpub">לפרסם</button>':c.status==='published'&&j.story?'<a class="b" href="#story/'+j.story.id+'">לכתבה בלוח</a>':'';
+    var edit=wait?'<div class="card"><h2 class="h">תיקון לפני פרסום</h2><form class="fg" id="cef"><label class="f">כותרת<input name="title" maxlength="160" value="'+esc(c.title||'')+'"></label>'
+      +'<label class="f">משפט פתיחה<textarea name="dek" rows="2" maxlength="300">'+esc(c.dek||'')+'</textarea></label><label class="f">הטור <small>שורה ריקה בין פסקאות. ## כותרת ביניים, &gt; ציטוט, **מודגש**</small><textarea name="body" rows="14">'+esc((c.body||[]).join('\n\n'))+'</textarea></label>'
+      +'<div class="row"><button class="b pri">שמירת התיקון</button><span class="note">רק תיקון כותרת או טעות הקלדה. שינוי גדול עדיף להחזיר לכותב.</span></div></form></div>'
+      +'<div class="card"><h2 class="h">להחזיר לכותב</h2><form class="fg" id="crf"><label class="f">ההערה לכותב <small>הכותב יראה אותה באזור הכותבים</small><textarea name="note" rows="3" required></textarea></label><div><button class="b warn">להחזיר עם ההערה</button></div></form></div>':'';
+    main().innerHTML='<div class="ph"><div><a href="#columns" class="note">חזרה לטורי דעה</a><h1>טור #'+c.id+'</h1></div><div class="row">'+acts+'</div></div>'
+      +(w.is_test?'<div class="warnbox" style="margin-bottom:12px">זה טור של כותב בדיקה. לא לפרסם.</div>':'')
+      +'<div class="ed"><div class="fm">'+fl+edit+info+'</div><div class="pv">'+pvw+'</div></div>';
+    var pb=document.getElementById('cpub');if(pb)pb.onclick=function(){if(w.is_test&&!confirm('זה כותב בדיקה. לפרסם בכל זאת?'))return;if(!confirm('לפרסם את הטור באתר עכשיו, במדור '+(c.section_he||'')+'?'))return;
+      act(pb,call('col_publish',{id:id}),function(){toast('הטור פורסם. '+SITE_NOTE);summary();vCol(id)})};
+    var ef=document.getElementById('cef');if(ef)ef.onsubmit=function(e){e.preventDefault();act(ef.querySelector('button'),call('col_edit',{id:id,title:ef.title.value,dek:ef.dek.value,body:ef.body.value}),function(){toast('התיקון נשמר');vCol(id)})};
+    var rf=document.getElementById('crf');if(rf)rf.onsubmit=function(e){e.preventDefault();if(!rf.note.value.trim())return toast('כתבו הערה לכותב',true);act(rf.querySelector('button'),call('col_return',{id:id,note:rf.note.value}),function(){toast('הטור הוחזר לכותב');summary();vCol(id)})};
   }).catch(function(){});
 }
 

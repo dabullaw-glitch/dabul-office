@@ -51,6 +51,9 @@
 //   {action:'restore', id}  a withdrawn story goes back to the site (same guards, not a merged one); a rejected story goes back to
 //     waiting as a held draft (extras.hold), to be published from the panel.
 //   tick: a story with extras.hold is skipped (never published or sent automatically).
+// 29.10.2026 (opinion columns, approved by Yakir): hns-cols publishes a column with {action:'create', fields:{kind:'opinion', author,
+//   author_role, ...}, publish:true, by, extras:{writer_id, column_id}} (only those two numeric extras are taken), and 'panel_publish'
+//   takes an optional by. Telegram taps on column buttons (hns:col:ok:<id> / hns:col:ret:<id>) are passed as they are to hns-cols.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -226,6 +229,12 @@ async function tick(dry: boolean) {
 }
 
 async function decide(data: string, cq: Any) {
+  if (String(data || '').startsWith('hns:col:')) {
+    const r = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/hns-cols`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': S.CRON_SECRET },
+      body: JSON.stringify({ action: 'decide', data, cq }), signal: AbortSignal.timeout(60000) }).then((x) => x.json()).catch((e) => ({ ok: false, error: String(e), net: true }));
+    if (r?.net && cq?.id) await tg('answerCallbackQuery', { callback_query_id: cq.id, text: 'הפעולה נכשלה, אפשר לנסות שוב בעוד דקה' });
+    return r;
+  }
   if (String(data || '').startsWith('hns:biz:')) {
     const r = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/hns-biz`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': S.CRON_SECRET },
       body: JSON.stringify({ action: 'decide', data, cq }), signal: AbortSignal.timeout(30000) }).then((x) => x.json()).catch((e) => ({ ok: false, error: String(e) }));
@@ -488,19 +497,23 @@ async function create(b: Any) {
   const base: Any = { extras: {}, sources: [] };
   const r: Any = fieldsPatch({ section: 'city', sensitivity: 'normal', ...f, kind }, base);
   if (r.error) return { ok: false, error: r.error };
-  const row: Any = { ...r.patch, kind, state: 'draft', verified: true, basis: 'manual', notes: 'נכתב ידנית בלוח הניהול', item_ids: [],
-    extras: { ...(r.patch.extras || {}), manual: true, hold: true }, sources: r.patch.sources || [] };
+  // opinion columns of hns-cols: the writer and the column (numbers only)
+  const colEx: Any = {};
+  for (const k of ['writer_id', 'column_id']) { const n = Number(b.extras?.[k]); if (Number.isInteger(n) && n > 0) colEx[k] = n; }
+  const by = clean(b.by || BY).slice(0, 40) || BY;
+  const row: Any = { ...r.patch, kind, state: 'draft', verified: true, basis: 'manual', notes: colEx.column_id ? 'טור דעה של כותב (אזור הכותבים)' : 'נכתב ידנית בלוח הניהול', item_ids: [],
+    extras: { ...(r.patch.extras || {}), ...colEx, manual: true, hold: true }, sources: r.patch.sources || [] };
   if (kind === 'sponsored') { row.author_role = row.author_role || 'תוכן שיווקי'; if (!row.author) return { ok: false, error: 'בתוכן שיווקי חובה לכתוב את שם המפרסם' }; }
   if (!hasBody(row)) return { ok: false, error: 'לידיעה חייבים להיות כותרת וטקסט' };
   const problem = voiceProblem(row);
   if (problem && b.publish) return { ok: false, error: `לא פורסם: ${problem}` };
   const { data, error } = await sb.from('hns_stories').insert(row).select('id').single();
   if (error) return { ok: false, error: error.message };
-  await log('panel_create', data.id, { by: BY, kind, title: row.title });
-  if (b.publish) { const p = await panelPublish(data.id); return { ...p, id: data.id, created: true }; }
+  await log('panel_create', data.id, { by, kind, title: row.title });
+  if (b.publish) { const p = await panelPublish(data.id, by); return { ...p, id: data.id, created: true }; }
   return { ok: true, id: data.id, created: true, state: 'draft', warning: problem ? `שימו לב: ${problem}. אי אפשר לפרסם כך.` : '' };
 }
-async function panelPublish(id: number) {
+async function panelPublish(id: number, by = BY) {
   await roles(); await outlets();
   const { data: st } = await sb.from('hns_stories').select('*').eq('id', id).maybeSingle();
   if (!st) return { ok: false, error: 'הידיעה לא נמצאה' };
@@ -511,7 +524,7 @@ async function panelPublish(id: number) {
   if (st.kind === 'sponsored' && !st.author) return { ok: false, error: 'בתוכן שיווקי חובה לכתוב את שם המפרסם' };
   const problem = voiceProblem(st);
   if (problem) return { ok: false, error: `לא פורסם: ${problem}` };
-  const ok = await publish(st, BY);
+  const ok = await publish(st, by);
   if (ok && st.tg_message_id && S.TELEGRAM_CHAT_ID) await tg('editMessageText', { chat_id: S.TELEGRAM_CHAT_ID, message_id: st.tg_message_id, text: `✅ פורסם (מלוח הניהול): ${clean(st.title)}`, disable_web_page_preview: true });
   return ok ? { ok: true, published: id } : { ok: false, error: 'הפרסום לא הצליח. רעננו ונסו שוב.' };
 }
@@ -568,7 +581,7 @@ Deno.serve(async (req) => {
     if (b.action === 'publish_ids') return J({ ok: true, res: await publishIds((b.ids || []).map(Number).filter(Boolean), !!b.dry) });
     if (b.action === 'edit') return J(await edit(b));
     if (b.action === 'create') return J(await create(b));
-    if (b.action === 'panel_publish') return J(await panelPublish(Number(b.id)));
+    if (b.action === 'panel_publish') return J(await panelPublish(Number(b.id), clean(b.by || BY).slice(0, 40) || BY));
     if (b.action === 'panel_reject') return J(await panelReject(Number(b.id), String(b.note || '')));
     if (b.action === 'restore') return J(await restore(Number(b.id)));
     if (b.action === 'status') {

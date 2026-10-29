@@ -52,6 +52,12 @@
 //   {action:'stats', days?}               visits and page views (hns_stats over the hns-hit tables), with story titles
 //   {action:'log', kind?}                 the panel log (hns_admin_log) and the publishing log (hns_publish_log)
 //   {action:'logout'}
+//   29.10.2026 (opinion columns, approved by Yakir): the "טורי דעה" area. Passed to the server only function hns-cols (cron secret):
+//   {action:'cols', status?} | {action:'col_get', id} | {action:'col_edit', id, title?, dek?, body?, image_alt?} |
+//   {action:'col_publish', id} | {action:'col_return', id, note} | {action:'writers'} |
+//   {action:'writer_save', id?, name, email, role, bio, sections, photo?, photo_remove?} (a new writer's code comes back once) |
+//   {action:'writer_code', id} (a new code, shown once) | {action:'writer_block', id, blocked}
+//   Writers themselves never come here: their area is the separate function hns-writer with its own credentials.
 //   {action:'test_session'} with x-cron-secret: a 10 minute session for automated checks of the panel (server to server only; whoever
 //                           holds the cron secret can already call every engine function directly).
 // Data changes go through the functions only. No long or medium dash in any saved text.
@@ -220,6 +226,7 @@ async function summary() {
     requests: await c(sb.from('hns_requests').select('id', { count: 'exact', head: true }).eq('status', 'new').eq('is_test', false)),
     listings: await c(sb.from('hns_biz_listings').select('id', { count: 'exact', head: true }).eq('status', 'pending').eq('is_test', false)),
     stories: await c(sb.from('hns_stories').select('id', { count: 'exact', head: true }).in('state', AWAIT).or('tg_sent_at.not.is.null,extras->>hold.eq.true')),
+    columns: await c(sb.from('hns_columns').select('id', { count: 'exact', head: true }).in('status', ['waiting', 'checking'])),
   };
 }
 
@@ -365,7 +372,8 @@ async function logList(kind: string) {
 
 // actions that change data: written to the log, and rate limited
 const WRITES = new Set(['request_set', 'listing_decide', 'listing_edit', 'story_decide', 'story_withdraw', 'story_kicker', 'event_set', 'event_clear',
-  'story_save', 'story_new', 'story_publish', 'story_reject', 'story_restore', 'story_pin', 'story_img_redo', 'flash_mod', 'flash_add', 'flash_edit', 'source_set']);
+  'story_save', 'story_new', 'story_publish', 'story_reject', 'story_restore', 'story_pin', 'story_img_redo', 'flash_mod', 'flash_add', 'flash_edit', 'source_set',
+  'col_edit', 'col_publish', 'col_return', 'writer_save', 'writer_code', 'writer_block']);
 const idOf = (b: Any) => Number(b.id || b.item_id) || 0;
 
 async function handle(b: Any, h: string): Promise<Any> {
@@ -449,6 +457,11 @@ async function handle(b: Any, h: string): Promise<Any> {
     case 'source_set': return await call('hns-admin', { action: 'source_set', id: String(b.id || ''), active: !!b.active });
     case 'stats': return await stats(Number(b.days) || 30);
     case 'log': return await logList(String(b.kind || 'all'));
+    case 'cols': case 'col_get': case 'col_edit': case 'col_return': case 'writers': case 'writer_save': case 'writer_code': case 'writer_block': {
+      const { s: _s, ...rest } = b;
+      return await call('hns-cols', { ...rest, by: 'yakir-panel' });
+    }
+    case 'col_publish': return await call('hns-cols', { action: 'col_publish', id: Number(b.id), by: 'yakir-panel' });
     case 'logout': await sb.from('hns_admin_sessions').update({ expires_at: new Date().toISOString() }).eq('token_hash', h); return { ok: true };
   }
   return { ok: false, error: 'unknown action', status: 400 };

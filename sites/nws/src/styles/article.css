@@ -106,3 +106,6 @@
  .n-art .n-hero figcaption{flex-direction:column;gap:2px}
  .n-art .n-hero figcaption .art-lbl{margin-inline-start:0}
 }
+/* opinion columns (29.10.2026): the "טור דעה" label above the title and the writer's photo in the byline */
+.art-op{display:inline-flex;align-items:center;min-height:26px;padding:2px 10px;border-radius:4px;background:var(--ink);color:#fff;font-size:13px;font-weight:800;letter-spacing:.2px}
+.n-art img.art-avi{object-fit:cover;padding:0;background:var(--warm)}

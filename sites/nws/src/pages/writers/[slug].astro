@@ -1,0 +1,35 @@
+---
+// A columnist's page (opinion columns, approved by Yakir 29.10.2026): photo, name, a short role line and bio, and the writer's
+// columns on the site, newest first. One page per writer who has at least one published column (content.ts WRITERS); the byline
+// of every column links here. No link to the writer's own site or business anywhere (Yakir's decision).
+import Page from '../../components/Page.astro';
+import Card from '../../components/Card.astro';
+import { SITE_URL } from '../../data/site';
+import { WRITERS, writerUrl } from '../../lib/content';
+export function getStaticPaths() { return WRITERS.map((w) => ({ params: { slug: w.slug }, props: { w } })); }
+const { w } = Astro.props;
+const path = writerUrl(w);
+const desc = (w.bio || `טורי הדעה של ${w.name} באתר חדשות נתניה והשרון.`).slice(0, 158);
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'ProfilePage', url: SITE_URL + path, name: w.name,
+  mainEntity: { '@type': 'Person', name: w.name, ...(w.role ? { jobTitle: w.role } : {}), ...(w.bio ? { description: w.bio } : {}), ...(w.photo ? { image: w.photo } : {}), url: SITE_URL + path } }];
+---
+<Page title={`${w.name}, טורי דעה | חדשות נתניה והשרון`} h1={w.name} description={desc} path={path} intro={w.role || 'כותב טורי דעה'} jsonld={jsonld} wide>
+  <section class="wr-top">
+    {w.photo && <img src={w.photo} alt={w.name} width="120" height="120" loading="eager" decoding="async">}
+    <div>
+      {w.bio && <p>{w.bio}</p>}
+      <p class="wr-note">הדעות בטורים הן של הכותב ואינן מייצגות את עמדת המערכת.</p>
+    </div>
+  </section>
+  <h2 class="wr-h">הטורים של {w.name}</h2>
+  <div class="n-grid n-g3 wr-grid">{w.columns.map((a) => <Card a={a} dek />)}</div>
+</Page>
+<style>
+.wr-top{display:flex;gap:20px;align-items:flex-start;margin:0 0 28px;max-width:760px}
+.wr-top img{width:120px;height:120px;border-radius:50%;object-fit:cover;flex:none;background:#F5F3EE}
+.wr-top p{margin:0 0 10px;font-size:17px;line-height:1.7}
+.wr-note{font-size:14px!important;color:#5E6776}
+.wr-h{font-size:22px;margin:0 0 18px}
+@media (max-width:860px){.wr-grid{grid-template-columns:1fr}}
+@media (max-width:520px){.wr-top{flex-direction:column}.wr-top img{width:96px;height:96px}}
+</style>
