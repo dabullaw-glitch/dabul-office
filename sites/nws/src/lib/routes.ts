@@ -28,7 +28,7 @@ export function routes(): R[] {
   }
   const nowA = all((l) => (l === 'he' ? '/now/' : `/${l}/now/`));
   for (const l of LANGS) out.push({ loc: nowA[l], alts: nowA, lastmod: now, changefreq: 'hourly', priority: '0.8' });
-  for (const p of ['shabbat', 'beaches', 'pharmacy', 'roads', 'alerts', 'phones']) out.push({ loc: `/now/${p}/`, lastmod: now, changefreq: 'daily', priority: '0.7' });
+  for (const p of ['weather', 'shabbat', 'weekend', 'beaches', 'pharmacy', 'roads', 'outages', 'alerts', 'phones']) out.push({ loc: `/now/${p}/`, lastmod: now, changefreq: 'daily', priority: '0.7' });
   out.push({ loc: '/netanya/', lastmod: now, changefreq: 'daily', priority: '0.8' });
   // the city guide "שימושון עירוני" (29.10.2026): the hub and every category page that has items
   out.push({ loc: '/guide/', lastmod: now, changefreq: 'weekly', priority: '0.7' });

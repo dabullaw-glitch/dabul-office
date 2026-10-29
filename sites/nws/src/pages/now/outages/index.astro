@@ -1,0 +1,26 @@
+---
+// הפסקות מים וחשמל בנתניה (29.10.2026, the daily search pages Yakir approved): every published story of the last 21 days about
+// a water or power cut in Netanya or the Sharon, newest first, plus the official numbers to report a fault.
+import NowPage from '../../../components/NowPage.astro';
+import { articlesFor, articleUrl, fmtShort, fmtTime } from '../../../lib/content';
+const RE = /הפסק(?:ת|ות) (?:ה)?(?:מים|חשמל)|(?:ללא|בלי|אין|ניתוק|תקלת|תקלה ב)(?:ה)? ?(?:מים|חשמל)|חברת החשמל|מי נתניה|פיצוץ (?:ב)?צנרת|צינור (?:ה)?מים|שבר (?:ב)?צנרת|אספקת (?:ה)?(?:מים|חשמל)/;
+const since = Date.now() - 21 * 864e5;
+const list = articlesFor('he').filter((a) => Date.parse(a.published) >= since && RE.test(`${a.title} ${a.dek || ''}`)).slice(0, 30);
+const last = list[0];
+const faq: [string, string][] = [
+  ['איפה מדווחים על הפסקת מים בנתניה?', 'במוקד של מי נתניה, 24 שעות ביממה, בטלפון חינם 1-800-20-20-84, או באתר של מי נתניה.'],
+  ['איפה מדווחים על הפסקת חשמל?', 'במוקד של חברת החשמל בטלפון 103, או באתר ובאפליקציה של חברת החשמל, שם אפשר גם לראות הפסקות מתוכננות לפי כתובת.'],
+  ['איך יודעים על הפסקות מתוכננות?', 'הפסקות מים מתוכננות מתפרסמות באתר מי נתניה ובהודעות העירייה, והפסקות חשמל מתוכננות באתר חברת החשמל. כשיש הודעה על הפסקה בנתניה, היא מופיעה גם בעמוד הזה.'],
+];
+---
+<NowPage icon="bolt" title="הפסקת מים בנתניה והפסקת חשמל: עדכונים ומספרי מוקד | חדשות נתניה והשרון" h1="הפסקות מים וחשמל בנתניה" description="הפסקות מים והפסקות חשמל בנתניה ובשרון: כל העדכונים האחרונים, הפסקות מתוכננות, ואיפה מדווחים על תקלה (מי נתניה 1-800-20-20-84, חברת החשמל 103)." path="/now/outages/" intro="מה מתוכנן, מה קורה עכשיו, ולמי מתקשרים." color="#7A4B00" img="city" faq={faq} updated={last?.published}>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px">
+    <section class="ncard" style="--c:#0B6FA4"><h2>תקלה במים או בביוב</h2><div class="kv"><span>מוקד מי נתניה, 24 שעות</span><b class="num">1-800-20-20-84</b></div><p class="note" style="margin:10px 0 0">שיחת חינם. אפשר לדווח גם באתר של <a href="https://www.mei-netanya.co.il/" rel="noopener" target="_blank" style="color:#0B5FCC">מי נתניה</a>.</p></section>
+    <section class="ncard" style="--c:#B86E00"><h2>הפסקת חשמל</h2><div class="kv"><span>מוקד חברת החשמל</span><b class="num">103</b></div><p class="note" style="margin:10px 0 0">הפסקות מתוכננות לפי כתובת: באתר <a href="https://www.iec.co.il/" rel="noopener" target="_blank" style="color:#0B5FCC">חברת החשמל</a>.</p></section>
+  </div>
+  <section class="ncard" style="--c:#C8102E;margin-top:18px">
+    <h2>העדכונים האחרונים</h2>
+    {list.length ? <ul style="list-style:none;margin:0;padding:0">{list.map((a) => <li style="padding:10px 0;border-top:1px solid #EFEDE7"><b class="num" style="color:#C8102E">{fmtShort(a.published)} {fmtTime(a.published)}</b> <a href={articleUrl(a)}>{a.title}</a></li>)}</ul>
+      : <p style="margin:0">אין כרגע הודעות על הפסקות מים או חשמל בנתניה בשלושת השבועות האחרונים. כשתהיה הודעה, היא תופיע כאן.</p>}
+  </section>
+</NowPage>

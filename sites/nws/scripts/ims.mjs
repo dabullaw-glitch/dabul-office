@@ -19,7 +19,7 @@ const today = il(new Date(), { year: 'numeric', month: '2-digit', day: '2-digit'
 const hourNow = Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jerusalem', hour: '2-digit', hour12: false }).format(new Date()));
 const num = (v) => (v === undefined || v === null || v === '' || !Number.isFinite(Number(v)) ? null : Number(v));
 
-const out = { ok: false, fetchedAt: new Date().toISOString(), source: 'השירות המטאורולוגי', sourceUrl: 'https://ims.gov.il/he/city_portal/7', day: null, now: null, sea: null };
+const out = { ok: false, fetchedAt: new Date().toISOString(), source: 'השירות המטאורולוגי', sourceUrl: 'https://ims.gov.il/he/city_portal/7', day: null, now: null, sea: null, hours: [], days: [], seaNext: [] };
 try {
   const j = await fetch('https://ims.gov.il/he/forecast_data/7', { headers: UA, signal: AbortSignal.timeout(15000) }).then((r) => r.json());
   const d = j?.data?.[today];
@@ -27,6 +27,12 @@ try {
   const hours = Object.values(d?.hourly || {}).filter((h) => h && h.hour !== undefined).sort((a, b) => Number(a.hour) - Number(b.hour));
   const h = hours.filter((x) => Number(x.hour) <= hourNow).pop() || hours[0];
   if (h) out.now = { hour: Number(h.hour), temp: num(h.precise_temperature) ?? num(h.temperature), wave: num(h.wave_height), code: num(h.weather_code), desc: CODE[h.weather_code] || '', rain: num(h.rain_chance) };
+  // 29.10.2026 (the weather page /now/weather/): the coming hours of today and the next days
+  out.hours = hours.filter((x) => Number(x.hour) >= hourNow).slice(0, 12).map((x) => ({ hour: Number(x.hour), temp: num(x.precise_temperature) ?? num(x.temperature), rain: num(x.rain_chance), wave: num(x.wave_height), desc: CODE[x.weather_code] || '' }));
+  out.days = Object.keys(j?.data || {}).filter((k) => /^\d{4}-\d{2}-\d{2}$/.test(k) && k >= today).sort().slice(0, 6).map((k) => {
+    const dd = j.data[k]?.daily || {};
+    return { date: k, min: num(dd.minimum_temperature), max: num(dd.maximum_temperature), code: num(dd.weather_code), desc: CODE[dd.weather_code] || '' };
+  }).filter((x) => x.min !== null || x.max !== null);
 } catch (e) { console.warn(`ims: forecast not loaded (${e.message})`); }
 try {
   const buf = await fetch('https://ims.gov.il/sites/default/files/ims_data/xml_files/isr_sea.xml', { headers: UA, signal: AbortSignal.timeout(15000) }).then((r) => r.arrayBuffer());
@@ -41,10 +47,11 @@ try {
     const nowS = `${today} ${String(hourNow).padStart(2, '0')}:00`;
     const u = units.find((v) => v.from <= nowS && nowS < v.to) || units[0];
     if (u && u.waves.length === 2) out.sea = { from: u.from, to: u.to, waveMin: u.waves[0] / 100, waveMax: u.waves[1] / 100, temp: u.temp };
+    out.seaNext = units.filter((v) => v.to > nowS && v.waves.length === 2).slice(0, 4).map((v) => ({ from: v.from, to: v.to, waveMin: v.waves[0] / 100, waveMax: v.waves[1] / 100, temp: v.temp }));
   }
 } catch (e) { console.warn(`ims: sea forecast not loaded (${e.message})`); }
 
-if (old) { if (!out.day && old.day?.date === today) out.day = old.day; if (!out.now && old.now) out.now = old.now; if (!out.sea && old.sea) out.sea = old.sea; }
+if (old) { if (!out.days.length && old.days) out.days = old.days.filter((x) => x.date >= today); if (!out.day && old.day?.date === today) out.day = old.day; if (!out.now && old.now) out.now = old.now; if (!out.sea && old.sea) out.sea = old.sea; }
 out.ok = !!(out.day || out.now || out.sea);
 if (out.ok || !old) fs.writeFileSync(OUT, JSON.stringify(out));
 console.log(`ims: day ${out.day ? `${out.day.min}-${out.day.max} ${out.day.desc}` : 'none'}, now ${out.now ? `${out.now.temp}° wave ${out.now.wave}` : 'none'}, sea ${out.sea ? `${out.sea.waveMin}-${out.sea.waveMax} m, ${out.sea.temp}°` : 'none'}`);

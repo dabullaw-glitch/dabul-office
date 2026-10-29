@@ -1,18 +1,38 @@
 ---
+// בית מרקחת תורן בנתניה (29.10.2026, the daily search pages Yakir approved): the duty pharmacy of today and the next days from
+// the municipality's official page (read by the municipality task from Yakir's computer into docs coll 'nwslive' id 'pharmacy',
+// passed through hns-feed 'live'), plus the list of all the city's pharmacies. Never shows a duty pharmacy of a past day.
 import NowPage from '../../../components/NowPage.astro';
-import { FACTS } from '../../../lib/content';
-const ph: any = FACTS?.dutyPharmacy ?? FACTS?.pharmacy ?? {};
-const src: string | null = typeof ph === 'string' ? ph : ph.sourceUrl ?? ph.source ?? ph.url ?? null;
+import { SERVICES as LIVE, FACTS } from '../../../lib/content';
+const P: any = LIVE.pharmacy || {};
+const ymd = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
+const today = ymd(new Date());
+const duty: any[] = (P.duty || []).filter((d: any) => d.date >= today).sort((a: any, b: any) => a.date.localeCompare(b.date));
+const now = duty.filter((d) => d.date === today);
+const next = duty.filter((d) => d.date > today);
+const all: any[] = P.all || [];
+const src: string = P.sourceUrl || FACTS?.pharmacy?.officialSource || 'https://www.netanya.muni.il/';
+const dl = (d: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'numeric' }).format(new Date(d + 'T12:00:00+02:00'));
+const tel = (p: string) => p.replace(/[^\d+]/g, '');
+const areas = [...new Set(all.map((p) => p.area).filter(Boolean))];
 const faq: [string, string][] = [
-  ['איפה בודקים מי בית המרקחת התורן בנתניה?', 'בעמוד הזה. רשימת התורנויות מתעדכנת לפי הפרסום הרשמי.'],
-  ['מה עושים במצב רפואי דחוף בלילה?', 'במצב חירום מתקשרים למד״א בטלפון 101.'],
+  ['מי בית המרקחת התורן בנתניה היום?', now.length ? `היום (${dl(today)}) תורן ${now.map((d) => `${d.name}, ${d.address}${d.phone ? `, טלפון ${d.phone}` : ''}`).join('; ')}. כדאי להתקשר לפני שמגיעים.` : 'רשימת התורנות מתעדכנת מהפרסום של עיריית נתניה. אם התורן של היום לא מופיע כאן, בדקו בעמוד בתי המרקחת באתר העירייה.'],
+  ['איפה מתפרסמת רשימת התורנויות?', 'בעמוד בתי המרקחת באתר עיריית נתניה, שם אפשר לחפש לפי תאריך תורנות ולפי שכונה. העמוד הזה מתעדכן ממנו כמה פעמים ביום.'],
+  ['מה עושים במצב רפואי דחוף בלילה?', 'במצב חירום מתקשרים למד״א בטלפון 101. חדר המיון הקרוב הוא במרכז הרפואי לניאדו.'],
 ];
 ---
-<NowPage icon="plus" title="בית מרקחת תורן בנתניה היום | חדשות נתניה והשרון" h1="בית מרקחת תורן בנתניה" description="בית המרקחת התורן בנתניה הלילה ובסוף השבוע: איפה לבדוק, שעות פתיחה, ומה עושים במצב דחוף." path="/now/pharmacy/" intro="מי תורן הלילה ובסוף השבוע." color="#8E0B21" img="city" faq={faq}>
+<NowPage icon="plus" title="בית מרקחת תורן בנתניה היום: כתובת וטלפון | חדשות נתניה והשרון" h1="בית מרקחת תורן בנתניה" description={now.length ? `בית מרקחת תורן בנתניה היום: ${now[0].name}, ${now[0].address}${now[0].phone ? `, ${now[0].phone}` : ''}. התורנות של הימים הקרובים ורשימת כל בתי המרקחת בעיר.` : 'בית המרקחת התורן בנתניה היום ובימים הקרובים, לפי הפרסום של עיריית נתניה, ורשימת כל בתי המרקחת בעיר לפי שכונה.'} path="/now/pharmacy/" intro="מי תורן היום ובימים הקרובים, לפי הפרסום של העירייה." color="#8E0B21" img="city" faq={faq} updated={P.updatedAt}>
   <section class="ncard" style="--c:#C8102E">
-    <h2>התורנות היום</h2>
-    <p>כאן יוצג בית המרקחת התורן של היום, עם כתובת, שעות וטלפון, ישירות מהפרסום הרשמי. החיבור יופעל לפני ההשקה.</p>
-    {src && <p>בינתיים אפשר לבדוק ב<a href={src} rel="noopener nofollow" target="_blank" style="color:#0B5FCC;font-weight:700">פרסום הרשמי של התורנויות</a>.</p>}
-    <p class="note">במצב חירום: מד״א 101.</p>
+    <h2>התורן היום, {dl(today)}</h2>
+    {now.length ? now.map((d) => <div class="kv" style="flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:10px;padding:14px 16px">
+      <b style="font-size:20px">{d.name}</b><span>{d.address}{d.area ? `, ${d.area}` : ''}</span>{d.phone && <a class="num" href={`tel:${tel(d.phone)}`} style="font-weight:800;font-size:18px;color:#0B5FCC">{d.phone}</a>}
+    </div>) : <p style="margin:0">התורנות של היום עוד לא עודכנה כאן. אפשר לבדוק ב<a href={src} rel="noopener" target="_blank" style="color:#0B5FCC;font-weight:700">עמוד בתי המרקחת של עיריית נתניה</a>.</p>}
+    <p class="note" style="margin:10px 0 0">שעות התורנות עלולות להשתנות. כדאי להתקשר לפני שמגיעים. במצב חירום: מד״א 101.</p>
   </section>
+  {next.length > 0 && <section class="ncard" style="--c:#0D1321;margin-top:18px"><h2>הימים הקרובים</h2><ul style="list-style:none;margin:0;padding:0">{next.map((d) => <li style="padding:9px 0;border-top:1px solid #EFEDE7"><b>{dl(d.date)}:</b> {d.name}, {d.address}{d.phone && <> · <a class="num" href={`tel:${tel(d.phone)}`} style="color:#0B5FCC">{d.phone}</a></>}</li>)}</ul></section>}
+  {all.length > 0 && <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>כל בתי המרקחת בנתניה לפי שכונה</h2>
+    {areas.map((ar) => <div><h3 style="font-size:16px;margin:12px 0 4px">{ar}</h3><ul style="margin:0;padding-inline-start:20px">{all.filter((p) => p.area === ar).map((p) => <li style="padding:3px 0">{p.name}, {p.address}</li>)}</ul></div>)}
+  </section>}
+  <p class="note" style="margin:14px 0 0">מקור: <a href={src} rel="noopener" target="_blank" style="color:#0B5FCC">עיריית נתניה, בתי מרקחת</a>.</p>
 </NowPage>

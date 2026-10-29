@@ -1,0 +1,52 @@
+---
+// מזג האוויר בנתניה (29.10.2026, the daily search pages Yakir approved): the Israel Meteorological Service forecast for Netanya
+// (scripts/ims.mjs, refreshed before every build, at most every 20 minutes): now, the coming hours, the next days and the sea.
+import NowPage from '../../../components/NowPage.astro';
+import { IMS } from '../../../lib/content';
+const day = IMS.day; const now = IMS.now; const sea = IMS.sea;
+const hours = IMS.hours || []; const days = IMS.days || []; const seaNext = IMS.seaNext || [];
+const wd = (d: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long' }).format(new Date(d + 'T12:00:00+02:00'));
+const dm = (d: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric' }).format(new Date(d + 'T12:00:00+02:00'));
+const hh = (s: string) => s.slice(11, 16);
+const seaWord = (m: number) => (m <= 0.5 ? 'ים שקט' : m <= 1 ? 'ים נוח לרחצה' : m <= 1.6 ? 'ים גלי' : m <= 2.5 ? 'ים גבוה' : 'ים סוער');
+const t = (v: number | null | undefined) => (v === null || v === undefined ? '' : `${Math.round(v)}°`);
+const desc = `מזג האוויר בנתניה היום${day ? `: בין ${day.min} ל־${day.max} מעלות, ${day.desc}` : ''}. תחזית לשעות הקרובות ולימים הבאים, וגובה הגלים בים, לפי השירות המטאורולוגי.`;
+const faq: [string, string][] = [
+  ['מה מזג האוויר בנתניה היום?', day ? `היום בנתניה בין ${day.min} ל־${day.max} מעלות, ${day.desc}.${now?.temp != null ? ` כרגע ${Math.round(now.temp)} מעלות.` : ''}` : 'התחזית מתעדכנת מהשירות המטאורולוגי לאורך היום.'],
+  ['מה גובה הגלים בים של נתניה?', sea ? `לפי השירות המטאורולוגי, גובה הגלים בחוף המרכז הוא ${sea.waveMin} עד ${sea.waveMax} מטר (${seaWord(sea.waveMax)}), וטמפרטורת המים ${sea.temp ?? ''} מעלות.` : 'תחזית הים מתעדכנת מהשירות המטאורולוגי.'],
+  ['מאיפה התחזית?', 'מהשירות המטאורולוגי, התחזית לעיר נתניה. העמוד מתעדכן כמה פעמים בשעה.'],
+];
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'Dataset', name: 'תחזית מזג האוויר לנתניה', description: desc, creator: { '@type': 'GovernmentOrganization', name: 'השירות המטאורולוגי' }, isAccessibleForFree: true, spatialCoverage: { '@type': 'Place', name: 'נתניה' }, dateModified: IMS.fetchedAt }];
+---
+<NowPage icon="sun" title="מזג האוויר בנתניה היום ומחר: תחזית, גשם וגובה גלים | חדשות נתניה והשרון" h1="מזג האוויר בנתניה" description={desc} path="/now/weather/" intro="התחזית לנתניה לשעות הקרובות ולימים הבאים, וגם מצב הים." color="#0A5A8F" img="beach" faq={faq} jsonld={jsonld} updated={IMS.fetchedAt}>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px">
+    <section class="ncard" style="--c:#2B8FD8">
+      <h2>היום בנתניה</h2>
+      {day || now ? <div class="grid num" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+        <div class="kv" style="flex-direction:column"><span>עכשיו</span><b class="big2">{t(now?.temp)}</b><span>{now?.desc}</span></div>
+        {day && <div class="kv" style="flex-direction:column"><span>היום</span><b class="big2" style="font-size:24px">{day.min}° עד {day.max}°</b><span>{day.desc}</span></div>}
+      </div> : <p>התחזית תתעדכן בקרוב.</p>}
+      {now?.rain != null && <p style="margin:12px 0 0">סיכוי לגשם בשעה הקרובה: <b class="num">{now.rain}%</b></p>}
+    </section>
+    <section class="ncard" style="--c:#0B6FA4">
+      <h2>הים והגלים</h2>
+      {sea ? <div class="grid num" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+        <div class="kv" style="flex-direction:column"><span>גובה הגלים</span><b class="big2" style="font-size:22px">{sea.waveMin} עד {sea.waveMax} מטר</b><span>{seaWord(sea.waveMax)}</span></div>
+        <div class="kv" style="flex-direction:column"><span>טמפרטורת המים</span><b class="big2">{sea.temp ?? ''}°</b><span>חוף המרכז</span></div>
+      </div> : <p>תחזית הים תתעדכן בקרוב.</p>}
+      {seaNext.length > 1 && <ul style="list-style:none;margin:12px 0 0;padding:0">{seaNext.slice(1).map((s) => <li class="num" style="padding:7px 0;border-top:1px solid #EFEDE7">{hh(s.from)} עד {hh(s.to)}: גלים {s.waveMin} עד {s.waveMax} מ׳</li>)}</ul>}
+      <p class="note" style="margin:10px 0 0">רוחצים רק בחוף מוכרז ובשעות שיש מציל. <a href="/now/beaches/" style="color:#0B5FCC">לחופים של נתניה</a></p>
+    </section>
+  </div>
+  {hours.length > 0 && <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>השעות הקרובות</h2>
+    <div style="overflow-x:auto"><table class="tbl num" style="min-width:420px"><thead><tr><th>שעה</th><th>טמפרטורה</th><th>סיכוי לגשם</th><th>מזג האוויר</th></tr></thead>
+    <tbody>{hours.map((h) => <tr><td>{String(h.hour).padStart(2, '0')}:00</td><td>{t(h.temp)}</td><td>{h.rain != null ? `${h.rain}%` : ''}</td><td>{h.desc}</td></tr>)}</tbody></table></div>
+  </section>}
+  {days.length > 1 && <section class="ncard" style="--c:#0D1321;margin-top:18px">
+    <h2>הימים הבאים</h2>
+    <div style="overflow-x:auto"><table class="tbl num" style="min-width:420px"><thead><tr><th>יום</th><th>מינימום</th><th>מקסימום</th><th>מזג האוויר</th></tr></thead>
+    <tbody>{days.slice(1).map((d) => <tr><td>{wd(d.date)}, {dm(d.date)}</td><td>{t(d.min)}</td><td>{t(d.max)}</td><td>{d.desc}</td></tr>)}</tbody></table></div>
+  </section>}
+  <p class="note" style="margin:14px 0 0">מקור: <a href={IMS.sourceUrl || 'https://ims.gov.il'} rel="noopener" target="_blank" style="color:#0B5FCC">השירות המטאורולוגי</a>. אזהרות מזג אוויר חמורות מופיעות גם ב<a href="/flash/" style="color:#0B5FCC">מבזקים</a>.</p>
+</NowPage>

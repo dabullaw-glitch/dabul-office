@@ -134,6 +134,8 @@ function fromFeed(s: any): any {
   };
 }
 const FEED_JSON: any = readJson('feed.json', { stories: [] });
+// 29.10.2026: live service data the engine keeps (hns-feed 'live': the duty pharmacy and more), for the /now/ pages
+export const SERVICES: any = FEED_JSON.live || {};
 const FEED: any[] = (FEED_JSON.stories || []).filter((s: any) => s && s.id && s.title && (s.body || []).length).map(fromFeed);
 // social card: a hand made card (public/og/a), else the story's own image, else its section photo (1200x630 JPEG)
 const ogFor = (a: any) => fs.existsSync(path.resolve('public/og/a', `${a.slug}.png`)) ? `/og/a/${a.slug}.png`
@@ -240,7 +242,9 @@ export const calVenue = (c: CalItem) => c.venue.replace(/^היכל התרבות 
 // sea and weather snapshot (scripts/live.mjs, Open-Meteo); the browser refreshes it
 // weather and sea of the Israel Meteorological Service (scripts/ims.mjs) and Maccabi Netanya data (scripts/sport.mjs), saved before every build
 export interface Ims { ok: boolean; fetchedAt?: string; day?: { date: string; min: number | null; max: number | null; code: number | null; desc: string } | null;
-  now?: { hour: number; temp: number | null; wave: number | null; code: number | null; desc: string } | null; sea?: { waveMin: number; waveMax: number; temp: number | null; from: string; to: string } | null }
+  now?: { hour: number; temp: number | null; wave: number | null; code: number | null; desc: string; rain?: number | null } | null; sea?: { waveMin: number; waveMax: number; temp: number | null; from: string; to: string } | null;
+  hours?: { hour: number; temp: number | null; rain: number | null; wave: number | null; desc: string }[]; days?: { date: string; min: number | null; max: number | null; code: number | null; desc: string }[];
+  seaNext?: { waveMin: number; waveMax: number; temp: number | null; from: string; to: string }[] }
 export const IMS: Ims = readJson('ims.json', { ok: false });
 export interface SportRow { pos: number; team: string; played: number; w: number; d: number; l: number; gf: number | null; ga: number | null; diff: number; pts: number; me: boolean }
 export interface Sport { ok: boolean; fetchedAt?: string; tableAt?: string; source: string; sourceUrl: string; league: string; round: number | null; table: SportRow[]; notes: string[];

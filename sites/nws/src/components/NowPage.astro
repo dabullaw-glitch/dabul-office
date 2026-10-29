@@ -6,10 +6,13 @@ import ListHero from './list/ListHero.astro';
 import NowNav from './NowNav.astro';
 import '../styles/list.css';
 import { SITE_URL, IMG } from '../data/site';
-interface Props { title: string; h1: string; description: string; path: string; intro: string; color?: string; img?: string; icon?: string; faq?: [string, string][]; jsonld?: any[] }
-const { title, h1, description, path, intro, color = '#0D1321', img = 'city', icon, faq = [], jsonld = [] } = Astro.props;
+interface Props { title: string; h1: string; description: string; path: string; intro: string; color?: string; img?: string; icon?: string; faq?: [string, string][]; jsonld?: any[]; updated?: string }
+const { title, h1, description, path, intro, color = '#0D1321', img = 'city', icon, faq = [], jsonld = [], updated } = Astro.props;
+// 29.10.2026: every service page says when it was last updated (and tells Google, dateModified), the build runs all day
+const upd = updated || new Date().toISOString();
+const updTxt = new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(upd));
 const crumbs = [{ name: 'ראשי', href: '/' }, { name: 'נתניה עכשיו', href: '/now/' }, { name: h1, href: path }];
-const ld = [...jsonld, { '@context': 'https://schema.org', '@type': 'WebPage', name: h1, url: SITE_URL + path, description, inLanguage: 'he', about: { '@type': 'City', name: 'נתניה' }, isPartOf: { '@id': SITE_URL + '/#website' } }];
+const ld = [...jsonld, { '@context': 'https://schema.org', '@type': 'WebPage', name: h1, url: SITE_URL + path, description, inLanguage: 'he', dateModified: upd, about: { '@type': 'City', name: 'נתניה' }, isPartOf: { '@id': SITE_URL + '/#website' } }];
 if (faq.length) ld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
 const photo = (IMG[img] || IMG.city).name;
 ---
@@ -18,6 +21,7 @@ const photo = (IMG[img] || IMG.city).name;
   <ListHero crumbs={crumbs} h1={h1} intro={intro} color={color} photo={photo} icon={icon} />
   <div class="n-wrap nl-np">
     <NowNav />
+    <p class="note num" style="margin:0 0 14px;color:var(--mut);font-size:13.5px">עודכן: <time datetime={upd}>{updTxt}</time></p>
     <slot />
     {faq.length > 0 && <section class="ncard faq" style="--c:#0D1321;margin-top:18px"><h2>שאלות ותשובות</h2>{faq.map(([q, a]) => <details open><summary>{q}</summary><p>{a}</p></details>)}</section>}
   </div>
