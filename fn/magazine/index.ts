@@ -6,7 +6,7 @@
 //   JSON {content}), waAt, siteAt ("YYYY-MM-DDTHH:MM", Israel time), token, state: draft|approved|done, sent:{}}
 // POST (x-cron-secret) {action:'request', id}  -> Telegram to Yakir: cover, main points, buttons (approve, open the PDF)
 // GET  ?a=ok&id=issue-NNN&t=TOKEN               -> approves: state=approved + the Friday carousel row in the content calendar
-// POST (x-cron-secret) {action:'tick'}          -> cron: Thursday WhatsApp, Friday the issue's own page + the main page (the carousel goes out via postoria)
+// POST (x-cron-secret) {action:'tick'}          -> cron: Thursday the site (issue page + main page) and right after it WhatsApp; Friday the carousel via postoria
 // Issue doc extra fields (23.10.2026): issueBody (url of {title, slug, status, parent, template, content}), seoTitle, seoDesc
 import { loadSecrets, json, cors, admin, env } from '../_shared/common.ts';
 
@@ -31,7 +31,7 @@ async function request(id: string) {
   const x = await getIssue(id); if (!x) return { ok: false, error: 'no issue' };
   const base = `${env('SUPABASE_URL')}/functions/v1/magazine`;
   const okUrl = `${base}?a=ok&id=${encodeURIComponent(id)}&t=${encodeURIComponent(x.token)}`;
-  const caption = `📰 מגזין הנדל״ן, גיליון #${x.no} (${x.dates}) מוכן לאישור.\n\n${String(x.waText || '').slice(0, 700)}\n\nאחרי האישור: ביום חמישי הודעה אחת לקבוצת הוואטסאפ, וביום שישי קרוסלה בפייסבוק, באינסטגרם ובלינקדאין ועדכון העמוד באתר.`;
+  const caption = `📰 מגזין הנדל״ן, גיליון #${x.no} (${x.dates}) מוכן לאישור.\n\n${String(x.waText || '').slice(0, 700)}\n\nאחרי האישור: ביום חמישי הודעה אחת לקבוצת הוואטסאפ ועדכון העמוד באתר, וביום שישי קרוסלה בפייסבוק, באינסטגרם ובלינקדאין.`;
   const kb = { inline_keyboard: [[{ text: '✅ מאשר את הגיליון', url: okUrl }], [{ text: '📄 צפייה במגזין המלא', url: x.pdf }]] };
   const r = await tg('sendPhoto', { photo: x.cover, caption: caption.slice(0, 1020), reply_markup: kb });
   if (!r || !r.ok) await tg('sendMessage', { text: caption.slice(0, 3900), reply_markup: kb, disable_web_page_preview: true });
@@ -48,7 +48,7 @@ async function approve(id: string, t: string) {
   const at = String(x.siteAt);
   await admin().from('docs').upsert({ coll: 'pub', id: `pub-magazine-${x.no}`, data: { at, kind: 'carousel', owner: 'office', status: 'planned', title: `מגזין הנדל״ן #${x.no}`, text: x.social || '', media: x.slides || [], channels: ['facebook', 'instagram', 'linkedin'], series: 'magazine', created: now }, updated_at: now }, { onConflict: 'coll,id' });
   await merge(id, { state: 'approved', approvedAt: now });
-  await tg('sendMessage', { text: `✅ גיליון #${x.no} אושר. חמישי: קבוצת הוואטסאפ. שישי: הרשתות והאתר.` });
+  await tg('sendMessage', { text: `✅ גיליון #${x.no} אושר. חמישי: האתר וקבוצת הוואטסאפ יחד. שישי: הרשתות.` });
   return page('ok', x.no);
 }
 
@@ -93,15 +93,18 @@ async function tick() {
   const now = Date.now(), log: string[] = [];
   for (const r of data || []) {
     const x = r.data, sent = { ...(x.sent || {}) };
+    // 29.10.2026 (Yakir): the site goes up together with the WhatsApp message (same run, the site first so its link works);
+    // only the social carousel waits for Friday (the pub row at siteAt).
+    const siteDue = x.waAt || x.siteAt;
+    if (!sent.site && siteDue && now >= ilToMs(siteDue)) {
+      const s = await updateSite(x, r.id); sent.site = s.ok ? { at: new Date().toISOString() } : null; log.push(`${r.id} site ${JSON.stringify(s)}`);
+      if (s.ok) await tg('sendMessage', { text: `✅ מגזין הנדל״ן #${x.no} עלה לאתר, עם עמוד משלו: https://dabullaw.co.il/magazine/issue-${x.no}/`, disable_web_page_preview: true });
+      else if (!sent.siteFailTold) { sent.siteFailTold = true; await tg('sendMessage', { text: `⚠️ מגזין הנדל״ן #${x.no}: ההעלאה לאתר נכשלה. אנסה שוב כל 10 דקות, ואעדכן כשזה יעבור.` }); }
+    }
     if (!sent.wa && x.waAt && now >= ilToMs(x.waAt) && now - ilToMs(x.waAt) < 6 * 3600e3) {
       const s = await sendWa(x); sent.wa = s.ok ? { at: new Date().toISOString(), id: s.id } : null; log.push(`${r.id} wa ${JSON.stringify(s)}`);
       if (!s.ok) { if (!sent.waFailTold) { sent.waFailTold = true; await tg('sendMessage', { text: `⚠️ מגזין הנדל״ן #${x.no}: השליחה לקבוצת הוואטסאפ נכשלה. אנסה שוב כל 10 דקות, ואעדכן כשזה יעבור.` }); } }
       else await tg('sendMessage', { text: `✅ מגזין הנדל״ן #${x.no} נשלח לקבוצת הוואטסאפ.` });
-    }
-    if (!sent.site && x.siteAt && now >= ilToMs(x.siteAt)) {
-      const s = await updateSite(x, r.id); sent.site = s.ok ? { at: new Date().toISOString() } : null; log.push(`${r.id} site ${JSON.stringify(s)}`);
-      if (s.ok) await tg('sendMessage', { text: `✅ מגזין הנדל״ן #${x.no} עלה לאתר, עם עמוד משלו: https://dabullaw.co.il/magazine/issue-${x.no}/`, disable_web_page_preview: true });
-      else if (!sent.siteFailTold) { sent.siteFailTold = true; await tg('sendMessage', { text: `⚠️ מגזין הנדל״ן #${x.no}: ההעלאה לאתר נכשלה. אנסה שוב כל 10 דקות, ואעדכן כשזה יעבור.` }); }
     }
     const done = sent.wa && sent.site;
     await merge(r.id, { sent, ...(done ? { state: 'done', doneAt: new Date().toISOString() } : {}) });
