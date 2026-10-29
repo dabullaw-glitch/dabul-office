@@ -759,7 +759,8 @@ async function history(b: Any) {
     const j = await wiki({ action: 'query', titles: t, prop: 'extracts|pageimages|info', explaintext: '1', exsectionformat: 'plain', piprop: 'name', inprop: 'url', redirects: '1' }).catch(() => null);
     const pg = j?.query?.pages?.[0];
     const ex = clean(String(pg?.extract || '').replace(/\n{2,}/g, '\n'));
-    if (!pg || pg.missing || ex.length < 1500 || !/(?:18|19|20)\d\d/.test(ex)) continue;
+    // a place with a past: its article tells about years before 1980
+    if (!pg || pg.missing || ex.length < 1500 || !/(?<!\d)(?:18\d\d|19[0-7]\d)(?!\d)/.test(ex)) continue;
     pick = { title: String(pg.title), url: String(pg.fullurl || `https://he.wikipedia.org/wiki/${encodeURIComponent(pg.title)}`), text: ex.slice(0, 7000), image: pg.pageimage ? String(pg.pageimage) : '' };
     break;
   }
@@ -789,10 +790,23 @@ JSON: {"kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""]}`;
 }
 
 // ---------- shared: weekly and monthly roundups from items ----------
-async function itemsSince(days: number, filter: (x: Any) => boolean) {
-  const { data } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,cluster_id,is_local,topic,outlet')
-    .gte('fetched_at', new Date(Date.now() - days * 864e5).toISOString()).eq('backfill', false).order('id', { ascending: false }).limit(3000);
-  return (data || []).filter((x: Any) => SRC[x.source_id]?.role === 'source' && filter(x));
+// local items (and, with official=true, every item of an official source) published in the last days. The query is narrowed in
+// the database: an answer has at most 1000 rows, and a week has thousands of national items.
+async function itemsSince(days: number, filter: (x: Any) => boolean, official = false) {
+  const since = new Date(Date.now() - days * 864e5).toISOString();
+  const cols = 'id,source_id,title,body,url,published_at,fetched_at,cluster_id,is_local,topic,outlet';
+  const offIds = Object.values(SRC).filter((s: Any) => s.trust === 'official' && s.role === 'source').map((s: Any) => s.id);
+  const all = new Map<number, Any>();
+  for (const kind of official ? ['local', 'official'] : ['local']) {
+    for (let p = 0; p < 6; p++) {
+      let q = sb.from('hns_items').select(cols).gte('fetched_at', since).order('id', { ascending: false }).range(p * 1000, p * 1000 + 999);
+      q = kind === 'local' ? q.eq('is_local', true) : q.in('source_id', offIds.length ? offIds : ['-']);
+      const { data } = await q;
+      for (const x of data || []) all.set(Number(x.id), x);
+      if ((data || []).length < 1000) break;
+    }
+  }
+  return [...all.values()].filter((x: Any) => SRC[x.source_id]?.role === 'source' && (!x.published_at || x.published_at >= since) && filter(x));
 }
 // the same event in several items is one group; a group counts as verified with an official source or 2 different outlets
 const STOP = new Set(['נתניה', 'בנתניה', 'השבוע', 'היום', 'הלילה', 'אתמול', 'העיר', 'בעיר']);
@@ -893,7 +907,7 @@ async function education(b: Any) {
   const key = `education:${now.ymd.slice(0, 7)}`;
   if (!b.test && (await getState(key))?.story_id) return { skipped: 'already written', key };
   await sources();
-  const its = await itemsSince(30, (x) => x.topic !== 'flash' && EDU_RE.test(norm(`${x.title} ${String(x.body || '').slice(0, 400)}`)) && (x.is_local || SRC[x.source_id]?.trust === 'official'));
+  const its = await itemsSince(30, (x) => x.topic !== 'flash' && EDU_RE.test(norm(`${x.title} ${String(x.body || '').slice(0, 400)}`)) && (x.is_local || SRC[x.source_id]?.trust === 'official'), true);
   const groups = groupItems(its).filter(verified).slice(0, 8);
   if (groups.length < 2) { if (!b.dry && !b.test) await log('education_month', key, null, 0, null, { held: `only ${groups.length} subjects` }); return { held: 'too few', key, candidates: its.length, groups: groups.length }; }
   const material = ['הודעות לחינוך ולמשפחות בנתניה מהחודש האחרון (כל שורה היא נושא אחד):', ...groups.map((g, i) => `e${i + 1}: ${g.map((x) => `${SRC[x.source_id]?.name_he || ''}: ${clean(x.title)}. ${clean(String(x.body || '').slice(0, 900))}`).join(' || ')}`)].join('\n');
