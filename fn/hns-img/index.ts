@@ -186,7 +186,8 @@ async function tick() {
   const b = await budget();
   const since = new Date(Date.now() - WINDOW_D * 864e5).toISOString();
   const { data: rows } = await sb.from('hns_stories').select('id,section,kind,title,dek,body,places,image_prompt,image_alt,image_note,published_at')
-    .eq('state', 'published').is('image_url', null).gte('published_at', since).order('published_at', { ascending: false }).limit(30);
+    .eq('state', 'published').is('image_url', null).gte('published_at', since).or('format.is.null,format.neq.history').order('published_at', { ascending: false }).limit(30);
+  // 29.10.2026: a "נתניה של פעם" piece (format 'history') gets only a real free licensed photo or the section photo, never an AI picture
   const todo = rows || [];
   if (!todo.length) return { todo: 0 };
   if (b.schnellBlocked) {

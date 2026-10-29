@@ -31,6 +31,11 @@
 //     sources) with real content (an agenda, decisions or a protocol, not only "watch the live broadcast") becomes a summary
 //     (format 'council_summary' or 'planning_summary'). The sources needed for this are documented in fn/hns-recurring/README.md.
 //   {action:'status'}  the format state rows and the last log lines.
+// 29.10.2026 night (content plan approved by Yakir; all routine pieces, never the lead or a flash):
+//   {action:'works'} hourly: the weekly works and closures story (adopts the engine's story of the municipal plan, or writes it),
+//   {action:'history'} Tuesday 10:00 "נתניה של פעם" (Hebrew Wikipedia, a free licensed photo with credit or none; {place} to choose),
+//   {action:'opened'} Wednesday 11:00 "מה נפתח בעיר", {action:'sportsweek'} Sunday 12:00 "הספורט של נתניה השבוע" (beyond the
+//   Maccabi Netanya senior football stories), {action:'education'} the 1st of the month 09:00 "חינוך ומשפחות". Details above each.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -610,6 +615,294 @@ JSON: {"kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""]}`;
   return { candidates: cands.length, res: out };
 }
 
+// ================= 29.10.2026 night: more recurring formats (the content plan Yakir approved at 23:17) =================
+// All of them are routine pieces (format set, notes "auto: hns-recurring"), never the lead and never a flash.
+
+// ---------- works: "עבודות וחסימות השבוע" ----------
+// The municipality publishes a weekly works plan (a table: address, work, closure, start, end, hours). The municipality task
+// (runs from Yakir's computer, the site blocks foreign servers) puts the article into hns_items (netanya_muni_news) and the table
+// rows into docs nwslive/works (shown on /now/roads/). The engine usually writes a story from the item within minutes: that story
+// is adopted (format 'works_week', so it is a routine piece and never a flash). When no story exists 12 hours before the week
+// starts, this function writes it. Cron hourly.
+const WORKS_RE = /תכנית עבודה שבועית|תוכנית עבודה שבועית/;
+function worksRange(title: string) {
+  const m = title.match(/(\d{1,2})\/(\d{1,2})\s*-\s*(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (!m) return null;
+  const y = Number(m[5]); const m1 = Number(m[2]), m2 = Number(m[4]);
+  const p2 = (n: number) => String(n).padStart(2, '0');
+  return { from: `${m1 > m2 ? y - 1 : y}-${p2(m1)}-${p2(Number(m[1]))}`, to: `${y}-${p2(m2)}-${p2(Number(m[3]))}` };
+}
+// the municipal table writes dates as 11/4/2026 (month/day) or 1.11.26 (day.month) and hours like 6:14:00 (meaning 06:00 to 14:00).
+// The same rules are in sites/nws/src/pages/now/roads/index.astro.
+function worksCell(v: string, kind: 'date' | 'hours', from = '') {
+  const t = String(v || '').replace(/​/g, '').trim();
+  if (!t) return '';
+  if (kind === 'date') {
+    let m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (m) {
+      const a = Number(m[1]), b = Number(m[2]), y = Number(m[3]);
+      const md = Date.UTC(y, a - 1, b), dmy = Date.UTC(y, b - 1, a);
+      const mid = from ? Date.parse(`${from}T12:00:00Z`) : Date.now();
+      const useMd = a <= 12 && (b > 12 || Math.abs(md - mid) <= Math.abs(dmy - mid));
+      const d = new Date(useMd ? md : dmy);
+      return `${d.getUTCDate()}.${d.getUTCMonth() + 1}`;
+    }
+    m = t.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/);
+    if (m) return `${Number(m[1])}.${Number(m[2])}`;
+    return t;
+  }
+  const m = t.match(/^(\d{1,2}):(\d{2}):00$/);
+  if (m) return `${m[1].padStart(2, '0')}:00 עד ${m[2]}:00`;
+  return t.replace(/(\d{1,2})\.(\d{2})(?!\d)/g, '$1:$2').replace(/\s*-\s*/g, ' עד ').replace(/\s*\/\s*/g, ', ').replace(/(\d:\d{2})\s+(?=\d)/g, '$1, ');
+}
+function worksRows(doc: Any) {
+  const rows: string[][] = Array.isArray(doc?.rows) ? doc.rows : [];
+  return rows.map((r) => {
+    const [where, what, closed, start, end, hours] = (Array.isArray(r) ? r : []).map((x) => clean(x));
+    return { where, what, closed, start: worksCell(start, 'date', doc.weekFrom), end: worksCell(end, 'date', doc.weekFrom), hours: worksCell(hours, 'hours') };
+  }).filter((r) => r.where);
+}
+async function works(b: Any) {
+  await sources();
+  const { data: its } = await sb.from('hns_items').select('id,title,body,url,published_at,fetched_at,cluster_id').eq('source_id', 'netanya_muni_news')
+    .gte('fetched_at', new Date(Date.now() - 12 * 864e5).toISOString()).order('id', { ascending: false }).limit(80);
+  const { data: dd } = await sb.from('docs').select('data').eq('coll', 'nwslive').eq('id', 'works').maybeSingle();
+  const doc = dd?.data || null;
+  const today = il(new Date()).ymd;
+  const out: Any[] = [];
+  for (const x of (its || []).filter((i: Any) => WORKS_RE.test(i.title))) {
+    const r = worksRange(String(x.title));
+    if (!r || r.to < today) continue;
+    const key = `works:${r.from}`;
+    const st = await getState(key);
+    if (st?.story_id && !b.test) { out.push({ key, skipped: st.stage }); continue; }
+    const rows = doc && (doc.url === x.url || doc.weekFrom === r.from) ? worksRows(doc) : [];
+    const fdata = { kind: 'works', from: r.from, to: r.to, url: x.url, rows: rows.length };
+    // the engine already wrote it: mark that story with the format (routine, never a flash)
+    if (x.cluster_id && !b.test) {
+      const { data: ex } = await sb.from('hns_stories').select('id,state,format').eq('id', x.cluster_id).maybeSingle();
+      if (ex && ex.state !== 'rejected' && (!ex.format || ex.format === 'works_week')) {
+        if (!b.dry) {
+          await sb.from('hns_stories').update({ format: 'works_week', format_key: key, format_data: fdata }).eq('id', ex.id).is('format', null);
+          await setState(key, 'works_week', { story_id: ex.id, stage: 'adopted', data: { item: x.id } });
+          await log('works_week', key, ex.id, 0, null, { adopted: ex.id });
+        }
+        out.push({ key, adopted: ex.id }); continue;
+      }
+    }
+    if (!b.force && !b.test && Date.now() < Date.parse(ilIso(r.from, '06:00')) - 12 * H) { out.push({ key, waiting: 'the engine may still write it' }); continue; }
+    const table = rows.map((w, i) => `w${i + 1}: ${w.where} | ${w.what || '-'} | חסימה: ${w.closed || 'לא צוין'} | ${w.start}${w.end && w.end !== w.start ? ` עד ${w.end}` : ''} | ${w.hours}`).join('\n');
+    const material = `עיריית נתניה, ${clean(x.title)} (השבוע: ${dm(ilIso(r.from, '12:00'))} עד ${dm(ilIso(r.to, '12:00'))}).\n${clean(x.body || '').slice(0, 5000)}${table ? `\n\nשורות הטבלה של העירייה:\n${table}` : ''}`;
+    if (b.dry) { out.push({ key, would: 'works_week', rows: rows.length, facts: material.slice(0, 1500) }); continue; }
+    if (await budgetLeft() <= 0) { out.push({ key, skipped: 'daily budget' }); break; }
+    CALLS = 0;
+    const user = `${material}
+
+כתוב ידיעה בשם "עבודות וחסימות בנתניה השבוע" מהחומר שלמעלה בלבד, בעברית פשוטה.
+פסקה ראשונה: השבוע (התאריכים) והחסימה או שיבוש התנועה החשובים ביותר. אחר כך פסקה לכל קבוצה: חסימות ושיבושי תנועה (רחוב, מה, מתי ובאילו שעות), עבודות תשתית גדולות (ביוב, מים, רכבת קלה), ובסוף משפט אחד שמסכם את גיזומי העצים והעבודות הקטנות לפי שמות המקומות. בלי להמציא שעות, תאריכים או מסלולי עקיפה. ייחוס: "לפי העירייה".
+כותרת עד 70 תווים שמתחילה ב"עבודות וחסימות בנתניה השבוע". כותרת משנה משפט אחד. kicker: "עבודות השבוע". 3 עד 5 נקודות עיקריות.
+JSON: {"kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""]}`;
+    const w = await write(user, material);
+    if (w.hold || w.fail) { await log('works_week', key, null, CALLS, w.usage, { held: w.hold || w.fail }); out.push({ key, held: w.hold || w.fail }); continue; }
+    const o = w.out;
+    let title = clean(o.title); if (!title.startsWith('עבודות וחסימות')) title = `עבודות וחסימות בנתניה השבוע: ${title}`;
+    const id = await insertStory(b, { section: 'transport', kicker: kickerOf(o.kicker) || 'עבודות השבוע', title, dek: o.dek, body: o.body, key_points: o.keyPoints,
+      places: ['נתניה'], sources: [srcRef('netanya_muni_news', x.url)], basis: 'official', item_ids: [String(x.id)], format: 'works_week', format_key: key, format_data: fdata, usage: w.usage });
+    if (!b.test) { await claimItems(id, [Number(x.id)]); await setState(key, 'works_week', { story_id: id, stage: 'done', data: { item: x.id } }); }
+    await log('works_week', key, id, Math.max(0, CALLS - 1), w.usage, { inserted: id, test: !!b.test });
+    out.push({ key, story: id, title, test: !!b.test });
+  }
+  return { res: out };
+}
+
+// ---------- history: "נתניה של פעם" ----------
+// Weekly (Tuesday 10:00 Israel time). A place in the city (a building, a neighborhood, a site) from the Hebrew Wikipedia
+// categories of Netanya; facts only from that article (the writer gets its text, and every number must appear in it). A photo
+// only when its file is in the public domain or under a free license (CC0, CC BY, CC BY-SA, never NC or ND), with the credit shown
+// under the picture; otherwise no image and the site shows the section photo (hns-img does not draw an AI picture for this
+// format). A place is never used twice.
+const WIKI = 'https://he.wikipedia.org/w/api.php';
+const WIKI_UA = { 'User-Agent': 'nws.co.il local news (https://nws.co.il/; office@dabullaw.co.il)', 'Accept-Language': 'he' };
+const HIST_CATS = ['קטגוריה:נתניה: היסטוריה', 'קטגוריה:נתניה: מבנים', 'קטגוריה:נתניה: שכונות', 'קטגוריה:נתניה: גאוגרפיה'];
+async function wiki(params: Record<string, string>) {
+  const r = await fetch(`${WIKI}?${new URLSearchParams({ format: 'json', formatversion: '2', ...params })}`, { headers: WIKI_UA, signal: AbortSignal.timeout(20000) });
+  if (!r.ok) throw new Error(`wikipedia ${r.status}`);
+  return await r.json();
+}
+const FREE_LIC = /^(?:public domain|pd\b|cc0|cc[ -]by(?:-sa)?\b)/i;
+async function freeImage(file: string) {
+  const j = await wiki({ action: 'query', titles: `File:${file}`, prop: 'imageinfo', iiprop: 'url|extmetadata', iiurlwidth: '1600' });
+  const ii = j?.query?.pages?.[0]?.imageinfo?.[0];
+  if (!ii) return null;
+  const md = ii.extmetadata || {};
+  const lic = txt(md.LicenseShortName?.value || '');
+  if (!FREE_LIC.test(lic) || /(?:^|[\s-])(?:nc|nd)(?:[\s-]|$)/i.test(lic)) return null;
+  const artist = txt(md.Artist?.value || '').slice(0, 40);
+  const url = String(ii.thumburl || ii.url || '');
+  if (!/^https:\/\/upload\.wikimedia\.org\//.test(url)) return null;
+  return { url, credit: clean(`ויקישיתוף${artist ? `, ${artist}` : ''}, ${lic}`).slice(0, 80), lic, page: String(ii.descriptionurl || '') };
+}
+async function history(b: Any) {
+  const now = il(new Date());
+  if (!b.force && !(now.wd === 2 && now.hh === 10)) return { skipped: `not Tuesday 10:00 in Israel (${now.ymd} ${now.hm})` };
+  const key = `history:${now.ymd}`;
+  if (!b.test && (await getState(key))?.story_id) return { skipped: 'already written', key };
+  const { data: used } = await sb.from('hns_recurring').select('data').eq('format', 'history');
+  const usedT = new Set((used || []).map((r: Any) => String(r.data?.title || '')).filter(Boolean));
+  const titles = new Set<string>();
+  for (const c of HIST_CATS) {
+    try { const j = await wiki({ action: 'query', list: 'categorymembers', cmtitle: c, cmnamespace: '0', cmlimit: '200' }); for (const m of j?.query?.categorymembers || []) titles.add(String(m.title)); } catch { /* next category */ }
+  }
+  const cands = [...titles].filter((t) => !usedT.has(t) && t !== 'נתניה' && (!b.place || t === b.place)).sort(() => Math.random() - 0.5);
+  let pick: Any = null;
+  for (const t of cands.slice(0, 10)) {
+    const j = await wiki({ action: 'query', titles: t, prop: 'extracts|pageimages|info', explaintext: '1', exsectionformat: 'plain', piprop: 'name', inprop: 'url', redirects: '1' }).catch(() => null);
+    const pg = j?.query?.pages?.[0];
+    const ex = clean(String(pg?.extract || '').replace(/\n{2,}/g, '\n'));
+    if (!pg || pg.missing || ex.length < 1500 || !/(?:18|19|20)\d\d/.test(ex)) continue;
+    pick = { title: String(pg.title), url: String(pg.fullurl || `https://he.wikipedia.org/wiki/${encodeURIComponent(pg.title)}`), text: ex.slice(0, 7000), image: pg.pageimage ? String(pg.pageimage) : '' };
+    break;
+  }
+  if (!pick) { if (!b.dry && !b.test) await log('history', key, null, 0, null, { held: 'no article long enough' }); return { held: 'no article long enough', key, candidates: cands.length }; }
+  const img = pick.image ? await freeImage(pick.image).catch(() => null) : null;
+  const material = `${pick.title} (מתוך הערך בוויקיפדיה):\n${pick.text}`;
+  if (b.dry) return { key, would: 'history', place: pick.title, url: pick.url, image: img, candidates: cands.length, facts: material.slice(0, 1200) };
+  if (await budgetLeft() <= 0) return { skipped: 'daily budget' };
+  await sources(); CALLS = 0;
+  const user = `${material}
+
+כתוב כתבה למדור "נתניה של פעם" על ${pick.title}, מהחומר שלמעלה בלבד, בעברית פשוטה וקולחת.
+ספר את הסיפור של המקום לפי סדר הזמנים: איך ומתי התחיל, מי היו שם, מה השתנה עם השנים, ומה יש שם היום (רק אם זה כתוב בחומר). 4 עד 6 פסקאות קצרות. כל שנה, מספר ושם חייבים להופיע בחומר. לא להעתיק משפטים, לנסח מחדש. בלי "לפי ויקיפדיה" בטקסט.
+כותרת עד 70 תווים שמתחילה ב"נתניה של פעם:". כותרת משנה משפט אחד. kicker: "נתניה של פעם". 3 נקודות עיקריות.
+JSON: {"kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""]}`;
+  const w = await write(user, material);
+  if (w.hold || w.fail) { await log('history', key, null, CALLS, w.usage, { held: w.hold || w.fail, place: pick.title }); return { held: w.hold || w.fail, key, place: pick.title }; }
+  const o = w.out;
+  let title = clean(o.title); if (!title.startsWith('נתניה של פעם')) title = `נתניה של פעם: ${title}`;
+  const id = await insertStory(b, { section: 'community', kicker: 'נתניה של פעם', title, dek: o.dek, body: o.body, key_points: o.keyPoints,
+    places: ['נתניה'], sources: [{ id: 'wikipedia', name: 'ויקיפדיה', url: pick.url, trust: 'media' }], basis: 'public', item_ids: [], format: 'history', format_key: key,
+    format_data: { kind: 'history', place: pick.title, url: pick.url, image: img ? { license: img.lic, page: img.page } : null },
+    ...(img ? { image_url: img.url, image_alt: pick.title, image_model: null, image_at: new Date().toISOString(), extras: { image_credit: img.credit } } : {}), usage: w.usage });
+  if (!b.test) await setState(key, 'history', { story_id: id, stage: 'done', data: { title: pick.title } });
+  await log('history', key, id, Math.max(0, CALLS - 1), w.usage, { inserted: id, place: pick.title, image: !!img, test: !!b.test });
+  return { key, story: id, title, place: pick.title, image: img?.credit || null, test: !!b.test };
+}
+
+// ---------- shared: weekly and monthly roundups from items ----------
+async function itemsSince(days: number, filter: (x: Any) => boolean) {
+  const { data } = await sb.from('hns_items').select('id,source_id,title,body,url,published_at,fetched_at,cluster_id,is_local,topic,outlet')
+    .gte('fetched_at', new Date(Date.now() - days * 864e5).toISOString()).eq('backfill', false).order('id', { ascending: false }).limit(3000);
+  return (data || []).filter((x: Any) => SRC[x.source_id]?.role === 'source' && filter(x));
+}
+// the same event in several items is one group; a group counts as verified with an official source or 2 different outlets
+const STOP = new Set(['נתניה', 'בנתניה', 'השבוע', 'היום', 'הלילה', 'אתמול', 'העיר', 'בעיר']);
+const tokSet = (s: string) => new Set(norm(s).replace(/[^\p{L}\p{N}"\s]/gu, ' ').split(/\s+/).filter((w) => w.length >= 3 && !STOP.has(w)));
+function groupItems(items: Any[]) {
+  const groups: { toks: Set<string>; items: Any[] }[] = [];
+  for (const x of items) {
+    const t = tokSet(`${x.title} ${String(x.body || '').slice(0, 300)}`);
+    const g = groups.find((gr) => { let n = 0; for (const w of t) if (gr.toks.has(w)) n++; return n >= 3 && n / Math.max(1, Math.min(t.size, gr.toks.size)) >= 0.3; });
+    if (g) { g.items.push(x); for (const w of t) g.toks.add(w); } else groups.push({ toks: t, items: [x] });
+  }
+  return groups.map((g) => g.items);
+}
+const verified = (g: Any[]) => g.some((x) => SRC[x.source_id]?.trust === 'official') || new Set(g.map((x) => x.outlet || x.source_id)).size >= 2;
+const refOf = (x: Any) => ({ id: x.source_id, name: SRC[x.source_id]?.name_he || x.source_id, url: x.url || '', trust: SRC[x.source_id]?.trust || 'media' });
+const srcsOf = (items: Any[]) => [...new Map(items.map((x) => [x.source_id, refOf(x)])).values()];
+async function roundup(b: Any, o: { format: string; key: string; section: string; kicker: string; titleStart: string; material: string; ask: string; srcs: Any[]; itemIds: number[]; fdata: Any }) {
+  if (b.dry) return { key: o.key, would: o.format, facts: o.material.slice(0, 2000) };
+  if (await budgetLeft() <= 0) return { skipped: 'daily budget' };
+  CALLS = 0;
+  const user = `${o.material}\n\n${o.ask}\nכותרת עד 70 תווים שמתחילה ב"${o.titleStart}". כותרת משנה משפט אחד. kicker: "${o.kicker}". 3 עד 5 נקודות עיקריות.\nJSON: {"kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""]}`;
+  const w = await write(user, o.material);
+  if (w.hold || w.fail) { await log(o.format, o.key, null, CALLS, w.usage, { held: w.hold || w.fail }); return { held: w.hold || w.fail, key: o.key }; }
+  const out = w.out;
+  let title = clean(out.title); if (!title.startsWith(o.titleStart)) title = `${o.titleStart}: ${title}`;
+  const id = await insertStory(b, { section: o.section, kicker: o.kicker, title, dek: out.dek, body: out.body, key_points: out.keyPoints,
+    places: ['נתניה'], sources: o.srcs, basis: o.srcs.some((x) => x.trust === 'official') ? 'official' : 'public',
+    item_ids: o.itemIds.map(String), format: o.format, format_key: o.key, format_data: o.fdata, usage: w.usage });
+  if (!b.test) await setState(o.key, o.format, { story_id: id, stage: 'done', data: { items: o.itemIds.length } });
+  await log(o.format, o.key, id, Math.max(0, CALLS - 1), w.usage, { inserted: id, test: !!b.test });
+  return { key: o.key, story: id, title, test: !!b.test };
+}
+
+// ---------- opened: "מה נפתח בעיר" ----------
+// Weekly (Wednesday 11:00 Israel time): places that opened in Netanya this week (a branch, a restaurant, a park, a library),
+// only verified (an official source, or two different outlets), plus businesses whose listing in the site's directory was
+// approved this week (named as joining the directory, not as new). At least 2 entries, otherwise no story.
+const OPEN_RE = /נפתח|נפתחה|נפתחו|ייפתח|תיפתח|ייפתחו|פתיחת|פתח את שעריו|פותח את שעריו|פותחת את שעריה|נחנך|נחנכה|נחנכו|חנוכת|השקת/;
+const OPEN_PLACE_RE = /סניף|מסעדה|חנות|קניון|מתחם|בית קפה|גן |גינה|פארק|ספרייה|בריכה|מגרש|אולם|קליניקה|מרפאה|סופרמרקט|גלריה|מוזיאון|טיילת|שוק|מרכז (?:קהילתי|מסחרי|ספורט|תרבות)|מועדון/;
+const NOT_OPEN_RE = /חקירה|באש|תיק|הליך|הרשמה|שנת הלימודים|עונת|ישיבת|לתנועה|כביש|מחסום|דיון|מכרז/;
+async function opened(b: Any) {
+  const now = il(new Date());
+  if (!b.force && !(now.wd === 3 && now.hh === 11)) return { skipped: `not Wednesday 11:00 in Israel (${now.ymd} ${now.hm})` };
+  const key = `opened:${now.ymd}`;
+  if (!b.test && (await getState(key))?.story_id) return { skipped: 'already written', key };
+  await sources();
+  const its = await itemsSince(7, (x) => x.is_local && x.topic !== 'flash' && OPEN_RE.test(norm(x.title)) && OPEN_PLACE_RE.test(norm(`${x.title} ${String(x.body || '').slice(0, 300)}`)) && !NOT_OPEN_RE.test(norm(x.title)));
+  const groups = groupItems(its).filter(verified).slice(0, 8);
+  const { data: biz } = await sb.from('hns_biz_listings').select('id,name,category,area').eq('status', 'approved').or('is_test.is.null,is_test.eq.false')
+    .gte('decided_at', new Date(Date.now() - 7 * 864e5).toISOString()).limit(10);
+  const listings = biz || [];
+  if (groups.length + listings.length < 2) { if (!b.dry && !b.test) await log('opened_week', key, null, 0, null, { held: `${groups.length} verified openings, ${listings.length} new listings` }); return { held: 'too few', key, candidates: its.length, openings: groups.length, listings: listings.length }; }
+  const material = [`פתיחות בנתניה ובסביבה בשבוע האחרון (כל שורה היא אירוע אחד, מכמה מקורות):`,
+    ...groups.map((g, i) => `o${i + 1}: ${g.map((x) => `${clean(x.title)}. ${clean(String(x.body || '').slice(0, 600))}`).join(' || ')}`),
+    ...(listings.length ? ['', 'עסקים שהצטרפו השבוע לספריית העסקים של האתר (לא בהכרח עסקים חדשים, רק שהצטרפו לספרייה):', ...listings.map((x: Any) => `- ${clean(x.name)}, ${clean(x.category)}${x.area ? `, ${clean(x.area)}` : ''}`)] : [])].join('\n');
+  const used = groups.flat();
+  const srcs = srcsOf(used);
+  if (listings.length) srcs.push({ id: 'nws_directory', name: 'ספריית העסקים של האתר', url: 'https://nws.co.il/directory/', trust: 'media' });
+  return await roundup(b, { format: 'opened_week', key, section: 'community', kicker: 'מה נפתח בעיר', titleStart: 'מה נפתח בנתניה השבוע', material,
+    ask: 'כתוב ידיעה בשם "מה נפתח בנתניה השבוע" מהחומר שלמעלה בלבד, בעברית פשוטה. פסקה לכל פתיחה: מה נפתח, איפה ומתי, רק מה שכתוב. אם יש עסקים שהצטרפו לספריית העסקים, פסקה אחת בסוף שאומרת שהם הצטרפו לספריית העסקים של האתר, בלי לכתוב שהם חדשים ובלי שבח. בלי מחירים ובלי מבצעים.',
+    srcs, itemIds: used.map((x) => Number(x.id)), fdata: { kind: 'opened', openings: groups.length, listings: listings.map((x: Any) => x.id) } });
+}
+
+// ---------- sports week: "הספורט של נתניה השבוע" ----------
+// Weekly (Sunday 12:00 Israel time): the city's teams and athletes beyond the Maccabi Netanya senior football stories (those have
+// their own preview and report): basketball, volleyball, handball, women's and youth football, athletics, swimming and so on, from
+// the week's local sports items (the new source gn_sports adds these branches). Scores only as the items state them. Routine.
+const MAIN_FOOT_RE = /מכבי נתניה/;
+const OTHER_SPORT_RE = /כדורסל|כדורעף|כדוריד|אתלטיק|שחי|ג'ודו|טניס|נוער|נערים|נערות|ילדים|נשים|אופניים|טאקוונדו|קראטה|התעמלות|שחמט|גלישה|חתירה|איגרוף|היאבקות|ליגה לאומית|ליגה א|ליגה ב|ליגה ג|בית"ר נתניה|הפועל נתניה|אליצור נתניה|מכבי צעירי/;
+async function sportsWeek(b: Any) {
+  const now = il(new Date());
+  if (!b.force && !(now.wd === 0 && now.hh === 12)) return { skipped: `not Sunday 12:00 in Israel (${now.ymd} ${now.hm})` };
+  const key = `sportsweek:${now.ymd}`;
+  if (!b.test && (await getState(key))?.story_id) return { skipped: 'already written', key };
+  await sources();
+  const its = await itemsSince(7, (x) => {
+    const t = norm(`${x.title} ${String(x.body || '').slice(0, 300)}`);
+    return x.is_local && (x.topic === 'sports' || x.source_id === 'gn_sports') && (!MAIN_FOOT_RE.test(t) || OTHER_SPORT_RE.test(t));
+  });
+  const groups = groupItems(its).slice(0, 10);
+  if (groups.length < 2) { if (!b.dry && !b.test) await log('sports_week', key, null, 0, null, { held: `only ${groups.length} items` }); return { held: 'too few', key, candidates: its.length, groups: groups.length }; }
+  const material = ['ספורט בנתניה בשבוע האחרון, מחוץ לקבוצת הבוגרים של מכבי נתניה בכדורגל (כל שורה היא אירוע אחד):',
+    ...groups.map((g, i) => `s${i + 1}: ${g.map((x) => `${clean(x.title)}. ${clean(String(x.body || '').slice(0, 500))}`).join(' || ')}`)].join('\n');
+  const used = groups.flat();
+  return await roundup(b, { format: 'sports_week', key, section: 'sports', kicker: 'ספורט נתניה', titleStart: 'הספורט של נתניה השבוע', material,
+    ask: 'כתוב סיכום שבועי בשם "הספורט של נתניה השבוע" מהחומר שלמעלה בלבד, בעברית פשוטה. פסקה קצרה לכל אירוע: הקבוצה או הספורטאי, הענף, התוצאה רק כפי שהיא כתובה, ומה הלאה רק אם כתוב.',
+    srcs: srcsOf(used), itemIds: used.map((x) => Number(x.id)), fdata: { kind: 'sportsweek', items: used.length } });
+}
+
+// ---------- education: "חינוך ומשפחות" ----------
+// Monthly (the 1st, 09:00 Israel time): announcements for Netanya families from the last 30 days (registration to kindergartens
+// and schools, the school calendar and holidays, camps, after school programs, transport, grants), from official sources (the
+// municipality, the Ministry of Education) or local items confirmed by 2 outlets. At least 2 subjects, otherwise no story.
+const EDU_RE = /רישום (?:ל|לגני|לגן|לכיתה|לבתי|למוסדות)|גני (?:ה)?ילדים|גן חובה|בתי (?:ה)?ספר|לוח (?:ה)?חופשות|חופשת (?:ה)?(?:חנוכה|פסח|סוכות|קיץ)|קייטנ|שנת הלימודים|משרד החינוך|צהרונ|מעונות יום|הסעות (?:ל|תלמידים)|מלגות|שיבוץ לגנים|תלמידים|הורים/;
+async function education(b: Any) {
+  const now = il(new Date());
+  if (!b.force && !(now.d === 1 && now.hh === 9)) return { skipped: `not the 1st at 09:00 in Israel (${now.ymd} ${now.hm})` };
+  const key = `education:${now.ymd.slice(0, 7)}`;
+  if (!b.test && (await getState(key))?.story_id) return { skipped: 'already written', key };
+  await sources();
+  const its = await itemsSince(30, (x) => x.topic !== 'flash' && EDU_RE.test(norm(`${x.title} ${String(x.body || '').slice(0, 400)}`)) && (x.is_local || SRC[x.source_id]?.trust === 'official'));
+  const groups = groupItems(its).filter(verified).slice(0, 8);
+  if (groups.length < 2) { if (!b.dry && !b.test) await log('education_month', key, null, 0, null, { held: `only ${groups.length} subjects` }); return { held: 'too few', key, candidates: its.length, groups: groups.length }; }
+  const material = ['הודעות לחינוך ולמשפחות בנתניה מהחודש האחרון (כל שורה היא נושא אחד):', ...groups.map((g, i) => `e${i + 1}: ${g.map((x) => `${SRC[x.source_id]?.name_he || ''}: ${clean(x.title)}. ${clean(String(x.body || '').slice(0, 900))}`).join(' || ')}`)].join('\n');
+  const used = groups.flat();
+  return await roundup(b, { format: 'education_month', key, section: 'community', kicker: 'חינוך ומשפחות', titleStart: 'חינוך ומשפחות בנתניה', material,
+    ask: 'כתוב ידיעה בשם "חינוך ומשפחות בנתניה: מה חשוב לדעת החודש" מהחומר שלמעלה בלבד, בעברית פשוטה. פסקה לכל נושא: מה, למי זה רלוונטי, מועדים ואיך עושים, רק מה שכתוב. מה שיש לו מועד אחרון קרוב ראשון. ייחוס לגוף שהודיע (העירייה או משרד החינוך).',
+    srcs: srcsOf(used), itemIds: used.map((x) => Number(x.id)), fdata: { kind: 'education', items: used.length } });
+}
+
 Deno.serve(async (req) => {
   await secrets();
   if (!S.CRON_SECRET || req.headers.get('x-cron-secret') !== S.CRON_SECRET) return J({ ok: false }, 401);
@@ -620,6 +913,11 @@ Deno.serve(async (req) => {
     if (b.action === 'week') return J({ ok: true, ...(await week(b)) });
     if (b.action === 'weekend') return J({ ok: true, ...(await weekend(b)) });
     if (b.action === 'council') return J({ ok: true, ...(await council(b)) });
+    if (b.action === 'works') return J({ ok: true, ...(await works(b)) });
+    if (b.action === 'history') return J({ ok: true, ...(await history(b)) });
+    if (b.action === 'opened') return J({ ok: true, ...(await opened(b)) });
+    if (b.action === 'sportsweek') return J({ ok: true, ...(await sportsWeek(b)) });
+    if (b.action === 'education') return J({ ok: true, ...(await education(b)) });
     // diagnostics: the parsed games of one round from sport5 (and the start of the raw answer)
     if (b.action === 'round') { const fx = await fixture(); const raw = await get(`${S5}/Ajax/GetCycleGames.aspx?LSnum=${fx?.lsnum}&CycleNum=${Number(b.n) || 1}`).catch((e) => String(e)); return J({ ok: true, lsnum: fx?.lsnum, games: parseRound(raw), raw: raw.slice(0, Number(b.raw) || 0) }); }
     if (b.action === 'status') {

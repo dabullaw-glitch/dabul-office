@@ -1,18 +1,63 @@
 ---
 import NowPage from '../../../components/NowPage.astro';
-import { articlesFor, articleUrl, fmtTime, fmtDate } from '../../../lib/content';
+import { articlesFor, articleUrl, fmtTime, fmtDate, SERVICES } from '../../../lib/content';
 const all = articlesFor('he');
 const ilToday = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
 // closures from published stories (field closure, written by the news engine), while their end date has not passed
 const closures = all.filter((a) => a.closure && (a.closure.until ? a.closure.until >= ilToday : Date.now() - Date.parse(a.published) < 3 * 864e5));
 const untilTxt = (c: any) => c.until ? `עד ${c.approx ? 'כ-' : ''}${new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long' }).format(new Date(c.until + 'T12:00:00Z'))}` : '';
 const items = all.filter((a) => a.section === 'flash');
-const faq: [string, string][] = [['איפה רואים חסימות בנתניה עכשיו?', 'כאן, ובערוץ הטלגרם של חדשות נתניה והשרון. כל חסימה או עבודה שהעירייה או המשטרה מודיעות עליה עולה כמבזק עם השעה והמקום.']];
+const faq: [string, string][] = [['איפה רואים חסימות בנתניה עכשיו?', 'כאן, ובערוץ הטלגרם של חדשות נתניה והשרון. כל חסימה או עבודה שהעירייה או המשטרה מודיעות עליה עולה כמבזק עם השעה והמקום.'],
+  ['איפה רואים את עבודות השבוע של העירייה?', 'בדף הזה, לפי תוכנית העבודה השבועית שעיריית נתניה מפרסמת: מקום, סוג העבודה, אם יש חסימה, תאריכים ושעות.']];
+
+// 29.10.2026: the municipality's weekly works plan (docs nwslive/works, saved by the municipality task, delivered by hns-feed as
+// live.works). The table writes dates as 11/4/2026 (month/day) or 1.11.26 (day.month) and hours like 6:14:00 (06:00 to 14:00);
+// the same rules are in fn/hns-recurring (worksCell).
+const W: any = SERVICES?.works || null;
+const cell = (v: string, kind: 'date' | 'hours') => {
+  const t = String(v || '').replace(/\u200b/g, '').trim();
+  if (!t) return '';
+  if (kind === 'date') {
+    let m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (m) {
+      const a = Number(m[1]), b = Number(m[2]), y = Number(m[3]);
+      const md = Date.UTC(y, a - 1, b), dmy = Date.UTC(y, b - 1, a);
+      const mid = W?.weekFrom ? Date.parse(`${W.weekFrom}T12:00:00Z`) : Date.now();
+      const d = new Date(a <= 12 && (b > 12 || Math.abs(md - mid) <= Math.abs(dmy - mid)) ? md : dmy);
+      return `${d.getUTCDate()}.${d.getUTCMonth() + 1}`;
+    }
+    m = t.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/);
+    return m ? `${Number(m[1])}.${Number(m[2])}` : t;
+  }
+  const m = t.match(/^(\d{1,2}):(\d{2}):00$/);
+  if (m) return `${m[1].padStart(2, '0')}:00 עד ${m[2]}:00`;
+  return t.replace(/(\d{1,2})\.(\d{2})(?!\d)/g, '$1:$2').replace(/\s*-\s*/g, ' עד ').replace(/\s*\/\s*/g, ', ').replace(/(\d:\d{2})\s+(?=\d)/g, '$1, ');
+};
+const dmTxt = (ymd: string) => ymd ? `${Number(ymd.slice(8, 10))}.${Number(ymd.slice(5, 7))}` : '';
+const CLOSED_RE = /^(?:יש|כן|חסימה|שיבוש)|שיבושי תנועה|סגירת|נסגר/;
+const works = W && Array.isArray(W.rows) && W.weekTo && W.weekTo >= ilToday ? W.rows.map((r: any[]) => {
+  const [where, what, closed, start, end, hours] = (Array.isArray(r) ? r : []).map((x) => String(x ?? '').trim());
+  const s = cell(start, 'date'), e = cell(end, 'date');
+  const isClosed = CLOSED_RE.test(closed) && !/^(?:אין|ללא)/.test(closed);
+  const group = isClosed ? 0 : /גיזום|גיזומי/.test(what) ? 2 : 1;
+  const when = [s && e && s !== e ? `${s} עד ${e}` : (s || (e ? `עד ${e}` : '')), cell(hours, 'hours')].filter(Boolean).join(', ');
+  return { where, what, closed: isClosed ? closed : '', when, group };
+}).filter((x: any) => x.where).sort((a: any, b: any) => a.group - b.group) : [];
+const GROUPS = ['חסימות ושיבושי תנועה', 'עבודות תשתית והסדרי תנועה', 'גיזום עצים'];
 ---
 <NowPage icon="road" title="חסימות ועבודות כביש בנתניה עכשיו | חדשות נתניה והשרון" h1="חסימות ועבודות כביש" description="חסימות כבישים, עבודות והסדרי תנועה בנתניה: מה סגור עכשיו, עד מתי, ואיך עוקפים. מתעדכן לאורך היום." path="/now/roads/" intro="מה סגור עכשיו בעיר, עד מתי, ואיך עוקפים." color="#9A4A00" img="road" faq={faq}>
   {closures.length > 0 && <section class="ncard" style="--c:#D9480F;margin-bottom:18px">
     <h2>חסימות ועבודות שפורסמו</h2>
     <div class="cls">{closures.map((a) => <a class="cl" href={articleUrl(a)} data-until={a.closure!.until || undefined}><b>{a.closure!.place}</b><span>{[a.closure!.what, untilTxt(a.closure!)].filter(Boolean).join(' · ')}</span></a>)}</div>
+  </section>}
+  {works.length > 0 && <section class="ncard wk" style="--c:#9A4A00;margin-bottom:18px">
+    <h2>עבודות השבוע לפי תוכנית העירייה</h2>
+    <p class="note" style="margin:0 0 6px">{dmTxt(W.weekFrom)} עד {dmTxt(W.weekTo)}, לפי תוכנית העבודה השבועית של עיריית נתניה.</p>
+    {GROUPS.map((g, gi) => works.some((w: any) => w.group === gi) && <>
+      <h3>{g}</h3>
+      <ul>{works.filter((w: any) => w.group === gi).map((w: any) => <li class={w.group === 0 ? 'hot' : undefined}><b>{w.where}</b>{(w.what || w.closed || w.when) && <span>{[w.what, w.closed && `חסימה: ${w.closed}`, w.when].filter(Boolean).join(' · ')}</span>}</li>)}</ul>
+    </>)}
+    {W.url && <p class="note" style="margin:10px 0 0"><a href={W.url} rel="noopener" target="_blank">התוכנית המלאה באתר עיריית נתניה</a></p>}
   </section>}
   {items.length > 0 && <section class="ncard" style="--c:#E07B00">
     <h2>המבזקים האחרונים</h2>
@@ -20,3 +65,10 @@ const faq: [string, string][] = [['איפה רואים חסימות בנתניה
     <p class="note" style="margin:10px 0 0">מידע רשמי על הסדרי תנועה מתפרסם באתר עיריית נתניה.</p>
   </section>}
 </NowPage>
+<style>
+  .wk h3 { font-size: 1rem; margin: 14px 0 4px; color: #5A3A10; }
+  .wk ul { list-style: none; margin: 0; padding: 0; }
+  .wk li { padding: 8px 0; border-top: 1px solid #EEF1F5; display: flex; flex-direction: column; gap: 2px; }
+  .wk li span { color: #4A5260; font-size: .93rem; }
+  .wk li.hot b { color: #C8102E; }
+</style>
