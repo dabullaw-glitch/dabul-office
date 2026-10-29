@@ -90,6 +90,6 @@ export const SECTIONS: Section[] = [
 
 export const SECTION_BY_KEY = Object.fromEntries(SECTIONS.map((s) => [s.key, s])) as Record<SectionKey, Section>;
 /** the main menu, in the order of the approved design (בעלי מקצוע is added by the layout) */
-export const NAV_ORDER: SectionKey[] = ['flash', 'national', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'leisure', 'sharon', 'blog'];
+export const NAV_ORDER: SectionKey[] = ['flash', 'national', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'leisure', 'sharon'];
 /** sections that always have a page, even before their first story (the rest appear with their first story) */
 export const CORE_SECTIONS: SectionKey[] = ['flash', 'city', 'realestate', 'sports', 'community', 'leisure', 'sharon', 'tourism', 'law'];
