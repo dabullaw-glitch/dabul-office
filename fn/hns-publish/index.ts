@@ -406,7 +406,8 @@ async function revise(b: Any) {
 }
 
 // ---------- 29.10.2026: management panel (/yakirdab/) ----------
-const SECTIONS = ['national', 'flash', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'leisure', 'sharon', 'tourism', 'law'];
+// 29.10.2026: 'blog' (long guides by hns-blog)
+const SECTIONS = ['blog', 'national', 'flash', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'leisure', 'sharon', 'tourism', 'law'];
 const BY = 'yakir-panel';
 const httpsUrl = (u: unknown) => { const x = String(u ?? '').trim(); return /^https:\/\/[^\s"<>]{3,500}$/.test(x) ? x : ''; };
 const linkUrl = (u: unknown) => { const x = String(u ?? '').trim(); return /^(https?:\/\/[^\s"<>]{3,500}|\/[^\s"<>]{0,300})$/.test(x) ? x : ''; };

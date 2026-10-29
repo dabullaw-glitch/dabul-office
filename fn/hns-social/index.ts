@@ -57,9 +57,9 @@ const CFG: Record<Ch, { perRun: number; perDay: number; gapMin: number; importan
 
 // same section slugs and fallback as the site (sites/nws/src/data/sections.ts, src/lib/content.ts fromFeed + articleUrl)
 const SLUG: Record<string, string> = { flash: 'flash', national: 'israel', city: 'city', realestate: 'real-estate', community: 'community', sports: 'sports',
-  leisure: 'events', sharon: 'sharon', tourism: 'tourism', law: 'law', police: 'police', transport: 'transport', health: 'health' };
+  leisure: 'events', sharon: 'sharon', tourism: 'tourism', law: 'law', police: 'police', transport: 'transport', health: 'health', blog: 'blog' };
 const TAG: Record<string, string> = { flash: 'מבזק', national: 'חדשות_ארציות', city: 'עיריית_נתניה', realestate: 'נדלן_נתניה', community: 'קהילה_וחינוך', sports: 'ספורט',
-  leisure: 'אירועים', sharon: 'השרון', tourism: 'תיירות', law: 'חוק_ומשפט', police: 'משטרה_ופלילים', transport: 'תחבורה', health: 'בריאות' };
+  leisure: 'אירועים', sharon: 'השרון', tourism: 'תיירות', law: 'חוק_ומשפט', police: 'משטרה_ופלילים', transport: 'תחבורה', health: 'בריאות', blog: 'מדריך_לתושבים' };
 const sec = (st: Any) => (SLUG[st.section] ? st.section : 'flash');
 const pathOf = (st: Any) => `/${SLUG[sec(st)]}/n${st.id}/`;
 const urlOf = (st: Any) => SITE + pathOf(st);
@@ -217,6 +217,8 @@ async function run(opts: { dry: boolean; preview?: boolean; all?: boolean }) {
       const st = x.st, urgent = isWarning(st);
       const wait = (why: string) => res.waiting.push({ id: st.id, title: clean(st.title), why });
       // 29.10.2026 (Yakir): Telegram gets a story only when it is published, never a backlog of older stories
+      // 29.10.2026: blog guides go to Facebook only, the Telegram channel is for news that just happened
+      if (ch === 'tg' && sec(st) === 'blog') continue;
       if (ch === 'tg' && !opts.all && Date.now() - Date.parse(st.published_at) > TG_FRESH_MIN * 60e3) continue;
       if (n >= cfg.perRun && !opts.all) { wait('בריצה הבאה'); continue; }
       if (clock.quiet && !urgent && !opts.all && ch !== 'tg') { wait('שעות שקט 23:00 עד 06:30'); continue; }
