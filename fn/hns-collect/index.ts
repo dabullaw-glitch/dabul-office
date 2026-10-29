@@ -307,7 +307,7 @@ async function pollSource(src: Any) {
   const now = new Date().toISOString();
   try {
     const r = await fetchText(src.url, src);
-    if (r.status === 202) return { id: src.id, pending: true };
+    if (r.status === 202 && src.kind === 'gnews') return { id: src.id, pending: true };
     if (r.status === 304) { await sb.from('hns_sources').update({ last_run: now, last_ok: now, last_error: null, fails: 0 }).eq('id', src.id); return { id: src.id, new: 0, status: 304 }; }
     if (r.status >= 400) throw new Error(`HTTP ${r.status}`);
     if (src.kind === 'smarticket') {
