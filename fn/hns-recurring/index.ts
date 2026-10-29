@@ -738,7 +738,7 @@ async function freeImage(file: string) {
   const lic = txt(md.LicenseShortName?.value || '');
   if (!FREE_LIC.test(lic) || /(?:^|[\s-])(?:nc|nd)(?:[\s-]|$)/i.test(lic)) return null;
   const artist = txt(md.Artist?.value || '').slice(0, 40);
-  const url = String(ii.thumburl || ii.url || '');
+  const url = String(ii.thumburl || ii.url || '').replace(/\?.*$/, '');
   if (!/^https:\/\/upload\.wikimedia\.org\//.test(url)) return null;
   return { url, credit: clean(`ויקישיתוף${artist ? `, ${artist}` : ''}, ${lic}`).slice(0, 80), lic, page: String(ii.descriptionurl || '') };
 }
@@ -780,7 +780,10 @@ JSON: {"kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""]}`;
   if (w.hold || w.fail) { await log('history', key, null, CALLS, w.usage, { held: w.hold || w.fail, place: pick.title }); return { held: w.hold || w.fail, key, place: pick.title }; }
   const o = w.out;
   let title = clean(o.title); if (!title.startsWith('נתניה של פעם')) title = `נתניה של פעם: ${title}`;
-  const id = await insertStory(b, { section: 'community', kicker: 'נתניה של פעם', title, dek: o.dek, body: o.body, key_points: o.keyPoints,
+  // war, expulsion, killings or attacks in the story of the place: Yakir approves it before it is published (hns-publish holds
+  // a 'sensitive' story for approval)
+  const sensitive = /נכבש|התרוקן|גורשו|גירוש|פליטים|טבח|פיגוע|נהרג|נרצח|נטבח/.test(norm([title, o.dek, ...cleanArr(o.body)].join(' ')));
+  const id = await insertStory(b, { section: 'community', kicker: 'נתניה של פעם', title, dek: o.dek, body: o.body, key_points: o.keyPoints, ...(sensitive ? { sensitivity: 'sensitive' } : {}),
     places: ['נתניה'], sources: [{ id: 'wikipedia', name: 'ויקיפדיה', url: pick.url, trust: 'media' }], basis: 'public', item_ids: [], format: 'history', format_key: key,
     format_data: { kind: 'history', place: pick.title, url: pick.url, image: img ? { license: img.lic, page: img.page } : null },
     ...(img ? { image_url: img.url, image_alt: pick.title, image_model: null, image_at: new Date().toISOString(), extras: { image_credit: img.credit } } : {}), usage: w.usage });
@@ -874,8 +877,8 @@ async function opened(b: Any) {
 // Weekly (Sunday 12:00 Israel time): the city's teams and athletes beyond the Maccabi Netanya senior football stories (those have
 // their own preview and report): basketball, volleyball, handball, women's and youth football, athletics, swimming and so on, from
 // the week's local sports items (the new source gn_sports adds these branches). Scores only as the items state them. Routine.
-const MAIN_FOOT_RE = /מכבי נתניה/;
-const OTHER_SPORT_RE = /כדורסל|כדורעף|כדוריד|אתלטיק|שחי|ג'ודו|טניס|נוער|נערים|נערות|ילדים|נשים|אופניים|טאקוונדו|קראטה|התעמלות|שחמט|גלישה|חתירה|איגרוף|היאבקות|ליגה לאומית|ליגה א|ליגה ב|ליגה ג|בית"ר נתניה|הפועל נתניה|אליצור נתניה|מכבי צעירי/;
+// an item counts when it names Netanya and another branch, a youth or women's team, or a lower league team of the city
+const OTHER_SPORT_RE = /כדורסל|כדורעף|כדוריד|אתלטיק|שחייה|שחיה|ג'ודו|טניס|(?<![א-ת])נוער|נערים|נערות|ילדות|(?<![א-ת])נשים|אופניים|טאקוונדו|קראטה|התעמלות|שחמט|גלישה|חתירה|איגרוף|היאבקות|ליגה לאומית|ליגה א'|ליגה ב'|ליגה ג'|בית"ר נתניה|הפועל נתניה|אליצור נתניה|מכבי צעירי/;
 async function sportsWeek(b: Any) {
   const now = il(new Date());
   if (!b.force && !(now.wd === 0 && now.hh === 12)) return { skipped: `not Sunday 12:00 in Israel (${now.ymd} ${now.hm})` };
@@ -883,8 +886,8 @@ async function sportsWeek(b: Any) {
   if (!b.test && (await getState(key))?.story_id) return { skipped: 'already written', key };
   await sources();
   const its = await itemsSince(7, (x) => {
-    const t = norm(`${x.title} ${String(x.body || '').slice(0, 300)}`);
-    return x.is_local && (x.topic === 'sports' || x.source_id === 'gn_sports') && (!MAIN_FOOT_RE.test(t) || OTHER_SPORT_RE.test(t));
+    const t = norm(`${x.title} ${String(x.body || '').slice(0, 600)}`);
+    return x.is_local && (x.topic === 'sports' || x.source_id === 'gn_sports') && /נתניה/.test(t) && OTHER_SPORT_RE.test(t);
   });
   const groups = groupItems(its).slice(0, 10);
   if (groups.length < 2) { if (!b.dry && !b.test) await log('sports_week', key, null, 0, null, { held: `only ${groups.length} items` }); return { held: 'too few', key, candidates: its.length, groups: groups.length }; }
