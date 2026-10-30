@@ -349,8 +349,9 @@ async function pollSource(src: Any) {
 }
 
 async function tick() {
-  // kind 'html' belongs to hns-official (sources agent); the fastest sources (poll_min) go first so alerts are never starved
-  const { data: srcs } = await sb.from('hns_sources').select('*').eq('enabled', true).neq('kind', 'html').order('poll_min');
+  // kind 'html' belongs to hns-official (sources agent); kind 'facebook' is read only from Yakir's Chrome by a scheduled task
+  // (Facebook answers 400 to servers; 30.10.2026: polling it here only produced failure alerts); the fastest sources (poll_min) go first so alerts are never starved
+  const { data: srcs } = await sb.from('hns_sources').select('*').eq('enabled', true).not('kind', 'in', '(html,facebook)').order('poll_min');
   const nowMs = Date.now();
   const due = (srcs || []).filter((s: Any) => {
     // back off after failures: wait poll_min * 2^fails, up to 6 hours

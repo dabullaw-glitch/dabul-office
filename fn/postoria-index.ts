@@ -167,7 +167,7 @@ async function publish() {
           if (ch === 'gbp' && pst.kind === 'video') { res[ch] = { ok: false, error: 'גוגל עסקי לא מקבל סרטונים' }; continue; }
           const p = await pst_(`/workspaces/${ws}/posts`, 'POST', postBody(row, ch, a, pst));
           if (p.status < 300 && p.j && p.j.id) res[ch] = { pending: p.j.id, via: 'postoria', at: new Date().toISOString() };
-          else res[ch] = { ok: false, via: 'postoria', error: `Postoria ${p.status}: ${String((p.j && (p.j.message || p.j.error || p.j.title)) || JSON.stringify(p.j)).slice(0, 200)}` };
+          else { const m = p.j && (p.j.message || p.j.error || p.j.title || p.j.errors); res[ch] = { ok: false, via: 'postoria', error: `Postoria ${p.status}: ${(m && typeof m === 'object' ? JSON.stringify(m) : String(m || JSON.stringify(p.j))).slice(0, 300)}` }; }
         }
       }
       // the links of what was sent
@@ -197,7 +197,7 @@ async function publish() {
     await merge('pub', r.id, patch);
     if (allOk && row.reel && res.instagram && res.instagram.ok) await merge('reel', row.reel, { igAt: new Date().toISOString(), igPub: r.id });
     const firstFail = failed.filter(c => !(row.result && row.result[c] && row.result[c].error));
-    if (firstFail.length || (late && !allOk)) await telegram(`⚠️ פרסום דרך Postoria ${late ? 'לא הצליח' : 'נכשל, אנסה שוב'}: ${row.title || r.id}\n${chans.filter(c => !(res[c] && res[c].ok)).map(c => `${c}: ${(res[c] && res[c].error) || 'לא יצא'}`).join('\n')}`).catch(() => false);
+    if (firstFail.length || (late && !allOk)) await telegram(`⚠️ פרסום דרך Postoria ${late ? 'לא הצליח' : 'נכשל, אנסה שוב'}: ${row.title || r.id}\n${chans.filter(c => !(res[c] && (res[c].ok || res[c].pending))).map(c => `${c}: ${(res[c] && res[c].error) || 'לא יצא'}`).join('\n')}`).catch(() => false);
     log.push(`${r.id}: ${status} ${JSON.stringify(res).slice(0, 220)}`);
   }
   return { ok: true, log };
