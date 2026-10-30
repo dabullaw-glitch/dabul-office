@@ -57,6 +57,13 @@ jobs:
                 await p.evaluate(()=>window.scrollTo(0,0)); await p.waitForTimeout(1500);
                 const cls2 = await p.evaluate(()=>({cls:+window.__cls.toFixed(4),n:window.__shifts.length,shifts:window.__shifts.slice(0,25)}));
                 fs.appendFileSync(`${process.env.OUT}/cls.txt`, JSON.stringify({name,tag,loadCls:cls1.cls,afterScrollCls:cls2.cls,loadShifts:cls1.shifts.slice(0,15),allShifts:cls2.shifts})+'\n');
+                // optional third column: a sketch script (mock/*.js) run on the live page before the pictures
+                if (js) { await p.addScriptTag({content: fs.readFileSync(process.env.GITHUB_WORKSPACE + '/' + js, 'utf8')}); await p.waitForTimeout(2500);
+                  for (let y=0;y<30000;y+=500){ await p.evaluate(v=>window.scrollTo(0,v),y); await p.waitForTimeout(80); } await p.evaluate(()=>window.scrollTo(0,0)); await p.waitForTimeout(1000);
+                  const els = await p.$$('[data-shot]'); let i=0;
+                  for (const e of els) { i++; try { await e.scrollIntoViewIfNeeded(); await p.waitForTimeout(800); const bb = await e.boundingBox(); if (!bb) continue;
+                    const top = await p.evaluate(()=>window.scrollY);
+                    await p.screenshot({path:`${process.env.OUT}/${name}-${tag}-part${i}.jpg`,type:'jpeg',quality:80,fullPage:true,clip:{x:0,y:Math.max(0,bb.y+top-40),width:vp.width,height:Math.min(bb.height+80,2400)}}); } catch(e) { console.log('part fail',name,tag,i,e.message); } } }
                 await p.screenshot({path:`${process.env.OUT}/${name}-${tag}.jpg`,fullPage:true,type:'jpeg',quality:70});
                 if (tag==='d') {
                   fs.writeFileSync(`${process.env.OUT}/${name}.html`, await p.content());
