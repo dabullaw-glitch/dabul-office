@@ -93,7 +93,7 @@ add_filter('wpseo_schema_graph', function ($graph) {
 		$page = get_permalink(988);
 		$lid = $page . '#press-list';
 		$els = array(); $n = 0;
-		foreach (array_slice($items, 0, 12) as $it) { $n++; $els[] = array('@type' => 'ListItem', 'position' => $n, 'item' => dabul_press_node($it, $mentions)); }
+		foreach (array_slice($items, 0, (function_exists('dabul_press_page_all') && dabul_press_page_all()) ? 100 : 12) as $it) { $n++; $els[] = array('@type' => 'ListItem', 'position' => $n, 'item' => dabul_press_node($it, $mentions)); }
 		$graph[] = array('@type' => 'ItemList', '@id' => $lid, 'name' => 'המשרד בתקשורת: כתבות על עו״ד יקיר דבול והמשרד', 'numberOfItems' => $n, 'itemListOrder' => 'https://schema.org/ItemListOrderDescending', 'itemListElement' => $els);
 		foreach ($graph as $i => $node) {
 			if (!is_array($node)) continue;
