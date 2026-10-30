@@ -3285,7 +3285,7 @@ html, body { overflow-x: hidden; }
 .dnt-ok b { display: block; font-size: 17px; margin-bottom: 8px; }
 .dnt-ok a { display: inline-block; background: rgb(197, 162, 90); color: rgb(20, 20, 20); font-weight: 700; border-radius: 10px; padding: 11px 20px; text-decoration: none; }
 .dnt section.dnt-press { padding-block: 26px 0px; }
-.dnt .dnt-press .in { display: flex; align-items: center; gap: 22px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+.dnt .dnt-press .in { display: flex; align-items: center; gap: 22px; padding-bottom: 24px; background: linear-gradient(var(--line),var(--line)) center bottom/calc(100% - 36px) 1px no-repeat; }
 .dnt .dnt-press .lb { margin: 0px; font-size: 15px; font-weight: 700; color: var(--muted); line-height: 1.3; white-space: nowrap; flex: 0 0 auto; }
 .dnt .dnt-press .lg { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex: 1 1 auto; min-width: 0px; }
 .dnt .dnt-press .t { display: flex; align-items: center; justify-content: center; height: 44px; padding: 5px 10px; background: rgb(255, 255, 255); border: 1px solid var(--line); border-radius: 8px; box-sizing: border-box; }
