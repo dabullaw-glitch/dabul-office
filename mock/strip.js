@@ -12,8 +12,9 @@
   document.querySelectorAll('body *').forEach((el) => { const cs = getComputedStyle(el); if (cs.position === 'fixed' && !el.closest('header')) el.style.visibility = 'hidden'; });
   // right under the page's first section (the one with the main title)
   const h1 = document.querySelector('main h1, [data-elementor-type] h1, h1');
-  let firstSec = h1;
-  while (firstSec && firstSec.parentElement && !firstSec.parentElement.hasAttribute('data-elementor-type')) firstSec = firstSec.parentElement;
+  let firstSec = h1 && h1.closest('.hero');
+  if (!firstSec) { firstSec = h1;
+  while (firstSec && firstSec.parentElement && !firstSec.parentElement.hasAttribute('data-elementor-type')) firstSec = firstSec.parentElement; }
   if (!firstSec || !firstSec.parentElement || firstSec.tagName === 'BODY' || firstSec.tagName === 'HTML') firstSec = h1 ? h1.parentElement : document.body.firstElementChild;
   const ff = getComputedStyle(document.body).fontFamily;
   const s = document.createElement('section');
