@@ -280,11 +280,14 @@ async function fetchViaDb(url: string, src: Any) {
     const { data } = await sb.rpc('hns_net_res', { rid: pend });
     const row = Array.isArray(data) ? data[0] : data;
     if (row) { if (row.err && !row.status) throw new Error('db fetch: ' + row.err); return { status: row.status || 0, text: row.body || '', etag: null, lm: null }; }
-    return { status: 202, text: '', etag: src.etag, lm: null };
+    // 30.10.2026: a request whose response never arrived (or was purged by pg_net) left every Google News source stuck on
+    // 'pending' for 10 hours. A request older than 20 minutes is treated as lost and a new one is sent.
+    const age = Date.now() - Date.parse(src.last_run || 0);
+    if (!(age > 20 * 60e3)) return { status: 202, text: '', etag: src.etag, lm: null };
   }
   const { data: id, error } = await sb.rpc('hns_net_get', { u: url });
   if (error || !id) throw new Error('db fetch: ' + (error?.message || 'no id'));
-  await sb.from('hns_sources').update({ etag: `net:${id}` }).eq('id', src.id);
+  await sb.from('hns_sources').update({ etag: `net:${id}`, last_run: new Date().toISOString() }).eq('id', src.id);
   return { status: 202, text: '', etag: `net:${id}`, lm: null };
 }
 async function fetchText(url: string, src: Any) {
@@ -355,6 +358,8 @@ async function tick() {
   const nowMs = Date.now();
   const due = (srcs || []).filter((s: Any) => {
     // back off after failures: wait poll_min * 2^fails, up to 6 hours
+    // a Google News request already sent is checked again after a minute (its answer is waiting in the database)
+    if (s.kind === 'gnews' && /^net:\d+$/.test(String(s.etag || ''))) return nowMs - Date.parse(s.last_run || 0) >= 40e3;
     const wait = Math.min(s.poll_min * Math.pow(2, Math.min(s.fails || 0, 8)), 360) * 60e3 - 20e3;
     return !s.last_run || nowMs - Date.parse(s.last_run) >= wait;
   }).slice(0, 24);

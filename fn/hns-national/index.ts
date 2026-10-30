@@ -30,17 +30,22 @@ const MODEL = 'claude-sonnet-5-5';
 // 29.10.2026 (Yakir approved): more national news, 15 to 25 a day, on matters that touch every family
 const MAX_DAY = 25;
 const GAP_MIN = 10;
+// 30.10.2026: i24 (Yakir gave it as a national source) was collected but never read here
 const NATIONAL_SRC = ['ynet_flash', 'ynet_news', 'walla_israel', 'maariv_news', 'mako_news', 'inn_news', 'kikar', 'srugim', 'haaretz_all', 'jdn', 'news08', 'hm_news', 'oref_tg',
-  'walla_money', 'globes_markets', 'ice_news'];
+  'walla_money', 'globes_markets', 'ice_news', 'i24_he_tg'];
 // 29.10.2026: too few national stories (3 a day instead of 15 to 25): different outlets word the same event differently, so few
 // events reached two outlets. An announcement of an official body (a ministry, Bank of Israel, the Knesset, the IDF, the rail...)
 // reported by one of the large outlets is enough, after waiting 30 minutes for a second outlet to join the group.
-const MAJOR_SRC = new Set(['ynet_flash', 'ynet_news', 'walla_israel', 'maariv_news', 'mako_news', 'haaretz_all', 'walla_money', 'globes_markets', 'inn_news']);
+const MAJOR_SRC = new Set(['ynet_flash', 'ynet_news', 'walla_israel', 'maariv_news', 'mako_news', 'haaretz_all', 'walla_money', 'globes_markets', 'inn_news', 'i24_he_tg']);
+// 30.10.2026 (Yakir: "איך פספסנו את זה?" about the Revolutionary Guards attack on two tankers in Hormuz): war and security events
+// (Iran, Hezbollah, the Houthis, Gaza, Hormuz) are worded so differently by each outlet that they rarely group, so one large outlet
+// is enough for them too, after waiting 20 minutes for others to join the group.
+const WAR_RE = /איראן|איראני|משמרות המהפכה|הורמוז|מכלית|מכליות|חות'?ים|חות׳ים|תימן|חיזבאללה|לבנון|חמאס|עזה|סוריה|ח'?אמנאי|גרעין|טיל|רקט|כטב"?ם|יירוט|יורט|תקיפ|תקף|פיגוע|מחבל|חטופ|הפסקת אש|מלחמה|המלחמה|פיקוד העורף|אזעק/;
 const OFFICIAL_BODY_RE = /משרד (?:ה|ל)|בנק ישראל|רשות (?:ה|ל)|ועדת הבחירות|ביטוח לאומי|הממשלה (?:אישרה|החליטה)|הכנסת (?:אישרה|אישר)|אושר בקריאה|החלטת ממשלה|פיקוד העורף|השירות המטאורולוגי|רכבת ישראל|צה"ל|דובר צה|המשטרה|הלמ"ס|הלשכה המרכזית לסטטיסטיקה|ההסתדרות|מדד המחירים|הריבית/;
 // 29.10.2026 (night, plan approved by Yakir): also housing (arnona, mortgages, rents, purchase tax), with the local angle paragraph.
 // 29.10.2026: besides elections and security, decisions that touch every household (taxes, benefits, prices, Bank of Israel),
 // health and education (strikes, school holidays), national transport (rail, strikes) and extreme weather
-const TOPIC_RE = /ארנונה|משכנתא|משכנתאות|מחירי הדירות|מחירי הדיור|דירה בהנחה|מחיר למשתכן|שכר הדירה|שכר דירה|שוכרים|מס רכישה|בנק ישראל|הריבית|מדד המחירים|יוקר המחיה|התייקר|ייקור|העלאת (?:ה)?מחיר|מחיר (?:הדלק|הבנזין|החשמל|המים|הלחם|החלב|הגז)|מס הכנסה|מע"מ|נקודות זיכוי|רשות המסים|קצב(?:ה|ת|אות)|ביטוח לאומי|מענק|שכר המינימום|תקציב המדינה|חוק ההסדרים|הכנסת אישרה|אושר בקריאה|הממשלה אישרה|החלטת ממשלה|משרד הבריאות|משרד החינוך|שבית|שובת|עיצומים|לוח החופשות|חופשת (?:חנוכה|הפסח|הקיץ|סוכות)|שנת הלימודים|בגרות|חיסון|תחלוא|רכבת ישראל|קווי הרכבת|תחבורה ציבורית|משרד התחבורה|נתב"ג|רישיון נהיגה|סערה|שיטפו|הצפות|גשם כבד|שלג|שרב|עומס חום|השירות המטאורולוגי|פיגוע|מחבל|ועדת הבחירות|מנדט|ספירת (?:הקולות|המעטפות)|הקואליציה|הרכבת (?:ה)?ממשלה|הטלת התפקיד|הנשיא (?:הטיל|יטיל)|ממשלה חדשה|השבעת הכנסת|מלחמה|פיקוד העורף|אזעק|ירי (?:רקטות|טילים)|טילים|כטב"ם|כטב״ם|צה"ל תקף|צה״ל תקף|תקיפה (?:ב|נגד)|איראן|חיזבאללה|חמאס|חטופ|הפסקת אש|מבצע צבאי|מצב (?:מיוחד|חירום) בעורף|הנחיות (?:פיקוד )?העורף|רעידת אדמה/;
+const TOPIC_RE = /ארנונה|משכנתא|משכנתאות|מחירי הדירות|מחירי הדיור|דירה בהנחה|מחיר למשתכן|שכר הדירה|שכר דירה|שוכרים|מס רכישה|בנק ישראל|הריבית|מדד המחירים|יוקר המחיה|התייקר|ייקור|העלאת (?:ה)?מחיר|מחיר (?:הדלק|הבנזין|החשמל|המים|הלחם|החלב|הגז)|מס הכנסה|מע"מ|נקודות זיכוי|רשות המסים|קצב(?:ה|ת|אות)|ביטוח לאומי|מענק|שכר המינימום|תקציב המדינה|חוק ההסדרים|הכנסת אישרה|אושר בקריאה|הממשלה אישרה|החלטת ממשלה|משרד הבריאות|משרד החינוך|שבית|שובת|עיצומים|לוח החופשות|חופשת (?:חנוכה|הפסח|הקיץ|סוכות)|שנת הלימודים|בגרות|חיסון|תחלוא|רכבת ישראל|קווי הרכבת|תחבורה ציבורית|משרד התחבורה|נתב"ג|רישיון נהיגה|סערה|שיטפו|הצפות|גשם כבד|שלג|שרב|עומס חום|השירות המטאורולוגי|פיגוע|מחבל|ועדת הבחירות|מנדט|ספירת (?:הקולות|המעטפות)|הקואליציה|הרכבת (?:ה)?ממשלה|הטלת התפקיד|הנשיא (?:הטיל|יטיל)|ממשלה חדשה|השבעת הכנסת|מלחמה|פיקוד העורף|אזעק|ירי (?:רקטות|טילים)|טילים|כטב"ם|כטב״ם|צה"ל תקף|צה״ל תקף|תקיפה (?:ב|נגד)|איראן|חיזבאללה|חמאס|חטופ|הפסקת אש|מבצע צבאי|מצב (?:מיוחד|חירום) בעורף|הנחיות (?:פיקוד )?העורף|רעידת אדמה|משמרות המהפכה|הורמוז|מכלית|מכליות|חות'ים|חות׳ים|החותים|תימן|ח'אמנאי|גרעין|יירוט|יורט|שיגור|לבנון|סוריה|עזה|רצועת עזה|יהודה ושומרון/;
 const SKIP_RE = /\|\s*[^|]{2,40}$|רכילות|ריאליטי|האח הגדול|נוטה למות|דעה|טור אישי|פרשנות|פודקאסט|גלריה|צפו:|צפו ב|ראיון|הסקר|סקר:|ציוץ|הורוסקופ|מתכון|בידור|כוכב|זמר|שחקנית|עוקבים/;
 const OFFICIAL_SRC = new Set(['oref_tg']);
 
@@ -88,7 +93,10 @@ const SYSTEM = `אתה עורך חדשות באתר "חדשות נתניה וה�
 - כשההחלטה או האירוע משפיעים על כל תושב (מס, ארנונה, קצבה, מחיר, ריבית, משכנתא, דיור ושכירות, שביתה, חופשה, הנחיה, תחבורה), הפסקה האחרונה מתחילה במילים "מה זה אומר לתושבי נתניה:" ומסבירה במשפט או שניים את ההשפעה המעשית, רק לפי מה שכתוב במקורות (מתי זה נכנס לתוקף, את מי זה מחייב, מה צריך לעשות). לא להמציא נתון מקומי. אם אין השפעה מעשית ברורה, לא להוסיף את הפסקה.
 - מבנה: פסקה ראשונה עם מה קרה ומתי (יום ותאריך, שעה אם ידועה), אחר כך הפרטים והמצב הנוכחי, ומה הלאה אם כתוב. 2 עד 4 פסקאות.
 - כותרת עד 80 תווים, עובדתית. כותרת משנה: משפט אחד עם פרט חשוב שלא בכותרת. kicker: עד 5 מילים עם עובדה שלא בכותרת, או ריק.
-- אם זה לא אירוע ארצי מהסוג הזה (למשל דעה, רכילות פוליטית, ויכוח בין פוליטיקאים בלי החלטה, ספורט, בידור, שוק ההון, חדשות מחו"ל בלי השפעה ישירה על ישראל), החזר רק {"skip":true,"reason":"..."}.
+- מלחמה וביטחון כוללים גם את מה שקורה סביב המלחמה עם איראן ובחזיתות האחרות, גם כשזה מחוץ לישראל: תקיפה, פיצוץ או תפיסה של ספינות ומכליות (למשל במצר הורמוז), שיגורים של החות'ים, חיזבאללה, עזה, סוריה, צעדים ביטחוניים של ארה"ב באזור, ומשא ומתן או הצהרה של מנהיג (נשיא ארה"ב, מנהיגי איראן) על המלחמה או על הפסקתה. את כל אלה כותבים. הצהרה מייחסים לאומר ("לדברי טראמפ"), לא מציגים אותה כעובדה.
+- דיווח של כלי תקשורת גדול על אירוע שקרה (תקיפה, פיצוץ, שיגור, הודעה של צבא או של גוף רשמי בחו"ל כמו משמרות המהפכה) מספיק לכתיבה. מייחסים לגוף שהודיע ("לפי משמרות המהפכה"), ואם אין אישור ממקור נוסף כותבים זאת במפורש.
+- אם זה לא אירוע ארצי מהסוג הזה (למשל דעה, רכילות פוליטית, ויכוח בין פוליטיקאים בלי החלטה, ספורט, בידור, שוק ההון, חדשות מחו"ל שאינן קשורות למלחמה ואין להן השפעה ישירה על ישראל), החזר רק {"skip":true,"reason":"..."}.
+- "hold" רק כשהמקור כולו הערכות ושמועות של גורמים בלי שם, בלי אירוע שקרה ובלי הצהרה של אדם או גוף מזוהה. אם יש אירוע או הצהרה מזוהה, כותבים.
 - אם אין מספיק עובדות לשני משפטים ענייניים, החזר רק {"hold":true,"reason":"..."}.
 החזר JSON בלבד: {"kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""],"basis":"official","sensitive":false}`;
 
@@ -124,8 +132,9 @@ async function tick(dry: boolean) {
     const g = groups.find((g) => same(g.t, t));
     if (g) { g.items.push(x); for (const w of t) g.t.add(w); } else groups.push({ items: [x], t });
   }
-  const solo = (g: { items: Any[] }) => g.items.some((x) => MAJOR_SRC.has(x.source_id) && OFFICIAL_BODY_RE.test(norm(x.title || ''))
-    && now - Date.parse(x.published_at || x.fetched_at) >= 30 * 60e3);
+  const solo = (g: { items: Any[] }) => g.items.some((x) => MAJOR_SRC.has(x.source_id) && (
+    (OFFICIAL_BODY_RE.test(norm(x.title || '')) && now - Date.parse(x.published_at || x.fetched_at) >= 30 * 60e3)
+    || (WAR_RE.test(norm(x.title || '')) && now - Date.parse(x.published_at || x.fetched_at) >= 20 * 60e3)));
   const ok = groups.filter((g) => new Set(g.items.map((x) => x.source_id)).size >= 2 || g.items.some((x) => OFFICIAL_SRC.has(x.source_id)) || solo(g))
     .sort((a, b) => new Set(b.items.map((x) => x.source_id)).size - new Set(a.items.map((x) => x.source_id)).size);
   // national stories of the last 6 hours: a matching group is attached, not written again
