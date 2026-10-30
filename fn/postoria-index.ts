@@ -98,7 +98,10 @@ function postBody(row: any, ch: string, acc: number, pst: any) {
     body.media = [{ media_id: pst.media[0], ...(pst.thumb ? { thumbnail_media_id: pst.thumb } : {}) }];
   } else if (pst.kind === 'image') {
     body.content_type = pst.media.length > 1 ? 'carousel' : 'image';
-    body.media = pst.media.map((id: number) => ({ media_id: id }));
+    // LinkedIn takes at most 9 files in one post (Postoria 400 "You can upload up to 9 files", 30.10.2026): keep the first 8 and the
+    // last slide (the closing slide with the office details)
+    const ids: number[] = ch === 'linkedin' && pst.media.length > 9 ? [...pst.media.slice(0, 8), pst.media[pst.media.length - 1]] : pst.media;
+    body.media = ids.map((id: number) => ({ media_id: id }));
   } else if (row.link && (ch === 'facebook' || ch === 'linkedin')) { body.content_type = 'link'; body.link_url = row.link; }
   else body.content_type = 'text';
   // Google Business: its own weekly post in Yakir's template (text as written, article link at the end), plus a "Learn more" button
