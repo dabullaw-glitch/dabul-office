@@ -41,7 +41,7 @@ for (const x of items) {
   const title = txt((h.match(/<h1[^>]*>([\s\S]*?)<\/h1>/) || [])[1]);
   const dek = txt((h.match(/<p class="n-dek"[^>]*>([\s\S]*?)<\/p>/) || [])[1]);
   const bodyHtml = (h.split('class="n-body"')[1] || '');
-  const body = [...bodyHtml.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)].slice(0, 4).map((m) => txt(m[1]));
+  const body = [...bodyHtml.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)].map((m) => txt(m[1])).filter((p) => p && !/לפרסם כאן|לדעת ראשונים|צרו קשר/.test(p)).slice(0, 4);
   const hero = (h.match(/<figure class="n-hero">[\s\S]*?<img[^>]*src="([^"]+)"/) || [])[1] || '';
   const slugSec = x.u.split('/')[1];
   const a = { title, dek, body, section: SEC[slugSec] || '', neighborhoods: [] };

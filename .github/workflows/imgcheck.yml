@@ -35,3 +35,14 @@ jobs:
           git diff --cached --quiet && { echo "no new fixes"; exit 0; }
           git commit -qm "nws image self check: stories sent to the neutral photo"
           for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
+      - name: Keep the report (branch nws-imgcheck, report.json and report.md)
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/rep && cp /tmp/imgcheck.json /tmp/rep/report.json 2>/dev/null || exit 0
+          node -e 'const j=require("/tmp/rep/report.json");console.log(`# image self check ${j.at}\n\n${j.checked} stories, ${j.mismatched} sent to the neutral photo\n\n| story | topic | where | photo | result |\n|---|---|---|---|---|\n`+j.rows.map(r=>`| ${r.t} | ${r.topic||""} | ${r.where||""} | ${r.img||r.err||""} | ${r.why?"FIX: "+r.why:r.err?"not checked":"ok"} |`).join("\n"))' > /tmp/rep/report.md
+          cd /tmp/rep && git init -q && git checkout -qb nws-imgcheck
+          git config user.name "site-bot" && git config user.email "site-bot@users.noreply.github.com"
+          git add -A && git commit -qm "image self check $(date -u +%FT%TZ)"
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" nws-imgcheck
