@@ -89,6 +89,31 @@ const ROOTS = [
   { cat: 'Herzliya Marina', depth: 1, cap: 4, topics: ['sea', 'sharon'], place: 'הרצליה', alt: 'מרינה הרצליה' },
   { cat: 'Hadera beach', depth: 1, cap: 4, topics: ['beach', 'sea', 'sharon'], place: 'חדרה', alt: 'חוף חדרה' },
   { cat: 'Sharon plain', depth: 1, cap: 10, topics: ['sharon', 'nature', 'agriculture'], place: 'השרון', alt: 'השרון' },
+  // ---- 30.10.2026: the topic illustration sets (Yakir: crime, security, accidents, fire, health, courts, elections, economy, weather,
+  // sports and education stories get a topic illustration, never a landmark). set: the illustration set; no place (they are not
+  // landmarks); allow: words of BAD that this set may show (a police car may say police). Many names are tried, a missing one is skipped.
+  ...[
+    ['police', 'ניידת משטרה', /polic/i, ['Israel Police vehicles', 'Police vehicles of Israel', 'Police cars of Israel', 'Police cars in Israel', 'Police lights', 'Emergency vehicle lighting', 'Police tape', 'Barricade tape']],
+    ['security', 'מצלמת אבטחה ואמצעי ביטחון', /polic|security/i, ['Closed-circuit television cameras', 'CCTV cameras in Israel', 'Surveillance cameras', 'Handcuffs', 'Police tape', 'Barricade tape']],
+    ['courts', 'בית המשפט', /court/i, ['Supreme Court of Israel building', 'Building of the Supreme Court of Israel', 'Courthouses in Israel', 'Court buildings in Israel', 'Gavels', 'Tel Aviv District Court', 'Jerusalem District Court']],
+    ['ambulance', 'אמבולנס של מד"א', /ambulan/i, ['Magen David Adom ambulances', 'Ambulances of Magen David Adom', 'Ambulances in Israel', 'Magen David Adom vehicles', 'Magen David Adom']],
+    ['fire', 'כבאית', /\bfires?\b|fire.?(engine|truck|station|fighting|service|and rescue)/i, ['Fire engines in Israel', 'Fire trucks in Israel', 'Israel Fire and Rescue Services vehicles', 'Israel Fire and Rescue Services', 'Fire stations in Israel']],
+    ['traffic', 'תנועה בכביש', null, ['Highway 2 (Israel)', 'Highway 4 (Israel)', 'Traffic congestion in Israel', 'Road traffic in Israel', 'Traffic jams in Israel', 'Highway 20 (Israel)']],
+    ['roadworks', 'עבודות בכביש', null, ['Road works in Israel', 'Road construction in Israel', 'Roadworks in Israel', 'Road works', 'Road construction']],
+    ['construction', 'אתר בנייה ועגורנים', null, ['Construction sites in Israel', 'Tower cranes in Israel', 'Construction cranes in Israel', 'Building construction in Israel', 'Construction in Israel']],
+    ['weather', 'מזג אוויר סוער', null, ['Rain in Israel', 'Storms in Israel', 'Clouds in Israel', 'Winter in Israel', 'Waves in Israel', 'Storm waves', 'Stormy seas', 'Storm clouds']],
+    ['hospital', 'בית חולים', null, ['Meir Medical Center', 'Hillel Yaffe Medical Center', 'Sheba Medical Center', 'Rabin Medical Center', 'Tel Aviv Sourasky Medical Center', 'Hospitals in Israel', 'Laniado Hospital']],
+    ['school', 'בית ספר', null, ['School buildings in Israel', 'Schools in Israel', 'Empty classrooms', 'Classrooms in Israel', 'School desks', 'Blackboards']],
+    ['election', 'קלפי', /election|ballot|campaign/i, ['Ballot boxes', 'Ballot boxes in Israel', 'Ballot papers of Israel', 'Polling stations in Israel', 'Ballots']],
+    ['money', 'כסף ושקלים', null, ['Israeli new shekel coins', 'Coins of Israel', 'Israeli new shekel banknotes', 'Banknotes of Israel', 'Israeli new shekel']],
+    ['realestate', 'בנייני מגורים', null, ['Apartment buildings in Israel', 'Residential buildings in Israel', 'House keys', 'Keys (locks)']],
+    ['football', 'מגרש כדורגל', /match/i, ['Netanya Stadium', 'Sammy Ofer Stadium', 'Bloomfield Stadium', 'Teddy Stadium', 'Turner Stadium', 'Association football pitches', 'Football pitches in Israel', 'Association footballs']],
+    ['basketball', 'מגרש כדורסל', null, ['Basketball courts in Israel', 'Basketball courts', 'Basketball hoops', 'Basketballs', 'Menora Mivtachim Arena', 'Pais Arena Jerusalem']],
+    ['culture', 'במה ותרבות', /concert|festival/i, ['Theatres in Israel', 'Habima Theatre', 'Concert halls in Israel', 'Stage lighting', 'Concert stages', 'Cameri Theatre']],
+    ['market', 'שוק', null, ['Markets in Israel', 'Carmel Market', 'Mahane Yehuda Market', 'Netanya market', 'Fruit and vegetable stalls']],
+    ['transport', 'תחבורה ציבורית', null, ['Buses in Israel', 'Israel Railways trains', 'Israel Railways rolling stock', 'Bus stops in Israel', 'Bus terminals in Israel', 'Netanya railway station']],
+    ['cityhall', 'בניין עירייה', null, ['City halls in Israel', 'Town halls in Israel', 'Netanya City Hall', 'Municipal buildings in Israel']],
+  ].flatMap(([set, alt, allow, cats]) => cats.map((cat) => ({ cat, depth: 1, cap: 6, set, topics: [set], place: null, alt, allow }))),
 ];
 // more specific places found in the sub-category or file name (Hebrew name as on the site)
 const PLACE_RX = [
@@ -110,6 +135,7 @@ const BAD = new RegExp([
   'airplane', 'aviation', '\\b4X-', 'nude', 'naked', 'selfie', 'videos', 'maps?\\b', 'diagram', 'interior of', 'synagogue', 'church', 'mosque',
   'hospital beds', 'patients', 'concert', 'festival', 'parade', 'purim', 'election', 'campaign', 'tempo beer', 'missile', 'rocket', 'shelter',
 ].join('|'), 'i');
+const TOPIC_BAD = /blood|injur|wound|\bdead\b|corpse|body of|weapon|\bguns?\b|rifle|pistol|crowd|\bfans\b|supporters|team photo|squad|interview|press conference|minister|mayor|poster|sticker|drawing|illustration|clip ?art|\bicons?\b|\.svg/i;
 const FREE = /^(public domain|pd(-[\w.-]+)?|cc0( 1\.0)?|cc by(-sa)? [1-4]\.[05]( [a-z]{2,6})?|attribution)$/i;
 
 async function api(params, tries = 0) {
@@ -172,7 +198,7 @@ for (const root of ROOTS) {
         if (!found.has(m.pageid)) { found.set(m.pageid, { root, via, title: m.title }); n++; }
       } else if (m.ns === 14 && depth > 0) {
         const sub = m.title.replace(/^Category:/, '');
-        if (BAD.test(sub) || /videos|panoram|by year|in 19|in 20[01]\d/i.test(sub)) continue;
+        if (BAD.test(root.allow ? sub.replace(new RegExp(root.allow.source, 'gi'), '') : sub) || /videos|panoram|by year|in 19|in 20[01]\d/i.test(sub)) continue;
         await walk(sub, depth - 1, `${via} > ${sub}`);
       }
     }
@@ -199,16 +225,20 @@ for (let i = 0; i < ids.length; i += 50) {
     if (!FREE.test(lic) || /\b(nc|nd)\b/i.test(lic)) { drop(`license ${lic}`.slice(0, 40)); continue; }
     if (/personality|trademark|insignia|consent/i.test(strip(em(m, 'Restrictions')))) { drop('restrictions'); continue; }
     const text = [p.title, f.via, ...p.categories].join(' | ');
-    if (BAD.test(text)) { drop('subject'); continue; }
+    if (BAD.test(f.root.allow ? text.replace(new RegExp(f.root.allow.source, 'gi'), '') : text)) { drop('subject'); continue; }
+    // a topic illustration: no injured people, blood, weapons, crowds, faces or readable text (the visual review checks the rest)
+    if (f.root.set && TOPIC_BAD.test(text)) { drop('topic subject'); continue; }
     if (f.root.must && !f.root.must.test(text + ' ' + strip(em(m, 'ImageDescription')))) { drop('not netanya'); continue; }
     const year = Number((strip(em(m, 'DateTimeOriginal')).match(/\b(19|20)\d\d\b/) || [])[0]) || 0;
     if (year && year < 2005) { drop('old'); continue; }
     let author = strip(em(m, 'Artist')).replace(/^(own work|self)[ ,.]*/i, '').replace(/\s*\(talk\)$/i, '');
     if (!author || /unknown|anonymous/i.test(author)) { drop('no author'); continue; }
     if (author.length > 60) author = author.slice(0, author.lastIndexOf(' ', 58) > 20 ? author.lastIndexOf(' ', 58) : 58);
-    const places = new Set([f.root.place]);
-    for (const [rx, he] of PLACE_RX) if (rx.test(text)) places.add(he);
+    // a topic illustration has no place: it is never used as a landmark
+    const places = new Set(f.root.place ? [f.root.place] : []);
+    if (f.root.place) for (const [rx, he] of PLACE_RX) if (rx.test(text)) places.add(he);
     const topics = new Set(f.root.topics);
+    if (!f.root.set) {
     if (/sunset|שקיעה/i.test(text)) topics.add('sunset');
     if (/\bnight|לילה/i.test(text)) topics.add('night');
     if (/beach|חוף/i.test(text)) topics.add('beach');
@@ -219,12 +249,13 @@ for (let i = 0; i < ids.length; i += 50) {
     if (/park|garden|גן /i.test(text)) topics.add('park');
     if (/construction|crane|building site/i.test(text)) topics.add('construction');
     if (/tower|skyscraper|high-rise/i.test(text)) topics.add('buildings');
+    }
     const assess = strip(em(m, 'Assessments'));
     const score = (assess ? 4 : 0) + (year >= 2016 ? 2 : year >= 2010 ? 1 : 0) + Math.min(2, ii.width / 3000);
     const licUrl = strip(em(m, 'LicenseUrl'));
     if (/^cc /i.test(lic) && !/^https?:/.test(licUrl)) { drop('no license url'); continue; }
     cand.push({ pageid: p.pageid, title: p.title, root: f.root.cat, cap: f.root.cap, alt: f.root.alt, author, license: lic, licenseUrl: licUrl,
-      page: ii.descriptionurl, thumb: ii.thumburl || ii.url, ow: ii.width, oh: ii.height, year, score, places: [...places], topics: [...topics] });
+      set: f.root.set || null, page: ii.descriptionurl, thumb: ii.thumburl || ii.url, ow: ii.width, oh: ii.height, year, score, places: [...places], topics: [...topics] });
   }
 }
 say(`dropped: ${JSON.stringify(why)}`);
@@ -233,14 +264,22 @@ say(`dropped: ${JSON.stringify(why)}`);
 // Every photo on the site was looked at by eye (review/ contact sheets), so once a library exists only its reviewed photos stay
 // (minus reject.txt); new photos come in only on a run with NEW_PHOTOS=1, and then their contact sheets need a review.
 const prevIds = new Set(((() => { try { return JSON.parse(fs.readFileSync(path.join(OUT, 'index.json'), 'utf8')).photos; } catch { return []; } })()).map((p) => p.pageid));
+// NEW_PHOTOS=topic: new photos only for the topic illustration sets (the place photos stay as reviewed)
 const allowNew = process.env.NEW_PHOTOS === '1' || prevIds.size === 0;
+const allowNewTopic = allowNew || process.env.NEW_PHOTOS === 'topic';
 say(`previous library: ${prevIds.size} photos; new photos ${allowNew ? 'allowed' : 'not allowed on this run'}`);
 const keep = [];
 const byRoot = new Map();
+const bySet = new Map();
 for (const c of cand.sort((a, b) => b.score - a.score || a.pageid - b.pageid)) {
-  if (!allowNew && !prevIds.has(c.pageid)) continue;
+  if (!(c.set ? allowNewTopic : allowNew) && !prevIds.has(c.pageid)) continue;
+  if (keep.some((x) => x.pageid === c.pageid)) continue;
   const k = byRoot.get(c.root) || { n: 0, au: {} };
   if (k.n >= c.cap || (k.au[c.author] || 0) >= 3) continue;
+  // a topic set: at most 12 photos (the review keeps 6 to 10), at most 2 of one author
+  const ks = c.set ? bySet.get(c.set) || { n: 0, au: {} } : null;
+  if (ks && (ks.n >= 12 || (ks.au[c.author] || 0) >= 2)) continue;
+  if (ks) { ks.n++; ks.au[c.author] = (ks.au[c.author] || 0) + 1; bySet.set(c.set, ks); }
   k.n++; k.au[c.author] = (k.au[c.author] || 0) + 1; byRoot.set(c.root, k); keep.push(c);
 }
 say(`candidates: ${cand.length}, kept after caps: ${keep.length}`);
@@ -287,7 +326,7 @@ for (const f of fs.readdirSync(IMG)) if (!want.has(f)) fs.rmSync(path.join(IMG, 
 const LIC_HE = (l) => (/public domain|^pd/i.test(l) ? 'נחלת הכלל' : /^attribution$/i.test(l) ? 'ייחוס' : l.toUpperCase().replace(/^CC0.*/, 'CC0'));
 const photos = done.map((c) => ({ id: c.id, pageid: c.pageid, file: c.title.replace(/^File:/, ''), page: c.page, author: c.author, license: c.license,
   licenseUrl: c.licenseUrl, credit: `צילום: ${c.author}, ויקישיתוף, ${LIC_HE(c.license)}`, alt: c.places.length > 1 && !c.alt.includes(c.places[1]) ? `${c.alt}, ${c.places[1]}` : c.alt,
-  places: c.places, topics: c.topics, root: c.root, year: c.year || null, sq: c.sq }));
+  places: c.places, topics: c.topics, ...(c.set ? { set: c.set } : {}), root: c.root, year: c.year || null, sq: c.sq }));
 fs.writeFileSync(path.join(OUT, 'index.json'), JSON.stringify({ at: new Date().toISOString(), source: 'Wikimedia Commons', photos }, null, 1));
 
 const REV = path.join(OUT, 'review');
@@ -300,13 +339,28 @@ for (let s = 0; s * per < photos.length; s++) {
   for (let i = 0; i < group.length; i++) {
     const x = (i % cols) * tw; const y = Math.floor(i / cols) * (th + lh);
     comps.push({ input: await sharp(path.join(IMG, `${group[i].id}-800.webp`)).resize(tw - 4, th - 4).toBuffer(), left: x + 2, top: y + 2 });
-    const t = `${group[i].pageid} ${group[i].root}`.slice(0, 40).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const t = `${group[i].pageid} ${group[i].set ? `[${group[i].set}] ` : ''}${group[i].root}`.slice(0, 40).replace(/&/g, '&amp;').replace(/</g, '&lt;');
     comps.push({ input: Buffer.from(`<svg width="${tw}" height="${lh}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#000"/><text x="4" y="16" font-family="sans-serif" font-size="13" fill="#fff">${t}</text></svg>`), left: x, top: y + th });
   }
   await sharp({ create: { width: cols * tw, height: rows * (th + lh), channels: 3, background: '#333' } }).composite(comps).jpeg({ quality: 70 }).toFile(path.join(REV, `sheet-${String(s + 1).padStart(2, '0')}.jpg`));
+}
+// one larger sheet per topic illustration set (review/set-<name>.jpg), 4 across, with the Commons page id
+for (const set of [...new Set(photos.map((p) => p.set).filter(Boolean))]) {
+  const group = photos.filter((p) => p.set === set);
+  const sw = 480; const sh = 320; const c4 = 4;
+  const comps = [];
+  for (let i = 0; i < group.length; i++) {
+    const x = (i % c4) * sw; const y = Math.floor(i / c4) * (sh + lh);
+    comps.push({ input: await sharp(path.join(IMG, `${group[i].id}-800.webp`)).resize(sw - 4, sh - 4).toBuffer(), left: x + 2, top: y + 2 });
+    const t = `${group[i].pageid} ${group[i].root}`.slice(0, 56).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    comps.push({ input: Buffer.from(`<svg width="${sw}" height="${lh}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#000"/><text x="4" y="16" font-family="sans-serif" font-size="13" fill="#fff">${t}</text></svg>`), left: x, top: y + sh });
+  }
+  await sharp({ create: { width: c4 * sw, height: Math.ceil(group.length / c4) * (sh + lh), channels: 3, background: '#333' } }).composite(comps).jpeg({ quality: 72 }).toFile(path.join(REV, `set-${set}.jpg`));
 }
 let bytes = 0; for (const f of fs.readdirSync(IMG)) bytes += fs.statSync(path.join(IMG, f)).size;
 say(`photos in the library: ${photos.length}, ${(bytes / 1e6).toFixed(1)} MB in img/`);
 const per2 = {}; for (const p of photos) for (const t of [...p.places, ...p.topics]) per2[t] = (per2[t] || 0) + 1;
 say(`by place and topic: ${JSON.stringify(per2)}`);
+const per3 = {}; for (const p of photos) if (p.set) per3[p.set] = (per3[p.set] || 0) + 1;
+say(`topic illustration sets: ${JSON.stringify(per3)}`);
 fs.writeFileSync(path.join(OUT, 'report.txt'), log.join('\n') + '\n');

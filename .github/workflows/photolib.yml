@@ -11,9 +11,10 @@ on:
   workflow_dispatch:
     inputs:
       new_photos:
-        description: 'Also add new photos (they then need a visual review of review/)'
-        type: boolean
-        default: false
+        description: 'Add new photos: none, topic (only the topic illustration sets) or all. New photos need a visual review of review/'
+        type: choice
+        options: [none, topic, all]
+        default: none
 permissions:
   contents: write
 concurrency:
@@ -39,7 +40,7 @@ jobs:
       - name: Harvest, filter and convert
         working-directory: sites/nws
         env:
-          NEW_PHOTOS: ${{ inputs.new_photos && '1' || '0' }}
+          NEW_PHOTOS: ${{ inputs.new_photos == 'all' && '1' || inputs.new_photos == 'topic' && 'topic' || '0' }}
         run: node scripts/photolib/harvest.mjs /tmp/photolib
       - name: Publish to the nws-photolib branch
         if: always()
