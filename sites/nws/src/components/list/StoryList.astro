@@ -42,7 +42,7 @@ const by = (a: Article) => (a.kind === 'opinion' && a.author ? a.author : L.by);
     <div class="n-meta num"><b>{by(lead)}</b><i aria-hidden="true"></i>{lead.updated && lead.updated !== lead.published ? <span class="n-upd">{L.upd} <time datetime={lead.updated} data-ago>{when(lead.updated)}</time></span> : <time datetime={lead.published} data-ago>{fmtDay(lead.published, lang)}</time>}<i aria-hidden="true"></i><span>{readMin(lead)} {L.min}</span></div>
   </div>
 </article>)}
-{duo.length > 0 && <div class="n-duo">{duo.map((a) => <Card a={a} lang={lang} dek eager={!he} sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 430px" />)}</div>}
+{duo.length > 0 && <div class="n-duo">{duo.map((a) => <Card a={a} lang={lang} dek eager={!he} sizes="(max-width: 760px) 112px, (max-width: 1100px) 50vw, 430px" />)}</div>}
 {cards.length > 0 && <div class="nl-cards">{cards.map((a) => <Card a={a} lang={lang} ratio="16/10" sizes="(max-width: 760px) 112px, (max-width: 1100px) 33vw, 290px" />)}</div>}
 {rest.length > 0 && (
 <section class="nl-blk" aria-labelledby="nl-more-h" style={`--c:${color}`}>

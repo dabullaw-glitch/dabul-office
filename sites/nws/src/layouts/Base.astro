@@ -93,14 +93,25 @@ const L = he ? { home: 'ראשי', pros: 'בעלי מקצוע', menu: 'תפרי�
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title={BRAND.he} href={`${pre}/rss.xml`}>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+{/* 30.10.2026 (mobile speed, item 9 Yakir approved): Noto Sans Hebrew is served from our own site (public/fonts, the same
+   Google font as a variable file for all weights, SIL Open Font License in public/fonts/OFL.txt) instead of Google Fonts:
+   no render-blocking stylesheet from another site and no two extra connections before the text can be drawn. */}
+{lang === 'he' && <link rel="preload" href="/fonts/noto-sans-hebrew-hebrew-v5.woff2" as="font" type="font/woff2" crossorigin>}
+<link rel="preload" href="/fonts/noto-sans-hebrew-latin-v5.woff2" as="font" type="font/woff2" crossorigin>
+<style is:inline>@font-face{font-family:'Noto Sans Hebrew';font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/noto-sans-hebrew-hebrew-v5.woff2) format('woff2');unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:'Noto Sans Hebrew';font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/noto-sans-hebrew-latin-ext-v5.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Noto Sans Hebrew';font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/noto-sans-hebrew-latin-v5.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}</style>
 {/* accessibility settings saved by the visitor are applied before the page is drawn */}
 <script is:inline>(function(){try{var a=JSON.parse(localStorage.getItem('nwsA11y')||'{}'),h=document.documentElement;if(a.z)h.classList.add('a11y-z'+a.z);['contrast','gray','links','font','still','cursor','focus'].forEach(function(k){if(a[k])h.classList.add('a11y-'+k)})}catch(e){}})();</script>
 {/* Google Analytics 4 (G-N0Q1GZWXF2) with Consent Mode v2: everything denied by default; the script itself loads only after the
    visitor agrees to statistics cookies (banner below), or on later visits when that choice is saved. window.nwsTrack(name, params). */}
 {ADSENSE.client && <meta name="google-adsense-account" content={ADSENSE.client}>}
-{ADSENSE.client && !PREVIEW && !noindex && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE.client}`} crossorigin="anonymous"></script>}
+{/* 30.10.2026 (mobile speed): the AdSense script loads after the page has finished loading (when the browser is idle), or at
+   the visitor's first scroll or tap, instead of competing with the story and its photo at the start. The site is verified by
+   the google-adsense-account meta tag above and ads.txt; ad units queued before that wait in window.adsbygoogle. */}
+{ADSENSE.client && !PREVIEW && !noindex && <script is:inline define:vars={{ AC: ADSENSE.client }}>(function(){var d=0;function go(){if(d)return;d=1;var s=document.createElement('script');s.async=true;s.crossOrigin='anonymous';s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+AC;document.head.appendChild(s)}
+function idle(){'requestIdleCallback' in window?requestIdleCallback(go,{timeout:3000}):setTimeout(go,1500)}
+if(document.readyState==='complete')idle();else addEventListener('load',idle);['scroll','pointerdown','keydown','touchstart'].forEach(function(e){addEventListener(e,go,{once:true,passive:true})})})();</script>}
 <script is:inline define:vars={{ GA: PREVIEW ? '' : 'G-N0Q1GZWXF2' }}>window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};
 gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',functionality_storage:'granted',security_storage:'granted'});
 gtag('js',new Date());if(GA)gtag('config',GA,{anonymize_ip:true,allow_google_signals:false,allow_ad_personalization_signals:false});
