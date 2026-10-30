@@ -273,7 +273,10 @@ const byRoot = new Map();
 const bySet = new Map();
 // 30.10.2026 second round: the sets that came out thin in the review get more candidates
 const THIN = new Set(['election', 'money', 'fire', 'roadworks', 'security', 'market']);
-for (const c of cand.sort((a, b) => b.score - a.score || a.pageid - b.pageid)) {
+// photos that passed the visual review (src/data/photolib-ok.txt) come first, so new candidates never push them out of a set
+const OK = new Set((() => { try { return fs.readFileSync(path.join(HERE, '../../src/data/photolib-ok.txt'), 'utf8'); } catch { return ''; } })()
+  .split('\n').map((l) => Number(l.replace(/#.*/, '').trim().split(/\s+/)[0])).filter(Boolean));
+for (const c of cand.sort((a, b) => Number(OK.has(b.pageid)) - Number(OK.has(a.pageid)) || b.score - a.score || a.pageid - b.pageid)) {
   if (!(c.set ? allowNewTopic : allowNew) && !prevIds.has(c.pageid)) continue;
   if (keep.some((x) => x.pageid === c.pageid)) continue;
   const k = byRoot.get(c.root) || { n: 0, au: {} };
