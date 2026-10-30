@@ -44,7 +44,7 @@ jobs:
           const lines = fs.readFileSync(process.argv[2],'utf8').split('\n').filter(l=>l.trim());
           const b = await chromium.launch();
           for (const l of lines) {
-            const [name,url] = l.trim().split(/\s+/);
+            const [name,url,js] = l.trim().split(/\s+/);
             for (const [tag,vp,mob] of [['d',{width:1440,height:900},false],['m',{width:390,height:844},true]]) {
               const c = await b.newContext({viewport:vp,isMobile:mob,hasTouch:mob,deviceScaleFactor:1,locale:'he-IL'});
               const p = await c.newPage();
