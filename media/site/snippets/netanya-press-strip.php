@@ -23,7 +23,7 @@ add_filter('the_content', function ($html) {
 	}
 	$css = '<style id="dnt-press-css">'
 		. '.dnt section.dnt-press{padding-block:26px 0}'
-		. '.dnt .dnt-press .in{display:flex;align-items:center;gap:22px;padding-bottom:24px;border-bottom:1px solid var(--line)}'
+		. '.dnt .dnt-press .in{display:flex;align-items:center;gap:22px;padding-bottom:24px;background:linear-gradient(var(--line),var(--line)) center bottom/calc(100% - 36px) 1px no-repeat}'
 		. '.dnt .dnt-press .lb{margin:0;font-size:15px;font-weight:700;color:var(--muted);line-height:1.3;white-space:nowrap;flex:none}'
 		. '.dnt .dnt-press .lg{display:flex;align-items:center;justify-content:space-between;gap:14px;flex:1 1 auto;min-width:0}'
 		. '.dnt .dnt-press .t{display:flex;align-items:center;justify-content:center;height:44px;padding:5px 10px;background:#fff;border:1px solid var(--line);border-radius:8px;box-sizing:border-box}'
