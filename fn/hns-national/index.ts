@@ -98,7 +98,8 @@ const SYSTEM = `אתה עורך חדשות באתר "חדשות נתניה וה�
 - אם זה לא אירוע ארצי מהסוג הזה (למשל דעה, רכילות פוליטית, ויכוח בין פוליטיקאים בלי החלטה, ספורט, בידור, שוק ההון, חדשות מחו"ל שאינן קשורות למלחמה ואין להן השפעה ישירה על ישראל), החזר רק {"skip":true,"reason":"..."}.
 - "hold" רק כשהמקור כולו הערכות ושמועות של גורמים בלי שם, בלי אירוע שקרה ובלי הצהרה של אדם או גוף מזוהה. אם יש אירוע או הצהרה מזוהה, כותבים.
 - אם אין מספיק עובדות לשני משפטים ענייניים, החזר רק {"hold":true,"reason":"..."}.
-החזר JSON בלבד: {"kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""],"basis":"official","sensitive":false}`;
+- מבזק או כתבה: אירוע חדשותי בודד ודחוף שיש עליו מעט פרטים (תקיפה, יירוט, פיצוץ, תפיסה של ספינה, הודעה קצרה של צבא, הצהרה של מנהיג) הוא מבזק: "kind":"flash", כותרת עובדתית, וגוף של פסקה אחת או שתיים קצרות (עד 70 מילים בסך הכול), בלי keyPoints ובלי kicker. החלטה או אירוע עם פרטים, השלכות או השפעה על התושבים (תוצאות בחירות, החלטת ממשלה, מסים, שביתה, הנחיות) הם כתבה: "kind":"article".
+החזר JSON בלבד: {"kind":"flash","kicker":"","title":"","dek":"","body":["",""],"keyPoints":["",""],"basis":"official","sensitive":false}`;
 
 async function claude(user: string) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -170,11 +171,14 @@ async function tick(dry: boolean) {
     return { wrote: 0, closed: st?.id, why: out.reason || 'no story' };
   }
   const basis = ['official', 'public', 'media_exclusive'].includes(out.basis) ? out.basis : 'public';
-  const kicker = clean(out.kicker || '');
+  const isFlash = out.kind === 'flash';
+  const kicker = isFlash ? '' : clean(out.kicker || '');
   const { data: st, error } = await sb.from('hns_stories').insert({
     section: 'national', places: ['ישראל'], item_ids: ids, sources, state: 'approved', sensitivity: 'normal', basis, model: MODEL, usage: res.usage,
-    title: clean(out.title), dek: clean(out.dek), body: out.body.map(clean).filter(Boolean), key_points: (out.keyPoints || []).map(clean).filter(Boolean),
-    kicker: kicker && kicker.split(/\s+/).length <= 5 ? kicker : null, notes: 'ארצי: נכתב אוטומטית (hns-national)',
+    title: clean(out.title), dek: clean(out.dek), body: out.body.map(clean).filter(Boolean), key_points: isFlash ? [] : (out.keyPoints || []).map(clean).filter(Boolean),
+    kicker: kicker && kicker.split(/\s+/).length <= 5 ? kicker : null, notes: `ארצי: נכתב אוטומטית (hns-national)${isFlash ? ', מבזק' : ''}`,
+    // 30.10.2026: a short breaking item is a flash (hns-feed isFlash), kept on the site under מבזקים, not only for 24 hours
+    kind: isFlash ? 'flash' : 'news',
   }).select('id').single();
   if (error || !st) return { error: error?.message || 'insert failed' };
   await sb.from('hns_items').update({ cluster_id: st.id }).in('id', ids);

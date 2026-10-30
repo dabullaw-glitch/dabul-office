@@ -20,7 +20,9 @@ import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, placesOf, place
 interface Props { lang: Lang; k: SectionKey }
 const { lang, k } = Astro.props;
 const s = SECTION_BY_KEY[k]; const u = t(lang); const pre = LANG_PREFIX[lang]; const he = lang === 'he';
-const items = articlesFor(lang).filter((a) => a.section === k);
+// 30.10.2026 (Yakir: "הדברים האלה צריכים להיות באתר ולא להעלם"): /flash/ keeps every flash story (urgent local and national),
+// newest first, below the live box of the last 24 hours; the stories also stay in their own sections
+const items = articlesFor(lang).filter((a) => a.section === k || (k === 'flash' && a.flash === true));
 const name = s.name[lang];
 const title = he ? `${s.title} | חדשות נתניה והשרון` : `${name}: Netanya & Sharon | NWS`;
 const desc = he ? s.desc : ({ ru: `${name}: последние новости Нетании и Шарона на русском языке, с источниками и полезной информацией для жителей.`, fr: `${name} : les dernières actualités de Netanya et du Sharon en français, avec les sources et des infos pratiques.`, en: `${name}: the latest news from Netanya and the Sharon in English, with sources and practical info for residents.` } as any)[lang];

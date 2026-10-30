@@ -442,7 +442,7 @@ function fieldsPatch(f: Any, st: Any) {
   if (has('section')) { if (!SECTIONS.includes(String(f.section))) return { error: 'מדור לא מוכר' }; patch.section = String(f.section); }
   if (has('places')) patch.places = lines(Array.isArray(f.places) ? f.places : String(f.places ?? '').split(/[,\n]/), 12);
   if (has('sensitivity')) patch.sensitivity = f.sensitivity === 'sensitive' ? 'sensitive' : 'normal';
-  if (has('kind')) patch.kind = ['news', 'opinion', 'sponsored'].includes(f.kind) ? f.kind : 'news';
+  if (has('kind')) patch.kind = ['news', 'opinion', 'sponsored', 'flash'].includes(f.kind) ? f.kind : 'news';
   if (has('author')) patch.author = clean(f.author).slice(0, 100) || null;
   if (has('author_role')) patch.author_role = clean(f.author_role).slice(0, 100) || null;
   if (has('image_url')) {
@@ -493,7 +493,7 @@ async function edit(b: Any) {
 async function create(b: Any) {
   await outlets();
   const f = b.fields || {};
-  const kind = ['news', 'opinion', 'sponsored'].includes(f.kind) ? f.kind : 'news';
+  const kind = ['news', 'opinion', 'sponsored', 'flash'].includes(f.kind) ? f.kind : 'news';
   const base: Any = { extras: {}, sources: [] };
   const r: Any = fieldsPatch({ section: 'city', sensitivity: 'normal', ...f, kind }, base);
   if (r.error) return { ok: false, error: r.error };

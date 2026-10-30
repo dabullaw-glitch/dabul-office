@@ -83,6 +83,8 @@ const NO_FLASH_SEC = new Set(['blog', 'leisure', 'community', 'realestate', 'spo
 const URGENT = /נפגע|נפצע|פצוע|פצועים|הרוג|נהרג|נרצח|רצח|תאונ|שריפ|דליק|חסימ|נחסם|נחסמ|ייחסם|ייחסמו|ייסגר|ייסגרו|נסגר|סגירת|הסדרי תנועה|שינויי תנועה|עבודות|הפסק(ת|ות) (מים|חשמל)|אין מים|אין חשמל|אזהר|מזהיר|ריקול|החזרה מהמדפים|אזעק|פיגוע|ירי|דקיר|נדקר|תקפ|תקיפ|נעצר|עצור|חשוד|כתב אישום|נעדר|חילוץ|לכוד|קרס|קריסת|דליפ|זיהום|חובש|פונה|פונו|החייאה|תגובה אלרגית|תוצאות הבחירות|ספירת|מנדטים|שיעור ההצבעה|אחוז ההצבעה|שביתה|מתקפ|טיל|יירוט|רעידת אדמה/;
 function isFlash(s: Any) {
   if (s.kind === 'sponsored' || s.kind === 'opinion' || s.format) return false;
+  // 30.10.2026 (Yakir, about the Hormuz tankers item: "זה מבזק לא כתבה"): a short national breaking item is written as a flash
+  if (s.kind === 'flash') return true;
   if (/^auto:|hns-recurring|hns-data/.test(String(s.notes || ''))) return false;
   // 29.10.2026 (Yakir): a result of the Maccabi Netanya senior team is a flash too (not youth teams, transfers or previews)
   if (s.section === 'sports') {

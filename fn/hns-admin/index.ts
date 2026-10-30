@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
       patch.kicker = k || null;
     }
     if (b.closure !== undefined) patch.closure = b.closure && typeof b.closure === 'object' ? { place: clean(b.closure.place), what: clean(b.closure.what), until: String(b.closure.until || '').slice(0, 10), approx: !!b.closure.approx } : null;
-    if (b.kind !== undefined) patch.kind = b.kind === 'opinion' ? 'opinion' : 'news';
+    if (b.kind !== undefined) patch.kind = b.kind === 'opinion' ? 'opinion' : b.kind === 'flash' ? 'flash' : 'news';
     if (b.author !== undefined) patch.author = clean(b.author) || null;
     if (b.author_role !== undefined) patch.author_role = clean(b.author_role) || null;
     if (b.video_url !== undefined) patch.video_url = String(b.video_url || '') || null;
