@@ -1,0 +1,55 @@
+---
+// One event of the official calendar (30.10.2026, item 5 Yakir approved): a light page Google can crawl and show as an
+// event (lib/events.ts), with the date, the hour, the hall, the official ticket link and the next events. Real data only.
+import Base from '../../../../layouts/Base.astro';
+import ListHero from '../../../../components/list/ListHero.astro';
+import '../../../../styles/list.css';
+import { IMG } from '../../../../data/site';
+import { SECTION_BY_KEY } from '../../../../data/sections';
+import { CALENDAR, calTime, type CalItem } from '../../../../lib/content';
+import { eventUrl, eventLd, eventPlace } from '../../../../lib/events';
+
+export function getStaticPaths() { return CALENDAR.map((c) => ({ params: { id: String(c.id) }, props: { c } })); }
+const { c } = Astro.props as { c: CalItem };
+const s = SECTION_BY_KEY.leisure;
+const il = (o: Intl.DateTimeFormatOptions, iso = c.start) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', ...o }).format(new Date(iso));
+const day = il({ weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+const short = il({ day: 'numeric', month: 'numeric' });
+const hour = calTime(c.start);
+const pl = eventPlace(c);
+const path = eventUrl(c);
+const title = `${c.title}, ${short}${hour ? ` ${hour}` : ''}, ${pl.name} | אירועים בנתניה`;
+const description = `${c.title} ב${day}${hour ? ` בשעה ${hour}` : ''}, ${pl.name}, נתניה. פרטים וכרטיסים באתר הרשמי של ${c.source}.`;
+const crumbs = [{ name: 'ראשי', href: '/' }, { name: s.name.he, href: '/events/' }, { name: c.title, href: path }];
+const next = CALENDAR.filter((x) => x.id !== c.id).slice(0, 8);
+const photo = (IMG[s.img] || IMG.city).name;
+---
+<Base title={title} description={description} path={path} crumbs={crumbs} jsonld={[eventLd(c)]} current="events" ogImage={`/img/stock/og/${photo}.jpg`}>
+  <div class="nl-page">
+  <ListHero crumbs={crumbs} h1={c.title} intro={`${day}${hour ? `, ${hour}` : ''} · ${pl.name}`} color={s.color} photo={photo} icon={s.icon} />
+  <div class="n-wrap nl-np">
+    <section class="ncard" style={`--c:${s.color}`}>
+      <h2>פרטי האירוע</h2>
+      <dl class="nl-ev">
+        <dt>מתי</dt><dd><time datetime={c.start}>{day}{hour && <>, בשעה <b class="num">{hour}</b></>}</time></dd>
+        <dt>איפה</dt><dd>{pl.name}{pl.street ? '' : ', נתניה'}</dd>
+        <dt>מארגן</dt><dd>{c.source}</dd>
+      </dl>
+      {c.url && <p style="margin:14px 0 0"><a class="nl-evb" href={c.url} rel="noopener" target="_blank">לפרטים ולכרטיסים באתר הרשמי</a></p>}
+      <p class="note" style="margin:12px 0 0;color:var(--mut);font-size:13.5px">מתוך לוח האירועים הרשמי של {c.source}. כדאי לבדוק שעות ומחירים באתר הרשמי לפני שיוצאים.</p>
+    </section>
+    {next.length > 0 && <section class="ncard" style="--c:#0D1321;margin-top:18px">
+      <h2>עוד אירועים בנתניה</h2>
+      <ul style="list-style:none;margin:0;padding:0">{next.map((e) => <li style="padding:8px 0;border-top:1px solid #EFEDE7"><b class="num">{il({ day: 'numeric', month: 'numeric' }, e.start)}{calTime(e.start) && ` ${calTime(e.start)}`}</b> <a href={eventUrl(e)}>{e.title}</a></li>)}</ul>
+      <p class="note" style="margin:12px 0 0"><a href="/events/#cal" style="color:#0B5FCC">ללוח האירועים המלא</a> · <a href="/now/weekend/" style="color:#0B5FCC">מה עושים בסוף השבוע</a></p>
+    </section>}
+  </div>
+  </div>
+</Base>
+<style>
+  .nl-ev { display:grid; grid-template-columns:auto 1fr; gap:8px 16px; margin:0; font-size:16.5px }
+  .nl-ev dt { color:var(--mut); font-weight:700 }
+  .nl-ev dd { margin:0 }
+  .nl-evb { display:inline-block; background:var(--c); color:#fff; font-weight:700; padding:10px 18px; border-radius:6px; text-decoration:none }
+  .nl-evb:hover { filter:brightness(1.08) }
+</style>

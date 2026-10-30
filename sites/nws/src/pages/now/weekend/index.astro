@@ -3,6 +3,7 @@
 // Thursday evening to Saturday night of the coming weekend, the latest weekend guide story, and the culture stories of the week.
 import NowPage from '../../../components/NowPage.astro';
 import { CALENDAR, articlesFor, articleUrl } from '../../../lib/content';
+import { eventUrl, eventLd } from '../../../lib/events';
 const il = (d: Date, o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', ...o }).format(d);
 const ymd = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(d);
 // the coming weekend: Thursday to Saturday of this week (from Sunday on, the next one)
@@ -23,13 +24,13 @@ const faq: [string, string][] = [
   ['מאיפה הרשימה?', 'מלוחות האירועים הרשמיים של העירייה, היכל התרבות, המוזיאונים והמתנ״סים. כדאי לבדוק שעות ומחירים באתר של כל מקום לפני שיוצאים.'],
 ];
 ---
-<NowPage icon="music" title="מה עושים בנתניה בסוף השבוע: אירועים, הופעות ופעילויות | חדשות נתניה והשרון" h1="מה עושים בנתניה בסוף השבוע" description={`אירועים בנתניה בסוף השבוע (${range}): הופעות, הצגות, פעילויות לילדים ותערוכות, מלוחות האירועים הרשמיים.`} path="/now/weekend/" intro={`סוף השבוע הקרוב, ${range}.`} color="#7A1F5C" img="beach-sunset" faq={faq}>
+<NowPage icon="music" title="מה עושים בנתניה בסוף השבוע: אירועים, הופעות ופעילויות | חדשות נתניה והשרון" h1="מה עושים בנתניה בסוף השבוע" description={`אירועים בנתניה בסוף השבוע (${range}): הופעות, הצגות, פעילויות לילדים ותערוכות, מלוחות האירועים הרשמיים.`} path="/now/weekend/" intro={`סוף השבוע הקרוב, ${range}.`} color="#7A1F5C" img="beach-sunset" faq={faq} jsonld={events.map(eventLd)}>
   {guide && <section class="ncard" style="--c:#C8102E;margin-bottom:18px"><h2>המדריך שלנו לסוף השבוע</h2><p style="margin:0"><a href={articleUrl(guide)} style="font-weight:700">{guide.title}</a></p>{guide.dek && <p style="margin:6px 0 0">{guide.dek}</p>}</section>}
   <section class="ncard" style="--c:#7A1F5C">
     <h2>האירועים לפי יום</h2>
     {byDay.size ? [...byDay.entries()].map(([d, list]) => <div style="margin-top:6px">
       <h3 style="font-size:17px;margin:12px 0 6px">{il(new Date(d + 'T12:00:00+02:00'), { weekday: 'long', day: 'numeric', month: 'numeric' })}</h3>
-      <ul style="list-style:none;margin:0;padding:0">{list.map((e) => <li style="padding:8px 0;border-top:1px solid #EFEDE7"><b class="num">{il(new Date(e.start), { hour: '2-digit', minute: '2-digit', hour12: false })}</b> {e.url ? <a href={e.url} rel="noopener" target="_blank">{e.title}</a> : e.title}{e.venue && <span style="color:var(--mut)"> · {e.venue}</span>}</li>)}</ul>
+      <ul style="list-style:none;margin:0;padding:0">{list.map((e) => <li style="padding:8px 0;border-top:1px solid #EFEDE7"><b class="num">{il(new Date(e.start), { hour: '2-digit', minute: '2-digit', hour12: false })}</b> <a href={eventUrl(e)}>{e.title}</a>{e.venue && <span style="color:var(--mut)"> · {e.venue}</span>}</li>)}</ul>
     </div>) : <p style="margin:0">עוד לא פורסמו אירועים לסוף השבוע הקרוב בלוחות הרשמיים. אפשר לראות את <a href="/events/#cal" style="color:#0B5FCC">לוח האירועים המלא</a>.</p>}
     <p class="note" style="margin:12px 0 0"><a href="/events/#cal" style="color:#0B5FCC">ללוח האירועים המלא</a></p>
   </section>

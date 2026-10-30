@@ -12,6 +12,7 @@ import { SECTION_BY_KEY, type SectionKey } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
 import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, fmtDay, FACTS, EVENT, IMS, SPORT, FLASHES, CALENDAR, calTime, calVenue, leadOf, readMin, kickerOf, picOf, picLabel, stockPic, stockFor, tableAround, type Article } from '../lib/content';
+import { eventUrl } from '../lib/events';
 import { LISTINGS, countBy } from '../lib/biz';
 import { liveFeed } from '../lib/livefeed';
 import { shabbatTimes } from '../lib/shabbat';
@@ -257,7 +258,7 @@ const T = he ? { live: 'עכשיו בנתניה והשרון', liveSub: 'מתע�
     <h2 class="n-sh" id="cu-h">תרבות ובילוי<a href="/events/#cal">כל האירועים ←</a></h2>
     <div class="n-cult">
       {leis.map((a) => { const p = picOf(a); return <a class="n-ph" href={articleUrl(a)}><img src={p.small} alt="" width="800" height="533" loading="lazy" decoding="async"><span class="n-ov"><span class="n-k" style="--c:#FF9DC6">{kickerOf(a)}</span><b>{a.title}</b><small class="num">{fmtDay(a.published)}</small></span></a>; })}
-      {cal.map((c) => { const p = stockPic(stockFor('leisure', c.id)); return <a class="n-ph" href={c.url || '/events/#cal'} {...(c.url ? { target: '_blank', rel: 'noopener nofollow' } : {})}><img src={p.small} alt="" width="800" height="533" loading="lazy" decoding="async"><span class="n-date num" aria-hidden="true"><b>{dayN(c.start)}</b><span>{mon(c.start)}</span></span><span class="n-ov"><span class="n-k" style="--c:#FFD66B">{calTime(c.start) ? `${dayN(c.start)} ב${mon(c.start)}, ${calTime(c.start)}` : `${dayN(c.start)} ב${mon(c.start)}`}</span><b>{c.title}</b>{calVenue(c) && <small>{calVenue(c)}</small>}</span></a>; })}
+      {cal.map((c) => { const p = stockPic(stockFor('leisure', c.id)); return <a class="n-ph" href={eventUrl(c)}><img src={p.small} alt="" width="800" height="533" loading="lazy" decoding="async"><span class="n-date num" aria-hidden="true"><b>{dayN(c.start)}</b><span>{mon(c.start)}</span></span><span class="n-ov"><span class="n-k" style="--c:#FFD66B">{calTime(c.start) ? `${dayN(c.start)} ב${mon(c.start)}, ${calTime(c.start)}` : `${dayN(c.start)} ב${mon(c.start)}`}</span><b>{c.title}</b>{calVenue(c) && <small>{calVenue(c)}</small>}</span></a>; })}
     </div>
   </section>)}
 

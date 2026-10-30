@@ -14,6 +14,7 @@ import { SECTION_BY_KEY, type SectionKey } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
 import { liveFeed } from '../lib/livefeed';
+import { eventUrl, eventLd } from '../lib/events';
 import { articlesFor, articleUrl, sectionUrl, fmtTime, fmtShort, placesOf, placeUrl, FLASHES, CALENDAR, calTime, calVenue, SPORT, tableAround } from '../lib/content';
 
 interface Props { lang: Lang; k: SectionKey }
@@ -39,8 +40,8 @@ const calDays = [...new Set(cal.map((c) => ilDayOf(c.start)))];
 const dayName = (ymd: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(ymd + 'T12:00:00Z'));
 const todayIl = ilDayOf(new Date().toISOString());
 const ftm = (iso: string) => (ilDayOf(iso) === todayIl ? fmtTime(iso) : fmtShort(iso));
-if (cal.length) jsonld.push(...cal.slice(0, 20).map((c) => ({ '@context': 'https://schema.org', '@type': 'Event', name: c.title, startDate: c.start, eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  eventStatus: 'https://schema.org/EventScheduled', location: { '@type': 'Place', name: c.venue || c.source, address: { '@type': 'PostalAddress', addressLocality: 'נתניה', addressCountry: 'IL' } }, url: c.url, organizer: { '@type': 'Organization', name: c.source } })));
+// 30.10.2026: every event has its own page on our site (lib/events.ts), the Event data points there
+if (cal.length) jsonld.push(...cal.slice(0, 20).map(eventLd));
 const sport = he && k === 'sports';
 const tbl = sport ? tableAround(7) : [];
 const nx = sport ? SPORT.next : null;
@@ -82,7 +83,7 @@ const L = {
         <p class="nl-note">מתוך לוח האירועים הרשמי של היכל התרבות נתניה. מתעדכן כמה פעמים ביום.</p>
         <div class="nl-cal">{calDays.map((d) => (
           <div class="n-box"><div class="h"><h3>{dayName(d)}</h3></div>
-            <ul class="num">{cal.filter((c) => ilDayOf(c.start) === d).map((c) => <li><time datetime={c.start}>{calTime(c.start) || 'כל היום'}</time><span><a href={c.url} rel="noopener nofollow" target="_blank">{c.title}</a>{calVenue(c) && <small>{calVenue(c)}</small>}</span></li>)}</ul></div>))}</div>
+            <ul class="num">{cal.filter((c) => ilDayOf(c.start) === d).map((c) => <li><time datetime={c.start}>{calTime(c.start) || 'כל היום'}</time><span><a href={eventUrl(c)}>{c.title}</a>{calVenue(c) && <small>{calVenue(c)}</small>}</span></li>)}</ul></div>))}</div>
       </section>)}
       {items.length === 0 && <div class="nl-empty"><b>{L.empty}</b>{L.emptyText}</div>}
       <StoryList items={items} lang={lang} listTitle={L.more} color={s.color} />

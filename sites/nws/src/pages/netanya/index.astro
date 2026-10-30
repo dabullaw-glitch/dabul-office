@@ -12,6 +12,7 @@ import { SECTIONS } from '../../data/sections';
 import { PLACES } from '../../data/places';
 import { CATEGORIES } from '../../data/directory';
 import { ARTICLES, FACTS, CALENDAR, calTime, calVenue, placesOf, sectionUrl, articleUrl, fmtDate, liveSections } from '../../lib/content';
+import { eventUrl } from '../../lib/events';
 import { shabbatTimes } from '../../lib/shabbat';
 import { AREA_SLUGS } from '../../lib/area';
 
@@ -54,7 +55,7 @@ const S1 = src(F?.bathingBeaches?.source); const S2 = src(F?.neighborhoods?.sour
     </section>
     <section class="ncard" style="--c:#D6337A" aria-labelledby="g-ev">
       <h2 id="g-ev"><a href="/events/#cal">מה עושים בנתניה השבוע</a></h2>
-      {cal.length ? <ul style="list-style:none;margin:0;padding:0">{cal.map((c) => <li style="padding:7px 0;border-top:1px solid #EEF1F5"><b>{fmtDate(c.start)}{calTime(c.start) ? `, ${calTime(c.start)}` : ''}</b><br>{c.title}{calVenue(c) ? ` · ${calVenue(c)}` : ''}</li>)}</ul> : <p>לוח האירועים מתעדכן מהיכל התרבות.</p>}
+      {cal.length ? <ul style="list-style:none;margin:0;padding:0">{cal.map((c) => <li style="padding:7px 0;border-top:1px solid #EEF1F5"><b>{fmtDate(c.start)}{calTime(c.start) ? `, ${calTime(c.start)}` : ''}</b><br><a href={eventUrl(c)}>{c.title}</a>{calVenue(c) ? ` · ${calVenue(c)}` : ''}</li>)}</ul> : <p>לוח האירועים מתעדכן מהיכל התרבות.</p>}
       <p class="note" style="margin:8px 0 0"><a href="/events/#cal" style="color:#0B5FCC">ללוח האירועים המלא</a></p>
     </section>
     <section class="ncard" style="--c:#6D3FC0" aria-labelledby="g-sh">

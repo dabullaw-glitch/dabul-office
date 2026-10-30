@@ -12,6 +12,7 @@ import { CATEGORIES, CAT_BY_SLUG } from '../../../data/directory';
 import { SITE_URL } from '../../../data/site';
 import { SECTION_BY_KEY } from '../../../data/sections';
 import { articleUrl, placeUrl, fmtTime, fmtShort, fmtDate, calTime, calVenue, FACTS } from '../../../lib/content';
+import { eventUrl } from '../../../lib/events';
 import { listingUrl, phoneShow } from '../../../lib/biz';
 import { AREA_PAGES, type AreaInfo } from '../../../lib/area';
 export function getStaticPaths() {
@@ -57,7 +58,7 @@ const byCat = (cat: string) => guide.filter((g) => g.cat === cat);
         : <section class="nl-blk"><h2 class="n-sh">חדשות {isN ? 'השכונה' : p.he}</h2><p style="margin:0">עוד לא פורסמו אצלנו ידיעות על {p.he}. ראיתם משהו? <a href="/send-news/" style="color:#0B5FCC;font-weight:700">שלחו לנו דיווח</a>.</p></section>}
       {events.length > 0 && (
       <section class="nl-blk" aria-labelledby="ev-h"><h2 id="ev-h" class="n-sh">אירועים</h2>
-        <ul style="list-style:none;margin:0;padding:0">{events.map((c) => <li style="padding:8px 0;border-top:1px solid #EFEDE7"><b class="num">{fmtDate(c.start)}{calTime(c.start) ? `, ${calTime(c.start)}` : ''}</b> {c.url ? <a href={c.url} rel="noopener" target="_blank">{c.title}</a> : c.title}{calVenue(c) ? <span style="color:var(--mut)"> · {calVenue(c)}</span> : ''}</li>)}</ul></section>)}
+        <ul style="list-style:none;margin:0;padding:0">{events.map((c) => <li style="padding:8px 0;border-top:1px solid #EFEDE7"><b class="num">{fmtDate(c.start)}{calTime(c.start) ? `, ${calTime(c.start)}` : ''}</b> <a href={eventUrl(c)}>{c.title}</a>{calVenue(c) ? <span style="color:var(--mut)"> · {calVenue(c)}</span> : ''}</li>)}</ul></section>)}
       {listings.length > 0 && (
       <section class="nl-blk" aria-labelledby="bz-h"><h2 id="bz-h" class="n-sh">עסקים ובעלי מקצוע ב{p.he}</h2>
         <ul style="list-style:none;margin:0;padding:0">{listings.slice(0, 24).map((l) => <li style="padding:8px 0;border-top:1px solid #EFEDE7"><a href={listingUrl(l)} style="font-weight:700">{l.name}</a> <span style="color:var(--mut)">· {CAT_BY_SLUG[l.category]?.he || ''}</span>{l.phone && <span class="num" dir="ltr" style="color:var(--mut)"> · {phoneShow(l.phone)}</span>}</li>)}</ul></section>)}

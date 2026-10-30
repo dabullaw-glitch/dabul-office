@@ -8,6 +8,8 @@ import { ARTICLES, localized, articleUrl, sectionUrl, placesOf, liveSections, WR
 import { IMG } from '../data/site';
 import { LISTINGS, listingUrl } from './biz';
 import { AREA_PAGES } from './area';
+import { CALENDAR } from './content';
+import { eventUrl } from './events';
 
 export interface R { loc: string; lastmod?: string; alts?: Partial<Record<Lang, string>>; images?: { loc: string; title: string }[]; priority?: string; changefreq?: string }
 const now = new Date().toISOString();
@@ -31,6 +33,8 @@ export function routes(): R[] {
   for (const l of LANGS) out.push({ loc: nowA[l], alts: nowA, lastmod: now, changefreq: 'hourly', priority: '0.8' });
   for (const p of ['weather', 'shabbat', 'weekend', 'beaches', 'pharmacy', 'roads', 'outages', 'alerts', 'phones', 'shelters', 'waste', 'parking', 'prices', 'elections']) out.push({ loc: `/now/${p}/`, lastmod: now, changefreq: 'daily', priority: '0.7' });
   out.push({ loc: '/netanya/', lastmod: now, changefreq: 'daily', priority: '0.8' });
+  // 30.10.2026: one page per event of the official calendar (lib/events.ts); past events drop out of the feed and the sitemap
+  for (const c of CALENDAR) out.push({ loc: eventUrl(c), lastmod: now, changefreq: 'daily', priority: '0.5' });
   // the city guide "שימושון עירוני" (29.10.2026): the hub and every category page that has items
   out.push({ loc: '/guide/', lastmod: now, changefreq: 'weekly', priority: '0.7' });
   for (const c of CATS) if (!c.href && (DATA[c.slug]?.items?.length ?? 0) > 0) out.push({ loc: `/guide/${c.slug}/`, lastmod: DATA[c.slug].checked || now, changefreq: 'monthly', priority: '0.6' });
