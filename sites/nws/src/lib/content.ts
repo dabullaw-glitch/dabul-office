@@ -5,7 +5,7 @@ import { LANG_PREFIX } from '../data/site';
 import { SECTIONS, SECTION_BY_KEY, NAV_ORDER, CORE_SECTIONS, type SectionKey } from '../data/sections';
 import { PLACES, PLACE_BY_HE } from '../data/places';
 // @ts-ignore a plain JS module, shared with the daily self check (scripts/imgcheck.mjs)
-import { topicOf, whereOf, checkPick, TOPIC_BY_KEY, SECTION_NEUTRAL, OUTSIDE } from './imgtopics.mjs';
+import { topicOf, whereOf, checkPick, setsOf, TOPIC_BY_KEY, SECTION_NEUTRAL, OUTSIDE } from './imgtopics.mjs';
 
 export interface Article {
   slug: string; section: SectionKey; title: string; dek: string; body: string[]; keyPoints: string[]; whatItMeans: string;
@@ -431,7 +431,7 @@ export const NETANYA_PLACES = PLACES.filter((p) => p.kind === 'neighborhood').ma
       pool = exact.length ? exact : where === 'netanya' ? placePhotos.filter((p) => fit(p) && p.places.includes('נתניה')) : [];
       why = exact.length ? 'place' : pool.length ? 'netanya' : '';
     }
-    if (!pool.length && T) { pool = T.sets.flatMap((s: string) => bySet.get(s) || []); why = pool.length ? 'topic' : ''; }
+    if (!pool.length && T) { pool = setsOf(T, a).flatMap((s: string) => bySet.get(s) || []); why = pool.length ? 'topic' : ''; }
     if (!pool.length && !T) { pool = (SECTION_NEUTRAL[a.section] || []).flatMap((s: string) => bySet.get(s) || []); why = pool.length ? 'neutral' : ''; }
     if (!pool.length) {
       // no library photo fits: the generic stock photo of the topic, or of the section (never a landmark)
@@ -446,6 +446,8 @@ export const NETANYA_PLACES = PLACES.filter((p) => p.kind === 'neighborhood').ma
       s += (hashOf(a.slug + p.id) % 1000) / 1e4; // a stable tie break
       if (s > bestS) { bestS = s; best = p; }
     }
+    // every photo that fits was already used today (a small set): the generic stock photo of the topic, not the same photo twice
+    if (bestS < -50 && T && T.hard) return { stock: T.stock[(a.engineId ?? hashOf(a.slug)) % T.stock.length], why: 'topic stock (set used up today)' };
     return { lib: best!, why };
   };
   for (const a of [...ARTICLES].reverse()) {

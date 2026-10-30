@@ -48,7 +48,7 @@ export const TOPICS = [
     rx: /עירי|ראש העיר|מועצת העיר|מליאת|מליאה|סגן ראש העיר|סגנית ראש העיר|חבר מועצה|חברי מועצה|חברי המועצה|מנכ"ל העירייה|מוקד 106|המוקד העירוני|אגף ה/g },
   { key: 'culture', sets: ['culture'], stock: ['concert', 'concert-hands'],
     placeTopics: ['culture', 'square', 'art'],
-    rx: /הופע|תיאטרון|קונצרט|פסטיבל|תערוכ|מוזיאון|קולנוע|ספרייה|ספריות|ספריית|זמר|זמרת|להקה|מופע |מופעים|המופע|מופעי|סדנ|הרצא|תרבות|מסיבה|חגיגה|קרנבל|האמן|אמנים|אמנית|אמנות/g },
+    rx: /הופע|תיאטרון|קונצרט|פסטיבל|תערוכ|מוזיאון|קולנוע|הצגה|הצגות|ספרייה|ספריות|ספריית|זמר|זמרת|להקה|מופע |מופעים|המופע|מופעי|סדנ|הרצא|תרבות|מסיבה|חגיגה|קרנבל|האמן|אמנים|אמנית|אמנות/g },
   { key: 'market', sets: ['market'], stock: ['city-buildings'],
     placeTopics: ['commerce', 'street'],
     rx: /שוק |השוק|דוכן|דוכנים|קניון|חנות|חנויות|בעלי עסקים|בית עסק|בתי עסק|מסחר|פתיחת סניף|סניף חדש|נפתח סניף|נפתחה חנות/g },
@@ -120,6 +120,13 @@ export function whereOf({ title = '', dek = '', body = [], section = '', neighbo
   if (OUTSIDE.some((p) => lead.includes(p)) && !lead.includes(NETANYA)) return 'outside';
   return lead.includes(NETANYA) ? 'netanya' : '';
 }
+/** the illustration sets for this story's topic: a sports story is football unless it is about basketball */
+export function setsOf(T, a) {
+  if (!T) return [];
+  if (T.key !== 'sports') return T.sets;
+  const text = [a.title, a.dek, ...(Array.isArray(a.body) ? a.body.slice(0, 2) : [])].join(' ');
+  return /כדורסל|יורוליג|ליגת ווינר|הפועל הולון|מכבי תל אביב בכדורסל|אליצור נתניה/.test(text) ? ['basketball'] : ['football'];
+}
 // what a library photo shows: a topic illustration (set), or a place photo; nature and landscape photos are only for nature,
 // park, beach and weather stories
 export const LANDSCAPE = ['nature', 'park', 'river', 'dunes', 'sunset', 'agriculture'];
@@ -133,12 +140,12 @@ export function checkPick(a, photo, netanyaPlaces = []) {
   const isPlace = !photo.set;
   if (!T && isPlace) return 'unclear topic but a place photo';
   if (T && T.hard && isPlace) return `${t.key} story with a place photo`;
-  if (T && T.hard && !T.sets.includes(photo.set)) return `${t.key} story with a ${photo.set} illustration`;
+  if (T && T.hard && !setsOf(T, a).includes(photo.set)) return `${t.key} story with a ${photo.set} illustration`;
   if (T && T.key === 'sports' && !['football', 'basketball'].includes(photo.set)) return 'sports story without a sports image';
   if (isPlace && where === 'outside' && (photo.places || []).some((p) => p === NETANYA || netanyaPlaces.includes(p))) return 'Netanya photo on a story from another place';
   if (isPlace && T && !(photo.topics || []).some((x) => (T.placeTopics || []).includes(x))) return `${t.key} story with a photo of ${(photo.topics || []).join('/')}`;
   if (isPlace && (photo.topics || []).some((x) => LANDSCAPE.includes(x)) && !(photo.topics || []).some((x) => !LANDSCAPE.includes(x)) && !(T && ['nature', 'beach', 'tourism', 'weather'].includes(T.key)))
     return 'landscape photo on a story that is not about nature';
-  if (!isPlace && T && !T.hard && T.sets.length && !T.sets.includes(photo.set)) return `${t.key} story with a ${photo.set} illustration`;
+  if (!isPlace && T && !T.hard && T.sets.length && !setsOf(T, a).includes(photo.set)) return `${t.key} story with a ${photo.set} illustration`;
   return '';
 }
