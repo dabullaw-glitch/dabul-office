@@ -13,6 +13,7 @@
 .art-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .n-art .n-hero{margin-inline:0}
 .n-art .n-hero figcaption .art-lbl{flex:none;margin-inline-start:auto}
+.n-art .n-hero figcaption .art-cr{flex:0 1 auto}.n-art .n-hero figcaption .art-cr a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 /* sponsored content: the label above the kicker and in the byline, the disclosure line at the end */
 .n-art .art-k{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .art-spon{display:inline-flex;align-items:center;min-height:26px;padding:2px 10px;border-radius:4px;background:#FFF1C2;border:1px solid #D9B44A;color:#4A3500;font-size:13px;font-weight:800;letter-spacing:.2px}

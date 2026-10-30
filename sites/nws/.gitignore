@@ -7,3 +7,5 @@ src/data/live.json
 src/data/aiimg.json
 .imgcache
 public/ai
+src/data/photolib.json
+public/img/lib

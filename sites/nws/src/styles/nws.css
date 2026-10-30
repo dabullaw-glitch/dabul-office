@@ -86,7 +86,7 @@ a:hover{color:var(--red)}
 /* photos */
 .n-ph{position:relative;overflow:hidden;background:#1A2130;border-radius:4px;display:block}
 .n-ph img{display:block;width:100%;height:100%;object-fit:cover}
-.n-cap{position:absolute;bottom:10px;left:10px;font-size:11.5px;color:#fff;background:rgba(13,19,33,.62);padding:3px 8px;border-radius:3px;letter-spacing:.2px;line-height:1.4;pointer-events:none;z-index:1}
+.n-cap{position:absolute;bottom:10px;left:10px;max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;color:#fff;background:rgba(13,19,33,.62);padding:3px 8px;border-radius:3px;letter-spacing:.2px;line-height:1.4;pointer-events:none;z-index:1}
 .n-ph .n-badge{position:absolute;top:10px;right:10px;background:var(--red);color:#fff;font-size:12px;font-weight:800;border-radius:4px;padding:3px 8px;display:inline-flex;align-items:center;gap:6px;z-index:1}
 .n-ph .n-badge i{width:6px;height:6px;border-radius:50%;background:#fff}
 /* kicker, meta, section heading */

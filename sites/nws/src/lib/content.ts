@@ -312,19 +312,27 @@ export const fmtDay = (iso: string, lang: Lang = 'he') => new Intl.DateTimeForma
  *  "צילום: באדיבות המפרסם"; 2. a photo from the section photo library (public/img/stock, labelled "צילום אילוסטרציה"), picked by
  *  the story id so neighbouring stories get different photos.
  *  ai: true only for an AI generated image; own: the story's own image (AI or real); kind: which label applies (see picLabel). */
-export type PicKind = 'ai' | 'photo' | 'sponsor' | 'stock';
+export type PicKind = 'ai' | 'photo' | 'sponsor' | 'stock' | 'lib';
 export interface Pic { src: string; srcset?: string; small: string; alt: string; w: number; h: number; ai: boolean; own: boolean; stock: boolean; kind: PicKind; credit: string; label: string; og: string;
   /** the large images for the structured data (16:9, 4:3, 1:1) and the size of the og image when known */
-  ld?: { src: string; w: number; h: number }[]; ogW?: number; ogH?: number }
+  ld?: { src: string; w: number; h: number }[]; ogW?: number; ogH?: number;
+  /** 30.10.2026: a photo of the Commons photo library (kind 'lib'): its author, source page, license and license page, for the credit */
+  lib?: { author: string; page: string; license: string; licenseUrl: string } }
+/** the license name in a credit: Hebrew for public domain */
+export const licName = (l: string, lang: Lang = 'he') => (/public domain|^pd/i.test(l) ? (lang === 'he' ? 'נחלת הכלל' : 'Public domain') : /^attribution$/i.test(l) ? (lang === 'he' ? 'ייחוס' : 'Attribution') : l);
+export const COMMONS: Record<Lang, string> = { he: 'ויקישיתוף', ru: 'Викисклад', fr: 'Wikimedia Commons', en: 'Wikimedia Commons' };
 /** the picture label in the page language */
 export function picLabel(p: Pic, lang: Lang = 'he') {
-  const L: Record<PicKind, Record<Lang, string>> = {
+  const L: Record<Exclude<PicKind, 'lib'>, Record<Lang, string>> = {
     ai: { he: 'תמונה להמחשה', ru: 'Иллюстрация ИИ', fr: 'Illustration IA', en: 'AI illustration' },
     photo: { he: 'צילום', ru: 'Фото', fr: 'Photo', en: 'Photo' },
     sponsor: { he: 'צילום: באדיבות המפרסם', ru: 'Фото предоставлено рекламодателем', fr: 'Photo : avec l’aimable autorisation de l’annonceur', en: 'Photo courtesy of the advertiser' },
     stock: { he: 'צילום אילוסטרציה', ru: 'Иллюстративное фото', fr: 'Photo d’illustration', en: 'Illustrative photo' },
   };
-  return (p.kind === 'photo' || p.kind === 'sponsor') && p.credit ? `${L.photo[lang]}: ${p.credit}` : L[p.kind][lang];
+  // a library photo: still "צילום אילוסטרציה", with its author and the source (the full credit with the license is under the photo
+  // on the story page, see ArticlePage)
+  if (p.kind === 'lib' && p.lib) return `${L.stock[lang]}: ${p.lib.author} / ${COMMONS[lang]}`;
+  return (p.kind === 'photo' || p.kind === 'sponsor') && p.credit ? `${L.photo[lang]}: ${p.credit}` : L[p.kind === 'lib' ? 'stock' : p.kind][lang];
 }
 function hashOf(s: string) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
 // the 1:1 crop of the library photos is 1200 wide, except two whose original is not tall enough (public/img/stock/x)
@@ -354,7 +362,79 @@ export function picOf(a: Article, _IMGS?: unknown): Pic {
     p.label = picLabel(p);
     return p;
   }
-  return stockPic(stockFor(a.section, a.engineId ?? a.slug));
+  const lp = LIB_PICK.get(a.slug);
+  return lp ? libPic(lp) : stockPic(stockFor(a.section, a.engineId ?? a.slug));
+}
+
+// ---------------------------------------------------------------- the photo library (30.10.2026)
+// Yakir approved: a story with no image of its own gets a real photo of Netanya or the Sharon from our Commons photo library
+// (scripts/photolib/harvest.mjs; the build copies it to public/img/lib and src/data/photolib.json, see scripts/loop.sh) instead of
+// one of the ~20 fixed stock photos. An AI image or a photo of the story itself always wins; sponsored stories keep the stock photo.
+// The pick: the place first (a photo of the neighbourhood or locality the story is about), then the topic (words in the title and
+// summary, then the section), never the same photo on two stories of the same day, and fewer repeats within a week. Stories are
+// picked oldest first, so a new story never changes the photo of an older one. Without the library the stock photos stay.
+interface LibPhoto { id: string; page: string; author: string; license: string; licenseUrl: string; alt: string; places: string[]; topics: string[]; sq: number }
+const LIB: LibPhoto[] = ((readJson('photolib.json', { photos: [] }).photos || []) as LibPhoto[])
+  .filter((p) => p && /^c\d+$/.test(p.id) && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)));
+function libPic(p: LibPhoto): Pic {
+  const b = `/img/lib/${p.id}`;
+  const pic: Pic = { ld: [{ src: `${b}-16x9.jpg`, w: 1200, h: 675 }, { src: `${b}-1x1.jpg`, w: p.sq || 1080, h: p.sq || 1080 }], ogW: 1200, ogH: 675,
+    src: `${b}-1600.webp`, srcset: `${b}-800.webp 800w, ${b}-1600.webp 1600w`, small: `${b}-800.webp`, alt: p.alt, w: 1600, h: 1067, ai: false, own: false,
+    stock: false, kind: 'lib', credit: `${p.author}, ${COMMONS.he}, ${licName(p.license)}`, label: '', og: `${b}-16x9.jpg`,
+    lib: { author: p.author, page: p.page, license: p.license, licenseUrl: p.licenseUrl } };
+  pic.label = picLabel(pic);
+  return pic;
+}
+const SEC_TOPICS: Record<string, string[]> = {
+  flash: ['street', 'road', 'night', 'aerial', 'city'], national: ['aerial', 'city', 'buildings'], city: ['cityhall', 'city', 'aerial', 'square', 'street'],
+  police: ['street', 'night', 'road'], realestate: ['buildings', 'construction', 'realestate', 'aerial', 'neighborhood'], sports: ['stadium', 'sports'],
+  transport: ['road', 'transport', 'train', 'street'], community: ['park', 'community', 'education', 'neighborhood'], health: ['health', 'park', 'nature'],
+  leisure: ['culture', 'leisure', 'promenade', 'sunset', 'square', 'beach'], sharon: ['sharon', 'nature', 'agriculture'],
+  tourism: ['beach', 'promenade', 'sunset', 'sea', 'tourism'], law: ['city', 'buildings', 'street'], blog: ['city', 'beach', 'promenade', 'sunset'],
+};
+const KW_TOPICS: [RegExp, string[]][] = [
+  [/חוף|חופי|רחצה|מציל|גלים| הים| בים/, ['beach', 'sea']], [/טיילת/, ['promenade']], [/רכבת/, ['train']],
+  [/כביש|תנועה|צומת|מחלף|נת"צ|אוטובוס|תחבורה|רמזור|חני[יה]/, ['road', 'transport', 'street']], [/פארק|גינ|שמור|טבע|אירוס|יער/, ['park', 'nature']],
+  [/בנייה|בניה|פרויקט|דירות|התחדשות|פינוי|תמ"א|מגדל|נדל"ן|קבלן|היתר/, ['buildings', 'construction', 'realestate']],
+  [/עירי|מועצת העיר|ראש העיר|מליא/, ['cityhall', 'city']], [/בית החולים|לניאדו|רפוא|מרפא|בריאות/, ['health']],
+  [/אצטדיון|מכבי|בית"ר|כדורגל|כדורסל|ספורט|הפועל/, ['stadium', 'sports']], [/הופעה|תיאטרון|תרבות|מוזיאון|קונצרט|פסטיבל|תערוכ/, ['culture', 'leisure']],
+  [/קניון|עסקים|חנויות|מסחר|שוק /, ['commerce']], [/בית ספר|בתי ספר|חינוך|תלמיד|גן ילדים|לימודים/, ['education']], [/שקיעה/, ['sunset']],
+  [/לילה|ליל /, ['night']], [/כיכר העצמאות|הכיכר/, ['square']], [/נחל|אלכסנדר/, ['river', 'nature']], [/חקלא|פרדס|שדות/, ['agriculture']],
+];
+const GENERIC_PLACES = new Set(['נתניה', 'השרון']);
+const LIB_PICK = new Map<string, LibPhoto>();
+if (LIB.length) {
+  const names = [...new Set(LIB.flatMap((p) => p.places))];
+  const dayOf = (iso: string) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date(iso));
+  const usedDay = new Map<string, Set<string>>(); // day -> photos used that day
+  const lastUse = new Map<string, number[]>(); // photo -> times it was used
+  for (const a of [...ARTICLES].reverse()) {
+    if (a.ai || a.kind === 'sponsored') continue;
+    const head = [a.title, a.dek].join(' ');
+    const text = [head, ...a.body.slice(0, 3), ...a.neighborhoods].join(' ');
+    const places = new Set(names.filter((n) => text.includes(n)));
+    const kw = new Set(KW_TOPICS.filter(([rx]) => rx.test(head)).flatMap(([, t]) => t));
+    const sec = new Set(SEC_TOPICS[a.section] || []);
+    const day = dayOf(a.published); const t = Date.parse(a.published) || 0;
+    const today = usedDay.get(day) || new Set<string>();
+    let best: LibPhoto | null = null; let bestS = -Infinity;
+    for (const p of LIB) {
+      if (today.has(p.id)) continue;
+      let s = 0;
+      for (const pl of p.places) if (places.has(pl)) s += GENERIC_PLACES.has(pl) ? 1 : 10;
+      if (a.section === 'sharon' && !p.topics.includes('sharon') && !p.places.some((pl) => places.has(pl) && !GENERIC_PLACES.has(pl))) s -= 3;
+      s += 3 * Math.min(2, p.topics.filter((x) => kw.has(x)).length) + 2 * Math.min(2, p.topics.filter((x) => sec.has(x)).length);
+      s -= 4 * (lastUse.get(p.id) || []).filter((u) => t - u < 7 * 864e5).length;
+      s += (hashOf(a.slug + p.id) % 1000) / 1e4; // a stable tie break
+      if (s > bestS) { bestS = s; best = p; }
+    }
+    if (!best) continue;
+    LIB_PICK.set(a.slug, best);
+    today.add(best.id); usedDay.set(day, today);
+    lastUse.set(best.id, [...(lastUse.get(best.id) || []), t]);
+    // the social card follows the photo, unless the story has a hand made card or an image of its own
+    if (!a.og || a.og.startsWith('/img/stock/og/')) a.og = `/img/lib/${best.id}-16x9.jpg`;
+  }
 }
 /** Hebrew numerals for the Hebrew date (י״ז, תשפ״ז) */
 export function gematria(n: number) {

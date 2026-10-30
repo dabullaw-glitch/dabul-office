@@ -44,23 +44,49 @@ check() {
   )
 }
 
+# 30.10.2026: the publish borrows the objects of this checkout (git alternates), which holds the current nws-site commit (TIP, fetched
+# before each build), and marks that commit as a shallow boundary, so git leaves out every file the site already has and the push
+# sends only what changed (the site with the photo library is about 100 MB). The new commit still has no parent, as before.
+# If that push fails for any reason, it packs everything and pushes in full, as before.
+TIP=""
 publish() {
-  local k="$1" d
+  local k="$1" d alt
   echo "$k" > dist/.build-key
+  alt="$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)/objects"
   d=$(mktemp -d); cp -r dist/. "$d"/
   ( cd "$d" && git init -q && git checkout -qb nws-site \
+    && { if [ -n "$TIP" ] && [ -d "$alt" ]; then echo "$alt" > .git/objects/info/alternates && echo "$TIP" > .git/shallow; fi; true; } \
     && git config user.name "site-bot" && git config user.email "site-bot@users.noreply.github.com" \
     && git add -A && git commit -qm "nws.co.il $(date -u +%FT%TZ)" \
-    && git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" nws-site )
+    && { git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" nws-site \
+      || { git repack -aq && rm -f .git/objects/info/alternates .git/shallow \
+        && git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" nws-site; }; } )
   local rc=$?; rm -rf "$d"; return $rc
+}
+
+# 30.10.2026: the photo library (branch nws-photolib, made by .github/workflows/photolib.yml): its photos go to public/img/lib and its
+# index to src/data/photolib.json, and a new library version means a new build (LIBSHA is part of the build key)
+LIBSHA=""
+synclib() {
+  local s t
+  s=$(git ls-remote origin refs/heads/nws-photolib 2>/dev/null | cut -c1-12)
+  if [ -z "$s" ] || [ "$s" = "$LIBSHA" ]; then return 0; fi
+  t=$(mktemp -d)
+  if git fetch -q --depth=1 origin nws-photolib 2>/dev/null && git archive FETCH_HEAD img index.json | tar -x -C "$t" && [ -s "$t/index.json" ]; then
+    rm -rf public/img/lib && mkdir -p public/img && mv "$t/img" public/img/lib && mv "$t/index.json" src/data/photolib.json
+    LIBSHA=$s; echo "$(date -u +%T) photo library $s: $(ls public/img/lib | wc -l) files"
+  fi
+  rm -rf "$t"
 }
 
 while :; do
   node scripts/feed.mjs >/dev/null 2>&1 || echo "feed fetch failed, keeping the last one"
   node scripts/biz.mjs >/dev/null 2>&1 || true
-  K="$(key)-$SRC-$(TZ=Asia/Jerusalem date +%F)"
+  synclib
+  K="$(key)-$SRC-$LIBSHA-$(TZ=Asia/Jerusalem date +%F)"
   if [ "$K" != "$LAST" ]; then
     OLD=$(git fetch -q --depth=1 origin nws-site 2>/dev/null && git show FETCH_HEAD:.build-key 2>/dev/null || true)
+    TIP=$(git rev-parse -q --verify 'FETCH_HEAD^{commit}' 2>/dev/null || true)
     git show FETCH_HEAD:.indexnow.tsv > /tmp/nws-indexnow-old.tsv 2>/dev/null || rm -f /tmp/nws-indexnow-old.tsv
     if [ "$K" != "$OLD" ]; then
       T0=$SECONDS
