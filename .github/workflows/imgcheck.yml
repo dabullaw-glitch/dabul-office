@@ -1,0 +1,37 @@
+name: nws image self check
+# 30.10.2026 (Yakir: the photo of a story must fit its topic, checked every day and fixed by itself). Once a day, checks the photos
+# of the last day's stories on the live site against the topic rules (sites/nws/scripts/imgcheck.mjs, the same topic reader as the
+# build) and sends every mismatch to the neutral pick through sites/nws/src/data/imgfix.json, which the next build reads.
+# The table of the checked stories is in the run summary and in the imgcheck artifact.
+on:
+  schedule: [{ cron: '17 4 * * *' }]
+  workflow_dispatch:
+    inputs:
+      hours: { description: 'how many hours back', required: false, default: '26' }
+permissions:
+  contents: write
+concurrency: { group: imgcheck, cancel-in-progress: false }
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: The photo library index
+        run: git fetch -q --depth=1 origin nws-photolib && git show FETCH_HEAD:index.json > /tmp/photolib.json
+      - name: Check
+        env:
+          REPORT: /tmp/imgcheck.json
+        run: node sites/nws/scripts/imgcheck.mjs /tmp/photolib.json "${{ inputs.hours || '26' }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: imgcheck, path: /tmp/imgcheck.json, retention-days: 30 }
+      - name: Save the fixes
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add sites/nws/src/data/imgfix.json
+          git diff --cached --quiet && { echo "no new fixes"; exit 0; }
+          git commit -qm "nws image self check: stories sent to the neutral photo"
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done

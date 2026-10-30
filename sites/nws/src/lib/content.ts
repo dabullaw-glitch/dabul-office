@@ -4,6 +4,8 @@ import type { Lang } from '../data/site';
 import { LANG_PREFIX } from '../data/site';
 import { SECTIONS, SECTION_BY_KEY, NAV_ORDER, CORE_SECTIONS, type SectionKey } from '../data/sections';
 import { PLACES, PLACE_BY_HE } from '../data/places';
+// @ts-ignore a plain JS module, shared with the daily self check (scripts/imgcheck.mjs)
+import { topicOf, whereOf, checkPick, TOPIC_BY_KEY, SECTION_NEUTRAL, OUTSIDE } from './imgtopics.mjs';
 
 export interface Article {
   slug: string; section: SectionKey; title: string; dek: string; body: string[]; keyPoints: string[]; whatItMeans: string;
@@ -362,83 +364,109 @@ export function picOf(a: Article, _IMGS?: unknown): Pic {
     p.label = picLabel(p);
     return p;
   }
-  const lp = LIB_PICK.get(a.slug);
-  return lp ? libPic(lp) : stockPic(stockFor(a.section, a.engineId ?? a.slug));
+  const pk = IMG_PICK.get(a.slug);
+  return pk?.lib ? libPic(pk.lib) : stockPic(pk?.stock || stockFor(a.section, a.engineId ?? a.slug));
 }
 
 // ---------------------------------------------------------------- the photo library (30.10.2026)
 // Yakir approved: a story with no image of its own gets a real photo of Netanya or the Sharon from our Commons photo library
 // (scripts/photolib/harvest.mjs; the build copies it to public/img/lib and src/data/photolib.json, see scripts/loop.sh) instead of
 // one of the ~20 fixed stock photos. An AI image or a photo of the story itself always wins; sponsored stories keep the stock photo.
-// The pick: the place first (a photo of the neighbourhood or locality the story is about), then the topic (words in the title and
-// summary, then the section), never the same photo on two stories of the same day, and fewer repeats within a week. Stories are
-// picked oldest first, so a new story never changes the photo of an older one. Without the library the stock photos stay.
-interface LibPhoto { id: string; page: string; author: string; license: string; licenseUrl: string; alt: string; places: string[]; topics: string[]; sq: number }
+// The pick: the topic first (see IMG_PICK below); photos of a place only for place topics. Stories are picked oldest first, so a
+// new story never changes the photo of an older one. Without the library the stock photos stay.
+interface LibPhoto { id: string; page: string; author: string; license: string; licenseUrl: string; alt: string; places: string[]; topics: string[]; sq: number; set?: string }
 // photos removed after the visual review never show, even before the library branch is rebuilt without them
 const LIB_REJECT = new Set((() => { try { return fs.readFileSync(path.resolve('scripts/photolib/reject.txt'), 'utf8'); } catch { return ''; } })()
   .split('\n').map((l) => l.replace(/#.*/, '').trim()).filter(Boolean).map((n) => `c${n}`));
+// a topic illustration shows only after it passed the visual review (src/data/photolib-ok.txt, Commons page ids)
+const TOPIC_OK = new Set((() => { try { return fs.readFileSync(path.resolve('src/data/photolib-ok.txt'), 'utf8'); } catch { return ''; } })()
+  .split('\n').map((l) => l.replace(/#.*/, '').trim()).filter(Boolean).map((n) => `c${n}`));
 const LIB: LibPhoto[] = ((readJson('photolib.json', { photos: [] }).photos || []) as LibPhoto[])
-  .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)));
+  .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && (!p.set || TOPIC_OK.has(p.id)) && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)));
 function libPic(p: LibPhoto): Pic {
   const b = `/img/lib/${p.id}`;
   // 30.10.2026: the 400px file (phone thumbnails), when the library already has it
   const s4 = fs.existsSync(path.resolve('public/img/lib', `${p.id}-400.webp`));
+  // and the 1200px file (the lead photo on phones: a 1600px file is about twice as heavy)
+  const s12 = fs.existsSync(path.resolve('public/img/lib', `${p.id}-1200.webp`));
   const pic: Pic = { ld: [{ src: `${b}-16x9.jpg`, w: 1200, h: 675 }, { src: `${b}-1x1.jpg`, w: p.sq || 1080, h: p.sq || 1080 }], ogW: 1200, ogH: 675,
-    src: `${b}-1600.webp`, srcset: `${s4 ? `${b}-400.webp 400w, ` : ''}${b}-800.webp 800w, ${b}-1600.webp 1600w`, small: `${b}-800.webp`, thumb: s4 ? `${b}-400.webp` : undefined, alt: p.alt, w: 1600, h: 1067, ai: false, own: false,
+    src: `${b}-1600.webp`, srcset: `${s4 ? `${b}-400.webp 400w, ` : ''}${b}-800.webp 800w, ${s12 ? `${b}-1200.webp 1200w, ` : ''}${b}-1600.webp 1600w`, small: `${b}-800.webp`, thumb: s4 ? `${b}-400.webp` : undefined, alt: p.alt, w: 1600, h: 1067, ai: false, own: false,
     stock: false, kind: 'lib', credit: `${p.author}, ${COMMONS.he}, ${licName(p.license)}`, label: '', og: `${b}-16x9.jpg`,
     lib: { author: p.author, page: p.page, license: p.license, licenseUrl: p.licenseUrl } };
   pic.label = picLabel(pic);
   return pic;
 }
-const SEC_TOPICS: Record<string, string[]> = {
-  flash: ['street', 'road', 'night', 'aerial', 'city'], national: ['aerial', 'city', 'buildings'], city: ['cityhall', 'city', 'aerial', 'square', 'street'],
-  police: ['street', 'night', 'road'], realestate: ['buildings', 'construction', 'realestate', 'aerial', 'neighborhood'], sports: ['stadium', 'sports'],
-  transport: ['road', 'transport', 'train', 'street'], community: ['park', 'community', 'education', 'neighborhood'], health: ['health', 'park', 'nature'],
-  leisure: ['culture', 'leisure', 'promenade', 'sunset', 'square', 'beach'], sharon: ['sharon', 'nature', 'agriculture'],
-  tourism: ['beach', 'promenade', 'sunset', 'sea', 'tourism'], law: ['city', 'buildings', 'street'], blog: ['city', 'beach', 'promenade', 'sunset'],
-};
-const KW_TOPICS: [RegExp, string[]][] = [
-  [/חוף|חופי|רחצה|מציל|גלים| הים| בים/, ['beach', 'sea']], [/טיילת/, ['promenade']], [/רכבת/, ['train']],
-  [/כביש|תנועה|צומת|מחלף|נת"צ|אוטובוס|תחבורה|רמזור|חני[יה]/, ['road', 'transport', 'street']], [/פארק|גינ|שמור|טבע|אירוס|יער/, ['park', 'nature']],
-  [/בנייה|בניה|פרויקט|דירות|התחדשות|פינוי|תמ"א|מגדל|נדל"ן|קבלן|היתר/, ['buildings', 'construction', 'realestate']],
-  [/עירי|מועצת העיר|ראש העיר|מליא/, ['cityhall', 'city']], [/בית החולים|לניאדו|רפוא|מרפא|בריאות/, ['health']],
-  [/אצטדיון|מכבי|בית"ר|כדורגל|כדורסל|ספורט|הפועל/, ['stadium', 'sports']], [/הופעה|תיאטרון|תרבות|מוזיאון|קונצרט|פסטיבל|תערוכ/, ['culture', 'leisure']],
-  [/קניון|עסקים|חנויות|מסחר|שוק /, ['commerce']], [/בית ספר|בתי ספר|חינוך|תלמיד|גן ילדים|לימודים/, ['education']], [/שקיעה/, ['sunset']],
-  [/לילה|ליל /, ['night']], [/כיכר העצמאות|הכיכר/, ['square']], [/נחל|אלכסנדר/, ['river', 'nature']], [/חקלא|פרדס|שדות/, ['agriculture']],
-];
-const GENERIC_PLACES = new Set(['נתניה', 'השרון']);
-const LIB_PICK = new Map<string, LibPhoto>();
-if (LIB.length) {
-  const names = [...new Set(LIB.flatMap((p) => p.places))];
+// 30.10.2026 (Yakir, after a museum photo on a weapons story and a landscape on a football story): the TOPIC comes first.
+// topicOf (src/lib/imgtopics.mjs, shared with the daily self check scripts/imgcheck.mjs) reads the title, summary and first
+// paragraphs. Crime, police, security, accidents, fire, health, courts, elections, economy, weather, sports, education, traffic,
+// road works and transport stories get a topic illustration (a set of the library: police car, ambulance, ballot box, pitch...),
+// never a place photo. A place photo only for a place topic (municipal, real estate, leisure, market, tourism, beach, parks), only
+// when the story is really about that place (a named neighbourhood, or Netanya and no other locality), and only a photo that shows
+// the topic (no nature photo for a municipal story). A story from another locality never gets a Netanya photo. An unclear topic
+// (low confidence) gets the neutral illustration of its section, never a place photo. When a set is still empty: the generic
+// stock photo of the topic. src/data/imgfix.json (written by the daily self check) forces the neutral pick for a story.
+// No photo twice on the same day, fewer repeats within a week. This runs on every build, so every new story gets it at once.
+interface PickInfo { lib?: LibPhoto; stock?: string; topic: string; conf: string; where: string; why: string }
+export const IMG_PICK = new Map<string, PickInfo>();
+const IMG_FIX: Record<string, any> = readJson('imgfix.json', { fixes: {} }).fixes || {};
+export const NETANYA_PLACES = PLACES.filter((p) => p.kind === 'neighborhood').map((p) => p.he);
+{
   const dayOf = (iso: string) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date(iso));
   const usedDay = new Map<string, Set<string>>(); // day -> photos used that day
   const lastUse = new Map<string, number[]>(); // photo -> times it was used
-  for (const a of [...ARTICLES].reverse()) {
-    if (a.ai || a.kind === 'sponsored') continue;
+  const bySet = new Map<string, LibPhoto[]>();
+  for (const p of LIB) if (p.set) bySet.set(p.set, [...(bySet.get(p.set) || []), p]);
+  const placePhotos = LIB.filter((p) => !p.set);
+  const withLib = new Set(LIB.flatMap((p) => p.places));
+  // neutral: no place photo at all (the topic illustration, else the section's neutral illustration, else stock)
+  const pickFor = (a: Article, t: any, where: string, neutral: boolean, at: number, today: Set<string>) => {
+    const T = t && t.conf === 'high' ? TOPIC_BY_KEY[t.key] : null;
     const head = [a.title, a.dek].join(' ');
-    const text = [head, ...a.body.slice(0, 3), ...a.neighborhoods].join(' ');
-    const places = new Set(names.filter((n) => text.includes(n)));
-    const kw = new Set(KW_TOPICS.filter(([rx]) => rx.test(head)).flatMap(([, t]) => t));
-    const sec = new Set(SEC_TOPICS[a.section] || []);
-    const day = dayOf(a.published); const t = Date.parse(a.published) || 0;
-    const today = usedDay.get(day) || new Set<string>();
+    const named = new Set([...NETANYA_PLACES, ...OUTSIDE].filter((n) => withLib.has(n) && (head.includes(n) || a.neighborhoods.includes(n))));
+    let pool: LibPhoto[] = []; let why = '';
+    if (T && !T.hard && !neutral && where !== '') {
+      // a place topic: photos of the named place (or of Netanya, for a Netanya story) that show the topic
+      const fit = (p: LibPhoto) => p.topics.some((x) => (T.placeTopics || []).includes(x));
+      const exact = placePhotos.filter((p) => fit(p) && p.places.some((pl) => pl !== 'נתניה' && named.has(pl)));
+      pool = exact.length ? exact : where === 'netanya' ? placePhotos.filter((p) => fit(p) && p.places.includes('נתניה')) : [];
+      why = exact.length ? 'place' : pool.length ? 'netanya' : '';
+    }
+    if (!pool.length && T) { pool = T.sets.flatMap((s: string) => bySet.get(s) || []); why = pool.length ? 'topic' : ''; }
+    if (!pool.length && !T) { pool = (SECTION_NEUTRAL[a.section] || []).flatMap((s: string) => bySet.get(s) || []); why = pool.length ? 'neutral' : ''; }
+    if (!pool.length) {
+      // no library photo fits: the generic stock photo of the topic, or of the section (never a landmark)
+      const n = a.engineId ?? hashOf(a.slug);
+      return { stock: T ? T.stock[n % T.stock.length] : stockFor(a.section, n), why: T ? 'topic stock' : 'section stock' };
+    }
     let best: LibPhoto | null = null; let bestS = -Infinity;
-    for (const p of LIB) {
-      if (today.has(p.id)) continue;
-      let s = 0;
-      for (const pl of p.places) if (places.has(pl)) s += GENERIC_PLACES.has(pl) ? 1 : 10;
-      if (a.section === 'sharon' && !p.topics.includes('sharon') && !p.places.some((pl) => places.has(pl) && !GENERIC_PLACES.has(pl))) s -= 3;
-      s += 3 * Math.min(2, p.topics.filter((x) => kw.has(x)).length) + 2 * Math.min(2, p.topics.filter((x) => sec.has(x)).length);
-      s -= 4 * (lastUse.get(p.id) || []).filter((u) => t - u < 7 * 864e5).length;
+    for (const p of pool) {
+      let s = today.has(p.id) ? -100 : 0;
+      for (const pl of p.places) if (named.has(pl)) s += 10;
+      s -= 4 * (lastUse.get(p.id) || []).filter((u) => at - u < 7 * 864e5).length;
       s += (hashOf(a.slug + p.id) % 1000) / 1e4; // a stable tie break
       if (s > bestS) { bestS = s; best = p; }
     }
-    if (!best) continue;
-    LIB_PICK.set(a.slug, best);
-    today.add(best.id); usedDay.set(day, today);
-    lastUse.set(best.id, [...(lastUse.get(best.id) || []), t]);
+    return { lib: best!, why };
+  };
+  for (const a of [...ARTICLES].reverse()) {
+    if (a.ai || a.kind === 'sponsored') continue;
+    const t = topicOf(a);
+    const where = whereOf(a, NETANYA_PLACES);
+    const day = dayOf(a.published); const at = Date.parse(a.published) || 0;
+    const today = usedDay.get(day) || new Set<string>();
+    const fixed = !!IMG_FIX[a.slug];
+    let r: { lib?: LibPhoto; stock?: string; why: string } = pickFor(a, t, where, fixed, at, today);
+    if (fixed) r.why += ' (self check fix)';
+    // the guard: the same check as the daily self check; a pick that fails it becomes the neutral pick
+    const bad = checkPick(a, r.lib ? r.lib : { stock: r.stock }, NETANYA_PLACES);
+    if (bad && !fixed) { r = pickFor(a, t, where, true, at, today); r.why += ` (guard: ${bad})`; }
+    IMG_PICK.set(a.slug, { ...r, topic: t?.key || '', conf: t?.conf || 'none', where });
+    const og = r.lib ? `/img/lib/${r.lib.id}-16x9.jpg` : `/img/stock/og/${r.stock}.jpg`;
     // the social card follows the photo, unless the story has a hand made card or an image of its own
-    if (!a.og || a.og.startsWith('/img/stock/og/')) a.og = `/img/lib/${best.id}-16x9.jpg`;
+    if (!a.og || a.og.startsWith('/img/stock/og/') || a.og.startsWith('/img/lib/')) a.og = og;
+    if (!r.lib) continue;
+    today.add(r.lib.id); usedDay.set(day, today);
+    lastUse.set(r.lib.id, [...(lastUse.get(r.lib.id) || []), at]);
   }
 }
 /** Hebrew numerals for the Hebrew date (י״ז, תשפ״ז) */

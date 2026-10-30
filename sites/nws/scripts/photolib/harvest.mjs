@@ -7,7 +7,7 @@
 //    license), landscape photos at least 1600 pixels wide, and drops sensitive subjects (memorials, war, police, accidents, protests,
 //    ceremonies), photos of identifiable people (personality rights notice, portraits, events, sports matches), logos and signs,
 //    and old archive photos.
-// 3. Downloads each kept photo once (from upload.wikimedia.org), and writes our own copies: 1600x1067, 800x533 and 400x267 WebP (3:2 crop),
+// 3. Downloads each kept photo once (from upload.wikimedia.org), and writes our own copies: 1600x1067, 1200x800, 800x533 and 400x267 WebP (3:2 crop),
 //    a 1200x675 JPEG (16:9, the social card and the structured data) and a 1080x1080 JPEG (1:1). sharp drops all EXIF data.
 // 4. Writes index.json (source page, author, license, license URL, tags, places, Hebrew alt and credit for every photo), contact
 //    sheets for a visual review (review/), and report.txt.
@@ -292,12 +292,15 @@ const done = [];
 for (const c of keep) {
   const id = `c${c.pageid}`;
   // 30.10.2026: a 400px WebP too, for phone thumbnails (an 800px file for a 112px card made the section page 2.7 times heavier)
-  const names = [`${id}-1600.webp`, `${id}-800.webp`, `${id}-16x9.jpg`, `${id}-1x1.jpg`, `${id}-400.webp`];
+  // and a 1200px WebP for the lead photo on phones (a 1600px file of ~390 KB was the heaviest file of a section page)
+  const names = [`${id}-1600.webp`, `${id}-800.webp`, `${id}-16x9.jpg`, `${id}-1x1.jpg`, `${id}-400.webp`, `${id}-1200.webp`];
   names.forEach((n) => want.add(n));
-  // a photo that has everything but the 400 file gets it from our own 1600 copy (same 3:2 crop), without downloading again
-  if (!fs.existsSync(path.join(IMG, names[4])) && names.slice(0, 4).every((n) => fs.existsSync(path.join(IMG, n)))) {
-    try { await sharp(path.join(IMG, names[0])).resize({ width: 400, height: 267, fit: 'cover' }).webp({ quality: 66 }).toFile(path.join(IMG, names[4])); }
-    catch (e) { say(`! 400 failed ${c.title}: ${e.message}`); }
+  // a photo that has everything but the 400 or 1200 file gets it from our own 1600 copy (same 3:2 crop), without downloading again
+  for (const [k, w, h, q] of [[4, 400, 267, 66], [5, 1200, 800, 64]]) {
+    if (!fs.existsSync(path.join(IMG, names[k])) && names.slice(0, 4).every((n) => fs.existsSync(path.join(IMG, n)))) {
+      try { await sharp(path.join(IMG, names[0])).resize({ width: w, height: h, fit: 'cover' }).webp({ quality: q }).toFile(path.join(IMG, names[k])); }
+      catch (e) { say(`! ${w} failed ${c.title}: ${e.message}`); }
+    }
   }
   if (!names.every((n) => fs.existsSync(path.join(IMG, n)))) {
     let buf = null;
@@ -313,6 +316,7 @@ for (const c of keep) {
       await base().resize({ width: 1600, height: 1067, ...att }).webp({ quality: 72 }).toFile(path.join(IMG, names[0]));
       await base().resize({ width: 800, height: 533, ...att }).webp({ quality: 70 }).toFile(path.join(IMG, names[1]));
       await base().resize({ width: 400, height: 267, ...att }).webp({ quality: 66 }).toFile(path.join(IMG, names[4]));
+      await base().resize({ width: 1200, height: 800, ...att }).webp({ quality: 64 }).toFile(path.join(IMG, names[5]));
       await base().resize({ width: 1200, height: 675, ...att }).jpeg({ quality: 78, mozjpeg: true, progressive: true }).toFile(path.join(IMG, names[2]));
       const sq = Math.min(1080, c.oh);
       await base().resize({ width: sq, height: sq, ...att }).jpeg({ quality: 78, mozjpeg: true, progressive: true }).toFile(path.join(IMG, names[3]));
