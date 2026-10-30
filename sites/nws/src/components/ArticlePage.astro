@@ -309,7 +309,7 @@ const hasSrc = srcs.length > 0;
             {!sponsored && i === adAt && <AdSlot place="inArticle" />}
             {inline && i === alsoAt - 1 && (
               <a class="n-also" href={articleUrl(inline, lang)}>
-                <span class="n-ph" aria-hidden="true"><img src={picOf(inline).small} alt="" width="240" height="160" loading="lazy" decoding="async"></span>
+                <span class="n-ph" aria-hidden="true"><img src={picOf(inline).thumb || picOf(inline).small} alt="" width="240" height="160" loading="lazy" decoding="async"></span>
                 <span><small>{L.also}</small><b>{inline.title}</b></span>
               </a>)}
           </>)}

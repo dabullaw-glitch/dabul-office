@@ -313,7 +313,7 @@ export const fmtDay = (iso: string, lang: Lang = 'he') => new Intl.DateTimeForma
  *  the story id so neighbouring stories get different photos.
  *  ai: true only for an AI generated image; own: the story's own image (AI or real); kind: which label applies (see picLabel). */
 export type PicKind = 'ai' | 'photo' | 'sponsor' | 'stock' | 'lib';
-export interface Pic { src: string; srcset?: string; small: string; alt: string; w: number; h: number; ai: boolean; own: boolean; stock: boolean; kind: PicKind; credit: string; label: string; og: string;
+export interface Pic { src: string; srcset?: string; small: string; /** a 400px file for small thumbnails, when there is one */ thumb?: string; alt: string; w: number; h: number; ai: boolean; own: boolean; stock: boolean; kind: PicKind; credit: string; label: string; og: string;
   /** the large images for the structured data (16:9, 4:3, 1:1) and the size of the og image when known */
   ld?: { src: string; w: number; h: number }[]; ogW?: number; ogH?: number;
   /** 30.10.2026: a photo of the Commons photo library (kind 'lib'): its author, source page, license and license page, for the credit */
@@ -381,8 +381,10 @@ const LIB: LibPhoto[] = ((readJson('photolib.json', { photos: [] }).photos || []
   .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)));
 function libPic(p: LibPhoto): Pic {
   const b = `/img/lib/${p.id}`;
+  // 30.10.2026: the 400px file (phone thumbnails), when the library already has it
+  const s4 = fs.existsSync(path.resolve('public/img/lib', `${p.id}-400.webp`));
   const pic: Pic = { ld: [{ src: `${b}-16x9.jpg`, w: 1200, h: 675 }, { src: `${b}-1x1.jpg`, w: p.sq || 1080, h: p.sq || 1080 }], ogW: 1200, ogH: 675,
-    src: `${b}-1600.webp`, srcset: `${b}-800.webp 800w, ${b}-1600.webp 1600w`, small: `${b}-800.webp`, alt: p.alt, w: 1600, h: 1067, ai: false, own: false,
+    src: `${b}-1600.webp`, srcset: `${s4 ? `${b}-400.webp 400w, ` : ''}${b}-800.webp 800w, ${b}-1600.webp 1600w`, small: `${b}-800.webp`, thumb: s4 ? `${b}-400.webp` : undefined, alt: p.alt, w: 1600, h: 1067, ai: false, own: false,
     stock: false, kind: 'lib', credit: `${p.author}, ${COMMONS.he}, ${licName(p.license)}`, label: '', og: `${b}-16x9.jpg`,
     lib: { author: p.author, page: p.page, license: p.license, licenseUrl: p.licenseUrl } };
   pic.label = picLabel(pic);

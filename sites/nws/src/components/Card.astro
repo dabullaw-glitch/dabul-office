@@ -20,7 +20,7 @@ const by = a.kind === 'opinion' && a.author ? a.author : spon ? (a.author || (he
 {row ? (
 <a class="n-row" href={href} style={`--c:${s.color}`}>
   <span><span class="n-k">{kickerOf(a, lang)}</span><b>{a.title}</b><small class="num">{spon ? <span class="n-spon">{he ? 'תוכן שיווקי' : 'Sponsored'}</span> : <time datetime={a.published} data-ago>{fmtDay(a.published, lang)}</time>}</small></span>
-  <span class="n-ph" aria-hidden="true"><img src={p.small} alt="" width="224" height="152" loading={eager ? 'eager' : 'lazy'} decoding="async"></span>
+  <span class="n-ph" aria-hidden="true"><img src={p.thumb || p.small} alt="" width="224" height="152" loading={eager ? 'eager' : 'lazy'} decoding="async"></span>
 </a>
 ) : (
 <article class="n-card" style={`--c:${s.color}`}>
