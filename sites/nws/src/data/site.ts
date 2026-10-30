@@ -20,9 +20,11 @@ export const BRAND = {
 };
 
 // Page and section header photos (28.10.2026 redesign: free-license photos from public/img/stock, never the old flat drawings).
-// src is the 1600px WebP; the same name also exists at 800px (-800.webp) and as a 1200x630 JPEG for social cards (stock/og/).
-const ph = (name: string, alt: string) => ({ src: `/img/stock/${name}-1600.webp`, small: `/img/stock/${name}-800.webp`, name, alt });
-export const IMG: Record<string, { src: string; small: string; name: string; alt: string }> = {
+// src is the 1600px WebP; the same name also exists at 1200, 800 and 400px (scripts/stock-sizes.mjs) and as a 1200x630 JPEG for
+// social cards (stock/og/). srcset: all four WebP sizes (30.10.2026, a phone takes the 1200px file instead of the 1600px one).
+const ph = (name: string, alt: string) => ({ src: `/img/stock/${name}-1600.webp`, small: `/img/stock/${name}-800.webp`, name, alt,
+  srcset: `/img/stock/${name}-400.webp 400w, /img/stock/${name}-800.webp 800w, /img/stock/${name}-1200.webp 1200w, /img/stock/${name}-1600.webp 1600w` });
+export const IMG: Record<string, { src: string; small: string; name: string; alt: string; srcset: string }> = {
   beach: ph('beach-umbrellas', 'סוככים על חוף הים'),
   sea: ph('wave', 'גל נשבר על החוף'),
   city: ph('city-buildings', 'מבט על בנייני מגורים בעיר'),

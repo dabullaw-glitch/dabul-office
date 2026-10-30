@@ -342,8 +342,8 @@ const STOCK_SQ: Record<string, number> = { 'police-lights': 980, 'police-street'
 const stockLd = (name: string) => [{ src: `/img/stock/x/${name}-16x9.jpg`, w: 1200, h: 675 }, { src: `/img/stock/x/${name}-4x3.jpg`, w: 1200, h: 900 },
   { src: `/img/stock/x/${name}-1x1.jpg`, w: STOCK_SQ[name] ?? 1200, h: STOCK_SQ[name] ?? 1200 }];
 export function stockPic(name: string, alt = ''): Pic {
-  return { ld: stockLd(name), ogW: 1200, ogH: 630, src: `/img/stock/${name}-1600.webp`, srcset: `/img/stock/${name}-800.webp 800w, /img/stock/${name}-1600.webp 1600w`,
-    small: `/img/stock/${name}-800.webp`, alt, w: 1600, h: 1067, ai: false, own: false, stock: true, kind: 'stock', credit: '', label: 'צילום אילוסטרציה', og: `/img/stock/og/${name}.jpg` };
+  return { ld: stockLd(name), ogW: 1200, ogH: 630, src: `/img/stock/${name}-1600.webp`, srcset: `/img/stock/${name}-400.webp 400w, /img/stock/${name}-800.webp 800w, /img/stock/${name}-1200.webp 1200w, /img/stock/${name}-1600.webp 1600w`,
+    small: `/img/stock/${name}-800.webp`, thumb: `/img/stock/${name}-400.webp`, alt, w: 1600, h: 1067, ai: false, own: false, stock: true, kind: 'stock', credit: '', label: 'צילום אילוסטרציה', og: `/img/stock/og/${name}.jpg` };
 }
 export function stockFor(key: SectionKey, seed: string | number) {
   const ph = SECTION_BY_KEY[key].photos;

@@ -11,7 +11,7 @@ const he = lang === 'he';
 const cap = { he: 'צילום אילוסטרציה', en: 'Illustrative photo', ru: 'Иллюстративное фото', fr: 'Photo d’illustration' }[lang];
 ---
 <section class="n-shero nl-hero" style={`--c:${color}`}>
-  <div class="bg" aria-hidden="true"><img src={`/img/stock/${photo}-1600.webp`} srcset={`/img/stock/${photo}-800.webp 800w, /img/stock/${photo}-1600.webp 1600w`} sizes="100vw" alt="" width="1600" height="1067" fetchpriority="high" decoding="async"></div>
+  <div class="bg" aria-hidden="true"><img src={`/img/stock/${photo}-1600.webp`} srcset={`/img/stock/${photo}-400.webp 400w, /img/stock/${photo}-800.webp 800w, /img/stock/${photo}-1200.webp 1200w, /img/stock/${photo}-1600.webp 1600w`} sizes="100vw" alt="" width="1600" height="1067" fetchpriority="high" decoding="async"></div>
   <div class="sh" aria-hidden="true"></div>
   <div class="n-wrap">
     <nav aria-label={crumbLabel || (he ? 'מיקום בדף' : 'Breadcrumbs')}><ol class="n-crumb">{crumbs.map((c, i) => <li>{i < crumbs.length - 1 ? <a href={c.href}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>)}</ol></nav>
