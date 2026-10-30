@@ -94,26 +94,26 @@ const ROOTS = [
   // landmarks); allow: words of BAD that this set may show (a police car may say police). Many names are tried, a missing one is skipped.
   ...[
     ['police', 'ניידת משטרה', /polic/i, ['Israel Police vehicles', 'Police vehicles of Israel', 'Police cars of Israel', 'Police cars in Israel', 'Police lights', 'Emergency vehicle lighting', 'Police tape', 'Barricade tape']],
-    ['security', 'מצלמת אבטחה ואמצעי ביטחון', /polic|security/i, ['Closed-circuit television cameras', 'CCTV cameras in Israel', 'Surveillance cameras', 'Handcuffs', 'Police tape', 'Barricade tape']],
+    ['security', 'מצלמת אבטחה ואמצעי ביטחון', /polic|security/i, ['Closed-circuit television cameras', 'CCTV cameras in Israel', 'Surveillance cameras', 'Handcuffs', 'Police tape', 'Barricade tape', 'Police line tape', 'Crime scene tape', 'Security cameras', 'CCTV cameras', 'Video surveillance cameras', 'Barbed wire']],
     ['courts', 'בית המשפט', /court/i, ['Supreme Court of Israel building', 'Building of the Supreme Court of Israel', 'Courthouses in Israel', 'Court buildings in Israel', 'Gavels', 'Tel Aviv District Court', 'Jerusalem District Court']],
     ['ambulance', 'אמבולנס של מד"א', /ambulan/i, ['Magen David Adom ambulances', 'Ambulances of Magen David Adom', 'Ambulances in Israel', 'Magen David Adom vehicles', 'Magen David Adom']],
-    ['fire', 'כבאית', /\bfires?\b|fire.?(engine|truck|station|fighting|service|and rescue)/i, ['Fire engines in Israel', 'Fire trucks in Israel', 'Israel Fire and Rescue Services vehicles', 'Israel Fire and Rescue Services', 'Fire stations in Israel']],
+    ['fire', 'כבאית', /\bfires?\b|fire.?(engine|truck|station|fighting|service|and rescue)/i, ['Fire engines in Israel', 'Fire trucks in Israel', 'Israel Fire and Rescue Services vehicles', 'Israel Fire and Rescue Services', 'Fire stations in Israel', 'Fire engines of Israel', 'Fire trucks of Israel', 'Fire engines', 'Fire hydrants', 'Fire hoses', 'Fire extinguishers']],
     ['traffic', 'תנועה בכביש', null, ['Highway 2 (Israel)', 'Highway 4 (Israel)', 'Traffic congestion in Israel', 'Road traffic in Israel', 'Traffic jams in Israel', 'Highway 20 (Israel)']],
-    ['roadworks', 'עבודות בכביש', null, ['Road works in Israel', 'Road construction in Israel', 'Roadworks in Israel', 'Road works', 'Road construction']],
+    ['roadworks', 'עבודות בכביש', null, ['Road works in Israel', 'Road construction in Israel', 'Roadworks in Israel', 'Road works', 'Road construction', 'Roadworks', 'Traffic cones', 'Road rollers', 'Asphalt paving', 'Asphalt pavers', 'Road closures']],
     ['construction', 'אתר בנייה ועגורנים', null, ['Construction sites in Israel', 'Tower cranes in Israel', 'Construction cranes in Israel', 'Building construction in Israel', 'Construction in Israel']],
     ['weather', 'מזג אוויר סוער', null, ['Rain in Israel', 'Storms in Israel', 'Clouds in Israel', 'Winter in Israel', 'Waves in Israel', 'Storm waves', 'Stormy seas', 'Storm clouds']],
     ['hospital', 'בית חולים', null, ['Meir Medical Center', 'Hillel Yaffe Medical Center', 'Sheba Medical Center', 'Rabin Medical Center', 'Tel Aviv Sourasky Medical Center', 'Hospitals in Israel', 'Laniado Hospital']],
     ['school', 'בית ספר', null, ['School buildings in Israel', 'Schools in Israel', 'Empty classrooms', 'Classrooms in Israel', 'School desks', 'Blackboards']],
-    ['election', 'קלפי', /election|ballot|campaign/i, ['Ballot boxes', 'Ballot boxes in Israel', 'Ballot papers of Israel', 'Polling stations in Israel', 'Ballots']],
-    ['money', 'כסף ושקלים', null, ['Israeli new shekel coins', 'Coins of Israel', 'Israeli new shekel banknotes', 'Banknotes of Israel', 'Israeli new shekel']],
+    ['election', 'קלפי', /election|ballot|campaign/i, ['Ballot boxes', 'Ballot boxes in Israel', 'Ballot papers of Israel', 'Polling stations in Israel', 'Ballots', 'Voting booths', 'Polling places', 'Polling stations', 'Transparent ballot boxes', 'Ballot boxes in Germany', 'Ballot boxes in France', 'Ballot boxes in Poland', 'Envelopes']],
+    ['money', 'כסף ושקלים', null, ['Israeli new shekel coins', 'Coins of Israel', 'Israeli new shekel banknotes', 'Banknotes of Israel', 'Israeli new shekel', 'Israeli new sheqel', 'Coins of the Israeli new shekel', 'Piggy banks', 'Calculators', 'Stacks of coins', 'Coins in hands', 'Wallets', 'Cash registers']],
     ['realestate', 'בנייני מגורים', null, ['Apartment buildings in Israel', 'Residential buildings in Israel', 'House keys', 'Keys (locks)']],
     ['football', 'מגרש כדורגל', /match/i, ['Netanya Stadium', 'Sammy Ofer Stadium', 'Bloomfield Stadium', 'Teddy Stadium', 'Turner Stadium', 'Association football pitches', 'Football pitches in Israel', 'Association footballs']],
     ['basketball', 'מגרש כדורסל', null, ['Basketball courts in Israel', 'Basketball courts', 'Basketball hoops', 'Basketballs', 'Menora Mivtachim Arena', 'Pais Arena Jerusalem']],
     ['culture', 'במה ותרבות', /concert|festival/i, ['Theatres in Israel', 'Habima Theatre', 'Concert halls in Israel', 'Stage lighting', 'Concert stages', 'Cameri Theatre']],
-    ['market', 'שוק', null, ['Markets in Israel', 'Carmel Market', 'Mahane Yehuda Market', 'Netanya market', 'Fruit and vegetable stalls']],
+    ['market', 'שוק', null, ['Markets in Israel', 'Carmel Market', 'Mahane Yehuda Market', 'Netanya market', 'Fruit and vegetable stalls', 'Hatikva Market', 'Levinsky Market', 'Market stalls', 'Fruit stalls', 'Vegetable stalls', 'Spices in markets', 'Produce markets']],
     ['transport', 'תחבורה ציבורית', null, ['Buses in Israel', 'Israel Railways trains', 'Israel Railways rolling stock', 'Bus stops in Israel', 'Bus terminals in Israel', 'Netanya railway station']],
     ['cityhall', 'בניין עירייה', null, ['City halls in Israel', 'Town halls in Israel', 'Netanya City Hall', 'Municipal buildings in Israel']],
-  ].flatMap(([set, alt, allow, cats]) => cats.map((cat) => ({ cat, depth: 1, cap: 6, set, topics: [set], place: null, alt, allow }))),
+  ].flatMap(([set, alt, allow, cats]) => cats.map((cat) => ({ cat, depth: 1, cap: ['election', 'money', 'fire', 'roadworks', 'security', 'market'].includes(set) ? 8 : 6, set, topics: [set], place: null, alt, allow }))),
 ];
 // more specific places found in the sub-category or file name (Hebrew name as on the site)
 const PLACE_RX = [
@@ -271,6 +271,8 @@ say(`previous library: ${prevIds.size} photos; new photos ${allowNew ? 'allowed'
 const keep = [];
 const byRoot = new Map();
 const bySet = new Map();
+// 30.10.2026 second round: the sets that came out thin in the review get more candidates
+const THIN = new Set(['election', 'money', 'fire', 'roadworks', 'security', 'market']);
 for (const c of cand.sort((a, b) => b.score - a.score || a.pageid - b.pageid)) {
   if (!(c.set ? allowNewTopic : allowNew) && !prevIds.has(c.pageid)) continue;
   if (keep.some((x) => x.pageid === c.pageid)) continue;
@@ -278,7 +280,7 @@ for (const c of cand.sort((a, b) => b.score - a.score || a.pageid - b.pageid)) {
   if (k.n >= c.cap || (k.au[c.author] || 0) >= 3) continue;
   // a topic set: at most 12 photos (the review keeps 6 to 10), at most 2 of one author
   const ks = c.set ? bySet.get(c.set) || { n: 0, au: {} } : null;
-  if (ks && (ks.n >= 12 || (ks.au[c.author] || 0) >= 2)) continue;
+  if (ks && (ks.n >= (THIN.has(c.set) ? 24 : 12) || (ks.au[c.author] || 0) >= 2)) continue;
   if (ks) { ks.n++; ks.au[c.author] = (ks.au[c.author] || 0) + 1; bySet.set(c.set, ks); }
   k.n++; k.au[c.author] = (k.au[c.author] || 0) + 1; byRoot.set(c.root, k); keep.push(c);
 }
