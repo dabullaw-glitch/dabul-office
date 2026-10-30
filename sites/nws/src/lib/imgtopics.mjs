@@ -42,13 +42,13 @@ export const TOPICS = [
   // place topics: a place photo may fit (municipal, real estate, leisure, tourism, beach, parks)
   { key: 'realestate', sets: ['realestate', 'construction'], stock: ['crane-building', 'cranes-sunset', 'scaffold'], pri: 1,
     placeTopics: ['buildings', 'realestate', 'construction', 'aerial', 'neighborhood'],
-    rx: /נדל"ן|נדל״ן|דירה|דירות|דירת|מחיר למשתכן|דירה בהנחה|שכירות|שכר דירה|רוכשי|עסקאות|יח"ד|יח״ד|יחידות דיור|התחדשות עירונית|פינוי.בינוי|תמ"א|תמ״א|קבלן|יזם |היזם|יזמים|היתר בנייה|היתרי בנייה|מגדל מגורים|מגדלי מגורים|קומות|בנייה|בניה|עגורן|תוכנית בניין/g },
+    rx: /נדל"ן|נדל״ן|דירה|דירות|דירת|מחיר למשתכן|דירה בהנחה|שכירות|שכר דירה|רוכשי|עסקאות|יח"ד|יח״ד|יחידות דיור|התחדשות עירונית|פינוי.בינוי|תמ"א|תמ״א|קבלן|(?<!מ)יזם |היזם|(?<!מ)יזמים|היתר בנייה|היתרי בנייה|מגדל מגורים|מגדלי מגורים|קומות|בנייה|בניה|עגורן|תוכנית בניין/g },
   { key: 'municipal', sets: ['cityhall'], stock: ['council-chamber'],
     placeTopics: ['cityhall', 'city', 'aerial', 'square', 'street'],
     rx: /עירי|ראש העיר|מועצת העיר|מליאת|מליאה|סגן ראש העיר|סגנית ראש העיר|חבר מועצה|חברי מועצה|חברי המועצה|מנכ"ל העירייה|מוקד 106|המוקד העירוני|אגף ה/g },
   { key: 'culture', sets: ['culture'], stock: ['concert', 'concert-hands'],
     placeTopics: ['culture', 'square', 'art'],
-    rx: /הופע|תיאטרון|קונצרט|פסטיבל|תערוכ|מוזיאון|קולנוע|ספרייה|ספריות|ספריית|זמר|זמרת|להקה|מופע|סדנ|הרצא|תרבות|מסיבה|חגיגה|קרנבל|האמן|אמנים|אמנית|אמנות/g },
+    rx: /הופע|תיאטרון|קונצרט|פסטיבל|תערוכ|מוזיאון|קולנוע|ספרייה|ספריות|ספריית|זמר|זמרת|להקה|מופע |מופעים|המופע|מופעי|סדנ|הרצא|תרבות|מסיבה|חגיגה|קרנבל|האמן|אמנים|אמנית|אמנות/g },
   { key: 'market', sets: ['market'], stock: ['city-buildings'],
     placeTopics: ['commerce', 'street'],
     rx: /שוק |השוק|דוכן|דוכנים|קניון|חנות|חנויות|בעלי עסקים|בית עסק|בתי עסק|מסחר|פתיחת סניף|סניף חדש|נפתח סניף|נפתחה חנות/g },
@@ -96,7 +96,10 @@ export function scoreTopics({ title = '', dek = '', body = [], section = '' }) {
 }
 /** the story's topic: { key, score, conf: 'high'|'low' } or null. A hard topic named in the title or the summary wins over a place
  *  topic (a weapons story in a museum town is a security story). Below 3 points (one word in the body only) the topic is unclear. */
+// a digest of many stories (the day summary, the week in Netanya) has no one topic: the neutral picture of its section
+const DIGEST = /^(סיכום היום|סיכום השבוע|השבוע בנתניה|השבוע בשרון|כל מה שקרה)/;
 export function topicOf(a) {
+  if (DIGEST.test(String(a.title || '').trim())) return null;
   const s = scoreTopics(a);
   const rank = (k) => s[k] + (TOPIC_BY_KEY[k].pri || 0) + (TOPIC_BY_KEY[k].hard ? 1 : 0);
   const keys = Object.keys(s).sort((x, y) => rank(y) - rank(x) || TOPICS.indexOf(TOPIC_BY_KEY[x]) - TOPICS.indexOf(TOPIC_BY_KEY[y]));
