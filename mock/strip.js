@@ -11,10 +11,10 @@
   ];
   document.querySelectorAll('body *').forEach((el) => { const cs = getComputedStyle(el); if (cs.position === 'fixed' && !el.closest('header')) el.style.visibility = 'hidden'; });
   // right under the page's first section (the one with the main title)
-  const h1 = document.querySelector('h1');
+  const h1 = document.querySelector('main h1, [data-elementor-type] h1, h1');
   let firstSec = h1;
-  while (firstSec && firstSec.parentElement && !(firstSec.classList.contains('e-parent') || firstSec.classList.contains('elementor-top-section'))) firstSec = firstSec.parentElement;
-  if (!firstSec || firstSec === document.body) firstSec = (h1 && h1.closest('section, .e-con')) || document.querySelector('main') || document.body.firstElementChild;
+  while (firstSec && firstSec.parentElement && !firstSec.parentElement.hasAttribute('data-elementor-type')) firstSec = firstSec.parentElement;
+  if (!firstSec || !firstSec.parentElement || firstSec.tagName === 'BODY' || firstSec.tagName === 'HTML') firstSec = h1 ? h1.parentElement : document.body.firstElementChild;
   const ff = getComputedStyle(document.body).fontFamily;
   const s = document.createElement('section');
   s.setAttribute('aria-label', 'כפי שפורסם ב');

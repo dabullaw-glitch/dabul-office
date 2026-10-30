@@ -41,7 +41,7 @@
     // one short line under the headline, readable over the photo
     const d = document.createElement('p');
     d.textContent = D[k][1];
-    d.style.cssText = `margin:10px 0 0;font-size:16px;line-height:1.5;font-weight:500;color:${hc.color};font-family:${hc.fontFamily};text-shadow:0 1px 3px rgba(0,0,0,.75)`;
+    d.style.cssText = `margin:10px 0 0;font-size:16px;line-height:1.5;font-weight:500;color:${hc.color};font-family:${hc.fontFamily};text-shadow:0 1px 3px rgba(0,0,0,.75);position:relative;z-index:5`;
     t.after(d); mark(d);
     // the card grows a little instead of hiding the new line
     for (let el = box; el && el !== document.body; el = el.parentElement) { if (el === box || el.classList.contains('e-con-inner')) { el.style.height = 'auto'; } }
