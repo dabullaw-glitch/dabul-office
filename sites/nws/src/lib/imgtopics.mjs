@@ -44,7 +44,7 @@ export const TOPICS = [
     placeTopics: ['buildings', 'realestate', 'construction', 'aerial', 'neighborhood'],
     rx: /נדל"ן|נדל״ן|דירה|דירות|דירת|מחיר למשתכן|דירה בהנחה|שכירות|שכר דירה|רוכשי|עסקאות|יח"ד|יח״ד|יחידות דיור|התחדשות עירונית|פינוי.בינוי|תמ"א|תמ״א|קבלן|(?<!מ)יזם |היזם|(?<!מ)יזמים|היתר בנייה|היתרי בנייה|מגדל מגורים|מגדלי מגורים|קומות|בנייה|בניה|עגורן|תוכנית בניין/g },
   { key: 'municipal', sets: ['cityhall'], stock: ['council-chamber'],
-    placeTopics: ['cityhall', 'city', 'aerial', 'square', 'street'],
+    placeTopics: ['cityhall', 'aerial', 'square'],
     rx: /עירי|ראש העיר|מועצת העיר|מליאת|מליאה|סגן ראש העיר|סגנית ראש העיר|חבר מועצה|חברי מועצה|חברי המועצה|מנכ"ל העירייה|מוקד 106|המוקד העירוני|אגף ה/g },
   { key: 'culture', sets: ['culture'], stock: ['concert', 'concert-hands'],
     placeTopics: ['culture', 'square', 'art'],
