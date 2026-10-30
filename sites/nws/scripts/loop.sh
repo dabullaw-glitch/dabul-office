@@ -72,7 +72,9 @@ synclib() {
   s=$(git ls-remote origin refs/heads/nws-photolib 2>/dev/null | cut -c1-12)
   if [ -z "$s" ] || [ "$s" = "$LIBSHA" ]; then return 0; fi
   t=$(mktemp -d)
-  if git fetch -q --depth=1 origin nws-photolib 2>/dev/null && git archive FETCH_HEAD img index.json | tar -x -C "$t" && [ -s "$t/index.json" ]; then
+  # (git archive takes its paths from the current folder, so it runs from the top of the checkout)
+  if git fetch -q --depth=1 origin nws-photolib 2>/dev/null && git -C "$(git rev-parse --show-toplevel)" archive FETCH_HEAD img index.json | tar -x -C "$t" \
+    && [ -s "$t/index.json" ]; then
     rm -rf public/img/lib && mkdir -p public/img && mv "$t/img" public/img/lib && mv "$t/index.json" src/data/photolib.json
     LIBSHA=$s; echo "$(date -u +%T) photo library $s: $(ls public/img/lib | wc -l) files"
   fi
