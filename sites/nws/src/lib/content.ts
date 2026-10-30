@@ -379,10 +379,16 @@ interface LibPhoto { id: string; page: string; author: string; license: string; 
 const LIB_REJECT = new Set((() => { try { return fs.readFileSync(path.resolve('scripts/photolib/reject.txt'), 'utf8'); } catch { return ''; } })()
   .split('\n').map((l) => l.replace(/#.*/, '').trim()).filter(Boolean).map((n) => `c${n}`));
 // a topic illustration shows only after it passed the visual review (src/data/photolib-ok.txt, Commons page ids)
-const TOPIC_OK = new Set((() => { try { return fs.readFileSync(path.resolve('src/data/photolib-ok.txt'), 'utf8'); } catch { return ''; } })()
-  .split('\n').map((l) => l.replace(/#.*/, '').trim()).filter(Boolean).map((n) => `c${n}`));
+// a line "<id> <role>" marks a place photo checked by eye for a role (realestate: it shows housing); the role is added to its
+// topics as "pick:<role>" (imgtopics.mjs placeTopics)
+const OK_LINES = (() => { try { return fs.readFileSync(path.resolve('src/data/photolib-ok.txt'), 'utf8'); } catch { return ''; } })()
+  .split('\n').map((l) => l.replace(/#.*/, '').trim().split(/\s+/)).filter((x) => x[0]);
+const TOPIC_OK = new Set(OK_LINES.filter((x) => !x[1]).map((x) => `c${x[0]}`));
+const ROLE = new Map<string, string[]>();
+for (const [id, role] of OK_LINES) if (role) ROLE.set(`c${id}`, [...(ROLE.get(`c${id}`) || []), `pick:${role}`]);
 const LIB: LibPhoto[] = ((readJson('photolib.json', { photos: [] }).photos || []) as LibPhoto[])
-  .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && (!p.set || TOPIC_OK.has(p.id)) && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)));
+  .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && (!p.set || TOPIC_OK.has(p.id)) && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)))
+  .map((p) => (ROLE.has(p.id) ? { ...p, topics: [...p.topics, ...ROLE.get(p.id)!] } : p));
 function libPic(p: LibPhoto): Pic {
   const b = `/img/lib/${p.id}`;
   // 30.10.2026: the 400px file (phone thumbnails), when the library already has it

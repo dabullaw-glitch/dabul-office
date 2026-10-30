@@ -18,6 +18,11 @@ const SITE = 'https://nws.co.il';
 const HOURS = Number(process.argv[3] || process.env.HOURS || 26);
 const LIB = new Map((JSON.parse(fs.readFileSync(process.argv[2], 'utf8')).photos || []).map((p) => [p.id, p]));
 const HERE = path.dirname(new URL(import.meta.url).pathname);
+// the roles given by eye in src/data/photolib-ok.txt ("<id> realestate"), as the build adds them (pick:<role>)
+for (const l of fs.readFileSync(path.resolve(HERE, '../src/data/photolib-ok.txt'), 'utf8').split('\n')) {
+  const [id, role] = l.replace(/#.*/, '').trim().split(/\s+/);
+  const p = role && LIB.get(`c${id}`); if (p) p.topics = [...(p.topics || []), `pick:${role}`];
+}
 const FIXF = path.resolve(HERE, '../src/data/imgfix.json');
 const placesTs = fs.readFileSync(path.resolve(HERE, '../src/data/places.ts'), 'utf8');
 const NETANYA_PLACES = [...placesTs.matchAll(/he: '([^']+)', kind: 'neighborhood'/g)].map((m) => m[1]);

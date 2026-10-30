@@ -41,7 +41,7 @@ export const TOPICS = [
     rx: /הקו האדום|הקו הסגול|רכבת קלה|רק"ל|רק״ל|אוטובוס|קו \d|קווי |תחבורה ציבורית|רכבת|תחנה מרכזית|מסוף|רב.קו|הסעה|הסעות|אופניים|קורקינט|תחבורה/g },
   // place topics: a place photo may fit (municipal, real estate, leisure, tourism, beach, parks)
   { key: 'realestate', sets: ['realestate', 'construction'], stock: ['crane-building', 'cranes-sunset', 'scaffold'], pri: 1,
-    placeTopics: ['buildings', 'realestate', 'construction', 'aerial', 'neighborhood'],
+    placeTopics: ['pick:realestate', 'aerial'],
     rx: /נדל"ן|נדל״ן|דירה|דירות|דירת|מחיר למשתכן|דירה בהנחה|שכירות|שכר דירה|רוכשי|עסקאות|יח"ד|יח״ד|יחידות דיור|התחדשות עירונית|פינוי.בינוי|תמ"א|תמ״א|קבלן|(?<!מ)יזם |היזם|(?<!מ)יזמים|היתר בנייה|היתרי בנייה|מגדל מגורים|מגדלי מגורים|קומות|בנייה|בניה|עגורן|תוכנית בניין/g },
   { key: 'municipal', sets: ['cityhall'], stock: ['council-chamber'],
     placeTopics: ['cityhall', 'aerial', 'square'],

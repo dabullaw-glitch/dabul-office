@@ -126,3 +126,12 @@
 157423160
 173457593
 146218747
+# place photos of Netanya that show housing (a real estate story may use them, besides the aerial views)
+97245135 realestate
+50350856 realestate
+56412104 realestate
+91332384 realestate
+54637683 realestate
+75403411 realestate
+43166538 realestate
+24896878 realestate
