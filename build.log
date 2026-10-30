@@ -1,0 +1,204 @@
+failed at 2026-10-30T19:43:14Z, run 41113681376
+
+[2m19:41:06[22m   [34m└─[39m [2m/en/rss.xml[22m [2m(+1ms)[22m 
+[2m19:41:06[22m [32m▶[39m src/pages/en/send-news/index.astro
+[2m19:41:06[22m   [34m└─[39m [2m/en/send-news/index.html[22m [2m(+11ms)[22m 
+[2m19:41:06[22m [32m▶[39m src/pages/events/e/[id]/index.astro
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/356/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/215/index.html[22m [2m(+13ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/3/index.html[22m [2m(+17ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/4/index.html[22m [2m(+16ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/5/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/6/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/7/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/8/index.html[22m [2m(+15ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/9/index.html[22m [2m(+12ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/10/index.html[22m [2m(+13ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/11/index.html[22m [2m(+15ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/12/index.html[22m [2m(+16ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/13/index.html[22m [2m(+16ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/14/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/15/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/16/index.html[22m [2m(+15ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/17/index.html[22m [2m(+12ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/18/index.html[22m [2m(+12ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/19/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/20/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/21/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/22/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/23/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/24/index.html[22m [2m(+15ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/25/index.html[22m [2m(+12ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/26/index.html[22m [2m(+12ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/27/index.html[22m [2m(+15ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/events/e/28/index.html[22m [2m(+15ms)[22m 
+[2m19:41:06[22m   [34m└─[39m [2m/events/e/29/index.html[22m [2m(+14ms)[22m 
+[2m19:41:06[22m [32m▶[39m src/pages/fr/[section]/[slug]/index.astro
+[2m19:41:06[22m   [34m├─[39m [2m/fr/sharon/emek-hefer-swim-aquathlon-2026/index.html[22m [2m(+12ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/sharon/kfar-yona-october-updates/index.html[22m [2m(+10ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/community/netanya-bagrut-record-2026/index.html[22m [2m(+11ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/law/dora-renewal-no-area-cap/index.html[22m [2m(+9ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/sports/maccabi-netanya-beat-kiryat-shmona/index.html[22m [2m(+9ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/real-estate/netanya-hamitmad-bialik-tower/index.html[22m [2m(+9ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/law/nordau-max-betterment-levy-appeal/index.html[22m [2m(+9ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/real-estate/netanya-five-urban-renewal-plans/index.html[22m [2m(+9ms)[22m 
+[2m19:41:06[22m   [34m└─[39m [2m/fr/events/netanya-beach-race-december-2026/index.html[22m [2m(+10ms)[22m 
+[2m19:41:06[22m [32m▶[39m src/pages/fr/[section]/index.astro
+[2m19:41:06[22m   [34m├─[39m [2m/fr/flash/index.html[22m [2m(+8ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/israel/index.html[22m [2m(+9ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/city/index.html[22m [2m(+7ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/police/index.html[22m [2m(+7ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/real-estate/index.html[22m [2m(+8ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/sports/index.html[22m [2m(+7ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/transport/index.html[22m [2m(+7ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/community/index.html[22m [2m(+7ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/health/index.html[22m [2m(+7ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/events/index.html[22m [2m(+8ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/sharon/index.html[22m [2m(+9ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/tourism/index.html[22m [2m(+7ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/fr/law/index.html[22m [2m(+8ms)[22m 
+[2m19:41:06[22m   [34m└─[39m [2m/fr/blog/index.html[22m [2m(+7ms)[22m 
+[2m19:41:06[22m [32m▶[39m src/pages/fr/about/index.astro
+[2m19:41:06[22m   [34m└─[39m [2m/fr/about/index.html[22m [2m(+8ms)[22m 
+[2m19:41:06[22m [32m▶[39m src/pages/fr/directory/index.astro
+[2m19:41:06[22m   [34m└─[39m [2m/fr/directory/index.html[22m [2m(+8ms)[22m 
+[2m19:41:06[22m [32m▶[39m src/pages/fr/index.astro
+[2m19:41:06[22m   [34m└─[39m [2m/fr/index.html[22m [2m(+8ms)[22m 
+[2m19:41:06[22m [32m▶[39m src/pages/fr/join/index.astro
+[2m19:41:06[22m   [34m└─[39m [2m/fr/join/index.html[22m [2m(+8ms)[22m 
+[2m19:41:06[22m [32m▶[39m src/pages/fr/now/index.astro
+[2m19:41:06[22m   [34m└─[39m [2m/fr/now/index.html[22m [2m(+8ms)[22m 
+[2m19:41:06[22m [35mλ[39m src/pages/fr/rss.xml.ts
+[2m19:41:06[22m   [34m└─[39m [2m/fr/rss.xml[22m [2m(+1ms)[22m 
+[2m19:41:06[22m [32m▶[39m src/pages/fr/send-news/index.astro
+[2m19:41:06[22m   [34m└─[39m [2m/fr/send-news/index.html[22m [2m(+10ms)[22m 
+[2m19:41:06[22m [32m▶[39m src/pages/guide/[slug].astro
+[2m19:41:06[22m   [34m├─[39m [2m/guide/service-centers/index.html[22m [2m(+12ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/guide/post/index.html[22m [2m(+12ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/guide/gov/index.html[22m [2m(+13ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/guide/banks/index.html[22m [2m(+13ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/guide/kupot/index.html[22m [2m(+16ms)[22m 
+[2m19:41:06[22m   [34m├─[39m [2m/guide/hospitals/index.html[22m [2m(+11ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/guide/transport/index.html[22m [2m(+11ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/guide/ngo/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/guide/synagogues/index.html[22m [2m(+13ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/guide/schools/index.html[22m [2m(+17ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/guide/matnasim/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/guide/libraries/index.html[22m [2m(+11ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/guide/map/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m   [34m└─[39m [2m/guide/neighborhoods/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/guide/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/guide/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m [35mλ[39m src/pages/img-check.json.ts
+[2m19:41:07[22m   [34m└─[39m [2m/img-check.json[22m [2m(+1ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/index.html[22m [2m(+23ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/join/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/join/index.html[22m [2m(+11ms)[22m 
+[2m19:41:07[22m [35mλ[39m src/pages/latest.json.ts
+[2m19:41:07[22m   [34m└─[39m [2m/latest.json[22m [2m(+1ms)[22m 
+[2m19:41:07[22m [35mλ[39m src/pages/llms.txt.ts
+[2m19:41:07[22m   [34m└─[39m [2m/llms.txt[22m [2m(+1ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/netanya/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/netanya/index.html[22m [2m(+14ms)[22m 
+[2m19:41:07[22m [35mλ[39m src/pages/news-sitemap.xml.ts
+[2m19:41:07[22m   [34m└─[39m [2m/news-sitemap.xml[22m [2m(+6ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/alerts/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/alerts/index.html[22m [2m(+13ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/beaches/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/beaches/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/elections/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/elections/index.html[22m [2m(+14ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/index.html[22m [2m(+14ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/outages/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/outages/index.html[22m [2m(+14ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/parking/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/parking/index.html[22m [2m(+11ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/pharmacy/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/pharmacy/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/phones/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/phones/index.html[22m [2m(+11ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/prices/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/prices/index.html[22m [2m(+13ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/roads/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/roads/index.html[22m [2m(+16ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/shabbat/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/shabbat/index.html[22m [2m(+15ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/shelters/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/shelters/index.html[22m [2m(+14ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/waste/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/waste/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/weather/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/weather/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/now/weekend/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/now/weekend/index.html[22m [2m(+16ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/privacy/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/privacy/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m [35mλ[39m src/pages/robots.txt.ts
+[2m19:41:07[22m   [34m└─[39m [2m/robots.txt[22m [2m(+1ms)[22m 
+[2m19:41:07[22m [35mλ[39m src/pages/rss.xml.ts
+[2m19:41:07[22m   [34m└─[39m [2m/rss.xml[22m [2m(+1ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/ru/[section]/[slug]/index.astro
+[2m19:41:07[22m   [34m├─[39m [2m/ru/sharon/emek-hefer-swim-aquathlon-2026/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/sharon/kfar-yona-october-updates/index.html[22m [2m(+10ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/community/netanya-bagrut-record-2026/index.html[22m [2m(+12ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/law/dora-renewal-no-area-cap/index.html[22m [2m(+10ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/sports/maccabi-netanya-beat-kiryat-shmona/index.html[22m [2m(+10ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/real-estate/netanya-hamitmad-bialik-tower/index.html[22m [2m(+9ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/law/nordau-max-betterment-levy-appeal/index.html[22m [2m(+9ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/real-estate/netanya-five-urban-renewal-plans/index.html[22m [2m(+10ms)[22m 
+[2m19:41:07[22m   [34m└─[39m [2m/ru/events/netanya-beach-race-december-2026/index.html[22m [2m(+10ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/ru/[section]/index.astro
+[2m19:41:07[22m   [34m├─[39m [2m/ru/flash/index.html[22m [2m(+8ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/israel/index.html[22m [2m(+9ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/city/index.html[22m [2m(+7ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/police/index.html[22m [2m(+7ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/real-estate/index.html[22m [2m(+8ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/sports/index.html[22m [2m(+8ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/transport/index.html[22m [2m(+7ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/community/index.html[22m [2m(+8ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/health/index.html[22m [2m(+7ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/events/index.html[22m [2m(+8ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/sharon/index.html[22m [2m(+10ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/tourism/index.html[22m [2m(+8ms)[22m 
+[2m19:41:07[22m   [34m├─[39m [2m/ru/law/index.html[22m [2m(+8ms)[22m 
+[2m19:41:07[22m   [34m└─[39m [2m/ru/blog/index.html[22m [2m(+7ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/ru/about/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/ru/about/index.html[22m [2m(+8ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/ru/directory/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/ru/directory/index.html[22m [2m(+8ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/ru/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/ru/index.html[22m [2m(+9ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/ru/join/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/ru/join/index.html[22m [2m(+8ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/ru/now/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/ru/now/index.html[22m [2m(+9ms)[22m 
+[2m19:41:07[22m [35mλ[39m src/pages/ru/rss.xml.ts
+[2m19:41:07[22m   [34m└─[39m [2m/ru/rss.xml[22m [2m(+1ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/ru/send-news/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/ru/send-news/index.html[22m [2m(+10ms)[22m 
+[2m19:41:07[22m [35mλ[39m src/pages/search-index.json.ts
+[2m19:41:07[22m   [34m└─[39m [2m/search-index.json[22m [2m(+2ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/search/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/search/index.html[22m [2m(+13ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/send-news/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/send-news/index.html[22m [2m(+10ms)[22m 
+[2m19:41:07[22m [35mλ[39m src/pages/sitemap-pages.xml.ts
+[2m19:41:07[22m   [34m└─[39m [2m/sitemap-pages.xml[22m [2m(+3ms)[22m 
+[2m19:41:07[22m [35mλ[39m src/pages/sitemap.xml.ts
+[2m19:41:07[22m   [34m└─[39m [2m/sitemap.xml[22m [2m(+1ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/terms/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/terms/index.html[22m [2m(+11ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/write/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/write/index.html[22m [2m(+1ms)[22m 
+[2m19:41:07[22m [32m▶[39m src/pages/writers/[slug].astro
+[2m19:41:07[22m [32m▶[39m src/pages/yakirdab/index.astro
+[2m19:41:07[22m   [34m└─[39m [2m/yakirdab/index.html[22m [2m(+3ms)[22m 
+[2m19:41:07[22m [32m✓ Completed in 4.32s.
+[39m
+[2m19:41:07[22m [34m[build][39m 331 page(s) built in [1m7.86s[22m
+[2m19:41:07[22m [34m[build][39m [1mComplete![22m
+merged: 2 redirects, 85 story pages known
+
+check:
