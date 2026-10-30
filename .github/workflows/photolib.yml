@@ -1,0 +1,47 @@
+name: nws photo library
+# 30.10.2026 (Yakir approved): the real photo library of nws.co.il, free-license photos of Netanya and the Sharon from Wikimedia
+# Commons, used for stories that have no image of their own. scripts/photolib/harvest.mjs picks, downloads and converts the photos
+# (our own WebP and JPEG copies, no EXIF, never hotlinked) and writes index.json with the credit and license of every photo.
+# The result lives on its own branch, nws-photolib, so main stays small; the site build (scripts/loop.sh) copies it into the site.
+# Runs when the harvest script, its reject list or this file change, or by hand. Photos already on the branch are not downloaded again.
+on:
+  push:
+    branches: [main]
+    paths: ['sites/nws/scripts/photolib/**', '.github/workflows/photolib.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: photolib
+  cancel-in-progress: false
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm, cache-dependency-path: sites/nws/package-lock.json }
+      - name: Install
+        working-directory: sites/nws
+        run: npm ci --no-audit --no-fund
+      - name: Take the current library
+        run: |
+          mkdir -p /tmp/photolib
+          if git ls-remote --exit-code origin refs/heads/nws-photolib >/dev/null; then
+            git fetch -q --depth=1 origin nws-photolib && git archive FETCH_HEAD | tar -x -C /tmp/photolib
+          fi
+      - name: Harvest, filter and convert
+        working-directory: sites/nws
+        run: node scripts/photolib/harvest.mjs /tmp/photolib
+      - name: Publish to the nws-photolib branch
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test -f /tmp/photolib/index.json || { echo "no index.json"; exit 1; }
+          cd /tmp/photolib
+          git init -q && git checkout -qb nws-photolib
+          git config user.name "site-bot" && git config user.email "site-bot@users.noreply.github.com"
+          git add -A && git commit -qm "photo library $(date -u +%FT%TZ)"
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" nws-photolib

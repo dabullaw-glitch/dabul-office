@@ -1,0 +1,1 @@
+# Commons page ids removed from the nws.co.il photo library after the visual review (one per line). See harvest.mjs.
