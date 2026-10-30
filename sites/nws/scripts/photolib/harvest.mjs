@@ -229,10 +229,16 @@ for (let i = 0; i < ids.length; i += 50) {
 }
 say(`dropped: ${JSON.stringify(why)}`);
 
-// per category cap, at most 3 photos of one author in a category, best first
+// per category cap, at most 3 photos of one author in a category, best first.
+// Every photo on the site was looked at by eye (review/ contact sheets), so once a library exists only its reviewed photos stay
+// (minus reject.txt); new photos come in only on a run with NEW_PHOTOS=1, and then their contact sheets need a review.
+const prevIds = new Set(((() => { try { return JSON.parse(fs.readFileSync(path.join(OUT, 'index.json'), 'utf8')).photos; } catch { return []; } })()).map((p) => p.pageid));
+const allowNew = process.env.NEW_PHOTOS === '1' || prevIds.size === 0;
+say(`previous library: ${prevIds.size} photos; new photos ${allowNew ? 'allowed' : 'not allowed on this run'}`);
 const keep = [];
 const byRoot = new Map();
 for (const c of cand.sort((a, b) => b.score - a.score || a.pageid - b.pageid)) {
+  if (!allowNew && !prevIds.has(c.pageid)) continue;
   const k = byRoot.get(c.root) || { n: 0, au: {} };
   if (k.n >= c.cap || (k.au[c.author] || 0) >= 3) continue;
   k.n++; k.au[c.author] = (k.au[c.author] || 0) + 1; byRoot.set(c.root, k); keep.push(c);

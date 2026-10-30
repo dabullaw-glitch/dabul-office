@@ -374,8 +374,11 @@ export function picOf(a: Article, _IMGS?: unknown): Pic {
 // summary, then the section), never the same photo on two stories of the same day, and fewer repeats within a week. Stories are
 // picked oldest first, so a new story never changes the photo of an older one. Without the library the stock photos stay.
 interface LibPhoto { id: string; page: string; author: string; license: string; licenseUrl: string; alt: string; places: string[]; topics: string[]; sq: number }
+// photos removed after the visual review never show, even before the library branch is rebuilt without them
+const LIB_REJECT = new Set((() => { try { return fs.readFileSync(path.resolve('scripts/photolib/reject.txt'), 'utf8'); } catch { return ''; } })()
+  .split('\n').map((l) => l.replace(/#.*/, '').trim()).filter(Boolean).map((n) => `c${n}`));
 const LIB: LibPhoto[] = ((readJson('photolib.json', { photos: [] }).photos || []) as LibPhoto[])
-  .filter((p) => p && /^c\d+$/.test(p.id) && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)));
+  .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)));
 function libPic(p: LibPhoto): Pic {
   const b = `/img/lib/${p.id}`;
   const pic: Pic = { ld: [{ src: `${b}-16x9.jpg`, w: 1200, h: 675 }, { src: `${b}-1x1.jpg`, w: p.sq || 1080, h: p.sq || 1080 }], ogW: 1200, ogH: 675,

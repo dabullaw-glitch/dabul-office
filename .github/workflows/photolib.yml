@@ -9,6 +9,11 @@ on:
     branches: [main]
     paths: ['sites/nws/scripts/photolib/**', '.github/workflows/photolib.yml']
   workflow_dispatch:
+    inputs:
+      new_photos:
+        description: 'Also add new photos (they then need a visual review of review/)'
+        type: boolean
+        default: false
 permissions:
   contents: write
 concurrency:
@@ -33,6 +38,8 @@ jobs:
           fi
       - name: Harvest, filter and convert
         working-directory: sites/nws
+        env:
+          NEW_PHOTOS: ${{ inputs.new_photos && '1' || '0' }}
         run: node scripts/photolib/harvest.mjs /tmp/photolib
       - name: Publish to the nws-photolib branch
         if: always()
