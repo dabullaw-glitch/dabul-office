@@ -9,8 +9,12 @@
     ['ביזפורטל', 'https://dabullaw.co.il/wp-content/uploads/2026/10/logo-bizportal.jpg.webp'],
     ['ערוץ 7', 'https://dabullaw.co.il/wp-content/uploads/2026/01/images.png'],
   ];
-  const doc = document.querySelector('[data-elementor-type="wp-page"], [data-elementor-type="single-page"], main') || document.body;
-  const firstSec = doc.querySelector(':scope > .e-parent, :scope > section, :scope > .elementor-section') || doc.firstElementChild;
+  document.querySelectorAll('body *').forEach((el) => { const cs = getComputedStyle(el); if (cs.position === 'fixed' && !el.closest('header')) el.style.visibility = 'hidden'; });
+  // right under the page's first section (the one with the main title)
+  const h1 = document.querySelector('h1');
+  let firstSec = h1;
+  while (firstSec && firstSec.parentElement && !(firstSec.classList.contains('e-parent') || firstSec.classList.contains('elementor-top-section'))) firstSec = firstSec.parentElement;
+  if (!firstSec || firstSec === document.body) firstSec = (h1 && h1.closest('section, .e-con')) || document.querySelector('main') || document.body.firstElementChild;
   const ff = getComputedStyle(document.body).fontFamily;
   const s = document.createElement('section');
   s.setAttribute('aria-label', 'כפי שפורסם ב');

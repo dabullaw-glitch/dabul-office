@@ -14,6 +14,8 @@
     'walla.co.il': ['29.12.2025', 'ליווי משפטי מוקדם ובדיקות מעמיקות בכל עסקה.'],
     'psakdin.co.il': ['13.4.2021', 'מאמר שכתבתי על פסק דין שבו נדחתה בקשת הפטר.'],
   };
+  // floating buttons (call / WhatsApp / accessibility) hidden in the pictures only, so they don't cover the additions
+  document.querySelectorAll('body *').forEach((el) => { const cs = getComputedStyle(el); if (cs.position === 'fixed' && !el.closest('header')) el.style.visibility = 'hidden'; });
   const mark = (el) => { el.style.outline = '2px dashed #C5A25A'; el.style.outlineOffset = '4px'; el.style.borderRadius = '6px'; };
   // 1. opening paragraph under the page title
   const h1 = document.querySelector('h1');
@@ -33,10 +35,18 @@
     const t = box.querySelector('.elementor-element-a245260') || box.querySelector('h2,h3');
     if (!t) return;
     const hc = getComputedStyle(t.querySelector('.elementor-heading-title') || t);
-    const d = document.createElement('div');
-    d.innerHTML = `<div style="font-size:14px;opacity:.75;margin:8px 0 4px">${D[k][0]}</div><p style="margin:0;font-size:16px;line-height:1.55;font-weight:400">${D[k][1]}</p>`;
-    d.style.cssText = `color:${hc.color};font-family:${hc.fontFamily}`;
+    // the date joins the existing small line "המשרד בתקשורת", so it adds no height
+    const info = box.querySelector('.elementor-element-26ed915 .elementor-post-info__terms-list, .elementor-element-26ed915 .elementor-icon-list-text');
+    if (info) { const dt = document.createElement('span'); dt.textContent = ' · ' + D[k][0]; info.appendChild(dt); mark(dt); }
+    // one short line under the headline, readable over the photo
+    const d = document.createElement('p');
+    d.textContent = D[k][1];
+    d.style.cssText = `margin:10px 0 0;font-size:16px;line-height:1.5;font-weight:500;color:${hc.color};font-family:${hc.fontFamily};text-shadow:0 1px 3px rgba(0,0,0,.75)`;
     t.after(d); mark(d);
+    // the card grows a little instead of hiding the new line
+    for (let el = box; el && el !== document.body; el = el.parentElement) { if (el === box || el.classList.contains('e-con-inner')) { el.style.height = 'auto'; } }
+    box.querySelectorAll('.e-con-inner').forEach((x) => { x.style.height = 'auto'; });
+    box.style.minHeight = box.offsetHeight + 'px'; box.style.height = 'auto';
     if (!first) first = box;
   });
   // close-up of the first row of cards
