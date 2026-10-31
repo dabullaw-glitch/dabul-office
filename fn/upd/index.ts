@@ -237,7 +237,10 @@ async function makePost(id: string, r: Any) {
   }
   if (issues.length) throw new Error('הטקסט לא עבר את הבדיקה: ' + issues.join(', '));
   const srcUrl = /^https?:\/\//.test(String(o.sourceUrl || '')) && !NO_NWS.test(o.sourceUrl) ? o.sourceUrl : it.source?.url;
-  const text = `${o.post}\n\nמקור: ${o.sourceName || it.source?.name}${srcUrl ? ` ${srcUrl}` : ''}\n\n${CONTACT}\n${DISCLAIMER}`;
+  // the hashtag lines go to the very end, after the source, the contact line and the disclaimer
+  const tagLines = o.post.split('\n').filter((l: string) => /^\s*(#\S+\s*)+$/.test(l));
+  const body = o.post.split('\n').filter((l: string) => !/^\s*(#\S+\s*)+$/.test(l)).join('\n').trim();
+  const text = `${body}\n\nמקור: ${o.sourceName || it.source?.name}${srcUrl ? ` ${srcUrl}` : ''}\n\n${CONTACT}\n${DISCLAIMER}${tagLines.length ? `\n\n${tagLines.join(' ').trim()}` : ''}`;
   const v = Number(r.v || 0) + 1;
   const png = await renderPost({ kicker: o.kicker, headline: o.headline, sub: o.sub, points: o.points, source: `מקור: ${o.sourceName || it.source?.name}` });
   const path = `upd/${id}-v${v}.png`;
@@ -248,8 +251,10 @@ async function makePost(id: string, r: Any) {
   await merge('updreq', id, { status: 'awaiting', v, tok: t, post: { ...o, text, img, sourceUrl: srcUrl }, sentAt: new Date().toISOString(), error: '' });
   const cap = `📝 פוסט לאישור (פייסבוק ולינקדאין)\n${o.headline}\n\n${text}`;
   const sent = await tgApi('sendPhoto', { photo: img, caption: cap.length > 1000 ? cap.slice(0, 990) + '…' : cap, reply_markup: { inline_keyboard: buttons(t) } });
-  if (!sent?.ok) await tg(`📝 פוסט לאישור: ${o.headline}\n${img}\n\n${text}`, buttons(t));
+  let tgOk = !!sent?.ok;
+  if (!tgOk) tgOk = !!(await tg(`📝 פוסט לאישור: ${o.headline}\n${img}\n\n${text}`, buttons(t)))?.ok;
   else if (cap.length > 1000) await tg(`הטקסט המלא של הפוסט:\n\n${text}`);
+  await merge('updreq', id, { tgOk, tgMsg: sent?.result?.message_id || null });
   return { post: o.headline, img };
 }
 

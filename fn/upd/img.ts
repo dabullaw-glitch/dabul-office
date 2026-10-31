@@ -1,7 +1,9 @@
 // The post image of the office updates board (31.10.2026): 1080x1080, office colors (navy #17253F, gold #C6A03C), Heebo,
 // the office logo. SVG made here and turned into PNG on the server with resvg (no browser), like the article covers.
 import { initWasm, Resvg } from 'npm:@resvg/resvg-wasm@2.6.2';
-const esc = (s: unknown) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
+// every Hebrew line starts with a right-to-left mark, so a line that opens with a number still reads right to left
+const esc0 = (s: unknown) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
+const esc = (s: unknown) => '\u200F' + esc0(s);
 let imgReady: Promise<void> | null = null;
 let LOADER: (k: string) => Promise<Uint8Array> = (k) => bytesOf(k);
 export const setLoader = (f: (k: string) => Promise<Uint8Array>) => { LOADER = f; };
