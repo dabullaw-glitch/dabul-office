@@ -31,6 +31,20 @@ const ilHM = (iso: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia
 const mins = (iso: string | null) => (iso ? Math.round((Date.now() - Date.parse(iso)) / 60e3) : Infinity);
 const ago = (m: number) => (m === Infinity ? 'אף פעם' : m < 120 ? `${m} דקות` : m < 2880 ? `${Math.round(m / 60)} שעות` : `${Math.round(m / 1440)} ימים`);
 
+// minutes between `from` and now that fall on Shabbat (Friday 12:00 to Saturday 21:00, Israel time), counted per 10 minutes
+const DH = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jerusalem', weekday: 'short', hour: '2-digit', hourCycle: 'h23' });
+const ilDayHour = (d: Date) => { const p = DH.formatToParts(d);
+  return { wd: p.find((x) => x.type === 'weekday')?.value || '', h: +(p.find((x) => x.type === 'hour')?.value || 0) }; };
+function shabbatMins(from: string | null) {
+  if (!from) return 0;
+  let n = 0;
+  for (let t = Math.max(Date.parse(from), Date.now() - 4 * 864e5); t < Date.now(); t += 10 * 60e3) {
+    const { wd, h } = ilDayHour(new Date(t));
+    if ((wd === 'Fri' && h >= 12) || (wd === 'Sat' && h < 21)) n += 10;
+  }
+  return n;
+}
+
 interface Issue { key: string; text: string }
 
 async function checks(): Promise<Issue[]> {
@@ -52,7 +66,9 @@ async function checks(): Promise<Issue[]> {
     if (Number(s.n14) >= 8 && s.last_item) {
       const gapMin = (14 * 1440) / Number(s.n14);
       const limit = Math.max(6 * gapMin, 8 * 60);
-      const silent = mins(s.last_item);
+      // 31.10.2026: many outlets (ערוץ 7, סרוגים, כיכר השבת, JDN, חדשות 08, ice...) stop from Friday noon to Saturday night, so
+      // the hours of Shabbat (Friday 12:00 to Saturday 21:00 Israel time) are not counted as silence
+      const silent = mins(s.last_item) - shabbatMins(s.last_item);
       if (silent > limit) out.push({ key: `source_silent:${s.id}`, text: `מהמקור "${s.name_he}" לא הגיעה אף ידיעה ${ago(silent)}, בדרך כלל מגיעה ידיעה כל ${ago(Math.round(gapMin))}. כדאי לבדוק שהערוץ או האתר עדיין פעילים.` });
     }
   }
