@@ -171,7 +171,7 @@ async function feed(b: Any) {
   const seen = new Set<string>(); (prev || []).forEach((r: Any) => (r.data.items || []).forEach((x: Any) => seen.add(x.url)));
   let cands: Any[] = await collectorItems();
   const notes: string[] = [];
-  const doSweep = b.sweep !== false && !BRAKE && !(cur.runs || []).some((r: Any) => r.sweep);
+  const doSweep = b.sweep !== false && !BRAKE && (b.force || !(cur.runs || []).some((r: Any) => r.sweep));
   if (doSweep) for (const k of ['gov', 'news'] as const) { try { cands = cands.concat(await sweep(k)); } catch (e) { notes.push(`${k}: ${(e as Error).message}`); } }
   else if (BRAKE) notes.push('brake: no searches');
   const uniq = new Map<string, Any>(); for (const c of cands) if (!seen.has(c.url) && !uniq.has(c.url)) uniq.set(c.url, c);
