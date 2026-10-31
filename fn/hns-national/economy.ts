@@ -40,7 +40,7 @@ const norm = (s: string) => s.replace(/[״“”]/g, '"').replace(/[׳‘’]/g,
 const TOPIC_RE = /בנק ישראל|הריבית|ריבית|אינפלציה|מדד המחירים|יוקר המחיה|התייקר|ייקור|מחיר (?:הדלק|הבנזין|החשמל|המים|הלחם|החלב|הגז)|מחירי|מע"מ|מס הכנסה|נקודות זיכוי|רשות המסים|מענק|קצב(?:ה|ת|אות)|ביטוח לאומי|שכר המינימום|השכר הממוצע|משכורת|תקציב המדינה|חוק ההסדרים|האוצר|גירעון|חוב|דירוג האשראי|תמ"ג|צמיחה|האבטלה|שוק העבודה|פנסי|קרן השתלמות|קרנות השתלמות|קופות גמל|גמל להשקעה|חיסכון|קרנות כספיות|קרן כספית|ביטוח|משכנת|הלוואה|אשראי|כרטיס(?:י)? אשראי|עמלות|הבנקים|בנק (?:הפועלים|לאומי|דיסקונט|מזרחי)|הבורסה|ת"א[- ]?35|ת"א[- ]?125|מניה|מניות|אג"ח|השקע|משקיעים|תשואה|תשואות|וול סטריט|נאסד"ק|S&P|דולר|השקל|האירו|שער החליפין|ביטקוין|קריפטו|מטבע(?:ות)? (?:דיגיטלי|קריפטו)|את'ריום|הנפק|דוחות כספיים|רווח|הכנסות|מיזוג|רכישה של|גיוס|סטארט[- ]?אפ|הייטק|אקזיט|פשיטת רגל|חדלות פירעון|רשות ניירות ערך|הממונה על שוק ההון|רשות התחרות|צרכנ|הנחה|מבצע|הוזלה|זול/;
 // crypto (English feeds): only market-moving or regulation news
 const CRYPTO_RE = /\b(bitcoin|btc|ether(?:eum)?|crypto|stablecoin|etf|sec|regulat|hack|exploit|binance|coinbase|blackrock|fed|price|record|crash|surge|tumble|rally|israel)\b/i;
-const SKIP_RE = /\|\s*[^|]{2,40}$|רכילות|ריאליטי|דעה|טור אישי|פרשנות|פודקאסט|גלריה|צפו:|צפו ב|ראיון|הורוסקופ|מתכון|בידור|כוכב|זמר|שחקנית|עוקבים|תוכן שיווקי|בשיתוף|ממומן|sponsored|opinion|podcast|webinar|price prediction|predict|should you buy|how to buy|best crypto|top \d+|meme coin|airdrop|giveaway/i;
+const SKIP_RE = /\|\s*[^|]{2,40}$|ועוד \d+ כתבות|הכתבות (?:הנקראות|החשובות)|האם זה הזמן|מומחים מנתחים|כל מה שצריך לדעת|רכילות|ריאליטי|דעה|טור אישי|פרשנות|פודקאסט|גלריה|צפו:|צפו ב|ראיון|הורוסקופ|מתכון|בידור|כוכב|זמר|שחקנית|עוקבים|תוכן שיווקי|בשיתוף|ממומן|sponsored|opinion|podcast|webinar|price prediction|predict|should you buy|how to buy|best crypto|top \d+|meme coin|airdrop|giveaway|what happened in crypto|everything you need to know|explained|here'?s (?:what|why|how)|morning (?:briefing|minute)|daily (?:recap|wrap)|week in review|this week in/i;
 const OFFICIAL_BODY_RE = /בנק ישראל|הלמ"ס|הלשכה המרכזית לסטטיסטיקה|רשות המסים|רשות ניירות ערך|הבורסה|האוצר|משרד האוצר|החשב הכללי|הממונה על שוק ההון|רשות התחרות|ביטוח לאומי|הממשלה (?:אישרה|החליטה)|הכנסת (?:אישרה|אישר)|אושר בקריאה|מדד המחירים|הריבית/;
 // buy/sell advice words: a draft with any of these is dropped (investments and crypto are news only)
 const ADVICE_RE = /כדאי (?:לקנות|למכור|להשקיע|להיכנס|לצאת)|(?:^|\s)(?:קנו|מכרו|השקיעו|תקנו|תמכרו)(?:\s|$)|המלצת (?:קנייה|מכירה)|הזדמנות (?:השקעה|קנייה)|עכשיו הזמן ל(?:קנות|השקיע)|מומלץ (?:לקנות|למכור|להשקיע)/;
@@ -60,6 +60,12 @@ const dayStartIl = () => {
   return new Date(guess - Number((off.match(/GMT([+-]\d+)/) || [0, 2])[1]) * 3600e3).toISOString();
 };
 const outletOf = (x: Any, src: Any) => String(x.outlet || src[x.source_id]?.name_he || x.source_id).replace(/\s*\(גוגל ניוז\)$/, '');
+// the outlet behind an item, to count "different outlets" (גלובס כלכלה and גלובס שוק ההון are one outlet)
+const BRAND: Record<string, string> = { globes_economy: 'globes', globes_markets: 'globes', ynet_economy: 'ynet', themarker_news: 'themarker', walla_money: 'walla', ice_news: 'ice', coindesk: 'coindesk', cointelegraph: 'cointelegraph', decrypt: 'decrypt' };
+const brandOf = (x: Any) => BRAND[x.source_id] || String(x.outlet || x.source_id).toLowerCase().replace(/^www\.|\.co\.il$|\.com$/g, '').replace(/[^\p{L}\p{N}]+/gu, '')
+  .replace(/^calcalist$|^כלכליסט$/, 'calcalist').replace(/^globes$|^גלובס$/, 'globes').replace(/^ynet.*/, 'ynet').replace(/^themarker$|^דהמרקר$/, 'themarker').replace(/^ביזפורטל$|^bizportal$/, 'bizportal');
+// a Google News title ends with " - <outlet>": dropped before grouping and writing
+const titleOf = (x: Any) => (String(x.source_id).startsWith('gn_') ? String(x.title || '').replace(/\s+-\s+[^-]{2,40}$/, '') : String(x.title || ''));
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
 const ENT: Record<string, string> = { quot: '"', amp: '&', lt: '<', gt: '>', apos: "'", nbsp: ' ', hellip: '...' };
@@ -136,18 +142,18 @@ async function tick(dry: boolean) {
     .in('source_id', ECON_SRC).eq('is_local', false).is('cluster_id', null).gte('fetched_at', new Date(now - 8 * 3600e3).toISOString())
     .order('id', { ascending: false }).limit(800);
   const pool = (items || []).filter((x: Any) => {
-    const t = String(x.title || '');
+    const t = titleOf(x);
     if (SKIP_RE.test(t)) return false;
     if (x.published_at && now - Date.parse(x.published_at) > 8 * 3600e3) return false;
     return CRYPTO_SRC.has(x.source_id) && x.source_id !== 'gn_crypto' ? CRYPTO_RE.test(t) : TOPIC_RE.test(norm(t));
   });
   const groups: { items: Any[]; t: Set<string> }[] = [];
   for (const x of pool) {
-    const t = toks(`${x.title} ${String(x.body || '').slice(0, 200)}`);
+    const t = toks(`${titleOf(x)} ${String(x.body || '').slice(0, 200)}`);
     const g = groups.find((g) => same(g.t, t));
     if (g) { g.items.push(x); for (const w of t) g.t.add(w); } else groups.push({ items: [x], t });
   }
-  const outlets = (g: { items: Any[] }) => new Set(g.items.map((x) => outletOf(x, src))).size;
+  const outlets = (g: { items: Any[] }) => new Set(g.items.map(brandOf)).size;
   const solo = (g: { items: Any[] }) => g.items.some((x) => MAJOR_SRC.has(x.source_id) && OFFICIAL_BODY_RE.test(norm(x.title || ''))
     && now - Date.parse(x.published_at || x.fetched_at) >= 30 * 60e3);
   const official = (g: { items: Any[] }) => g.items.some((x) => OFFICIAL_BODY_RE.test(norm(x.title || ''))) ? 1 : 0;
@@ -160,7 +166,7 @@ async function tick(dry: boolean) {
     const hit = (recent || []).find((s: Any) => same(toks(`${s.title} ${s.dek || ''}`), g.t));
     if (hit) attach.push({ story: hit.id, ids: g.items.map((x) => x.id) }); else fresh.push(g);
   }
-  if (dry) return { pool: pool.length, groups: ok.map((g) => ({ n: g.items.length, outlets: [...new Set(g.items.map((x) => outletOf(x, src)))], titles: g.items.slice(0, 3).map((x) => x.title) })), attach, singles: groups.length - ok.length };
+  if (dry) return { pool: pool.length, groups: ok.map((g) => ({ n: g.items.length, outlets: [...new Set(g.items.map((x) => outletOf(x, src)))], titles: g.items.slice(0, 3).map(titleOf) })), attach, singles: groups.length - ok.length };
   for (const a of attach) await sb.from('hns_items').update({ cluster_id: a.story }).in('id', a.ids);
   if (!fresh.length) return { pool: pool.length, groups: ok.length, attached: attach.length, wrote: 0 };
   const brake = await brakeOn();
@@ -173,11 +179,11 @@ async function tick(dry: boolean) {
   const its = g.items.slice(0, 6);
   for (const x of its.slice(0, 4)) if (x.url && String(x.body || '').length < 450) { const t = await pageText(x.url); if (t.length > String(x.body || '').length + 40) x.body = `${x.body || ''}\n${t}`; }
   const user = `היום: ${ilWhen(new Date().toISOString())} (שעון ישראל)\n\nהמקורות:\n\n` + its.map((x: Any, i: number) =>
-    `מקור ${i + 1}: ${outletOf(x, src)} (${src[x.source_id]?.trust === 'official' ? 'גוף רשמי' : 'כלי תקשורת'})\nזמן הפרסום: ${ilWhen(x.published_at || x.fetched_at)}\nכותרת: ${x.title}\nתוכן: ${String(x.body || '').slice(0, 2500)}`).join('\n\n');
+    `מקור ${i + 1}: ${outletOf(x, src)} (${src[x.source_id]?.trust === 'official' ? 'גוף רשמי' : 'כלי תקשורת'})\nזמן הפרסום: ${ilWhen(x.published_at || x.fetched_at)}\nכותרת: ${titleOf(x)}\nתוכן: ${String(x.body || '').slice(0, 2500)}`).join('\n\n');
   const ids = g.items.map((x: Any) => x.id);
   const sources = [...new Map(its.map((x: Any) => [outletOf(x, src), { id: x.source_id, name: outletOf(x, src), url: x.url, trust: src[x.source_id]?.trust || 'media' }])).values()];
   const close = async (why: string) => {
-    const { data: st } = await sb.from('hns_stories').insert({ section: 'economy', title: clean(its[0].title), state: 'rejected', item_ids: ids, sources, places: ['ישראל'],
+    const { data: st } = await sb.from('hns_stories').insert({ section: 'economy', title: clean(titleOf(its[0])), state: 'rejected', item_ids: ids, sources, places: ['ישראל'],
       notes: `כלכלה: ${why}`.slice(0, 300), model: MODEL, sensitivity: 'normal' }).select('id').single();
     if (st) await sb.from('hns_items').update({ cluster_id: st.id }).in('id', ids);
     return st?.id;
