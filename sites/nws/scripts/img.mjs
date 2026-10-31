@@ -26,7 +26,7 @@ let made = 0, cached = 0, failed = 0;
 for (const s of stories) {
   const url = s?.image?.url;
   if (!url || !/^https:\/\//.test(url)) continue;
-  const h = crypto.createHash('sha1').update(url).digest('hex').slice(0, 10);
+  const h = crypto.createHash('sha1').update(url + '#2').digest('hex').slice(0, 10); // '#2': 31.10.2026 portraits cut from the top
   const widths = s.image.model === 'lucid' ? [640, 1280] : [480, 960];
   const names = widths.map((w) => `n${s.id}-${h}-${w}.webp`);
   const cropNames = RATIOS.map(([tag]) => `n${s.id}-${h}-${tag}.jpg`);
@@ -39,8 +39,14 @@ for (const s of stories) {
     } else {
       const r = await fetch(url, { signal: AbortSignal.timeout(30000) });
       if (!r.ok) throw new Error(`download ${r.status}`);
-      const buf = Buffer.from(await r.arrayBuffer());
-      const m = await sharp(buf).metadata();
+      let buf = Buffer.from(await r.arrayBuffer());
+      let m = await sharp(buf).metadata();
+      // 31.10.2026: a tall photo (a portrait of a public figure, hns-img real.ts) is cut to 3:2 from the TOP first, so the head is never
+      // cut off by a wide crop or by the page's cover fit
+      if (m.width && m.height && m.height > m.width) {
+        buf = await sharp(buf).resize({ width: m.width, height: Math.round((m.width * 2) / 3), fit: 'cover', position: 'north' }).jpeg({ quality: 90 }).toBuffer();
+        m = await sharp(buf).metadata();
+      }
       if (!m.width || !m.height) throw new Error('not an image');
       for (let i = 0; i < widths.length; i++) {
         await sharp(buf).resize({ width: Math.min(widths[i], m.width) }).webp({ quality: 72 }).toFile(path.join(CACHE, names[i]));
