@@ -26,7 +26,7 @@
 // COST: every Anthropic call is priced into ai_cost (fn 'upd'; web searches as model 'web_search', $0.01 each). When the month
 //   reaches the brake (hns_config ai_extra), the feed skips the searches and the writing uses the regular model.
 import { loadSecrets, json, cors, admin, env } from '../_shared/common.ts';
-import { renderPost } from './img.ts';
+import { renderCard, PHOTOS, photoUrl, type Card, type Tpl } from './img.ts';
 
 // deno-lint-ignore no-explicit-any
 type Any = any;
@@ -208,17 +208,25 @@ async function sourcePage(url: string) {
 // ---------- the post image: ./img.ts ----------
 
 // ---------- POST ----------
-const POST_SYS = `אתה כותב פוסטים לפייסבוק וללינקדאין של "יקיר דבול - משרד עורכי דין" (מקרקעין ונדל"ן, נתניה). קהל: קונים, מוכרים ובעלי דירות.
+const POST_SYS = `אתה הקופירייטר של "יקיר דבול - משרד עורכי דין" (מקרקעין ונדל"ן, נתניה) לפייסבוק וללינקדאין. קהל: קונים, מוכרים ובעלי דירות. המטרה: לעצור את הגלילה בשתי שניות ולתת ערך אמיתי.
 כללים מחייבים:
-- כותבים בניסוח שלנו, בגוף שני רבים ("אתם"), עברית פשוטה וזורמת. לא מעתיקים משפטים מהמקור.
-- רק עובדות שמופיעות בחומר שקיבלת. אסור להמציא מספרים, תאריכים, שמות, סעיפים או מספרי תיקים.
+- שורת הפתיחה היא ה"הוק": קצרה, חדה, מסקרנת, נוגעת בכיס או בבית של הקורא (שאלה, מספר מפתיע, או "אם אתם..."). לא כותרת יבשה.
+- טון חי וזורם, בגוף שני רבים ("אתם"), משפטים קצרים, פסקאות של שורה או שתיים. לא יבש ולא משפטי.
+- לא כותבים "לפי הדיווח", "לפי הפרסום", "דווח ש". מייחסים את העובדה לגוף הראשוני עצמו: "עיריית נתניה החליטה", "בית המשפט קבע", "רשות המסים הציעה".
+- רק עובדות שמופיעות בחומר שקיבלת. אסור להמציא מספרים, תאריכים, שמות, סעיפים או מספרי תיקים. לא מעתיקים משפטים מהמקור.
 - כללי לשכת עורכי הדין: בלי "הכי", בלי "מומחה", בלי הבטחה לתוצאה, בלי "חינם" או "ללא עלות", בלי מחירים או שכר טרחה, בלי המלצות של לקוחות, בלי לשון הפלגה.
 - בלי מקף ארוך או בינוני (— –). רק פסיק, נקודה או מקף רגיל.
 - לא מזכירים משרדי עורכי דין אחרים. לא מזכירים את האתר nws או "חדשות נתניה והשרון".
-- מקור: אם יש מקור ראשוני (בית משפט, רשות המסים, רמ"י, מנהל התכנון, הכנסת, בנק ישראל), מייחסים אליו את העובדה בגוף הפוסט. אם לא, כותבים בשורת המקור את שם האתר.
-מבנה הפוסט: שורת פתיחה שעוצרת גלילה, 3 עד 5 פסקאות קצרות (מה קרה, מה זה אומר בפועל, ממה להיזהר או מה לבדוק), ובסוף 3 עד 4 האשטגים בעברית. בלי שורת יצירת קשר ובלי הסתייגות: הן מתווספות אוטומטית.
+מבנה הפוסט: הוק, 3 עד 4 פסקאות קצרות (מה קרה, מה זה אומר בפועל לכם, מה לבדוק או ממה להיזהר), ובסוף שאלה רכה או קריאה עדינה לתגובה (למשל "גרים במתחם? ספרו בתגובות איפה הפרויקט שלכם עומד"). אחר כך 3 עד 4 האשטגים בעברית בשורה נפרדת. בלי שורת יצירת קשר, בלי הסתייגות ובלי שורת מקור: הן מתווספות אוטומטית.
+התמונה (בלי מקור ובלי טלפון עליה, הם מתווספים לבד): בחר תבנית אחת לפי התוכן:
+- "number": יש מספר או עובדה אחת חזקה (40 מ״ר, 8%, 13 חודשים). hero = המספר עם היחידה, עד 8 תווים. heroLabel = מה המספר אומר, עד 24 תווים.
+- "question": הסיפור עובד הכי טוב כשאלה ישירה לקורא. hook = השאלה.
+- "split": החלטה או פסק דין שצריך כותרת עיתונאית; אפשר hero קצר לתג עגול (לא חובה).
+- "list": יש 3 דברים מעשיים לבדוק או לדעת. items = 3 שורות, עד 30 תווים כל אחת.
+hook = עד 40 תווים, החלק שעוצר את הגלילה. sub = עד 55 תווים (לא חובה). kicker = 2 עד 3 מילים: הנושא.
+photo = נושא התמונה, אחד מ: court (בית משפט), tax (מס), money (ריבית ומשכנתאות), urban (פינוי בינוי ובנייה), towers (בניינים), coast (עיר חוף), contract (חוזה ועסקה), home (בית ודירה).
 החזר JSON בלבד:
-{"kicker":"2-3 מילים: הנושא", "headline":"כותרת לתמונה, עד 42 תווים", "sub":"משפט הסבר לתמונה, עד 85 תווים", "points":["2-3 נקודות קצרות לתמונה, עד 30 תווים כל אחת"], "post":"הטקסט המלא לפייסבוק וללינקדאין", "sourceName":"שם המקור הראשוני או האתר", "sourceUrl":"הקישור למקור הראשוני אם יש, אחרת הקישור לכתבה"}`;
+{"tpl":"number|question|split|list", "kicker":"", "hero":"", "heroLabel":"", "hook":"", "sub":"", "items":[], "photo":"", "post":"הטקסט המלא", "sourceName":"שם הגוף הראשוני (עדיף) או האתר", "sourceUrl":"קישור למקור הראשוני אם יש, אחרת לכתבה"}`;
 async function makePost(id: string, r: Any) {
   const it = r.item || {};
   const pg = await sourcePage(it.source?.url || '');
@@ -228,11 +236,13 @@ async function makePost(id: string, r: Any) {
   for (let k = 0; k < 2; k++) {
     const d = await claude({ model: writer(), max_tokens: 6000, system: POST_SYS, messages: [{ role: 'user', content: k ? `${user}\n\nהטיוטה הקודמת נפסלה: ${issues.join(', ')}. כתוב מחדש לפי הכללים.` : user }] });
     o = jsonOf(textOf(d));
-    for (const key of ['kicker', 'headline', 'sub', 'post', 'sourceName']) o[key] = clean(o[key]);
+    for (const key of ['kicker', 'hero', 'heroLabel', 'hook', 'sub', 'post', 'sourceName']) o[key] = clean(o[key]);
     o.post = String(o.post).replace(/\n{3,}/g, '\n\n');
-    o.points = (o.points || []).map(clean).filter(Boolean).slice(0, 3);
-    issues = badIn([o.kicker, o.headline, o.sub, o.post, ...o.points].join(' '));
-    if (!o.headline || !o.post) issues.push('חסר טקסט');
+    o.items = (o.items || []).map(clean).filter(Boolean).slice(0, 3);
+    o.headline = o.hook;
+    issues = badIn([o.kicker, o.hero, o.heroLabel, o.hook, o.sub, o.post, ...o.items].join(' '));
+    if (/לפי (?:ה)?דיווח|לפי (?:ה)?פרסום|כפי שדווח/.test(o.post)) issues.push('"לפי הדיווח"');
+    if (!o.hook || !o.post) issues.push('חסר טקסט');
     if (!issues.length) break;
   }
   if (issues.length) throw new Error('הטקסט לא עבר את הבדיקה: ' + issues.join(', '));
@@ -242,13 +252,30 @@ async function makePost(id: string, r: Any) {
   const body = o.post.split('\n').filter((l: string) => !/^\s*(#\S+\s*)+$/.test(l)).join('\n').trim();
   const text = `${body}\n\nמקור: ${o.sourceName || it.source?.name}${srcUrl ? ` ${srcUrl}` : ''}\n\n${CONTACT}\n${DISCLAIMER}${tagLines.length ? `\n\n${tagLines.join(' ').trim()}` : ''}`;
   const v = Number(r.v || 0) + 1;
-  const png = await renderPost({ kicker: o.kicker, headline: o.headline, sub: o.sub, points: o.points, source: `מקור: ${o.sourceName || it.source?.name}` });
+  // the template: as the writer chose, but never the same one three posts in a row; the photo: one of its subject not used lately
+  const { data: last } = await db().select('data').eq('coll', 'updreq').eq('data->>kind', 'post').neq('id', id).order('updated_at', { ascending: false }).limit(8);
+  const lastTpl = (last || []).map((x: Any) => x.data?.post?.tpl).filter(Boolean);
+  const usedPh = new Set((last || []).map((x: Any) => x.data?.post?.photoId).filter(Boolean));
+  const can: Record<string, boolean> = { number: !!o.hero, split: true, question: true, list: o.items.length >= 3 };
+  let tpl: Tpl = (['number', 'question', 'split', 'list'].includes(o.tpl) && can[o.tpl]) ? o.tpl : (o.hero ? 'number' : 'question');
+  if (lastTpl[0] === tpl && lastTpl[1] === tpl) tpl = (['number', 'split', 'list', 'question'] as Tpl[]).find(t => t !== tpl && can[t]) || tpl;
+  const pool = PHOTOS[o.photo] || PHOTOS.home;
+  const photoId = pool.find(p => !usedPh.has(p)) || pool[Math.floor(Math.random() * pool.length)];
+  const pr = await fetch(photoUrl(photoId, 1350), { signal: AbortSignal.timeout(20000) });
+  if (!pr.ok) throw new Error('photo ' + pr.status);
+  const photoBytes = new Uint8Array(await pr.arrayBuffer());
+  const card: Card = { tpl, kicker: o.kicker, hero: o.hero, heroLabel: o.heroLabel, hook: o.hook, sub: o.sub, items: o.items, photo: photoId };
+  const png = await renderCard(card, 1350, photoBytes);
+  const pr2 = await fetch(photoUrl(photoId, 1080), { signal: AbortSignal.timeout(20000) }).catch(() => null);
+  const sq = pr2 && pr2.ok ? await renderCard(card, 1080, new Uint8Array(await pr2.arrayBuffer())) : null;
   const path = `upd/${id}-v${v}.png`;
   const up = await admin().storage.from('pv').upload(path, png, { contentType: 'image/png', upsert: true });
   if (up.error) throw new Error('image upload: ' + up.error.message);
+  if (sq) await admin().storage.from('pv').upload(`upd/${id}-v${v}-sq.png`, sq, { contentType: 'image/png', upsert: true });
+  o.tpl = tpl; o.photoId = photoId;
   const img = `${env('SUPABASE_URL')}/storage/v1/object/public/pv/${path}`;
   const t = r.tok || tok();
-  await merge('updreq', id, { status: 'awaiting', v, tok: t, post: { ...o, text, img, sourceUrl: srcUrl }, sentAt: new Date().toISOString(), error: '' });
+  await merge('updreq', id, { status: 'awaiting', v, tok: t, post: { ...o, text, img, imgSq: sq ? `${env('SUPABASE_URL')}/storage/v1/object/public/pv/upd/${id}-v${v}-sq.png` : '', sourceUrl: srcUrl }, sentAt: new Date().toISOString(), error: '' });
   const cap = `📝 פוסט לאישור (פייסבוק ולינקדאין)\n${o.headline}\n\n${text}`;
   const sent = await tgApi('sendPhoto', { photo: img, caption: cap.length > 1000 ? cap.slice(0, 990) + '…' : cap, reply_markup: { inline_keyboard: buttons(t) } });
   let tgOk = !!sent?.ok;
@@ -472,9 +499,12 @@ Deno.serve(async (req) => {
     if (b.action === 'feed') return json({ ok: true, ...(await feed(b)) });
     if (b.action === 'work') return json({ ok: true, ...(await work()) });
     if (b.action === 'imgtest') {
-      const png = await renderPost({ kicker: b.kicker || 'מיסוי מקרקעין', headline: b.headline || 'בדיקת תמונה לפוסט', sub: b.sub || 'שורת הסבר קצרה', points: b.points || ['נקודה ראשונה', 'נקודה שנייה'], source: b.source || 'מקור: רשות המסים' });
+      const card: Card = { tpl: b.tpl || 'number', kicker: b.kicker || 'מיסוי מקרקעין', hero: b.hero || '8%', heroLabel: b.heroLabel || '', hook: b.hook || 'בדיקת תמונה לפוסט', sub: b.sub || '', items: b.items || [], photo: '' };
+      const pid = (PHOTOS[b.photo] || PHOTOS.home)[0];
+      const H = b.h === 1080 ? 1080 : 1350;
+      const png = await renderCard(card, H, new Uint8Array(await (await fetch(photoUrl(pid, H))).arrayBuffer()));
       const up = await admin().storage.from('pv').upload('upd/_test.png', png, { contentType: 'image/png', upsert: true });
-      return json({ ok: !up.error, error: up.error?.message, url: `${env('SUPABASE_URL')}/storage/v1/object/public/pv/upd/_test.png?v=${Date.now()}` });
+      return json({ ok: !up.error, error: up.error?.message, size: png.length });
     }
     if (b.action === 'sweepdebug') return json({ ok: true, res: await sweep(b.kind === 'news' ? 'news' : 'gov', true) });
     if (b.action === 'artdry') { const r = await getDoc('updreq', String(b.id)); return json({ ok: true, ...(await writeArticle(String(b.id), r, true)) }); }
