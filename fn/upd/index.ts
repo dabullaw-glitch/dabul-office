@@ -44,7 +44,7 @@ const hash = (s: string) => { let h = 5381; for (let i = 0; i < s.length; i++) h
 const NO_NWS = /nws\.co\.il|חדשות נתניה והשרון/;
 const TOPICS = ['מיסוי מקרקעין', 'פסיקה', 'התחדשות עירונית', 'חקיקה ונהלים', 'משכנתאות וריבית', 'רמ"י ותכנון', 'שוק הדירות', 'שכירות', 'ירושה ומקרקעין', 'נתניה והשרון'];
 // Bar advertising rules and the office's own words that never appear
-const BAD: [RegExp, string][] = [[/(^|[\s"(])הכי([\s,.)]|$)/, '"הכי"'], [/מומח/, '"מומחה"'], [/חינם|ללא עלות|ללא תשלום/, '"חינם"'], [/הטוב(?:ים|ה|ות)? ביותר/, 'לשון הפלגה'],
+const BAD: [RegExp, string][] = [[/(^|[\s"(])הכי([\s,.)]|$)/, '"הכי"'], [/מומח/, '"מומחה"'], [/חינם|ללא עלות|ללא תשלום/, '"חינם"'], [/הטוב(?:ים|ה|ות)? ביותר/, 'לשון הפלגה'], [/מקסימל/, 'לשון הפלגה "מקסימלי"'],
   [/(?:אחוזי|שיעור) הצלחה/, 'שיעורי הצלחה'], [/מבטיח(?:ים)? (?:לכם|לך)|אנו מבטיחים|נבטיח/, 'הבטחה'], [/דבול ושות/, 'שם ישן של המשרד'], [/nws\.co\.il|חדשות נתניה והשרון/, 'אזכור nws']];
 const badIn = (t: string) => BAD.filter(([re]) => re.test(t)).map(([, l]) => l);
 const CONTACT = 'לשאלות ותיאום פגישה: 09-8613413 או בוואטסאפ 050-5580189.';
@@ -250,7 +250,11 @@ async function makePost(id: string, r: Any, dry = false) {
   // the hashtag lines go to the very end, after the source, the contact line and the disclaimer
   const tagLines = o.post.split('\n').filter((l: string) => /^\s*(#\S+\s*)+$/.test(l));
   const body = o.post.split('\n').filter((l: string) => !/^\s*(#\S+\s*)+$/.test(l)).join('\n').trim();
-  const text = `${body}\n\nמקור: ${o.sourceName || it.source?.name}${srcUrl ? ` ${srcUrl}` : ''}\n\n${CONTACT}\n${DISCLAIMER}${tagLines.length ? `\n\n${tagLines.join(' ').trim()}` : ''}`;
+  // the source line: the primary body; when the link is a news report of it, say where it was published
+  const isPrimary = /(^https?:\/\/([a-z0-9-]+\.)*(gov\.il|muni\.il|knesset\.gov\.il|boi\.org\.il|cbs\.gov\.il)\/)/i.test(String(srcUrl || ''));
+  const outlet = String(it.source?.name || '').split(',')[0].trim();
+  const srcLine = `${o.sourceName || outlet}${!isPrimary && outlet && o.sourceName && !o.sourceName.includes(outlet) ? `, כפי שפורסם ב-${outlet}` : ''}`;
+  const text = `${body}\n\nמקור: ${srcLine}${srcUrl ? ` ${srcUrl}` : ''}\n\n${CONTACT}\n${DISCLAIMER}${tagLines.length ? `\n\n${tagLines.join(' ').trim()}` : ''}`;
   const v = Number(r.v || 0) + 1;
   // the template: as the writer chose, but never the same one three posts in a row; the photo: one of its subject not used lately
   const { data: last } = await db().select('data').eq('coll', 'updreq').eq('data->>kind', 'post').neq('id', id).order('updated_at', { ascending: false }).limit(8);
