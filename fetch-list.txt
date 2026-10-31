@@ -1,2 +1,2 @@
-upd-t2.png https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/upd/q-test2-20261031-v1.png
-upd-t2-sq.png https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/upd/q-test2-20261031-v1-sq.png
+upd-t3.png https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/upd/q-test2-20261031-v2.png
+upd-t3-sq.png https://mgjmnvpnovkewvqevjmz.supabase.co/storage/v1/object/public/pv/upd/q-test2-20261031-v2-sq.png
