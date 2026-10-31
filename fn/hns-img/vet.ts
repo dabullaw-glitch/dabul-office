@@ -133,11 +133,18 @@ async function label(b: Any) {
   for (const n of STOCK) if ((!want.size && !wantStock.size) || wantStock.has(n)) todo.push({ id: `stock:${n}`, url: `${SITE}/img/stock/${n}-800.webp`, meta: `Generic stock photo named "${n}" (Unsplash)`, place: false });
   const max = Math.min(Number(b.max) || 40, 60);
   let n = 0;
+  const have = new Set<string>();
+  for (let from = 0; ; from += 1000) {
+    const { data } = await sb.from('docs').select('id').eq('coll', 'nwsimglab').range(from, from + 999);
+    (data || []).forEach((r: Any) => have.add(r.id));
+    if (!data || data.length < 1000) break;
+  }
   const pend: typeof todo = [];
   for (const t of todo) {
-    if (!b.force && await getDoc('nwsimglab', t.id)) continue;
+    if (!b.force && have.has(t.id)) continue;
     pend.push(t); if (pend.length >= max) break;
   }
+  if (!pend.length && b.quiet) return { labelled: 0, left: 0 };
   for (let i = 0; i < pend.length; i += 6) {
     const res = await Promise.all(pend.slice(i, i + 6).map((t) => labelOne(t.id, t.url, t.meta, t.place, true).catch((e) => ({ id: t.id, error: String((e as Error).message || e) }))));
     out.push(...res); n += res.length;
@@ -215,6 +222,8 @@ async function vetStory(st: Any, force: boolean) {
 }
 async function tick(b: Any) {
   if (BRAKE) { await merge('nwslive', 'imgfix', { brake: true, at: new Date().toISOString() }); return { brake: true }; }
+  // new photos of the library (a new harvest) get their label first; until then the build never uses them
+  const lab = await label({ max: 12, quiet: true }).catch((e) => ({ error: String((e as Error).message || e) }));
   const fx: Any = await getDoc('nwslive', 'imgfix');
   if (fx?.brake) await merge('nwslive', 'imgfix', { brake: false });
   const days = Math.min(Number(b.days) || 2, 30);
@@ -228,7 +237,7 @@ async function tick(b: Any) {
     const res = await Promise.all(rows.slice(i, i + 5).map((s: Any) => vetStory(s, !!b.force).catch((e) => ({ id: `n${s.id}`, error: String((e as Error).message || e).slice(0, 120) }))));
     for (const r of res) { out.push(r); if ('ok' in r && !(r as Any).same && !(r as Any).card) calls++; }
   }
-  return { checked: out.length, calls, failed: out.filter((r: Any) => r.ok === false), errors: out.filter((r: Any) => r.error).slice(0, 5) };
+  return { labels: lab, checked: out.length, calls, failed: out.filter((r: Any) => r.ok === false), errors: out.filter((r: Any) => r.error).slice(0, 5) };
 }
 
 // Lives inside hns-img (the project reached its limit of edge functions): hns-img routes every action that starts with 'vet_' here.
