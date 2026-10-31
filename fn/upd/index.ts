@@ -139,9 +139,9 @@ ITEM
 END`;
 async function sweep(kind: 'gov' | 'news', debug = false) {
   const ask = kind === 'gov'
-    ? 'חפש עדכונים רשמיים מהימים האחרונים: החלטות מיסוי וחוזרים של רשות המסים, החלטות ועדות ערר, פסקי דין של העליון והמחוזי בנדל"ן ובמקרקעין, החלטות מועצת רשות מקרקעי ישראל ומכרזים, מנהל התכנון, רשם המקרקעין, משרד הבינוי והשיכון והרשות להתחדשות עירונית, ריבית בנק ישראל ומשכנתאות, מדד מחירי הדירות של הלמ"ס, חקיקה בכנסת שנוגעת לדירות.'
+    ? 'חפש החלטות רשמיות ופסקי דין מהימים האחרונים (במקור הרשמי או כפי שדווחו באתרי החדשות): החלטות מיסוי וחוזרים של רשות המסים, החלטות ועדות ערר, פסקי דין של העליון והמחוזי בנדל"ן ובמקרקעין, החלטות מועצת רשות מקרקעי ישראל ומכרזים, מנהל התכנון, רשם המקרקעין, משרד הבינוי והשיכון והרשות להתחדשות עירונית, ריבית בנק ישראל ומשכנתאות, מדד מחירי הדירות של הלמ"ס, חקיקה בכנסת שנוגעת לדירות.'
     : 'חפש חדשות נדל"ן ומשפט מהימים האחרונים באתרי החדשות: מיסוי מקרקעין, פסקי דין בעסקאות דירה ובבתים משותפים, התחדשות עירונית ופינוי בינוי, משכנתאות וריבית, שינויי חקיקה ונהלים, תכנון ובנייה, ונתניה והשרון.';
-  const content = await searchRun(REG, SEARCH_SYS, `התאריך היום: ${ilDay()}.\n${ask}\nחפש, קרא, ותן את התשובה בפורמט שנקבע.`, kind === 'gov' ? GOV_DOMAINS : NEWS_DOMAINS, 6, 5000);
+  const content = await searchRun(CHEAP, SEARCH_SYS, `התאריך היום: ${ilDay()}.\n${ask}\nחפש, קרא, ותן את התשובה בפורמט שנקבע.`, kind === 'gov' ? [...GOV_DOMAINS, ...NEWS_DOMAINS] : NEWS_DOMAINS, 6, 5000);
   if (debug) { const txt = content.filter((c: Any) => c.type === 'text'); return [{ debug: true, blocks: content.length, texts: txt.length, cites: txt.reduce((a: number, c: Any) => a + (c.citations || []).length, 0), text: txt.map((c: Any) => c.text).join('').slice(0, 2500) }]; }
   return citedBlocks(content).map(({ field, cites }) => ({
     title: field('כותרת'), date: field('תאריך').slice(0, 10), what: field('מה קרה'), url: cites[0].url, source: field('מקור') || cites[0].title, via: kind,
@@ -262,7 +262,7 @@ async function research(id: string, r: Any) {
 FACT
 עובדה: (משפט אחד או שניים)
 END`;
-  const content = await searchRun(REG, sys, `העדכון: ${it.title}\n${it.summary}\nהמקור: ${it.source?.name} ${it.source?.url}\n${r.note ? `הערה של יקיר: ${r.note}\n` : ''}חפש את המקור הראשוני (פסק הדין, ההחלטה, החוק) ומקורות רקע, ותן 6 עד 14 עובדות.`, ART_NEUTRAL, 6, 5000);
+  const content = await searchRun(CHEAP, sys, `העדכון: ${it.title}\n${it.summary}\nהמקור: ${it.source?.name} ${it.source?.url}\n${r.note ? `הערה של יקיר: ${r.note}\n` : ''}חפש את המקור הראשוני (פסק הדין, ההחלטה, החוק) ומקורות רקע, ותן 6 עד 14 עובדות.`, ART_NEUTRAL, 6, 5000);
   const facts = citedBlocks(content, 'FACT').map(({ field, cites }) => ({ fact: field('עובדה'), url: cites[0].url, title: cites[0].title, quote: cites[0].quote.slice(0, 300) })).filter(f => f.fact);
   if (facts.length < 3) throw new Error('נמצאו מעט מדי עובדות עם מקור');
   await merge('updreq', id, { status: 'write', facts, researchAt: new Date().toISOString() });
