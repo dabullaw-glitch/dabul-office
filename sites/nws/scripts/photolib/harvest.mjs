@@ -140,7 +140,7 @@ const ROOTS = [
     ['election', 'קלפי', /election|ballot|campaign/i, ['Ballot boxes', 'Ballot boxes in Israel', 'Ballot papers of Israel', 'Israeli ballot slips', 'Polling stations in Israel', 'Voting booths', 'Ballot box', 'Israeli legislative election, 2022', 'Israeli legislative election, 2021']],
     ['courts', 'בית המשפט', /court/i, ['Gavels', 'Judge gavels', 'Scales of justice', 'Lady Justice', 'Courtrooms in Israel', 'Supreme Court of Israel building', 'Law books']],
     ['fire', 'כבאית', /\bfires?\b|fire.?(engine|truck|station|fighting|service|and rescue)/i, ['Fire engines in Israel', 'Israel Fire and Rescue Services vehicles', 'Fire hoses', 'Firefighting', 'Fire trucks', 'Smoke']],
-  ].flatMap(([set, alt, allow, cats]) => cats.map((cat) => ({ cat, depth: 1, cap: 10, set, topics: [set], place: null, alt, allow }))),
+  ].flatMap(([set, alt, allow, cats]) => cats.map((cat) => ({ cat, depth: 1, cap: 10, scan: 60, set, topics: [set], place: null, alt, allow }))),
 ];
 // more specific places found in the sub-category or file name (Hebrew name as on the site)
 const PLACE_RX = [
@@ -221,6 +221,8 @@ for (const root of ROOTS) {
     let list = [];
     try { list = await members(cat); } catch (e) { say(`! ${cat}: ${e.message}`); return; }
     for (const m of list) {
+      // 31.10.2026: a big category (Firefighting, Smoke...) is scanned only up to root.scan files, so a run ends in time
+      if (n >= (root.scan || 100000)) return;
       if (m.ns === 6) {
         if (!found.has(m.pageid)) { found.set(m.pageid, { root, via, title: m.title }); n++; }
       } else if (m.ns === 14 && depth > 0) {
