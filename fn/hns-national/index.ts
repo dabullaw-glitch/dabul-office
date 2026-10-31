@@ -5,7 +5,7 @@
 // emergency. Nothing else national (politics of the day, opinion, gossip, economy, world news) is written.
 // 29.10.2026 (Yakir approved): wider topics (household money, health, education, transport, weather), 25 a day, every 10 minutes,
 //   and a closing "מה זה אומר לתושבי נתניה:" paragraph when there is a practical effect.
-// Cron every 10 minutes. Per run at most ONE story:
+// Cron every 5 minutes (10 before 1.11.2026). Per run at most ONE story:
 //   1. items of the last 3 hours from national news feeds (already collected by hns-collect, is_local false, cluster_id null) whose
 //      title matches the national topics, without opinion pieces, columns, podcasts or galleries;
 //   2. grouped by event (shared words); a group needs at least 2 different outlets, or the Home Front Command's own channel;
@@ -61,6 +61,9 @@ const STOP = new Set(['היום', 'אתמול', 'הערב', 'הבוקר', 'לא�
 const toks = (s: string) => new Set(norm(s).replace(/[^\p{L}\p{N}"\s%]/gu, ' ').split(/\s+/).map((w) => w.replace(/^"|"$/g, ''))
   .map((w) => (w.length > 4 && /^[ובלמהש]/.test(w) ? w.slice(1) : w)).filter((w) => w.length >= 3 && !STOP.has(w)));
 const same = (a: Set<string>, b: Set<string>) => { let n = 0; for (const x of a) if (b.has(x)) n++; return n >= 3 && n / Math.max(1, Math.min(a.size, b.size)) >= 0.3; };
+const GENERIC = new Set(['איראן', 'איראני', 'האיראני', 'איראנית', 'טראמפ', 'נתניהו', 'המלחמה', 'מלחמה', 'ארה"ב', 'צה"ל', 'דיווח', 'דיווח:', 'החלטה', 'ישראלי', 'ישראלית', 'לדברי', 'אמר', 'מאיים', 'מאיימת']);
+const core = (t: Set<string>) => new Set([...t].filter((w) => !GENERIC.has(w)));
+const sameTitle = (a: Set<string>, b: Set<string>) => { let n = 0; for (const x of a) if (b.has(x)) n++; return n >= 2 && n / Math.max(1, Math.min(a.size, b.size)) >= 0.25; };
 const clean = (s: unknown) => String(s ?? '').replace(/\s*—\s*/g, ', ').replace(/\s*–\s*/g, ' - ').replace(/ {2,}/g, ' ').trim();
 const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
 const ilWhen = (iso: string) => new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(iso));
@@ -152,7 +155,9 @@ async function tick(dry: boolean) {
   const recent = (recentAll || []).filter((s: Any) => s.section === 'national');
   const attach: Any[] = []; const fresh: typeof ok = [];
   for (const g of ok) {
-    const hit = (recentAll || []).find((s: Any) => same(toks(`${s.title} ${s.dek || ''}`), g.t));
+    // 1.11.2026: compared by titles only, without the words every war story shares. The group's words (with the item bodies) matched
+    // "רוביו: טראמפ טרם החליט" to "טראמפ ונתניהו שוחחו על איראן", so a new event was attached to an old story and never written.
+    const hit = (recentAll || []).find((s: Any) => { const st = core(toks(s.title)); return g.items.some((x) => sameTitle(core(toks(x.title || '')), st)); });
     if (hit) attach.push({ story: hit.id, ids: g.items.map((x) => x.id) }); else fresh.push(g);
   }
   if (dry) return { pool: pool.length, groups: ok.map((g) => ({ n: g.items.length, outlets: [...new Set(g.items.map((x) => x.source_id))], titles: g.items.slice(0, 3).map((x) => x.title) })), attach };
@@ -206,6 +211,16 @@ Deno.serve(async (req) => {
   const b: Any = await req.json().catch(() => ({}));
   try {
     if (b.action === 'tick') return J({ ok: true, ...(await tick(!!b.dry)) });
+    // 1.11.2026: items that were attached to the wrong national story go back to the queue (only items attached to a national story)
+    if (b.action === 'release' && Array.isArray(b.ids) && b.ids.length) {
+      const { data: its } = await sb.from('hns_items').select('id,cluster_id').in('id', b.ids.slice(0, 20));
+      const sids = [...new Set((its || []).map((x: Any) => x.cluster_id).filter(Boolean))];
+      const { data: nat } = await sb.from('hns_stories').select('id').in('id', sids.length ? sids : [0]).eq('section', 'national');
+      const ok = new Set((nat || []).map((x: Any) => x.id));
+      const ids = (its || []).filter((x: Any) => ok.has(x.cluster_id)).map((x: Any) => x.id);
+      if (ids.length) await sb.from('hns_items').update({ cluster_id: null }).in('id', ids);
+      return J({ ok: true, released: ids });
+    }
     if (['econ', 'econ_dry', 'econ_live'].includes(b.action)) return J({ ok: true, ...(await economy(b.action, S)) });
     return J({ ok: false, error: 'unknown action' }, 400);
   } catch (e) { return J({ ok: false, error: String((e as Error).message || e) }, 500); }
