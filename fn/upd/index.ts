@@ -92,6 +92,12 @@ async function searchRun(model: string, system: string, user: string, domains: s
     if (d.stop_reason !== 'pause_turn') break;
     messages.push({ role: 'assistant', content: d.content });
   }
+  // the search ended without a written answer (or only "nothing"): ask once for the final answer from what was read
+  const said = content.filter((c: Any) => c.type === 'text').map((c: Any) => c.text).join('');
+  if (!/ITEM|FACT/.test(said) && content.some((c: Any) => c.type === 'web_search_tool_result')) {
+    const d = await claude({ model, max_tokens: maxTok, system, messages: [...messages.slice(0, 1), { role: 'assistant', content: content.filter((c: Any) => c.type !== 'text') }, { role: 'user', content: 'כתוב עכשיו את התשובה הסופית בפורמט שנקבע, מתוך העמודים שכבר קראת. כל פריט עם הציטוט מהעמוד.' }], tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 1, allowed_domains: domains }] }).catch(() => null);
+    if (d) content = content.concat(d.content || []);
+  }
   return content;
 }
 // ITEM ... END blocks with the citations that sit inside each block (an item with no citation is dropped)
@@ -119,7 +125,7 @@ const GOV_DOMAINS = ['gov.il', 'knesset.gov.il', 'boi.org.il', 'cbs.gov.il', 'co
 const NEWS_DOMAINS = ['nadlancenter.co.il', 'calcalist.co.il', 'globes.co.il', 'themarker.com', 'bizportal.co.il', 'ice.co.il', 'magdilim.co.il', 'ynet.co.il', 'walla.co.il', 'mako.co.il', 'maariv.co.il', 'israelhayom.co.il', 'davar1.co.il', 'news1.co.il'];
 const SEARCH_SYS = `אתה עוזר מחקר במשרד עורכי דין לנדל"ן ומקרקעין בנתניה. מחפשים עדכונים אמיתיים מהימים האחרונים שחשובים לקונים, למוכרים, לבעלי דירות ולמשקיעים.
 כללים:
-- רק עדכונים מ-7 הימים האחרונים (בדוק את התאריך שבעמוד). לא מדריכים כלליים ולא כתבות ישנות.
+- רק עדכונים מ-14 הימים האחרונים (בדוק את התאריך שבעמוד). לא מדריכים כלליים ולא כתבות ישנות.
 - כתוב את כל הפריטים בתשובה הסופית אחת, וכל פריט בנוי מהמשפטים שמצוטטים מהמקור (עם הציטוט בתוך הפריט).
 - כל פריט חייב להישען על עמוד שקראת בחיפוש, עם ציטוט. בלי לנחש תאריכים, מספרים או שמות.
 - לא אתרים של עורכי דין או משרדי עורכי דין.
@@ -135,7 +141,7 @@ async function sweep(kind: 'gov' | 'news', debug = false) {
   const ask = kind === 'gov'
     ? 'חפש עדכונים רשמיים מהימים האחרונים: החלטות מיסוי וחוזרים של רשות המסים, החלטות ועדות ערר, פסקי דין של העליון והמחוזי בנדל"ן ובמקרקעין, החלטות מועצת רשות מקרקעי ישראל ומכרזים, מנהל התכנון, רשם המקרקעין, משרד הבינוי והשיכון והרשות להתחדשות עירונית, ריבית בנק ישראל ומשכנתאות, מדד מחירי הדירות של הלמ"ס, חקיקה בכנסת שנוגעת לדירות.'
     : 'חפש חדשות נדל"ן ומשפט מהימים האחרונים באתרי החדשות: מיסוי מקרקעין, פסקי דין בעסקאות דירה ובבתים משותפים, התחדשות עירונית ופינוי בינוי, משכנתאות וריבית, שינויי חקיקה ונהלים, תכנון ובנייה, ונתניה והשרון.';
-  const content = await searchRun(kind === 'gov' ? REG : CHEAP, SEARCH_SYS, `התאריך היום: ${ilDay()}.\n${ask}\nחפש, קרא, ותן את התשובה בפורמט שנקבע.`, kind === 'gov' ? GOV_DOMAINS : NEWS_DOMAINS, 6, 5000);
+  const content = await searchRun(REG, SEARCH_SYS, `התאריך היום: ${ilDay()}.\n${ask}\nחפש, קרא, ותן את התשובה בפורמט שנקבע.`, kind === 'gov' ? GOV_DOMAINS : NEWS_DOMAINS, 6, 5000);
   if (debug) { const txt = content.filter((c: Any) => c.type === 'text'); return [{ debug: true, blocks: content.length, texts: txt.length, cites: txt.reduce((a: number, c: Any) => a + (c.citations || []).length, 0), text: txt.map((c: Any) => c.text).join('').slice(0, 2500) }]; }
   return citedBlocks(content).map(({ field, cites }) => ({
     title: field('כותרת'), date: field('תאריך').slice(0, 10), what: field('מה קרה'), url: cites[0].url, source: field('מקור') || cites[0].title, via: kind,
