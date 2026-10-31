@@ -29,6 +29,16 @@ const say = (s) => { console.log(s); log.push(s); };
 // depth: how many sub-category levels to walk; cap: at most this many photos from this category; alt: Hebrew description.
 const N = 'נתניה';
 const ROOTS = [
+  // 31.10.2026 (Yakir): VENUE photos, walked first so no other root takes them. Each keeps its venue key; the build uses a venue
+  // photo only for a story whose event happened at that venue (src/lib/imgtopics.mjs VENUES). Never as a generic sports photo.
+  ...[['Netanya Stadium', 'netanya', 'אצטדיון נתניה'], ['Sammy Ofer Stadium', 'sammy-ofer', 'אצטדיון סמי עופר בחיפה'], ['Bloomfield Stadium', 'bloomfield', 'אצטדיון בלומפילד בתל אביב'],
+    ['Teddy Stadium', 'teddy', 'אצטדיון טדי בירושלים'], ['Turner Stadium', 'turner', 'אצטדיון טרנר בבאר שבע'], ['HaMoshava Stadium', 'hamoshava', 'אצטדיון המושבה בפתח תקווה'],
+    ['Green Stadium', 'green', 'האצטדיון הירוק בנוף הגליל'], ['Doha Stadium', 'doha', 'אצטדיון דוחא בסכנין'], ['Kiryat Shmona Municipal Stadium', 'kiryat-shmona', 'האצטדיון העירוני בקריית שמונה'],
+    ['Haberfeld Stadium', 'haberfeld', 'אצטדיון הברפלד בראשון לציון'], ['Netanya Sports Hall', 'netanya-hall', 'היכל הספורט בנתניה']]
+    .map(([cat, venue, alt]) => ({ cat, depth: 1, cap: 8, set: 'stadium', venue, topics: ['football'], place: null, alt, allow: /match|stadium|sport|players|ceremon/i })),
+  // generic football (no identifiable venue): balls, goals, nets, grass pitches
+  ...['Association footballs', 'Footballs on grass', 'Association football goals', 'Football goals', 'Goal nets', 'Association football pitches']
+    .map((cat) => ({ cat, depth: 1, cap: 8, set: 'football', venue: '', topics: ['football'], place: null, alt: 'כדורגל', allow: /match/i })),
   { cat: 'Beaches of Netanya', depth: 2, cap: 40, topics: ['beach', 'sea', 'tourism'], place: N, alt: 'חוף הים בנתניה' },
   { cat: 'Netanya Promenade', depth: 1, cap: 18, topics: ['promenade', 'sea', 'tourism'], place: N, alt: 'הטיילת של נתניה' },
   { cat: 'Netanya cliffs', depth: 1, cap: 10, topics: ['sea', 'nature', 'beach'], place: N, alt: 'המצוק מול הים בנתניה' },
@@ -107,8 +117,8 @@ const ROOTS = [
     ['election', 'קלפי', /election|ballot|campaign/i, ['Ballot boxes', 'Ballot boxes in Israel', 'Ballot papers of Israel', 'Polling stations in Israel', 'Ballots', 'Voting booths', 'Polling places', 'Polling stations', 'Transparent ballot boxes', 'Ballot boxes in Germany', 'Ballot boxes in France', 'Ballot boxes in Poland', 'Envelopes']],
     ['money', 'כסף ושקלים', null, ['Israeli new shekel coins', 'Coins of Israel', 'Israeli new shekel banknotes', 'Banknotes of Israel', 'Israeli new shekel', 'Israeli new sheqel', 'Coins of the Israeli new shekel', 'Piggy banks', 'Calculators', 'Stacks of coins', 'Coins in hands', 'Wallets', 'Cash registers']],
     ['realestate', 'בנייני מגורים', null, ['Apartment buildings in Israel', 'Residential buildings in Israel', 'House keys', 'Keys (locks)']],
-    ['football', 'מגרש כדורגל', /match/i, ['Netanya Stadium', 'Sammy Ofer Stadium', 'Bloomfield Stadium', 'Teddy Stadium', 'Turner Stadium', 'Association football pitches', 'Football pitches in Israel', 'Association footballs']],
-    ['basketball', 'מגרש כדורסל', null, ['Basketball courts in Israel', 'Basketball courts', 'Basketball hoops', 'Basketballs', 'Menora Mivtachim Arena', 'Pais Arena Jerusalem']],
+    ['football', 'מגרש כדורגל', /match/i, ['Football pitches in Israel']],
+    ['basketball', 'מגרש כדורסל', null, ['Basketball courts in Israel', 'Basketball courts', 'Basketball hoops', 'Basketballs']],
     ['culture', 'במה ותרבות', /concert|festival/i, ['Theatres in Israel', 'Habima Theatre', 'Concert halls in Israel', 'Stage lighting', 'Concert stages', 'Cameri Theatre']],
     ['market', 'שוק', null, ['Markets in Israel', 'Carmel Market', 'Mahane Yehuda Market', 'Netanya market', 'Fruit and vegetable stalls', 'Hatikva Market', 'Levinsky Market', 'Market stalls', 'Fruit stalls', 'Vegetable stalls', 'Spices in markets', 'Produce markets']],
     ['transport', 'תחבורה ציבורית', null, ['Buses in Israel', 'Israel Railways trains', 'Israel Railways rolling stock', 'Bus stops in Israel', 'Bus terminals in Israel', 'Netanya railway station']],
@@ -255,7 +265,7 @@ for (let i = 0; i < ids.length; i += 50) {
     const licUrl = strip(em(m, 'LicenseUrl'));
     if (/^cc /i.test(lic) && !/^https?:/.test(licUrl)) { drop('no license url'); continue; }
     cand.push({ pageid: p.pageid, title: p.title, root: f.root.cat, cap: f.root.cap, alt: f.root.alt, author, license: lic, licenseUrl: licUrl,
-      set: f.root.set || null, page: ii.descriptionurl, thumb: ii.thumburl || ii.url, ow: ii.width, oh: ii.height, year, score, places: [...places], topics: [...topics] });
+      set: f.root.set || null, ...(f.root.venue ? { venue: f.root.venue } : {}), page: ii.descriptionurl, thumb: ii.thumburl || ii.url, ow: ii.width, oh: ii.height, year, score, places: [...places], topics: [...topics] });
   }
 }
 say(`dropped: ${JSON.stringify(why)}`);
@@ -283,7 +293,8 @@ for (const c of cand.sort((a, b) => Number(OK.has(b.pageid)) - Number(OK.has(a.p
   if (k.n >= c.cap || (k.au[c.author] || 0) >= 3) continue;
   // a topic set: at most 12 photos (the review keeps 6 to 10), at most 2 of one author
   const ks = c.set ? bySet.get(c.set) || { n: 0, au: {} } : null;
-  if (ks && (ks.n >= (THIN.has(c.set) ? 24 : 12) || (ks.au[c.author] || 0) >= 2)) continue;
+  // venue photos (set 'stadium'): up to 8 per venue (the root cap), so the set and author caps are wider
+  if (ks && (ks.n >= (c.set === 'stadium' ? 90 : THIN.has(c.set) ? 24 : 12) || (ks.au[c.author] || 0) >= (c.set === 'stadium' ? 4 : 2))) continue;
   if (ks) { ks.n++; ks.au[c.author] = (ks.au[c.author] || 0) + 1; bySet.set(c.set, ks); }
   k.n++; k.au[c.author] = (k.au[c.author] || 0) + 1; byRoot.set(c.root, k); keep.push(c);
 }

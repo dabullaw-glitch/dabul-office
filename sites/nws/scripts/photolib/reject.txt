@@ -205,3 +205,22 @@
 65389615
 65389611
 166420812
+# 31.10.2026 (Yakir: a Finnish "VAALI" ballot on an election story): anything specific to another country never shows (foreign
+# ballots, stamps, flags, landmarks, signs). Venue photos (stadiums, hospitals, courts...) STAY in the library: they are labelled by
+# venue and used only for a story whose event happened at that venue (src/lib/imgtopics.mjs VENUES, live.imglabels).
+# election: Czech, Finnish (VAALI stamp), Moldovan, Icelandic polling stations and ballots
+96787258
+113831758
+114818334
+65918819
+63386673
+149369664
+# basketball: Mexico City landmark, a street in Vienna
+58302191
+71554388
+# security: Mexico City building, a French catamaran, Cologne cathedral square cameras, East German museum handcuffs
+53664573
+86140512
+100283376
+152990119
+153122534
