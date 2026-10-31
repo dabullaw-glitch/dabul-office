@@ -455,7 +455,9 @@ export const NETANYA_PLACES = PLACES.filter((p) => p.kind === 'neighborhood').ma
   // neutral: no place photo at all (the topic illustration, else the section's neutral illustration, else stock)
   // 31.10.2026: may this photo show on this story? its vision label (labelOk), never a photo the vision check failed for this story,
   // and while the AI budget brake is on, only generic photos
-  const okFor = (a: Article, p: LibPhoto) => { const l = IMG_LABELS[p.id] || ''; return labelOk(l, a) && !(IMG_BRAKE && l.startsWith('s:')) && !(LIVE_FIX[a.slug]?.bad || []).includes(p.id); };
+  // a sports photo of a specific venue never comes through the topic pool (club names in a story do not say where it was played):
+  // only through venueOf above
+  const okFor = (a: Article, p: LibPhoto) => { const l = IMG_LABELS[p.id] || ''; if ((p.set === 'football' || p.set === 'stadium' || p.set === 'basketball') && !l.startsWith('g')) return false; return labelOk(l, a) && !(IMG_BRAKE && l.startsWith('s:')) && !(LIVE_FIX[a.slug]?.bad || []).includes(p.id); };
   // stock photos of a stadium: only for a match played at that venue (checked by eye against Commons photos of the venue)
   // stadium-day shows the stadium with its Hebrew name "אצטדיון נתניה" on the facade, stadium-aerial the same stadium from above
   // (checked by eye 31.10.2026); stadium-night (Brighton) and stadium-crowd (Brazil) are foreign: never
