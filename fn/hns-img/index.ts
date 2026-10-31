@@ -17,6 +17,7 @@
 //   the quota, nothing more is tried for an hour (29.10.2026: the allowance turned out not to free up exactly at 00:00 UTC, so a
 //   whole-day block left the stories without images all day); the story gets image_note and the next try is an hour later.
 // The site shows every AI image with the label "תמונה להמחשה"; the alt text (Hebrew) describes the scene.
+import { vetRoute } from './vet.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -215,6 +216,8 @@ Deno.serve(async (req) => {
   if (!S.CRON_SECRET || req.headers.get('x-cron-secret') !== S.CRON_SECRET) return J({ ok: false }, 401);
   const body: Any = await req.json().catch(() => ({}));
   try {
+    // 31.10.2026: the photo labels and the vision check of the story pictures (vet.ts)
+    if (String(body.action || '').startsWith('vet_')) return J(await vetRoute(body));
     if (body.action === 'tick') return J({ ok: true, ...(await tick()) });
     if (body.action === 'one') {
       const { data: st } = await sb.from('hns_stories').select('id,section,kind,title,dek,body,places,image_prompt,image_alt,image_note,state').eq('id', Number(body.id)).maybeSingle();

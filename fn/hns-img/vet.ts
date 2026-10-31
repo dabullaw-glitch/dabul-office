@@ -1,4 +1,4 @@
-// nws-imgvet (31.10.2026): the photo rules of nws.co.il (חדשות נתניה והשרון), after Yakir saw a Maccabi Netanya story with a photo of
+// hns-img/vet.ts (31.10.2026): the photo rules of nws.co.il (חדשות נתניה והשרון), after Yakir saw a Maccabi Netanya story with a photo of
 // Turner Stadium in Be'er Sheva ("שמים תמונה של אצטדיון אחר לגמרי שלא קשור לכלום ... זה לא יכול להיות רציני ככה") and an election
 // story with a Finnish ballot stamped "VAALI".
 //
@@ -27,17 +27,16 @@
 // BUDGET: every call is priced into ai_cost (fn 'nws-imgvet'). When this month's cost + hns_config ai_extra.untracked_usd reaches
 //   extra_stop_usd, the vet is skipped and nwslive imgfix.brake = true, so the build uses only generic pictures (no 's:' photos).
 //
-// POST (x-cron-secret):
-//   {action:'label', ids?:[...], stock?:[...], force?}  label library photos (default: all unlabelled, at most 40 per call) and stock
-//   {action:'tick', days?:2, max?:30}                     cron every 10 minutes: vet new stories / changed pictures
-//   {action:'vet', ids:[story ids], force?}              vet these stories now
-//   {action:'live'}                                      rebuild nwslive imglabels from nwsimglab
+// POST hns-img (x-cron-secret):
+//   {action:'vet_label', ids?:[...], stock?:[...], force?, max?}  label library photos (default: all unlabelled, at most 40 per call) and stock
+//   {action:'vet_tick', days?:2, max?:30}                     cron every 10 minutes: vet new stories / changed pictures
+//   {action:'vet_vet', ids:[story ids], force?}              vet these stories now
+//   {action:'vet_live'}                                      rebuild nwslive imglabels from nwsimglab
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
 type Any = any;
 const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
-const J = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { 'content-type': 'application/json; charset=utf-8' } });
 const SITE = 'https://nws.co.il';
 const LIBRAW = 'https://raw.githubusercontent.com/dabullaw-glitch/dabul-office/nws-photolib';
 const LABEL_MODEL = 'claude-sonnet-5-5';
@@ -232,15 +231,14 @@ async function tick(b: Any) {
   return { checked: out.length, calls, failed: out.filter((r: Any) => r.ok === false), errors: out.filter((r: Any) => r.error).slice(0, 5) };
 }
 
-Deno.serve(async (req) => {
+// Lives inside hns-img (the project reached its limit of edge functions): hns-img routes every action that starts with 'vet_' here.
+export async function vetRoute(b: Any) {
   await setup();
-  if (!S.CRON_SECRET || req.headers.get('x-cron-secret') !== S.CRON_SECRET) return J({ ok: false }, 401);
-  const b: Any = await req.json().catch(() => ({}));
   try {
-    if (b.action === 'label') return J({ ok: true, ...(await label(b)) });
-    if (b.action === 'live') return J({ ok: true, ...(await live()) });
-    if (b.action === 'tick') return J({ ok: true, ...(await tick(b)) });
-    if (b.action === 'vet') return J({ ok: true, ...(await tick({ ...b, max: 60 })) });
-    return J({ ok: false, error: 'unknown action' }, 400);
-  } catch (e) { return J({ ok: false, error: String((e as Error).message || e) }, 500); }
-});
+    if (b.action === 'vet_label') return { ok: true, ...(await label(b)) };
+    if (b.action === 'vet_live') return { ok: true, ...(await live()) };
+    if (b.action === 'vet_tick') return { ok: true, ...(await tick(b)) };
+    if (b.action === 'vet_vet') return { ok: true, ...(await tick({ ...b, max: 60 })) };
+    return { ok: false, error: 'unknown action' };
+  } catch (e) { return { ok: false, error: String((e as Error).message || e) }; }
+}
