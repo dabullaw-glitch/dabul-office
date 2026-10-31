@@ -227,7 +227,7 @@ hook = עד 40 תווים, החלק שעוצר את הגלילה. sub = עד 55 
 photo = נושא התמונה, אחד מ: court (בית משפט), tax (מס), money (ריבית ומשכנתאות), urban (פינוי בינוי ובנייה), towers (בניינים), coast (עיר חוף), contract (חוזה ועסקה), home (בית ודירה).
 החזר JSON בלבד:
 {"tpl":"number|question|split|list", "kicker":"", "hero":"", "heroLabel":"", "hook":"", "sub":"", "items":[], "photo":"", "post":"הטקסט המלא", "sourceName":"שם הגוף הראשוני (עדיף) או האתר", "sourceUrl":"קישור למקור הראשוני אם יש, אחרת לכתבה"}`;
-async function makePost(id: string, r: Any) {
+async function makePost(id: string, r: Any, dry = false) {
   const it = r.item || {};
   const pg = await sourcePage(it.source?.url || '');
   const fixes = (r.fixes || []).map((f: Any) => `- ${f.note}`).join('\n');
@@ -275,13 +275,20 @@ async function makePost(id: string, r: Any) {
   o.tpl = tpl; o.photoId = photoId;
   const img = `${env('SUPABASE_URL')}/storage/v1/object/public/pv/${path}`;
   const t = r.tok || tok();
-  await merge('updreq', id, { status: 'awaiting', v, tok: t, post: { ...o, text, img, imgSq: sq ? `${env('SUPABASE_URL')}/storage/v1/object/public/pv/upd/${id}-v${v}-sq.png` : '', sourceUrl: srcUrl }, sentAt: new Date().toISOString(), error: '' });
+  await merge('updreq', id, { status: dry ? 'dry' : 'awaiting', v, tok: t, post: { ...o, text, img, imgSq: sq ? `${env('SUPABASE_URL')}/storage/v1/object/public/pv/upd/${id}-v${v}-sq.png` : '', sourceUrl: srcUrl }, sentAt: new Date().toISOString(), error: '' });
+  if (dry) return { dry: true, img, tpl: o.tpl };
+  return await sendPost(id, t, o.headline, text, img);
+}
+// the Telegram approval of a prepared post (photo with the buttons; the full text again when it is longer than a caption)
+async function sendPost(id: string, t: string, headline: string, text: string, img: string) {
+  const o = { headline };
   const cap = `📝 פוסט לאישור (פייסבוק ולינקדאין)\n${o.headline}\n\n${text}`;
   const sent = await tgApi('sendPhoto', { photo: img, caption: cap.length > 1000 ? cap.slice(0, 990) + '…' : cap, reply_markup: { inline_keyboard: buttons(t) } });
   let tgOk = !!sent?.ok;
   if (!tgOk) tgOk = !!(await tg(`📝 פוסט לאישור: ${o.headline}\n${img}\n\n${text}`, buttons(t)))?.ok;
   else if (cap.length > 1000) await tg(`הטקסט המלא של הפוסט:\n\n${text}`);
   await merge('updreq', id, { tgOk, tgMsg: sent?.result?.message_id || null });
+  await merge('updreq', id, { status: 'awaiting' });
   return { post: o.headline, img };
 }
 
@@ -506,6 +513,8 @@ Deno.serve(async (req) => {
       const up = await admin().storage.from('pv').upload('upd/_test.png', png, { contentType: 'image/png', upsert: true });
       return json({ ok: !up.error, error: up.error?.message, size: png.length });
     }
+    if (b.action === 'postdry') { const r = await getDoc('updreq', String(b.id)); return json({ ok: true, ...(await makePost(String(b.id), r, true)) }); }
+    if (b.action === 'postsend') { const r = await getDoc('updreq', String(b.id)); if (r?.status !== 'dry') return json({ ok: false, error: 'not a prepared post' }); return json({ ok: true, ...(await sendPost(String(b.id), r.tok, r.post.headline, r.post.text, r.post.img)) }); }
     if (b.action === 'sweepdebug') return json({ ok: true, res: await sweep(b.kind === 'news' ? 'news' : 'gov', true) });
     if (b.action === 'artdry') { const r = await getDoc('updreq', String(b.id)); return json({ ok: true, ...(await writeArticle(String(b.id), r, true)) }); }
     return json({ error: 'action?' }, 400);
