@@ -1,0 +1,168 @@
+{
+ "at": "2026-10-31T10:22:44.442Z",
+ "hours": 26,
+ "checked": 20,
+ "mismatched": 0,
+ "rows": [
+  {
+   "u": "/israel/n224/",
+   "t": "קטאר ופקיסטן מתווכות: לפי מקורות, ארה\"ב ואיראן לקראת שיחות ישירות",
+   "topic": "economy/low",
+   "where": "outside",
+   "img": "stock:road-aerial",
+   "why": ""
+  },
+  {
+   "u": "/blog/n220/",
+   "t": "פינוי גזם ופסולת גדולה בנתניה: איך מזמינים ומתי מוציאים",
+   "topic": "municipal/high",
+   "where": "netanya",
+   "img": "stock:beach-sunset",
+   "why": ""
+  },
+  {
+   "u": "/tourism/n216/",
+   "t": "מזג האוויר בנתניה, יום שבת 31.10: בין 18 ל-25 מעלות",
+   "topic": "weather/high",
+   "where": "netanya",
+   "img": "c184081050 [weather]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n215/",
+   "t": "מכלית נפט נפגעה בהורמוז, טראמפ: איראן רוצה לדבר",
+   "topic": "accident/high",
+   "where": "outside",
+   "img": "c109225160 [ambulance]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n214/",
+   "t": "משמרות המהפכה: תקפנו מכלית במצר הורמוז",
+   "topic": "accident/high",
+   "where": "outside",
+   "img": "c152978421 [ambulance]",
+   "why": ""
+  },
+  {
+   "u": "/community/n213/",
+   "t": "סיכום היום בנתניה ובשרון, יום שישי 30.10: 19 ידיעות",
+   "topic": "none",
+   "where": "netanya",
+   "img": "stock:city-buildings",
+   "why": ""
+  },
+  {
+   "u": "/israel/n211/",
+   "t": "מתווכים קטארים חזרו לטהרן בניסיון לקדם הסכם זמני",
+   "topic": "roadworks/low",
+   "where": "outside",
+   "img": "stock:city-buildings",
+   "why": ""
+  },
+  {
+   "u": "/israel/n210/",
+   "t": "סעודיה: כטב\"ם שיגרו החות'ים יורט באזור ריאד",
+   "topic": "security/high",
+   "where": "outside",
+   "img": "c100283376 [security]",
+   "why": ""
+  },
+  {
+   "u": "/blog/n208/",
+   "t": "דוח חניה בנתניה: איך משלמים, מערערים ומבקשים להישפט",
+   "topic": "traffic/high",
+   "where": "netanya",
+   "img": "c79196836 [roadworks]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n207/",
+   "t": "צה\"ל הרס את בתי מבצעי הפיגוע הקטלני בצומת יהודה",
+   "topic": "security/high",
+   "where": "outside",
+   "img": "c55049294 [security]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n206/",
+   "t": "צה\"ל: חוסל מפקד חוליה בזרוע הצבאית של חמאס",
+   "topic": "security/high",
+   "where": "outside",
+   "img": "c58389902 [security]",
+   "why": ""
+  },
+  {
+   "u": "/sports/n204/",
+   "t": "אליצור נתניה ניצחה את אליצור יבנה בליגה הלאומית בכדורסל",
+   "topic": "sports/high",
+   "where": "netanya",
+   "img": "c58204415 [basketball]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n201/",
+   "t": "צה\"ל ושב\"כ: ארבעה פעילי חמאס חוסלו בתקיפות בדרום רצועת עזה",
+   "topic": "security/high",
+   "where": "outside",
+   "img": "c62381434 [police]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n199/",
+   "t": "משמרות המהפכה: שתי מכליות נעצרו במצר הורמוז אחרי תקריות",
+   "topic": "police/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sports/n197/",
+   "t": "שוער עירוני טבריה נבחר לשחקן המחזור השמיני בליגת העל",
+   "topic": "sports/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sports/n195/",
+   "t": "מכבי נתניה מארחת את הפועל ירושלים בשבת ב-19:30",
+   "topic": "sports/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n194/",
+   "t": "צה\"ל: שני מחסני נשק של חמאס הושמדו ברצועת עזה",
+   "topic": "security/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sports/n193/",
+   "t": "אביב אברהם, קפטן מכבי נתניה לשעבר, חתם בהפועל עפולה",
+   "topic": "sports/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/city/n192/",
+   "t": "מהנדסת העיר נתניה זומנה לשימוע, האופוזיציה מבקרת",
+   "topic": "municipal/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n190/",
+   "t": "מצבור נשק נתפס בכפר חבלה, ובג'נין נעצרו חשודים בפעילות טרור",
+   "topic": "security/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  }
+ ]
+}
