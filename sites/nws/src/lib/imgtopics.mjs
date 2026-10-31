@@ -149,3 +149,66 @@ export function checkPick(a, photo, netanyaPlaces = []) {
   if (!isPlace && T && !T.hard && T.sets.length && !setsOf(T, a).includes(photo.set)) return `${t.key} story with a ${photo.set} illustration`;
   return '';
 }
+
+// ---------------------------------------------------------------- the entity rule (31.10.2026, Yakir)
+// "חייב לחשוב יותר לעומק מה לעשות עם התמונות": a Maccabi Netanya story showed Turner Stadium (Be'er Sheva), another Sammy Ofer
+// (Haifa), an election story a Finnish "VAALI" ballot. The rule for EVERY story and topic:
+//  - a photo that shows a specific identifiable place, venue, building, landmark, team or event is used only when the story's
+//    event really happened there (Maccabi Netanya away at Maccabi Haifa -> Sammy Ofer is right; a home game -> only the Netanya
+//    Stadium; unknown venue -> never a venue photo);
+//  - anything specific to another country never shows;
+//  - otherwise a generic illustration that does not pretend to show a particular place, or the designed card of the section.
+// Every photo of the library and every stock photo carries a label from a vision check (hns-img vet.ts -> live.imglabels):
+// 'g' generic, 'x' never, 'p' a Netanya/Sharon place photo (the place rules decide), 's:<words>' only for a story that names it.
+// Venue photos (library set 'stadium') carry their venue key from their Commons category; the venue of a match comes from VENUES.
+export const VENUES = [
+  { key: 'netanya', rx: /אצטדיון נתניה|האצטדיון בנתניה|האצטדיון העירוני בנתניה|באצטדיון העירוני נתניה/, clubs: /מכבי נתניה|בית"ר נתניה|בית״ר נתניה/ },
+  { key: 'sammy-ofer', rx: /סמי עופר|סמי-עופר/, clubs: /מכבי חיפה|הפועל חיפה/ },
+  { key: 'bloomfield', rx: /בלומפילד/, clubs: /מכבי תל אביב|הפועל תל אביב|בני יהודה/ },
+  { key: 'teddy', rx: /אצטדיון טדי|בטדי|טדי קולק/, clubs: /בית"ר ירושלים|בית״ר ירושלים|הפועל ירושלים/ },
+  { key: 'turner', rx: /טרנר/, clubs: /הפועל באר שבע/ },
+  { key: 'hamoshava', rx: /המושבה/, clubs: /מכבי פתח תקו|הפועל פתח תקו/ },
+  { key: 'green', rx: /האצטדיון הירוק/, clubs: /מכבי בני ריינה|הפועל נוף הגליל/ },
+  { key: 'doha', rx: /דוחא/, clubs: /בני סכנין/ },
+  { key: 'kiryat-shmona', rx: /האצטדיון העירוני בקריית שמונה|האצטדיון העירוני קריית שמונה/, clubs: /הפועל קרית שמונה|הפועל קריית שמונה|עירוני קרית שמונה|עירוני קריית שמונה/ },
+  { key: 'haberfeld', rx: /הברפלד/, clubs: /הפועל ראשון לציון|מכבי ראשון/ },
+];
+const HOME_RX = /במגרשה|על מגרשה|משחק בית|במשחק הבית|במשחק ביתי|בבית מול|הביתה/;
+const AWAY_RX = /משחק חוץ|במשחק החוץ|בחוץ מול|כאורחת|התארחה|מתארחת|תתארח|יתארחו|התארחו/;
+/** where the story's match was played: a VENUES key, or '' when it is not known for sure.
+ *  sport: { next, last } from sport.json (fixture data), used only for a story published around that game's date */
+export function venueOf(a, sport = {}) {
+  const head = [a.title, a.dek].join(' ');
+  const text = [head, ...(Array.isArray(a.body) ? a.body.slice(0, 3) : [])].join(' ');
+  const named = VENUES.filter((v) => v.rx.test(text));
+  if (named.length === 1) return named[0].key;
+  if (named.length > 1) return '';
+  const netanyaClub = VENUES[0].clubs.test(text);
+  const others = VENUES.slice(1).filter((v) => v.clubs.test(text));
+  if (netanyaClub && HOME_RX.test(text) && !AWAY_RX.test(text)) return 'netanya';
+  if (netanyaClub && AWAY_RX.test(text) && !HOME_RX.test(text)) return others.length === 1 ? others[0].key : '';
+  // the fixture data: the game of Maccabi Netanya that the story is about (same opponent, published within 2 days of the game)
+  const at = Date.parse(a.published || '') || 0;
+  for (const g of [sport.next, sport.last]) {
+    if (!g || !g.opponent || !g.date || !netanyaClub) continue;
+    const gd = Date.parse(`${String(g.date).slice(0, 10)}T12:00:00Z`);
+    if (!gd || Math.abs(at - gd) > 2.5 * 864e5 || !text.includes(String(g.opponent).replace(/״/g, '"')) && !text.includes(String(g.opponent))) continue;
+    if (g.home) return 'netanya';
+    const host = VENUES.slice(1).find((v) => v.clubs.test(String(g.opponent)));
+    return host ? host.key : '';
+  }
+  return '';
+}
+/** may this labelled photo illustrate this story? label from live.imglabels ('g', 'x', 'p', 's:<words>'); no label: no */
+export function labelOk(label, a) {
+  if (!label || label === 'x') return false;
+  if (label === 'g' || label === 'p') return true;
+  if (label.startsWith('s:')) {
+    // a city or region name alone is too broad (a Hadera traffic story must not get the Hadera hospital): only the entity's own words
+    const broad = new Set([...OUTSIDE.map((x) => x.trim()), 'נתניה', 'ישראל', 'השרון', 'תל אביב', 'ירושלים', 'חיפה', 'באר שבע', 'פתח תקווה', 'פתח תקוה', 'חדרה', 'אשדוד', 'יפו', 'טבריה', 'רמלה', 'בני ברק', 'בת ים', 'ראשון לציון', 'קריית שמונה', 'קרית שמונה']);
+    const words = label.slice(2).split('|').map((w) => w.trim()).filter((w) => w.length >= 2 && !broad.has(w));
+    const head = [a.title, a.dek].join(' ');
+    return words.some((w) => head.includes(w));
+  }
+  return false;
+}

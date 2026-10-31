@@ -208,7 +208,7 @@ async function vetStory(st: Any, force: boolean) {
     const fx: Any = (await getDoc('nwslive', 'imgfix')) || {};
     const fixes = { ...(fx.fixes || {}) };
     const prevFix = fixes[id] || {};
-    fixes[id] = { img: k.key, bad: [...new Set([...(prevFix.bad || []), k.key])], why: String(o.why || '').slice(0, 160), at: new Date().toISOString(), ...(k.kind === 'ai' || prevFix.noai ? { noai: true } : {}) };
+    fixes[id] = { img: k.key, bad: [...new Set([...(prevFix.bad || []), k.key])], why: String(o.why || '').slice(0, 160), at: new Date().toISOString(), ...(k.kind === 'ai' || k.kind === 'own' || prevFix.noai ? { noai: true } : {}) };
     await merge('nwslive', 'imgfix', { fixes, brake: BRAKE, at: new Date().toISOString() });
   }
   return { id, img: k.key, ok, why: o.why };

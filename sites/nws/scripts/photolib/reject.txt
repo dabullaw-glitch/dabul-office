@@ -224,3 +224,5 @@
 100283376
 152990119
 153122534
+# Jericho entrance (West Bank desert road), labelled generic by mistake: a specific place
+17896002

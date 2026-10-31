@@ -5,7 +5,7 @@ import { LANG_PREFIX } from '../data/site';
 import { SECTIONS, SECTION_BY_KEY, NAV_ORDER, CORE_SECTIONS, type SectionKey } from '../data/sections';
 import { PLACES, PLACE_BY_HE } from '../data/places';
 // @ts-ignore a plain JS module, shared with the daily self check (scripts/imgcheck.mjs)
-import { topicOf, whereOf, checkPick, setsOf, TOPIC_BY_KEY, SECTION_NEUTRAL, OUTSIDE } from './imgtopics.mjs';
+import { topicOf, whereOf, checkPick, setsOf, TOPIC_BY_KEY, SECTION_NEUTRAL, OUTSIDE, venueOf, labelOk } from './imgtopics.mjs';
 
 export interface Article {
   slug: string; section: SectionKey; title: string; dek: string; body: string[]; keyPoints: string[]; whatItMeans: string;
@@ -154,7 +154,14 @@ function fromFeed(s: any): any {
 const FEED_JSON: any = readJson('feed.json', { stories: [] });
 // 29.10.2026: live service data the engine keeps (hns-feed 'live': the duty pharmacy and more), for the /now/ pages
 export const SERVICES: any = FEED_JSON.live || {};
-const FEED: any[] = (FEED_JSON.stories || []).filter((s: any) => s && s.id && s.title && (s.body || []).length).map(fromFeed);
+// 31.10.2026 (Yakir: the photo must show the story's real place/entity/event): the vision labels of every photo (live.imglabels) and
+// the fixes of the vision check of every story (live.imgfix), both written by hns-img vet.ts. An AI image that failed the check is
+// dropped (noai) and the story gets the safe pick below.
+const IMG_LABELS: Record<string, string> = (FEED_JSON.live?.imglabels?.labels) || {};
+const LIVE_FIX: Record<string, any> = (FEED_JSON.live?.imgfix?.fixes) || {};
+const IMG_BRAKE = !!FEED_JSON.live?.imgfix?.brake;
+const FEED: any[] = (FEED_JSON.stories || []).filter((s: any) => s && s.id && s.title && (s.body || []).length).map(fromFeed)
+  .map((a: any) => (LIVE_FIX[a.slug]?.noai && a.ai ? { ...a, ai: null } : a));
 // social card: a hand made card (public/og/a), else the story's own image, else its section photo (1200x630 JPEG)
 const ogFor = (a: any) => fs.existsSync(path.resolve('public/og/a', `${a.slug}.png`)) ? `/og/a/${a.slug}.png`
   : a.ai?.crops?.length ? a.ai.crops[0].src : a.ai?.files?.length ? a.ai.files[a.ai.files.length - 1].src : `/img/stock/og/${stockFor(a.section, a.engineId ?? a.slug)}.jpg`;
@@ -358,6 +365,14 @@ export function stockFor(key: SectionKey, seed: string | number) {
   const n = typeof seed === 'number' ? seed : Number(String(seed).replace(/\D/g, '')) || hashOf(String(seed));
   return ph[n % ph.length];
 }
+// 31.10.2026: the designed card of a section (public/img/card, no photo at all): the safe picture when no photo truly fits
+const CARD_KEYS = new Set(['flash', 'national', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'leisure', 'sharon', 'tourism', 'law', 'economy', 'blog']);
+export function cardPic(section: string, alt = ''): Pic {
+  const k = CARD_KEYS.has(section) ? section : 'national';
+  return { ld: [{ src: `/img/card/x/${k}-16x9.jpg`, w: 1200, h: 675 }, { src: `/img/card/x/${k}-4x3.jpg`, w: 1200, h: 900 }, { src: `/img/card/x/${k}-1x1.jpg`, w: 1200, h: 1200 }],
+    ogW: 1200, ogH: 675, src: `/img/card/${k}-1600.webp`, srcset: `/img/card/${k}-400.webp 400w, /img/card/${k}-800.webp 800w, /img/card/${k}-1200.webp 1200w, /img/card/${k}-1600.webp 1600w`,
+    small: `/img/card/${k}-800.webp`, thumb: `/img/card/${k}-400.webp`, alt, w: 1600, h: 1067, ai: false, own: false, stock: true, kind: 'stock', credit: '', label: '', og: `/img/card/og/${k}.jpg` };
+}
 export function picOf(a: Article, _IMGS?: unknown): Pic {
   const ai = a.ai;
   if (ai) {
@@ -373,7 +388,7 @@ export function picOf(a: Article, _IMGS?: unknown): Pic {
     return p;
   }
   const pk = IMG_PICK.get(a.slug);
-  return pk?.lib ? libPic(pk.lib) : stockPic(pk?.stock || stockFor(a.section, a.engineId ?? a.slug));
+  return pk?.lib ? libPic(pk.lib) : pk?.card ? cardPic(pk.card) : stockPic(pk?.stock || stockFor(a.section, a.engineId ?? a.slug));
 }
 
 // ---------------------------------------------------------------- the photo library (30.10.2026)
@@ -382,7 +397,7 @@ export function picOf(a: Article, _IMGS?: unknown): Pic {
 // one of the ~20 fixed stock photos. An AI image or a photo of the story itself always wins; sponsored stories keep the stock photo.
 // The pick: the topic first (see IMG_PICK below); photos of a place only for place topics. Stories are picked oldest first, so a
 // new story never changes the photo of an older one. Without the library the stock photos stay.
-interface LibPhoto { id: string; page: string; author: string; license: string; licenseUrl: string; alt: string; places: string[]; topics: string[]; sq: number; set?: string }
+interface LibPhoto { id: string; page: string; author: string; license: string; licenseUrl: string; alt: string; places: string[]; topics: string[]; sq: number; set?: string; venue?: string }
 // photos removed after the visual review never show, even before the library branch is rebuilt without them
 const LIB_REJECT = new Set((() => { try { return fs.readFileSync(path.resolve('scripts/photolib/reject.txt'), 'utf8'); } catch { return ''; } })()
   .split('\n').map((l) => l.replace(/#.*/, '').trim()).filter(Boolean).map((n) => `c${n}`));
@@ -395,7 +410,9 @@ const TOPIC_OK = new Set(OK_LINES.filter((x) => !x[1]).map((x) => `c${x[0]}`));
 const ROLE = new Map<string, string[]>();
 for (const [id, role] of OK_LINES) if (role) ROLE.set(`c${id}`, [...(ROLE.get(`c${id}`) || []), `pick:${role}`]);
 const LIB: LibPhoto[] = ((readJson('photolib.json', { photos: [] }).photos || []) as LibPhoto[])
-  .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && (!p.set || TOPIC_OK.has(p.id)) && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)))
+  // 31.10.2026: only photos with a vision label that is not 'x' (foreign, faces, brands); venue photos (set 'stadium') need no
+  // review line: their venue comes from their Commons category and they show only for a match played at that venue
+  .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && (!p.set || p.set === 'stadium' || TOPIC_OK.has(p.id)) && !!IMG_LABELS[p.id] && IMG_LABELS[p.id] !== 'x' && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)))
   .map((p) => (ROLE.has(p.id) ? { ...p, topics: [...p.topics, ...ROLE.get(p.id)!] } : p));
 function libPic(p: LibPhoto): Pic {
   const b = `/img/lib/${p.id}`;
@@ -420,7 +437,7 @@ function libPic(p: LibPhoto): Pic {
 // (low confidence) gets the neutral illustration of its section, never a place photo. When a set is still empty: the generic
 // stock photo of the topic. src/data/imgfix.json (written by the daily self check) forces the neutral pick for a story.
 // No photo twice on the same day, fewer repeats within a week. This runs on every build, so every new story gets it at once.
-interface PickInfo { lib?: LibPhoto; stock?: string; topic: string; conf: string; where: string; why: string }
+interface PickInfo { lib?: LibPhoto; stock?: string; card?: string; topic: string; conf: string; where: string; why: string }
 export const IMG_PICK = new Map<string, PickInfo>();
 const IMG_FIX: Record<string, any> = readJson('imgfix.json', { fixes: {} }).fixes || {};
 export const NETANYA_PLACES = PLACES.filter((p) => p.kind === 'neighborhood').map((p) => p.he);
@@ -433,24 +450,42 @@ export const NETANYA_PLACES = PLACES.filter((p) => p.kind === 'neighborhood').ma
   const placePhotos = LIB.filter((p) => !p.set);
   const withLib = new Set(LIB.flatMap((p) => p.places));
   // neutral: no place photo at all (the topic illustration, else the section's neutral illustration, else stock)
+  // 31.10.2026: may this photo show on this story? its vision label (labelOk), never a photo the vision check failed for this story,
+  // and while the AI budget brake is on, only generic photos
+  const okFor = (a: Article, p: LibPhoto) => { const l = IMG_LABELS[p.id] || ''; return labelOk(l, a) && !(IMG_BRAKE && l.startsWith('s:')) && !(LIVE_FIX[a.slug]?.bad || []).includes(p.id); };
+  // stock photos of a stadium: only for a match played at that venue (checked by eye against Commons photos of the venue)
+  const STOCK_VENUE: Record<string, string> = { 'stadium-day': '?', 'stadium-aerial': '?', 'stadium-night': '?', 'stadium-crowd': '?' };
+  const stockOk = (a: Article, n: string) => { const l = IMG_LABELS[`stock:${n}`] || ''; if (STOCK_VENUE[n] !== undefined) return STOCK_VENUE[n] !== '?' && venueOf(a, SP0) === STOCK_VENUE[n] && l !== 'x'; return labelOk(l, a) && !(IMG_BRAKE && l.startsWith('s:')) && !(LIVE_FIX[a.slug]?.bad || []).includes(`stock:${n}`); };
+  // the safe end: a generic stock photo of the topic that passed its label, else the designed card of the section
+  const safeEnd = (a: Article, names: string[], why: string) => {
+    const ok = names.filter((n) => stockOk(a, n));
+    return ok.length ? { stock: ok[(a.engineId ?? hashOf(a.slug)) % ok.length], why } : { card: a.section, why: `${why} -> card` };
+  };
   const pickFor = (a: Article, t: any, where: string, neutral: boolean, at: number, today: Set<string>) => {
     const T = t && t.conf === 'high' ? TOPIC_BY_KEY[t.key] : null;
     const head = [a.title, a.dek].join(' ');
     const named = new Set([...NETANYA_PLACES, ...OUTSIDE].filter((n) => withLib.has(n) && (head.includes(n) || a.neighborhoods.includes(n))));
     let pool: LibPhoto[] = []; let why = '';
-    if (T && !T.hard && !neutral && where !== '') {
+    // a sports story: a photo of the venue only when the match was played there (venueOf: named in the story, home/away words, or
+    // the fixture data); otherwise the generic football / basketball illustrations
+    if (T && T.key === 'sports' && !neutral) {
+      const v = venueOf(a, SP0);
+      if (v) { pool = LIB.filter((p) => p.set === 'stadium' && p.venue === v && !(LIVE_FIX[a.slug]?.bad || []).includes(p.id)); why = pool.length ? `venue ${v}` : ''; }
+    }
+    if (!pool.length && T && !T.hard && !neutral && where !== '') {
       // a place topic: photos of the named place (or of Netanya, for a Netanya story) that show the topic
       const fit = (p: LibPhoto) => p.topics.some((x) => (T.placeTopics || []).includes(x));
       const exact = placePhotos.filter((p) => fit(p) && p.places.some((pl) => pl !== 'נתניה' && named.has(pl)));
       pool = exact.length ? exact : where === 'netanya' ? placePhotos.filter((p) => fit(p) && p.places.includes('נתניה')) : [];
       why = exact.length ? 'place' : pool.length ? 'netanya' : '';
     }
-    if (!pool.length && T) { pool = setsOf(T, a).flatMap((s: string) => bySet.get(s) || []); why = pool.length ? 'topic' : ''; }
-    if (!pool.length && !T) { pool = (SECTION_NEUTRAL[a.section] || []).flatMap((s: string) => bySet.get(s) || []); why = pool.length ? 'neutral' : ''; }
+    if (pool.length && !why.startsWith('venue')) pool = pool.filter((p) => okFor(a, p));
+    if (!pool.length && T) { pool = setsOf(T, a).flatMap((s: string) => bySet.get(s) || []).filter((p) => okFor(a, p)); why = pool.length ? 'topic' : ''; }
+    if (!pool.length && !T) { pool = (SECTION_NEUTRAL[a.section] || []).flatMap((s: string) => bySet.get(s) || []).filter((p) => okFor(a, p)); why = pool.length ? 'neutral' : ''; }
     if (!pool.length) {
-      // no library photo fits: the generic stock photo of the topic, or of the section (never a landmark)
-      const n = a.engineId ?? hashOf(a.slug);
-      return { stock: T ? T.stock[n % T.stock.length] : stockFor(a.section, n), why: T ? 'topic stock' : 'section stock' };
+      // no library photo fits: the generic stock photo of the topic, or of the section (never a landmark), that passed its label;
+      // else the designed card of the section
+      return T ? safeEnd(a, T.stock, 'topic stock') : safeEnd(a, SECTION_BY_KEY[a.section as SectionKey]?.photos || [], 'section stock');
     }
     let best: LibPhoto | null = null; let bestS = -Infinity;
     for (const p of pool) {
@@ -461,7 +496,7 @@ export const NETANYA_PLACES = PLACES.filter((p) => p.kind === 'neighborhood').ma
       if (s > bestS) { bestS = s; best = p; }
     }
     // every photo that fits was already used today (a small set): the generic stock photo of the topic, not the same photo twice
-    if (bestS < -50 && T && T.hard) return { stock: T.stock[(a.engineId ?? hashOf(a.slug)) % T.stock.length], why: 'topic stock (set used up today)' };
+    if (bestS < -50 && T && T.hard && !why.startsWith('venue')) return safeEnd(a, T.stock, 'topic stock (set used up today)');
     return { lib: best!, why };
   };
   for (const a of [...ARTICLES].reverse()) {
@@ -471,15 +506,15 @@ export const NETANYA_PLACES = PLACES.filter((p) => p.kind === 'neighborhood').ma
     const day = dayOf(a.published); const at = Date.parse(a.published) || 0;
     const today = usedDay.get(day) || new Set<string>();
     const fixed = !!IMG_FIX[a.slug];
-    let r: { lib?: LibPhoto; stock?: string; why: string } = pickFor(a, t, where, fixed, at, today);
+    let r: { lib?: LibPhoto; stock?: string; card?: string; why: string } = pickFor(a, t, where, fixed, at, today);
     if (fixed) r.why += ' (self check fix)';
     // the guard: the same check as the daily self check; a pick that fails it becomes the neutral pick
-    const bad = checkPick(a, r.lib ? r.lib : { stock: r.stock }, NETANYA_PLACES);
+    const bad = r.card || (r.lib && r.lib.set === 'stadium') ? '' : checkPick(a, r.lib ? r.lib : { stock: r.stock }, NETANYA_PLACES);
     if (bad && !fixed) { r = pickFor(a, t, where, true, at, today); r.why += ` (guard: ${bad})`; }
     IMG_PICK.set(a.slug, { ...r, topic: t?.key || '', conf: t?.conf || 'none', where });
-    const og = r.lib ? `/img/lib/${r.lib.id}-16x9.jpg` : `/img/stock/og/${r.stock}.jpg`;
+    const og = r.lib ? `/img/lib/${r.lib.id}-16x9.jpg` : r.card ? cardPic(r.card).og : `/img/stock/og/${r.stock}.jpg`;
     // the social card follows the photo, unless the story has a hand made card or an image of its own
-    if (!a.og || a.og.startsWith('/img/stock/og/') || a.og.startsWith('/img/lib/')) a.og = og;
+    if (!a.og || a.og.startsWith('/img/stock/og/') || a.og.startsWith('/img/lib/') || a.og.startsWith('/img/card/')) a.og = og;
     if (!r.lib) continue;
     today.add(r.lib.id); usedDay.set(day, today);
     lastUse.set(r.lib.id, [...(lastUse.get(r.lib.id) || []), at]);
