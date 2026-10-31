@@ -383,7 +383,8 @@ ${wr?.linkRules || ''}
 <meta>{"title":"","slug":"באנגלית-עם-מקפים","keyword":"","metaTitle":"עד 60 תווים","metaDescription":"140 עד 155 תווים","excerpt":"","coverAlt":"","coverTitle":"","coverKicker":""}</meta>
 <html>...כל המאמר...</html>`;
   const user = `העדכון: ${it.title}\n${it.summary}\nהמקור: ${it.source?.name} ${it.source?.url}\nתאריך: ${it.date}\n${r.note ? `הערה של יקיר: ${r.note}\n` : ''}${fixes ? `תיקונים שיקיר ביקש:\n${fixes}\n` : ''}\nהעובדות (עם מקורות):\n${facts}\n\nעמודי האתר לקישור פנימי (כותרת | כתובת):\n${links.slice(0, 400).join('\n')}\n\nמאמר הדוגמה (מבנה וסגנון בלבד, לא תוכן):\n${String(ex?.body || '').slice(0, 14000)}`;
-  const params = { model: r.batchModel || writer(), max_tokens: 20000, system: sys, messages: [{ role: 'user', content: user }] };
+  // 48k: the model thinks first (13.5k thinking tokens in the first live test cut the article at 20k)
+  const params = { model: r.batchModel || writer(), max_tokens: 48000, system: sys, messages: [{ role: 'user', content: user }] };
   if (dry) d = await claude(params);
   else if (!d) {
     const batchId = await batchSubmit(id, params);
@@ -399,6 +400,7 @@ ${wr?.linkRules || ''}
   const plain = html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<[^>]+>/g, ' ');
   const words = plain.split(/\s+/).filter(Boolean).length;
   const issues = badIn(plain + ' ' + JSON.stringify(meta));
+  if (d.stop_reason === 'max_tokens') issues.push('התשובה נחתכה');
   if (!meta.title || !html.includes('lvbl-article')) issues.push('מבנה חסר');
   if ((html.match(/lvbl-faq-item/g) || []).length !== 5) issues.push('צריך בדיוק 5 שאלות');
   if (words < 1200) issues.push(`קצר מדי (${words} מילים)`);
