@@ -454,7 +454,9 @@ export const NETANYA_PLACES = PLACES.filter((p) => p.kind === 'neighborhood').ma
   // and while the AI budget brake is on, only generic photos
   const okFor = (a: Article, p: LibPhoto) => { const l = IMG_LABELS[p.id] || ''; return labelOk(l, a) && !(IMG_BRAKE && l.startsWith('s:')) && !(LIVE_FIX[a.slug]?.bad || []).includes(p.id); };
   // stock photos of a stadium: only for a match played at that venue (checked by eye against Commons photos of the venue)
-  const STOCK_VENUE: Record<string, string> = { 'stadium-day': '?', 'stadium-aerial': '?', 'stadium-night': '?', 'stadium-crowd': '?' };
+  // stadium-day shows the stadium with its Hebrew name "אצטדיון נתניה" on the facade, stadium-aerial the same stadium from above
+  // (checked by eye 31.10.2026); stadium-night (Brighton) and stadium-crowd (Brazil) are foreign: never
+  const STOCK_VENUE: Record<string, string> = { 'stadium-day': 'netanya', 'stadium-aerial': 'netanya', 'stadium-night': '?', 'stadium-crowd': '?' };
   const stockOk = (a: Article, n: string) => { const l = IMG_LABELS[`stock:${n}`] || ''; if (STOCK_VENUE[n] !== undefined) return STOCK_VENUE[n] !== '?' && venueOf(a, SP0) === STOCK_VENUE[n] && l !== 'x'; return labelOk(l, a) && !(IMG_BRAKE && l.startsWith('s:')) && !(LIVE_FIX[a.slug]?.bad || []).includes(`stock:${n}`); };
   // the safe end: a generic stock photo of the topic that passed its label, else the designed card of the section
   const safeEnd = (a: Article, names: string[], why: string) => {
