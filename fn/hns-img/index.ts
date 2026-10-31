@@ -18,6 +18,7 @@
 //   whole-day block left the stories without images all day); the story gets image_note and the next try is an hour later.
 // The site shows every AI image with the label "תמונה להמחשה"; the alt text (Hebrew) describes the scene.
 import { vetRoute } from './vet.ts';
+import { realRoute } from './real.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -218,6 +219,8 @@ Deno.serve(async (req) => {
   try {
     // 31.10.2026: the photo labels and the vision check of the story pictures (vet.ts)
     if (String(body.action || '').startsWith('vet_')) return J(await vetRoute(body));
+    // 31.10.2026: real, credited photos from official releases and free-license portraits (real.ts)
+    if (String(body.action || '').startsWith('real_')) return J(await realRoute(body));
     if (body.action === 'tick') return J({ ok: true, ...(await tick()) });
     if (body.action === 'one') {
       const { data: st } = await sb.from('hns_stories').select('id,section,kind,title,dek,body,places,image_prompt,image_alt,image_note,state').eq('id', Number(body.id)).maybeSingle();

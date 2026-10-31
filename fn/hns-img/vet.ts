@@ -172,6 +172,7 @@ The picture FAILS if any of these is true:
 - it is about a different topic (basketball on a football story, a beach on a crime story) or contradicts the story;
 - it is an AI image that looks like a real photo of the actual event, of real named people or of a real identifiable place (a generic AI scene is fine);
 - it shows identifiable faces of people, or injured people, or readable brands/logos that are not part of the story.
+Exception (31.10.2026): a REAL credited photo that is the story's own image (an official release photo of the body that issued the story, or a free-license portrait of the public figure the story is about) may show that person or the officials, staff and vehicles of that body; it fails only for the other reasons above, or if it shows injured people, minors or suspects' faces, or a person clearly different from the story's subject.
 A generic illustration that fits the topic (a football on a pitch for a football story, a police light for a police story, a gavel for a court story, a coin for an economy story) PASSES, even though it is not the real event.
 Answer JSON only: {"ok":true|false,"why":"<short Hebrew reason>"}`;
 const SEC_HE: Record<string, string> = { flash: 'מבזקים', national: 'חדשות ארציות', city: 'העירייה', police: 'משטרה', realestate: 'נדל"ן', sports: 'ספורט', transport: 'תחבורה', community: 'קהילה וחינוך', health: 'בריאות', leisure: 'תרבות ובילוי', sharon: 'השרון', tourism: 'תיירות', law: 'משפט', blog: 'בלוג', economy: 'כלכלה' };
@@ -205,6 +206,10 @@ async function vetStory(st: Any, force: boolean) {
   if (k.kind === 'lib' || k.kind === 'stock') {
     const lab = await getDoc('nwsimglab', k.key);
     labelTxt = lab ? `Library label: ${lab.shows}${lab.entity ? ` (${lab.entity})` : ''}` : '';
+  } else if (k.kind === 'ai' && st.image_url && !st.image_model) {
+    // a real photo also lives under /ai/ on the site (scripts/img.mjs makes every story image small); see real.ts
+    const src: Any = st.extras?.image_src || {};
+    labelTxt = `This is a REAL credited photo, the story's own image (caption "צילום: ${st.extras?.image_credit || ''}")${src.type === 'commons' ? `: a free-license portrait of ${src.person || 'the person the story is about'}` : src.type === 'release' ? ': an official release photo of the body that issued the story' : ''}.`;
   } else if (k.kind === 'ai') labelTxt = 'This is an AI generated illustration (labelled "תמונה להמחשה" on the site).';
   else labelTxt = 'This is the story\'s own image (from the source).';
   const text = `Section: ${SEC_HE[st.section] || st.section}\nTitle: ${st.title}\nSummary: ${st.dek || ''}\n${labelTxt}\nJSON only.`;
@@ -228,8 +233,8 @@ async function tick(b: Any) {
   if (fx?.brake) await merge('nwslive', 'imgfix', { brake: false });
   const days = Math.min(Number(b.days) || 2, 30);
   const since = new Date(Date.now() - days * 864e5).toISOString();
-  const q = sb.from('hns_stories').select('id,title,dek,section,published_at,kind').eq('state', 'published').gte('published_at', since).order('published_at', { ascending: false }).limit(400);
-  const { data } = await (b.ids ? sb.from('hns_stories').select('id,title,dek,section,published_at,kind').in('id', b.ids.map(Number)) : q);
+  const q = sb.from('hns_stories').select('id,title,dek,section,published_at,kind,image_url,image_model,extras').eq('state', 'published').gte('published_at', since).order('published_at', { ascending: false }).limit(400);
+  const { data } = await (b.ids ? sb.from('hns_stories').select('id,title,dek,section,published_at,kind,image_url,image_model,extras').in('id', b.ids.map(Number)) : q);
   const rows = (data || []).filter((s: Any) => s.kind !== 'sponsored');
   const max = Math.min(Number(b.max) || 30, 60);
   const out: Any[] = []; let calls = 0;
