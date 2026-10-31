@@ -308,7 +308,7 @@ END`;
   const content = await searchRun(CHEAP, sys, `העדכון: ${it.title}\n${it.summary}\nהמקור: ${it.source?.name} ${it.source?.url}\n${r.note ? `הערה של יקיר: ${r.note}\n` : ''}חפש את המקור הראשוני (פסק הדין, ההחלטה, החוק) ומקורות רקע, ותן 6 עד 14 עובדות.`, ART_NEUTRAL, 6, 5000);
   const facts = citedBlocks(content, 'FACT').map(({ field, cites }) => ({ fact: field('עובדה'), url: cites[0].url, title: cites[0].title, quote: cites[0].quote.slice(0, 300) })).filter(f => f.fact);
   if (facts.length < 3) throw new Error('נמצאו מעט מדי עובדות עם מקור');
-  await merge('updreq', id, { status: 'write', facts, researchAt: new Date().toISOString() });
+  await merge('updreq', id, { status: 'write', facts, researchAt: new Date().toISOString(), lockAt: '' });
   return { facts: facts.length };
 }
 async function siteLinks() {
@@ -323,9 +323,50 @@ async function siteLinks() {
   return out;
 }
 const basic = (u: string, p: string) => 'Basic ' + btoa(String.fromCharCode(...new TextEncoder().encode(`${u}:${p.replace(/\s+/g, '')}`)));
+// 31.10.2026 (first live test): one synchronous call that writes 1,800+ words hit the edge gateway limit (504 after 150s) and
+// nothing was saved. The write now goes through Anthropic's Message Batches API: one tick submits the request (batchId on the
+// updreq doc) and the next ticks poll it; when it has ended, the text is checked, saved as a WP draft and sent to Yakir as before.
+// Batches have no time limit on our side and cost half. The dry run (artdry) still calls the model directly.
+function aiHdr() {
+  const h: Record<string, string> = { 'x-api-key': env('ANTHROPIC_API_KEY'), 'anthropic-version': '2023-06-01', 'content-type': 'application/json' };
+  if (env('ANTHROPIC_WORKSPACE_ID')) h['anthropic-workspace-id'] = env('ANTHROPIC_WORKSPACE_ID');
+  return h;
+}
+async function batchSubmit(id: string, params: Any) {
+  const r = await fetch('https://api.anthropic.com/v1/messages/batches', { method: 'POST', headers: aiHdr(), body: JSON.stringify({ requests: [{ custom_id: id.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 64), params }] }) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.id) throw new Error(`batch ${r.status}: ${String(j?.error?.message || '').slice(0, 160)}`);
+  return String(j.id);
+}
+// null while the batch is still running; the message when it has ended; throws when the request failed
+async function batchResult(batchId: string, model: string): Promise<Any | null> {
+  const r = await fetch(`https://api.anthropic.com/v1/messages/batches/${batchId}`, { headers: aiHdr() });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(`batch status ${r.status}`);
+  if (j.processing_status !== 'ended') return null;
+  if (!j.results_url) throw new Error('batch ended without results');
+  const rr = await fetch(j.results_url, { headers: aiHdr() });
+  const line = (await rr.text()).split('\n').map((x) => x.trim()).filter(Boolean)[0];
+  const res = line ? JSON.parse(line).result : null;
+  if (!res || res.type !== 'succeeded') throw new Error(`batch request ${res?.type || 'missing'}${res?.error?.error?.message ? ': ' + String(res.error.error.message).slice(0, 120) : ''}`);
+  const msg = res.message, u = msg.usage || {};
+  // batches are billed at half the list price
+  await admin().rpc('ai_cost_add', { p_fn: 'upd', p_model: model, p_in: Math.round((Number(u.input_tokens || 0) + Number(u.cache_read_input_tokens || 0) + Number(u.cache_creation_input_tokens || 0)) / 2), p_out: Math.round(Number(u.output_tokens || 0) / 2) }).then(() => null, () => null);
+  return msg;
+}
 async function writeArticle(id: string, r: Any, dry = false) {
   const it = r.item || {};
-  const [wr, ex, links] = await Promise.all([getDoc('artcfg', 'writer'), getDoc('artcfg', 'exemplar'), siteLinks()]);
+  // a submitted batch is polled first, without rebuilding the prompt (that reads the whole site index)
+  let d: Any = null;
+  if (!dry && r.batchId) {
+    d = await batchResult(r.batchId, r.batchModel || writer());
+    if (!d) {
+      if (Date.now() - Date.parse(r.batchAt || '') > 3 * 3600e3) { await merge('updreq', id, { batchId: '', lockAt: '' }); throw new Error('הכתיבה לקחה יותר משלוש שעות, מנסה שוב'); }
+      await merge('updreq', id, { lockAt: '' });
+      return { waiting: r.batchId };
+    }
+  }
+  const [wr, ex, links] = await Promise.all([getDoc('artcfg', 'writer'), getDoc('artcfg', 'exemplar'), d ? Promise.resolve([] as string[]) : siteLinks()]);
   const facts = (r.facts || []).map((f: Any, i: number) => `[${i + 1}] ${f.fact} (מקור: ${f.title} ${f.url})`).join('\n');
   const fixes = (r.fixes || []).map((f: Any) => `- ${f.note}`).join('\n');
   const sys = `אתה כותב מאמרי ניתוח לאתר dabullaw.co.il של "יקיר דבול - משרד עורכי דין". המאמר מנתח עדכון (פסק דין, החלטה או שינוי חקיקה) ומסביר לקוראים מה המשמעות עבורם.
@@ -342,7 +383,13 @@ ${wr?.linkRules || ''}
 <meta>{"title":"","slug":"באנגלית-עם-מקפים","keyword":"","metaTitle":"עד 60 תווים","metaDescription":"140 עד 155 תווים","excerpt":"","coverAlt":"","coverTitle":"","coverKicker":""}</meta>
 <html>...כל המאמר...</html>`;
   const user = `העדכון: ${it.title}\n${it.summary}\nהמקור: ${it.source?.name} ${it.source?.url}\nתאריך: ${it.date}\n${r.note ? `הערה של יקיר: ${r.note}\n` : ''}${fixes ? `תיקונים שיקיר ביקש:\n${fixes}\n` : ''}\nהעובדות (עם מקורות):\n${facts}\n\nעמודי האתר לקישור פנימי (כותרת | כתובת):\n${links.slice(0, 400).join('\n')}\n\nמאמר הדוגמה (מבנה וסגנון בלבד, לא תוכן):\n${String(ex?.body || '').slice(0, 14000)}`;
-  const d = await claude({ model: writer(), max_tokens: 20000, system: sys, messages: [{ role: 'user', content: user }] });
+  const params = { model: r.batchModel || writer(), max_tokens: 20000, system: sys, messages: [{ role: 'user', content: user }] };
+  if (dry) d = await claude(params);
+  else if (!d) {
+    const batchId = await batchSubmit(id, params);
+    await merge('updreq', id, { batchId, batchModel: params.model, batchAt: new Date().toISOString(), lockAt: '' });
+    return { batch: batchId };
+  }
   const t = textOf(d);
   const meta = JSON.parse((t.match(/<meta>([\s\S]*?)<\/meta>/) || [])[1] || '{}');
   let html = ((t.match(/<html>([\s\S]*)<\/html>/) || [])[1] || '').trim();
@@ -359,7 +406,7 @@ ${wr?.linkRules || ''}
   if (issues.length) {
     const tries = Number(r.writeTries || 0) + 1;
     if (tries >= 2) throw new Error('המאמר לא עבר את הבדיקה: ' + issues.join(', '));
-    await merge('updreq', id, { status: 'write', writeTries: tries, lastIssues: issues });
+    await merge('updreq', id, { status: 'write', writeTries: tries, lastIssues: issues, batchId: '', lockAt: '' });
     return { retry: issues };
   }
   // a hidden draft on the site for the preview (nothing is published here)
@@ -370,7 +417,7 @@ ${wr?.linkRules || ''}
   if (!pr.ok || !p.id) throw new Error(`טיוטה באתר נכשלה (${pr.status})`);
   const preview = `${SITE}/?p=${p.id}&preview=true`;
   const tk = r.tok || tok();
-  await merge('updreq', id, { status: 'awaiting', tok: tk, v: Number(r.v || 0) + 1, writeTries: 0, article: { meta, html, words, wpId: p.id, preview }, sentAt: new Date().toISOString(), error: '' });
+  await merge('updreq', id, { status: 'awaiting', tok: tk, v: Number(r.v || 0) + 1, writeTries: 0, batchId: '', article: { meta, html, words, wpId: p.id, preview }, sentAt: new Date().toISOString(), error: '' });
   await tg(`📰 מאמר לאישור\n\n${meta.title}\n${words} מילים · נכתב מ-${(r.facts || []).length} עובדות עם מקורות\nהעדכון: ${it.title}\n\nשום דבר לא עולה לאתר עד שתאשר. באישור הוא עובר את הבדיקה האוטומטית ועולה מחר ב-06:05.`,
     [[{ text: '👁 תצוגה מקדימה', url: preview }], ...buttons(tk)]);
   return { article: meta.title, words };
@@ -477,7 +524,7 @@ async function act(a: string, t: string, note: string) {
   }
   if (a === 'fix') {
     const n = clean(note).slice(0, 600); if (!n) return { ok: false, msg: 'כתבו מה לשנות.' };
-    await merge('updreq', id, { status: isPost ? 'queued' : 'write', fixes: [...(r.fixes || []), { note: n, at: now }], lockAt: '', tries: 0, writeTries: 0 });
+    await merge('updreq', id, { status: isPost ? 'queued' : 'write', fixes: [...(r.fixes || []), { note: n, at: now }], lockAt: '', tries: 0, writeTries: 0, batchId: '' });
     return { ok: true, msg: 'קיבלתי. מכין גרסה מתוקנת ושולח אליך שוב לאישור.' };
   }
   if (a === 'ok') {
