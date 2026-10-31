@@ -1,3 +1,4 @@
-elb-home https://dabullaw.co.il/?elcss=before1
-elb-art https://dabullaw.co.il/%D7%94%D7%A2%D7%A8%D7%AA-%D7%90%D7%96%D7%94%D7%A8%D7%94-%D7%91%D7%98%D7%90%D7%91%D7%95/?elcss=before1
-elb-net https://dabullaw.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F-%D7%91%D7%A0%D7%AA%D7%A0%D7%99%D7%94/?elcss=before1
+nst01 https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Netanya-Stadium_01.jpg/1200px-Netanya-Stadium_01.jpg
+nst04 https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Netanya-Stadium_04.JPG/1200px-Netanya-Stadium_04.JPG
+nst27 https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Netanya-Stadium_11.JPG/1200px-Netanya-Stadium_11.JPG
+nstair https://www.google.com/maps/@32.2843,34.8601,600m/data=!3m1!1e3
