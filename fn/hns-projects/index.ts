@@ -37,6 +37,7 @@ const TOWNS: Record<number, { he: string; slug: string }> = {
   168: { he: 'כפר יונה', slug: 'kfar-yona' }, 154: { he: 'תל מונד', slug: 'tel-mond' },
 };
 const MAX_CHANGES = 8;
+const INTRO_V = 'v2'; // a new version rewrites all intros (v2: no compound/plan numbers, no "not stated" lines)
 const MAX_INTROS = 12; // per run, written 6 at a time (the function has a time limit); the daily runs fill in the rest
 const SITE = 'https://nws.co.il';
 
@@ -149,7 +150,7 @@ function factsOf(p: P) {
 async function writeIntro(p: P) {
   const facts = factsOf(p);
   const sys = `אתה כותב באתר החדשות המקומי "חדשות נתניה והשרון" עמוד מידע על מתחם התחדשות עירונית (פינוי בינוי).\n${RULES}`;
-  const user = `${facts}\n\nכתוב שתי פסקאות קצרות (עד 70 מילים כל אחת) לתושבים:\n1. מה המתחם: איפה, כמה דירות יש היום וכמה יהיו לפי התוכנית.\n2. איפה הוא עומד עכשיו ומה המשמעות של השלב והמסלול, בשפה פשוטה.\nהחזר JSON בלבד: {"p":["פסקה 1","פסקה 2"]}`;
+  const user = `${facts}\n\nכתוב שתי פסקאות קצרות (עד 60 מילים כל אחת) לתושבים, בעברית טבעית וזורמת:\n1. מה המתחם: איפה, כמה דירות יש היום וכמה יהיו לפי התוכנית.\n2. איפה הוא עומד עכשיו ומה המשמעות של השלב (והמסלול, אם צוין), בשפה פשוטה.\nאל תכתוב את מספר המתחם ואת מספר התוכנית (הם מופיעים בטבלה שבעמוד). אל תכתוב שפרט כלשהו "לא צוין" או "אינו בביצוע"; פשוט לא מזכירים פרט שאין עליו מידע. אל תפתח במילים "מתחם ההתחדשות העירונית" בכל פעם; פתח בצורה טבעית.\nהחזר JSON בלבד: {"p":["פסקה 1","פסקה 2"]}`;
   const o = await claude(sys, user, 3000);
   const paras = (o.p || []).map(clean).filter(Boolean).slice(0, 2);
   if (paras.length < 1 || !numbersOk(paras.join(' '), facts) || BAD.test(paras.join(' '))) throw new Error('intro failed checks');
@@ -227,10 +228,10 @@ async function run(opts: { stories: boolean; dry?: boolean }) {
   for (const [id, d] of prev) if (!docs.has(id) && !d.gone) docs.set(id, { ...d, gone: true, goneOn: today });
   if (opts.dry) return { dry: true, baseline, count: list.length, changed: changed.map((c) => ({ id: c.p.id, name: c.p.name, isNew: c.isNew, ch: c.ch })) };
   // AI intros: a compound with no AI intro yet, or whose status changed since its intro was written
-  const need = [...docs.values()].filter((d) => !d.gone && d.introFor !== d.cur.status).slice(0, BRAKE ? 0 : MAX_INTROS);
+  const need = [...docs.values()].filter((d) => !d.gone && d.introFor !== `${d.cur.status}|${INTRO_V}`).slice(0, BRAKE ? 0 : MAX_INTROS);
   for (let i = 0; i < need.length; i += 6) {
     await Promise.all(need.slice(i, i + 6).map(async (d) => {
-      try { d.intro = await writeIntro(d.cur); d.introFor = d.cur.status; intros++; } catch (e) { errors.push(`${d.cur.id}: ${(e as Error).message}`); }
+      try { d.intro = await writeIntro(d.cur); d.introFor = `${d.cur.status}|${INTRO_V}`; intros++; } catch (e) { errors.push(`${d.cur.id}: ${(e as Error).message}`); }
     }));
   }
 
