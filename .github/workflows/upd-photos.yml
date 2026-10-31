@@ -1,0 +1,28 @@
+# upd-photos (31.10.2026): downloads the free-license photos (Unsplash license) of the office updates board, listed in
+# media/upd/photos.txt ("name photo-id"), small (1080px), to the branch upd-photos for the design review. The workspace can't
+# reach image hosts; the runner can. The live images are fetched by the upd function itself. Manual run only.
+name: upd-photos
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: download
+        run: |
+          mkdir -p out
+          while read -r name id; do
+            [ -z "$name" ] && continue
+            curl -fsSL --retry 3 -o "out/$name.jpg" "https://images.unsplash.com/photo-$id?w=1080&q=78&fm=jpg&fit=max" || echo "FAIL $name $id"
+          done < media/upd/photos.txt
+          ls -la out | head -80
+      - name: commit
+        run: |
+          git config user.name "upd-photos"; git config user.email "upd-photos@users.noreply.github.com"
+          git checkout --orphan upd-photos
+          git rm -rfq . >/dev/null
+          mkdir -p photos && mv out/*.jpg photos/
+          git add photos && git commit -qm "upd photos $(date -u +%F)" && git push -f origin upd-photos
