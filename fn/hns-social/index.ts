@@ -60,9 +60,9 @@ const CFG: Record<Ch, { perRun: number; perDay: number; gapMin: number; importan
 
 // same section slugs and fallback as the site (sites/nws/src/data/sections.ts, src/lib/content.ts fromFeed + articleUrl)
 const SLUG: Record<string, string> = { flash: 'flash', national: 'israel', city: 'city', realestate: 'real-estate', community: 'community', sports: 'sports',
-  leisure: 'events', sharon: 'sharon', tourism: 'tourism', law: 'law', police: 'police', transport: 'transport', health: 'health', blog: 'blog' };
+  leisure: 'events', sharon: 'sharon', tourism: 'tourism', law: 'law', police: 'police', transport: 'transport', health: 'health', blog: 'blog', economy: 'economy' };
 const TAG: Record<string, string> = { flash: 'מבזק', national: 'חדשות_ארציות', city: 'עיריית_נתניה', realestate: 'נדלן_נתניה', community: 'קהילה_וחינוך', sports: 'ספורט',
-  leisure: 'אירועים', sharon: 'השרון', tourism: 'תיירות', law: 'חוק_ומשפט', police: 'משטרה_ופלילים', transport: 'תחבורה', health: 'בריאות', blog: 'מדריך_לתושבים' };
+  leisure: 'אירועים', sharon: 'השרון', tourism: 'תיירות', law: 'חוק_ומשפט', police: 'משטרה_ופלילים', transport: 'תחבורה', health: 'בריאות', blog: 'מדריך_לתושבים', economy: 'כלכלה_וכסף' };
 const sec = (st: Any) => (SLUG[st.section] ? st.section : 'flash');
 const pathOf = (st: Any) => `/${SLUG[sec(st)]}/n${st.id}/`;
 const urlOf = (st: Any) => SITE + pathOf(st);

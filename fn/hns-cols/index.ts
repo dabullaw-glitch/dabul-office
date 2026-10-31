@@ -50,9 +50,9 @@ function blocksOf(v: unknown): string[] {
   return out.slice(0, 80);
 }
 const SEC_HE: Record<string, string> = { national: 'חדשות ארציות', city: 'העירייה', police: 'משטרה ופלילים', realestate: 'נדל״ן ותכנון', sports: 'ספורט', transport: 'תחבורה',
-  community: 'קהילה וחינוך', health: 'בריאות', leisure: 'תרבות ופנאי', sharon: 'השרון', tourism: 'תיירות', law: 'חוק ומשפט' };
+  community: 'קהילה וחינוך', health: 'בריאות', leisure: 'תרבות ופנאי', sharon: 'השרון', tourism: 'תיירות', law: 'חוק ומשפט', economy: 'כלכלה וכסף' };
 const SLUG: Record<string, string> = { national: 'israel', city: 'city', realestate: 'real-estate', community: 'community', sports: 'sports', leisure: 'events', sharon: 'sharon',
-  tourism: 'tourism', law: 'law', police: 'police', transport: 'transport', health: 'health', blog: 'blog', flash: 'flash' };
+  tourism: 'tourism', law: 'law', police: 'police', transport: 'transport', health: 'health', blog: 'blog', flash: 'flash', economy: 'economy' };
 const tg = (method: string, body: Any) => fetch(`https://api.telegram.org/bot${S.TELEGRAM_BOT_TOKEN}/${method}`, { method: 'POST', headers: { 'content-type': 'application/json' },
   body: JSON.stringify(body), signal: AbortSignal.timeout(15000) }).then((r) => r.json()).catch((e) => ({ ok: false, description: String(e) }));
 const call = (fn: string, body: Any) => fetch(`${FN}/${fn}`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': S.CRON_SECRET },

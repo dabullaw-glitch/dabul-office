@@ -128,7 +128,7 @@ class NoStory extends Error {}
 // the writer found too few facts: the story waits quietly for another source (no text, no message to Yakir)
 class Hold extends Error {}
 // the site sections (sites/nws/src/data/sections.ts); an answer with another key keeps the item's own topic
-const SECTION_KEYS = new Set(['flash', 'police', 'city', 'transport', 'health', 'realestate', 'community', 'sports', 'leisure', 'sharon', 'tourism', 'law']);
+const SECTION_KEYS = new Set(['flash', 'police', 'city', 'transport', 'health', 'realestate', 'community', 'sports', 'leisure', 'sharon', 'tourism', 'law', 'economy']);
 const sectionOf = (o: Any, fallback: string) => (SECTION_KEYS.has(String(o?.section || '')) ? String(o.section) : fallback);
 const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
 

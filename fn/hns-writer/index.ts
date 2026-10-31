@@ -158,7 +158,7 @@ async function storyUrl(storyId: number | null) {
   const { data } = await sb.from('hns_stories').select('id,section,state').eq('id', storyId).maybeSingle();
   if (!data || data.state !== 'published') return '';
   const SLUG: Record<string, string> = { national: 'israel', city: 'city', realestate: 'real-estate', community: 'community', sports: 'sports', leisure: 'events', sharon: 'sharon',
-    tourism: 'tourism', law: 'law', police: 'police', transport: 'transport', health: 'health', blog: 'blog', flash: 'flash' };
+    tourism: 'tourism', law: 'law', police: 'police', transport: 'transport', health: 'health', blog: 'blog', flash: 'flash', economy: 'economy' };
   return `https://nws.co.il/${SLUG[data.section] || 'city'}/n${data.id}/`;
 }
 const view = (c: Any) => ({ id: c.id, status: c.status, status_he: STATUS_HE[c.status] || c.status, section: c.section, section_he: SEC_HE[c.section] || '', title: c.title || '', dek: c.dek || '',

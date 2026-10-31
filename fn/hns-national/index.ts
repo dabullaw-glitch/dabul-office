@@ -139,10 +139,12 @@ async function tick(dry: boolean) {
   const ok = groups.filter((g) => new Set(g.items.map((x) => x.source_id)).size >= 2 || g.items.some((x) => OFFICIAL_SRC.has(x.source_id)) || solo(g))
     .sort((a, b) => new Set(b.items.map((x) => x.source_id)).size - new Set(a.items.map((x) => x.source_id)).size);
   // national stories of the last 6 hours: a matching group is attached, not written again
-  const { data: recent } = await sb.from('hns_stories').select('id,title,dek,created_at,state').eq('section', 'national').gte('created_at', new Date(now - 6 * 3600e3).toISOString());
+  // 31.10.2026: economy stories (hns-economy) count too, so the same event is not written twice in two sections
+  const { data: recentAll } = await sb.from('hns_stories').select('id,title,dek,created_at,state,section').in('section', ['national', 'economy']).gte('created_at', new Date(now - 6 * 3600e3).toISOString());
+  const recent = (recentAll || []).filter((s: Any) => s.section === 'national');
   const attach: Any[] = []; const fresh: typeof ok = [];
   for (const g of ok) {
-    const hit = (recent || []).find((s: Any) => same(toks(`${s.title} ${s.dek || ''}`), g.t));
+    const hit = (recentAll || []).find((s: Any) => same(toks(`${s.title} ${s.dek || ''}`), g.t));
     if (hit) attach.push({ story: hit.id, ids: g.items.map((x) => x.id) }); else fresh.push(g);
   }
   if (dry) return { pool: pool.length, groups: ok.map((g) => ({ n: g.items.length, outlets: [...new Set(g.items.map((x) => x.source_id))], titles: g.items.slice(0, 3).map((x) => x.title) })), attach };

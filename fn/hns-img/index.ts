@@ -66,7 +66,8 @@ It must be a GENERIC scene that fits the topic, never a depiction of the real ev
 a quiet street of white stone apartment blocks with palm trees; the seafront promenade on the cliffs above the beach; a municipal building exterior;
 a school yard seen from outside the fence; an ambulance parked far away on a coastal road at dusk; blue police lights reflected on a wet empty street at night, seen from far;
 construction cranes over new residential towers; a sandy beach with lifeguard hut; a green city park; an intersection with orange traffic cones and road works;
-an empty classroom with a plain ballot box; a rural road through orchards; a courthouse exterior with columns; an empty football stadium at dusk.
+an empty classroom with a plain ballot box; a rural road through orchards; a courthouse exterior with columns; an empty football stadium at dusk;
+for economy and money stories: glass office towers of a business district at golden hour; stacked coins and a pocket calculator on a wooden desk; a supermarket aisle with blurred shelves; a family kitchen table with bills and a laptop seen from above (no readable text).
 Hard rules:
 - No people close up. If there are people at all, they are tiny, far away, seen from behind, unidentifiable.
 - Never politicians or public figures. Never injured people, blood, weapons, fights or a crime scene.
@@ -109,6 +110,8 @@ const T = {
   beach: ['The Netanya style sandstone cliffs and promenade above a sandy beach, calm turquoise sea, late afternoon light', 'מצוק וטיילת מעל חוף ים רגוע'],
   sharon: ['A rural road through green orchards and fields in the Sharon plain, morning light, empty road', 'כביש כפרי בין פרדסים ושדות'],
   law: ['A courthouse exterior with tall columns and stone steps, clear sky, empty steps', 'בניין בית משפט עם עמודים ומדרגות'],
+  economy: ['Glass office towers of a business district at golden hour seen from street level, Mediterranean light, no signs and no text', 'מגדלי משרדים ברובע עסקים בשעת ערב'],
+  coins: ['A close up of stacked coins and a pocket calculator on a wooden desk, soft window light, shallow depth of field, no text, no banknotes', 'מטבעות ומחשבון על שולחן עץ'],
   street: ['A quiet residential street of white stone apartment blocks with palm trees in a Mediterranean coastal city, natural light', 'רחוב שקט עם בנייני מגורים ועצי דקל'],
 } as const;
 function templatePrompt(st: Any) {
@@ -119,7 +122,8 @@ function templatePrompt(st: Any) {
     : /חסימ|ייחסמ|עבודות|צומת|הסדרי תנועה/.test(tx) ? 'roads'
     : st.section === 'realestate' ? 'cranes' : st.section === 'community' ? 'school' : st.section === 'sports' ? 'sports'
     : st.section === 'leisure' ? 'leisure' : st.section === 'tourism' ? 'beach' : st.section === 'sharon' ? 'sharon'
-    : st.section === 'law' ? 'law' : st.section === 'city' ? 'city' : 'street';
+    : st.section === 'law' ? 'law' : st.section === 'city' ? 'city'
+    : st.section === 'economy' ? (/קצב|מחיר|התייקר|חשבון|פנסי|חיסכון|משכורת|שכר|ביטוח|הנחה|צרכנ/.test(tx) ? 'coins' : 'economy') : 'street';
   return { scene: k, prompt: T[k][0], alt: T[k][1], by: 'template' };
 }
 
