@@ -348,6 +348,8 @@ export function picLabel(p: Pic, lang: Lang = 'he') {
   };
   // a library photo: still "צילום אילוסטרציה", with its author and the source (the full credit with the license is under the photo
   // on the story page, see ArticlePage)
+  // 31.10.2026: the designed card of a section is not a photo: no photo label at all
+  if (p.src && p.src.startsWith('/img/card/')) return '';
   if (p.kind === 'lib' && p.lib) return `${L.stock[lang]}: ${p.lib.author} / ${COMMONS[lang]}`;
   return (p.kind === 'photo' || p.kind === 'sponsor') && p.credit ? `${L.photo[lang]}: ${p.credit}` : L[p.kind === 'lib' ? 'stock' : p.kind][lang];
 }
