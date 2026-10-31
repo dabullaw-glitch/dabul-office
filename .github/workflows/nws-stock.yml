@@ -1,0 +1,50 @@
+# nws-stock (31.10.2026): adds free-license photos (Unsplash license) to the nws stock library (sites/nws/public/img/stock) in the
+# same sizes as the existing ones: 1600x1067, 1200x800, 800x533 and 400x267 WebP, and a 1200x630 JPEG for sharing (og/).
+# The list is sites/nws/scripts/stock-new.txt ("name photo-id"); a name that already exists is skipped. The workspace can't reach
+# image hosts; the runner can. Manual run only.
+name: nws-stock
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: nws-stock
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: download and resize
+        run: |
+          pip install --quiet pillow
+          python3 - <<'PY'
+          import os, urllib.request
+          from PIL import Image
+          D = 'sites/nws/public/img/stock'
+          os.makedirs(D + '/og', exist_ok=True)
+          for line in open('sites/nws/scripts/stock-new.txt'):
+              p = line.split()
+              if len(p) < 2: continue
+              name, pid = p[0], p[1]
+              if os.path.exists(f'{D}/{name}-1600.webp'): print('skip', name); continue
+              url = f'https://images.unsplash.com/photo-{pid}?w=1600&h=1067&fit=crop&crop=entropy&q=85&fm=jpg'
+              src = f'/tmp/{name}.jpg'
+              urllib.request.urlretrieve(url, src)
+              im = Image.open(src).convert('RGB')
+              def cover(w, h):
+                  r = max(w / im.width, h / im.height)
+                  x = im.resize((round(im.width * r), round(im.height * r)), Image.LANCZOS)
+                  l, t = (x.width - w) // 2, (x.height - h) // 2
+                  return x.crop((l, t, l + w, t + h))
+              for w, h, q in [(1600, 1067, 70), (1200, 800, 62), (800, 533, 64), (400, 267, 64)]:
+                  cover(w, h).save(f'{D}/{name}-{w}.webp', 'WEBP', quality=q, method=6)
+              cover(1200, 630).save(f'{D}/og/{name}.jpg', 'JPEG', quality=82, optimize=True, progressive=True)
+              print('ok', name)
+          PY
+      - name: commit
+        run: |
+          git config user.name "nws-stock"; git config user.email "nws-stock@users.noreply.github.com"
+          git add sites/nws/public/img/stock
+          git diff --cached --quiet && exit 0
+          git commit -qm "nws: stock photos for the economy section"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && break; sleep 5; done
