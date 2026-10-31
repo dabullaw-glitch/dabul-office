@@ -5,6 +5,7 @@
 // the events calendar of the culture hall, /sports/ shows the next Maccabi Netanya game and the league table in the sidebar.
 // Real data only: a block without data is not shown.
 import Base from '../layouts/Base.astro';
+import { PROJECTS } from '../lib/projects';
 import ListHero from './list/ListHero.astro';
 import StoryList from './list/StoryList.astro';
 import ListAside from './list/ListAside.astro';
@@ -72,6 +73,11 @@ const L = {
   <ListHero lang={lang} crumbs={crumbs} crumbLabel={u.breadcrumbs} h1={he ? s.title.split(':')[0] : name} intro={he ? s.intro : desc} color={s.color} photo={IMG[s.img]?.name || s.photos[0]} icon={s.key} stats={stats} />
   <div class="n-wrap n-list">
     <div style={`--c:${s.color}`}>
+      {he && k === 'realestate' && PROJECTS.length > 0 && (
+      <a class="nl-pjbox" href="/projects/" style="display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;background:#FFF1DB;border:1px solid #F0D3A6;border-radius:10px;padding:14px 18px;margin-bottom:26px;color:#3B2600">
+        <span><b style="font-size:17px">פינוי בינוי בנתניה ובשרון</b><br><span style="font-size:14.5px">כל {PROJECTS.length} המתחמים, השלב של כל אחד והקישור לתוכנית הרשמית</span></span>
+        <b style="color:#8A5200">לרשימת המתחמים ←</b>
+      </a>)}
       {he && k === 'flash' && (
       <section class="n-live nl-ofbox" id="official" aria-labelledby="of-h" style="margin-bottom:36px">
         <div class="lh"><h2 id="of-h"><span class="n-pulse" aria-hidden="true"></span>המבזקים האחרונים</h2><span>מתעדכן כל הזמן</span></div>

@@ -267,7 +267,8 @@ async function writeLive(docs: Map<string, Any>) {
   const items = [...docs.values()].filter((d) => !d.gone).map((d) => ({ ...d.cur, intro: d.intro, firstSeen: d.firstSeen, history: (d.history || []).slice(-10) }))
     .sort((a, b) => (a.town === b.town ? (b.total || 0) - (a.total || 0) : a.town === 'נתניה' ? -1 : b.town === 'נתניה' ? 1 : a.town.localeCompare(b.town, 'he')));
   const sum = (arr: Any[], k: string) => arr.reduce((s, x) => s + (Number(x[k]) || 0), 0);
-  const towns = Object.values(TOWNS).map((t) => { const a = items.filter((i) => i.town === t.he); return { he: t.he, slug: t.slug, n: a.length, exist: sum(a, 'exist'), total: sum(a, 'total'), add: sum(a, 'add') }; }).filter((t) => t.n);
+  const towns = Object.values(TOWNS).map((t) => { const a = items.filter((i) => i.town === t.he); return { he: t.he, slug: t.slug, n: a.length, exist: sum(a, 'exist'), total: sum(a, 'total'), add: sum(a, 'add') }; }).filter((t) => t.n)
+    .sort((a, b) => (a.he === 'נתניה' ? -1 : b.he === 'נתניה' ? 1 : b.n - a.n));
   const byStatus: Record<string, number> = {};
   items.filter((i) => i.town === 'נתניה').forEach((i) => { byStatus[i.status] = (byStatus[i.status] || 0) + 1; });
   await sb.rpc('docs_merge', { p_coll: 'nwslive', p_id: 'projects', p_patch: { updated: new Date().toISOString(), sourceUrl: DATASET_URL, items, towns, byStatus, statusTxt: STATUS_TXT, trackTxt: TRACK_TXT } });
