@@ -1,0 +1,18 @@
+# Redirect map (301). Format: from  to  status. Old or alternate URLs go to the one canonical URL.
+# Every source here is also listed in _routes.json "exclude", so these redirects stay plain static rules (no function call).
+/home                 /                   301
+/index.html           /                   301
+/news                 /flash/             301
+/mivzakim             /flash/             301
+/realestate           /real-estate/       301
+/nadlan               /real-estate/       301
+/iriya                /city/              301
+/sport                /sports/            301
+/leisure              /events/            301
+/business             /directory/         301
+/businesses           /directory/         301
+/madrich              /directory/         301
+/shabbat              /now/shabbat/       301
+/pharmacy             /now/pharmacy/      301
+/beaches              /now/beaches/       301
+/he/*                 /:splat             301
