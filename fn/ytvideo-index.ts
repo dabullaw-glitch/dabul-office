@@ -11,6 +11,14 @@
 // POST ?step=attach     cron: when media/yt/<id>.mp4 is live on GitHub Pages, the video goes into its calendar row (media,
 //                       description) and Yakir gets a Telegram message with the video and a stop link.
 // GET  ?stop=<token>    stops that video (the calendar row becomes "skipped").
+//
+// 31.10.2026: the weekly "השבוע בנתניה" video of the news site nws.co.il uses the same voice and steps, in its own collection:
+//   docs coll 'nwsvideo', id 'w-YYYY-MM-DD': { status: 'new' | 'voiced' | 'ready' | 'stopped', at, week {from,to,label}, title (YouTube title),
+//     description, tags[], storyIds[], scenes: [{ type: open|story|end, ..., say }] }  (written each Friday by a scheduled task)
+// GET  ?a=nwsnext&have=a,b  public, like ?a=next but for 'nwsvideo' (GitHub Action .github/workflows/nws-video.yml, renderer
+//                       tools/office-video/news.mjs, output media/nwsv/<id>.mp4). Narration files: pv/nwsvo/<id>/.
+//   ?step=attach also marks a 'nwsvideo' row 'ready' once its file is live and tells Yakir on Telegram. Nothing is uploaded or
+//   published: the news site's YouTube channel is not connected yet.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const SECRETS: Record<string, string> = {};
@@ -25,6 +33,8 @@ const text = (m: string) => new Response(m, { headers: { 'content-type': 'text/p
 // deno-lint-ignore no-explicit-any
 const merge = (coll: string, id: string, patch: any) => sb().rpc('docs_merge', { p_coll: coll, p_id: id, p_patch: patch });
 const VOICE = 'he-IL-Chirp3-HD-Charon';
+// where each collection's videos live (media/<dir>/<id>.mp4) and its narration files (pv/<vo>/<id>/)
+const KINDS: Record<string, { dir: string; vo: string }> = { ytscript: { dir: 'yt', vo: 'ytvo' }, nwsvideo: { dir: 'nwsv', vo: 'nwsvo' } };
 
 const b64url = (b: ArrayBuffer | Uint8Array | string) => { const bytes = typeof b === 'string' ? new TextEncoder().encode(b) : new Uint8Array(b as ArrayBuffer); let s = ''; bytes.forEach((x) => (s += String.fromCharCode(x))); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
 let tokCache = { t: '', exp: 0 };
@@ -48,8 +58,8 @@ async function synth(say: string, voice: string) {
 }
 
 // deno-lint-ignore no-explicit-any
-async function next(skip: string[]): Promise<any> {
-  const { data } = await sb().from('docs').select('id,data').eq('coll', 'ytscript').in('data->>status', ['new', 'voiced']);
+async function next(skip: string[], coll = 'ytscript'): Promise<any> {
+  const { data } = await sb().from('docs').select('id,data').eq('coll', coll).in('data->>status', ['new', 'voiced']);
   // deno-lint-ignore no-explicit-any
   const rows = (data || []).sort((a: any, b: any) => String(a.data.at).localeCompare(String(b.data.at)));
   for (const row of rows) {
@@ -62,12 +72,13 @@ async function next(skip: string[]): Promise<any> {
       const h = await hash(`${voice}|${sc.say}`);
       if (sc.audio && sc.ah === h) continue;
       const bytes = await synth(sc.say, voice);
-      const path = `ytvo/${row.id}/${String(i + 1).padStart(2, '0')}-${h}.mp3`;
+      const path = `${KINDS[coll].vo}/${row.id}/${String(i + 1).padStart(2, '0')}-${h}.mp3`;
       const up = await sb().storage.from('pv').upload(path, bytes, { upsert: true, contentType: 'audio/mpeg' });
       if (up.error) throw new Error(up.error.message);
       sc.audio = sb().storage.from('pv').getPublicUrl(path).data.publicUrl; sc.ah = h; changed = true;
     }
-    if (changed || s.status !== 'voiced') await merge('ytscript', row.id, { scenes, status: 'voiced', voicedAt: new Date().toISOString() });
+    if (changed || s.status !== 'voiced') await merge(coll, row.id, { scenes, status: 'voiced', voicedAt: new Date().toISOString() });
+    if (coll === 'nwsvideo') return { id: row.id, coll, title: s.title, week: s.week || null, description: s.description || '', tags: s.tags || [], storyIds: s.storyIds || [], scenes };
     return { id: row.id, title: s.title, link: s.link || '', scenes };
   }
   return { id: null };
@@ -103,15 +114,27 @@ async function attach() {
       [[{ text: '▶️ צפייה בסרטון', url: media + file }], [{ text: '⛔ לא לפרסם', url: `${env('SUPABASE_URL')}/functions/v1/ytvideo?stop=${token}` }]]);
     done.push(row.id);
   }
+  // the weekly news video: no calendar row yet (its YouTube channel is connected later), only the status and a note to Yakir
+  const { data: nv } = await sb().from('docs').select('id,data').eq('coll', 'nwsvideo').eq('data->>status', 'voiced');
+  for (const row of nv || []) {
+    const s = row.data, file = `${KINDS.nwsvideo.dir}/${row.id}.mp4`;
+    const h = await fetch(media + file, { method: 'HEAD' }).catch(() => null);
+    if (!h || !h.ok) continue;
+    const token = crypto.randomUUID().replace(/-/g, '');
+    await merge('nwsvideo', row.id, { status: 'ready', file, url: media + file, readyAt: new Date().toISOString(), stopToken: token });
+    await tg(`🎬 הסרטון השבועי של חדשות נתניה והשרון מוכן: ${s.title}\nהוא לא עולה לשום מקום. ערוץ היוטיוב של האתר יחובר בהמשך.\n\nאפשר לצפות עכשיו. אם משהו לא מתאים, לוחצים "לא לפרסם".`,
+      [[{ text: '▶️ צפייה בסרטון', url: media + file }], [{ text: '⛔ לא לפרסם', url: `${env('SUPABASE_URL')}/functions/v1/ytvideo?stop=${token}` }]]);
+    done.push(row.id);
+  }
   return { attached: done };
 }
 
 async function stop(token: string) {
-  const { data } = await sb().from('docs').select('id,data').eq('coll', 'ytscript').eq('data->>stopToken', token).limit(1);
+  const { data } = await sb().from('docs').select('coll,id,data').in('coll', Object.keys(KINDS)).eq('data->>stopToken', token).limit(1);
   const row = data && data[0];
   if (!row) return text('הקישור לא תקף, או שהסרטון כבר טופל.');
   if (row.data.pubId) await merge('pub', row.data.pubId, { status: 'skipped', skipReason: 'יקיר עצר את הסרטון' });
-  await merge('ytscript', row.id, { status: 'stopped', stoppedAt: new Date().toISOString() });
+  await merge(row.coll, row.id, { status: 'stopped', stoppedAt: new Date().toISOString() });
   await tg(`⛔ הסרטון "${row.data.title}" לא יפורסם.`);
   return text('✓ הסרטון לא יפורסם. אפשר לסגור את הדף.');
 }
@@ -122,6 +145,7 @@ Deno.serve(async (req) => {
   const url = new URL(req.url);
   try {
     if (url.searchParams.get('a') === 'next') return json(await next((url.searchParams.get('have') || '').split(',').filter(Boolean)));
+    if (url.searchParams.get('a') === 'nwsnext') return json(await next((url.searchParams.get('have') || '').split(',').filter(Boolean), 'nwsvideo'));
     const st = url.searchParams.get('stop'); if (st) return await stop(st.replace(/[^a-f0-9]/g, ''));
     if (!env('CRON_SECRET') || req.headers.get('x-cron-secret') !== env('CRON_SECRET')) return json({ error: 'unauthorized' }, 401);
     if (url.searchParams.get('step') === 'attach') return json(await attach());

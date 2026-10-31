@@ -1,0 +1,74 @@
+name: nws weekly video
+# "השבוע בנתניה": the weekly YouTube video of the news site nws.co.il (חדשות נתניה והשרון), 1920x1080, about 3 minutes.
+# Same engine as "office videos" (office-video.yml): Google Text-to-Speech narration made by the Supabase function ytvideo,
+# the picture rendered here with tools/office-video/news.mjs, the files committed to media/nwsv and served by GitHub Pages.
+# Nothing is uploaded or published anywhere; the site's YouTube channel will be connected later.
+# Two ways in:
+#  1. a script file media/nwsv/<id>.json (scenes with narration links) pushed to main: rendered at once;
+#  2. on the schedule (Fridays and Saturdays), ytvideo?a=nwsnext hands over the next 'nwsvideo' docs row that has no video yet,
+#     narrated; it is saved as media/nwsv/<id>.json and rendered.
+# Every script file without its .mp4 is rendered; 4 check stills go to media/nwsv/check/<id>-1..4.jpg.
+on:
+  schedule: [{ cron: '47 * * * 5,6' }]
+  push:
+    branches: [main]
+    paths: ['media/nwsv/*.json', 'tools/office-video/news.mjs']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: nws-video, cancel-in-progress: false }
+env:
+  FN: https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/ytvideo
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scripts waiting for a video
+        id: todo
+        run: |
+          mkdir -p media/nwsv
+          have=$(ls media/nwsv/*.mp4 2>/dev/null | xargs -r -n1 basename | sed 's/\.mp4$//' | paste -sd, -)
+          # the function answers 401 until its nws part is deployed; then nothing comes from here
+          if curl -fsS --retry 2 "$FN?a=nwsnext&have=$have" -o /tmp/next.json 2>/dev/null; then
+            id=$(jq -r 'select(.coll == "nwsvideo") | .id // empty' /tmp/next.json)
+            if [ -n "$id" ] && echo "$id" | grep -Eq '^[a-z0-9-]+$' && [ ! -f "media/nwsv/$id.json" ]; then jq . /tmp/next.json > "media/nwsv/$id.json"; fi
+          fi
+          ids=""
+          for f in media/nwsv/*.json; do
+            [ -f "$f" ] || continue
+            id=$(basename "$f" .json); case "$id" in *.times) continue;; esac
+            [ -f "media/nwsv/$id.mp4" ] || ids="$ids $id"
+          done
+          echo "ids=$(echo $ids)" >> "$GITHUB_OUTPUT"; echo "to render: ${ids:-none}"
+      - uses: actions/setup-node@v4
+        if: steps.todo.outputs.ids != ''
+        with: { node-version: '22' }
+      - name: Install
+        if: steps.todo.outputs.ids != ''
+        working-directory: tools/office-video
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+          command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
+      - name: Render
+        if: steps.todo.outputs.ids != ''
+        run: |
+          mkdir -p media/nwsv/check
+          for id in ${{ steps.todo.outputs.ids }}; do
+            node tools/office-video/news.mjs "media/nwsv/$id.json"
+            d=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "media/nwsv/$id.mp4")
+            n=0
+            for p in 0.03 0.30 0.62 0.97; do
+              n=$((n+1)); ts=$(awk -v d="$d" -v p="$p" 'BEGIN{printf "%.2f", d*p}')
+              ffmpeg -y -v error -ss "$ts" -i "media/nwsv/$id.mp4" -frames:v 1 -vf scale=960:-2 -q:v 4 "media/nwsv/check/$id-$n.jpg"
+            done
+          done
+      - name: Publish to the repo (GitHub Pages)
+        if: steps.todo.outputs.ids != ''
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add media/nwsv
+          git commit -qm "nws weekly video: ${{ steps.todo.outputs.ids }}" || { echo nothing; exit 0; }
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
