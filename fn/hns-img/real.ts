@@ -135,7 +135,7 @@ async function claude(system: string, content: Any[], maxTok = 700) {
   await sb.rpc('ai_cost_add', { p_fn: 'nws-realimg', p_model: MODEL, p_in: Number(u.input_tokens || 0) + Number(u.cache_read_input_tokens || 0) + Number(u.cache_creation_input_tokens || 0), p_out: Number(u.output_tokens || 0) }).then(() => null, () => null);
   const text = (j.content || []).filter((c: Any) => c.type === 'text').map((c: Any) => c.text).join('');
   const m = text.replace(/```(?:json)?/g, '').match(/\{[\s\S]*\}/);
-  if (!m) throw new Error('no json');
+  if (!m) throw new Error(`no json${j.stop_reason === 'max_tokens' ? ' (cut)' : ''}: ${text.slice(0, 60)}`);
   return JSON.parse(m[0]);
 }
 const PERSON_SYS = `You read a Hebrew local news story (Netanya, Israel) and decide whether its MAIN subject is one specific public figure (a minister, member of Knesset, party leader, the prime minister, a mayor or council head, a senior official, a judge, a coach, a known athlete or artist), so that a portrait of that person would be the natural photo of the story.
@@ -184,7 +184,7 @@ async function oneStory(st: Any, dry: boolean) {
   }
   // 2. the public figure's portrait
   if (PORTRAIT_SECTIONS.has(st.section) && st.sensitivity !== 'sensitive') {
-    const p = await claude(PERSON_SYS, [{ type: 'text', text: `${story}\nJSON only.` }], 200).catch(() => null);
+    const p = await claude(PERSON_SYS, [{ type: 'text', text: `${story}\nJSON only.` }], 1000).catch(() => null);
     if (p?.about && p.person_he) {
       const pr: Any = await portraitOf(String(p.person_he)).catch((e) => ({ reject: String((e as Error).message || e).slice(0, 60) }));
       if (pr?.url) {
@@ -201,7 +201,7 @@ async function useIf(st: Any, story: string, c: Any, dry: boolean) {
   let img;
   try { img = await download(c.url); } catch (e) { return { type: c.type, url: c.url, error: String((e as Error).message || e).slice(0, 60) }; }
   const mt = img.ct as string;
-  const v = await claude(CHECK_SYS, [{ type: 'image', source: { type: 'base64', media_type: mt, data: b64(img.buf) } }, { type: 'text', text: `${story}\nCandidate: ${c.desc}\nCredit: ${c.credit}\nJSON only.` }], 400).catch((e) => ({ ok: false, why: String((e as Error).message || e).slice(0, 80) }));
+  const v = await claude(CHECK_SYS, [{ type: 'image', source: { type: 'base64', media_type: mt, data: b64(img.buf) } }, { type: 'text', text: `${story}\nCandidate: ${c.desc}\nCredit: ${c.credit}\nJSON only.` }], 1500).catch((e) => ({ ok: false, why: String((e as Error).message || e).slice(0, 80) }));
   if (v.ok !== true) {
     if (!dry) await merge('nwsrealimg', `n${st.id}`, { status: 'rejected', type: c.type, url: c.url, why: String(v.why || '').slice(0, 160), at: new Date().toISOString() });
     return { type: c.type, url: c.url, rejected: String(v.why || '').slice(0, 120) };
