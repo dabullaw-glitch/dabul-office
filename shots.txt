@@ -1,4 +1,4 @@
-nst01 https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Netanya-Stadium_01.jpg/1200px-Netanya-Stadium_01.jpg
-nst04 https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Netanya-Stadium_04.JPG/1200px-Netanya-Stadium_04.JPG
-nst27 https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Netanya-Stadium_11.JPG/1200px-Netanya-Stadium_11.JPG
-nstair https://www.google.com/maps/@32.2843,34.8601,600m/data=!3m1!1e3
+nwsh https://nws.co.il/?v=img1
+nwssp https://nws.co.il/sports/?v=img1
+nws253 https://nws.co.il/sports/n253/?v=img1
+nws248 https://nws.co.il/israel/n248/?v=img1
