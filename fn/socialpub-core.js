@@ -254,6 +254,9 @@ export function start(createClient) {
       const ch = row.channels || [];
       // 11.10.2026 (Yakir): with Postoria connected, Instagram and TikTok go out through the postoria function; this job only stages the reels
       if (cfg.postoria && cfg.postoria.ok && ch.every((c) => ['instagram', 'tiktok', 'facebook', 'youtube', 'linkedin', 'gbp'].includes(c))) continue;
+      // 31.10.2026: Google Business posts sent directly (channel 'gbpdirect') belong to the gbp function (step=due). This job used to
+      // reach them first, find nothing to do and mark them 'waiting', so the posts of 25.10 and 28.10 never went out.
+      if (ch.length && ch.every((c) => c === 'gbpdirect')) continue;
       const res = { ...(row.result || {}) };
       if (ch.includes('instagram') && (!res.instagram || res.instagram.pending)) {
         const C = igc.mode === 'fb' ? { base: FB, who: '/' + igc.igId, token: S.IG_PAGE_TOKEN } : { base: IG, who: '/me', token: S.IG_TOKEN };
@@ -277,7 +280,7 @@ export function start(createClient) {
       if (ch.includes('whatsapp') && !res.whatsapp) res.whatsapp = { skipped: 'handled by the community job' };
       if (res.instagram && res.instagram.pending) { await merge('pub', r.id, { result: res, handledAt: new Date().toISOString() }); log.push(r.id + ': instagram processing'); continue; }
       const anyOk = Object.values(res).some((x) => x && x.ok);
-      const allSkipped = Object.values(res).every((x) => x && x.skipped);
+      const allSkipped = Object.values(res).length > 0 && Object.values(res).every((x) => x && x.skipped);
       await merge('pub', r.id, { result: res, status: anyOk ? 'published' : allSkipped ? 'waiting' : 'planned', handledAt: new Date().toISOString() });
       log.push(r.id + ': ' + JSON.stringify(res).slice(0, 200));
     }
