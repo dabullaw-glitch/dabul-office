@@ -12,7 +12,7 @@
    database, nothing is erased). */
 (function (O) {
   if (!O || O.ZZLEAD) return;
-  O.ZZLEAD = '20261025a';
+  O.ZZLEAD = '20261031a';
   const esc = v => (O.esc ? O.esc(v == null ? '' : String(v)) : String(v == null ? '' : v));
   const icon = (n, z) => (O.icon ? O.icon(n, z) : '');
   const toMs = x => { if (!x) return NaN; const s = String(x); return /[zZ]|[+-]\d\d:?\d\d$/.test(s) ? Date.parse(s) : (O.localToMs ? O.localToMs(s) : Date.parse(s)); };
@@ -21,7 +21,8 @@
   const LABEL = k => ((O.SALES_TPL || {})[k] || [k])[0];
 
   const st = document.createElement('style');
-  st.textContent = `.zz-said{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--panel)}
+  st.textContent = `.zz-said{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--panel);min-width:0;max-width:100%;overflow:hidden}
+.zz-said,.zz-said *{overflow-wrap:anywhere;word-break:break-word}.zz-q a{color:inherit;text-decoration:underline}
 .zz-said h4{margin:0 0 6px;font-size:14.5px;display:flex;gap:6px;align-items:center}
 .zz-q{white-space:pre-wrap;font-size:15px;line-height:1.6;margin:0;padding:8px 10px;border-radius:10px;background:var(--panel2)}
 .zz-q+.zz-q{margin-top:6px}.zz-q small{display:block;color:var(--muted);font-size:12px;margin-bottom:2px}
@@ -137,9 +138,15 @@
     // 2. what the lead wrote
     const said = [];
     const ft = String(n.formText || '').trim();
-    if (ft) said.push(`<p class="zz-q"><small>בטופס באתר${n.created ? ' · ' + esc(when(toMs(n.created))) : ''}</small>${esc(ft)}</p>`);
+    // 31.10.2026: a long address (a Gmail link pasted in the form) broke the window on the phone; addresses show as a short link
+    const linkify = t => String(t).split(/(https?:\/\/\S+)/g).map((x, i) => i % 2 === 0 ? esc(x)
+      : /mail\.google\.com/i.test(x) ? `<a href="${esc(x)}" target="_blank" rel="noopener">קישור לתיבת הג׳ימייל של הליד</a> <small style="display:inline;color:var(--muted)">(נפתח רק אצלו, כדאי לבקש שישלח את הקובץ)</small>`
+      : `<a href="${esc(x)}" target="_blank" rel="noopener">קישור (${esc((x.match(/^https?:\/\/([^/?#]+)/) || [])[1] || 'אתר')})</a>`).join('');
+    if (ft) said.push(`<p class="zz-q"><small>בטופס באתר${n.created ? ' · ' + esc(when(toMs(n.created))) : ''}</small>${linkify(ft)}</p>`);
     (n.waIn || []).slice(-10).forEach(m => said.push(`<p class="zz-q"><small>בוואטסאפ · ${esc(when(Date.parse(m.at)))}</small>${esc(m.text)}</p>`));
-    const ff = (n.formFields || []).filter(([k, v]) => v && !/name|שם|phone|tel|טלפון|נייד|mail|מייל|message|notes|הודעה|הערות|msg|pirut|פירוט|תוכן|source|redirect/i.test(k) && String(v) !== ft).slice(0, 8);
+    // technical fields the website form sends along (form ids, view ids, JSON blobs, consent) are not shown
+    const ff = (n.formFields || []).filter(([k, v]) => v && !/name|שם|phone|tel|טלפון|נייד|mail|מייל|message|notes|הודעה|הערות|msg|pirut|פירוט|תוכן|source|redirect|form_type|viewid|query_string|crm|uco|fixdigital|origin|referrer|getparams|privacy|consent|hidden|nonce|token|utm_|gclid|fbclid|page|url/i.test(k)
+      && !/^\s*[\[{]/.test(String(v)) && String(v).length < 200 && String(v) !== ft).slice(0, 8);
     if (said.length || ff.length) {
       const left = box.querySelector('.lx-notes');
       const html = `<div class="zz-said"><h4>${icon('chat', 15)} מה הליד כתב</h4>${said.join('') || '<p class="small muted" style="margin:0">לא כתב הודעה.</p>'}${ff.length ? `<div class="zz-ff">${ff.map(([k, v]) => `<span><b>${esc(k)}:</b> ${esc(v)}</span>`).join('')}</div>` : ''}</div>`;
