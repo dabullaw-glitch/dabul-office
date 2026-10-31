@@ -61,7 +61,7 @@
 // 28.10.2026 (site redesign): three more sections, police, transport and health; flash stays for short urgent items. A section
 //   key the site does not know is replaced by the item's own topic.
 // 31.10.2026 (Yakir approved idea 4, "שדרוג הכתיבה"): the WRITER step of a story (compose, also its rewrite after the editor) uses
-//   hns_config 'ai'.lead_model (Opus 5.5) when set; the copy editor, live updates and everything else stay on the regular model.
+//   hns_config 'ai_extra'.lead_model (Opus 5.5) when set; the copy editor, live updates and everything else stay on the regular model.
 //   Every call is priced into the table ai_cost (rpc ai_cost_add, list price per token). BUDGET BRAKE: when this month's tracked
 //   cost (ai_cost_month) plus 'untracked_usd' (estimate for functions that do not log yet) reaches 'extra_stop_usd', the writer
 //   goes back to the regular model by itself until the month ends.
@@ -83,6 +83,9 @@ let BRAKE = false;
 async function config() {
   const { data } = await sb.from('hns_config').select('v').eq('k', 'ai').maybeSingle();
   if (data?.v && typeof data.v === 'object') CFG = { ...CFG, ...data.v };
+  // the strong-writer settings live in their own row 'ai_extra' {lead_model, extra_stop_usd, untracked_usd}
+  const { data: x } = await sb.from('hns_config').select('v').eq('k', 'ai_extra').maybeSingle();
+  if (x?.v && typeof x.v === 'object') CFG = { ...CFG, ...x.v };
   BRAKE = false;
   if (CFG.lead_model) {
     const { data: m } = await sb.rpc('ai_cost_month');
