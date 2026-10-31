@@ -414,8 +414,9 @@ for (const [id, role] of OK_LINES) if (role) ROLE.set(`c${id}`, [...(ROLE.get(`c
 const LIB: LibPhoto[] = ((readJson('photolib.json', { photos: [] }).photos || []) as LibPhoto[])
   // 31.10.2026: only photos with a vision label that is not 'x' (foreign, faces, brands); venue photos (set 'stadium') need no
   // review line: their venue comes from their Commons category and they show only for a match played at that venue; the new generic
-  // football set (balls, goals, pitches, 31.10.2026) is gated by its vision label alone
-  .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && (!p.set || p.set === 'stadium' || p.set === 'football' || TOPIC_OK.has(p.id)) && !!IMG_LABELS[p.id] && IMG_LABELS[p.id] !== 'x' && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)))
+  // football set (balls, goals, pitches, 31.10.2026) is gated by its vision label alone; since 31.10.2026 (late) every topic set photo
+  // with the vision label 'g' is used too (the vision check replaced the manual review, Yakir: "הכל צריך להיות עם תמונה")
+  .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && (!p.set || p.set === 'stadium' || p.set === 'football' || TOPIC_OK.has(p.id) || (IMG_LABELS[p.id] || '').startsWith('g')) && !!IMG_LABELS[p.id] && IMG_LABELS[p.id] !== 'x' && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)))
   .map((p) => (ROLE.has(p.id) ? { ...p, topics: [...p.topics, ...ROLE.get(p.id)!] } : p));
 function libPic(p: LibPhoto): Pic {
   const b = `/img/lib/${p.id}`;
@@ -464,9 +465,17 @@ export const NETANYA_PLACES = PLACES.filter((p) => p.kind === 'neighborhood').ma
   const STOCK_VENUE: Record<string, string> = { 'stadium-day': 'netanya', 'stadium-aerial': 'netanya', 'stadium-night': '?', 'stadium-crowd': '?' };
   const stockOk = (a: Article, n: string) => { const l = IMG_LABELS[`stock:${n}`] || ''; if (STOCK_VENUE[n] !== undefined) return STOCK_VENUE[n] !== '?' && venueOf(a, SP0) === STOCK_VENUE[n] && l !== 'x'; return labelOk(l, a) && !(IMG_BRAKE && l.startsWith('s:')) && !(LIVE_FIX[a.slug]?.bad || []).includes(`stock:${n}`); };
   // the safe end: a generic stock photo of the topic that passed its label, else the designed card of the section
+  // 31.10.2026 (late, Yakir: "רוב האתר בלי תמונות. זה לא נורמאלי. הכל צריך להיות עם תמונה"): the designed card is the last resort.
+  // Before it: a generic library photo of the section's neutral sets, then any generic stock photo of the section, that passed its
+  // label for this story.
   const safeEnd = (a: Article, names: string[], why: string) => {
     const ok = names.filter((n) => stockOk(a, n));
-    return ok.length ? { stock: ok[(a.engineId ?? hashOf(a.slug)) % ok.length], why } : { card: a.section, why: `${why} -> card` };
+    if (ok.length) return { stock: ok[(a.engineId ?? hashOf(a.slug)) % ok.length], why };
+    const neutral = (SECTION_NEUTRAL[a.section] || []).flatMap((x: string) => bySet.get(x) || []).filter((p) => (IMG_LABELS[p.id] || '').startsWith('g') && okFor(a, p));
+    if (neutral.length) return { lib: neutral[(a.engineId ?? hashOf(a.slug)) % neutral.length], why: `${why} -> section generic` };
+    const sec = (SECTION_BY_KEY[a.section as SectionKey]?.photos || []).filter((n) => (IMG_LABELS[`stock:${n}`] || '') === 'g' && stockOk(a, n));
+    if (sec.length) return { stock: sec[(a.engineId ?? hashOf(a.slug)) % sec.length], why: `${why} -> section stock` };
+    return { card: a.section, why: `${why} -> card` };
   };
   const pickFor = (a: Article, t: any, where: string, neutral: boolean, at: number, today: Set<string>) => {
     const T = t && t.conf === 'high' ? TOPIC_BY_KEY[t.key] : null;

@@ -12,6 +12,16 @@
 export const TOPICS = [
   { key: 'security', hard: true, sets: ['security', 'police'], stock: ['police-lights', 'police-street'],
     rx: /טרור|פיגוע|מחבל|נשק |נשק,|כלי נשק|הנשק|אמל"ח|אמל״ח|תחמושת|רימון|מטען חבלה|שב"כ|שב״כ|ביטחוני|צה"ל|צה״ל|אזעק|רקט|טילים|טיל |כטב"ם|יירוט|פיקוד העורף|ממ"ד|ממ״ד|מקלט|מקלטים/g },
+  // 31.10.2026 (Yakir: every story needs a fitting photo): national topics. A generic military, shipping, politics or diplomacy photo
+  // (tanks, Iron Dome, a navy ship, an oil tanker, the Knesset, microphones), never a photo of the actual event.
+  { key: 'military', hard: true, sets: ['military', 'security'], stock: [], pri: 1,
+    rx: /צה"ל|צה״ל|הצבא|צבאי|צבאית|חיילי|חייל |לוחמי|לוחמים|חטיבת|גדוד|חיל האוויר|חיל הים|תקיפה|תקף|תקפו|מלחמ|איראן|איראני|חיזבאללה|חמאס|עזה|לבנון|סוריה|תימן|החות'ים|החות׳ים|כיפת ברזל|יירוט|יירט|טילים|טיל |כטב"ם|כטב״ם|הרמטכ"ל|הרמטכ״ל|מבצע צבאי|הרס את|בתי המחבלים|יהודה ושומרון|רצועת|גרעין/g },
+  { key: 'shipping', hard: true, sets: ['shipping'], stock: [], pri: 2,
+    rx: /מכלית|מכליות|מיכלית|ספינה|ספינת|ספינות|אונייה|אוניית|אוניות|נמל |נמל,|בנמל|מצר הורמוז|הורמוז|ספנות|נפט גולמי|מפרץ הפרסי/g },
+  { key: 'politics', hard: true, sets: ['politics'], stock: [], pri: -1,
+    rx: /הכנסת|בכנסת|כנסת |ממשלה|הממשלה|קואליצי|אופוזיצי|ראש הממשלה|נתניהו|השר |השרה|שר ה|שרת ה|חבר הכנסת|חברי הכנסת|ח"כ|ח״כ|מפלג|הליכוד|יש עתיד|ש"ס|ש״ס|יהדות התורה|המחנה הממלכתי|הרכבת הממשלה|מליאת הכנסת|הצבעה במליאה|איזנקוט|בנט|לפיד/g },
+  { key: 'diplomacy', hard: true, sets: ['diplomacy', 'politics'], stock: [], pri: 0,
+    rx: /טראמפ|הבית הלבן|וושינגטון|ארה"ב|ארה״ב|אמריקה|רוביו|מזכיר המדינה|האו"ם|האו״ם|שגריר|שגרירות|מדיני|הסכם|משא ומתן|פוטין|רוסיה|אוקראינה|האיחוד האירופי/g },
   { key: 'police', hard: true, sets: ['police', 'security'], stock: ['police-lights', 'police-street'],
     rx: /משטר|שוטר|ניידת|נעצר|נעצרו|העצור|עצורים|חשוד|כתב אישום|כתבי אישום|רצח|נרצח|דקיר|נדקר|יריות| ירי |בירי |בירי,|ירי,|נורה|שוד |שוד,|שודד|פריצה|פריצות|פרץ ל|גניב|נגנב|סמים|הונאה|אלימות|תקיפ|קטטה|מעצר|בילוש|פלילי|עבריי|סחיט|הימורים/g },
   { key: 'accident', hard: true, sets: ['ambulance'], stock: ['traffic-night', 'traffic-fog'],
@@ -68,8 +78,8 @@ export const TOPIC_BY_KEY = Object.fromEntries(TOPICS.map((t) => [t.key, t]));
 export const SECTION_TOPIC = { police: 'police', sports: 'sports', law: 'courts', health: 'health', realestate: 'realestate', transport: 'traffic',
   leisure: 'culture', tourism: 'tourism', city: 'municipal', flash: 'police' };
 export const SECTION_NEUTRAL = { flash: ['police', 'traffic'], police: ['police'], sports: ['football'], law: ['courts'], health: ['hospital'],
-  realestate: ['construction', 'realestate'], transport: ['transport', 'traffic'], leisure: ['culture'], city: ['cityhall'], national: [],
-  community: [], sharon: [], tourism: [], blog: [] };
+  realestate: ['construction', 'realestate'], transport: ['transport', 'traffic'], leisure: ['culture'], city: ['cityhall'], national: ['politics', 'diplomacy'],
+  community: ['school', 'cityhall'], sharon: ['cityhall', 'construction'], tourism: [], blog: [], economy: ['money'] };
 
 // places: the Netanya neighbourhoods, the city, and places outside it (a Netanya landmark never illustrates a story from there)
 export const NETANYA = 'נתניה';
@@ -162,7 +172,7 @@ export function checkPick(a, photo, netanyaPlaces = []) {
 // 'g' generic, 'x' never, 'p' a Netanya/Sharon place photo (the place rules decide), 's:<words>' only for a story that names it.
 // Venue photos (library set 'stadium') carry their venue key from their Commons category; the venue of a match comes from VENUES.
 export const VENUES = [
-  { key: 'netanya', rx: /אצטדיון נתניה|האצטדיון בנתניה|האצטדיון העירוני בנתניה|באצטדיון העירוני נתניה/, clubs: /מכבי נתניה|בית"ר נתניה|בית״ר נתניה/ },
+  { key: 'netanya', rx: /אצטדיון נתניה|האצטדיון בנתניה|האצטדיון העירוני בנתניה|באצטדיון העירוני נתניה|אצטדיון מרים/, clubs: /מכבי נתניה|בית"ר נתניה|בית״ר נתניה/ },
   { key: 'sammy-ofer', rx: /סמי עופר|סמי-עופר/, clubs: /מכבי חיפה|הפועל חיפה/ },
   { key: 'bloomfield', rx: /בלומפילד/, clubs: /מכבי תל אביב|הפועל תל אביב|בני יהודה/ },
   { key: 'teddy', rx: /אצטדיון טדי|בטדי|טדי קולק/, clubs: /בית"ר ירושלים|בית״ר ירושלים|הפועל ירושלים/ },
@@ -173,7 +183,7 @@ export const VENUES = [
   { key: 'kiryat-shmona', rx: /האצטדיון העירוני בקריית שמונה|האצטדיון העירוני קריית שמונה/, clubs: /הפועל קרית שמונה|הפועל קריית שמונה|עירוני קרית שמונה|עירוני קריית שמונה/ },
   { key: 'haberfeld', rx: /הברפלד/, clubs: /הפועל ראשון לציון|מכבי ראשון/ },
 ];
-const HOME_RX = /במגרשה|על מגרשה|משחק בית|במשחק הבית|במשחק ביתי|בבית מול|הביתה/;
+const HOME_RX = /במגרשה|על מגרשה|משחק בית|במשחק הבית|במשחק ביתי|המשחק הביתי|משחק ביתי|בבית מול|הביתה/;
 const AWAY_RX = /משחק חוץ|במשחק החוץ|בחוץ מול|כאורחת|התארחה|מתארחת|תתארח|יתארחו|התארחו/;
 /** where the story's match was played: a VENUES key, or '' when it is not known for sure.
  *  sport: { next, last } from sport.json (fixture data), used only for a story published around that game's date */

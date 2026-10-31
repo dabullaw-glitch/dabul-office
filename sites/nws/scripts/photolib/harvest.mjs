@@ -123,7 +123,24 @@ const ROOTS = [
     ['market', 'שוק', null, ['Markets in Israel', 'Carmel Market', 'Mahane Yehuda Market', 'Netanya market', 'Fruit and vegetable stalls', 'Hatikva Market', 'Levinsky Market', 'Market stalls', 'Fruit stalls', 'Vegetable stalls', 'Spices in markets', 'Produce markets']],
     ['transport', 'תחבורה ציבורית', null, ['Buses in Israel', 'Israel Railways trains', 'Israel Railways rolling stock', 'Bus stops in Israel', 'Bus terminals in Israel', 'Netanya railway station']],
     ['cityhall', 'בניין עירייה', null, ['City halls in Israel', 'Town halls in Israel', 'Netanya City Hall', 'Municipal buildings in Israel']],
-  ].flatMap(([set, alt, allow, cats]) => cats.map((cat) => ({ cat, depth: 1, cap: ['election', 'money', 'fire', 'roadworks', 'security', 'market'].includes(set) ? 8 : 6, set, topics: [set], place: null, alt, allow }))),
+    // 31.10.2026 (Yakir: "רוב האתר בלי תמונות ... הכל צריך להיות עם תמונה"): many more GENERIC photos per topic, and new topics for
+    // national news (military, shipping, politics, diplomacy). Every new photo gets a vision label (hns-img vet_label) before use:
+    // only 'g' (generic, no foreign text or flags, no faces, no brands) illustrates a story; anything else never shows.
+    ['military', 'כוחות צבא', /army|militar|soldier|\bIDF\b|defen[cs]e forces|missile|rocket|aircraft|airplane|aviation|tank|navy|naval|air force|war/i, ['Merkava Mk 4', 'Merkava tanks', 'Merkava Mark IV', 'Namer (vehicle)', 'Iron Dome', 'Iron Dome launchers', "David's Sling", 'Arrow (Israeli missile)', 'F-35I Adir', 'F-16I Sufa', 'F-15I Ra\'am', 'Israeli Air Force aircraft', 'Israeli Navy ships', "Sa'ar 6-class corvettes", "Sa'ar 5-class corvettes", 'Israel Defense Forces vehicles', 'Military vehicles of Israel', 'AH-64 Apache of the Israeli Air Force', 'Israeli Air Force helicopters']],
+    ['shipping', 'מכלית בים', /navy|naval|war/i, ['Oil tankers', 'Crude oil tankers', 'Tankers (ships)', 'Container ships', 'Container ships at sea', 'Bulk carriers', 'Port of Haifa', 'Port of Ashdod', 'Ships at sea', 'Oil platforms']],
+    ['politics', 'הכנסת', /flags?\b/i, ['Knesset building', 'Exterior of the Knesset building', 'Knesset Plenum', 'Knesset plenum hall', 'Knesset Menorah', 'Flags of Israel', 'Flags of Israel in Jerusalem', 'Government quarter (Jerusalem)', 'Kiryat HaMemshala (Jerusalem)']],
+    ['diplomacy', 'מיקרופונים ודוכן נאומים', /flags?\b/i, ['Microphones', 'Microphones in press conferences', 'Lecterns', 'Podiums', 'Press conference rooms', 'Flags of the United States', 'Flags of the United States and Israel', 'Conference tables', 'Meeting rooms']],
+    ['football', 'כדורגל', /match/i, ['Association footballs', 'Footballs (soccer)', 'Soccer balls', 'Footballs on grass', 'Association football goals', 'Goal nets', 'Association football pitches', 'Football pitches', 'Corner flags (association football)', 'Football boots', 'Stadium seats', 'Empty stadiums', 'Football pitches in Israel']],
+    ['police', 'ניידת משטרה', /polic/i, ['Israel Police', 'Israel Police cars', 'Police cars of Israel Police', 'Israel Police vehicles', 'Police motorcycles of Israel', 'Blue lights', 'Police light bars']],
+    ['ambulance', 'אמבולנס של מד"א', /ambulan/i, ['Magen David Adom ambulances', 'Magen David Adom mobile intensive care units', 'Magen David Adom motorcycles', 'Ambulances in Israel', 'Ambulance interiors', 'Stretchers']],
+    ['money', 'כסף ושקלים', null, ['Israeli new shekel coins', 'Israeli new shekel banknotes', 'Banknotes of Israel', '200 new shekel banknote', '100 new shekel banknote', '50 new shekel banknote', '10 new shekel coin', 'Coins of Israel', 'Piggy banks', 'Calculators', 'Wallets', 'Credit cards', 'Stacks of coins', 'Bank of Israel']],
+    ['hospital', 'בית חולים', null, ['Hospital corridors', 'Hospital beds', 'Stethoscopes', 'Medical equipment', 'Operating rooms', 'Emergency departments', 'Hospitals in Israel', 'Medical syringes', 'Medicine bottles']],
+    ['school', 'בית ספר', null, ['School buildings in Israel', 'Empty classrooms', 'Classrooms', 'School desks', 'Blackboards', 'Whiteboards', 'School bags', 'Pencils', 'Notebooks', 'School yards in Israel']],
+    ['weather', 'מזג אוויר', null, ['Rain', 'Raindrops', 'Rain on windows', 'Storm clouds', 'Cumulonimbus clouds', 'Lightning', 'Stormy seas', 'Waves breaking', 'Puddles', 'Umbrellas in the rain', 'Heat waves', 'Thermometers']],
+    ['election', 'קלפי', /election|ballot|campaign/i, ['Ballot boxes', 'Ballot boxes in Israel', 'Ballot papers of Israel', 'Israeli ballot slips', 'Polling stations in Israel', 'Voting booths', 'Ballot box', 'Israeli legislative election, 2022', 'Israeli legislative election, 2021']],
+    ['courts', 'בית המשפט', /court/i, ['Gavels', 'Judge gavels', 'Scales of justice', 'Lady Justice', 'Courtrooms in Israel', 'Supreme Court of Israel building', 'Law books']],
+    ['fire', 'כבאית', /\bfires?\b|fire.?(engine|truck|station|fighting|service|and rescue)/i, ['Fire engines in Israel', 'Israel Fire and Rescue Services vehicles', 'Fire hoses', 'Firefighting', 'Fire trucks', 'Smoke']],
+  ].flatMap(([set, alt, allow, cats]) => cats.map((cat) => ({ cat, depth: 1, cap: 10, set, topics: [set], place: null, alt, allow }))),
 ];
 // more specific places found in the sub-category or file name (Hebrew name as on the site)
 const PLACE_RX = [
@@ -282,7 +299,7 @@ const keep = [];
 const byRoot = new Map();
 const bySet = new Map();
 // 30.10.2026 second round: the sets that came out thin in the review get more candidates
-const THIN = new Set(['election', 'money', 'fire', 'roadworks', 'security', 'market']);
+const THIN = new Set(['election', 'money', 'fire', 'roadworks', 'security', 'market', 'military', 'shipping', 'politics', 'diplomacy', 'football', 'police', 'ambulance', 'hospital', 'school', 'weather', 'courts', 'traffic', 'realestate', 'construction', 'transport', 'culture', 'cityhall', 'basketball']);
 // photos that passed the visual review (src/data/photolib-ok.txt) come first, so new candidates never push them out of a set
 const OK = new Set((() => { try { return fs.readFileSync(path.join(HERE, '../../src/data/photolib-ok.txt'), 'utf8'); } catch { return ''; } })()
   .split('\n').map((l) => Number(l.replace(/#.*/, '').trim().split(/\s+/)[0])).filter(Boolean));
@@ -294,7 +311,7 @@ for (const c of cand.sort((a, b) => Number(OK.has(b.pageid)) - Number(OK.has(a.p
   // a topic set: at most 12 photos (the review keeps 6 to 10), at most 2 of one author
   const ks = c.set ? bySet.get(c.set) || { n: 0, au: {} } : null;
   // venue photos (set 'stadium'): up to 8 per venue (the root cap), so the set and author caps are wider
-  if (ks && (ks.n >= (c.set === 'stadium' ? 90 : THIN.has(c.set) ? 24 : 12) || (ks.au[c.author] || 0) >= (c.set === 'stadium' ? 4 : 2))) continue;
+  if (ks && (ks.n >= (c.set === 'stadium' ? 90 : THIN.has(c.set) ? 40 : 12) || (ks.au[c.author] || 0) >= (c.set === 'stadium' ? 4 : 5))) continue;
   if (ks) { ks.n++; ks.au[c.author] = (ks.au[c.author] || 0) + 1; bySet.set(c.set, ks); }
   k.n++; k.au[c.author] = (k.au[c.author] || 0) + 1; byRoot.set(c.root, k); keep.push(c);
 }
