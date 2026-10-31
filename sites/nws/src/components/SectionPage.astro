@@ -71,7 +71,7 @@ const L = {
 ---
 <Base lang={lang} title={title} description={desc} path={path} alternates={alternates} jsonld={jsonld} crumbs={crumbs} current={k} ogImage={`/img/stock/og/${IMG[s.img]?.name || s.photos[0]}.jpg`}>
   <div class="nl-page">
-  <ListHero lang={lang} crumbs={crumbs} crumbLabel={u.breadcrumbs} h1={he ? s.title.split(':')[0] : name} intro={he ? s.intro : desc} color={s.color} photo={IMG[s.img]?.name || s.photos[0]} icon={s.key} stats={stats} />
+  <ListHero lang={lang} crumbs={crumbs} crumbLabel={u.breadcrumbs} h1={he ? s.title.split(':')[0].replace(/\s+מנתניה$/, '') : name} intro={he ? s.intro : desc} color={s.color} photo={IMG[s.img]?.name || s.photos[0]} icon={s.key} stats={[]} />
   <div class="n-wrap n-list">
     <div style={`--c:${s.color}`}>
       {he && k === 'realestate' && PROJECTS.length > 0 && (
