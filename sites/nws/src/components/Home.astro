@@ -6,6 +6,7 @@
 import Base from '../layouts/Base.astro';
 import Card from './Card.astro';
 import AdSlot from './AdSlot.astro';
+import EconLive from './EconLive.astro';
 import Icon from './Icon.astro';
 import { BRAND, SITE_URL, LANG_PREFIX, LANGS, TG_URL, SAME_AS, type Lang } from '../data/site';
 import { SECTION_BY_KEY, type SectionKey } from '../data/sections';
@@ -62,6 +63,8 @@ const groups: { keys: SectionKey[]; title: string }[] = [
   { keys: ['sharon'], title: 'השרון' }, { keys: ['tourism'], title: 'חופים ותיירות' }, { keys: ['law'], title: 'חוק ומשפט' }, { keys: ['realestate'], title: 'נדל״ן ותכנון' }];
 const sportsAll = all.filter((a) => a.section === 'sports');
 const reAll = all.filter((a) => a.section === 'realestate');
+// 31.10.2026: the "כלכלה וכסף" block (the newest economy stories and the live market strip)
+const econ = all.filter((a) => a.section === 'economy').slice(0, 5);
 // 29.10.2026 (Yakir): every section block shows the newest stories of its section, even when they also appear at the top
 const cols = groups.map((g) => ({ ...g, items: all.filter((a) => g.keys.includes(a.section) && !(g.keys.length === 1 && g.keys[0] === 'realestate' && reAll.length > 1)) }))
   .filter((g) => g.items.length > 0).slice(0, he ? 3 : 0);
@@ -234,6 +237,19 @@ const T = he ? { live: 'עכשיו בנתניה והשרון', liveSub: 'מתע�
         <div class="h">עוד מנדל״ן ותכנון בנתניה<span>מהידיעות באתר</span></div>
         {re.slice(1).map((a) => <a class="pr" href={articleUrl(a)}><div><b>{a.title}</b><span class="num">{fmtDay(a.published)}</span></div><span class="n-st">{a.kicker ? a.kicker.split(' ').slice(0, 2).join(' ') : 'תכנון'}</span></a>)}
         <a class="n-lf" href="https://mavat.iplan.gov.il/" rel="noopener nofollow" target="_blank">חיפוש תוכניות באתר מנהל התכנון ←</a>
+      </div>
+    </div>
+  </section>)}
+
+  {he && econ.length > 0 && (
+  <section class="n-sec n-wrap" aria-labelledby="ec-h" style={`--c:${S('economy').color}`}>
+    <h2 class="n-sh" id="ec-h">כלכלה וכסף<a href={sectionUrl('economy')}>לכל ידיעות הכלכלה ←</a></h2>
+    <div class="n-re">
+      <Card a={econ[0]} ratio="16/9" dek size={28} sizes="(max-width: 1100px) 100vw, 700px" />
+      <div class="n-ec">
+        <EconLive compact />
+        {econ.length > 1 && <div class="n-box"><div class="h">עוד מכלכלה וכסף<span>מהידיעות באתר</span></div>
+          {econ.slice(1).map((a) => <a class="pr" href={articleUrl(a)}><div><b>{a.title}</b><span class="num">{fmtDay(a.published)}</span></div></a>)}</div>}
       </div>
     </div>
   </section>)}

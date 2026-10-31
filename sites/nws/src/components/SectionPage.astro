@@ -7,6 +7,7 @@
 import Base from '../layouts/Base.astro';
 import { PROJECTS } from '../lib/projects';
 import ListHero from './list/ListHero.astro';
+import EconLive from './EconLive.astro';
 import StoryList from './list/StoryList.astro';
 import ListAside from './list/ListAside.astro';
 import '../styles/list.css';
@@ -93,6 +94,7 @@ const L = {
           <div class="n-box"><div class="h"><h3>{dayName(d)}</h3></div>
             <ul class="num">{cal.filter((c) => ilDayOf(c.start) === d).map((c) => <li><time datetime={c.start}>{calTime(c.start) || 'כל היום'}</time><span><a href={eventUrl(c)}>{c.title}</a>{calVenue(c) && <small>{calVenue(c)}</small>}</span></li>)}</ul></div>))}</div>
       </section>)}
+      {he && k === 'economy' && <EconLive tabs={items} />}
       {items.length === 0 && <div class="nl-empty"><b>{L.empty}</b>{L.emptyText}</div>}
       <StoryList items={items} lang={lang} listTitle={L.more} color={s.color} />
       {he && places.length > 0 && (

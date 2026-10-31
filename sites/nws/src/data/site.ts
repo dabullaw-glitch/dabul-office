@@ -36,6 +36,7 @@ export const IMG: Record<string, { src: string; small: string; name: string; alt
   police: ph('police-lights', 'אורות של ניידת משטרה'),
   traffic: ph('traffic-fog', 'תנועת מכוניות בערב'),
   sunset: ph('beach-sunset', 'שקיעה מעל הים'),
+  towers: ph('econ-towers', 'מגדלי משרדים מזכוכית, מבט מלמטה'),
 };
 
 export const abs = (path: string) => SITE_URL + path;

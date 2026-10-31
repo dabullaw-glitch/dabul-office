@@ -61,6 +61,8 @@ export interface Extras {
   service: { title: string; lines: string[]; link: { text: string; url: string } | null; source: string } | null;
   // our earlier stories as background (hns-enrich context_ids, up to 3), resolved to links on the story page
   contextIds: number[];
+  /** 31.10.2026: the sub-topic of an economy story (hns-national economy module): economy | money | invest | crypto */
+  econ?: string;
 }
 const safeUrl = (u: unknown) => { const x = String(u ?? '').trim(); return /^https?:\/\/[^\s"<>]+$/.test(x) || /^\/[^\s"<>]*$/.test(x) ? x.replace(/^https?:\/\/(www\.)?nws\.co\.il(?=\/)/, '') : ''; };
 /** extras of hns-feed v8, checked and trimmed (tolerant of small shape differences); null when there is nothing to show.
@@ -82,7 +84,8 @@ function extrasOf(s: any): Extras | null {
     const link = lk && lk.url ? { text: lk.text || '', url: lk.url } : null;
     if (lines.length || link) service = { title: clean(sv.title) || '', lines, link, source: clean(sv.source ?? sv.source_name) };
   }
-  return related.length || service || contextIds.length ? { related, service, contextIds } : null;
+  const econ = ['economy', 'money', 'invest', 'crypto'].includes(String(e0.econ)) ? String(e0.econ) : undefined;
+  return related.length || service || contextIds.length || econ ? { related, service, contextIds, ...(econ ? { econ } : {}) } : null;
 }
 // recurring formats of hns-recurring (Maccabi Netanya preview and report, the week's roundup, the weekend guide, council and
 // planning summaries). formatData is passed on checked: match {opponent, home, kickoff, venue, round, competition, table, previous,
@@ -302,7 +305,7 @@ export function leadOf(all: Article[], ev: SiteEvent | null = EVENT) {
   if (pinned) return pinned;
   // 29.10.2026: national stories (section 'national') get their own column and never take the local lead
   // 29.10.2026 (Yakir): fixed recurring pieces (Shabbat times, weather, weekend guide...) never lead either
-  const pool = all.filter((a) => !evSlugs.has(a.slug) && a.kind !== 'sponsored' && a.section !== 'national' && !a.routine);
+  const pool = all.filter((a) => !evSlugs.has(a.slug) && a.kind !== 'sponsored' && a.section !== 'national' && a.section !== 'economy' && !a.routine);
   const fresh = pool.filter((a) => Date.now() - Date.parse(a.published) < 72 * 3600e3);
   return fresh.find((a) => a.section !== 'flash' && a.kind !== 'opinion') ?? pool.find((a) => a.section !== 'flash' && a.kind !== 'opinion') ?? pool[0] ?? all[0];
 }
@@ -343,7 +346,7 @@ export function picLabel(p: Pic, lang: Lang = 'he') {
 }
 function hashOf(s: string) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
 // the 1:1 crop of the library photos is 1200 wide, except two whose original is not tall enough (public/img/stock/x)
-const STOCK_SQ: Record<string, number> = { 'police-lights': 980, 'police-street': 1012 };
+const STOCK_SQ: Record<string, number> = { 'police-lights': 980, 'police-street': 1012, 'econ-coins': 1067, 'econ-chart': 1067, 'econ-towers': 1067 };
 const stockLd = (name: string) => [{ src: `/img/stock/x/${name}-16x9.jpg`, w: 1200, h: 675 }, { src: `/img/stock/x/${name}-4x3.jpg`, w: 1200, h: 900 },
   { src: `/img/stock/x/${name}-1x1.jpg`, w: STOCK_SQ[name] ?? 1200, h: STOCK_SQ[name] ?? 1200 }];
 export function stockPic(name: string, alt = ''): Pic {

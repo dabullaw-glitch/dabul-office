@@ -3,7 +3,8 @@
 // picture of a story without its own image, picked per story so neighbouring stories do not repeat.
 // 28.10.2026: police, transport and health were added (the engine, hns-write v10, fills them). A section without stories is left out
 // of the menu and gets no page until its first story is published (liveSections in lib/content.ts).
-export type SectionKey = 'blog' | 'national' | 'flash' | 'city' | 'police' | 'realestate' | 'sports' | 'transport' | 'community' | 'health' | 'leisure' | 'sharon' | 'tourism' | 'law';
+// 31.10.2026: 'economy' (כלכלה וכסף: economy, household money, investments and crypto; the hns-national economy module fills it)
+export type SectionKey = 'blog' | 'national' | 'flash' | 'city' | 'police' | 'realestate' | 'sports' | 'transport' | 'community' | 'health' | 'leisure' | 'sharon' | 'tourism' | 'law' | 'economy';
 
 export interface Section {
   key: SectionKey; slug: string; color: string; ink: string; soft: string; img: string; photos: string[]; icon: string;
@@ -81,6 +82,11 @@ export const SECTIONS: Section[] = [
     intro: 'פסקי דין והחלטות שנוגעים לתושבי העיר, בלי שמות של אנשים פרטיים, ובשפה פשוטה.' },
   // 29.10.2026 (Yakir approved): the blog, long guides that stay useful (arnona, parking, neighborhoods, history), from official sources
   // only, two a day by the engine function hns-blog from the topic list Yakir approved
+  { key: 'economy', slug: 'economy', color: '#0E7A5A', ink: '#0A5F46', soft: '#E3F4EC', img: 'towers', photos: ['econ-towers', 'econ-coins', 'econ-chart'], icon: 'coins',
+    name: { he: 'כלכלה וכסף', ru: 'Экономика', fr: 'Économie', en: 'Economy' },
+    title: 'כלכלה וכסף: ריבית, מחירים, השקעות וקריפטו',
+    desc: 'חדשות כלכלה וכסף: ריבית בנק ישראל, מדד המחירים ויוקר המחיה, מסים וקצבאות, פנסיה וחיסכון, הבורסה, דולר וקריפטו, בשפה פשוטה.',
+    intro: 'מה קורה עם הריבית, המחירים, החיסכון וההשקעות, ומה זה אומר לכיס שלכם.' },
   { key: 'blog', slug: 'blog', color: '#2E6B4F', ink: '#245A41', soft: '#E7F2EC', img: 'beach', photos: ['city-buildings', 'beach-sunset', 'road-aerial'], icon: 'book',
     name: { he: 'בלוג', ru: 'Блог', fr: 'Blog', en: 'Blog' },
     title: 'הבלוג של נתניה: מדריכים לתושבים, שכונות והיסטוריה',
@@ -90,6 +96,7 @@ export const SECTIONS: Section[] = [
 
 export const SECTION_BY_KEY = Object.fromEntries(SECTIONS.map((s) => [s.key, s])) as Record<SectionKey, Section>;
 /** the main menu, in the order of the approved design (בעלי מקצוע is added by the layout) */
-export const NAV_ORDER: SectionKey[] = ['flash', 'national', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'leisure', 'sharon'];
+// 31.10.2026 (Yakir): 'economy' takes the place of 'leisure' in the top menu; leisure stays everywhere else on the site
+export const NAV_ORDER: SectionKey[] = ['flash', 'national', 'city', 'police', 'realestate', 'sports', 'transport', 'community', 'health', 'economy', 'sharon'];
 /** sections that always have a page, even before their first story (the rest appear with their first story) */
-export const CORE_SECTIONS: SectionKey[] = ['flash', 'city', 'realestate', 'sports', 'community', 'leisure', 'sharon', 'tourism', 'law'];
+export const CORE_SECTIONS: SectionKey[] = ['flash', 'city', 'realestate', 'sports', 'community', 'leisure', 'sharon', 'tourism', 'law', 'economy'];
