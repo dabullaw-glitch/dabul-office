@@ -15,6 +15,8 @@
 //      published through hns-publish 'approve' (by 'national-auto'), which keeps every publishing guard (outlet names, dashes).
 // POST (x-cron-secret): {action:'tick'} | {action:'tick', dry:true} (shows the groups, writes nothing)
 import { createClient } from 'npm:@supabase/supabase-js@2';
+// 31.10.2026: the "כלכלה וכסף" section engine (economy.ts) runs here too: the project has no room for another edge function
+import { economy } from './economy.ts';
 
 // deno-lint-ignore no-explicit-any
 type Any = any;
@@ -197,6 +199,7 @@ Deno.serve(async (req) => {
   const b: Any = await req.json().catch(() => ({}));
   try {
     if (b.action === 'tick') return J({ ok: true, ...(await tick(!!b.dry)) });
+    if (['econ', 'econ_dry', 'econ_live'].includes(b.action)) return J({ ok: true, ...(await economy(b.action, S)) });
     return J({ ok: false, error: 'unknown action' }, 400);
   } catch (e) { return J({ ok: false, error: String((e as Error).message || e) }, 500); }
 });

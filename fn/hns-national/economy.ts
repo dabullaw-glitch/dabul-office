@@ -1,4 +1,5 @@
-// hns-economy (31.10.2026, Yakir approved 21:45): the "כלכלה וכסף" section of nws.co.il (section 'economy'): economy, household
+// economy module of hns-national (31.10.2026, Yakir approved 21:45; the project has no room for another edge function, so this
+// runs inside hns-national with the actions 'econ', 'econ_dry' and 'econ_live'): the "כלכלה וכסף" section of nws.co.il (section 'economy'): economy, household
 // money, investments and crypto, 8 to 10 stories a day, plus the live market strip at the top of the section.
 //
 // STORIES ({action:'tick'}, cron every 15 minutes, 07:00 to 23:00 Israel time). Per run at most ONE story:
@@ -17,19 +18,14 @@
 //   open data), Bitcoin and Ethereum prices (CoinGecko free API) and the TA-35 index (Yahoo Finance chart, best effort, dropped
 //   when it fails). Written to docs coll 'nwslive' id 'markets' (docs_merge), which hns-feed passes to the site as live.markets.
 //   A value that fails keeps its last good value with its own time.
-// Every Anthropic call is priced into the table ai_cost (fn 'hns-economy'). POST (x-cron-secret): {action:'tick', dry?} |
-//   {action:'live'}
+// Every Anthropic call is priced into the table ai_cost (fn 'hns-economy'). POST hns-national (x-cron-secret): {action:'econ'} |
+//   {action:'econ_dry'} | {action:'econ_live'}
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
 type Any = any;
 const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
 let S: Record<string, string> = {};
-async function secrets() {
-  const { data } = await sb.from('app_secrets').select('k,v').in('k', ['CRON_SECRET', 'ANTHROPIC_API_KEY', 'ANTHROPIC_WORKSPACE_ID']);
-  S = Object.fromEntries((data || []).map((r: Any) => [r.k, r.v]));
-}
-const J = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { 'content-type': 'application/json; charset=utf-8' } });
 
 const MODEL = 'claude-sonnet-5-5';
 const MAX_DAY = 10;
@@ -267,13 +263,11 @@ async function live() {
   return { ok: true, errors: errs, rate: out.rate?.value, usd: out.usd?.value, eur: out.eur?.value, btc: out.btc?.usd, ta35: out.ta35?.value };
 }
 
-Deno.serve(async (req) => {
-  await secrets();
-  if (!S.CRON_SECRET || req.headers.get('x-cron-secret') !== S.CRON_SECRET) return J({ ok: false }, 401);
-  const b: Any = await req.json().catch(() => ({}));
-  try {
-    if (b.action === 'tick') return J({ ok: true, ...(await tick(!!b.dry)) });
-    if (b.action === 'live') return J(await live());
-    return J({ ok: false, error: 'unknown action' }, 400);
-  } catch (e) { return J({ ok: false, error: String((e as Error).message || e) }, 500); }
-});
+// called by hns-national with its secrets
+export async function economy(action: string, secrets: Record<string, string>) {
+  S = secrets;
+  if (action === 'econ') return await tick(false);
+  if (action === 'econ_dry') return await tick(true);
+  if (action === 'econ_live') return await live();
+  return { error: 'unknown economy action' };
+}
