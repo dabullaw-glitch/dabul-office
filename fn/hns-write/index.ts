@@ -60,6 +60,11 @@
 //   by the regular run (story 88 was an April video seen again).
 // 28.10.2026 (site redesign): three more sections, police, transport and health; flash stays for short urgent items. A section
 //   key the site does not know is replaced by the item's own topic.
+// 31.10.2026 (Yakir approved idea 4, "שדרוג הכתיבה"): the WRITER step of a story (compose, also its rewrite after the editor) uses
+//   hns_config 'ai'.lead_model (Opus 5.5) when set; the copy editor, live updates and everything else stay on the regular model.
+//   Every call is priced into the table ai_cost (rpc ai_cost_add, list price per token). BUDGET BRAKE: when this month's tracked
+//   cost (ai_cost_month) plus 'untracked_usd' (estimate for functions that do not log yet) reaches 'extra_stop_usd', the writer
+//   goes back to the regular model by itself until the month ends.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 // deno-lint-ignore no-explicit-any
@@ -74,10 +79,18 @@ const J = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, 
 const MAX_PER_DAY = 25;
 const MODEL = 'claude-sonnet-5-5';
 let CFG: Any = { max_per_day: MAX_PER_DAY, model: MODEL, boost: false };
+let BRAKE = false;
 async function config() {
   const { data } = await sb.from('hns_config').select('v').eq('k', 'ai').maybeSingle();
   if (data?.v && typeof data.v === 'object') CFG = { ...CFG, ...data.v };
+  BRAKE = false;
+  if (CFG.lead_model) {
+    const { data: m } = await sb.rpc('ai_cost_month');
+    BRAKE = Number(m || 0) + Number(CFG.untracked_usd || 0) >= Number(CFG.extra_stop_usd || 65);
+  }
 }
+// the model that writes the story text (the strong one, unless the monthly brake is on)
+const writerModel = (m: string) => (CFG.lead_model && !BRAKE ? String(CFG.lead_model) : m);
 const dailyMax = () => Number(CFG.boost ? CFG.boost_max_per_day : CFG.max_per_day) || MAX_PER_DAY;
 const modelFor = (sensitive: boolean, nItems: number) => !CFG.boost ? (CFG.model || MODEL) : (!sensitive && nItems <= 2 ? (CFG.boost_model || MODEL) : (CFG.boost_complex_model || MODEL));
 // AI calls used today (Israel day). Since 28.10.2026 every Anthropic call (writer, copy editor, rewrite, live update) is counted in
@@ -255,7 +268,11 @@ async function claude(user: string, model = MODEL, system = SYSTEM) {
     signal: AbortSignal.timeout(90000),
   });
   const j = await r.json();
-  if (r.ok) { CALLS++; await sb.rpc('hns_ai_bump', { p_day: ilDay(new Date()), p_n: 1 }); }
+  if (r.ok) {
+    CALLS++; await sb.rpc('hns_ai_bump', { p_day: ilDay(new Date()), p_n: 1 });
+    const u = j.usage || {};
+    await sb.rpc('ai_cost_add', { p_fn: 'hns-write', p_model: model, p_in: Number(u.input_tokens || 0) + Number(u.cache_creation_input_tokens || 0) + Number(u.cache_read_input_tokens || 0), p_out: Number(u.output_tokens || 0) }).then(() => null, () => null);
+  }
   if (!r.ok) throw new Error(`anthropic ${r.status}: ${JSON.stringify(j).slice(0, 200)}`);
   const text = (j.content || []).filter((c: Any) => c.type === 'text').map((c: Any) => c.text).join('');
   const m = text.replace(/```(?:json)?/g, '').match(/\{[\s\S]*\}/);
@@ -352,11 +369,12 @@ async function editor(out: Any, sourcesText: string, model: string) {
 }
 // write, check, and when the editor fails it, write once more with the editor's notes; failing twice means hold (never to Yakir)
 async function writeChecked(user: string, model: string) {
-  let w = await compose(user, '', model);
+  const wm = writerModel(model);
+  let w = await compose(user, '', wm);
   let qa = await editor(w.out, user, model);
   let rounds = 1;
   if (!qa.pass) {
-    const w2 = await compose(user, `עורך המשנה החזיר את הטיוטה עם ההערות: ${qa.notes.join('; ')}`, model);
+    const w2 = await compose(user, `עורך המשנה החזיר את הטיוטה עם ההערות: ${qa.notes.join('; ')}`, wm);
     const qa2 = await editor(w2.out, user, model);
     w = { ...w2, usage: { first: w.usage, second: w2.usage, editor: [qa.usage, qa2.usage] } as Any }; qa = qa2; rounds = 2;
   } else w = { ...w, usage: { write: w.usage, editor: qa.usage } as Any };
