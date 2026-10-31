@@ -1,0 +1,106 @@
+---
+// One urban renewal compound (31.10.2026): the official data of the Ministry of Housing dataset, our plain explanation (written by
+// hns-projects from the data only), the stage on a timeline, the changes we saw, links to the official plan and the map, and our
+// stories that mention the compound. No developers, no prices, no service providers.
+import Base from '../../layouts/Base.astro';
+import ListHero from '../../components/list/ListHero.astro';
+import Card from '../../components/Card.astro';
+import '../../styles/list.css';
+import '../../styles/guide.css';
+import { SITE_URL } from '../../data/site';
+import { ARTICLES } from '../../lib/content';
+import { PROJECTS, STATUS_TXT, TRACK_TXT, PROJ_SOURCE, PROJ_UPDATED, STAGES, STAGE_SHORT, stageIdx, projUrl, fmtN, trackLabel, type Project } from '../../lib/projects';
+export function getStaticPaths() {
+  return PROJECTS.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props as { p: Project };
+const path = projUrl(p);
+const h1 = `פינוי בינוי ${p.name}, ${p.town}`;
+const fmtD = (d: string) => (/^\d{4}-\d{2}-\d{2}$/.test(d) ? d.split('-').reverse().join('.') : d.replace(/\//g, '.'));
+const upd = PROJ_UPDATED ? new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(PROJ_UPDATED)) : '';
+const description = `מתחם ההתחדשות העירונית ${p.name} ב${p.town}: ${p.exist != null ? `${fmtN(p.exist)} דירות קיימות` : ''}${p.total != null ? `, ${fmtN(p.total)} דירות לפי התוכנית` : ''}. השלב: ${STAGE_SHORT[p.status] || p.status}. הנתונים, המשמעות והקישור לתוכנית הרשמית.`;
+const crumbs = [{ name: 'ראשי', href: '/' }, { name: 'פינוי בינוי', href: '/projects/' }, { name: p.name, href: path }];
+const si = stageIdx(p.status);
+// our stories that name the compound (its street words) together with renewal words
+const words = p.name.replace(/[0-9\-/,]+/g, ' ').split(/\s+/).filter((w) => w.length >= 3 && !['מתחם', 'רחוב', 'התחדשות', 'שכונת'].includes(w));
+const rel = ARTICLES.filter((a) => { const t = [a.title, a.dek, ...a.body].join(' '); return words.length > 0 && words.every((w) => t.includes(w)) && /פינוי|התחדשות|תמ"א|תמ״א|הריסה/.test(t); }).slice(0, 4);
+const near = PROJECTS.filter((x) => x.town === p.town && x.id !== p.id).slice(0, 6);
+const facts: [string, string][] = ([
+  ['יישוב', p.town], ['מספר מתחם', p.id], ['דירות קיימות', fmtN(p.exist)], ['דירות נוספות', fmtN(p.add)], ['סך הדירות לפי התוכנית', fmtN(p.total)],
+  ['דירות עם היתר בנייה', fmtN(p.permits)], ['מסלול', trackLabel(p.track)], ['תאריך הכרזה', p.declared ? fmtD(p.declared) : ''],
+  ['שנת מתן תוקף לתוכנית', p.validYear ? String(p.validYear) : ''], ['בביצוע', p.inExec ? 'כן' : 'לא'], ['מספר תוכנית', p.plan],
+] as [string, string][]).filter(([, v]) => v);
+const faq: [string, string][] = [
+  [`באיזה שלב נמצא מתחם ${p.name}?`, `לפי המאגר של משרד הבינוי והשיכון, המתחם בשלב "${p.status}". ${STATUS_TXT[p.status] || ''}`.trim()],
+  ...(p.total != null ? [[`כמה דירות ייבנו במתחם ${p.name}?`, `לפי התוכנית יהיו במתחם ${fmtN(p.total)} דירות${p.exist != null ? `, במקום ${fmtN(p.exist)} הדירות הקיימות` : ''}.`] as [string, string]] : []),
+  ...(p.track && TRACK_TXT[p.track] ? [[`מה פירוש ${trackLabel(p.track)}?`, TRACK_TXT[p.track]] as [string, string]] : []),
+];
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'Place', name: `מתחם התחדשות עירונית ${p.name}`, address: { '@type': 'PostalAddress', streetAddress: p.name, addressLocality: p.town, addressCountry: 'IL' }, url: SITE_URL + path, ...(p.mapUrl ? { hasMap: p.mapUrl } : {}) },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
+];
+const stats = [p.exist != null ? `<b>${fmtN(p.exist)}</b> דירות היום` : '', p.total != null ? `<b>${fmtN(p.total)}</b> לפי התוכנית` : '', upd ? `נבדק ${upd}` : ''].filter(Boolean);
+---
+<Base title={`${h1}: שלב, דירות ותוכנית | חדשות נתניה והשרון`} description={description} path={path} crumbs={crumbs} jsonld={ld} ogImage="/img/stock/og/crane-building.jpg">
+  <div class="nl-page">
+  <ListHero crumbs={crumbs} h1={h1} intro={`${STAGE_SHORT[p.status] || p.status}${trackLabel(p.track) ? ` · ${trackLabel(p.track)}` : ''}`} color="#B86E00" photo="crane-building" icon="building" stats={stats} />
+  <div class="n-wrap pj-one">
+    <article class="pj-main">
+      {p.intro.map((t) => <p class="pj-lead">{t}</p>)}
+      <section class="pj-box">
+        <h2>איפה המתחם עומד</h2>
+        <ol class="pj-line">{STAGES.map((s, i) => <li class={i < si ? 'done' : i === si ? 'now' : ''}><span class="dot" aria-hidden="true"></span><b>{STAGE_SHORT[s]}</b>{i === si && <em>השלב הנוכחי</em>}</li>)}</ol>
+        <p class="pj-what">{STATUS_TXT[p.status]}</p>
+        {p.track && TRACK_TXT[p.track] && <p class="pj-what">{TRACK_TXT[p.track]}</p>}
+      </section>
+      <section class="pj-box">
+        <h2>הנתונים הרשמיים</h2>
+        <dl class="pj-facts num">{facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+        <p class="pj-links">{p.planUrl && <a href={p.planUrl} target="_blank" rel="noopener nofollow">התוכנית באתר מנהל התכנון ←</a>}{p.mapUrl && <a href={p.mapUrl} target="_blank" rel="noopener nofollow">המתחם במפה הממשלתית ←</a>}</p>
+      </section>
+      {p.history.length > 0 && <section class="pj-box">
+        <h2>שינויים שראינו במאגר</h2>
+        <ul class="pj-hist">{[...p.history].reverse().map((h) => <li><time class="num">{fmtD(h.date)}</time> {h.label}: {h.from} ← {h.to}</li>)}</ul>
+      </section>}
+      {rel.length > 0 && <section class="pj-box"><h2>ידיעות על המתחם</h2><div class="nl-cards" style="border-top:0;padding-top:0">{rel.map((a) => <Card a={a} ratio="16/10" sizes="(max-width: 760px) 112px, 400px" />)}</div></section>}
+      <section class="pj-faq">
+        <h2>שאלות נפוצות</h2>
+        {faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+      </section>
+      <p class="g-src">מקור: <a href={PROJ_SOURCE} target="_blank" rel="noopener nofollow">המאגר הפתוח של משרד הבינוי והשיכון, מתחמי התחדשות עירונית</a>. המידע כללי, לפי המאגר, ואינו מחליף בדיקה של התוכנית עצמה במוסדות התכנון.</p>
+    </article>
+    <aside class="pj-side">
+      <a class="pj-all" href="/projects/">כל מתחמי הפינוי בינוי ←</a>
+      {near.length > 0 && <><b class="pj-st">עוד מתחמים ב{p.town}</b><ul>{near.map((x) => <li><a href={projUrl(x)}>{x.name}</a><small>{STAGE_SHORT[x.status] || x.status}</small></li>)}</ul></>}
+    </aside>
+  </div>
+  </div>
+</Base>
+<style is:global>
+.pj-one{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:28px;padding-block:24px 48px;align-items:start}
+@media(max-width:900px){.pj-one{grid-template-columns:minmax(0,1fr)}}
+.pj-main{min-width:0;display:flex;flex-direction:column;gap:18px}
+.pj-lead{font-size:17.5px;line-height:1.75;margin:0;max-width:68ch}
+.pj-box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.pj-box h2,.pj-faq h2{font-size:20px;font-weight:800;margin:0 0 12px}
+.pj-line{list-style:none;margin:0 0 12px;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+@media(max-width:600px){.pj-line{grid-template-columns:minmax(0,1fr)}}
+.pj-line li{display:flex;flex-direction:column;gap:4px;font-size:13.5px;color:var(--mut);border-top:4px solid var(--line);padding-top:8px}
+.pj-line li.done{border-color:#E7B97A;color:var(--ink)}.pj-line li.now{border-color:#B86E00;color:var(--ink)}
+.pj-line li.now b{color:#8A5200}.pj-line em{font-style:normal;font-size:12.5px;font-weight:700;color:#B86E00}.pj-line .dot{display:none}
+.pj-what{margin:6px 0 0;line-height:1.65;font-size:15.5px}
+.pj-facts{margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px 18px}
+.pj-facts div{display:flex;flex-direction:column;border-bottom:1px solid var(--line2);padding-bottom:6px}
+.pj-facts dt{font-size:13px;color:var(--mut)}.pj-facts dd{margin:0;font-weight:700;font-size:16px;overflow-wrap:anywhere}
+.pj-links{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0 0}.pj-links a{color:#0B5FCC;font-weight:700}
+.pj-hist{margin:0;padding:0 18px 0 0;line-height:1.7}
+.pj-faq details{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.pj-faq summary{font-weight:700;cursor:pointer}.pj-faq p{margin:8px 0 0;line-height:1.6}
+.pj-side{position:sticky;top:90px;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.pj-all{display:block;background:#B86E00;color:#fff;font-weight:800;padding:12px 16px}
+.pj-st{display:block;padding:12px 16px 4px;font-size:15px}
+.pj-side ul{list-style:none;margin:0;padding:0 0 8px}
+.pj-side li{display:flex;flex-direction:column;padding:8px 16px;border-top:1px solid var(--line2)}
+.pj-side li a{color:var(--ink);font-weight:700;font-size:15px}.pj-side small{color:var(--mut);font-size:12.5px}
+@media(max-width:900px){.pj-side{position:static}}
+</style>

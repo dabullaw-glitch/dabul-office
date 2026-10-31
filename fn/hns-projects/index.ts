@@ -108,7 +108,7 @@ const WATCH: [keyof P, string][] = [['status', 'שלב'], ['track', 'מסלול'
 const show = (k: keyof P, v: unknown) => (k === 'inExec' ? (v ? 'כן' : 'לא') : v == null || v === '' ? 'לא צוין' : typeof v === 'number' ? fmt(v) : String(v));
 
 // ---------- AI ----------
-async function claude(system: string, user: string, maxTok = 1500) {
+async function claude(system: string, user: string, maxTok = 4000) { // the model may think first: room for thinking + JSON
   const h: Record<string, string> = { 'x-api-key': S.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' };
   if (S.ANTHROPIC_WORKSPACE_ID) h['anthropic-workspace-id'] = S.ANTHROPIC_WORKSPACE_ID;
   const m = model();
@@ -120,7 +120,7 @@ async function claude(system: string, user: string, maxTok = 1500) {
   await sb.rpc('hns_ai_bump', { p_day: ilDay(), p_n: 1 }).then(() => null, () => null);
   const text = (j.content || []).filter((c: Any) => c.type === 'text').map((c: Any) => c.text).join('');
   const mm = text.replace(/```(?:json)?/g, '').match(/\{[\s\S]*\}/);
-  if (!mm) throw new Error('no json');
+  if (!mm) throw new Error(`no json${j.stop_reason === 'max_tokens' ? ' (cut)' : ''}`);
   return JSON.parse(mm[0]);
 }
 // every number in the written text must come from the data given to the writer (dates and years included)
@@ -150,7 +150,7 @@ async function writeIntro(p: P) {
   const facts = factsOf(p);
   const sys = `אתה כותב באתר החדשות המקומי "חדשות נתניה והשרון" עמוד מידע על מתחם התחדשות עירונית (פינוי בינוי).\n${RULES}`;
   const user = `${facts}\n\nכתוב שתי פסקאות קצרות (עד 70 מילים כל אחת) לתושבים:\n1. מה המתחם: איפה, כמה דירות יש היום וכמה יהיו לפי התוכנית.\n2. איפה הוא עומד עכשיו ומה המשמעות של השלב והמסלול, בשפה פשוטה.\nהחזר JSON בלבד: {"p":["פסקה 1","פסקה 2"]}`;
-  const o = await claude(sys, user, 900);
+  const o = await claude(sys, user, 3000);
   const paras = (o.p || []).map(clean).filter(Boolean).slice(0, 2);
   if (paras.length < 1 || !numbersOk(paras.join(' '), facts) || BAD.test(paras.join(' '))) throw new Error('intro failed checks');
   return paras;
@@ -286,7 +286,7 @@ async function launch(dry: boolean) {
   if (!BRAKE) {
     const sys = `אתה עורך חדשות באתר "חדשות נתניה והשרון". כותבים כתבת נתונים על מפת ההתחדשות העירונית בנתניה, לפי המאגר הרשמי של משרד הבינוי והשיכון.\n${RULES}`;
     try {
-      o = await claude(sys, `${facts}\n\nכתוב כתבת נתונים: כותרת (עד 80 תווים), כותרת משנה, kicker (עד 4 מילים), 4-5 פסקאות (התמונה הכללית, איך המתחמים מתחלקים לפי שלבים, המתחמים הגדולים, הערים הסמוכות, מה המשמעות לתושבים), ו-3 נקודות עיקריות.\nהחזר JSON בלבד: {"title":"","dek":"","kicker":"","body":[""],"keyPoints":[""]}`, 2500);
+      o = await claude(sys, `${facts}\n\nכתוב כתבת נתונים: כותרת (עד 80 תווים), כותרת משנה, kicker (עד 4 מילים), 4-5 פסקאות (התמונה הכללית, איך המתחמים מתחלקים לפי שלבים, המתחמים הגדולים, הערים הסמוכות, מה המשמעות לתושבים), ו-3 נקודות עיקריות.\nהחזר JSON בלבד: {"title":"","dek":"","kicker":"","body":[""],"keyPoints":[""]}`, 6000);
       const all = [o.title, o.dek, o.kicker, ...(o.body || []), ...(o.keyPoints || [])].join(' ');
       if (!numbersOk(all, facts) || BAD.test(all)) o = null;
     } catch { o = null; }

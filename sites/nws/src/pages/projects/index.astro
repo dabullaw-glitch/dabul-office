@@ -1,0 +1,93 @@
+---
+// פינוי בינוי והתחדשות עירונית בנתניה ובשרון (31.10.2026, Yakir approved): all declared urban renewal compounds from the open
+// dataset of the Ministry of Housing (edge function hns-projects -> docs nwslive 'projects' -> hns-feed live.projects).
+// Each compound has its own page. Only the official data and our plain explanation; no developers, no prices.
+import Base from '../../layouts/Base.astro';
+import ListHero from '../../components/list/ListHero.astro';
+import Icon from '../../components/Icon.astro';
+import '../../styles/list.css';
+import '../../styles/guide.css';
+import { SITE_URL } from '../../data/site';
+import { PROJECTS, PROJ_TOWNS, STATUS_TXT, TRACK_TXT, PROJ_UPDATED, PROJ_SOURCE, STAGES, STAGE_SHORT, projUrl, fmtN, trackLabel } from '../../lib/projects';
+const path = '/projects/';
+const net = PROJ_TOWNS.find((t) => t.he === 'נתניה');
+const others = PROJ_TOWNS.filter((t) => t.he !== 'נתניה');
+const total = PROJECTS.length;
+const exec = PROJECTS.filter((p) => p.inExec).length;
+const upd = PROJ_UPDATED ? new Intl.DateTimeFormat('he-IL', { timeZone: 'Asia/Jerusalem', day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(PROJ_UPDATED)) : '';
+const h1 = 'פינוי בינוי בנתניה: כל מתחמי ההתחדשות העירונית';
+const description = net ? `${net.n} מתחמי פינוי בינוי בנתניה, עם ${fmtN(net.exist)} דירות קיימות ו-${fmtN(net.total)} דירות לפי התוכניות. השלב של כל מתחם, המסלול והקישור לתוכנית הרשמית, לפי המאגר של משרד הבינוי והשיכון.` : 'כל מתחמי ההתחדשות העירונית בנתניה ובשרון, לפי המאגר הרשמי של משרד הבינוי והשיכון.';
+const crumbs = [{ name: 'ראשי', href: '/' }, { name: 'נדל״ן', href: '/real-estate/' }, { name: 'פינוי בינוי', href: path }];
+const stagesPresent = STAGES.filter((s) => PROJECTS.some((p) => p.status === s));
+const faq: [string, string][] = [
+  ['כמה מתחמי פינוי בינוי יש בנתניה?', net ? `לפי המאגר של משרד הבינוי והשיכון יש בנתניה ${net.n} מתחמי התחדשות עירונית, עם ${fmtN(net.exist)} דירות קיימות. לפי התוכניות ייבנו בהם ${fmtN(net.total)} דירות.` : 'הרשימה בעמוד הזה מתעדכנת מהמאגר של משרד הבינוי והשיכון.'],
+  ['מה ההבדל בין מסלול מיסוי למסלול רשויות?', `${TRACK_TXT['מיסוי'] || ''} ${TRACK_TXT['רשויות'] || ''}`.trim()],
+  ['איך יודעים באיזה שלב נמצא הבניין שלי?', 'מחפשים את הרחוב בשדה החיפוש בעמוד. בעמוד של כל מתחם מופיע השלב שלו לפי המאגר, מה המשמעות שלו, וקישור לתוכנית הרשמית באתר מנהל התכנון ולמפה.'],
+  ['כל כמה זמן הנתונים מתעדכנים?', 'המאגר של משרד הבינוי והשיכון מתעדכן פעם בשבוע, ואנחנו בודקים אותו כל יום. כשמתחם עובר שלב, מתפרסמת אצלנו ידיעה.'],
+];
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'ItemList', name: h1, numberOfItems: total, itemListElement: PROJECTS.slice(0, 100).map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: SITE_URL + projUrl(p), name: `${p.name}, ${p.town}` })) },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
+  { '@context': 'https://schema.org', '@type': 'Dataset', name: 'מתחמי התחדשות עירונית בנתניה ובשרון', description, url: SITE_URL + path, isBasedOn: PROJ_SOURCE, creator: { '@type': 'Organization', name: 'משרד הבינוי והשיכון' }, ...(PROJ_UPDATED ? { dateModified: PROJ_UPDATED } : {}) },
+];
+const stats = [net ? `<b>${net.n}</b> מתחמים בנתניה` : '', net ? `<b>${fmtN(net.total)}</b> דירות לפי התוכניות` : '', exec ? `<b>${exec}</b> בבנייה` : '', upd ? `נבדק ${upd}` : ''].filter(Boolean);
+---
+<Base title={`${h1} | חדשות נתניה והשרון`} description={description} path={path} crumbs={crumbs} jsonld={ld} ogImage="/img/stock/og/crane-building.jpg">
+  <div class="nl-page">
+  <ListHero crumbs={crumbs} h1={h1} intro="כל המתחמים שהוכרזו, השלב של כל אחד והקישור לתוכנית הרשמית. לפי המאגר של משרד הבינוי והשיכון." color="#B86E00" photo="crane-building" icon="building" stats={stats} />
+  <div class="n-wrap pj-wrap">
+    {total === 0 ? <p class="g-note">הרשימה נטענת. נסו שוב בעוד כמה דקות.</p> : <>
+    <section class="pj-sum" aria-label="תמונת מצב">
+      {PROJ_TOWNS.map((t) => <a class="pj-town" href={`#${t.slug}`}><b>{t.he}</b><span><b class="num">{t.n}</b> מתחמים</span><span><b class="num">{fmtN(t.exist)}</b> דירות היום</span><span><b class="num">{fmtN(t.total)}</b> לפי התוכניות</span></a>)}
+    </section>
+    <section class="pj-stages" aria-label="מה פירוש כל שלב">
+      <h2>מה פירוש כל שלב</h2>
+      <ol>{stagesPresent.map((s) => <li><b>{STAGE_SHORT[s] || s}</b><span>{STATUS_TXT[s]}</span><em class="num">{PROJECTS.filter((p) => p.status === s).length} מתחמים</em></li>)}</ol>
+    </section>
+    <div class="g-tools">
+      <label class="g-q"><Icon name="search" size={18} /><input type="search" placeholder="חיפוש לפי רחוב או שם מתחם" aria-label="חיפוש מתחם" data-gq></label>
+      <select data-ga aria-label="סינון לפי יישוב"><option value="">כל היישובים</option>{PROJ_TOWNS.map((t) => <option>{t.he}</option>)}</select>
+      <select data-gk aria-label="סינון לפי שלב"><option value="">כל השלבים</option>{stagesPresent.map((s) => <option value={s}>{STAGE_SHORT[s] || s}</option>)}</select>
+      <span class="g-cnt num" data-gc aria-live="polite">{total} מתחמים</span>
+    </div>
+    {PROJ_TOWNS.map((t) => (
+      <section id={t.slug} class="pj-sec">
+        <h2>{t.he === 'נתניה' ? 'המתחמים בנתניה' : `המתחמים ב${t.he}`}</h2>
+        <ul class="g-list">{PROJECTS.filter((p) => p.town === t.he).map((p) => (
+          <li class="g-item pj-item" data-a={p.town} data-k={p.status} data-s={`${p.name} ${p.town} ${p.plan}`.toLowerCase()}>
+            <div class="hd"><h3><a href={projUrl(p)}>{p.name}</a></h3><span class="g-kind" style={`--c:${p.inExec ? '#1A7F37' : '#B86E00'}`}>{STAGE_SHORT[p.status] || p.status}</span></div>
+            <p class="g-area">{p.town}{trackLabel(p.track) ? ` · ${trackLabel(p.track)}` : ''}</p>
+            <p class="pj-n num">{p.exist != null && <span><b>{fmtN(p.exist)}</b> דירות היום</span>}{p.total != null && <span><b>{fmtN(p.total)}</b> לפי התוכנית</span>}</p>
+            <a class="pj-more" href={projUrl(p)}>כל הפרטים על המתחם ←</a>
+          </li>))}</ul>
+      </section>))}
+    </>}
+    <section class="pj-faq">
+      <h2>שאלות נפוצות</h2>
+      {faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+    </section>
+    <p class="g-src">מקור: <a href={PROJ_SOURCE} target="_blank" rel="noopener nofollow">המאגר הפתוח של משרד הבינוי והשיכון, מתחמי התחדשות עירונית</a>. המידע כללי ואינו מחליף בדיקה של התוכנית עצמה במוסדות התכנון.</p>
+    <p class="g-fix">מצאתם פרט שהשתנה? <a href="/contact/">כתבו לנו</a> ונבדוק.</p>
+  </div>
+  </div>
+  <script is:inline>
+  (function(){var q=document.querySelector('[data-gq]');if(!q)return;var a=document.querySelector('[data-ga]'),k=document.querySelector('[data-gk]'),c=document.querySelector('[data-gc]'),L=[].slice.call(document.querySelectorAll('.pj-item')),S=[].slice.call(document.querySelectorAll('.pj-sec'));
+  function f(){var s=q.value.trim().toLowerCase(),av=a.value,kv=k.value,n=0;L.forEach(function(li){var ok=(!s||li.dataset.s.indexOf(s)>-1)&&(!av||li.dataset.a===av)&&(!kv||li.dataset.k===kv);li.hidden=!ok;if(ok)n++});S.forEach(function(x){x.hidden=!x.querySelector('.pj-item:not([hidden])')});c.textContent=n+' מתחמים'}
+  q.addEventListener('input',f);a.addEventListener('change',f);k.addEventListener('change',f)})();
+  </script>
+</Base>
+<style is:global>
+.pj-wrap{padding-block:24px 48px;display:flex;flex-direction:column;gap:22px}
+.pj-sum{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.pj-town{display:flex;flex-direction:column;gap:3px;background:#fff;border:1px solid var(--line);border-top:4px solid #B86E00;border-radius:10px;padding:14px 16px;color:var(--ink);font-size:14px}
+.pj-town>b{font-size:18px;margin-bottom:4px}.pj-town span{color:var(--mut)}.pj-town span b{color:var(--ink)}
+.pj-stages{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.pj-stages h2,.pj-sec h2,.pj-faq h2{font-size:20px;font-weight:800;margin:0 0 12px}
+.pj-stages ol{margin:0;padding:0 18px 0 0;display:flex;flex-direction:column;gap:8px}
+.pj-stages li{font-size:15px;line-height:1.5}.pj-stages li b{margin-left:6px}.pj-stages li em{font-style:normal;color:var(--mut);font-size:13.5px;margin-right:6px}
+.pj-item h3{font-size:18px;font-weight:800;line-height:1.35;margin:0}.pj-item h3 a{color:var(--ink)}
+.pj-n{margin:2px 0 0;display:flex;flex-wrap:wrap;gap:14px;font-size:14.5px;color:var(--mut)}.pj-n b{color:var(--ink)}
+.pj-more{margin-top:auto;padding-top:6px;font-weight:700;color:#0B5FCC;font-size:14.5px}
+.pj-faq details{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.pj-faq summary{font-weight:700;cursor:pointer}.pj-faq p{margin:8px 0 0;line-height:1.6}
+</style>
