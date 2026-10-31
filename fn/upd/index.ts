@@ -119,10 +119,11 @@ const GOV_DOMAINS = ['gov.il', 'knesset.gov.il', 'boi.org.il', 'cbs.gov.il', 'co
 const NEWS_DOMAINS = ['nadlancenter.co.il', 'calcalist.co.il', 'globes.co.il', 'themarker.com', 'bizportal.co.il', 'ice.co.il', 'magdilim.co.il', 'ynet.co.il', 'walla.co.il', 'mako.co.il', 'maariv.co.il', 'israelhayom.co.il', 'davar1.co.il', 'news1.co.il'];
 const SEARCH_SYS = `אתה עוזר מחקר במשרד עורכי דין לנדל"ן ומקרקעין בנתניה. מחפשים עדכונים אמיתיים מהימים האחרונים שחשובים לקונים, למוכרים, לבעלי דירות ולמשקיעים.
 כללים:
-- רק עדכונים מ-3 הימים האחרונים (בדוק את התאריך שבעמוד). לא מדריכים כלליים ולא כתבות ישנות.
+- רק עדכונים מ-7 הימים האחרונים (בדוק את התאריך שבעמוד). לא מדריכים כלליים ולא כתבות ישנות.
+- כתוב את כל הפריטים בתשובה הסופית אחת, וכל פריט בנוי מהמשפטים שמצוטטים מהמקור (עם הציטוט בתוך הפריט).
 - כל פריט חייב להישען על עמוד שקראת בחיפוש, עם ציטוט. בלי לנחש תאריכים, מספרים או שמות.
 - לא אתרים של עורכי דין או משרדי עורכי דין.
-- בין 3 ל-8 פריטים. אם אין, כתוב רק: אין עדכונים.
+- בין 4 ל-10 פריטים. אם אין, כתוב רק: אין עדכונים.
 פורמט לכל פריט, בדיוק כך:
 ITEM
 כותרת: (עד 12 מילים)
@@ -130,17 +131,18 @@ ITEM
 מקור: (שם הגוף או האתר)
 מה קרה: (משפט או שניים)
 END`;
-async function sweep(kind: 'gov' | 'news') {
+async function sweep(kind: 'gov' | 'news', debug = false) {
   const ask = kind === 'gov'
     ? 'חפש עדכונים רשמיים מהימים האחרונים: החלטות מיסוי וחוזרים של רשות המסים, החלטות ועדות ערר, פסקי דין של העליון והמחוזי בנדל"ן ובמקרקעין, החלטות מועצת רשות מקרקעי ישראל ומכרזים, מנהל התכנון, רשם המקרקעין, משרד הבינוי והשיכון והרשות להתחדשות עירונית, ריבית בנק ישראל ומשכנתאות, מדד מחירי הדירות של הלמ"ס, חקיקה בכנסת שנוגעת לדירות.'
     : 'חפש חדשות נדל"ן ומשפט מהימים האחרונים באתרי החדשות: מיסוי מקרקעין, פסקי דין בעסקאות דירה ובבתים משותפים, התחדשות עירונית ופינוי בינוי, משכנתאות וריבית, שינויי חקיקה ונהלים, תכנון ובנייה, ונתניה והשרון.';
-  const content = await searchRun(CHEAP, SEARCH_SYS, `התאריך היום: ${ilDay()}.\n${ask}\nחפש, קרא, ותן את התשובה בפורמט שנקבע.`, kind === 'gov' ? GOV_DOMAINS : NEWS_DOMAINS, 5);
+  const content = await searchRun(kind === 'gov' ? REG : CHEAP, SEARCH_SYS, `התאריך היום: ${ilDay()}.\n${ask}\nחפש, קרא, ותן את התשובה בפורמט שנקבע.`, kind === 'gov' ? GOV_DOMAINS : NEWS_DOMAINS, 6, 5000);
+  if (debug) { const txt = content.filter((c: Any) => c.type === 'text'); return [{ debug: true, blocks: content.length, texts: txt.length, cites: txt.reduce((a: number, c: Any) => a + (c.citations || []).length, 0), text: txt.map((c: Any) => c.text).join('').slice(0, 2500) }]; }
   return citedBlocks(content).map(({ field, cites }) => ({
     title: field('כותרת'), date: field('תאריך').slice(0, 10), what: field('מה קרה'), url: cites[0].url, source: field('מקור') || cites[0].title, via: kind,
   })).filter(x => x.title && x.url);
 }
 async function collectorItems() {
-  const since = new Date(Date.now() - 36 * 3600e3).toISOString();
+  const since = new Date(Date.now() - 72 * 3600e3).toISOString();
   const [{ data: rows }, { data: srcs }] = await Promise.all([
     admin().from('hns_items').select('url,title,body,published_at,source_id').in('source_id', FEED_SRC).gte('fetched_at', since).order('fetched_at', { ascending: false }).limit(400),
     admin().from('hns_sources').select('id,name_he').in('id', FEED_SRC)]);
@@ -150,7 +152,7 @@ async function collectorItems() {
 }
 const RANK_SYS = `אתה העורך של לוח העדכונים במשרד עורכי דין לנדל"ן ומקרקעין בנתניה (יקיר דבול). מתוך רשימת עדכונים, בחר את אלה שחשובים לעבודה של המשרד וללקוחות שלו: מיסוי מקרקעין, פסיקה בעסקאות דירה ובבתים משותפים, התחדשות עירונית, חקיקה ונהלים, משכנתאות וריבית, רמ"י ותכנון, שוק הדירות, שכירות, ירושה ומקרקעין, נתניה והשרון.
 כללים:
-- אל תבחר עדכונים שלא קשורים לנדל"ן ולמשפט, ועדכונים כפולים (אותו אירוע פעמיים: בחר את המקור הרשמי אם יש, אחרת את המלא יותר).
+- אל תבחר עדכונים שלא קשורים לנדל"ן ולמשפט, עסקה בודדת או מחיר של דירה אחת בעיר אחרת, ידיעות על חברות בבורסה, ועדכונים כפולים (אותו אירוע פעמיים: בחר את המקור הרשמי אם יש, אחרת את המלא יותר).
 - כותרת וסיכום בניסוח שלך, בעברית פשוטה. בלי להעתיק משפטים. רק עובדות שמופיעות בפריט.
 - בלי מקף ארוך או בינוני. בלי "הכי".
 - חשיבות 1 עד 5: 5 = שינוי שמשפיע על הרבה קונים, מוכרים או בעלי דירות (חוק, מס, פסק דין עקרוני, ריבית). 1 = מעניין אבל שולי.
@@ -463,6 +465,7 @@ Deno.serve(async (req) => {
       const up = await admin().storage.from('pv').upload('upd/_test.png', png, { contentType: 'image/png', upsert: true });
       return json({ ok: !up.error, error: up.error?.message, url: `${env('SUPABASE_URL')}/storage/v1/object/public/pv/upd/_test.png?v=${Date.now()}` });
     }
+    if (b.action === 'sweepdebug') return json({ ok: true, res: await sweep(b.kind === 'news' ? 'news' : 'gov', true) });
     if (b.action === 'artdry') { const r = await getDoc('updreq', String(b.id)); return json({ ok: true, ...(await writeArticle(String(b.id), r, true)) }); }
     return json({ error: 'action?' }, 400);
   } catch (e) {
