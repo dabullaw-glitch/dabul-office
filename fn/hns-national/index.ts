@@ -32,6 +32,11 @@ const MODEL = 'claude-sonnet-5-5';
 // 29.10.2026 (Yakir approved): more national news, 15 to 25 a day, on matters that touch every family
 const MAX_DAY = 25;
 const GAP_MIN = 10;
+// 1.11.2026 (Yakir: "איך פספסנו את זה במבזקים?" about "טראמפ ונתניהו שוחחו על איראן", out on Telegram channels 20 to 40 minutes
+// before us): war and security news first in the queue, a shorter wait for a second outlet (7 minutes instead of 20) and a shorter
+// gap between two such stories (5 minutes). The cron runs every 5 minutes.
+const WAR_WAIT_MIN = 7;
+const WAR_GAP_MIN = 5;
 // 30.10.2026: i24 (Yakir gave it as a national source) was collected but never read here
 const NATIONAL_SRC = ['ynet_flash', 'ynet_news', 'walla_israel', 'maariv_news', 'mako_news', 'inn_news', 'kikar', 'srugim', 'haaretz_all', 'jdn', 'news08', 'hm_news', 'oref_tg',
   'walla_money', 'globes_markets', 'ice_news', 'i24_he_tg'];
@@ -137,9 +142,10 @@ async function tick(dry: boolean) {
   }
   const solo = (g: { items: Any[] }) => g.items.some((x) => MAJOR_SRC.has(x.source_id) && (
     (OFFICIAL_BODY_RE.test(norm(x.title || '')) && now - Date.parse(x.published_at || x.fetched_at) >= 30 * 60e3)
-    || (WAR_RE.test(norm(x.title || '')) && now - Date.parse(x.published_at || x.fetched_at) >= 20 * 60e3)));
+    || (WAR_RE.test(norm(x.title || '')) && now - Date.parse(x.published_at || x.fetched_at) >= WAR_WAIT_MIN * 60e3)));
+  const war = (g: { items: Any[] }) => g.items.some((x) => WAR_RE.test(norm(x.title || '')));
   const ok = groups.filter((g) => new Set(g.items.map((x) => x.source_id)).size >= 2 || g.items.some((x) => OFFICIAL_SRC.has(x.source_id)) || solo(g))
-    .sort((a, b) => new Set(b.items.map((x) => x.source_id)).size - new Set(a.items.map((x) => x.source_id)).size);
+    .sort((a, b) => (Number(war(b)) - Number(war(a))) || (new Set(b.items.map((x) => x.source_id)).size - new Set(a.items.map((x) => x.source_id)).size));
   // national stories of the last 6 hours: a matching group is attached, not written again
   // 31.10.2026: economy stories (hns-economy) count too, so the same event is not written twice in two sections
   const { data: recentAll } = await sb.from('hns_stories').select('id,title,dek,created_at,state,section').in('section', ['national', 'economy']).gte('created_at', new Date(now - 6 * 3600e3).toISOString());
@@ -156,8 +162,9 @@ async function tick(dry: boolean) {
   const { count: today } = await sb.from('hns_stories').select('id', { count: 'exact', head: true }).eq('section', 'national').gte('created_at', dayStartIl());
   if ((today || 0) >= MAX_DAY) return { capped: 'daily', today };
   const last = (recent || []).map((s: Any) => Date.parse(s.created_at)).sort((a: number, b: number) => b - a)[0] || 0;
-  if (now - last < GAP_MIN * 60e3) return { capped: 'pace', next_in_min: Math.ceil((GAP_MIN * 60e3 - (now - last)) / 60e3) };
   const g = fresh[0];
+  const gap = war(g) ? WAR_GAP_MIN : GAP_MIN;
+  if (now - last < gap * 60e3) return { capped: 'pace', next_in_min: Math.ceil((gap * 60e3 - (now - last)) / 60e3) };
   const its = g.items.slice(0, 6);
   for (const x of its.slice(0, 4)) if (x.url && String(x.body || '').length < 450) { const t = await pageText(x.url); if (t.length > String(x.body || '').length + 40) x.body = `${x.body || ''}\n${t}`; }
   const user = `היום: ${ilWhen(new Date().toISOString())} (שעון ישראל)\n\nהמקורות:\n\n` + its.map((x: Any, i: number) =>

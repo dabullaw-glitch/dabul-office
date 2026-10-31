@@ -15,9 +15,10 @@ export interface Section {
 export const SECTIONS: Section[] = [
   { key: 'flash', slug: 'flash', color: '#C8102E', ink: '#A50D26', soft: '#FDECEE', img: 'road', photos: ['police-lights', 'traffic-fog', 'road-aerial', 'police-street'], icon: 'bolt',
     name: { he: 'מבזקים', ru: 'Срочно', fr: 'Flash', en: 'Breaking' },
-    title: 'מבזקים מנתניה: חסימות, עבודות, מים וחשמל',
-    desc: 'המבזקים של נתניה והסביבה: חסימות כבישים, עבודות, הפסקות מים וחשמל והודעות דחופות, מתעדכן לאורך היום.',
-    intro: 'כל מה שקורה עכשיו בנתניה ובסביבה, בקצרה: חסימות ועבודות כביש, הפסקות מים וחשמל, הודעות של העירייה וגופי החירום.' },
+    // 1.11.2026 (Yakir): the flashes are national too now, not only Netanya
+    title: 'מבזקים: חדשות מהארץ ומנתניה והשרון',
+    desc: 'מבזקים מהארץ ומנתניה והסביבה: ביטחון והנחיות פיקוד העורף, החלטות שנוגעות לכולם, חסימות כבישים, הפסקות מים וחשמל והודעות דחופות, מתעדכן לאורך היום.',
+    intro: 'כל מה שקורה עכשיו, בקצרה: מבזקים מהארץ, ביטחון והנחיות פיקוד העורף, ומנתניה והסביבה חסימות ועבודות כביש, הפסקות מים וחשמל והודעות של העירייה וגופי החירום.' },
   // 29.10.2026 (Yakir): national events that concern everyone (elections, war, a national emergency) are covered too, even when
   // they are not about Netanya. Filled by the engine function hns-national; the section appears with its first story.
   { key: 'national', slug: 'israel', color: '#1B3A6B', ink: '#142C52', soft: '#E8EEF8', img: 'council', photos: ['council-chamber', 'city-buildings', 'road-aerial'], icon: 'city',
