@@ -87,10 +87,8 @@ const photo = (src: string, H: number, extra = '') => `<image x="0" y="0" width=
 const brand = (H: number, light = true) => `<rect x="70" y="${H - 132}" width="940" height="2" fill="${GOLD}" fill-opacity="0.75"/>
 <image x="70" y="${H - 112}" width="290" height="68" preserveAspectRatio="xMinYMid meet" href="${LOGO}" xlink:href="${LOGO}"/>
 <g font-family="Heebo" text-anchor="end" direction="ltr"><text x="1010" y="${H - 66}" font-size="30" font-weight="800" fill="${light ? CREAM : INK}" letter-spacing="1">09-8613413</text></g>`;
-const kickerPill = (t: string, x: number, y: number, dark = false) => {
-  const w = Math.max(160, width(t, 30, 0.56) + 56);
-  return `<rect x="${x - w}" y="${y}" width="${w}" height="56" rx="28" fill="${dark ? INK : GOLD}"/><text x="${x - 28}" y="${y + 39}" font-family="Heebo" font-size="30" font-weight="800" fill="${dark ? GOLD2 : INK}" direction="rtl" text-anchor="end">${esc(t)}</text>`;
-};
+// 31.10.2026 (Yakir: "את זה לא אהבתי" about the gold topic pill at the top): no pill on the images any more
+const kickerPill = (_t: string, _x: number, _y: number, _dark = false) => '';
 const svgOpen = (H: number) => `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1080" height="${H}" viewBox="0 0 1080 ${H}">${defs(H)}`;
 const R = 1010, MAXW = 940;
 
