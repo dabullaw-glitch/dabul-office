@@ -188,12 +188,50 @@ async function postDue(b: Any) {
   }
   return { ok: true, posted: out };
 }
+// ---- 31.10.2026 (Yakir): 8 Google Business posts a month, and each post comes to him for approval before it goes up.
+// The weekly task writes calendar rows with status 'review'. POST ?step=askpost sends each one to Telegram with two buttons
+// (through portal.html#w=postok|postno&t=<token>). "אישור" makes it 'planned' (step=due posts it at its time, or right away
+// if its time already passed); "לא לפרסם" makes it 'skipped'.
+async function askPost(b: Any) {
+  const { data } = await db().select('id,data').eq('coll', 'pub').eq('data->>status', 'review').contains('data', { channels: ['gbpdirect'] });
+  const set = (await getDoc('settings', 'pub')) || {}; const MEDIA = String(set.media || '');
+  const out: string[] = [];
+  for (const row of (data || []).sort((x: Any, y: Any) => String(x.data.at).localeCompare(String(y.data.at)))) {
+    const r = row.data; if (b.id && row.id !== b.id) continue;
+    if (!b.force && r.askedAt && Date.now() - Date.parse(r.askedAt) < 20 * 3600e3) continue;
+    const t = r.ptok || tok();
+    const img = ((r.media || []) as string[]).map(u => String(u).replace('{MEDIA}', MEDIA)).find(u => /^https:\/\//.test(u)) || '';
+    const [d, h] = String(r.at || '').split('T'); const dd = d ? d.slice(8, 10) + '.' + d.slice(5, 7) : '';
+    await merge('pub', row.id, { ptok: t, askedAt: new Date().toISOString() });
+    await tg(`${r.askedAt ? '⏳ תזכורת: ' : ''}📍 פוסט לגוגל עסקי מחכה לאישור שלך\nיעלה ב-${dd} בשעה ${h || ''}\n\n${String(r.textGbp || r.text || '').slice(0, 2600)}${img ? `\n\n🖼 התמונה: ${img}` : ''}\n\nהפוסט עולה רק אחרי שתלחץ "אישור". רוצה לשנות משהו? כתוב לי בצ'אט.`,
+      [[{ text: '✅ אישור', url: pub('postok', t) }, { text: '✗ לא לפרסם', url: pub('postno', t) }]]);
+    out.push(row.id);
+  }
+  return { ok: true, asked: out };
+}
+async function postAct(req: Request, a: string, t: string) {
+  if (!/^[a-f0-9]{40}$/.test(t)) return page('הקישור לא תקף', '<p>הפוסט לא נמצא.</p>', 404);
+  const { data } = await db().select('id,data').eq('coll', 'pub').eq('data->>ptok', t).limit(1); const row = data && data[0];
+  if (!row) return page('הקישור לא תקף', '<p>הפוסט לא נמצא.</p>', 404);
+  const r = row.data; const set = (await getDoc('settings', 'pub')) || {}; const MEDIA = String(set.media || '');
+  const img = ((r.media || []) as string[]).map(u => String(u).replace('{MEDIA}', MEDIA)).find(u => /^https:\/\//.test(u)) || '';
+  const view = `${img ? `<p><img src="${esc(img)}" alt="" style="width:100%;border-radius:10px"></p>` : ''}<blockquote>${esc(r.textGbp || r.text)}</blockquote>`;
+  if (r.status === 'published') return page('הפוסט כבר עלה', '<p>הפוסט כבר מופיע בגוגל עסקי.</p>' + view);
+  if (r.status === 'planned' && a === 'postok') return page('הפוסט כבר אושר', `<p>הפוסט יעלה ב-${esc(String(r.at).replace('T', ' '))}.</p>` + view);
+  if (r.status === 'skipped' && a === 'postno') return page('הפוסט לא יעלה', '<p>הפוסט הזה בוטל.</p>');
+  if (req.method !== 'POST') return page(a === 'postok' ? 'לאשר את הפוסט לגוגל עסקי?' : 'לא לפרסם את הפוסט?', `<p>מועד: ${esc(String(r.at).replace('T', ' '))}</p>${view}<form method="post" action="${self()}?a=${a}&t=${t}"><button type="submit">${a === 'postok' ? '✅ אישור, שיעלה' : '✗ לא לפרסם'}</button></form>`);
+  if (a === 'postno') { await merge('pub', row.id, { status: 'skipped', skippedAt: new Date().toISOString(), note2: 'יקיר בחר לא לפרסם' }); return page('הפוסט לא יעלה', '<p>בסדר, הפוסט הזה לא יעלה. רוצה נושא אחר? כתוב לי בצ\'אט.</p>'); }
+  const now = ilNow(); const at = String(r.at || '') < now ? now : String(r.at);
+  await merge('pub', row.id, { status: 'planned', at, approvedAt: new Date().toISOString() });
+  return page('הפוסט אושר', `<p>${at === now ? 'הפוסט יעלה לגוגל בדקות הקרובות.' : `הפוסט יעלה ב-${esc(at.replace('T', ' '))}.`}</p>` + view);
+}
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   await loadSecrets().catch(() => {});
   const url = new URL(req.url); const a = url.searchParams.get('a') || '', t = (url.searchParams.get('t') || '').replace(/[^a-f0-9]/g, '');
   try {
     if (a === 'okall') return await actAll(req, t);
+    if (a === 'postok' || a === 'postno') return await postAct(req, a, t);
     if (a === 'ok' || a === 'no') return await act(req, a, t);
     if (!env('CRON_SECRET') || req.headers.get('x-cron-secret') !== env('CRON_SECRET')) return json({ error: 'unauthorized' }, 401);
     const step = url.searchParams.get('step'); const b = await req.json().catch(() => ({}));
@@ -203,6 +241,7 @@ Deno.serve(async (req) => {
     if (step === 'locations') return json(await locations());
     if (step === 'deldup') return json(await delDup(b));
     if (step === 'due') return json(await postDue(b));
+    if (step === 'askpost') return json(await askPost(b));
     if (step === 'ping') { await access(); const { acc, loc } = await ids(); return json({ ok: true, acc: !!acc, loc: !!loc }); }
     return json({ error: 'step?' }, 400);
   } catch (e) { console.error(e); return a ? page('משהו השתבש', '<p>נסו שוב בעוד דקה.</p>', 500) : json({ ok: false, error: String((e as Error).message || e) }, 500); }
