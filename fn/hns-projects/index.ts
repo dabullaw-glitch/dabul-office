@@ -283,12 +283,12 @@ async function launch(dry: boolean) {
   const top = [...net].sort((a: Any, b: Any) => (b.total || 0) - (a.total || 0)).slice(0, 3);
   const exec = net.filter((i: Any) => i.inExec).length;
   const st = Object.entries(L.byStatus).map(([k, v]) => `${k}: ${v}`).join('\n');
-  const facts = `מספר המתחמים בנתניה במאגר: ${net.length}\nדירות קיימות במתחמים: ${t.exist}\nסך הדירות לפי התוכניות: ${t.total}\nדירות נוספות: ${t.add}\nמתחמים בביצוע: ${exec}\nלפי שלב:\n${st}\nשלושת המתחמים הגדולים לפי סך הדירות:\n${top.map((i: Any) => `${i.name}: ${i.total} דירות, שלב ${i.status}`).join('\n')}\nערים סמוכות: ${L.towns.filter((x: Any) => x.he !== 'נתניה').map((x: Any) => `${x.he} ${x.n}`).join(', ')}`;
+  const facts = `מספר המתחמים בנתניה במאגר: ${net.length}\nדירות קיימות במתחמים: ${fmt(t.exist)}\nסך הדירות לפי התוכניות: ${fmt(t.total)}\nדירות נוספות: ${fmt(t.add)}\nמתחמים בביצוע: ${exec}\nלפי שלב:\n${st}\nשלושת המתחמים הגדולים לפי סך הדירות:\n${top.map((i: Any) => `${i.name}: ${fmt(i.total)} דירות, שלב ${i.status}`).join('\n')}\nערים סמוכות: ${L.towns.filter((x: Any) => x.he !== 'נתניה').map((x: Any) => `${x.he} ${x.n}`).join(', ')}`;
   let o: Any = null;
   if (!BRAKE) {
     const sys = `אתה עורך חדשות באתר "חדשות נתניה והשרון". כותבים כתבת נתונים על מפת ההתחדשות העירונית בנתניה, לפי המאגר הרשמי של משרד הבינוי והשיכון.\n${RULES}`;
     try {
-      o = await claude(sys, `${facts}\n\nכתוב כתבת נתונים: כותרת (עד 80 תווים), כותרת משנה, kicker (עד 4 מילים), 4-5 פסקאות (התמונה הכללית, איך המתחמים מתחלקים לפי שלבים, המתחמים הגדולים, הערים הסמוכות, מה המשמעות לתושבים), ו-3 נקודות עיקריות.\nהחזר JSON בלבד: {"title":"","dek":"","kicker":"","body":[""],"keyPoints":[""]}`, 6000);
+      o = await claude(sys, `${facts}\n\nכתוב כתבת נתונים: כותרת (עד 80 תווים), כותרת משנה, kicker (עד 4 מילים), 4-5 פסקאות (התמונה הכללית, איך המתחמים מתחלקים לפי שלבים, המתחמים הגדולים, הערים הסמוכות, מה המשמעות לתושבים), ו-3 נקודות עיקריות. מספרים מעל 999 כותבים עם פסיק (16,585). את מספרי הערים הסמוכות כותבים כמשפט טבעי ("באבן יהודה ובקדימה צורן יש שני מתחמים בכל אחת").\nהחזר JSON בלבד: {"title":"","dek":"","kicker":"","body":[""],"keyPoints":[""]}`, 6000);
       const all = [o.title, o.dek, o.kicker, ...(o.body || []), ...(o.keyPoints || [])].join(' ');
       if (!numbersOk(all, facts) || BAD.test(all)) o = null;
     } catch { o = null; }
