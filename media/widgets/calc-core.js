@@ -85,6 +85,26 @@ pane('defects',function(I,O){var now=new Date();now.setHours(12,0,0,0);if(!I('go
   var be=addY(g,x[1]),ae=addY(be,3),d=document.createElement('div'),t=document.createElement('b'),st=document.createElement('i'),s=document.createElement('span');t.textContent=x[0];
   if(now<be){st.className='b';st.textContent='בתוך תקופת הבדק';}else if(now<ae){st.className='a';st.textContent='בתוך תקופת האחריות';}else{st.className='x';st.textContent='התקופות הסתיימו';}
   s.textContent='בדק '+x[1]+(x[1]===1?' שנה':' שנים')+': עד '+fd(be)+' · אחריות: עד '+fd(ae);d.appendChild(t);d.appendChild(st);d.appendChild(s);box.appendChild(d);});});
+// capital gains tax (מס שבח), individual, residential apartment bought from 1.1.1994. Real gain split by days:
+// regular (sec. 48א(ב1)): up to 7.11.2001 marginal (max 47%), to 1.1.2012 20%, after 25%; linear-beneficial (sec. 48א(ב2)): up to 1.1.2014 exempt, after 25%.
+pane('cgt',function(I,O){var bp=num(I('bp')),sp=num(I('sp')),ex=num(I('ex')),dec=function(k){return parseFloat(String(I(k).value).replace(',','.'))||0;},bi=dec('bi'),si=dec('si'),lin=I('lin').value==='yes',box=O('rows');box.innerHTML='';
+ var nom=sp-bp-ex,inf=bi&&si?Math.max(0,(bp+ex)*(si/bi-1)):0,real=Math.max(0,nom-inf);O('nom').textContent=ILS(nom);O('inf').textContent=ILS(inf);O('real').textContent=ILS(real);
+ var bv=I('bd').value,sv=I('sd').value;
+ if(!bv||!sv||D(sv)<=D(bv)){O('tax').textContent='חסר תאריך';O('note').textContent='מקלידים תאריך קנייה ותאריך מכירה מאוחר ממנו.';return;}
+ if(!bi||!si){O('tax').textContent='חסר מדד';O('note').textContent='מקלידים את המדד הידוע ביום הקנייה ואת המדד הידוע ביום המכירה, באותו בסיס.';return;}
+ var bd=D(bv),sd=D(sv),T0=D('2001-11-07'),T1=D('2012-01-01'),T2=D('2014-01-01'),lo=D('1900-01-01'),hi=D('2200-01-01');
+ if(bd<D('1994-01-01')){O('tax').textContent='צריך בדיקה';O('note').textContent='דירה שנקנתה לפני 1994 מחושבת לפי כללים נוספים, ולכן המחשבון לא מתאים לה.';return;}
+ var dd=function(a,b){return Math.max(0,Math.round((b-a)/864e5));},all=dd(bd,sd),seg=function(a,b){var s=a>bd?a:bd,e=b<sd?b:sd;return e>s?dd(s,e):0;};
+ var calc=function(L){var P=L?[['החלק שעד 1.1.2014',seg(lo,T2),0],['החלק מ־1.1.2014',seg(T2,hi),.25]]:[['החלק שעד 7.11.2001',seg(lo,T0),.47],['החלק שמ־7.11.2001 עד 1.1.2012',seg(T0,T1),.2],['החלק מ־1.1.2012',seg(T1,hi),.25]],t=0,rows=[];
+  P.forEach(function(p){if(!p[1])return;var part=real*p[1]/all,v=part*p[2];t+=v;rows.push([p[0]+' ('+pf.format(p[1]/all*100)+'% מהתקופה): '+(p[2]?(p[2]===.47?'עד 47%':pf.format(p[2]*100)+'%')+' על '+nf.format(Math.round(part))+' ₪':'פטור על '+nf.format(Math.round(part))+' ₪'),v]);});return {t:t,rows:rows};};
+ var x=calc(lin);x.rows.forEach(function(r){var d=document.createElement('div');d.className='r';var s=document.createElement('span');s.textContent=r[0];var b=document.createElement('b');b.textContent=ILS(r[1]);d.appendChild(s);d.appendChild(b);box.appendChild(d);});
+ O('tax').textContent=ILS(x.t);var n=[];
+ if(real<=0)n.push('לפי הנתונים אין שבח ריאלי, ולכן אין מס שבח. עדיין צריך לדווח על המכירה לרשות המסים.');
+ else{if(lin&&bd>=T2)n.push('דירה שנקנתה מ־1.1.2014 לא נהנית מחישוב ליניארי מוטב, ולכן כל השבח הריאלי מחושב לפי 25%.');
+  if(!lin&&bd<T2){var y=calc(true).t;if(y<x.t)n.push('אם הדירה עומדת בתנאים לחישוב ליניארי מוטב, המס המשוער יורד ל־'+ILS(y)+'.');}
+  if(!lin&&bd<T0)n.push('בחלק שעד 7.11.2001 המס הוא לפי מדרגות מס הכנסה, עד 47%. המחשבון לוקח 47%, ולכן המס בפועל יכול להיות נמוך יותר.');
+  if(!lin&&bd>=T0&&bd<D('2004-01-01'))n.push('מי שקנה בין 7.11.2001 לסוף 2003 עשוי להיות זכאי להנחה נוספת במס, שהמחשבון לא מחשב.');}
+ n.push('זו הערכה כללית בלבד ואינה ייעוץ משפטי.');O('note').textContent=n.join(' ');});
 // JOURNEY: highlight tools of the chosen stage
 var stops=[].slice.call(R.querySelectorAll('.stop'));
 stops.forEach(function(s){s.addEventListener('click',function(){var on=s.getAttribute('aria-pressed')!=='true',st=s.getAttribute('data-s');
