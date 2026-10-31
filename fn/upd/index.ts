@@ -13,7 +13,7 @@
 // REQUESTS (docs coll 'updreq', written by the office app addon-upd.js): {kind:'post'|'article', item, note, status:'queued'}
 //   post:    text for Facebook and LinkedIn in the office voice + a designed image (resvg, office colors, Heebo, the logo) ->
 //            Telegram photo with buttons (מאשר / לתקן / לבטל, through portal.html#u=<a>&t=<token>) -> on approval a row in the
-//            publishing calendar (docs pub, owner office, channels facebook+linkedin, a few minutes ahead) that the postoria cron
+//            publishing calendar (docs pub, owner office, channels facebook+instagram+linkedin+x, a few minutes ahead) that the postoria cron
 //            publishes. When it is out, Telegram gets the links.
 //   article: research with citations (neutral sources only, never other lawyers' sites) -> a full article in the office template
 //            (artcfg writer rules + exemplar) -> a hidden WordPress draft for preview -> Telegram with the preview link and the
@@ -208,7 +208,7 @@ async function sourcePage(url: string) {
 // ---------- the post image: ./img.ts ----------
 
 // ---------- POST ----------
-const POST_SYS = `אתה הקופירייטר של "יקיר דבול - משרד עורכי דין" (מקרקעין ונדל"ן, נתניה) לפייסבוק וללינקדאין. קהל: קונים, מוכרים ובעלי דירות. המטרה: לעצור את הגלילה בשתי שניות ולתת ערך אמיתי.
+const POST_SYS = `אתה הקופירייטר של "יקיר דבול - משרד עורכי דין" (מקרקעין ונדל"ן, נתניה) לפייסבוק, לאינסטגרם, ללינקדאין ול-X. קהל: קונים, מוכרים ובעלי דירות. המטרה: לעצור את הגלילה בשתי שניות ולתת ערך אמיתי.
 כללים מחייבים:
 - שורת הפתיחה היא ה"הוק": קצרה, חדה, מסקרנת, נוגעת בכיס או בבית של הקורא (שאלה, מספר מפתיע, או "אם אתם..."). לא כותרת יבשה.
 - טון חי וזורם, בגוף שני רבים ("אתם"), משפטים קצרים, פסקאות של שורה או שתיים. לא יבש ולא משפטי.
@@ -286,7 +286,7 @@ async function makePost(id: string, r: Any, dry = false) {
 // the Telegram approval of a prepared post (photo with the buttons; the full text again when it is longer than a caption)
 async function sendPost(id: string, t: string, headline: string, text: string, img: string) {
   const o = { headline };
-  const cap = `📝 פוסט לאישור (פייסבוק ולינקדאין)\n${o.headline}\n\n${text}`;
+  const cap = `📝 פוסט לאישור (פייסבוק, אינסטגרם, לינקדאין ו-X)\n${o.headline}\n\n${text}`;
   const sent = await tgApi('sendPhoto', { photo: img, caption: cap.length > 1000 ? cap.slice(0, 990) + '…' : cap, reply_markup: { inline_keyboard: buttons(t) } });
   let tgOk = !!sent?.ok;
   if (!tgOk) tgOk = !!(await tg(`📝 פוסט לאישור: ${o.headline}\n${img}\n\n${text}`, buttons(t)))?.ok;
@@ -388,7 +388,7 @@ async function followUp() {
       const done = ch.filter(c => res[c]?.ok); const failed = ch.filter(c => res[c] && res[c].ok === false && !res[c].pending);
       if (done.length === ch.length) {
         await merge('updreq', row.id, { status: 'published', publishedAt: new Date().toISOString(), links: Object.fromEntries(done.map(c => [c, res[c].url || ''])) });
-        await tg(`✅ הפוסט עלה: ${r.post?.headline}\n${done.map(c => `${c === 'facebook' ? 'פייסבוק' : 'לינקדאין'}: ${res[c].url || ''}`).join('\n')}`);
+        await tg(`✅ הפוסט עלה: ${r.post?.headline}\n${done.map(c => `${({ facebook: 'פייסבוק', instagram: 'אינסטגרם', linkedin: 'לינקדאין', x: 'X' } as Record<string, string>)[c] || c}: ${res[c].url || ''}`).join('\n')}`);
         out.push({ id: row.id, published: true });
       } else if (p.status === 'missed' || (failed.length && done.length + failed.length === ch.length)) {
         await merge('updreq', row.id, { status: 'failed', error: failed.map(c => `${c}: ${res[c]?.error || ''}`).join('; ') || 'לא פורסם' });
@@ -449,7 +449,7 @@ async function viewPage(a: string, t: string) {
   const r = row.data, isPost = r.kind === 'post';
   const fn = `${env('SUPABASE_URL')}/functions/v1/upd`;
   const what = isPost
-    ? `<img src="${esc(r.post?.img)}" alt=""><pre>${esc(r.post?.text)}</pre><p class="muted">יעלה לפייסבוק וללינקדאין כמה דקות אחרי האישור.</p>`
+    ? `<img src="${esc(r.post?.img)}" alt=""><pre>${esc(r.post?.text)}</pre><p class="muted">יעלה לפייסבוק, לאינסטגרם, ללינקדאין ול-X כמה דקות אחרי האישור.</p>`
     : `<p><b>${esc(r.article?.meta?.title)}</b><br><span class="muted">${esc(r.article?.words)} מילים</span></p><p><a href="${esc(r.article?.preview)}" target="_blank" rel="noopener">👁 פתיחת התצוגה המקדימה באתר</a></p><p class="muted">באישור, המאמר עובר את הבדיקה האוטומטית (כללי לשכה וקישורים) ועולה לאתר מחר ב-06:05.</p>`;
   if (r.status !== 'awaiting') return page(isPost ? 'פוסט מלוח העדכונים' : 'מאמר מלוח העדכונים', `${what}<p class="msg">${esc(STATE_TXT[r.status] || 'הבקשה לא ממתינה לאישור.')}</p>`);
   const body = `<p class="muted">העדכון: ${esc(r.item?.title)}</p>${what}
@@ -483,10 +483,16 @@ async function act(a: string, t: string, note: string) {
   if (a === 'ok') {
     if (isPost) {
       const at = ilNowPlus(6);
-      await merge('pub', `pub-upd-${id}`, { at, kind: 'image', channels: ['facebook', 'linkedin'], owner: 'office', status: 'planned', series: 'upd', title: `לוח עדכונים: ${r.post.headline}`,
-        text: r.post.text, media: [r.post.img], created: now, note: 'מלוח העדכונים במערכת, יקיר אישר בטלגרם' });
+      // 31.10.2026 (Yakir): the board's posts go to Facebook, Instagram, LinkedIn and X. X gets a short version of its own
+      // (the opening paragraphs up to 270 characters, no hashtags), not the long text cut in the middle.
+      const paras = String(r.post.text || '').replace(/(^|\s)#\S+/g, '').split(/\n\s*\n/).map((x: string) => x.trim()).filter(Boolean);
+      let textX = '';
+      for (const q of paras) { const t = textX ? `${textX}\n\n${q}` : q; if (t.length > 270) break; textX = t; }
+      if (!textX) textX = (paras[0] || r.post.headline || '').slice(0, 268).replace(/\s+\S*$/, '') + '…';
+      await merge('pub', `pub-upd-${id}`, { at, kind: 'image', channels: ['facebook', 'instagram', 'linkedin', 'x'], owner: 'office', status: 'planned', series: 'upd', title: `לוח עדכונים: ${r.post.headline}`,
+        text: r.post.text, textX, media: [r.post.img], created: now, note: 'מלוח העדכונים במערכת, יקיר אישר בטלגרם' });
       await merge('updreq', id, { status: 'approved', approvedAt: now, pubId: `pub-upd-${id}`, pubAt: at });
-      return { ok: true, msg: `אושר. הפוסט יעלה לפייסבוק וללינקדאין ב-${at.slice(11)}, ותקבל הודעה עם הקישורים.` };
+      return { ok: true, msg: `אושר. הפוסט יעלה לפייסבוק, לאינסטגרם, ללינקדאין ול-X ב-${at.slice(11)}, ותקבל הודעה עם הקישורים.` };
     }
     const m = r.article;
     await merge('artjob', `aj-upd-${id}`, { status: 'written', mode: 'new', source: 'upd', updReq: id, meta: m.meta, html: m.html, wpId: m.wpId, categories: [1, 10], writer: 'upd', created: now, topic: r.item?.title });
