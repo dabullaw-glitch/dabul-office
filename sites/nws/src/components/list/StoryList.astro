@@ -47,8 +47,9 @@ const by = (a: Article) => (a.kind === 'opinion' && a.author ? a.author : L.by);
 {rest.length > 0 && (
 <section class="nl-blk" aria-labelledby="nl-more-h" style={`--c:${color}`}>
   <h2 class="n-sh" id="nl-more-h">{listTitle || L.more}</h2>
-  <ol class="nl-tl num" data-more={perPage}>
-    {rest.map((a) => <li class={hot(a.published) ? 'hot' : undefined} style={`--c:${SECTION_BY_KEY[a.section].color}`}><time datetime={a.published}>{when(a.published)}</time><div><a href={articleUrl(a, lang)}>{a.title}</a><small>{a.kind === 'sponsored' ? <span class="n-spon">{spTag}</span> : kickerOf(a, lang)}</small></div></li>)}
+  {/* 31.10.2026 (news-site look): every story of the list is a row with its photo beside the title */}
+  <ol class="nl-tl nl-rows num" data-more={perPage}>
+    {rest.map((a) => <li><Card a={a} lang={lang} row /></li>)}
   </ol>
   <button class="n-btn line nl-more" type="button" hidden data-more-btn>{L.show}</button>
 </section>)}

@@ -1,0 +1,112 @@
+/* news.css (31.10.2026, Yakir: "שיראה כמו אתר חדשות", the level of c14.co.il): a denser, punchier news-site look on top of
+   nws.css and list.css. Heavy headlines, colored section bars, a red flash strip, a dark band under the lead photo with a
+   kicker tag, dense rows with a photo beside the title, horizontal carousels on phones. Loaded last; "html" raises the
+   specificity so it wins over the component styles whatever their order. */
+
+/* type: heavier, tighter headlines */
+html h1, html h2, html h3 { letter-spacing: -.2px }
+html .n-card h3, html .n-card h2 { font-weight: 800; line-height: 1.22 }
+html .n-k { font-weight: 800; font-size: 13.5px }
+
+/* flash strip: bold red */
+html .n-tick { background: var(--red); border-bottom: 0 }
+html .n-tick .n-wrap { height: 48px }
+html .n-tick .tl { background: #fff; color: var(--red); font-weight: 900 }
+html .n-tick .tl i { background: var(--red) }
+html .n-tick ul { font-size: 15px; font-weight: 700 }
+html .n-tick li, html .n-tick li a { color: #fff }
+html .n-tick time, html .n-tick b { color: #FFE08A; font-weight: 900 }
+html .n-tick .all, html .n-tick .pz { color: #fff; border-color: rgba(255,255,255,.55); background: transparent }
+html .n-tick .pz svg { color: #fff }
+
+/* section headers: a solid bar in the section color with chevrons */
+html .n-sh { background: var(--c, var(--red)); color: #fff; padding: 9px 16px; border-radius: 4px; font-size: 21px; font-weight: 900; margin: 0 0 16px; gap: 10px }
+html .n-sh:before { display: none }
+html .n-sh a { color: #fff; font-size: 14px; font-weight: 800; opacity: .95 }
+html .n-sh a:hover { color: #fff; text-decoration: underline }
+html .n-sh a { text-decoration: none }
+/* dark blocks keep the light header */
+html .n-sport .n-sh { background: transparent; padding: 0; color: #fff }
+html .n-sport .n-sh:before { display: block; content: ''; width: 6px; height: 22px; background: #5BD08A }
+/* the small headers inside side boxes stay quiet */
+html aside .n-sh, html .n-mr .n-sh { background: transparent; color: var(--ink); padding: 0; border-bottom: 3px solid var(--red); padding-bottom: 8px; border-radius: 0 }
+
+/* lead: photo, then a dark band with the kicker tag, a heavy white headline and the summary */
+html .n-lead .n-ph { border-radius: 10px 10px 0 0 }
+html .n-lead .tx { background: #0B1220; color: #fff; padding: 0 28px 26px; border-radius: 0 0 10px 10px }
+html .n-lead .tx > div:first-child { margin-top: 0 !important; transform: translateY(-50%); margin-bottom: -6px }
+html .n-lead .n-k { background: var(--red); color: #fff; padding: 7px 16px; border-radius: 6px; font-size: 15px; font-weight: 900; box-shadow: 0 6px 16px rgba(0,0,0,.25) }
+html .n-lead .n-k:before { display: none }
+html .n-lead h2 { margin: 6px 0 12px; font-size: 46px; line-height: 1.1; color: #fff }
+html .n-lead h2 a { color: #fff }
+html .n-lead h2 a:hover { color: #FFD9DE }
+html .n-lead p { color: #C9D1DC }
+html .n-lead .n-meta { color: #AEB6C3 }
+html .n-lead .n-meta b { color: #fff }
+html .n-lead .n-meta i { background: #6B7686 }
+html .n-lead .n-cap { z-index: 1 }
+
+/* dense rows: photo beside a bold three-line title */
+html .n-row { grid-template-columns: minmax(0,1fr) 150px; gap: 14px; padding: 14px 0; border-top: 1px solid var(--line) }
+html .n-row .n-ph { width: 150px; height: 102px; border-radius: 8px; overflow: hidden }
+html .n-row .n-ph img { width: 100%; height: 100%; object-fit: cover }
+html .n-row b { font-size: 18px; font-weight: 800; line-height: 1.28; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden }
+html .n-row small { font-size: 12.5px; font-weight: 600 }
+html .n-row .n-k { font-size: 13px; color: var(--red) }
+html .n-row .n-k:before { display: none }
+html .n-tlist a.n-row { display: grid; flex-direction: initial; gap: 14px }
+html .n-rows3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0 28px }
+html .n-rows3 .n-row { grid-template-columns: minmax(0,1fr) 120px }
+html .n-rows3 .n-row .n-ph { width: 120px; height: 84px }
+html .n-rowlist { margin-top: 6px }
+html .n-rowlist .n-row:first-child { border-top: 1px solid var(--line) }
+
+/* section pages: the rest of the list as photo rows */
+html .nl-tl.nl-rows li { display: block; padding: 0; border-top: 0; gap: 0 }
+html .nl-tl.nl-rows .n-row { padding: 14px 0 }
+html .nl-lead h2 { font-weight: 900; line-height: 1.12 }
+
+/* article title */
+html h1.n-t { font-weight: 900; line-height: 1.12; letter-spacing: -.4px }
+
+@media (max-width: 1100px) {
+  html .n-rows3 { grid-template-columns: minmax(0,1fr) }
+}
+
+@media (max-width: 760px) {
+  html .n-sh { font-size: 19px; padding: 8px 14px; margin-inline: -16px; border-radius: 0 }
+  html aside .n-sh, html .n-mr .n-sh { margin-inline: 0 }
+  html .n-tick .n-wrap { height: 46px }
+  html .n-tick ul { font-size: 14.5px }
+  /* lead: full-bleed photo and dark band */
+  html .n-lead .n-ph { border-radius: 0; aspect-ratio: 16/11 }
+  html .n-lead .tx { border-radius: 0; padding: 0 16px 20px }
+  html .n-lead h2 { font-size: 29px; line-height: 1.14 }
+  html .n-lead p { font-size: 16.5px }
+  html .n-lead .n-k { font-size: 14px; padding: 6px 13px }
+  /* rows under the lead and in the section blocks */
+  html .n-duo .n-card, html .n-tri .n-card { grid-template-columns: minmax(0,1fr) 150px; column-gap: 14px; padding: 14px 0; border-top: 1px solid var(--line) }
+  html .n-duo .n-card .n-ph, html .n-tri .n-card .n-ph { width: 150px; height: 102px; border-radius: 8px }
+  html .n-duo .n-card h3, html .n-tri .n-card h3 { font-size: 18px; font-weight: 800; line-height: 1.28 }
+  html .n-duo .n-card .n-k, html .n-tri .n-card .n-k { color: var(--red); font-size: 13px }
+  html .n-duo .n-card .n-k:before, html .n-tri .n-card .n-k:before { display: none }
+  html .n-row { grid-template-columns: minmax(0,1fr) 150px }
+  html .n-rows3 .n-row { grid-template-columns: minmax(0,1fr) 150px }
+  html .n-rows3 .n-row .n-ph { width: 150px; height: 102px }
+  html .n-tlist { padding-top: 0; border-top: 0; margin-top: 0 }
+  /* card grids (guides, video) become rows too */
+  html .n-g3 .n-card, html .n-g4 .n-card { display: grid; grid-template-columns: minmax(0,1fr) 150px; column-gap: 14px; padding: 14px 0; border-top: 1px solid var(--line) }
+  html .n-g3 .n-card > *, html .n-g4 .n-card > * { grid-column: 1 }
+  html .n-g3 .n-card .n-ph, html .n-g4 .n-card .n-ph { grid-column: 2; grid-row: 1/5; width: 150px; height: 102px; aspect-ratio: auto !important; border-radius: 8px }
+  html .n-g3 .n-card .n-cap, html .n-g4 .n-card .n-cap, html .n-g3 .n-card p { display: none }
+  html .n-g3 .n-card .k, html .n-g4 .n-card .k { margin-top: 0 }
+  html .n-g3 .n-card h3, html .n-g4 .n-card h3 { font-size: 18px; margin: 4px 0 }
+  html .n-g3, html .n-g4 { gap: 0 }
+  /* culture: a horizontal carousel */
+  html .n-cult { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; margin-inline: -16px; padding-inline: 16px; scrollbar-width: none }
+  html .n-cult::-webkit-scrollbar { display: none }
+  html .n-cult > a { flex: 0 0 74%; scroll-snap-align: start }
+  html .nl-tl.nl-rows .n-row { grid-template-columns: minmax(0,1fr) 140px }
+  html .nl-tl.nl-rows .n-row .n-ph { width: 140px; height: 96px }
+  html h1.n-t { font-size: 31px }
+}
