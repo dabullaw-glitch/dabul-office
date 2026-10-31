@@ -219,7 +219,12 @@ const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 export function linkify(paras: string[], places: (typeof PLACES)[number][], lang: Lang = 'he'): string[] {
   const used = new Set<string>(); let n = 0;
   return paras.map((p) => {
-    let h = esc(p);
+    // 31.10.2026: an address of our own site written in the text becomes a short link (a bare https://nws.co.il/... broke the
+    // right-to-left line on phones); any other address becomes a link that shows only its site name
+    let h = esc(p).replace(/https?:\/\/(?:www\.)?nws\.co\.il(\/[^\s<]*?)?([.,;)]*)(?=\s|$)/g, (_m, path = '/', tail = '') => {
+      const lbl = /^\/projects\/?$/.test(path) ? 'לרשימת כל המתחמים' : /^\/projects\/[^/]+\/?$/.test(path) ? 'לעמוד המתחם' : 'לעמוד באתר';
+      return `<a href="${path}">${lbl} ←</a>${tail}`;
+    }).replace(/https?:\/\/(?!(?:www\.)?nws\.co\.il)([^\s<\/]+)[^\s<]*?(?=[.,;)]*(?:\s|$))/g, (m, host) => `<a href="${m}" target="_blank" rel="noopener nofollow" dir="ltr">${host.replace(/^www\./, '')}</a>`);
     if (lang === 'he') for (const pl of places) {
       if (n >= 3 || used.has(pl.slug)) continue;
       const i = h.indexOf(pl.he);
