@@ -413,8 +413,9 @@ const ROLE = new Map<string, string[]>();
 for (const [id, role] of OK_LINES) if (role) ROLE.set(`c${id}`, [...(ROLE.get(`c${id}`) || []), `pick:${role}`]);
 const LIB: LibPhoto[] = ((readJson('photolib.json', { photos: [] }).photos || []) as LibPhoto[])
   // 31.10.2026: only photos with a vision label that is not 'x' (foreign, faces, brands); venue photos (set 'stadium') need no
-  // review line: their venue comes from their Commons category and they show only for a match played at that venue
-  .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && (!p.set || p.set === 'stadium' || TOPIC_OK.has(p.id)) && !!IMG_LABELS[p.id] && IMG_LABELS[p.id] !== 'x' && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)))
+  // review line: their venue comes from their Commons category and they show only for a match played at that venue; the new generic
+  // football set (balls, goals, pitches, 31.10.2026) is gated by its vision label alone
+  .filter((p) => p && /^c\d+$/.test(p.id) && !LIB_REJECT.has(p.id) && (!p.set || p.set === 'stadium' || p.set === 'football' || TOPIC_OK.has(p.id)) && !!IMG_LABELS[p.id] && IMG_LABELS[p.id] !== 'x' && p.page && p.author && p.license && fs.existsSync(path.resolve('public/img/lib', `${p.id}-1600.webp`)))
   .map((p) => (ROLE.has(p.id) ? { ...p, topics: [...p.topics, ...ROLE.get(p.id)!] } : p));
 function libPic(p: LibPhoto): Pic {
   const b = `/img/lib/${p.id}`;
