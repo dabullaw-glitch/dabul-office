@@ -24,11 +24,12 @@ savelog() {
   rm -rf "$d"
 }
 
+# 31.10.2026: the photo fixes of the vision check (live.imgfix) and a new set of photo labels (live.imglabels) also mean a new build
 key() {
   node -e "
     const fs=require('fs');const r=(f,d)=>{try{return JSON.parse(fs.readFileSync(f,'utf8'))}catch(e){return d}};
     const j=r('src/data/feed.json',{});const b=r('src/data/biz.json',{});
-    process.stdout.write(JSON.stringify([j.stories||[],b.listings||[],j.event||null,(j.flashes||[]).map(f=>f.id+':'+f.text),(j.calendar||[]).map(c=>c.id+c.start),j.pin||null]))" | sha256sum | cut -c1-16
+    process.stdout.write(JSON.stringify([j.stories||[],b.listings||[],j.event||null,(j.flashes||[]).map(f=>f.id+':'+f.text),(j.calendar||[]).map(c=>c.id+c.start),j.pin||null,(j.live&&j.live.imgfix)||null,(j.live&&j.live.imglabels&&j.live.imglabels.at)||null]))" | sha256sum | cut -c1-16
 }
 
 check() {
