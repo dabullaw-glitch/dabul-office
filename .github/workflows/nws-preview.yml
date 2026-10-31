@@ -1,0 +1,59 @@
+name: nws design preview
+# 31.10.2026: builds sites/nws from the branch nws-design with the live engine feed and the photo library, takes phone and
+# desktop screenshots and saves them to the branch nws-design-shots. Nothing is published: the live site comes only from main.
+# Every step continues on error, so a failed preview never fails the run (a failed run emails Yakir).
+on:
+  push:
+    branches: [nws-design]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: nws-preview, cancel-in-progress: true }
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm, cache-dependency-path: sites/nws/package-lock.json }
+      - name: Install
+        continue-on-error: true
+        working-directory: sites/nws
+        run: npm ci --no-audit --no-fund
+      - name: Restore the AI image cache
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: sites/nws/.imgcache
+          key: nwsimg-preview-${{ github.run_id }}
+          restore-keys: nwsimg-
+      - name: Photo library
+        continue-on-error: true
+        run: |
+          t=$(mktemp -d)
+          git fetch -q --depth=1 origin nws-photolib && git archive FETCH_HEAD img index.json | tar -x -C "$t"
+          mkdir -p sites/nws/public/img && rm -rf sites/nws/public/img/lib && mv "$t/img" sites/nws/public/img/lib && mv "$t/index.json" sites/nws/src/data/photolib.json
+      - name: Build
+        continue-on-error: true
+        working-directory: sites/nws
+        run: |
+          node scripts/feed.mjs && node scripts/biz.mjs || true
+          npm run -s build:site 2>&1 | tail -40
+      - name: Shots
+        continue-on-error: true
+        run: |
+          mkdir -p /tmp/shots
+          cd sites/nws/dist && (python3 -m http.server 8765 >/dev/null 2>&1 &) && cd ../../..
+          sleep 2
+          mkdir -p /tmp/pw && cd /tmp/pw && npm init -y >/dev/null && npm i --no-audit --no-fund playwright@1.48.2 >/dev/null && npx playwright install --with-deps chromium >/dev/null
+          cp $GITHUB_WORKSPACE/tools/nwsprev/shots.mjs /tmp/pw/shots.mjs
+          node /tmp/pw/shots.mjs /tmp/shots > /tmp/shots/log.txt 2>&1 || true; cat /tmp/shots/log.txt
+      - name: Save
+        continue-on-error: true
+        if: always()
+        run: |
+          mkdir -p /tmp/shots
+          d=$(mktemp -d); cp -r /tmp/shots/. "$d/"; echo "${GITHUB_SHA}" > "$d/sha.txt"
+          cd "$d" && git init -q && git checkout -qb nws-design-shots && git config user.name "site-bot" && git config user.email "site-bot@users.noreply.github.com" \
+            && git add -A && git commit -qm "preview ${GITHUB_SHA}" && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" nws-design-shots
