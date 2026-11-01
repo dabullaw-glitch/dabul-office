@@ -158,7 +158,8 @@ For every vidreq with status 'heygen' and no hg.videoId (oldest first, at most 2
 
 ## 5. Poll HeyGen and send to the cloud editor
 
-For every vidreq with status 'heygen' and hg.videoId but no hg.url: get_video (wait 30 seconds between polls; up to
+For every vidreq with status 'heygen' and hg.videoId but no hg.url, AND every vidreq with status 'raw-ok' (Yakir approved
+the raw video; go straight to the edit job below with a fresh hg.url from get_video): get_video (wait 30 seconds between polls; up to
 about 10 minutes in this run, otherwise continue next run). Always read the request row again right before writing to it
 (someone may have replaced hg with a new video meanwhile; then work on the new hg.videoId and never write the old one back).
 Requests with status 'hold' are never touched (Yakir stopped them).
