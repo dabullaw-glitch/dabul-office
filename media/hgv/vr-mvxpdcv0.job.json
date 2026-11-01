@@ -1,0 +1,93 @@
+{
+ "id": "vr-mvxpdcv0",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/46f5cc2d37cc064e27218f8064b08a92.mp4?Expires=1794145855&Signature=e3sAEEkh7MzeBSWbbLgnNDP9RtOAHGfRdDZaopgDGmTLd9CJqqPaO0up9GN-P11WMwSuks8sKDwPeWdChwO6pmn2RP49PbIOGC9s-c0M9k7w1aRUanZQLAYdJzcTPB9VrLL7Y2Ew1uvt8Uu6bn7kiGYFmg5NwC2uHoG1HHf0~ZE3X~RcRn9t5uESnAmqxD9P-tc3U9ylW~LAwnqgjYMvVPJc~AkHsStTyR32n2kUZbOO~vx4jTwSCCBTRTqvPJ6eTVHL-4ZPnnEiqfV~Th5s~czVmBeaZ5miuzVoo1lHFqh3QlxBKIQ~ua2iCEUerDnFJBl~GL6lmeQhTzaZ4EaV5w__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "גרים בדירה כבר שנה. מקבלים דואר, תולים תמונות.\nובטאבו? הבעלים זה עדיין המוכר.\n\nנשמע מוזר? זה קורה כל הזמן.\n\nפרק אחרון בסדרה.\n\nעד שהדירה לא נרשמה על שמכם, בספרים עדיין רשום המוכר.\n\nכדי לרשום צריך אישורים: ממיסוי מקרקעין, מהעירייה, ולפעמים גם מהבנק.\nואז מגישים הכול ללשכת רישום המקרקעין.\n\nלמה זה כל כך חשוב?\nכי ביום שתרצו למכור, לקחת משכנתא, או להוריש לילדים, מה שרשום זה מה שקובע.\n\nוקניתם מקבלן? שם הרישום לפעמים לוקח שנים.\nאז כדאי לבדוק מה רשום בינתיים, ואיפה.\n\nוזהו. עברנו יחד עסקה שלמה, מההתחלה ועד הסוף.\nשמרו את הסדרה, ושלחו אותה למי שקונה עכשיו דירה.",
+ "history": "v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "mono,cinematic-gold,boxed-navy",
+ "plan": {
+  "title": "פרק 8: הרישום בטאבו. הצעד שאסור לשכוח",
+  "topic": "קניית דירה",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "boxed",
+  "goldWords": [
+   "המוכר.",
+   "אישורים:",
+   "שקובע.",
+   "שנים.",
+   "הסדרה,"
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "פרק 8",
+    "l1": "גרים בדירה שנה",
+    "l2": "ובטאבו? המוכר"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "פרק אחרון בסדרה.",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "rule",
+    "kind": "term",
+    "say": "עד שהדירה לא נרשמה על",
+    "until": "בספרים עדיין רשום המוכר.",
+    "kicker": "בטאבו",
+    "text": "עדיין רשום המוכר",
+    "sub": "עד שנרשמה על שמכם",
+    "subSay": "בספרים עדיין רשום המוכר."
+   },
+   {
+    "id": "steps",
+    "kind": "stack",
+    "say": "כדי לרשום צריך אישורים:",
+    "until": "ללשכת רישום המקרקעין.",
+    "items": [
+     {
+      "say": "ממיסוי מקרקעין, מהעירייה,",
+      "text": "מיסוי מקרקעין ועירייה"
+     },
+     {
+      "say": "ולפעמים גם מהבנק.",
+      "text": "לפעמים גם הבנק"
+     },
+     {
+      "say": "ואז מגישים הכול ללשכת",
+      "text": "מגישים לטאבו"
+     }
+    ]
+   },
+   {
+    "id": "why",
+    "kind": "stamp",
+    "say": "למה זה כל כך חשוב?",
+    "until": "מה שרשום זה מה שקובע.",
+    "text": "מה שרשום קובע",
+    "stampSay": "מה שרשום זה מה שקובע."
+   },
+   {
+    "id": "dev",
+    "kind": "boom",
+    "say": "שם הרישום לפעמים לוקח שנים.",
+    "dur": 2.4,
+    "text": "לפעמים שנים"
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "שמרו את הסדרה, ושלחו",
+    "until": "למי שקונה עכשיו דירה.",
+    "text": "09-8613413",
+    "label": "שמרו ושלחו"
+   }
+  ]
+ }
+}

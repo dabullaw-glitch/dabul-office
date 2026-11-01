@@ -1,0 +1,94 @@
+{
+ "id": "vr-mvxpd7jk",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/1bf017cb79d4cbfea6c6736044422529.mp4?Expires=1794145705&Signature=gXBbZZfYjP6maBEo7Z7B5DIQun9NKt93ZZadt48HM8n6eucypKe-rW8VCbAB2wQyKs3nIhTA2sp92OV6~xjFF68OrydSDX5hj3lLQhSkB-RmKnfCseGx4QYdJpQLOOgP4OCSfIziei8w53F4gdjZbQDBnYVb3tvzHElGxPhepmAUuNr3NdRtLQ2oNw-e4PF2RLvthWRTaZ~d3J09gp26ifjOJM5VDyanF9PX6~XVGHDKh9KTNALXEbzdeugrj63w5naNpxVtfsEJHRvf8tt95ZdRlXHM7aQluS8cGj758fJ99CYjW5hwK-EGbJllAOECdGutJIC7VQQ9CURm0oapuw__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "מאות אלפי שקלים. העברה אחת. ואין כפתור ביטול.\n\nאז איך משלמים למוכר בלי לישון בלילה עם בטן מתהפכת?\n\nפרק שישי בסדרה.\n\nיש כלל אחד, ותזכרו אותו:\nשום שקל לא יוצא, עד שמשהו קורה בצד השני.\n\nלמוכר יש משכנתא על הדירה?\nחלק מהכסף שלכם הולך ישר לבנק שלו, כדי לסגור אותה. לא אליו.\n\nהתשלום האחרון?\nבדרך כלל רק כשהמפתח ביד שלכם, יחד עם כל האישורים לרישום.\n\nולפעמים עורך הדין מחזיק חלק מהכסף בנאמנות, עד שהכול מסודר.\n\nומה אסור? להעביר כסף על סמך \"סמוך עליי\".\n\nבפרק הבא: יום המסירה, והדבר שכולם שוכחים לצלם.",
+ "history": "boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "boxed-navy,navy-gold,cinematic-gold",
+ "plan": {
+  "title": "פרק 6: איך משלמים למוכר בלי לקחת סיכון",
+  "topic": "קניית דירה",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "cinematic",
+  "goldWords": [
+   "ביטול.",
+   "כלל",
+   "השני.",
+   "לבנק",
+   "כשהמפתח",
+   "בנאמנות,"
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "פרק 6",
+    "l1": "מאות אלפי שקלים",
+    "l2": "ואין כפתור ביטול"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "פרק שישי בסדרה.",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "rule",
+    "kind": "term",
+    "say": "יש כלל אחד, ותזכרו",
+    "until": "שמשהו קורה בצד השני.",
+    "kicker": "הכלל",
+    "text": "שום שקל לא יוצא",
+    "sub": "עד שמשהו קורה בצד השני",
+    "subSay": "עד שמשהו קורה בצד"
+   },
+   {
+    "id": "bank",
+    "kind": "stamp",
+    "say": "למוכר יש משכנתא על הדירה?",
+    "until": "כדי לסגור אותה. לא אליו.",
+    "text": "ישר לבנק שלו",
+    "stampSay": "הולך ישר לבנק שלו,"
+   },
+   {
+    "id": "steps",
+    "kind": "stack",
+    "say": "התשלום האחרון?",
+    "until": "עד שהכול מסודר.",
+    "items": [
+     {
+      "say": "כשהמפתח ביד שלכם,",
+      "text": "התשלום האחרון: עם המפתח"
+     },
+     {
+      "say": "כל האישורים לרישום.",
+      "text": "עם כל האישורים"
+     },
+     {
+      "say": "מחזיק חלק מהכסף בנאמנות,",
+      "text": "חלק בנאמנות"
+     }
+    ]
+   },
+   {
+    "id": "no",
+    "kind": "boom",
+    "say": "ומה אסור? להעביר כסף",
+    "dur": 2.6,
+    "text": "לא על סמך \"סמוך עליי\""
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "בפרק הבא: יום המסירה,",
+    "until": "שכולם שוכחים לצלם.",
+    "text": "09-8613413",
+    "label": "בפרק הבא: יום המסירה"
+   }
+  ]
+ }
+}

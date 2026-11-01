@@ -1,0 +1,104 @@
+{
+ "id": "vr-mvxpabyz",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/b435daf3eea3581c23ae08172c9bf873.mp4?Expires=1794145624&Signature=KxVrcmzleVGzxJYKXFk85aDmgny0Atrc-yJocNcUVxTdRAoGX36lXatHJBqNtJDClaI8lr5DE5KuRvOEItD-p9Ca60UQ29fMF-eoaM1JJMLIVAcoFiVmdPJd~4o2O4sdD7hImQnk-Aq~UsbY8NntuVWSY2GFmeia7RuM2AahVQVzrO0DdBHGnYRfJdRnIMPT7GRDV-kvwcJqmX1mqNfzhdvQ0qKt7vvxE0-XcEEtGD0jZf2l47YJArAMTfayt8kV5ZV5bRRt8nq58rbfzWxARthzeIM77-fa3cre37X9H6f8yCiK9Fm-1TKLLU12M-AdbFLVxOP~iYiB-kiXvNHSgQ__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "היא חתמה על דירה.\nורק אחרי החתימה, יצאה בפעם הראשונה למרפסת.\n\nמקרה אמיתי מהמשרד.\nלקוחה שלי קנתה דירה מושכרת.\nלפני החתימה היא באה לראות אותה,\nאבל לשוכר היו מלא דברים בבית,\nוהיא לא רצתה להפריע.\nאז הסתכלה מהר, ויצאה.\n\nחתמנו.\nולקראת המסירה, היא חוזרת לדירה.\nיוצאת למרפסת, תופסת את המעקה,\nוהוא זז לה ביד. רופף לגמרי.\nנכנסת למטבח. נזילה מתחת לכיור.\n\nופה מגיע החלק שכואב.\nבחוזה כמעט תמיד כתוב שראיתם ובדקתם את הדירה,\nושאתם מקבלים אותה במצבה.\nאז אחרי החתימה, כל ויכוח על זה מתחיל מנקודה הרבה פחות טובה.\n\nאז לפני שחותמים:\nאחד. קובעים ביקור עם זמן. גם אם יש שוכר. נכנסים לכל חדר.\nשתיים. פותחים ברזים, מדליקים אורות, יוצאים למרפסת ונוגעים במעקה.\nשלוש. ראיתם משהו? מכניסים את זה לחוזה לפני החתימה. מי מתקן, ועד מתי.\n\nעשר דקות של אי נעימות מול השוכר,\nאו תיקונים על חשבונכם אחרי שהדירה כבר שלכם.\n\nמכירים מישהו שעומד לקנות דירה?\nשלחו לו את זה לפני שהוא חותם.",
+ "history": "cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "cinematic-gold,bold,boxed-navy",
+ "plan": {
+  "title": "חתמה, ורק אז יצאה למרפסת",
+  "topic": "קניית דירה",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "v3",
+  "theme": "navy-gold",
+  "goldWords": [
+   "למרפסת.",
+   "רופף",
+   "במצבה.",
+   "לחוזה",
+   "חותם."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "לפני החתימה",
+    "l1": "חתמה על דירה",
+    "l2": "ורק אז יצאה למרפסת"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "מקרה אמיתי מהמשרד.",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "rail",
+    "kind": "boom",
+    "say": "רופף לגמרי.",
+    "dur": 2,
+    "text": "רופף"
+   },
+   {
+    "id": "leak",
+    "kind": "stamp",
+    "say": "נכנסת למטבח.",
+    "dur": 2.6,
+    "text": "נזילה",
+    "stampSay": "נזילה מתחת לכיור."
+   },
+   {
+    "id": "contract",
+    "kind": "term",
+    "say": "בחוזה כמעט תמיד כתוב",
+    "until": "מקבלים אותה במצבה.",
+    "kicker": "בחוזה",
+    "text": "ראיתי ובדקתי",
+    "sub": "מקבלים אותה במצבה",
+    "subSay": "ושאתם מקבלים אותה"
+   },
+   {
+    "id": "steps",
+    "kind": "stack",
+    "say": "אז לפני שחותמים:",
+    "until": "מי מתקן, ועד מתי.",
+    "items": [
+     {
+      "say": "קובעים ביקור עם זמן.",
+      "text": "ביקור עם זמן"
+     },
+     {
+      "say": "פותחים ברזים, מדליקים אורות,",
+      "text": "ברזים, אורות, מעקה"
+     },
+     {
+      "say": "מכניסים את זה לחוזה",
+      "text": "הכל בחוזה"
+     }
+    ]
+   },
+   {
+    "id": "ten",
+    "kind": "count",
+    "say": "עשר דקות של אי נעימות",
+    "until": "שהדירה כבר שלכם.",
+    "n": 10,
+    "label": "דקות של אי נעימות",
+    "sub": "או תיקונים על חשבונכם",
+    "suffix": ""
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "מכירים מישהו שעומד",
+    "until": "לפני שהוא חותם.",
+    "text": "09-8613413",
+    "label": "שלחו לפני שחותמים"
+   }
+  ]
+ }
+}

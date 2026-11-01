@@ -1,0 +1,94 @@
+{
+ "id": "vr-mvxpdade",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/1f144f5ac0b52811515dceb88dae8235.mp4?Expires=1794145846&Signature=BALs~29Ub0RPTGXnqLFAPeywRDcGrzdG8fGD~MOfCwwA4mNsucrm3WhF9XWAdVPLbIxWGdB1uqbRo-DlFAheSwkiMJyh3x69ZFFBkqe9gkz4Qdbplau8Vi6xG8hrRD2nMj9zPMXEu-2cJaehcdeqP1A-IcXqzLvH0Keulx7QDpNT9D-p8dwq2kap57d7oBUCFWXqG0Bnw8WZqXYy6KTDolljBLQTrNoiPQ1NQlHaxxW-4hPitrrlhrRs8ivZqOsrW2JLKI0UyAOPmwvRJjMx5zHN~Tc4JygfTOSpjGr0-zbW9KciCcZjTvGnQjCa-tG720ys4nSMqfRZVejlyPZLmw__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "יום המסירה. המפתח מחכה לכם. ואתם כבר עם בקבוק שמפניה ביד.\n\nרגע. עוד לא.\n\nפרק שביעי בסדרה.\n\nקודם כל, עוברים על הדירה.\nמה שהבטיחו להשאיר, נשאר? מה שסיכמתם, באמת שם?\n\nדבר שני, וזה מה שכולם שוכחים: מצלמים את המונים.\nחשמל, מים, גז.\nבלי התמונה הזאת, החשבונות הישנים יכולים ליפול עליכם.\n\nדבר שלישי: אישור שאין חובות ארנונה וועד בית עד יום המסירה.\n\nמשהו לא בסדר? כותבים את זה עכשיו.\nלא בעוד חודש, כשכבר אין עם מי לדבר.\n\nורק אז לוקחים מפתח. עכשיו אפשר לפתוח את השמפניה.\n\nובפרק האחרון: הצעד שבלעדיו הדירה בכלל לא רשומה על שמכם.",
+ "history": "cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "cinematic-gold,boxed-navy,navy-gold",
+ "plan": {
+  "title": "פרק 7: יום המסירה. מה בודקים לפני שלוקחים מפתח",
+  "topic": "קניית דירה",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "v3",
+  "theme": "mono",
+  "goldWords": [
+   "עוד",
+   "המונים.",
+   "ארנונה",
+   "עכשיו.",
+   "מפתח."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "פרק 7",
+    "l1": "יום המסירה",
+    "l2": "רגע. עוד לא."
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "פרק שביעי בסדרה.",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "steps",
+    "kind": "stack",
+    "say": "קודם כל, עוברים על הדירה.",
+    "until": "וועד בית עד יום המסירה.",
+    "items": [
+     {
+      "say": "קודם כל, עוברים על הדירה.",
+      "text": "עוברים על הדירה"
+     },
+     {
+      "say": "מצלמים את המונים.",
+      "text": "מצלמים את המונים"
+     },
+     {
+      "say": "אישור שאין חובות ארנונה",
+      "text": "אישור: אין חובות"
+     }
+    ]
+   },
+   {
+    "id": "meters",
+    "kind": "stamp",
+    "say": "חשמל, מים, גז.",
+    "dur": 2.6,
+    "text": "חשמל, מים, גז",
+    "stampSay": "חשמל, מים, גז."
+   },
+   {
+    "id": "write",
+    "kind": "boom",
+    "say": "משהו לא בסדר? כותבים",
+    "dur": 2.4,
+    "text": "כותבים עכשיו"
+   },
+   {
+    "id": "key",
+    "kind": "term",
+    "say": "ורק אז לוקחים מפתח.",
+    "until": "לפתוח את השמפניה.",
+    "kicker": "ורק אז",
+    "text": "לוקחים מפתח",
+    "sub": "ועכשיו שמפניה",
+    "subSay": "עכשיו אפשר לפתוח"
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "ובפרק האחרון: הצעד שבלעדיו",
+    "until": "בכלל לא רשומה על שמכם.",
+    "text": "09-8613413",
+    "label": "בפרק האחרון: הרישום"
+   }
+  ]
+ }
+}

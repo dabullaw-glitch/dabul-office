@@ -1,0 +1,104 @@
+{
+ "id": "vr-mvxpd5dz",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/1150a13b34128fbc0960db0d96456a15.mp4?Expires=1794145624&Signature=UbVr6hUjRzZHPN0RhAlQmkCLqlRU1hTChh2dPcVrrRiOAKfjw00dmaBedcRPv1Wi~YTwkzhUDfer0PVNuqTgNKPNR7EJyyjQi2mEL0pUVVK6QP2sw7gLE13B3qciyXoBdE7IyPykXFQ0IzuIpGnE5nx1CDO1TtbHixD4nQWRlnsmMDe3Xh92BrHBIfCEwfuIdLduAtzb9vKOuhGceZswcRLwoBeEuyR~9xfyto3jVoUZ-u2zdgP-Q5TQkxIamUMsox9WBLqFDFY8z5q-uwfM5QhvPSyl0h4d6xtroPq3GlGFA~eeZffSQ3ruH3m39y8XnBg1Qady3a9cdVUNBzBLKQ__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "חתמתם על חוזה לדירה. מזל טוב.\nועכשיו שאלה: מה מונע מהמוכר למכור את אותה דירה מחר למישהו אחר?\n\nפרק חמישי בסדרה, וזה פרק שאסור לפספס.\n\nהתשובה: הערת אזהרה בטאבו.\nזו הודעה לכל העולם שהדירה הזאת כבר נמכרה לכם.\nבלעדיה, אתם תלויים במילה של המוכר.\n\nויש עוד שעון שמתחיל לתקתק ביום החתימה.\nשלושים יום לדווח על העסקה למיסוי מקרקעין.\nומס הרכישה, אם יש, משולם בדרך כלל תוך שישים יום.\nפספסתם? ריבית, הצמדה, ולפעמים גם קנס.\n\nאז אם עורך הדין שלכם מטפל בזה, מעולה. רק תשאלו אותו: זה כבר נעשה?\n\nובפרק הבא: אתם עומדים להעביר מאות אלפי שקלים. איך עושים את זה בלי לקחת סיכון.",
+ "history": "v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "navy-gold,cinematic-gold,bold",
+ "plan": {
+  "title": "פרק 5: חתמתם. מה חייב לקרות בחודש הראשון",
+  "topic": "קניית דירה",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "boxed",
+  "goldWords": [
+   "אזהרה",
+   "בטאבו.",
+   "שלושים",
+   "שישים",
+   "קנס.",
+   "נעשה?"
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "פרק 5",
+    "l1": "חתמתם על דירה?",
+    "l2": "מה מונע מכירה כפולה?"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "פרק חמישי בסדרה, וזה",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "note",
+    "kind": "term",
+    "say": "התשובה: הערת אזהרה בטאבו.",
+    "until": "כבר נמכרה לכם.",
+    "kicker": "התשובה",
+    "text": "הערת אזהרה",
+    "sub": "הודעה לכל העולם",
+    "subSay": "זו הודעה לכל העולם"
+   },
+   {
+    "id": "dep",
+    "kind": "boom",
+    "say": "בלעדיה, אתם תלויים במילה",
+    "dur": 2,
+    "text": "תלויים במוכר"
+   },
+   {
+    "id": "d30",
+    "kind": "count",
+    "say": "שלושים יום לדווח על",
+    "until": "למיסוי מקרקעין.",
+    "n": 30,
+    "label": "יום לדיווח",
+    "sub": "למיסוי מקרקעין",
+    "suffix": ""
+   },
+   {
+    "id": "d60",
+    "kind": "count",
+    "say": "משולם בדרך כלל תוך",
+    "until": "תוך שישים יום.",
+    "n": 60,
+    "label": "יום למס רכישה",
+    "sub": "בדרך כלל",
+    "suffix": ""
+   },
+   {
+    "id": "miss",
+    "kind": "stamp",
+    "say": "פספסתם? ריבית, הצמדה,",
+    "until": "ולפעמים גם קנס.",
+    "text": "ריבית, הצמדה, קנס",
+    "stampSay": "ולפעמים גם קנס."
+   },
+   {
+    "id": "ask",
+    "kind": "term",
+    "say": "רק תשאלו אותו: זה",
+    "until": "זה כבר נעשה?",
+    "kicker": "שאלה אחת",
+    "text": "זה כבר נעשה?",
+    "sub": "לשאול את עורך הדין",
+    "subSay": "רק תשאלו אותו:"
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "ובפרק הבא: אתם עומדים",
+    "until": "בלי לקחת סיכון.",
+    "text": "09-8613413",
+    "label": "בפרק הבא: תשלום בלי סיכון"
+   }
+  ]
+ }
+}
