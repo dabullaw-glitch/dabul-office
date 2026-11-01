@@ -31,6 +31,11 @@ cat $W/build.json
 ffmpeg -y -v error -i $W/out.mp4 -c:v copy -af loudnorm=I=-14:TP=-1.5:LRA=11 -c:a aac -b:a 192k -movflags +faststart media/hgv/$id.mp4
 if [ "$(stat -c %s media/hgv/$id.mp4)" -gt 95000000 ]; then
   ffmpeg -y -v error -i $W/out.mp4 -c:v libx264 -crf 24 -preset slow -pix_fmt yuv420p -af loudnorm=I=-14:TP=-1.5:LRA=11 -c:a aac -b:a 160k -movflags +faststart media/hgv/$id.mp4
+  # storage limit for reels is 50 MB: re-encode to about 44 MB when bigger (1.11.2026)
+  if [ "$(stat -c %s media/hgv/$id.mp4)" -gt 47000000 ]; then
+    d=$(ffprobe -v error -show_entries format=duration -of csv=p=0 media/hgv/$id.mp4 | cut -d. -f1); vbr=$(( 44*8*1024/d - 160 ))
+    ffmpeg -y -v error -i media/hgv/$id.mp4 -c:v libx264 -preset medium -b:v ${vbr}k -maxrate ${vbr}k -bufsize $((vbr*2))k -pix_fmt yuv420p -c:a copy -movflags +faststart $W/small.mp4 && mv $W/small.mp4 media/hgv/$id.mp4
+  fi
 fi
 d=$(ffprobe -v error -show_entries format=duration -of csv=p=0 media/hgv/$id.mp4)
 ffmpeg -y -v error -ss 1.2 -i media/hgv/$id.mp4 -frames:v 1 -q:v 3 media/hgv/$id.jpg
