@@ -1,0 +1,78 @@
+name: heygen edit
+# HeyGen avatar videos of Yakir -> the same reel editor as his filmed reels (tools/reel-lab: the three styles v3 / cinematic /
+# boxed in turn, captions, graphics off the face, no music, end card). Built 1.11.2026 for the "בקשת סרטון" flow (fn/vidreq).
+# Input: media/hgv/<id>.job.json pushed to main by the scheduled task "סרטוני הייגן":
+#   { "id", "kind": "reel", "video": "<HeyGen video_url>", "script": "<the approved Hebrew script>",
+#     "plan": { reel-lab plan whose beats point at phrases: say / until / items[].say ... (tools/heygen-edit/prep.py) },
+#     "history": "<styles newest first>", "avoid": "<last 3 themes>" }
+# Output (main, GitHub Pages): media/hgv/<id>.mp4, <id>.jpg, <id>.result.json (style, theme, timing, missed phrases),
+#   <id>.words.json, <id>.plan.json, and check stills media/hgv/check/<id>-1..6.jpg. On failure: <id>.error.txt.
+# Nothing is published from here: the task looks at the stills and sends the video to Yakir for approval (vidreq?step=final).
+on:
+  push:
+    branches: [main]
+    paths: ['media/hgv/*.job.json']
+  schedule: [{ cron: '17 5-20 * * *' }]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: heygen-edit, cancel-in-progress: false }
+jobs:
+  edit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - name: Jobs waiting
+        id: todo
+        run: |
+          ids=""
+          for f in media/hgv/*.job.json; do
+            [ -f "$f" ] || continue
+            id=$(basename "$f" .job.json)
+            echo "$id" | grep -Eq '^[a-z0-9-]+$' || continue
+            [ -f "media/hgv/$id.mp4" ] && continue
+            # a failed job is tried again only when its job file is newer than the error
+            if [ -f "media/hgv/$id.error.txt" ] && [ "$(git log -1 --format=%ct -- "$f")" -le "$(git log -1 --format=%ct -- "media/hgv/$id.error.txt")" ]; then continue; fi
+            ids="$ids $id"
+          done
+          echo "ids=$(echo $ids)" >> "$GITHUB_OUTPUT"; echo "to edit: ${ids:-none}"
+      - name: Editor (newest reel-lab)
+        if: steps.todo.outputs.ids != ''
+        run: |
+          mkdir -p /tmp/editor
+          if grep -q pick_style tools/reel-lab/themes.py 2>/dev/null; then cp -r tools/reel-lab /tmp/editor/; echo "editor: main"
+          else git fetch -q --depth 1 origin wip/video-friday && git archive FETCH_HEAD tools/reel-lab | tar -x -C /tmp/editor && mv /tmp/editor/tools/reel-lab /tmp/editor/reel-lab && echo "editor: wip/video-friday"; fi
+          ls /tmp/editor/reel-lab
+      - uses: actions/setup-node@v4
+        if: steps.todo.outputs.ids != ''
+        with: { node-version: '22' }
+      - uses: actions/cache@v4
+        if: steps.todo.outputs.ids != ''
+        with: { path: ~/.cache/huggingface, key: whisper-ivrit-v1 }
+      - name: Tools
+        if: steps.todo.outputs.ids != ''
+        run: |
+          command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
+          pip install -q faster-whisper==1.1.1 scipy numpy opencv-python-headless==4.10.0.84 playwright==1.47.2
+          python -m playwright install --with-deps chromium > /tmp/pw.log 2>&1 || tail -20 /tmp/pw.log
+      - name: Edit
+        if: steps.todo.outputs.ids != ''
+        env:
+          HYPERFRAMES_SKIP_SKILLS: '1'
+          HYPERFRAMES_NO_TELEMETRY: '1'
+        run: |
+          mkdir -p media/hgv/check /tmp/w
+          for id in ${{ steps.todo.outputs.ids }}; do
+            mkdir -p /tmp/w/$id
+            if bash tools/heygen-edit/edit.sh "$id" /tmp/editor/reel-lab > /tmp/w/$id/log.txt 2>&1; then echo "done $id"; rm -f media/hgv/$id.error.txt
+            else echo "FAILED $id"; { echo "failed $(date -u +%FT%TZ)"; tail -60 /tmp/w/$id/log.txt; } > media/hgv/$id.error.txt; rm -f media/hgv/$id.mp4; fi
+            tail -40 /tmp/w/$id/log.txt
+          done
+      - name: Publish to the repo (GitHub Pages, not to any network)
+        if: always() && steps.todo.outputs.ids != ''
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add media/hgv
+          git commit -qm "heygen edit: ${{ steps.todo.outputs.ids }}" || { echo nothing; exit 0; }
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done

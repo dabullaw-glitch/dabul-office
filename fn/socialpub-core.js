@@ -103,6 +103,13 @@ export function start(createClient) {
       if (!(row.channels || []).includes('instagram')) continue;
       const reel = await reelFor(row);
       if (!reel) { if (t - now < 6 * 3600e3 && !row.noReelWarned) { await merge('pub', r.id, { noReelWarned: new Date().toISOString() }); await tg(S, `⚠️ אין רילס מאושר לתאריך ${row.at.slice(0, 10)}, אז באינסטגרם לא יעלה סרטון השבוע.`); } continue; }
+      // 1.11.2026: a reel that is already in storage (HeyGen videos: reel.data.path) is used as it is, no Drive download
+      if (reel.data.path && /^reels\/[a-z0-9-]+\.mp4$/.test(reel.data.path)) {
+        const cap0 = (reel.data.captions && reel.data.captions.instagram) || '';
+        await merge('pub', r.id, { reel: reel.id, reelPath: reel.data.path, reelBytes: reel.data.bytes || 0, staged: new Date().toISOString(), title: 'רילס: ' + (reel.data.name || ''), text: row.text || cap0, textTiktok: (reel.data.captions && reel.data.captions.tiktok) || '' });
+        log.push(r.id + ' staged ' + reel.data.path + ' (already in storage)');
+        break;
+      }
       try {
         const res = await fetch('https://drive.usercontent.google.com/download?id=' + encodeURIComponent(reel.data.driveId) + '&export=download&confirm=t');
         const type = res.headers.get('content-type') || '';

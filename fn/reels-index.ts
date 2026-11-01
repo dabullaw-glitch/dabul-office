@@ -2,6 +2,7 @@
 // at 19:00, settings/social.videoSlots), and the scheduled task puts it in the publishing calendar. The office system publishes
 // it everywhere: Facebook and YouTube (bufauth), Instagram and TikTok (socialpub). Grok Bot was cancelled on 11.10.2026.
 // Cron (x-cron-secret): POST ?step=add {reels:[{driveId,name,link,folder,captions:{facebook,youtubeTitle,youtubeDesc,youtubeTags,instagram,tiktok}}]}
+//                       (or {path:'reels/<name>.mp4', bytes, ...} for a reel already in storage, e.g. HeyGen videos from vidreq)
 //                       POST ?step=handed {id, grokFile}   (the task copied the reel to the Grok Bot folder)
 //                       POST ?step=remind {}               (sends again every reel still waiting for Yakir, with its buttons)
 // Public (opened from the Telegram buttons through the office site, portal.html#v=<a>&t=<token>): ?a=ok | no
@@ -61,11 +62,14 @@ const askText = (name: string, reminder = false) => `${reminder ? '⏳ תזכו�
 async function add(b: Any) {
   const out: Any[] = [];
   for (const r of (b.reels || []).slice(0, 30)) {
-    const driveId = String(r.driveId || '').replace(/[^A-Za-z0-9_-]/g, ''); if (!driveId) continue;
-    const id = 'rl-' + driveId; const prev = await getDoc('reel', id);
+    // 1.11.2026: a reel already in storage (HeyGen videos, files/reels/<name>.mp4) comes with "path" instead of a Drive file
+    const driveId = String(r.driveId || '').replace(/[^A-Za-z0-9_-]/g, '');
+    const path = /^reels\/[a-z0-9-]+\.mp4$/.test(String(r.path || '')) ? String(r.path) : '';
+    if (!driveId && !path) continue;
+    const id = 'rl-' + (driveId || path.slice(6, -4)); const prev = await getDoc('reel', id);
     if (prev) { out.push({ id, skipped: prev.status }); continue; }
     const c = r.captions || {}; const t = tok();
-    await db().upsert({ coll: 'reel', id, data: { driveId, name: String(r.name || ''), link: String(r.link || ''), folder: String(r.folder || ''), captions: c, status: 'awaiting', tok: t, created: new Date().toISOString(), asked: new Date().toISOString() }, updated_at: new Date().toISOString() });
+    await db().upsert({ coll: 'reel', id, data: { driveId, ...(path ? { path, bytes: Number(r.bytes) || 0 } : {}), name: String(r.name || ''), link: String(r.link || ''), folder: String(r.folder || ''), captions: c, status: 'awaiting', tok: t, created: new Date().toISOString(), asked: new Date().toISOString() }, updated_at: new Date().toISOString() });
     await tg(askText(String(r.name || '')), askButtons(String(r.link || ''), t));
     out.push({ id, added: true });
   }

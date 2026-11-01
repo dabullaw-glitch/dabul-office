@@ -1,10 +1,10 @@
 /* addon-upd.js (31.10.2026, approved by Yakir): "לוח עדכונים" under היום.
    Real estate and legal updates of the last days (written by the edge function upd into docs coll "upd", one doc per day),
    ranked by importance, with a topic filter. Each update: its source and link, and the buttons "פוסט" / "מאמר" / "סרטון"
-   (video comes after the HeyGen trial) with an optional note. A tap writes a request into docs coll "updreq" through the app's
+   (video since 1.11.2026: a request in docs coll "vidreq", HeyGen or filming) with an optional note. A tap writes a request into docs coll "updreq" through the app's
    normal data layer; the upd function prepares it and sends it to Yakir in Telegram for approval. Nothing is published from here. */
 (function (s) {
-  if (!s || s.UPD) return; s.UPD = '20261031a';
+  if (!s || s.UPD) return; s.UPD = '20261101a';
   const n = v => s.esc(v == null ? '' : String(v));
   const C = 'upd', Q = 'updreq';
   [C, Q].forEach(c => { s.S.data[c] = s.S.data[c] || {}; });
@@ -49,8 +49,13 @@
   const dayName = d => { const t = s.today ? s.today() : new Date().toISOString().slice(0, 10); if (d === t) return 'היום'; const y = new Date(Date.parse(t) - 864e5).toISOString().slice(0, 10); return d === y ? 'אתמול' : (s.fmtDateLong ? s.fmtDateLong(d) : d); };
   const stPill = r => { const x = STATUS[r.status] || [r.status || '', '']; return `<span class="ud-st ${x[1]}">${n(KIND[r.kind] || '')}: ${n(x[0])}</span>`; };
 
+  // 1.11.2026 (Yakir): "סרטון" makes a video request (docs coll "vidreq", loaded by addon-video.js): HeyGen or filming
+  // myself, then script -> his approval -> HeyGen or teleprompter -> edit -> his final approval, like every request.
+  const VST = { new: 'חדש', writing: 'כותב תסריט', 'script-fix': 'כותב תסריט', 'script-wait': 'תסריט מחכה לאישורך', heygen: 'בהכנה בהייגן', editing: 'בעריכה', 'final-wait': 'מחכה לאישור סופי', approved: 'אושר', published: 'פורסם ✓', rejected: 'נדחה', film: 'מחכה לצילום שלך' };
+  const vidOf = itemId => Object.entries(s.S.data.vidreq || {}).map(([id, r]) => Object.assign({ id }, r)).find(r => r.upd && r.upd.id === itemId && r.status !== 'rejected' && !r.test);
+  const vidPill = r => `<span class="ud-st ${['approved', 'published'].includes(r.status) ? 'ok' : 'wait'}">סרטון: ${n(VST[r.status] || r.status || '')}</span>`;
   function itemHtml(it) {
-    const rp = reqOf(it.id, 'post'), ra = reqOf(it.id, 'article');
+    const rp = reqOf(it.id, 'post'), ra = reqOf(it.id, 'article'), rv = vidOf(it.id);
     return `<article class="ud-it i${n(it.imp)}">
       <div class="ud-top"><span class="ud-tp">${n(it.topic)}</span><span class="ud-imp" title="חשיבות">${'●'.repeat(Math.max(1, Math.min(5, +it.imp || 1)))}</span><span>${n(it.date ? it.date.split('-').reverse().join('.') : '')}</span></div>
       <h3>${n(it.title)}</h3>
@@ -60,9 +65,9 @@
         <input class="ud-note" data-upd-note="${n(it.id)}" placeholder="הערה (לא חובה), למשל: להדגיש את מס השבח" aria-label="הערה לבקשה">
         <button class="btn sm pri" data-a="ud-req" data-k="post" data-id="${n(it.id)}"${rp ? ' disabled' : ''}>${s.icon('send', 14)} פוסט</button>
         <button class="btn sm" data-a="ud-req" data-k="article" data-id="${n(it.id)}"${ra ? ' disabled' : ''}>${s.icon('doc', 14)} מאמר</button>
-        <button class="btn sm ghost" disabled title="אחרי הניסיון בהייגן">סרטון (אחרי הניסיון בהייגן)</button>
+        <button class="btn sm" data-a="ud-vid" data-id="${n(it.id)}"${rv ? ' disabled' : ''}>🎬 סרטון</button>
       </div>
-      ${rp || ra ? `<div class="ud-act">${rp ? stPill(rp) : ''}${ra ? stPill(ra) : ''}</div>` : ''}
+      ${rp || ra || rv ? `<div class="ud-act">${rp ? stPill(rp) : ''}${ra ? stPill(ra) : ''}${rv ? vidPill(rv) : ''}</div>` : ''}
     </article>`;
   }
 
@@ -75,7 +80,7 @@
     const segs = s.segs('tp', [['all', 'הכל', all.length]].concat(topics.map(t => [t, t, all.filter(i => i.topic === t).length])), tp);
     const open = reqs().filter(r => !['published', 'scheduled', 'cancelled'].includes(r.status)).slice(0, 8);
     const list = D.map(x => { const L = tp === 'all' ? x.items : x.items.filter(i => i.topic === tp); return L.length ? `<div class="ud-day">${n(dayName(x.d))}</div>${L.map(itemHtml).join('')}` : ''; }).join('');
-    el.innerHTML = `<div>${s.pageHead('לוח עדכונים', 'עדכוני נדל"ן ומשפט מהימים האחרונים, ממקורות רשמיים ומאתרי חדשות. בוחרים עדכון ולוחצים "פוסט" או "מאמר": הוא מוכן ונשלח אליך לאישור בטלגרם, ועולה רק אחרי שתאשר.', '')}
+    el.innerHTML = `<div>${s.pageHead('לוח עדכונים', 'עדכוני נדל"ן ומשפט מהימים האחרונים, ממקורות רשמיים ומאתרי חדשות. בוחרים עדכון ולוחצים "פוסט", "מאמר" או "סרטון": הוא מוכן ונשלח אליך לאישור בטלגרם, ועולה רק אחרי שתאשר.', '')}
       <div class="ud-wrap">
         ${open.length ? `<div class="ud-req"><b>בקשות פתוחות</b>${open.map(r => `<div class="ud-rq">${stPill(r)}<b>${n(r.item && r.item.title)}</b>${r.error && r.status === 'failed' ? `<span class="small muted">${n(r.error)}</span>` : ''}</div>`).join('')}</div>` : ''}
         <div class="toolbar">${segs}</div>
@@ -97,6 +102,17 @@
         item: { id: it.id, title: it.title, summary: it.summary, topic: it.topic, date: it.date, source: it.source } });
       s.toast(d.k === 'post' ? 'הבקשה נשלחה. הפוסט יגיע אליך לאישור בטלגרם.' : 'הבקשה נשלחה. המאמר יגיע אליך לאישור בטלגרם (לוקח קצת יותר זמן).');
     } catch { b.disabled = false; }
+  });
+
+  s.act('ud-vid', (b, d) => {
+    let it = null; for (const k of days()) { it = ((s.S.data[C][k] || {}).items || []).find(x => x.id === d.id); if (it) break; }
+    if (!it) return;
+    if (vidOf(it.id)) { s.toast('כבר ביקשת סרטון על העדכון הזה'); return; }
+    if (typeof s.newVideoRequest !== 'function') { s.toast('מסך הסרטונים עוד נטען, נסה שוב בעוד רגע', 'bad'); return; }
+    const inp = document.querySelector('[data-upd-note="' + it.id + '"]');
+    const note = inp ? String(inp.value || '').trim().slice(0, 500) : '';
+    s.newVideoRequest({ type: 'reel', topic: it.title || '', notes: note, source: 'upd',
+      extra: { upd: { id: it.id, title: it.title || '', summary: it.summary || '', topic: it.topic || '', date: it.date || '', source: it.source || null } } });
   });
 
   // menu: under "היום", after "ברכות חג" (or after "הודעות")
