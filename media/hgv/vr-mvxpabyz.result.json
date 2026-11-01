@@ -1,0 +1,85 @@
+{
+  "ok": true,
+  "duration": 70.000000,
+  "bytes": 66712628,
+  "style": "v3",
+  "theme": "navy-gold",
+  "build": {
+    "fix": {
+      "r": 0.0,
+      "dx": 0.0,
+      "dy": 0.0,
+      "s": 1.0,
+      "b": 1.0,
+      "why": "none needed"
+    },
+    "style": "v3",
+    "theme": "navy-gold",
+    "clips": 2,
+    "body": 67.164,
+    "total": 69.96,
+    "captions": 66,
+    "sfx": 14,
+    "layout": {
+      "hook": [
+        "chin",
+        1.0,
+        0
+      ],
+      "name": [
+        "low",
+        null,
+        null
+      ],
+      "rail": [
+        "chin",
+        1.0,
+        0
+      ],
+      "leak": [
+        "chin",
+        1.0,
+        0
+      ],
+      "contract": [
+        "chin",
+        1.0,
+        0
+      ],
+      "steps": [
+        "chin",
+        1.0,
+        0
+      ],
+      "ten": [
+        "chin",
+        1.0,
+        0
+      ],
+      "cta": [
+        "low",
+        null,
+        null
+      ]
+    }
+  },
+  "align": {
+    "words": 153,
+    "mode": "aligned 145 of 153",
+    "start": 0.0,
+    "end": 67.4
+  },
+  "resolve": {
+    "beats": 8,
+    "missed": [],
+    "keep": [
+      [
+        0.0,
+        67.85
+      ]
+    ]
+  },
+  "warnings": "",
+  "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n30 segments",
+  "at": "2026-11-01T15:42:20Z"
+}
