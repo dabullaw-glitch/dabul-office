@@ -1,0 +1,58 @@
+{
+ "id": "vr-test-1101",
+ "kind": "reel",
+ "test": true,
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/672a3fc446486d1acab1b80069667abc.mp4?Expires=1794132092&Signature=ZMA4xoYia8Zcf~7gtwcfD7T1m-SwHuk0bmS0CzGMcI2oSvRv3Amo6HmePWANFCExTZ1W9ul6i8qpkBMTu0v9Ig0lKIXcZj0lEHPiPO60VvgTforJcQDLhYJnXFuuYV52VQCDDYBz~P5svqq7NHYV1yZ-k8wt~851HyBYJOq6syjPv6JNYe0LvckonNcOWR1M-kvwF4pKJq9kevW3JnWCRXliSGvHdAQQDZrnYkPt5-gPq3PL3J0Bq6GNSttxLHn~oX9XQZCfchRjP342wm1j6NIoiqOMaO1Jate2Omhq0has3RejtnfzgUxwAQbwDhGMeVhFPnlSX9SkaqewG7nERQ__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "זו בדיקה קצרה של מערכת הסרטונים,\nבמשרד של עורך דין יקיר דבול.\nאם אתם רואים את הסרטון הזה,\nההכנה, העריכה והכתוביות עובדות.",
+ "history": "boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "bold,boxed-navy,warm",
+ "plan": {
+  "title": "בדיקה: מערכת הסרטונים",
+  "topic": "בדיקה",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "goldWords": [
+   "דבול.",
+   "העריכה",
+   "עובדות."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 3.2,
+    "kicker": "בדיקת מערכת",
+    "l1": "בדיקה קצרה",
+    "l2": "מערכת הסרטונים"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "במשרד של עורך דין",
+    "dur": 2.6,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "three",
+    "kind": "stack",
+    "say": "ההכנה, העריכה והכתוביות",
+    "until": "והכתוביות עובדות.",
+    "items": [
+     {
+      "say": "ההכנה,",
+      "text": "הכנה"
+     },
+     {
+      "say": "העריכה",
+      "text": "עריכה"
+     },
+     {
+      "say": "והכתוביות",
+      "text": "כתוביות"
+     }
+    ]
+   }
+  ]
+ }
+}
