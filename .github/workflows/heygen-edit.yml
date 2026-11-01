@@ -57,7 +57,7 @@ jobs:
         if: steps.todo.outputs.ids != ''
         run: |
           command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
-          pip install -q faster-whisper==1.1.1 scipy numpy opencv-python-headless==4.10.0.84 playwright
+          pip install -q faster-whisper==1.1.1 requests scipy numpy opencv-python-headless==4.10.0.84 playwright
           python -m playwright install --with-deps chromium > /tmp/pw.log 2>&1 || tail -20 /tmp/pw.log
       - name: Edit
         if: steps.todo.outputs.ids != ''
