@@ -167,7 +167,10 @@ Requests with status 'hold' are never touched (Yakir stopped them).
 - completed: credits after (get_current_user): store hg.url (video_url), hg.duration, hg.creditsAfter, hg.cost
   (before - after), and append {id, title, at, cost, remaining} to settings/heygen.costLog (read it, append, merge the whole
   array) and update settings/heygen.plan.creditsRemaining / creditsAt.
-  Then write the edit job and push it:
+  RAW APPROVAL FIRST (Yakir 1.11.2026): docs_merge the request status 'raw-wait' and send Yakir one Telegram line:
+  "סרטון גולמי מוכן לבדיקה: <title> - https://app.heygen.com/videos/<hg.videoId>". Stop here for this request.
+  Only a request with status 'raw-ok' (Yakir approved the raw video; set in the chat or the office system) goes on:
+  for status 'raw-ok' get a fresh hg.url with get_video (the HeyGen link expires), then write the edit job and push it:
   `media/hgv/<vidreq id>.job.json` = {
      "id": "<vidreq id>", "kind": "reel", "video": "<hg.url>",
      "script": "<the prompt row's text, original Hebrew, exactly as approved>",
