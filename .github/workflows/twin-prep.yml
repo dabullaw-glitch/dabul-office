@@ -43,14 +43,17 @@ jobs:
             ls -l /tmp/src.mov
             dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/src.mov | cut -d. -f1)
             [ "$dur" -gt "$max" ] && dur=$max
-            vbr=$(( (28 * 8 * 1024) / dur - 96 ))   # kbit/s for about 28 MB total
-            [ $vbr -gt 6000 ] && vbr=6000
-            ffmpeg -y -v error -i /tmp/src.mov -t $dur -vf "scale=720:1280:force_original_aspect_ratio=decrease,pad=720:1280:(ow-iw)/2:(oh-ih)/2,fps=30" \
+            mb=$(python3 -c "import json;print(json.load(open('$f')).get('targetMB',28))")
+            res=$(python3 -c "import json;print(json.load(open('$f')).get('res','720:1280'))")
+            vbr=$(( (mb * 8 * 1024) / dur - 96 ))   # kbit/s for about <mb> MB total
+            [ $vbr -gt 12000 ] && vbr=12000
+            ffmpeg -y -v error -i /tmp/src.mov -t $dur -vf "scale=${res}:force_original_aspect_ratio=decrease,pad=${res}:(ow-iw)/2:(oh-ih)/2,fps=30" \
               -c:v libx264 -preset slow -b:v ${vbr}k -maxrate ${vbr}k -bufsize $((vbr*2))k -pix_fmt yuv420p \
               -c:a aac -b:a 96k -ac 1 -movflags +faststart "media/twin/$id.mp4"
             ffmpeg -y -v error -ss 3 -i "media/twin/$id.mp4" -frames:v 1 "media/twin/$id.jpg"
             size=$(stat -c %s "media/twin/$id.mp4")
-            echo "{\"id\":\"$id\",\"sec\":$dur,\"bytes\":$size,\"vbr\":$vbr}" > "media/twin/$id.info.json"; cat "media/twin/$id.info.json"
+            sha=$(sha256sum "media/twin/$id.mp4" | cut -d' ' -f1)
+            echo "{\"id\":\"$id\",\"sec\":$dur,\"bytes\":$size,\"vbr\":$vbr,\"sha256\":\"$sha\"}" > "media/twin/$id.info.json"; cat "media/twin/$id.info.json"
           done
       - name: Commit
         run: |

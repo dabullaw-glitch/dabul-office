@@ -1,0 +1,24 @@
+name: twin upload
+# PUTs a prepared file from the repo to a HeyGen presigned upload URL (files over HeyGen's 32 MB URL limit).
+# The URL is passed only as a run input (never stored in the repo). Started by hand / by Claude with gh workflow run.
+on:
+  workflow_dispatch:
+    inputs:
+      path: { description: 'repo path of the file', required: true }
+      url: { description: 'presigned upload URL', required: true }
+      ctype: { description: 'content type', required: true, default: 'video/mp4' }
+permissions:
+  contents: read
+jobs:
+  put:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload
+        env: { URL: '${{ inputs.url }}', P: '${{ inputs.path }}', CT: '${{ inputs.ctype }}' }
+        run: |
+          echo "::add-mask::$URL"
+          ls -l "$P"
+          code=$(curl -sS -o /tmp/out.txt -w "%{http_code}" -X PUT -H "Content-Type: $CT" --upload-file "$P" "$URL")
+          echo "status $code"; head -c 500 /tmp/out.txt; [ "$code" = "200" ]
