@@ -22,6 +22,21 @@ jobs:
           for f in media/twin/*.src.json; do
             id=$(basename "$f" .src.json); echo "$id" | grep -Eq '^[a-z0-9-]+$' || continue
             [ -f "media/twin/$id.mp4" ] && continue
+            [ -f "media/twin/$id.mp3" ] && continue
+            if python3 -c "import json,sys;sys.exit(0 if json.load(open('$f')).get('audioOnly') else 1)"; then
+              # voice clone sample: clean speech from several studio videos, joined, mono mp3
+              i=0; : > /tmp/list.txt
+              for d in $(python3 -c "import json;print(' '.join(json.load(open('$f'))['driveIds']))"); do
+                i=$((i+1)); curl -sSL -o /tmp/a$i.mov "https://drive.usercontent.google.com/download?id=$d&export=download&confirm=t"
+                ffmpeg -y -v error -i /tmp/a$i.mov -vn -ac 1 -ar 44100 -af "silenceremove=start_periods=1:start_threshold=-45dB,loudnorm=I=-18:TP=-2" /tmp/a$i.wav
+                echo "file '/tmp/a$i.wav'" >> /tmp/list.txt; rm -f /tmp/a$i.mov
+              done
+              max=$(python3 -c "import json;print(json.load(open('$f')).get('maxSec',600))")
+              ffmpeg -y -v error -f concat -safe 0 -i /tmp/list.txt -t $max -c:a libmp3lame -b:a 128k "media/twin/$id.mp3"
+              sec=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "media/twin/$id.mp3" | cut -d. -f1)
+              echo "{\"id\":\"$id\",\"sec\":$sec,\"bytes\":$(stat -c %s media/twin/$id.mp3)}" > "media/twin/$id.info.json"; cat "media/twin/$id.info.json"
+              continue
+            fi
             did=$(python3 -c "import json;print(json.load(open('$f'))['driveId'])")
             max=$(python3 -c "import json;print(json.load(open('$f')).get('maxSec',300))")
             curl -sSL -o /tmp/src.mov "https://drive.usercontent.google.com/download?id=$did&export=download&confirm=t"
@@ -40,7 +55,7 @@ jobs:
       - name: Commit
         run: |
           git config user.name "twin-prep"; git config user.email "actions@github.com"
-          git add media/twin/*.mp4 media/twin/*.jpg media/twin/*.info.json 2>/dev/null || true
+          git add media/twin/*.mp4 media/twin/*.mp3 media/twin/*.jpg media/twin/*.info.json 2>/dev/null || true
           git diff --cached --quiet && exit 0
           git commit -qm "twin prep: footage for HeyGen digital twin"
           for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; sleep 5; done
