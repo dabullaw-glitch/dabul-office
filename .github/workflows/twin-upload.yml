@@ -7,6 +7,7 @@ on:
       path: { description: 'repo path of the file', required: true }
       url: { description: 'presigned upload URL', required: true }
       ctype: { description: 'content type', required: true, default: 'video/mp4' }
+      sse: { description: 'add x-amz-server-side-encryption: AES256', required: false, default: 'yes' }
 permissions:
   contents: read
 jobs:
@@ -16,9 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Upload
-        env: { URL: '${{ inputs.url }}', P: '${{ inputs.path }}', CT: '${{ inputs.ctype }}' }
+        env: { URL: '${{ inputs.url }}', P: '${{ inputs.path }}', CT: '${{ inputs.ctype }}', SSE: '${{ inputs.sse }}' }
         run: |
           echo "::add-mask::$URL"
           ls -l "$P"
-          code=$(curl -sS -o /tmp/out.txt -w "%{http_code}" -X PUT -H "Content-Type: $CT" --upload-file "$P" "$URL")
+          extra=(); [ "$SSE" = "yes" ] && extra=(-H "x-amz-server-side-encryption: AES256")
+          code=$(curl -sS -o /tmp/out.txt -w "%{http_code}" -X PUT -H "Content-Type: $CT" "${extra[@]}" --upload-file "$P" "$URL")
           echo "status $code"; head -c 500 /tmp/out.txt; [ "$code" = "200" ]
