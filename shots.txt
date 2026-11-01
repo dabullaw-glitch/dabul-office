@@ -1,4 +1,0 @@
-nwsh https://nws.co.il/?v=img1
-nwssp https://nws.co.il/sports/?v=img1
-nws253 https://nws.co.il/sports/n253/?v=img1
-nws248 https://nws.co.il/israel/n248/?v=img1
