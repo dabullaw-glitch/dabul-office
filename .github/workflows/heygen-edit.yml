@@ -47,6 +47,9 @@ jobs:
       - uses: actions/setup-node@v4
         if: steps.todo.outputs.ids != ''
         with: { node-version: '22' }
+      - uses: actions/setup-python@v5
+        if: steps.todo.outputs.ids != ''
+        with: { python-version: '3.11' }
       - uses: actions/cache@v4
         if: steps.todo.outputs.ids != ''
         with: { path: ~/.cache/huggingface, key: whisper-ivrit-v1 }
@@ -54,7 +57,7 @@ jobs:
         if: steps.todo.outputs.ids != ''
         run: |
           command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
-          pip install -q faster-whisper==1.1.1 scipy numpy opencv-python-headless==4.10.0.84 playwright==1.47.2
+          pip install -q faster-whisper==1.1.1 scipy numpy opencv-python-headless==4.10.0.84 playwright
           python -m playwright install --with-deps chromium > /tmp/pw.log 2>&1 || tail -20 /tmp/pw.log
       - name: Edit
         if: steps.todo.outputs.ids != ''
