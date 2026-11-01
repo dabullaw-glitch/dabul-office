@@ -6,14 +6,15 @@
 // Nothing is published from here. A finished reel goes to the existing reels flow (reels?step=add: Telegram approval,
 // then the next publishing slot and every network, exactly like the edited reels).
 //
+// Served by the reels function (the project has no room for another function): .../functions/v1/reels?vr=<step>
 // Cron (header x-cron-secret):
-//   POST ?step=script {id, dry?}         script of the request is ready: Telegram to Yakir (read + approve / ask for a change)
-//   POST ?step=final  {id, url, captions?, dry?}
+//   POST ?vr=script {id, dry?}         script of the request is ready: Telegram to Yakir (read + approve / ask for a change)
+//   POST ?vr=final  {id, url, captions?, dry?}
 //                                        finished video (an mp4 on the office GitHub Pages site, media/hgv/<id>.mp4).
 //                                        reel: copied to storage files/reels/hg-<id>.mp4 and handed to reels?step=add.
 //                                        other types: Telegram with view + approve / reject (pages below).
-//   POST ?step=sync {}                   request statuses follow their reel rows (approved, published, rejected)
-//   POST ?step=remind {force?}           scripts and finished videos still waiting for Yakir, once a day
+//   POST ?vr=sync {}                   request statuses follow their reel rows (approved, published, rejected)
+//   POST ?vr=remind {force?}           scripts and finished videos still waiting for Yakir, once a day
 // Public (Telegram buttons through the office site, portal.html#h=<a>&t=<token>):
 //   ?a=sok | sfix  (script: approve / ask for a change, POST note)   ?a=vok | vno (finished video, not reels)
 import { loadSecrets, json, cors, admin, env } from '../_shared/common.ts';
@@ -24,7 +25,7 @@ const getDoc = async (coll: string, id: string): Promise<Any> => { const { data 
 const merge = (coll: string, id: string, patch: Any) => admin().rpc('docs_merge', { p_coll: coll, p_id: id, p_patch: patch });
 const tok = () => crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '').slice(0, 8);
 const esc = (s: unknown) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
-const self = () => `${env('SUPABASE_URL')}/functions/v1/vidreq`;
+const self = () => `${env('SUPABASE_URL')}/functions/v1/reels`;
 const pub = (a: string, t: string) => `https://dabullaw-glitch.github.io/dabul-office/portal.html#h=${a}&t=${t}`;
 const OFFICE = 'https://dabullaw-glitch.github.io/dabul-office/#video';
 const now = () => new Date().toISOString();
@@ -164,20 +165,19 @@ async function videoPage(req: Request, a: string, t: string) {
   return page('אושר', `<p>${title} אושר.</p>${r.type === 'course' ? '<p class="muted">השיעור מסומן כמוכן לקורס. הוא לא עולה לקונים עד שתאשר את פרסום הקורס.</p>' : ''}`);
 }
 
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
-  await loadSecrets().catch(() => {});
-  const url = new URL(req.url); const a = url.searchParams.get('a') || '', t = (url.searchParams.get('t') || '').replace(/[^a-f0-9]/g, '');
+// called first by the reels function: answers vidreq requests, or null for everything else
+export async function handleVidreq(req: Request, url: URL): Promise<Response | null> {
+  const a = url.searchParams.get('a') || '', t = (url.searchParams.get('t') || '').replace(/[^a-f0-9]/g, ''), step = url.searchParams.get('vr');
+  if (!['sok', 'sfix', 'vok', 'vno'].includes(a) && !step) return null;
   try {
     if (a === 'sok' || a === 'sfix') return await scriptPage(req, a, t);
     if (a === 'vok' || a === 'vno') return await videoPage(req, a, t);
-    const step = url.searchParams.get('step');
     if (!env('CRON_SECRET') || req.headers.get('x-cron-secret') !== env('CRON_SECRET')) return json({ error: 'unauthorized' }, 401);
     const b = await req.json().catch(() => ({}));
     if (step === 'script') return json(await askScript(String(b.id || ''), !!b.dry));
     if (step === 'final') return json(await final(b, !!b.dry));
     if (step === 'sync') return json(await sync());
     if (step === 'remind') return json(await remind(b));
-    return json({ error: 'step?' }, 400);
+    return json({ error: 'vr?' }, 400);
   } catch (e) { console.error(e); return a ? page('משהו השתבש', '<p>נסו שוב בעוד דקה.</p>', 500) : json({ ok: false, error: String((e as Error).message || e) }, 500); }
-});
+}

@@ -6,7 +6,9 @@
 //                       POST ?step=handed {id, grokFile}   (the task copied the reel to the Grok Bot folder)
 //                       POST ?step=remind {}               (sends again every reel still waiting for Yakir, with its buttons)
 // Public (opened from the Telegram buttons through the office site, portal.html#v=<a>&t=<token>): ?a=ok | no
+// 1.11.2026: also serves the video requests flow (HeyGen): ?vr=<step> and the script / video approval pages (fn/vidreq/index.ts)
 import { loadSecrets, json, cors, admin, env } from '../_shared/common.ts';
+import { handleVidreq } from '../vidreq/index.ts';
 // deno-lint-ignore no-explicit-any
 type Any = any;
 const db = () => admin().from('docs');
@@ -104,7 +106,9 @@ async function act(req: Request, a: string, t: string) {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   await loadSecrets().catch(() => {});
-  const url = new URL(req.url); const a = url.searchParams.get('a') || '', t = (url.searchParams.get('t') || '').replace(/[^a-f0-9]/g, '');
+  const url = new URL(req.url);
+  const vr = await handleVidreq(req, url); if (vr) return vr;
+  const a = url.searchParams.get('a') || '', t = (url.searchParams.get('t') || '').replace(/[^a-f0-9]/g, '');
   try {
     if (a === 'ok' || a === 'no') return await act(req, a, t);
     const step = url.searchParams.get('step');
