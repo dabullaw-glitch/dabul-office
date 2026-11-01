@@ -1,85 +1,87 @@
 {
-  "ok": true,
-  "duration": 61.600000,
-  "bytes": 51248993,
+ "ok": true,
+ "duration": 61.6,
+ "bytes": 51248993,
+ "style": "cinematic",
+ "theme": "cinematic-gold",
+ "build": {
+  "fix": {
+   "r": 0.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0,
+   "b": 1.0,
+   "why": "none needed"
+  },
   "style": "cinematic",
   "theme": "cinematic-gold",
-  "build": {
-    "fix": {
-      "r": 0.0,
-      "dx": 0.0,
-      "dy": 0.0,
-      "s": 1.0,
-      "b": 1.0,
-      "why": "none needed"
-    },
-    "style": "cinematic",
-    "theme": "cinematic-gold",
-    "clips": 1,
-    "body": 58.71,
-    "total": 61.51,
-    "captions": 47,
-    "sfx": 11,
-    "layout": {
-      "hook": [
-        "band",
-        0.9615384615384616,
-        0
-      ],
-      "name": [
-        "low",
-        null,
-        null
-      ],
-      "cond": [
-        "full",
-        1.0,
-        null
-      ],
-      "time": [
-        "full",
-        1.0,
-        null
-      ],
-      "miss": [
-        "full",
-        1.0,
-        null
-      ],
-      "steps": [
-        "full",
-        1.0,
-        null
-      ],
-      "case": [
-        "full",
-        1.0,
-        null
-      ],
-      "cta": [
-        "low",
-        null,
-        null
-      ]
-    }
-  },
-  "align": {
-    "words": 142,
-    "mode": "aligned 133 of 142",
-    "start": 0.0,
-    "end": 58.54
-  },
-  "resolve": {
-    "beats": 8,
-    "missed": [],
-    "keep": [
-      [
-        0.0,
-        58.99
-      ]
-    ]
-  },
-  "warnings": "",
-  "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n24 segments",
-  "at": "2026-11-01T15:34:36Z"
+  "clips": 1,
+  "body": 58.71,
+  "total": 61.51,
+  "captions": 47,
+  "sfx": 11,
+  "layout": {
+   "hook": [
+    "band",
+    0.9615384615384616,
+    0
+   ],
+   "name": [
+    "low",
+    null,
+    null
+   ],
+   "cond": [
+    "full",
+    1.0,
+    null
+   ],
+   "time": [
+    "full",
+    1.0,
+    null
+   ],
+   "miss": [
+    "full",
+    1.0,
+    null
+   ],
+   "steps": [
+    "full",
+    1.0,
+    null
+   ],
+   "case": [
+    "full",
+    1.0,
+    null
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 142,
+  "mode": "aligned 133 of 142",
+  "start": 0.0,
+  "end": 58.54
+ },
+ "resolve": {
+  "beats": 8,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    58.99
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n24 segments",
+ "at": "2026-11-01T15:34:36Z",
+ "cover": "vr-mvxp8287.cover.jpg",
+ "coverSec": 1.0
 }

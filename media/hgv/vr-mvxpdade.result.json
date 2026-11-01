@@ -1,80 +1,82 @@
 {
-  "ok": true,
-  "duration": 46.400000,
-  "bytes": 49591457,
+ "ok": true,
+ "duration": 46.4,
+ "bytes": 49591457,
+ "style": "v3",
+ "theme": "mono",
+ "build": {
+  "fix": {
+   "r": 0.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0,
+   "b": 1.0,
+   "why": "none needed"
+  },
   "style": "v3",
   "theme": "mono",
-  "build": {
-    "fix": {
-      "r": 0.0,
-      "dx": 0.0,
-      "dy": 0.0,
-      "s": 1.0,
-      "b": 1.0,
-      "why": "none needed"
-    },
-    "style": "v3",
-    "theme": "mono",
-    "clips": 1,
-    "body": 43.59,
-    "total": 46.39,
-    "captions": 41,
-    "sfx": 12,
-    "layout": {
-      "hook": [
-        "band",
-        1.0,
-        0
-      ],
-      "name": [
-        "low",
-        null,
-        null
-      ],
-      "steps": [
-        "band",
-        1.0,
-        0
-      ],
-      "meters": [
-        "band",
-        1.0,
-        0
-      ],
-      "write": [
-        "band",
-        1.0,
-        0
-      ],
-      "key": [
-        "band",
-        1.0,
-        0
-      ],
-      "cta": [
-        "low",
-        null,
-        null
-      ]
-    }
-  },
-  "align": {
-    "words": 95,
-    "mode": "aligned 94 of 95",
-    "start": 0.0,
-    "end": 43.42
-  },
-  "resolve": {
-    "beats": 7,
-    "missed": [],
-    "keep": [
-      [
-        0.0,
-        43.87
-      ]
-    ]
-  },
-  "warnings": "",
-  "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n22 segments",
-  "at": "2026-11-01T15:59:40Z"
+  "clips": 1,
+  "body": 43.59,
+  "total": 46.39,
+  "captions": 41,
+  "sfx": 12,
+  "layout": {
+   "hook": [
+    "band",
+    1.0,
+    0
+   ],
+   "name": [
+    "low",
+    null,
+    null
+   ],
+   "steps": [
+    "band",
+    1.0,
+    0
+   ],
+   "meters": [
+    "band",
+    1.0,
+    0
+   ],
+   "write": [
+    "band",
+    1.0,
+    0
+   ],
+   "key": [
+    "band",
+    1.0,
+    0
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 95,
+  "mode": "aligned 94 of 95",
+  "start": 0.0,
+  "end": 43.42
+ },
+ "resolve": {
+  "beats": 7,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    43.87
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n22 segments",
+ "at": "2026-11-01T15:59:40Z",
+ "cover": "vr-mvxpdade.cover.jpg",
+ "coverSec": 1.0
 }

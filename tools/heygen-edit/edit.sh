@@ -47,4 +47,6 @@ cp $W/words.json media/hgv/$id.words.json; cp $W/plan.json media/hgv/$id.plan.js
 jq -n --argjson b "$(tail -1 $W/build.json)" --argjson al "$(cat $W/align.json)" --argjson rs "$(cat $W/resolve.json)" \
   --arg dur "$d" --arg bytes "$(stat -c %s media/hgv/$id.mp4)" --arg warn "$(cat $W/resolve.err)" --arg wh "$(tail -c 1500 $W/wh.log 2>/dev/null)" \
   '{ok:true, duration:($dur|tonumber), bytes:($bytes|tonumber), style:$b.style, theme:$b.theme, build:$b, align:$al, resolve:$rs, warnings:$warn, whisper:$wh, at:(now|todate)}' > media/hgv/$id.result.json
+# cover ("שער", Yakir 1.11.2026): 1 s title image before the video runs; also keeps the file under the 50 MB storage limit
+python3 tools/heygen-edit/cover.py $id || echo "cover failed"
 cat media/hgv/$id.result.json
