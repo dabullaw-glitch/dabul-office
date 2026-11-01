@@ -131,7 +131,10 @@ For every vidreq with status 'heygen' and no hg.videoId (oldest first, at most 2
 3. Look (Yakir approved 1.11.2026: the look fits the script, with variety): read settings/heygen.lookByType.map. Take the
    script type (prompt row type: story, simple, qa, news, dont, myth, value; a list or checklist script -> value_list;
    inheritance or family topics -> inheritance_family; Yakir's opinion on a complex topic -> opinion) and its list of look
-   ids in order. Use the first look in that list that is NOT the look of the previous video (settings/heygen.lookHistory[0]);
+   ids in order. VARIETY (Yakir 1.11.2026): some videos like a podcast, some in the office, some seated in the chair, matched
+   to the content: settings/heygen.lookByType.variety maps the script type to office / chair / podcast; use that setting only
+   if it has an approved look (lookByType.approvedLooks.<setting>); otherwise use the office twin (2de82931...).
+   Use the first look in that list that is NOT the look of the previous video (settings/heygen.lookHistory[0]);
    among looks of equal fit prefer the one used longest ago. NEVER use looks.rejected (the AI looks he rejected), the studio
    looks in lookByType.noStudio, or lookByType.photoLooksPaused. Yakir 1.11.2026: only digital twins made from his REAL
    footage look natural; photo looks (a still photo that HeyGen animates) look AI. Use only the look ids in the map (today
@@ -142,9 +145,10 @@ For every vidreq with status 'heygen' and no hg.videoId (oldest first, at most 2
 4. create_video_from_avatar with: avatarId = the look id, voiceId = settings/heygen.voice.id (013a42e6afdb4c22aa39a7f84f74ed0a,
    "יקיר דבול - קול סטודיו", approved by Yakir 1.11.2026; never 1a97..., the English or the "-- 2" voices),
    voiceSettings = settings/heygen.voice.voiceSettings (ElevenLabs engine, model eleven_v4: it reads Hebrew correctly and
-   sounds like him), script = the prepared text, engine = {"type": "avatar_v"},
-   resolution = "1080p", aspectRatio = "9:16" for reels (and 'other'), motionPrompt = settings/heygen.motionPrompt,
-   title = "<vidreq id> <title>". Do not pass expressiveness ("More expressive" stays off). Do not burn captions in HeyGen.
+   sounds like him), script = the prepared text, engine = settings/heygen.engine ({"type": "avatar_iii"}: Yakir chose it
+   1.11.2026 because the mouth and teeth come from his real footage), resolution = "1080p", aspectRatio = "9:16" for reels
+   (and 'other'), fit "cover" when the look's lookByType.pending entry says so, title = "<vidreq id> <title>".
+   Do NOT pass motionPrompt or expressiveness with avatar_iii (the motion comes from his real footage). Do not burn captions.
 5. docs_merge the request: hg {videoId, lookId, at, creditsBefore, text: the exact text sent}. Add the look to
    settings/heygen.lookHistory (newest first, keep 10). Never create a second video for the same request while one is in
    progress; never recreate to poll.
