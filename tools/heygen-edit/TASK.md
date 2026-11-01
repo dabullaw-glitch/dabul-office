@@ -246,6 +246,9 @@ For every vidreq with status 'editing': `git pull` and look for media/hgv/<id>.m
   "רילס חדש מוכן לאישור" in Telegram with view and approve / reject, and after approval it gets the next publishing slot and
   is published everywhere (all networks, including TikTok and Instagram) like every reel. For type 'other' the function sends its own view + approve message.
   The request becomes 'final-wait'; sync (section 2) moves it to approved / published / rejected.
+  SERIES (Yakir 1.11.2026): when the script is an episode of a series ("פרק <n>" in the title), right after vr=final
+  docs_merge the reel row (reelId from the answer) {"seriesKey": "<short latin key of the series>", "ep": <n>}. The reels
+  function then keeps the episodes in order (an earlier episode never publishes after a later one).
 
 ## 7. Log and finish
 

@@ -90,6 +90,17 @@ async function remind(b: Any) {
   }
   return { ok: true, out };
 }
+// 1.11.2026 (Yakir: "שפרק 8 לא יהיה לפני פרק 7"): episodes of one series (seriesKey + ep on the reel row) keep their order.
+// The approved, not yet published episodes share their slots, earliest slot to the lowest episode number.
+async function seriesOrder(key: string): Promise<Record<string, string>> {
+  const { data } = await db().select('id,data').eq('coll', 'reel').eq('data->>seriesKey', key).eq('data->>status', 'approved');
+  const rows = (data || []).filter((x: Any) => x.data.publishAt && Number(x.data.ep));
+  const slots = rows.map((x: Any) => String(x.data.publishAt)).sort();
+  const eps = [...rows].sort((a: Any, b: Any) => Number(a.data.ep) - Number(b.data.ep));
+  const out: Record<string, string> = {};
+  for (let i = 0; i < eps.length; i++) { out[eps[i].id] = slots[i]; if (eps[i].data.publishAt !== slots[i]) await merge('reel', eps[i].id, { publishAt: slots[i], seriesReordered: new Date().toISOString() }); }
+  return out;
+}
 async function byTok(t: string) { if (!/^[a-f0-9]{40}$/.test(t)) return null; const { data } = await db().select('id,data').eq('coll', 'reel').eq('data->>tok', t).limit(1); return data && data[0]; }
 async function act(req: Request, a: string, t: string) {
   const row = await byTok(t); if (!row) return page('הקישור לא תקף', '<p>הסרטון לא נמצא.</p>', 404);
@@ -98,8 +109,9 @@ async function act(req: Request, a: string, t: string) {
   if (r.status === 'rejected' && a === 'no') return page('לא יפורסם', `<p>${name} לא יפורסם.</p>`);
   if (req.method !== 'POST') return page(a === 'ok' ? 'אישור פרסום' : 'לא לפרסם?', `<p>${name}</p><p>${a === 'ok' ? 'הסרטון יתוזמן לפרסום בתזמון הפנוי הבא, בפייסבוק, ביוטיוב, באינסטגרם ובטיקטוק.' : 'הסרטון לא יפורסם.'}</p><form method="post" action="${self()}?a=${a}&t=${t}"><button type="submit">${a === 'ok' ? '✅ מאשר, לפרסם' : '✗ לא לפרסם'}</button></form>`);
   if (a === 'no') { await merge('reel', row.id, { status: 'rejected', rejectedAt: new Date().toISOString() }); return page('לא יפורסם', `<p>${name} לא יפורסם.</p>`); }
-  const at = await nextSlot();
+  let at = await nextSlot();
   await merge('reel', row.id, { status: 'approved', approvedAt: new Date().toISOString(), publishAt: at });
+  if (r.seriesKey && Number(r.ep)) at = (await seriesOrder(String(r.seriesKey)))[row.id] || at;
   await tg(`✅ אישרת את ${r.name}. הוא יפורסם ב${when(at)} בפייסבוק, ביוטיוב, באינסטגרם ובטיקטוק.`);
   return page('אושר', `<p>${name} יפורסם ב${esc(when(at))}.</p><p>מערכת המשרד מפרסמת אותו בפייסבוק, ביוטיוב, באינסטגרם ובטיקטוק. אין צורך לעשות שום דבר נוסף.</p>`);
 }
