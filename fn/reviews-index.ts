@@ -1,6 +1,7 @@
 // reviews (11.10.2026, Yakir: "לקוחות ממליצים" on the home page updates by itself when new Google reviews come in).
 //  GET                         -> public JSON for the website widget: {google:{rating,count,url,reviews[]}, lawreviews:{...}, at}
-//                                 (cached 30 min at the edge; read from docs site/reviews)
+//                                 (cached 30 min at the edge; read from docs site/reviews; Google rating and count
+//                                 from docs settings/gbp.api, refreshed every morning by gbp?step=sync)
 //  POST {refresh:true} + cron  -> Google Places (New) with the office service account: rating, count and the latest reviews.
 //                                 Google returns only 5 reviews per call, so new ones are added to the stored list and kept;
 //                                 the list grows over time. LawReviews: rating and count from the public profile page.
@@ -84,6 +85,14 @@ Deno.serve(async (req) => {
   await loadSecrets().catch(() => {});
   if (req.method === 'GET') {
     const d = (await getDoc()) || {};
+    // 1.11.2026 (Yakir: "יש 113 ביקורות. תעדכן בכל האתר"): the Google rating and count come from the daily Business Profile
+    // sync (gbp?step=sync -> docs settings/gbp.api {reviews, rating}), so this JSON never shows an old count.
+    try {
+      const { data: s } = await sb().from('docs').select('data').match({ coll: 'settings', id: 'gbp' }).maybeSingle();
+      const a = s?.data?.api || {}; const n = Number(a.reviews || 0), rt = Number(a.rating || 0);
+      if (d.google && n > Number(d.google.count || 0)) d.google.count = n;
+      if (d.google && rt >= 1 && rt <= 5) d.google.rating = Math.round(rt * 10) / 10;
+    } catch { /* the stored values stay */ }
     // public: only what the widget shows
     // deno-lint-ignore no-explicit-any
     const pub = (x: any) => x ? { rating: x.rating, count: x.count, url: x.url, reviews: (x.reviews || []).filter((v: { rating: number }) => (v.rating || 5) >= 4).slice(0, 30).map((v: any) => ({ name: v.name, photo: v.photo, rating: v.rating, text: v.text, at: v.at, ago: v.ago })) } : null;
