@@ -107,8 +107,10 @@ async function final(b: Any, dry: boolean) {
     const up = await admin().storage.from('files').upload(path, buf, { contentType: 'video/mp4', upsert: true });
     if (up.error) return { ok: false, error: 'storage: ' + up.error.message };
     const add = await fetch(`${env('SUPABASE_URL')}/functions/v1/reels?step=add`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': env('CRON_SECRET') },
-      body: JSON.stringify({ reels: [{ path, link: url, name: title, folder: 'heygen/' + id, captions, bytes: buf.length }] }) }).then(x => x.json()).catch(e => ({ error: String(e) }));
+      body: JSON.stringify({ reels: [{ path, link: url, name: title, folder: 'heygen/' + id, captions, bytes: buf.length, priority: 'heygen' }] }) }).then(x => x.json()).catch(e => ({ error: String(e) }));
     const reelId = 'rl-' + name;
+    // 1.11.2026 (Yakir: HeyGen videos go to the front of the queue): mark the reel row, also when it already existed
+    if (await getDoc('reel', reelId)) await merge('reel', reelId, { priority: 'heygen' });
     await merge('vidreq', id, { status: 'final-wait', finalUrl: url, finalAt: now(), reelId, reelPath: path, bytes: buf.length });
     if (r.promptId) await merge('prompt', r.promptId, { status: 'filmed', hgFinal: url, reelId });
     return { ok: true, id, reelId, path, bytes: buf.length, reels: add };

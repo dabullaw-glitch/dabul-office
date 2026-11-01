@@ -35,10 +35,18 @@ async function tg(text: string, buttons?: Any[]) {
 // Israel local time parts for a UTC instant
 const il = (d: Date) => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', weekday: 'short', hourCycle: 'h23' }).formatToParts(d).map(x => [x.type, x.value])); return p; };
 const wd: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-// the next free publishing slot (settings/social.videoSlots: days, time, skip = dates kept free), at least 3 hours from now
+// 1.11.2026 (Yakir: "סרטון גם ביום ראשון אבל פעם בשבועיים, שבוע כן שבוע לא"): videoSlots.biweekly = [{day, from}] adds that
+// weekday every other week, counted from the date "from" (from itself is a slot, the next one 14 days later)
+const biweeklyOk = (rules: Any[], dow: number, ymd: string) => (rules || []).some((x: Any) => {
+  if (Number(x?.day) !== dow || !/^\d{4}-\d{2}-\d{2}$/.test(String(x?.from || ''))) return false;
+  const diff = Math.round((Date.parse(ymd + 'T12:00:00Z') - Date.parse(String(x.from) + 'T12:00:00Z')) / 864e5);
+  return diff >= 0 && diff % 14 === 0;
+});
+// the next free publishing slot (settings/social.videoSlots: days, biweekly, time, skip = dates kept free), at least 3 hours from now
 async function nextSlot(): Promise<string> {
   const cfg = (await getDoc('settings', 'social')) || {};
   const days: number[] = cfg.videoSlots?.days || [2, 4]; const hm: string = cfg.videoSlots?.time || '19:00';
+  const bi: Any[] = Array.isArray(cfg.videoSlots?.biweekly) ? cfg.videoSlots.biweekly : [];
   const skip = new Set<string>((cfg.videoSlots?.skip || []).map(String));
   const { data } = await db().select('data').eq('coll', 'reel').in('data->>status', ['approved', 'handed', 'published']);
   const taken = new Set((data || []).map((r: Any) => String(r.data.publishAt || '').slice(0, 16)));
@@ -47,7 +55,7 @@ async function nextSlot(): Promise<string> {
   // window was taken all approved reels got "now + 3 hours", the same day and hour)
   for (let h = 0; h < 24 * 730; h++) {
     const d = new Date(Math.ceil(start / 3600e3) * 3600e3 + h * 3600e3); const p = il(d);
-    if (!days.map(Number).includes(wd[p.weekday])) continue;
+    if (!days.map(Number).includes(wd[p.weekday]) && !biweeklyOk(bi, wd[p.weekday], `${p.year}-${p.month}-${p.day}`)) continue;
     if (skip.has(`${p.year}-${p.month}-${p.day}`)) continue;
     if (`${p.hour}:00` !== hm.slice(0, 3) + '00' && `${p.hour}:${p.minute}` !== hm) continue;
     const iso = d.toISOString().slice(0, 16); if (taken.has(iso)) continue;
@@ -71,7 +79,10 @@ async function add(b: Any) {
     const id = 'rl-' + (driveId || path.slice(6, -4)); const prev = await getDoc('reel', id);
     if (prev) { out.push({ id, skipped: prev.status }); continue; }
     const c = r.captions || {}; const t = tok();
-    await db().upsert({ coll: 'reel', id, data: { driveId, ...(path ? { path, bytes: Number(r.bytes) || 0 } : {}), name: String(r.name || ''), link: String(r.link || ''), folder: String(r.folder || ''), captions: c, status: 'awaiting', tok: t, created: new Date().toISOString(), asked: new Date().toISOString() }, updated_at: new Date().toISOString() });
+    // 1.11.2026: priority 'heygen' (from vidreq final): the scheduled HeyGen task moves the reel forward after approval
+    // (settings/social.queueRule, tools/heygen-edit/TASK.md section 6). The slot itself is still the next free one.
+    const priority = r.priority === 'heygen' ? { priority: 'heygen' } : {};
+    await db().upsert({ coll: 'reel', id, data: { driveId, ...priority, ...(path ? { path, bytes: Number(r.bytes) || 0 } : {}), name: String(r.name || ''), link: String(r.link || ''), folder: String(r.folder || ''), captions: c, status: 'awaiting', tok: t, created: new Date().toISOString(), asked: new Date().toISOString() }, updated_at: new Date().toISOString() });
     await tg(askText(String(r.name || '')), askButtons(String(r.link || ''), t));
     out.push({ id, added: true });
   }
