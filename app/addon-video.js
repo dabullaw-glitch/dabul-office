@@ -66,7 +66,8 @@
       ${p.mode === 'self' && !busy ? `<a class="btn-s" href="${PROMPTER}#p=${encodeURIComponent(p.id)}" target="_blank" rel="noopener">🎥 לצילום או העלאה</a>` : `<button class="btn-s" data-a="vd-self" data-id="${n(p.id)}"${busy ? ' disabled' : ''}>🎥 אצלם בעצמי</button>`}
       <button class="btn-s" data-a="vd-edit" data-id="${n(p.id)}"${busy ? ' disabled' : ''}>✏️ עריכת הטקסט</button>
       ${!busy ? `<button class="btn-s" data-a="vd-skip" data-id="${n(p.id)}">לא אצלם</button>` : ''}`;
-    return `<div class="vd-row"><div class="grow"><div><b>${n(p.title || '')}</b> ${pill(TYPE, p.type)} ${pill(ST, p.status)} ${modeTag(p, r)}</div>
+    const tag = modeTag(p, r), stp = r && tag && ['draft', 'ready'].includes(p.status) ? '' : pill(ST, p.status);   // the request's status says it all
+    return `<div class="vd-row"><div class="grow"><div><b>${n(p.title || '')}</b> ${pill(TYPE, p.type)} ${stp} ${tag}</div>
       <small class="muted">${p.plan ? 'לצילום עד ' + fdt(p.plan) + ' · ' : ''}${p.sec ? 'כ-' + p.sec + ' שניות' : ''}${p.onScreen ? ' · כיתוב על המסך: ' + n(p.onScreen) : ''}</small>
       <div class="txt">${n(p.text || '')}</div>${busy && !gone ? '<div class="note">הסרטון כבר בהכנה בהייגן, ולכן אי אפשר לשנות כאן את הטקסט.</div>' : ''}</div><div class="acts">${acts}</div></div>`;
   };
