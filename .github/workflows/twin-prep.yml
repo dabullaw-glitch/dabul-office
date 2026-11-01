@@ -59,7 +59,7 @@ jobs:
       - name: Commit
         run: |
           git config user.name "twin-prep"; git config user.email "actions@github.com"
-          git add media/twin/*.mp4 media/twin/*.mp3 media/twin/*.jpg media/twin/*.info.json media/twin/*.error.json 2>/dev/null || true
+          git add -A media/twin
           git diff --cached --quiet && exit 0
           git commit -qm "twin prep: footage for HeyGen digital twin"
           for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; sleep 5; done
