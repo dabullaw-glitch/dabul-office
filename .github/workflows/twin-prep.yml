@@ -42,6 +42,7 @@ jobs:
             curl -sSL -o /tmp/src.mov "https://drive.usercontent.google.com/download?id=$did&export=download&confirm=t"
             ls -l /tmp/src.mov
             dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/src.mov | cut -d. -f1)
+            if [ -z "$dur" ]; then echo "$id: not a video (the Drive file is not public?)"; echo "{\"id\":\"$id\",\"error\":\"download is not a video; the Drive file must be shared as anyone with the link\"}" > "media/twin/$id.error.json"; continue; fi
             [ "$dur" -gt "$max" ] && dur=$max
             mb=$(python3 -c "import json;print(json.load(open('$f')).get('targetMB',28))")
             res=$(python3 -c "import json;print(json.load(open('$f')).get('res','720:1280'))")
@@ -58,7 +59,7 @@ jobs:
       - name: Commit
         run: |
           git config user.name "twin-prep"; git config user.email "actions@github.com"
-          git add media/twin/*.mp4 media/twin/*.mp3 media/twin/*.jpg media/twin/*.info.json 2>/dev/null || true
+          git add media/twin/*.mp4 media/twin/*.mp3 media/twin/*.jpg media/twin/*.info.json media/twin/*.error.json 2>/dev/null || true
           git diff --cached --quiet && exit 0
           git commit -qm "twin prep: footage for HeyGen digital twin"
           for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; sleep 5; done
