@@ -167,9 +167,11 @@ async function sameAsLive(acc: string, loc: string, text: string, link: string):
   for (const p of await livePosts(acc, loc)) {
     if (String(p.createTime || '') < since || p.state === 'REJECTED') continue;
     const url = String(p.callToAction?.url || '');
-    if (link && !/^https:\/\/dabullaw\.co\.il\/?$/.test(link) && url && decodeURI(url) === decodeURI(link)) return p.name;
     const bw = words(p.summary || ''); let n = 0; for (const w of a) if (bw.has(w)) n++;
-    if (a.size && n / Math.min(a.size, bw.size || 1) >= 0.45) return p.name;
+    const share = a.size ? n / Math.min(a.size, bw.size || 1) : 0;
+    // several different posts link to the same main page, so the same link alone is not enough
+    const sameLink = !!(link && url && decodeURI(url) === decodeURI(link));
+    if (share >= 0.45 || (sameLink && share >= 0.25)) return p.name;
   }
   return '';
 }
