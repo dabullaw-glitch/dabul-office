@@ -1,0 +1,103 @@
+{
+ "id": "vr-mvxp8287",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/fb5539559439e7a31867bd3900c59f29.mp4?Expires=1794140464&Signature=pXUAxnWl~Oj~vo7RST0EkL72-AY7kCdT70ciBa5lAHdpQIMHuVTJwFBLFD61i7XN2aJ1g0wFWIV1O4cA38XiKV6adF0~gOdqUrQxyHd~xVUWhfWzz5SSpI0Rxc-sHZ6uRo2D9LiBU96y0UWW22XJOzXSucfQ3Y4bXHALjmxWRWCEQk09eMRkP-ugIav6a9XtUnl8H4CyZyCJC64b7hOA9qtr0GsHvl3fFuxCasmhsEJjWhYduHGl-ytHJV9lV-yqkryFlTUSqdTaedxWYB-08EXygOVOwR6W77pyJJhBCE0YXhj4Te-9reTaP~lAasLLXWbEZuH5TG1ELSfm5E8GDA__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "קניתם דירה חדשה,\nואת הישנה עוד לא מכרתם?\nתעצרו רגע. השעון שלכם אולי כבר כמעט נגמר.\n\nמי שקונה דירה חדשה כשיש לו כבר דירה,\nמשלם מס רכישה כמו על דירה יחידה.\nאבל רק בתנאי אחד:\nשהוא מוכר את הדירה הישנה בזמן.\n\nכמה זמן?\nזה תלוי מתי קניתם.\nלרוב שנה וחצי עד שנתיים מיום החתימה.\nובדירה מקבלן, הספירה מתחילה עד שנה ממועד המסירה.\n\nומה קורה אם מפספסים?\nמשלמים מס רכישה כמו על דירה שנייה.\nבדירה של שלושה מיליון שקל,\nזה יכול להיות הפרש של קרוב למאתיים אלף שקל.\nועוד הצמדה וריבית.\n\nאז מה עושים?\nאחד. בודקים היום את התאריך המדויק שלכם.\nשתיים. אם המועד קרוב, מתכננים את המכירה לפיו,\nולא לפי מה שנוח.\nשלוש. אם כבר שילמתם מס של דירה שנייה ומכרתם בזמן,\nמגישים בקשה להחזר. זה לא קורה לבד.\n\nכל מקרה שונה, ויש חריגים.\nשלחו את זה למישהו שקנה דירה חדשה השנה.",
+ "history": "boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "bold,boxed-navy,warm",
+ "plan": {
+  "title": "משפרי דיור: השעון לדירה הישנה נגמר",
+  "topic": "מיסוי",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "cinematic",
+  "goldWords": [
+   "נגמר.",
+   "בזמן.",
+   "שנייה.",
+   "להחזר.",
+   "חריגים."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "מס רכישה",
+    "l1": "קניתם דירה חדשה?",
+    "l2": "השעון כבר רץ"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "מי שקונה דירה חדשה",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "cond",
+    "kind": "term",
+    "say": "אבל רק בתנאי אחד:",
+    "until": "את הדירה הישנה בזמן.",
+    "kicker": "התנאי",
+    "text": "מוכרים את הישנה",
+    "sub": "בזמן",
+    "subSay": "הישנה בזמן."
+   },
+   {
+    "id": "months",
+    "kind": "count",
+    "say": "לרוב שנה וחצי עד שנתיים",
+    "until": "מיום החתימה.",
+    "n": 24,
+    "suffix": "",
+    "label": "חודשים, לרוב",
+    "sub": "מיום החתימה"
+   },
+   {
+    "id": "miss",
+    "kind": "stamp",
+    "say": "ומה קורה אם מפספסים?",
+    "until": "ועוד הצמדה וריבית.",
+    "text": "מס של דירה שנייה",
+    "stampSay": "כמו על דירה שנייה."
+   },
+   {
+    "id": "steps",
+    "kind": "stack",
+    "say": "אז מה עושים?",
+    "until": "זה לא קורה לבד.",
+    "items": [
+     {
+      "say": "בודקים היום את התאריך",
+      "text": "בודקים את התאריך"
+     },
+     {
+      "say": "מתכננים את המכירה לפיו,",
+      "text": "מתכננים את המכירה"
+     },
+     {
+      "say": "מגישים בקשה להחזר.",
+      "text": "מבקשים החזר"
+     }
+    ]
+   },
+   {
+    "id": "case",
+    "kind": "boom",
+    "say": "כל מקרה שונה, ויש חריגים.",
+    "dur": 2,
+    "text": "כל מקרה שונה"
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "שלחו את זה למישהו",
+    "until": "דירה חדשה השנה.",
+    "label": "שלחו למי שקנה השנה",
+    "text": "09-8613413"
+   }
+  ]
+ }
+}
