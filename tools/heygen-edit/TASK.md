@@ -133,11 +133,11 @@ For every vidreq with status 'heygen' and no hg.videoId (oldest first, at most 2
 3. Look (Yakir approved 1.11.2026: the look fits the script, with variety): read settings/heygen.lookByType.map. Take the
    script type (prompt row type: story, simple, qa, news, dont, myth, value; a list or checklist script -> value_list;
    inheritance or family topics -> inheritance_family; Yakir's opinion on a complex topic -> opinion) and its list of look
-   ids in order. LOOKS (Yakir 1.11.2026, final): the OFFICE twin (settings/heygen.officeRecipe: look 2de82931...,
-   engine avatar_iii, no motionPrompt) for almost every video. The CHAIR (settings/heygen.lookByType.chairRecipe: look
-   b60c351e..., engine avatar_v with reference_look_id 2de82931..., its own motionPrompt) only now and then: at most one
-   video in five (check lookHistory) and only for calm, conversational content (story, inheritance or family, opinion).
-   NEVER the podcast look or any other look. Use the recipe of the chosen look exactly (engine and motionPrompt).
+   ids in order. LOOKS (Yakir 1.11.2026 19:45, final): four approved looks, all digital twins made from his REAL office
+   footage (settings/heygen.lookByType.approvedLooks): suit and tie 2de82931..., black jacket + black shirt 11e4b953...,
+   black jacket + white shirt f9ec4b0e..., black polo b51d39d9.... Pick by the script type from lookByType.map (first look
+   in the list that is not lookHistory[0]; never the same look twice in a row). Every look: engine {"type":"avatar_iii"},
+   NO motionPrompt, NO expressiveness. NEVER the armchair, the podcast, any photo look, or the blue-shirt twin 03235a17.
    Use the first look in that list that is NOT the look of the previous video (settings/heygen.lookHistory[0]);
    among looks of equal fit prefer the one used longest ago. NEVER use looks.rejected (the AI looks he rejected), the studio
    looks in lookByType.noStudio, or lookByType.photoLooksPaused. Yakir 1.11.2026: only digital twins made from his REAL
@@ -152,8 +152,7 @@ For every vidreq with status 'heygen' and no hg.videoId (oldest first, at most 2
    sounds like him), script = the prepared text, engine = settings/heygen.engine ({"type": "avatar_iii"}: Yakir chose it
    1.11.2026 because the mouth and teeth come from his real footage), resolution = "1080p", aspectRatio = "9:16" for reels
    (and 'other'), fit "cover" when the look's lookByType.pending entry says so, title = "<vidreq id> <title>".
-   Do NOT pass motionPrompt or expressiveness with avatar_iii (the motion comes from his real footage); for the chair pass the
-   chairRecipe engine and motionPrompt. Do not burn captions.
+   Do NOT pass motionPrompt or expressiveness with avatar_iii (the motion comes from his real footage). Do not burn captions.
 5. docs_merge the request: hg {videoId, lookId, at, creditsBefore, text: the exact text sent}. Add the look to
    settings/heygen.lookHistory (newest first, keep 10). Never create a second video for the same request while one is in
    progress; never recreate to poll.
