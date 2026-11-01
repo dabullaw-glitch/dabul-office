@@ -1,22 +1,29 @@
 // vidreq (1.11.2026, Yakir: "בקשת סרטון" in the office system, HeyGen instead of filming, every step with his approval).
 // Requests live in docs coll "vidreq" (written by the office app addon-video.js / addon-upd.js and by the scheduled task
 // "סרטוני הייגן"). The script of a request is a row in coll "prompt" (same list as the teleprompter), linked by promptId.
-// Statuses: new, writing, script-wait, script-fix, heygen, editing, final-wait, approved, published, rejected,
-//           film (approved script, Yakir films it himself), later (course lessons: editing starts later), test-done.
+// Statuses: new, writing, script-wait, script-fix, heygen, raw-wait, raw-ok, raw-fix, editing, final-wait, approved,
+//           published, rejected, hold (Yakir stopped it), film (approved script, Yakir films it himself),
+//           later (course lessons: editing starts later), test-done.
+// Raw approval (Yakir 1.11.2026): every HeyGen video is checked by Yakir BEFORE editing: heygen -> raw-wait (Telegram with
+// view + approve / ask for a fix) -> raw-ok (the scheduled task sends it to the cloud editor) or raw-fix (rawFixNote: the
+// task makes the HeyGen video again and asks again).
 // Nothing is published from here. A finished reel goes to the existing reels flow (reels?step=add: Telegram approval,
 // then the next publishing slot and every network, exactly like the edited reels).
 //
 // Served by the reels function (the project has no room for another function): .../functions/v1/reels?vr=<step>
 // Cron (header x-cron-secret):
 //   POST ?vr=script {id, dry?}         script of the request is ready: Telegram to Yakir (read + approve / ask for a change)
+//   POST ?vr=raw    {id, dry?}         the HeyGen video is ready (hg.videoId): status raw-wait, Telegram to Yakir
+//                                        (view in HeyGen + approve for editing / ask for a fix). dry writes nothing.
 //   POST ?vr=final  {id, url, captions?, dry?}
 //                                        finished video (an mp4 on the office GitHub Pages site, media/hgv/<id>.mp4).
 //                                        reel: copied to storage files/reels/hg-<id>.mp4 and handed to reels?step=add.
 //                                        other types: Telegram with view + approve / reject (pages below).
 //   POST ?vr=sync {}                   request statuses follow their reel rows (approved, published, rejected)
-//   POST ?vr=remind {force?}           scripts and finished videos still waiting for Yakir, once a day
+//   POST ?vr=remind {force?}           scripts, raw HeyGen videos and finished videos still waiting for Yakir, once a day
 // Public (Telegram buttons through the office site, portal.html#h=<a>&t=<token>):
 //   ?a=sok | sfix  (script: approve / ask for a change, POST note)   ?a=vok | vno (finished video, not reels)
+//   ?a=rok | rfix  (raw HeyGen video, token rtok: approve for editing / ask for a fix, POST note)
 import { loadSecrets, json, cors, admin, env } from '../_shared/common.ts';
 // deno-lint-ignore no-explicit-any
 type Any = any;
@@ -61,6 +68,23 @@ async function askScript(id: string, dry: boolean, reminder = false) {
   const out = await tg(text, [[{ text: '✅ קריאה ואישור', url: pub('sok', t) }], [{ text: '✏️ צריך שינוי', url: pub('sfix', t) }, { text: '📂 במערכת המשרד', url: OFFICE }]], dry);
   if (reminder) await merge('vidreq', id, { reminded: now() });
   return { ok: true, id, status: 'script-wait', telegram: out };
+}
+
+// ---- raw HeyGen video ready: Yakir checks it before editing ----
+const hgId = (r: Any) => String((r && r.hg && r.hg.videoId) || '').replace(/[^A-Za-z0-9_-]/g, '');
+const hgView = (vid: string) => `https://app.heygen.com/videos/${vid}`;
+const rawButtons = (vid: string, t: string) => [[{ text: '👁 צפייה בסרטון', url: hgView(vid) }], [{ text: '✅ מאשר, לעריכה', url: pub('rok', t) }, { text: '✏️ צריך תיקון', url: pub('rfix', t) }], [{ text: '📂 במערכת המשרד', url: OFFICE }]];
+async function askRaw(id: string, dry: boolean, reminder = false) {
+  const r = await getDoc('vidreq', id); if (!r) return { ok: false, error: 'no request' };
+  const vid = hgId(r); if (!vid) return { ok: false, error: 'no hg.videoId' };
+  const p = r.promptId ? await getDoc('prompt', r.promptId) : null;
+  const title = String((p && p.title) || r.topic || 'סרטון');
+  // a new token for every new raw video (old Telegram buttons of a video that was fixed stop working); reminders reuse it
+  const t = reminder && r.rtok ? String(r.rtok) : tok();
+  if (!dry) await merge('vidreq', id, reminder ? { rtok: t, reminded: now() } : { status: 'raw-wait', rtok: t, rawAskedAt: now() });
+  const text = `${reminder ? '⏳ תזכורת: ' : ''}🎥 הסרטון מהייגן מוכן לבדיקה: ${title}\n\nצפייה, ואז אישור לעריכה או בקשת תיקון. שום דבר לא עולה לפני האישור הסופי שלך.`;
+  const out = await tg(text, rawButtons(vid, t), dry);
+  return { ok: true, id, status: 'raw-wait', ...(dry ? { dry: true, wrote: false } : {}), telegram: out };
 }
 
 // ---- finished video ----
@@ -109,13 +133,14 @@ async function sync() {
   return { ok: true, out };
 }
 async function remind(b: Any) {
-  const { data } = await db().select('id,data').eq('coll', 'vidreq').in('data->>status', ['script-wait', 'final-wait']);
+  const { data } = await db().select('id,data').eq('coll', 'vidreq').in('data->>status', ['script-wait', 'raw-wait', 'final-wait']);
   const out: Any[] = [];
   for (const row of data || []) {
     const r = row.data; if (r.test || r.dryRun) continue;
-    const last = Date.parse(r.reminded || r.asked || r.finalAt || r.created || 0);
+    const last = r.status === 'raw-wait' ? Math.max(Date.parse(r.reminded || 0) || 0, Date.parse(r.rawAskedAt || 0) || 0) : Date.parse(r.reminded || r.asked || r.finalAt || r.created || 0);
     if (!b.force && Date.now() - last < 20 * 3600e3) continue;
     if (r.status === 'script-wait') out.push(await askScript(row.id, !!b.dry, true));
+    else if (r.status === 'raw-wait') out.push(await askRaw(row.id, !!b.dry, true));
     else if (!r.reelId && r.vtok) {   // reels are reminded by the reels function itself
       await tg(`⏳ תזכורת: ${TYPE[r.type] || 'סרטון'} מחכה לאישור הסופי שלך: ${r.topic || ''}`, [[{ text: '👁 צפייה בסרטון', url: r.finalUrl }], [{ text: '✅ מאשר', url: pub('vok', r.vtok) }, { text: '✗ לא מאשר', url: pub('vno', r.vtok) }]], !!b.dry);
       await merge('vidreq', row.id, { reminded: now() }); out.push({ id: row.id, reminded: true });
@@ -154,6 +179,33 @@ async function scriptPage(req: Request, a: string, t: string) {
   await merge('vidreq', row.id, { status: 'script-fix', fixNote: note, fixAt: now(), fixes: [...(r.fixes || []), { note, at: now() }] });
   return page('קיבלתי', `<p>נכתוב גרסה חדשה לפי ההערה ונשלח אליך שוב לאישור.</p><p class="muted">${esc(note)}</p>`);
 }
+async function rawPage(req: Request, a: string, t: string) {
+  const row = await byTok('rtok', t); if (!row) return page('הקישור לא תקף', '<p>הבקשה לא נמצאה.</p>', 404);
+  const r = row.data; const p = r.promptId ? await getDoc('prompt', r.promptId) : null;
+  const title = esc((p && p.title) || r.topic || '');
+  const vid = hgId(r);
+  const view = vid ? `<p><a class="lnk" href="${hgView(vid)}" target="_blank" rel="noopener">👁 צפייה בסרטון</a></p>` : '';
+  if (r.status !== 'raw-wait') {
+    const what = ['raw-fix', 'heygen'].includes(r.status) ? 'ביקשת תיקון. הסרטון יוכן מחדש בהייגן ויישלח אליך שוב לבדיקה.'
+      : ['rejected', 'hold'].includes(r.status) ? 'הבקשה הזאת נעצרה.'
+      : 'הסרטון כבר אושר לעריכה. אחרי העריכה הוא יגיע אליך לאישור סופי, ושום דבר לא מתפרסם לפני כן.';
+    return page('כבר טופל', `<p><b>${title}</b></p><p>${what}</p><p class="muted">אפשר לראות את מצב הסרטון במערכת המשרד, במסך סרטונים.</p><p><a class="lnk" href="${OFFICE}">פתיחת מערכת המשרד</a></p>`);
+  }
+  if (req.method !== 'POST') {
+    if (a === 'rok') return page('אישור הסרטון לעריכה', `<p><b>${title}</b></p>${view}<p class="muted">אחרי האישור הסרטון ייערך (כתוביות, גרפיקה וסיום), ויגיע אליך לאישור סופי. שום דבר לא מתפרסם לפני האישור הסופי שלך.</p>
+      <form method="post" action="${self()}?a=rok&t=${t}"><div class="row"><button type="submit">✅ מאשר, לעריכה</button></div></form>
+      <p><a class="lnk" href="${pub('rfix', t)}">✏️ צריך תיקון</a> · <a class="lnk" href="${OFFICE}">במערכת המשרד</a></p>`);
+    return page('מה לתקן בסרטון?', `<p><b>${title}</b></p>${view}<form method="post" action="${self()}?a=rfix&t=${t}"><p>מה לתקן בסרטון? (למשל מילה שנשמעת לא נכון, תנועה, מראה)</p><textarea name="note" required></textarea><div class="row"><button type="submit">שליחה</button></div></form>`);
+  }
+  if (a === 'rok') {
+    await merge('vidreq', row.id, { status: 'raw-ok', rawApprovedAt: now(), rawApprovedBy: 'telegram' });
+    return page('הסרטון אושר לעריכה', `<p>${title}</p><p>הסרטון ייערך בסבב הקרוב (עד כמה שעות), ויגיע אליך לאישור סופי לפני כל פרסום.</p>`);
+  }
+  const form = await req.text().catch(() => ''); const note = (new URLSearchParams(form).get('note') || '').trim().slice(0, 2000);
+  if (!note) return page('לא נכתב מה לתקן', `<p>נסו שוב: <a class="lnk" href="${pub('rfix', t)}">מה לתקן</a></p>`, 400);
+  await merge('vidreq', row.id, { status: 'raw-fix', rawFixNote: note, rawFixAt: now(), rawFixes: [...(r.rawFixes || []), { note, at: now(), videoId: vid, by: 'telegram' }] });
+  return page('קיבלתי', `<p>נתקן לפי ההערה, נכין את הסרטון מחדש בהייגן ונשלח אליך שוב לבדיקה.</p><p class="muted">${esc(note)}</p>`);
+}
 async function videoPage(req: Request, a: string, t: string) {
   const row = await byTok('vtok', t); if (!row) return page('הקישור לא תקף', '<p>הסרטון לא נמצא.</p>', 404);
   const r = row.data; const title = esc(r.topic || '');
@@ -168,13 +220,15 @@ async function videoPage(req: Request, a: string, t: string) {
 // called first by the reels function: answers vidreq requests, or null for everything else
 export async function handleVidreq(req: Request, url: URL): Promise<Response | null> {
   const a = url.searchParams.get('a') || '', t = (url.searchParams.get('t') || '').replace(/[^a-f0-9]/g, ''), step = url.searchParams.get('vr');
-  if (!['sok', 'sfix', 'vok', 'vno'].includes(a) && !step) return null;
+  if (!['sok', 'sfix', 'vok', 'vno', 'rok', 'rfix'].includes(a) && !step) return null;
   try {
     if (a === 'sok' || a === 'sfix') return await scriptPage(req, a, t);
     if (a === 'vok' || a === 'vno') return await videoPage(req, a, t);
+    if (a === 'rok' || a === 'rfix') return await rawPage(req, a, t);
     if (!env('CRON_SECRET') || req.headers.get('x-cron-secret') !== env('CRON_SECRET')) return json({ error: 'unauthorized' }, 401);
     const b = await req.json().catch(() => ({}));
     if (step === 'script') return json(await askScript(String(b.id || ''), !!b.dry));
+    if (step === 'raw') return json(await askRaw(String(b.id || ''), !!b.dry));
     if (step === 'final') return json(await final(b, !!b.dry));
     if (step === 'sync') return json(await sync());
     if (step === 'remind') return json(await remind(b));

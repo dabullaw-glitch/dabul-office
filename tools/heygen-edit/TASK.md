@@ -24,7 +24,7 @@ NOTHING is published without his approval of the finished video. You never publi
   NEVER UPDATE or DELETE rows. Test rows are marked status 'test-done', never deleted.
 - Secrets live in table app_secrets (k, v). NEVER select or print their values. Use them only inside SQL, for example:
   - call an office function (cron secret). The video requests steps are served by the reels function:
-    https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reels?vr=<script | final | sync | remind> (POST, JSON body):
+    https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reels?vr=<script | raw | final | sync | remind> (POST, JSON body):
     `select net.http_post(url := 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reels?vr=script',
        body := '{"id":"vr-..."}'::jsonb,
        headers := jsonb_build_object('content-type','application/json','x-cron-secret',(select v from app_secrets where k='CRON_SECRET')),
@@ -62,8 +62,10 @@ NOTHING is published without his approval of the finished video. You never publi
 - `docs vidreq`: the requests. Fields: type ('reel' | 'course' | 'other'), topic, notes, mode ('heygen' | 'self'), status,
   created, source ('office' | 'upd' | 'script'), upd {id,title,summary,topic,date,source{name,url}} when it came from the
   updates board, promptId (its script), fixNote / fixes (Yakir's change requests), hg {...} (HeyGen), finalUrl, reelId, test.
-  Statuses: new, writing, script-wait, script-fix, heygen, editing, final-wait, approved, published, rejected,
-  film (approved, Yakir films it himself), later (course lessons), test-done. Skip rows with test true unless this prompt says so.
+  Statuses: new, writing, script-wait, script-fix, heygen, raw-wait, raw-ok, raw-fix, editing, final-wait, approved,
+  published, rejected, hold (Yakir stopped it), film (approved, Yakir films it himself), later (course lessons), test-done.
+  Raw approval fields: rtok, rawAskedAt, rawApprovedAt / rawApprovedBy, rawFixNote / rawFixes (Yakir's fix requests for the
+  HeyGen video), hgRejected (earlier HeyGen videos he asked to fix). Skip rows with test true unless this prompt says so.
 - Check that the HeyGen tools exist: ToolSearch query "+heygen create_video_from_avatar" (tools named mcp__heygen__*:
   create_video_from_avatar, get_video, get_current_user, list_avatar_looks, get_avatar_look). Load the ones you need with
   ToolSearch "select:...".
@@ -168,9 +170,21 @@ Requests with status 'hold' are never touched (Yakir stopped them).
 - completed: credits after (get_current_user): store hg.url (video_url), hg.duration, hg.creditsAfter, hg.cost
   (before - after), and append {id, title, at, cost, remaining} to settings/heygen.costLog (read it, append, merge the whole
   array) and update settings/heygen.plan.creditsRemaining / creditsAt.
-  RAW APPROVAL FIRST (Yakir 1.11.2026): docs_merge the request status 'raw-wait' and send Yakir one Telegram line:
-  "סרטון גולמי מוכן לבדיקה: <title> - https://app.heygen.com/videos/<hg.videoId>". Stop here for this request.
-  Only a request with status 'raw-ok' (Yakir approved the raw video; set in the chat or the office system) goes on:
+  RAW APPROVAL FIRST (Yakir 1.11.2026): call `reels?vr=raw` with {"id": "<vidreq id>"} and check the answer is ok. The
+  function sets status 'raw-wait' and sends Yakir the Telegram message (view in HeyGen, "מאשר, לעריכה" / "צריך תיקון", and a
+  link to the office system; the office system shows the same buttons). Do not send your own Telegram line. Stop here for
+  this request.
+  Status 'raw-fix' (Yakir asked to fix the HeyGen video): read rawFixNote (and rawFixes). First append the current
+  hg.videoId to hgRejected (read it, append {videoId, note, at}, merge the whole array). Then:
+  - words read wrong (a word sounds wrong, a wrong accent or stress): add those words to settings/heygen.spokenReplace
+    (read it, add, merge the whole object) with a rephrase or a simpler word of the same meaning, NEVER niqqud; then create
+    the HeyGen video again (section 4, steps 2 to 5) from the prompt row's current text with the new replacements and the
+    SAME look recipe as the rejected video (hg.lookId and its recipe).
+  - look or motion (how he looks, moves, the background, the framing): follow the note only within the approved recipes
+    (settings/heygen.officeRecipe, settings/heygen.lookByType.chairRecipe); never a look outside them. Then create the
+    HeyGen video again (section 4, steps 4 and 5).
+  docs_merge the request status 'heygen' with the new hg {...}; when it completes, call `reels?vr=raw` again (above).
+  Only a request with status 'raw-ok' (Yakir approved the raw video in Telegram or in the office system) goes on:
   for status 'raw-ok' get a fresh hg.url with get_video (the HeyGen link expires), then write the edit job and push it:
   `media/hgv/<vidreq id>.job.json` = {
      "id": "<vidreq id>", "kind": "reel", "video": "<hg.url>",

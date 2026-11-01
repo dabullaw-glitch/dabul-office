@@ -6,9 +6,11 @@
    avatar video, Claude edits it like every reel, and Yakir approves the finished video before anything is published
    (reels go to the existing reels flow and publishing slots). For every script not filmed yet: "🎬 להכין בהייגן",
    "🎥 אצלם בעצמי", "✏️ עריכת הטקסט" (before it goes to HeyGen) and "לא אצלם". Filmed and published scripts leave the list
-   (closed archive at the bottom). The scheduled task "סרטוני הייגן" (every 3 hours, 8:00 to 22:00) does the work. */
+   (closed archive at the bottom). The scheduled task "סרטוני הייגן" (every 3 hours, 8:00 to 22:00) does the work.
+   1.11.2026 (Yakir): raw approval before editing. A request in 'raw-wait' shows "👁 צפייה" (the video in HeyGen),
+   "✅ מאשר, לעריכה" (raw-ok) and "✏️ צריך תיקון" (raw-fix with a note), the same as the Telegram buttons (reels?vr=raw). */
 (function (s) {
-  if (!s || s.VIDEO) return; s.VIDEO = '20261101a';
+  if (!s || s.VIDEO) return; s.VIDEO = '20261101b';
   const n = s.esc;
   const PROMPTER = ((window.OFFICE_CONFIG || {}).appUrl || 'https://dabullaw-glitch.github.io/dabul-office/') + 'prompter.html';
   const COLLS = ['prompt', 'rawvid', 'vidreq'];
@@ -34,7 +36,7 @@
   const all = c => s.all(c);
   const TYPE = { story: ['סיפור', 'p-info'], dont: ['אל תעשו', 'p-bad'], value: ['הסבר עם ערך', 'p-ok'], myth: ['מיתוס מול עובדה', 'p-warn'], curious: ['מעניין', 'p-info'], qa: ['שאלה מהקהל', 'p-mute'], news: ['אקטואליה', 'p-info'], simple: ['בואו נעשה את זה פשוט', 'p-ok'], special: ['מיוחד', 'p-info'] };
   const ST = { draft: ['ממתין לאישור שלך', 'p-warn'], ready: ['מאושר', 'p-ok'], filmed: ['צולם', 'p-info'], done: ['פורסם', 'p-mute'], published: ['פורסם', 'p-mute'], new: ['הגיע, ממתין לעריכה', 'p-warn'], editing: ['בעריכה', 'p-info'], edited: ['נערך', 'p-ok'], skipped: ['לא יצולם', 'p-mute'] };
-  const RQ = { new: ['חדש', 'p-warn'], writing: ['כותב תסריט', 'p-info'], 'script-fix': ['כותב תסריט', 'p-info'], 'script-wait': ['תסריט מחכה לאישור שלך', 'p-warn'], heygen: ['בהכנה בהייגן', 'p-info'], editing: ['בעריכה', 'p-info'], 'final-wait': ['מחכה לאישור סופי', 'p-warn'], approved: ['אושר', 'p-ok'], published: ['פורסם', 'p-mute'], rejected: ['נדחה', 'p-mute'], film: ['מחכה לצילום שלך', 'p-info'], later: ['ממתין לשלב הקורס', 'p-mute'], 'test-done': ['בדיקה', 'p-mute'] };
+  const RQ = { new: ['חדש', 'p-warn'], writing: ['כותב תסריט', 'p-info'], 'script-fix': ['כותב תסריט', 'p-info'], 'script-wait': ['תסריט מחכה לאישור שלך', 'p-warn'], heygen: ['בהכנה בהייגן', 'p-info'], 'raw-wait': ['ממתין לבדיקת הסרטון מהייגן', 'p-warn'], 'raw-ok': ['אושר, בעריכה בקרוב', 'p-ok'], 'raw-fix': ['תיקון לסרטון מהייגן', 'p-info'], hold: ['עצור', 'p-mute'], editing: ['בעריכה', 'p-info'], 'final-wait': ['מחכה לאישור סופי', 'p-warn'], approved: ['אושר', 'p-ok'], published: ['פורסם', 'p-mute'], rejected: ['נדחה', 'p-mute'], film: ['מחכה לצילום שלך', 'p-info'], later: ['ממתין לשלב הקורס', 'p-mute'], 'test-done': ['בדיקה', 'p-mute'] };
   const RTYPE = { reel: 'רילס לרשתות', course: 'שיעור בקורס', other: 'אחר' };
   const pill = (map, k) => { const [t, c] = map[k] || [k || '', 'p-mute']; return `<span class="pill ${c}">${n(t)}</span>`; };
   const fdt = d => d ? s.fmtDate(String(d).slice(0, 10)) : '';
@@ -129,6 +131,7 @@
   // ---- video requests ----
   const requests = () => all('vidreq').filter(r => !r.test && r.status !== 'test-done').sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
   const OPEN = r => !['approved', 'published', 'rejected'].includes(reqStatus(r));
+  const hgVid = r => String((r && r.hg && r.hg.videoId) || '').replace(/[^A-Za-z0-9_-]/g, '');
   function reqRow(r) {
     const p = r.promptId ? s.get('prompt', r.promptId) : null, k = reqStatus(r);
     const src = r.source === 'upd' ? ' · מלוח העדכונים' : r.source === 'script' ? ' · מרשימת התסריטים' : '';
@@ -136,8 +139,10 @@
       <small class="muted">${n(RTYPE[r.type] || 'סרטון')} · ${r.mode === 'self' ? 'אצלם בעצמי' : 'הייגן'} · ${fdt(r.created)}${src}${r.publishAt && k === 'approved' ? ' · יפורסם ב-' + fdt(r.publishAt) : ''}</small>
       ${p && p.text && k !== 'new' ? `<div class="txt">${n(p.text)}</div>` : r.notes ? `<div class="txt">${n(r.notes)}</div>` : ''}
       ${r.status === 'script-fix' && r.fixNote ? `<div class="note">ביקשת שינוי: ${n(r.fixNote)}</div>` : ''}
+      ${r.status === 'raw-fix' && r.rawFixNote ? `<div class="note">ביקשת תיקון בסרטון: ${n(r.rawFixNote)}</div>` : ''}
       ${r.error && k !== 'approved' ? `<div class="note">${n(r.error)}</div>` : ''}</div>
       <div class="acts">${r.finalUrl ? `<a class="btn-s" href="${n(r.finalUrl)}" target="_blank" rel="noopener">👁 צפייה</a>` : ''}
+      ${k === 'raw-wait' && hgVid(r) ? `<a class="btn-s" href="https://app.heygen.com/videos/${n(hgVid(r))}" target="_blank" rel="noopener">👁 צפייה</a><button class="btn-s ok" data-a="vd-rok" data-id="${n(r.id)}">✅ מאשר, לעריכה</button><button class="btn-s" data-a="vd-rfix" data-id="${n(r.id)}">✏️ צריך תיקון</button>` : ''}
       ${p && k === 'script-wait' ? `<button class="btn-s ok" data-a="vd-ok" data-id="${n(p.id)}">✅ מאשר את התסריט</button><button class="btn-s" data-a="vd-edit" data-id="${n(p.id)}">✏️ עריכת הטקסט</button><button class="btn-s" data-a="vd-fix" data-id="${n(r.id)}">צריך שינוי</button>` : ''}
       ${k === 'new' ? `<button class="btn-s" data-a="vd-cancel" data-id="${n(r.id)}">ביטול</button>` : ''}</div></div>`;
   }
@@ -145,7 +150,7 @@
     const R = requests(), open = R.filter(OPEN), closed = R.filter(r => !OPEN(r));
     return `<div class="card card-b">${open.map(reqRow).join('') || s.empty('אין בקשות פתוחות', 'לוחצים "בקשת סרטון חדש" למעלה, ואני כותב תסריט ושולח אליך לאישור.')}
       ${closed.length ? `<details class="vd-skip"><summary>בקשות שהסתיימו (${closed.length})</summary>${closed.map(reqRow).join('')}</details>` : ''}</div>
-      <p class="muted" style="margin:10px 4px 0;font-size:13px">כל שלב עובר אישור שלך: קודם התסריט, ובסוף הסרטון הערוך. שום דבר לא מתפרסם לפני האישור הסופי שלך.</p>`;
+      <p class="muted" style="margin:10px 4px 0;font-size:13px">כל שלב עובר אישור שלך: קודם התסריט, אחר כך הסרטון מהייגן לפני העריכה, ובסוף הסרטון הערוך. שום דבר לא מתפרסם לפני האישור הסופי שלך.</p>`;
   }
   s.newVideoRequest = (pre = {}) => s.formModal({ title: '🎬 בקשת סרטון חדש', submit: 'שליחת הבקשה',
     fields: [['type', 'סוג', 'select', { options: [['reel', 'רילס לרשתות'], ['course', 'שיעור בקורס'], ['other', 'אחר']] }],
@@ -164,6 +169,17 @@
     const r = s.get('vidreq', d.id); if (!r) return;
     s.formModal({ title: 'מה לשנות בתסריט?', submit: 'שליחה', fields: [['note', 'כתוב במילים פשוטות מה לשנות', 'textarea', { rows: 5, full: true, req: true }]], values: {},
       onSubmit: async v => { await s.patch('vidreq', d.id, { status: 'script-fix', fixNote: String(v.note || '').trim(), fixAt: nowIso(), fixes: (r.fixes || []).concat([{ note: String(v.note || '').trim(), at: nowIso() }]) }); s.toast('קיבלתי. גרסה חדשה תגיע אליך לאישור.'); } });
+  });
+  // raw HeyGen video: approve for editing / ask for a fix (the same as the Telegram buttons)
+  s.act('vd-rok', async (el, d) => {
+    const r = s.get('vidreq', d.id); if (!r || r.status !== 'raw-wait') { s.toast('הבקשה כבר טופלה'); return; }
+    el.disabled = true;
+    try { await s.patch('vidreq', d.id, { status: 'raw-ok', rawApprovedAt: nowIso(), rawApprovedBy: 'office' }); s.toast('הסרטון אושר. הוא ייערך ויגיע אליך לאישור סופי.'); } catch { el.disabled = false; }
+  });
+  s.act('vd-rfix', (el, d) => {
+    const r = s.get('vidreq', d.id); if (!r || r.status !== 'raw-wait') { s.toast('הבקשה כבר טופלה'); return; }
+    s.formModal({ title: 'מה לתקן בסרטון?', submit: 'שליחה', fields: [['note', 'מה לתקן בסרטון? (למשל מילה שנשמעת לא נכון, תנועה, מראה)', 'textarea', { rows: 5, full: true, req: true }]], values: {},
+      onSubmit: async v => { const note = String(v.note || '').trim().slice(0, 2000); if (!note) return; await s.patch('vidreq', d.id, { status: 'raw-fix', rawFixNote: note, rawFixAt: nowIso(), rawFixes: (r.rawFixes || []).concat([{ note, at: nowIso(), videoId: hgVid(r), by: 'office' }]) }); s.toast('קיבלתי. הסרטון יוכן מחדש ויגיע אליך שוב לבדיקה.'); } });
   });
   s.act('vd-cancel', async (el, d) => { const r = s.get('vidreq', d.id); if (!r) return; if (!(await s.confirm('לבטל את הבקשה?', 'ביטול הבקשה'))) return; await s.patch('vidreq', d.id, { status: 'rejected', cancelledAt: nowIso() }); });
 
