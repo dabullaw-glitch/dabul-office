@@ -1,0 +1,46 @@
+name: twin prep
+# Prepares Yakir's real studio footage for a HeyGen digital twin (1.11.2026): HeyGen takes a URL only up to 32 MB.
+# Input: media/twin/<id>.src.json {"driveId": "<public Google Drive file id>", "maxSec": 300}
+# Output: media/twin/<id>.mp4 (720x1280 H.264, under 30 MB) and <id>.info.json, served by GitHub Pages.
+on:
+  push:
+    branches: [main]
+    paths: ['media/twin/*.src.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: twin-prep, cancel-in-progress: false }
+jobs:
+  prep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare
+        run: |
+          command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
+          for f in media/twin/*.src.json; do
+            id=$(basename "$f" .src.json); echo "$id" | grep -Eq '^[a-z0-9-]+$' || continue
+            [ -f "media/twin/$id.mp4" ] && continue
+            did=$(python3 -c "import json;print(json.load(open('$f'))['driveId'])")
+            max=$(python3 -c "import json;print(json.load(open('$f')).get('maxSec',300))")
+            curl -sSL -o /tmp/src.mov "https://drive.usercontent.google.com/download?id=$did&export=download&confirm=t"
+            ls -l /tmp/src.mov
+            dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/src.mov | cut -d. -f1)
+            [ "$dur" -gt "$max" ] && dur=$max
+            vbr=$(( (28 * 8 * 1024) / dur - 96 ))   # kbit/s for about 28 MB total
+            [ $vbr -gt 6000 ] && vbr=6000
+            ffmpeg -y -v error -i /tmp/src.mov -t $dur -vf "scale=720:1280:force_original_aspect_ratio=decrease,pad=720:1280:(ow-iw)/2:(oh-ih)/2,fps=30" \
+              -c:v libx264 -preset slow -b:v ${vbr}k -maxrate ${vbr}k -bufsize $((vbr*2))k -pix_fmt yuv420p \
+              -c:a aac -b:a 96k -ac 1 -movflags +faststart "media/twin/$id.mp4"
+            ffmpeg -y -v error -ss 3 -i "media/twin/$id.mp4" -frames:v 1 "media/twin/$id.jpg"
+            size=$(stat -c %s "media/twin/$id.mp4")
+            echo "{\"id\":\"$id\",\"sec\":$dur,\"bytes\":$size,\"vbr\":$vbr}" > "media/twin/$id.info.json"; cat "media/twin/$id.info.json"
+          done
+      - name: Commit
+        run: |
+          git config user.name "twin-prep"; git config user.email "actions@github.com"
+          git add media/twin/*.mp4 media/twin/*.jpg media/twin/*.info.json 2>/dev/null || true
+          git diff --cached --quiet && exit 0
+          git commit -qm "twin prep: footage for HeyGen digital twin"
+          for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; sleep 5; done
