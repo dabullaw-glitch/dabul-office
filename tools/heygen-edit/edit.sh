@@ -40,6 +40,6 @@ n=0; for p in 0.04 0.18 0.36 0.55 0.75 0.985; do
 done
 cp $W/words.json media/hgv/$id.words.json; cp $W/plan.json media/hgv/$id.plan.json
 jq -n --argjson b "$(tail -1 $W/build.json)" --argjson al "$(cat $W/align.json)" --argjson rs "$(cat $W/resolve.json)" \
-  --arg dur "$d" --arg bytes "$(stat -c %s media/hgv/$id.mp4)" --arg warn "$(cat $W/resolve.err)" \
-  '{ok:true, duration:($dur|tonumber), bytes:($bytes|tonumber), style:$b.style, theme:$b.theme, build:$b, align:$al, resolve:$rs, warnings:$warn, at:(now|todate)}' > media/hgv/$id.result.json
+  --arg dur "$d" --arg bytes "$(stat -c %s media/hgv/$id.mp4)" --arg warn "$(cat $W/resolve.err)" --arg wh "$(tail -c 1500 $W/wh.log 2>/dev/null)" \
+  '{ok:true, duration:($dur|tonumber), bytes:($bytes|tonumber), style:$b.style, theme:$b.theme, build:$b, align:$al, resolve:$rs, warnings:$warn, whisper:$wh, at:(now|todate)}' > media/hgv/$id.result.json
 cat media/hgv/$id.result.json
