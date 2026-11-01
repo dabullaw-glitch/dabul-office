@@ -157,6 +157,33 @@ async function delDup(b: Any) {
 // so Claude publishes the Google Business posts directly). Calendar rows (docs coll 'pub') with channel 'gbpdirect',
 // status 'planned' and a time that has come (Israel time, up to 6 hours late) are posted as a STANDARD local post with a
 // photo and a "LEARN_MORE" button to the article. Cron: POST ?step=due every 10 minutes. Postoria ignores 'gbpdirect'.
+const words = (t: string) => new Set(String(t || '').replace(/[^\u0590-\u05FFA-Za-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w.length > 2));
+async function livePosts(acc: string, loc: string): Promise<Any[]> {
+  const j = await g(`https://mybusiness.googleapis.com/v4/accounts/${acc}/locations/${loc}/localPosts?pageSize=100`);
+  return j.localPosts || [];
+}
+async function sameAsLive(acc: string, loc: string, text: string, link: string): Promise<string> {
+  const since = new Date(Date.now() - 60 * 864e5).toISOString(); const a = words(text);
+  for (const p of await livePosts(acc, loc)) {
+    if (String(p.createTime || '') < since || p.state === 'REJECTED') continue;
+    const url = String(p.callToAction?.url || '');
+    if (link && !/^https:\/\/dabullaw\.co\.il\/?$/.test(link) && url && decodeURI(url) === decodeURI(link)) return p.name;
+    const bw = words(p.summary || ''); let n = 0; for (const w of a) if (bw.has(w)) n++;
+    if (a.size && n / Math.min(a.size, bw.size || 1) >= 0.45) return p.name;
+  }
+  return '';
+}
+// POST ?step=delpost {name}: deletes one post from the profile (only after Yakir approved deleting it).
+async function delPost(b: Any) {
+  const name = String(b.name || ''); if (!/^accounts\/\d+\/locations\/\d+\/localPosts\/\d+$/.test(name)) throw new Error('bad name');
+  await g(`https://mybusiness.googleapis.com/v4/${name}`, 'DELETE');
+  return { ok: true, deleted: name };
+}
+// GET-like ?step=posts: the posts now on the profile (name, time, text start, link).
+async function listPosts() {
+  const { acc, loc } = await ids();
+  return { ok: true, posts: (await livePosts(acc, loc)).map((p: Any) => ({ name: p.name, at: p.createTime, state: p.state, url: p.callToAction?.url || '', text: String(p.summary || '').slice(0, 120) })) };
+}
 const ilNow = () => new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jerusalem' }).slice(0, 16).replace(' ', 'T');
 async function postDue(b: Any) {
   const { acc, loc } = await ids();
@@ -174,6 +201,16 @@ async function postDue(b: Any) {
     const body: Any = { languageCode: 'he', topicType: 'STANDARD', summary: text, callToAction: { actionType: 'LEARN_MORE', url: link } };
     if (img) body.media = [{ mediaFormat: 'PHOTO', sourceUrl: img }];
     const tries = Number(prev.tries || 0) + 1;
+    // 1.11.2026 (Yakir: "זה כבר עלה. אל תעלה פעמיים אותו דבר"): before posting, compare with the posts already on the
+    // profile from the last 60 days; the same link or mostly the same words means it is already up, so it is not posted again.
+    if (!b.force) {
+      const dup = await sameAsLive(acc, loc, text, link);
+      if (dup) {
+        await merge('pub', row.id, { status: 'duplicate', result: { ...(r.result || {}), gbp: { ok: false, duplicateOf: dup, at: new Date().toISOString() } } });
+        await tg(`ℹ️ פוסט לגוגל עסקי לא הועלה כי פוסט דומה כבר עלה: ${r.title || row.id}`);
+        out.push({ id: row.id, ok: false, duplicateOf: dup }); continue;
+      }
+    }
     try {
       const j = await g(`https://mybusiness.googleapis.com/v4/accounts/${acc}/locations/${loc}/localPosts`, 'POST', body);
       await merge('pub', row.id, { status: 'published', result: { ...(r.result || {}), gbp: { ok: true, via: 'gbp-api', name: j.name || '', url: j.searchUrl || '', at: new Date().toISOString() } } });
@@ -242,6 +279,8 @@ Deno.serve(async (req) => {
     if (step === 'deldup') return json(await delDup(b));
     if (step === 'due') return json(await postDue(b));
     if (step === 'askpost') return json(await askPost(b));
+    if (step === 'posts') return json(await listPosts());
+    if (step === 'delpost') return json(await delPost(b));
     if (step === 'ping') { await access(); const { acc, loc } = await ids(); return json({ ok: true, acc: !!acc, loc: !!loc }); }
     return json({ error: 'step?' }, 400);
   } catch (e) { console.error(e); return a ? page('משהו השתבש', '<p>נסו שוב בעוד דקה.</p>', 500) : json({ ok: false, error: String((e as Error).message || e) }, 500); }
