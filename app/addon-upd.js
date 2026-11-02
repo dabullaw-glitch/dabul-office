@@ -4,7 +4,10 @@
    (video since 1.11.2026: a request in docs coll "vidreq", HeyGen or filming) with an optional note. A tap writes a request into docs coll "updreq" through the app's
    normal data layer; the upd function prepares it and sends it to Yakir in Telegram for approval. Nothing is published from here. */
 (function (s) {
-  if (!s || s.UPD) return; s.UPD = '20261101a';
+  /* 2.11.2026 (Yakir): only news from the last 3 days stay on the board ("כל מה שעבר את ה-3 ימים ולא סימנתי, שימחק");
+     an older item stays only if he asked for a post / article / video on it. Every item has "🗑 לא מעניין" (a hide mark in
+     updreq: {kind:'hide', status:'hidden'}; the upd function never processes it). Nothing is deleted from the database. */
+  if (!s || s.UPD) return; s.UPD = '20261102a';
   const n = v => s.esc(v == null ? '' : String(v));
   const C = 'upd', Q = 'updreq';
   [C, Q].forEach(c => { s.S.data[c] = s.S.data[c] || {}; });
@@ -30,6 +33,7 @@
 .ud-src{font-size:13px}.ud-src a{color:#0b5fcc;overflow-wrap:anywhere}
 .ud-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .ud-act .btn{min-height:38px}
+.ud-del{color:var(--muted)}
 .ud-note{flex:1 1 220px;min-width:0;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;font-size:14px;background:var(--panel2);color:var(--ink)}
 .ud-st{font-size:13px;font-weight:700;border-radius:8px;padding:4px 10px;background:var(--panel2)}
 .ud-st.ok{background:#e6f4ea;color:#1a6b34}.ud-st.wait{background:#fff4dc;color:#7a5600}.ud-st.bad{background:#fde8e8;color:#9b1c1c}
@@ -46,6 +50,9 @@
   const days = () => Object.keys(s.S.data[C] || {}).filter(k => /^feed-\d{4}-\d{2}-\d{2}$/.test(k)).sort().reverse().slice(0, 7);
   const reqs = () => Object.entries(s.S.data[Q] || {}).map(([id, r]) => Object.assign({ id }, r)).sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
   const reqOf = (itemId, kind) => reqs().find(r => r.item && r.item.id === itemId && r.kind === kind && r.status !== 'cancelled');
+  const hidden = itemId => reqs().some(r => r.kind === 'hide' && r.status === 'hidden' && r.item && r.item.id === itemId);
+  const KEEP_DAYS = 3;
+  const cutoff = () => { const t = s.today ? s.today() : new Date().toISOString().slice(0, 10); return new Date(Date.parse(t) - (KEEP_DAYS - 1) * 864e5).toISOString().slice(0, 10); };
   const dayName = d => { const t = s.today ? s.today() : new Date().toISOString().slice(0, 10); if (d === t) return 'היום'; const y = new Date(Date.parse(t) - 864e5).toISOString().slice(0, 10); return d === y ? 'אתמול' : (s.fmtDateLong ? s.fmtDateLong(d) : d); };
   const stPill = r => { const x = STATUS[r.status] || [r.status || '', '']; return `<span class="ud-st ${x[1]}">${n(KIND[r.kind] || '')}: ${n(x[0])}</span>`; };
 
@@ -62,6 +69,7 @@
       ${it.summary ? `<p>${n(it.summary)}</p>` : ''}
       <div class="ud-src">מקור: <a href="${n(it.source && it.source.url)}" target="_blank" rel="noopener nofollow">${n(it.source && it.source.name)}</a></div>
       <div class="ud-act">
+        <button class="btn sm ud-del" data-a="ud-hide" data-id="${n(it.id)}" title="להסיר מהלוח" aria-label="לא מעניין, להסיר מהלוח">🗑 לא מעניין</button>
         <input class="ud-note" data-upd-note="${n(it.id)}" placeholder="הערה (לא חובה), למשל: להדגיש את מס השבח" aria-label="הערה לבקשה">
         <button class="btn sm pri" data-a="ud-req" data-k="post" data-id="${n(it.id)}"${rp ? ' disabled' : ''}>${s.icon('send', 14)} פוסט</button>
         <button class="btn sm" data-a="ud-req" data-k="article" data-id="${n(it.id)}"${ra ? ' disabled' : ''}>${s.icon('doc', 14)} מאמר</button>
@@ -74,13 +82,18 @@
   s.V.upd = { title: 'לוח עדכונים', render(el) {
     const loaded = s.S.loaded && s.S.loaded[C];
     const tp = s.ui('upd', 'tp', 'all');
-    const D = days().map(d => ({ d: d.slice(5), items: ((s.S.data[C][d] || {}).items || []).slice().sort((a, b) => (b.imp || 0) - (a.imp || 0)) }));
+    const cut = cutoff(), seen = new Set();
+    const keep = (it, day) => { if (!it || !it.id || seen.has(it.id) || hidden(it.id)) return false;
+      const asked = reqOf(it.id, 'post') || reqOf(it.id, 'article') || vidOf(it.id);
+      const d = /^\d{4}-\d{2}-\d{2}$/.test(String(it.date || '')) ? it.date : day;
+      if (!asked && d < cut) return false; seen.add(it.id); return true; };
+    const D = days().map(d => ({ d: d.slice(5), items: ((s.S.data[C][d] || {}).items || []).filter(it => keep(it, d.slice(5))).sort((a, b) => (b.imp || 0) - (a.imp || 0)) }));
     const all = D.flatMap(x => x.items);
     const topics = [...new Set(all.map(i => i.topic).filter(Boolean))];
     const segs = s.segs('tp', [['all', 'הכל', all.length]].concat(topics.map(t => [t, t, all.filter(i => i.topic === t).length])), tp);
-    const open = reqs().filter(r => !['published', 'scheduled', 'cancelled'].includes(r.status)).slice(0, 8);
+    const open = reqs().filter(r => r.kind !== 'hide' && !['published', 'scheduled', 'cancelled', 'hidden'].includes(r.status)).slice(0, 8);
     const list = D.map(x => { const L = tp === 'all' ? x.items : x.items.filter(i => i.topic === tp); return L.length ? `<div class="ud-day">${n(dayName(x.d))}</div>${L.map(itemHtml).join('')}` : ''; }).join('');
-    el.innerHTML = `<div>${s.pageHead('לוח עדכונים', 'עדכוני נדל"ן ומשפט מהימים האחרונים, ממקורות רשמיים ומאתרי חדשות. בוחרים עדכון ולוחצים "פוסט", "מאמר" או "סרטון": הוא מוכן ונשלח אליך לאישור בטלגרם, ועולה רק אחרי שתאשר.', '')}
+    el.innerHTML = `<div>${s.pageHead('לוח עדכונים', 'עדכוני נדל"ן ומשפט משלושת הימים האחרונים, ממקורות רשמיים ומאתרי חדשות. בוחרים עדכון ולוחצים "פוסט", "מאמר" או "סרטון": הוא מוכן ונשלח אליך לאישור בטלגרם, ועולה רק אחרי שתאשר.', '')}
       <div class="ud-wrap">
         ${open.length ? `<div class="ud-req"><b>בקשות פתוחות</b>${open.map(r => `<div class="ud-rq">${stPill(r)}<b>${n(r.item && r.item.title)}</b>${r.error && r.status === 'failed' ? `<span class="small muted">${n(r.error)}</span>` : ''}</div>`).join('')}</div>` : ''}
         <div class="toolbar">${segs}</div>
@@ -101,6 +114,17 @@
       await s.save(Q, id, { kind: d.k, status: 'queued', note, created: new Date().toISOString(), by: 'office',
         item: { id: it.id, title: it.title, summary: it.summary, topic: it.topic, date: it.date, source: it.source } });
       s.toast(d.k === 'post' ? 'הבקשה נשלחה. הפוסט יגיע אליך לאישור בטלגרם.' : 'הבקשה נשלחה. המאמר יגיע אליך לאישור בטלגרם (לוקח קצת יותר זמן).');
+    } catch { b.disabled = false; }
+  });
+
+  s.act('ud-hide', async (b, d) => {
+    if (!(s.S.loaded && s.S.loaded[Q])) { s.toast('רגע, הנתונים עוד נטענים', 'bad'); return; }
+    let it = null; for (const k of days()) { it = ((s.S.data[C][k] || {}).items || []).find(x => x.id === d.id); if (it) break; }
+    if (!it) return;
+    b.disabled = true;
+    try {
+      await s.save(Q, 'h-' + String(it.id).replace(/[^A-Za-z0-9_-]/g, '').slice(0, 60), { kind: 'hide', status: 'hidden', created: new Date().toISOString(), by: 'office', item: { id: it.id, title: it.title || '' } });
+      s.toast('הוסר מהלוח');
     } catch { b.disabled = false; }
   });
 

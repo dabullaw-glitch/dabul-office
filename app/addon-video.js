@@ -10,7 +10,10 @@
    1.11.2026 (Yakir): raw approval before editing. A request in 'raw-wait' shows "👁 צפייה" (the video in HeyGen),
    "✅ מאשר, לעריכה" (raw-ok) and "✏️ צריך תיקון" (raw-fix with a note), the same as the Telegram buttons (reels?vr=raw). */
 (function (s) {
-  if (!s || s.VIDEO) return; s.VIDEO = '20261101b';
+  /* 2.11.2026 (Yakir): "🗑 מחיקה" on every script and every request ("תמיד בכל המערכת שיהיה לי מקום למחוק").
+     A deleted script is archived (prompt.arch, the list already hides it) and a deleted request gets status 'rejected' with
+     hidden: true, so the scheduled task stops working on it. Nothing is erased from the database. */
+  if (!s || s.VIDEO) return; s.VIDEO = '20261102a';
   const n = s.esc;
   const PROMPTER = ((window.OFFICE_CONFIG || {}).appUrl || 'https://dabullaw-glitch.github.io/dabul-office/') + 'prompter.html';
   const COLLS = ['prompt', 'rawvid', 'vidreq'];
@@ -68,6 +71,7 @@
       ${p.mode === 'self' && !busy ? `<a class="btn-s" href="${PROMPTER}#p=${encodeURIComponent(p.id)}" target="_blank" rel="noopener">🎥 לצילום או העלאה</a>` : `<button class="btn-s" data-a="vd-self" data-id="${n(p.id)}"${busy ? ' disabled' : ''}>🎥 אצלם בעצמי</button>`}
       <button class="btn-s" data-a="vd-edit" data-id="${n(p.id)}"${busy ? ' disabled' : ''}>✏️ עריכת הטקסט</button>
       ${!busy ? `<button class="btn-s" data-a="vd-skip" data-id="${n(p.id)}">לא אצלם</button>` : ''}`;
+    acts += `<button class="btn-s vd-del" data-a="vd-delp" data-id="${n(p.id)}" title="מחיקת התסריט">🗑 מחיקה</button>`;
     const tag = modeTag(p, r), stp = r && tag && ['draft', 'ready'].includes(p.status) ? '' : pill(ST, p.status);   // the request's status says it all
     return `<div class="vd-row"><div class="grow"><div><b>${n(p.title || '')}</b> ${pill(TYPE, p.type)} ${stp} ${tag}</div>
       <small class="muted">${p.plan ? 'לצילום עד ' + fdt(p.plan) + ' · ' : ''}${p.sec ? 'כ-' + p.sec + ' שניות' : ''}${p.onScreen ? ' · כיתוב על המסך: ' + n(p.onScreen) : ''}</small>
@@ -129,7 +133,7 @@
   s.act('vd-back', async (el, d) => { const p = s.get('prompt', d.id); if (!p) return; await s.patch('prompt', d.id, { status: p.prevStatus && p.prevStatus !== 'skipped' ? p.prevStatus : 'ready', skippedAt: '' }); });
 
   // ---- video requests ----
-  const requests = () => all('vidreq').filter(r => !r.test && r.status !== 'test-done').sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
+  const requests = () => all('vidreq').filter(r => !r.test && !r.hidden && r.status !== 'test-done').sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
   const OPEN = r => !['approved', 'published', 'rejected'].includes(reqStatus(r));
   const hgVid = r => String((r && r.hg && r.hg.videoId) || '').replace(/[^A-Za-z0-9_-]/g, '');
   function reqRow(r) {
@@ -144,7 +148,7 @@
       <div class="acts">${r.finalUrl ? `<a class="btn-s" href="${n(r.finalUrl)}" target="_blank" rel="noopener">👁 צפייה</a>` : ''}
       ${k === 'raw-wait' && hgVid(r) ? `<a class="btn-s" href="https://app.heygen.com/videos/${n(hgVid(r))}" target="_blank" rel="noopener">👁 צפייה</a><button class="btn-s ok" data-a="vd-rok" data-id="${n(r.id)}">✅ מאשר, לעריכה</button><button class="btn-s" data-a="vd-rfix" data-id="${n(r.id)}">✏️ צריך תיקון</button>` : ''}
       ${p && k === 'script-wait' ? `<button class="btn-s ok" data-a="vd-ok" data-id="${n(p.id)}">✅ מאשר את התסריט</button><button class="btn-s" data-a="vd-edit" data-id="${n(p.id)}">✏️ עריכת הטקסט</button><button class="btn-s" data-a="vd-fix" data-id="${n(r.id)}">צריך שינוי</button>` : ''}
-      ${k === 'new' ? `<button class="btn-s" data-a="vd-cancel" data-id="${n(r.id)}">ביטול</button>` : ''}</div></div>`;
+      <button class="btn-s vd-del" data-a="vd-delr" data-id="${n(r.id)}" title="מחיקת הבקשה">🗑 מחיקה</button></div></div>`;
   }
   function requestsView() {
     const R = requests(), open = R.filter(OPEN), closed = R.filter(r => !OPEN(r));
@@ -180,6 +184,22 @@
     const r = s.get('vidreq', d.id); if (!r || r.status !== 'raw-wait') { s.toast('הבקשה כבר טופלה'); return; }
     s.formModal({ title: 'מה לתקן בסרטון?', submit: 'שליחה', fields: [['note', 'מה לתקן בסרטון? (למשל מילה שנשמעת לא נכון, תנועה, מראה)', 'textarea', { rows: 5, full: true, req: true }]], values: {},
       onSubmit: async v => { const note = String(v.note || '').trim().slice(0, 2000); if (!note) return; await s.patch('vidreq', d.id, { status: 'raw-fix', rawFixNote: note, rawFixAt: nowIso(), rawFixes: (r.rawFixes || []).concat([{ note, at: nowIso(), videoId: hgVid(r), by: 'office' }]) }); s.toast('קיבלתי. הסרטון יוכן מחדש ויגיע אליך שוב לבדיקה.'); } });
+  });
+  s.act('vd-delp', async (el, d) => {
+    const p = s.get('prompt', d.id); if (!p) return;
+    const r = reqOf(p), live = r && OPEN(r) && !['new', 'script-wait'].includes(reqStatus(r));
+    if (!(await s.confirm(`למחוק את "${p.title || 'התסריט'}"?${live ? ' הסרטון כבר בהכנה, והמחיקה תעצור אותו.' : ''}`, 'מחיקה'))) return;
+    await s.patch('prompt', d.id, { arch: true, deletedAt: nowIso(), prevStatus: p.status || '' });
+    if (r && OPEN(r)) await s.patch('vidreq', r.id, { status: 'rejected', hidden: true, deletedAt: nowIso(), prevStatus: r.status || '' });
+    s.toast('נמחק');
+  });
+  s.act('vd-delr', async (el, d) => {
+    const r = s.get('vidreq', d.id); if (!r) return;
+    const p = r.promptId ? s.get('prompt', r.promptId) : null;
+    if (!(await s.confirm(`למחוק את הבקשה "${(p && p.title) || r.topic || ''}"?${OPEN(r) && reqStatus(r) !== 'new' ? ' העבודה עליה תיעצר.' : ''}`, 'מחיקה'))) return;
+    await s.patch('vidreq', d.id, { status: OPEN(r) ? 'rejected' : (r.status || 'rejected'), hidden: true, deletedAt: nowIso(), prevStatus: r.status || '' });
+    if (p && !GONE.includes(p.status)) await s.patch('prompt', p.id, { arch: true, deletedAt: nowIso() });
+    s.toast('נמחק');
   });
   s.act('vd-cancel', async (el, d) => { const r = s.get('vidreq', d.id); if (!r) return; if (!(await s.confirm('לבטל את הבקשה?', 'ביטול הבקשה'))) return; await s.patch('vidreq', d.id, { status: 'rejected', cancelledAt: nowIso() }); });
 
