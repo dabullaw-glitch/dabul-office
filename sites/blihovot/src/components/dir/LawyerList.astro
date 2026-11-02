@@ -1,0 +1,52 @@
+---
+// Promoted (labelled, at most 3) first, then everyone else by score. Client side filters.
+import LawyerCard from './LawyerCard.astro';
+import type { Lawyer } from '../../lib/dir';
+import { TOPICS } from '../../data/portal';
+interface Props { promoted: Lawyer[]; rest: Lawyer[]; topic?: string; topicFilter?: boolean }
+const { promoted, rest, topic, topicFilter = false } = Astro.props;
+const total = promoted.length + rest.length;
+const all = [...promoted, ...rest];
+const tcount = (s: string) => all.filter((l) => l.topics.includes(s as any)).length;
+---
+{total > 3 && (
+  <div class="filters" role="group" aria-label="סינון הרשימה">
+    {topicFilter && TOPICS.filter((t) => tcount(t.slug)).map((t) => <button type="button" class="chip" aria-pressed="false" data-t={t.slug}>{t.he}<span class="n">{tcount(t.slug)}</span></button>)}
+    <button type="button" class="chip" aria-pressed="false" data-f="reviews">עם חוות דעת</button>
+    <button type="button" class="chip" aria-pressed="false" data-f="verified">פרופיל מאומת</button>
+    <span class="shown" data-shown aria-live="polite">{total} עורכי דין</span>
+  </div>
+)}
+<div class="lcards" data-list>
+  {promoted.map((l) => <LawyerCard l={l} promo topic={topic} />)}
+  {rest.map((l) => <LawyerCard l={l} topic={topic} />)}
+</div>
+<p class="muted" data-none hidden>אין ברשימה עורכי דין שמתאימים לסינון. אפשר להסיר את הסינון.</p>
+<script>
+  document.querySelectorAll<HTMLElement>('.filters').forEach((box) => {
+    const on: Record<string, boolean> = {};
+    let topic = '';
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-list] > .lcard'));
+    const shown = box.querySelector('[data-shown]') as HTMLElement;
+    const none = document.querySelector('[data-none]') as HTMLElement;
+    const apply = () => {
+      let n = 0;
+      for (const c of cards) {
+        const ok = (!on.reviews || +(c.dataset.reviews || 0) > 0) && (!on.verified || c.dataset.verified === '1') && (!topic || (c.dataset.topics || '').split(' ').includes(topic));
+        c.hidden = !ok; if (ok) n++;
+      }
+      shown.textContent = `${n} עורכי דין`;
+      none.hidden = n > 0;
+    };
+    box.querySelectorAll<HTMLButtonElement>('[data-f]').forEach((b) => b.addEventListener('click', () => {
+      on[b.dataset.f!] = !on[b.dataset.f!];
+      b.setAttribute('aria-pressed', on[b.dataset.f!] ? 'true' : 'false');
+      apply();
+    }));
+    const tbtns = Array.from(box.querySelectorAll<HTMLButtonElement>('[data-t]'));
+    const setTopic = (t: string) => { topic = t; tbtns.forEach((x) => x.setAttribute('aria-pressed', x.dataset.t === t ? 'true' : 'false')); apply(); };
+    tbtns.forEach((b) => b.addEventListener('click', () => setTopic(topic === b.dataset.t ? '' : b.dataset.t!)));
+    const pre = new URLSearchParams(location.search).get('nose');
+    if (pre && tbtns.some((b) => b.dataset.t === pre)) setTopic(pre);
+  });
+</script>

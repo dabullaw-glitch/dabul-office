@@ -1,0 +1,18 @@
+---
+// A short box in some guides that leads to the lawyer portal (list in GUIDE_LAWYER_BOX, src/data/portal.ts)
+import { TOPICS, type TopicSlug } from '../../data/portal';
+interface Props { topic: TopicSlug }
+const { topic } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const t = TOPICS.find((x) => x.slug === topic)!;
+---
+<aside class="findlaw card" aria-label="עורכי דין לפי עיר">
+  <b>מחפשים עורך דין ל{t.he} באזור שלכם?</b>
+  <p>רשימה לפי עיר ואזור, עם ציון שקוף וחוות דעת מאומתות. אפשר לפנות ישירות, בלי עלות.</p>
+  <a class="go" href={`${B}orchei-din/${t.slug}/`}>לרשימת עורכי הדין ←</a>
+</aside>
+<style>
+.findlaw{display:grid;gap:4px;margin:30px 0;border-inline-start:5px solid var(--teal);background:var(--teal-soft)}
+.findlaw b{font-size:1.1rem}.findlaw p{margin:0;color:var(--ink-2)}
+.findlaw .go{font-weight:700;margin-top:4px}
+</style>

@@ -1,0 +1,34 @@
+---
+import Portal from '../../layouts/Portal.astro';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Portal title="עדכון או הסרה של פרופיל עורך דין" description="עורך דין שמופיע ברשימת עורכי הדין של האתר יכול לבקש לעדכן את הפרטים או להסיר את הפרופיל. ממלאים טופס קצר, ואנחנו בודקים ומטפלים בבקשה." crumbs={[{ label: 'עורכי דין', href: 'orchei-din/' }, { label: 'עדכון או הסרה' }]} h1="עדכון או הסרה של פרופיל" lede="הפרטים בפרופילים הראשונים נאספו ממקורות ציבוריים. אם אתם עורכי הדין שמופיעים בפרופיל, אפשר לבקש לעדכן אותו או להסיר אותו.">
+  <div class="pd-cols">
+    <div class="prose">
+      <h2 style="margin-top:0">מה קורה אחרי השליחה</h2>
+      <ul>
+        <li>נבדוק שהבקשה הגיעה מעורך הדין שבפרופיל, בדרך כלל בשיחה או במייל לכתובת שמופיעה באתר המשרד.</li>
+        <li>אחרי הבדיקה, פרופיל שביקשתם להסיר יורד מהאתר ומהחיפוש הפנימי בבנייה הבאה של האתר.</li>
+        <li>מעדיפים לעדכן במקום להסיר? אפשר <a href={`${B}orchei-din/hitztarfut/#claim`}>לאשר בעלות על הפרופיל</a> ולעדכן אותו.</li>
+      </ul>
+      <p>אפשר לבקש גם מחיקה של מידע אישי לפי <a href={`${B}mediniyut-pratiyut/`}>מדיניות הפרטיות</a>.</p>
+    </div>
+    <aside>
+      <form class="dform panel" data-dir="remove" novalidate>
+        <h2>טופס בקשה</h2>
+        <div class="fields">
+          <div class="hp" aria-hidden="true"><label>אתר <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+          <div class="field"><label for="r-id">קישור לפרופיל או מזהה</label><input id="r-id" name="lawyerId" data-from-qs="id" required dir="ltr" /></div>
+          <div class="field"><label for="r-k">מה לעשות?</label><select id="r-k" name="kind"><option value="remove">להסיר את הפרופיל</option><option value="update">לעדכן פרטים</option></select></div>
+          <div class="field"><label for="r-n">שם מלא</label><input id="r-n" name="name" required autocomplete="name" maxlength="80" /></div>
+          <div class="field"><label for="r-p">טלפון</label><input id="r-p" name="phone" type="tel" required dir="ltr" maxlength="20" /></div>
+          <div class="field"><label for="r-e">מייל</label><input id="r-e" name="email" type="email" dir="ltr" maxlength="120" /></div>
+          <div class="field"><label for="r-m">הערות (לא חובה)</label><textarea id="r-m" name="message" rows="3" maxlength="1500"></textarea></div>
+          <label class="check"><input type="checkbox" name="consent" required /><span>אני עורך/ת הדין שבפרופיל או מורשה מטעמו/ה.</span></label>
+          <button class="btn btn-teal" type="submit">שליחת בקשה</button>
+        </div>
+        <div class="msg" role="status" aria-live="polite"></div>
+      </form>
+    </aside>
+  </div>
+</Portal>

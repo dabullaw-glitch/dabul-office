@@ -65,3 +65,15 @@ The owner's name appears only in `src/data/lawyers.json` (the paid lawyer list).
   vanilla JavaScript only, all math in the browser, no data sent anywhere; register it in `src/data/tools.ts`, link it from
   1 or 2 related guides (`tool: <id>` in their frontmatter) and add it to the glossary/terms if it has a name people search.
   Every rule a calculator uses must come from an official source listed on its page.
+
+## Lawyer portal (orchei-din/)
+
+Lawyers for insolvency, debt settlements and enforcement, by topic, city and region, with a public score and verified reviews.
+Data comes at build time from the shared directory engine (database function `dir_api`, `{a:'export', p:{site:'blihovot'}}`);
+when it cannot be reached (local sandbox) `src/lib/dir.ts` falls back to `../folivus/src/data/lawyers.seed.json`, filtered the same way.
+Forms post `lead | join | claim | remove | otp + review` to the same function with `site: 'blihovot'` (`src/lib/dirForms.ts`).
+Topics, regions, score parts, draft packages and the guides that show the "find a lawyer" box: `src/data/portal.ts`.
+Rules: paid placement always labelled "מקודם", at most 3 per page, never changes the score; every public-source profile shows
+the public-sources note with update and removal links; `orchei-din/ishur/` is noindex and not in the sitemap.
+The law office is never listed in the portal (filtered in `src/lib/dir.ts`); `src/data/lawyers.json` is not used by any page.
+`scripts/check-portal.mjs` runs after `astro build` and fails the build on dashes, superlatives, "מומחה" or brand mentions in the portal.

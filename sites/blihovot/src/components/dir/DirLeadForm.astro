@@ -1,0 +1,33 @@
+---
+// Contact form of the lawyer portal. Posts to the directory engine (lead). Handled by src/lib/dirForms.ts
+import { TOPICS } from '../../data/portal';
+import { CITIES } from '../../lib/dir';
+import { REGIONS } from '../../data/portal';
+interface Props { lawyerId?: string; topic?: string; city?: string; title?: string; intro?: string }
+const { lawyerId = '', topic = '', city = '', title = 'השארת פנייה', intro } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const uid = 'dl' + Math.random().toString(36).slice(2, 7);
+const topicHe = TOPICS.find((t) => t.slug === topic)?.he || '';
+const cityHe = CITIES.find((c) => c.slug === city)?.he || '';
+---
+<form class="dform panel" data-dir="lead" novalidate>
+  <h2>{title}</h2>
+  {intro && <p class="muted" style="margin:0 0 12px;font-size:.95rem">{intro}</p>}
+  <div class="fields">
+    <input type="hidden" name="lawyerId" value={lawyerId} />
+    <div class="hp" aria-hidden="true"><label>אתר <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+    <div class="field"><label for={`${uid}-n`}>שם</label><input id={`${uid}-n`} name="name" required autocomplete="name" maxlength="80" /></div>
+    <div class="field"><label for={`${uid}-p`}>טלפון</label><input id={`${uid}-p`} name="phone" type="tel" inputmode="tel" required autocomplete="tel" dir="ltr" maxlength="20" /></div>
+    {topicHe ? <input type="hidden" name="area" value={topicHe} /> : (
+      <div class="field"><label for={`${uid}-a`}>נושא</label><select id={`${uid}-a`} name="area"><option value="">לא בטוח/ה</option>{TOPICS.map((t) => <option>{t.he}</option>)}</select></div>
+    )}
+    {cityHe ? <input type="hidden" name="city" value={cityHe} /> : (
+      <div class="field"><label for={`${uid}-c`}>עיר</label><select id={`${uid}-c`} name="city"><option value="">בחירה</option>{REGIONS.map((r) => <optgroup label={r.he}>{CITIES.filter((c) => c.regionSlug === r.slug).map((c) => <option>{c.he}</option>)}</optgroup>)}</select></div>
+    )}
+    <div class="field"><label for={`${uid}-m`}>במה מדובר? (בקצרה)</label><textarea id={`${uid}-m`} name="message" rows="3" required maxlength="1500"></textarea></div>
+    <label class="check"><input type="checkbox" name="consent" required /><span>אני מסכים/ה שהפרטים יועברו לעורך הדין או לעורכי דין בתחום כדי שיחזרו אליי, לפי <a href={`${B}mediniyut-pratiyut/`}>מדיניות הפרטיות</a>.</span></label>
+    <button class="btn btn-sun" type="submit">שליחת הפנייה</button>
+    <p class="note" style="margin:10px 0 0">השליחה בלי עלות ואינה יוצרת יחסי עורך דין ולקוח.</p>
+  </div>
+  <div class="msg" role="status" aria-live="polite"></div>
+</form>

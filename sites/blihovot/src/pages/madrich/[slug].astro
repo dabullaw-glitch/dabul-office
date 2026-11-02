@@ -13,6 +13,8 @@ import { animsFor } from '../../data/hamchashot';
 import ShareBar from '../../components/ShareBar.astro';
 import ChecklistImage from '../../components/ChecklistImage.astro';
 import videos from '../../data/videos.json';
+import FindLawyerBox from '../../components/dir/FindLawyerBox.astro';
+import { GUIDE_LAWYER_BOX } from '../../data/portal';
 
 export async function getStaticPaths() {
   const all = (await getCollection('guides')).filter((g) => !g.data.draft);
@@ -70,6 +72,7 @@ if (video) schema.push({ '@context': 'https://schema.org', '@type': 'VideoObject
         {tool && (
           <a class="toolcta card" href={`${B}kli/${tool.id}/`}><span class="tag">מחשבון</span><b>{tool.title}</b><span class="muted">{tool.blurb}</span><span class="go">{tool.cta} ←</span></a>
         )}
+        {GUIDE_LAWYER_BOX[g.id] && <FindLawyerBox topic={GUIDE_LAWYER_BOX[g.id]} />}
         <AdSlot />
         {d.faq.length > 0 && (
           <section class="faq" aria-labelledby="faq-h">

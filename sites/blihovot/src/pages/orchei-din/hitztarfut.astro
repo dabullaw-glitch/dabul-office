@@ -1,0 +1,86 @@
+---
+import Portal from '../../layouts/Portal.astro';
+import { CITIES } from '../../lib/dir';
+import { PACKAGES, REGIONS } from '../../data/portal';
+import { SITE } from '../../data/site';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const faq = [
+  { q: 'כבר יש לי פרופיל ברשימה. איך הוא הגיע לכאן?', a: 'פרופילים ראשונים נבנו מפרטים בסיסיים שמשרדים פרסמו בעצמם, באתרים שלהם או ברשימות ציבוריות. אנחנו לא מעתיקים ביקורות, תמונות או טקסטים. אפשר לאשר שהפרופיל שלכם, לעדכן אותו או לבקש הסרה.' },
+  { q: 'האם תשלום משפר את הציון?', a: 'לא. הציון מחושב באותה שיטה לכולם. חבילה בתשלום משנה את מה שמופיע בפרופיל ואת מקום ההצגה, ומיקום כזה מסומן תמיד כ"מקודם". בכל עמוד יש לכל היותר שלושה מקודמים.' },
+  { q: 'יש עמלה על פניות או על תיקים?', a: 'לא. החבילות הן במחיר קבוע לתקופה. אין עמלה על פניות ואין תשלום שתלוי בתוצאה.' },
+  { q: 'איך מגיעות אליי פניות?', a: 'בחבילה הבסיסית מופיע הטלפון שלכם. בחבילות בתשלום, ואחרי שאישרתם שהפרופיל שלכם, פניות מהטופס נשלחות אליכם ישירות.' },
+  { q: 'מי יכול להצטרף?', a: 'עורכי דין עם רישיון בתוקף, שעוסקים בפועל בחדלות פירעון, בהסדרי חובות או בהוצאה לפועל. אנחנו בודקים כל בקשה לפני הפרסום, ושומרים לעצמנו את הזכות לא לפרסם.' },
+  { q: 'אפשר לבטל?', a: 'כן. חבילה חודשית אפשר לבטל בכל חודש. אחרי הביטול הפרופיל חוזר לחבילה הבסיסית ולא נמחק.' },
+];
+---
+<Portal title="לעורכי דין: הצטרפות לרשימה, עדכון פרופיל וחבילות" description={`עורכי דין לחדלות פירעון, הסדרי חובות והוצאה לפועל יכולים להצטרף ל${SITE.name} בחינם, לאשר ולעדכן את הפרופיל, או לבחור חבילה. בלי עמלה על פניות.`} crumbs={[{ label: 'עורכי דין', href: 'orchei-din/' }, { label: 'הצטרפות וחבילות' }]} h1="לעורכי דין: הצטרפות, עדכון וחבילות" lede={`${SITE.name} הוא אתר מידע על חובות, חדלות פירעון והוצאה לפועל, שמגיעים אליו אנשים שמחפשים פתרון עכשיו. פרופיל בסיסי הוא בחינם, הציון לא תלוי בתשלום, וכל מיקום מקודם מסומן.`} faq={faq}>
+  <section aria-labelledby="pk-h">
+    <div class="sec-head" style="margin-bottom:16px"><h2 id="pk-h" style="margin:0">חבילות</h2><span class="launch">מחירים להשקה</span></div>
+    <div class="plans">
+      {PACKAGES.map((p) => (
+        <div class:list={['plan', p.id === 'pro' && 'hi']}>
+          <h3>{p.name}</h3>
+          <div class="price">{p.price}</div>
+          {p.yearly ? <p class="muted" style="margin:0;font-size:.9rem">{p.yearly}, לפני מע"מ</p> : <p class="muted" style="margin:0;font-size:.9rem">בלי התחייבות</p>}
+          <ul>{p.items.map((i) => <li>{i}</li>)}</ul>
+          <a class:list={['btn', p.id === 'pro' ? 'btn-sun' : 'btn-line']} href="#join" data-plan={p.id}>בחירה ב{p.name}</a>
+        </div>
+      ))}
+    </div>
+    <p class="muted" style="margin-top:12px;font-size:.93rem">המחירים הם מחירי השקה ועשויים להשתנות. התשלום עדיין לא מתבצע באתר: אחרי שליחת הטופס נחזור אליכם להשלמת ההצטרפות. אין עמלה על פניות ואין תשלום שתלוי בתוצאה. <a href={`${B}orchei-din/shita/`}>איך מחושב הציון</a>.</p>
+  </section>
+
+  <section class="pd-sec pd-cols">
+    <div>
+      <form class="dform panel" id="join" data-dir="join" novalidate>
+        <h2>הצטרפות לרשימה</h2>
+        <p class="muted" style="margin:0 0 12px;font-size:.95rem">ממלאים פעם אחת. נבדוק את הפרטים ונחזור אליכם לפני שהפרופיל עולה.</p>
+        <div class="fields">
+          <div class="hp" aria-hidden="true"><label>אתר <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+          <div class="row">
+            <div class="field"><label for="j-n">שם מלא</label><input id="j-n" name="name" required autocomplete="name" maxlength="80" /></div>
+            <div class="field"><label for="j-f">שם המשרד</label><input id="j-f" name="firm" autocomplete="organization" maxlength="120" /></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="j-p">טלפון</label><input id="j-p" name="phone" type="tel" required dir="ltr" maxlength="20" /></div>
+            <div class="field"><label for="j-e">מייל</label><input id="j-e" name="email" type="email" required dir="ltr" maxlength="120" /></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="j-y">שנת רישיון</label><input id="j-y" name="licenseYear" inputmode="numeric" maxlength="4" dir="ltr" /></div>
+            <div class="field"><label for="plan-sel">חבילה</label><select id="plan-sel" name="plan">{PACKAGES.map((p) => <option value={p.id}>{p.name}</option>)}</select></div>
+          </div>
+          <fieldset class="checks" data-need-one style="border:0;padding:0;margin:0 0 14px">
+            <legend style="font-weight:700;font-size:.95rem;margin-bottom:6px">תחומים</legend>
+            <label><input type="checkbox" name="areas" value="insolvency" data-multi />חדלות פירעון והסדרי חובות</label>
+            <label><input type="checkbox" name="areas" value="enforcement" data-multi />הוצאה לפועל</label>
+          </fieldset>
+          <div class="field"><label for="j-c">עיר המשרד</label><select id="j-c" name="city" required><option value="">בחירה</option>{REGIONS.map((r) => <optgroup label={r.he}>{CITIES.filter((c) => c.regionSlug === r.slug).map((c) => <option value={c.slug}>{c.he}</option>)}</optgroup>)}</select></div>
+          <div class="field"><label for="j-s">אתר המשרד (אם יש)</label><input id="j-s" name="siteUrl" type="url" dir="ltr" placeholder="https://" maxlength="200" /></div>
+          <label class="check"><input type="checkbox" name="consent" required /><span>אני עורך/ת דין עם רישיון בתוקף, הפרטים נכונים, וקראתי את <a href={`${B}tnaei-shimush/`}>תנאי השימוש</a>.</span></label>
+          <button class="btn btn-sun" type="submit">שליחת בקשת הצטרפות</button>
+        </div>
+        <div class="msg" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+    <aside>
+      <form class="dform panel" id="claim" data-dir="claim" novalidate>
+        <h2>זה המשרד שלי</h2>
+        <p class="muted" style="margin:0 0 12px;font-size:.95rem">מצאתם את עצמכם ברשימה? אשרו שהפרופיל שלכם, ותוכלו לעדכן אותו ולקבל פניות ישירות.</p>
+        <div class="fields">
+          <div class="hp" aria-hidden="true"><label>אתר <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+          <div class="field"><label for="c-id">קישור לפרופיל או מזהה</label><input id="c-id" name="lawyerId" data-from-qs="claim" required dir="ltr" /></div>
+          <div class="field"><label for="c-n">שם מלא</label><input id="c-n" name="name" required autocomplete="name" maxlength="80" /></div>
+          <div class="field"><label for="c-p">טלפון</label><input id="c-p" name="phone" type="tel" required dir="ltr" maxlength="20" /></div>
+          <div class="field"><label for="c-e">מייל</label><input id="c-e" name="email" type="email" required dir="ltr" maxlength="120" /></div>
+          <div class="field"><label for="c-m">מה לעדכן? (לא חובה)</label><textarea id="c-m" name="message" rows="3" maxlength="1500"></textarea></div>
+          <label class="check"><input type="checkbox" name="consent" required /><span>אני עורך/ת הדין שמופיע/ה בפרופיל, או מורשה מטעמו/ה.</span></label>
+          <button class="btn btn-teal" type="submit">שליחת בקשה</button>
+        </div>
+        <div class="msg" role="status" aria-live="polite"></div>
+      </form>
+    </aside>
+  </section>
+  <script>
+    document.querySelectorAll<HTMLAnchorElement>('[data-plan]').forEach((a) => a.addEventListener('click', () => { const s = document.getElementById('plan-sel') as HTMLSelectElement; if (s) s.value = a.dataset.plan!; }));
+  </script>
+</Portal>

@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "astro build && node scripts/og.mjs && pagefind --site dist --output-subdir pagefind",
+    "build": "astro build && node scripts/check-portal.mjs && node scripts/og.mjs && pagefind --site dist --output-subdir pagefind",
     "dev": "astro dev"
   },
   "dependencies": {

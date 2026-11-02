@@ -1,0 +1,35 @@
+---
+import DIcon from './DIcon.astro';
+import { cityBySlug, topicBySlug, telHref, yearsOf, bareName, fullName, profilePath, type Lawyer } from '../../lib/dir';
+interface Props { l: Lawyer; promo?: boolean; topic?: string; level?: 'h2' | 'h3' }
+const { l, promo = false, topic } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const href = B + profilePath(l.id);
+const bare = bareName(l);
+const topics = [...(topic ? [topic] : []), ...l.topics.filter((t) => t !== topic)].map((t) => topicBySlug(t)!.he);
+const cities = l.cities.map((c) => cityBySlug(c)?.he).filter(Boolean).slice(0, 3);
+const yrs = yearsOf(l);
+---
+<article class:list={['lcard', promo && 'promo']} data-topics={l.topics.join(' ')} data-reviews={l.reviewCount} data-verified={l.verified ? '1' : '0'}>
+  <div class="lc-top">
+    <div class="av" aria-hidden="true">{l.photo ? <img src={l.photo} alt="" loading="lazy" width="52" height="52" /> : bare.charAt(0)}</div>
+    <div class="lc-main">
+      {promo && <span class="promo-l">מקודם</span>}
+      <h3><a href={href}>{fullName(l)}</a></h3>
+      {l.firm && <p class="lc-firm">{l.firm}</p>}
+    </div>
+    <div class="ring" style={`--v:${l.score}`} title="ציון מתוך 100, לפי שיטה פומבית"><div><b>{l.score}</b><small>ציון</small></div></div>
+  </div>
+  <ul class="lc-meta">
+    {cities.length > 0 && <li><DIcon name="pin" />{cities.join(', ')}</li>}
+    {yrs !== undefined && <li><DIcon name="clock" />{yrs > 0 ? `${yrs} שנות רישיון` : 'רישיון מהשנה'}</li>}
+    <li><DIcon name="star" />{l.reviewCount > 0 ? `${l.avg.toFixed(1)} מתוך 5 (${l.reviewCount} חוות דעת)` : 'אין עדיין חוות דעת'}</li>
+    {l.verified && <li><DIcon name="check" />פרופיל מאומת</li>}
+  </ul>
+  <ul class="lc-tags">{topics.map((t) => <li class="tag">{t}</li>)}</ul>
+  <div class="lc-act">
+    <a class="btn btn-teal btn-sm" href={href}>לפרופיל ויצירת קשר</a>
+    {l.phone && <a class="btn btn-line btn-sm" href={telHref(l.phone)}><DIcon name="phone" />התקשרות</a>}
+    {l.source === 'public' && <span class="src-l">פרטים ממקורות ציבוריים</span>}
+  </div>
+</article>

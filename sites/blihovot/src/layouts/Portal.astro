@@ -1,0 +1,38 @@
+---
+// Layout for the lawyer portal (orchei-din/): the site's Base, a page head with breadcrumbs (and BreadcrumbList JSON-LD),
+// optional FAQ (with FAQPage JSON-LD), and the portal forms script.
+import '../styles/portal.css';
+import Base from './Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+interface Crumb { label: string; href?: string }
+interface Props { title: string; description: string; h1?: string; lede?: string; crumbs: Crumb[]; schema?: object[]; noindex?: boolean; faq?: { q: string; a: string }[] }
+const { title, description, h1 = title, lede, crumbs, schema = [], noindex = false, faq = [] } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const abs = (p: string) => new URL(B + p.replace(/^\//, ''), Astro.site).href;
+const here = new URL(Astro.url.pathname, Astro.site).href;
+const bc = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ name: 'ראשי', item: abs('') }, ...crumbs.map((c) => ({ name: c.label, item: c.href ? abs(c.href) : here }))].map((x, i) => ({ '@type': 'ListItem', position: i + 1, ...x })) };
+const fq = faq.length ? [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : [];
+---
+<Base title={title} description={description} schema={[bc, ...fq, ...schema]} noindex={noindex}>
+  <section class="pd-head"><div class="wrap">
+    <Breadcrumbs items={crumbs} />
+    <slot name="top">
+      <h1>{h1}</h1>
+      {lede && <p class="pd-lede">{lede}</p>}
+    </slot>
+    <slot name="head" />
+  </div></section>
+  <div class="wrap pd-body">
+    <slot />
+    {faq.length > 0 && (
+      <section class="pd-sec dfaq" aria-labelledby="faq-h" style="max-width:var(--w-text)">
+        <h2 id="faq-h">שאלות נפוצות</h2>
+        {faq.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </section>
+    )}
+  </div>
+  <script>
+    import { initDirForms } from '../lib/dirForms';
+    initDirForms();
+  </script>
+</Base>

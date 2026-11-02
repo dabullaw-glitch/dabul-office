@@ -14,5 +14,7 @@ import ContactForm from '../components/ContactForm.astro';
   </ul>
   <h2>2. מודעות</h2>
   <p>שטחי מודעות באתר, מסומנים כפרסומת ונפרדים מהתוכן.</p>
+  <h2>3. עורכי דין</h2>
+  <p>עורכי דין שעוסקים בחדלות פירעון, בהסדרי חובות או בהוצאה לפועל יכולים להופיע ב<a href={`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}orchei-din/`}>רשימת עורכי הדין לפי עיר</a>. פרופיל בסיסי בחינם, וחבילות עם מיקום מקודם שמסומן ככזה. הפרטים ב<a href={`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}orchei-din/hitztarfut/`}>עמוד ההצטרפות</a>.</p>
   <ContactForm slot="after" kind="advertise" title="רוצים לפרסם? השאירו פרטים" fields={['name', 'phone', 'email', 'msg']} msgLabel="במה מדובר?" />
 </Page>

@@ -1,0 +1,111 @@
+---
+import Portal from '../../layouts/Portal.astro';
+import LawyerCard from '../../components/dir/LawyerCard.astro';
+import DirLeadForm from '../../components/dir/DirLeadForm.astro';
+import { loadData, counts, CITIES, key, orderFor } from '../../lib/dir';
+import { TOPICS, REGIONS, SCORE_PARTS } from '../../data/portal';
+import { hubFaq } from '../../lib/dirFaq';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { lawyers } = await loadData();
+const c = await counts();
+// premium plans may appear here, always labelled "מקודם", at most 3
+const featured = orderFor(lawyers.filter((l) => l.plan === 'premium'), undefined).promoted;
+const withLawyers = CITIES.filter((x) => c.city[x.slug]);
+const nav = {
+  combos: Object.keys(c.topicCity).filter((k) => c.topicCity[k]),
+  cities: withLawyers.map((x) => x.slug),
+  region: Object.fromEntries(CITIES.map((x) => [x.slug, x.regionSlug])),
+};
+const schema = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'עורכי דין לחדלות פירעון, הסדרי חובות והוצאה לפועל', inLanguage: 'he-IL',
+  hasPart: TOPICS.map((t) => ({ '@type': 'CollectionPage', name: `עורכי דין ל${t.he}`, url: new URL(`${B}orchei-din/${t.slug}/`, Astro.site).href })) }];
+---
+<Portal title="עורכי דין לחדלות פירעון, הסדרי חובות והוצאה לפועל לפי עיר" description="רשימת עורכי דין שעוסקים בחדלות פירעון, בהסדרי חובות ובהוצאה לפועל, לפי עיר ואזור. ציון שקוף, חוות דעת מאומתות ופנייה ישירה בלי עלות." crumbs={[{ label: 'עורכי דין' }]} faq={hubFaq} schema={schema}>
+  <Fragment slot="top">
+    <h1>עורכי דין לחדלות פירעון, הסדרי חובות והוצאה לפועל</h1>
+    <p class="pd-lede">רק עורכי דין שעוסקים בחובות, לפי עיר ואזור. ליד כל אחד יש ציון שמחושב בשיטה פומבית, וחוות דעת שנבדקו. הפנייה בלי עלות.</p>
+  </Fragment>
+  <Fragment slot="head">
+    <form class="dsearch" id="dsearch" role="search" aria-label="חיפוש עורך דין" data-nav={JSON.stringify(nav)}>
+      <div class="field"><label for="ds-t">במה צריך עזרה?</label>
+        <select id="ds-t" name="nose"><option value="">כל הנושאים</option>{TOPICS.map((t) => <option value={t.slug}>{t.he}</option>)}</select></div>
+      <div class="field"><label for="ds-c">באיזו עיר?</label>
+        <select id="ds-c" name="ir"><option value="">כל הארץ</option>{REGIONS.map((r) => <optgroup label={r.he}>{CITIES.filter((x) => x.regionSlug === r.slug).map((x) => <option value={x.slug}>{x.he}</option>)}</optgroup>)}</select></div>
+      <button class="btn btn-sun" type="submit">חיפוש</button>
+    </form>
+    <div class="pills"><span class="pill">{c.total} משרדים</span><span class="pill">{withLawyers.length} ערים</span><a class="pill" href={`${B}orchei-din/shita/`}>איך מחושב הציון</a></div>
+  </Fragment>
+
+  <p class="disc"><b>חשוב לדעת:</b> הרשימה אינה המלצה. הפרטים נאספו ממקורות ציבוריים או נמסרו על ידי עורכי הדין. מיקום בתשלום מסומן תמיד במילה "מקודם" ואינו משנה את הציון. האתר אינו צד להתקשרות בינכם לבין עורך הדין.</p>
+
+  {featured.length > 0 && (
+    <section class="pd-sec" aria-labelledby="ft-h" style="margin-top:20px">
+      <h2 id="ft-h">משרדים מקודמים</h2>
+      <div class="lcards">{featured.map((l) => <LawyerCard l={l} promo />)}</div>
+    </section>
+  )}
+
+  <section class="pd-sec" aria-labelledby="t-h">
+    <h2 id="t-h">לפי נושא</h2>
+    <div class="tiles">
+      {TOPICS.map((t) => (
+        <a class="card tile" href={`${B}orchei-din/${t.slug}/`}>
+          <span class="tag" style="justify-self:start">{c.topic[t.slug] || 0} עורכי דין</span>
+          <h3>עורכי דין ל{t.he}</h3>
+          <p>{t.blurb}</p>
+          <span class="go">לרשימה ←</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="pd-sec" aria-labelledby="r-h">
+    <h2 id="r-h">לפי אזור ועיר</h2>
+    <div class="tiles">
+      {REGIONS.filter((r) => c.region[r.slug]).map((r) => (
+        <div class="card tile">
+          <h3><a href={`${B}orchei-din/ezor/${r.slug}/`}>אזור {r.he}</a> <span class="muted" style="font-weight:500;font-size:.9rem">({c.region[r.slug]})</span></h3>
+          <p style="margin-bottom:10px">{r.blurb}</p>
+          <ul class="chips">{withLawyers.filter((x) => x.regionSlug === r.slug).map((x) => <li><a class="chip" href={`${B}orchei-din/ir/${x.slug}/`}>{x.he}<span class="n">{c.city[x.slug]}</span></a></li>)}</ul>
+        </div>
+      ))}
+    </div>
+    <p style="margin-top:14px"><a href={`${B}orchei-din/ir/`}>כל הערים ←</a></p>
+  </section>
+
+  <section class="pd-sec" aria-labelledby="s-h">
+    <h2 id="s-h">איך מחושב הציון</h2>
+    <p style="max-width:66ch">ליד כל עורך דין יש מספר בין 0 ל-100. הוא מחושב לפי מידע שאפשר לבדוק, באותה שיטה לכולם. <b>תשלום לא משנה את הציון.</b></p>
+    <ol class="steps3">{SCORE_PARTS.map((p) => <li><b>{p.max} נקודות</b>{p.label}</li>)}</ol>
+    <p style="margin-top:12px"><a href={`${B}orchei-din/shita/`}>השיטה המלאה ←</a></p>
+  </section>
+
+  <section class="pd-sec pd-cols" aria-labelledby="j-h">
+    <div class="card" style="padding:26px;background:var(--teal-soft);border-color:color-mix(in srgb,var(--teal) 35%,var(--line))">
+      <h2 id="j-h" style="margin-top:0">עורכי דין: מופיעים ברשימה?</h2>
+      <p>עורכי דין שעוסקים בחדלות פירעון, בהסדרי חובות או בהוצאה לפועל יכולים להצטרף בחינם, לאשר שהפרופיל שלהם ולעדכן אותו, או לבחור חבילה. אין עמלה על פניות.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px">
+        <a class="btn btn-teal" href={`${B}orchei-din/hitztarfut/`}>הצטרפות וחבילות</a>
+        <a class="btn btn-line" href={`${B}orchei-din/hasara/`}>עדכון או הסרה</a>
+      </div>
+    </div>
+    <DirLeadForm title="לא בטוחים למי לפנות?" intro="תיאור קצר מספיק. הפנייה תועבר לעורכי דין בתחום, לפי העיר שבחרתם." />
+  </section>
+  <script>
+    const f = document.getElementById('dsearch') as HTMLFormElement | null;
+    if (f) {
+      const nav = JSON.parse(f.dataset.nav || '{}') as { combos: string[]; cities: string[]; region: Record<string, string> };
+      const B = (document.querySelector('a.logo') as HTMLAnchorElement).getAttribute('href') || '/';
+      f.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const t = (f.elements.namedItem('nose') as HTMLSelectElement).value;
+        const c = (f.elements.namedItem('ir') as HTMLSelectElement).value;
+        let to = 'orchei-din/';
+        if (t && c) to = nav.combos.includes(`${t}|${c}`) ? `orchei-din/${t}/${c}/` : nav.cities.includes(c) ? `orchei-din/ir/${c}/?nose=${t}` : `orchei-din/ezor/${nav.region[c]}/?nose=${t}&ir=${c}`;
+        else if (t) to = `orchei-din/${t}/`;
+        else if (c) to = nav.cities.includes(c) ? `orchei-din/ir/${c}/` : `orchei-din/ezor/${nav.region[c]}/?ir=${c}`;
+        else to = 'orchei-din/ir/';
+        location.href = B + to;
+      });
+    }
+  </script>
+</Portal>

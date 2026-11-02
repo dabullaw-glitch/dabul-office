@@ -2,6 +2,8 @@ import { getCollection } from 'astro:content';
 import { SITE, HUBS, FACTS } from '../data/site';
 import { ALL_TOOLS as TOOLS } from '../data/tools';
 import numbers from '../data/numbers.json';
+import { TOPICS, REGIONS } from '../data/portal';
+import { counts } from '../lib/dir';
 // llms.txt: a plain map of the site for AI assistants (GEO)
 export async function GET(ctx: { site: URL }) {
   const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
@@ -15,6 +17,8 @@ export async function GET(ctx: { site: URL }) {
     t += `## ${h.title}\n\n` + list.map((g) => `- [${g.data.title}](${u('madrich/' + g.id + '/')}): ${g.data.description}`).join('\n') + '\n\n';
   }
   t += `## מחשבונים\n\n` + TOOLS.map((x) => `- [${x.title}](${u('kli/' + x.id + '/')}): ${x.blurb}`).join('\n') + '\n\n';
+  const c = await counts();
+  t += `## עורכי דין לחדלות פירעון, הסדרי חובות והוצאה לפועל\n\nרשימה של ${c.total} משרדים לפי עיר ואזור, עם ציון שקוף (0 עד 100, שיטה פומבית, תשלום לא משנה אותו) וחוות דעת מאומתות. ההופעה ברשימה אינה המלצה; מיקום בתשלום מסומן "מקודם".\n\n- [כל עורכי הדין](${u('orchei-din/')})\n` + TOPICS.map((x) => `- [עורכי דין ל${x.he}](${u('orchei-din/' + x.slug + '/')}): ${x.blurb}`).join('\n') + '\n' + REGIONS.filter((r) => c.region[r.slug]).map((r) => `- [אזור ${r.he}](${u('orchei-din/ezor/' + r.slug + '/')})`).join('\n') + `\n- [לפי עיר](${u('orchei-din/ir/')})\n- [איך מחושב הציון](${u('orchei-din/shita/')})\n- [לעורכי דין: הצטרפות וחבילות](${u('orchei-din/hitztarfut/')})\n\n`;
   t += `## עוד\n\n- [מילון מונחים](${u('milon/')})\n- [קורס חינמי](${u('kurs/')})\n- [מה השתנה החודש](${u('ma-hishtana/')})\n- [מחשבונים להטמעה באתרים אחרים](${u('hatmaa/')})\n- [אודות ומדיניות מערכת](${u('odot/')})\n`;
   return new Response(t, { headers: { 'content-type': 'text/plain; charset=utf-8' } });
 }

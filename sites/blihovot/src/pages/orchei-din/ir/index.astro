@@ -1,0 +1,15 @@
+---
+import Portal from '../../../layouts/Portal.astro';
+import { counts, CITIES } from '../../../lib/dir';
+import { REGIONS } from '../../../data/portal';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const c = await counts();
+---
+<Portal title="עורכי דין לחובות לפי עיר" description="כל הערים שיש בהן עורכי דין לחדלות פירעון, הסדרי חובות והוצאה לפועל ברשימה, לפי אזור. בוחרים עיר ורואים את עורכי הדין, הציון וחוות הדעת." crumbs={[{ label: 'עורכי דין', href: 'orchei-din/' }, { label: 'לפי עיר' }]} h1="עורכי דין לחובות לפי עיר" lede="בוחרים עיר ורואים את עורכי הדין שמשרדם בה. אין את העיר שלכם? בדקו את האזור.">
+  {REGIONS.filter((r) => c.region[r.slug]).map((r) => (
+    <section class="pd-sec" style="margin-top:0;margin-bottom:28px" aria-labelledby={`r-${r.slug}`}>
+      <h2 id={`r-${r.slug}`}><a href={`${B}orchei-din/ezor/${r.slug}/`}>אזור {r.he}</a></h2>
+      <ul class="chips">{CITIES.filter((x) => x.regionSlug === r.slug && c.city[x.slug]).map((x) => <li><a class="chip" href={`${B}orchei-din/ir/${x.slug}/`}>{x.he}<span class="n">{c.city[x.slug]}</span></a></li>)}</ul>
+    </section>
+  ))}
+</Portal>

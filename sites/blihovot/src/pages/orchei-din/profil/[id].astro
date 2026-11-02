@@ -1,0 +1,138 @@
+---
+import Portal from '../../../layouts/Portal.astro';
+import DirLeadForm from '../../../components/dir/DirLeadForm.astro';
+import DIcon from '../../../components/dir/DIcon.astro';
+import { loadData, counts, cityBySlug, topicBySlug, telHref, waHref, yearsOf, bareName, fullName, profilePath, key, type Lawyer } from '../../../lib/dir';
+import { DIR, SCORE_PARTS, TOPICS } from '../../../data/portal';
+export async function getStaticPaths() {
+  const { lawyers } = await loadData();
+  return lawyers.map((l) => ({ params: { id: l.id }, props: { l } }));
+}
+const { l } = Astro.props as { l: Lawyer };
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const c = await counts();
+const full = fullName(l);
+const yrs = yearsOf(l);
+const topicNames = l.topics.map((t) => topicBySlug(t)!.he);
+const cityNames = l.cities.map((x) => cityBySlug(x)!.he);
+const mainTopic = l.topics[0];
+const mainCity = l.cities[0];
+const topicHref = (t: string) => `${B}orchei-din/${t}/${mainCity && c.topicCity[key(t, mainCity)] ? mainCity + '/' : ''}`;
+// WhatsApp only for profiles the office manages itself (claimed, joined or on a paid plan)
+const showWa = l.whatsapp && (l.paid || l.source !== 'public');
+const page = new URL(B + profilePath(l.id), Astro.site).href;
+const ld: any = {
+  '@context': 'https://schema.org', '@type': ['Attorney', 'LegalService'], '@id': page + '#lawyer', name: full, url: page,
+  ...(l.firm ? { alternateName: l.firm } : {}),
+  ...(l.phone ? { telephone: l.phone } : {}),
+  ...(l.address || cityNames[0] ? { address: { '@type': 'PostalAddress', ...(l.address ? { streetAddress: l.address } : {}), addressLocality: cityNames[0] || '', addressCountry: 'IL' } } : {}),
+  areaServed: cityNames.map((n) => ({ '@type': 'City', name: n })),
+  knowsAbout: topicNames,
+  ...(l.site ? { sameAs: [l.site] } : {}),
+  ...(l.reviewCount > 0 ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: l.avg.toFixed(1), reviewCount: l.reviewCount, bestRating: 5, worstRating: 1 } } : {}),
+  ...(l.reviews.length ? { review: l.reviews.slice(0, 10).map((r) => ({ '@type': 'Review', reviewRating: { '@type': 'Rating', ratingValue: r.stars, bestRating: 5 }, author: { '@type': 'Person', name: r.name || 'לקוח' }, reviewBody: r.text })) } : {}),
+};
+const desc = `${full}${l.firm && l.firm !== l.name ? `, ${l.firm}` : ''}: ${topicNames.join(', ')}${cityNames.length ? ` ב${cityNames.slice(0, 2).join(' וב')}` : ''}. פרטי קשר, ציון שקוף וחוות דעת מאומתות. פנייה בלי עלות.`;
+const stars = (n: number) => '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+const crumbs = [{ label: 'עורכי דין', href: 'orchei-din/' }, ...(mainTopic ? [{ label: topicBySlug(mainTopic)!.he, href: `orchei-din/${mainTopic}/` }] : []), ...(mainTopic && mainCity ? [{ label: cityBySlug(mainCity)!.he, href: `orchei-din/${mainTopic}/${mainCity}/` }] : []), { label: full }];
+const siteLabel = (() => { const s = (l.site || '').replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''); try { return decodeURI(s).slice(0, 60); } catch { return s.slice(0, 60); } })();
+const claim = `${B}orchei-din/hitztarfut/?claim=${l.id}#claim`;
+const remove = `${B}orchei-din/hasara/?id=${l.id}`;
+---
+<Portal title={`${full}${cityNames[0] ? `, ${cityNames[0]}` : ''}: ${topicNames.slice(0, 2).join(' ו')}`} description={desc} crumbs={crumbs} schema={[ld]}>
+  <Fragment slot="top">
+    <div class="prof-top">
+      <div class="av lg" aria-hidden="true">{l.photo ? <img src={l.photo} alt="" width="76" height="76" /> : bareName(l).charAt(0)}</div>
+      <div style="min-width:0">
+        <h1>{full}</h1>
+        {l.firm && l.firm !== l.name && <p class="lc-firm" style="font-size:1.02rem">{l.firm}</p>}
+      </div>
+    </div>
+    <div class="pills">
+      {l.verified && <span class="pill"><DIcon name="check" />פרופיל מאומת</span>}
+      {yrs !== undefined && <span class="pill">{yrs > 0 ? `${yrs} שנות רישיון` : 'רישיון מהשנה'}</span>}
+      <span class="pill">{l.reviewCount ? `${l.avg.toFixed(1)} מתוך 5 (${l.reviewCount} חוות דעת)` : 'אין עדיין חוות דעת'}</span>
+      <a class="pill" href="#score">ציון {l.score} מתוך 100</a>
+    </div>
+  </Fragment>
+  <div class="pd-cols">
+    <div>
+      {l.source === 'public' && (
+        <p class="disc">הפרטים נאספו ממקורות ציבוריים ואינם המלצה. זה המשרד שלך? אפשר <a href={claim}>לעדכן</a> או <a href={remove}>להסיר</a> בלחיצה.</p>
+      )}
+      {l.about && <div class="panel"><h2>על המשרד</h2><p style="margin:0;white-space:pre-line">{l.about}</p></div>}
+
+      <div class="panel">
+        <h2>פרטים</h2>
+        <dl class="facts">
+          <div><dt>תחומים</dt><dd><ul class="lc-tags" style="margin:0">{l.topics.map((t) => <li><a class="tag" href={topicHref(t)}>{topicBySlug(t)!.he}</a></li>)}</ul></dd></div>
+          {cityNames.length > 0 && <div><dt>ערים</dt><dd>{l.cities.map((x, i) => <>{i > 0 && ', '}<a href={`${B}orchei-din/ir/${x}/`}>{cityBySlug(x)!.he}</a></>)}</dd></div>}
+          {l.address && <div><dt>כתובת</dt><dd>{l.address}</dd></div>}
+          {l.phone && <div><dt>טלפון</dt><dd><a href={telHref(l.phone)} dir="ltr">{l.phone}</a></dd></div>}
+          {l.email && <div><dt>מייל</dt><dd><a href={`mailto:${l.email}`}>{l.email}</a></dd></div>}
+          {l.site && <div><dt>אתר</dt><dd><a href={l.site} rel="nofollow noopener" target="_blank" dir="ltr">{siteLabel}</a></dd></div>}
+          {l.licenseYear && <div><dt>שנת רישיון</dt><dd>{l.licenseYear}</dd></div>}
+          {l.languages.length > 0 && <div><dt>שפות</dt><dd>{l.languages.join(', ')}</dd></div>}
+          <div><dt>רישום בלשכה</dt><dd><a href={DIR.barUrl} rel="nofollow noopener" target="_blank">בדיקה באתר לשכת עורכי הדין</a></dd></div>
+          {l.source === 'public' && l.sourceUrl && <div><dt>מקור הפרטים</dt><dd><a href={l.sourceUrl} rel="nofollow noopener" target="_blank">מקור ציבורי</a></dd></div>}
+        </dl>
+      </div>
+
+      <div class="panel" id="score">
+        <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px">
+          <div class="ring lg" style={`--v:${l.score}`}><div><b>{l.score}</b><small>מתוך 100</small></div></div>
+          <div><h2 style="margin:0;font-size:1.35rem">הציון ואיך הוא מחושב</h2><p class="muted" style="margin:0;font-size:.93rem">לפי <a href={`${B}orchei-din/shita/`}>שיטה פומבית</a>, אותה שיטה לכולם. תשלום לא משנה את הציון.</p></div>
+        </div>
+        <ul class="bars">
+          {SCORE_PARTS.map((p) => { const v = (l.parts as any)[p.k] || 0; return <li><span>{p.label}</span><span class="c">{Math.round(v)} מתוך {p.max}</span><span class="bar"><i style={`width:${Math.min(100, (v / p.max) * 100)}%`}></i></span></li>; })}
+        </ul>
+      </div>
+
+      <div class="panel" id="reviews">
+        <h2>חוות דעת של לקוחות</h2>
+        <p class="muted" style="font-size:.93rem">רק חוות דעת שנבדקו: לפני הפרסום אנחנו מוודאים בטלפון שהכותב קיבל שירות מהמשרד. גם חוות דעת שליליות מתפרסמות.</p>
+        {l.reviews.length ? l.reviews.map((r) => (
+          <div class="review">
+            <div><span class="stars" aria-label={`${r.stars} מתוך 5`}>{stars(r.stars)}</span> <b>{r.name}</b></div>
+            <p class="rv-text" style="margin:6px 0 0">{r.text}</p>
+          </div>
+        )) : <p>אין עדיין חוות דעת מאומתות על {full}.</p>}
+        <details class="wr" style="margin-top:12px">
+          <summary class="btn btn-line btn-sm">כתיבת חוות דעת</summary>
+          <form class="dform" data-dir="review" style="margin-top:14px" novalidate>
+            <div class="fields">
+              <input type="hidden" name="lawyerId" value={l.id} />
+              <div class="hp" aria-hidden="true"><label>אתר <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+              <div class="row">
+                <div class="field"><label for="rv-n">שם פרטי ואות ראשונה של שם המשפחה</label><input id="rv-n" name="name" required maxlength="40" /></div>
+                <div class="field"><label for="rv-s">דירוג</label><select id="rv-s" name="stars" required><option value="">בחירה</option><option value="5">5 מתוך 5</option><option value="4">4 מתוך 5</option><option value="3">3 מתוך 5</option><option value="2">2 מתוך 5</option><option value="1">1 מתוך 5</option></select></div>
+              </div>
+              <div class="field"><label for="rv-a">באיזה נושא קיבלתם שירות?</label><select id="rv-a" name="area"><option value="">בחירה</option>{TOPICS.filter((t) => l.topics.includes(t.slug)).map((t) => <option value={t.he}>{t.he}</option>)}</select></div>
+              <div class="field"><label for="rv-t">מה חשוב שאחרים יידעו?</label><textarea id="rv-t" name="text" rows="4" required minlength="20" maxlength="1500"></textarea></div>
+              <div class="field"><label for="rv-p">טלפון (לאימות בלבד, לא יפורסם)</label><input id="rv-p" name="phone" type="tel" inputmode="tel" required dir="ltr" /></div>
+              <div class="field" data-step-code hidden><label for="rv-c">קוד שקיבלתם בהודעה</label><input id="rv-c" name="code" inputmode="numeric" autocomplete="one-time-code" required maxlength="8" dir="ltr" /></div>
+              <label class="check"><input type="checkbox" name="consent" required /><span>אני מאשר/ת שקיבלתי שירות מעורך הדין, שהכתוב משקף את החוויה שלי, ושקראתי את <a href={`${B}tnaei-shimush/`}>תנאי השימוש</a>.</span></label>
+              <button class="btn btn-teal" type="submit">שליחת חוות הדעת</button>
+            </div>
+            <div class="msg" role="status" aria-live="polite"></div>
+          </form>
+        </details>
+      </div>
+
+      <p class="muted" style="font-size:.93rem">זה המשרד שלך? <a href={claim}>אישור בעלות ועדכון הפרטים</a>. רוצים להוריד את הפרופיל? <a href={remove}>בקשת הסרה</a>.</p>
+    </div>
+    <aside id="contact">
+      {(l.phone || showWa) && (
+        <div class="panel" style="display:grid;gap:8px;margin:0">
+          {l.phone && <a class="btn btn-teal" href={telHref(l.phone)}><DIcon name="phone" />התקשרות</a>}
+          {showWa && <a class="btn btn-line" href={waHref(l.whatsapp)} rel="nofollow noopener" target="_blank"><DIcon name="wa" />וואטסאפ</a>}
+        </div>
+      )}
+      <DirLeadForm lawyerId={l.id} topic={mainTopic} city={mainCity} title={`פנייה ל${full}`} intro={l.paid || l.source !== 'public' ? 'הפנייה נשלחת לעורך הדין.' : 'הפנייה תועבר לעורך הדין דרך צוות האתר.'} />
+    </aside>
+  </div>
+  <div class="stickybar">
+    {l.phone && <a class="btn btn-teal" href={telHref(l.phone)}><DIcon name="phone" />התקשרות</a>}
+    <a class="btn btn-sun" href="#contact">השארת פנייה</a>
+  </div>
+</Portal>

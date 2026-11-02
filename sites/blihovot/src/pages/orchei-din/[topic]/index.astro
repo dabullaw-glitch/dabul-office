@@ -1,0 +1,41 @@
+---
+import Portal from '../../../layouts/Portal.astro';
+import LawyerList from '../../../components/dir/LawyerList.astro';
+import DirLeadForm from '../../../components/dir/DirLeadForm.astro';
+import { loadData, counts, CITIES, key, orderFor, profilePath } from '../../../lib/dir';
+import { TOPICS, REGIONS, type Topic } from '../../../data/portal';
+import { HUBS } from '../../../data/site';
+import { topicFaq } from '../../../lib/dirFaq';
+export function getStaticPaths() { return TOPICS.map((t) => ({ params: { topic: t.slug }, props: { t } })); }
+const { t } = Astro.props as { t: Topic };
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { lawyers } = await loadData();
+const c = await counts();
+const here = lawyers.filter((l) => l.topics.includes(t.slug));
+const { promoted, rest } = orderFor(here, t.slug);
+const hub = HUBS.find((h) => h.id === t.hub);
+const others = TOPICS.filter((x) => x.slug !== t.slug);
+const schema = here.length ? [{ '@context': 'https://schema.org', '@type': 'ItemList', name: `עורכי דין ל${t.he}`, numberOfItems: here.length,
+  itemListElement: [...promoted, ...rest].slice(0, 30).map((l, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(B + profilePath(l.id), Astro.site).href, name: l.name })) }] : [];
+---
+<Portal title={`עורך דין ל${t.he}: רשימה לפי עיר`} description={`עורכי דין שעוסקים ב${t.he}, לפי עיר ואזור: ${here.length} משרדים עם ציון שקוף, חוות דעת מאומתות ופנייה ישירה בלי עלות.`} crumbs={[{ label: 'עורכי דין', href: 'orchei-din/' }, { label: t.he }]} h1={`עורכי דין ל${t.he}`} lede={t.blurb} faq={topicFaq(t.slug)} schema={schema} noindex={!here.length}>
+  <Fragment slot="head">
+    <div class="pills"><span class="pill">{here.length} עורכי דין</span>{others.map((o) => <a class="pill" href={`${B}orchei-din/${o.slug}/`}>{o.he}</a>)}</div>
+  </Fragment>
+  <div class="pd-cols">
+    <div>
+      <p class="disc"><b>מתי פונים:</b> {t.when} {t.slug === 'hesderei-hovot' && 'ברשימה מופיעים עורכי דין שעוסקים בחדלות פירעון ובהסדרי חוב. '}הרשימה אינה המלצה, ומיקום בתשלום מסומן "מקודם".</p>
+      <section aria-labelledby="cities-h" style="margin-bottom:26px">
+        <h2 id="cities-h" style="margin:0 0 12px;font-size:1.35rem">לפי עיר</h2>
+        {REGIONS.map((r) => { const list = CITIES.filter((x) => x.regionSlug === r.slug && c.topicCity[key(t.slug, x.slug)]); return list.length > 0 && (
+          <div style="margin-bottom:12px"><b style="display:block;font-size:.95rem;margin-bottom:6px"><a href={`${B}orchei-din/ezor/${r.slug}/?nose=${t.slug}`}>אזור {r.he}</a></b>
+          <ul class="chips">{list.map((x) => <li><a class="chip" href={`${B}orchei-din/${t.slug}/${x.slug}/`}>{x.he}<span class="n">{c.topicCity[key(t.slug, x.slug)]}</span></a></li>)}</ul></div>
+        ); })}
+      </section>
+      <h2 style="margin:0 0 12px;font-size:1.35rem">כל עורכי הדין ל{t.he}</h2>
+      {here.length ? <LawyerList promoted={promoted} rest={rest} topic={t.slug} /> : <div class="empty"><h2>עדיין אין עורכי דין ברשימה</h2><p>אפשר להשאיר פנייה, והיא תועבר לעורכי דין בתחום.</p></div>}
+      {hub && <p style="margin-top:22px">רוצים להבין קודם איך זה עובד? <a href={`${B}nose/${hub.id}/`}>כל המדריכים על {hub.title}</a>, בשפה פשוטה ולפי מקורות רשמיים.</p>}
+    </div>
+    <aside><DirLeadForm topic={t.slug} intro={`תיאור קצר מספיק. הפנייה תועבר לעורכי דין שעוסקים ב${t.he}, לפי העיר שבחרתם.`} /></aside>
+  </div>
+</Portal>

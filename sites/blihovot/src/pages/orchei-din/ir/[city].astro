@@ -1,0 +1,47 @@
+---
+import Portal from '../../../layouts/Portal.astro';
+import LawyerList from '../../../components/dir/LawyerList.astro';
+import LawyerCard from '../../../components/dir/LawyerCard.astro';
+import DirLeadForm from '../../../components/dir/DirLeadForm.astro';
+import { loadData, counts, CITIES, key, profilePath, type City } from '../../../lib/dir';
+import { TOPICS, REGIONS } from '../../../data/portal';
+// built only for cities with lawyers
+export async function getStaticPaths() {
+  const c = await counts();
+  return CITIES.filter((x) => c.city[x.slug]).map((x) => ({ params: { city: x.slug }, props: { city: x } }));
+}
+const { city } = Astro.props as { city: City };
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { lawyers } = await loadData();
+const c = await counts();
+const here = lawyers.filter((l) => l.cities.includes(city.slug));
+const region = REGIONS.find((r) => r.slug === city.regionSlug)!;
+const nearby = lawyers.filter((l) => !l.cities.includes(city.slug) && l.regions.includes(city.regionSlug)).slice(0, 4);
+const nearCities = CITIES.filter((x) => x.regionSlug === city.regionSlug && x.slug !== city.slug && c.city[x.slug]);
+const schema = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: `עורכי דין לחובות ב${city.he}`, numberOfItems: here.length,
+  itemListElement: here.map((l, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(B + profilePath(l.id), Astro.site).href, name: l.name })) }];
+---
+<Portal title={`עורך דין לחובות ב${city.he}: חדלות פירעון והוצאה לפועל`} description={`עורכי דין לחדלות פירעון, הסדרי חובות והוצאה לפועל ב${city.he}: ${here.length === 1 ? 'משרד אחד' : `${here.length} משרדים`} עם ציון שקוף, חוות דעת מאומתות ופנייה ישירה בלי עלות.`} crumbs={[{ label: 'עורכי דין', href: 'orchei-din/' }, { label: `אזור ${region.he}`, href: `orchei-din/ezor/${region.slug}/` }, { label: city.he }]} h1={`עורכי דין לחובות ב${city.he}`} lede="חדלות פירעון, הסדרי חובות והוצאה לפועל. הרשימה לפי ציון, בלי מיקום בתשלום.">
+  <Fragment slot="head">
+    <div class="pills">{TOPICS.filter((t) => c.topicCity[key(t.slug, city.slug)]).map((t) => <a class="pill" href={`${B}orchei-din/${t.slug}/${city.slug}/`}>{t.he} ב{city.he} ({c.topicCity[key(t.slug, city.slug)]})</a>)}</div>
+  </Fragment>
+  <div class="pd-cols">
+    <div>
+      <p class="disc">הרשימה אינה המלצה. הפרטים נאספו ממקורות ציבוריים או נמסרו על ידי עורכי הדין. <a href={`${B}orchei-din/shita/`}>איך מחושב הציון</a>.</p>
+      <LawyerList promoted={[]} rest={here} topicFilter />
+      {nearby.length > 0 && (
+        <section class="pd-sec" aria-labelledby="near-h">
+          <h2 id="near-h">עוד באזור {region.he}</h2>
+          <div class="lcards">{nearby.map((l) => <LawyerCard l={l} />)}</div>
+        </section>
+      )}
+      {nearCities.length > 0 && (
+        <section class="pd-sec" aria-labelledby="nc-h">
+          <h2 id="nc-h">ערים קרובות</h2>
+          <ul class="chips">{nearCities.map((x) => <li><a class="chip" href={`${B}orchei-din/ir/${x.slug}/`}>{x.he}<span class="n">{c.city[x.slug]}</span></a></li>)}</ul>
+        </section>
+      )}
+    </div>
+    <aside><DirLeadForm city={city.slug} intro={`תיאור קצר מספיק. הפנייה תועבר לעורכי דין בתחום באזור ${city.he}.`} /></aside>
+  </div>
+</Portal>

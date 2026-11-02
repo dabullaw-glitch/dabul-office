@@ -1,0 +1,55 @@
+---
+import Portal from '../../../layouts/Portal.astro';
+import LawyerList from '../../../components/dir/LawyerList.astro';
+import LawyerCard from '../../../components/dir/LawyerCard.astro';
+import DirLeadForm from '../../../components/dir/DirLeadForm.astro';
+import { loadData, counts, CITIES, key, orderFor, profilePath, type City } from '../../../lib/dir';
+import { TOPICS, REGIONS, type Topic } from '../../../data/portal';
+import { topicFaq } from '../../../lib/dirFaq';
+// built only when the city has lawyers in this topic
+export async function getStaticPaths() {
+  const c = await counts();
+  return TOPICS.flatMap((t) => CITIES.filter((x) => c.topicCity[key(t.slug, x.slug)]).map((x) => ({ params: { topic: t.slug, city: x.slug }, props: { t, city: x } })));
+}
+const { t, city } = Astro.props as { t: Topic; city: City };
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { lawyers } = await loadData();
+const c = await counts();
+const here = lawyers.filter((l) => l.topics.includes(t.slug) && l.cities.includes(city.slug));
+const { promoted, rest } = orderFor(here, t.slug, city.slug);
+const region = REGIONS.find((r) => r.slug === city.regionSlug)!;
+const nearby = lawyers.filter((l) => l.topics.includes(t.slug) && !l.cities.includes(city.slug) && l.regions.includes(city.regionSlug)).slice(0, 4);
+const nearCities = CITIES.filter((x) => x.regionSlug === city.regionSlug && x.slug !== city.slug && c.topicCity[key(t.slug, x.slug)]);
+const others = TOPICS.filter((x) => x.slug !== t.slug && c.topicCity[key(x.slug, city.slug)]);
+const schema = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: `עורכי דין ל${t.he} ב${city.he}`, numberOfItems: here.length,
+  itemListElement: [...promoted, ...rest].map((l, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(B + profilePath(l.id), Astro.site).href, name: l.name })) }];
+---
+<Portal title={`עורך דין ל${t.he} ב${city.he}`} description={`עורכי דין שעוסקים ב${t.he} ב${city.he} והסביבה: ${here.length === 1 ? 'משרד אחד' : `${here.length} משרדים`} עם ציון שקוף, חוות דעת מאומתות ופנייה ישירה בלי עלות.`} crumbs={[{ label: 'עורכי דין', href: 'orchei-din/' }, { label: t.he, href: `orchei-din/${t.slug}/` }, { label: city.he }]} h1={`עורכי דין ל${t.he} ב${city.he}`} lede={t.blurb} faq={topicFaq(t.slug, city.he)} schema={schema}>
+  <Fragment slot="head">
+    <div class="pills">
+      <span class="pill">{here.length === 1 ? 'עורך דין אחד' : `${here.length} עורכי דין`} ב{city.he}</span>
+      {others.map((o) => <a class="pill" href={`${B}orchei-din/${o.slug}/${city.slug}/`}>{o.he} ב{city.he}</a>)}
+      <a class="pill" href={`${B}orchei-din/ir/${city.slug}/`}>כל עורכי הדין ב{city.he}</a>
+    </div>
+  </Fragment>
+  <div class="pd-cols">
+    <div>
+      <p class="disc">הרשימה אינה המלצה. מיקום בתשלום מסומן "מקודם" ואינו משנה את הציון. <a href={`${B}orchei-din/shita/`}>איך מחושב הציון</a>.</p>
+      <LawyerList promoted={promoted} rest={rest} topic={t.slug} />
+      {nearby.length > 0 && (
+        <section class="pd-sec" aria-labelledby="near-h">
+          <h2 id="near-h">עוד באזור {region.he}</h2>
+          <div class="lcards">{nearby.map((l) => <LawyerCard l={l} topic={t.slug} />)}</div>
+        </section>
+      )}
+      {nearCities.length > 0 && (
+        <section class="pd-sec" aria-labelledby="nc-h">
+          <h2 id="nc-h">{t.he} בערים קרובות</h2>
+          <ul class="chips">{nearCities.map((x) => <li><a class="chip" href={`${B}orchei-din/${t.slug}/${x.slug}/`}>{x.he}<span class="n">{c.topicCity[key(t.slug, x.slug)]}</span></a></li>)}</ul>
+          <p style="margin-top:12px"><a href={`${B}orchei-din/ezor/${region.slug}/?nose=${t.slug}`}>כל אזור {region.he} ←</a></p>
+        </section>
+      )}
+    </div>
+    <aside><DirLeadForm topic={t.slug} city={city.slug} intro={`תיאור קצר מספיק. הפנייה תועבר לעורכי דין שעוסקים ב${t.he} באזור ${city.he}.`} /></aside>
+  </div>
+</Portal>
