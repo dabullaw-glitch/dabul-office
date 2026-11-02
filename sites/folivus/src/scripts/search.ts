@@ -30,6 +30,8 @@ export function initSearch() {
   };
 
   let timer = 0;
+  let manual = false; // once the visitor picks an area by hand, the matcher stops changing it
+  area.addEventListener('change', () => { manual = true; });
   const render = () => {
     const text = q.value;
     out.textContent = '';
@@ -48,10 +50,10 @@ export function initSearch() {
       const a = document.createElement('a');
       a.href = target(slug, city.value);
       a.textContent = names[slug];
-      a.addEventListener('click', () => { area.value = slug; });
+      a.addEventListener('click', () => { area.value = slug; manual = true; });
       out.append(a);
     }
-    if (!area.value) area.value = m[0][0];
+    if (!manual) area.value = m[0][0];
   };
   q.addEventListener('input', () => { clearTimeout(timer); timer = window.setTimeout(render, 200); });
   f.addEventListener('submit', (e) => {

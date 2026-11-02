@@ -1,0 +1,47 @@
+name: folivus site
+# Builds the Folivus lawyers directory (sites/folivus) and publishes:
+# - a preview to the folivus/ folder, which GitHub Pages serves at https://dabullaw-glitch.github.io/dabul-office/folivus/ (hidden from search engines),
+# - a production build for https://folivus.com to the folivus-site branch, which Cloudflare Pages serves as is (no build there).
+# Runs nightly too, so new lawyers, reviews and rankings from the directory engine get their pages.
+on:
+  schedule: [{ cron: '41 1 * * *' }]
+  push:
+    branches: [main]
+    paths: ['sites/folivus/**', '.github/workflows/folivus.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: folivus, cancel-in-progress: false }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Install
+        working-directory: sites/folivus
+        run: npm ci --no-audit --no-fund
+      - name: Build preview
+        working-directory: sites/folivus
+        env: { SITE_URL: 'https://dabullaw-glitch.github.io/dabul-office/folivus', BASE: '/dabul-office/folivus/', PREVIEW: '1' }
+        run: npm run build
+      - name: Publish to folivus/
+        run: |
+          rm -rf folivus && cp -r sites/folivus/dist folivus && touch folivus/.nojekyll
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add -A folivus
+          git commit -qm "folivus: publish preview $(date -u +%FT%TZ)" || echo "preview unchanged"
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
+      - name: Production build (folivus.com)
+        working-directory: sites/folivus
+        env: { SITE_URL: 'https://folivus.com', BASE: '/', PREVIEW: '0' }
+        run: rm -rf dist && npm run build
+      - name: Publish to folivus-site branch
+        run: |
+          D=$(mktemp -d); cp -r sites/folivus/dist/. "$D"/
+          cd "$D"; git init -q; git checkout -qb folivus-site
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add -A; git commit -qm "folivus.com $(date -u +%FT%TZ)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" folivus-site
