@@ -1,0 +1,97 @@
+{
+ "id": "vr-mvz1y01",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/504ad77c47691f7c08c9081e9de98e9c.mp4?Expires=1794165646&Signature=IKP-btcy3qKu9ldZTIlMt2FQq0k~-CFf7CchQdk~Fu0GA3TuVbEcd9hVZNfYJoPvie~DYuS7dKtPhlEGEkblsZTa5vinXhGmKAbRJd4BwiDlInIWnxgH0d-Qg3xt0xJ33JjAJQvBBgAyV6KFAKZWEhxfdxcxTFEaeT~oUnXMKrJYTqLtKBmiUlTE4a1oKkNslqZrtm~Fh4Kwbge~GVaT2paDsQrHpj9D3KNa6d~RBFTmXu1VdeTj-1~~YMlXQE3Mk1sYg-w7b5klPOgnhhPaqJqOv3nMJWTeY581Dj2srLo3VFijYaY2dvPWRb76ITVT27gX8nSLkxvdnAilykCGOQ__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "מצאתם דירה טובה. ואז המתווך אומר:\n\"זה מירושה. האחים רוצים למכור מהר.\"\nלפני שאתם חותמים, תעצרו.\nכי בעסקה כזאת, מי שחותם מולכם הוא לא תמיד מי שיכול באמת למכור.\n\nבואו נעשה את זה פשוט. שלושה דברים.\n\nאחד. צו ירושה, או צו קיום צוואה.\nבלי צו, היורשים עוד לא יכולים להעביר לכם את הדירה.\nאם הצו עוד לא ניתן, לא משלמים סכום גדול.\nהכסף מחכה בנאמנות אצל עורך דין, עד שהצו מגיע.\n\nשתיים. כל היורשים חותמים.\nמספיק אח אחד שלא מסכים, והעסקה נתקעת.\n\"הוא יחתום אחר כך\" זה לא מספיק.\nאו שהוא בחוזה, או שאין עסקה.\n\nשלוש. יש יורש קטין?\nאם כן, צריך אישור של בית המשפט למכירה. וזה לוקח זמן.\nאת זה כותבים בחוזה מראש, כולל מה קורה אם האישור לא מגיע.\n\nויש עוד דבר שכולם שוכחים:\nלבדוק בטאבו על שם מי הדירה רשומה היום.\nלפעמים היא עדיין על שם סבא.\n\nכל מקרה שונה.\nשלחו את זה למי שמחפש עכשיו דירה.",
+ "history": "boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "bold,boxed-navy,warm",
+ "plan": {
+  "title": "קונים דירה מיורשים? שלושה דברים לפני שמשלמים",
+  "topic": "מקרקעין",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "goldWords": [
+   "צו",
+   "בנאמנות",
+   "כל",
+   "היורשים",
+   "קטין?",
+   "בטאבו"
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "קונים מיורשים",
+    "l1": "\"האחים רוצים",
+    "l2": "למכור מהר\""
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "לפני שאתם חותמים, תעצרו.",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "who",
+    "kind": "term",
+    "say": "כי בעסקה כזאת, מי",
+    "until": "שיכול באמת למכור.",
+    "kicker": "שימו לב",
+    "text": "מי שחותם מולכם",
+    "sub": "לא תמיד יכול למכור",
+    "subSay": "הוא לא תמיד מי"
+   },
+   {
+    "id": "three",
+    "kind": "title",
+    "say": "בואו נעשה את זה",
+    "until": "פשוט. שלושה דברים.",
+    "num": "3",
+    "text": "דברים לפני שמשלמים"
+   },
+   {
+    "id": "o1",
+    "kind": "option",
+    "say": "אחד. צו ירושה, או",
+    "until": "עד שהצו מגיע.",
+    "num": "1",
+    "text": "צו ירושה או קיום צוואה"
+   },
+   {
+    "id": "o2",
+    "kind": "option",
+    "say": "שתיים. כל היורשים חותמים.",
+    "until": "או שאין עסקה.",
+    "num": "2",
+    "text": "כל היורשים חותמים"
+   },
+   {
+    "id": "o3",
+    "kind": "option",
+    "say": "שלוש. יש יורש קטין?",
+    "until": "אם האישור לא מגיע.",
+    "num": "3",
+    "text": "יורש קטין? אישור בית משפט"
+   },
+   {
+    "id": "tabu",
+    "kind": "stamp",
+    "say": "ויש עוד דבר שכולם",
+    "until": "עדיין על שם סבא.",
+    "text": "בודקים בטאבו",
+    "stampSay": "לבדוק בטאבו על שם"
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "כל מקרה שונה.",
+    "until": "שמחפש עכשיו דירה.",
+    "text": "09-8613413"
+   }
+  ]
+ }
+}
