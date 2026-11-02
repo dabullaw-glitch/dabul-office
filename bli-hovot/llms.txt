@@ -99,6 +99,23 @@
 - [עוזר להתנגדות לתביעה](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/kli/bakasha-hitnagdut/): מזינים את תאריך האזהרה והטענות, ומקבלים: עד מתי מגישים, נימוקים מסודרים, שלד לתצהיר ורשימת מה לצרף לטופס 218.
 - [עוזר לביטול "מוגבל באמצעים"](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/kli/bakasha-mugbal/): ההכרזה לא מתבטלת מאליה. עונים על 2 שלבים ומקבלים נוסח לנימוקים והוראות הגשה.
 
+## עורכי דין לחדלות פירעון, הסדרי חובות והוצאה לפועל
+
+רשימה של 61 משרדים לפי עיר ואזור, עם ציון שקוף (0 עד 100, שיטה פומבית, תשלום לא משנה אותו) וחוות דעת מאומתות. ההופעה ברשימה אינה המלצה; מיקום בתשלום מסומן "מקודם".
+
+- [כל עורכי הדין](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/)
+- [עורכי דין לחדלות פירעון](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/hadlut-piraon/): ליווי בהליך חדלות פירעון של יחיד: בקשה לצו פתיחת הליכים, תקופת הביניים, תוכנית פירעון והפטר.
+- [עורכי דין להסדרי חובות](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/hesderei-hovot/): משא ומתן עם בנקים, חברות אשראי ונושים אחרים להסדר תשלומים או להפחתת חוב, לפני הליך או במקומו.
+- [עורכי דין להוצאה לפועל](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/hotzaa-lapoal/): תיקים בהוצאה לפועל: עיקולים, איחוד תיקים, צו תשלומים, התנגדות לביצוע ובקשות לרשם.
+- [אזור מרכז](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/ezor/merkaz/)
+- [אזור שרון](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/ezor/sharon/)
+- [אזור ירושלים](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/ezor/yerushalayim/)
+- [אזור צפון](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/ezor/tzafon/)
+- [אזור דרום](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/ezor/darom/)
+- [לפי עיר](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/ir/)
+- [איך מחושב הציון](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/shita/)
+- [לעורכי דין: הצטרפות וחבילות](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/orchei-din/hitztarfut/)
+
 ## עוד
 
 - [מילון מונחים](https://dabullaw-glitch.github.io/dabul-office/bli-hovot/milon/)
