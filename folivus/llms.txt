@@ -1,0 +1,94 @@
+# פוליבוס (Folivus)
+
+> מאגר עורכי דין לפי תחום ועיר, עם ציון שקוף, חוות דעת מאומתות של לקוחות ומדריכים בשפה פשוטה.
+
+מאגר עורכי דין בישראל לפי תחום עיסוק, עיר ואזור. לכל עורך דין יש ציון בין 0 ל-100 שמחושב בשיטה פומבית (חוות דעת מאומתות 50, שנות רישיון 15, שלמות פרופיל 15, מענה לפניות 10, הכרה מקצועית 10). תשלום לא משנה את הציון, ומיקום מקודם מסומן תמיד. חלק מהפרופילים נבנו ממקורות ציבוריים ומסומנים כך. האתר אינו משרד עורכי דין ואינו נותן ייעוץ משפטי.
+
+- [איך מחושב הציון](https://dabullaw-glitch.github.io/dabul-office/folivus/shita/)
+- [נבחרת פוליבוס, דירוג שנתי](https://dabullaw-glitch.github.io/dabul-office/folivus/nivcheret/)
+- [כל התחומים](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/)
+- [כל הערים](https://dabullaw-glitch.github.io/dabul-office/folivus/ir/)
+
+## נדל"ן
+
+- [עורכי דין למקרקעין ונדל"ן](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/real-estate/): קנייה ומכירה של דירה או נכס, חוזה מכר, משכנתא, רישום בטאבו וליווי העסקה עד הסוף. (37 עורכי דין)
+- [עורכי דין להתחדשות עירונית ותמ"א 38](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/urban-renewal/): תמ"א 38 ופינוי בינוי: בדיקת הסכם עם יזם, ייצוג בעלי דירות וליווי הפרויקט. (5 עורכי דין)
+- [עורכי דין לליקויי בנייה](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/construction-defects/): ליקויים בדירה חדשה או ישנה, דרישות מקבלן, חוות דעת מהנדס ותביעות. (5 עורכי דין)
+- [עורכי דין למיסוי מקרקעין](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/real-estate-tax/): מס שבח, מס רכישה, היטל השבחה ותכנון המס לפני עסקה. (5 עורכי דין)
+- [עורכי דין לתכנון ובנייה](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/planning-building/): היתרי בנייה, תוכניות, התנגדויות, חריגות בנייה והליכים מול ועדות התכנון. (3 עורכי דין)
+- [עורכי דין לשכירות ופינוי מושכר](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/landlord-tenant/): חוזה שכירות, פיקדון וערבויות, פינוי מושכר ומחלוקות בין שוכר למשכיר. (4 עורכי דין)
+- [עורכי דין לבתים משותפים ומפקח על המקרקעין](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/condominium/): רכוש משותף, ועד בית, הצמדות, גג ומחלוקות בין שכנים מול המפקח על רישום מקרקעין. (2 עורכי דין)
+
+## משפחה וירושה
+
+- [עורכי דין לדיני משפחה](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/family/): מזונות, הסדרי שהות, אחריות הורית והליכים בבית המשפט לענייני משפחה. (24 עורכי דין)
+- [עורכי דין לגירושין](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/divorce/): גירושין, גט, חלוקת רכוש והסכם גירושין, בבית הדין הרבני או בבית המשפט. (8 עורכי דין)
+- [עורכי דין להסכמי ממון](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/prenup/): הסכם ממון לפני או אחרי החתונה, וגם לבני זוג שחיים יחד בלי להתחתן. (7 עורכי דין)
+- [עורכי דין לירושה וצוואות](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/inheritance/): עריכת צוואה, צו ירושה, קיום צוואה, התנגדות לצוואה וחלוקת עיזבון. (25 עורכי דין)
+- [עורכי דין לייפוי כוח מתמשך](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/enduring-poa/): ייפוי כוח מתמשך לעניינים אישיים, רפואיים ורכושיים, מראש ולפני שיש צורך. (18 עורכי דין)
+- [עורכי דין לאפוטרופסות](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/guardianship/): מינוי אפוטרופוס או תומך החלטות לקרוב שאינו יכול לנהל את ענייניו לבד. (4 עורכי דין)
+
+## עבודה ותעסוקה
+
+- [עורכי דין לדיני עבודה](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/labor/): פיטורים ושימוע, שכר ופיצויים, זכויות עובדים ויחסי עובד ומעסיק. (15 עורכי דין)
+
+## פלילי
+
+- [עורכי דין למשפט פלילי](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/criminal/): זימון לחקירה, מעצר, כתב אישום וייצוג בכל שלבי ההליך הפלילי. (8 עורכי דין)
+- [עורכי דין לדיני תעבורה](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/traffic/): דוחות, שלילת רישיון, נקודות ותיקים בבית המשפט לתעבורה. (7 עורכי דין)
+- [עורכי דין לצווארון לבן](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/white-collar/): עבירות כלכליות, חקירות של רשויות אכיפה, ניירות ערך ועבירות מס. (2 עורכי דין)
+
+## נזיקין וביטוח
+
+- [עורכי דין לנזיקין ותאונות](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/personal-injury/): פיצוי על נזקי גוף: נפילה, תאונת עבודה ופגיעות אחרות. (11 עורכי דין)
+- [עורכי דין לתאונות דרכים](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/road-accidents/): תביעת פיצויים אחרי תאונת דרכים, מול חברת הביטוח ובבית המשפט. (6 עורכי דין)
+- [עורכי דין לרשלנות רפואית](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/medical-malpractice/): טעות בטיפול, אבחון מאוחר או פגיעה בניתוח, ותביעות נגד מוסדות רפואיים. (7 עורכי דין)
+- [עורכי דין לביטוח](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/insurance/): תביעות מול חברות ביטוח: דירה, רכב, חיים, בריאות ואובדן כושר עבודה. (7 עורכי דין)
+- [עורכי דין לביטוח לאומי ונכויות](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/national-insurance/): קצבאות ונכות מביטוח לאומי, ועדות רפואיות וערעורים. (10 עורכי דין)
+
+## חובות וכספים
+
+- [עורכי דין לחדלות פירעון](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/insolvency/): חדלות פירעון (פשיטת רגל), הפטר מחובות ושיקום כלכלי ליחידים ולחברות. (42 עורכי דין)
+- [עורכי דין להוצאה לפועל](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/enforcement/): תיקים בהוצאה לפועל, עיקולים, איחוד תיקים, צו תשלומים והתנגדות לביצוע. (42 עורכי דין)
+- [עורכי דין לבנקאות](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/banking/): מחלוקות מול בנקים: הלוואות, ערבויות, עמלות, חשבון מוגבל ומשכנתאות. (8 עורכי דין)
+- [עורכי דין למיסים](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/tax/): מס הכנסה ומע"מ, השגות על שומה, ערעורי מס והסדרים מול רשות המסים. (4 עורכי דין)
+
+## מסחרי
+
+- [עורכי דין לדיני חברות](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/corporate/): הקמת חברה, הסכם מייסדים ובעלי מניות, דירקטוריון וענייני חברות שוטפים. (15 עורכי דין)
+- [עורכי דין למשפט מסחרי וחוזים](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/commercial/): חוזים מסחריים, הסכמים עם ספקים ולקוחות, זכיינות ומחלוקות בין עסקים. (18 עורכי דין)
+- [עורכי דין להייטק וסטארטאפים](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/startups/): ליווי חברות הזנק: גיוס השקעות, אופציות לעובדים והסכמי מייסדים.
+- [עורכי דין לקניין רוחני](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/intellectual-property/): סימני מסחר, זכויות יוצרים, פטנטים והגנה על מותג ועל תוכן. (1 עורכי דין)
+- [עורכי דין לפרטיות וסייבר](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/privacy-cyber/): הגנת פרטיות, מאגרי מידע, דליפת מידע ופרסום תמונות או פרטים ברשת. (3 עורכי דין)
+- [עורכי דין להגנת הצרכן](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/consumer/): מוצר או שירות פגום, ביטול עסקה, החזר כספי ומחלוקות מול עסקים. (3 עורכי דין)
+
+## ליטיגציה
+
+- [עורכי דין לתביעות ייצוגיות](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/class-actions/): תביעה ייצוגית בשם קבוצה של צרכנים, עובדים או בעלי מניות. (3 עורכי דין)
+- [עורכי דין לליטיגציה אזרחית](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/civil-litigation/): תביעות כספיות, מכתבי התראה, תביעות קטנות וייצוג בבתי משפט אזרחיים. (19 עורכי דין)
+- [עורכי דין ללשון הרע](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/defamation/): לשון הרע: פרסום פוגע ברשתות, בתקשורת או בקבוצות, וגם הגנה מפני תביעה כזו. (3 עורכי דין)
+
+## ציבורי
+
+- [עורכי דין למשפט מנהלי](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/administrative/): החלטות של רשויות, עתירות, מכרזים, ארנונה והליכים מול גופים ציבוריים. (3 עורכי דין)
+- [עורכי דין להגירה ואזרחות](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/immigration/): אזרחות, אשרות, איחוד משפחות, מעמד בישראל והליכים מול רשות האוכלוסין. (1 עורכי דין)
+- [עורכי דין לדין צבאי](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/military/): הליכים בצבא, דין משמעתי, פטור משירות וזכויות של חיילים ומשרתי מילואים. (4 עורכי דין)
+
+## שירותים
+
+- [עורכי דין לנוטריון](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/notary/): אימות חתימה, תרגום נוטריוני, אפוסטיל ואישורים לשימוש בחוץ לארץ. (17 עורכי דין)
+- [עורכי דין לרפואה ובריאות](https://dabullaw-glitch.github.io/dabul-office/folivus/orchei-din/health/): זכויות מטופלים, קופות חולים, סל הבריאות, אשפוז ומימון טיפולים.
+
+## אזורים
+
+- [אזור מרכז](https://dabullaw-glitch.github.io/dabul-office/folivus/ezor/merkaz/): תל אביב, גוש דן, השפלה ועד מודיעין.
+- [אזור שרון](https://dabullaw-glitch.github.io/dabul-office/folivus/ezor/sharon/): נתניה, כפר סבא, רעננה, הרצליה, חדרה והיישובים שביניהן.
+- [אזור ירושלים](https://dabullaw-glitch.github.io/dabul-office/folivus/ezor/yerushalayim/): ירושלים, בית שמש ומעלה אדומים.
+- [אזור צפון](https://dabullaw-glitch.github.io/dabul-office/folivus/ezor/tzafon/): חיפה והקריות, הגליל, העמקים ואזור זכרון יעקב.
+- [אזור דרום](https://dabullaw-glitch.github.io/dabul-office/folivus/ezor/darom/): באר שבע, אשדוד, אשקלון, הנגב ואילת.
+
+## מדריכים
+
+- [כמה עולה עורך דין? ממה המחיר מורכב](https://dabullaw-glitch.github.io/dabul-office/folivus/maamarim/kama-ole-orech-din/): ממה מורכב שכר הטרחה של עורך דין: שיטות תשלום, מה משפיע על המחיר, הוצאות נוספות ששוכחים, ואיך משווים בין הצעות. בלי מחירונים, עם שאלות שכדאי לשאול.
+- [איך בוחרים עורך דין: מדריך מעשי בשפה פשוטה](https://dabullaw-glitch.github.io/dabul-office/folivus/maamarim/eich-bocharim-orech-din/): איך בוחרים עורך דין בלי להתבלבל: להבין איזה תחום צריך, לבדוק רישום וניסיון, להשוות הצעות שכר טרחה ולשים לב לסימני אזהרה. מדריך כללי בשפה פשוטה.
+- [מה שואלים בפגישה הראשונה עם עורך דין](https://dabullaw-glitch.github.io/dabul-office/folivus/maamarim/ma-shoalim-bapgisha-harishona/): רשימת שאלות מסודרת לפגישה הראשונה עם עורך דין: על העניין עצמו, על הניסיון, על שכר הטרחה ועל דרך העבודה. וגם מה להכין ומה לעשות אחרי הפגישה.
