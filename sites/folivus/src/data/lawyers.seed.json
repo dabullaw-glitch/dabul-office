@@ -3429,5 +3429,1557 @@
   ],
   "plan": "free",
   "status": "live"
+ },
+ {
+  "id": "nk-law",
+  "name": "עו\"ד נועה קריספל",
+  "firm": "NK Law משרד עורכי דין",
+  "cities": [
+   "bnei-brak"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "startups",
+   "corporate",
+   "commercial",
+   "civil-litigation"
+  ],
+  "phone": "03-9153193",
+  "email": "law@nkcommercial.com",
+  "site": "https://nkcommercial.com/",
+  "address": "בר כוכבא 16, בית נועה, בני ברק",
+  "about": "משרד בבני ברק העוסק בליווי סטארטאפים, הקמת חברות וחוזים מסחריים",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://nkcommercial.com/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "orly-sapir-law",
+  "name": "עו\"ד אורלי ספיר סחייק",
+  "firm": "משרד עורך דין אורלי ספיר סחייק",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "intellectual-property",
+   "defamation",
+   "privacy-cyber"
+  ],
+  "phone": "04-8528528",
+  "email": "orly@orlylaw.co.il",
+  "site": "https://orlylaw.co.il/",
+  "address": "מעלה השחרור 15, חיפה",
+  "about": "משרד בחיפה העוסק בקניין רוחני, זכויות יוצרים, סימני מסחר ודיני אינטרנט",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://orlylaw.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "katan-bar-tal-talmor",
+  "name": "עו\"ד גלעד יצחק בר-טל",
+  "firm": "קטן, בר-טל, טלמור משרד עורכי דין",
+  "cities": [
+   "petah-tikva"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "health",
+   "labor",
+   "administrative",
+   "commercial"
+  ],
+  "phone": "03-5671671",
+  "email": "office@clbt-law.co.il",
+  "site": "https://www.clbt-law.co.il/",
+  "address": "שוהם 11, בית דקל, פתח תקווה",
+  "about": "משרד בפתח תקווה העוסק בדיני בריאות, דיני עבודה ומשפט מנהלי",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.clbt-law.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%9C%D7%A2%D7%A0%D7%99%D7%99%D7%A0%D7%99-%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "maya-weiss-tamir-law",
+  "name": "עו\"ד מאיה וייס-טמיר",
+  "firm": "משרד עו\"ד מאיה וייס-טמיר",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "immigration",
+   "administrative",
+   "personal-injury",
+   "inheritance",
+   "enduring-poa"
+  ],
+  "phone": "04-8584840",
+  "email": "office@mwt-law.co.il",
+  "site": "https://www.mwt-law.co.il/",
+  "address": "דרך העצמאות 57, חיפה",
+  "about": "משרד בחיפה העוסק בהגירה, אשרות, מעמד ואזרחות ישראלית",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.mwt-law.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "sklarsky-law",
+  "name": "עו\"ד יאיר סקלסקי",
+  "firm": "משרד עורכי דין יאיר סקלסקי",
+  "cities": [
+   "ramat-gan",
+   "petah-tikva"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "medical-malpractice",
+   "health"
+  ],
+  "phone": "03-7518405",
+  "email": "",
+  "site": "https://prmm.co.il/",
+  "address": "",
+  "about": "משרד ברמת גן ובפתח תקווה העוסק ברשלנות רפואית, משפט רפואי וזכויות החולה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://prmm.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "kfir-levy-immigration",
+  "name": "עו\"ד דניאל כפיר, עו\"ד מורן לוי",
+  "firm": "דניאל כפיר ומורן לוי משרד עורכי דין",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "immigration",
+   "administrative"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://hagira.org.il/",
+  "address": "גרוזנברג 14, תל אביב",
+  "about": "משרד בתל אביב העוסק בהגירה, אשרות, הסדרת מעמד ועלייה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://hagira.org.il/english/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "sws-law",
+  "name": "עו\"ד אביטל ורצקי, עו\"ד יונתן שניידמן",
+  "firm": "שפטלר, שניידמן, ורצקי ושות'",
+  "cities": [
+   "bnei-brak"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "startups",
+   "corporate",
+   "commercial"
+  ],
+  "phone": "03-6055989",
+  "email": "office@swslaw.co.il",
+  "site": "https://swslaw.co.il/",
+  "address": "הירקון 5, מגדלי LYFE, בני ברק",
+  "about": "משרד בבני ברק העוסק בהייטק, מימון חברות, מיזוגים ורכישות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://swslaw.co.il/experties/%D7%94%D7%99%D7%99-%D7%98%D7%A7/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "aluk-law",
+  "name": "עו\"ד יפעת אלוק",
+  "firm": "עו\"ד יפעת אלוק ושות'",
+  "cities": [
+   "ramat-gan"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "startups",
+   "corporate",
+   "civil-litigation",
+   "inheritance",
+   "defamation",
+   "privacy-cyber"
+  ],
+  "phone": "077-9966634",
+  "email": "",
+  "site": "https://www.aluk-firm.com/",
+  "address": "דרך אבא הלל 16, רמת גן",
+  "about": "משרד ברמת גן העוסק בדיני חברות, הייטק, ליטיגציה וצוואות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.aluk-firm.com/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%94%D7%99%D7%99%D7%98%D7%A7/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "gbd-law",
+  "name": "עו\"ד גילעד בן דוד",
+  "firm": "בן דוד ושות' משרד עורכי דין",
+  "cities": [
+   "petah-tikva"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "intellectual-property",
+   "commercial",
+   "corporate",
+   "real-estate",
+   "civil-litigation"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://gbd-lawfirm.co.il/",
+  "address": "ז'בוטינסקי 63, ב.ס.ר סיטי, פתח תקווה",
+  "about": "משרד בפתח תקווה העוסק בקניין רוחני, ליטיגציה מסחרית ודיני חברות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://gbd-lawfirm.co.il/%D7%93%D7%99%D7%A0%D7%99-%D7%A7%D7%A0%D7%99%D7%99%D7%9F-%D7%A8%D7%95%D7%97%D7%A0%D7%99/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "hila-weintrob-law",
+  "name": "עו\"ד הילה וינטרוב",
+  "firm": "הילה וינטרוב משרד עורכי דין",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "prenup",
+   "divorce",
+   "family",
+   "inheritance"
+  ],
+  "phone": "077-9968860",
+  "email": "hila@hilaweintrob.co.il",
+  "site": "https://hilaweintrob.co.il/",
+  "address": "יגאל אלון 94, מגדל אלון 2, תל אביב",
+  "about": "משרד בתל אביב העוסק בהסכמי ממון, גירושין, גישור וצוואות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://hilaweintrob.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%9E%D7%A9%D7%A4%D7%97%D7%94-%D7%92%D7%91%D7%A2%D7%AA%D7%99%D7%99%D7%9D/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "yaniv-gil-law",
+  "name": "עו\"ד יניב גיל",
+  "firm": "משרד עו\"ד יניב גיל ושות'",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "family",
+   "divorce",
+   "inheritance",
+   "insolvency",
+   "enforcement",
+   "commercial",
+   "real-estate"
+  ],
+  "phone": "03-6092414",
+  "email": "yaniv@yanivgil.co.il",
+  "site": "https://www.yanivgil.co.il/",
+  "address": "דרך מנחם בגין 150, מגדל WE TLV, תל אביב",
+  "about": "משרד בתל אביב העוסק בדיני משפחה, ירושה וחדלות פירעון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.yanivgil.co.il/od-gerushin-givatayim",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "guy-oren-law",
+  "name": "עו\"ד גיא אורן",
+  "firm": "משרד עו\"ד ונוטריון גיא אורן",
+  "cities": [
+   "tel-aviv",
+   "kiryat-ono"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "notary",
+   "guardianship",
+   "enduring-poa",
+   "inheritance",
+   "commercial",
+   "real-estate",
+   "construction-defects",
+   "planning-building"
+  ],
+  "phone": "03-6350773",
+  "email": "guyoren@bezeqint.net",
+  "site": "https://www.guyoren.net/",
+  "address": "נחל גמלא 8, קריית אונו",
+  "about": "משרד בקריית אונו ובתל אביב העוסק בשירותי נוטריון, אפוטרופסות, צוואות ומקרקעין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.guyoren.net/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "alon-levi-law",
+  "name": "עו\"ד אלון לוי",
+  "firm": "משרד עורכי דין ונוטריון אלון לוי ושות'",
+  "cities": [
+   "hod-hasharon"
+  ],
+  "regions": [
+   "שרון"
+  ],
+  "areas": [
+   "real-estate",
+   "inheritance",
+   "labor",
+   "corporate",
+   "civil-litigation",
+   "traffic",
+   "enduring-poa",
+   "notary"
+  ],
+  "phone": "09-9550777",
+  "email": "office@levi-law.co.il",
+  "site": "https://levi-law.co.il/",
+  "address": "הנגר 6, הוד השרון",
+  "about": "משרד בהוד השרון העוסק בעסקאות מקרקעין, צוואות, דיני עבודה ושירותי נוטריון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://levi-law.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%91%D7%90%D7%91%D7%9F-%D7%99%D7%94%D7%95%D7%93%D7%94/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "fialko-law",
+  "name": "עו\"ד שביט פיאלקו",
+  "firm": "משרד עורכי דין שביט פיאלקו",
+  "cities": [
+   "ashdod"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "real-estate",
+   "real-estate-tax",
+   "civil-litigation",
+   "inheritance",
+   "prenup",
+   "enduring-poa"
+  ],
+  "phone": "077-8036361",
+  "email": "",
+  "site": "https://www.fialkolaw.co.il/",
+  "address": "",
+  "about": "משרד באשדוד העוסק במקרקעין, מיסוי מקרקעין, צוואות וייפוי כוח מתמשך",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.fialkolaw.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "snir-bar-zohar-law",
+  "name": "עו\"ד שניר בר זוהר",
+  "firm": "משרד עורכי דין שניר בר זוהר",
+  "cities": [
+   "beer-sheva"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "labor",
+   "national-insurance",
+   "personal-injury",
+   "inheritance",
+   "insolvency"
+  ],
+  "phone": "",
+  "email": "snirbarzohar@law-sbz.co.il",
+  "site": "https://law-sbz.co.il/",
+  "address": "הדסה 78, בית גוזלן, באר שבע",
+  "about": "משרד בבאר שבע העוסק בדיני עבודה, ביטוח לאומי ונזיקין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://law-sbz.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "rasiuk-law",
+  "name": "עו\"ד מרדכי רסיוק, עו\"ד אבי רסיוק",
+  "firm": "משרד עורכי דין מרדכי ואבי רסיוק",
+  "cities": [
+   "beer-sheva"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "personal-injury",
+   "medical-malpractice",
+   "road-accidents",
+   "national-insurance",
+   "labor",
+   "inheritance",
+   "enduring-poa",
+   "insurance"
+  ],
+  "phone": "08-6433770",
+  "email": "info@mar.co.il",
+  "site": "https://mar.co.il/",
+  "address": "הדסה 66, באר שבע",
+  "about": "משרד בבאר שבע העוסק בנזקי גוף, רשלנות רפואית, ביטוח לאומי ודיני עבודה",
+  "licenseYear": null,
+  "languages": [
+   "עברית",
+   "אנגלית",
+   "רוסית",
+   "ערבית"
+  ],
+  "source": "public",
+  "sourceUrl": "https://mar.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "filvich-avdeev-law",
+  "name": "עו\"ד גלי אבדייב, עו\"ד חגית פילביץ'",
+  "firm": "פילביץ' אבדייב משרד עורכי דין",
+  "cities": [
+   "ashdod"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "real-estate",
+   "national-insurance"
+  ],
+  "phone": "08-6362050",
+  "email": "office@af-lawyers.co.il",
+  "site": "https://af-lawyers.co.il/",
+  "address": "שדרות ירושלים 18, מגדלי K, אשדוד",
+  "about": "משרד באשדוד העוסק בעסקאות מקרקעין ורכישת דירות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://af-lawyers.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F-%D7%90%D7%A9%D7%93%D7%95%D7%93/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "binyamin-law",
+  "name": "עו\"ד אודי בנימין",
+  "firm": "משרד עו\"ד בנימין",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "real-estate",
+   "real-estate-tax",
+   "family",
+   "corporate"
+  ],
+  "phone": "073-7313252",
+  "email": "",
+  "site": "https://binyaminlawoffice.com/",
+  "address": "אחד העם 12, תל אביב",
+  "about": "משרד בתל אביב העוסק בעסקאות מקרקעין ומיסוי מקרקעין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://binyaminlawoffice.com/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F-%D7%90%D7%A9%D7%93%D7%95%D7%93/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "nahari-law",
+  "name": "עו\"ד שרון נהרי",
+  "firm": "משרד עו\"ד שרון נהרי ושות'",
+  "cities": [
+   "bnei-brak"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "criminal",
+   "white-collar"
+  ],
+  "phone": "03-6969080",
+  "email": "office@nahari-law.co.il",
+  "site": "https://www.nahari-law.co.il/",
+  "address": "מצדה 7, מגדל בסר 4, בני ברק",
+  "about": "משרד בבני ברק העוסק במשפט פלילי, צווארון לבן והסגרות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.nahari-law.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%A4%D7%9C%D7%99%D7%9C%D7%99-%D7%91%D7%97%D7%99%D7%A4%D7%94/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "nadashi-law",
+  "name": "עו\"ד יאיר נדשי",
+  "firm": "משרד עורך דין פלילי ותעבורה יאיר נדשי",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "criminal",
+   "traffic",
+   "defamation"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://nadashi.co.il/",
+  "address": "שדרות פלי\"ם 2, חלונות הסיטי, חיפה",
+  "about": "משרד בחיפה העוסק במשפט פלילי ובדיני תעבורה",
+  "licenseYear": 1999,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://nadashi.co.il/%D7%90%D7%95%D7%93%D7%95%D7%AA-%D7%94%D7%9E%D7%A9%D7%A8%D7%93-%D7%A8%D7%97%D7%91/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "hagit-ziv-law",
+  "name": "עו\"ד חגית זיו",
+  "firm": "חגית זיו משרד עורכי דין",
+  "cities": [
+   "jerusalem"
+  ],
+  "regions": [
+   "ירושלים"
+  ],
+  "areas": [
+   "divorce",
+   "family",
+   "guardianship",
+   "inheritance"
+  ],
+  "phone": "02-6525064",
+  "email": "",
+  "site": "https://hagitziv-adv.co.il/",
+  "address": "בית הדפוס 12, גבעת שאול, ירושלים",
+  "about": "משרד בירושלים העוסק בגירושין, דיני משפחה, אפוטרופסות וצוואות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://hagitziv-adv.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "david-josef-law",
+  "name": "עו\"ד דוד יוסף",
+  "firm": "משרד עורך דין ומגשר דוד יוסף",
+  "cities": [
+   "jerusalem"
+  ],
+  "regions": [
+   "ירושלים"
+  ],
+  "areas": [
+   "divorce",
+   "inheritance",
+   "enduring-poa",
+   "real-estate",
+   "civil-litigation"
+  ],
+  "phone": "",
+  "email": "david@josef-law.co.il",
+  "site": "https://josef-law.co.il/",
+  "address": "כנפי נשרים 13, בית ענבר, ירושלים",
+  "about": "משרד בירושלים העוסק בגירושין, ירושה, ייפוי כוח מתמשך ומקרקעין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://josef-law.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%92%D7%99%D7%A8%D7%95%D7%A9%D7%99%D7%9F-%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "eetiel-hikri-law",
+  "name": "עו\"ד איתיאל היקרי",
+  "firm": "איתיאל היקרי משרד עורכי דין ונוטריון",
+  "cities": [
+   "netanya"
+  ],
+  "regions": [
+   "שרון"
+  ],
+  "areas": [
+   "family",
+   "prenup",
+   "divorce",
+   "inheritance",
+   "enduring-poa",
+   "guardianship",
+   "real-estate",
+   "urban-renewal",
+   "real-estate-tax",
+   "insolvency",
+   "civil-litigation",
+   "notary"
+  ],
+  "phone": "09-8871717",
+  "email": "eetiel@eetiel-law.co.il",
+  "site": "https://eetiel-law.co.il/",
+  "address": "רם ברוך 9, נתניה",
+  "about": "משרד בנתניה העוסק בדיני משפחה, מקרקעין ושירותי נוטריון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://eetiel-law.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "eddie-avinoam-law",
+  "name": "עו\"ד אדי אבינועם",
+  "firm": "משרד עורך דין פלילי אדי אבינועם",
+  "cities": [
+   "rishon-lezion"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "criminal",
+   "white-collar"
+  ],
+  "phone": "03-9524198",
+  "email": "",
+  "site": "https://www.eddieavinoam.co.il/",
+  "address": "",
+  "about": "משרד בראשון לציון העוסק במשפט פלילי ובעבירות כלכליות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.eddieavinoam.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "reichert-law",
+  "name": "עו\"ד עידית רייכרט",
+  "firm": "עידית רייכרט משרד עורכי דין",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "criminal",
+   "white-collar",
+   "privacy-cyber"
+  ],
+  "phone": "077-9898888",
+  "email": "office@reichert-law.co.il",
+  "site": "https://reichert-law.co.il/",
+  "address": "הארבעה 28, מגדלי הארבעה, תל אביב",
+  "about": "משרד בתל אביב ובקריית טבעון העוסק במשפט פלילי, צווארון לבן וייצוג נפגעי עבירה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://reichert-law.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%A4%D7%9C%D7%99%D7%9C%D7%99-%D7%91%D7%A8%D7%90%D7%A9%D7%95%D7%9F-%D7%9C%D7%A6%D7%99%D7%95%D7%9F/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "ben-shai-law",
+  "name": "עו\"ד ירון בן-שי",
+  "firm": "משרד עו\"ד ירון בן-שי",
+  "cities": [
+   "kiryat-bialik"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "enduring-poa",
+   "inheritance"
+  ],
+  "phone": "04-8810010",
+  "email": "office@benshai-law.co.il",
+  "site": "https://lpalawyer.co.il/",
+  "address": "שדרות בן גוריון 63, קריית ביאליק",
+  "about": "משרד בקריית ביאליק העוסק בייפוי כוח מתמשך, צוואות וירושות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://lpalawyer.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "narkis-lavi-law",
+  "name": "עו\"ד נרקיס לביא",
+  "firm": "נרקיס לביא חברת עורכי דין ונוטריון",
+  "cities": [
+   "kiryat-bialik"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "family",
+   "inheritance",
+   "enduring-poa",
+   "real-estate",
+   "civil-litigation",
+   "personal-injury",
+   "notary"
+  ],
+  "phone": "04-8581441",
+  "email": "",
+  "site": "https://www.narkislaw.co.il/",
+  "address": "שדרות בן גוריון 63, קריית ביאליק",
+  "about": "משרד בקריית ביאליק ובגליל המערבי העוסק בדיני משפחה, צוואות וייפוי כוח מתמשך",
+  "licenseYear": null,
+  "languages": [
+   "עברית",
+   "אנגלית",
+   "רוסית"
+  ],
+  "source": "public",
+  "sourceUrl": "https://www.narkislaw.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "gilad-narkis-law",
+  "name": "עו\"ד גלעד נרקיס",
+  "firm": "משרד עורכי דין גלעד נרקיס ושות'",
+  "cities": [
+   "bnei-brak"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "banking",
+   "insolvency",
+   "consumer"
+  ],
+  "phone": "03-7554975",
+  "email": "gilad@narkis-law.com",
+  "site": "https://narkis-law.com/",
+  "address": "כנרת 5, מגדלי ב.ס.ר 3, בני ברק",
+  "about": "משרד בבני ברק העוסק בתביעות נגד בנקים, חדלות פירעון והסדרי חובות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://narkis-law.com/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "eyal-cohen-law",
+  "name": "עו\"ד ד\"ר אייל כהן",
+  "firm": "עו\"ד ד\"ר אייל כהן משרד עורכי דין ונוטריון",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "banking",
+   "insolvency",
+   "enforcement",
+   "guardianship",
+   "notary"
+  ],
+  "phone": "03-3851319",
+  "email": "Eyal@eyalcohenlaw.co.il",
+  "site": "https://eyalcohenlaw.co.il/",
+  "address": "אחד העם 9, מגדל שלום, תל אביב",
+  "about": "משרד בתל אביב העוסק בתביעות נגד בנקים, חדלות פירעון והסדרי חוב",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://eyalcohenlaw.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "joseph-chen-law",
+  "name": "עו\"ד יוסף חן",
+  "firm": "יוסף חן משרד עורכי דין",
+  "cities": [
+   "modiin"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "real-estate",
+   "construction-defects",
+   "commercial",
+   "enduring-poa"
+  ],
+  "phone": "074-7021462",
+  "email": "joseph@jc-law.co.il",
+  "site": "https://jc-law.co.il/",
+  "address": "דם המכבים 36, בניין רקיע, מודיעין",
+  "about": "משרד במודיעין העוסק בנדל\"ן, ליקויי בנייה ומשפט מסחרי",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://jc-law.co.il/%D7%A0%D7%93%D7%9C%D7%9F-%D7%95%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "elram-zelznik-law",
+  "name": "עו\"ד אל-רם זלזניק",
+  "firm": "אל-רם זלזניק ושות'",
+  "cities": [
+   "ness-ziona"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "real-estate",
+   "inheritance",
+   "family",
+   "notary"
+  ],
+  "phone": "08-6515294",
+  "email": "office@elramlaw.co.il",
+  "site": "https://elramlaw.co.il/",
+  "address": "דרך הנפת הדגל 5, פארק המדע, נס ציונה",
+  "about": "משרד בנס ציונה העוסק במקרקעין, צוואות, דיני משפחה ושירותי נוטריון",
+  "licenseYear": 2012,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://elramlaw.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "zhukov-law",
+  "name": "עו\"ד סוזאנה זוקוב",
+  "firm": "משרד עו\"ד סוזאנה זוקוב",
+  "cities": [
+   "modiin"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "real-estate",
+   "enduring-poa",
+   "inheritance"
+  ],
+  "phone": "08-6896953",
+  "email": "sz@zhukov.co.il",
+  "site": "https://www.zhukov.co.il/",
+  "address": "ערער 9, בית שמעון, מרכז עזריאלי, מודיעין",
+  "about": "משרד במודיעין העוסק בעסקאות מקרקעין, ייפוי כוח מתמשך וצוואות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.zhukov.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "ben-tzuk-law",
+  "name": "עו\"ד ספיר בן צוק",
+  "firm": "עו\"ד ס. בן-צוק ושות'",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "banking",
+   "commercial",
+   "corporate",
+   "inheritance",
+   "intellectual-property",
+   "civil-litigation"
+  ],
+  "phone": "04-8677812",
+  "email": "LBG@zahav.net.il",
+  "site": "https://e-lawyer.co.il/",
+  "address": "שדרות הפלי\"ם 16, חיפה",
+  "about": "משרד בחיפה העוסק בתביעות בנקים, משפט מסחרי וקניין רוחני",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://e-lawyer.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%9E%D7%95%D7%9E%D7%97%D7%94-%D7%91%D7%A0%D7%A7%D7%99%D7%9D-%D7%91%D7%97%D7%99%D7%A4%D7%94/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "sofi-specktor-law",
+  "name": "עו\"ד סופי ספקטור",
+  "firm": "משרד עו\"ד סופי ספקטור",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "inheritance",
+   "enduring-poa",
+   "divorce",
+   "family"
+  ],
+  "phone": "04-9575950",
+  "email": "",
+  "site": "https://sofi-specktor.com/",
+  "address": "דרך העצמאות 9, חיפה",
+  "about": "משרד בחיפה העוסק בצוואות, ייפוי כוח מתמשך וגירושין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://sofi-specktor.com/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%99%D7%99%D7%A4%D7%95%D7%99-%D7%9B%D7%95%D7%97-%D7%9E%D7%AA%D7%9E%D7%A9%D7%9A/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "paz-israel-law",
+  "name": "",
+  "firm": "פז ישראל ושות' משרד עורכי דין",
+  "cities": [
+   "modiin",
+   "tel-aviv",
+   "jerusalem"
+  ],
+  "regions": [
+   "מרכז",
+   "ירושלים"
+  ],
+  "areas": [
+   "urban-renewal",
+   "real-estate",
+   "prenup",
+   "family",
+   "enduring-poa",
+   "corporate",
+   "intellectual-property"
+  ],
+  "phone": "079-6082227",
+  "email": "Office@Paz-LawOffice.com",
+  "site": "https://paz-lawoffice.com/",
+  "address": "דם המכבים 38, מודיעין",
+  "about": "משרד במודיעין, בתל אביב ובירושלים העוסק בפינוי בינוי, נדל\"ן ודיני משפחה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://paz-lawoffice.com/%D7%A2%D7%95%D7%A8%D7%9A_%D7%93%D7%99%D7%9F_%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F_%D7%91%D7%9E%D7%95%D7%93%D7%99%D7%A2%D7%99%D7%9F_%D7%A2%D7%95%D7%A8%D7%9A_%D7%93%D7%99%D7%9F-_%D7%A0%D7%93%D7%9C/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "dana-shavit-law",
+  "name": "עו\"ד דנה שביט",
+  "firm": "משרד עו\"ד דנה שביט",
+  "cities": [
+   "haifa",
+   "tel-aviv"
+  ],
+  "regions": [
+   "צפון",
+   "מרכז"
+  ],
+  "areas": [
+   "criminal",
+   "traffic"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://shavitkantor.com/",
+  "address": "שדרות הפלי\"ם 16, חיפה",
+  "about": "משרד בחיפה ובתל אביב העוסק במשפט פלילי, מעצרים ודיני תעבורה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://shavitkantor.com/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "azulay-law",
+  "name": "עו\"ד שמעון אזולאי",
+  "firm": "אזולאי ושות' עורכי דין וגישור",
+  "cities": [
+   "modiin"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "family",
+   "inheritance",
+   "real-estate"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://azulaylegal.com/",
+  "address": "דם המכבים 36, מודיעין",
+  "about": "משרד במודיעין העוסק בדיני משפחה, ירושות ומקרקעין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://azulaylegal.com/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "titonovich-nichtberger",
+  "name": "עו\"ד דורון ניכטברגר",
+  "firm": "טיטונוביץ, ניכטברגר ושות' משרד עורכי דין",
+  "cities": [
+   "ramat-gan"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "banking",
+   "commercial",
+   "civil-litigation",
+   "white-collar"
+  ],
+  "phone": "03-6114080",
+  "email": "doron@sn-law.co.il",
+  "site": "https://www.sn-law.co.il/",
+  "address": "ז'בוטינסקי 7, מגדל משה אביב, רמת גן",
+  "about": "משרד ברמת גן העוסק בבנקאות, תביעות נגד בנקים והעברות כספים מחו\"ל",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.sn-law.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "liran-ohayon-law",
+  "name": "עו\"ד ד\"ר לירן אוחיון",
+  "firm": "עו\"ד ד\"ר לירן אוחיון משרד עורכי דין ונוטריון",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "criminal",
+   "traffic",
+   "planning-building",
+   "notary"
+  ],
+  "phone": "04-9999244",
+  "email": "office@lawliran.com",
+  "site": "https://advliran.co.il/",
+  "address": "י.ל. פרץ 32, חיפה",
+  "about": "משרד בחיפה העוסק במשפט פלילי, מחיקת רישום פלילי ודיני תעבורה",
+  "licenseYear": 2011,
+  "languages": [
+   "רוסית",
+   "ערבית",
+   "אנגלית"
+  ],
+  "source": "public",
+  "sourceUrl": "https://advliran.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "brotman-law",
+  "name": "עו\"ד חיים ברוטמן",
+  "firm": "משרד עו\"ד חיים ברוטמן",
+  "cities": [
+   "nesher",
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "enduring-poa",
+   "corporate",
+   "commercial",
+   "defamation",
+   "labor",
+   "tax",
+   "civil-litigation",
+   "inheritance",
+   "real-estate"
+  ],
+  "phone": "04-8100170",
+  "email": "brotman@brotman.co.il",
+  "site": "https://brotman.co.il/",
+  "address": "דרך בר יהודה 52, בית עופר, נשר",
+  "about": "משרד בנשר העוסק בייפוי כוח מתמשך, דיני חברות, ליטיגציה ומקרקעין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://brotman.co.il/%D7%AA%D7%97%D7%95%D7%9E%D7%99-%D7%94%D7%AA%D7%9E%D7%97%D7%95%D7%AA/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%99%D7%99%D7%A4%D7%95%D7%99-%D7%9B%D7%95%D7%97-%D7%9E%D7%AA%D7%9E%D7%A9%D7%9A/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "rachel-shahar-law",
+  "name": "עו\"ד רחל שחר",
+  "firm": "משרד עו\"ד ונוטריונית רחל שחר",
+  "cities": [
+   "tel-aviv",
+   "kiryat-ono"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "divorce",
+   "family",
+   "prenup",
+   "inheritance",
+   "guardianship",
+   "enduring-poa",
+   "real-estate",
+   "notary"
+  ],
+  "phone": "03-6359634",
+  "email": "info@rslawfirm.co.il",
+  "site": "https://rslawfirm.co.il/",
+  "address": "שמירה אימבר 4, קריית אונו",
+  "about": "משרד בקריית אונו ובתל אביב העוסק בגירושין, הסכמי ממון, צוואות ואפוטרופסות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://rslawfirm.co.il/guardianship-attorney/sibling-dispute-guardianship/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "sorotzkin-law",
+  "name": "עו\"ד אמיתי סורוצקין",
+  "firm": "משרד עו\"ד אמיתי סורוצקין",
+  "cities": [
+   "jerusalem"
+  ],
+  "regions": [
+   "ירושלים"
+  ],
+  "areas": [
+   "family",
+   "divorce",
+   "guardianship",
+   "inheritance",
+   "enduring-poa"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://amitay-law.co.il/",
+  "address": "כנפי נשרים 15, בית התאומים, ירושלים",
+  "about": "משרד בירושלים העוסק בדיני משפחה, אפוטרופסות וצוואות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://amitay-law.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%92%D7%99%D7%A8%D7%95%D7%A9%D7%99%D7%9F-%D7%91%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "eyal-sayag-law",
+  "name": "עו\"ד אייל סייג",
+  "firm": "משרד עורכי דין אייל סייג",
+  "cities": [
+   "holon"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "divorce",
+   "family",
+   "guardianship",
+   "inheritance"
+  ],
+  "phone": "03-5508150",
+  "email": "",
+  "site": "https://www.sayag-law.co.il/",
+  "address": "טרומפלדור 1, חולון",
+  "about": "משרד בחולון העוסק בגירושין, משמורת ילדים, מזונות וצוואות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.sayag-law.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%92%D7%99%D7%A8%D7%95%D7%A9%D7%99%D7%9F-%D7%91%D7%A8%D7%9E%D7%9C%D7%94/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "genish-law",
+  "name": "",
+  "firm": "אנג'לו ניסים גניש משרד עורכי דין ונוטריון",
+  "cities": [
+   "bat-yam"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "inheritance",
+   "road-accidents",
+   "personal-injury",
+   "national-insurance",
+   "insurance",
+   "commercial",
+   "traffic",
+   "labor",
+   "enforcement",
+   "notary"
+  ],
+  "phone": "03-5060363",
+  "email": "",
+  "site": "https://genish-law.co.il/",
+  "address": "ירושלים 31, בת ים",
+  "about": "משרד בבת ים העוסק בצוואות וירושות, נזיקין, ביטוח לאומי ושירותי נוטריון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://genish-law.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%A6%D7%95%D7%95%D7%90%D7%95%D7%AA-%D7%95%D7%99%D7%A8%D7%95%D7%A9%D7%95%D7%AA-%D7%91%D7%91%D7%AA-%D7%99%D7%9D/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "iris-moreno-law",
+  "name": "עו\"ד איריס מורנו",
+  "firm": "משרד עורכת דין ונוטריון איריס מורנו",
+  "cities": [
+   "holon"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "family",
+   "divorce",
+   "insolvency",
+   "inheritance",
+   "enduring-poa",
+   "notary"
+  ],
+  "phone": "03-6033013",
+  "email": "iris@moreno-adv.co.il",
+  "site": "https://www.moreno-adv.co.il/",
+  "address": "הכישור 47, חולון",
+  "about": "משרד בחולון העוסק בדיני משפחה, חדלות פירעון, צוואות ושירותי נוטריון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.moreno-adv.co.il/wills-inheritance-lawyer-bat-yam",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "vered-levi-law",
+  "name": "עו\"ד ורד לוי",
+  "firm": "משרד עו\"ד ורד לוי",
+  "cities": [
+   "ramat-gan"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "family",
+   "divorce",
+   "prenup",
+   "inheritance"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://lvered.co.il/",
+  "address": "דרך אבא הלל 14, רמת גן",
+  "about": "משרד ברמת גן העוסק בדיני משפחה, גירושין, הסכמי ממון וגישור",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://lvered.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%92%D7%99%D7%A8%D7%95%D7%A9%D7%99%D7%9F-%D7%91%D7%A8%D7%9E%D7%9C%D7%94",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "yifat-cohen-law",
+  "name": "עו\"ד יפעת כהן",
+  "firm": "משרד עורכי הדין יפעת כהן",
+  "cities": [
+   "haifa",
+   "tel-aviv"
+  ],
+  "regions": [
+   "צפון",
+   "מרכז"
+  ],
+  "areas": [
+   "criminal"
+  ],
+  "phone": "",
+  "email": "office@yifat-adv.co.il",
+  "site": "https://www.yifat-adv.co.il/",
+  "address": "שדרות אח\"י אילת 15, קריית חיים, חיפה",
+  "about": "משרד בחיפה ובתל אביב העוסק במשפט פלילי, מעצרים וחקירות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.yifat-adv.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%A4%D7%9C%D7%99%D7%9C%D7%99-%D7%91%D7%97%D7%99%D7%A4%D7%94-2/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "aviv-mizrahi-law",
+  "name": "עו\"ד אביב מזרחי",
+  "firm": "אביב מזרחי משרד עורכי דין",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "criminal",
+   "traffic",
+   "military"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://avivlawyer.co.il/",
+  "address": "הרצל 2, חיפה",
+  "about": "משרד בחיפה העוסק במשפט פלילי ובדיני תעבורה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://avivlawyer.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
  }
 ]
