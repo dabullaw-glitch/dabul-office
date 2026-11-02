@@ -218,6 +218,10 @@ script (tools/heygen-edit/prep.py resolves them), so you can write it before the
   max about 4 words a line. Graphics never cover the face (the editor places them). No music (the editor only adds light
   sound effects). The end card (office name, phone, dabullaw.co.il, "המידע כללי ואינו ייעוץ משפטי") is added by the editor.
 - Leave out "keep": the whole speech is kept; the editor cuts only real pauses.
+- READY PLAN (2.11.2026): when the request row has "editPlan" (a repo path like media/hgv/plans/<vidreq id>.plan.json),
+  use that file as the job's "plan" exactly (it was prepared with real screenshots in media/hgv/assets/<vidreq id>/ for the
+  "news" beats: Yakir asked that explainer videos show visuals, not only him talking). Only check that every "say" / "until"
+  phrase still appears in the approved script; if the script changed, fix just those phrases. Do not drop the image beats.
 
 ## 6. Check the finished edit and send it for final approval
 
