@@ -2740,5 +2740,694 @@
   ],
   "plan": "free",
   "status": "live"
+ },
+ {
+  "id": "meni-koren-law",
+  "name": "עו\"ד מני קורן",
+  "firm": "מני קורן ושות' משרד עורכי דין ונוטריון",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "real-estate",
+   "inheritance",
+   "civil-litigation",
+   "commercial",
+   "family",
+   "notary"
+  ],
+  "phone": "077-5545840",
+  "email": "office@menikoren.co.il",
+  "site": "https://www.menikoren.co.il/",
+  "address": "מבוא גרופית 4, תל אביב",
+  "about": "משרד בתל אביב העוסק במקרקעין, ירושות וצוואות ומשפט אזרחי ומסחרי",
+  "licenseYear": null,
+  "languages": [
+   "אנגלית",
+   "צרפתית"
+  ],
+  "source": "public",
+  "sourceUrl": "https://www.menikoren.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "haj-yahya-law",
+  "name": "עו\"ד סעיד חאג' יחיא, עו\"ד מואניס חאג' יחיא",
+  "firm": "חאג' יחיא ושות' משרד עורכי דין",
+  "cities": [
+   "taibe"
+  ],
+  "regions": [
+   "שרון"
+  ],
+  "areas": [
+   "enforcement",
+   "banking",
+   "insolvency",
+   "civil-litigation",
+   "family",
+   "traffic"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://hajyahya-law.com/",
+  "address": "בניין אלמגד, כביש 444, טייבה",
+  "about": "משרד בטייבה העוסק בהוצאה לפועל, חדלות פירעון, דיני משפחה ודיני תעבורה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://hajyahya-law.com/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "adar-ben-gigi-law",
+  "name": "עו\"ד אדר בן גיגי",
+  "firm": "משרד עורכי דין אדר בן גיגי",
+  "cities": [
+   "afula",
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "family",
+   "real-estate",
+   "enforcement"
+  ],
+  "phone": "04-8264404",
+  "email": "",
+  "site": "https://adarblaw.co.il/",
+  "address": "חרוד 7, עפולה",
+  "about": "משרד בעפולה ובחיפה העוסק בדיני משפחה ומקרקעין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://adarblaw.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%91%D7%A0%D7%A6%D7%A8%D7%AA-%D7%A2%D7%99%D7%9C%D7%99%D7%AA/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "uliel-law",
+  "name": "עו\"ד יערית אוליאל",
+  "firm": "משרד עורך דין יערית אוליאל",
+  "cities": [
+   "kiryat-bialik",
+   "tel-aviv"
+  ],
+  "regions": [
+   "צפון",
+   "מרכז"
+  ],
+  "areas": [
+   "traffic",
+   "road-accidents"
+  ],
+  "phone": "072-3718608",
+  "email": "",
+  "site": "https://uliel.co.il/",
+  "address": "דרך עכו חיפה 50, קריית ביאליק",
+  "about": "משרד בקריית ביאליק ובתל אביב העוסק בדיני תעבורה ותאונות דרכים",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://uliel.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%AA%D7%A2%D7%91%D7%95%D7%A8%D7%94-%D7%A0%D7%A6%D7%A8%D7%AA/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "hadar-menajem-schwartz",
+  "name": "עו\"ד הדר מנג'ם שוורץ",
+  "firm": "הדר מנג'ם שוורץ משרד עורכי דין ונוטריון",
+  "cities": [
+   "pardes-hanna"
+  ],
+  "regions": [
+   "שרון"
+  ],
+  "areas": [
+   "notary",
+   "real-estate",
+   "inheritance",
+   "enduring-poa",
+   "prenup",
+   "commercial",
+   "corporate"
+  ],
+  "phone": "04-6198000",
+  "email": "",
+  "site": "https://www.hms-law.co.il/",
+  "address": "סמטת הבונה 8, בית שמאי, פרדס חנה כרכור",
+  "about": "משרד בפרדס חנה כרכור העוסק במקרקעין, צוואות, ייפוי כוח מתמשך ושירותי נוטריון",
+  "licenseYear": 2007,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.hms-law.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "ohad-shoham-law",
+  "name": "עו\"ד אוהד שוהם",
+  "firm": "אוהד שוהם משרד עורכי דין",
+  "cities": [
+   "ramat-gan"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "inheritance"
+  ],
+  "phone": "",
+  "email": "ohad@yerusha.org.il",
+  "site": "https://www.yerusha.org.il/",
+  "address": "ז'בוטינסקי 35, רמת גן",
+  "about": "משרד ברמת גן העוסק בדיני ירושה, צוואות ועיזבונות",
+  "licenseYear": 2002,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.yerusha.org.il/%D7%90%D7%95%D7%93%D7%95%D7%AA-%D7%94%D7%9E%D7%A9%D7%A8%D7%93/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "grauer-law",
+  "name": "עו\"ד אביעזר גרואר",
+  "firm": "משרד עורכי דין אביעזר גרואר",
+  "cities": [
+   "shoham"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "real-estate",
+   "banking",
+   "inheritance",
+   "enforcement",
+   "insolvency",
+   "corporate",
+   "commercial",
+   "notary"
+  ],
+  "phone": "03-5232201",
+  "email": "",
+  "site": "https://grauer-law.zapweb.co.il/",
+  "address": "יזרעאל 20, שוהם",
+  "about": "משרד בשוהם העוסק במקרקעין, בנקאות, ירושה והוצאה לפועל",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://grauer-law.zapweb.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "zarotski-law",
+  "name": "עו\"ד שקד זרוצקי",
+  "firm": "משרד עורכי דין זרוצקי",
+  "cities": [
+   "dimona"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "road-accidents",
+   "personal-injury",
+   "national-insurance",
+   "insurance",
+   "medical-malpractice"
+  ],
+  "phone": "08-6834666",
+  "email": "",
+  "site": "https://zalaw.org/",
+  "address": "יגאל אלון 209, דימונה",
+  "about": "משרד בדימונה העוסק בתאונות דרכים, נזקי גוף וביטוח לאומי",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://zalaw.org/he/105/%D7%93%D7%99%D7%9E%D7%95%D7%A0%D7%94",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "otmazgin-law",
+  "name": "עו\"ד מיטל אוטמזגין",
+  "firm": "משרד עורכי דין מיטל אוטמזגין",
+  "cities": [
+   "dimona",
+   "beer-sheva"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "real-estate",
+   "traffic",
+   "inheritance",
+   "enduring-poa",
+   "prenup"
+  ],
+  "phone": "",
+  "email": "meital@otmazgin-law.com",
+  "site": "https://www.otmazgin-law.com/",
+  "address": "יגאל אלון 209, דימונה",
+  "about": "משרד בדימונה ובבאר שבע העוסק במקרקעין, צוואות, ייפוי כוח מתמשך ודיני תעבורה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.otmazgin-law.com/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%9E%D7%A7%D7%A8%D7%A7%D7%A2%D7%99%D7%9F-%D7%91%D7%93%D7%99%D7%9E%D7%95%D7%A0%D7%94/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "hagit-halevi-law",
+  "name": "עו\"ד חגית הלוי",
+  "firm": "משרד עורכי דין חגית הלוי ושות'",
+  "cities": [
+   "kiryat-shmona",
+   "tel-aviv",
+   "modiin"
+  ],
+  "regions": [
+   "צפון",
+   "מרכז"
+  ],
+  "areas": [
+   "family",
+   "divorce",
+   "inheritance",
+   "notary"
+  ],
+  "phone": "077-2306101",
+  "email": "adv@hhlaw.org.il",
+  "site": "https://www.hhlaw.org.il/",
+  "address": "כיכר צה\"ל 1, קריית שמונה",
+  "about": "משרד בקריית שמונה, בתל אביב ובמודיעין העוסק בדיני משפחה, צוואות וגישור",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.hhlaw.org.il/%D7%91%D7%99%D7%AA-%D7%9E%D7%A9%D7%A4%D7%98-%D7%9C%D7%A2%D7%A0%D7%99%D7%99%D7%A0%D7%99-%D7%9E%D7%A9%D7%A4%D7%97%D7%94-%D7%91%D7%A7%D7%A8%D7%99%D7%AA-%D7%A9%D7%9E%D7%95%D7%A0%D7%94/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "arik-ariel-law",
+  "name": "עו\"ד ד\"ר אריק אריאל",
+  "firm": "משרד עורכי דין ד\"ר אריק אריאל",
+  "cities": [
+   "bnei-brak"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "labor",
+   "corporate",
+   "defamation",
+   "real-estate",
+   "administrative",
+   "commercial",
+   "inheritance",
+   "family"
+  ],
+  "phone": "",
+  "email": "ariel@arieladv.co.il",
+  "site": "https://arieladv.co.il/",
+  "address": "בר כוכבא 23, מגדל V TOWER, בני ברק",
+  "about": "משרד בבני ברק העוסק בדיני עבודה, דיני חברות, מקרקעין ומשפט מנהלי",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://arieladv.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "schachter-bir",
+  "name": "עו\"ד יואח שכטר",
+  "firm": "שכטר-ביר משרד עורכי דין",
+  "cities": [
+   "bnei-brak",
+   "eilat"
+  ],
+  "regions": [
+   "מרכז",
+   "דרום"
+  ],
+  "areas": [
+   "medical-malpractice",
+   "personal-injury",
+   "insurance",
+   "national-insurance",
+   "road-accidents"
+  ],
+  "phone": "03-6126126",
+  "email": "",
+  "site": "https://schachterlaw.co.il/",
+  "address": "כנרת 5, בניין בסר 3, בני ברק",
+  "about": "משרד בבני ברק ובאילת העוסק ברשלנות רפואית, נזקי גוף ותביעות ביטוח",
+  "licenseYear": 1995,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://schachterlaw.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%91%D7%99%D7%98%D7%95%D7%97-%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%A8%D7%9E%D7%AA-%D7%92%D7%9F/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "asnafy-law",
+  "name": "עו\"ד ורו\"ח איתן אסנפי",
+  "firm": "איתן אסנפי משרד עורכי דין מיסים",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "tax",
+   "real-estate-tax"
+  ],
+  "phone": "03-5356100",
+  "email": "",
+  "site": "https://asnafy.co.il/",
+  "address": "הארבעה 28, תל אביב",
+  "about": "משרד בתל אביב העוסק במיסים, מיסוי בינלאומי ומיסוי מקרקעין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://asnafy.co.il/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "ordan-law",
+  "name": "עו\"ד דני אורדן",
+  "firm": "אורדן עורכי דין ורואי חשבון",
+  "cities": [
+   "herzliya"
+  ],
+  "regions": [
+   "שרון"
+  ],
+  "areas": [
+   "tax",
+   "administrative",
+   "insolvency"
+  ],
+  "phone": "",
+  "email": "ordanlaw@netvision.net.il",
+  "site": "https://www.ordanlaw.co.il/",
+  "address": "משכית 32, הרצליה פיתוח",
+  "about": "משרד בהרצליה העוסק במיסים, רשויות מקומיות וחדלות פירעון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.ordanlaw.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%9E%D7%99%D7%A1%D7%99%D7%9D-%D7%91%D7%AA%D7%9C-%D7%90%D7%91%D7%99%D7%91",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "friedman-cohen-tax",
+  "name": "עו\"ד אבי פרידמן, עו\"ד ליאור כהן",
+  "firm": "פרידמן כהן ושות' משרד עורכי דין",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "tax",
+   "real-estate-tax"
+  ],
+  "phone": "077-5558846",
+  "email": "office@fc.tax",
+  "site": "https://fc.tax/",
+  "address": "מנחם בגין 156, תל אביב",
+  "about": "משרד בתל אביב העוסק במס הכנסה, מיסוי מקרקעין ומע\"מ",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://fc.tax/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "yosef-ezra-law",
+  "name": "עו\"ד יוסף עזרא",
+  "firm": "יוסף עזרא ושות' חברת עורכי דין ונוטריון",
+  "cities": [
+   "haifa",
+   "holon"
+  ],
+  "regions": [
+   "צפון",
+   "מרכז"
+  ],
+  "areas": [
+   "personal-injury",
+   "national-insurance",
+   "urban-renewal",
+   "inheritance",
+   "insolvency",
+   "notary"
+  ],
+  "phone": "04-6482021",
+  "email": "office@ezra-law.co.il",
+  "site": "https://ezra-law.co.il/",
+  "address": "פל-ים 8, בניין אשל 1, חיפה",
+  "about": "משרד בחיפה ובחולון העוסק בנזיקין, ביטוח לאומי, התחדשות עירונית וחדלות פירעון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://ezra-law.co.il/%D7%9E%D7%A9%D7%A8%D7%93-%D7%A2%D7%95%D7%A8%D7%9B%D7%99-%D7%93%D7%99%D7%9F-%D7%91%D7%97%D7%95%D7%9C%D7%95%D7%9F1/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "melnik-law",
+  "name": "עו\"ד דוד מלניק",
+  "firm": "דוד מלניק משרד עורכי דין ונוטריונים",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "real-estate",
+   "real-estate-tax",
+   "condominium",
+   "inheritance",
+   "guardianship",
+   "commercial",
+   "corporate",
+   "privacy-cyber",
+   "notary"
+  ],
+  "phone": "03-6206444",
+  "email": "david@melnik.org.il",
+  "site": "https://www.melnik.org.il/",
+  "address": "ארלוזורוב 62, תל אביב",
+  "about": "משרד בתל אביב העוסק בעסקאות נדל\"ן, בתים משותפים, ירושות ושירותי נוטריון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.melnik.org.il/%D7%91%D7%AA%D7%99%D7%9D-%D7%9E%D7%A9%D7%95%D7%AA%D7%A4%D7%99%D7%9D/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "oz-cohen-law",
+  "name": "עו\"ד עוז כהן",
+  "firm": "עוז כהן עו\"ד ונוטריון",
+  "cities": [
+   "jerusalem"
+  ],
+  "regions": [
+   "ירושלים"
+  ],
+  "areas": [
+   "urban-renewal",
+   "real-estate",
+   "condominium",
+   "construction-defects",
+   "notary"
+  ],
+  "phone": "02-6542333",
+  "email": "",
+  "site": "https://oz-cohen.com/",
+  "address": "יהושע בן נון 38א, ירושלים",
+  "about": "משרד בירושלים העוסק בתמ\"א 38, בתים משותפים וליקויי בנייה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://oz-cohen.com/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "aviv-tasa-law",
+  "name": "עו\"ד אביב טסה",
+  "firm": "משרד עורכי דין אביב טסה",
+  "cities": [
+   "ramat-gan",
+   "kiryat-motzkin"
+  ],
+  "regions": [
+   "מרכז",
+   "צפון"
+  ],
+  "areas": [
+   "urban-renewal",
+   "condominium",
+   "real-estate",
+   "planning-building",
+   "civil-litigation"
+  ],
+  "phone": "03-6121313",
+  "email": "",
+  "site": "https://tasalaw.co.il/",
+  "address": "דרך אבא הלל 7, רמת גן",
+  "about": "משרד ברמת גן ובקריית מוצקין העוסק בהתחדשות עירונית ובבתים משותפים",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://tasalaw.co.il/%D7%A1%D7%9B%D7%A1%D7%95%D7%9B%D7%99-%D7%A9%D7%9B%D7%A0%D7%99%D7%9D-%D7%91%D7%91%D7%99%D7%AA-%D7%94%D7%9E%D7%A9%D7%95%D7%AA%D7%A3/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "amidor-law",
+  "name": "עו\"ד ליאור עמידור, עו\"ד חן עמידור",
+  "firm": "ל. עמידור ושות'",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "urban-renewal",
+   "planning-building",
+   "real-estate-tax",
+   "landlord-tenant",
+   "civil-litigation",
+   "administrative"
+  ],
+  "phone": "03-6912265",
+  "email": "office@amidor.co.il",
+  "site": "https://www.amidor.co.il/",
+  "address": "דרך מנחם בגין 148, תל אביב",
+  "about": "משרד בתל אביב העוסק בהתחדשות עירונית, תכנון ובנייה ומיסוי מקרקעין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.amidor.co.il/city/construction-evacuation-in-holon/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "elad-ran-law",
+  "name": "עו\"ד אלעד רן",
+  "firm": "אלעד רן ושות'",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "white-collar",
+   "tax",
+   "criminal"
+  ],
+  "phone": "03-7773333",
+  "email": "office@erht.co.il",
+  "site": "https://erht.co.il/",
+  "address": "שדרות רוטשילד 15, תל אביב",
+  "about": "משרד בתל אביב העוסק בצווארון לבן, הלבנת הון ומיסים",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://erht.co.il/tax-lawyer/",
+  "sites": [
+   "folivus"
+  ],
+  "plan": "free",
+  "status": "live"
  }
 ]
