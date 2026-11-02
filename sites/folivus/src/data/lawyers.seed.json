@@ -1,0 +1,1523 @@
+[
+ {
+  "id": "rosenstein-eyal-law",
+  "name": "עו\"ד אייל צבי רוזנשטיין",
+  "firm": "משרד עו\"ד אייל צבי רוזנשטיין",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "corporate",
+   "civil-litigation"
+  ],
+  "phone": "072-3939694",
+  "email": "",
+  "site": "https://www.lawpoint.co.il/",
+  "address": "",
+  "about": "משרד בחיפה העוסק בחדלות פירעון, הסדרי חובות והוצאה לפועל",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.lawpoint.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "zeevi-law",
+  "name": "עו\"ד רועי זאבי",
+  "firm": "רועי זאבי - משרד עורכי דין ונוטריון",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "banking",
+   "civil-litigation",
+   "commercial",
+   "personal-injury",
+   "real-estate",
+   "inheritance",
+   "insurance",
+   "notary"
+  ],
+  "phone": "04-8885818",
+  "email": "roee@zeevilaw.co.il",
+  "site": "https://zeevilaw.co.il/",
+  "address": "בעלי מלאכה 26, חיפה",
+  "about": "משרד בחיפה העוסק בחדלות פירעון, בנקאות, הוצאה לפועל וליטיגציה אזרחית",
+  "licenseYear": 2000,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://zeevilaw.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "moshe-israel-law",
+  "name": "עו\"ד משה ישראל",
+  "firm": "משרד עורכי דין משה ישראל",
+  "cities": [
+   "kiryat-motzkin",
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "civil-litigation",
+   "commercial",
+   "corporate",
+   "real-estate",
+   "landlord-tenant",
+   "family",
+   "inheritance",
+   "privacy-cyber"
+  ],
+  "phone": "04-6772733",
+  "email": "office@im-law.co.il",
+  "site": "https://im-law.co.il/",
+  "address": "שושנה דמארי 4, קריית מוצקין",
+  "about": "משרד בקריית מוצקין העוסק בחדלות פירעון, הוצאה לפועל ומשפט אזרחי",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://im-law.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "nidam-mizrahi",
+  "name": "",
+  "firm": "נידם, מזרחי ושות' משרד עורכי דין",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "labor"
+  ],
+  "phone": "04-6880883",
+  "email": "office@nmi-law.co.il",
+  "site": "https://www.nmi-law.co.il/",
+  "address": "דרך יפו 51, חיפה",
+  "about": "משרד בחיפה העוסק בחדלות פירעון, הסדרי חובות ודיני עבודה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.nmi-law.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "alush-law",
+  "name": "עו\"ד ענבל ג'וליה אלוש",
+  "firm": "משרד עורכי דין ונוטריון ענבל ג'וליה אלוש",
+  "cities": [
+   "beer-sheva",
+   "ashdod"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "insolvency",
+   "family",
+   "real-estate",
+   "notary"
+  ],
+  "phone": "08-6230922",
+  "email": "",
+  "site": "https://alushjuliainbal-law.co.il/",
+  "address": "",
+  "about": "משרד בבאר שבע ובאשדוד העוסק בחדלות פירעון, דיני משפחה ומקרקעין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://alushjuliainbal-law.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "olshevitz-drey",
+  "name": "",
+  "firm": "אולשביץ, דריי ושות' משרד עורכי דין",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "commercial",
+   "corporate",
+   "labor",
+   "inheritance",
+   "real-estate",
+   "family",
+   "defamation",
+   "guardianship",
+   "civil-litigation"
+  ],
+  "phone": "072-2152102",
+  "email": "",
+  "site": "https://od-adv.co.il/",
+  "address": "דרך העצמאות 43, חיפה",
+  "about": "משרד בחיפה העוסק בחדלות פירעון, הוצאה לפועל ומשפט אזרחי ומסחרי",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://od-adv.co.il/%D7%97%D7%93%D7%9C%D7%95%D7%AA-%D7%A4%D7%99%D7%A8%D7%A2%D7%95%D7%9F-%D7%95%D7%9E%D7%A9%D7%A4%D7%98-%D7%90%D7%96%D7%A8%D7%97%D7%99-%D7%91%D7%97%D7%99%D7%A4%D7%94/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "shay-dana-law",
+  "name": "עו\"ד שי דנה",
+  "firm": "משרד עו\"ד שי דנה",
+  "cities": [
+   "haifa"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement"
+  ],
+  "phone": "",
+  "email": "lawshay@netvision.net.il",
+  "site": "https://lawshay.co.il/",
+  "address": "",
+  "about": "משרד בעיר התחתית בחיפה העוסק בחדלות פירעון והוצאה לפועל",
+  "licenseYear": 1998,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://lawshay.co.il/%D7%A2%D7%9C%D7%99%D7%A0%D7%95/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "ozana-ylaw",
+  "name": "עו\"ד יוסף אוזנה",
+  "firm": "יוסף אוזנה משרד עורכי דין",
+  "cities": [
+   "beit-shemesh"
+  ],
+  "regions": [
+   "ירושלים"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement"
+  ],
+  "phone": "073-8025250",
+  "email": "",
+  "site": "https://ylaw.org.il/",
+  "address": "יגאל אלון 24, בית שמש",
+  "about": "משרד בבית שמש העוסק בהסדרי חובות, חדלות פירעון והוצאה לפועל",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://ylaw.org.il/bankruptcy-lawyer-jerusalem/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "amiram-elkobi",
+  "name": "עמירם אלקובי",
+  "firm": "עמירם אלקובי ושות' משרד עורכי דין",
+  "cities": [
+   "kiryat-ata",
+   "tel-aviv",
+   "jerusalem",
+   "beer-sheva"
+  ],
+  "regions": [
+   "צפון",
+   "מרכז",
+   "ירושלים",
+   "דרום"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "landlord-tenant",
+   "consumer",
+   "commercial"
+  ],
+  "phone": "077-6707389",
+  "email": "info@amiram-lawoffice.co.il",
+  "site": "https://amiram-lawoffice.co.il/",
+  "address": "דרך חיפה 37, קריית אתא",
+  "about": "משרד עם סניפים בצפון, במרכז, בירושלים ובבאר שבע העוסק בהסדרי חובות וחדלות פירעון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://amiram-lawoffice.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "bardugo-law",
+  "name": "עו\"ד שלומי ברדוגו",
+  "firm": "משרד עורכי דין שלומי ברדוגו",
+  "cities": [
+   "jerusalem"
+  ],
+  "regions": [
+   "ירושלים"
+  ],
+  "areas": [
+   "insolvency",
+   "tax",
+   "real-estate"
+  ],
+  "phone": "02-6307061",
+  "email": "",
+  "site": "https://sbr-law.co.il/",
+  "address": "האומן 25, ירושלים",
+  "about": "משרד בירושלים העוסק במיסים, עסקאות נדל\"ן וחדלות פירעון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://sbr-law.co.il/bankruptcy-lawyer/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%9C%D7%A4%D7%A9%D7%99%D7%98%D7%AA-%D7%A8%D7%92%D7%9C-%D7%91%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "counsellor-hakim",
+  "name": "עו\"ד אריק חכים",
+  "firm": "קונסלור משרד עורכי דין",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement"
+  ],
+  "phone": "03-3810100",
+  "email": "",
+  "site": "https://counsellor.co.il/",
+  "address": "השוק 13, תל אביב",
+  "about": "משרד בתל אביב העוסק בפשיטת רגל, חדלות פירעון וגביית חובות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://counsellor.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%A4%D7%A9%D7%99%D7%98%D7%AA-%D7%A8%D7%92%D7%9C-%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "akrawi-law",
+  "name": "עו\"ד עדי עקראוי",
+  "firm": "משרד עורכי דין עדי עקראוי ושות'",
+  "cities": [
+   "kiryat-motzkin",
+   "tel-aviv"
+  ],
+  "regions": [
+   "צפון",
+   "מרכז"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "real-estate",
+   "corporate"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://pshitotregel.co.il/",
+  "address": "שדרות גושן משה 21, קריית מוצקין",
+  "about": "משרד בקריית מוצקין ובתל אביב העוסק בחדלות פירעון, הסדרי חוב והוצאה לפועל",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://pshitotregel.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%A4%D7%A9%D7%99%D7%98%D7%AA-%D7%A8%D7%92%D7%9C-%D7%91%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "korsia-law",
+  "name": "עו\"ד אייל קורסיה",
+  "firm": "משרד עורכי דין אייל קורסיה ושות'",
+  "cities": [
+   "netanya",
+   "hadera"
+  ],
+  "regions": [
+   "שרון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "urban-renewal",
+   "real-estate"
+  ],
+  "phone": "077-8067790",
+  "email": "",
+  "site": "https://adv-dk.co.il/",
+  "address": "",
+  "about": "משרד הפועל בנתניה ובשרון ועוסק בחדלות פירעון, התחדשות עירונית ומקרקעין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://adv-dk.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%97%D7%93%D7%9C%D7%95%D7%AA-%D7%A4%D7%A8%D7%A2%D7%95%D7%9F/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "tzafir-rosenblum",
+  "name": "עו\"ד אילנית צפיר, עו\"ד מריה רוזנבלום",
+  "firm": "צפיר ורוזנבלום משרד עורכי דין",
+  "cities": [
+   "netanya"
+  ],
+  "regions": [
+   "שרון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "labor",
+   "guardianship",
+   "inheritance",
+   "commercial",
+   "civil-litigation"
+  ],
+  "phone": "072-2333580",
+  "email": "office@rm-lawoffice.co.il",
+  "site": "https://www.rm-lawoffice.co.il/",
+  "address": "המלאכה 2, בית גולד, נתניה",
+  "about": "משרד בנתניה העוסק בחדלות פירעון, הוצאה לפועל ודיני עבודה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.rm-lawoffice.co.il/%D7%A2%D7%95%D7%93-%D7%97%D7%93%D7%9C%D7%95%D7%AA-%D7%A4%D7%99%D7%A8%D7%A2%D7%95%D7%9F-%D7%91%D7%A0%D7%AA%D7%A0%D7%99%D7%94/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "bokobza-law",
+  "name": "עו\"ד ירון בוכובזה",
+  "firm": "ירון בוכובזה משרד עורכי דין",
+  "cities": [
+   "ashdod",
+   "rishon-lezion"
+  ],
+  "regions": [
+   "דרום",
+   "מרכז"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "traffic",
+   "military",
+   "road-accidents"
+  ],
+  "phone": "073-3224248",
+  "email": "",
+  "site": "https://www.snb.co.il/",
+  "address": "האורגים 35, מגדל בר סנטר, אשדוד",
+  "about": "משרד באשדוד ובראשון לציון העוסק בחדלות פירעון, הוצאה לפועל ודיני תעבורה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.snb.co.il/%D7%91%D7%9C%D7%95%D7%92/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%97%D7%93%D7%9C%D7%95%D7%AA-%D7%A4%D7%99%D7%A8%D7%A2%D7%95%D7%9F/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "eti-hasan-law",
+  "name": "עו\"ד אתי חסן",
+  "firm": "חברת עורכי דין אתי חסן",
+  "cities": [
+   "hadera",
+   "afula",
+   "rishon-lezion",
+   "beer-sheva"
+  ],
+  "regions": [
+   "שרון",
+   "צפון",
+   "מרכז",
+   "דרום"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "family",
+   "national-insurance",
+   "civil-litigation",
+   "corporate",
+   "real-estate"
+  ],
+  "phone": "",
+  "email": "eti@esterhadv.com",
+  "site": "https://esterhadv.com/",
+  "address": "אחד העם 9, חדרה",
+  "about": "משרד עם סניפים בחדרה, עפולה, ראשון לציון ובאר שבע העוסק בחדלות פירעון ודיני משפחה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://esterhadv.com/expertise/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%97%D7%93%D7%9C%D7%95%D7%AA-%D7%A4%D7%99%D7%A8%D7%A2%D7%95%D7%9F-%D7%91%D7%A8%D7%90%D7%A9%D7%95%D7%9F-%D7%9C%D7%A6%D7%99%D7%95%D7%9F/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "adasha-law",
+  "name": "עו\"ד איתן עדשה",
+  "firm": "איתן עדשה עורך דין ונוטריון",
+  "cities": [
+   "ashkelon"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "personal-injury",
+   "family",
+   "notary"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://ealaw.co.il/",
+  "address": "צה\"ל 99, מרכז אביאל, אשקלון",
+  "about": "משרד באשקלון העוסק בחדלות פירעון, הוצאה לפועל, נזיקין ודיני משפחה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://ealaw.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "eliyahu-cohen-law",
+  "name": "עו\"ד אליהו כהן",
+  "firm": "משרד עורך דין אליהו כהן",
+  "cities": [
+   "ashdod"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://ec-lawyer.co.il/",
+  "address": "הגדוד העברי 5, אשדוד",
+  "about": "משרד באשדוד העוסק בחדלות פירעון, הסדרי חובות והוצאה לפועל",
+  "licenseYear": 2010,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://ec-lawyer.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "taasiri-law",
+  "name": "עו\"ד אסף תאסירי",
+  "firm": "משרד עורכי דין תאסירי ושות'",
+  "cities": [
+   "ramat-gan"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "civil-litigation",
+   "commercial",
+   "enduring-poa",
+   "corporate"
+  ],
+  "phone": "03-7695555",
+  "email": "",
+  "site": "https://taasiri-law.co.il/",
+  "address": "זבוטינסקי 7, מגדל משה אביב, רמת גן",
+  "about": "משרד ברמת גן העוסק בחדלות פירעון, הוצאה לפועל וליטיגציה אזרחית",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://taasiri-law.co.il/%D7%99%D7%99%D7%A2%D7%95%D7%A5-%D7%97%D7%93%D7%9C%D7%95%D7%AA-%D7%A4%D7%99%D7%A8%D7%A2%D7%95%D7%9F-%D7%90%D7%A9%D7%93%D7%95%D7%93-%D7%A4%D7%92%D7%99%D7%A9%D7%94-%D7%A8%D7%90%D7%A9%D7%95%D7%A0%D7%94",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "vlk-law",
+  "name": "עו\"ד ציון ותרי, עו\"ד לריסה ליברמן, עו\"ד רוזה קימיאגרוב",
+  "firm": "ותרי, ליברמן, קימיאגרוב משרד עורכי דין ונוטריון",
+  "cities": [
+   "beer-sheva"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "enforcement",
+   "inheritance",
+   "real-estate",
+   "family",
+   "enduring-poa",
+   "labor",
+   "notary"
+  ],
+  "phone": "077-2005874",
+  "email": "",
+  "site": "https://www.vlk-law.co.il/",
+  "address": "הנרייטה סולד 8, באר שבע",
+  "about": "משרד בבאר שבע העוסק בירושה, נדל\"ן, דיני משפחה והוצאה לפועל",
+  "licenseYear": null,
+  "languages": [
+   "רוסית",
+   "אנגלית"
+  ],
+  "source": "public",
+  "sourceUrl": "https://www.vlk-law.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "sarit-cohen-chen",
+  "name": "עו\"ד שרית כהן חן",
+  "firm": "משרד עו\"ד שרית כהן חן",
+  "cities": [
+   "beer-sheva"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "national-insurance",
+   "family",
+   "divorce",
+   "commercial"
+  ],
+  "phone": "08-6181315",
+  "email": "",
+  "site": "https://sarit-law.co.il/",
+  "address": "החלוץ 136, באר שבע",
+  "about": "משרד בבאר שבע העוסק בהוצאה לפועל, חדלות פירעון, ביטוח לאומי ודיני משפחה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://sarit-law.co.il/%D7%94%D7%95%D7%A6%D7%90%D7%94-%D7%9C%D7%A4%D7%95%D7%A2%D7%9C/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "tsulfayev-law",
+  "name": "עו\"ד רושאל צולפייב",
+  "firm": "רושאל צולפייב משרד עורכי דין",
+  "cities": [
+   "petah-tikva"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "urban-renewal",
+   "real-estate",
+   "planning-building",
+   "condominium",
+   "corporate"
+  ],
+  "phone": "073-7371841",
+  "email": "office@rtz-law.co.il",
+  "site": "https://rtz-law.co.il/",
+  "address": "עזרא גבאי 3, מטרופארק, פתח תקווה",
+  "about": "משרד בפתח תקווה העוסק בחדלות פירעון, הסדרי חובות והתחדשות עירונית",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://rtz-law.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%97%D7%93%D7%9C%D7%95%D7%AA-%D7%A4%D7%99%D7%A8%D7%A2%D7%95%D7%9F-%D7%A4%D7%AA%D7%97-%D7%AA%D7%A7%D7%95%D7%94/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "dana-peled-law",
+  "name": "עו\"ד דנה פלד",
+  "firm": "משרד עורכי דין דנה פלד",
+  "cities": [
+   "raanana"
+  ],
+  "regions": [
+   "שרון"
+  ],
+  "areas": [
+   "insolvency",
+   "enduring-poa",
+   "inheritance",
+   "prenup",
+   "corporate"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://www.danapeled.com/",
+  "address": "זרחין 13, רעננה",
+  "about": "משרד ברעננה העוסק בחדלות פירעון, הסדרי חוב, צוואות וייפוי כוח מתמשך",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.danapeled.com/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "orel-mizrachi-law",
+  "name": "עו\"ד אוראל מזרחי",
+  "firm": "משרד עורך דין אוראל מזרחי",
+  "cities": [
+   "hod-hasharon"
+  ],
+  "regions": [
+   "שרון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "national-insurance",
+   "family"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://orelmizrachi.co.il/",
+  "address": "דרך רמתיים 96, הוד השרון",
+  "about": "משרד בהוד השרון העוסק בחדלות פירעון, הסדרי חובות והוצאה לפועל",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://orelmizrachi.co.il/chdalut-pirayon/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "sharon-halevi-law",
+  "name": "עו\"ד שרון הלוי",
+  "firm": "משרד עורכי דין ונוטריון שרון הלוי",
+  "cities": [
+   "kfar-saba"
+  ],
+  "regions": [
+   "שרון"
+  ],
+  "areas": [
+   "enforcement",
+   "insolvency",
+   "labor",
+   "notary"
+  ],
+  "phone": "077-5013088",
+  "email": "",
+  "site": "https://s-halevi.co.il/",
+  "address": "הצומת 8, בית מריק, כפר סבא",
+  "about": "משרד בכפר סבא העוסק בהוצאה לפועל, חדלות פירעון ודיני עבודה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://s-halevi.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%A4%D7%A9%D7%99%D7%98%D7%AA-%D7%A8%D7%92%D7%9C-%D7%91%D7%9B%D7%A4%D7%A8-%D7%A1%D7%91%D7%90/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "faragian-law",
+  "name": "עו\"ד קורל פרג'יאן",
+  "firm": "קורל פרג'יאן משרד עורכי דין",
+  "cities": [
+   "karmiel"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "enforcement",
+   "insolvency",
+   "family",
+   "divorce",
+   "real-estate"
+  ],
+  "phone": "",
+  "email": "koral@faragian-adv.co.il",
+  "site": "https://faragian-adv.co.il/",
+  "address": "הנפח 12, כרמיאל",
+  "about": "משרד בכרמיאל העוסק בהוצאה לפועל, הסדרי חוב, חדלות פירעון ודיני משפחה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://faragian-adv.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "avidan-danino",
+  "name": "עו\"ד יגאל אבידן, עו\"ד אתי דנינו",
+  "firm": "אבידן - דנינו משרד עורכי דין",
+  "cities": [
+   "jerusalem"
+  ],
+  "regions": [
+   "ירושלים"
+  ],
+  "areas": [
+   "family",
+   "divorce",
+   "prenup",
+   "insolvency",
+   "enforcement",
+   "civil-litigation",
+   "commercial",
+   "real-estate"
+  ],
+  "phone": "02-5777855",
+  "email": "",
+  "site": "https://ayd-law.co.il/",
+  "address": "התנופה 12, מגדל התנופה, ירושלים",
+  "about": "משרד בירושלים העוסק בדיני משפחה, חדלות פירעון והסדרי חובות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://ayd-law.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "matan-elkayam-law",
+  "name": "עו\"ד מתן אלקיים",
+  "firm": "משרד עו\"ד מתן אלקיים",
+  "cities": [
+   "jerusalem"
+  ],
+  "regions": [
+   "ירושלים"
+  ],
+  "areas": [
+   "insolvency",
+   "labor",
+   "national-insurance"
+  ],
+  "phone": "",
+  "email": "matan@emlaw.co.il",
+  "site": "https://emlaw.co.il/",
+  "address": "עמק רפאים 43א, ירושלים",
+  "about": "משרד בירושלים העוסק בייצוג עובדים בהליכי חדלות פירעון של מעסיקים",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://emlaw.co.il/jerusalem/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "matalon-law",
+  "name": "עו\"ד רונן מטלון",
+  "firm": "משרד עורכי דין ר. מטלון",
+  "cities": [
+   "ramat-gan",
+   "jerusalem"
+  ],
+  "regions": [
+   "מרכז",
+   "ירושלים"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "banking",
+   "corporate",
+   "real-estate",
+   "enduring-poa"
+  ],
+  "phone": "03-6914333",
+  "email": "matalon@rmatalon.co.il",
+  "site": "https://rmatalon.co.il/",
+  "address": "ז'בוטינסקי 7, מגדל משה אביב, רמת גן",
+  "about": "משרד ברמת גן ובירושלים העוסק בחדלות פירעון, הסדרי חובות והוצאה לפועל",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://rmatalon.co.il/%D7%90%D7%95%D7%93%D7%95%D7%AA/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "alkoni-law",
+  "name": "עו\"ד איריס אלקוני",
+  "firm": "משרד עורכי דין איריס אלקוני",
+  "cities": [
+   "ramat-gan"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "enduring-poa",
+   "real-estate",
+   "commercial",
+   "inheritance",
+   "insolvency",
+   "labor",
+   "enforcement"
+  ],
+  "phone": "03-5178751",
+  "email": "iris@alkoni-law.co.il",
+  "site": "https://alkoni-law.co.il/",
+  "address": "מנחם בגין 7, רמת גן",
+  "about": "משרד ברמת גן העוסק בייפוי כוח מתמשך, מקרקעין, ירושה וחדלות פירעון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://alkoni-law.co.il/lawyer-for-insolvency/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "dudi-levy-law",
+  "name": "עו\"ד דודי לוי",
+  "firm": "דודי לוי משרד עורכי דין",
+  "cities": [
+   "ramat-gan"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "banking",
+   "corporate"
+  ],
+  "phone": "03-7526061",
+  "email": "",
+  "site": "https://www.dudilevy-law.com/",
+  "address": "תובל 34, רמת גן",
+  "about": "משרד ברמת גן העוסק בחדלות פירעון, הסדרי חובות והוצאה לפועל",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.dudilevy-law.com/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "kulyo-law",
+  "name": "עו\"ד אפרים קוליו",
+  "firm": "משרד עורכי דין אפרים קוליו",
+  "cities": [
+   "rishon-lezion",
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "enforcement",
+   "insolvency",
+   "civil-litigation",
+   "family",
+   "inheritance"
+  ],
+  "phone": "077-2109062",
+  "email": "",
+  "site": "https://ekulyo-law.co.il/",
+  "address": "דוד סחרוב 22, ראשון לציון",
+  "about": "משרד בראשון לציון ובתל אביב העוסק בהוצאה לפועל, הסדרי חובות וחדלות פירעון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://ekulyo-law.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%94%D7%95%D7%A6%D7%90%D7%94-%D7%9C%D7%A4%D7%95%D7%A2%D7%9C-%D7%91%D7%A8%D7%97%D7%95%D7%91%D7%95%D7%AA/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "gat-rimon-law",
+  "name": "עו\"ד איתי גת רימון",
+  "firm": "משרד עורכי הדין איתי גת רימון ושות'",
+  "cities": [
+   "tel-aviv"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "enforcement",
+   "insolvency",
+   "corporate",
+   "prenup",
+   "inheritance",
+   "enduring-poa",
+   "real-estate",
+   "commercial"
+  ],
+  "phone": "03-7795000",
+  "email": "office@gatrimon-law.co.il",
+  "site": "https://www.gatrimon-law.co.il/",
+  "address": "הארבעה 28, מגדלי הארבעה, תל אביב",
+  "about": "משרד בתל אביב העוסק בהוצאה לפועל, חדלות פירעון וגבייה משפטית",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.gatrimon-law.co.il/%D7%94%D7%95%D7%A6%D7%90%D7%94-%D7%9C%D7%A4%D7%95%D7%A2%D7%9C/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "osmo-law",
+  "name": "עו\"ד יצחק אוסמו",
+  "firm": "עו\"ד ונוטריון יצחק אוסמו",
+  "cities": [
+   "nahariya"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "traffic",
+   "inheritance",
+   "enduring-poa",
+   "real-estate",
+   "notary"
+  ],
+  "phone": "04-9927787",
+  "email": "",
+  "site": "https://www.yizhakosmo.com/",
+  "address": "שדרות הגעתון 16, נהריה",
+  "about": "משרד בנהריה העוסק בחדלות פירעון, הוצאה לפועל ודיני תעבורה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.yizhakosmo.com/hadlut-piraon.html",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "kalifi-law",
+  "name": "עו\"ד אודי קליפי",
+  "firm": "משרד עורכי דין אודי קליפי",
+  "cities": [
+   "tel-aviv",
+   "jerusalem",
+   "beer-sheva"
+  ],
+  "regions": [
+   "מרכז",
+   "ירושלים",
+   "דרום"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement"
+  ],
+  "phone": "03-6040409",
+  "email": "",
+  "site": "https://kalifi.co.il/",
+  "address": "יגאל אלון 55, תל אביב",
+  "about": "משרד עם סניפים בתל אביב, ירושלים ובאר שבע העוסק במחיקת חובות וחדלות פירעון",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://kalifi.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%97%D7%93%D7%9C%D7%95%D7%AA-%D7%A4%D7%99%D7%A8%D7%A2%D7%95%D7%9F/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "shelly-gersht-law",
+  "name": "עו\"ד שלי גרשט",
+  "firm": "משרד עו\"ד שלי גרשט",
+  "cities": [
+   "hadera",
+   "bnei-brak"
+  ],
+  "regions": [
+   "שרון",
+   "מרכז"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "family",
+   "inheritance",
+   "corporate",
+   "banking"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://shellyglaw.com/",
+  "address": "אחד העם 9, חדרה",
+  "about": "משרד בחדרה ובבני ברק העוסק בחדלות פירעון, הוצאה לפועל ודיני משפחה",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://shellyglaw.com/%D7%9E%D7%A9%D7%A8%D7%93-%D7%A2%D7%95%D7%A8%D7%9B%D7%99-%D7%93%D7%99%D7%9F-%D7%A4%D7%A9%D7%99%D7%98%D7%AA-%D7%A8%D7%92%D7%9C-%D7%91%D7%97%D7%93%D7%A8%D7%94/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "avi-levi-law",
+  "name": "עו\"ד אבי לוי",
+  "firm": "משרד עורכי דין אבי לוי",
+  "cities": [
+   "modiin"
+  ],
+  "regions": [
+   "מרכז"
+  ],
+  "areas": [
+   "family",
+   "divorce",
+   "inheritance",
+   "prenup",
+   "enduring-poa",
+   "real-estate",
+   "landlord-tenant",
+   "construction-defects",
+   "condominium",
+   "corporate",
+   "labor",
+   "enforcement",
+   "insolvency",
+   "traffic"
+  ],
+  "phone": "08-6905888",
+  "email": "",
+  "site": "https://avilevi-law.co.il/",
+  "address": "ארז 23, מודיעין מכבים רעות",
+  "about": "משרד במודיעין העוסק בדיני משפחה, מקרקעין, גישור והוצאה לפועל",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://avilevi-law.co.il/additional-fields/%D7%97%D7%93%D7%9C%D7%95%D7%AA-%D7%A4%D7%A8%D7%A2%D7%95%D7%9F-%D7%9E%D7%95%D7%93%D7%99%D7%A2%D7%99%D7%9F/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "david-david-law",
+  "name": "עו\"ד דוד דוד",
+  "firm": "דוד דוד משרד עורכי דין",
+  "cities": [
+   "netanya"
+  ],
+  "regions": [
+   "שרון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "real-estate",
+   "labor",
+   "inheritance",
+   "guardianship",
+   "notary"
+  ],
+  "phone": "072-2159555",
+  "email": "",
+  "site": "https://www.david-law.co.il/",
+  "address": "גיבורי ישראל 5א, נתניה",
+  "about": "משרד בנתניה העוסק בחדלות פירעון, הסדרי חובות, מקרקעין ושירותי נוטריון",
+  "licenseYear": 2000,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.david-law.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "mizrachi-malka",
+  "name": "עו\"ד שמעון מזרחי, עו\"ד קובי מלכה",
+  "firm": "מזרחי מלכה ושות' משרד עורכי דין",
+  "cities": [
+   "afula"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "enduring-poa"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://mizrachi-malka.co.il/",
+  "address": "יהושע חנקין 8, בית דוידא, עפולה",
+  "about": "משרד בעפולה העוסק בייצוג חייבים בחדלות פירעון ובהוצאה לפועל",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://mizrachi-malka.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "hahn-law",
+  "name": "עו\"ד שמעון האן",
+  "firm": "שמעון האן משרד עורכי דין ונוטריון",
+  "cities": [
+   "jerusalem"
+  ],
+  "regions": [
+   "ירושלים"
+  ],
+  "areas": [
+   "defamation",
+   "notary",
+   "real-estate",
+   "civil-litigation",
+   "enforcement",
+   "insolvency",
+   "labor",
+   "commercial",
+   "real-estate-tax",
+   "corporate",
+   "enduring-poa",
+   "inheritance"
+  ],
+  "phone": "077-8036102",
+  "email": "office@hahnlaw.co.il",
+  "site": "https://www.hahn-law.co.il/",
+  "address": "הלל 23, ירושלים",
+  "about": "משרד במרכז ירושלים העוסק בהוצאה לפועל, חדלות פירעון, מקרקעין ולשון הרע",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.hahn-law.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%94%D7%95%D7%A6%D7%90%D7%94-%D7%9C%D7%A4%D7%95%D7%A2%D7%9C-%D7%91%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "taibi-law",
+  "name": "עו\"ד נתנאל טייבי",
+  "firm": "משרד עורכי דין נתנאל טייבי",
+  "cities": [
+   "jerusalem"
+  ],
+  "regions": [
+   "ירושלים"
+  ],
+  "areas": [
+   "enforcement",
+   "insolvency",
+   "inheritance",
+   "real-estate",
+   "real-estate-tax",
+   "landlord-tenant",
+   "urban-renewal",
+   "notary"
+  ],
+  "phone": "",
+  "email": "",
+  "site": "https://taibi.co.il/",
+  "address": "יפו 97, ירושלים",
+  "about": "משרד בירושלים העוסק בהוצאה לפועל, חדלות פירעון, ירושה ומקרקעין",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://taibi.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%94%D7%95%D7%A6%D7%90%D7%94-%D7%9C%D7%A4%D7%95%D7%A2%D7%9C-%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "zvi-shiloh-law",
+  "name": "עו\"ד צבי שילה",
+  "firm": "צבי שילה ושות' משרד עורכי דין ונוטריון",
+  "cities": [
+   "jerusalem"
+  ],
+  "regions": [
+   "ירושלים"
+  ],
+  "areas": [
+   "tax",
+   "notary",
+   "enforcement",
+   "insolvency",
+   "class-actions",
+   "labor",
+   "inheritance",
+   "enduring-poa",
+   "defamation",
+   "banking",
+   "civil-litigation",
+   "real-estate"
+  ],
+  "phone": "02-6526599",
+  "email": "zvi@sp-sh.com",
+  "site": "https://zvishiloh.co.il/",
+  "address": "המלך ג'ורג' 16, ירושלים",
+  "about": "משרד בירושלים העוסק בארנונה, הוצאה לפועל, ליטיגציה אזרחית ושירותי נוטריון",
+  "licenseYear": 1988,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://zvishiloh.co.il/%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%94%D7%95%D7%A6%D7%90%D7%94-%D7%9C%D7%A4%D7%95%D7%A2%D7%9C-%D7%91%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "zimberg-law",
+  "name": "עו\"ד אורה צימברג",
+  "firm": "משרד עורכי דין אורה צימברג",
+  "cities": [
+   "ashkelon"
+  ],
+  "regions": [
+   "דרום"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "banking",
+   "civil-litigation",
+   "family",
+   "defamation",
+   "traffic",
+   "enduring-poa",
+   "labor"
+  ],
+  "phone": "073-3742523",
+  "email": "",
+  "site": "https://www.oraz-law.co.il/",
+  "address": "הגדוד העברי 10, אשקלון סנטר, אשקלון",
+  "about": "משרד באשקלון העוסק בחדלות פירעון, הוצאה לפועל והסדרי חובות",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://www.oraz-law.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ },
+ {
+  "id": "diana-paz-law",
+  "name": "עו\"ד דיאנה פז",
+  "firm": "דיאנה פז ושות' משרד עורכי דין",
+  "cities": [
+   "afula"
+  ],
+  "regions": [
+   "צפון"
+  ],
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "banking"
+  ],
+  "phone": "04-6666016",
+  "email": "office@diana-law.co.il",
+  "site": "https://diana-law.co.il/",
+  "address": "ירושלים 4, עפולה",
+  "about": "משרד בעפולה העוסק בחדלות פירעון, מחיקת חובות והוצאה לפועל",
+  "licenseYear": null,
+  "languages": [],
+  "source": "public",
+  "sourceUrl": "https://diana-law.co.il/",
+  "sites": [
+   "folivus",
+   "blihovot"
+  ],
+  "plan": "free",
+  "status": "live"
+ }
+]
