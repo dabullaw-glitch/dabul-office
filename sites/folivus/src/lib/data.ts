@@ -92,7 +92,7 @@ let cache: Promise<Data> | null = null;
 async function fromEngine(): Promise<any | null> {
   if (process.env.DIR_OFFLINE === '1') return null;
   try {
-    const r = await fetch(`${SITE.dir}?a=export&site=folivus`, { signal: AbortSignal.timeout(20000) });
+    const r = await fetch(SITE.dir, { method: 'POST', headers: { apikey: SITE.dirKey, 'content-type': 'application/json' }, body: JSON.stringify({ a: 'export', p: { site: 'folivus' } }), signal: AbortSignal.timeout(30000) });
     if (!r.ok) return null;
     const j = await r.json();
     return Array.isArray(j?.lawyers) && j.lawyers.length ? j : null;

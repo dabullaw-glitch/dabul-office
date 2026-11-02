@@ -51,7 +51,7 @@ const fonts = [
 <script type="application/ld+json" set:html={JSON.stringify([org, web, ...schema])} />
 <slot name="head" />
 </head>
-<body data-dir={SITE.dir} class={bodyClass}>
+<body data-dir={SITE.dir} data-dk={SITE.dirKey} class={bodyClass}>
 <a class="skip" href="#main">דילוג לתוכן</a>
 <header class="hdr" id="hdr">
   <div class="wrap">

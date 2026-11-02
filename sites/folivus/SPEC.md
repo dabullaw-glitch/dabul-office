@@ -31,7 +31,12 @@ Collections:
 - dir_lead: {lawyerId|null, site, area, city, name, phone, message, created, sentTo}
 - dir_rank: {year, area, list:[{lawyerId, place|tier}], method}
 - dir_req: claim / update / remove / join requests, approved by Yakir in Telegram (one tap) like the other office flows.
-Function `dir` (verify_jwt false, CORS *):
+ENGINE AS BUILT (2.11.2026): the project is at its limit of edge functions, so the engine is the database function
+public.dir_api(a, p) (sql/dir_api.sql), called with the publishable key: POST /rest/v1/rpc/dir_api {"a":"<action>","p":{...}}.
+Same actions as below (otp answers {skip:true}: no SMS sender yet, reviews are checked by a phone call before approval).
+Approvals: Telegram buttons open <site>/ishur/#id=..&t=..&act=ok|no (settings/folivus.approveBase). fn/dir/index.ts is the
+same logic as an edge function, kept for a later move if a function slot is freed.
+Function `dir` (planned shape, verify_jwt false, CORS *):
 - GET ?a=export&site=folivus|blihovot  -> {at, lawyers:[public fields + score + reviewCount + avg], ranks, areas, cities}
   (blihovot: only lawyers with insolvency / debt-settlement / enforcement areas; firm site links allowed, no office links).
 - POST ?a=lead {site, lawyerId?, area, city, name, phone, message, turnstile} -> saves, sends to the lawyer (email or WhatsApp

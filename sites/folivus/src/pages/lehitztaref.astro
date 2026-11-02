@@ -58,7 +58,7 @@ const faq = [
               <label>תחום עיקרי<select name="area" required><option value="">בחירה</option>{GROUPS.map((g) => <optgroup label={g}>{AREAS.filter((a) => a.group === g).map((a) => <option value={a.slug}>{a.he}</option>)}</optgroup>)}</select></label>
               <label>עיר המשרד<select name="city" required><option value="">בחירה</option>{REGIONS.map((r) => <optgroup label={r.he}>{CITIES.filter((c) => c.regionSlug === r.slug).map((c) => <option value={c.slug}>{c.he}</option>)}</optgroup>)}</select></label>
             </div>
-            <label>אתר המשרד (אם יש)<input name="site" type="url" dir="ltr" style="text-align:right" placeholder="https://" /></label>
+            <label>אתר המשרד (אם יש)<input name="siteUrl" type="url" dir="ltr" style="text-align:right" placeholder="https://" /></label>
             <label class="check"><input type="checkbox" name="consent" required />אני עורך/ת דין בעל/ת רישיון בתוקף, הפרטים נכונים, וקראתי את <a href={`${B}tnaei-shimush/`}>תנאי השימוש</a>.</label>
             <button class="btn btn-or" type="submit">שליחת בקשת הצטרפות</button>
           </div>

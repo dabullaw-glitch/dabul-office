@@ -13,9 +13,11 @@ const ERR = 'השליחה לא הצליחה. בדקו את החיבור לאינ
 function endpoint() { return document.body.dataset.dir || ''; }
 
 async function post(action: string, data: Record<string, unknown>) {
-  const r = await fetch(`${endpoint()}?a=${action}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ site: 'folivus', page: location.pathname, ...data }) });
+  const r = await fetch(endpoint(), { method: 'POST', headers: { apikey: document.body.dataset.dk || '', 'content-type': 'application/json' }, body: JSON.stringify({ a: action, p: { site: 'folivus', page: location.pathname, ...data } }) });
   if (!r.ok) throw new Error(String(r.status));
-  return r.json().catch(() => ({}));
+  const j = await r.json().catch(() => ({}));
+  if (j && j.ok === false) throw new Error(String(j.error || 'failed'));
+  return j;
 }
 
 function collect(f: HTMLFormElement) {
@@ -68,7 +70,14 @@ export function initForms() {
       try {
         if (action === 'review' && step !== 'code') {
           // step 1: ask for a phone code (verified reviews only)
-          await post('otp', { phone: data.phone, lawyerId: data.lawyerId });
+          const o = await post('otp', { phone: data.phone, lawyerId: data.lawyerId });
+          if (o && o.skip) {
+            // no phone code yet: the review is saved as pending and checked by a phone call before it goes live
+            await post('review', data);
+            f.classList.add('sent');
+            setStatus(f, 'ok', 'תודה. חוות הדעת התקבלה. לפני שהיא עולה לאתר נוודא בטלפון שאתם לקוחות של המשרד.');
+            return;
+          }
           f.dataset.step = 'code';
           f.querySelectorAll<HTMLElement>('[data-step-code]').forEach((el) => { el.hidden = false; });
           if (btn) btn.dataset.t = 'אישור ושליחה';

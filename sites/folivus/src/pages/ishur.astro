@@ -1,0 +1,33 @@
+---
+// Approval page for requests from the directory engine (links in the owner's Telegram): #id=..&t=..&act=ok|no
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+---
+<Base title="אישור בקשה" description="אישור או דחייה של בקשה במאגר." noindex>
+  <section class="sec"><div class="wrap" style="max-width:560px">
+    <div class="panel" id="ish" data-dir={SITE.dir} data-dk={SITE.dirKey}>
+      <h1 id="ih">אישור בקשה</h1>
+      <p id="ip">טוען...</p>
+      <button class="btn" id="ib" type="button" hidden>אישור</button>
+    </div>
+  </div></section>
+  <script>
+    const box = document.getElementById('ish')!, h = document.getElementById('ih')!, p = document.getElementById('ip')!, b = document.getElementById('ib') as HTMLButtonElement;
+    const q = new URLSearchParams(location.hash.slice(1));
+    const id = q.get('id') || '', t = q.get('t') || '', act = q.get('act') === 'ok' ? 'ok' : 'no';
+    if (!id || !t) { p.textContent = 'הקישור חסר. פתחו אותו שוב מההודעה.'; }
+    else {
+      h.textContent = act === 'ok' ? 'לאשר את הבקשה?' : 'לדחות את הבקשה?';
+      p.textContent = act === 'ok' ? 'לחיצה על הכפתור תאשר את הבקשה ותעדכן את המאגר.' : 'לחיצה על הכפתור תדחה את הבקשה. שום דבר לא ישתנה באתר.';
+      b.textContent = act === 'ok' ? 'כן, לאשר' : 'כן, לדחות'; b.hidden = false;
+      b.addEventListener('click', async () => {
+        b.disabled = true; b.textContent = 'רגע...';
+        try {
+          const r = await fetch(box.dataset.dir!, { method: 'POST', headers: { apikey: box.dataset.dk || '', 'content-type': 'application/json' }, body: JSON.stringify({ a: 'decide', p: { id, t, act } }) });
+          const j = await r.json().catch(() => ({}));
+          h.textContent = j.ok ? 'בוצע' : 'לא בוצע'; p.textContent = j.msg || 'משהו השתבש. נסו שוב בעוד דקה.'; b.hidden = true;
+        } catch { p.textContent = 'השליחה לא הצליחה. בדקו את החיבור ונסו שוב.'; b.disabled = false; b.textContent = 'לנסות שוב'; }
+      });
+    }
+  </script>
+</Base>

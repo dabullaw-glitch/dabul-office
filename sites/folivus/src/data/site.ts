@@ -5,8 +5,9 @@ export const SITE = {
   tagline: 'מדריך עורכי הדין בישראל',
   description: 'מאגר עורכי דין לפי תחום ועיר, עם ציון שקוף, חוות דעת מאומתות של לקוחות ומדריכים בשפה פשוטה.',
   preview: process.env.PREVIEW !== '0',
-  // the directory engine (Supabase edge function `dir`)
-  dir: 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/dir',
+  // the directory engine: one database function, POST {a, p} (sql/dir_api.sql). The key is the public (publishable) one.
+  dir: 'https://mgjmnvpnovkewvqevjmz.supabase.co/rest/v1/rpc/dir_api',
+  dirKey: 'sb_publishable_VlbYeA-oSqVs28QSWXtwJA_VoMt8p6j',
   barUrl: 'https://www.israelbar.org.il/',
 };
 
