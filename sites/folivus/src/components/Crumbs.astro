@@ -1,0 +1,11 @@
+---
+// Breadcrumbs (visible) + BreadcrumbList JSON-LD. items: [{name, href?}] with href relative to BASE.
+interface Props { items: { name: string; href?: string }[] }
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const all = [{ name: 'ראשי', href: '' }, ...Astro.props.items];
+const ld = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: all.map((it, i) => ({ '@type': 'ListItem', position: i + 1, name: it.name, ...(it.href !== undefined ? { item: new URL(B + it.href, Astro.site).href } : {}) })) };
+---
+<nav class="crumbs" aria-label="מיקום בעמוד">
+  <ol>{all.map((it, i) => <li>{it.href !== undefined && i < all.length - 1 ? <a href={B + it.href}>{it.name}</a> : <span aria-current={i === all.length - 1 ? 'page' : undefined}>{it.name}</span>}</li>)}</ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />

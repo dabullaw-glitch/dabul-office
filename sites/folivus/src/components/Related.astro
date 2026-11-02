@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import Icon from './Icon.astro';
+interface Props { area?: string; title?: string; exclude?: string }
+const { area, title = 'מדריכים שיעזרו לבחור', exclude } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const all = (await getCollection('maamarim')).filter((a) => a.id !== exclude);
+const list = [...all.filter((a) => area && a.data.areas.includes(area)), ...all.filter((a) => !area || !a.data.areas.includes(area))].slice(0, 3);
+---
+{list.length > 0 && (
+  <section aria-label={title} style="margin-top:36px">
+    <h2>{title}</h2>
+    <div class="arts">{list.map((a) => <a class="art" href={`${B}maamarim/${a.id}/`}><Icon name="doc" class="muted" /><h3>{a.data.title}</h3><p>{a.data.description}</p></a>)}</div>
+  </section>
+)}

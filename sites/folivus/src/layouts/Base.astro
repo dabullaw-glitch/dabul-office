@@ -1,0 +1,108 @@
+---
+import '../styles/global.css';
+import { SITE, NAV } from '../data/site';
+import Logo from '../components/Logo.astro';
+interface Props { title: string; description: string; type?: 'website' | 'article' | 'profile'; schema?: object[]; noindex?: boolean; image?: string; bodyClass?: string }
+const { title, description, type = 'website', schema = [], noindex = false, bodyClass } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const u = (p: string) => B + p.replace(/^\//, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
+const ogImage = new URL(u(Astro.props.image || 'og/default.png'), Astro.site).href;
+const here = Astro.url.pathname;
+const home = new URL(B, Astro.site).href;
+const org = { '@context': 'https://schema.org', '@type': 'Organization', '@id': home + '#org', name: SITE.name, alternateName: 'Folivus', url: home, logo: new URL(u('icon-512.png'), Astro.site).href, description: SITE.description };
+const web = { '@context': 'https://schema.org', '@type': 'WebSite', '@id': home + '#web', name: SITE.name, url: home, inLanguage: 'he-IL', publisher: { '@id': org['@id'] }, potentialAction: { '@type': 'SearchAction', target: { '@type': 'EntryPoint', urlTemplate: home + 'orchei-din/{area}/' }, 'query-input': 'required name=area' } };
+const f = (fam: string, w: number, sub: string, file: string, range: string) => `@font-face{font-family:'${fam}';font-weight:${w};font-display:swap;src:url(${B}fonts/${file}) format('woff2');unicode-range:${range}}`;
+const HE = 'U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F';
+const LA = 'U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212';
+const fonts = [
+  f('Heebo', 400, 'he', 'heebo-hebrew-400-normal.woff2', HE), f('Heebo', 500, 'he', 'heebo-hebrew-500-normal.woff2', HE), f('Heebo', 700, 'he', 'heebo-hebrew-700-normal.woff2', HE),
+  f('Heebo', 400, 'la', 'heebo-latin-400-normal.woff2', LA), f('Heebo', 700, 'la', 'heebo-latin-700-normal.woff2', LA),
+  f('Frank Ruhl Libre', 700, 'he', 'frank-ruhl-libre-hebrew-700-normal.woff2', HE), f('Frank Ruhl Libre', 700, 'la', 'frank-ruhl-libre-latin-700-normal.woff2', LA),
+].join('');
+---
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{(noindex || SITE.preview) && <meta name="robots" content="noindex,nofollow" />}
+<meta name="theme-color" content="#0c1f3d" />
+<link rel="icon" href={u('favicon.svg')} type="image/svg+xml" />
+<link rel="apple-touch-icon" href={u('icon-512.png')} />
+<link rel="preload" href={`${B}fonts/heebo-hebrew-400-normal.woff2`} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={`${B}fonts/frank-ruhl-libre-hebrew-700-normal.woff2`} as="font" type="font/woff2" crossorigin />
+<style set:html={fonts}></style>
+<link rel="alternate" type="application/rss+xml" title={SITE.name} href={u('rss.xml')} />
+<meta property="og:type" content={type === 'profile' ? 'profile' : type} />
+<meta property="og:locale" content="he_IL" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<script type="application/ld+json" set:html={JSON.stringify([org, web, ...schema])} />
+<slot name="head" />
+</head>
+<body data-dir={SITE.dir} class={bodyClass}>
+<a class="skip" href="#main">דילוג לתוכן</a>
+<header class="hdr" id="hdr">
+  <div class="wrap">
+    <a class="logo" href={B} aria-label={`${SITE.name}, לעמוד הראשי`}><Logo /><span>{SITE.name}<small>{SITE.tagline}</small></span></a>
+    <nav class="nav" id="nav" aria-label="ראשי">
+      {NAV.map((n) => <a href={u(n.href)} aria-current={here.startsWith(u(n.href)) ? 'page' : undefined}>{n.label}</a>)}
+    </nav>
+    <a class="btn btn-or btn-sm cta" href={u('lehitztaref/')}>לעורכי דין: הצטרפות</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav" aria-label="תפריט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+</header>
+<main id="main"><slot /></main>
+<footer class="ftr">
+  <div class="wrap">
+    <div class="fcols">
+      <div>
+        <a class="logo" href={B}><Logo /><span>{SITE.name}</span></a>
+        <p style="margin-top:14px;max-width:40ch">{SITE.description}</p>
+      </div>
+      <div><h2>מחפשים עורך דין</h2><ul>
+        <li><a href={u('orchei-din/')}>כל התחומים</a></li>
+        <li><a href={u('ir/')}>לפי עיר</a></li>
+        <li><a href={u('ezor/merkaz/')}>אזור המרכז</a></li>
+        <li><a href={u('ezor/sharon/')}>אזור השרון</a></li>
+        <li><a href={u('maamarim/')}>מדריכים</a></li>
+      </ul></div>
+      <div><h2>לעורכי דין</h2><ul>
+        <li><a href={u('lehitztaref/')}>הצטרפות וחבילות</a></li>
+        <li><a href={u('lehitztaref/#claim')}>זה המשרד שלי</a></li>
+        <li><a href={u('nivcheret/')}>נבחרת פוליבוס</a></li>
+        <li><a href={u('shita/')}>איך מחושב הציון</a></li>
+        <li><a href={u('hasara/')}>עדכון או הסרה</a></li>
+      </ul></div>
+      <div><h2>האתר</h2><ul>
+        <li><a href={u('odot/')}>אודות</a></li>
+        <li><a href={u('tzor-kesher/')}>יצירת קשר</a></li>
+        <li><a href={u('tnaei-shimush/')}>תנאי שימוש</a></li>
+        <li><a href={u('mediniyut-pratiyut/')}>מדיניות פרטיות</a></li>
+        <li><a href={u('negishut/')}>הצהרת נגישות</a></li>
+      </ul></div>
+    </div>
+    <p class="legal">{SITE.name} הוא מאגר מידע על עורכי דין ואינו משרד עורכי דין. המידע באתר הוא מידע כללי ואינו ייעוץ משפטי או המלצה על עורך דין מסוים. חלק מהפרטים נאספו ממקורות ציבוריים; עורכי דין יכולים לעדכן או להסיר אותם בכל עת. מיקום מקודם מסומן תמיד. © {new Date().getFullYear()} {SITE.name}</p>
+  </div>
+</footer>
+<div class="cookie" id="cookie" hidden role="region" aria-label="הודעה על עוגיות">
+  <p>האתר משתמש בעוגיות הכרחיות בלבד כדי לעבוד כמו שצריך. <a href={u('mediniyut-pratiyut/')}>פרטים</a></p>
+  <button class="btn btn-ink btn-sm" type="button">הבנתי</button>
+</div>
+<script>
+  import { initForms, initCookie, initMenu } from '../scripts/forms';
+  initMenu(); initForms(); initCookie();
+</script>
+</body>
+</html>

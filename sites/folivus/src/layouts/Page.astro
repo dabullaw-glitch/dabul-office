@@ -1,0 +1,17 @@
+---
+import Base from './Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+interface Props { title: string; h1?: string; description: string; lede?: string; updated?: string }
+const { title, h1, description, lede, updated } = Astro.props;
+---
+<Base title={title} description={description}>
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: h1 || title }]} />
+    <h1>{h1 || title}</h1>
+    {lede && <p>{lede}</p>}
+  </div></section>
+  <section class="sec-tight"><div class="wrap prose">
+    <slot />
+    {updated && <p class="muted small">עודכן לאחרונה: {updated}</p>}
+  </div></section>
+</Base>

@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchBox from '../components/SearchBox.astro';
+import AreaGroups from '../components/AreaGroups.astro';
+import LawyerCard from '../components/LawyerCard.astro';
+import Seal from '../components/Seal.astro';
+import Icon from '../components/Icon.astro';
+import { getCollection } from 'astro:content';
+import { CITIES, loadData, counts } from '../lib/data';
+import { REGIONS, SITE } from '../data/site';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { lawyers } = await loadData();
+const c = await counts();
+const featured = lawyers.filter((l) => l.paid && l.plan === 'premium').slice(0, 3);
+const arts = (await getCollection('maamarim')).sort((a, b) => +b.data.published - +a.data.published).slice(0, 3);
+---
+<Base title={`${SITE.name}: מוצאים עורך דין לפי תחום ועיר`} description="מחפשים עורך דין? חיפוש לפי תחום ועיר, ציון שקוף לכל עורך דין, חוות דעת מאומתות של לקוחות ומדריכים שעוזרים לבחור. בלי עלות לפונים.">
+  <section class="hero">
+    <div class="wrap grid">
+      <div>
+        <h1>מוצאים עורך דין לפי הבעיה, לא לפי המזל</h1>
+        <p class="lede">כתבו במה מדובר, בחרו עיר, וקבלו רשימה של עורכי דין בתחום. לכל אחד יש ציון שמחושב בשיטה פומבית, ותשלום לא משנה אותו.</p>
+      </div>
+      <ul class="hero-note">
+        <li><Icon name="check" />בלי עלות לפונים</li>
+        <li><Icon name="check" />מיקום מקודם תמיד מסומן</li>
+        <li><Icon name="check" />רק חוות דעת מאומתות</li>
+      </ul>
+    </div>
+  </section>
+  <div class="wrap"><SearchBox /></div>
+
+  {featured.length > 0 && (
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head"><h2>עורכי דין מקודמים</h2><p>מודעות של עורכי דין שבחרו בחבילת פרימיום. המיקום כאן ממומן ואינו חלק מהציון.</p></div>
+        <div class="list">{featured.map((l) => <LawyerCard l={l} promo />)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head"><h2>תחומי עיסוק</h2><a class="link-more" href={`${B}orchei-din/`}>כל התחומים בעמוד אחד</a></div>
+      <AreaGroups counts={c.area} />
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><h2>עורכי דין לפי עיר ואזור</h2><a class="link-more" href={`${B}ir/`}>כל הערים</a></div>
+      <div class="regions">
+        {REGIONS.map((r) => (
+          <div class="region">
+            <h3><a href={`${B}ezor/${r.slug}/`}>אזור {r.he}</a>{c.region[r.slug] ? <span class="count">{c.region[r.slug]} עורכי דין</span> : null}</h3>
+            <ul class="chips">
+              {CITIES.filter((x) => x.regionSlug === r.slug).map((x) => <li><a class="chip chip-s" href={`${B}ir/${x.slug}/`}>{x.he}</a></li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec band">
+    <div class="wrap grid">
+      <Seal />
+      <div>
+        <h2>נבחרת פוליבוס: דירוג שנתי בשיטה גלויה</h2>
+        <p>פעם בשנה נפרסם בכל תחום רשימה של משרדים שנבחרו לפי שיטה כתובה ופומבית: חוות דעת מאומתות של לקוחות, ותק, שלמות הפרופיל וזמינות לפניות. אפשר לקרוא בדיוק איך זה נעשה.</p>
+        <p class="note">ההגשה לנבחרת כרוכה בתשלום, והתשלום לא מבטיח מקום ברשימה. ההרשמה לדירוג הראשון פתוחה עכשיו.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px">
+          <a class="btn btn-or" href={`${B}nivcheret/`}>על הנבחרת</a>
+          <a class="btn btn-ghost" href={`${B}shita/`}>איך מחושב הציון</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {arts.length > 0 && (
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head"><h2>לפני שבוחרים עורך דין</h2><a class="link-more" href={`${B}maamarim/`}>כל המדריכים</a></div>
+        <div class="arts">{arts.map((a) => <a class="art" href={`${B}maamarim/${a.id}/`}><Icon name="doc" class="muted" /><h3>{a.data.title}</h3><p>{a.data.description}</p></a>)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="panel panel-ink fold" style="--fold:28px;border-radius:0 16px 16px 16px;padding:28px 24px">
+        <h2>עורכי דין? הפרופיל שלכם כבר כאן, או שאפשר להוסיף אותו</h2>
+        <p style="max-width:62ch">פרופיל בסיסי הוא בחינם. אם מצאתם את המשרד שלכם, אפשר לאשר שהוא שלכם, לעדכן את הפרטים או לבקש הסרה. חבילות בתשלום מוסיפות תמונה, תיאור, וואטסאפ ומיקום מקודם שמסומן ככזה.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
+          <a class="btn btn-or" href={`${B}lehitztaref/`}>הצטרפות וחבילות</a>
+          <a class="btn btn-ghost" href={`${B}lehitztaref/#claim`}>זה המשרד שלי</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

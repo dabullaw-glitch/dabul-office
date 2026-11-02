@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Base title="עדכון או הסרה של פרופיל" description="עורך דין שמופיע בפוליבוס יכול לבקש לעדכן את הפרטים או להסיר את הפרופיל. ממלאים טופס קצר ואנחנו מטפלים בבקשה.">
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: 'עדכון או הסרה' }]} />
+    <h1>עדכון או הסרה של פרופיל</h1>
+    <p>הפרטים בפרופילים הראשונים נאספו ממקורות ציבוריים. אם אתם עורכי הדין שמופיעים בפרופיל, אפשר לבקש לעדכן אותו או להסיר אותו.</p>
+  </div></section>
+  <section class="sec-tight"><div class="wrap cols">
+    <div class="prose">
+      <h2>מה קורה אחרי השליחה</h2>
+      <ul>
+        <li>נבדוק שהבקשה הגיעה מעורך הדין שבפרופיל, בדרך כלל בשיחה או במייל לכתובת שמופיעה באתר המשרד.</li>
+        <li>אחרי הבדיקה, פרופיל שביקשתם להסיר יוסתר מהאתר ומתוצאות החיפוש הפנימי.</li>
+        <li>מעדיפים לעדכן במקום להסיר? אפשר <a href={`${B}lehitztaref/#claim`}>לאשר בעלות על הפרופיל</a> ולערוך אותו.</li>
+      </ul>
+      <p>אפשר לבקש גם מחיקה של מידע אישי לפי <a href={`${B}mediniyut-pratiyut/`}>מדיניות הפרטיות</a>.</p>
+    </div>
+    <aside><div class="panel">
+      <form class="form" data-dir="remove" novalidate>
+        <h2 style="margin:0">טופס בקשה</h2>
+        <div class="fields form">
+          <div class="hp" aria-hidden="true"><label>אתר <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+          <label>קישור לפרופיל או מזהה<input name="lawyerId" data-from-qs="id" required dir="ltr" style="text-align:right" /></label>
+          <label>מה לעשות?<select name="kind"><option value="remove">להסיר את הפרופיל</option><option value="update">לעדכן פרטים</option></select></label>
+          <label>שם מלא<input name="name" required autocomplete="name" /></label>
+          <label>טלפון<input name="phone" type="tel" required dir="ltr" style="text-align:right" /></label>
+          <label>מייל<input name="email" type="email" dir="ltr" style="text-align:right" /></label>
+          <label>הערות (לא חובה)<textarea name="message" maxlength="1500" style="min-height:80px"></textarea></label>
+          <label class="check"><input type="checkbox" name="consent" required />אני עורך/ת הדין שבפרופיל או מורשה מטעמו/ה.</label>
+          <button class="btn btn-ink" type="submit">שליחת בקשה</button>
+        </div>
+        <p class="status" role="status" aria-live="polite"></p>
+      </form>
+    </div></aside>
+  </div></section>
+</Base>

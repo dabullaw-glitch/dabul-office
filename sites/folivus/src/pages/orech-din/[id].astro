@@ -1,0 +1,143 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import Icon from '../../components/Icon.astro';
+import { loadData, areaBySlug, cityBySlug, telHref, waHref, yearsOf, type Lawyer } from '../../lib/data';
+import { SITE } from '../../data/site';
+export async function getStaticPaths() {
+  const { lawyers } = await loadData();
+  return lawyers.map((l) => ({ params: { id: l.id }, props: { l } }));
+}
+const { l } = Astro.props as { l: Lawyer };
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const name = l.name.replace(/^(עו"ד|עו״ד)\s*/, '');
+const full = `${l.title} ${name}`;
+const yrs = yearsOf(l);
+const areaNames = l.areas.map((a) => areaBySlug(a)!.he);
+const cityNames = l.cities.map((c) => cityBySlug(c)!.he);
+const mainArea = l.areas[0];
+const mainCity = l.cities[0];
+const showWa = l.whatsapp && (l.paid || l.source !== 'public');
+const parts = [
+  { k: 'reviews', label: 'חוות דעת מאומתות (ממוצע וכמות)', max: 50 },
+  { k: 'years', label: 'שנות רישיון', max: 15 },
+  { k: 'profile', label: 'שלמות הפרופיל', max: 15 },
+  { k: 'response', label: 'מענה לפניות', max: 10 },
+  { k: 'recognition', label: 'הכרה מקצועית (כמו נבחרת פוליבוס)', max: 10 },
+] as const;
+const page = new URL(`${B}orech-din/${l.id}/`, Astro.site!).href;
+const ld: any = {
+  '@context': 'https://schema.org', '@type': ['Attorney', 'LegalService'], '@id': page + '#lawyer', name: full, url: page,
+  ...(l.firm ? { alternateName: l.firm } : {}),
+  ...(l.phone ? { telephone: l.phone } : {}),
+  ...(l.address ? { address: { '@type': 'PostalAddress', streetAddress: l.address, addressLocality: cityNames[0] || '', addressCountry: 'IL' } } : cityNames[0] ? { address: { '@type': 'PostalAddress', addressLocality: cityNames[0], addressCountry: 'IL' } } : {}),
+  areaServed: cityNames.map((n) => ({ '@type': 'City', name: n })),
+  knowsAbout: areaNames,
+  ...(l.site ? { sameAs: [l.site] } : {}),
+  ...(l.reviewCount > 0 ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: l.avg.toFixed(1), reviewCount: l.reviewCount, bestRating: 5, worstRating: 1 } } : {}),
+  ...(l.reviews.length ? { review: l.reviews.slice(0, 10).map((r) => ({ '@type': 'Review', reviewRating: { '@type': 'Rating', ratingValue: r.stars, bestRating: 5 }, author: { '@type': 'Person', name: r.name || 'לקוח' }, reviewBody: r.text })) } : {}),
+};
+const desc = `${full}${l.firm ? `, ${l.firm}` : ''}: ${areaNames.slice(0, 3).join(', ')}${cityNames.length ? ` ב${cityNames.slice(0, 2).join(' ו')}` : ''}. פרטי קשר, ציון שקוף וחוות דעת מאומתות.`;
+const stars = (n: number) => '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+---
+<Base title={`${full}${cityNames[0] ? `, ${cityNames[0]}` : ''}`} description={desc} type="profile" schema={[ld]} bodyClass="has-sticky">
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[...(mainArea ? [{ name: areaBySlug(mainArea)!.he, href: `orchei-din/${mainArea}/` }] : []), ...(mainArea && mainCity ? [{ name: cityBySlug(mainCity)!.he, href: `orchei-din/${mainArea}/${mainCity}/` }] : []), { name: full }]} />
+    <div class="prof-top">
+      <div class="avatar" aria-hidden="true">{l.photo ? <img src={l.photo} alt="" width="76" height="76" /> : name.charAt(0)}</div>
+      <div style="min-width:0">
+        <h1 style="margin-bottom:.15em">{full}</h1>
+        {l.firm && <p>{l.firm}</p>}
+        <div class="counts">
+          {l.verified && <span class="pill">פרופיל מאומת</span>}
+          {yrs !== undefined && <span class="pill">{yrs > 0 ? `${yrs} שנות רישיון` : 'רישיון מהשנה'}</span>}
+          <span class="pill">{l.reviewCount ? `${l.avg.toFixed(1)} מתוך 5 (${l.reviewCount} חוות דעת)` : 'אין עדיין חוות דעת'}</span>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="sec-tight"><div class="wrap cols">
+    <div>
+      {l.source === 'public' && (
+        <p class="notice">הפרטים נאספו ממקורות ציבוריים ואינם המלצה. זה המשרד שלך? אפשר <a href={`${B}lehitztaref/?claim=${l.id}#claim`}>לעדכן</a> או <a href={`${B}hasara/?id=${l.id}`}>להסיר</a> בלחיצה.</p>
+      )}
+      {l.about && <div class="panel"><h2>על המשרד</h2><p style="margin:0;white-space:pre-line">{l.about}</p></div>}
+
+      <div class="panel">
+        <h2>פרטים</h2>
+        <dl class="facts">
+          <div><dt>תחומי עיסוק</dt><dd><ul class="tags">{l.areas.map((a) => <li><a class="tag" href={`${B}orchei-din/${a}/${mainCity ? mainCity + '/' : ''}`}>{areaBySlug(a)!.he}</a></li>)}</ul></dd></div>
+          {cityNames.length > 0 && <div><dt>ערים</dt><dd>{l.cities.map((c, i) => <>{i > 0 && ', '}<a href={`${B}ir/${c}/`}>{cityBySlug(c)!.he}</a></>)}</dd></div>}
+          {l.address && <div><dt>כתובת</dt><dd>{l.address}</dd></div>}
+          {l.phone && <div><dt>טלפון</dt><dd><a href={telHref(l.phone)} dir="ltr">{l.phone}</a></dd></div>}
+          {l.email && <div><dt>מייל</dt><dd><a href={`mailto:${l.email}`}>{l.email}</a></dd></div>}
+          {l.site && <div><dt>אתר</dt><dd><a href={l.site} rel="nofollow noopener" target="_blank">{l.site.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</a></dd></div>}
+          {l.licenseYear && <div><dt>שנת רישיון</dt><dd>{l.licenseYear}</dd></div>}
+          {l.languages.length > 0 && <div><dt>שפות</dt><dd>{l.languages.join(', ')}</dd></div>}
+          <div><dt>רישום בלשכה</dt><dd><a href={SITE.barUrl} rel="nofollow noopener" target="_blank">בדיקה באתר לשכת עורכי הדין</a> <span class="muted small">(אנחנו לא מעתיקים את פנקס הלשכה)</span></dd></div>
+          {l.source === 'public' && l.sourceUrl && <div><dt>מקור הפרטים</dt><dd><a href={l.sourceUrl} rel="nofollow noopener" target="_blank">מקור ציבורי</a></dd></div>}
+        </dl>
+      </div>
+
+      <div class="panel" id="score">
+        <div style="display:flex;gap:16px;align-items:center;margin-bottom:14px">
+          <div class="ring" style={`--v:${l.score}`}><div><b>{l.score}</b><small>מתוך 100</small></div></div>
+          <div><h2 style="margin:0">ציון פוליבוס</h2><p class="muted small" style="margin:0">מחושב לפי <a href={`${B}shita/`}>שיטה פומבית</a>. תשלום לא משנה את הציון.</p></div>
+        </div>
+        <ul class="bars">
+          {parts.map((p) => { const v = (l.parts as any)[p.k] || 0; return <li><span>{p.label}</span><span class="count">{Math.round(v)} מתוך {p.max}</span><span class="bar"><i style={`width:${Math.min(100, (v / p.max) * 100)}%`}></i></span></li>; })}
+        </ul>
+      </div>
+
+      <div class="panel" id="reviews">
+        <h2>חוות דעת של לקוחות</h2>
+        <p class="muted small">רק חוות דעת מאומתות: הכותבים אישרו מספר טלפון או הגיעו מקישור שעורך הדין שלח. אנחנו מפרסמים גם חוות דעת שליליות.</p>
+        {l.reviews.length ? l.reviews.map((r) => (
+          <div class="review">
+            <div><span class="stars" aria-label={`${r.stars} מתוך 5`}>{stars(r.stars)}</span> <b>{r.name}</b> {r.area && areaBySlug(r.area) && <span class="muted small">({areaBySlug(r.area)!.he})</span>}</div>
+            <p style="margin:6px 0 0">{r.text}</p>
+          </div>
+        )) : <p>אין עדיין חוות דעת מאומתות על {full}.</p>}
+        <details style="margin-top:12px">
+          <summary class="btn btn-line btn-sm" style="display:inline-flex">כתיבת חוות דעת</summary>
+          <form class="form" data-dir="review" style="margin-top:14px" novalidate>
+            <div class="fields form">
+              <input type="hidden" name="lawyerId" value={l.id} />
+              <div class="hp" aria-hidden="true"><label>אתר <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+              <div class="two">
+                <label>שם פרטי ואות ראשונה של שם המשפחה<input name="name" required maxlength="40" /></label>
+                <label>דירוג<select name="stars" required><option value="">בחירה</option><option value="5">5 מתוך 5</option><option value="4">4 מתוך 5</option><option value="3">3 מתוך 5</option><option value="2">2 מתוך 5</option><option value="1">1 מתוך 5</option></select></label>
+              </div>
+              <label>באיזה תחום קיבלתם שירות?<select name="area"><option value="">בחירה</option>{l.areas.map((a) => <option value={a}>{areaBySlug(a)!.he}</option>)}</select></label>
+              <label>מה חשוב שאחרים יידעו?<textarea name="text" required minlength="20" maxlength="1500"></textarea></label>
+              <label>טלפון (לאימות בלבד, לא יפורסם)<input name="phone" type="tel" inputmode="tel" required dir="ltr" style="text-align:right" /></label>
+              <label data-step-code hidden>קוד שקיבלתם בהודעה<input name="code" inputmode="numeric" autocomplete="one-time-code" required maxlength="8" dir="ltr" style="text-align:right" /></label>
+              <label class="check"><input type="checkbox" name="consent" required />אני מאשר/ת שקיבלתי שירות מעורך הדין, שהכתוב משקף את החוויה שלי, ושקראתי את <a href={`${B}tnaei-shimush/`}>תנאי השימוש</a>.</label>
+              <button class="btn btn-ink" type="submit">שליחת קוד אימות</button>
+            </div>
+            <p class="status" role="status" aria-live="polite"></p>
+          </form>
+        </details>
+      </div>
+
+      <p class="muted small" style="margin-top:20px">זה המשרד שלך? <a href={`${B}lehitztaref/?claim=${l.id}#claim`}>אישור בעלות ועדכון הפרטים</a>. רוצים להוריד את הפרופיל? <a href={`${B}hasara/?id=${l.id}`}>בקשת הסרה</a>.</p>
+    </div>
+    <aside id="contact">
+      <div class="panel">
+        {(l.phone || showWa) && (
+          <div style="display:grid;gap:8px;margin-bottom:16px">
+            {l.phone && <a class="btn btn-ink" href={telHref(l.phone)}><Icon name="phone" />התקשרות</a>}
+            {showWa && <a class="btn btn-line" href={waHref(l.whatsapp)} rel="nofollow noopener" target="_blank"><Icon name="wa" />וואטסאפ</a>}
+          </div>
+        )}
+        <LeadForm lawyerId={l.id} area={mainArea} city={mainCity} title={`פנייה ל${full}`} intro={l.paid || l.source !== 'public' ? 'הפנייה נשלחת ישירות לעורך הדין.' : 'הפנייה תועבר לעורך הדין דרך צוות האתר.'} />
+      </div>
+    </aside>
+  </div></section>
+  <div class="stickybar">
+    {l.phone && <a class="btn btn-or" href={telHref(l.phone)}><Icon name="phone" />התקשרות</a>}
+    <a class="btn btn-ghost" href="#contact">השארת פנייה</a>
+  </div>
+</Base>

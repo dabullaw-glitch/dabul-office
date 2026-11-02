@@ -1,0 +1,40 @@
+---
+// Promoted (labelled) first, then everyone else by score. Client side filters: reviews / verified.
+import LawyerCard from './LawyerCard.astro';
+import type { Lawyer } from '../lib/data';
+interface Props { promoted: Lawyer[]; rest: Lawyer[]; area?: string; filters?: boolean }
+const { promoted, rest, area, filters = true } = Astro.props;
+const total = promoted.length + rest.length;
+---
+{filters && total > 3 && (
+  <div class="filters" role="group" aria-label="סינון הרשימה">
+    <button type="button" class="chip" aria-pressed="false" data-f="reviews">עם חוות דעת</button>
+    <button type="button" class="chip" aria-pressed="false" data-f="verified">פרופיל מאומת</button>
+    <span class="count" data-shown aria-live="polite">{total} עורכי דין</span>
+  </div>
+)}
+<div class="list" data-list>
+  {promoted.map((l) => <LawyerCard l={l} promo area={area} />)}
+  {rest.map((l) => <LawyerCard l={l} area={area} />)}
+</div>
+<p class="muted small" data-none hidden>אין ברשימה עורכי דין שמתאימים לסינון. אפשר להסיר את הסינון.</p>
+<script>
+  const box = document.querySelector('.filters');
+  if (box) {
+    const on: Record<string, boolean> = {};
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-list] > .card'));
+    const shown = box.querySelector('[data-shown]') as HTMLElement;
+    const none = document.querySelector('[data-none]') as HTMLElement;
+    box.querySelectorAll<HTMLButtonElement>('[data-f]').forEach((b) => b.addEventListener('click', () => {
+      on[b.dataset.f!] = !on[b.dataset.f!];
+      b.setAttribute('aria-pressed', on[b.dataset.f!] ? 'true' : 'false');
+      let n = 0;
+      for (const c of cards) {
+        const ok = (!on.reviews || +(c.dataset.reviews || 0) > 0) && (!on.verified || c.dataset.verified === '1');
+        c.hidden = !ok; if (ok) n++;
+      }
+      shown.textContent = `${n} עורכי דין`;
+      none.hidden = n > 0;
+    }));
+  }
+</script>

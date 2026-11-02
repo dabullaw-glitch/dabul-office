@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import Faq from '../../components/Faq.astro';
+import Related from '../../components/Related.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { getCollection, render } from 'astro:content';
+import { areaBySlug } from '../../lib/data';
+import { SITE } from '../../data/site';
+export async function getStaticPaths() {
+  return (await getCollection('maamarim')).filter((a) => !a.data.draft).map((a) => ({ params: { slug: a.id }, props: { a } }));
+}
+const { a } = Astro.props;
+const { Content } = await render(a);
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const url = new URL(`${B}maamarim/${a.id}/`, Astro.site!).href;
+const d = (x: Date) => x.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+const ld = { '@context': 'https://schema.org', '@type': 'Article', headline: a.data.title, description: a.data.description, datePublished: a.data.published.toISOString(), dateModified: a.data.updated.toISOString(), inLanguage: 'he-IL', mainEntityOfPage: url, author: { '@type': 'Organization', name: `מערכת ${SITE.name}` }, publisher: { '@id': new URL(B, Astro.site!).href + '#org' } };
+---
+<Base title={a.data.title} description={a.data.description} type="article" schema={[ld]}>
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: 'מדריכים', href: 'maamarim/' }, { name: a.data.title }]} />
+    <h1>{a.data.title}</h1>
+    <p>{a.data.description}</p>
+    <div class="counts"><span class="pill">עודכן ב־{d(a.data.updated)}</span><span class="pill">מערכת {SITE.name}</span></div>
+  </div></section>
+  <section class="sec-tight"><div class="wrap cols">
+    <article class="prose">
+      {a.data.summary.length > 0 && <div class="summary"><h2>בקצרה</h2><ul>{a.data.summary.map((s) => <li>{s}</li>)}</ul></div>}
+      <Content />
+      <Faq items={a.data.faq} />
+      {a.data.sources.length > 0 && (<section><h2>מקורות וקריאה נוספת</h2><ul>{a.data.sources.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.title}</a></li>)}</ul></section>)}
+      <p class="muted small">המדריך הוא מידע כללי ואינו ייעוץ משפטי. בכל מקרה אישי כדאי להתייעץ עם עורך דין.</p>
+      {a.data.areas.length > 0 && <p>תחומים קשורים: {a.data.areas.map((s, i) => <>{i > 0 && ', '}<a href={`${B}orchei-din/${s}/`}>{areaBySlug(s)?.he}</a></>)}</p>}
+      <Related exclude={a.id} title="עוד מדריכים" />
+    </article>
+    <aside><div class="panel"><LeadForm title="מחפשים עורך דין?" intro="כתבו בקצרה במה מדובר, והפנייה תועבר לעורכי דין בתחום." /></div></aside>
+  </div></section>
+</Base>

@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import AreaGroups from '../../components/AreaGroups.astro';
+import SearchBox from '../../components/SearchBox.astro';
+import { counts, AREAS } from '../../lib/data';
+const c = await counts();
+---
+<Base title="עורכי דין לפי תחום עיסוק" description={`כל תחומי המשפט במקום אחד: ${AREAS.length} תחומים, מנדל"ן וירושה ועד דיני עבודה ופלילי. בוחרים תחום ומקבלים רשימת עורכי דין עם ציון שקוף.`}>
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: 'תחומי עיסוק' }]} />
+    <h1>עורכי דין לפי תחום עיסוק</h1>
+    <p>בחרו את התחום שמתאים למה שעובר עליכם. לא בטוחים? כתבו במילים שלכם במה מדובר, ונציע תחום מתאים.</p>
+  </div></section>
+  <div class="wrap"><SearchBox flat /></div>
+  <section class="sec" style="padding-top:32px"><div class="wrap"><AreaGroups counts={c.area} /></div></section>
+</Base>

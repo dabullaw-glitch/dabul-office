@@ -1,0 +1,67 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Crumbs from '../../../components/Crumbs.astro';
+import LawyerList from '../../../components/LawyerList.astro';
+import LeadForm from '../../../components/LeadForm.astro';
+import Faq from '../../../components/Faq.astro';
+import Related from '../../../components/Related.astro';
+import { AREAS, CITIES, loadData, counts, orderFor, key, hasCombo, type Area } from '../../../lib/data';
+import { AREA_INFO } from '../../../data/areaInfo';
+import { REGIONS } from '../../../data/site';
+import { areaFaq } from '../../../lib/faq';
+export function getStaticPaths() { return AREAS.map((a) => ({ params: { area: a.slug }, props: { a } })); }
+const { a } = Astro.props as { a: Area };
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { lawyers } = await loadData();
+const c = await counts();
+const here = lawyers.filter((l) => l.areas.includes(a.slug));
+const { promoted, rest } = orderFor(here, a.slug);
+const info = AREA_INFO[a.slug];
+const withCities = CITIES.filter((x) => c.areaCity[key(a.slug, x.slug)]);
+const faq = areaFaq(a.he);
+const site = Astro.site!;
+const itemList = here.length ? [{ '@context': 'https://schema.org', '@type': 'ItemList', name: `עורכי דין בתחום ${a.he}`, itemListElement: [...promoted, ...rest].slice(0, 20).map((l, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(`${B}orech-din/${l.id}/`, site).href, name: l.name })) }] : [];
+---
+<Base title={`עורכי דין ל${a.he}: רשימה, ציונים וחוות דעת`} description={`עורכי דין בתחום ${a.he} בכל הארץ. ${info?.blurb || ''} ציון שקוף, חוות דעת מאומתות ופנייה בלי עלות.`.slice(0, 300)} schema={itemList} noindex={here.length === 0}>
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: 'תחומי עיסוק', href: 'orchei-din/' }, { name: a.he }]} />
+    <h1>עורכי דין ל{a.he}</h1>
+    <p>{info?.blurb}</p>
+    <div class="counts"><span class="pill">{here.length ? `${here.length} עורכי דין ברשימה` : 'הרשימה בבנייה'}</span><span class="pill">קבוצה: {a.group}</span></div>
+  </div></section>
+  <section class="sec-tight"><div class="wrap cols">
+    <div>
+      {here.length > 0 && (
+        <div class="filters">
+          <label class="sr" for="cityf">בחירת עיר</label>
+          <select id="cityf" onchange="if(this.value)location.href=this.value">
+            <option value="">סינון לפי עיר</option>
+            {REGIONS.filter((r) => c.areaRegion[key(a.slug, r.slug)]).map((r) => <optgroup label={r.he}>{CITIES.filter((x) => x.regionSlug === r.slug && hasCombo(c, a.slug, x.slug)).map((x) => <option value={`${B}orchei-din/${a.slug}/${x.slug}/`}>{x.he}{c.areaCity[key(a.slug, x.slug)] ? ` (${c.areaCity[key(a.slug, x.slug)]})` : ''}</option>)}</optgroup>)}
+          </select>
+        </div>
+      )}
+      {here.length ? <LawyerList promoted={promoted} rest={rest} area={a.slug} /> : (
+        <div class="empty">
+          <h2>עדיין אין עורכי דין ברשימה בתחום הזה</h2>
+          <p>אנחנו מוסיפים משרדים כל הזמן. בינתיים אפשר להשאיר פנייה, והיא תועבר לעורכי דין שעוסקים ב{a.he}.</p>
+          <a class="btn btn-line btn-sm" href={`${B}lehitztaref/`}>עורך דין בתחום? הצטרפו בחינם</a>
+        </div>
+      )}
+      {withCities.length > 0 && (
+        <section style="margin-top:32px" aria-labelledby="cities-h">
+          <h2 id="cities-h">{a.he} לפי עיר</h2>
+          <ul class="chips">{withCities.map((x) => <li><a class="chip chip-s" href={`${B}orchei-din/${a.slug}/${x.slug}/`}>{x.he}<span class="count">{c.areaCity[key(a.slug, x.slug)]}</span></a></li>)}</ul>
+        </section>
+      )}
+      <div style="margin-top:36px"><Faq items={faq} /></div>
+      <Related area={a.slug} />
+    </div>
+    <aside>
+      <div class="panel"><LeadForm area={a.slug} title="לא בטוחים במי לבחור?" intro={`השאירו פרטים, והפנייה תועבר לעורכי דין בתחום ${a.he}.`} /></div>
+      <div class="panel">
+        <h3>תחומים קרובים</h3>
+        <ul class="chips">{AREAS.filter((x) => x.group === a.group && x.slug !== a.slug).map((x) => <li><a class="chip chip-s" href={`${B}orchei-din/${x.slug}/`}>{x.he}</a></li>)}</ul>
+      </div>
+    </aside>
+  </div></section>
+</Base>

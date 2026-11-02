@@ -1,0 +1,39 @@
+---
+import Icon from './Icon.astro';
+import { areaBySlug, cityBySlug, telHref, yearsOf, type Lawyer } from '../lib/data';
+interface Props { l: Lawyer; promo?: boolean; area?: string; headingLevel?: 'h2' | 'h3' }
+const { l, promo = false, area } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const href = `${B}orech-din/${l.id}/`;
+const bare = l.name.replace(/^(עו"ד|עו״ד)\s*/, '').trim();
+const initial = bare.charAt(0);
+// show the page's area first
+const areas = [...(area ? [area] : []), ...l.areas.filter((a) => a !== area)].slice(0, 3);
+const cities = l.cities.map((c) => cityBySlug(c)?.he).filter(Boolean).slice(0, 3);
+const yrs = yearsOf(l);
+---
+<article class:list={['card', promo && 'promo fold']} data-cities={l.cities.join(' ')} data-reviews={l.reviewCount} data-verified={l.verified ? '1' : '0'}>
+  <div class="card-top">
+    <div class="avatar" aria-hidden="true">{l.photo ? <img src={l.photo} alt="" loading="lazy" width="56" height="56" /> : initial}</div>
+    <div style="min-width:0;flex:1">
+      {promo && <span class="label-promo">מקודם</span>}
+      <h3><a href={href}>{l.title} {bare}</a></h3>
+      {l.firm && <p class="firm">{l.firm}</p>}
+    </div>
+    <div class="score" title="ציון פוליבוס מתוך 100, לפי השיטה הפומבית">
+      <div class="ring" style={`--v:${l.score}`}><div><b>{l.score}</b><small>ציון</small></div></div>
+    </div>
+  </div>
+  <ul class="meta">
+    {cities.length > 0 && <li><Icon name="pin" />{cities.join(', ')}</li>}
+    {yrs !== undefined && <li><Icon name="clock" />{yrs > 0 ? `${yrs} שנות רישיון` : 'רישיון מהשנה'}</li>}
+    {l.reviewCount > 0 ? <li><Icon name="star" />{l.avg.toFixed(1)} מתוך 5 ({l.reviewCount} חוות דעת)</li> : <li><Icon name="star" />אין עדיין חוות דעת</li>}
+    {l.verified && <li><Icon name="check" />פרופיל מאומת</li>}
+  </ul>
+  {areas.length > 0 && <ul class="tags">{areas.map((a) => <li class="tag">{areaBySlug(a)?.he}</li>)}</ul>}
+  <div class="card-actions">
+    <a class="btn btn-ink btn-sm" href={href}>לפרופיל ויצירת קשר</a>
+    {l.phone && <a class="btn btn-line btn-sm" href={telHref(l.phone)}><Icon name="phone" />התקשרות</a>}
+    {l.source === 'public' && <span class="label-src">פרטים ממקורות ציבוריים</span>}
+  </div>
+</article>

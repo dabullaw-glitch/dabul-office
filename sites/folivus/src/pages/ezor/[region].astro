@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import LawyerCard from '../../components/LawyerCard.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { AREAS, CITIES, loadData, counts } from '../../lib/data';
+import { REGIONS } from '../../data/site';
+export function getStaticPaths() { return REGIONS.map((r) => ({ params: { region: r.slug }, props: { r } })); }
+const { r } = Astro.props as { r: (typeof REGIONS)[number] };
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { lawyers } = await loadData();
+const cn = await counts();
+const here = lawyers.filter((l) => l.regions.includes(r.slug));
+const cities = CITIES.filter((x) => x.regionSlug === r.slug);
+const areaCounts: Record<string, number> = {};
+for (const l of here) for (const a of l.areas) areaCounts[a] = (areaCounts[a] || 0) + 1;
+const topAreas = AREAS.filter((a) => areaCounts[a.slug]).sort((x, y) => areaCounts[y.slug] - areaCounts[x.slug]).slice(0, 16);
+---
+<Base title={`עורכי דין באזור ${r.he}`} description={`עורכי דין באזור ${r.he}: ${r.blurb} רשימה לפי עיר ותחום, עם ציון שקוף וחוות דעת מאומתות.`} noindex={here.length === 0}>
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: 'ערים', href: 'ir/' }, { name: `אזור ${r.he}` }]} />
+    <h1>עורכי דין באזור {r.he}</h1>
+    <p>{r.blurb}</p>
+    <div class="counts"><span class="pill">{cities.length} ערים</span>{here.length > 0 && <span class="pill">{here.length} עורכי דין</span>}</div>
+  </div></section>
+  <section class="sec-tight"><div class="wrap cols">
+    <div>
+      <h2>ערים באזור</h2>
+      <ul class="chips">{cities.map((x) => <li><a class="chip" href={`${B}ir/${x.slug}/`}>{x.he}{cn.city[x.slug] ? <span class="count">{cn.city[x.slug]}</span> : null}</a></li>)}</ul>
+      {topAreas.length > 0 && (<section style="margin-top:28px">
+        <h2>תחומים באזור {r.he}</h2>
+        <ul class="chips">{topAreas.map((a) => <li><a class="chip chip-s" href={`${B}orchei-din/${a.slug}/`}>{a.he}<span class="count">{areaCounts[a.slug]}</span></a></li>)}</ul>
+      </section>)}
+      {here.length > 0 && (<section style="margin-top:28px">
+        <h2>עורכי דין באזור לפי ציון</h2>
+        <div class="list">{here.slice(0, 8).map((l) => <LawyerCard l={l} />)}</div>
+      </section>)}
+      <section style="margin-top:28px">
+        <h2>אזורים נוספים</h2>
+        <ul class="chips">{REGIONS.filter((x) => x.slug !== r.slug).map((x) => <li><a class="chip" href={`${B}ezor/${x.slug}/`}>אזור {x.he}</a></li>)}</ul>
+      </section>
+    </div>
+    <aside><div class="panel"><LeadForm title={`פנייה לעורך דין באזור ${r.he}`} /></div></aside>
+  </div></section>
+</Base>

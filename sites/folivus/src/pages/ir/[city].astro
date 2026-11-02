@@ -1,0 +1,43 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import AreaGroups from '../../components/AreaGroups.astro';
+import LawyerCard from '../../components/LawyerCard.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { CITIES, loadData, counts, hasCombo, type City } from '../../lib/data';
+import { REGIONS } from '../../data/site';
+export function getStaticPaths() { return CITIES.map((c) => ({ params: { city: c.slug }, props: { c } })); }
+const { c: city } = Astro.props as { c: City };
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { lawyers } = await loadData();
+const cn = await counts();
+const here = lawyers.filter((l) => l.cities.includes(city.slug));
+const byArea = Object.fromEntries(Object.entries(cn.areaCity).filter(([k]) => k.endsWith('|' + city.slug)).map(([k, v]) => [k.split('|')[0], v]));
+const region = REGIONS.find((r) => r.slug === city.regionSlug)!;
+const top = here.slice(0, 6);
+---
+<Base title={`עורך דין ב${city.he}: כל התחומים`} description={`עורכי דין ב${city.he} לפי תחום: נדל"ן, משפחה וירושה, עבודה, פלילי ועוד. ציון שקוף, חוות דעת מאומתות ופנייה בלי עלות.`} noindex={here.length === 0}>
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: 'ערים', href: 'ir/' }, { name: `אזור ${region.he}`, href: `ezor/${region.slug}/` }, { name: city.he }]} />
+    <h1>עורכי דין ב{city.he}</h1>
+    <p>בחרו תחום כדי לראות את עורכי הדין ב{city.he} שעוסקים בו. המספר ליד כל תחום הוא מספר עורכי הדין ברשימה.</p>
+    <div class="counts"><span class="pill">{here.length ? `${here.length} עורכי דין ב${city.he}` : 'הרשימה בבנייה'}</span></div>
+  </div></section>
+  <section class="sec-tight"><div class="wrap">
+    <AreaGroups counts={byArea} city={city.slug} has={(a) => hasCombo(cn, a, city.slug)} />
+  </div></section>
+  <section class="sec-tight"><div class="wrap cols">
+    <div>
+      {top.length > 0 && (<>
+        <h2>עורכי דין ב{city.he} לפי ציון</h2>
+        <p class="muted small">לפי ציון פוליבוס בלבד, בלי קידום בתשלום. <a href={`${B}shita/`}>איך מחושב הציון</a></p>
+        <div class="list">{top.map((l) => <LawyerCard l={l} />)}</div>
+      </>)}
+      <section style="margin-top:28px">
+        <h2>ערים נוספות באזור {region.he}</h2>
+        <ul class="chips">{CITIES.filter((x) => x.regionSlug === city.regionSlug && x.slug !== city.slug).map((x) => <li><a class="chip chip-s" href={`${B}ir/${x.slug}/`}>{x.he}</a></li>)}</ul>
+      </section>
+    </div>
+    <aside><div class="panel"><LeadForm city={city.slug} title={`פנייה לעורך דין ב${city.he}`} intro="ספרו בקצרה במה מדובר, והפנייה תועבר לעורכי דין בתחום." /></div></aside>
+  </div></section>
+</Base>

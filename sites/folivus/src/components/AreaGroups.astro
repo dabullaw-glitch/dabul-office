@@ -1,0 +1,20 @@
+---
+import Icon from './Icon.astro';
+import { AREAS, GROUPS } from '../lib/data';
+import { GROUP_ICON } from '../data/areaInfo';
+interface Props { counts: Record<string, number>; city?: string; has?: (area: string) => boolean }
+const { counts, city, has = () => true } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<div class="groups">
+  {GROUPS.map((g) => (
+    <section class="group" aria-label={g}>
+      <h3><span class="ic"><Icon name={GROUP_ICON[g] || 'doc'} /></span>{g}</h3>
+      <ul>
+        {AREAS.filter((a) => a.group === g).map((a) => (
+          <li><a href={`${B}orchei-din/${a.slug}/${city && has(a.slug) ? city + '/' : ''}`}><span>{a.he}</span><span class="count">{counts[a.slug] ? `${counts[a.slug]} עורכי דין` : ''}</span></a></li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>

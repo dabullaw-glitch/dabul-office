@@ -1,0 +1,23 @@
+---
+import Page from '../layouts/Page.astro';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<Page title="יצירת קשר" description="יצירת קשר עם צוות פוליבוס: שאלות על האתר, דיווח על טעות בפרופיל, בקשות של עורכי דין ונגישות." lede="שאלה על האתר, טעות בפרופיל או בעיה בנגישות? כתבו לנו כאן.">
+  <p>מחפשים עורך דין? אפשר להשאיר פנייה בעמוד התחום או בפרופיל של עורך הדין, והיא תגיע ישירות למקום הנכון. עורכי דין שרוצים לעדכן פרופיל: <a href={`${B}lehitztaref/#claim`}>אישור בעלות</a> או <a href={`${B}hasara/`}>עדכון והסרה</a>.</p>
+  <div class="panel" style="max-width:560px">
+    <form class="form" data-dir="lead" novalidate>
+      <h2 style="margin:0">הודעה לצוות האתר</h2>
+      <div class="fields form">
+        <input type="hidden" name="kind" value="contact" />
+        <div class="hp" aria-hidden="true"><label>אתר <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+        <label>שם<input name="name" required autocomplete="name" /></label>
+        <label>טלפון<input name="phone" type="tel" required dir="ltr" style="text-align:right" /></label>
+        <label>מייל (לא חובה)<input name="email" type="email" dir="ltr" style="text-align:right" /></label>
+        <label>ההודעה<textarea name="message" required maxlength="2000"></textarea></label>
+        <label class="check"><input type="checkbox" name="consent" required />קראתי את <a href={`${B}mediniyut-pratiyut/`}>מדיניות הפרטיות</a>.</label>
+        <button class="btn btn-ink" type="submit">שליחת ההודעה</button>
+      </div>
+      <p class="status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</Page>

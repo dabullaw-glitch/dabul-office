@@ -1,0 +1,26 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Crumbs from '../../../components/Crumbs.astro';
+import LawyerCard from '../../../components/LawyerCard.astro';
+import { loadData, areaBySlug, type Rank } from '../../../lib/data';
+export async function getStaticPaths() {
+  const { ranks } = await loadData();
+  return ranks.map((r) => ({ params: { year: String(r.year), area: r.area }, props: { r } }));
+}
+const { r } = Astro.props as { r: Rank };
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { lawyers } = await loadData();
+const a = areaBySlug(r.area)!;
+const rows = r.list.map((x) => ({ ...x, l: lawyers.find((l) => l.id === x.lawyerId) })).filter((x) => x.l).sort((x, y) => (x.place ?? 999) - (y.place ?? 999));
+---
+<Base title={`נבחרת פוליבוס ${r.year}: ${a.he}`} description={`רשימת המשרדים שנכללו בנבחרת פוליבוס ${r.year} בתחום ${a.he}, לפי שיטה פומבית. ההגשה לדירוג כרוכה בתשלום.`}>
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: 'נבחרת פוליבוס', href: 'nivcheret/' }, { name: `${a.he} ${r.year}` }]} />
+    <h1>נבחרת פוליבוס {r.year}: {a.he}</h1>
+    <p>המשרדים שנכללו ברשימה לפי <a style="color:#fff" href={`${B}shita/`}>השיטה הפומבית</a>. השתתפות בדירוג כרוכה בתשלום, והתשלום לא מבטיח מקום.</p>
+  </div></section>
+  <section class="sec-tight"><div class="wrap">
+    {r.method && <p class="notice">{r.method}</p>}
+    <div class="list">{rows.map((x) => <div>{(x.place || x.tier) && <p class="launch" style="margin-bottom:6px">{x.place ? `מקום ${x.place}` : x.tier}</p>}<LawyerCard l={x.l!} area={r.area} /></div>)}</div>
+  </div></section>
+</Base>

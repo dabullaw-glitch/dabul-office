@@ -1,0 +1,27 @@
+---
+// Contact / lead form. Posts JSON to the directory engine (?a=lead). Handled by src/scripts/forms.ts
+interface Props { lawyerId?: string; area?: string; city?: string; title?: string; intro?: string; button?: string }
+import { AREAS, CITIES } from '../lib/data';
+const { lawyerId = '', area = '', city = '', title = 'השארת פנייה', intro, button = 'שליחת הפנייה' } = Astro.props;
+const uid = Math.random().toString(36).slice(2, 8);
+---
+<form class="form" data-dir="lead" novalidate>
+  <h2 style="margin:0">{title}</h2>
+  {intro && <p class="muted small" style="margin:0">{intro}</p>}
+  <div class="fields form">
+    <input type="hidden" name="lawyerId" value={lawyerId} />
+    <div class="hp" aria-hidden="true"><label>אתר <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+    <label>שם<input name="name" required autocomplete="name" /></label>
+    <label>טלפון<input name="phone" type="tel" inputmode="tel" required autocomplete="tel" dir="ltr" style="text-align:right" /></label>
+    {!area ? (
+      <label>תחום<select name="area"><option value="">לא בטוח/ה</option>{AREAS.map((a) => <option value={a.slug}>{a.he}</option>)}</select></label>
+    ) : <input type="hidden" name="area" value={area} />}
+    {!city ? (
+      <label>עיר<select name="city"><option value="">בחירה</option>{CITIES.map((c) => <option value={c.slug}>{c.he}</option>)}</select></label>
+    ) : <input type="hidden" name="city" value={city} />}
+    <label>במה מדובר? (בקצרה)<textarea name="message" required maxlength="1500"></textarea></label>
+    <label class="check"><input type="checkbox" name="consent" required id={`c-${uid}`} />אני מסכים/ה שהפרטים יועברו לעורך הדין או לעורכי דין בתחום כדי שיחזרו אליי, לפי <a href={import.meta.env.BASE_URL.replace(/\/?$/, '/') + 'mediniyut-pratiyut/'}>מדיניות הפרטיות</a>.</label>
+    <button class="btn btn-or" type="submit">{button}</button>
+  </div>
+  <p class="status" role="status" aria-live="polite"></p>
+</form>

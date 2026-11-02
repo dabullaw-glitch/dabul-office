@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import { CITIES, counts } from '../../lib/data';
+import { REGIONS } from '../../data/site';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const c = await counts();
+---
+<Base title="עורכי דין לפי עיר" description={`עורכי דין ב-${CITIES.length} ערים בישראל, מסודרים לפי אזור: מרכז, שרון, ירושלים, צפון ודרום. בוחרים עיר ותחום ומקבלים רשימה עם ציון שקוף.`}>
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: 'ערים' }]} />
+    <h1>עורכי דין לפי עיר</h1>
+    <p>בחרו עיר כדי לראות את כל תחומי העיסוק בה ואת מספר עורכי הדין בכל תחום.</p>
+  </div></section>
+  <section class="sec"><div class="wrap regions">
+    {REGIONS.map((r) => (
+      <div class="region">
+        <h3><a href={`${B}ezor/${r.slug}/`}>אזור {r.he}</a>{c.region[r.slug] ? <span class="count">{c.region[r.slug]} עורכי דין</span> : null}</h3>
+        <ul class="chips">{CITIES.filter((x) => x.regionSlug === r.slug).map((x) => <li><a class="chip chip-s" href={`${B}ir/${x.slug}/`}>{x.he}{c.city[x.slug] ? <span class="count">{c.city[x.slug]}</span> : null}</a></li>)}</ul>
+      </div>
+    ))}
+  </div></section>
+</Base>

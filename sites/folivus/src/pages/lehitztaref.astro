@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Faq from '../components/Faq.astro';
+import { AREAS, CITIES, GROUPS } from '../lib/data';
+import { PACKAGES, RANK_FEE, REGIONS } from '../data/site';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const faq = [
+  { q: 'כבר יש לי פרופיל באתר. איך הוא הגיע לכאן?', a: 'פרופילים ראשונים נבנו מפרטים בסיסיים שמשרדים פרסמו בעצמם, באתרים שלהם או ברשימות ציבוריות. אנחנו לא מעתיקים את פנקס הלשכה, ביקורות מגוגל, תמונות או טקסטים. אפשר לאשר שהפרופיל שלכם, לעדכן אותו או לבקש הסרה.' },
+  { q: 'האם תשלום משפר את הציון?', a: 'לא. הציון מחושב באותה שיטה לכולם. חבילה בתשלום משנה את מה שמופיע בפרופיל ואת מקום ההצגה, ומיקום כזה מסומן תמיד כ"מקודם".' },
+  { q: 'איך מגיעות אליי פניות?', a: 'בחבילה בסיסית מופיע הטלפון שלכם. בחבילות בתשלום, ואחרי שאישרתם שהפרופיל שלכם, פניות מהטופס נשלחות אליכם ישירות.' },
+  { q: 'אפשר לבטל?', a: 'כן. חבילה חודשית אפשר לבטל בכל חודש. אחרי הביטול הפרופיל חוזר לחבילה הבסיסית ולא נמחק.' },
+];
+---
+<Base title="הצטרפות לעורכי דין: חבילות ואישור בעלות על פרופיל" description="עורכי דין יכולים להצטרף לפוליבוס בחינם, לאשר שהפרופיל שלהם, לעדכן פרטים, או לבחור חבילה עם תמונה, תיאור, וואטסאפ ומיקום מקודם שמסומן ככזה.">
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: 'לעורכי דין' }]} />
+    <h1>לעורכי דין: הצטרפות, עדכון וחבילות</h1>
+    <p>פרופיל בסיסי הוא בחינם. הציון לא תלוי בתשלום, וכל מיקום מקודם מסומן.</p>
+  </div></section>
+  <section class="sec-tight"><div class="wrap">
+    <div class="sec-head"><h2>חבילות</h2><span class="launch">מחירים להשקה</span></div>
+    <div class="plans">
+      {PACKAGES.map((p) => (
+        <div class:list={['plan', p.id === 'pro' && 'hi']}>
+          <h3>{p.name}</h3>
+          <div class="price">{p.price}</div>
+          {p.yearly ? <p class="muted small" style="margin:0">{p.yearly}, לפני מע"מ</p> : <p class="muted small" style="margin:0">בלי התחייבות</p>}
+          <ul>{p.items.map((i) => <li>{i}</li>)}</ul>
+          <a class:list={['btn', p.id === 'pro' ? 'btn-or' : 'btn-line']} href="#join" data-plan={p.id}>בחירה ב{p.name}</a>
+        </div>
+      ))}
+    </div>
+    <p class="muted small" style="margin-top:12px">המחירים הם מחירי השקה ועשויים להשתנות. התשלום עדיין לא מתבצע באתר: אחרי שליחת הטופס נחזור אליכם להשלמת ההצטרפות. הגשת מועמדות ל<a href={`${B}nivcheret/`}>נבחרת פוליבוס</a>: {RANK_FEE}, בנפרד מהחבילות.</p>
+  </div></section>
+
+  <section class="sec-tight"><div class="wrap cols">
+    <div>
+      <div class="panel" id="join">
+        <form class="form" data-dir="join" novalidate>
+          <h2 style="margin:0">הצטרפות לאתר</h2>
+          <p class="muted small" style="margin:0">ממלאים פעם אחת. נבדוק את הפרטים ונחזור אליכם לפני שהפרופיל עולה.</p>
+          <div class="fields form">
+            <div class="hp" aria-hidden="true"><label>אתר <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+            <div class="two">
+              <label>שם מלא<input name="name" required autocomplete="name" /></label>
+              <label>שם המשרד<input name="firm" autocomplete="organization" /></label>
+            </div>
+            <div class="two">
+              <label>טלפון<input name="phone" type="tel" required dir="ltr" style="text-align:right" /></label>
+              <label>מייל<input name="email" type="email" required dir="ltr" style="text-align:right" /></label>
+            </div>
+            <div class="two">
+              <label>שנת רישיון<input name="licenseYear" inputmode="numeric" maxlength="4" /></label>
+              <label>חבילה<select name="plan" id="plan-sel">{PACKAGES.map((p) => <option value={p.id}>{p.name}</option>)}</select></label>
+            </div>
+            <div class="two">
+              <label>תחום עיקרי<select name="area" required><option value="">בחירה</option>{GROUPS.map((g) => <optgroup label={g}>{AREAS.filter((a) => a.group === g).map((a) => <option value={a.slug}>{a.he}</option>)}</optgroup>)}</select></label>
+              <label>עיר המשרד<select name="city" required><option value="">בחירה</option>{REGIONS.map((r) => <optgroup label={r.he}>{CITIES.filter((c) => c.regionSlug === r.slug).map((c) => <option value={c.slug}>{c.he}</option>)}</optgroup>)}</select></label>
+            </div>
+            <label>אתר המשרד (אם יש)<input name="site" type="url" dir="ltr" style="text-align:right" placeholder="https://" /></label>
+            <label class="check"><input type="checkbox" name="consent" required />אני עורך/ת דין בעל/ת רישיון בתוקף, הפרטים נכונים, וקראתי את <a href={`${B}tnaei-shimush/`}>תנאי השימוש</a>.</label>
+            <button class="btn btn-or" type="submit">שליחת בקשת הצטרפות</button>
+          </div>
+          <p class="status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+      <div style="margin-top:32px"><Faq items={faq} /></div>
+    </div>
+    <aside>
+      <div class="panel" id="claim">
+        <form class="form" data-dir="claim" novalidate>
+          <h2 style="margin:0">זה המשרד שלי</h2>
+          <p class="muted small" style="margin:0">מצאתם את עצמכם באתר? אשרו שהפרופיל שלכם, ותוכלו לעדכן אותו ולקבל פניות ישירות.</p>
+          <div class="fields form">
+            <div class="hp" aria-hidden="true"><label>אתר <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+            <label>קישור לפרופיל או מזהה<input name="lawyerId" data-from-qs="claim" required dir="ltr" style="text-align:right" /></label>
+            <label>שם מלא<input name="name" required autocomplete="name" /></label>
+            <label>טלפון<input name="phone" type="tel" required dir="ltr" style="text-align:right" /></label>
+            <label>מייל<input name="email" type="email" required dir="ltr" style="text-align:right" /></label>
+            <label>מה לעדכן? (לא חובה)<textarea name="message" maxlength="1500" style="min-height:80px"></textarea></label>
+            <label class="check"><input type="checkbox" name="consent" required />אני עורך/ת הדין שמופיע/ה בפרופיל, או מורשה מטעמו/ה.</label>
+            <button class="btn btn-ink" type="submit">שליחת בקשה</button>
+          </div>
+          <p class="status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </aside>
+  </div></section>
+  <script>
+    document.querySelectorAll<HTMLAnchorElement>('[data-plan]').forEach((a) => a.addEventListener('click', () => { const s = document.getElementById('plan-sel') as HTMLSelectElement; if (s) s.value = a.dataset.plan!; }));
+  </script>
+</Base>

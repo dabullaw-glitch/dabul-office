@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchBox from '../components/SearchBox.astro';
+import { AREAS, CITIES } from '../lib/data';
+import { REGIONS } from '../data/site';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const names = { a: Object.fromEntries(AREAS.map((a) => [a.slug, a.he])), c: Object.fromEntries(CITIES.map((c) => [c.slug, [c.he, c.regionSlug]])), r: Object.fromEntries(REGIONS.map((r) => [r.slug, r.he])) };
+---
+<Base title="העמוד לא נמצא" description="העמוד שחיפשתם לא נמצא. אפשר לחפש עורך דין לפי תחום ועיר." noindex>
+  <section class="phead"><div class="wrap" id="nf" data-names={JSON.stringify(names)} data-base={B}>
+    <h1 id="nf-h">העמוד לא נמצא</h1>
+    <p id="nf-p">ייתכן שהקישור השתנה או שהפרופיל הוסר. אפשר לחפש מכאן, או לחזור ל<a style="color:#fff" href={B}>עמוד הראשי</a>.</p>
+    <div class="counts" id="nf-links"></div>
+  </div></section>
+  <div class="wrap"><SearchBox flat /></div>
+  <script>
+    // An area + city with no lawyers yet in the whole region has no page. Explain that and offer the nearest pages.
+    const box = document.getElementById('nf')!;
+    const n = JSON.parse(box.dataset.names || '{}');
+    const B = box.dataset.base || '/';
+    const m = location.pathname.slice(B.length - 1).match(/^\/orchei-din\/([a-z0-9-]+)\/([a-z0-9-]+)\/?$/);
+    if (m && n.a[m[1]] && n.c[m[2]]) {
+      const [area, city] = [n.a[m[1]], n.c[m[2]][0]];
+      const reg = n.c[m[2]][1];
+      document.getElementById('nf-h')!.textContent = `עדיין אין עורכי דין ל${area} ב${city}`;
+      document.getElementById('nf-p')!.textContent = `אנחנו מוסיפים משרדים כל הזמן. בינתיים אפשר לראות את כל עורכי הדין בתחום, או את כל התחומים ב${city}.`;
+      const links = document.getElementById('nf-links')!;
+      for (const [href, text] of [[`${B}orchei-din/${m[1]}/`, `כל עורכי הדין ל${area}`], [`${B}ir/${m[2]}/`, `כל התחומים ב${city}`], [`${B}ezor/${reg}/`, `אזור ${n.r[reg]}`]]) {
+        const a = document.createElement('a'); a.className = 'pill'; a.style.textDecoration = 'none'; a.href = href; a.textContent = text; links.append(a);
+      }
+    }
+  </script>
+</Base>

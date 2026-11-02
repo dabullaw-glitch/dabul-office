@@ -1,0 +1,12 @@
+{
+  "name": "folivus",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "astro build && node scripts/check.mjs",
+    "dev": "astro dev"
+  },
+  "dependencies": {
+    "astro": "5.18.2"
+  }
+}

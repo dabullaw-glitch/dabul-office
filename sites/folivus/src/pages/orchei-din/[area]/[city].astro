@@ -1,0 +1,67 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Crumbs from '../../../components/Crumbs.astro';
+import LawyerList from '../../../components/LawyerList.astro';
+import LawyerCard from '../../../components/LawyerCard.astro';
+import LeadForm from '../../../components/LeadForm.astro';
+import Faq from '../../../components/Faq.astro';
+import Related from '../../../components/Related.astro';
+import { AREAS, CITIES, loadData, counts, orderFor, key, hasCombo, type Area, type City } from '../../../lib/data';
+import { AREA_INFO } from '../../../data/areaInfo';
+import { REGIONS } from '../../../data/site';
+import { areaFaq } from '../../../lib/faq';
+export async function getStaticPaths() {
+  const cn = await counts();
+  return AREAS.flatMap((a) => CITIES.filter((c) => hasCombo(cn, a.slug, c.slug)).map((c) => ({ params: { area: a.slug, city: c.slug }, props: { a, c } })));
+}
+const { a, c: city } = Astro.props as { a: Area; c: City };
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const { lawyers } = await loadData();
+const cn = await counts();
+const here = lawyers.filter((l) => l.areas.includes(a.slug) && l.cities.includes(city.slug));
+const { promoted, rest } = orderFor(here, a.slug, city.slug);
+const region = REGIONS.find((r) => r.slug === city.regionSlug)!;
+const nearby = lawyers.filter((l) => l.areas.includes(a.slug) && !l.cities.includes(city.slug) && l.regions.includes(city.regionSlug)).slice(0, 6);
+const nearCities = CITIES.filter((x) => x.regionSlug === city.regionSlug && x.slug !== city.slug && cn.areaCity[key(a.slug, x.slug)]);
+const site = Astro.site!;
+const itemList = here.length ? [{ '@context': 'https://schema.org', '@type': 'ItemList', name: `עורכי דין ל${a.he} ב${city.he}`, itemListElement: [...promoted, ...rest].slice(0, 20).map((l, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(`${B}orech-din/${l.id}/`, site).href, name: l.name })) }] : [];
+---
+<Base title={`עורך דין ל${a.he} ב${city.he}`} description={`עורכי דין בתחום ${a.he} ב${city.he} והסביבה: רשימה עם ציון שקוף, חוות דעת מאומתות של לקוחות ופנייה בלי עלות.`} schema={itemList} noindex={here.length === 0}>
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: 'תחומי עיסוק', href: 'orchei-din/' }, { name: a.he, href: `orchei-din/${a.slug}/` }, { name: city.he }]} />
+    <h1>עורכי דין ל{a.he} ב{city.he}</h1>
+    <p>{AREA_INFO[a.slug]?.blurb}</p>
+    <div class="counts"><span class="pill">{here.length ? `${here.length} עורכי דין ב${city.he}` : `עדיין אין רישומים ב${city.he}`}</span><a class="pill" style="text-decoration:none" href={`${B}ir/${city.slug}/`}>כל התחומים ב{city.he}</a></div>
+  </div></section>
+  <section class="sec-tight"><div class="wrap cols">
+    <div>
+      {here.length ? <LawyerList promoted={promoted} rest={rest} area={a.slug} /> : (
+        <div class="empty">
+          <h2>עדיין אין כאן עורכי דין ל{a.he} ב{city.he}</h2>
+          <p>אפשר לחפש באזור {region.he}, לראות את כל עורכי הדין בתחום, או להשאיר פנייה שתועבר לעורכי דין בתחום.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <a class="btn btn-ink btn-sm" href={`${B}orchei-din/${a.slug}/`}>כל עורכי הדין ל{a.he}</a>
+            <a class="btn btn-line btn-sm" href={`${B}ezor/${region.slug}/`}>אזור {region.he}</a>
+          </div>
+        </div>
+      )}
+      {nearby.length > 0 && (
+        <section style="margin-top:32px" aria-labelledby="near-h">
+          <h2 id="near-h">גם באזור {region.he}</h2>
+          <div class="list">{nearby.map((l) => <LawyerCard l={l} area={a.slug} />)}</div>
+        </section>
+      )}
+      {nearCities.length > 0 && (
+        <section style="margin-top:28px" aria-labelledby="nc-h">
+          <h2 id="nc-h">{a.he} בערים קרובות</h2>
+          <ul class="chips">{nearCities.map((x) => <li><a class="chip chip-s" href={`${B}orchei-din/${a.slug}/${x.slug}/`}>{x.he}<span class="count">{cn.areaCity[key(a.slug, x.slug)]}</span></a></li>)}</ul>
+        </section>
+      )}
+      {here.length > 0 && <div style="margin-top:36px"><Faq items={areaFaq(a.he, city.he)} /></div>}
+      <Related area={a.slug} />
+    </div>
+    <aside>
+      <div class="panel"><LeadForm area={a.slug} city={city.slug} title="השארת פנייה" intro={`תיאור קצר מספיק. הפנייה תועבר לעורכי דין בתחום ${a.he} באזור ${city.he}.`} /></div>
+    </aside>
+  </div></section>
+</Base>

@@ -1,0 +1,38 @@
+---
+// Search sheet: free text matcher + area + city. Logic in src/scripts/search.ts
+import { AREAS, CITIES, GROUPS } from '../lib/data';
+import { AREA_INFO } from '../data/areaInfo';
+import { REGIONS } from '../data/site';
+const { flat = false } = Astro.props as { flat?: boolean };
+const kw = Object.fromEntries(AREAS.map((a) => [a.slug, [a.he, ...(AREA_INFO[a.slug]?.kw || [])]]));
+const names = Object.fromEntries(AREAS.map((a) => [a.slug, a.he]));
+---
+<form class:list={['sheet fold', flat && 'flat']} id="search" role="search" action={import.meta.env.BASE_URL.replace(/\/?$/, '/') + 'orchei-din/'} data-kw={JSON.stringify(kw)} data-names={JSON.stringify(names)} data-base={import.meta.env.BASE_URL.replace(/\/?$/, '/')}>
+  <h2>מה צריך?</h2>
+  <div class="free">
+    <label for="q">ספרו במילים שלכם במה מדובר</label>
+    <textarea id="q" name="q" rows="2" placeholder="לדוגמה: קיבלתי מכתב פיטורים אחרי 6 שנים ולא שילמו לי פיצויים"></textarea>
+    <div class="match" id="match" aria-live="polite"></div>
+  </div>
+  <div class="row">
+    <div>
+      <label for="s-area">תחום</label>
+      <select id="s-area" name="area">
+        <option value="">כל התחומים</option>
+        {GROUPS.map((g) => <optgroup label={g}>{AREAS.filter((a) => a.group === g).map((a) => <option value={a.slug}>{a.he}</option>)}</optgroup>)}
+      </select>
+    </div>
+    <div>
+      <label for="s-city">עיר</label>
+      <select id="s-city" name="city">
+        <option value="">כל הארץ</option>
+        {REGIONS.map((r) => <optgroup label={r.he}>{CITIES.filter((c) => c.regionSlug === r.slug).map((c) => <option value={c.slug}>{c.he}</option>)}</optgroup>)}
+      </select>
+    </div>
+    <button class="btn btn-or" type="submit" style="min-height:48px">חיפוש עורך דין</button>
+  </div>
+</form>
+<script>
+  import { initSearch } from '../scripts/search';
+  initSearch();
+</script>

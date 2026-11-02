@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import Icon from '../../components/Icon.astro';
+import { getCollection } from 'astro:content';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const list = (await getCollection('maamarim')).filter((a) => !a.data.draft).sort((a, b) => +b.data.published - +a.data.published);
+---
+<Base title="מדריכים: איך בוחרים עורך דין ומה חשוב לדעת" description="מדריכים בשפה פשוטה למי שמחפש עורך דין: איך בוחרים, ממה מורכב המחיר, ומה שואלים בפגישה הראשונה. מידע כללי, לא ייעוץ משפטי.">
+  <section class="phead"><div class="wrap">
+    <Crumbs items={[{ name: 'מדריכים' }]} />
+    <h1>מדריכים</h1>
+    <p>מידע כללי שעוזר להגיע לעורך הדין הנכון ולשאול את השאלות הנכונות. זה לא ייעוץ משפטי.</p>
+  </div></section>
+  <section class="sec-tight"><div class="wrap">
+    <div class="arts">{list.map((a) => <a class="art" href={`${B}maamarim/${a.id}/`}><Icon name="doc" /><h3>{a.data.title}</h3><p>{a.data.description}</p></a>)}</div>
+  </div></section>
+</Base>
