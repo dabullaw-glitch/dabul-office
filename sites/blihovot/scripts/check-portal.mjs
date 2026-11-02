@@ -1,12 +1,12 @@
 // Post-build guard for the lawyer portal (dist/orchei-din/**; sitemap and llms.txt for dashes and brands only): fails the build on en/em dashes,
-// our own superlatives, the word "expert", or any mention of the law office or of the other directory brand.
+// our own superlatives, the word "expert", or any link to the law office website (his name in the lawyer list is allowed) or of the other directory brand.
 // Client review text is the client's own words, so only the dash and brand rules apply to it.
 import fs from 'node:fs';
 import path from 'node:path';
 const dist = path.resolve('dist');
 const strict = [
   [/[–—]/, 'en/em dash'],
-  [/דבול|dabul(?!-office)|dabullaw\.co/i, 'law office mention'],
+  [/dabullaw\.co/i, 'link to the law office website'],
   [/folivus|פוליבוס/i, 'other brand mention'],
 ];
 const words = [

@@ -75,5 +75,5 @@ Forms post `lead | join | claim | remove | otp + review` to the same function wi
 Topics, regions, score parts, draft packages and the guides that show the "find a lawyer" box: `src/data/portal.ts`.
 Rules: paid placement always labelled "מקודם", at most 3 per page, never changes the score; every public-source profile shows
 the public-sources note with update and removal links; `orchei-din/ishur/` is noindex and not in the sitemap.
-The law office is never listed in the portal (filtered in `src/lib/dir.ts`); `src/data/lawyers.json` is not used by any page.
+Yakir's own listing (the one place his name appears, by the site rule) is the engine row dir_lawyer/yakir-dabul, sites ['blihovot'] only (never on Folivus), plan premium so it is shown as "מקודם". No link to the office website anywhere (check-portal.mjs fails on dabullaw.co). `src/data/lawyers.json` is not used by any page.
 `scripts/check-portal.mjs` runs after `astro build` and fails the build on dashes, superlatives, "מומחה" or brand mentions in the portal.

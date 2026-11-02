@@ -1,7 +1,7 @@
 // Build-time data for the lawyer portal (orchei-din/). Reads the directory engine export once per build
 // ({a:'export', p:{site:'blihovot'}}). If the engine is not reachable (local sandbox), it falls back to the shared public
 // seed list kept with the other front end, filtered here the same way the engine filters it. If that is missing too: empty.
-// This list never shows the law office: entries that point to it are dropped (see BLOCK).
+// Yakir's own listing is in the engine (dir_lawyer/yakir-dabul, only on this site). No links to the office website (BLOCK).
 import fs from 'node:fs';
 import path from 'node:path';
 import citiesRaw from '../data/cities.json';
@@ -31,8 +31,8 @@ const AREAS = new Set(['insolvency', 'enforcement']);
 export const AREA_HE: Record<string, string> = { insolvency: 'חדלות פירעון והסדרי חובות', enforcement: 'הוצאה לפועל' };
 const topicsOf = (areas: string[]) => TOPICS.filter((t) => areas.includes(t.area)).map((t) => t.slug) as TopicSlug[];
 
-// The law office is never listed here (site rule): drop anything that points to it.
-const BLOCK = /dabul|דבול|דעבול/i;
+// The owner's name may appear in the lawyer list (site rule), but never a link to the office website.
+const BLOCK = /dabullaw\.co/i;
 const NOW = new Date();
 const THIS_YEAR = NOW.getFullYear();
 const arr = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x) => typeof x === 'string') : []);
@@ -65,7 +65,8 @@ function normalize(raw: any, rankedIds: Set<string>): Lawyer | null {
   if (raw.status && raw.status !== 'live') return null;
   const sites = arr(raw.sites);
   if (sites.length && !sites.includes(DIR.site)) return null;
-  if (BLOCK.test([id, raw.name, raw.firm, raw.site, raw.sourceUrl, raw.email, raw.about].join(' '))) return null;
+  if (BLOCK.test(String(raw.site || ''))) raw = { ...raw, site: undefined };
+  if (BLOCK.test(String(raw.sourceUrl || ''))) raw = { ...raw, sourceUrl: undefined };
   // the engine already keeps only these two areas for this site; the seed list has more, so filter the same way
   const areas = arr(raw.areas).filter((a) => AREAS.has(a));
   if (!areas.length) return null;
