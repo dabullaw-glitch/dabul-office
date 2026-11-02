@@ -1,0 +1,117 @@
+{
+ "title": "איך מוציאים נסח טאבו לבד",
+ "topic": "מקרקעין",
+ "endLine": "מקרקעין ונדל״ן · נתניה",
+ "goldWords": [
+  "לבד,",
+  "מתבלבלים.",
+  "המצב",
+  "הבניין",
+  "השנים.",
+  "בסדר."
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "kind": "hook",
+   "t": 0.05,
+   "dur": 4,
+   "kicker": "נסח טאבו",
+   "l1": "איך מוציאים לבד",
+   "l2": "תוך כמה דקות"
+  },
+  {
+   "id": "gov",
+   "kind": "news",
+   "img": "media/hgv/assets/tabu-nesach/1-gov.jpg",
+   "h": 780,
+   "pan": 420,
+   "tag": "האתר הממשלתי",
+   "at": 12.9,
+   "to": 20.79
+  },
+  {
+   "id": "types",
+   "kind": "news",
+   "img": "media/hgv/assets/tabu-nesach/2-types.jpg",
+   "h": 780,
+   "pan": 300,
+   "tag": "שלושה סוגים של נסח",
+   "at": 20.72,
+   "to": 25.69
+  },
+  {
+   "id": "full",
+   "kind": "term",
+   "kicker": "נסח מלא",
+   "text": "המצב היום",
+   "sub": "בעלים, משכנתאות, עיקולים",
+   "at": 25.54,
+   "to": 36.63,
+   "subAt": 29.16
+  },
+  {
+   "id": "merukaz",
+   "kind": "term",
+   "kicker": "נסח מרוכז",
+   "text": "כל הדירות בבניין",
+   "sub": "ומי הבעלים של כל אחת",
+   "at": 36.48,
+   "to": 48.39,
+   "subAt": 42.4
+  },
+  {
+   "id": "hist",
+   "kind": "term",
+   "kicker": "נסח היסטורי",
+   "text": "גם מה שכבר נמחק",
+   "sub": "בעלים ומשכנתאות מהעבר",
+   "at": 48.1,
+   "to": 59.39,
+   "subAt": 51.58
+  },
+  {
+   "id": "details",
+   "kind": "news",
+   "img": "media/hgv/assets/tabu-nesach/3-details.jpg",
+   "h": 780,
+   "pan": 380,
+   "tag": "שם ומייל",
+   "at": 59.24,
+   "to": 66.821
+  },
+  {
+   "id": "property",
+   "kind": "news",
+   "img": "media/hgv/assets/tabu-nesach/4-property.jpg",
+   "h": 780,
+   "pan": 420,
+   "tag": "גוש, חלקה ותת חלקה",
+   "at": 66.68,
+   "to": 79.87
+  },
+  {
+   "id": "clean",
+   "kind": "stamp",
+   "text": "לא הכול רשום בטאבו",
+   "at": 83.86,
+   "to": 97.21,
+   "stampAt": 87.36
+  },
+  {
+   "id": "cta",
+   "kind": "cta",
+   "text": "09-8613413",
+   "at": 97.04,
+   "to": 100.53
+  }
+ ],
+ "keep": [
+  [
+   0.0,
+   100.73
+  ]
+ ],
+ "gap": 0.55,
+ "pad": 0.12
+}

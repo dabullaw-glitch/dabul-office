@@ -1,0 +1,97 @@
+{
+ "ok": true,
+ "duration": 103.3,
+ "bytes": 91096183,
+ "style": "boxed",
+ "theme": "boxed-navy",
+ "build": {
+  "fix": {
+   "r": 0.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0,
+   "b": 1.0,
+   "why": "none needed"
+  },
+  "style": "boxed",
+  "theme": "boxed-navy",
+  "clips": 1,
+  "body": 100.45,
+  "total": 103.25,
+  "captions": 94,
+  "sfx": 11,
+  "layout": {
+   "hook": [
+    "chin",
+    1.0,
+    0
+   ],
+   "gov": [
+    "news",
+    1.0,
+    0
+   ],
+   "types": [
+    "news",
+    1.0,
+    0
+   ],
+   "full": [
+    "band",
+    1.0,
+    0
+   ],
+   "merukaz": [
+    "band",
+    1.0,
+    0
+   ],
+   "hist": [
+    "band",
+    1.0,
+    0
+   ],
+   "details": [
+    "news",
+    1.0,
+    0
+   ],
+   "property": [
+    "news",
+    1.0,
+    0
+   ],
+   "clean": [
+    "band",
+    0.932,
+    0
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 233,
+  "mode": "aligned 226 of 233",
+  "start": 0.0,
+  "end": 100.28
+ },
+ "resolve": {
+  "beats": 10,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    100.73
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n42 segments",
+ "at": "2026-11-02T15:54:41Z",
+ "cover": "vr-nesach1102.cover.jpg",
+ "coverSec": 1.0
+}
