@@ -1,0 +1,97 @@
+{
+ "ok": true,
+ "duration": 103.3,
+ "bytes": 74549458,
+ "style": "cinematic",
+ "theme": "cinematic-gold",
+ "build": {
+  "fix": {
+   "r": 0.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0,
+   "b": 1.0,
+   "why": "none needed"
+  },
+  "style": "cinematic",
+  "theme": "cinematic-gold",
+  "clips": 1,
+  "body": 100.45,
+  "total": 103.25,
+  "captions": 79,
+  "sfx": 11,
+  "layout": {
+   "hook": [
+    "band",
+    0.9615384615384616,
+    0
+   ],
+   "gov": [
+    "full",
+    0.96,
+    null
+   ],
+   "types": [
+    "full",
+    0.96,
+    null
+   ],
+   "full": [
+    "full",
+    1.0,
+    null
+   ],
+   "merukaz": [
+    "full",
+    1.0,
+    null
+   ],
+   "hist": [
+    "full",
+    1.0,
+    null
+   ],
+   "details": [
+    "full",
+    0.96,
+    null
+   ],
+   "property": [
+    "full",
+    0.96,
+    null
+   ],
+   "clean": [
+    "full",
+    1.0,
+    null
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 233,
+  "mode": "aligned 226 of 233",
+  "start": 0.0,
+  "end": 100.28
+ },
+ "resolve": {
+  "beats": 10,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    100.73
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n39 segments",
+ "at": "2026-11-02T16:14:19Z",
+ "cover": "vr-nesach1102-2.cover.jpg",
+ "coverSec": 1.0
+}
