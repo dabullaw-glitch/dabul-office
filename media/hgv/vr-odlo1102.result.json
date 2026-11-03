@@ -1,0 +1,82 @@
+{
+ "ok": true,
+ "duration": 42.0,
+ "bytes": 42323195,
+ "style": "v3",
+ "theme": "paper",
+ "build": {
+  "fix": {
+   "r": 0.61,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0189,
+   "b": 1.0,
+   "why": "level +0.6 deg"
+  },
+  "style": "v3",
+  "theme": "paper",
+  "clips": 2,
+  "body": 39.13,
+  "total": 41.93,
+  "captions": 40,
+  "sfx": 13,
+  "layout": {
+   "hook": [
+    "band",
+    0.829,
+    0
+   ],
+   "name": [
+    "low",
+    null,
+    null
+   ],
+   "trap": [
+    "band",
+    1.0,
+    0
+   ],
+   "contract": [
+    "band",
+    1.0,
+    0
+   ],
+   "reg": [
+    "push",
+    1.0,
+    123
+   ],
+   "risks": [
+    "push",
+    1.0,
+    202
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 96,
+  "mode": "aligned 93 of 96",
+  "start": 0.0,
+  "end": 39.28
+ },
+ "resolve": {
+  "beats": 7,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    39.73
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n18 segments",
+ "at": "2026-11-03T06:28:31Z",
+ "cover": "vr-odlo1102.cover.jpg",
+ "coverSec": 1.0
+}
