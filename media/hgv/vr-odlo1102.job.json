@@ -1,0 +1,96 @@
+{
+ "id": "vr-odlo1102",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/e49d00c3e5b7fba4fe376b474f4cc295.mp4?Expires=1794248691&Signature=AtOXD0Sginzjg2oVKGvgawxYv82ncYp8W2ooM7dMG5X4krIcPMextDdZuzx~lS7F5lJDURRguaCRv65~-gktHBJAezjG0B8uZ2ptYxl4lfXjh~dFLrdcdNDGST0S9thXBYJm49Vjkrx6wZM~busJlw6o0L--0-yYjombOrLXO6Tz3AAFyXpxnAKgFH~e9CyE3gR9PlOhQL8ECDPOSvGeBox2RhtrN7D2Y3aIWV-YYipAfUfKpFuujybi6WKkG1hmEl4TfzBvdDbsNCAz3EJGZ35xHnEkGYrnblahK1JVMu5w6M~CTCeyZiRQJ3nxvIV95b-fMB5tgCv-7IUGVEld8g__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "יש מצב ששילמתם מיליונים על דירה,\nוהיא עדיין לא שלכם.\n\nקיבלתם מפתח.\nעברתם לגור בה.\nומבחינה משפטית, היא עדיין לא לגמרי שלכם.\n\nוזה המלכוד שרוב מי שקונים דירה לא מכירים.\n\nחוזה חתום נותן לכם זכות לפי החוזה.\nעוד לא בעלות.\n\nאז מתי העסקה באמת נגמרת?\nרק כשהדירה נרשמת על שמכם בטאבו.\n\nוכל עוד הרישום מתעכב,\nעיקול, טעות של מישהו בדרך, או כל בעיה אחרת,\nיכולים להכניס אתכם למאבק משפטי של שנים.\n\nקיבלתם מפתח?\nזה עוד לא אומר שהדירה שלכם.\n\nקניתם דירה, והיא עדיין לא רשומה על שמכם?\nתבדקו את זה עכשיו. לא ביום שתצטרכו למכור אותה.",
+ "history": "boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "boxed-navy,glass,cinematic-gold",
+ "plan": {
+  "title": "קיבלתם מפתח, אבל הדירה עדיין לא שלכם",
+  "topic": "מקרקעין",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "v3",
+  "goldWords": [
+   "מיליונים",
+   "בעלות.",
+   "בטאבו.",
+   "עיקול,",
+   "שנים.",
+   "עכשיו."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "טאבו",
+    "l1": "יש מצב",
+    "l2": "שהדירה לא שלכם"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "עברתם לגור בה.",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "trap",
+    "kind": "boom",
+    "say": "וזה המלכוד שרוב מי",
+    "dur": 2,
+    "text": "המלכוד"
+   },
+   {
+    "id": "contract",
+    "kind": "term",
+    "say": "חוזה חתום נותן לכם",
+    "until": "עוד לא בעלות.",
+    "kicker": "חוזה חתום",
+    "text": "זכות לפי החוזה",
+    "sub": "עוד לא בעלות",
+    "subSay": "עוד לא בעלות."
+   },
+   {
+    "id": "reg",
+    "kind": "stamp",
+    "say": "אז מתי העסקה באמת נגמרת?",
+    "until": "נרשמת על שמכם בטאבו.",
+    "text": "רישום בטאבו",
+    "stampSay": "נרשמת על שמכם בטאבו."
+   },
+   {
+    "id": "risks",
+    "kind": "stack",
+    "say": "וכל עוד הרישום מתעכב,",
+    "until": "למאבק משפטי של שנים.",
+    "items": [
+     {
+      "say": "עיקול, טעות של",
+      "text": "עיקול"
+     },
+     {
+      "say": "טעות של מישהו בדרך,",
+      "text": "טעות בדרך"
+     },
+     {
+      "say": "או כל בעיה אחרת,",
+      "text": "כל בעיה אחרת"
+     }
+    ],
+    "summary": "מאבק של שנים",
+    "summarySay": "למאבק משפטי של שנים."
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "קניתם דירה, והיא עדיין",
+    "until": "שתצטרכו למכור אותה.",
+    "text": "09-8613413",
+    "label": "תבדקו עכשיו"
+   }
+  ]
+ }
+}
