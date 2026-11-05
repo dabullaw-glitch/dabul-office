@@ -2,8 +2,8 @@
 // The API key is POSTORIA_API_KEY in app_secrets (saved by Yakir in the office system, never shown).
 // Cron/office calls (x-cron-secret):
 //  POST {action:'accounts'}                         -> workspaces and connected accounts; marks settings/pub.postoria ok
-//  POST {action:'video', reelPath, caption, networks:['tiktok'], who:'private'|'public', at?}
-//       -> imports the reel (files bucket) into Postoria, waits until it is ready, creates the post (now or scheduled)
+//  POST {action:'video', videoUrl | reelPath, caption, networks:['tiktok'], who:'private'|'public', at?}
+//       -> imports the reel (its public link, or the files bucket) into Postoria, waits until it is ready, creates the post (now or scheduled)
 //  POST {action:'post', postId}                     -> the post status and the link on each network
 //  POST {action:'publish'} (cron every 10 minutes)   -> the content calendar (docs coll "pub"): every network except X goes out
 //       here once settings/pub.postoria.ok (Yakir, 11.10.2026: Facebook, Instagram, YouTube, LinkedIn, TikTok, Google Business).
@@ -11,6 +11,8 @@
 //       posts each channel once the media is ready (result.<ch>.pending = Postoria post id); a later run fills in the link.
 //       Failures go to Telegram; a row that is still not out 4 hours after its time becomes "missed".
 import { loadSecrets, json, cors, admin, env, telegram } from './_shared/common.ts';
+// 5.11.2026: a reel goes out from its public link (videoUrl, GitHub Pages) when it has one; storage only as the fallback
+import { pickVideo, needsFrom, publicVideo } from './_shared/video-src.js';
 
 const API = 'https://api.postoria.io/v1';
 // YouTube titles (Yakir, 11.10.2026: "לא לכתוב יותר שורטס ... תכתוב כמו בשאר הסרטונים"): no #shorts or other hashtags,
@@ -49,9 +51,13 @@ async function video(b: any) {
   const nets: string[] = Array.isArray(b.networks) && b.networks.length ? b.networks : ['tiktok'];
   const ids = acc.filter((a: any) => nets.includes(String(a.network || '').toLowerCase())).map((a: any) => a.id);
   if (!ids.length) return { ok: false, error: 'no connected account for ' + nets.join(','), accounts: acc };
-  const su = await admin().storage.from('files').createSignedUrl(String(b.reelPath), 6 * 3600);
-  if (!su.data?.signedUrl) return { ok: false, error: 'reel not found: ' + b.reelPath };
-  const imp = await pst_(`/workspaces/${ws}/media/imports`, 'POST', { url: su.data.signedUrl, thumbnail_timestamp_ms: 1500 });
+  let src = publicVideo(b.videoUrl) || publicVideo(b.reelPath);
+  if (!src) {
+    const su = await admin().storage.from('files').createSignedUrl(String(b.reelPath), 6 * 3600);
+    if (!su.data?.signedUrl) return { ok: false, error: 'reel not found: ' + b.reelPath };
+    src = su.data.signedUrl;
+  }
+  const imp = await pst_(`/workspaces/${ws}/media/imports`, 'POST', { url: src, thumbnail_timestamp_ms: 1500 });
   const media = imp.j && (imp.j.id || imp.j.media_id || (imp.j.data && imp.j.data.id));
   if (!media) return { ok: false, step: 'import', status: imp.status, j: imp.j };
   let m: any = null, thumb = imp.j.thumbnail_media_id || null;
@@ -81,9 +87,12 @@ const isVid = (u: string) => /\.(mp4|mov)(\?|$)/i.test(u) || /\/reels\//.test(u)
 const isImg = (u: string) => /\.(jpe?g|png|webp)(\?|$)/i.test(u);
 async function mediaOf(row: any, cfg: any) {
   const fill = (x: string) => String(x || '').split('{MEDIA}').join(cfg.media || '').split('{SITE}').join(cfg.site || '');
-  let reelPath = row.reelPath;
-  if (!reelPath && row.reelFrom) { const { data } = await admin().from('docs').select('data').match({ coll: 'pub', id: row.reelFrom }).maybeSingle(); reelPath = data && data.data && data.data.reelPath; }
-  if (reelPath) { const su = await admin().storage.from('files').createSignedUrl(reelPath, 6 * 3600); if (!su.data?.signedUrl) throw new Error('the reel file is missing in storage'); return { kind: 'video', urls: [su.data.signedUrl] }; }
+  // the reel: its public link (row.videoUrl, or the link of the row in reelFrom) first, storage (reelPath) only as the fallback
+  let from = null;
+  if (needsFrom(row)) { const { data } = await admin().from('docs').select('data').match({ coll: 'pub', id: row.reelFrom }).maybeSingle(); from = data && data.data; }
+  const vid = pickVideo(row, from);
+  if (vid.url) return { kind: 'video', urls: [vid.url] };
+  if (vid.path) { const su = await admin().storage.from('files').createSignedUrl(vid.path, 6 * 3600); if (!su.data?.signedUrl) throw new Error('the reel file is missing in storage'); return { kind: 'video', urls: [su.data.signedUrl] }; }
   const m = (row.media || []).map(fill).filter((u: string) => !/story/i.test(u.split('?')[0].split('/').pop() || ''));
   const v = m.find(isVid); if (v) return { kind: 'video', urls: [v] };
   const im = m.filter(isImg).slice(0, 10); if (im.length) return { kind: 'image', urls: im };

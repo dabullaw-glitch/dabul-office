@@ -2,12 +2,15 @@
 // Publishes calendar rows (docs coll "pub") whose owner is "system", when their time comes:
 //   instagram: feed image, reel (video) and story, through the Instagram API with Instagram Login (secret IG_TOKEN)
 //   tiktok:    through Postoria since 11.10.2026 (function postoria); once settings/pub.postoria.ok, Instagram too.
-//   This job keeps staging the weekly reels (Drive -> storage) and the Instagram comments check.
+//   This job keeps staging the weekly reels (since 5.11.2026: the reel's public link, videoUrl; Drive -> storage only as a
+//   fallback) and the Instagram comments check.
 // Weekly reels: stageReels() attaches the approved reel of that day and copies it from Drive to storage; reels publish in two steps.
 // Extra Instagram reel slots (8.10.2026, Yakir asked to push Instagram): pub rows with an explicit "reel" id; once a reel is out on
 // Instagram it gets igAt, so its later weekly date does not post it there a second time.
 // Also: checks a newly saved Instagram token (settings/pub.ig.check = 'pending'), refreshes it every 30 days,
 // and reports to Telegram. Grok Bot's rows are never touched here.
+// 5.11.2026: reels are published from their public link (videoUrl, GitHub Pages); storage only for old rows (see _shared/video-src.js)
+import { publicVideo } from './_shared/video-src.js';
 export function start(createClient) {
   const sb = createClient(Deno.env.get('SUPABASE_URL'), Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'));
   const IG = 'https://graph.instagram.com/v21.0', FB = 'https://graph.facebook.com/v21.0';
@@ -99,10 +102,19 @@ export function start(createClient) {
     const { data } = await sb.from('docs').select('id,data').eq('coll', 'pub').eq('data->>owner', 'system').eq('data->>status', 'planned').eq('data->>kind', 'video').gte('data->>at', from);
     for (const r of data || []) {
       const row = r.data, t = ilToMs(row.at);
-      if (only ? r.id !== only : (row.reelPath || (row.media || []).length || t - now > 48 * 3600e3 || now - t > 2 * 3600e3)) continue;
+      if (only ? r.id !== only : (row.reelPath || publicVideo(row.videoUrl) || (row.media || []).length || t - now > 48 * 3600e3 || now - t > 2 * 3600e3)) continue;
       if (!(row.channels || []).includes('instagram')) continue;
       const reel = await reelFor(row);
       if (!reel) { if (t - now < 6 * 3600e3 && !row.noReelWarned) { await merge('pub', r.id, { noReelWarned: new Date().toISOString() }); await tg(S, `⚠️ אין רילס מאושר לתאריך ${row.at.slice(0, 10)}, אז באינסטגרם לא יעלה סרטון השבוע.`); } continue; }
+      // 5.11.2026 (storage is full, Yakir will not pay for more): a reel with a public link (reel.data.videoUrl, the compressed
+      // copy on GitHub Pages, media/reels-pub/<name>.mp4) is staged with that link only. Nothing is copied to storage.
+      const vurl = publicVideo(reel.data.videoUrl);
+      if (vurl) {
+        const capv = (reel.data.captions && reel.data.captions.instagram) || '';
+        await merge('pub', r.id, { reel: reel.id, videoUrl: vurl, staged: new Date().toISOString(), title: 'רילס: ' + (reel.data.name || ''), text: row.text || capv, textTiktok: (reel.data.captions && reel.data.captions.tiktok) || '' });
+        log.push(r.id + ' staged ' + vurl + ' (public link)');
+        break;
+      }
       // 1.11.2026: a reel that is already in storage (HeyGen videos: reel.data.path) is used as it is, no Drive download
       if (reel.data.path && /^reels\/[a-z0-9-]+\.mp4$/.test(reel.data.path)) {
         const cap0 = (reel.data.captions && reel.data.captions.instagram) || '';
@@ -110,6 +122,9 @@ export function start(createClient) {
         log.push(r.id + ' staged ' + reel.data.path + ' (already in storage)');
         break;
       }
+      // fallback (a Drive reel without a public link yet): copied to storage as before. Since 5.11.2026 every scheduled reel gets
+      // its link ahead of time (workflow reels-pub, list media/reels-pub/drive.txt), so this should not happen; it is reported.
+      if (!row.noLinkWarned) { await merge('pub', r.id, { noLinkWarned: new Date().toISOString() }); await tg(S, `⚠️ לרילס "${reel.data.name || ''}" אין עדיין קישור ציבורי, אז הוא נשמר זמנית באחסון של מערכת המשרד. צריך להוסיף אותו לרשימת הכיווץ.`); }
       try {
         const res = await fetch('https://drive.usercontent.google.com/download?id=' + encodeURIComponent(reel.data.driveId) + '&export=download&confirm=t');
         const type = res.headers.get('content-type') || '';
@@ -207,8 +222,9 @@ export function start(createClient) {
       const id = q.get('pub');
       await stageReels(S, log, id);
       const row = (await sb.from('docs').select('data').match({ coll: 'pub', id }).maybeSingle()).data?.data || {};
-      if (!row.reelPath) return Response.json({ ok: false, log });
-      const su = await sb.storage.from('files').createSignedUrl(row.reelPath, 3600);
+      const vurl0 = publicVideo(row.videoUrl);
+      if (!row.reelPath && !vurl0) return Response.json({ ok: false, log });
+      const su = vurl0 ? { data: { signedUrl: vurl0 } } : await sb.storage.from('files').createSignedUrl(row.reelPath, 3600);
       const C = igc.mode === 'fb' ? { base: FB, who: '/' + igc.igId, token: S.IG_PAGE_TOKEN } : { base: IG, who: '/me', token: S.IG_TOKEN };
       try {
         const c = await ig(C.who + '/media', { media_type: 'REELS', video_url: su.data.signedUrl, caption: String(row.text || '').slice(0, 2150), share_to_feed: true }, C.token, 'POST', C.base);
@@ -270,7 +286,8 @@ export function start(createClient) {
         if (!C.token || !igc.ok) { res.instagram = { skipped: 'not connected' }; }
         else {
           try {
-            if (row.reelPath) {
+            if (publicVideo(row.videoUrl)) row.media = [publicVideo(row.videoUrl), ...(row.media || []).filter((m) => /story/i.test(m))];
+            else if (row.reelPath) {
               const su = await sb.storage.from('files').createSignedUrl(row.reelPath, 6 * 3600);
               if (su.error || !su.data) throw new Error('storage link: ' + (su.error && su.error.message));
               row.media = [su.data.signedUrl, ...(row.media || []).filter((m) => /story/i.test(m))];
