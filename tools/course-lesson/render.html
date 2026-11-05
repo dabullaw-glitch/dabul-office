@@ -43,12 +43,21 @@
     window.DabulDeck.mount(box, { deck: { scenes: scenes.map(s => { const x = { ...s }; delete x.audio; return x; }) } });
     return document.querySelectorAll('.dk-seg i').length;
   };
+  // items appear in turn like in the player, except that a small label (the kicker of a title, "טיפ", "טעות נפוצה" ...)
+  // appears together with the text after it: in a video an empty box while he talks looks broken
+  let groups = [];
   window.show = (i) => {
     document.querySelector(`.dk-seg i[data-i="${i}"]`).click();
-    return document.querySelectorAll('.dk-scene .rv').length;
+    groups = []; let open = null;
+    document.querySelectorAll('.dk-scene .rv').forEach(el => {
+      if (open) { open.push(el); open = null; return; }
+      const g = [el]; groups.push(g);
+      if (el.classList.contains('lab') || el.classList.contains('k')) open = g;
+    });
+    return groups.length;
   };
-  // reveal the first k items (the player reveals them in order across the slide)
-  window.reveal = (k) => { document.querySelectorAll('.dk-scene .rv').forEach((el, i) => el.classList.toggle('in', i < k)); };
+  // reveal the first k groups
+  window.reveal = (k) => { groups.forEach((g, i) => g.forEach(el => el.classList.toggle('in', i < k))); };
   // the panel next to the avatar
   window.panel = (o) => {
     document.getElementById('box').innerHTML = '';
