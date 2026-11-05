@@ -344,8 +344,18 @@ Every run, after section 6, check the episode rows (skip rows with test true). Y
   10 to 12 minutes, loudness about -16 LUFS, Read the cover images with your own eyes: Hebrew right to left, nothing cut).
   docs_merge epNN {mix:{mp3, mp4, duration, bytes, lufs, chapters, covers}}, then POST reels?vr=podfinal {"id": "epNN"}:
   Telegram to Yakir with "listen and approve" / "fix" buttons; status 'final-wait'.
-- 'final-fix': Yakir wrote what to fix (finalFixNote). Words: fix only the sections concerned in epNN.script, re-voice only
-  those sections (the others keep their audio), mix again. Music or sound: change the mix only. Then reels?vr=podfinal again.
+- 'final-fix': Yakir wrote what to fix (finalFixNote). Words: fix only the sections concerned in epNN.script (if
+  fixedSections is set, the chat session already fixed the text: re-voice exactly those sections), re-voice only those
+  sections (the others keep their audio: replace only those entries of epNN.voice.parts), mix again under the same file
+  names. Music or sound: change the mix only. Then reels?vr=podfinal again.
+- 'final-approved' with replaceInFeed true (a fix of an episode that is ALREADY in the feed, e.g. ep01 on 5.11.2026: Yakir
+  heard "ונשמע" instead of "ונשתמע"): do not wait for a release day and never add a second item. Right away: add_repo +
+  clone nadlan-podcast as in b below, run feed_add.py with `--replace` (same item, same guid and date; new audio, length and
+  duration), commit and push only nadlan-podcast, check the mp3 URL answers with the new size. The YouTube file
+  media/podcast/epNN.mp4 was rebuilt by the mix under the same name, so a planned YouTube pub row needs nothing (if that
+  row is already 'published', tell Yakir once that YouTube still has the old version). docs_merge {status
+  'published-feed' (or 'published' if YouTube is out too), replaceInFeed false, replacedAt}. Telegram one line:
+  "🎙 התיקון של פרק <n> עלה. ספוטיפיי ואפל יקראו את הקובץ החדש בשעות הקרובות."
 - 'final-approved': publish ONCE, on the release day, never twice:
   a. YouTube (right away, it is only scheduled): if docs pub `pub-<releaseDate as YYYYMMDD>T1900-podcast-epNN` does not exist,
      INSERT it in the exact shape of `pub-20261111T1900-podcast-ep01` (at '<releaseDate>T19:00', kind 'video', series

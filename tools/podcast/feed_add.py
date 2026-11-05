@@ -20,7 +20,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--repo', required=True); ap.add_argument('--office', required=True)
     ap.add_argument('--ep', required=True); ap.add_argument('--meta', required=True); ap.add_argument('--pubdate')
+    ap.add_argument('--replace', action='store_true', help='the episode is already in the feed: replace its audio and cover only')
     a = ap.parse_args()
+    if a.replace:
+        return replace(a)
     if not re.fullmatch(r'ep\d{2,3}', a.ep): sys.exit('bad --ep')
     m = json.load(open(a.meta, encoding='utf-8'))
     n = int(m['n']); mix = m['mix']
@@ -59,6 +62,27 @@ def main():
     open(feed_path, 'w', encoding='utf-8').write(feed)
     print(json.dumps({'ok': True, 'ep': a.ep, 'guid': guid, 'bytes': size, 'pubDate': pub,
                       'mp3': f'{BASE}episodes/{a.ep}.mp3'}, ensure_ascii=False))
+
+def replace(a):
+    """A fixed version of an episode that is already published (Yakir asked for a fix after it went out): same item,
+    same guid and pubDate (no second episode for the listeners), new audio file, new length and duration."""
+    if not re.fullmatch(r'ep\d{2,3}', a.ep): sys.exit('bad --ep')
+    m = json.load(open(a.meta, encoding='utf-8')); mix = m['mix']
+    feed_path = os.path.join(a.repo, 'feed.xml'); feed = open(feed_path, encoding='utf-8').read()
+    url = f'{BASE}episodes/{a.ep}.mp3'
+    i = feed.find(f'<enclosure url="{url}"')
+    if i < 0: sys.exit(f'{a.ep} is not in the feed: use the normal mode')
+    s = feed.rfind('<item>', 0, i); e = feed.find('</item>', i)
+    mp3 = os.path.join(a.repo, 'episodes', f'{a.ep}.mp3')
+    shutil.copyfile(os.path.join(a.office, mix['mp3']), mp3)
+    shutil.copyfile(os.path.join(a.office, mix['covers']['episode']), os.path.join(a.repo, 'episodes', f'{a.ep}.jpg'))
+    size = os.path.getsize(mp3)
+    if size < 2_000_000: sys.exit('mp3 too small')
+    item = feed[s:e]
+    item = re.sub(r'(<enclosure url="[^"]+" length=")\d+(")', rf'\g<1>{size}\g<2>', item)
+    item = re.sub(r'<itunes:duration>\d+</itunes:duration>', f'<itunes:duration>{round(float(mix["duration"]))}</itunes:duration>', item)
+    open(feed_path, 'w', encoding='utf-8').write(feed[:s] + item + feed[e:])
+    print(json.dumps({'ok': True, 'ep': a.ep, 'replaced': True, 'bytes': size}, ensure_ascii=False))
 
 if __name__ == '__main__':
     main()

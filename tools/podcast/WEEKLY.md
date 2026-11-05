@@ -40,7 +40,7 @@ shape of every field and the spoken style of the script).
      with a header line in square brackets: [פתיח] (a hook from a concrete moment, 30 to 40 s), [הצגת התוכנית] (the show,
      "אני יקיר דבול, עורך דין" once, what this episode covers), 4 to 5 parts [חלק 1: ...], a short [תזכורת באמצע הפרק]
      (share, follow), [מה עושים השבוע] (3 to 4 concrete steps for this week), [סיום] (a bridge to next week without
-     naming a date, "המידע כללי ואינו ייעוץ משפטי"). Short spoken lines, numbers in words ("שני מיליון ומאה אלף"),
+     naming a date, "המידע כללי ואינו ייעוץ משפטי", and the goodbye "ונשתמע בשבוע הבא", never "ונשמע": Yakir 5.11.2026). Short spoken lines, numbers in words ("שני מיליון ומאה אלף"),
      "עורך דין" not "עו״ד" in the spoken text.
    - clip: {title, sec 60, words about 130, script: the strongest idea of the episode as a stand-alone 1-minute video for
      the networks, ending with "את הפרק המלא ... תמצאו בפודקאסט נדל״ן בגובה העיניים", caption (with the office phone line
