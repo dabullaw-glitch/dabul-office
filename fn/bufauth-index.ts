@@ -5,8 +5,6 @@
 // cron (x-cron-secret) {action:'channels'}: re-reads the channels with the saved key.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { loadSecrets, env, admin, cors, json, telegram } from '../_shared/common.ts';
-// 5.11.2026: a reel goes out from its public link (videoUrl, GitHub Pages) when it has one; storage only as the fallback
-import { pickVideo, needsFrom } from '../_shared/video-src.js';
 
 const API = 'https://api.buffer.com';
 // deno-lint-ignore no-explicit-any
@@ -42,8 +40,8 @@ const mergeDoc = (coll: string, id: string, patch: any) => admin().rpc('docs_mer
 // ---- publishing (cron every 10 minutes): calendar rows (docs coll "pub") whose owner is "office" ----
 // (11.10.2026: Grok Bot was cancelled; facebook / linkedin / x go through Buffer, youtube through SocialAPI)
 // Each row: at (Israel time 'YYYY-MM-DDTHH:MM'), channels (facebook / linkedin / x), text, textX (optional, for X),
-// link (optional, added to the text if missing), media (images or one .mp4; {MEDIA} token allowed), videoUrl (public link,
-// 5.11.2026) or reelPath (storage, fallback), or reelFrom (the id of the 19:05 system row whose staged reel to use), ytTitle / ytDesc / ytTags for YouTube.
+// link (optional, added to the text if missing), media (images or one .mp4; {MEDIA} token allowed), reelPath (storage)
+// or reelFrom (the id of the 19:05 system row whose staged reel to use), ytTitle / ytDesc / ytTags for YouTube.
 // A channel that went out gets result.<channel> = {ok, id, url}; failures go to Telegram and are retried for 2 hours.
 const CH2SVC: Record<string, string> = { facebook: 'facebook', linkedin: 'linkedin', x: 'twitter' };
 function ilToMs(at: string) {
@@ -119,12 +117,10 @@ async function publishDue(key: string, dryRow?: string) {
     if (!((row.channels || []) as string[]).some(mine)) continue;
     const res = { ...(row.result || {}) };
     let media: string[] = (row.media || []).map((m: string) => String(m).replace('{MEDIA}', cfg.media || ''));
-    let from = null;
-    if (needsFrom(row)) { const { data: rf } = await admin().from('docs').select('data').match({ coll: 'pub', id: row.reelFrom }).maybeSingle(); from = rf && rf.data; }
-    const vid = pickVideo(row, from);
-    if (vid.url) media = [vid.url, ...media.filter(m => !/\.mp4/i.test(m))];
-    else if (vid.path) {
-      const su = await admin().storage.from('files').createSignedUrl(vid.path, 6 * 3600);
+    let reelPath = row.reelPath;
+    if (!reelPath && row.reelFrom) { const { data: rf } = await admin().from('docs').select('data').match({ coll: 'pub', id: row.reelFrom }).maybeSingle(); reelPath = rf && rf.data && rf.data.reelPath; }
+    if (reelPath) {
+      const su = await admin().storage.from('files').createSignedUrl(reelPath, 6 * 3600);
       if (su.data) media = [su.data.signedUrl, ...media.filter(m => !/\.mp4/i.test(m))];
     }
     if (!dryRow && !PST && (row.channels || []).includes('youtube') && !(res.youtube && (res.youtube.ok || res.youtube.cap))) {
