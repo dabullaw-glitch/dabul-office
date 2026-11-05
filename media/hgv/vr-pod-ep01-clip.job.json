@@ -1,0 +1,125 @@
+{
+ "id": "vr-pod-ep01-clip",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/ba1607d81ceead9ce70e2c87f2bc14d4.mp4?Expires=1794480565&Signature=IB3ipHBv66IE9LgrsH0cplVPjzCdHkkAWkiUxHKB7TM6PetsbK9YdzMv6Q1yzGb2EfLtgHtCtfZ7b3oPCcZGEytnS9jcMlQwrXsElDkR3PP39MCq7~09bx7Oz35zyMl2i7kOPV5H57i0XL-a5I8g~V7rzZK8dxszZXI1lfBqC7nAMeLq0cr3AOUXnbWpXsXcKr3q1X87bk9WSewgyuYPUEc7WM~4baRa24AFQLCPSPgXgdM5HnDfA6CqLjFL~inzLtbXeltu2~NVwpBBgQbM9IPRcyGxoNuzHMlHp1Byy-DOo5BNdqKe83vos~PL4j5Kdv0VQrGJCac9-VMzuE5Eog__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "קונים דירה ראשונה בשני מיליון ומאה אלף שקל?\nמס הרכישה שלכם יכול לצאת קצת יותר מארבעת אלפים שקל.\nכן, ארבעת אלפים.\n\nלמה?\nכי מי שקונה דירה יחידה, לא משלם מס רכישה בכלל עד קצת פחות משני מיליון שקל.\nועל החלק שמעל, משלמים במדרגות, החל משלושה וחצי אחוז.\nוהמדרגות האלה הוקפאו. לפי מה שפורסם, עד ינואר אלפיים עשרים ושמונה.\n\nאבל יש מלכודת אחת.\nאם לכם, או לבן או לבת הזוג, יש כבר חלק בדירה אחרת, אפילו חלק קטן, למשל מירושה,\nתבדקו את זה לפני החתימה. זה יכול לשנות את החישוב.\n\nועוד דבר שכולם שוכחים:\nיש שלושים יום לדווח על העסקה, ובדרך כלל שישים יום לשלם את המס.\nאיחור עולה בקנסות.\n\nאת הפרק המלא, עם עוד ארבע הפתעות של דירה ראשונה,\nתמצאו בפודקאסט נדל״ן בגובה העיניים.\nשמרו את הסרטון, ושתפו מי שקונה עכשיו דירה.",
+ "history": "v3,boxed,cinematic,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "navy-gold,boxed-navy,cinematic-gold",
+ "plan": {
+  "title": "דירה ראשונה: כמה מס רכישה באמת תשלמו?",
+  "topic": "מיסוי",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "goldWords": [
+   "ארבעת",
+   "יחידה,",
+   "במדרגות,",
+   "מלכודת",
+   "החתימה.",
+   "בקנסות."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "מס רכישה",
+    "l1": "דירה ראשונה?",
+    "l2": "כמה מס תשלמו"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "כן, ארבעת אלפים.",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "single",
+    "kind": "term",
+    "say": "כי מי שקונה דירה יחידה,",
+    "until": "קצת פחות משני מיליון שקל.",
+    "kicker": "דירה יחידה",
+    "text": "בלי מס רכישה",
+    "sub": "עד כמעט שני מיליון",
+    "subSay": "עד קצת פחות משני"
+   },
+   {
+    "id": "steps",
+    "kind": "stack",
+    "say": "ועל החלק שמעל, משלמים",
+    "until": "עד ינואר אלפיים עשרים ושמונה.",
+    "items": [
+     {
+      "say": "משלמים במדרגות, החל",
+      "text": "מס במדרגות"
+     },
+     {
+      "say": "החל משלושה וחצי אחוז.",
+      "text": "מ-3.5 אחוז"
+     },
+     {
+      "say": "והמדרגות האלה הוקפאו.",
+      "text": "המדרגות הוקפאו"
+     },
+     {
+      "say": "עד ינואר אלפיים עשרים",
+      "text": "עד ינואר 2028"
+     }
+    ]
+   },
+   {
+    "id": "trap",
+    "kind": "boom",
+    "say": "אבל יש מלכודת אחת.",
+    "dur": 2,
+    "text": "מלכודת"
+   },
+   {
+    "id": "check",
+    "kind": "stamp",
+    "say": "אם לכם, או לבן",
+    "until": "זה יכול לשנות את החישוב.",
+    "text": "לבדוק לפני החתימה",
+    "stampSay": "תבדקו את זה לפני"
+   },
+   {
+    "id": "days",
+    "kind": "stack",
+    "say": "ועוד דבר שכולם שוכחים:",
+    "until": "איחור עולה בקנסות.",
+    "items": [
+     {
+      "say": "יש שלושים יום לדווח",
+      "text": "30 יום לדווח"
+     },
+     {
+      "say": "שישים יום לשלם את",
+      "text": "60 יום לשלם"
+     }
+    ],
+    "summary": "איחור עולה בקנסות",
+    "summarySay": "איחור עולה בקנסות."
+   },
+   {
+    "id": "pod",
+    "kind": "term",
+    "say": "את הפרק המלא, עם",
+    "until": "בפודקאסט נדל״ן בגובה העיניים.",
+    "kicker": "פודקאסט",
+    "text": "נדל״ן בגובה העיניים",
+    "sub": "הפרק המלא",
+    "subSay": "תמצאו בפודקאסט נדל״ן בגובה"
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "שמרו את הסרטון, ושתפו",
+    "until": "מי שקונה עכשיו דירה.",
+    "text": "09-8613413",
+    "label": "שמרו ושתפו"
+   }
+  ]
+ }
+}
