@@ -20,6 +20,8 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+        # full history: the skip test below compares the commit times of the job and the mp3 (a shallow clone makes them equal)
+        with: { fetch-depth: 0 }
       - name: tools
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
       - name: mix
