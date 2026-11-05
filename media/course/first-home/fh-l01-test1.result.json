@@ -1,0 +1,216 @@
+{
+ "id": "vr-fh-test",
+ "file": "fh-l01-test1",
+ "course": "first-home",
+ "at": "2026-11-05T09:21:53Z",
+ "warnings": [],
+ "n": 1,
+ "title": "מפת הדרכים של עסקת דירה",
+ "scenes": 28,
+ "narration": {
+  "mode": "google",
+  "pieces": [
+   {
+    "from": 0,
+    "to": 9,
+    "method": "longest-pauses",
+    "warnings": []
+   },
+   {
+    "from": 10,
+    "to": 19,
+    "method": "longest-pauses",
+    "warnings": []
+   },
+   {
+    "from": 20,
+    "to": 27,
+    "method": "longest-pauses",
+    "warnings": []
+   }
+  ]
+ },
+ "splitTest": {
+  "maxError": 0.106,
+  "cuts": 25
+ },
+ "duration": 769.11,
+ "parts": {
+  "open": 39.4,
+  "slides": 690.26,
+  "close": 39.4
+ },
+ "bytes": 28704198,
+ "crf": 24,
+ "slides": [
+  {
+   "slide": 1,
+   "kind": "title",
+   "start": 39.4,
+   "speech": 25.38
+  },
+  {
+   "slide": 2,
+   "kind": "big",
+   "start": 65.68,
+   "speech": 24.15
+  },
+  {
+   "slide": 3,
+   "kind": "cards",
+   "start": 90.73,
+   "speech": 17.33
+  },
+  {
+   "slide": 4,
+   "kind": "svg",
+   "start": 108.96,
+   "speech": 29.46
+  },
+  {
+   "slide": 5,
+   "kind": "flow",
+   "start": 139.32,
+   "speech": 27.47
+  },
+  {
+   "slide": 6,
+   "kind": "cards",
+   "start": 167.69,
+   "speech": 29.86
+  },
+  {
+   "slide": 7,
+   "kind": "doc",
+   "start": 198.45,
+   "speech": 25.33
+  },
+  {
+   "slide": 8,
+   "kind": "cards",
+   "start": 224.68,
+   "speech": 27.5
+  },
+  {
+   "slide": 9,
+   "kind": "split",
+   "start": 253.09,
+   "speech": 31.25
+  },
+  {
+   "slide": 10,
+   "kind": "key",
+   "start": 285.24,
+   "speech": 29.58
+  },
+  {
+   "slide": 11,
+   "kind": "flow",
+   "start": 315.72,
+   "speech": 23.27
+  },
+  {
+   "slide": 12,
+   "kind": "flow",
+   "start": 339.89,
+   "speech": 25.5
+  },
+  {
+   "slide": 13,
+   "kind": "cards",
+   "start": 366.29,
+   "speech": 24.33
+  },
+  {
+   "slide": 14,
+   "kind": "flow",
+   "start": 391.52,
+   "speech": 25.15
+  },
+  {
+   "slide": 15,
+   "kind": "quote",
+   "start": 417.56,
+   "speech": 8.84
+  },
+  {
+   "slide": 16,
+   "kind": "key",
+   "start": 427.3,
+   "speech": 19.9
+  },
+  {
+   "slide": 17,
+   "kind": "cards",
+   "start": 448.11,
+   "speech": 26.89
+  },
+  {
+   "slide": 18,
+   "kind": "split",
+   "start": 475.89,
+   "speech": 24.72
+  },
+  {
+   "slide": 19,
+   "kind": "compare",
+   "start": 501.52,
+   "speech": 29.22
+  },
+  {
+   "slide": 20,
+   "kind": "big",
+   "start": 531.64,
+   "speech": 14.66
+  },
+  {
+   "slide": 21,
+   "kind": "example",
+   "start": 547.2,
+   "speech": 29.4
+  },
+  {
+   "slide": 22,
+   "kind": "flow",
+   "start": 577.5,
+   "speech": 18.71
+  },
+  {
+   "slide": 23,
+   "kind": "bullets",
+   "start": 597.11,
+   "speech": 21.91
+  },
+  {
+   "slide": 24,
+   "kind": "tip",
+   "start": 619.92,
+   "speech": 18.82
+  },
+  {
+   "slide": 25,
+   "kind": "flow",
+   "start": 639.64,
+   "speech": 24.69
+  },
+  {
+   "slide": 26,
+   "kind": "checklist",
+   "start": 665.22,
+   "speech": 31.5
+  },
+  {
+   "slide": 27,
+   "kind": "summary",
+   "start": 697.62,
+   "speech": 14.13
+  },
+  {
+   "slide": 28,
+   "kind": "big",
+   "start": 712.65,
+   "speech": 16.11
+  }
+ ],
+ "url": "https://dabullaw-glitch.github.io/dabul-office/media/course/first-home/fh-l01-test1.mp4"
+}
