@@ -1,0 +1,1 @@
+[["<small class=\"num\">${c(E(s.phone)||\"חסר טלפון\")}${s.idNo?\" · \"+c(s.idNo):\"\"}</small></div>${s.phone?", "<small class=\"num\">${c(E(s.phone)||\"חסר טלפון\")}${s.idNo?\" · \"+c(s.idNo):\"\"}</small></div><button class=\"btn xs\" data-a=\"kyc\" data-id=\"${s.id}\" title=\"טופס הכר את הלקוח (לא חובה)\">${s.kyc?\"✓ הכר את הלקוח\":\"הכר את הלקוח\"}</button>${s.phone?"]]
