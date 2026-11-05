@@ -1,0 +1,97 @@
+{
+ "ok": true,
+ "duration": 54.0,
+ "bytes": 37610757,
+ "style": "cinematic",
+ "theme": "cinematic-gold",
+ "build": {
+  "fix": {
+   "r": -1.1,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0339,
+   "b": 1.0,
+   "why": "level -1.1 deg"
+  },
+  "style": "cinematic",
+  "theme": "cinematic-gold",
+  "clips": 2,
+  "body": 51.12,
+  "total": 53.92,
+  "captions": 45,
+  "sfx": 11,
+  "layout": {
+   "hook": [
+    "band",
+    0.9615384615384616,
+    0
+   ],
+   "name": [
+    "low",
+    null,
+    null
+   ],
+   "permit": [
+    "full",
+    1.0,
+    null
+   ],
+   "why": [
+    "full",
+    1.0,
+    null
+   ],
+   "three": [
+    "full",
+    0.923,
+    null
+   ],
+   "o1": [
+    "full",
+    1.0,
+    null
+   ],
+   "o2": [
+    "full",
+    1.0,
+    null
+   ],
+   "o3": [
+    "full",
+    1.0,
+    null
+   ],
+   "more": [
+    "full",
+    1.0,
+    null
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 120,
+  "mode": "aligned 116 of 120",
+  "start": 0.0,
+  "end": 51.28
+ },
+ "resolve": {
+  "beats": 10,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    51.73
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n22 segments",
+ "at": "2026-11-05T11:01:37Z",
+ "cover": "vr-mvz1y05.cover.jpg",
+ "coverSec": 1.0
+}
