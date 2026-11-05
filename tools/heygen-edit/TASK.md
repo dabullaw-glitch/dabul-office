@@ -334,6 +334,11 @@ Every run, after section 6, check the episode rows. You only act on these status
   (duration 10 to 12 minutes, loudness about -16 LUFS, Read the cover images with your own eyes: Hebrew right to left,
   nothing cut). Then update podcast/epNN.html with the audio player, the YouTube version and the covers, and send Yakir ONE
   Telegram message for the final approval (approve or fix in the chat with Claude, not by replying to the bot). Status 'final-wait'.
+- HOSTING (5.11.2026): the podcast files and the feed live in their own repo dabullaw-glitch/nadlan-podcast (GitHub Pages,
+  feed https://dabullaw-glitch.github.io/nadlan-podcast/feed.xml, see docs podcast/show.hosting), never in dabul-office and
+  never in Supabase storage. The feed URL never changes. Writing to that repo is done by the chat session (Yakir approves the
+  final episode in the chat), not by this scheduled task: when an episode reaches 'final-approved', leave the publish to the
+  chat session if this run cannot push to nadlan-podcast.
 - 'final-approved': publish only what pipeline.7_publish says, once (feed item with a permanent guid; never add the same
   episode twice). YouTube as a regular video, NEVER in a Sun/Tue/Thu video slot or the Monday debt slot unless Yakir chose it
   (podcast/show.releaseSlot). Status 'published' with the links.
