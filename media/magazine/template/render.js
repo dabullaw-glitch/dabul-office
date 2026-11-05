@@ -1,6 +1,9 @@
 const { chromium } = require('playwright');
 (async () => {
-  const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
+  const fs = require('fs');
+  const cands = ['/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell', '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell'];
+  const exe = cands.find(p => fs.existsSync(p));
+  const b = await chromium.launch(exe ? { executablePath: exe } : {});
   const p = await b.newPage({ viewport: { width: 1200, height: 1500 }, deviceScaleFactor: 1 });
   await p.goto('file://' + process.cwd() + '/' + (process.argv[2] || 'issue1.html'));
   await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(500);
