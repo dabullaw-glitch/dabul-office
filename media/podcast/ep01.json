@@ -1,12 +1,12 @@
 {
  "ep": "ep01",
- "duration": 628.7,
- "bytes": 10146106,
+ "duration": 628.9,
+ "bytes": 10149868,
  "lufs": -16.44,
- "truePeak": -1.73,
+ "truePeak": -1.65,
  "lra": 2.5,
- "mp4Bytes": 56789649,
- "mp4Duration": 628.7,
+ "mp4Bytes": 56841507,
+ "mp4Duration": 628.9,
  "chapters": [
   {
    "h": "פתיח",
