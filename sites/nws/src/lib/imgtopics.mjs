@@ -11,7 +11,7 @@
 // of the same topic is there too (שער, משחק are also a gate and a game).
 export const TOPICS = [
   { key: 'security', hard: true, sets: ['security', 'police'], stock: ['police-lights', 'police-street'],
-    rx: /טרור|פיגוע|מחבל|נשק |נשק,|כלי נשק|הנשק|אמל"ח|אמל״ח|תחמושת|רימון|מטען חבלה|שב"כ|שב״כ|ביטחוני|צה"ל|צה״ל|אזעק|רקט|טילים|טיל |כטב"ם|יירוט|פיקוד העורף|ממ"ד|ממ״ד|מקלט|מקלטים/g },
+    rx: /טרור|פיגוע|מחבל|נשק |נשק,|כלי נשק|הנשק|אמל"ח|אמל״ח|תחמושת|רימון|מטען חבלה|שב"כ|שב״כ|ביטחוני(?!ות)|צה"ל|צה״ל|אזעק|רקט|טילים|טיל |כטב"ם|יירוט|פיקוד העורף|ממ"ד|ממ״ד|מקלט|מקלטים/g },
   // 31.10.2026 (Yakir: every story needs a fitting photo): national topics. A generic military, shipping, politics or diplomacy photo
   // (tanks, Iron Dome, a navy ship, an oil tanker, the Knesset, microphones), never a photo of the actual event.
   { key: 'military', hard: true, sets: ['military', 'security'], stock: [], pri: 1,
@@ -42,7 +42,7 @@ export const TOPICS = [
   { key: 'education', hard: true, sets: ['school'], stock: ['city-buildings'],
     rx: /בית ספר|בית הספר|בתי ספר|בתי הספר|תלמיד|חינוך|גן ילדים|גני ילדים|גני הילדים|גננת|המורה|למורה|מורה ו|המורים|למורים|מורים ו|מורות|שנת הלימודים|בגרות|כיתה|כיתות|אוניברסיט|מכללה|סטודנט|לימודים|חופשת הקיץ|הסעות תלמידים/g },
   { key: 'economy', hard: true, sets: ['money'], stock: ['city-buildings'], pri: -1,
-    rx: /ארנונה|תקציב|מחירי|מחיר |שקלים|₪|כלכל|יוקר המחיה|משכורת|שכר מינימום|מיסים|מס הכנסה|הנחה ב|תעריף|ריבית|בנק |בנקים|אינפלציה|קנס|קנסות|גירעון|חובות/g },
+    rx: /ארנונה|תקציב|מחירי|מחיר |שקלים|₪|כלכל|יוקר המחיה|משכורת|שכר מינימום|מיסים|מס הכנסה|הנחה ב|תעריף|ריבית|בנק |בנקים|אינפלציה|קנס|קנסות|גירעון|חובות|בורסה|הבורסה|מניה|מניות|מדד ת|מדדים|ת"א 35|ת״א 35|ת"א 125|ת״א 125|ת"א 90|שוק ההון|המסחר ב|יום המסחר|תחילת המסחר|סוף המסחר|אג"ח|אג״ח|דולר|שער החליפין|נאסד"ק|וול סטריט|משקיעים|תשואה|ביטקוין|קריפטו/g },
   { key: 'traffic', hard: true, sets: ['traffic', 'roadworks'], stock: ['traffic-night', 'traffic-fog', 'road-aerial'],
     rx: /כביש|צומת|מחלף|פקק|פקקים|עומס תנועה|תנועה|רמזור|נתיב|נת"צ|נת״צ|חניה|חנייה|חניון|נהג |נהגת|נהגים|נהגי |מצלמת מהירות|מהירות מופרזת/g },
   { key: 'roadworks', hard: true, sets: ['roadworks', 'construction', 'traffic'], stock: ['scaffold', 'road-aerial'], pri: 1,
