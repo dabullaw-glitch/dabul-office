@@ -99,6 +99,7 @@ a.card:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:var(
 .prose th{background:var(--sand);font-weight:700}
 .prose strong{color:var(--ink)}
 .prose hr{border:0;border-top:1px solid var(--line);margin:2em 0}
+code{font:.88em/1.4 ui-monospace,Consolas,monospace;background:var(--sand);border:1px solid var(--line);padding:1px 6px;border-radius:6px;unicode-bidi:isolate}
 
 /* footer */
 .ftr{background:#0f1b2d;color:#c9d3e0;padding-block:52px 28px;margin-top:40px;font-size:.95rem}

@@ -1,0 +1,186 @@
+---
+// One sponsored article (paid content). Always labelled at the top, links to the sponsor carry rel="sponsored",
+// and this section is the only place on the site where an advertiser's website may be linked (scripts/check-portal.mjs).
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { SITE } from '../../data/site';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('sponsored')).filter((a) => !a.data.draft);
+  return all.map((a) => ({ params: { slug: a.id }, props: { a, all } }));
+}
+const { a, all } = Astro.props;
+const { Content } = await render(a);
+const d = a.data;
+const s = d.sponsor;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const url = new URL(`${B}tochen-memuman/${a.id}/`, Astro.site).href;
+const fmt = (x: Date) => x.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+const words = (a.body || '').split(/\s+/).length;
+const minutes = Math.max(2, Math.round(words / 190));
+const rel = 'sponsored noopener';
+const tel = (p: string) => 'tel:+972' + p.replace(/\D/g, '').replace(/^0/, '');
+const wa = (p: string) => 'https://wa.me/972' + p.replace(/\D/g, '').replace(/^0/, '');
+const host = new URL(s.url).host.replace(/^www\./, '');
+const others = all.filter((x) => x.id !== a.id).sort((x, y) => +y.data.published - +x.data.published).slice(0, 3);
+const image = d.image ? B + d.image.replace(/^\//, '') : null;
+const schema: object[] = [
+  { '@context': 'https://schema.org', '@type': 'Article', headline: d.title, description: d.description, inLanguage: 'he-IL',
+    datePublished: d.published.toISOString(), dateModified: d.updated.toISOString(), mainEntityOfPage: url,
+    author: { '@type': 'Organization', name: s.name, url: s.url }, sponsor: { '@type': 'Organization', name: s.name, url: s.url },
+    publisher: { '@id': new URL(B + '#org', Astro.site).href }, image: image ? new URL(image, Astro.site).href : new URL(`${B}og/tm-${a.id}.png`, Astro.site).href,
+    articleSection: 'תוכן ממומן', wordCount: words },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'ראשי', item: new URL(B, Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: 'תוכן ממומן', item: new URL(`${B}tochen-memuman/`, Astro.site).href },
+    { '@type': 'ListItem', position: 3, name: d.title, item: url }] },
+];
+if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
+---
+<Base title={d.seoTitle || d.title} description={d.description} type="article" schema={schema} image={`og/tm-${a.id}.png`}>
+  <div class="sp-bar" role="note">
+    <div class="wrap"><span class="sp-pill">תוכן ממומן</span><span>כתבה בשיתוף <b>{s.name}</b><span class="sp-bar-x">. הכתבה פורסמה בתשלום ואינה חלק מהתוכן המערכתי של {SITE.name}.</span></span><a href={`${B}tochen-memuman/#mediniyut`}>מה זה אומר?</a></div>
+  </div>
+  <article class="sp">
+    <header class="sp-hero">
+      <div class="wrap">
+        <Breadcrumbs items={[{ href: 'tochen-memuman/', label: 'תוכן ממומן' }, { label: d.title }]} />
+        <p class="sp-kicker"><span>תוכן ממומן</span> כתבה בשיתוף {s.name}</p>
+        <h1>{d.title}</h1>
+        <p class="sp-dek">{d.description.replace(/\s*כתבה ממומנת בשיתוף.*$/, '')}</p>
+        <p class="sp-by">
+          <span class="sp-av" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+          <span><b>{s.name}</b><small>פורסם <time datetime={d.published.toISOString().slice(0, 10)}>{fmt(d.published)}</time> · {minutes} דקות קריאה</small></span>
+        </p>
+      </div>
+    </header>
+    <div class="wrap">
+      <figure class="sp-cover">
+        {image ? <img src={image} alt={d.imageAlt || ''} width="1200" height="480" loading="eager" /> : (
+          <svg viewBox="0 0 1200 420" role="img" aria-label="איור: תיקיית מסמכים, רשימת שאלות ושמש עולה">
+            <defs>
+              <linearGradient id="spg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a524c"/><stop offset="1" stop-color="#0d6b63"/></linearGradient>
+              <pattern id="spd" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.6" fill="#fbf8f3" opacity=".13"/></pattern>
+            </defs>
+            <rect width="1200" height="420" fill="url(#spg)"/>
+            <rect width="1200" height="420" fill="url(#spd)"/>
+            <path d="M780 420a250 250 0 0 1 500 0Z" fill="#f2a93b" opacity=".95"/>
+            <path d="M1030 112v38M914 171l-17-36M1146 171l17-36M819 243l-30-26" stroke="#f2a93b" stroke-width="10" stroke-linecap="round"/>
+            <path d="M0 360h1200" stroke="#fbf8f3" stroke-width="5" opacity=".5" stroke-dasharray="2 18" stroke-linecap="round"/>
+            <g transform="translate(150 70) rotate(-4)">
+              <rect width="300" height="300" rx="18" fill="#fdf0d9"/>
+              <rect x="0" y="-26" width="120" height="40" rx="12" fill="#fdf0d9"/>
+              <rect x="22" y="22" width="256" height="256" rx="10" fill="#fff"/>
+              <g fill="#14233a" opacity=".85"><rect x="52" y="62" width="150" height="12" rx="6"/><rect x="52" y="96" width="196" height="9" rx="4.5" opacity=".35"/><rect x="52" y="118" width="170" height="9" rx="4.5" opacity=".35"/><rect x="52" y="140" width="186" height="9" rx="4.5" opacity=".35"/></g>
+              <g stroke="#0d6b63" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M52 190l12 12 22-24"/><path d="M52 232l12 12 22-24"/></g>
+              <g fill="#14233a" opacity=".35"><rect x="104" y="190" width="140" height="9" rx="4.5"/><rect x="104" y="232" width="118" height="9" rx="4.5"/></g>
+            </g>
+            <g transform="translate(520 92)">
+              <rect width="220" height="150" rx="26" fill="#fbf8f3"/>
+              <path d="M44 150l-6 44 46-44Z" fill="#fbf8f3"/>
+              <text x="110" y="112" text-anchor="middle" font-family="Frank Ruhl Libre, Georgia, serif" font-weight="700" font-size="104" fill="#0d6b63">?</text>
+            </g>
+            <g transform="translate(600 290)"><circle r="14" fill="none" stroke="#fbf8f3" stroke-width="6"/><circle cx="70" r="14" fill="none" stroke="#fbf8f3" stroke-width="6"/><circle cx="140" r="14" fill="#f2a93b"/></g>
+          </svg>
+        )}
+        <figcaption>תוכן ממומן · {s.name}</figcaption>
+      </figure>
+      <div class="cols">
+        <div class="main">
+          <section class="tldr" aria-labelledby="tldr-h">
+            <h2 id="tldr-h">בקצרה</h2>
+            <ul>{d.summary.map((x) => <li set:html={x} />)}</ul>
+          </section>
+          <div class="prose sp-prose"><Content /></div>
+          {d.faq.length > 0 && (
+            <section class="faq" aria-labelledby="faq-h">
+              <h2 id="faq-h">שאלות נפוצות</h2>
+              {d.faq.map((f) => <details><summary>{f.q}</summary><div set:html={f.a} /></details>)}
+            </section>
+          )}
+          <section class="sp-box" aria-labelledby="spb-h">
+            <p class="sp-box-l">המפרסם</p>
+            <h2 id="spb-h">{s.name}</h2>
+            <p>{s.about}</p>
+            <ul class="sp-contact">
+              {s.address && <li><span>כתובת</span>{s.address}</li>}
+              {s.phone && <li><span>טלפון</span><a href={tel(s.phone)} rel={rel} dir="ltr">{s.phone}</a></li>}
+              {s.whatsapp && <li><span>וואטסאפ</span><a href={wa(s.whatsapp)} rel={rel} target="_blank" dir="ltr">{s.whatsapp}</a></li>}
+              <li><span>אתר</span><a href={s.url} rel={rel} target="_blank" dir="ltr">{host}</a></li>
+            </ul>
+            <a class="btn btn-teal" href={s.url} rel={rel} target="_blank">{s.cta} ←</a>
+          </section>
+          <p class="sp-disc"><b>גילוי נאות:</b> זו כתבה ממומנת. היא נכתבה בשיתוף {s.name} ופורסמה בתשלום. היא אינה חלק מהתוכן המערכתי של {SITE.name}, ואינה המלצה של האתר על המפרסם או על השירותים שלו. המידע בה כללי ואינו ייעוץ משפטי. <a href={`${B}tochen-memuman/#mediniyut`}>המדיניות שלנו לתוכן ממומן</a> · <a href={`${B}pirsum/`}>לפרסם כתבה ממומנת</a></p>
+        </div>
+        <aside class="side" aria-label="המפרסם">
+          <div class="card sp-side">
+            <span class="sp-pill">תוכן ממומן</span>
+            <b>בשיתוף {s.name}</b>
+            {s.address && <p>{s.address}</p>}
+            {s.phone && <p><a href={tel(s.phone)} rel={rel} dir="ltr">{s.phone}</a></p>}
+            <a class="btn btn-line" href={s.url} rel={rel} target="_blank">{s.cta}</a>
+          </div>
+          <div class="card sidecta">
+            <b>רוצים להבין קודם לבד?</b>
+            <p>6 שאלות קצרות, ותדעו איזה הליך רלוונטי למצב שלכם.</p>
+            <a class="btn btn-teal" href={`${B}kli/eize-halich/`}>לבדיקה</a>
+          </div>
+        </aside>
+      </div>
+      {others.length > 0 && (
+        <section class="rel" aria-labelledby="rel-h"><h2 id="rel-h">עוד תוכן ממומן</h2><div class="grid g3">{others.map((o) => (
+          <a class="card" href={`${B}tochen-memuman/${o.id}/`}><span class="tag">תוכן ממומן</span><h3>{o.data.title}</h3><p>בשיתוף {o.data.sponsor.name}</p></a>
+        ))}</div></section>
+      )}
+    </div>
+  </article>
+</Base>
+<style>
+.sp-bar{background:var(--sun-soft);border-bottom:1px solid color-mix(in srgb,var(--sun) 45%,transparent);font-size:.93rem}
+.sp-bar .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding-block:10px}
+.sp-bar a{margin-inline-start:auto;color:var(--ink);font-weight:700}
+@media (max-width:640px){.sp-bar-x{display:none}.sp-bar .wrap{font-size:.88rem;padding-block:8px}}
+.sp-pill{display:inline-block;background:var(--sun);color:#1b1405;font-weight:700;font-size:.8rem;padding:3px 12px;border-radius:999px;white-space:nowrap}
+.sp-hero{background:radial-gradient(900px 380px at 90% -20%,color-mix(in srgb,var(--sun) 18%,transparent),transparent 60%),linear-gradient(180deg,var(--sand),var(--paper))}
+.sp-hero .wrap{padding-block:26px 30px;max-width:var(--w)}
+.sp-kicker{font-size:.95rem;color:var(--muted);margin:0 0 10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sp-kicker span{color:var(--rose);font-weight:700;letter-spacing:.02em;border-inline-end:2px solid var(--line);padding-inline-end:8px}
+.sp-hero h1{font-size:clamp(2rem,4.6vw,3.3rem);max-width:28ch;line-height:1.15;margin:0 0 14px}
+.sp-dek{font-size:clamp(1.1rem,1.8vw,1.3rem);color:var(--ink-2);max-width:60ch;line-height:1.6;margin:0 0 20px}
+.sp-by{display:flex;align-items:center;gap:12px;margin:0}
+.sp-by b{display:block;line-height:1.3}.sp-by small{display:block;color:var(--muted);font-size:.88rem}
+.sp-av{width:44px;height:44px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;flex:none}.sp-av svg{width:22px;height:22px}
+.sp-cover{margin:6px 0 34px}
+.sp-cover svg,.sp-cover img{width:100%;border-radius:var(--r);display:block;object-fit:cover;aspect-ratio:1200/420}
+.sp-cover figcaption{font-size:.82rem;color:var(--muted);margin-top:8px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:48px;align-items:start}
+.main{min-width:0;max-width:var(--w-text)}
+.side{position:sticky;top:92px;display:grid;gap:16px}
+@media (max-width:1000px){.cols{grid-template-columns:1fr}.side{display:none}}
+.tldr{background:var(--teal-soft);border:1px solid color-mix(in srgb,var(--teal) 30%,transparent);border-radius:var(--r);padding:18px 22px;margin-bottom:28px}
+.tldr h2{font:700 1.05rem/1.3 var(--ff);margin:0 0 8px;color:var(--teal-2)}
+.tldr ul{margin:0;padding-inline-start:1.2em}.tldr li{margin:.3em 0}
+.sp-prose>:global(p:first-of-type){font-size:1.18em;line-height:1.7;color:var(--ink)}
+.sp-prose :global(blockquote){font-size:1.12rem}
+.sp-prose :global(h2){padding-top:.2em;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line);padding:14px 0}
+.faq summary{cursor:pointer;font-weight:700;font-size:1.05rem;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";color:var(--teal);font-size:1.4rem;line-height:1}
+.faq details[open] summary:after{content:"−"}
+.faq details div{margin-top:8px;color:var(--ink-2)}
+.sp-box{margin:38px 0 18px;padding:26px 26px 28px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-top:6px solid var(--sun);box-shadow:var(--shadow)}
+.sp-box-l{margin:0;font-size:.8rem;font-weight:700;color:var(--rose);letter-spacing:.04em}
+.sp-box h2{margin:.2em 0 .4em;font-size:1.6rem}
+.sp-box>p{color:var(--ink-2)}
+.sp-contact{list-style:none;padding:0;margin:0 0 20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sp-contact li{background:var(--sand);border-radius:var(--r-s);padding:10px 14px;display:grid}
+.sp-contact span{font-size:.8rem;color:var(--muted);font-weight:700}
+.sp-contact a{font-weight:700;text-align:start;justify-self:start}
+.sp-disc{font-size:.88rem;color:var(--muted);background:var(--sand);border-radius:var(--r-s);padding:14px 16px;margin:0 0 34px}
+.sp-side{display:grid;gap:8px;justify-items:start;border-top:5px solid var(--sun)}
+.sp-side p{margin:0;font-size:.93rem;color:var(--muted)}
+.sidecta p{font-size:.93rem;color:var(--muted);margin:6px 0 12px}
+.rel{padding-block:20px 10px}
+</style>

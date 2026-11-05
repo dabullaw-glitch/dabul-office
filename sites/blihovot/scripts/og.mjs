@@ -1,4 +1,4 @@
-// Share images (1200x630) for every guide, tool and the home page, made from an HTML template with a headless browser.
+// Share images (1200x630) for every guide, sponsored article, tool and the home page, made from an HTML template with a headless browser.
 // Usage after "astro build": node scripts/og.mjs   (writes dist/og/*.png and dist/icon-512.png)
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -7,6 +7,9 @@ const DIST = 'dist', OUT = path.join(DIST, 'og'); fs.mkdirSync(OUT, { recursive:
 const HUB = { 'hadlut-piraon': 'חדלות פירעון', 'hotzaa-lapoal': 'הוצאה לפועל', 'hesder-hov': 'הסדרי חוב', atzmaim: 'עצמאים ועסקים', kalkala: 'כלכלה נכונה', achrei: 'אחרי החובות' };
 const fm = (s) => { const m = /^---\n([\s\S]*?)\n---/.exec(s); const o = {}; if (m) for (const line of m[1].split('\n')) { const k = /^(\w+):\s*"?(.*?)"?\s*$/.exec(line); if (k) o[k[1]] = k[2]; } return o; };
 const items = fs.readdirSync('src/content/guides').filter((f) => f.endsWith('.md')).map((f) => { const d = fm(fs.readFileSync(path.join('src/content/guides', f), 'utf8')); return { id: f.replace(/\.md$/, ''), title: d.title, tag: HUB[d.hub] || '' }; });
+// sponsored articles (tochen-memuman/): og/tm-<slug>.png, always tagged as paid content
+const SP = 'src/content/sponsored';
+if (fs.existsSync(SP)) for (const f of fs.readdirSync(SP).filter((f) => f.endsWith('.md'))) { const d = fm(fs.readFileSync(path.join(SP, f), 'utf8')); if (d.draft !== 'true') items.push({ id: 'tm-' + f.replace(/\.md$/, ''), title: d.title, tag: 'תוכן ממומן' }); }
 items.push({ id: 'default', title: 'יש דרך החוצה מהחובות', tag: 'המדריך הישראלי ליציאה מחובות' });
 const font = (f) => 'data:font/woff2;base64,' + fs.readFileSync('public/fonts/' + f).toString('base64');
 const css = `@font-face{font-family:H;font-weight:400;src:url(${font('heebo-hebrew-400-normal.woff2')})}@font-face{font-family:H;font-weight:700;src:url(${font('heebo-hebrew-700-normal.woff2')})}@font-face{font-family:F;font-weight:700;src:url(${font('frank-ruhl-libre-hebrew-700-normal.woff2')})}

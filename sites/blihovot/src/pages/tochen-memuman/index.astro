@@ -1,0 +1,66 @@
+---
+// The sponsored-content section: every paid article, clearly labelled, and the site's policy for paid content.
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { SITE } from '../../data/site';
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const all = (await getCollection('sponsored')).filter((a) => !a.data.draft).sort((x, y) => +y.data.published - +x.data.published);
+const fmt = (x: Date) => x.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+const title = 'תוכן ממומן: כתבות בשיתוף מפרסמים';
+const description = `כתבות ממומנות באתר ${SITE.name}, בנושאי חובות, ניהול כסף ושירותים משפטיים. כל כתבה מסומנת בבירור כתוכן ממומן, וכל קישור למפרסם מסומן כממומן.`;
+const schema = [
+  { '@context': 'https://schema.org', '@type': 'CollectionPage', name: title, description, inLanguage: 'he-IL', url: new URL(`${B}tochen-memuman/`, Astro.site).href,
+    hasPart: all.map((a) => ({ '@type': 'Article', headline: a.data.title, url: new URL(`${B}tochen-memuman/${a.id}/`, Astro.site).href })) },
+];
+---
+<Base title={title} description={description} schema={schema}>
+  <div class="wrap" style="padding-block:28px 40px">
+    <Breadcrumbs items={[{ label: 'תוכן ממומן' }]} />
+    <p class="tm-k"><span class="tm-pill">תוכן ממומן</span></p>
+    <h1>כתבות בשיתוף מפרסמים</h1>
+    <p class="tm-lede">כאן מרוכזות הכתבות הממומנות של {SITE.name}. הן נכתבות בשיתוף עסקים ומשרדים שמשלמים על הפרסום, ולכן הן מסומנות בבירור ונפרדות מהמדריכים של המערכת.</p>
+    {all.length > 0 ? (
+      <div class="tm-list">
+        {all.map((a, i) => (
+          <a class={`card tm-card${i === 0 ? ' tm-first' : ''}`} href={`${B}tochen-memuman/${a.id}/`}>
+            <span class="tm-pill">תוכן ממומן</span>
+            <h2>{a.data.title}</h2>
+            <p>{a.data.description.replace(/\s*כתבה ממומנת בשיתוף.*$/, '')}</p>
+            <span class="tm-meta">בשיתוף <b>{a.data.sponsor.name}</b> · {fmt(a.data.published)}</span>
+            <span class="tm-go">לקריאת הכתבה ←</span>
+          </a>
+        ))}
+      </div>
+    ) : <p class="muted">עדיין אין כתבות ממומנות.</p>}
+    <section class="tm-pol" id="mediniyut" aria-labelledby="pol-h">
+      <h2 id="pol-h">המדיניות שלנו לתוכן ממומן</h2>
+      <ul>
+        <li><strong>סימון ברור.</strong> בראש כל כתבה ממומנת כתוב "תוכן ממומן" ושם המפרסם, וגם בסופה יש גילוי נאות.</li>
+        <li><strong>קישורים מסומנים.</strong> כל קישור לאתר של המפרסם מסומן כממומן (<code dir="ltr">rel="sponsored"</code>), לפי ההנחיות של מנועי החיפוש.</li>
+        <li><strong>עריכה לפני פרסום.</strong> כל כתבה עוברת בדיקה של המערכת. לא מפרסמים הבטחות לתוצאה, "מחיקת חובות מובטחת", הלוואות בתנאים פוגעניים או מידע לא נכון.</li>
+        <li><strong>לא המלצה.</strong> כתבה ממומנת אינה המלצה של האתר על המפרסם. המדריכים של {SITE.name} נכתבים בנפרד ואינם מושפעים מפרסום.</li>
+        <li><strong>זכות לסרב.</strong> אנחנו רשאים לא לפרסם תוכן שלא מתאים לקוראים שלנו.</li>
+      </ul>
+      <p>רוצים לפרסם כתבה ממומנת? כל הפרטים ב<a href={`${B}pirsum/#kitva`}>עמוד הפרסום</a>.</p>
+    </section>
+  </div>
+</Base>
+<style>
+.tm-k{margin:0 0 6px}
+.tm-pill{display:inline-block;background:var(--sun);color:#1b1405;font-weight:700;font-size:.8rem;padding:3px 12px;border-radius:999px}
+.tm-lede{font-size:1.15rem;color:var(--ink-2);max-width:62ch}
+.tm-list{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));margin-top:26px}
+.tm-card{display:grid!important;gap:10px;align-content:start;border-top:5px solid var(--sun)}
+.tm-card .tm-pill{justify-self:start}
+.tm-card h2{font-size:1.35rem;margin:0}
+.tm-first{grid-column:1/-1;padding:30px;background:linear-gradient(135deg,var(--card),var(--sun-soft))}
+.tm-first h2{font-size:clamp(1.5rem,3vw,2.1rem);max-width:28ch}
+.tm-first p{font-size:1.05rem;max-width:62ch}
+.tm-meta{font-size:.9rem;color:var(--muted)}
+.tm-go{color:var(--teal);font-weight:700}
+.tm-pol{margin-top:46px;max-width:var(--w-text);background:var(--sand);border-radius:var(--r);padding:24px 26px}
+.tm-pol h2{margin-top:0;font-size:1.5rem}
+.tm-pol ul{padding-inline-start:1.2em}.tm-pol li{margin-bottom:.5em}
+.tm-pol p{margin:0}
+</style>

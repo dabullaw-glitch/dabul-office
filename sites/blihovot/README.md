@@ -4,7 +4,8 @@ A separate information site about debt in Israel: insolvency (חדלות פיר�
 self-employed debt, and healthy money habits. **It is not the law office site and must never be mixed with it**:
 no links to dabullaw.co.il from content, no posting to the office's social accounts, no use of the office's WordPress,
 snippets or Supabase collections other than `hublead` (this site's leads) and `hubreport` (this site's reports).
-The owner's name appears only in `src/data/lawyers.json` (the paid lawyer list).
+The owner's name appears only in `src/data/lawyers.json` (the paid lawyer list) and, as a paying sponsor, in his own sponsored
+article (see "Sponsored content" below). That clearly labelled sponsored article is the **only** exception to the no-link rule.
 
 - Static site (Astro). `npm ci && npm run build` builds to `dist/` (pages, share images, search index).
 - Every push to `main` that touches `sites/blihovot/**` runs `.github/workflows/blihovot.yml`, which publishes `dist/`
@@ -31,6 +32,24 @@ The owner's name appears only in `src/data/lawyers.json` (the paid lawyer list).
    error when an item is too short). Length comes from real value, never filler: a direct answer in the first paragraph,
    H2 headings phrased as the questions people search, a table, numbered steps, a worked example with made-up numbers
    (say so), common mistakes, a "what to do this week" checklist, 4 to 6 FAQ items, and 5 to 10 internal links.
+
+## Sponsored content (tochen-memuman/)
+
+Paid articles ("תוכן ממומן"), sold on `pirsum/` (price on request; never write a price on the site unless the owner approved one).
+- One markdown file per article in `src/content/sponsored/<slug>.md` (schema `sponsored` in `src/content.config.ts`: title, seoTitle,
+  description, published, updated, summary, sponsor {name, url, about, phone, whatsapp, address, cta}, optional image under `public/`, faq).
+  The index is `tochen-memuman/`, each article is `tochen-memuman/<slug>/`; both are in the sitemap, the footer links the index (not the main menu).
+  Not in the RSS feed, the guide lists or `llms.txt`. Share image: `og/tm-<slug>.png` (made by `scripts/og.mjs`).
+- Every page is labelled at the top ("תוכן ממומן", "כתבה בשיתוף ...") and ends with a disclosure. Article JSON-LD names the sponsor.
+- **Links to the sponsor live only in the sponsor box and the side card**, rendered by `src/pages/tochen-memuman/[slug].astro` with
+  `rel="sponsored noopener"`. Do not put the sponsor's website inside the markdown body.
+- **The law office exception:** the owner asked for a sponsored article about his own office (`matai-lifnot-leorech-din-hadlut-piraon`).
+  dabullaw.co.il may appear only inside `tochen-memuman/` pages, always with rel="sponsored"; nowhere else on the site.
+  `scripts/check-portal.mjs` enforces this: a dabullaw.co link on any other page fails the build, and inside `tochen-memuman/`
+  every such link must carry rel="sponsored".
+- Content rules: the writing rules above, plus Israel Bar advertising rules for any lawyer sponsor: no superlatives ("הכי",
+  "הטוב ביותר", "מוביל"), never "מומחה", no promises of results, no prices, no client testimonials. The check script fails the build on
+  dashes, "הכי", "הטוב ביותר", "מומח" and "מוביל" in these pages. Length 700 to 1,200 words, useful to the reader first, the sponsor second.
 
 ## Numbers, monthly check and "מה השתנה" (ma-hishtana/)
 

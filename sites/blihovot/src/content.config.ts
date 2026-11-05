@@ -38,4 +38,32 @@ const lessons = defineCollection({
   }),
 });
 
-export const collections = { guides, lessons };
+// Sponsored articles (paid content, "תוכן ממומן"): one markdown file per article in src/content/sponsored/<slug>.md.
+// Shown only under tochen-memuman/, always labelled as paid content. Links to the sponsor are rendered by the page
+// (sponsor box, rel="sponsored"); do not put the sponsor's website inside the markdown body.
+const sponsored = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/sponsored' }),
+  schema: z.object({
+    title: z.string(),                       // the H1
+    seoTitle: z.string().optional(),         // <title> if different (max ~60 chars)
+    description: z.string(),                 // meta description and the lede under the H1, 140-160 chars
+    published: z.coerce.date(),
+    updated: z.coerce.date(),
+    summary: z.array(z.string()).min(2),     // "בקצרה" lines at the top
+    sponsor: z.object({
+      name: z.string(),                      // as the sponsor wants it shown
+      url: z.string().url(),                 // the sponsor's website (always rel="sponsored")
+      about: z.string(),                     // 1-3 sentences for the sponsor box, approved by the sponsor
+      phone: z.string().optional(),
+      whatsapp: z.string().optional(),
+      address: z.string().optional(),
+      cta: z.string().default('לאתר של המפרסם'),
+    }),
+    image: z.string().optional(),            // optional cover image under public/ (path without the base), e.g. sponsored/x.jpg
+    imageAlt: z.string().optional(),
+    faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { guides, lessons, sponsored };

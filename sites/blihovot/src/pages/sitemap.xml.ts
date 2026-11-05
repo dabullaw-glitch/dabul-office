@@ -8,14 +8,16 @@ export async function GET(ctx: { site: URL }) {
   const u = (p: string) => new URL(B + p, ctx.site).href;
   const guides = (await getCollection('guides')).filter((g) => !g.data.draft);
   const lessons = await getCollection('lessons');
+  const sponsored = (await getCollection('sponsored')).filter((a) => !a.data.draft);
   const { questions } = await forumData();
   const latest = guides.reduce((m, g) => (+g.data.updated > m ? +g.data.updated : m), 0);
   const d = (x: number | Date) => new Date(x).toISOString().slice(0, 10);
   const rows: [string, string][] = [
-    ['', d(latest)], ['madrich/', d(latest)], ['kli/', d(latest)], ['kurs/', d(latest)], ['video/', d(latest)], ['milon/', d(latest)], ['pniya/', d(latest)], ['odot/', d(latest)], ['pirsum/', d(latest)], ['forum/', d(latest)], ['hamchashot/', d(latest)], ['mischak/', d(latest)], ['kurs/kalkala/', d(latest)], ['kurs/taktziv/', d(latest)], ['kurs/hesder/', d(latest)], ['forum/klalim/', d(latest)], ['ma-hishtana/', d(latest)], ['hatmaa/', d(latest)],
+    ['', d(latest)], ['madrich/', d(latest)], ['kli/', d(latest)], ['kurs/', d(latest)], ['video/', d(latest)], ['milon/', d(latest)], ['pniya/', d(latest)], ['odot/', d(latest)], ['pirsum/', d(latest)], ['forum/', d(latest)], ['hamchashot/', d(latest)], ['mischak/', d(latest)], ['kurs/kalkala/', d(latest)], ['kurs/taktziv/', d(latest)], ['kurs/hesder/', d(latest)], ['forum/klalim/', d(latest)], ['ma-hishtana/', d(latest)], ['hatmaa/', d(latest)], ['tochen-memuman/', d(sponsored.reduce((m, a) => (+a.data.updated > m ? +a.data.updated : m), latest))],
     ...HUBS.map((h) => [`nose/${h.id}/`, d(latest)] as [string, string]),
     ...TOOLS.map((t) => [`kli/${t.id}/`, d(latest)] as [string, string]),
     ...guides.map((g) => [`madrich/${g.id}/`, d(g.data.updated)] as [string, string]),
+    ...sponsored.map((a) => [`tochen-memuman/${a.id}/`, d(a.data.updated)] as [string, string]),
     ...lessons.map((l) => [`kurs/${l.id}/`, d(latest)] as [string, string]),
     ...(await portalUrls()),
     ...questions.map((q) => [`forum/q/${q.id}/`, d(new Date(q.created))] as [string, string]),
