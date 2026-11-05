@@ -1,0 +1,30 @@
+{
+ "id": "vr-fh-l01",
+ "file": "fh-l01-40c99f",
+ "course": "first-home",
+ "n": 1,
+ "deckUrl": "https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reels?a=deck&t=40c99f5cf8094d5edc0c9a8b3b2c57dcce9a9183",
+ "open": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/555dac2798e0bec2df82c81f879d16b1.mp4?Expires=1794480540&Signature=BErK-LKdnidM3mqnw609q5UWmhL2eMv28cngrBlTIBybuaSkvskFHUjNX2jgidUgtyKUgnyRBWuDJbHn9OCRSMcOFhlIn~7iqYvCVoHcFw9tzn8BPsHg5KSniNNhkJBfux2GKdakOILTInwyNO177ZvfzHLBhDuynwS07FfwgFwoqUeL4vR2H2v6dnnGAOEAn8dO8r~fqlVR64qgZbLCgEE4Yl1ZJ-oMmVS11NDWzlICq~60ocY7FHRJFG48YaRBylptFInsaGcOImrH41EbAJs8ZhTMQ12ZiZ~NsCH6hhfak--sTKYsSP6A6KGv2OomzxWsMpTCoiJ8Yeenh6dNOQ__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "close": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/d2096e2d9a1bbb932fd096b2030b7e1e.mp4?Expires=1794480550&Signature=h5ucbShNw6duZOMSmje07ouTqU0ue~97K9MR0xWvdQ971TyN5JGJFS5p0AZsT8hA9OrNHtWpQjR9jn8l0zIVL4lKsQvrbsHvYJbVcXCKmwDXyZ93wT1YPn~gpzsuMAxpwaqQLiJ37NPQs-8ZP1JLx7DVxw8tN36Hgig1vNXjj99gcrC1bVagbpd0Gdd~hDdk~nP-uKCAqXCTkkKeOrKTsLBGwmphhHlT-~W-Z2cNoPw0W7DQH83M5zJenfxUwn1mA6~Si6zAqLiWb84vmt40kUG8O-uMJMkIjjKuqmvVeMqEbNhqA3ahkXhwaNIUw2-wvo1yr3TXKc~z49Q9hqLiUA__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "narration": {
+  "mode": "pieces",
+  "pieces": [
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=5995dd7d-0708-4903-80b6-f61f0b8eb415.wav",
+    "from": 0,
+    "to": 1
+   },
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=d37f0550-ab50-45c3-8869-278c7759bb2e.wav",
+    "from": 2,
+    "to": 14
+   },
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=ec4eb7f6-2179-4f35-a94d-274012c997d6.wav",
+    "from": 15,
+    "to": 25
+   }
+  ]
+ },
+ "note": "from/to are 0-based in the filtered slide list (deck slide 0 'ברוכים הבאים' and the last 'בשיעור הבא' dropped); vidreq narr[] uses the deck indices (1-2, 3-15, 16-26)."
+}
