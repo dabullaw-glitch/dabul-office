@@ -262,21 +262,26 @@ For every vidreq with status 'editing': `git pull` and look for media/hgv/<id>.m
 ### 6a. After Yakir approves a HeyGen reel: publishing row + front of the queue (Yakir 1.11.2026)
 
 Rule (settings/social.queueRule): "להקדים את סרטוני הייגן לראש התור, ואת שאר הרילסים לדחות". The reels function gives an
-approved reel the next FREE day (Yakir 3.11.2026: Sunday, Tuesday and Thursday EVERY week, at a rotating hour from
-settings/social.videoSlots.times, see timesNote there; the every-other-Sunday rule was dropped), which is the END of the queue. The reel row carries priority 'heygen' (vr=final sets it). Every run, for each reel with
+approved reel the next FREE day (Yakir 5.11.2026: Sunday, Tuesday and Thursday EVERY week, each day at its own FIXED
+hour, the same every week: Sunday 20:30, Tuesday 12:30, Thursday 17:30 = settings/social.videoSlots.times in the order of
+days), which is the END of the queue. The reel row carries priority 'heygen' (vr=final sets it). Every run, for each reel with
 priority 'heygen' and status 'approved' that has no `frontAt` yet, do this once:
 
-How the calendar is built (docs coll 'pub', publishing by the postoria function; never call Postoria yourself):
-- one MAIN row per reel: owner 'system', kind 'video', at = the reel's publishAt in Israel time + 5 minutes
-  (e.g. publishAt 12:30 Israel -> at 'YYYY-MM-DDT12:35'; before 5.11.2026 always 19:05), reel = reel id, channels
-  always 'instagram'; plus 'tiktok' only on a Thursday (not on Tuesday, not on Sunday). Filmed reels have a companion
-  OFFICE row (owner 'office', at = the publishAt time itself, 5 minutes before the main row, channels facebook/youtube, reelFrom = main row id). HeyGen reels have no
-  office row: their main row carries facebook + youtube itself (see pub-20261126T1905-system-hg for the exact shape:
-  title "רילס: <name>", text = captions.instagram, textTiktok, ytTitle, ytDesc, ytTags, series, videoUrl = reel.videoUrl
-  (5.11.2026; older rows have reelPath = reel.path in storage instead), reelBytes, staged, note). A main row is published
-  from videoUrl (fn/_shared/video-src.js); a TikTok or office row takes it from its reelFrom row.
-- TikTok rows: channels ['tiktok'] only, reelFrom = a main row. Sunday rows (10 minutes after that day's main row, or
-  at the slot hour when the day has no main row) carry the reel of the Tuesday just before (until 3.1.2027); always a reel that was already published on the main row before the TikTok row.
+How the calendar is built (docs coll 'pub', publishing by the postoria function; never call Postoria yourself).
+Yakir 5.11.2026: "ראשון, שלישי וחמישי רק סרטונים שלי שאני מדבר", and every video goes out to ALL networks at the SAME time.
+- ONE row per reel, nothing else: owner 'system', kind 'video', at = the reel's publishAt in Israel time exactly (the slot
+  hour itself, e.g. 'YYYY-MM-DDT12:30', no +5 minutes), reel = reel id, channels ALWAYS
+  ["facebook","instagram","youtube","tiktok"] on every slot day (Sunday, Tuesday and Thursday alike). Shape: see
+  pub-20261126T1905-system-hg (title "רילס: <name>", text = captions.instagram, textTiktok = captions.tiktok, ytTitle,
+  ytDesc, ytTags, series, videoUrl = reel.videoUrl (5.11.2026; older rows have reelPath = reel.path in storage instead),
+  reelBytes, staged, note). The row is published from videoUrl (fn/_shared/video-src.js).
+- NO office row (owner 'office') and NO separate TikTok row for a reel any more, and no TikTok-only day. Postoria posts all
+  four networks of the row in the same run. The only exception is a reel whose topic already went out on a network (e.g.
+  rl-cl-yt-gush-chelka: facebook + instagram only); keep such a row's channels as they are.
+- Only videos where Yakir himself speaks (HeyGen reels of his avatar and voice, and edits of takes he filmed). A video made
+  only of photos, slides or music, or anything edited without him, never gets a row (if you find one planned: docs_merge
+  {status:'cancelled', cancelNote:'יקיר 5.11.2026: רק סרטונים שלי שאני מדבר'}).
+- Image posts and articles on a video day stay at a different hour than the video.
 - A row id never changes (ids do not match dates); moving = docs_merge a new `at`.
 
 Steps:
