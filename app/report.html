@@ -71,7 +71,7 @@ input[type=number]{text-align:center;direction:ltr;-moz-appearance:textfield}inp
 @keyframes up{from{transform:translateY(40px);opacity:0}}
 .sheet h2{display:flex;justify-content:space-between;align-items:center}
 .x{all:unset;cursor:pointer;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:var(--bg);font-size:18px}
-.mtog{display:flex;gap:8px;margin:4px 0 14px}.mtog button{all:unset;cursor:pointer;flex:1;text-align:center;padding:10px;border-radius:12px;border:1.5px solid var(--line);font-weight:700}.mtog button.on{border-color:var(--accent);background:var(--soft);color:var(--accent-ink)}
+.mtog{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}.mtog button{min-width:92px}.mtog button{all:unset;cursor:pointer;flex:1;text-align:center;padding:10px;border-radius:12px;border:1.5px solid var(--line);font-weight:700}.mtog button.on{border-color:var(--accent);background:var(--soft);color:var(--accent-ink)}
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .tile{all:unset;box-sizing:border-box;cursor:pointer;border:1.5px solid var(--line);border-radius:14px;padding:12px;min-height:58px;display:flex;align-items:center;gap:8px;font-weight:700;font-size:14.5px;line-height:1.25;background:var(--panel)}
 .tile.exp{border-color:var(--accent);background:var(--soft)}
@@ -103,7 +103,10 @@ const EXP = [['rent','שכר דירה','','קבלה על שכר דירה'],['mor
 const LINES = INC.concat(EXP), lineOf = k => LINES.find(x => x[0] === k);
 const catName = k => k === 'extra' ? 'הכנסה / הוצאה נוספת' : k === 'other' ? 'מסמך אחר' : ((lineOf(k) || [])[1] || 'מסמך');
 const catDoc = k => k === 'extra' ? 'קבלה / אישור' : k === 'other' ? 'מסמך' : ((lineOf(k) || [])[3] || 'קבלה');
-let D = null, R = null, P = null, step = 0, saveT = null, dirty = false, mode = 'home';
+let D = null, R = null, P = null, step = 0, saveT = null, dirty = false, mode = 'home', selM = null;
+// "אוקטובר ונובמבר 2026" / "דצמבר 2026 וינואר 2027"
+const two = ks => ks[0].slice(0, 4) === ks[1].slice(0, 4) ? `${mName(ks[0])} ו${mName(ks[1])} ${ks[0].slice(0, 4)}` : `${mName(ks[0])} ${ks[0].slice(0, 4)} ו${mName(ks[1])} ${ks[1].slice(0, 4)}`;
+const longDate = s => { const [y, m, d] = String(s).slice(0, 10).split('-'); return `${+d} ב${MONTHS[+m - 1]} ${y}`; };
 
 const fail = (t, s) => { main.innerHTML = `<div class="card msg"><div class="big">🔒</div><b>${esc(t)}</b><p style="color:var(--muted);margin:0">${esc(s || 'אם קיבלת את הקישור מהמשרד, פנה אלינו ונשלח קישור מעודכן.')}</p></div>`; bar.classList.add('hidden'); };
 if (!token || !C.functions) return fail('הקישור לא תקין');
@@ -128,18 +131,23 @@ function home(){
   if (close && close.status !== 'filled') { const miss = missing(close);
     html += `<div class="card alertc"><h2>⏰ הגיע הזמן לסגור את הדוח של ${esc(close.label)}</h2><p class="sub" style="margin:4px 0 12px">החודשים נגמרו. בודקים שכל הקבלות צולמו, מאשרים את הסכומים וחותמים. ${close.due ? `חשוב לסיים עד ${fmt(addDays(close.due, -5))}.` : ''}</p>${miss.length ? `<p style="margin:0 0 12px;color:var(--bad);font-weight:700">חסרות עדיין ${miss.length} קבלות</p>` : ''}<button class="btn pri" style="width:100%" data-open="${close.key}">לסגירת הדוח</button></div>`; }
   else if (close && close.status === 'filled') html += `<div class="card okc"><h2>✓ הדוח של ${esc(close.label)} נשלח למשרד</h2><p class="sub" style="margin:4px 0 10px">אנחנו בודקים ומגישים. עד שנבדוק אפשר עוד לתקן.</p><button class="btn sm" data-open="${close.key}">צפייה ותיקון</button></div>`;
-  html += `<button class="cta" id="snap"><span style="font-size:26px">📷</span><span>צילום קבלה או מסמך<small>כל קבלה, חשבון או תלוש. מצלמים, וזה נשמר אצלנו</small></span></button>`;
   // what is expected every month, with a mark when it is already here
-  if (cur) { const months = cur.mkeys.filter(k => k <= nowM).reverse(), exp = (D.expect || []);
-    html += `<div class="card"><h2>${esc(mName(nowM))}: מה צריך לצלם</h2><p class="sub">הממונה מחייב קבלה לכל הכנסה והוצאה בדוח.${exp.length ? ' זו הרשימה לפי הדוח הקודם שלך.' : ' כל מה ששילמת או קיבלת החודש.'}</p>${(exp.length ? exp : ['rent', 'arnona', 'elec', 'water', 'food', 'salary']).map(k => { const n = (cur.files || []).filter(f => f.cat === k && f.month === nowM).length;
+  if (cur) { if (!cur.mkeys.includes(selM)) selM = cur.mkeys.includes(nowM) ? nowM : cur.mkeys[0];
+    const months = cur.mkeys.slice().reverse(), exp = (D.expect || []), sel = selM;
+    html += `<div class="card" id="period"><h2>הדוח לחודשים ${esc(two(cur.mkeys))}</h2><p class="sub" style="margin:4px 0 12px">את הדוח מגישים לממונה עד ${esc(longDate(cur.due))}.</p><p style="margin:0 0 6px;font-weight:700;font-size:14.5px">לאיזה חודש שייכת הקבלה?</p><div class="mtog" role="tablist" aria-label="חודש">${cur.mkeys.map(k => `<button role="tab" aria-selected="${k === sel}" data-sel="${k}" class="${k === sel ? 'on' : ''}">${esc(mName(k))}${k === nowM ? ' (החודש)' : ''}</button>`).join('')}</div></div>`;
+  }
+  html += `<button class="cta" id="snap"><span style="font-size:26px">📷</span><span>צילום קבלה או מסמך${cur ? ` ל${esc(mName(selM))}` : ''}<small>כל קבלה, חשבון או תלוש. מצלמים, וזה נשמר אצלנו</small></span></button>`;
+  if (cur) { const months = cur.mkeys.slice().reverse(), exp = (D.expect || []), sel = selM;
+    html += `<div class="card"><h2>${esc(mName(sel))}: מה צריך לצלם</h2><p class="sub">הממונה מחייב קבלה לכל הכנסה והוצאה בדוח.${exp.length ? ' זו הרשימה לפי הדוח הקודם שלך.' : ' כל מה ששילמת או קיבלת החודש.'}</p>${(exp.length ? exp : ['rent', 'arnona', 'elec', 'water', 'food', 'salary']).map(k => { const n = (cur.files || []).filter(f => f.cat === k && f.month === sel).length;
       return `<div class="li2 ${n ? 'ok' : ''}"><span class="ic">${n ? '✓' : '·'}</span><div class="t"><b>${esc(catDoc(k))}</b><small>${esc(catName(k))}${n ? ` · צולמו ${n}` : ' · עוד לא צולם'}</small></div><button class="mini" data-snap="${k}">${n ? 'עוד' : 'צילום'}</button></div>`; }).join('')}</div>`;
     const list = (cur.files || []).slice().reverse();
     html += `<div class="card"><h2>צילמת בתקופה הזו (${list.length})</h2>${list.length ? months.map(mo => { const fs = list.filter(f => f.month === mo); return fs.length ? `<div class="grp">${esc(mName(mo))}</div>` + fs.map(f => `<div class="li2 ok"><span class="ic">✓</span><div class="t"><b>${esc(catName(f.cat))}</b><small>${+f.amount ? money(f.amount) + ' · ' : ''}${esc(f.name)}</small></div>${f.path ? `<button class="mini" data-rm="${esc(f.path)}" aria-label="הסרה" style="color:var(--bad)">✕</button>` : ''}</div>`).join('') : ''; }).join('') : '<p class="sub" style="margin:0">עוד לא צילמת כלום החודש. כל קבלה שמגיעה: לוחצים על הכפתור הירוק ומצלמים.</p>'}</div>`;
   }
   html += hist() + contact();
   main.innerHTML = html;
-  document.getElementById('snap').onclick = () => sheet();
-  main.querySelectorAll('[data-snap]').forEach(b => b.onclick = () => sheet(b.dataset.snap));
+  document.getElementById('snap').onclick = () => sheet(null, selM);
+  main.querySelectorAll('[data-snap]').forEach(b => b.onclick = () => sheet(b.dataset.snap, selM));
+  main.querySelectorAll('[data-sel]').forEach(b => b.onclick = () => { selM = b.dataset.sel; home(); });
   main.querySelectorAll('[data-open]').forEach(b => b.onclick = () => openReport(b.dataset.open));
   main.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => removeFile(b.dataset.rm));
 }
@@ -162,7 +170,7 @@ function sheet(cat, month){
       ${months.length > 1 ? `<div class="mtog">${months.map(k => `<button data-m="${k}" class="${k === mo ? 'on' : ''}">${esc(mName(k))}${k === D.now ? ' (החודש)' : ''}</button>`).join('')}</div>` : `<p class="sub">לחודש ${esc(mName(mo))}</p>`}
       <div class="tiles">${order.map(k => `<button class="tile${exp.includes(k) ? ' exp' : ''}" data-c="${k}">${esc(catDoc(k))}<br><small style="font-weight:500;color:var(--muted)">${esc(catName(k))}</small></button>`).join('')}<button class="tile" data-c="extra">הכנסה או הוצאה אחרת</button><button class="tile" data-c="other">מסמך אחר</button></div></div>`;
     bg.querySelector('.x').onclick = close;
-    bg.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { mo = b.dataset.m; draw(); });
+    bg.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { mo = b.dataset.m; selM = mo; draw(); });
     bg.querySelectorAll('[data-c]').forEach(b => b.onclick = () => choose(b.dataset.c));
   };
   // the file dialog must open inside the tap itself

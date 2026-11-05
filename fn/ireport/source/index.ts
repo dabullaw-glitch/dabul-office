@@ -8,22 +8,28 @@ const ym = (s: string) => String(s || '').slice(0, 7);
 const addM = (k: string, n: number) => { const [y, m] = k.split('-').map(Number); const d = new Date(Date.UTC(y, m - 1 + n, 1)); return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`; };
 const todayIL = () => new Date(Date.now() + 3 * 3600e3).toISOString().slice(0, 10);
 const label = (p: any) => { const [y1, m1] = p.months[0].split('-').map(Number), [y2, m2] = p.months[1].split('-').map(Number); return y1 === y2 ? `${MONTHS[m1 - 1]}-${MONTHS[m2 - 1]} ${y1}` : `${MONTHS[m1 - 1]} ${y1} - ${MONTHS[m2 - 1]} ${y2}`; };
+const rep = (m: any, k: string) => (m.irep || {})[k] || {};
 function periods(m: any) {
   const first = m.firstPeriod || ym(m.orderDate); if (!/^\d{4}-\d{2}$/.test(first || '')) return [];
   const now = ym(todayIL()), out: any[] = [];
-  for (let k = first, i = 0; i < 120 && k <= now; k = addM(k, 2), i++) { const end = addM(k, 1); out.push({ key: k, months: [k, end], end, due: addM(end, 1) + '-15' }); }
+  // up to the current month, plus the next two months right after a report the office closed
+  // (5.11.2026: the office can close a report early and move the client on, even to months still ahead)
+  for (let k = first, i = 0; i < 120 && (k <= now || i > 0 && rep(m, addM(k, -2)).status === 'submitted'); k = addM(k, 2), i++) { const end = addM(k, 1); out.push({ key: k, months: [k, end], end, due: addM(end, 1) + '-15' }); }
   return out;
 }
-const rep = (m: any, k: string) => (m.irep || {})[k] || {};
 const LOCKED = ['ready', 'submitted'];
 const nowM = () => ym(todayIL());
 // the period of the current month (photos go there) and the oldest ended one that still needs closing
 function state(m: any) {
   const ps = periods(m), now = nowM();
-  const cur = ps.find(p => p.months.includes(now)) || null;
+  let cur = ps.find(p => p.months.includes(now)) || null;
+  // the office closed the current report early: photos go to the next open report
+  const c0 = cur;
+  if (c0 && LOCKED.includes(rep(m, c0.key).status || '')) cur = ps.find(p => p.key > c0.key && !LOCKED.includes(rep(m, p.key).status || '')) || c0;
   const close = ps.find(p => p.end < now && rep(m, p.key).status !== 'submitted' && !LOCKED.includes(rep(m, p.key).status || '')) || null;
   const open = [close, cur].filter((p, i, a) => p && !LOCKED.includes(rep(m, p.key).status || '') && a.indexOf(p) === i) as any[];
-  const months = open.flatMap(p => p.months.filter((x: string) => x <= now));
+  // both months of every open report, so the client can always choose the month of a receipt
+  const months = open.flatMap(p => p.months);
   return { ps, cur, close, open, months };
 }
 const INC = ['salary', 'business', 'pension', 'rentIn', 'nii', 'alimonyIn'];
@@ -98,7 +104,7 @@ Deno.serve(async (req) => {
     const m = await find(String(b.t || ''));
     if (!m) return json({ error: 'not_found' }, 404);
     const S = state(m), sb = admin();
-    const byMonth = (mo: string) => S.open.find(p => p.months.includes(mo) && mo <= nowM());
+    const byMonth = (mo: string) => S.open.find(p => p.months.includes(mo));
     const byPath = (path: string) => S.open.find(p => path.startsWith(`insolv/${m.id}/${p.key}/`) && !path.includes('..'));
     const p: any = b.key ? S.open.find(p => p.key === b.key) : null;
     const dir = p ? `insolv/${m.id}/${p.key}` : '';
