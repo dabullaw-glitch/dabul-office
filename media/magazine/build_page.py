@@ -19,7 +19,8 @@ CSS = """
 .dmag *{box-sizing:border-box}
 .dmag h1,.dmag h2,.dmag h3{margin:0;font-weight:800;color:inherit;text-wrap:balance}
 .dmag a{text-decoration:none}
-.dmag .hero{position:relative;overflow:hidden;border-radius:22px;background:radial-gradient(120% 140% at 85% 0%,#2a2620 0%,#141414 50%,#0B0B0B 100%);color:#fff;padding:52px 48px 56px}
+html,body{overflow-x:clip}
+.dmag .hero{position:relative;overflow:hidden;border-radius:0;background:radial-gradient(120% 140% at 85% 0%,#2a2620 0%,#141414 50%,#0B0B0B 100%);color:#fff;width:100vw;max-width:100vw;margin:-24px calc(50% - 50vw) 0;padding:64px max(24px,calc(50vw - 564px)) 68px}
 .dmag .hero:before{content:"";position:absolute;inset:0;background:var(--heroimg) center 62%/cover no-repeat;opacity:.34;filter:grayscale(.2)}
 .dmag .hero>*{position:relative}
 .dmag .kick{color:var(--g2);font-weight:700;letter-spacing:.06em;font-size:15px;display:flex;align-items:center;gap:12px}
