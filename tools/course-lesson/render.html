@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8">
+<!-- Course lesson renderer (5.11.2026). Driven by tools/course-lesson/lesson.py with Playwright:
+     - the lesson slides exactly as the academy player shows them (academy/deck.js + academy/academy.css), one still per
+       reveal step of every slide, 1280x720 at device scale 1.5 = 1920x1080;
+     - the side panel next to Yakir's avatar in the opening and the closing (lesson number, title, next lesson). -->
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../academy/academy.css">
+<style>
+  html,body{margin:0;padding:0;background:#0f0e0c;width:1280px;height:720px;overflow:hidden}
+  #box{width:1280px;margin:0}
+  .dk-frame{border-radius:0!important;box-shadow:none!important}
+  .dk-bar,.dk-big-play,.dk-cap{display:none!important}
+  .dk-scene .rv{transition:none!important}
+  /* the panel next to the avatar (the avatar video is placed over the left part, 405 css px = 608 px of 1920) */
+  #panel{position:absolute;inset:0;width:1280px;height:720px;direction:rtl;color:#fff;font-family:var(--sans);
+    background:radial-gradient(900px 600px at 60% 15%,#2a251c 0%,#15130f 60%,#0b0a08 100%);overflow:hidden}
+  #panel:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(228,209,156,.03) 0 2px,transparent 2px 110px)}
+  #panel .p-side{position:absolute;top:0;bottom:0;right:0;width:875px;padding:0 70px 0 60px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center}
+  #panel .p-brand{position:absolute;top:26px;right:40px;font-size:20px;color:var(--gold);letter-spacing:.04em;opacity:.85}
+  #panel .p-k{color:var(--gold-line);font-size:28px;font-weight:700;letter-spacing:.05em;margin-bottom:14px}
+  #panel h1{font-family:var(--serif);font-weight:900;font-size:66px;line-height:1.12;margin:0;color:#fff}
+  #panel .p-line{width:120px;height:4px;background:var(--gold);margin:28px 0}
+  #panel ul{list-style:none;margin:0;padding:0}
+  #panel li{font-size:30px;line-height:1.45;color:#eee6d3;margin:0 0 14px;padding-right:34px;position:relative}
+  #panel li:before{content:'';position:absolute;right:0;top:.55em;width:14px;height:14px;border-radius:50%;background:var(--gold)}
+  #panel .p-next{font-size:28px;color:#d9d1bf}
+  #panel .p-next b{color:var(--gold)}
+  #panel .p-foot{position:absolute;bottom:26px;right:40px;left:445px;font-size:19px;color:#a9a59c;text-align:right}
+  #panel .p-seam{position:absolute;top:0;bottom:0;left:405px;width:3px;background:linear-gradient(#0000,var(--gold-line),#0000);opacity:.8}
+</style></head>
+<body><div id="box"></div>
+<script>
+  // no animation loop: the renderer sets every reveal step itself (deck.js redraws with requestAnimationFrame)
+  window.requestAnimationFrame = () => 0; window.cancelAnimationFrame = () => {};
+</script>
+<script src="../../academy/deck.js"></script>
+<script>
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // slides: mount the academy player once, then show(i) loads slide i and returns how many items it reveals in turn
+  window.mountDeck = (scenes) => {
+    const box = document.getElementById('box');
+    window.DabulDeck.mount(box, { deck: { scenes: scenes.map(s => { const x = { ...s }; delete x.audio; return x; }) } });
+    return document.querySelectorAll('.dk-seg i').length;
+  };
+  window.show = (i) => {
+    document.querySelector(`.dk-seg i[data-i="${i}"]`).click();
+    return document.querySelectorAll('.dk-scene .rv').length;
+  };
+  // reveal the first k items (the player reveals them in order across the slide)
+  window.reveal = (k) => { document.querySelectorAll('.dk-scene .rv').forEach((el, i) => el.classList.toggle('in', i < k)); };
+  // the panel next to the avatar
+  window.panel = (o) => {
+    document.getElementById('box').innerHTML = '';
+    const p = document.createElement('div'); p.id = 'panel';
+    const pts = (o.points || []).map(x => `<li>${esc(x)}</li>`).join('');
+    p.innerHTML = `<div class="p-brand">עו״ד יקיר דבול · ${esc(o.course || 'קונים דירה ראשונה')}</div><div class="p-seam"></div>
+      <div class="p-side"><div class="p-k">${esc(o.kicker || '')}</div><h1>${esc(o.title || '')}</h1><div class="p-line"></div>
+      ${pts ? `<ul>${pts}</ul>` : ''}${o.next ? `<p class="p-next">בשיעור הבא: <b>${esc(o.next)}</b></p>` : ''}</div>
+      <div class="p-foot">${esc(o.foot || '')}</div>`;
+    document.body.appendChild(p);
+  };
+</script>
+</body></html>

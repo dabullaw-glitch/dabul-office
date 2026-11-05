@@ -96,7 +96,9 @@
     const p = s.get('prompt', d.id); if (!p) return;
     await s.patch('prompt', d.id, { status: 'ready', approvedAt: nowIso(), approvedBy: 'office' });
     const r = reqOf(p);
-    if (r && ['script-wait', 'script-fix', 'writing'].includes(r.status)) await s.patch('vidreq', r.id, { status: r.mode === 'self' ? 'film' : r.type === 'course' ? 'later' : 'heygen', scriptApprovedAt: nowIso() });
+    // a course lesson (two scripts: opening + closing, 5.11.2026) moves on only when both of its scripts are approved
+    const both = !(r && Array.isArray(r.promptIds)) || r.promptIds.every(id => id === d.id || (s.get('prompt', id) || {}).status === 'ready');
+    if (r && both && ['script-wait', 'script-fix', 'writing'].includes(r.status)) await s.patch('vidreq', r.id, { status: r.mode === 'self' ? 'film' : r.type === 'course' ? (r.lesson ? 'heygen' : 'later') : 'heygen', scriptApprovedAt: nowIso() });
     s.toast(r && r.mode !== 'self' ? 'התסריט אושר. הסרטון יוכן בהייגן ויגיע אליך לאישור סופי.' : 'התסריט אושר.');
   });
   s.act('vd-hg', async (el, d) => {

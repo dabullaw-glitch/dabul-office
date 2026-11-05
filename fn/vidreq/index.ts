@@ -26,6 +26,10 @@
 // Public (Telegram buttons through the office site, portal.html#h=<a>&t=<token>):
 //   ?a=sok | sfix  (script: approve / ask for a change, POST note)   ?a=vok | vno (finished video, not reels)
 //   ?a=rok | rfix  (raw HeyGen video, token rtok: approve for editing / ask for a fix, POST note)
+// Course lessons (5.11.2026, Yakir approved option A: his avatar opens and closes every lesson, in the middle the lesson
+// slides with his voice): a request of type 'course' has {course, lesson, promptIds: [opening, closing]} (two scripts,
+// shown and approved together); after approval it goes to 'heygen' (the scheduled task follows settings/heygen.courseRules).
+//   GET ?a=deck&t=<ctok>  the lesson slides for the course-lesson workflow (only while the lesson is being assembled)
 import { loadSecrets, json, cors, admin, env } from '../_shared/common.ts';
 // deno-lint-ignore no-explicit-any
 type Any = any;
@@ -57,16 +61,29 @@ async function tg(text: string, buttons?: Any[], dry = false) {
     body: JSON.stringify({ chat_id: chat, text: text.slice(0, 4000), disable_web_page_preview: true, reply_markup: buttons ? { inline_keyboard: buttons } : undefined }) }).catch(() => null);
   return { sent: !!(r && r.ok) };
 }
+// a request's scripts: course lessons have two (opening + closing, promptIds), every other request one (promptId)
+const PART: Record<string, string> = { open: 'פתיחה', close: 'סיום' };
+async function scriptsOf(r: Any): Promise<Any[]> {
+  const ids: string[] = Array.isArray(r.promptIds) && r.promptIds.length ? r.promptIds : (r.promptId ? [r.promptId] : []);
+  const out: Any[] = []; for (const id of ids) { const p = await getDoc('prompt', id); if (p) out.push({ ...p, id }); } return out;
+}
+const many = (ps: Any[]) => ps.length > 1;
+const partTitle = (p: Any, i: number) => `${PART[p.part] || 'חלק ' + (i + 1)}${p.sec ? ' (כ-' + p.sec + ' שניות)' : ''}`;
 const short = (t: string, n = 700) => { const s = String(t || '').trim(); return s.length > n ? s.slice(0, n).replace(/\s+\S*$/, '') + '...' : s; };
 
 // ---- script ready: ask Yakir ----
 async function askScript(id: string, dry: boolean, reminder = false) {
   const r = await getDoc('vidreq', id); if (!r) return { ok: false, error: 'no request' };
-  const p = r.promptId ? await getDoc('prompt', r.promptId) : null; if (!p) return { ok: false, error: 'no script (promptId)' };
+  const ps = await scriptsOf(r); const p = ps[0]; if (!p) return { ok: false, error: 'no script (promptId)' };
   const t = r.stok || tok();
   if (!reminder) await merge('vidreq', id, { status: 'script-wait', stok: t, asked: now(), ...(dry ? { dryRun: true } : {}) });
-  const how = r.mode === 'self' ? 'אחרי האישור הוא יחכה לך בטלפרומטר לצילום.' : 'אחרי האישור הסרטון יוכן בהייגן ויערך, ויגיע אליך שוב לאישור סופי לפני כל פרסום.';
-  const text = `${reminder ? '⏳ תזכורת: ' : ''}📝 תסריט חדש מחכה לאישור שלך: ${p.title || r.topic || ''}\n(${TYPE[r.type] || 'סרטון'}${p.sec ? ', כ-' + p.sec + ' שניות' : ''})\n\n${short(p.text)}\n\n${how}`;
+  const course = r.type === 'course';
+  const how = r.mode === 'self' ? 'אחרי האישור הוא יחכה לך בטלפרומטר לצילום.'
+    : course ? 'אחרי האישור שני הקטעים יוכנו בהייגן, השיעור כולו יורכב (פתיחה, השקפים בקול שלך, סיום), ויגיע אליך לאישור סופי לפני שהוא נכנס לקורס.'
+    : 'אחרי האישור הסרטון יוכן בהייגן ויערך, ויגיע אליך שוב לאישור סופי לפני כל פרסום.';
+  const body = many(ps) ? ps.map((x, i) => `${partTitle(x, i)}:\n${short(x.text, 1500)}`).join('\n\n') : short(p.text);
+  const head = course ? (r.topic || p.title || '') : (p.title || r.topic || '');
+  const text = `${reminder ? '⏳ תזכורת: ' : ''}📝 ${many(ps) ? 'תסריטים חדשים מחכים' : 'תסריט חדש מחכה'} לאישור שלך: ${head}\n(${TYPE[r.type] || 'סרטון'}${!many(ps) && p.sec ? ', כ-' + p.sec + ' שניות' : ''})\n\n${body}\n\n${how}`;
   const out = await tg(text, [[{ text: '✅ קריאה ואישור', url: pub('sok', t) }], [{ text: '✏️ צריך שינוי', url: pub('sfix', t) }, { text: '📂 במערכת המשרד', url: OFFICE }]], dry);
   if (reminder) await merge('vidreq', id, { reminded: now() });
   return { ok: true, id, status: 'script-wait', telegram: out };
@@ -93,7 +110,10 @@ async function askRaw(id: string, dry: boolean, reminder = false) {
 async function final(b: Any, dry: boolean) {
   const id = String(b.id || ''); const r = await getDoc('vidreq', id); if (!r) return { ok: false, error: 'no request' };
   const url = String(b.url || '');
-  if (!/^https:\/\/dabullaw-glitch\.github\.io\/dabul-office\/media\/hgv\/[a-z0-9-]+\.mp4$/.test(url)) return { ok: false, error: 'url must be media/hgv/<id>.mp4 on the office GitHub Pages site' };
+  const course = r.type === 'course';
+  const okUrl = /^https:\/\/dabullaw-glitch\.github\.io\/dabul-office\/media\/hgv\/[a-z0-9-]+\.mp4$/.test(url)
+    || (course && /^https:\/\/dabullaw-glitch\.github\.io\/dabul-office\/media\/course\/[a-z0-9-]+\/[a-z0-9-]+\.mp4$/.test(url));
+  if (!okUrl) return { ok: false, error: 'url must be media/hgv/<id>.mp4 (course lessons: media/course/<course>/<file>.mp4) on the office GitHub Pages site' };
   const p = r.promptId ? await getDoc('prompt', r.promptId) : null;
   const title = String((p && p.title) || r.topic || 'סרטון');
   if ((r.type || 'reel') === 'reel') {
@@ -120,7 +140,7 @@ async function final(b: Any, dry: boolean) {
   }
   const t = r.vtok || tok();
   await merge('vidreq', id, { status: 'final-wait', finalUrl: url, finalAt: now(), vtok: t });
-  const out = await tg(`🎬 ${TYPE[r.type] || 'סרטון'} מוכן לאישור סופי: ${title}\n\nלוחצים "צפייה בסרטון", ואז "מאשר" או "לא מאשר". שום דבר לא עולה לפני האישור שלך.`,
+  const out = await tg(`🎬 ${TYPE[r.type] || 'סרטון'} מוכן לאישור סופי: ${course ? (r.topic || title) : title}\n\nלוחצים "צפייה בסרטון", ואז "מאשר" או "לא מאשר". ${course ? 'השיעור נכנס לקורס רק אחרי האישור שלך.' : 'שום דבר לא עולה לפני האישור שלך.'}`,
     [[{ text: '👁 צפייה בסרטון', url }], [{ text: '✅ מאשר', url: pub('vok', t) }, { text: '✗ לא מאשר', url: pub('vno', t) }]], dry);
   return { ok: true, id, status: 'final-wait', telegram: out };
 }
@@ -161,23 +181,28 @@ async function byTok(field: string, t: string) {
 }
 async function scriptPage(req: Request, a: string, t: string) {
   const row = await byTok('stok', t); if (!row) return page('הקישור לא תקף', '<p>הבקשה לא נמצאה.</p>', 404);
-  const r = row.data; const p = r.promptId ? await getDoc('prompt', r.promptId) : null;
+  const r = row.data; const ps = await scriptsOf(r); const p = ps[0];
   if (!p) return page('התסריט לא נמצא', '<p>אולי הוא נמחק או הוחלף. אפשר לראות הכל במערכת המשרד, במסך סרטונים.</p>', 404);
-  const title = esc(p.title || r.topic || '');
+  const title = esc(r.type === 'course' ? (r.topic || p.title || '') : (p.title || r.topic || ''));
   const done = !['script-wait', 'script-fix', 'writing', 'new'].includes(r.status);
   if (done) return page('התסריט כבר אושר', `<p>${title}</p><p class="muted">אפשר לראות את מצב הסרטון במערכת המשרד, במסך סרטונים.</p><p><a class="lnk" href="${OFFICE}">פתיחת מערכת המשרד</a></p>`);
   if (req.method !== 'POST') {
-    const scr = `<div class="scr">${esc(p.text || '')}</div>${p.caption ? `<p class="muted"><b>הטקסט שיעלה עם הסרטון:</b><br>${esc(p.caption)}</p>` : ''}`;
-    if (a === 'sok') return page('אישור התסריט', `<p><b>${title}</b></p>${scr}<p class="muted">${r.mode === 'self' ? 'אחרי האישור התסריט יחכה לך בטלפרומטר.' : 'אחרי האישור הסרטון יוכן בהייגן, ייערך, ויגיע אליך לאישור סופי. שום דבר לא מתפרסם לפני האישור הסופי שלך.'}</p>
-      <form method="post" action="${self()}?a=sok&t=${t}"><div class="row"><button type="submit">✅ מאשר את התסריט</button></div></form>
+    const scr = many(ps) ? ps.map((x, i) => `<h2 style="font-size:1.1rem;margin:18px 0 6px">${esc(partTitle(x, i))}</h2><div class="scr">${esc(x.text || '')}</div>`).join('')
+      : `<div class="scr">${esc(p.text || '')}</div>${p.caption ? `<p class="muted"><b>הטקסט שיעלה עם הסרטון:</b><br>${esc(p.caption)}</p>` : ''}`;
+    const after = r.mode === 'self' ? 'אחרי האישור התסריט יחכה לך בטלפרומטר.'
+      : r.type === 'course' ? 'אחרי האישור שני הקטעים יוכנו בהייגן, השיעור כולו יורכב (פתיחה, השקפים בקול שלך, סיום), ויגיע אליך לאישור סופי. השיעור נכנס לקורס רק אחרי האישור הסופי שלך.'
+      : 'אחרי האישור הסרטון יוכן בהייגן, ייערך, ויגיע אליך לאישור סופי. שום דבר לא מתפרסם לפני האישור הסופי שלך.';
+    if (a === 'sok') return page(many(ps) ? 'אישור התסריטים' : 'אישור התסריט', `<p><b>${title}</b></p>${scr}<p class="muted">${after}</p>
+      <form method="post" action="${self()}?a=sok&t=${t}"><div class="row"><button type="submit">✅ מאשר ${many(ps) ? 'את שני התסריטים' : 'את התסריט'}</button></div></form>
       <p><a class="lnk" href="${pub('sfix', t)}">✏️ צריך שינוי</a> · <a class="lnk" href="${OFFICE}">עריכה במערכת המשרד</a></p>`);
     return page('מה לשנות בתסריט?', `<p><b>${title}</b></p>${scr}<form method="post" action="${self()}?a=sfix&t=${t}"><p>כתוב במילים פשוטות מה לשנות, ונכתוב גרסה חדשה ונשלח אליך שוב:</p><textarea name="note" required></textarea><div class="row"><button type="submit">שליחה</button></div></form>`);
   }
   if (a === 'sok') {
-    const next = r.mode === 'self' ? 'film' : (r.type === 'course' ? 'later' : 'heygen');
-    await merge('prompt', r.promptId, { status: 'ready', approvedAt: now(), approvedBy: 'telegram', mode: r.mode === 'self' ? 'self' : 'heygen' });
+    // course lessons with a lesson number go to HeyGen (settings/heygen.courseRules); older course requests wait ('later')
+    const next = r.mode === 'self' ? 'film' : (r.type === 'course' ? (r.lesson ? 'heygen' : 'later') : 'heygen');
+    for (const x of ps) await merge('prompt', x.id, { status: 'ready', approvedAt: now(), approvedBy: 'telegram', mode: r.mode === 'self' ? 'self' : 'heygen' });
     await merge('vidreq', row.id, { status: next, scriptApprovedAt: now() });
-    return page('התסריט אושר', `<p>${title}</p><p>${next === 'film' ? 'הוא מחכה לך בטלפרומטר, במסך סרטונים במערכת המשרד.' : next === 'later' ? 'שיעורי הקורס יוכנו כשמסלול העריכה של הקורס יהיה מוכן.' : 'הסרטון יוכן בהייגן בסבב הקרוב (עד כמה שעות), ייערך, ויגיע אליך לאישור סופי.'}</p>`);
+    return page('התסריט אושר', `<p>${title}</p><p>${next === 'film' ? 'הוא מחכה לך בטלפרומטר, במסך סרטונים במערכת המשרד.' : next === 'later' ? 'שיעורי הקורס יוכנו כשמסלול העריכה של הקורס יהיה מוכן.' : r.type === 'course' ? 'שני הקטעים יוכנו בהייגן בסבבים הקרובים, השיעור יורכב, ויגיע אליך לאישור סופי.' : 'הסרטון יוכן בהייגן בסבב הקרוב (עד כמה שעות), ייערך, ויגיע אליך לאישור סופי.'}</p>`);
   }
   const form = await req.text().catch(() => ''); const note = (new URLSearchParams(form).get('note') || '').trim().slice(0, 2000);
   if (!note) return page('לא נכתב מה לשנות', `<p>נסו שוב: <a class="lnk" href="${pub('sfix', t)}">מה לשנות</a></p>`, 400);
@@ -222,11 +247,24 @@ async function videoPage(req: Request, a: string, t: string) {
   return page('אושר', `<p>${title} אושר.</p>${r.type === 'course' ? '<p class="muted">השיעור מסומן כמוכן לקורס. הוא לא עולה לקונים עד שתאשר את פרסום הקורס.</p>' : ''}`);
 }
 
+// the slides of a course lesson for the course-lesson workflow (GitHub Actions has no secrets): token ctok on the request,
+// answered only while the lesson is being voiced / assembled / waits for the final approval (or on a test request)
+async function deckJson(t: string) {
+  const row = await byTok('ctok', t); if (!row) return json({ ok: false, error: 'not found' }, 404);
+  const r = row.data;
+  if (r.type !== 'course' || !(['voice', 'assembling', 'final-wait'].includes(r.status) || (r.test && r.status !== 'test-done'))) return json({ ok: false, error: 'closed' }, 403);
+  const c = await getDoc('course', String(r.course || 'first-home')); const ls: Any[] = (c && c.lessons) || [];
+  const l = ls.find(x => Number(x.n) === Number(r.lesson)); if (!l) return json({ ok: false, error: 'no lesson' }, 404);
+  const nx = ls.find(x => Number(x.n) === Number(r.lesson) + 1);
+  return json({ ok: true, course: r.course || 'first-home', n: l.n, of: ls.length, title: l.title, nextTitle: nx ? nx.title : '', scenes: (l.deck && l.deck.scenes) || [] });
+}
+
 // called first by the reels function: answers vidreq requests, or null for everything else
 export async function handleVidreq(req: Request, url: URL): Promise<Response | null> {
   const a = url.searchParams.get('a') || '', t = (url.searchParams.get('t') || '').replace(/[^a-f0-9]/g, ''), step = url.searchParams.get('vr');
-  if (!['sok', 'sfix', 'vok', 'vno', 'rok', 'rfix'].includes(a) && !step) return null;
+  if (!['sok', 'sfix', 'vok', 'vno', 'rok', 'rfix', 'deck'].includes(a) && !step) return null;
   try {
+    if (a === 'deck') return await deckJson(t);
     if (a === 'sok' || a === 'sfix') return await scriptPage(req, a, t);
     if (a === 'vok' || a === 'vno') return await videoPage(req, a, t);
     if (a === 'rok' || a === 'rfix') return await rawPage(req, a, t);

@@ -1,0 +1,62 @@
+name: course lesson
+# Course lessons (5.11.2026, Yakir approved option A for "קונים דירה ראשונה, בלי הפתעות"): his HeyGen avatar opens and
+# closes every lesson, in the middle the lesson slides (academy/deck.js, the same look as the academy player) with his voice.
+# Input: media/course/jobs/<file>.job.json pushed to main by the scheduled task "סרטוני הייגן" (tools/heygen-edit/TASK.md
+# section 8, settings/heygen.courseRules). Assembly: tools/course-lesson/lesson.py (Playwright stills + ffmpeg).
+# Output (main, GitHub Pages, never Supabase storage): media/course/<course>/<file>.mp4, .jpg, .result.json and check stills
+# media/course/check/<file>-1..6.jpg. On failure: media/course/jobs/<file>.error.txt.
+# Nothing is published from here: the task checks the stills and sends the lesson to Yakir for approval (reels?vr=final).
+on:
+  push:
+    branches: [main]
+    paths: ['media/course/jobs/*.job.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: course-lesson, cancel-in-progress: false }
+jobs:
+  lesson:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Jobs waiting
+        id: todo
+        run: |
+          ids=""
+          for f in media/course/jobs/*.job.json; do
+            [ -f "$f" ] || continue
+            id=$(basename "$f" .job.json)
+            echo "$id" | grep -Eq '^[a-z0-9-]+$' || continue
+            course=$(jq -r '.course // "first-home"' "$f" | tr -cd 'a-z0-9-')
+            [ -f "media/course/$course/$id.mp4" ] && continue
+            # a failed job runs again only when its job file is newer than the error
+            if [ -f "media/course/jobs/$id.error.txt" ] && [ "$(git log -1 --format=%ct -- "$f")" -le "$(git log -1 --format=%ct -- "media/course/jobs/$id.error.txt")" ]; then continue; fi
+            ids="$ids $id"
+          done
+          echo "ids=$(echo $ids)" >> "$GITHUB_OUTPUT"; echo "to build: ${ids:-none}"
+      - uses: actions/setup-python@v5
+        if: steps.todo.outputs.ids != ''
+        with: { python-version: '3.11' }
+      - name: Tools
+        if: steps.todo.outputs.ids != ''
+        run: |
+          command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
+          pip install -q playwright
+          python -m playwright install --with-deps chromium > /tmp/pw.log 2>&1 || tail -20 /tmp/pw.log
+      - name: Build
+        if: steps.todo.outputs.ids != ''
+        run: |
+          mkdir -p /tmp/cl
+          for id in ${{ steps.todo.outputs.ids }}; do
+            if python tools/course-lesson/lesson.py "media/course/jobs/$id.job.json" > /tmp/cl/$id.log 2>&1; then echo "done $id"; rm -f media/course/jobs/$id.error.txt
+            else echo "FAILED $id"; { echo "failed $(date -u +%FT%TZ)"; tail -60 /tmp/cl/$id.log; } > media/course/jobs/$id.error.txt; fi
+            tail -30 /tmp/cl/$id.log
+          done
+      - name: Publish to the repo (GitHub Pages, not to any network)
+        if: always() && steps.todo.outputs.ids != ''
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add media/course
+          git commit -qm "course lesson: ${{ steps.todo.outputs.ids }}" || { echo nothing; exit 0; }
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
