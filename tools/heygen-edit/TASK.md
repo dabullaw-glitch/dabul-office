@@ -55,7 +55,7 @@ NOTHING is published without his approval of the finished video. You never publi
   editRules, styleRule, editStyles, usedTopics, styleHistory, themeHistory. Scripts and edits must follow all of them.
 - `docs settings/heygen`: the HeyGen recipe (avatar group, looks, lookByType, lookHistory, voice, motionPrompt, engine,
   resolution, aspect, pronunciation list, spokenReplace, avoidWords, publishRule, plan credits, costLog). Use it for every generation.
-- `docs settings/social`: videoSlots (the publishing slots: Sun/Tue/Thu every week, rotating hours in `times`; you do not change them) and cadence (per-network rules, 3.11.2026).
+- `docs settings/social`: videoSlots (the publishing slots: Sun/Tue/Thu every week, one FIXED hour per weekday since 5.11.2026: `times` follows `days`, Sunday 20:30, Tuesday 12:30, Thursday 17:30; you do not change them) and cadence (per-network rules, 5.11.2026).
 - Recent rows of `docs prompt` (the scripts list; same list as the teleprompter) for the script format: id, title, type,
   text (short lines, one breath per line), sec, caption (with "המידע כללי ואינו ייעוץ משפטי." and 4 to 6 hashtags),
   takeaway, sources, style 'teleprompter-natural', status, order, created.
@@ -245,7 +245,13 @@ For every vidreq with status 'editing': `git pull` and look for media/hgv/<id>.m
   "לשאלות ותיאום פגישה: 09-8613413 או בוואטסאפ 050-5580189.", hashtags, and "המידע כללי ואינו ייעוץ משפטי"; never
   "#shorts" in titles). Never write in the captions that the video was made with AI (settings/heygen.publishRule).
   GitHub Pages needs 1 to 3 minutes after the editor's commit: if the answer is "download 404", wait and call again.
-  For a reel the function copies the file to storage and hands it to the existing reels flow (reels?step=add): Yakir gets
+  STORAGE (5.11.2026): the storage of the office system is full (free plan, 1 GB) and Yakir will not pay for more. Nothing is
+  copied to storage any more. The editor workflow also makes a small publishing copy media/reels-pub/hg-<file id>.mp4, and
+  vr=final hands the reel to the reels flow with that public link (reel row "videoUrl"; the full media/hgv file if the copy is
+  missing). Before calling vr=final check the copy exists after `git pull` (ffprobe: 1080x1920, same duration as the full
+  file) and Read one frame of it. Never upload an mp4 to storage (no storeput, no storage upload), never overwrite or delete a
+  storage file.
+  For a reel the function hands it to the existing reels flow (reels?step=add): Yakir gets
   "רילס חדש מוכן לאישור" in Telegram with view and approve / reject, and after approval it gets the next publishing slot and
   is published everywhere (all networks, including TikTok and Instagram) like every reel. For type 'other' the function sends its own view + approve message.
   The request becomes 'final-wait'; sync (section 2) moves it to approved / published / rejected.
@@ -266,30 +272,31 @@ How the calendar is built (docs coll 'pub', publishing by the postoria function;
   always 'instagram'; plus 'tiktok' only on a Thursday (not on Tuesday, not on Sunday). Filmed reels have a companion
   OFFICE row (owner 'office', at = the publishAt time itself, 5 minutes before the main row, channels facebook/youtube, reelFrom = main row id). HeyGen reels have no
   office row: their main row carries facebook + youtube itself (see pub-20261126T1905-system-hg for the exact shape:
-  title "רילס: <name>", text = captions.instagram, textTiktok, ytTitle, ytDesc, ytTags, series, reelPath = reel.path,
-  reelBytes, staged, note).
+  title "רילס: <name>", text = captions.instagram, textTiktok, ytTitle, ytDesc, ytTags, series, videoUrl = reel.videoUrl
+  (5.11.2026; older rows have reelPath = reel.path in storage instead), reelBytes, staged, note). A main row is published
+  from videoUrl (fn/_shared/video-src.js); a TikTok or office row takes it from its reelFrom row.
 - TikTok rows: channels ['tiktok'] only, reelFrom = a main row. Sunday rows (10 minutes after that day's main row, or
   at the slot hour when the day has no main row) carry the reel of the Tuesday just before (until 3.1.2027); always a reel that was already published on the main row before the TikTok row.
 - A row id never changes (ids do not match dates); moving = docs_merge a new `at`.
 
 Steps:
-1. Row: if no planned main row has reel = <this reel id>, INSERT one (shape above) at the reel's publishAt (Israel time) + 5 minutes.
+1. Row: if no planned main row has reel = <this reel id>, INSERT one (shape above) at the reel's publishAt (Israel time), with all four channels.
    Never create a second main row for the same reel (a reel appears in only one main row: "אל תעלה פעמיים אותו דבר").
 2. Target: the earliest main row whose time is more than 48 hours from now, status 'planned', no `pst` and no `result`,
    whose reel has no priority 'heygen' and no seriesKey (never break into a series block), and is earlier than this reel's row.
    None: just docs_merge the reel {frontAt: now, frontNote: 'אין רילס להחלפה'}.
    A series episode (seriesKey + ep) moves forward only if every earlier episode of that series is published or scheduled
    before the target; otherwise skip it this run.
-3. Swap the two units: the HeyGen main row gets the target's `at` (date AND time); the target's main row gets the HeyGen row's
-   old `at` and its office row that time minus 5 minutes. Fix channels for the new weekday on both main rows (tiktok only on Thursday and
-   only if the row has textTiktok). docs_merge both reels' publishAt to their new main row time minus 5 minutes, Israel time (ISO UTC; Israel
-   is UTC+2 in winter, UTC+3 from the last Friday of March), and record on every changed row
+3. Swap the two rows: the HeyGen row gets the target's `at` (date AND time); the target's row gets the HeyGen row's old `at`.
+   Both keep all four channels (facebook, instagram, youtube, tiktok). docs_merge both reels' publishAt to their new row
+   time, Israel time (ISO UTC; Israel is UTC+2 in winter, UTC+3 from the last Friday of March), and record on every changed row
    {replanFrom: <old at>, replannedAt: now, replanNote: 'יקיר 1.11.2026: סרטוני הייגן לראש התור'}.
-4. TikTok rows: any TikTok row whose reelFrom row now publishes on or after the TikTok row's own time must point to the
-   reel of the main row just before it instead (docs_merge reel, reelFrom, title "טיקטוק: <name>", text and textTiktok =
-   that row's textTiktok). Check that no reel is on TikTok twice.
+4. If you find an old office row or a TikTok-only row for a reel that is still 'planned' (left from before 5.11.2026),
+   merge it: make sure the reel's main row has all four channels, then docs_merge the extra row {status:'cancelled',
+   cancelNote:'יקיר 5.11.2026: כל סרטון עולה לכל הרשתות באותו זמן', mergedInto:<main row id>}. Never publish a reel twice.
 5. docs_merge the reel {frontAt: now}. Never touch rows due within 48 hours, staged for Postoria (pst) or published.
-   Check at the end: every planned main row from today has a different day and a different reel.
+   Check at the end: every planned video row from today has a different day, a different reel, the fixed hour of its
+   weekday (Sunday 20:30, Tuesday 12:30, Thursday 17:30) and all four channels.
 
 ## 7. Log and finish
 

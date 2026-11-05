@@ -17,7 +17,9 @@
 //                                        (view in HeyGen + approve for editing / ask for a fix). dry writes nothing.
 //   POST ?vr=final  {id, url, captions?, dry?}
 //                                        finished video (an mp4 on the office GitHub Pages site, media/hgv/<id>.mp4).
-//                                        reel: copied to storage files/reels/hg-<id>.mp4 and handed to reels?step=add.
+//                                        reel: handed to reels?step=add with its public link (5.11.2026: the storage is
+//                                        full, nothing is copied there): the compressed copy media/reels-pub/hg-<file id>.mp4
+//                                        made by the heygen-edit workflow, or the full file when that copy is missing.
 //                                        other types: Telegram with view + approve / reject (pages below).
 //   POST ?vr=sync {}                   request statuses follow their reel rows (approved, published, rejected)
 //   POST ?vr=remind {force?}           scripts, raw HeyGen videos and finished videos still waiting for Yakir, once a day
@@ -96,24 +98,25 @@ async function final(b: Any, dry: boolean) {
   const title = String((p && p.title) || r.topic || 'סרטון');
   if ((r.type || 'reel') === 'reel') {
     const name = 'hg-' + id.replace(/[^a-z0-9-]/gi, '').toLowerCase().slice(0, 50);
-    const path = `reels/${name}.mp4`;
     const cap = String((p && p.caption) || '');
     const captions = b.captions || { facebook: cap, instagram: cap, tiktok: cap, youtubeTitle: `${title} | עורך דין יקיר דבול`, youtubeDesc: cap, youtubeTags: '' };
-    if (dry) return { ok: true, dry: true, would: { copy: url + ' -> files/' + path, reelsAdd: { path, link: url, name: title, captions } } };
-    const res = await fetch(url).catch(() => null);
-    if (!res || !res.ok) return { ok: false, error: 'download ' + (res ? res.status : 'failed') + ' (GitHub Pages may need a minute)' };
-    const buf = new Uint8Array(await res.arrayBuffer());
-    if (buf.length < 200000) return { ok: false, error: 'file too small ' + buf.length };
-    const up = await admin().storage.from('files').upload(path, buf, { contentType: 'video/mp4', upsert: true });
-    if (up.error) return { ok: false, error: 'storage: ' + up.error.message };
+    // 5.11.2026 (Yakir: the storage is full, no paid plan): the reel is published from its public link, nothing goes to storage.
+    // First choice: the small copy for publishing (heygen-edit workflow: media/reels-pub/hg-<file id>.mp4); else the full file.
+    const fileId = url.split('/').pop()!.slice(0, -4);
+    const small = `https://dabullaw-glitch.github.io/dabul-office/media/reels-pub/hg-${fileId}.mp4`;
+    if (dry) return { ok: true, dry: true, would: { reelsAdd: { key: name, videoUrl: small + ' (or ' + url + ')', link: url, name: title, captions } } };
+    const head = async (u: string) => { const x = await fetch(u, { method: 'HEAD' }).catch(() => null); return x && x.ok ? (Number(x.headers.get('content-length') || 0) || 999999) : -1; };
+    let videoUrl = small, bytes = await head(small);
+    if (bytes < 200000) { videoUrl = url; bytes = await head(url); }
+    if (bytes < 200000) return { ok: false, error: 'the video is not on GitHub Pages yet (' + bytes + '); GitHub Pages may need a minute' };
     const add = await fetch(`${env('SUPABASE_URL')}/functions/v1/reels?step=add`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': env('CRON_SECRET') },
-      body: JSON.stringify({ reels: [{ path, link: url, name: title, folder: 'heygen/' + id, captions, bytes: buf.length, priority: 'heygen' }] }) }).then(x => x.json()).catch(e => ({ error: String(e) }));
+      body: JSON.stringify({ reels: [{ key: name, videoUrl, link: url, name: title, folder: 'heygen/' + id, captions, bytes, priority: 'heygen' }] }) }).then(x => x.json()).catch(e => ({ error: String(e) }));
     const reelId = 'rl-' + name;
     // 1.11.2026 (Yakir: HeyGen videos go to the front of the queue): mark the reel row, also when it already existed
     if (await getDoc('reel', reelId)) await merge('reel', reelId, { priority: 'heygen' });
-    await merge('vidreq', id, { status: 'final-wait', finalUrl: url, finalAt: now(), reelId, reelPath: path, bytes: buf.length });
+    await merge('vidreq', id, { status: 'final-wait', finalUrl: url, finalAt: now(), reelId, videoUrl, bytes });
     if (r.promptId) await merge('prompt', r.promptId, { status: 'filmed', hgFinal: url, reelId });
-    return { ok: true, id, reelId, path, bytes: buf.length, reels: add };
+    return { ok: true, id, reelId, videoUrl, bytes, reels: add };
   }
   const t = r.vtok || tok();
   await merge('vidreq', id, { status: 'final-wait', finalUrl: url, finalAt: now(), vtok: t });

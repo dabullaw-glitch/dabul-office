@@ -2,7 +2,9 @@
 // settings/social.videoSlots days + times), and the scheduled task puts it in the publishing calendar. The office system publishes
 // it everywhere: Facebook and YouTube (bufauth), Instagram and TikTok (socialpub). Grok Bot was cancelled on 11.10.2026.
 // Cron (x-cron-secret): POST ?step=add {reels:[{driveId,name,link,folder,captions:{facebook,youtubeTitle,youtubeDesc,youtubeTags,instagram,tiktok}}]}
-//                       (or {path:'reels/<name>.mp4', bytes, ...} for a reel already in storage, e.g. HeyGen videos from vidreq)
+//                       (or {path:'reels/<name>.mp4', bytes, ...} for a reel already in storage, e.g. HeyGen videos from vidreq before 5.11)
+//                       (5.11.2026: or {key:'<name>', videoUrl:'https://dabullaw-glitch.github.io/dabul-office/media/....mp4', bytes, ...}
+//                        for a reel published from its public link, e.g. HeyGen videos from vidreq; nothing in storage)
 //                       POST ?step=handed {id, grokFile}   (the task copied the reel to the Grok Bot folder)
 //                       POST ?step=remind {}               (sends again every reel still waiting for Yakir, with its buttons)
 // Public (opened from the Telegram buttons through the office site, portal.html#v=<a>&t=<token>): ?a=ok | no
@@ -99,14 +101,17 @@ async function add(b: Any) {
     // 1.11.2026: a reel already in storage (HeyGen videos, files/reels/<name>.mp4) comes with "path" instead of a Drive file
     const driveId = String(r.driveId || '').replace(/[^A-Za-z0-9_-]/g, '');
     const path = /^reels\/[a-z0-9-]+\.mp4$/.test(String(r.path || '')) ? String(r.path) : '';
-    if (!driveId && !path) continue;
-    const id = 'rl-' + (driveId || path.slice(6, -4)); const prev = await getDoc('reel', id);
+    // 5.11.2026: a reel with a public link on the office GitHub Pages site (videoUrl) and a short key for its id
+    const videoUrl = /^https:\/\/dabullaw-glitch\.github\.io\/dabul-office\/media\/[A-Za-z0-9_\/.-]+\.mp4$/.test(String(r.videoUrl || '')) ? String(r.videoUrl) : '';
+    const key = videoUrl && /^[a-z0-9-]{3,60}$/.test(String(r.key || '')) ? String(r.key) : '';
+    if (!driveId && !path && !key) continue;
+    const id = 'rl-' + (driveId || (path ? path.slice(6, -4) : key)); const prev = await getDoc('reel', id);
     if (prev) { out.push({ id, skipped: prev.status }); continue; }
     const c = r.captions || {}; const t = tok();
     // 1.11.2026: priority 'heygen' (from vidreq final): the scheduled HeyGen task moves the reel forward after approval
     // (settings/social.queueRule, tools/heygen-edit/TASK.md section 6). The slot itself is still the next free one.
     const priority = r.priority === 'heygen' ? { priority: 'heygen' } : {};
-    await db().upsert({ coll: 'reel', id, data: { driveId, ...priority, ...(path ? { path, bytes: Number(r.bytes) || 0 } : {}), name: String(r.name || ''), link: String(r.link || ''), folder: String(r.folder || ''), captions: c, status: 'awaiting', tok: t, created: new Date().toISOString(), asked: new Date().toISOString() }, updated_at: new Date().toISOString() });
+    await db().upsert({ coll: 'reel', id, data: { driveId, ...priority, ...(path ? { path, bytes: Number(r.bytes) || 0 } : {}), ...(videoUrl ? { videoUrl, bytes: Number(r.bytes) || 0 } : {}), name: String(r.name || ''), link: String(r.link || ''), folder: String(r.folder || ''), captions: c, status: 'awaiting', tok: t, created: new Date().toISOString(), asked: new Date().toISOString() }, updated_at: new Date().toISOString() });
     await tg(askText(String(r.name || '')), askButtons(String(r.link || ''), t));
     out.push({ id, added: true });
   }

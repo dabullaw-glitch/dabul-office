@@ -72,10 +72,25 @@ jobs:
             else echo "FAILED $id"; { echo "failed $(date -u +%FT%TZ)"; tail -60 /tmp/w/$id/log.txt; } > media/hgv/$id.error.txt; rm -f media/hgv/$id.mp4; fi
             tail -40 /tmp/w/$id/log.txt
           done
+      - name: Publishing copy (media/reels-pub)
+        # 5.11.2026: the storage of the office system is full (free plan, 1 GB) and Yakir will not pay for more, so a reel is
+        # published from a small copy on GitHub Pages: media/reels-pub/hg-<id>.mp4 (H.264 CRF 27, AAC 128k, +faststart; looks
+        # the same on a phone). reels?vr=final hands this link to the reels flow; nothing is copied to storage.
+        if: always() && steps.todo.outputs.ids != ''
+        run: |
+          mkdir -p media/reels-pub
+          for id in ${{ steps.todo.outputs.ids }}; do
+            [ -f "media/hgv/$id.mp4" ] || continue
+            out="media/reels-pub/hg-$id.mp4"; [ -f "$out" ] && continue
+            if ffmpeg -nostdin -y -v error -i "media/hgv/$id.mp4" -map 0:v:0 -map '0:a:0?' -c:v libx264 -preset medium -crf 27 -profile:v high -level 4.1 \
+                 -pix_fmt yuv420p -r 30 -c:a aac -b:a 128k -ar 48000 -movflags +faststart "/tmp/w/hg-$id.mp4"; then
+              mv "/tmp/w/hg-$id.mp4" "$out"; echo "publishing copy $id: $(stat -c %s "media/hgv/$id.mp4") -> $(stat -c %s "$out")"
+            else echo "publishing copy failed for $id (vr=final then uses the full file)"; fi
+          done
       - name: Publish to the repo (GitHub Pages, not to any network)
         if: always() && steps.todo.outputs.ids != ''
         run: |
           git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
-          git add media/hgv
+          git add media/hgv media/reels-pub
           git commit -qm "heygen edit: ${{ steps.todo.outputs.ids }}" || { echo nothing; exit 0; }
           for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
