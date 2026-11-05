@@ -79,10 +79,9 @@ NOTHING is published without his approval of the finished video. You never publi
 ## 3. New requests -> script (no HeyGen needed)
 
 For every vidreq with status 'new' (oldest first, at most 3 per run):
-- type 'course': do NOT work on it now (the course lesson editing is not built yet; it starts after Yakir approves it,
-  not before 8.11.2026, and only when `settings/heygen.courseEnabled` is true). Set status 'later' with
-  note "שיעורי קורס יוכנו כשמסלול העריכה של הקורס יהיה מוכן" and continue. When courseEnabled is true, follow
-  settings/heygen.courseRules instead.
+- type 'course': never here. Course lessons have their own path in section 8 (built 5.11.2026, Yakir approved it). If
+  `settings/heygen.courseEnabled` is not true, set status 'later' with note "שיעורי קורס יוכנו כשמסלול העריכה של הקורס
+  יהיה מוכן" and continue.
 - Otherwise: docs_merge status 'writing'. Research the topic now (WebSearch / WebFetch; for a request from the updates
   board start from its upd.source.url and upd.summary and confirm with a second source). Choose the angle by
   settings/video.contentRule (story for illustration / current affairs / "בואו נעשה את זה פשוט") and hookRule.
@@ -101,7 +100,7 @@ For every vidreq with status 'new' (oldest first, at most 3 per run):
   {"id": "<vidreq id>"}. That sends Yakir the script in Telegram with "קריאה ואישור" / "צריך שינוי" buttons and a link to
   the office system. Check the answer is ok.
 
-For every vidreq with status 'script-fix': read fixNote (and fixes), rewrite the script accordingly (same rules),
+For every vidreq with status 'script-fix' (not type 'course': section 8): read fixNote (and fixes), rewrite the script accordingly (same rules),
 docs_merge the prompt row {text, title, caption, status 'draft', rewrittenAt}, then call `reels?vr=script` again.
 
 When Yakir approves a script (Telegram page or the office system), the prompt row becomes status 'ready' and the request
@@ -114,8 +113,8 @@ date in Israel time) send Yakir exactly this one line in Telegram:
 "כדי שאוכל להכין סרטונים בהייגן, צריך לחבר שוב את החיבור להייגן בהגדרות."
 Then stop the HeyGen part (sections 2 and 3 still run).
 
-For every vidreq with status 'heygen' and no hg.videoId (oldest first, at most 2 per run), whose prompt row has status
-'ready' (and mode not 'self'):
+For every vidreq with status 'heygen' and no hg.videoId (oldest first, at most 2 per run), NOT type 'course' (section 8),
+whose prompt row has status 'ready' (and mode not 'self'):
 1. Credits: get_current_user; note the remaining premium credits. If fewer than settings/heygen.plan.warnBelow (100):
    one Telegram line to Yakir (at most once a day, `settings/heygen.creditsWarnedAt`):
    "נשארו בהייגן <n> קרדיטים מתוך החבילה החודשית." and still continue while there are enough for this video.
@@ -159,7 +158,7 @@ For every vidreq with status 'heygen' and no hg.videoId (oldest first, at most 2
 
 ## 5. Poll HeyGen and send to the cloud editor
 
-For every vidreq with status 'heygen' and hg.videoId but no hg.url, AND every vidreq with status 'raw-ok' (Yakir approved
+For every vidreq (NOT type 'course': section 8) with status 'heygen' and hg.videoId but no hg.url, AND every vidreq with status 'raw-ok' (Yakir approved
 the raw video; go straight to the edit job below with a fresh hg.url from get_video): get_video (wait 30 seconds between polls; up to
 about 10 minutes in this run, otherwise continue next run). Always read the request row again right before writing to it
 (someone may have replaced hg with a new video meanwhile; then work on the new hg.videoId and never write the old one back).
@@ -344,9 +343,116 @@ Every run, after section 6, check the episode rows. You only act on these status
 Never create HeyGen media for the podcast outside these steps, never publish without the final approval, and never put a
 podcast item into the fixed publishing slots without asking.
 
+## 8. Course lessons (built 5.11.2026; runs every run, before section 7)
+
+Yakir approved 5.11.2026 10:59 (option A) for his first course "קונים דירה ראשונה, בלי הפתעות" (docs `course/first-home`,
+10 lessons): "האווטאר שלך פותח וסוגר כל שיעור, בערך דקה וחצי. באמצע: שקפים עם הסברים בקול שלך". So every lesson video =
+his avatar OPENING (about 45 s) + the lesson's existing slides (lessons[n].deck.scenes, the academy player's slides) read in
+HIS cloned voice + his avatar CLOSING (about 45 s), 16:9, played in the academy. Parameters and the Hebrew summary:
+`settings/heygen.courseRules` (read it every run). Only when `settings/heygen.courseEnabled` is true; otherwise skip.
+Every script and the finished lesson go to Yakir for approval; nothing enters the course before his final approval.
+
+The request: docs vidreq id `vr-fh-l<NN>` (NN = 01..10) {type 'course', course 'first-home', lesson n, topic
+"שיעור <n>: <lesson title>", mode 'heygen', source 'office', promptId (opening), promptIds [opening, closing], ctok}.
+ONE lesson in progress at a time, in order 1 to 10. Statuses: new -> script-wait / script-fix -> heygen -> voice ->
+assembling -> final-wait -> approved (then attached) | rejected -> hold. Skip rows with test true.
+
+A. New lesson request (status 'new', or create it): when the previous lesson is approved and attached (lesson 1: already
+   created) and no other course request is open, INSERT `vr-fh-l<NN>` for the next lesson n (none after 10) with status
+   'writing' and ctok = 40 random hex (`md5(random()::text)||substr(md5(random()::text),1,8)` in SQL).
+B. Scripts (status 'new' or 'writing'): read lessons[n] (title, summary, html, deck.scenes[].say) and write TWO scripts in
+   Yakir's spoken style (same rules as section 3: Hebrew only, simple words, short lines, no "—"/"–", no English, Israel Bar
+   rules: no "הכי", never "מומחה", no promises, no prices, no "חינם"; avoid settings/heygen.avoidWords and the words in
+   pronunciationIssues; numbers in words; "עורך דין" not "עו״ד"):
+   - opening, 95 to 115 words (40 to 50 s): a hook from a real moment of the buyer (an example, never a real client), who
+     the lesson is for, what they will know at the end (from the lesson), "אני יקיר דבול, עורך דין" once, ends "בואו נתחיל."
+     Do not repeat the slides' own welcome sentence word for word.
+   - closing, 95 to 115 words: the 3 key points of the lesson (from its summary slide), ONE practical step for this week,
+     "כל עסקה שונה" style caveat, a bridge to the next lesson (its title from lessons[n+1]); lesson 10 ends the course
+     instead ("סיימתם את הקורס" + what to do next, no sales pitch).
+   INSERT them as prompt rows `c<yymmdd>-fh-l<NN>-open` and `-close` {id, title "שיעור <n> - פתיחה: <title>" /
+   "שיעור <n> - סיום: <title>", type 'course', part 'open' | 'close', course, lesson, text, sec (words / 2.45), caption '',
+   takeaway, sources [], style 'teleprompter-natural', status 'draft', mode 'heygen', req, by 'heygen-task', created,
+   order (max + 1, + 2)}. docs_merge the request {promptId: <open id>, promptIds: [<open id>, <close id>]} and call
+   `reels?vr=script` {"id": "<request id>"} (it shows BOTH scripts and approves both together); check ok.
+   Status 'script-fix': read fixNote / fixes, rewrite the script(s) the note is about (both if unclear), docs_merge the
+   prompt rows {text, title, status 'draft', rewrittenAt}, call `reels?vr=script` again.
+   Approval moves the request to 'heygen' (Telegram page). The office system also does it when both rows are 'ready'.
+   An older request with status 'later' + scriptApprovedAt + both rows 'ready' counts as 'heygen' (docs_merge it).
+C. Avatar clips (status 'heygen', no hg.open.videoId): first the BUDGET: get_current_user premium credits R. Estimate the
+   lesson: avatar = ceil(open seconds / 15) + ceil(close seconds / 15) (Avatar III bills about 1 credit per started 15 s:
+   costLog 1-2.11.2026) + voice = courseRules.voice.creditsPerLesson (until measured: 13). If R - estimate < plan.warnBelow
+   + courseRules.budget.reserveForReels (100 + 40): do not start; at most once a day (courseRules.budgetWarnedAt, Israel
+   date) Telegram: "השיעור הבא בקורס מחכה: נשארו בהייגן <R> קרדיטים, ו-40 שמורים לסרטונים הרגילים. השיעורים ימשיכו
+   כשהקרדיטים יתחדשו ב-<plan.resetsAt as d.m>." and stop section 8.
+   Else create the two clips exactly like section 4 steps 2 and 4 (the prompt rows' CURRENT text, pronunciation +
+   spokenReplace + avoidWords on the HeyGen text only, no niqqud, voice settings/heygen.voice, engine avatar_iii, no
+   motionPrompt, resolution 1080p) with: avatarId = courseRules.lookId (the same look for the whole course),
+   aspectRatio "9:16" (his twins are portrait office footage; the assembly puts him on the left of a 16:9 frame with the
+   lesson title beside him), title "<request id> פתיחה" / "<request id> סיום". docs_merge hg {open: {videoId, lookId, at,
+   text}, close: {...}, creditsBefore: R}. Never create a second clip while one exists; never recreate to poll.
+   Poll (section 5 rules: 30 s apart, up to about 10 minutes, else next run). Failed: hg.<part>.error, failures + 1, create
+   that part once more; after a second failure Telegram "לא הצלחתי להכין בהייגן את <topic>. אבדוק שוב." and leave it.
+   Both completed: get_current_user -> hg.creditsAfter, hg.cost; append {id: "<request id>", title: topic, at, cost,
+   remaining, seconds} to settings/heygen.costLog and update plan.creditsRemaining / creditsAt; docs_merge status 'voice'.
+D. His voice for the slides (status 'voice'): the narration text of slide i = lessons[n].deck.scenes[i].say EXACTLY, with
+   only settings/heygen.pronunciation (whole words) and the simple spokenReplace / avoidWords swaps applied (מועד -> תאריך,
+   הפרש -> פער, להחזר -> לקבל את הכסף בחזרה, שלחו -> תשלחו; a standalone "מוכר" -> rephrase minimally), never niqqud.
+   Split the slides into consecutive PIECES of at most courseRules.voice.maxChars (4500) characters; inside a piece join the
+   slides with ` <break time="1.2s"/> ` (the assembly cuts the piece back into slides at these pauses).
+   For each piece, oldest first: get_current_user (credits before), then ONE call
+   create_speech_without_player {text, voiceId: settings/heygen.voice.id, engine: "elevenlabs", settings: {model_id:
+   "eleven_v4"}, language: "he"}; then get_current_user again (cost = before - after; wait 10 s and read again if 0).
+   Record each piece on the request: narr [{from, to, audio: audio_url, seconds: duration, cost, at}] (read, append, merge
+   the whole array) and in settings/heygen.costLog ({id: "<request id>-voice-<k>", title, at, cost, remaining, seconds}).
+   On an error or a timeout: record narrError and stop section 8 for this run (never retry in the same run); after a
+   second error Telegram "לא הצלחתי להקליט את הקול של <topic>. אבדוק שוב." and leave it.
+   COST CHECK (only while courseRules.voice.creditsPerMinute is not set): the FIRST piece of lesson 1 is small: the first
+   slides until the text has at least 320 characters (about 25 s, under 60 s). Then:
+   - cost <= 1: voice is cheap (HeyGen bills it by the minute or less). docs_merge courseRules.voice {creditsPerMinute:
+     ceil(cost * 60 / seconds), creditsPerLesson: <estimate for 12 minutes>, measuredAt, status 'ok'} and go on with the
+     other pieces (normal size).
+   - cost >= 2: his voice on the slides costs about as much as the avatar video (about 4 credits a minute, about 45 per
+     lesson). STOP: docs_merge courseRules.voice {status 'blocked-cost', measured {cost, seconds}} and send Yakir once:
+     "הקול שלך על השקפים עולה בהייגן כמו סרטון אווטאר: כ-<round(45)> קרדיטים לשיעור, כ-<x> לכל הקורס. לאשר בכל זאת, או
+     להשאיר בשקפים את הקול הקיים? אפשר לענות בצ'אט." Then wait: the request stays 'voice' until
+     courseRules.voiceDecision is 'his' (go on with his voice) or 'google' (narration mode google, below).
+   When every slide is in a piece (or voiceDecision is 'google'), write the job and push it (commit only this file):
+   `media/course/jobs/<file>.job.json`, <file> = `fh-l<NN>-<first 6 chars of ctok>` (a fixed job never overwrites a
+   finished file: a re-run uses `-2`, `-3`) = {"id": "<request id>", "file": "<file>", "course": "first-home", "n": n,
+   "deckUrl": "https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reels?a=deck&t=<ctok>",
+   "open": "<hg.open url>", "close": "<hg.close url>" (fresh from get_video: the HeyGen links expire),
+   "narration": {"mode": "pieces", "pieces": [{"audio", "from", "to"}, ...]}   (or {"mode": "google"})}.
+   docs_merge the request {status 'assembling', jobFile, jobAt}.
+E. Assembly (status 'assembling'): the workflow .github/workflows/course-lesson.yml (tools/course-lesson/lesson.py) builds
+   media/course/first-home/<file>.mp4 (opening: Yakir on the left, lesson number + title beside him; the slides exactly as
+   the academy shows them, each slide's items appearing in turn, crossfades, his voice; closing: the summary points and the
+   next lesson; 1920x1080, under 90 MB), <file>.jpg, <file>.result.json and stills media/course/check/<file>-1..6.jpg.
+   `git pull` and look for the mp4 (if the run just pushed the job, poll every 60 s up to 30 minutes; else next run).
+   media/course/jobs/<file>.error.txt newer than the job: read it, fix the cause (usually a narration link that expired:
+   fresh links, a new job file `-2`), push once more; a second failure: Telegram "ההרכבה של <topic> נתקעה, אני מטפל
+   בזה." and record the error. When it is there: read result.json (duration about the lesson's minutes + 1.5, warnings,
+   narration.pieces[].method: 'longest-pauses' is the good one; 'nearest-pause' with warnings = check those slides) and
+   Read the six stills and the poster with your own eyes (Hebrew right to left, nothing cut, the slide fits what is said
+   there, his face natural, the panel text right). If a slide is out of step with its words, fix the pieces (smaller
+   pieces around it) and build again under a new file id. When it passes: `reels?vr=final` {"id": "<request id>", "url":
+   "https://dabullaw-glitch.github.io/dabul-office/media/course/first-home/<file>.mp4"} (wait 1 to 3 minutes for GitHub
+   Pages if the answer says it is not there). The function sends Yakir the lesson with view / approve / not approve
+   (status 'final-wait'). Never upload anything to storage.
+F. After his answer: 'approved' with courseReady and no attachedAt: attach the video to the lesson, server side (never copy
+   the lessons array by hand):
+   `select docs_merge('course','first-home', jsonb_build_object('lessons', (select jsonb_agg(case when (l->>'n')::int = <n>
+    then l || jsonb_build_object('video', '<url>', 'videoAt', now()) else l end order by o) from docs d,
+    jsonb_array_elements(d.data->'lessons') with ordinality as x(l, o) where d.coll = 'course' and d.id = 'first-home')));`
+   check lessons[n].video, docs_merge the request {attachedAt}, and go to A for the next lesson. The academy plays the mp4
+   instead of the slides player (academy/academy.js). The course stays closed for sale until Yakir opens it (sale.open).
+   'rejected': docs_merge status 'hold', Telegram once "שיעור <n> לא אושר. כתוב לי בצ'אט מה לתקן, ואתקן." and stop the
+   course path until a fix note arrives (fixNote on the request, written by the main session).
+Every run writes `course` in the log row (section 7).
+
 ## 7. Log and finish
 
 Write one row per run: INSERT (or docs_merge) `docs agents` id `heygen-YYYY-MM-DD-HH` (Israel time) with
-{at, heygenConnected, credits, requestsNew, scriptsWritten, scriptsFixed, generated, polled, editJobs, finalsSent, errors[],
-notes}. Do not message Yakir except the messages named above (script approval and final approval go through the functions).
+{at, heygenConnected, credits, requestsNew, scriptsWritten, scriptsFixed, generated, polled, editJobs, finalsSent,
+course: {lesson, status, did, credits}, errors[], notes}. Do not message Yakir except the messages named above (script approval and final approval go through the functions).
 If nothing needs doing, just write the log row and stop.
