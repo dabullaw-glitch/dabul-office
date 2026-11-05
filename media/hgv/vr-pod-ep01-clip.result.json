@@ -1,0 +1,92 @@
+{
+ "ok": true,
+ "duration": 55.7,
+ "bytes": 39344501,
+ "style": "cinematic",
+ "theme": "cinematic-gold",
+ "build": {
+  "fix": {
+   "r": 0.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0,
+   "b": 1.0,
+   "why": "none needed"
+  },
+  "style": "cinematic",
+  "theme": "cinematic-gold",
+  "clips": 2,
+  "body": 52.861,
+  "total": 55.66,
+  "captions": 46,
+  "sfx": 15,
+  "layout": {
+   "hook": [
+    "band",
+    0.9615384615384616,
+    0
+   ],
+   "name": [
+    "low",
+    null,
+    null
+   ],
+   "single": [
+    "full",
+    1.0,
+    null
+   ],
+   "steps": [
+    "full",
+    1.0,
+    null
+   ],
+   "trap": [
+    "full",
+    1.0,
+    null
+   ],
+   "check": [
+    "full",
+    1.0,
+    null
+   ],
+   "days": [
+    "full",
+    1.0,
+    null
+   ],
+   "pod": [
+    "full",
+    1.0,
+    null
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 132,
+  "mode": "aligned 115 of 132",
+  "start": 0.0,
+  "end": 53.04
+ },
+ "resolve": {
+  "beats": 9,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    53.49
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n14 segments",
+ "at": "2026-11-05T12:34:35Z",
+ "cover": "vr-pod-ep01-clip.cover.jpg",
+ "coverSec": 1.0
+}
