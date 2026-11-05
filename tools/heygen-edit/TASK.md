@@ -315,6 +315,35 @@ Steps:
    weekday (Sunday 20:30, Tuesday 12:30, Thursday 17:30) and all four channels, except the debt rows (Monday 19:00,
    youtube only, slotRule 'monday-youtube-debt').
 
+## 6b. פודקאסט (Yakir approved the podcast 5.11.2026 10:59)
+
+Weekly podcast "נדל״ן בגובה העיניים" (name still a proposal: read `docs podcast/show.name` / `nameStatus`), 10 to 12
+minutes in Yakir's cloned voice, on Spotify, Apple Podcasts, YouTube and the site videos page, plus a 1-minute avatar clip.
+The full plan is `docs podcast/show.pipeline` (read it every time you work on the podcast); episodes are `docs podcast/epNN`.
+Every run, after section 6, check the episode rows. You only act on these statuses:
+
+- 'draft' or 'script-wait': nothing. Yakir has not approved the script yet. Never generate anything for it.
+- 'script-approved' (set by the chat session after Yakir wrote "מאשר"): generate the VOICE ONLY (no avatar video), exactly
+  as pipeline.2_voice says: mcp__heygen__create_speech_without_player per script section, voice settings/heygen.voice.id,
+  engine 'elevenlabs', settings {model_id:'eleven_v4'}, the text prepared like section 4 step 2 (no section headers,
+  pronunciation + spokenReplace + avoidWords, never niqqud). Credits before / after (get_current_user) into
+  settings/heygen.costLog as {id:'pod-epNN-voice', ...}. If the first section costs premium credits at more than about one
+  credit per 10 seconds of audio, stop: one Telegram line to Yakir with the measured cost, status 'voice-cost-wait'.
+  No automatic retry after an error. Then docs_merge epNN {voice:{parts,at,creditsBefore,creditsAfter}, status:'voiced'}.
+- 'voiced': write the mix job media/podcast/src/epNN.json and run the podcast mix Action (pipeline.3_mix to 5_youtube_video;
+  if the Action does not exist yet, build it first, in the pattern of .github/workflows/audio-mix.yml). Check the result
+  (duration 10 to 12 minutes, loudness about -16 LUFS, Read the cover images with your own eyes: Hebrew right to left,
+  nothing cut). Then update podcast/epNN.html with the audio player, the YouTube version and the covers, and send Yakir ONE
+  Telegram message for the final approval (approve or fix in the chat with Claude, not by replying to the bot). Status 'final-wait'.
+- 'final-approved': publish only what pipeline.7_publish says, once (feed item with a permanent guid; never add the same
+  episode twice). YouTube as a regular video, NEVER in a Sun/Tue/Thu video slot or the Monday debt slot unless Yakir chose it
+  (podcast/show.releaseSlot). Status 'published' with the links.
+- The 1-minute clip is a normal vidreq of type 'other' (source 'podcast'), handled by sections 4 to 6 like any request.
+  It is never type 'reel' and never gets a fixed slot on its own; Yakir decides where it goes.
+
+Never create HeyGen media for the podcast outside these steps, never publish without the final approval, and never put a
+podcast item into the fixed publishing slots without asking.
+
 ## 7. Log and finish
 
 Write one row per run: INSERT (or docs_merge) `docs agents` id `heygen-YYYY-MM-DD-HH` (Israel time) with
