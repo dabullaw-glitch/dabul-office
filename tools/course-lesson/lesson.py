@@ -17,7 +17,7 @@ with <break time="1.2s"/>. The piece is cut back into slides at its longest paus
 Output (GitHub Pages, never Supabase storage): media/course/<course>/<file>.mp4, <file>.jpg (poster), <file>.result.json,
 check stills media/course/check/<file>-1..6.jpg. On failure the workflow writes media/course/jobs/<file>.error.txt.
 """
-import json, math, os, pathlib, re, subprocess, sys, time, urllib.request
+import json, math, os, pathlib, re, shutil, subprocess, sys, time, urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 W, H, FPS = 1920, 1080, 25
@@ -355,7 +355,7 @@ def main(job_path):
         crf += 3
     if size >= 95e6:
         raise SystemExit(f'the lesson video is too big for GitHub ({size} bytes)')
-    os.replace(tmp, final)
+    shutil.move(str(tmp), str(final))   # /tmp and the checkout can be on different disks (5.11.2026)
     total = dur(final)
     # poster and check stills (opening, four points in the slides, closing)
     run(['ffmpeg', '-nostdin', '-y', '-v', 'error', '-ss', f'{min(2.0, l_open / 2):.2f}', '-i', final, '-frames:v', '1', '-q:v', '3', outdir / f'{fid}.jpg'])
