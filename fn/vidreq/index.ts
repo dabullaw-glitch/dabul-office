@@ -31,6 +31,8 @@
 // shown and approved together); after approval it goes to 'heygen' (the scheduled task follows settings/heygen.courseRules).
 //   GET ?a=deck&t=<ctok>  the lesson slides for the course-lesson workflow (only while the lesson is being assembled)
 import { loadSecrets, json, cors, admin, env } from '../_shared/common.ts';
+import { POD_ACTIONS, podPage, askPodScript, askPodFinal, remindPod } from './podcast.ts';
+// Podcast (5.11.2026): POST ?vr=podscript {id} / ?vr=podfinal {id}, pages ?a=pok|pfix (script) and ?a=pfok|pffix (finished episode): ./podcast.ts
 // deno-lint-ignore no-explicit-any
 type Any = any;
 const db = () => admin().from('docs');
@@ -262,9 +264,10 @@ async function deckJson(t: string) {
 // called first by the reels function: answers vidreq requests, or null for everything else
 export async function handleVidreq(req: Request, url: URL): Promise<Response | null> {
   const a = url.searchParams.get('a') || '', t = (url.searchParams.get('t') || '').replace(/[^a-f0-9]/g, ''), step = url.searchParams.get('vr');
-  if (!['sok', 'sfix', 'vok', 'vno', 'rok', 'rfix', 'deck'].includes(a) && !step) return null;
+  if (!['sok', 'sfix', 'vok', 'vno', 'rok', 'rfix', 'deck', ...POD_ACTIONS].includes(a) && !step) return null;
   try {
     if (a === 'deck') return await deckJson(t);
+    if (POD_ACTIONS.includes(a)) return await podPage(req, a, t);
     if (a === 'sok' || a === 'sfix') return await scriptPage(req, a, t);
     if (a === 'vok' || a === 'vno') return await videoPage(req, a, t);
     if (a === 'rok' || a === 'rfix') return await rawPage(req, a, t);
@@ -274,7 +277,9 @@ export async function handleVidreq(req: Request, url: URL): Promise<Response | n
     if (step === 'raw') return json(await askRaw(String(b.id || ''), !!b.dry));
     if (step === 'final') return json(await final(b, !!b.dry));
     if (step === 'sync') return json(await sync());
-    if (step === 'remind') return json(await remind(b));
+    if (step === 'remind') { const r = await remind(b); return json({ ...r, podcast: b.dry ? [] : await remindPod(!!b.force) }); }
+    if (step === 'podscript') return json(await askPodScript(String(b.id || '')));
+    if (step === 'podfinal') return json(await askPodFinal(String(b.id || '')));
     return json({ error: 'vr?' }, 400);
   } catch (e) { console.error(e); return a ? page('משהו השתבש', '<p>נסו שוב בעוד דקה.</p>', 500) : json({ ok: false, error: String((e as Error).message || e) }, 500); }
 }

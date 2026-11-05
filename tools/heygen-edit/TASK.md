@@ -314,39 +314,63 @@ Steps:
    weekday (Sunday 20:30, Tuesday 12:30, Thursday 17:30) and all four channels, except the debt rows (Monday 19:00,
    youtube only, slotRule 'monday-youtube-debt').
 
-## 6b. פודקאסט (Yakir approved the podcast 5.11.2026 10:59)
+## 6b. פודקאסט (Yakir approved the podcast 5.11.2026; weekly cycle with Telegram buttons since 5.11.2026 12:17)
 
-Weekly podcast "נדל״ן בגובה העיניים" (name still a proposal: read `docs podcast/show.name` / `nameStatus`), 10 to 12
-minutes in Yakir's cloned voice, on Spotify, Apple Podcasts, YouTube and the site videos page, plus a 1-minute avatar clip.
-The full plan is `docs podcast/show.pipeline` (read it every time you work on the podcast); episodes are `docs podcast/epNN`.
-Every run, after section 6, check the episode rows. You only act on these statuses:
+Weekly podcast "נדל״ן בגובה העיניים", 10 to 12 minutes in Yakir's cloned voice, on Spotify, Apple Podcasts, YouTube and the
+site videos page, plus a 1-minute avatar clip. Yakir 5.11.2026: "משימה קבועה אחת לשבוע לשלוח אליי תוכן לאישור ואחרי שאני
+מאשר להעביר את זה לעריכה ואז לפרסום של פרק פודקאסט שבועי. כל פעם על נושא אחר."
+THE CYCLE: every Thursday the scheduled task "פודקאסט שבועי: תסריט לאישור" writes the next episode (tools/podcast/WEEKLY.md:
+new topic, research, script, clip, description) as `docs podcast/epNN` with a `releaseDate` (a Wednesday) and sends it to
+Yakir with Telegram buttons (reels?vr=podscript). Yakir approves with the button (status 'script-approved') or writes a fix.
+THIS task does everything after that. The plan details are `docs podcast/show.pipeline` (2_voice, 3_mix, 4_cover,
+5_youtube_video); approvals are ALWAYS the Telegram buttons below, never "approve in the chat".
+Every run, after section 6, check the episode rows (skip rows with test true). You only act on these statuses:
 
-- 'draft' or 'script-wait': nothing. Yakir has not approved the script yet. Never generate anything for it.
-- 'script-approved' (set by the chat session after Yakir wrote "מאשר"): generate the VOICE ONLY (no avatar video), exactly
-  as pipeline.2_voice says: mcp__heygen__create_speech_without_player per script section, voice settings/heygen.voice.id,
-  engine 'elevenlabs', settings {model_id:'eleven_v4'}, the text prepared like section 4 step 2 (no section headers,
-  pronunciation + spokenReplace + avoidWords, never niqqud). Credits before / after (get_current_user) into
-  settings/heygen.costLog as {id:'pod-epNN-voice', ...}. If the first section costs premium credits at more than about one
-  credit per 10 seconds of audio, stop: one Telegram line to Yakir with the measured cost, status 'voice-cost-wait'.
-  No automatic retry after an error. Then docs_merge epNN {voice:{parts,at,creditsBefore,creditsAfter}, status:'voiced'}.
-- 'voiced': write the mix job media/podcast/src/epNN.json and run the podcast mix Action (pipeline.3_mix to 5_youtube_video;
-  if the Action does not exist yet, build it first, in the pattern of .github/workflows/audio-mix.yml). Check the result
-  (duration 10 to 12 minutes, loudness about -16 LUFS, Read the cover images with your own eyes: Hebrew right to left,
-  nothing cut). Then update podcast/epNN.html with the audio player, the YouTube version and the covers, and send Yakir ONE
-  Telegram message for the final approval (approve or fix in the chat with Claude, not by replying to the bot). Status 'final-wait'.
-- HOSTING (5.11.2026): the podcast files and the feed live in their own repo dabullaw-glitch/nadlan-podcast (GitHub Pages,
-  feed https://dabullaw-glitch.github.io/nadlan-podcast/feed.xml, see docs podcast/show.hosting), never in dabul-office and
-  never in Supabase storage. The feed URL never changes. Writing to that repo is done by the chat session (Yakir approves the
-  final episode in the chat), not by this scheduled task: when an episode reaches 'final-approved', leave the publish to the
-  chat session if this run cannot push to nadlan-podcast.
-- 'final-approved': publish only what pipeline.7_publish says, once (feed item with a permanent guid; never add the same
-  episode twice). YouTube as a regular video, NEVER in a Sun/Tue/Thu video slot or the Monday debt slot unless Yakir chose it
-  (podcast/show.releaseSlot). Status 'published' with the links.
-- The 1-minute clip is a normal vidreq of type 'other' (source 'podcast'), handled by sections 4 to 6 like any request.
-  It is never type 'reel' and never gets a fixed slot on its own; Yakir decides where it goes.
+- 'draft', 'script-wait', 'final-wait': nothing (waiting for Yakir; reels?vr=remind reminds him once a day).
+- 'script-fix': Yakir wrote what to change (fixNote, history in fixes). Rewrite by the writing rules of tools/podcast/WEEKLY.md
+  (a different topic if he asked for one: new research, sources you open this run). docs_merge {script, clip (keep clip.req
+  unset), description, cover, youtubeTitle, sources, words, sec, status 'draft', rewrittenAt}, then POST reels?vr=podscript
+  {"id": "epNN"} with the x-cron-secret header (net.http_post, read net._http_response): it sends Yakir the new version.
+- 'script-approved' (Yakir pressed the button; the function also opened the clip request vr-pod-epNN-clip): generate the
+  VOICE ONLY (no avatar video), exactly as pipeline.2_voice says: mcp__heygen__create_speech_without_player per script
+  section, voice settings/heygen.voice.id, engine 'elevenlabs', settings {model_id:'eleven_v4'}, the text prepared like
+  section 4 step 2 (no section headers, pronunciation + spokenReplace + avoidWords, never niqqud). Credits before / after
+  (get_current_user) into settings/heygen.costLog as {id:'pod-epNN-voice', ...} (episode 1 cost 29 credits for 10 minutes).
+  If the first section costs clearly more than that rate, stop: one Telegram line to Yakir with the measured cost, status
+  'voice-cost-wait'. No automatic retry after an error. Then docs_merge epNN {voice:{parts,at,creditsBefore,creditsAfter},
+  status:'voiced'}.
+- 'voiced': write the mix job media/podcast/src/epNN.json and run the podcast mix Action (.github/workflows/podcast-mix.yml,
+  tools/podcast/mix.py and covers.py, exactly as episode 1: docs podcast/ep01.mix is the model). Check the result (duration
+  10 to 12 minutes, loudness about -16 LUFS, Read the cover images with your own eyes: Hebrew right to left, nothing cut).
+  docs_merge epNN {mix:{mp3, mp4, duration, bytes, lufs, chapters, covers}}, then POST reels?vr=podfinal {"id": "epNN"}:
+  Telegram to Yakir with "listen and approve" / "fix" buttons; status 'final-wait'.
+- 'final-fix': Yakir wrote what to fix (finalFixNote). Words: fix only the sections concerned in epNN.script, re-voice only
+  those sections (the others keep their audio), mix again. Music or sound: change the mix only. Then reels?vr=podfinal again.
+- 'final-approved': publish ONCE, on the release day, never twice:
+  a. YouTube (right away, it is only scheduled): if docs pub `pub-<releaseDate as YYYYMMDD>T1900-podcast-epNN` does not exist,
+     INSERT it in the exact shape of `pub-20261111T1900-podcast-ep01` (at '<releaseDate>T19:00', kind 'video', series
+     'podcast', slotRule 'podcast-wednesday', channels ['youtube'], owner 'system', status 'planned', title, ytTitle =
+     epNN.youtubeTitle, ytDesc with the chapter times of epNN.mix.chapters, ytTags, videoUrl
+     https://dabullaw-glitch.github.io/dabul-office/<epNN.mix.mp4>). If releaseDate already passed, use the next Wednesday
+     that has no podcast row. docs_merge epNN {youtubePub}.
+  b. Spotify and Apple (the feed): only on the first run at or after releaseDate 19:00 Israel time. Call
+     mcp__claude-code-remote__add_repo {owner 'dabullaw-glitch', repo 'nadlan-podcast', access 'push'}, clone it to
+     /home/claude/nadlan-podcast (or git pull), write epNN's {n, title, description, mix} to /tmp/epNN.json and run
+     `python3 tools/podcast/feed_add.py --repo /home/claude/nadlan-podcast --office /home/claude/dabul-office --ep epNN
+     --meta /tmp/epNN.json --pubdate "<releaseDate 19:00 in RFC 2822 with the Israel offset>"` (it refuses an episode that is
+     already in the feed), commit and push only the repo nadlan-podcast. Check after 1 to 3 minutes that the feed URL answers
+     200 and has the episode. docs_merge epNN {feed:{at, url, mp3, guid}, status 'published', publishedAt} and append epNN to
+     podcast/show.episodes. One short Telegram line: "🎙 פרק <n> של נדל״ן בגובה העיניים עלה לספוטיפיי ולאפל. ביוטיוב
+     הערב ב-19:00." If the push is refused: Telegram once "לא הצלחתי להעלות את פרק <n> לפיד, אני בודק." and leave the status.
+- The 1-minute clip is the vidreq vr-pod-epNN-clip (type 'other', source 'podcast', opened by the function at the script
+  approval), handled by sections 4 to 6 like any request (raw approval, edit, final approval). When it is 'approved' and has
+  no pubId: INSERT a pub row `pub-<releaseDate YYYYMMDD>T1300-podcast-epNN-clip` at '<releaseDate>T13:00' for
+  podcast/show.clipSlot.channels (facebook, instagram, youtube, tiktok) with its edited video link and the clip caption,
+  series 'podcast', slotRule 'podcast-clip-wednesday' (Yakir chose Wednesday 13:00 on 5.11.2026). Never a Sun/Tue/Thu slot
+  and never type 'reel'. docs_merge the vidreq {pubId}.
 
-Never create HeyGen media for the podcast outside these steps, never publish without the final approval, and never put a
-podcast item into the fixed publishing slots without asking.
+Never create HeyGen media for the podcast outside these steps, never publish without the final approval, never add an
+episode to the feed twice, and never put a podcast item into the fixed Sun/Tue/Thu or Monday slots.
 
 ## 8. Course lessons (built 5.11.2026; runs every run, before section 7)
 
