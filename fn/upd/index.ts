@@ -166,8 +166,8 @@ const RANK_SYS = `אתה העורך של לוח העדכונים במשרד עו
 async function feed(b: Any) {
   const day = ilDay(), id = `feed-${day}`;
   const cur = (await getDoc('upd', id)) || { date: day, items: [], runs: [] };
-  // links already on the board in the last 4 days are not offered again
-  const { data: prev } = await db().select('data').eq('coll', 'upd').gte('id', `feed-${ilDay(new Date(Date.now() - 4 * 864e5))}`);
+  // links already on the board in the last 10 days are not offered again (5.11.2026: Yakir saw nothing new, old items kept coming back)
+  const { data: prev } = await db().select('data').eq('coll', 'upd').gte('id', `feed-${ilDay(new Date(Date.now() - 10 * 864e5))}`);
   const seen = new Set<string>(); (prev || []).forEach((r: Any) => (r.data.items || []).forEach((x: Any) => seen.add(x.url)));
   let cands: Any[] = await collectorItems();
   const notes: string[] = [];
@@ -175,11 +175,13 @@ async function feed(b: Any) {
   if (doSweep) for (const k of ['gov', 'news'] as const) { try { cands = cands.concat(await sweep(k)); } catch (e) { notes.push(`${k}: ${(e as Error).message}`); } }
   else if (BRAKE) notes.push('brake: no searches');
   const uniq = new Map<string, Any>(); for (const c of cands) if (!seen.has(c.url) && !uniq.has(c.url)) uniq.set(c.url, c);
-  const list = [...uniq.values()].slice(0, 90);
+  // only fresh news: the board shows the last 3 days, so an item dated earlier is never offered (5.11.2026)
+  const freshFrom = ilDay(new Date(Date.now() - 2 * 864e5));
+  const list = [...uniq.values()].filter((c: Any) => !c.date || String(c.date).slice(0, 10) >= freshFrom).slice(0, 90);
   if (!list.length) { await merge('upd', id, { date: day, runs: [...(cur.runs || []), { at: new Date().toISOString(), sweep: doSweep, cands: 0, added: 0, notes }] }); return { added: 0, cands: 0, notes }; }
   const lines = list.map((c, i) => `${i + 1}. [${c.source}${c.date ? ', ' + c.date : ''}] ${c.title}${c.what ? ' | ' + c.what : ''}`).join('\n');
-  const want = Math.max(4, 18 - (cur.items || []).length);
-  const d = await claude({ model: BRAKE ? CHEAP : REG, max_tokens: 6000, system: RANK_SYS, messages: [{ role: 'user', content: `התאריך היום: ${day}.\nבחר עד ${want} עדכונים (רק את החשובים באמת, אפשר פחות).\n\n${lines}` }] });
+  const want = Math.max(8, 20 - (cur.items || []).length);
+  const d = await claude({ model: BRAKE ? CHEAP : REG, max_tokens: 6000, system: RANK_SYS, messages: [{ role: 'user', content: `התאריך היום: ${day}.\nבחר עד ${want} עדכונים (רק את החשובים באמת, אפשר פחות). רק ידיעות מהיומיים האחרונים; ידיעה ישנה יותר לא נבחרת.\n\n${lines}` }] });
   const picked: Any[] = jsonOf(textOf(d));
   const items = picked.map((p: Any) => {
     const c = list[Number(p.i) - 1]; if (!c) return null;
