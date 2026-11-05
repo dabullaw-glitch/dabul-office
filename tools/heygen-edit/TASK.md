@@ -283,12 +283,23 @@ Yakir 5.11.2026: "ראשון, שלישי וחמישי רק סרטונים שלי
   {status:'cancelled', cancelNote:'יקיר 5.11.2026: רק סרטונים שלי שאני מדבר'}).
 - Image posts and articles on a video day stay at a different hour than the video.
 - A row id never changes (ids do not match dates); moving = docs_merge a new `at`.
+- EXCEPTION, debt videos (Yakir 5.11.2026: "את זה אתה יכול לעלות רק לאתר וליוטיוב ביום שני. ולהוציא את זה מכל הסרטונים
+  הקבועים של ראשון, שלישי וחמישי"; settings/social.cadence.debtMonday): a video of Yakir on debts, insolvency, liens,
+  enforcement or debt settlement (חובות, חדלות פירעון, עיקול, הוצאה לפועל, הסדר חוב) never takes a Sunday, Tuesday or
+  Thursday slot. Its row is on a MONDAY at 19:00, one per Monday, channels ["youtube"] only (no Facebook, Instagram or
+  TikTok; the site page comes from YouTube through the daily task), with slotRule 'monday-youtube-debt' on the row and on
+  the reel, and videoUrl set on the row (a YouTube-only row is not staged by socialpub, which stages Instagram rows only).
+  Such a row is never a swap target in step 2 and is never moved into a Sun/Tue/Thu slot. The reels function gives every
+  approved reel the next Sun/Tue/Thu slot without looking at its topic, so when a NEW debt reel is approved: give its row
+  the next free Monday 19:00 (youtube only, slotRule, videoUrl), docs_merge the reel publishAt to match, and close the
+  Sun/Tue/Thu gap it leaves by moving the following rows one slot earlier (each keeps its slot hour and channels).
 
 Steps:
 1. Row: if no planned main row has reel = <this reel id>, INSERT one (shape above) at the reel's publishAt (Israel time), with all four channels.
    Never create a second main row for the same reel (a reel appears in only one main row: "אל תעלה פעמיים אותו דבר").
 2. Target: the earliest main row whose time is more than 48 hours from now, status 'planned', no `pst` and no `result`,
-   whose reel has no priority 'heygen' and no seriesKey (never break into a series block), and is earlier than this reel's row.
+   whose reel has no priority 'heygen' and no seriesKey (never break into a series block), no slotRule
+   'monday-youtube-debt' (debt videos stay on Monday, YouTube only), and is earlier than this reel's row.
    None: just docs_merge the reel {frontAt: now, frontNote: 'אין רילס להחלפה'}.
    A series episode (seriesKey + ep) moves forward only if every earlier episode of that series is published or scheduled
    before the target; otherwise skip it this run.
@@ -301,7 +312,8 @@ Steps:
    cancelNote:'יקיר 5.11.2026: כל סרטון עולה לכל הרשתות באותו זמן', mergedInto:<main row id>}. Never publish a reel twice.
 5. docs_merge the reel {frontAt: now}. Never touch rows due within 48 hours, staged for Postoria (pst) or published.
    Check at the end: every planned video row from today has a different day, a different reel, the fixed hour of its
-   weekday (Sunday 20:30, Tuesday 12:30, Thursday 17:30) and all four channels.
+   weekday (Sunday 20:30, Tuesday 12:30, Thursday 17:30) and all four channels, except the debt rows (Monday 19:00,
+   youtube only, slotRule 'monday-youtube-debt').
 
 ## 7. Log and finish
 
