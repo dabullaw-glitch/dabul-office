@@ -350,6 +350,8 @@ podcast item into the fixed publishing slots without asking.
 
 ## 8. Course lessons (built 5.11.2026; runs every run, before section 7)
 
+SKIP ENDS (Yakir 5.11.2026, "אוקיי"): his avatar already opens and closes each lesson, so the slides' own welcome and goodbye are left out: drop the FIRST deck scene (kind 'title' / "ברוכים הבאים..."), and drop the LAST scene only when its say starts with "בשיעור הבא" or "תודה שהייתם". Use exactly this filtered list both for the voice pieces (do not pay to voice the dropped slides) and for the build job (tools/course-lesson/lesson.py applies the same rule; settings/heygen.courseRules.skipEnds = true).
+
 Yakir approved 5.11.2026 10:59 (option A) for his first course "קונים דירה ראשונה, בלי הפתעות" (docs `course/first-home`,
 10 lessons): "האווטאר שלך פותח וסוגר כל שיעור, בערך דקה וחצי. באמצע: שקפים עם הסברים בקול שלך". So every lesson video =
 his avatar OPENING (about 45 s) + the lesson's existing slides (lessons[n].deck.scenes, the academy player's slides) read in

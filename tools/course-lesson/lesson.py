@@ -159,6 +159,14 @@ def main(job_path):
         if not deck.get('ok', True):
             raise SystemExit('deck: ' + str(deck))
     scenes = deck['scenes']
+    # 5.11.2026 (Yakir approved): his avatar already opens and closes every lesson, so the slides' own welcome
+    # (the first slide, "ברוכים הבאים...") and the slides' own goodbye (a last slide that starts "בשיעור הבא" or "תודה שהייתם")
+    # are left out of the video. The same rule decides which slides get his voice (settings/heygen.courseRules.skipEnds).
+    if job.get('skipEnds', True) and len(scenes) > 2:
+        if (scenes[0].get('kind') == 'title') or str(scenes[0].get('say', '')).startswith('ברוכים הבאים'):
+            scenes = scenes[1:]
+        if str(scenes[-1].get('say', '')).startswith(('בשיעור הבא', 'תודה שהייתם')):
+            scenes = scenes[:-1]
     n, of = deck.get('n') or job.get('n'), deck.get('of') or 10
     res.update(n=n, title=deck.get('title'), scenes=len(scenes))
     log('lesson', n, deck.get('title'), len(scenes), 'slides')
