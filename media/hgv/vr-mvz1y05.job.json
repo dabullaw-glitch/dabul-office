@@ -1,0 +1,114 @@
+{
+ "id": "vr-mvz1y05",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/3a4c584456a532efec0fa9b6cafb6d4d.mp4?Expires=1794165608&Signature=SeQ3fnPnMbIB0uk23MBtWAjxt6VG1hpcn46uc9irZGd75RW1XAORYxFDblcTl0Fuf5IWUtoeemPcNR2WXcbOLi2OEM5St5aUl9MuJG-FNmLB8Hh8UAcYsmOS5qHmPz7xJ0YqJuaDjteZMjo1bDbLM~Jdfjx45ngmE2~zomp5Az69S3ZLxAj6p~WuevlLDM8EE8J19Q1sJcqQoHl~iP-QLPyjxU2AQEkBy8M~~gwUyhbFmC6YcNoGMWYvlLhyM2dyZn1driyVXSjwjVmIVVJ1NfNNM1lx-rtK4xelyheE62Vkwq8ADdagDqt9ZoYjSF586Owp2ClTKyNQWzG7aAyRIw__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "תחשבו על זוג שמצא דירה עם מרפסת סגורה.\nעוד חדר. בדיוק מה שהיה חסר להם.\nהם חתמו, עברו, שמחו.\nואז הגיע מכתב מהעירייה.\n\nמתברר שהמרפסת נסגרה בלי היתר.\nוהבעיה עכשיו היא שלהם, כי הם הבעלים החדשים.\n\nאיך זה קרה?\nכי אף אחד לא בדק אם מה שרואים בדירה,\nזה מה שאושר בתוכניות.\n\nאז מה בודקים לפני שחותמים?\nאחד. מבקשים מהעירייה את תיק הבניין,\nומשווים את התוכנית לדירה עצמה.\nשתיים. אם יש תוספת בלי היתר, שואלים:\nאפשר להכשיר אותה? כמה זמן זה לוקח? ומי משלם?\nשלוש. כותבים את זה בחוזה.\nמה המוכר מצהיר, ומה קורה אם תגיע דרישה.\n\nויש עוד דבר:\nגם הבנק עלול לשים לב לזה,\nוהשמאי עלול להעריך את הדירה בפחות.\n\nשמרו את זה לפני שאתם יוצאים לראות דירות.",
+ "history": "v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "paper,boxed-navy,glass",
+ "plan": {
+  "title": "קנו דירה עם חדר נוסף. ואז הגיע מכתב מהעירייה",
+  "topic": "מקרקעין",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "cinematic",
+  "goldWords": [
+   "מהעירייה.",
+   "היתר.",
+   "בתוכניות.",
+   "תיק",
+   "בחוזה.",
+   "בפחות."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "חריגות בנייה",
+    "l1": "קנו חדר נוסף",
+    "l2": "ואז הגיע מכתב"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "עוד חדר. בדיוק מה",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "permit",
+    "kind": "stamp",
+    "say": "מתברר שהמרפסת נסגרה בלי היתר.",
+    "until": "הם הבעלים החדשים.",
+    "text": "בלי היתר",
+    "stampSay": "נסגרה בלי היתר."
+   },
+   {
+    "id": "why",
+    "kind": "term",
+    "say": "כי אף אחד לא בדק",
+    "until": "מה שאושר בתוכניות.",
+    "kicker": "איך זה קרה?",
+    "text": "מה שרואים בדירה",
+    "sub": "מול מה שאושר",
+    "subSay": "זה מה שאושר בתוכניות."
+   },
+   {
+    "id": "three",
+    "kind": "title",
+    "say": "אז מה בודקים לפני שחותמים?",
+    "dur": 2.5,
+    "num": "3",
+    "text": "בדיקות לפני שחותמים"
+   },
+   {
+    "id": "o1",
+    "kind": "option",
+    "say": "אחד. מבקשים מהעירייה את",
+    "until": "לדירה עצמה.",
+    "num": "1",
+    "text": "תיק הבניין בעירייה"
+   },
+   {
+    "id": "o2",
+    "kind": "option",
+    "say": "שתיים. אם יש תוספת",
+    "until": "כמה זמן זה לוקח? ומי משלם?",
+    "num": "2",
+    "text": "אפשר להכשיר? מי משלם?"
+   },
+   {
+    "id": "o3",
+    "kind": "option",
+    "say": "שלוש. כותבים את זה בחוזה.",
+    "until": "ומה קורה אם תגיע דרישה.",
+    "num": "3",
+    "text": "הכל כתוב בחוזה"
+   },
+   {
+    "id": "more",
+    "kind": "stack",
+    "say": "ויש עוד דבר:",
+    "until": "להעריך את הדירה בפחות.",
+    "items": [
+     {
+      "say": "גם הבנק עלול לשים",
+      "text": "הבנק"
+     },
+     {
+      "say": "והשמאי עלול להעריך",
+      "text": "השמאי"
+     }
+    ]
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "שמרו את זה לפני",
+    "until": "יוצאים לראות דירות.",
+    "text": "09-8613413"
+   }
+  ]
+ }
+}

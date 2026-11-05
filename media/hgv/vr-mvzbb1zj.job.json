@@ -1,0 +1,104 @@
+{
+ "id": "vr-mvzbb1zj",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/3611e1248365921e635bfa04aaa81548.mp4?Expires=1794248685&Signature=qtbLvonP61aYEk2Iud9ssuaGBeAnZPe4KXd-m5mTNlIpAhPCNGeFUvXwVOQcN9u4rqU0AnFGAKLXveGsksKAxa-8AsEJsFpnGab6tToyUZ05e2zPi-WwJG41L1SG72pHcE~d9SvZa9jhO5TYrzPiK-v0f0WJpDXRyguAf~pPCgL6YnSGsh16HJHHD-uTMW98RlXPWA2z9HvBnTQbiNqYz7yREHSVUn4d4JTapDDRyJUkk0P8fos1vNt3Cbos6tkSLWUBU8sINY2zr9bSHoy9mW5rvFM3UiNPox9f9Sk4vXXlD6gj0MbRXA4oxBumkJGVQCrByo90LH6DUNwr1MGDog__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "היא מכרה את הדירה שלה, כדי לקנות דירה חדשה.\nואז בעל הדירה החדשה התחרט.\nוהחוזה? היה רק טיוטה.\n\nזה אחד משני פסקי דין שפורסמו השבוע.\nויש צעד אחד, שהיה עוזר בשניהם.\n\nהראשון, מבאר שבע.\nאישה רצתה לקנות דירה באילת.\nעורכות הדין החליפו טיוטות של חוזה,\nועוד לפני שסוכם לוח תשלומים, הוא חזר בו.\nהיא תבעה, והתביעה נדחתה.\nבית המשפט קבע:\nטיוטה שלא נחתמה, בלי הסכמה על הפרטים החשובים,\nזה עוד לא חוזה.\n\nוהשני, הפוך.\nזוג קנה דירה משופצת בחיפה.\nאחרי שנכנסו, התגלתה רטיבות קשה.\nבית המשפט קבע שמי שמכרו להם ידעו, או היו צריכים לדעת,\nולא סיפרו.\nוהם חויבו לשלם פיצוי של מאות אלפי שקלים.\n\nאז מה הצעד?\nלא מתחייבים לשום דבר, לא למכור ולא לקנות,\nלפני שיש חוזה חתום.\nולפני החתימה, עושים בדק בית,\nושואלים בכתב על רטיבות וליקויים.\nכל מקרה שונה, ולכן את החוזה בודקים עם עורך דין.\n\nתשלחו את זה למי שעומד לקנות או למכור דירה.",
+ "history": "v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "paper,boxed-navy,glass",
+ "plan": {
+  "title": "התחרט ברגע האחרון, והחוזה היה רק טיוטה",
+  "topic": "פסיקה",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "boxed",
+  "goldWords": [
+   "טיוטה.",
+   "נדחתה.",
+   "רטיבות",
+   "פיצוי",
+   "חתום.",
+   "בדק"
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "פסקי דין",
+    "l1": "החוזה היה",
+    "l2": "רק טיוטה"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "זה אחד משני פסקי",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "case1",
+    "kind": "term",
+    "say": "הראשון, מבאר שבע.",
+    "until": "הוא חזר בו.",
+    "kicker": "פסק דין ראשון",
+    "text": "החליפו טיוטות של חוזה",
+    "sub": "והוא חזר בו",
+    "subSay": "הוא חזר בו."
+   },
+   {
+    "id": "draft",
+    "kind": "stamp",
+    "say": "היא תבעה, והתביעה נדחתה.",
+    "until": "זה עוד לא חוזה.",
+    "text": "טיוטה זה עוד לא חוזה",
+    "stampSay": "זה עוד לא חוזה."
+   },
+   {
+    "id": "case2",
+    "kind": "term",
+    "say": "והשני, הפוך.",
+    "until": "התגלתה רטיבות קשה.",
+    "kicker": "פסק דין שני",
+    "text": "דירה משופצת בחיפה",
+    "sub": "רטיבות קשה",
+    "subSay": "התגלתה רטיבות קשה."
+   },
+   {
+    "id": "comp",
+    "kind": "stamp",
+    "say": "בית המשפט קבע שמי שמכרו",
+    "until": "מאות אלפי שקלים.",
+    "text": "חויבו בפיצוי",
+    "stampSay": "חויבו לשלם פיצוי"
+   },
+   {
+    "id": "step",
+    "kind": "stack",
+    "say": "אז מה הצעד?",
+    "until": "על רטיבות וליקויים.",
+    "items": [
+     {
+      "say": "לא מתחייבים לשום דבר,",
+      "text": "קודם חוזה חתום"
+     },
+     {
+      "say": "עושים בדק בית,",
+      "text": "בדק בית"
+     },
+     {
+      "say": "ושואלים בכתב על רטיבות",
+      "text": "שאלות בכתב"
+     }
+    ]
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "תשלחו את זה למי",
+    "until": "לקנות או למכור דירה.",
+    "text": "09-8613413"
+   }
+  ]
+ }
+}

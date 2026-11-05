@@ -1,0 +1,105 @@
+{
+ "id": "vr-mw1ts539",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/693b9f098948416a86128ad076f2d6fa.mp4?Expires=1794475625&Signature=AuFEsDEnQzkEM5FmPys2QNVitsKfelMmPeGWrYwaN0ecKsfb-krenwyioxrgJ0zcDB5ltm-U7rcHryk~oD1qqFKZdSdJQjWiAMpVabUZ11ewBtHhY85cPRh0yJ7EtM1NdsBBqNgxzLBAGdgox3LJMZAz-xK~xZkWzr6tWqDJT5zXKFZEJGQs-ubidlxyMaCuaOe7F9iayYHXNgtoCVXGsXE~2Azo575vOe8UsfIsNDUsKtPPbBMuM-gMLq~XwaVdbeI8W~2U3bLFoRJUbeidV2iyUBRj83QlKxhkrOdlwVU1EtsEG3fhYD1di9Tt~63AKhwCAf6ft5ffI22tff9BDQ__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "ההורים שלכם מרוויחים יותר מכם,\nולכן הם נכנסים איתכם למשכנתא?\nאז תקשיבו, כי בנק ישראל הבהיר משהו חשוב.\n\nויש צעד אחד שכדאי לעשות לפני שחותמים על דירה.\nתכף נגיע אליו.\n\nמה הבהירו?\nאם ההורים לא רשומים כבעלים בדירה,\nהבנק יכול לספור רק חצי מההכנסה הפנויה שלהם.\nגם אם הם אלה שמשלמים כל חודש.\n\nנניח שאתם מרוויחים עשרת אלפים שקל בחודש,\nואבא מרוויח שלושים אלף.\nהבנק יספור מאבא רק חמישה עשר אלף.\nביחד, עשרים וחמישה אלף.\n\nבבנק ישראל אומרים שזה לא כלל חדש, רק הבהרה.\nאבל יש בנקים שעד עכשיו ספרו את כל ההכנסה של ההורים.\n\nאז מה הצעד?\nלפני שחותמים על חוזה לקניית דירה,\nמבקשים מהבנק אישור עקרוני למשכנתא,\nלפי החישוב הזה.\nובודקים בחוזה מה קורה אם הבנק מאשר פחות.",
+ "history": "v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "paper,boxed-navy,glass",
+ "plan": {
+  "title": "ההורים עוזרים במשכנתא? הבנק יספור רק חצי מההכנסה שלהם",
+  "topic": "משכנתא",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "v3",
+  "goldWords": [
+   "חצי",
+   "כבעלים",
+   "חמישה",
+   "הבהרה.",
+   "עקרוני",
+   "פחות."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "משכנתא",
+    "l1": "ההורים עוזרים?",
+    "l2": "רק חצי נספר"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "אז תקשיבו, כי בנק",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "rule",
+    "kind": "term",
+    "say": "מה הבהירו?",
+    "until": "שמשלמים כל חודש.",
+    "kicker": "בנק ישראל",
+    "text": "רק חצי מההכנסה",
+    "sub": "כשההורים לא בעלים",
+    "subSay": "אם ההורים לא רשומים"
+   },
+   {
+    "id": "example",
+    "kind": "stack",
+    "say": "נניח שאתם מרוויחים עשרת",
+    "until": "ביחד, עשרים וחמישה אלף.",
+    "items": [
+     {
+      "say": "נניח שאתם מרוויחים עשרת",
+      "text": "אתם: 10,000 ₪"
+     },
+     {
+      "say": "ואבא מרוויח שלושים אלף.",
+      "text": "אבא: 30,000 ₪"
+     },
+     {
+      "say": "הבנק יספור מאבא רק",
+      "text": "נספר מאבא: 15,000 ₪"
+     }
+    ],
+    "summary": "ביחד: 25,000 ₪",
+    "summarySay": "ביחד, עשרים וחמישה אלף."
+   },
+   {
+    "id": "clar",
+    "kind": "stamp",
+    "say": "בבנק ישראל אומרים שזה",
+    "until": "את כל ההכנסה של ההורים.",
+    "text": "לא כלל חדש",
+    "stampSay": "לא כלל חדש, רק הבהרה."
+   },
+   {
+    "id": "step",
+    "kind": "stack",
+    "say": "אז מה הצעד?",
+    "until": "לפי החישוב הזה.",
+    "items": [
+     {
+      "say": "לפני שחותמים על חוזה",
+      "text": "לפני החתימה"
+     },
+     {
+      "say": "מבקשים מהבנק אישור עקרוני",
+      "text": "אישור עקרוני למשכנתא"
+     }
+    ]
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "ובודקים בחוזה מה קורה",
+    "until": "הבנק מאשר פחות.",
+    "text": "09-8613413",
+    "label": "בודקים את החוזה"
+   }
+  ]
+ }
+}
