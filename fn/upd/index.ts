@@ -4,9 +4,10 @@
 // (after the HeyGen trial). Separate from the magazine, the newsletter and the fixed Google Business posts: it never touches them.
 //
 // FEED (docs coll 'upd', id 'feed-YYYY-MM-DD': {date, items[], at, runs[]}):
-//   candidates: real estate items the news collector already reads (Globes, TheMarker, Walla, ynet feeds; only their own links),
-//   plus (morning run) two web searches with citations: official and primary sources (gov.il, courts, Knesset, Bank of Israel,
-//   CBS) and real estate news sites. A search item without a citation the model really read is dropped.
+//   candidates (5.11.2026, see "FEED" below): real estate items the news collector reads (hns_items), sources read directly here
+//   (Bizportal, Magdilim, Nadlancenter, Knesset bills, Bing News topic searches, urban renewal status changes), plus (morning run)
+//   one web search with citations on official sites only (gov.il, courts, Knesset, Bank of Israel, CBS; last 3 days). A search
+//   item without a citation the model really read is dropped. Links and stories already shown or hidden are never offered again.
 //   One ranking call picks 10-20 items that matter to the practice (tax, rulings, urban renewal, law changes, mortgages, planning,
 //   Netanya and the Sharon), writes a title and a 1-2 line summary in our own words, a topic and an importance (1-5).
 //   Every item keeps its source name and link. nws.co.il is never a source or a link here.
@@ -20,7 +21,7 @@
 //            buttons -> on approval an artjob 'written' (with the draft's id), so the existing articles engine checks it and
 //            schedules it for the next morning, with its own stop button.
 //   "לתקן": Yakir writes what to change; it is done again with his note and sent again. "לבטל": nothing goes out.
-// POST (x-cron-secret): {action:'feed', sweep?:bool} cron 06:20 (with searches) and 13:20 (collector only), Israel time
+// POST (x-cron-secret): {action:'feed', sweep?:bool} cron 06:20 (with the official search) and 13:20 (no search), Israel time
 //                       {action:'work'}               cron every 5 minutes: one step for up to 2 requests, and the follow-ups
 // GET/POST ?a=view|ok|fix|no&t=<token>                the approval page (opened from Telegram through the office portal)
 // COST: every Anthropic call is priced into ai_cost (fn 'upd'; web searches as model 'web_search', $0.01 each). When the month
@@ -119,80 +120,321 @@ function citedBlocks(content: Any[], tag = 'ITEM') {
 }
 
 // ---------- FEED ----------
-const FEED_SRC = ['globes_realestate', 'themarker_realestate', 'globes_markets', 'walla_money', 'walla_local_biz', 'ynet_news', 'walla_israel'];
-const KW = /נדל"?ן|נדל״ן|דירה|דירות|מס רכישה|מס שבח|משכנת|ריבית|פינוי[ -]?בינוי|תמ"?א|תמ״א|התחדשות עירונית|רמ"?י|רמ״י|רשות מקרקעי|מקרקעין|היטל השבחה|טאבו|רשם המקרקעין|קבלן|יזם|שכירות|שוכר|משכיר|ירוש|צוואה|ועדת ערר|תכנון ובנייה|ועדה מקומית|ועדה מחוזית|דירה בהנחה|מחיר למשתכן|מחירי הדירות|בנק ישראל|הלמ"ס|בית משותף|הערת אזהרה|זיכרון דברים/;
-const GOV_DOMAINS = ['gov.il', 'knesset.gov.il', 'boi.org.il', 'cbs.gov.il', 'court.gov.il', 'kolzchut.org.il'];
-const NEWS_DOMAINS = ['nadlancenter.co.il', 'calcalist.co.il', 'globes.co.il', 'themarker.com', 'bizportal.co.il', 'ice.co.il', 'magdilim.co.il', 'ynet.co.il', 'walla.co.il', 'mako.co.il', 'maariv.co.il', 'israelhayom.co.il', 'davar1.co.il', 'news1.co.il'];
-const SEARCH_SYS = `אתה עוזר מחקר במשרד עורכי דין לנדל"ן ומקרקעין בנתניה. מחפשים עדכונים אמיתיים מהימים האחרונים שחשובים לקונים, למוכרים, לבעלי דירות ולמשקיעים.
+// 5.11.2026 (Yakir approved the sources proposal, "מאשר הכל"): the board had few new items and the same stories came back every
+// day. Two reasons, both fixed here:
+//   1. the repeat check read x.url, which board items do not have (their link is x.source.url), so nothing was ever "seen".
+//      Now: the normalized link (host lowercase, no www., no #fragment, no utm_*, no trailing slash) of every item of the last
+//      10 days, plus the ids, links and titles of the items Yakir marked "לא מעניין" (updreq kind 'hide'), and a story check:
+//      a candidate whose title shares about half of its words with a recent or hidden title is the same event and is dropped.
+//      The ranker also gets those titles with the instruction not to pick the same event again.
+//   2. few sources. Now: the collector's real estate feeds (Globes, TheMarker, Walla, ynet and Maariv real estate, ice real
+//      estate, Sharonline real estate; general economy feeds only with a real estate word), and read directly here: Bizportal
+//      (real estate + Takdin rulings, news sitemap), Magdilim (WordPress API), Nadlancenter (home page), Knesset bills (OData),
+//      Bing News searches by topic (the outlet's own link), and status changes of the urban renewal compounds of Netanya and the
+//      Sharon (docs 'nwsproj', from the Ministry of Housing open data). General news feeds (ynet, Walla news) and the AI news
+//      search were dropped; the morning AI search reads official sites only and keeps items of the last 3 days.
+//   Calcalist (403 to our servers) and the Bank of Israel site (bot wall) are not read; the gov search still covers boi.org.il.
+const FEED_SRC = ['globes_realestate', 'themarker_realestate', 'walla_local_biz', 'ynet_realestate', 'maariv_realestate', 'ice_news', 'sharonline', 'globes_markets', 'walla_money', 'themarker_news', 'ynet_economy'];
+// real estate sections: every item; ice and Sharonline: only their real estate links; the rest: only with a real estate word
+const WHOLE = new Set(['globes_realestate', 'themarker_realestate', 'ynet_realestate', 'maariv_realestate', 'ice_news', 'sharonline']);
+const LINK_ONLY: Record<string, RegExp> = { ice_news: /\/realestate\//i, sharonline: /\/real-estate\//i };
+const SRC_NAME: Record<string, string> = { ice_news: 'אייס', sharonline: 'שרון אונליין', ynet_realestate: 'ynet', maariv_realestate: 'מעריב', themarker_news: 'דה מרקר', ynet_economy: 'ynet' };
+// whole words (with the Hebrew one-letter prefixes), so ירושה matches and ירושלים does not
+const KW_TERMS = ['נדל"ן', 'נדלן', 'דירה', 'דירות', 'דירת', 'מס רכישה', 'מס שבח', 'משכנתא', 'משכנתה', 'משכנתאות', 'ריבית', 'פינוי בינוי', 'תמ"א',
+  'התחדשות עירונית', 'רמ"י', 'רשות מקרקעי ישראל', 'מקרקעין', 'היטל השבחה', 'היטלי השבחה', 'טאבו', 'רשם המקרקעין', 'קבלן', 'קבלנים', 'יזם', 'יזמים',
+  'שכירות', 'שכר דירה', 'שוכר', 'שוכרים', 'משכיר', 'משכירים', 'ירושה', 'ירושות', 'יורש', 'יורשים', 'צוואה', 'צוואות', 'עיזבון', 'עזבון', 'ועדת ערר',
+  'ועדות ערר', 'תכנון ובנייה', 'תכנון והבנייה', 'ועדה מקומית', 'וועדה מקומית', 'וועדה המקומית', 'ועדה המקומית', 'ועדה מחוזית', 'וועדה המחוזית',
+  'ועדה המחוזית', 'מחיר למשתכן', 'מחיר מטרה', 'דירה בהנחה', 'בנק ישראל', 'הלמ"ס', 'בית משותף', 'בתים משותפים', 'הערת אזהרה', 'זיכרון דברים',
+  'זכרון דברים', 'תב"ע', 'היתר בנייה', 'היתרי בנייה', 'משרד השיכון', 'משרד הבינוי'];
+const reEsc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '[\\s-]+');
+const KW = new RegExp(`(?<![א-ת])[ובכלמשה]{0,3}(?:${KW_TERMS.map(reEsc).join('|')})(?![א-ת])`);
+const heText = (s: unknown) => String(s ?? '').replace(/[״“”„]/g, '"').replace(/[׳‘’]/g, "'").replace(/[־–—]/g, '-');
+const isRE = (s: string) => KW.test(heText(s));
+const GOV_DOMAINS = ['gov.il', 'court.gov.il', 'knesset.gov.il', 'boi.org.il', 'cbs.gov.il'];
+
+// one link, one form: for the repeat check and the item id
+function normUrl(u: unknown) {
+  try {
+    const x = new URL(String(u || '').trim());
+    for (const k of [...x.searchParams.keys()]) if (/^utm_/i.test(k)) x.searchParams.delete(k);
+    let path = x.pathname; try { path = decodeURIComponent(path); } catch { /* keep */ }
+    path = path.replace(/\/+$/, '');
+    const q = x.searchParams.toString();
+    return `${x.hostname.toLowerCase().replace(/^www\./, '')}${x.port ? ':' + x.port : ''}${path}${q ? '?' + q : ''}`;
+  } catch { return String(u || '').trim().toLowerCase().replace(/#.*$/, '').replace(/\/+$/, ''); }
+}
+const itemId = (u: string) => 'u' + hash(normUrl(u));
+// the words of a title (one or two prefix letters off longer words), and how much two titles share
+const STOPW = new Set(['של', 'על', 'את', 'עם', 'לא', 'גם', 'כי', 'אם', 'או', 'זה', 'זו', 'הוא', 'היא', 'הם', 'יש', 'אין', 'כל', 'עד', 'אחרי', 'לפני', 'בין', 'כך', 'מה', 'איך', 'למה', 'יותר', 'פחות', 'אחד', 'אחת', 'רק', 'כבר', 'עוד']);
+function words(t: unknown) {
+  const out = new Set<string>();
+  for (let w of heText(t).replace(/[^\p{L}\p{N}"]+/gu, ' ').split(/\s+/)) {
+    w = w.replace(/^"+|"+$/g, '');
+    for (let k = 0; k < 2 && w.length > 4 && /^[ובלמהשכ]/.test(w); k++) w = w.slice(1);
+    if (w.length >= 2 && !STOPW.has(w)) out.add(w);
+  }
+  return out;
+}
+function overlap(a: Set<string>, b: Set<string>) {
+  if (!a.size || !b.size) return 0;
+  let n = 0; for (const x of a) if (b.has(x)) n++;
+  return n < 3 ? 0 : n / Math.min(a.size, b.size);
+}
+const SAME_STORY = 0.5;
+
+// what is already known: links, ids and titles of the last 10 days, and everything Yakir hid
+async function seenData() {
+  const from10 = `feed-${ilDay(new Date(Date.now() - 10 * 864e5))}`, from30 = `feed-${ilDay(new Date(Date.now() - 30 * 864e5))}`;
+  const [{ data: feeds }, { data: hid }] = await Promise.all([
+    db().select('id,data').eq('coll', 'upd').like('id', 'feed-%').gte('id', from30),
+    db().select('data').eq('coll', 'updreq').eq('data->>kind', 'hide').eq('data->>status', 'hidden').limit(2000)]);
+  const urls = new Set<string>(), ids = new Set<string>(), recent: string[] = [], hidden: string[] = [], toks: Set<string>[] = [];
+  const urlOf = new Map<string, string>();
+  for (const r of feeds || []) for (const x of r.data?.items || []) {
+    const u = x.source?.url || x.url || '';
+    if (x.id && u) urlOf.set(x.id, u);
+    if (r.id < from10) continue;
+    if (u) urls.add(normUrl(u));
+    if (x.id) ids.add(x.id);
+    if (x.title) { recent.push(x.title); toks.push(words(x.title)); }
+    if (x.orig) toks.push(words(x.orig));
+  }
+  for (const r of hid || []) {
+    const it = r.data?.item || {};
+    if (it.id) { ids.add(it.id); if (urlOf.has(it.id)) urls.add(normUrl(urlOf.get(it.id))); }
+    if (it.source?.url) urls.add(normUrl(it.source.url));
+    if (it.title) { hidden.push(it.title); toks.push(words(it.title)); }
+  }
+  return { urls, ids, recent: [...new Set(recent)], hidden: [...new Set(hidden)], toks };
+}
+const sameAsSeen = (title: string, toks: Set<string>[]) => { const w = words(title); return toks.some(t => overlap(w, t) >= SAME_STORY); };
+
+// ---------- the AI search on official sites (morning run) ----------
+const SEARCH_SYS = `אתה עוזר מחקר במשרד עורכי דין לנדל"ן ומקרקעין בנתניה. מחפשים עדכונים רשמיים אמיתיים מהימים האחרונים שחשובים לקונים, למוכרים, לבעלי דירות ולמשקיעים.
 כללים:
-- רק עדכונים מ-14 הימים האחרונים (בדוק את התאריך שבעמוד). לא מדריכים כלליים ולא כתבות ישנות.
+- רק עדכונים מ-3 הימים האחרונים (בדוק את התאריך שבעמוד). פריט בלי תאריך ברור לא נכנס. לא מדריכים כלליים ולא עמודים ישנים.
 - כתוב את כל הפריטים בתשובה הסופית אחת, וכל פריט בנוי מהמשפטים שמצוטטים מהמקור (עם הציטוט בתוך הפריט).
 - כל פריט חייב להישען על עמוד שקראת בחיפוש, עם ציטוט. בלי לנחש תאריכים, מספרים או שמות.
-- לא אתרים של עורכי דין או משרדי עורכי דין.
-- בין 4 ל-10 פריטים. אם אין, כתוב רק: אין עדכונים.
+- בין 2 ל-8 פריטים. אם אין, כתוב רק: אין עדכונים.
 פורמט לכל פריט, בדיוק כך:
 ITEM
 כותרת: (עד 12 מילים)
 תאריך: (YYYY-MM-DD)
-מקור: (שם הגוף או האתר)
+מקור: (שם הגוף)
 מה קרה: (משפט או שניים)
 END`;
-async function sweep(kind: 'gov' | 'news', debug = false) {
-  const ask = kind === 'gov'
-    ? 'חפש החלטות רשמיות ופסקי דין מהימים האחרונים (במקור הרשמי או כפי שדווחו באתרי החדשות): החלטות מיסוי וחוזרים של רשות המסים, החלטות ועדות ערר, פסקי דין של העליון והמחוזי בנדל"ן ובמקרקעין, החלטות מועצת רשות מקרקעי ישראל ומכרזים, מנהל התכנון, רשם המקרקעין, משרד הבינוי והשיכון והרשות להתחדשות עירונית, ריבית בנק ישראל ומשכנתאות, מדד מחירי הדירות של הלמ"ס, חקיקה בכנסת שנוגעת לדירות.'
-    : 'חפש חדשות נדל"ן ומשפט מהימים האחרונים באתרי החדשות: מיסוי מקרקעין, פסקי דין בעסקאות דירה ובבתים משותפים, התחדשות עירונית ופינוי בינוי, משכנתאות וריבית, שינויי חקיקה ונהלים, תכנון ובנייה, ונתניה והשרון.';
-  const content = await searchRun(CHEAP, SEARCH_SYS, `התאריך היום: ${ilDay()}.\n${ask}\nחפש, קרא, ותן את התשובה בפורמט שנקבע.`, kind === 'gov' ? [...GOV_DOMAINS, ...NEWS_DOMAINS] : NEWS_DOMAINS, 6, 5000);
+async function sweep(debug = false) {
+  const ask = 'חפש באתרים הרשמיים החלטות ופרסומים מהימים האחרונים: החלטות מיסוי וחוזרים של רשות המסים, החלטות ועדות ערר, פסקי דין של העליון והמחוזי בנדל"ן ובמקרקעין, החלטות מועצת רשות מקרקעי ישראל ומכרזים, מנהל התכנון, רשם המקרקעין, משרד הבינוי והשיכון והרשות להתחדשות עירונית, ריבית בנק ישראל והוראות למשכנתאות, מדד מחירי הדירות של הלמ"ס, חקיקה בכנסת שנוגעת לדירות.';
+  const content = await searchRun(CHEAP, SEARCH_SYS, `התאריך היום: ${ilDay()}.\n${ask}\nחפש, קרא, ותן את התשובה בפורמט שנקבע.`, GOV_DOMAINS, 6, 5000);
   if (debug) { const txt = content.filter((c: Any) => c.type === 'text'); return [{ debug: true, blocks: content.length, texts: txt.length, cites: txt.reduce((a: number, c: Any) => a + (c.citations || []).length, 0), text: txt.map((c: Any) => c.text).join('').slice(0, 2500) }]; }
+  const from = ilDay(new Date(Date.now() - 3 * 864e5));
   return citedBlocks(content).map(({ field, cites }) => ({
-    title: field('כותרת'), date: field('תאריך').slice(0, 10), what: field('מה קרה'), url: cites[0].url, source: field('מקור') || cites[0].title, via: kind,
-  })).filter(x => x.title && x.url);
+    title: field('כותרת'), date: field('תאריך').slice(0, 10), what: field('מה קרה'), url: cites[0].url, source: field('מקור') || cites[0].title, via: 'gov',
+  })).filter(x => x.title && x.url && /^\d{4}-\d{2}-\d{2}$/.test(x.date) && x.date >= from && x.date <= ilDay());
 }
+
+// ---------- the news collector's feeds (hns_items) ----------
 async function collectorItems() {
   const since = new Date(Date.now() - 72 * 3600e3).toISOString();
   const [{ data: rows }, { data: srcs }] = await Promise.all([
-    admin().from('hns_items').select('url,title,body,published_at,source_id').in('source_id', FEED_SRC).gte('fetched_at', since).order('fetched_at', { ascending: false }).limit(400),
+    admin().from('hns_items').select('url,title,body,published_at,source_id').in('source_id', FEED_SRC).gte('fetched_at', since).order('fetched_at', { ascending: false }).limit(1200),
     admin().from('hns_sources').select('id,name_he').in('id', FEED_SRC)]);
   const nm = Object.fromEntries((srcs || []).map((s: Any) => [s.id, s.name_he]));
-  return (rows || []).filter((r: Any) => r.url && !NO_NWS.test(r.url) && KW.test(`${r.title} ${String(r.body || '').slice(0, 400)}`))
-    .map((r: Any) => ({ title: clean(r.title), date: String(r.published_at || '').slice(0, 10), what: clean(String(r.body || '').replace(/<[^>]+>/g, ' ').slice(0, 280)), url: r.url, source: String(nm[r.source_id] || '').replace(/\s*(נדל"ן|חדשות|כסף|מקומי.*)$/, '').trim() || 'אתר חדשות', via: 'feed' }));
+  return (rows || []).filter((r: Any) => r.url && !NO_NWS.test(r.url)
+    && (!LINK_ONLY[r.source_id] || LINK_ONLY[r.source_id].test(r.url))
+    && (WHOLE.has(r.source_id) || isRE(`${r.title} ${String(r.body || '').slice(0, 400)}`)))
+    .map((r: Any) => ({ title: clean(r.title), date: dayOf(r.published_at), what: clean(String(r.body || '').replace(/<[^>]+>/g, ' ').slice(0, 280)), url: r.url,
+      source: SRC_NAME[r.source_id] || String(nm[r.source_id] || '').replace(/\s*(נדל"ן|חדשות|כסף|מקומי.*)$/, '').trim() || 'אתר חדשות', via: r.source_id }));
 }
+
+// ---------- sources read directly (5.11.2026) ----------
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
+async function getText(url: string, accept = '') {
+  let r: Response | null = null;
+  for (const plain of [false, true]) { // Bizportal answers 400 to some header sets: one more try with no extra headers
+    const h: Record<string, string> = plain ? {} : { 'user-agent': UA, 'accept-language': 'he-IL,he;q=0.9' };
+    if (accept) h.accept = accept;
+    r = await fetch(url, { headers: h, signal: AbortSignal.timeout(15000) });
+    if (r.status !== 400) break;
+    await r.body?.cancel();
+  }
+  if (!r || !r.ok) throw new Error(`HTTP ${r?.status}`);
+  const t = await r.text();
+  if (/<title>\s*(Radware|Access Denied|Just a moment)/i.test(t.slice(0, 4000))) throw new Error('blocked');
+  return t;
+}
+const unent = (s: string) => s.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n)).replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+  .replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&nbsp;/g, ' ').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+const txt = (s: unknown) => clean(unent(String(s ?? '').replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/<[^>]+>/g, ' ')).replace(/<[^>]+>/g, ' '));
+const dayOf = (s: unknown) => { const t = Date.parse(String(s || '')); return isFinite(t) ? ilDay(new Date(t)) : ''; };
+const pick = (s: string, re: RegExp) => (s.match(re) || [])[1] || '';
+
+async function bizportal() {
+  const xml = await getText('https://www.bizportal.co.il/sitemap.xml');
+  const out: Any[] = [];
+  for (const b of xml.split(/<url>/).slice(1)) {
+    const loc = pick(b, /<loc>\s*([^<\s]+)\s*<\/loc>/);
+    const sec = pick(loc, /bizportal\.co\.il\/(realestates|takdin)\//i);
+    if (!sec) continue;
+    const title = txt(pick(b, /<news:title>([\s\S]*?)<\/news:title>/));
+    if (!title || (sec === 'takdin' && !isRE(title))) continue;
+    out.push({ title, date: dayOf(pick(b, /<news:publication_date>([^<]+)</)), what: '', url: loc, source: sec === 'takdin' ? 'ביזפורטל, תקדין' : 'ביזפורטל', via: 'bizportal' });
+  }
+  return out;
+}
+async function magdilim() {
+  const a = JSON.parse(await getText('https://www.magdilim.co.il/wp-json/wp/v2/posts?per_page=40&_fields=id,date,link,title,excerpt', 'application/json'));
+  return (Array.isArray(a) ? a : []).map((x: Any) => ({ title: txt(x.title?.rendered), date: String(x.date || '').slice(0, 10), what: txt(x.excerpt?.rendered).slice(0, 280), url: x.link, source: 'מגדילים', via: 'magdilim' }))
+    .filter((x: Any) => x.title && /^https?:\/\//.test(x.url));
+}
+// "07:00" = today, "04.11" = this year (or last year when it would be in the future), "04.11.26"
+function ncDate(s: string) {
+  const today = ilDay();
+  if (/^\d{1,2}:\d{2}$/.test(s)) return today;
+  const m = s.match(/^(\d{1,2})\.(\d{1,2})(?:\.(\d{2,4}))?$/); if (!m) return '';
+  let y = m[3] ? Number(m[3].length === 2 ? '20' + m[3] : m[3]) : Number(today.slice(0, 4));
+  const d = (yy: number) => `${yy}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+  if (!m[3] && d(y) > today) y--;
+  return d(y);
+}
+async function nadlancenter() {
+  const html = await getText('https://www.nadlancenter.co.il/');
+  const out = new Map<string, Any>();
+  for (const b of html.split(/<article\b/).slice(1)) {
+    const id = pick(b, /nadlancenter\.co\.il\/article\/(\d+)/);
+    if (!id || out.has(id)) continue;
+    const title = txt(pick(b, /<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>/));
+    if (!title) continue;
+    out.set(id, { title, date: ncDate(txt(pick(b, /info_item date[^>]*>([^<]*)</))), what: txt(pick(b, /<h4[^>]*>([\s\S]*?)<\/h4>/)).slice(0, 280), url: `https://www.nadlancenter.co.il/article/${id}`, source: 'מרכז הנדל"ן', via: 'nadlancenter' });
+  }
+  return [...out.values()];
+}
+// Knesset bills updated in the last 3 days, one word per call (the OData search takes one "contains")
+const KNESSET_WORDS = ['מקרקעין', 'שכירות', 'התחדשות', 'דירות', 'התכנון'];
+async function knesset() {
+  const base = 'https://knesset.gov.il/OdataV4/ParliamentInfo';
+  const q = (o: Record<string, string>) => Object.entries(o).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+  const st = JSON.parse(await getText(`${base}/KNS_Status?${q({ $filter: 'TypeID eq 2', $select: 'Id,Desc' })}`, 'application/json'));
+  const status = Object.fromEntries((st.value || []).map((s: Any) => [s.Id, s.Desc]));
+  const since = new Date(Date.now() - 3 * 864e5).toISOString().slice(0, 19) + 'Z';
+  const out = new Map<number, Any>();
+  for (const w of KNESSET_WORDS) {
+    const j = JSON.parse(await getText(`${base}/KNS_Bill?${q({ $filter: `contains(Name,'${w}') and KnessetNum ge 25 and LastUpdatedDate ge ${since}`, $orderby: 'LastUpdatedDate desc', $top: '15', $select: 'Id,Name,StatusID,SubTypeDesc,LastUpdatedDate' })}`, 'application/json'));
+    for (const b of j.value || []) {
+      if (out.has(b.Id)) continue;
+      const s = status[b.StatusID] || '';
+      out.set(b.Id, { title: clean(`${b.Name}${s ? ` (${s})` : ''}`), date: dayOf(b.LastUpdatedDate), what: clean(`הצעת חוק ${b.SubTypeDesc || ''}. סטטוס במאגר הכנסת: ${s || 'לא צוין'}.`),
+        url: `https://main.knesset.gov.il/activity/legislation/laws/pages/lawbill.aspx?t=lawsuggestionssearch&lawitemid=${b.Id}`, source: 'הכנסת', via: 'knesset' });
+    }
+  }
+  return [...out.values()];
+}
+// Bing News searches by topic: the outlet's own link (url= in Bing's click link), never a law firm's site
+const BING_Q = ['מס שבח ועדת ערר', 'היטל השבחה', 'פינוי בינוי נתניה', 'רשות מקרקעי ישראל מכרז', 'מס רכישה', 'שכירות חוק'];
+const HOST_NAME: Record<string, string> = { 'nadlancenter.co.il': 'מרכז הנדל"ן', 'bizportal.co.il': 'ביזפורטל', 'magdilim.co.il': 'מגדילים', 'globes.co.il': 'גלובס', 'themarker.com': 'דה מרקר',
+  'calcalist.co.il': 'כלכליסט', 'ynet.co.il': 'ynet', 'maariv.co.il': 'מעריב', 'ice.co.il': 'אייס', 'walla.co.il': 'וואלה', 'mako.co.il': 'mako', 'israelhayom.co.il': 'ישראל היום',
+  'davar1.co.il': 'דבר', 'news1.co.il': 'news1', 'sharonline.co.il': 'שרון אונליין', 'bhol.co.il': 'בחדרי חרדים', 'kan.org.il': 'כאן' };
+const LAWYER = /law|lawyer|advocat|attorney|adv-|-adv\.|orech|עו"ד|עורך דין|עורכי דין|משרד עו/i;
+async function bing() {
+  const out = new Map<string, Any>();
+  for (const qq of BING_Q) {
+    const xml = await getText(`https://www.bing.com/news/search?q=${encodeURIComponent(qq)}&format=rss`);
+    for (const b of xml.split(/<item>/).slice(1)) {
+      const link = unent(pick(b, /<link>([\s\S]*?)<\/link>/));
+      let url = pick(link, /[?&]url=([^&]+)/); try { url = decodeURIComponent(url); } catch { url = ''; }
+      if (!/^https?:\/\//.test(url) || NO_NWS.test(url)) continue;
+      const host = new URL(url).hostname.toLowerCase().replace(/^www\./, '');
+      const outlet = txt(pick(b, /<News:Source>([\s\S]*?)<\/News:Source>/)).replace(/\\+/g, '').trim();
+      if (LAWYER.test(host) || LAWYER.test(outlet)) continue;
+      const key = normUrl(url); if (out.has(key)) continue;
+      out.set(key, { title: txt(pick(b, /<title>([\s\S]*?)<\/title>/)), date: dayOf(pick(b, /<pubDate>([^<]+)</)), what: txt(pick(b, /<description>([\s\S]*?)<\/description>/)).slice(0, 280),
+        url, source: HOST_NAME[host] || HOST_NAME[host.split('.').slice(-3).join('.')] || outlet || host, via: 'bing' });
+    }
+  }
+  return [...out.values()].filter((x: Any) => x.title);
+}
+// status changes of the urban renewal compounds of Netanya and the Sharon (docs 'nwsproj', written daily by hns-projects from the
+// Ministry of Housing open data). The link is the official plan (mavat) or the map (govmap), never the news site.
+const PROJ_FIELDS = ['status', 'track', 'inExec', 'permits', 'declared', 'validYear'];
+async function projects(from: string) {
+  const { data } = await db().select('id,data').eq('coll', 'nwsproj');
+  const rows = (data || []).map((r: Any) => r.data || {});
+  const base = rows.map((d: Any) => d.firstSeen || '').filter(Boolean).sort()[0] || '';
+  const out: Any[] = [];
+  for (const d of rows) {
+    const p = d.cur || {}; if (d.gone || !p.name) continue;
+    const ch = (d.history || []).filter((h: Any) => String(h.date || '') >= from && PROJ_FIELDS.includes(h.field));
+    const isNew = !!d.firstSeen && d.firstSeen > base && d.firstSeen >= from;
+    if (!ch.length && !isNew) continue;
+    const title = isNew ? `מתחם פינוי בינוי חדש במאגר הרשמי: ${p.name}, ${p.town}` : `מתחם ${p.name} ב${p.town}: ${ch.map((h: Any) => `${h.label} עודכן ל"${h.to}"`).join(', ')}`;
+    const what = `${ch.map((h: Any) => `${h.label}: היה "${h.from}", עכשיו "${h.to}"`).join('. ')}${ch.length ? '. ' : ''}${p.exist != null && p.total != null ? `במתחם ${p.exist} דירות קיימות, ולפי התוכנית ${p.total} דירות. ` : ''}לפי המאגר הפתוח של משרד הבינוי והשיכון.`;
+    out.push({ title: clean(title), date: ch.length ? ch[ch.length - 1].date : d.firstSeen, what: clean(what), url: p.planUrl || p.mapUrl || 'https://data.gov.il/dataset/urban_renewal', source: 'משרד הבינוי והשיכון', via: 'projects' });
+  }
+  return out;
+}
+
 const RANK_SYS = `אתה העורך של לוח העדכונים במשרד עורכי דין לנדל"ן ומקרקעין בנתניה (יקיר דבול). מתוך רשימת עדכונים, בחר את אלה שחשובים לעבודה של המשרד וללקוחות שלו: מיסוי מקרקעין, פסיקה בעסקאות דירה ובבתים משותפים, התחדשות עירונית, חקיקה ונהלים, משכנתאות וריבית, רמ"י ותכנון, שוק הדירות, שכירות, ירושה ומקרקעין, נתניה והשרון.
 כללים:
-- אל תבחר עדכונים שלא קשורים לנדל"ן ולמשפט, עסקה בודדת או מחיר של דירה אחת בעיר אחרת, ידיעות על חברות בבורסה, ועדכונים כפולים (אותו אירוע פעמיים: בחר את המקור הרשמי אם יש, אחרת את המלא יותר).
+- אל תבחר עדכונים שלא קשורים לנדל"ן ולמשפט, עסקה בודדת או מחיר של דירה אחת בעיר אחרת, ידיעות על חברות בבורסה, מבצעי שיווק של קבלן אחד, ופריטים מאתרים של עורכי דין.
+- אותו אירוע שמופיע כמה פעמים ברשימה (גם מכמה אתרים ובכותרות שונות): בחר אותו פעם אחת בלבד. עדיף המקור הרשמי, אחרת המלא יותר.
+- אל תבחר אירוע שכבר מופיע ברשימת "כבר בלוח או הוסר", גם אם הוא מגיע ממקור אחר ובכותרת אחרת. בחר רק אם יש בו התפתחות חדשה ממשית (למשל החלטה סופית אחרי הצעה).
 - כותרת וסיכום בניסוח שלך, בעברית פשוטה. בלי להעתיק משפטים. רק עובדות שמופיעות בפריט.
 - בלי מקף ארוך או בינוני. בלי "הכי".
 - חשיבות 1 עד 5: 5 = שינוי שמשפיע על הרבה קונים, מוכרים או בעלי דירות (חוק, מס, פסק דין עקרוני, ריבית). 1 = מעניין אבל שולי.
 החזר JSON בלבד: [{"i": מספר הפריט, "title": "עד 14 מילים", "summary": "משפט או שניים", "topic": "אחד מהנושאים: ${TOPICS.join(' / ')}", "imp": 1-5}]`;
+const DIRECT: [string, () => Promise<Any[]>][] = [['bizportal', bizportal], ['magdilim', magdilim], ['nadlancenter', nadlancenter], ['knesset', knesset], ['bing', bing]];
 async function feed(b: Any) {
   const day = ilDay(), id = `feed-${day}`;
   const cur = (await getDoc('upd', id)) || { date: day, items: [], runs: [] };
-  // links already on the board in the last 10 days are not offered again (5.11.2026: Yakir saw nothing new, old items kept coming back)
-  const { data: prev } = await db().select('data').eq('coll', 'upd').gte('id', `feed-${ilDay(new Date(Date.now() - 10 * 864e5))}`);
-  const seen = new Set<string>(); (prev || []).forEach((r: Any) => (r.data.items || []).forEach((x: Any) => seen.add(x.url)));
-  let cands: Any[] = await collectorItems();
-  const notes: string[] = [];
-  const doSweep = b.sweep !== false && !BRAKE && (b.force || !(cur.runs || []).some((r: Any) => r.sweep));
-  if (doSweep) for (const k of ['gov', 'news'] as const) { try { cands = cands.concat(await sweep(k)); } catch (e) { notes.push(`${k}: ${(e as Error).message}`); } }
-  else if (BRAKE) notes.push('brake: no searches');
-  const uniq = new Map<string, Any>(); for (const c of cands) if (!seen.has(c.url) && !uniq.has(c.url)) uniq.set(c.url, c);
-  // only fresh news: the board shows the last 3 days, so an item dated earlier is never offered (5.11.2026)
+  const seen = await seenData();
   const freshFrom = ilDay(new Date(Date.now() - 2 * 864e5));
-  const list = [...uniq.values()].filter((c: Any) => !c.date || String(c.date).slice(0, 10) >= freshFrom).slice(0, 90);
-  if (!list.length) { await merge('upd', id, { date: day, runs: [...(cur.runs || []), { at: new Date().toISOString(), sweep: doSweep, cands: 0, added: 0, notes }] }); return { added: 0, cands: 0, notes }; }
+  const notes: string[] = [], src: Record<string, number> = {};
+  const got = await Promise.all([['collector', collectorItems] as [string, () => Promise<Any[]>], ...DIRECT, ['projects', () => projects(freshFrom)] as [string, () => Promise<Any[]>]]
+    .map(async ([k, f]) => { try { return await f(); } catch (e) { notes.push(`${k}: ${String((e as Error).message || e).slice(0, 120)}`); return []; } }));
+  let cands: Any[] = got.flat();
+  const doSweep = b.sweep !== false && !BRAKE && (b.force || !(cur.runs || []).some((r: Any) => r.sweep));
+  if (doSweep) { try { cands = cands.concat(await sweep()); } catch (e) { notes.push(`gov: ${(e as Error).message}`); } }
+  else if (BRAKE) notes.push('brake: no searches');
+  // fresh only (the board shows the last 3 days; the gov search already kept its last 3 days), never seen, never hidden, not the same story
+  const drop = { old: 0, seen: 0, story: 0 };
+  const uniq = new Map<string, Any>();
+  for (const c of cands) {
+    if (!c.url || !c.title || NO_NWS.test(c.url)) continue;
+    const nu = normUrl(c.url);
+    if (uniq.has(nu)) continue;
+    if (c.via !== 'gov' && c.date && String(c.date).slice(0, 10) < freshFrom) { drop.old++; continue; }
+    if (seen.urls.has(nu) || seen.ids.has(itemId(c.url)) || seen.ids.has('u' + hash(c.url))) { drop.seen++; continue; }
+    if (sameAsSeen(c.title, seen.toks)) { drop.story++; continue; }
+    uniq.set(nu, c);
+  }
+  // at most 20 a source, so one busy feed does not crowd out the rest
+  const per: Record<string, number> = {};
+  const list = [...uniq.values()].filter((c: Any) => { const k = c.source + '|' + c.via; per[k] = (per[k] || 0) + 1; return per[k] <= 20; }).slice(0, 140);
+  for (const c of list) src[c.via] = (src[c.via] || 0) + 1;
+  const run = (added: number) => ({ at: new Date().toISOString(), sweep: doSweep, cands: list.length, added, src, drop, notes });
+  if (!list.length) { await merge('upd', id, { date: day, runs: [...(cur.runs || []), run(0)] }); return { added: 0, cands: 0, src, drop, notes }; }
   const lines = list.map((c, i) => `${i + 1}. [${c.source}${c.date ? ', ' + c.date : ''}] ${c.title}${c.what ? ' | ' + c.what : ''}`).join('\n');
+  const known = [...seen.recent.slice(-160), ...seen.hidden].map(t => `- ${t}`).join('\n');
   const want = Math.max(8, 20 - (cur.items || []).length);
-  const d = await claude({ model: BRAKE ? CHEAP : REG, max_tokens: 6000, system: RANK_SYS, messages: [{ role: 'user', content: `התאריך היום: ${day}.\nבחר עד ${want} עדכונים (רק את החשובים באמת, אפשר פחות). רק ידיעות מהיומיים האחרונים; ידיעה ישנה יותר לא נבחרת.\n\n${lines}` }] });
+  const d = await claude({ model: BRAKE ? CHEAP : REG, max_tokens: 8000, system: RANK_SYS, messages: [{ role: 'user', content: `התאריך היום: ${day}.\n\nכבר בלוח או הוסר (לא לבחור שוב את אותו אירוע):\n${known || '- (אין)'}\n\nבחר עד ${want} עדכונים מהרשימה הבאה (רק את החשובים באמת, אפשר פחות). רק ידיעות מהיומיים האחרונים; ידיעה ישנה יותר לא נבחרת.\n\n${lines}` }] });
   const picked: Any[] = jsonOf(textOf(d));
-  const items = picked.map((p: Any) => {
+  // the same check on the titles the ranker wrote, against what is known and against each other
+  const taken: Set<string>[] = [];
+  const items = picked.sort((a: Any, b2: Any) => Number(b2.imp || 0) - Number(a.imp || 0)).map((p: Any) => {
     const c = list[Number(p.i) - 1]; if (!c) return null;
     const t = clean(p.title), s = clean(p.summary);
     if (!t || badIn(`${t} ${s}`).length) return null;
-    return { id: 'u' + hash(c.url), title: t, summary: s, topic: TOPICS.includes(p.topic) ? p.topic : 'שוק הדירות', imp: Math.min(5, Math.max(1, Number(p.imp) || 2)),
-      source: { name: c.source, url: c.url }, date: c.date || day, via: c.via, at: new Date().toISOString() };
+    const iid = itemId(c.url);
+    if (seen.ids.has(iid)) return null;
+    const w = words(t);
+    if (seen.toks.some(x => overlap(w, x) >= SAME_STORY) || taken.some(x => overlap(w, x) >= SAME_STORY)) { drop.story++; return null; }
+    taken.push(w); seen.ids.add(iid);
+    return { id: iid, title: t, summary: s, topic: TOPICS.includes(p.topic) ? p.topic : 'שוק הדירות', imp: Math.min(5, Math.max(1, Number(p.imp) || 2)),
+      source: { name: c.source, url: c.url }, date: c.date || day, via: c.via, orig: c.title, at: new Date().toISOString() };
   }).filter(Boolean);
   const all = [...(cur.items || []), ...items].sort((a: Any, b2: Any) => b2.imp - a.imp);
-  await merge('upd', id, { date: day, items: all, at: new Date().toISOString(), runs: [...(cur.runs || []), { at: new Date().toISOString(), sweep: doSweep, cands: list.length, added: items.length, notes }] });
-  return { cands: list.length, added: items.length, total: all.length, sweep: doSweep, notes };
+  await merge('upd', id, { date: day, items: all, at: new Date().toISOString(), runs: [...(cur.runs || []), run(items.length)] });
+  return { cands: list.length, added: items.length, total: all.length, sweep: doSweep, src, drop, notes, new: items.map((x: Any) => ({ id: x.id, via: x.via, source: x.source.name, title: x.title })) };
 }
 
 // ---------- source page (facts for the writing) ----------
@@ -576,7 +818,7 @@ Deno.serve(async (req) => {
     }
     if (b.action === 'postdry') { const r = await getDoc('updreq', String(b.id)); return json({ ok: true, ...(await makePost(String(b.id), r, true)) }); }
     if (b.action === 'postsend') { const r = await getDoc('updreq', String(b.id)); if (r?.status !== 'dry') return json({ ok: false, error: 'not a prepared post' }); return json({ ok: true, ...(await sendPost(String(b.id), r.tok, r.post.headline, r.post.text, r.post.img)) }); }
-    if (b.action === 'sweepdebug') return json({ ok: true, res: await sweep(b.kind === 'news' ? 'news' : 'gov', true) });
+    if (b.action === 'sweepdebug') return json({ ok: true, res: await sweep(true) });
     if (b.action === 'artdry') { const r = await getDoc('updreq', String(b.id)); return json({ ok: true, ...(await writeArticle(String(b.id), r, true)) }); }
     return json({ error: 'action?' }, 400);
   } catch (e) {
