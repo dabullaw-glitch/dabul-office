@@ -1,0 +1,14 @@
+{
+ "id": "vr-fh-test",
+ "file": "fh-l01-test1",
+ "course": "first-home",
+ "n": 1,
+ "deckUrl": "https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reels?a=deck&t=81df0db24f547d55a1f9e974bd43ca09455aa8cb",
+ "open": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/e49d00c3e5b7fba4fe376b474f4cc295.mp4?Expires=1794248691&Signature=AtOXD0Sginzjg2oVKGvgawxYv82ncYp8W2ooM7dMG5X4krIcPMextDdZuzx~lS7F5lJDURRguaCRv65~-gktHBJAezjG0B8uZ2ptYxl4lfXjh~dFLrdcdNDGST0S9thXBYJm49Vjkrx6wZM~busJlw6o0L--0-yYjombOrLXO6Tz3AAFyXpxnAKgFH~e9CyE3gR9PlOhQL8ECDPOSvGeBox2RhtrN7D2Y3aIWV-YYipAfUfKpFuujybi6WKkG1hmEl4TfzBvdDbsNCAz3EJGZ35xHnEkGYrnblahK1JVMu5w6M~CTCeyZiRQJ3nxvIV95b-fMB5tgCv-7IUGVEld8g__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "close": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/e49d00c3e5b7fba4fe376b474f4cc295.mp4?Expires=1794248691&Signature=AtOXD0Sginzjg2oVKGvgawxYv82ncYp8W2ooM7dMG5X4krIcPMextDdZuzx~lS7F5lJDURRguaCRv65~-gktHBJAezjG0B8uZ2ptYxl4lfXjh~dFLrdcdNDGST0S9thXBYJm49Vjkrx6wZM~busJlw6o0L--0-yYjombOrLXO6Tz3AAFyXpxnAKgFH~e9CyE3gR9PlOhQL8ECDPOSvGeBox2RhtrN7D2Y3aIWV-YYipAfUfKpFuujybi6WKkG1hmEl4TfzBvdDbsNCAz3EJGZ35xHnEkGYrnblahK1JVMu5w6M~CTCeyZiRQJ3nxvIV95b-fMB5tgCv-7IUGVEld8g__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "narration": {
+  "mode": "google"
+ },
+ "splitTest": true,
+ "note": "build test 5.11.2026: an existing HeyGen reel stands in for the opening and the closing; the slides use the existing Google narration. Not for use."
+}
