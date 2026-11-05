@@ -1,5 +1,5 @@
-// Finished reels: Yakir approves each one in Telegram, it gets a publish slot (11.10.2026: two a week, Tuesday and Thursday
-// at 19:00, settings/social.videoSlots), and the scheduled task puts it in the publishing calendar. The office system publishes
+// Finished reels: Yakir approves each one in Telegram, it gets a publish slot (3.11.2026: Sunday, Tuesday and Thursday every week, rotating hours;
+// settings/social.videoSlots days + times), and the scheduled task puts it in the publishing calendar. The office system publishes
 // it everywhere: Facebook and YouTube (bufauth), Instagram and TikTok (socialpub). Grok Bot was cancelled on 11.10.2026.
 // Cron (x-cron-secret): POST ?step=add {reels:[{driveId,name,link,folder,captions:{facebook,youtubeTitle,youtubeDesc,youtubeTags,instagram,tiktok}}]}
 //                       (or {path:'reels/<name>.mp4', bytes, ...} for a reel already in storage, e.g. HeyGen videos from vidreq)
@@ -42,28 +42,52 @@ const biweeklyOk = (rules: Any[], dow: number, ymd: string) => (rules || []).som
   const diff = Math.round((Date.parse(ymd + 'T12:00:00Z') - Date.parse(String(x.from) + 'T12:00:00Z')) / 864e5);
   return diff >= 0 && diff % 14 === 0;
 });
-// the next free publishing slot (settings/social.videoSlots: days, biweekly, time, skip = dates kept free), at least 3 hours from now
+// Israel local date + time (YYYY-MM-DD, HH:MM) -> UTC ms (works in summer and winter time)
+const ilMs = (ymd: string, hm: string) => {
+  const guess = Date.parse(`${ymd}T${hm}:00Z`); const p = il(new Date(guess));
+  return guess - (Date.parse(`${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:00Z`) - guess);
+};
+// 3.11.2026 (Yakir: "תפרסם בשעות שונות, לא הכל בשעה 19:00 בערב"): videoSlots.times = ['20:30', '12:30', ...] rotates by
+// slot number = (weeks since videoSlots.timesFrom, a Sunday) * days.length + the day's place in days, so the same weekday
+// does not get the same hour week after week. No times: the single videoSlots.time (default 19:00).
+function slotTime(vs: Any, ymd: string, dow: number): string {
+  const times: string[] = (Array.isArray(vs?.times) ? vs.times : []).map(String).filter((t: string) => /^\d{2}:\d{2}$/.test(t));
+  const one = /^\d{2}:\d{2}$/.test(String(vs?.time || '')) ? String(vs.time) : '19:00';
+  if (!times.length) return one;
+  const from = /^\d{4}-\d{2}-\d{2}$/.test(String(vs?.timesFrom || '')) ? String(vs.timesFrom) : '2026-11-01';
+  const days: number[] = (vs?.days || [2, 4]).map(Number).sort((a: number, b: number) => a - b);
+  const week = Math.floor(Math.round((Date.parse(ymd + 'T12:00:00Z') - Date.parse(from + 'T12:00:00Z')) / 864e5) / 7);
+  const idx = days.indexOf(dow) >= 0 ? days.indexOf(dow) : days.length;
+  const n = week * Math.max(1, days.length) + idx, k = times.length;
+  return times[((n % k) + k) % k];
+}
+// the next free publishing slot (settings/social.videoSlots: days, biweekly, times / time, skip = dates kept free), at least
+// 3 hours from now. 3.11.2026: one reel a day at most, so a day is taken when any approved reel already publishes on it
+// (the hour no longer tells, since the hours rotate).
 async function nextSlot(): Promise<string> {
   const cfg = (await getDoc('settings', 'social')) || {};
-  const days: number[] = cfg.videoSlots?.days || [2, 4]; const hm: string = cfg.videoSlots?.time || '19:00';
-  const bi: Any[] = Array.isArray(cfg.videoSlots?.biweekly) ? cfg.videoSlots.biweekly : [];
-  const skip = new Set<string>((cfg.videoSlots?.skip || []).map(String));
+  const vs = cfg.videoSlots || {};
+  const days: number[] = (vs.days || [2, 4]).map(Number);
+  const bi: Any[] = Array.isArray(vs.biweekly) ? vs.biweekly : [];
+  const skip = new Set<string>((vs.skip || []).map(String));
   const { data } = await db().select('data').eq('coll', 'reel').in('data->>status', ['approved', 'handed', 'published']);
-  const taken = new Set((data || []).map((r: Any) => String(r.data.publishAt || '').slice(0, 16)));
+  const dayOf = (iso: string) => { const p = il(new Date(iso)); return `${p.year}-${p.month}-${p.day}`; };
+  const taken = new Set((data || []).filter((r: Any) => r.data.publishAt && !isNaN(Date.parse(r.data.publishAt))).map((r: Any) => dayOf(String(r.data.publishAt))));
   const start = Date.now() + 3 * 3600e3;
-  // walk hour by hour for up to two years (8.10.2026: it stopped at 60 days, and when every weekly slot in that
+  // walk day by day for up to two years (8.10.2026: it stopped at 60 days, and when every weekly slot in that
   // window was taken all approved reels got "now + 3 hours", the same day and hour)
-  for (let h = 0; h < 24 * 730; h++) {
-    const d = new Date(Math.ceil(start / 3600e3) * 3600e3 + h * 3600e3); const p = il(d);
-    if (!days.map(Number).includes(wd[p.weekday]) && !biweeklyOk(bi, wd[p.weekday], `${p.year}-${p.month}-${p.day}`)) continue;
-    if (skip.has(`${p.year}-${p.month}-${p.day}`)) continue;
-    if (`${p.hour}:00` !== hm.slice(0, 3) + '00' && `${p.hour}:${p.minute}` !== hm) continue;
-    const iso = d.toISOString().slice(0, 16); if (taken.has(iso)) continue;
-    return d.toISOString();
+  const p0 = il(new Date()); const today = Date.parse(`${p0.year}-${p0.month}-${p0.day}T12:00:00Z`);
+  for (let i = 0; i < 730; i++) {
+    const ymd = new Date(today + i * 864e5).toISOString().slice(0, 10);
+    const dow = new Date(ymd + 'T12:00:00Z').getUTCDay();
+    if (!days.includes(dow) && !biweeklyOk(bi, dow, ymd)) continue;
+    if (skip.has(ymd) || taken.has(ymd)) continue;
+    const t = ilMs(ymd, slotTime(vs, ymd, dow)); if (t < start) continue;
+    return new Date(t).toISOString();
   }
-  // never fall back to one shared time: one week after the last taken slot
+  // never fall back to one shared time: one week after the last taken day
   const last = [...taken].sort().pop();
-  return new Date((last ? Date.parse(last + ':00Z') : start) + 7 * 24 * 3600e3).toISOString();
+  return new Date((last ? ilMs(last, slotTime(vs, last, new Date(last + 'T12:00:00Z').getUTCDay())) : start) + 7 * 24 * 3600e3).toISOString();
 }
 const when = (iso: string) => { const p = il(new Date(iso)); return `יום ${DAYS[wd[p.weekday]]} ${p.day}.${p.month} בשעה ${p.hour}:${p.minute}`; };
 const askButtons = (link: string, t: string) => [[{ text: '👁 צפייה בסרטון', url: link || 'https://drive.google.com' }], [{ text: '✅ מאשר, לפרסם', url: pub('ok', t) }, { text: '✗ לא לפרסם', url: pub('no', t) }]];

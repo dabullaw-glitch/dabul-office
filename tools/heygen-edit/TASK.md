@@ -55,7 +55,7 @@ NOTHING is published without his approval of the finished video. You never publi
   editRules, styleRule, editStyles, usedTopics, styleHistory, themeHistory. Scripts and edits must follow all of them.
 - `docs settings/heygen`: the HeyGen recipe (avatar group, looks, lookByType, lookHistory, voice, motionPrompt, engine,
   resolution, aspect, pronunciation list, spokenReplace, avoidWords, publishRule, plan credits, costLog). Use it for every generation.
-- `docs settings/social`: videoSlots (the publishing slots; you do not change them).
+- `docs settings/social`: videoSlots (the publishing slots: Sun/Tue/Thu every week, rotating hours in `times`; you do not change them) and cadence (per-network rules, 3.11.2026).
 - Recent rows of `docs prompt` (the scripts list; same list as the teleprompter) for the script format: id, title, type,
   text (short lines, one breath per line), sec, caption (with "המידע כללי ואינו ייעוץ משפטי." and 4 to 6 hashtags),
   takeaway, sources, style 'teleprompter-natural', status, order, created.
@@ -256,32 +256,33 @@ For every vidreq with status 'editing': `git pull` and look for media/hgv/<id>.m
 ### 6a. After Yakir approves a HeyGen reel: publishing row + front of the queue (Yakir 1.11.2026)
 
 Rule (settings/social.queueRule): "להקדים את סרטוני הייגן לראש התור, ואת שאר הרילסים לדחות". The reels function gives an
-approved reel the next FREE slot (Tue / Thu 19:00 and every other Sunday from 8.11.2026, settings/social.videoSlots.biweekly),
-which is the END of the queue. The reel row carries priority 'heygen' (vr=final sets it). Every run, for each reel with
+approved reel the next FREE day (Yakir 3.11.2026: Sunday, Tuesday and Thursday EVERY week, at a rotating hour from
+settings/social.videoSlots.times, see timesNote there; the every-other-Sunday rule was dropped), which is the END of the queue. The reel row carries priority 'heygen' (vr=final sets it). Every run, for each reel with
 priority 'heygen' and status 'approved' that has no `frontAt` yet, do this once:
 
 How the calendar is built (docs coll 'pub', publishing by the postoria function; never call Postoria yourself):
-- one MAIN row per reel: owner 'system', kind 'video', at 'YYYY-MM-DDT19:05' (Israel time), reel = reel id, channels
+- one MAIN row per reel: owner 'system', kind 'video', at = the reel's publishAt in Israel time + 5 minutes
+  (e.g. publishAt 12:30 Israel -> at 'YYYY-MM-DDT12:35'; before 5.11.2026 always 19:05), reel = reel id, channels
   always 'instagram'; plus 'tiktok' only on a Thursday (not on Tuesday, not on Sunday). Filmed reels have a companion
-  OFFICE row (owner 'office', at same day 19:00, channels facebook/youtube, reelFrom = main row id). HeyGen reels have no
+  OFFICE row (owner 'office', at = the publishAt time itself, 5 minutes before the main row, channels facebook/youtube, reelFrom = main row id). HeyGen reels have no
   office row: their main row carries facebook + youtube itself (see pub-20261126T1905-system-hg for the exact shape:
   title "רילס: <name>", text = captions.instagram, textTiktok, ytTitle, ytDesc, ytTags, series, reelPath = reel.path,
   reelBytes, staged, note).
-- TikTok rows: channels ['tiktok'] only, reelFrom = a main row. Sunday 19:00 rows carry the reel of the Tuesday just
-  before (until 3.1.2027); always a reel that was already published on the main row before the TikTok row.
+- TikTok rows: channels ['tiktok'] only, reelFrom = a main row. Sunday rows (10 minutes after that day's main row, or
+  at the slot hour when the day has no main row) carry the reel of the Tuesday just before (until 3.1.2027); always a reel that was already published on the main row before the TikTok row.
 - A row id never changes (ids do not match dates); moving = docs_merge a new `at`.
 
 Steps:
-1. Row: if no planned main row has reel = <this reel id>, INSERT one (shape above) at the reel's publishAt date, 19:05.
+1. Row: if no planned main row has reel = <this reel id>, INSERT one (shape above) at the reel's publishAt (Israel time) + 5 minutes.
    Never create a second main row for the same reel (a reel appears in only one main row: "אל תעלה פעמיים אותו דבר").
 2. Target: the earliest main row whose time is more than 48 hours from now, status 'planned', no `pst` and no `result`,
    whose reel has no priority 'heygen' and no seriesKey (never break into a series block), and is earlier than this reel's row.
    None: just docs_merge the reel {frontAt: now, frontNote: 'אין רילס להחלפה'}.
    A series episode (seriesKey + ep) moves forward only if every earlier episode of that series is published or scheduled
    before the target; otherwise skip it this run.
-3. Swap the two units: the HeyGen main row gets the target's date (19:05); the target's main row and its office row get the
-   HeyGen row's old date (19:05 / 19:00). Fix channels for the new weekday on both main rows (tiktok only on Thursday and
-   only if the row has textTiktok). docs_merge both reels' publishAt to the new day at 19:00 Israel time (ISO UTC; Israel
+3. Swap the two units: the HeyGen main row gets the target's `at` (date AND time); the target's main row gets the HeyGen row's
+   old `at` and its office row that time minus 5 minutes. Fix channels for the new weekday on both main rows (tiktok only on Thursday and
+   only if the row has textTiktok). docs_merge both reels' publishAt to their new main row time minus 5 minutes, Israel time (ISO UTC; Israel
    is UTC+2 in winter, UTC+3 from the last Friday of March), and record on every changed row
    {replanFrom: <old at>, replannedAt: now, replanNote: 'יקיר 1.11.2026: סרטוני הייגן לראש התור'}.
 4. TikTok rows: any TikTok row whose reelFrom row now publishes on or after the TikTok row's own time must point to the
