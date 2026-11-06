@@ -2,7 +2,7 @@
 
 Yakir approved (23.10.2026) a weekly 10-slide carousel magazine about real estate law, tax, urban renewal and mortgages.
 Wednesday: build the issue and ask Yakir to approve. Thursday 10:00: one WhatsApp message to the office group
-(the PDF + main points + link). Friday 10:00: carousel on Facebook, Instagram, LinkedIn + the site page
+(the PDF + main points + link). Friday 10:00: carousel on Facebook and LinkedIn (never Instagram: Yakir 6.11.2026) + the site page
 https://dabullaw.co.il/magazine/ (page id 7776). NOTHING goes out without Yakir's approval tap in Telegram.
 
 ## Hard rules (Yakir)

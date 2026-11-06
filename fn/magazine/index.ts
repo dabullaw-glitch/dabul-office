@@ -1,6 +1,6 @@
 // magazine (23.10.2026): the weekly "מגזין הנדל״ן" of Yakir's office, after he approves each issue.
 // Yakir approved: Thursday a single WhatsApp message to the office group (the PDF + the week's main points + a link to
-// https://dabullaw.co.il/magazine/), Friday a carousel on Facebook, Instagram and LinkedIn, and the site page updated.
+// https://dabullaw.co.il/magazine/), Friday a carousel on Facebook and LinkedIn (Yakir 6.11.2026: never Instagram), and the site page updated.
 // Nothing goes out before Yakir taps "מאשר" in the office Telegram bot.
 // Data: docs coll "magazine", id "issue-NNN": {no, dates, title, pdf, cover, slides[], waText, social, pageBody (url of a
 //   JSON {content}), waAt, siteAt ("YYYY-MM-DDTHH:MM", Israel time), token, state: draft|approved|done, sent:{}}
@@ -31,7 +31,7 @@ async function request(id: string) {
   const x = await getIssue(id); if (!x) return { ok: false, error: 'no issue' };
   const base = `${env('SUPABASE_URL')}/functions/v1/magazine`;
   const okUrl = `${base}?a=ok&id=${encodeURIComponent(id)}&t=${encodeURIComponent(x.token)}`;
-  const caption = `📰 מגזין הנדל״ן, גיליון #${x.no} (${x.dates}) מוכן לאישור.\n\n${String(x.waText || '').slice(0, 700)}\n\nאחרי האישור: ביום חמישי הודעה אחת לקבוצת הוואטסאפ ועדכון העמוד באתר, וביום שישי קרוסלה בפייסבוק, באינסטגרם ובלינקדאין.`;
+  const caption = `📰 מגזין הנדל״ן, גיליון #${x.no} (${x.dates}) מוכן לאישור.\n\n${String(x.waText || '').slice(0, 700)}\n\nאחרי האישור: ביום חמישי הודעה אחת לקבוצת הוואטסאפ ועדכון העמוד באתר, וביום שישי קרוסלה בפייסבוק ובלינקדאין.`;
   const kb = { inline_keyboard: [[{ text: '✅ מאשר את הגיליון', url: okUrl }], [{ text: '📄 צפייה במגזין המלא', url: x.pdf }]] };
   const r = await tg('sendPhoto', { photo: x.cover, caption: caption.slice(0, 1020), reply_markup: kb });
   if (!r || !r.ok) await tg('sendMessage', { text: caption.slice(0, 3900), reply_markup: kb, disable_web_page_preview: true });
@@ -46,7 +46,7 @@ async function approve(id: string, t: string) {
   const now = new Date().toISOString();
   // the Friday carousel joins the content calendar; postoria publishes it at its time
   const at = String(x.siteAt);
-  await admin().from('docs').upsert({ coll: 'pub', id: `pub-magazine-${x.no}`, data: { at, kind: 'carousel', owner: 'office', status: 'planned', title: `מגזין הנדל״ן #${x.no}`, text: x.social || '', media: x.slides || [], channels: ['facebook', 'instagram', 'linkedin'], series: 'magazine', created: now }, updated_at: now }, { onConflict: 'coll,id' });
+  await admin().from('docs').upsert({ coll: 'pub', id: `pub-magazine-${x.no}`, data: { at, kind: 'carousel', owner: 'office', status: 'planned', title: `מגזין הנדל״ן #${x.no}`, text: x.social || '', media: x.slides || [], channels: ['facebook', 'linkedin'], series: 'magazine', created: now }, updated_at: now }, { onConflict: 'coll,id' });
   await merge(id, { state: 'approved', approvedAt: now });
   await tg('sendMessage', { text: `✅ גיליון #${x.no} אושר. חמישי: האתר וקבוצת הוואטסאפ יחד. שישי: הרשתות.` });
   return page('ok', x.no);
