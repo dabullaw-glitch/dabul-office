@@ -22,7 +22,7 @@ sources:
     url: "https://www.kolzchut.org.il/he/בנקים,_כרטיסי_אשראי_ואמצעי_תשלום"
   - title: "כל זכות: קבלת מידע על נתוני אשראי ודירוג האשראי האישי"
     url: "https://www.kolzchut.org.il/he/קבלת_מידע_על_נתוני_אשראי_ודירוג_האשראי_האישי"
-related: [hesder-im-noshim, netunei-ashrai, tzaadim-rishonim]
+related: [mashkanta-pigur, hesder-im-noshim, netunei-ashrai, tzaadim-rishonim]
 ---
 
 רוב החובות בישראל מתחילים בבנק: מינוס שגדל, הלוואה שקשה להחזיר, כרטיס אשראי שנחסם. החדשות הטובות: **בשלב הזה עוד יש הרבה מקום למשא ומתן**. ככל שפונים מוקדם יותר, יש יותר אפשרויות.
