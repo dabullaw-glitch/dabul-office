@@ -1,0 +1,256 @@
+{
+ "at": "2026-11-07T11:03:32.987Z",
+ "hours": 26,
+ "checked": 31,
+ "mismatched": 1,
+ "rows": [
+  {
+   "u": "/israel/n659/",
+   "t": "נמסר על פיצוצים בג'יזאן שבדרום סעודיה אחרי תקיפה של החות'ים",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "c55049295 [security]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n658/",
+   "t": "טראמפ: תקפנו מתקן נ״מ קטן; הוצע פרס של עד 20 מיליון דולר על מידע",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n657/",
+   "t": "באיראן טוענים: מכלית נפגעה ממוקש ועלתה באש במצר הורמוז",
+   "topic": "shipping/high",
+   "where": "outside",
+   "img": "c20989367 [shipping]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n654/",
+   "t": "הצפות באשקלון ובבנימינה בעקבות גשמים עזים",
+   "topic": "weather/high",
+   "where": "outside",
+   "img": "c187613161 [weather]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n653/",
+   "t": "טראמפ אישר: ארה\"ב תקפה באי קשם באיראן",
+   "topic": "diplomacy/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/blog/n652/",
+   "t": "מקלטים ציבוריים בנתניה: איך מוצאים את הקרוב אליכם",
+   "topic": "security/high",
+   "where": "netanya",
+   "img": "c113104897 [security]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n651/",
+   "t": "טראמפ אישר תקיפה אמריקאית נוספת באיראן",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n650/",
+   "t": "כביש 90 נחסם בין צומת הלידו למצוקי דרגות בגלל חשש להצפות",
+   "topic": "traffic/high",
+   "where": "outside",
+   "img": "c29219813 [roadworks]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n649/",
+   "t": "גשמים כבדים במרכז הארץ, השירות המטאורולוגי מזהיר מהצפות",
+   "topic": "weather/high",
+   "where": "outside",
+   "img": "c197873005 [weather]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n648/",
+   "t": "קטאר: דברי ראש הממשלה עוותו, המשא ומתן בין ארה\"ב לאיראן נמשך",
+   "topic": "diplomacy/high",
+   "where": "outside",
+   "img": "c94076089 [politics]",
+   "why": ""
+  },
+  {
+   "u": "/tourism/n646/",
+   "t": "מזג האוויר בנתניה, יום שבת 7.11: בין 15 ל-23 מעלות",
+   "topic": "weather/high",
+   "where": "netanya",
+   "img": "c94604550 [weather]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n644/",
+   "t": "טראמפ: ארה\"ב נפגשת עם איראן ומתקדמת היטב במגעים",
+   "topic": "diplomacy/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n643/",
+   "t": "סעודיה הודיעה: כטב\"ם יורט באזור ריאד",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "c36519130 [security]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n642/",
+   "t": "ארה\"ב הטילה סנקציות על 8 חברות קנדיות בגלל קשר לאיראן",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "c11932150 [security]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n641/",
+   "t": "דיווח באיראן: פיצוצים נשמעו באי קשם לאחר שיגור טילים לעבר הורמוז",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "c93244956 [security]",
+   "why": ""
+  },
+  {
+   "u": "/sharon/n640/",
+   "t": "כפר סבא: המעבר בין עמק דותן למשעול עמק יזרעאל ייסגר לשלושה שבועות",
+   "topic": "roadworks/high",
+   "where": "outside",
+   "img": "c29199085 [roadworks]",
+   "why": ""
+  },
+  {
+   "u": "/transport/n639/",
+   "t": "מ-14.11: קו הרכבת מירושלים יגיע לנתניה, רכבות השיא יסתיימו בהרצליה",
+   "topic": "transport/high",
+   "where": "netanya",
+   "img": "c144974442 [traffic]",
+   "why": "transport story with a traffic illustration"
+  },
+  {
+   "u": "/israel/n637/",
+   "t": "ארה\"ב פרסמה אזהרות ביטחון לדיפלומטים שלה במזרח התיכון בגלל איומי איראן",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "c78877047 [military]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n636/",
+   "t": "ראש ממשלת קטאר: ארה\"ב ואיראן לא הגיעו להסכם מלא",
+   "topic": "diplomacy/high",
+   "where": "outside",
+   "img": "c63802359 [diplomacy]",
+   "why": ""
+  },
+  {
+   "u": "/community/n635/",
+   "t": "סיכום היום בנתניה ובשרון, יום שישי 6.11: 25 ידיעות",
+   "topic": "none",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/blog/n634/",
+   "t": "מי נתניה: תשלום חשבון מים, דיווח על נזילה ויצירת קשר",
+   "topic": "economy/low",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n632/",
+   "t": "החות'ים: לפחות 30 הרוגים בתקיפה סעודית על שוק בתימן",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n631/",
+   "t": "משמרות המהפכה: הופל כטב\"ם אמריקני באזור האי קשם",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n630/",
+   "t": "איש צוות נהרג בפיצוץ על מכלית יוונית במפרץ הפרסי",
+   "topic": "shipping/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sports/n629/",
+   "t": "אליצור נתניה ניצחה את אשקלון 83:88 ונותרה ללא הפסדים בליגה הלאומית",
+   "topic": "sports/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/economy/n623/",
+   "t": "יוון אישרה מס של 10% על רווחים מקריפטו החל ב-2027",
+   "topic": "economy/high",
+   "where": "",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sports/n621/",
+   "t": "מכבי חיפה נגד מכבי נתניה מחר: המשטרה נערכת ומפרסמת הנחיות לאוהדים",
+   "topic": "sports/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n620/",
+   "t": "הסתיים התרגיל הגדול של חטיבת החילוץ בצה\"ל מזה חמש שנים",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/economy/n618/",
+   "t": "ביטקוין חזר מעל 76 אלף דולר אחרי ירידה ביום חמישי",
+   "topic": "economy/high",
+   "where": "",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sports/n616/",
+   "t": "מכבי חיפה מול מכבי נתניה: משחק חוץ בשבת בסמי עופר",
+   "topic": "sports/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n615/",
+   "t": "שלושה חשודים בתכנון פיגועים נעצרו בחטיבת בנימין",
+   "topic": "police/high",
+   "where": "outside",
+   "img": "c104917153 [security]",
+   "why": ""
+  }
+ ]
+}
