@@ -1,0 +1,33 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=()
+/img/*
+  Cache-Control: public, max-age=31536000, immutable
+/og/*
+  Cache-Control: public, max-age=604800
+# 30.10.2026 (mobile speed): the story pictures (names carry a hash of the source) and the self-hosted font
+/ai/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+# the notifications service worker (29.10.2026): always checked for a new version
+/sw.js
+  Cache-Control: no-cache
+# the directory badge that businesses embed on their own sites (29.10.2026): cached, usable from any site
+/badge/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+  Access-Control-Allow-Origin: *
+  Cross-Origin-Resource-Policy: cross-origin
+# the writers' area (opinion columns, 29.10.2026): never indexed, never cached, never framed
+/write/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+  Referrer-Policy: no-referrer
+  X-Frame-Options: DENY
+# The Pages address and preview deployments are never indexed (the site lives at https://nws.co.il; functions/_middleware.js
+# also sends nws-site.pages.dev and www.nws.co.il to it with a 301).
+https://nws-site.pages.dev/*
+  X-Robots-Tag: noindex
+https://:version.nws-site.pages.dev/*
+  X-Robots-Tag: noindex
