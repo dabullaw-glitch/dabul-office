@@ -19,17 +19,18 @@ function dabul_ft_guides_row() {
 		array(6816, 'tabu', 'טאבו ורישום זכויות במקרקעין'),
 	);
 	$o = '<div class="r25"><style>'
-		. '.r25{display:grid;grid-template-columns:1fr 1fr;gap:56px;padding:34px 0 30px;border-top:1px solid rgba(255,255,255,.08)}'
-		. '.r25 .h25{color:#C5A25A;font-size:21px;font-weight:700;margin:0}'
-		. '.r25 .u25{width:46px;height:2px;background:#A88A4C;margin:12px 0 10px}'
-		. '.r25 a.rw{display:flex;align-items:center;gap:14px;min-height:62px;border-bottom:1px solid #2a2927;text-decoration:none}'
-		. '.r25 a.rw:hover span{color:#E7CD96}'
-		. '.r25 a.rw svg{width:20px;height:20px;flex:0 0 20px}'
-		. '.r25 a.rw i{width:7px;height:7px;border-radius:50%;background:#C5A25A;flex:0 0 7px;margin:0 6px 0 7px}'
-		. '.r25 a.rw span{font-size:16.5px;line-height:1.45;color:#e9e6dd;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}'
-		. '.r25 a.all{display:inline-block;margin-top:18px;color:#E7CD96;font-weight:700;font-size:15.5px;text-decoration:none}'
-		. '@media (max-width:760px){.r25{grid-template-columns:1fr;gap:34px}}'
-		. '</style>';
+		. '#dbl-foot .r25{max-width:1340px;margin:0 auto;border-top:1px solid rgba(231,205,150,.18);padding:34px 0 34px}'
+		. '#dbl-foot .r25i{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:80px}'
+		. '#dbl-foot .r25 .h25{color:#e7cd96;font-size:17px;font-weight:600;line-height:1.3;margin:0 0 12px;padding-bottom:12px;position:relative}'
+		. '#dbl-foot .r25 .h25:after{content:"";position:absolute;right:0;bottom:0;width:28px;height:2px;background:#c9a961}'
+		. '#dbl-foot .r25 a.rw{display:flex;align-items:center;gap:10px;padding:4px 0;text-decoration:none;min-width:0}'
+		. '#dbl-foot .r25 a.rw svg{width:16px;height:16px;flex:0 0 16px}'
+		. '#dbl-foot .r25 a.rw i{width:5px;height:5px;border-radius:50%;background:#c9a961;flex:0 0 5px;margin:0 5px 0 6px}'
+		. '#dbl-foot .r25 a.rw span{font-size:15px;line-height:1.5;color:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}'
+		. '#dbl-foot .r25 a.rw:hover span{color:#e7cd96}'
+		. '#dbl-foot .r25 a.all{display:inline-block;margin-top:10px;color:#e7cd96;font-weight:600;font-size:14.5px;text-decoration:none}'
+		. '@media (max-width:900px){#dbl-foot .r25i{grid-template-columns:minmax(0,1fr);gap:28px}#dbl-foot .r25{padding:28px 0}}'
+		. '</style><div class="r25i">';
 	$o .= '<div><p class="h25">המדריכים המובילים</p><div class="u25"></div>';
 	foreach ($guides as $g) {
 		$url = get_permalink($g[0]);
@@ -43,6 +44,6 @@ function dabul_ft_guides_row() {
 		$o .= '<a class="rw" href="' . esc_url(get_permalink($p)) . '"><i></i><span>' . esc_html(wp_strip_all_tags(get_the_title($p))) . '</span></a>';
 	}
 	$o .= '<a class="all" href="' . 'https://dabullaw.co.il/%d7%9e%d7%99%d7%93%d7%a2-%d7%9e%d7%a9%d7%a4%d7%98%d7%99/' . '">לכל המאמרים ←</a></div>';
-	return $o . '</div>';
+	return $o . '</div></div>';
 }
 }
