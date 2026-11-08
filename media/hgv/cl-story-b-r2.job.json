@@ -93,7 +93,7 @@
     "kind": "proof",
     "at": 28.14,
     "to": 32.5,
-    "img": "/tmp/claude-0/reel/proofs/s01-letter.jpg",
+    "img": "media/hgv/proofs/s01-letter.jpg",
     "caption": "והתקבל אישור בכתב",
     "focus": "50% 40%",
     "zoom": 1.25
@@ -118,5 +118,5 @@
   "theme": "cinematic-gold"
  },
  "cover": false,
- "note": "8.11.2026: re-edit with the original plan, theme and style; only the cuts change."
+ "note": "8.11.2026: re-edit with the original plan, theme and style; only the cuts change. Proof image taken from the approved old version (details already blurred)."
 }

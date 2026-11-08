@@ -81,7 +81,7 @@
     "kind": "proof",
     "at": 29.48,
     "to": 33.95,
-    "img": "/tmp/claude-0/reel/proofs/s02-letter.jpg",
+    "img": "media/hgv/proofs/s02-letter.jpg",
     "caption": "האישורים התקבלו",
     "focus": "50% 85%",
     "zoom": 1.25
@@ -113,5 +113,5 @@
   "theme": "boxed-navy"
  },
  "cover": false,
- "note": "8.11.2026: re-edit with the original plan, theme and style; only the cuts change."
+ "note": "8.11.2026: re-edit with the original plan, theme and style; only the cuts change. Proof image taken from the approved old version (details already blurred)."
 }

@@ -38,7 +38,7 @@
     "kind": "proof",
     "at": 0.3,
     "to": 3.5,
-    "img": "/tmp/claude-0/reel/proofs/s03-message.jpg",
+    "img": "media/hgv/proofs/s03-message.jpg",
     "caption": "ההודעה שהגיעה בערב",
     "focus": "50% 15%",
     "zoom": 1.12
@@ -139,5 +139,5 @@
   "theme": "glass"
  },
  "cover": false,
- "note": "8.11.2026: re-edit with the original plan, theme and style; only the cuts change."
+ "note": "8.11.2026: re-edit with the original plan, theme and style; only the cuts change. Proof image taken from the approved old version (details already blurred)."
 }
