@@ -1,0 +1,97 @@
+{
+ "ok": true,
+ "duration": 57.3,
+ "bytes": 62498785,
+ "style": "v3",
+ "theme": "paper",
+ "build": {
+  "fix": {
+   "r": 0.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0,
+   "b": 1.0,
+   "why": "none needed"
+  },
+  "style": "v3",
+  "theme": "paper",
+  "clips": 4,
+  "body": 54.435,
+  "total": 57.23,
+  "captions": 57,
+  "sfx": 15,
+  "layout": {
+   "hook": [
+    "band",
+    1.0,
+    0
+   ],
+   "name": [
+    "low",
+    null,
+    null
+   ],
+   "angle": [
+    "band",
+    1.0,
+    0
+   ],
+   "six": [
+    "band",
+    1.0,
+    0
+   ],
+   "list1": [
+    "band",
+    1.0,
+    0
+   ],
+   "opt4": [
+    "band",
+    1.0,
+    0
+   ],
+   "opt5": [
+    "band",
+    1.0,
+    0
+   ],
+   "opt6": [
+    "band",
+    1.0,
+    0
+   ],
+   "save": [
+    "band",
+    1.0,
+    0
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 134,
+  "mode": "aligned 128 of 134",
+  "start": 0.0,
+  "end": 55.3
+ },
+ "resolve": {
+  "beats": 10,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    55.75
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n18 segments",
+ "at": "2026-11-08T12:43:49Z",
+ "cover": "vr-yk-taut-1108-2.cover.jpg",
+ "coverSec": 1.0
+}
