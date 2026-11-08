@@ -1,0 +1,97 @@
+{
+ "ok": true,
+ "duration": 58.0,
+ "bytes": 41767745,
+ "style": "cinematic",
+ "theme": "cinematic-gold",
+ "build": {
+  "fix": {
+   "r": 0.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0,
+   "b": 1.0,
+   "why": "none needed"
+  },
+  "style": "cinematic",
+  "theme": "cinematic-gold",
+  "clips": 1,
+  "body": 55.15,
+  "total": 57.95,
+  "captions": 44,
+  "sfx": 14,
+  "layout": {
+   "hook": [
+    "band",
+    0.9615384615384616,
+    0
+   ],
+   "name": [
+    "low",
+    null,
+    null
+   ],
+   "personal": [
+    "full",
+    1.0,
+    null
+   ],
+   "deals": [
+    "full",
+    1.0,
+    null
+   ],
+   "early": [
+    "full",
+    1.0,
+    null
+   ],
+   "checks": [
+    "full",
+    1.0,
+    null
+   ],
+   "econ": [
+    "full",
+    1.0,
+    null
+   ],
+   "bar": [
+    "full",
+    1.0,
+    null
+   ],
+   "court": [
+    "full",
+    1.0,
+    null
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 133,
+  "mode": "aligned 132 of 133",
+  "start": 0.0,
+  "end": 54.98
+ },
+ "resolve": {
+  "beats": 10,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    55.43
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n18 segments",
+ "at": "2026-11-08T15:53:22Z",
+ "cover": "vr-yk-hekerut-1108-2.cover.jpg",
+ "coverSec": 1.0
+}
