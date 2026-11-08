@@ -427,8 +427,6 @@ V.more = () => `<h1>עוד</h1>
   <div class="card"><h2>צעדים אוטומטית מאפליקציית הבריאות</h2>
    <p class="muted" style="font-size:14px;margin:0 0 10px">${HEALTH.linked ? (HEALTH.last ? '✓ מחובר. עדכון אחרון: ' + new Date(HEALTH.last).toLocaleString('he-IL', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'נוצר קוד חיבור. מחכה לעדכון הראשון מהאייפון.') : 'האייפון ישלח לבד כל ערב את מספר הצעדים של היום. מגדירים פעם אחת, בערך 3 דקות.'}</p>
    <button class="btn ${HEALTH.linked ? 'sec' : ''}" data-act="health">${HEALTH.linked ? 'הוראות וקוד חדש' : 'לחבר את אפליקציית הבריאות'}</button></div>
-  <div class="card"><h2>תזכורות בטלגרם</h2><p class="muted" style="font-size:14px;margin:0 0 10px">בבוקר של יום אימון, תזכורת לשקילה ביום שישי, וסיכום שבועי במוצאי שבת.</p>
-   <button class="btn ${D.settings.tg ? '' : 'sec'}" data-act="tg">${D.settings.tg ? 'התזכורות פועלות' : 'התזכורות כבויות'}</button></div>
   <p class="center muted" style="font-size:13px">FitTrack · <span id="sync" class="sync"></span></p><input type="file" id="impfile" accept="application/json" hidden>`;
 V.profile = () => { const p = D.profile, t = D.targets; const F = (k, l, v, o) => `<div><label class="f">${l}</label><input class="in" data-pf="${o}.${k}" value="${esc(v)}" inputmode="${typeof v === 'number' ? 'decimal' : 'text'}"></div>`;
   return `<h1>פרופיל ויעדים</h1><p class="sub">כל הנתונים ניתנים לעריכה. נשמר לבד.</p>
@@ -464,9 +462,16 @@ function bindLogin() {
 
 // ---------- actions ----------
 function markDone(type) {
-  const t = today();
-  const doIt = () => { D.sessions.push({ id: uid(), date: t, type, status: 'done', endedAt: new Date().toISOString(), ex: [] }); delete D.postponed[t]; save(true); go('home'); toast('כל הכבוד! האימון נרשם 💪'); };
-  if (sessOn(t).some(x => x.status === 'done')) ask('כבר סימנת אימון היום. לסמן עוד אימון היום?', 'כן, לסמן', 'לא', doIt); else doIt();
+  const t = today(), y = addDays(t, -1);
+  const doIt = d => { D.sessions.push({ id: uid(), date: d, type, status: 'done', endedAt: new Date().toISOString(), ex: [] }); delete D.postponed[d]; save(true); go('home'); toast('כל הכבוד! האימון נרשם 💪'); };
+  const onDay = d => { if (sessOn(d).some(x => x.status === 'done')) ask('כבר סימנת אימון ביום הזה. לסמן עוד אימון באותו יום?', 'כן, לסמן', 'לא', () => doIt(d)); else doIt(d); };
+  // late at night or the day after: ask which day it was (yesterday was a training day and nothing was marked)
+  const yOpen = (D.days.includes(dow(y)) || D.extra[y]) && !sessOn(y).some(x => x.status === 'done');
+  if (yOpen && !sessOn(t).some(x => x.status === 'done')) {
+    return sheet(`<h2>מתי עשית את האימון?</h2><div class="row mt12"><button class="btn" id="dy">אתמול, יום ${DAYS[dow(y)]}</button><button class="btn sec" id="dt">היום</button></div><button class="btn sec mt8" data-close>ביטול</button>`,
+      el => { el.querySelector('#dy').onclick = () => { el.remove(); onDay(y); }; el.querySelector('#dt').onclick = () => { el.remove(); onDay(t); }; });
+  }
+  onDay(t);
 }
 function aiSummary() {
   const ds = doneSessions(), t = today();
