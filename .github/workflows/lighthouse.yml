@@ -23,7 +23,7 @@ jobs:
           mkdir -p tools/lighthouse /tmp/lh
           P=""; [ "${{ inputs.preset }}" = "desktop" ] && P="--preset=desktop"
           for i in 1 2 3; do
-            npx -y lighthouse@12 "${{ inputs.url }}" $P --only-categories=performance --output=json --output-path=/tmp/lh/r$i.json --chrome-flags="--headless=new --no-sandbox" --quiet || true
+            npx -y lighthouse@13.6.0 "${{ inputs.url }}" $P --only-categories=performance --output=json --output-path=/tmp/lh/r$i.json --chrome-flags="--headless=new --no-sandbox" --quiet || true
           done
           node -e '
             const fs=require("fs"); const out=[];
