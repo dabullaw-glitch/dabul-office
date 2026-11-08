@@ -1,0 +1,114 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "mobile",
+ "at": "2026-11-08T16:58:31.577Z",
+ "runs": [
+  {
+   "score": 72,
+   "fcp": 2011.016,
+   "lcp": 2720.016,
+   "si": 3072.4481886982694,
+   "tbt": 1035.4999999999998,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-e22fed0e-6423-4463-a430-7698c95aced4=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     639
+    ],
+    [
+     "resourceLoadDelay",
+     155
+    ],
+    [
+     "resourceLoadDuration",
+     233
+    ],
+    [
+     "elementRenderDelay",
+     177
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 349826,
+   "docBytes": 158080
+  },
+  {
+   "score": 94,
+   "fcp": 1795.722,
+   "lcp": 2022.1895,
+   "si": 1795.722,
+   "tbt": 239.5,
+   "cls": 0.00004763208281266191,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-e22fed0e-6423-4463-a430-7698c95aced4=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     38
+    ],
+    [
+     "resourceLoadDelay",
+     40
+    ],
+    [
+     "resourceLoadDuration",
+     43
+    ],
+    [
+     "elementRenderDelay",
+     171
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-a0e701d elementor-widget elementor-wid…\" data-id=\"a0e701d\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div#content > div.elementor-element > div.elementor-element > div.elementor-element",
+     "https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2"
+    ]
+   ],
+   "bytes": 349839,
+   "docBytes": 158083
+  },
+  {
+   "score": 94,
+   "fcp": 1637.5390000000002,
+   "lcp": 2008.8020000000001,
+   "si": 1637.5390000000002,
+   "tbt": 228.49999999999977,
+   "cls": 0.00004763208281266191,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-e22fed0e-6423-4463-a430-7698c95aced4=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     41
+    ],
+    [
+     "resourceLoadDelay",
+     25
+    ],
+    [
+     "resourceLoadDuration",
+     40
+    ],
+    [
+     "elementRenderDelay",
+     146
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-a0e701d elementor-widget elementor-wid…\" data-id=\"a0e701d\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div#content > div.elementor-element > div.elementor-element > div.elementor-element",
+     ""
+    ]
+   ],
+   "bytes": 349842,
+   "docBytes": 158085
+  }
+ ]
+}
