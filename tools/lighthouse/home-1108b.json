@@ -1,0 +1,100 @@
+{
+ "url": "https://dabullaw.co.il/?dbltest=lh1108b",
+ "preset": "mobile",
+ "at": "2026-11-08T15:20:00.103Z",
+ "runs": [
+  {
+   "score": 78,
+   "fcp": 2049.656,
+   "lcp": 2640.656,
+   "si": 3965.026163413854,
+   "tbt": 600.5,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-214a31db-d9f5-45b1-ae84-ff29e73bbca0=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     1483
+    ],
+    [
+     "resourceLoadDelay",
+     134
+    ],
+    [
+     "resourceLoadDuration",
+     150
+    ],
+    [
+     "elementRenderDelay",
+     208
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 348740,
+   "docBytes": 157907
+  },
+  {
+   "score": 97,
+   "fcp": 1618.308,
+   "lcp": 2091.4775,
+   "si": 1618.308,
+   "tbt": 134,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-214a31db-d9f5-45b1-ae84-ff29e73bbca0=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     51
+    ],
+    [
+     "resourceLoadDelay",
+     45
+    ],
+    [
+     "resourceLoadDuration",
+     53
+    ],
+    [
+     "elementRenderDelay",
+     111
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 349957,
+   "docBytes": 158180
+  },
+  {
+   "score": 97,
+   "fcp": 1690.225,
+   "lcp": 2143.689,
+   "si": 1690.225,
+   "tbt": 115,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-214a31db-d9f5-45b1-ae84-ff29e73bbca0=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     45
+    ],
+    [
+     "resourceLoadDelay",
+     32
+    ],
+    [
+     "resourceLoadDuration",
+     36
+    ],
+    [
+     "elementRenderDelay",
+     118
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 349916,
+   "docBytes": 158173
+  }
+ ]
+}
