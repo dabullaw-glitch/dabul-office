@@ -1,0 +1,82 @@
+{
+  "ok": true,
+  "duration": 40.000000,
+  "bytes": 56438721,
+  "style": "v3",
+  "theme": "warm",
+  "build": {
+    "fix": {
+      "r": 0.0,
+      "dx": 0.0,
+      "dy": 0.0,
+      "s": 1.0,
+      "b": 1.0,
+      "why": "none needed"
+    },
+    "style": "v3",
+    "theme": "warm",
+    "clips": 2,
+    "body": 37.07,
+    "total": 39.87,
+    "captions": 40,
+    "sfx": 10,
+    "layout": {
+      "hook": [
+        "band",
+        1.0,
+        0
+      ],
+      "name": [
+        "low",
+        null,
+        null
+      ],
+      "o1": [
+        "band",
+        1.0,
+        0
+      ],
+      "o2": [
+        "band",
+        1.0,
+        0
+      ],
+      "o3": [
+        "band",
+        1.0,
+        0
+      ],
+      "res": [
+        "band",
+        1.0,
+        0
+      ],
+      "next": [
+        "band",
+        1.0,
+        0
+      ],
+      "cta": [
+        "low",
+        null,
+        null
+      ]
+    }
+  },
+  "align": {
+    "words": "from job"
+  },
+  "resolve": {
+    "beats": 8,
+    "missed": [],
+    "keep": [
+      [
+        0.0,
+        37.1
+      ]
+    ]
+  },
+  "warnings": "",
+  "whisper": "",
+  "at": "2026-11-08T18:56:07Z"
+}
