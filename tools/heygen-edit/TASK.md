@@ -261,6 +261,27 @@ For every vidreq with status 'editing': `git pull` and look for media/hgv/<id>.m
 
 ### 6a. After Yakir approves a HeyGen reel: publishing row + front of the queue (Yakir 1.11.2026)
 
+**FIRST, update videos go to the very front (Yakir 8.11.2026, settings/social.queueRule.timelyFirst; this beats every
+rule below, including heygenFirst and the "no other reels inside a series" rule):** "סרטונים על דברים עדכניים שקורים עכשיו
+צריכים לעלות בזמנים הקרובים ולא רק במרץ... מה שמגיע מעדכונים של דברים חדשים חייב להקדים ומה שכללי לדחות לאחרי זה".
+An update video = its vidreq row has source 'upd' (news, a new ruling, a new directive; vidreq.upd holds the item).
+For each approved reel of an update video that has no `timelyAt` yet:
+1. Make sure it has exactly one planned main row (step 1 below).
+2. Target slot T = the first Sun 20:30 / Tue 12:30 / Thu 17:30 slot more than 48 hours from now that is not held by
+   another update video, by a row with pst or result, or by a debt row (Monday rows are not slots anyway).
+3. Move the update row to T. Every GENERAL planned main row from T up to the update row's old slot moves ONE slot later,
+   in order (each takes the next slot's date and hour, so the order between them stays and an episode is never before an
+   earlier episode); the update row's old slot is filled by the last shifted row, so no gap is left. Never touch rows due
+   within 48 hours, staged (pst / result) or published, and never move a debt row.
+4. docs_merge each moved row {at, replanFrom, replannedAt, replanNote:'יקיר 8.11.2026: סרטונים על עדכונים ודברים חדשים
+   מוקדמים, והכלליים נדחים אחריהם'}, each moved reel {publishAt (ISO UTC, Israel is UTC+2 in winter)}, and the update
+   reel {timelyAt: now, frontAt: now}; the vidreq row {publishAt}.
+5. Telegram to Yakir in simple Hebrew, no English and no dashes: "<name> הוקדם ל<יום> <תאריך> בשעה <שעה>, כי זה עדכון.
+   הסרטונים הכלליים זזו סלוט אחד קדימה." (the approval message from the reels function shows the end-of-queue date).
+An update reel is then done: skip the heygenFirst steps below for it.
+Example (done by hand 8.11.2026): the ruling video and the Bank of Israel video moved from 6.12 and 8.12 to 12.11 and
+15.11, and episodes 3 to 8 of the series and the general videos after them moved two slots later.
+
 Rule (settings/social.queueRule): "להקדים את סרטוני הייגן לראש התור, ואת שאר הרילסים לדחות". The reels function gives an
 approved reel the next FREE day (Yakir 5.11.2026: Sunday, Tuesday and Thursday EVERY week, each day at its own FIXED
 hour, the same every week: Sunday 20:30, Tuesday 12:30, Thursday 17:30 = settings/social.videoSlots.times in the order of
