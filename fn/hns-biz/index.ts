@@ -18,7 +18,7 @@
 // 29.10.2026 (security hardening): every public form goes through gate() (5 saved forms an hour per sender and form type, 20 attempts)
 //   and Turnstile (widget "nws.co.il forms"; NWS_TURNSTILE_SECRET in app_secrets), checked after field validation. See lib.ts.
 // No long or medium dash in any saved text.
-import { Any, sb, S, secrets, J, CORS, clean, phoneOf, urlOk, emailOk, sha, ipOf, tg, mail, gate, gateOk, turnstile } from './lib.ts';
+import { Any, sb, S, secrets, J, CORS, clean, phoneOf, urlOk, emailOk, sha, ipOf, tg, mail, gate, gateOk, turnstile, YAKIR_TG_OFF } from './lib.ts';
 import { request, requestDecide } from './requests.ts';
 
 // Netanya (whole city), its neighborhoods and the nearby Sharon: same names as the site's places (sites/nws/src/data/places.ts)
@@ -105,7 +105,7 @@ async function register(b: Any, req: Request, admin: boolean) {
   if (error) return { ok: false, status: 500, error: 'שמירה נכשלה, נסו שוב בעוד דקה' };
   await gateOk(g.id);
   let sent = false;
-  if (!test || b.tg) {
+  if (!YAKIR_TG_OFF && (!test || b.tg)) {
     const r = await tg('sendMessage', { chat_id: S.TELEGRAM_CHAT_ID, text: approvalText(ins, cat?.plural_he || L.category), disable_web_page_preview: true,
       reply_markup: { inline_keyboard: [[{ text: '✅ לאשר', callback_data: `hns:biz:ok:${ins.id}` }, { text: '✗ לדחות', callback_data: `hns:biz:no:${ins.id}` }]] } });
     if (r?.ok) { sent = true; await sb.from('hns_biz_listings').update({ tg_sent_at: new Date().toISOString(), tg_message_id: r.result?.message_id ?? null }).eq('id', ins.id); }

@@ -35,6 +35,9 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 // deno-lint-ignore no-explicit-any
 type Any = any;
 const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
+// 9.11.2026 (Yakir): no Telegram messages from nws to Yakir. Anything that needs his approval waits in the admin panel and is never published automatically.
+// (only the weekly report to TELEGRAM_CHAT_ID is stopped; the public channel posts below are unchanged)
+const YAKIR_TG_OFF = true;
 const KEYS = ['CRON_SECRET', 'TELEGRAM_BOT_TOKEN', 'NWS_SOCIAL_LIVE', 'NWS_TG_CHANNEL', 'NWS_FB_PAGE_ID', 'NWS_FB_PAGE_TOKEN', 'NWS_WA_CHANNEL',
   'GREEN_API_URL', 'GREEN_API_INSTANCE', 'GREEN_API_TOKEN', 'META_APP_ID', 'META_APP_SECRET', 'NWS_FB_STATE', 'TELEGRAM_CHAT_ID'];
 let S: Record<string, string> = {};
@@ -379,6 +382,7 @@ async function weeklyReport(b: Any) {
   if (typeof count === 'number') lines.push(`נרשמים להתראות בטלפון: ${nf(count)}`);
   const text = lines.join('\n');
   if (b.dry) return { dry: true, text };
+  if (YAKIR_TG_OFF) return { sent: false, off: true, text };
   const r = await fetch(`https://api.telegram.org/bot${S.TELEGRAM_BOT_TOKEN}/sendMessage`, { method: 'POST', headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ chat_id: S.TELEGRAM_CHAT_ID, text, disable_web_page_preview: true }), signal: AbortSignal.timeout(15000) }).then((x) => x.json()).catch((e) => ({ ok: false, description: String(e) }));
   if (r?.ok) await sb.from('docs').upsert({ coll: 'nwsreport', id, data: { text, sentAt: new Date().toISOString() } }, { onConflict: 'coll,id' });

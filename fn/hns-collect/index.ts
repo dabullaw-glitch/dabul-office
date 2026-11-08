@@ -21,6 +21,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 type Any = any;
 const SB_URL = Deno.env.get('SUPABASE_URL')!;
 const sb = createClient(SB_URL, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
+// 9.11.2026 (Yakir): no Telegram messages from nws to Yakir. Anything that needs his approval waits in the admin panel and is never published automatically.
+const YAKIR_TG_OFF = true;
 let S: Record<string, string> = {};
 async function secrets() {
   const { data } = await sb.from('app_secrets').select('k,v').in('k', ['CRON_SECRET', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID']);
@@ -374,7 +376,8 @@ async function tick() {
   if (+p.hour === 8) {
     const y = ilDay(new Date(Date.now() - 24 * 3600e3));
     const { data: done } = await sb.from('hns_reports').select('day,sent_at').eq('day', y).maybeSingle();
-    if (!done || !done.sent_at) report = await buildReport(y, true);
+    // switch on: the report is built and saved once a day (hns_reports), never sent
+    if (!done || (!done.sent_at && !YAKIR_TG_OFF)) report = await buildReport(y, !YAKIR_TG_OFF);
   }
   return { polled: res, report: report ? { day: report.day, sent: report.sent } : null };
 }
@@ -441,7 +444,7 @@ async function buildReport(day: string, send: boolean) {
   const text = lines.join('\n');
   const body = { theirs: theirs.length, matched: matched.length, firstUs, missed: missed.map((x: Any) => ({ title: x.title, url: x.url })), extra: extra.length, text };
   let sent = false;
-  if (send && S.TELEGRAM_BOT_TOKEN && S.TELEGRAM_CHAT_ID) {
+  if (send && !YAKIR_TG_OFF && S.TELEGRAM_BOT_TOKEN && S.TELEGRAM_CHAT_ID) {
     const r = await fetch(`https://api.telegram.org/bot${S.TELEGRAM_BOT_TOKEN}/sendMessage`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ chat_id: S.TELEGRAM_CHAT_ID, text: text.slice(0, 3900), disable_web_page_preview: true }) }).then((r) => r.json()).catch(() => null);
     sent = !!(r && r.ok);
   }

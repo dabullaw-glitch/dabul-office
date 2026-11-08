@@ -38,6 +38,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 type Any = any;
 const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
 const S: Record<string, string> = {};
+// 9.11.2026 (Yakir): no Telegram messages from nws to Yakir. Anything that needs his approval waits in the admin panel and is never published automatically.
+const YAKIR_TG_OFF = true;
 async function secrets() {
   const { data } = await sb.from('app_secrets').select('k,v').in('k', ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID', 'ANTHROPIC_API_KEY', 'ANTHROPIC_WORKSPACE_ID']);
   for (const r of data || []) S[(r as Any).k] = String((r as Any).v ?? '').trim();
@@ -313,6 +315,8 @@ async function runCheck(id: number) {
     await sb.from('hns_columns').update({ history: [...(Array.isArray(c.history) ? c.history : []), { at: now, what: 'checked', by: 'auto', flags: res.flags.length }, { at: now, what: 'telegram_dry', text: msg.slice(0, 1500) }].slice(-40) }).eq('id', id);
     return;
   }
+  // switch on: no Telegram message; the column stays 'waiting' in the panel and is published only from there
+  if (YAKIR_TG_OFF) return;
   const r = await fetch(`https://api.telegram.org/bot${S.TELEGRAM_BOT_TOKEN}/sendMessage`, { method: 'POST', headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ chat_id: S.TELEGRAM_CHAT_ID, text: msg, disable_web_page_preview: true, reply_markup: kb }), signal: AbortSignal.timeout(15000) }).then((x) => x.json()).catch(() => null);
   if (r?.ok) await sb.from('hns_columns').update({ tg_message_id: r.result?.message_id ?? null }).eq('id', id);

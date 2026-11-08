@@ -70,6 +70,9 @@ const FRESH_H = 36;      // automatic publishing only for stories from the last 
 const WARN_H = 10;       // a weather or sea warning goes stale fast
 const APPROVAL_H = 36;   // older stories are not sent to Yakir for approval
 const MAX_TG_PER_RUN = 5;
+// 9.11.2026 (Yakir): no Telegram messages from nws to Yakir. Anything that needs his approval waits in the admin panel and is never published automatically.
+const YAKIR_TG_OFF = true;
+const NO_TG_NOTE = 'דורש אישור, לא פורסם (אין שליחה לטלגרם)';
 
 // Netanya, its neighborhoods and the nearby Sharon (same places as the site's area pages, plus regions used in warnings).
 // TEXT: names that are safe to look for inside a title or subtitle. PLACES_ONLY: names that are also common words
@@ -214,6 +217,8 @@ async function tick(dry: boolean) {
     if (st.tg_sent_at) continue;
     const why = !local ? 'לא מקומי, לא נשלח לאישור' : age > APPROVAL_H ? 'ישן, לא נשלח לאישור' : '';
     if (why) { out.skipped.push({ id: st.id, why }); if (!dry) await note(st, why); continue; }
+    // switch on: nothing is sent; the story stays unpublished (draft / needs_check) and waits in the panel (note written once)
+    if (YAKIR_TG_OFF) { out.skipped.push({ id: st.id, why: NO_TG_NOTE }); if (!dry) await note(st, NO_TG_NOTE); continue; }
     if (sent >= MAX_TG_PER_RUN) { out.skipped.push({ id: st.id, why: 'next run' }); continue; }
     sent++;
     if (dry) { out.asked.push({ id: st.id, title: st.title, text: approvalText(st) }); continue; }

@@ -17,6 +17,8 @@ const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SE
 const SITE = 'https://nws.co.il';
 const FEED = `${Deno.env.get('SUPABASE_URL')}/functions/v1/hns-feed?limit=1`;
 const BRAND = 'חדשות נתניה והשרון';
+// 9.11.2026 (Yakir): no Telegram messages from nws to Yakir. Anything that needs his approval waits in the admin panel and is never published automatically.
+const YAKIR_TG_OFF = true;
 const J = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { 'content-type': 'application/json; charset=utf-8' } });
 
 async function secrets() {
@@ -66,6 +68,7 @@ const downText = (what: string) => `⚠️ האתר nws.co.il לא עונה (2 �
 const upText = (min: number) => `✅ האתר חזר לעבוד. היה למטה בערך ${min} דקות.`;
 
 async function tg(S: Record<string, string>, text: string) {
+  if (YAKIR_TG_OFF) return false; // nothing is sent (the state in docs ops/uptime is still kept)
   if (!S.TELEGRAM_BOT_TOKEN || !S.TELEGRAM_CHAT_ID) return false;
   const r: Any = await fetch(`https://api.telegram.org/bot${S.TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: 'POST', headers: { 'content-type': 'application/json' }, signal: AbortSignal.timeout(15000),

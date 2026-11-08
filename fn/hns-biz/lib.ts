@@ -8,6 +8,8 @@ export const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPA
 // secrets from the private table app_secrets. NWS_MAIL_FROM (e.g. "חדשות נתניה והשרון <news@nws.co.il>") switches on confirmation
 // emails to people who leave an email; it must be a sender on the nws.co.il domain, never the law office domain.
 export const S: Record<string, string> = {};
+// 9.11.2026 (Yakir): no Telegram messages from nws to Yakir. Anything that needs his approval waits in the admin panel and is never published automatically.
+export const YAKIR_TG_OFF = true;
 export async function secrets() {
   const { data } = await sb.from('app_secrets').select('k,v').in('k', ['CRON_SECRET', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID', 'NWS_TURNSTILE_SECRET', 'RESEND_API_KEY', 'NWS_MAIL_FROM']);
   for (const r of data || []) S[(r as Any).k] = String((r as Any).v ?? '').trim();
@@ -62,6 +64,7 @@ export const tg = (method: string, body: Any) => fetch(`https://api.telegram.org
 }).then((r) => r.json()).catch((e) => ({ ok: false, description: String(e) }));
 
 export async function tgPhoto(bytes: Uint8Array, mime: string, caption: string, replyTo?: number) {
+  if (YAKIR_TG_OFF) return { ok: false, description: 'telegram to Yakir is off' };
   const fd = new FormData();
   fd.set('chat_id', S.TELEGRAM_CHAT_ID); fd.set('caption', caption.slice(0, 1000));
   if (replyTo) fd.set('reply_to_message_id', String(replyTo));

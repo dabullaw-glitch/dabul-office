@@ -12,7 +12,7 @@
 // engine's own rule applies: a tip alone becomes a story "needs_check" (רמז בלבד) and is written only when an official source or
 // another source tells the same event. The item holds only the text and the place: no name, phone, email or photo. The photo
 // stays in the private bucket and is never published automatically. Marking a report as spam takes its item out of the engine.
-import { Any, sb, S, clean, phoneOf, urlOk, emailOk, sha, ipOf, tg, tgPhoto, waLink, mail, gate, gateOk, turnstile } from './lib.ts';
+import { Any, sb, S, clean, phoneOf, urlOk, emailOk, sha, ipOf, tg, tgPhoto, waLink, mail, gate, gateOk, turnstile, YAKIR_TG_OFF } from './lib.ts';
 
 export const OFFERS: Record<string, string> = {
   featured: 'קידום במדריך (עסק מומלץ)', leader: 'מוביל בקטגוריה במדריך', sponsored: 'כתבת תוכן שיווקי', tgpost: 'פוסט ממומן בטלגרם',
@@ -186,7 +186,7 @@ export async function request(b: Any, req: Request, admin: boolean) {
     if (item) { ins.extra = { ...(ins.extra || {}), item_id: item }; await sb.from('hns_requests').update({ extra: ins.extra }).eq('id', ins.id); }
   }
   let sent = false;
-  if (!test || b.tg) {
+  if (!YAKIR_TG_OFF && (!test || b.tg)) {
     const r = await tg('sendMessage', { chat_id: S.TELEGRAM_CHAT_ID, text: requestText(ins), disable_web_page_preview: true, reply_markup: requestButtons(ins) });
     if (r?.ok) {
       sent = true;

@@ -19,6 +19,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 // deno-lint-ignore no-explicit-any
 type Any = any;
 const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
+// 9.11.2026 (Yakir): no Telegram messages from nws to Yakir. Anything that needs his approval waits in the admin panel and is never published automatically.
+const YAKIR_TG_OFF = true;
 let S: Record<string, string> = {};
 async function secrets() {
   const { data } = await sb.from('app_secrets').select('k,v').in('k', ['CRON_SECRET', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID']);
@@ -127,6 +129,7 @@ async function checks(): Promise<Issue[]> {
 }
 
 async function send(text: string) {
+  if (YAKIR_TG_OFF) return false; // nothing is sent; the alert is only kept in hns_watch_alerts (shown in the panel dashboard)
   if (!S.TELEGRAM_BOT_TOKEN || !S.TELEGRAM_CHAT_ID) return false;
   const r = await fetch(`https://api.telegram.org/bot${S.TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: 'POST', headers: { 'content-type': 'application/json' }, signal: AbortSignal.timeout(15000),
@@ -141,7 +144,8 @@ async function tick(dry: boolean) {
   if (dry) return { issues, quiet: hour >= 23 || hour < 7 };
   if (hour >= 23 || hour < 7) return { issues: issues.map((i) => i.key), held: 'night' };
   const since = new Date(Date.now() - QUIET_H * 3600e3).toISOString();
-  const { data: recent } = await sb.from('hns_watch_alerts').select('issue').eq('sent', true).gte('at', since);
+  // switch on: an alert kept unsent also counts, so each issue is written once per 6 hours (not every 15 minutes)
+  const { data: recent } = await (YAKIR_TG_OFF ? sb.from('hns_watch_alerts').select('issue').gte('at', since) : sb.from('hns_watch_alerts').select('issue').eq('sent', true).gte('at', since));
   const seen = new Set((recent || []).map((r: Any) => r.issue));
   const fresh = issues.filter((i) => !seen.has(i.key));
   if (!fresh.length) return { issues: issues.map((i) => i.key), sent: 0 };
