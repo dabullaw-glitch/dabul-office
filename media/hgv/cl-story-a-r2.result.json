@@ -1,0 +1,82 @@
+{
+  "ok": true,
+  "duration": 47.400000,
+  "bytes": 58861085,
+  "style": "boxed",
+  "theme": "boxed-navy",
+  "build": {
+    "fix": {
+      "r": 0.76,
+      "dx": 63.3,
+      "dy": 0.0,
+      "s": 1.1436,
+      "b": 1.0,
+      "why": "level +0.8 deg, centre +63px"
+    },
+    "style": "boxed",
+    "theme": "boxed-navy",
+    "clips": 2,
+    "body": 44.54,
+    "total": 47.34,
+    "captions": 44,
+    "sfx": 10,
+    "layout": {
+      "hook": [
+        "chin",
+        1.0,
+        0
+      ],
+      "family": [
+        "band",
+        0.932,
+        0
+      ],
+      "law": [
+        "band",
+        0.967,
+        0
+      ],
+      "need": [
+        "band",
+        1.0,
+        0
+      ],
+      "proof": [
+        "full",
+        0.905,
+        null
+      ],
+      "lesson": [
+        "band",
+        0.894,
+        0
+      ],
+      "check": [
+        "band",
+        0.863,
+        0
+      ],
+      "cta": [
+        "low",
+        null,
+        null
+      ]
+    }
+  },
+  "align": {
+    "words": "from job"
+  },
+  "resolve": {
+    "beats": 8,
+    "missed": [],
+    "keep": [
+      [
+        0.2,
+        44.8
+      ]
+    ]
+  },
+  "warnings": "",
+  "whisper": "",
+  "at": "2026-11-08T20:35:26Z"
+}

@@ -1,0 +1,87 @@
+{
+  "ok": true,
+  "duration": 47.000000,
+  "bytes": 59963340,
+  "style": "v3",
+  "theme": "glass",
+  "build": {
+    "fix": {
+      "r": 0.0,
+      "dx": 88.2,
+      "dy": 0.0,
+      "s": 1.1633,
+      "b": 1.0,
+      "why": "centre +88px"
+    },
+    "style": "v3",
+    "theme": "glass",
+    "clips": 2,
+    "body": 44.12,
+    "total": 46.92,
+    "captions": 43,
+    "sfx": 16,
+    "layout": {
+      "proof": [
+        "full",
+        0.743,
+        null
+      ],
+      "hook": [
+        "band",
+        0.84,
+        0
+      ],
+      "name": [
+        "low",
+        null,
+        null
+      ],
+      "hard": [
+        "push",
+        1.0,
+        130
+      ],
+      "work": [
+        "push",
+        1.0,
+        255
+      ],
+      "closed": [
+        "band",
+        1.0,
+        0
+      ],
+      "home": [
+        "band",
+        1.0,
+        0
+      ],
+      "lesson": [
+        "band",
+        0.897,
+        0
+      ],
+      "cta": [
+        "low",
+        null,
+        null
+      ]
+    }
+  },
+  "align": {
+    "words": "from job"
+  },
+  "resolve": {
+    "beats": 9,
+    "missed": [],
+    "keep": [
+      [
+        0.25,
+        44.2
+      ]
+    ]
+  },
+  "warnings": "",
+  "whisper": "",
+  "at": "2026-11-08T20:43:33Z"
+}
