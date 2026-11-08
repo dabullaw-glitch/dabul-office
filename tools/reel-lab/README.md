@@ -31,3 +31,12 @@ word-by-word captions (active word in gold), animated graphics that follow what 
 6. Check: `npx hyperframes lint`, then `npx hyperframes snapshot --at <beat times>` and LOOK at the frames:
    no graphic on the face, nothing cut at the edges, Hebrew right to left. Fix the plan and rebuild if needed.
 7. Render: `npx hyperframes render --output out.mp4`, then loudness `ffmpeg -i out.mp4 -c:v copy -af loudnorm=I=-14:TP=-1.5:LRA=11 -c:a aac -b:a 192k final.mp4`.
+
+## Cutting rule (Yakir 8.11.2026, standing: "תתקן את זה גם בסרטון הזה וגם בסרטונים הבאים שלא תחתוך אותי באמצע שאני מדבר")
+"אתה כן עורך אם יש טעות במילה או שזה לא אמור להיות במקום, אבל אתה סתם חותך את הסוף של המילים והמשפטים בלי סיבה."
+- Never cut the end of a word or a sentence. `build.py` keeps at least 0.3 s after the last word before every cut and
+  0.15 s before the first word after it, cuts only pauses longer than 0.5 s, and never ends a kept range before its
+  last word has faded out. A plan cannot make these tighter.
+- `keep` ranges start and end at sentence boundaries. Remove only real mistakes: a wrong word he corrected, a retake,
+  a repeated sentence, something that does not belong. Never drop the end of a sentence to make the video shorter.
+- Check every cut point on the audio before rendering (listen to 1 s around each cut in the working copy).
