@@ -15,9 +15,17 @@ ffmpeg -y -v error -i $W/raw.mp4 -vf "scale=1080:1920:force_original_aspect_rati
 ffmpeg -y -v error -i $W/raw.mp4 -vn -ac 1 -ar 16000 $W/a16.wav
 ffmpeg -v info -i $W/a16.wav -af silencedetect=n=-35dB:d=0.35 -f null - 2> $W/sil.txt || true
 # word timings: Whisper (Hebrew), then every word of the approved script gets a time (captions = the exact script)
+# 8.11.2026: a re-edit of one of Yakir's filmed takes (tools/reel-lab) brings its own transcript ("words": URL of the
+# reel-lab words.json) and its original plan in seconds, so the captions and the graphics stay exactly as he approved;
+# only the cuts change (build.py now checks every cut on the sound). Then no Whisper and no script alignment here.
+wurl=$(jq -r '.words // empty' $J)
+if [ -n "$wurl" ]; then
+  curl -fsSL --retry 3 "$wurl" -o $W/words.json; echo '{"words":"from job"}' > $W/align.json; : > $W/wh.log
+else
 mkdir -p $W/wh; wj=-
 if timeout 1500 python3 $ED/transcribe.py $W/wh $W/a16.wav > $W/wh.log 2>&1; then wj=$W/wh/words.json; else echo "whisper failed, spreading by length"; tail -5 $W/wh.log; fi
 python3 tools/heygen-edit/prep.py align $W/script.txt $wj "$dur" $W/sil.txt $W/words.json | tee $W/align.json
+fi
 F=$W/faces.json; python3 $ED/facetrack.py $W/take.mp4 $F 0.2 || F=-
 python3 tools/heygen-edit/prep.py resolve $W/plan.in.json $W/words.json $W/plan.json 2> $W/resolve.err | tee $W/resolve.json
 cat $W/resolve.err || true
@@ -48,5 +56,5 @@ jq -n --argjson b "$(tail -1 $W/build.json)" --argjson al "$(cat $W/align.json)"
   --arg dur "$d" --arg bytes "$(stat -c %s media/hgv/$id.mp4)" --arg warn "$(cat $W/resolve.err)" --arg wh "$(tail -c 1500 $W/wh.log 2>/dev/null)" \
   '{ok:true, duration:($dur|tonumber), bytes:($bytes|tonumber), style:$b.style, theme:$b.theme, build:$b, align:$al, resolve:$rs, warnings:$warn, whisper:$wh, at:(now|todate)}' > media/hgv/$id.result.json
 # cover ("שער", Yakir 1.11.2026): 1 s title image before the video runs; also keeps the file under the 50 MB storage limit
-python3 tools/heygen-edit/cover.py $id || echo "cover failed"
+if [ "$(jq -r 'if .cover == false then "no" else "yes" end' $J)" = yes ]; then python3 tools/heygen-edit/cover.py $id || echo "cover failed"; fi
 cat media/hgv/$id.result.json
