@@ -1,0 +1,130 @@
+{
+ "id": "vr-yk-hekerut-1108-2",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/652a194a9090d9f1ee26f2cc1152f5dd.mp4?Expires=1794745226&Signature=hzeM~Cv4cN8sPDm0oiN1oMGyJ0EGaAren5M4rMBVAtqsXrycW6LlY0EF1TnkGEOf8pNTZ8QhRnmkaWE2~CiSP1ByWbcZj5uzk4E9GWV8IozpoWeiFkZuWpZp-lgs-0ZMXXbwnlPsHRwU6BpKsKK1-4Nb2GfLe~17gcZeRnlT5ALbE5nCHbruOQg9QI6OUzIFzlNTD~LO-WUfePZKISy9qN~VUU6NKaYtqRqcTBKkMc6tVA71FQFk5JiJ3YPeKaG6iffd3GomSWeghK9eWam5-9DYAWfTbidqnaIcjNKpKPqvnr1rZW1hrDWC~N-vB1TBgzETMuyINoM7oyNrTCreVA__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "שמי יקיר דבול, ואני עורך דין מקרקעין מנתניה.\nאני יודע שקנייה או מכירה של דירה היא אחד הצעדים הגדולים בחיים,\nושחשוב לכם לעשות אותו נכון, בלי הפתעות.\nולכן אני מלווה אישית כל עסקה ועסקה שמטופלת במשרד.\nכשאתם עובדים איתי, אתם מקבלים ניסיון של יותר ממאה עסקאות נדל״ן בכל שנה,\nבנתניה ובשרון.\nהניסיון הזה עוזר לזהות מראש בעיות שעלולות לצוץ,\nולטפל בהן עוד לפני החתימה:\nבדיקות מקדימות מקיפות, וחוזה שבנוי בדיוק לעסקה שלכם.\nומעבר לצד המשפטי, אני יודע שחשוב לכם גם הצד הכלכלי.\nלכן אני בודק איתכם את המס, את העלויות שמסביב לעסקה ואת הסיכונים,\nכדי שתקבלו את ההחלטה הנכונה בשבילכם.\nאני חבר בחמש ועדות של לשכת עורכי הדין,\nובית המשפט ממנה אותי לטפל ברישום של בתים משותפים.\nמוזמנים ליצור איתי קשר בטלפון, או להשאיר פרטים באתר,\nואחזור אליכם, בדרך כלל עוד באותו יום.",
+ "history": "v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "paper,boxed-navy,cinematic-gold",
+ "plan": {
+  "title": "נעים להכיר: יקיר דבול, עורך דין מקרקעין בנתניה",
+  "topic": "מקרקעין",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "goldWords": [
+   "אישית",
+   "ממאה",
+   "מראש",
+   "מקיפות,",
+   "הכלכלי.",
+   "בחמש",
+   "משותפים."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "נעים להכיר",
+    "l1": "יקיר דבול",
+    "l2": "עורך דין מקרקעין"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "אני יודע שקנייה או",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "personal",
+    "kind": "stamp",
+    "say": "ולכן אני מלווה אישית",
+    "until": "עסקה שמטופלת במשרד.",
+    "text": "ליווי אישי",
+    "stampSay": "מלווה אישית כל עסקה"
+   },
+   {
+    "id": "deals",
+    "kind": "count",
+    "say": "ניסיון של יותר ממאה",
+    "until": "בנתניה ובשרון.",
+    "n": 100,
+    "suffix": "+",
+    "label": "עסקאות בשנה",
+    "sub": "נתניה והשרון"
+   },
+   {
+    "id": "early",
+    "kind": "term",
+    "say": "הניסיון הזה עוזר לזהות",
+    "until": "עוד לפני החתימה:",
+    "kicker": "לפני החתימה",
+    "text": "לזהות בעיות מראש",
+    "sub": "ולטפל בהן בזמן",
+    "subSay": "ולטפל בהן עוד לפני"
+   },
+   {
+    "id": "checks",
+    "kind": "stack",
+    "say": "בדיקות מקדימות מקיפות, וחוזה",
+    "until": "בדיוק לעסקה שלכם.",
+    "items": [
+     {
+      "say": "בדיקות מקדימות מקיפות, וחוזה",
+      "text": "בדיקות מקדימות"
+     },
+     {
+      "say": "וחוזה שבנוי בדיוק לעסקה",
+      "text": "חוזה מותאם לעסקה"
+     }
+    ]
+   },
+   {
+    "id": "econ",
+    "kind": "stack",
+    "say": "לכן אני בודק איתכם",
+    "until": "ההחלטה הנכונה בשבילכם.",
+    "items": [
+     {
+      "say": "לכן אני בודק איתכם",
+      "text": "המס"
+     },
+     {
+      "say": "את העלויות שמסביב לעסקה",
+      "text": "העלויות"
+     },
+     {
+      "say": "ואת הסיכונים, כדי שתקבלו",
+      "text": "הסיכונים"
+     }
+    ]
+   },
+   {
+    "id": "bar",
+    "kind": "title",
+    "say": "אני חבר בחמש ועדות",
+    "until": "של לשכת עורכי הדין,",
+    "num": "5",
+    "text": "ועדות בלשכה"
+   },
+   {
+    "id": "court",
+    "kind": "term",
+    "say": "ובית המשפט ממנה אותי",
+    "until": "של בתים משותפים.",
+    "kicker": "מינוי בית המשפט",
+    "text": "רישום בתים משותפים"
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "מוזמנים ליצור איתי קשר",
+    "until": "עוד באותו יום.",
+    "text": "09-8613413",
+    "label": "דברו איתי"
+   }
+  ],
+  "style": "cinematic"
+ }
+}
