@@ -1,0 +1,113 @@
+{
+ "id": "vr-yk-taut-1108",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/fccfc00fc569e84eb898d02a5cfea2e4.mp4?Expires=1794734426&Signature=QRy8TsQ7G-fCUCbKgB8tE2GhIqu1uoosOxbyTTjZLabKj5plT0y~QICS0IOJBf1oMZCfxktGQJjdE0nRo6JXgPG7Ombuo5OFKIRNrOdh0FBVT4Y4~RhZTmDA1nLmT~I3XORLIF9l56G3BgLfEfOLDm6aKqhePn1MZ7snWPPHB~jV31qb9qoHk5WWlJbK6Wv~CGfwRCOS8gVLDss6EMLhOZ2BsAlgkMYeT6WihwI8GjbQKTCKVlaoZSaO-mb7wp53JeULklDjcyrWrDa37~lyu3Gq22oYyuD-nL~9OkbFW3dS-LurLJadDkR9wjd9pzyVVuVe-xGrDGv1Momy97IvqA__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "עסקת הנדל״ן הראשונה שלכם?\nטעות אחת יכולה לעלות לכם מאות אלפי שקלים.\nואני מדבר עכשיו על הצד הכלכלי של העסקה,\nלא על הצד המשפטי.\nאלה שש טעויות שאני רואה שוב ושוב.\nאחת:\nלקנות מעל מחיר השוק,\nולהפסיד כסף כבר ביום הקנייה.\nשתיים:\nלקנות בלי מחקר מקדים רציני.\nשלוש:\nלקנות באזור שכבר מיצה את הפוטנציאל שלו.\nויש הרבה כאלה בארץ.\nארבע:\nלקנות בלי לבדוק את הסביבה,\nמה קורה בשכונה ומי צפוי לגור או לשכור בה.\nזה נכון גם לדירה להשקעה,\nוגם לדירה למגורים.\nחמש:\nלקנות באזור עם היצע גדול של דירות להשכרה ולמכירה.\nזה קורה בדרך כלל באזורים עם הרבה פרויקטים של מחיר למשתכן.\nשש:\nלקנות בלי להכיר את כל העלויות הנלוות,\nולגלות אותן רק ביום החתימה.\nתימנעו מהטעויות האלה,\nוזה יכול לחסוך לכם הרבה מאוד כסף.\nשמרו את הסרטון\nלפני שאתם יוצאים לחפש דירה.",
+ "history": "cinematic,v3,boxed,cinematic,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "cinematic-gold,navy-gold,boxed-navy",
+ "plan": {
+  "title": "שש טעויות כלכליות בעסקת הנדל״ן הראשונה",
+  "topic": "נדל״ן",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "v3",
+  "goldWords": [
+   "הכלכלי",
+   "שש",
+   "השוק,",
+   "מחקר",
+   "הסביבה,",
+   "היצע",
+   "הנלוות,"
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "עסקה ראשונה",
+    "l1": "טעות אחת",
+    "l2": "מאות אלפי שקלים"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "ואני מדבר עכשיו על",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "angle",
+    "kind": "stamp",
+    "say": "לא על הצד המשפטי.",
+    "dur": 2.2,
+    "text": "הצד הכלכלי",
+    "stampSay": "לא על הצד המשפטי."
+   },
+   {
+    "id": "six",
+    "kind": "title",
+    "say": "אלה שש טעויות שאני",
+    "until": "רואה שוב ושוב.",
+    "num": "6",
+    "text": "טעויות כלכליות"
+   },
+   {
+    "id": "list1",
+    "kind": "stack",
+    "say": "אחת: לקנות מעל מחיר",
+    "until": "ויש הרבה כאלה בארץ.",
+    "items": [
+     {
+      "say": "אחת: לקנות מעל מחיר",
+      "text": "1. מעל מחיר השוק"
+     },
+     {
+      "say": "שתיים: לקנות בלי מחקר",
+      "text": "2. בלי מחקר מקדים"
+     },
+     {
+      "say": "שלוש: לקנות באזור שכבר",
+      "text": "3. אזור שמיצה את עצמו"
+     }
+    ]
+   },
+   {
+    "id": "list2",
+    "kind": "stack",
+    "say": "ארבע: לקנות בלי לבדוק",
+    "until": "ולגלות אותן רק ביום החתימה.",
+    "items": [
+     {
+      "say": "ארבע: לקנות בלי לבדוק",
+      "text": "4. בלי לבדוק את הסביבה"
+     },
+     {
+      "say": "חמש: לקנות באזור עם",
+      "text": "5. היצע גדול מדי"
+     },
+     {
+      "say": "שש: לקנות בלי להכיר",
+      "text": "6. עלויות נלוות"
+     }
+    ]
+   },
+   {
+    "id": "save",
+    "kind": "boom",
+    "say": "וזה יכול לחסוך לכם",
+    "dur": 1.8,
+    "text": "לחסוך"
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "שמרו את הסרטון לפני",
+    "until": "יוצאים לחפש דירה.",
+    "text": "09-8613413",
+    "label": "שמרו את הסרטון"
+   }
+  ]
+ }
+}

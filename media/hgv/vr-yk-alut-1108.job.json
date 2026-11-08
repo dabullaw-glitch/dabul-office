@@ -1,0 +1,111 @@
+{
+ "id": "vr-yk-alut-1108",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/d87f140d3090eed0041b17d638203e6e.mp4?Expires=1794734409&Signature=cQ8H5DwOYCG47DFiugsKNAMc0ZoL9pNglHlYLDKdrbyrEwxfEiif6QWQbhWtlASf2a6XsKETIWorph~j37ZACQd3RUe9qMh9wpVLllqHjOhXQD2TJ2F1K9QIJgk1nf8rh61cJmoek7R5bRRfgUQqy76XwwxX2rDgjSFopw7H99CHLXkyxUoKw6Rb2Xj-iPyucdaNanl~LtUgEdwwiPqVvEjvd8Uu98O~qrGKVAsRImATKQSIw9ErdcKrBcg1FTnLLkcnow-kX6JdJUdrJLB~aJxk2KL1FWq~4NHu8dAf-ZXsZSeqkHpynYQnJzadK4fc7sedfMX2llfM2GCfKxhMQg__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "קניתם דירה?\nהמחיר בחוזה הוא לא כל הסיפור.\nיש עלויות שרוב הזוגות שוכחים לתכנן.\nתיווך:\nבדרך כלל בערך שני אחוז,\nועוד מס ערך מוסף.\nיועץ משכנתאות:\nלרוב בין שמונה לעשרת אלפים שקל.\nעורך דין:\nשכר טרחה, שהוא בדרך כלל אחוז קטן מהעסקה.\nומס רכישה:\nבדירה ראשונה יש פטור עד תקרה מסוימת.\nבדירה נוספת, שמונה אחוז.\nעכשיו תעשו חשבון.\nדירה בשני מיליון שקל?\nתיווך, יועץ משכנתאות ועורך דין,\nיכולים להגיע ביחד לקרוב לשבעים אלף שקל.\nאז לפני שחותמים,\nתעשו את החשבון המלא,\nותבדקו שהעסקה מתאימה לכם\nגם אחרי כל העלויות האלה.\nשמרו את הסרטון,\nושתפו מי שמחפש עכשיו דירה.",
+ "history": "cinematic,v3,boxed,cinematic,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "cinematic-gold,navy-gold,boxed-navy",
+ "plan": {
+  "title": "קניתם דירה? המחיר בחוזה הוא לא כל הסיפור",
+  "topic": "מיסוי",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "boxed",
+  "goldWords": [
+   "תיווך:",
+   "משכנתאות:",
+   "רכישה:",
+   "פטור",
+   "חשבון.",
+   "לשבעים",
+   "המלא,"
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "קניית דירה",
+    "l1": "המחיר בחוזה",
+    "l2": "זה לא הכל"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "יש עלויות שרוב הזוגות",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "costs",
+    "kind": "stack",
+    "say": "תיווך: בדרך כלל בערך",
+    "until": "אחוז קטן מהעסקה.",
+    "items": [
+     {
+      "say": "תיווך: בדרך כלל בערך",
+      "text": "תיווך: כ-2% + מע״מ"
+     },
+     {
+      "say": "יועץ משכנתאות: לרוב בין",
+      "text": "יועץ משכנתאות"
+     },
+     {
+      "say": "עורך דין: שכר טרחה,",
+      "text": "עורך דין"
+     }
+    ]
+   },
+   {
+    "id": "tax",
+    "kind": "term",
+    "say": "ומס רכישה: בדירה ראשונה",
+    "until": "בדירה נוספת, שמונה אחוז.",
+    "kicker": "מס רכישה",
+    "text": "דירה ראשונה: פטור עד תקרה",
+    "sub": "דירה נוספת: 8%",
+    "subSay": "בדירה נוספת, שמונה אחוז."
+   },
+   {
+    "id": "calc",
+    "kind": "boom",
+    "say": "עכשיו תעשו חשבון.",
+    "dur": 1.6,
+    "text": "חשבון"
+   },
+   {
+    "id": "sum",
+    "kind": "stamp",
+    "say": "דירה בשני מיליון שקל?",
+    "until": "לקרוב לשבעים אלף שקל.",
+    "text": "כ-70,000 ₪",
+    "stampSay": "לקרוב לשבעים אלף שקל."
+   },
+   {
+    "id": "step",
+    "kind": "stack",
+    "say": "אז לפני שחותמים, תעשו",
+    "until": "גם אחרי כל העלויות האלה.",
+    "items": [
+     {
+      "say": "אז לפני שחותמים, תעשו",
+      "text": "החשבון המלא"
+     },
+     {
+      "say": "ותבדקו שהעסקה מתאימה לכם",
+      "text": "שהעסקה מתאימה לכם"
+     }
+    ]
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "שמרו את הסרטון, ושתפו",
+    "until": "שמחפש עכשיו דירה.",
+    "text": "09-8613413",
+    "label": "שמרו ושתפו"
+   }
+  ]
+ }
+}
