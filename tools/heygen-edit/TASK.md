@@ -132,7 +132,8 @@ whose prompt row has status 'ready' (and mode not 'self'):
 3. Look (Yakir approved 1.11.2026: the look fits the script, with variety): read settings/heygen.lookByType.map. Take the
    script type (prompt row type: story, simple, qa, news, dont, myth, value; a list or checklist script -> value_list;
    inheritance or family topics -> inheritance_family; Yakir's opinion on a complex topic -> opinion) and its list of look
-   ids in order. LOOKS (Yakir 1.11.2026 19:45, final): four approved looks, all digital twins made from his REAL office
+   ids in order. OVERRIDE (Yakir 8.11.2026): when the vidreq or its prompt row has a lookId, Yakir chose that look for
+   this video: use exactly it (even if it equals lookHistory[0]) and skip the rotation below. LOOKS (Yakir 1.11.2026 19:45, final): four approved looks, all digital twins made from his REAL office
    footage (settings/heygen.lookByType.approvedLooks): suit and tie 2de82931..., black jacket + black shirt 11e4b953...,
    black jacket + white shirt f9ec4b0e..., black polo b51d39d9.... Pick by the script type from lookByType.map (first look
    in the list that is not lookHistory[0]; never the same look twice in a row). Every look: engine {"type":"avatar_iii"},
