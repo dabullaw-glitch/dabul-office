@@ -47,8 +47,15 @@ MIN = MIN.replace('{T}', str(TH['tilt'])); MOUT = MOUT.replace('{T}', str(TH['ti
 NUM = TH['num']
 
 FIX = plan.get('fix', {})
-GAP = plan.get('gap', 0.30)      # a silence longer than this is cut
-PAD = plan.get('pad', 0.09)      # breath kept on each side of a cut
+# 8.11.2026 (Yakir: "אתה ממש חותך לי משפטים מהמילים... סתם חותך את הסוף של המילים והמשפטים"): the cuts were too tight.
+# Whisper marks the end of a word early (the last sound of a Hebrew word fades out after its timestamp), so a cut 0.09 s
+# after the word ate the end of the word, and a kept range was capped at the plan's end number. Now: a long tail after the
+# last word before every cut, a short lead before the first word after it, only real pauses are cut, and a kept range
+# always ends after its last word. Mistakes and retakes are still removed by the plan's keep ranges; nothing else is cut.
+# A plan can only make these SAFER (larger), never tighter.
+GAP = max(float(plan.get('gap', 0.6)), 0.5)      # only a silence longer than this is cut
+PRE = max(float(plan.get('pre', plan.get('pad', 0.15))), 0.15)   # kept before the first word after a cut
+TAIL = max(float(plan.get('tail', 0.34)), 0.3)   # kept after the last word before a cut (the end of the word)
 END = plan.get('endCard', 2.8)
 W, H = 1080, 1920
 TOP = 150                        # keep clear of the app's top bar
@@ -74,14 +81,26 @@ if FIXAT:
 
 # ---- 1. cuts: source ranges -> clips without long silences ----
 clips = []
+def _after(w):   # the end of a word, with its fade, but never into the next spoken word
+    nxt = [x['s'] for x in words if x['s'] > w['e'] + 0.01]
+    return min(w['e'] + TAIL, (min(nxt) - 0.08) if nxt else w['e'] + TAIL)
+def _before(w):  # just before a word, but never inside the word before it
+    prv = [x['e'] for x in words if x['e'] < w['s'] - 0.01]
+    return max(w['s'] - PRE, (max(prv) + 0.08) if prv else 0.0, 0.0)
 for a, b in plan['keep']:
     ws = [w for w in words if w['s'] >= a - 0.05 and w['e'] <= b + 0.3]
     if not ws: continue
-    cur = [max(a, ws[0]['s'] - PAD), None]
+    cur = [_before(ws[0]), None]
     for i in range(1, len(ws)):
         if ws[i]['s'] - ws[i - 1]['e'] > GAP:
-            cur[1] = ws[i - 1]['e'] + PAD; clips.append(tuple(cur)); cur = [ws[i]['s'] - PAD, None]
-    cur[1] = min(b, ws[-1]['e'] + PAD + 0.05); clips.append(tuple(cur))
+            cur[1] = _after(ws[i - 1]); clips.append(tuple(cur)); cur = [_before(ws[i]), None]
+    cur[1] = _after(ws[-1]); clips.append(tuple(cur))
+# two clips that now touch or overlap become one (no cut in the middle of speech)
+merged = []
+for s0, e0 in clips:
+    if merged and s0 <= merged[-1][1] + 0.02: merged[-1] = (merged[-1][0], max(merged[-1][1], e0))
+    else: merged.append((s0, e0))
+clips = merged
 tl_clips = []; t = 0.0
 for s, e in clips:
     d = round(e - s, 3); tl_clips.append((round(t, 3), round(s, 3), d)); t += d
