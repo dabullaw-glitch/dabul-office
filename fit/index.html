@@ -157,29 +157,36 @@ const num = (v, d = 1) => (v == null || v === '' || isNaN(v)) ? '' : (+(+v).toFi
 
 // ---------- default data (from Yakir's brief) ----------
 function ex(name, muscle, sets, reps, unit) { return { id: uid(), name, muscle, sets, reps, unit: unit || 'ק"ג', note: '' }; }
+// 9.11.2026 (Yakir): two workouts. Sunday A, Tuesday B, Thursday A. Weekly reminder to add 2.5% to 5% weight.
+function newPlan() {
+  return {
+    A: { name: 'אימון א', focus: 'חזה · כתפיים · יד קדמית · בטן', ex: [
+      ex('לחיצת חזה במוט או דאמבלים', 'חזה', 3, '8-10'), ex('לחיצת כתפיים בישיבה', 'כתפיים', 3, '10'),
+      ex('פרפר במכשיר או בכבלים', 'חזה', '2-3', '12'), ex('כפיפת מרפקים במוט או דאמבלים', 'יד קדמית', 3, '10-12'),
+      ex('תרגילי בטן (כפיפות בטן או פלאנק)', 'בטן', 3, '')] },
+    B: { name: 'אימון ב', focus: 'גב · רגליים · יד אחורית', ex: [
+      ex('סקוואט או דדליפט או לחיצת רגליים', 'רגליים', '3-4', '6-10'), ex('משיכת פולי עליון או מתח', 'גב', 3, '8-12'),
+      ex('חתירה בטי בר או בכבלים', 'גב', 3, '10'), ex('פשיטת מרפקים בפולי', 'יד אחורית', 3, '12'),
+      ex('תאומים במכשיר', 'רגליים', 3, '15')] }
+  };
+}
+function migrate(x) {
+  if (!x || !x.plan) return x;
+  if (!x.dayPlan) {
+    x.plan = newPlan(); x.dayPlan = { 0: 'A', 2: 'B', 4: 'A' }; x.days = [0, 2, 4];
+    Object.keys(x.extra || {}).forEach(d => { if (x.extra[d] === true) x.extra[d] = 'A'; });
+    (x.sessions || []).forEach(s => { if (s.type === 'C') s.type = 'A'; });
+    x.updatedAt = Date.now(); x._mig = 2;
+  }
+  return x;
+}
 function defaults() {
   return {
     v: 1, start: today(),
     profile: { age: 30, height: 173, goal: 'בניית מסת שריר והפחתת אחוזי שומן', freq: 3, type: 'חדר כושר, מכשירים ומשקולות', activity: 'עבודה משרדית וישיבה ממושכת', stepsBase: 3607 },
     targets: { kcal: 2150, protein: 145, carbs: 230, fat: 70, water: 3, steps: 7000 },
-    days: [0, 2, 4],
-    plan: {
-      A: { name: 'פלג גוף עליון א', focus: 'חזה · גב · כתפיים · יד אחורית', ex: [
-        ex('לחיצת חזה במכונה', 'חזה', 3, '8-10'), ex('לחיצת חזה בשיפוע עליון עם משקולות', 'חזה', 3, '10-12'),
-        ex('פולי עליון', 'גב', 3, '10-12'), ex('חתירה בכבל בישיבה', 'גב', 3, '10-12'),
-        ex('לחיצת כתפיים במכונה', 'כתפיים', 3, '10-12'), ex('הרחקה לצדדים עם משקולות', 'כתפיים', 3, '12-15'),
-        ex('פשיטת מרפקים בכבל', 'יד אחורית', 3, '12-15')] },
-      B: { name: 'רגליים וידיים ב', focus: 'רגליים · יד קדמית · יד אחורית · בטן', ex: [
-        ex('לחיצת רגליים', 'רגליים', 4, '10-12'), ex('כפיפת ברכיים במכונה', 'רגליים', 3, '10-12'),
-        ex('פשיטת ברכיים במכונה', 'רגליים', 3, '12-15'), ex('הרמת עקבים (תאומים)', 'רגליים', 3, '12-15'),
-        ex('כפיפת מרפקים עם משקולות', 'יד קדמית', 3, '10-12'), ex('פשיטת מרפקים מעל הראש', 'יד אחורית', 3, '10-12'),
-        ex('כפיפות בטן בכבל', 'בטן', 3, '12-15'), ex('פלאנק', 'בטן', 3, '30-45', 'שניות')] },
-      C: { name: 'פלג גוף עליון ג', focus: 'גב · חזה · כתפיים · יד קדמית · יד אחורית', ex: [
-        ex('חתירה עם משקולת ביד אחת', 'גב', 3, '8-10'), ex('פולי עליון באחיזה צרה', 'גב', 3, '10-12'),
-        ex('לחיצת חזה בשיפוע במכונה', 'חזה', 3, '10-12'), ex('פרפר במכונה', 'חזה', 3, '12-15'),
-        ex('פרפר הפוך לכתף אחורית', 'כתפיים', 3, '12-15'), ex('לחיצת כתפיים עם משקולות', 'כתפיים', 3, '8-10'),
-        ex('כפיפת מרפקים בפטיש', 'יד קדמית', 3, '10-12'), ex('מקבילים במכונה', 'יד אחורית', 3, '8-12')] }
-    },
+    days: [0, 2, 4], dayPlan: { 0: 'A', 2: 'B', 4: 'A' },
+    plan: newPlan(),
     sessions: [], postponed: {}, extra: {},
     body: [{ date: today(), weight: 75.8, waist: 86 }],
     food: {},
@@ -190,8 +197,9 @@ function defaults() {
 }
 
 // ---------- state + sync ----------
-let D = LS.get('data', null), TOKEN = LS.get('token', ''), dirty = LS.get('dirty', false), online = navigator.onLine, saving = false, lastSync = LS.get('lastSync', 0);
+let D = null,  TOKEN = LS.get('token', ''), dirty = LS.get('dirty', false), online = navigator.onLine, saving = false, lastSync = LS.get('lastSync', 0);
 let view = 'home', sub = {};
+D = LS.get('data', null); if (D && !D.dayPlan) { migrate(D); LS.set('data', D); dirty = true; LS.set('dirty', true); }
 function save(now) {
   D.updatedAt = Date.now(); LS.set('data', D); dirty = true; LS.set('dirty', true);
   clearTimeout(save.t); save.t = setTimeout(push, now ? 0 : 1200); syncBadge();
@@ -213,7 +221,7 @@ async function pull() {
     online = true;
     const srv = r.data || {};
     if (!srv.v) { if (!D) D = defaults(); save(true); await pullSteps(); return; }
-    if (!D || (!dirty && (srv.updatedAt || 0) >= (D.updatedAt || 0)) || (srv.updatedAt || 0) > (D.updatedAt || 0)) { D = srv; LS.set('data', D); dirty = false; LS.set('dirty', false); }
+    if (!D || (!dirty && (srv.updatedAt || 0) >= (D.updatedAt || 0)) || (srv.updatedAt || 0) > (D.updatedAt || 0)) { D = srv; LS.set('data', D); dirty = false; LS.set('dirty', false); if (!D.dayPlan) { migrate(D); save(true); } }
     else if (dirty) push();
     lastSync = Date.now(); LS.set('lastSync', lastSync);
     await pullSteps();
@@ -238,18 +246,20 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 function logout() { TOKEN = ''; LS.set('token', ''); render(); }
 
 // ---------- schedule ----------
-const SEQ = ['A', 'B', 'C'];
+const SEQ = ['A', 'B'];
 const doneSessions = () => D.sessions.filter(s => s.status === 'done').sort((a, b) => (a.date + (a.endedAt || '')).localeCompare(b.date + (b.endedAt || '')));
-function nextType() { const ds = doneSessions(); if (!ds.length) return 'A'; return SEQ[(SEQ.indexOf(ds[ds.length - 1].type) + 1) % 3]; }
-const isTrainDay = s => (D.days.includes(dow(s)) || D.extra[s]) && !D.postponed[s];
+const planned = s => !!(D.dayPlan[dow(s)] || D.extra[s]);
+const typeFor = s => (typeof D.extra[s] === 'string' && D.plan[D.extra[s]]) ? D.extra[s] : (D.dayPlan[dow(s)] || 'A');
+const isTrainDay = s => planned(s) && !D.postponed[s];
+function nextType() { const u = upcoming(1)[0]; return u ? u.type : 'A'; }
 const sessOn = s => D.sessions.filter(x => x.date === s);
 // upcoming plan: queue A-B-C from the next type, on the coming training days (today included if nothing done today)
 function upcoming(n) {
-  const out = []; let t = nextType(); let d = today(); const doneToday = sessOn(d).some(x => x.status === 'done');
+  const out = []; let d = today(); const doneToday = sessOn(d).some(x => x.status === 'done');
   if (doneToday) d = addDays(d, 1);
   for (let i = 0; out.length < n && i < 120; i++, d = addDays(d, 1)) {
     if (!isTrainDay(d)) continue; if (sessOn(d).some(x => x.status === 'skipped')) continue;
-    out.push({ date: d, type: t }); t = SEQ[(SEQ.indexOf(t) + 1) % 3];
+    out.push({ date: d, type: typeFor(d) });
   }
   return out;
 }
@@ -258,7 +268,7 @@ function dayStatus(s) {
   const done = ss.find(x => x.status === 'done'); if (done) return { st: 'done', type: done.type };
   const sk = ss.find(x => x.status === 'skipped'); if (sk) return { st: 'skip', type: sk.type };
   if (D.postponed[s]) return { st: 'post' };
-  if (s < t && s >= D.start && (D.days.includes(dow(s)) || D.extra[s])) return { st: 'miss' };
+  if (s < t && s >= D.start && planned(s)) return { st: 'miss', type: typeFor(s) };
   const u = upcoming(40).find(x => x.date === s); if (u) return { st: 'plan', type: u.type };
   return { st: '' };
 }
@@ -340,6 +350,7 @@ V.home = () => {
   ${doneToday ? `<div class="card next"><span class="pill g">היום</span><div class="t">✓ ${esc(D.plan[doneToday.type].name)} בוצע</div><div class="muted">כל הכבוד. האימון הבא: ${nx ? esc(D.plan[nx.type].name) + ', ' + esc(when) : ''}</div></div>` : ''}
   ${!doneToday && nx ? `<div class="card next"><span class="pill g">האימון הבא שלך</span> <span class="pill">${esc(when)}</span><div class="t">${esc(P.name)}</div><div class="muted">${esc(P.focus)} · ${P.ex.length} תרגילים</div>
    <div class="row mt12"><button class="btn sec" style="flex:1" data-act="showplan" data-type="${nx.type}">מה עושים באימון</button><button class="btn" style="flex:1.3" data-act="markdone" data-type="${nx.type}">✓ עשיתי את האימון</button></div>${nx.date === t ? `<div class="row mt8"><button class="btn sec small" style="flex:1" data-act="postpone" data-date="${t}">לדחות למחר</button><button class="btn sec small" style="flex:1" data-act="skip" data-date="${t}" data-type="${nx.type}">דילגתי היום</button></div>` : ''}</div>` : ''}
+  ${progressDue() ? `<div class="card" style="border-color:#4d3a12;background:#1a150b"><h2 style="margin:0 0 6px">📈 תזכורת שבועית: להעלות משקולות</h2><p style="margin:0;line-height:1.6;font-size:15px">השבוע תעלה קצת משקל, בערך 2.5% עד 5%, בתרגילים שבפעם הקודמת הרגישו לך קלים ועשית בהם את כל החזרות. למשל 40 ק"ג הופך ל־41 עד 42 ק"ג.</p><div class="row mt12"><button class="btn sec small" style="flex:1" data-act="showplan" data-type="${nx ? nx.type : 'A'}">לעדכן משקלים בתוכנית</button><button class="btn small" style="flex:1" data-act="progack">סגור לשבוע הזה</button></div></div>` : ''}
   <div class="card"><div class="row between"><h2 style="margin:0">היום שלך בתזונה</h2><button class="btn sec small" data-go="food">לעדכן</button></div>
    ${[['kcal', 'קלוריות', D.targets.kcal, ''], ['protein', 'חלבון', D.targets.protein, 'גרם'], ['water', 'מים', D.targets.water, 'ליטר']].map(([k, l, tg, u]) => { const v = +fd[k] || 0, p = tg ? Math.min(100, v / tg * 100) : 0; return `<div class="mt12"><div class="row between" style="font-size:14px"><span>${l}</span><span class="muted">${num(v)} מתוך ${num(tg)} ${u}</span></div><div class="bar mt8 ${p < 60 ? 'o' : ''}"><i style="width:${p}%"></i></div></div>`; }).join('')}
   </div>
@@ -352,10 +363,12 @@ V.train = () => {
   return `<h1>אימונים</h1><p class="sub">הבא בתור: ${esc(D.plan[nextType()].name)}</p>
   <div class="seg">${SEQ.map(k => `<button class="${k === tp ? 'on' : ''}" data-plan="${k}">אימון ${L(k)}${k === nextType() ? ' •' : ''}</button>`).join('')}</div>
   <div class="card"><div class="row between"><div><h2 style="margin:0">${esc(P.name)}</h2><div class="muted" style="font-size:14px">${esc(P.focus)}</div></div><button class="btn sec small" data-act="editplan" data-type="${tp}">עריכה</button></div>
-   <ul class="list mt12">${P.ex.map((e, i) => `<li><span><b style="color:var(--mut);margin-inline-end:6px">${i + 1}</b>${esc(e.name)}<br><small class="muted">${esc(e.muscle)}${e.note ? ' · ' + esc(e.note) : ''}</small></span><span style="text-align:left;white-space:nowrap"><b style="color:var(--tx)">${e.sets}×${esc(e.reps)}</b>${e.unit === 'שניות' ? '<br><small>שניות</small>' : ''}${e.w ? '<br><small>' + esc(e.w) + '</small>' : ''}</span></li>`).join('')}</ul>
+   <ul class="list mt12">${P.ex.map((e, i) => `<li><span><b style="color:var(--mut);margin-inline-end:6px">${i + 1}</b>${esc(e.name)}<br><small class="muted">${esc(e.muscle)}${e.note ? ' · ' + esc(e.note) : ''}</small></span><span style="text-align:left;white-space:nowrap"><b style="color:var(--tx)">${e.reps ? e.sets + '×' + esc(e.reps) : e.sets + ' סטים'}</b>${e.unit === 'שניות' ? '<br><small>שניות</small>' : ''}${e.w ? '<br><small>' + esc(e.w) + '</small>' : ''}${bump(e.w) ? '<br><small style="color:var(--acc)">' + bump(e.w) + '</small>' : ''}</span></li>`).join('')}</ul>
    <button class="btn mt12" data-act="markdone" data-type="${tp}">✓ עשיתי את האימון הזה היום</button></div>
   <div class="card"><h2>היסטוריית אימונים</h2>${doneSessions().length ? `<ul class="list">${doneSessions().slice(-15).reverse().map(s => `<li data-act="viewsess" data-id="${s.id}" style="cursor:pointer"><span>${esc(D.plan[s.type] ? D.plan[s.type].name : s.type)}</span><span>${DAYS[dow(s.date)]} ${fmtD(s.date)}</span></li>`).join('')}</ul>` : '<p class="muted">עדיין אין אימונים שסומנו.</p>'}</div>`;
 };
+function bump(w) { const m = String(w || '').match(/\d+(\.\d+)?/); if (!m || !progressDue()) return ''; const v = +m[0], r = x => Math.round(x * 2) / 2; return `השבוע: ${r(v * 1.025)} עד ${r(v * 1.05)}`; }
+const progressDue = () => D.progressAck !== weekStart(today());
 V.cal = () => {
   const t = today(), mode = sub.cal || 'week';
   let start, len;
@@ -369,13 +382,13 @@ V.cal = () => {
     cells += `<div class="c ${st.st} ${d === t ? 'today' : ''} ${month != null && parse(d).getMonth() !== month ? 'out' : ''}" data-day="${d}"><b>${parse(d).getDate()}</b>${st.st ? `<i>${st.type ? 'אימון ' + L(st.type) : lbl[st.st]}</i>` : ''}</div>`; }
   const title = mode === 'week' ? `${fmtD(start)} עד ${fmtD(addDays(start, 13))}` : (() => { const d = parse(t); d.setMonth(d.getMonth() + (sub.off || 0)); return MONTHS[d.getMonth()] + ' ' + d.getFullYear(); })();
   const up = upcoming(4);
-  return `<h1>לוח אימונים</h1><p class="sub">אימון שפספסת עובר לבד ליום האימון הפנוי הבא, והסדר א, ב, ג נשמר.</p>
+  return `<h1>לוח אימונים</h1><p class="sub">ראשון אימון א, שלישי אימון ב, חמישי אימון א. אימון שדחית עובר ליום שאחריו. לחיצה על יום פותחת אפשרויות.</p>
   <div class="seg"><button class="${mode === 'week' ? 'on' : ''}" data-cal="week">שבועיים</button><button class="${mode === 'month' ? 'on' : ''}" data-cal="month">חודש</button></div>
   <div class="card"><div class="row between"><button class="btn sec small" data-off="-1">→</button><b>${title}</b><button class="btn sec small" data-off="1">←</button></div>
    <div class="cal mt12">${DSHORT.map(x => `<div class="dn">${x}</div>`).join('')}${cells}</div>
    <div class="legend"><span class="pill g">הושלם</span><span class="pill b">מתוכנן</span><span class="pill o">נדחה</span><span class="pill r">הוחמץ</span><span class="pill">דילגת</span></div></div>
   <div class="card"><h2>הבאים בתור</h2><ul class="list">${up.map(u => `<li><span>${esc(D.plan[u.type].name)}</span><span>${DAYS[dow(u.date)]} ${fmtD(u.date)}</span></li>`).join('')}</ul></div>
-  <div class="card"><h2>ימי אימון קבועים</h2><div class="row" style="flex-wrap:wrap;gap:6px">${DAYS.map((n, i) => `<button class="btn small ${D.days.includes(i) ? '' : 'sec'}" data-wd="${i}">${n}</button>`).join('')}</div></div>`;
+  <div class="card"><h2>ימי אימון קבועים</h2>${[0, 1, 2, 3, 4, 5, 6].map(i => `<div class="row between" style="padding:6px 0"><span>${DAYS[i]}</span><div class="row" style="gap:6px">${[['', 'מנוחה'], ['A', 'א'], ['B', 'ב']].map(([k, l]) => `<button class="btn small ${(D.dayPlan[i] || '') === k ? '' : 'sec'}" data-wd="${i},${k}">${l}</button>`).join('')}</div></div>`).join('')}</div>`;
 };
 V.body = () => {
   const B = D.body.slice().sort((a, b) => a.date.localeCompare(b.date)), k = sub.m || 'weight';
@@ -466,7 +479,7 @@ function markDone(type) {
   const doIt = d => { D.sessions.push({ id: uid(), date: d, type, status: 'done', endedAt: new Date().toISOString(), ex: [] }); delete D.postponed[d]; save(true); go('home'); toast('כל הכבוד! האימון נרשם 💪'); };
   const onDay = d => { if (sessOn(d).some(x => x.status === 'done')) ask('כבר סימנת אימון ביום הזה. לסמן עוד אימון באותו יום?', 'כן, לסמן', 'לא', () => doIt(d)); else doIt(d); };
   // late at night or the day after: ask which day it was (yesterday was a training day and nothing was marked)
-  const yOpen = (D.days.includes(dow(y)) || D.extra[y]) && !sessOn(y).some(x => x.status === 'done');
+  const yOpen = planned(y) && !sessOn(y).some(x => x.status === 'done');
   if (yOpen && !sessOn(t).some(x => x.status === 'done')) {
     return sheet(`<h2>מתי עשית את האימון?</h2><div class="row mt12"><button class="btn" id="dy">אתמול, יום ${DAYS[dow(y)]}</button><button class="btn sec" id="dt">היום</button></div><button class="btn sec mt8" data-close>ביטול</button>`,
       el => { el.querySelector('#dy').onclick = () => { el.remove(); onDay(y); }; el.querySelector('#dt').onclick = () => { el.remove(); onDay(t); }; });
@@ -479,9 +492,9 @@ function aiSummary() {
   const missed = []; for (let i = 1; i <= 28; i++) { const d = addDays(t, -i); if (dayStatus(d).st === 'miss') missed.push(d); }
   const body = D.body.slice().sort((a, b) => a.date.localeCompare(b.date)).slice(-12).map(b => `${b.date}: ` + ['weight', 'waist', 'chest', 'arm', 'thigh', 'fat'].filter(k => b[k]).map(k => ({ weight: 'משקל', waist: 'בטן', chest: 'חזה', arm: 'זרוע', thigh: 'ירך', fat: 'שומן%' })[k] + ' ' + b[k]).join(', ')).join('\n');
   const food = []; for (let i = 0; i < 14; i++) { const d = addDays(t, -i), f = D.food[d]; if (f && (f.kcal || f.protein || f.steps || f.water)) food.push(`${d}: קלוריות ${f.kcal || '-'}, חלבון ${f.protein || '-'}, מים ${f.water || '-'}, צעדים ${f.steps || '-'}`); }
-  const plan = SEQ.map(k => `אימון ${k} (${D.plan[k].name}): ` + D.plan[k].ex.map(e => `${e.name} ${e.sets}x${e.reps}${e.unit === 'שניות' ? ' שניות' : ''}${e.w ? ' (' + e.w + ')' : ''}`).join('; ')).join('\n');
+  const plan = SEQ.map(k => `${D.plan[k].name} (${D.plan[k].focus}): ` + D.plan[k].ex.map(e => `${e.name} ${e.sets}x${e.reps}${e.unit === 'שניות' ? ' שניות' : ''}${e.w ? ' (' + e.w + ')' : ''}`).join('; ')).join('\n');
   return `היום: ${t} (יום ${DAYS[dow(t)]}). התחלת מעקב: ${D.start}.
-פרופיל: גיל ${D.profile.age}, גובה ${D.profile.height} ס"מ, מטרה: ${D.profile.goal}. ${D.profile.freq} אימונים בשבוע (${D.days.map(i => DAYS[i]).join(', ')}). ${D.profile.type}. ${D.profile.activity}. ממוצע צעדים בהתחלה ${D.profile.stepsBase}.
+פרופיל: גיל ${D.profile.age}, גובה ${D.profile.height} ס"מ, מטרה: ${D.profile.goal}. ${D.profile.freq} אימונים בשבוע (${Object.keys(D.dayPlan).map(i => DAYS[i] + ' ' + D.plan[D.dayPlan[i]].name).join(', ')}). (${D.days.map(i => DAYS[i]).join(', ')}). ${D.profile.type}. ${D.profile.activity}. ממוצע צעדים בהתחלה ${D.profile.stepsBase}.
 יעדים יומיים: ${D.targets.kcal} קלוריות, ${D.targets.protein} גרם חלבון, ${D.targets.carbs} גרם פחמימות, ${D.targets.fat} גרם שומן, ${D.targets.water} ליטר מים, ${D.targets.steps} צעדים.
 תוכנית האימונים:
 ${plan}
@@ -494,7 +507,7 @@ ${body || 'אין'}
 ${food.join('\n') || 'לא הוזן'}`;
 }
 const SYS = () => `אתה מאמן כושר אישי של משתמש אחד, ועונה רק בעברית פשוטה וברורה, בלי מילים באנגלית ובלי מקפים ארוכים.
-כללים: תתבסס על הנתונים שלמטה ולא על תשובות כלליות. לכל המלצה תן הסבר קצר: מה ראית בנתונים ולמה. אל תשנה בעצמך את התוכנית או את היעדים; אם כדאי לשנות משהו, הצע ושאל אם לאשר. אם חסרים נתונים, אמור מה חסר. אם יש כאב או פציעה, המלץ לפנות לרופא או לפיזיותרפיסט. תהיה ממוקד ומעשי.
+שיטת ההתקדמות של המשתמש: כל שבוע מעלה משקל בערך 2.5% עד 5% בתרגילים שהרגישו קלים. כללים: תתבסס על הנתונים שלמטה ולא על תשובות כלליות. לכל המלצה תן הסבר קצר: מה ראית בנתונים ולמה. אל תשנה בעצמך את התוכנית או את היעדים; אם כדאי לשנות משהו, הצע ושאל אם לאשר. אם חסרים נתונים, אמור מה חסר. אם יש כאב או פציעה, המלץ לפנות לרופא או לפיזיותרפיסט. תהיה ממוקד ומעשי.
 הנתונים:
 ${aiSummary()}`;
 async function askAI(kind, messages) {
@@ -534,11 +547,11 @@ function planSheet(type) {
   const draw = el => {
     el.querySelector('.box').innerHTML = `<h2>עריכת ${esc(P.name)}</h2><label class="f">שם האימון</label><input class="in" id="pn" value="${esc(P.name)}"><label class="f mt8">מה עובדים</label><input class="in" id="pf" value="${esc(P.focus)}">
      <div class="mt12">${P.ex.map((e, i) => `<div class="card" style="padding:12px"><input class="in" data-e="${i},name" value="${esc(e.name)}">
-       <div class="fg mt8" style="grid-template-columns:1fr 1fr 1fr"><div><label class="f">שריר</label><input class="in" data-e="${i},muscle" value="${esc(e.muscle)}"></div><div><label class="f">סטים</label><input class="in" data-e="${i},sets" value="${esc(e.sets)}" inputmode="numeric"></div><div><label class="f">${e.unit === 'שניות' ? 'שניות' : 'חזרות'}</label><input class="in" data-e="${i},reps" value="${esc(e.reps)}"></div></div>
+       <div class="fg mt8" style="grid-template-columns:1fr 1fr 1fr"><div><label class="f">שריר</label><input class="in" data-e="${i},muscle" value="${esc(e.muscle)}"></div><div><label class="f">סטים</label><input class="in" data-e="${i},sets" value="${esc(e.sets)}"></div><div><label class="f">${e.unit === 'שניות' ? 'שניות' : 'חזרות'}</label><input class="in" data-e="${i},reps" value="${esc(e.reps)}"></div></div>
        <div class="fg mt8"><div><label class="f">משקל (לא חובה)</label><input class="in" data-e="${i},w" value="${esc(e.w || '')}" placeholder="למשל 40 ק&quot;ג"></div><div><label class="f">הערה</label><input class="in" data-e="${i},note" value="${esc(e.note || '')}"></div></div>
        <div class="row mt8"><button class="btn sec small" data-mv="${i},-1">↑</button><button class="btn sec small" data-mv="${i},1">↓</button><button class="btn danger small" data-rm="${i}">מחיקה</button></div></div>`).join('')}</div>
      <button class="btn sec" id="addex">+ תרגיל חדש</button><div class="row mt12"><button class="btn" id="ps">שמירה</button><button class="btn sec" data-close>סגירה</button></div>`;
-    const read = () => { P.name = el.querySelector('#pn').value; P.focus = el.querySelector('#pf').value; el.querySelectorAll('[data-e]').forEach(i => { const [n, k] = i.dataset.e.split(','); P.ex[+n][k] = k === 'sets' ? (+i.value || 1) : i.value; }); };
+    const read = () => { P.name = el.querySelector('#pn').value; P.focus = el.querySelector('#pf').value; el.querySelectorAll('[data-e]').forEach(i => { const [n, k] = i.dataset.e.split(','); P.ex[+n][k] = k === 'sets' ? (isNaN(i.value) || i.value === '' ? (i.value || '3') : +i.value) : i.value; }); };
     el.querySelector('#addex').onclick = () => { read(); P.ex.push(ex('תרגיל חדש', '', 3, '10-12')); draw(el); };
     el.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { read(); P.ex.splice(+b.dataset.rm, 1); draw(el); });
     el.querySelectorAll('[data-mv]').forEach(b => b.onclick = () => { read(); const [i, d] = b.dataset.mv.split(',').map(Number), j = i + d; if (j < 0 || j >= P.ex.length) return; [P.ex[i], P.ex[j]] = [P.ex[j], P.ex[i]]; draw(el); });
@@ -552,11 +565,11 @@ function dayMenu(d) {
    ${ss.filter(s => s.status === 'done').map(s => `<button class="btn sec mt8" data-vs="${s.id}">לראות את האימון</button>`).join('')}
    ${d >= t && st.st === 'plan' ? `<button class="btn sec mt8" id="pp">לדחות ליום הבא</button>` : ''}
    ${d >= t && D.postponed[d] ? `<button class="btn sec mt8" id="up">לבטל את הדחייה</button>` : ''}
-   ${d > t && !isTrainDay(d) && !D.postponed[d] ? `<button class="btn sec mt8" id="ex">להוסיף אימון ביום הזה</button>` : ''}
+   ${d > t && !isTrainDay(d) && !D.postponed[d] ? `<div class="row mt8"><button class="btn sec" id="ex">להוסיף אימון א</button><button class="btn sec" id="exb">להוסיף אימון ב</button></div>` : ''}
    ${D.extra[d] && d >= t ? `<button class="btn sec mt8" id="rx">להסיר את האימון הנוסף</button>` : ''}
    <button class="btn sec mt12" data-close>סגירה</button>`, el => {
     const on = (id, f) => { const b = el.querySelector('#' + id); if (b) b.onclick = () => { f(); save(); el.remove(); render(); }; };
-    on('pp', () => postpone(d)); on('up', () => { delete D.postponed[d]; }); on('ex', () => { D.extra[d] = true; }); on('rx', () => { delete D.extra[d]; });
+    on('pp', () => postpone(d)); on('up', () => { delete D.postponed[d]; }); on('ex', () => { D.extra[d] = 'A'; }); on('exb', () => { D.extra[d] = 'B'; }); on('rx', () => { delete D.extra[d]; });
     el.querySelectorAll('[data-vs]').forEach(b => b.onclick = () => { el.remove(); viewSession(b.dataset.vs); });
   });
 }
@@ -581,7 +594,7 @@ function healthSheet() {
   };
   const el = sheet(''); draw(el);
 }
-function postpone(d) { D.postponed[d] = true; const n = addDays(d, 1); if (!isTrainDay(n)) D.extra[n] = true; }
+function postpone(d) { const tp = typeFor(d); D.postponed[d] = true; const n = addDays(d, 1); if (!isTrainDay(n)) D.extra[n] = tp; }
 function viewSession(id) {
   const s = D.sessions.find(x => x.id === id); if (!s) return;
   sheet(`<h2>${esc(D.plan[s.type] ? D.plan[s.type].name : s.type)}</h2><p class="muted">${DAYS[dow(s.date)]} ${fmtD(s.date)}${s.mins ? ' · ' + s.mins + ' דקות' : ''}</p>
@@ -600,7 +613,7 @@ document.addEventListener('click', async e => {
   if (ds.cal) { sub.cal = ds.cal; sub.off = 0; return render(); }
   if (ds.off) { sub.off = (sub.off || 0) + +ds.off; return render(); }
   if (ds.day) return dayMenu(ds.day);
-  if (ds.wd != null) { const i = +ds.wd; D.days = D.days.includes(i) ? D.days.filter(x => x !== i) : D.days.concat(i).sort(); save(); return render(); }
+  if (ds.wd != null) { const [i, k] = ds.wd.split(','); if (k) D.dayPlan[i] = k; else delete D.dayPlan[i]; D.days = Object.keys(D.dayPlan).map(Number).sort(); D.profile.freq = D.days.length; save(); return render(); }
   if (ds.m) { sub.m = ds.m; return render(); }
   if (ds.fd) { if (ds.fd > today()) return; sub.fd = ds.fd; return render(); }
   if (ds.add) { const [k, v] = ds.add.split(','); const f = foodDay(sub.fd || today()); f[k] = +(((+f[k] || 0) + +v).toFixed(2)); save(); return render(); }
@@ -613,6 +626,7 @@ document.addEventListener('click', async e => {
     save(); return render(); }
   const a = ds.act;
   if (a === 'markdone') return markDone(ds.type);
+  if (a === 'progack') { D.progressAck = weekStart(today()); save(); return render(); }
   if (a === 'showplan') { view = 'train'; sub = { plan: ds.type }; render(); return scrollTo(0, 0); }
   if (a === 'resume') return go('train');
   if (a === 'postpone') { postpone(ds.date); save(); render(); return toast('האימון עבר ליום הבא'); }
