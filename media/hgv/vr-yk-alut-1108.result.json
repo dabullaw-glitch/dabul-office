@@ -1,0 +1,82 @@
+{
+ "ok": true,
+ "duration": 46.2,
+ "bytes": 47308523,
+ "style": "boxed",
+ "theme": "boxed-navy",
+ "build": {
+  "fix": {
+   "r": 0.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0,
+   "b": 1.0,
+   "why": "none needed"
+  },
+  "style": "boxed",
+  "theme": "boxed-navy",
+  "clips": 1,
+  "body": 43.33,
+  "total": 46.13,
+  "captions": 42,
+  "sfx": 12,
+  "layout": {
+   "hook": [
+    "chin",
+    1.0,
+    0
+   ],
+   "costs": [
+    "band",
+    0.997,
+    0
+   ],
+   "tax": [
+    "band",
+    1.0,
+    0
+   ],
+   "calc": [
+    "band",
+    1.0,
+    0
+   ],
+   "sum": [
+    "band",
+    0.928,
+    0
+   ],
+   "step": [
+    "band",
+    1.0,
+    0
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 98,
+  "mode": "aligned 88 of 98",
+  "start": 0.0,
+  "end": 43.16
+ },
+ "resolve": {
+  "beats": 8,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    43.61
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n18 segments",
+ "at": "2026-11-08T12:26:18Z",
+ "cover": "vr-yk-alut-1108.cover.jpg",
+ "coverSec": 1.0
+}
