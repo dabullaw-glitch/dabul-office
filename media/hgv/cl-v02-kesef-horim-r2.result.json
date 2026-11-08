@@ -1,0 +1,72 @@
+{
+  "ok": true,
+  "duration": 35.900000,
+  "bytes": 36603961,
+  "style": "boxed",
+  "theme": "boxed-navy",
+  "build": {
+    "fix": {
+      "r": 0.0,
+      "dx": 0.0,
+      "dy": 0.0,
+      "s": 1.0,
+      "b": 1.0,
+      "why": "none needed"
+    },
+    "style": "boxed",
+    "theme": "boxed-navy",
+    "clips": 1,
+    "body": 33.01,
+    "total": 35.81,
+    "captions": 35,
+    "sfx": 10,
+    "layout": {
+      "hook": [
+        "chin",
+        1.0,
+        0
+      ],
+      "gift": [
+        "push",
+        1.0,
+        186
+      ],
+      "half": [
+        "push",
+        1.0,
+        145
+      ],
+      "doc": [
+        "chin",
+        1.0,
+        0
+      ],
+      "mamon": [
+        "chin",
+        1.0,
+        0
+      ],
+      "cta": [
+        "low",
+        null,
+        null
+      ]
+    }
+  },
+  "align": {
+    "words": "from job"
+  },
+  "resolve": {
+    "beats": 6,
+    "missed": [],
+    "keep": [
+      [
+        0.45,
+        33.2
+      ]
+    ]
+  },
+  "warnings": "",
+  "whisper": "",
+  "at": "2026-11-08T19:22:30Z"
+}

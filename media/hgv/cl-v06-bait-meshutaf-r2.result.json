@@ -1,0 +1,77 @@
+{
+  "ok": true,
+  "duration": 49.900000,
+  "bytes": 52452730,
+  "style": "v3",
+  "theme": "mono",
+  "build": {
+    "fix": {
+      "r": 0.0,
+      "dx": 0.0,
+      "dy": 0.0,
+      "s": 1.0,
+      "b": 1.0,
+      "why": "none needed"
+    },
+    "style": "v3",
+    "theme": "mono",
+    "clips": 4,
+    "body": 47.04,
+    "total": 49.84,
+    "captions": 44,
+    "sfx": 12,
+    "layout": {
+      "hook": [
+        "chin",
+        1.0,
+        0
+      ],
+      "name": [
+        "low",
+        null,
+        null
+      ],
+      "parcel": [
+        "chin",
+        1.0,
+        0
+      ],
+      "what": [
+        "chin",
+        0.724,
+        0
+      ],
+      "me": [
+        "chin",
+        1.0,
+        0
+      ],
+      "nesach": [
+        "chin",
+        0.857,
+        0
+      ],
+      "cta": [
+        "low",
+        null,
+        null
+      ]
+    }
+  },
+  "align": {
+    "words": "from job"
+  },
+  "resolve": {
+    "beats": 7,
+    "missed": [],
+    "keep": [
+      [
+        0.35,
+        52.0
+      ]
+    ]
+  },
+  "warnings": "",
+  "whisper": "",
+  "at": "2026-11-08T19:37:37Z"
+}

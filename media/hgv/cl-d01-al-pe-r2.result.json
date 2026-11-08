@@ -1,0 +1,72 @@
+{
+  "ok": true,
+  "duration": 30.600000,
+  "bytes": 25586027,
+  "style": "cinematic",
+  "theme": "cinematic-gold",
+  "build": {
+    "fix": {
+      "r": 0.0,
+      "dx": 0.0,
+      "dy": 0.0,
+      "s": 1.0,
+      "b": 1.0,
+      "why": "none needed"
+    },
+    "style": "cinematic",
+    "theme": "cinematic-gold",
+    "clips": 1,
+    "body": 27.71,
+    "total": 30.51,
+    "captions": 24,
+    "sfx": 10,
+    "layout": {
+      "hook": [
+        "band",
+        0.839,
+        0
+      ],
+      "name": [
+        "low",
+        null,
+        null
+      ],
+      "rule": [
+        "full",
+        1.0,
+        null
+      ],
+      "list": [
+        "full",
+        1.0,
+        null
+      ],
+      "fix": [
+        "full",
+        1.0,
+        null
+      ],
+      "cta": [
+        "low",
+        null,
+        null
+      ]
+    }
+  },
+  "align": {
+    "words": "from job"
+  },
+  "resolve": {
+    "beats": 6,
+    "missed": [],
+    "keep": [
+      [
+        0.3,
+        27.7
+      ]
+    ]
+  },
+  "warnings": "",
+  "whisper": "",
+  "at": "2026-11-08T19:08:45Z"
+}
