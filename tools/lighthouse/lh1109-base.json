@@ -1,0 +1,114 @@
+{
+ "url": "https://dabullaw.co.il/?dbltest=base1109b",
+ "preset": "mobile",
+ "at": "2026-11-09T09:03:21.144Z",
+ "runs": [
+  {
+   "score": 75,
+   "fcp": 1872.004,
+   "lcp": 2513.004,
+   "si": 2349.933894751094,
+   "tbt": 902.5000000000002,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-5e44dc0d-2580-4806-8bc2-41c0ce465f75=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     194
+    ],
+    [
+     "resourceLoadDelay",
+     119
+    ],
+    [
+     "resourceLoadDuration",
+     156
+    ],
+    [
+     "elementRenderDelay",
+     357
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 350108,
+   "docBytes": 158463
+  },
+  {
+   "score": 95,
+   "fcp": 1723.404,
+   "lcp": 2141.6,
+   "si": 1723.404,
+   "tbt": 196.5,
+   "cls": 0.00882879664092339,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-5e44dc0d-2580-4806-8bc2-41c0ce465f75=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     56
+    ],
+    [
+     "resourceLoadDelay",
+     47
+    ],
+    [
+     "resourceLoadDuration",
+     36
+    ],
+    [
+     "elementRenderDelay",
+     140
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0.009,
+     "<div id=\"dbl-cbar\" role=\"navigation\" aria-label=\"יצירת קשר מהירה\">",
+     "body.rtl > div#dbl-cbar",
+     ""
+    ]
+   ],
+   "bytes": 350214,
+   "docBytes": 158473
+  },
+  {
+   "score": 95,
+   "fcp": 1623.2000000000003,
+   "lcp": 2131.9240000000004,
+   "si": 1623.2000000000003,
+   "tbt": 218.86199999999985,
+   "cls": 0.00882879664092339,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-5e44dc0d-2580-4806-8bc2-41c0ce465f75=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     34
+    ],
+    [
+     "resourceLoadDelay",
+     29
+    ],
+    [
+     "resourceLoadDuration",
+     20
+    ],
+    [
+     "elementRenderDelay",
+     174
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0.009,
+     "<div id=\"dbl-cbar\" role=\"navigation\" aria-label=\"יצירת קשר מהירה\">",
+     "body.rtl > div#dbl-cbar",
+     ""
+    ]
+   ],
+   "bytes": 350216,
+   "docBytes": 158476
+  }
+ ]
+}
