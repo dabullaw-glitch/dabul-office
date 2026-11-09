@@ -151,6 +151,8 @@
     function checkVal(f, v) {
       var empty = v == null || v === '' || (Array.isArray(v) && !v.length);
       if (empty) return f.req ? 'צריך למלא' : '';
+      // 9.11.2026: a day without a time is not a choice (the server refused it only at the last step)
+      if (f.t === 'slot' && !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$|^later$/.test(String(v))) return 'צריך לבחור שעה';
       if (f.fmt === 'id' && !idOk(v)) return 'מספר תעודת זהות לא תקין';
       if (f.fmt === 'phone' && !phoneOk(v)) return 'מספר טלפון לא תקין';
       if (f.fmt === 'email' && !emailOk(v)) return 'כתובת מייל לא תקינה';
@@ -316,8 +318,7 @@
         else st.slots = make();
       }
       draw();
-      // keep only a full date + time as a valid choice
-      var orig = f.req; f.req = orig;
+      // only a full date + time (or "later") is a valid choice: see checkVal
     }
     function renderContact() {
       if (svc.sign === 'meet') {
