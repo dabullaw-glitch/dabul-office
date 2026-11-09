@@ -1,0 +1,86 @@
+{
+ "phone-a": {
+  "errors": [
+   "t.composedPath(...)[0].getRootNode is not a function"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "מקצועיות. ניסיון. תוצאות"
+  },
+  "h": 20056,
+  "w": 412,
+  "invisible": [],
+  "styles": 101,
+  "links": 16
+ },
+ "phone-b": {
+  "errors": [
+   "t.composedPath(...)[0].getRootNode is not a function"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "מקצועיות. ניסיון. תוצאות"
+  },
+  "h": 20056,
+  "w": 412,
+  "invisible": [],
+  "styles": 101,
+  "links": 16
+ },
+ "computer-a": {
+  "errors": [
+   "t.composedPath(...)[0].getRootNode is not a function"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "מקצועיות. ניסיון. תוצאות"
+  },
+  "h": 15469,
+  "w": 1366,
+  "invisible": [],
+  "styles": 107,
+  "links": 16
+ },
+ "computer-b": {
+  "errors": [
+   "t.composedPath(...)[0].getRootNode is not a function"
+  ],
+  "panel": {
+   "visible": true,
+   "langItems": [
+    "עברית",
+    "English",
+    "Français",
+    "العربية",
+    "Русский"
+   ],
+   "title": "מקצועיות. ניסיון. תוצאות"
+  },
+  "h": 15469,
+  "w": 1366,
+  "invisible": [],
+  "styles": 107,
+  "links": 16
+ }
+}
