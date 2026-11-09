@@ -1,0 +1,31 @@
+name: page measure
+# 9.11.2026: positions and heights of the page sections on a phone and a computer (before and after a visitor's touch).
+# Saves tools/visual/<name>/measure.json. Used to check speed changes keep every section in its place.
+on:
+  workflow_dispatch:
+    inputs:
+      url: { description: 'page address', required: true, default: 'https://dabullaw.co.il/' }
+      name: { description: 'result folder', required: true, default: 'measure' }
+permissions:
+  contents: write
+concurrency: { group: visual, cancel-in-progress: false }
+jobs:
+  m:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Measure
+        run: |
+          cd tools/office-video && npm install --no-audit --no-fund && npx playwright install --with-deps chromium && cd ../..
+          cp tools/visual/measure.mjs tools/office-video/measure.mjs
+          node tools/office-video/measure.mjs "${{ inputs.url }}" "${{ inputs.name }}" || true
+          rm tools/office-video/measure.mjs
+      - name: Save
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add tools/visual
+          git commit -qm "page measure: ${{ inputs.name }}" || exit 0
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
