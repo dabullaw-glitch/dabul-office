@@ -81,7 +81,7 @@
   // ---------- list ----------
   function listView() {
     const tab = s.ui('chk', 't', 'open');
-    const A = all().sort((a, b) => String(b.paidAt || b.created || '').localeCompare(String(a.paidAt || a.created || '')));
+    const A = all().filter(o => !o.test).sort((a, b) => String(b.paidAt || b.created || '').localeCompare(String(a.paidAt || a.created || '')));
     const F = { open: A.filter(o => o.status === 'paid' || o.status === 'working'), pending: A.filter(o => o.status === 'pending'), sent: A.filter(o => o.status === 'sent'), all: A }[tab] || A;
     const cnt = k => ({ open: A.filter(o => o.status === 'paid' || o.status === 'working').length, pending: A.filter(o => o.status === 'pending').length, sent: A.filter(o => o.status === 'sent').length, all: A.length })[k];
     const month = new Date().toISOString().slice(0, 7);
