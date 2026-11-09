@@ -63,3 +63,6 @@ https://dabullaw.co.il/magazine/ (page id 7776). NOTHING goes out without Yakir'
    reason: what changed, the exact new fact with its date, "להוסיף קישור לעמוד הגיליון <page>", and the source URL for
    checking only (never linked on the site)}. Skip a target that already has a queued upq item from 'magazine'.
    The existing-pages task sends each update to Yakir for approval, as always. At most 2 a week.
+
+## Opening web sources in an unattended run (9.11.2026, Yakir approved)
+Never WebFetch a URL written from memory or built by hand: in a scheduled run such a call waits for an approval nobody gives, and fails (on 9.11.2026 the article task wrote nothing because of this). First run WebSearch, and WebFetch only URLs that appeared in its results in this run. If a page is still blocked or WebFetch fails, open it through the database instead (Supabase project mgjmnvpnovkewvqevjmz): `select r.status, r.content from extensions.http(('GET','<url>',ARRAY[extensions.http_header('User-Agent','Mozilla/5.0')],null,null)::extensions.http_request) r` and read the text from the HTML. Tested 9.11.2026: Wikisource, Wikipedia and Nevo work this way; kolzchut and gov.il refuse it (403), so open those only via WebSearch then WebFetch. Never stop a run only because one source is blocked: use another reliable source.

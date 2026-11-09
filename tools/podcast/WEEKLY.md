@@ -69,3 +69,6 @@ shape of every field and the spoken style of the script).
    with chat_id (select v from app_secrets where k='TELEGRAM_CHAT_ID')).
 8. **Log**: docs_merge('agents','podcast-weekly-'||current_date, {episode, topic, releaseDate, words, sources: count,
    telegram}). Finish with a two-line Hebrew summary.
+
+## Opening web sources in an unattended run (9.11.2026, Yakir approved)
+Never WebFetch a URL written from memory or built by hand: in a scheduled run such a call waits for an approval nobody gives, and fails (on 9.11.2026 the article task wrote nothing because of this). First run WebSearch, and WebFetch only URLs that appeared in its results in this run. If a page is still blocked or WebFetch fails, open it through the database instead (Supabase project mgjmnvpnovkewvqevjmz): `select r.status, r.content from extensions.http(('GET','<url>',ARRAY[extensions.http_header('User-Agent','Mozilla/5.0')],null,null)::extensions.http_request) r` and read the text from the HTML. Tested 9.11.2026: Wikisource, Wikipedia and Nevo work this way; kolzchut and gov.il refuse it (403), so open those only via WebSearch then WebFetch. Never stop a run only because one source is blocked: use another reliable source.
