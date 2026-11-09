@@ -1,0 +1,114 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "mobile",
+ "at": "2026-11-09T08:46:13.289Z",
+ "runs": [
+  {
+   "score": 80,
+   "fcp": 1770.796,
+   "lcp": 2289.7960000000003,
+   "si": 1931.590501236679,
+   "tbt": 729.0000000000005,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-66323940-a925-4da0-85cf-54edbd31c04f=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     116
+    ],
+    [
+     "resourceLoadDelay",
+     109
+    ],
+    [
+     "resourceLoadDuration",
+     37
+    ],
+    [
+     "elementRenderDelay",
+     269
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 350218,
+   "docBytes": 158462
+  },
+  {
+   "score": 95,
+   "fcp": 1611.9699999999998,
+   "lcp": 1992.7149999999997,
+   "si": 1611.9699999999998,
+   "tbt": 200.5,
+   "cls": 0.00004763208281266191,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-66323940-a925-4da0-85cf-54edbd31c04f=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     64
+    ],
+    [
+     "resourceLoadDelay",
+     16
+    ],
+    [
+     "resourceLoadDuration",
+     31
+    ],
+    [
+     "elementRenderDelay",
+     160
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-a0e701d elementor-widget elementor-wid…\" data-id=\"a0e701d\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div#content > div.elementor-element > div.elementor-element > div.elementor-element",
+     ""
+    ]
+   ],
+   "bytes": 350201,
+   "docBytes": 158464
+  },
+  {
+   "score": 94,
+   "fcp": 1632.091,
+   "lcp": 2013.3,
+   "si": 1632.091,
+   "tbt": 254.5,
+   "cls": 0.00004763208281266191,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-66323940-a925-4da0-85cf-54edbd31c04f=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     63
+    ],
+    [
+     "resourceLoadDelay",
+     57
+    ],
+    [
+     "resourceLoadDuration",
+     40
+    ],
+    [
+     "elementRenderDelay",
+     157
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-a0e701d elementor-widget elementor-wid…\" data-id=\"a0e701d\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div#content > div.elementor-element > div.elementor-element > div.elementor-element",
+     "https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2"
+    ]
+   ],
+   "bytes": 350235,
+   "docBytes": 158471
+  }
+ ]
+}
