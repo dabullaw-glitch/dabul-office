@@ -184,14 +184,16 @@ async function paid(url: URL, req: Request) {
   const id = clip(url.searchParams.get('id'), 40), k = clip(url.searchParams.get('k'), 40);
   const o = id ? await getDoc('svc', id) : null;
   if (!o || !o.payKey || k !== o.payKey) return json({ ok: false }, 404);
-  if (o.status === 'paid' || o.paidAt) return json({ ok: true, again: true });
+  if (o.status === 'paid' || o.paidAt) { if (!o.calEventId) await addToCalendar(id, o).catch((e) => { console.error(e); return ''; }); return json({ ok: true, again: true }); }
   // deno-lint-ignore no-explicit-any
   const p: any = await req.json().catch(() => ({}));
   const now = new Date().toISOString();
   await merge('svc', id, { status: 'paid', paidAt: now, payment: { amount: p.amount ?? o.price.total, doc: p.documentId || p.id || '', ref: clip(p.transactionId || p.reference || '', 80) },
     log: (o.log || []).concat([{ at: now, kind: 'paid', text: 'התשלום התקבל במורנינג' }]) });
   if (o.svc === 'precheck') await admin().rpc('docs_merge', { p_coll: 'chk', p_id: id, p_patch: { status: 'paid', paidAt: now } });
-  if (o.clientId) await admin().from('docs').insert({ coll: 'notes', id: 'n-' + Date.now().toString(36) + rand(4).toLowerCase(), data: { refType: 'client', refId: o.clientId, kind: 'system', date: now, text: `התקבל תשלום ${ils(o.price.total)} עבור ${o.title} (הזמנה מהאתר ${id})` } }).catch(() => null);
+  // 9.11.2026: the database call is not a promise with .catch (that crashed this callback after every payment, so no
+  // Telegram and nothing after it ran)
+  if (o.clientId) { const { error: ne } = await admin().from('docs').insert({ coll: 'notes', id: 'n-' + Date.now().toString(36) + rand(4).toLowerCase(), data: { refType: 'client', refId: o.clientId, kind: 'system', date: now, text: `התקבל תשלום ${ils(o.price.total)} עבור ${o.title} (הזמנה מהאתר ${id})` } }); if (ne) console.error(ne); }
   const ev = await addToCalendar(id, o).catch((e) => { console.error(e); return ''; });
   await telegram(`💳 שולם: ${o.title} · ${ils(o.price.total)}\n👤 ${o.c.name} · 📞 ${o.c.phone}${o.slot && o.slot !== 'later' ? `\n🗓 ${o.slot.split(' ')[0].split('-').reverse().join('.')} ${o.slot.split(' ')[1] || ''}${ev ? ' (נכנס ליומן)' : ' (⚠️ לא נכנס ליומן, צריך להוסיף ידנית)'}` : ''}${o.src && o.src.chName ? `\n📣 מקור: ${o.src.chName}` : ''}\nמספר: ${id}`).catch(() => false);
   return json({ ok: true });
