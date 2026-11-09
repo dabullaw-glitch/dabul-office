@@ -1,0 +1,35 @@
+name: lighthouse tasks (main-thread breakdown)
+# 9.11.2026: runs Lighthouse (same version and phone settings as lighthouse.yml) 2 times with the trace saved and writes, for
+# every main-thread task of 10ms or more, what the time went to (style, layout, which script line) to tools/lighthouse/<name>-tasks.json.
+on:
+  workflow_dispatch:
+    inputs:
+      url: { description: 'page address', required: true, default: 'https://dabullaw.co.il/' }
+      name: { description: 'result name', required: true, default: 'home-tasks' }
+permissions:
+  contents: write
+concurrency: { group: lighthouse, cancel-in-progress: false }
+jobs:
+  lh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Lighthouse x2 with traces
+        run: |
+          mkdir -p tools/lighthouse /tmp/lh
+          for i in 1 2; do
+            npx -y lighthouse@13.6.0 "${{ inputs.url }}" --only-categories=performance --save-assets --output=json --output-path=/tmp/lh/r$i.json --chrome-flags="--headless=new --no-sandbox" --quiet || true
+          done
+          echo '[' > tools/lighthouse/${{ inputs.name }}-tasks.json
+          for i in 1 2; do node tools/lighthouse/tasks.mjs /tmp/lh/r$i-0.trace.json /tmp/lh/r$i.json >> tools/lighthouse/${{ inputs.name }}-tasks.json || echo '{"error":1}' >> tools/lighthouse/${{ inputs.name }}-tasks.json; [ $i = 1 ] && echo ',' >> tools/lighthouse/${{ inputs.name }}-tasks.json; done
+          echo ']' >> tools/lighthouse/${{ inputs.name }}-tasks.json
+          gzip -c /tmp/lh/r1-0.trace.json > tools/lighthouse/${{ inputs.name }}-trace1.json.gz || true
+      - name: Save
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add tools/lighthouse
+          git commit -qm "lighthouse tasks: ${{ inputs.name }}" || exit 0
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
