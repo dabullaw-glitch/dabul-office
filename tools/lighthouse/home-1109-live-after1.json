@@ -1,0 +1,120 @@
+{
+ "url": "https://dabullaw.co.il/",
+ "preset": "mobile",
+ "at": "2026-11-09T09:37:51.683Z",
+ "runs": [
+  {
+   "score": 91,
+   "fcp": 1698.9009999999998,
+   "lcp": 2117.901,
+   "si": 1765.7522385679545,
+   "tbt": 323,
+   "cls": 0,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-00fd2b75-15df-437b-a044-76fcd2a14aed=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     259
+    ],
+    [
+     "resourceLoadDelay",
+     86
+    ],
+    [
+     "resourceLoadDuration",
+     35
+    ],
+    [
+     "elementRenderDelay",
+     163
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [],
+   "bytes": 350494,
+   "docBytes": 158993
+  },
+  {
+   "score": 99,
+   "fcp": 1580.2939999999999,
+   "lcp": 1978.6619999999998,
+   "si": 1580.2939999999999,
+   "tbt": 9.5,
+   "cls": 0.00004763208281266191,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-00fd2b75-15df-437b-a044-76fcd2a14aed=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     54
+    ],
+    [
+     "resourceLoadDelay",
+     48
+    ],
+    [
+     "resourceLoadDuration",
+     22
+    ],
+    [
+     "elementRenderDelay",
+     86
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-a0e701d elementor-widget elementor-wid…\" data-id=\"a0e701d\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div#content > div.elementor-element > div.elementor-element > div.elementor-element",
+     "https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2"
+    ]
+   ],
+   "bytes": 350641,
+   "docBytes": 158911
+  },
+  {
+   "score": 99,
+   "fcp": 1566.0330000000001,
+   "lcp": 2113.721,
+   "si": 1566.0330000000001,
+   "tbt": 6,
+   "cls": 0.008876428723736052,
+   "lcpEl": "<div class=\"dbl-ph\" data-rocket-lazy-bg-00fd2b75-15df-437b-a044-76fcd2a14aed=\"excluded\">",
+   "lcpParts": [
+    [
+     "timeToFirstByte",
+     37
+    ],
+    [
+     "resourceLoadDelay",
+     18
+    ],
+    [
+     "resourceLoadDuration",
+     16
+    ],
+    [
+     "elementRenderDelay",
+     83
+    ]
+   ],
+   "renderBlocking": [],
+   "shifts": [
+    [
+     0.009,
+     "<div id=\"dbl-cbar\" role=\"navigation\" aria-label=\"יצירת קשר מהירה\">",
+     "body.rtl > div#dbl-cbar",
+     ""
+    ],
+    [
+     0,
+     "<div class=\"elementor-element elementor-element-a0e701d elementor-widget elementor-wid…\" data-id=\"a0e701d\" data-element_type=\"widget\" data-e-type=\"widget\" data-",
+     "div#content > div.elementor-element > div.elementor-element > div.elementor-element",
+     "https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Bold.woff2|https://dabullaw.co.il/wp-content/uploads/2026/03/NotoSansHebrew-Light.woff2"
+    ]
+   ],
+   "bytes": 350672,
+   "docBytes": 158908
+  }
+ ]
+}
