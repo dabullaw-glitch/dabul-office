@@ -35,7 +35,7 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--refs', required=True); ap.add_argument('--days', type=int, default=14)
     ap.add_argument('--apply', action='store_true'); ap.add_argument('--log', help='saved git log --format=@%%ct --name-only output (for a shallow clone)'); o = ap.parse_args()
     refs = {l.strip() for l in open(o.refs) if l.strip()}
-    refs |= {m.split(':', 1)[1] if ':' in m else m for m in git('grep', '-hoE', r'media/[A-Za-z0-9_./-]+\.(mp4|mov|webm|jpg|jpeg|png|webp|mp3|wav|gif)', 'HEAD', '--',
+    refs |= {m.split(':', 1)[1] if ':' in m else m for m in git('grep', '-hoE', r'(media|tools/visual|fetched/shots)/[A-Za-z0-9_./-]+\.(mp4|mov|webm|jpg|jpeg|png|webp|mp3|wav|gif)', 'HEAD', '--',
              '.', ':!media/hgv/*.json', ':!media/reels-pub/*.json', ':!media/twin/*.json', ':!media/archived.txt').split()}
     if len(refs) < 20: sys.exit(f'only {len(refs)} references found; refusing to move anything')
     keep = {(os.path.dirname(r).replace('/check', ''), stem(r)) for r in refs}
