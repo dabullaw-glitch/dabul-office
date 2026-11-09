@@ -126,6 +126,8 @@
     function lim(f) { var r = f.lim && f.lim[st.a[f.lim.k]]; return r ? { min: r[0], max: r[1] } : { min: f.min || 0, max: f.max || 1 }; }
     var st = { a: {}, files: {}, meet: svc.sign === 'meet' ? 'office' : '', c: { name: '', phone: '', email: '', note: '' }, step: 0, agree: false, sending: false, done: null, slots: null, err: {} };
     try { var saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved && saved.a) { st.a = saved.a; st.c = saved.c || st.c; st.meet = saved.meet || st.meet; } } catch (e) { /* private mode */ }
+    // 9.11.2026: a time saved from an earlier visit is not restored (it may be taken by now); the free times are always fresh
+    var SLOT = null; svc.fields.forEach(function (f) { if (f.t === 'slot') { SLOT = f; delete st.a[f.k]; } });
     function save() { try { localStorage.setItem(KEY, JSON.stringify({ a: st.a, c: st.c, meet: st.meet })); } catch (e) { /* ignore */ } }
 
     // steps: the services' own steps, then "signing and details", then the summary
@@ -213,6 +215,7 @@
           b.onclick = function () {
             if (f.t === 'checks') { var arr = Array.isArray(st.a[f.k]) ? st.a[f.k].slice() : []; var i = arr.indexOf(o.v); if (i >= 0) arr.splice(i, 1); else arr.push(o.v); st.a[f.k] = arr; }
             else st.a[f.k] = o.v;
+            if (SLOT && SLOT.lenKey === f.k) { st.slots = null; delete st.a[SLOT.k]; }
             delete st.err[f.k]; render();
           };
           box.appendChild(b);
@@ -278,7 +281,7 @@
     function renderSlots(f, box) {
       function draw() {
         box.innerHTML = '';
-        if (!st.slots) { box.innerHTML = '<p class="sv-help">טוענים מועדים פנויים...</p>'; return; }
+        if (!st.slots) { box.innerHTML = '<p class="sv-help">טוענים את המועדים הפנויים מהיומן...</p>'; return; }
         if (!st.slots.length) { box.innerHTML = '<p class="sv-help">אין כרגע מועדים פנויים באתר. כתבו בתיאור מתי נוח לכם, ונחזור אליכם לקבוע.</p>'; st.a[f.k] = 'later'; return; }
         var cur = st.a[f.k] || '', curDay = cur.slice(0, 10);
         var days = el('div', 'sv-days');
@@ -294,14 +297,22 @@
           box.appendChild(times);
         }
       }
-      if (!st.slots) {
+      if (st.slots === null) {
         var make = function () {
-          var h = cfg.hours, out = [], d = new Date(), names = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+          // preview mode only (no server): example times from the configured hours
+          var h = cfg.hours, out = [], d = new Date(), names = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'], len = +(f.lenKey && st.a[f.lenKey]) || 30;
+          var tm = function (x) { var q = String(x).split(':'); return +q[0] * 60 + (+q[1] || 0); }, times = [];
+          for (var m = tm(h.from || '10:00'); m + len <= tm(h.to || '15:00'); m += (+h.step || 30)) times.push(('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2));
           d.setDate(d.getDate() + (h.notBefore || 1));
-          while (out.length < h.horizon) { if (h.days.indexOf(d.getDay()) >= 0) out.push({ date: d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2), dow: names[d.getDay()], label: d.getDate() + '.' + (d.getMonth() + 1), times: h.slots.slice() }); d.setDate(d.getDate() + 1); }
+          for (var i = 0; i < (h.horizonDays || 14); i++, d.setDate(d.getDate() + 1)) { if (h.days.indexOf(d.getDay()) >= 0) out.push({ date: d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2), dow: names[d.getDay()], label: d.getDate() + '.' + (d.getMonth() + 1), times: times.slice() }); }
           return out;
         };
-        if (fnUrl) fetch(fnUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'slots', svc: svc.id }) }).then(function (r) { return r.json(); }).then(function (j) { st.slots = j.days || make(); draw(); }).catch(function () { st.slots = make(); draw(); });
+        // 9.11.2026: the times come only from the server (Yakir's calendar). If it does not answer, no times are shown and
+        // the client writes when it suits them (never invented times).
+        if (fnUrl) { var want = f.lenKey ? (st.a[f.lenKey] || '30') : ''; st.slots = undefined;
+          fetch(fnUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'slots', svc: svc.id, len: want }) }).then(function (r) { return r.json(); })
+            .then(function (j) { if (f.lenKey && (st.a[f.lenKey] || '30') !== want) return; st.slots = Array.isArray(j.days) ? j.days : []; draw(); })
+            .catch(function () { st.slots = []; draw(); }); }
         else st.slots = make();
       }
       draw();
@@ -350,7 +361,7 @@
       if (rv.length) body.insertAdjacentHTML('beforeend', '<div class="sv-review"><b>נבדוק לפני תשלום.</b> לפי מה שמילאתם (' + esc(rv.join(', ')) + ') המקרה צריך בדיקה קצרה. שולחים את הפרטים, ונחזור אליכם בתוך יום עבודה עם אישור ומחיר. שום תשלום לא נגבה עכשיו.</div>');
       var terms = el('div', 'sv-terms' + (st.err.agree ? ' sv-bad' : ''));
       terms.innerHTML = '<ul>' + (svc.cancel ? '<li class="sv-cancel"><b>' + esc(svc.cancel) + '</b></li>' : '') + cfg.terms.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + (svc.gov ? '<li>' + esc(svc.gov) + '</li>' : '') + '</ul>';
-      var lb = el('label', 'sv-agree', '<input type="checkbox"' + (st.agree ? ' checked' : '') + '> קראתי ואני מסכים לתנאים ול<a href="https://dabullaw.co.il/%D7%AA%D7%A7%D7%A0%D7%95%D7%9F-%D7%90%D7%AA%D7%A8/" target="_blank" rel="noopener">תקנון האתר</a>, ומאשר שהפרטים נכונים');
+      var lb = el('label', 'sv-agree', '<input type="checkbox"' + (st.agree ? ' checked' : '') + '><span>קראתי ואני מסכים לתנאים ול<a href="https://dabullaw.co.il/%D7%AA%D7%A7%D7%A0%D7%95%D7%9F-%D7%90%D7%AA%D7%A8/" target="_blank" rel="noopener">תקנון האתר</a>, ומאשר שהפרטים נכונים</span>');
       lb.querySelector('input').onchange = function (e) { st.agree = e.target.checked; delete st.err.agree; };
       terms.appendChild(lb); terms.insertAdjacentHTML('beforeend', errHtml('agree'));
       body.appendChild(terms);
@@ -379,13 +390,16 @@
       st.sending = true; render();
       var payload = { action: 'order', svc: svc.id, a: st.a, c: st.c, meet: st.meet, files: files, website: hp ? hp.value : '', page: location.href.split('#')[0], total: p.total, src: SRC };
       fetch(fnUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) })
-        .then(function (r) { return r.json().then(function (j) { if (!r.ok || !j.ok) throw new Error(j.error || 'שגיאה'); return j; }); })
+        .then(function (r) { return r.json().then(function (j) { if (!r.ok || !j.ok) { var er = new Error(j.error || 'שגיאה'); er.code = j.code; throw er; } return j; }); })
         .then(function (j) {
+          var failed = [];
           var ups = (j.uploads || []).map(function (u) {
             var x = (st.files[u.k] || [])[u.i]; if (!x) return Promise.resolve();
-            return fetch(u.url, { method: 'PUT', headers: { 'content-type': x.type || 'application/octet-stream', 'x-upsert': 'false' }, body: x }).then(function (r) { if (!r.ok) throw new Error('העלאת הקובץ ' + x.name + ' נכשלה'); });
+            // 9.11.2026: a file that fails does not stop the order; the office is told which document is missing
+            return fetch(u.url, { method: 'PUT', headers: { 'content-type': x.type || 'application/octet-stream', 'x-upsert': 'false' }, body: x })
+              .then(function (r) { if (!r.ok) failed.push(x.name); }).catch(function () { failed.push(x.name); });
           });
-          return Promise.all(ups).then(function () { return fetch(fnUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'uploaded', id: j.id, token: j.token }) }).then(function (r) { return r.json(); }); }).then(function (k) { return { j: j, k: k }; });
+          return Promise.all(ups).then(function () { return fetch(fnUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'uploaded', id: j.id, token: j.token, failed: failed }) }).then(function (r) { return r.json(); }); }).then(function (k) { return { j: j, k: k }; });
         })
         .then(function (x) {
           try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ }
@@ -394,7 +408,11 @@
           st.done = { id: x.j.id, review: x.j.review, msg: x.j.review ? 'הפרטים והמסמכים אצלנו. נעבור עליהם ונחזור אליכם בתוך יום עבודה, לפני כל תשלום.' : 'הפרטים והמסמכים אצלנו. שלחנו אליכם מייל עם סיכום ההזמנה וקישור לתשלום.' };
           render();
         })
-        .catch(function (e) { st.sending = false; render(); alertMsg((e && e.message) || 'השליחה נכשלה. נסו שוב או התקשרו 09-8613413'); });
+        .catch(function (e) {
+          st.sending = false;
+          if (e && e.code === 'slot' && SLOT) { delete st.a[SLOT.k]; st.slots = null; st.step = Math.max(0, stepNames.indexOf(SLOT.step || 'פרטים')); st.err = {}; st.err[SLOT.k] = e.message; }
+          render(); alertMsg((e && e.message) || 'השליחה נכשלה. נסו שוב או התקשרו 09-8613413');
+        });
     }
     render();
   }
