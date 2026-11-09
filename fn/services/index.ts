@@ -123,15 +123,18 @@ const normPhone = (p: string) => { let d = digits(p); if (d.startsWith('972')) d
 // Without clearing in Morning (or on any error) there is no link: the client gets one by email later and Yakir a Telegram.
 const MORNING = 'https://api.greeninvoice.co.il/api/v1';
 let mTok = '', mTokAt = 0;
+// 9.11.2026: Morning moved the token to its OAuth server in June 2026 (the old /account/token answers 404 for every key, so
+// no payment link was created since then). Same API key, sent as client_id / client_secret; the token lives one hour.
 async function morningToken() {
   if (mTok && Date.now() - mTokAt < 40 * 60e3) return mTok;
   const id = env('MORNING_API_ID'), secret = env('MORNING_API_SECRET');
-  if (!id || !secret) return '';
-  const r = await fetch(MORNING + '/account/token', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, secret }) });
+  if (!id || !secret) { await telegram('⚠️ חסרים פרטי החיבור למורנינג, ולכן לא נוצרים קישורי תשלום באתר.').catch(() => false); return ''; }
+  const r = await fetch('https://api.morning.co/idp/v1/oauth/token', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ client_id: id, client_secret: secret, grant_type: 'client_credentials' }) });
   // deno-lint-ignore no-explicit-any
   const j: any = await r.json().catch(() => ({}));
-  if (!r.ok || !j.token) return '';
-  mTok = j.token; mTokAt = Date.now(); return mTok;
+  const t = j.accessToken || j.access_token || j.token;
+  if (!r.ok || !t) { await telegram(`⚠️ מורנינג לא מאשר את החיבור (${r.status} ${String(j.error || j.errorMessage || '').slice(0, 80)}), ולכן לא נוצרים קישורי תשלום באתר.`).catch(() => false); return ''; }
+  mTok = t; mTokAt = Date.now(); return mTok;
 }
 // deno-lint-ignore no-explicit-any
 async function morning(path: string, method = 'GET', body?: any) {
