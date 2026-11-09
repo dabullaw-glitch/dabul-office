@@ -20,7 +20,10 @@ for (const [dev, opt] of [['phone', { viewport: { width: 412, height: 823 }, dev
   for (let y = 0; y < H; y += 600) { await p.evaluate((v) => scrollTo(0, v), y); await p.waitForTimeout(250); }
   await p.waitForTimeout(1500); await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(500);
   const after = await m();
-  res[dev] = { errors, before, after }; await ctx.close();
+  // a visit that opens the page at an anchor (the menu links of the FAQ): where the anchor ends up on the screen
+  const p2 = await ctx.newPage(); await p2.goto(url.split('#')[0] + '#real-estate', { waitUntil: 'load', timeout: 60000 }); await p2.waitForTimeout(3000);
+  const anchor = await p2.evaluate(() => { const e = document.getElementById('real-estate'); return { scrollY: Math.round(scrollY), top: e ? Math.round(e.getBoundingClientRect().top) : null, cvOff: document.documentElement.classList.contains('dbl-cv-off') }; });
+  res[dev] = { errors, before, after, anchor }; await ctx.close();
 }
 await b.close();
 fs.writeFileSync(`${out}/measure.json`, JSON.stringify(res, null, 1)); console.log(JSON.stringify(res).slice(0, 3000));
