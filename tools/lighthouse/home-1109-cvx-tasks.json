@@ -1,0 +1,792 @@
+[
+{
+ "fcp": 570,
+ "tasksOver10ms": 19,
+ "totalMs": 566,
+ "score": 84,
+ "tbt": 475.5,
+ "longTasks": [
+  [
+   "Unattributable",
+   1653,
+   363
+  ],
+  [
+   "/?dbltest=cvx1109a",
+   2370,
+   256
+  ],
+  [
+   "/?dbltest=cvx1109a",
+   2026,
+   249
+  ],
+  [
+   "/?dbltest=cvx1109a",
+   2657,
+   84
+  ],
+  [
+   "Unattributable",
+   3112,
+   61
+  ],
+  [
+   "/?dbltest=cvx1109a",
+   2866,
+   54
+  ]
+ ],
+ "tasks": [
+  {
+   "at": 23,
+   "ms": 12,
+   "top": [],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 183,
+   "ms": 91,
+   "top": [
+    [
+     "DocumentLoader::CreateParserPostCommit",
+     50.6
+    ],
+    [
+     "HTMLDocumentParser::MaybeFetchQueuedPreloads",
+     12
+    ],
+    [
+     "DecodedDataDocumentParser::AppendBytes",
+     11.9
+    ],
+    [
+     "LocalWindowProxy::Initialize",
+     5.7
+    ],
+    [
+     "DocumentLoader::CommitNavigation",
+     5.3
+    ],
+    [
+     "DocumentLoader::BodyDataReceivedImpl",
+     1
+    ],
+    [
+     "V8.DeserializeContext",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 280,
+   "ms": 62,
+   "top": [
+    [
+     "ParseHTML",
+     36
+    ],
+    [
+     "v8.run < EvaluateScript /?dbltest=cvx1109a:57",
+     17.1
+    ],
+    [
+     "FunctionCall /?dbltest=cvx1109a:3 MutationObserver.observe.subtree",
+     4.8
+    ],
+    [
+     "v8.run < EvaluateScript /?dbltest=cvx1109a:3",
+     1.2
+    ],
+    [
+     "v8.compile /?dbltest=cvx1109a:3",
+     0.5
+    ],
+    [
+     "v8.compile /?dbltest=cvx1109a:1264",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 342,
+   "ms": 12,
+   "top": [],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 365,
+   "ms": 12,
+   "top": [
+    [
+     "ParseHTML",
+     8.6
+    ],
+    [
+     "FunctionCall /?dbltest=cvx1109a:3 MutationObserver.observe.subtree",
+     3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 377,
+   "ms": 128,
+   "top": [
+    [
+     "Layout",
+     65.1
+    ],
+    [
+     "Paint",
+     27
+    ],
+    [
+     "UpdateLayoutTree",
+     23.6
+    ],
+    [
+     "PaintImage",
+     4.1
+    ],
+    [
+     "PrePaint",
+     0.8
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     24,
+     205
+    ]
+   ],
+   "layouts": [
+    [
+     65,
+     241,
+     241
+    ]
+   ]
+  },
+  {
+   "at": 505,
+   "ms": 15,
+   "top": [
+    [
+     "ParseHTML",
+     5.2
+    ],
+    [
+     "FunctionCall /?dbltest=cvx1109a:3 MutationObserver.observe.subtree",
+     4.8
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     1.7
+    ],
+    [
+     "RunMicrotasks",
+     1.5
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 521,
+   "ms": 42,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     20.7
+    ],
+    [
+     "Layout",
+     8.4
+    ],
+    [
+     "Paint",
+     6.6
+    ],
+    [
+     "IntersectionObserverController::computeIntersections",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     21,
+     139
+    ]
+   ],
+   "layouts": [
+    [
+     8,
+     173,
+     410
+    ]
+   ]
+  },
+  {
+   "at": 563,
+   "ms": 17,
+   "top": [
+    [
+     "RunMicrotasks < ParseHTML",
+     5.3
+    ],
+    [
+     "ParseHTML",
+     5
+    ],
+    [
+     "FunctionCall /?dbltest=cvx1109a:3 MutationObserver.observe.subtree",
+     2.7
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 581,
+   "ms": 11,
+   "top": [
+    [
+     "Layout",
+     7.3
+    ],
+    [
+     "UpdateLayoutTree",
+     3.1
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     3,
+     53
+    ]
+   ],
+   "layouts": [
+    [
+     7,
+     102,
+     508
+    ]
+   ]
+  },
+  {
+   "at": 594,
+   "ms": 19,
+   "top": [
+    [
+     "ParseHTML",
+     14.1
+    ],
+    [
+     "FunctionCall /?dbltest=cvx1109a:3 MutationObserver.observe.subtree",
+     0.7
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     0.6
+    ],
+    [
+     "LocalWindowProxy::Initialize < ParseHTML",
+     0.5
+    ],
+    [
+     "V8.DeserializeContext < ParseHTML",
+     0.5
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 615,
+   "ms": 15,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     7.8
+    ],
+    [
+     "Layout",
+     6.2
+    ],
+    [
+     "PrePaint",
+     0.5
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     8,
+     77
+    ]
+   ],
+   "layouts": [
+    [
+     6,
+     83,
+     588
+    ]
+   ]
+  },
+  {
+   "at": 630,
+   "ms": 27,
+   "top": [
+    [
+     "ParseHTML",
+     24
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     1
+    ],
+    [
+     "v8.compile /?dbltest=cvx1109a:3715",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 661,
+   "ms": 14,
+   "top": [
+    [
+     "v8.run < EvaluateScript /?dbltest=cvx1109a:4102",
+     5.7
+    ],
+    [
+     "ParseHTML",
+     1.7
+    ],
+    [
+     "v8.run < EvaluateScript /?dbltest=cvx1109a:3989",
+     0.8
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     0.5
+    ],
+    [
+     "v8.compile /?dbltest=cvx1109a:3989",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 683,
+   "ms": 16,
+   "top": [
+    [
+     "v8.evaluateModule",
+     7.3
+    ],
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3990 ",
+     1.6
+    ],
+    [
+     "UpdateLayoutTree",
+     1.2
+    ],
+    [
+     "Layout",
+     0.7
+    ],
+    [
+     "RunMicrotasks < EventDispatch DOMContentLoaded",
+     0.5
+    ],
+    [
+     "EventDispatch DOMContentLoaded",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 744,
+   "ms": 20,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     18.9
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     19,
+     49
+    ]
+   ],
+   "layouts": []
+  },
+  {
+   "at": 767,
+   "ms": 17,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     12.6
+    ],
+    [
+     "Layout",
+     2.7
+    ],
+    [
+     "PrePaint",
+     0.6
+    ],
+    [
+     "Paint",
+     0.5
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     13,
+     438
+    ]
+   ],
+   "layouts": [
+    [
+     3,
+     531,
+     531
+    ]
+   ]
+  },
+  {
+   "at": 794,
+   "ms": 20,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 874,
+   "ms": 15,
+   "top": [],
+   "styleRecalcs": [],
+   "layouts": []
+  }
+ ]
+}
+,
+{
+ "fcp": 183,
+ "tasksOver10ms": 9,
+ "totalMs": 132,
+ "score": 99,
+ "tbt": 0,
+ "longTasks": [
+  [
+   "/?dbltest=cvx1109a",
+   1618,
+   64
+  ],
+  [
+   "Unattributable",
+   1560,
+   57
+  ]
+ ],
+ "tasks": [
+  {
+   "at": 50,
+   "ms": 14,
+   "top": [
+    [
+     "DecodedDataDocumentParser::AppendBytes",
+     6.1
+    ],
+    [
+     "DocumentLoader::BodyDataReceivedImpl",
+     1.3
+    ],
+    [
+     "V8.DeserializeContext",
+     1
+    ],
+    [
+     "HTMLDocumentParser::MaybeFetchQueuedPreloads",
+     0.8
+    ],
+    [
+     "LocalWindowProxy::Initialize",
+     0.6
+    ],
+    [
+     "DocumentLoader::CommitNavigation",
+     0.6
+    ],
+    [
+     "DocumentLoader::CreateParserPostCommit",
+     0.6
+    ],
+    [
+     "InstallConditionalFeatures",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 66,
+   "ms": 16,
+   "top": [
+    [
+     "ParseHTML",
+     10.8
+    ],
+    [
+     "v8.run < EvaluateScript /?dbltest=cvx1109a:3",
+     1.4
+    ],
+    [
+     "v8.run < EvaluateScript /?dbltest=cvx1109a:57",
+     0.5
+    ],
+    [
+     "v8.compile /?dbltest=cvx1109a:3",
+     0.5
+    ],
+    [
+     "FunctionCall /?dbltest=cvx1109a:3 MutationObserver.observe.subtree",
+     0.5
+    ],
+    [
+     "v8.compile /?dbltest=cvx1109a:1264",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 92,
+   "ms": 10,
+   "top": [
+    [
+     "ParseHTML",
+     4.3
+    ],
+    [
+     "FunctionCall /?dbltest=cvx1109a:3 MutationObserver.observe.subtree",
+     4.2
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     1
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 103,
+   "ms": 24,
+   "top": [
+    [
+     "RunMicrotasks < ParseHTML",
+     7.3
+    ],
+    [
+     "ParseHTML",
+     6.9
+    ],
+    [
+     "FunctionCall /?dbltest=cvx1109a:3 MutationObserver.observe.subtree",
+     4.3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 128,
+   "ms": 20,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     8.8
+    ],
+    [
+     "Layout",
+     8.1
+    ],
+    [
+     "Paint",
+     0.8
+    ],
+    [
+     "PrePaint",
+     0.7
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     9,
+     392
+    ]
+   ],
+   "layouts": [
+    [
+     8,
+     508,
+     508
+    ]
+   ]
+  },
+  {
+   "at": 149,
+   "ms": 11,
+   "top": [
+    [
+     "ParseHTML",
+     3.1
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     1.7
+    ],
+    [
+     "FunctionCall /?dbltest=cvx1109a:3 MutationObserver.observe.subtree",
+     1.5
+    ],
+    [
+     "V8.DeserializeContext < ParseHTML",
+     0.9
+    ],
+    [
+     "LocalWindowProxy::Initialize < ParseHTML",
+     0.5
+    ],
+    [
+     "DocumentLoader::FinishedLoading < ParseHTML",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 166,
+   "ms": 10,
+   "top": [
+    [
+     "ParseHTML",
+     3.1
+    ],
+    [
+     "v8.run < EvaluateScript /?dbltest=cvx1109a:3989",
+     0.6
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     0.5
+    ],
+    [
+     "v8.compile /?dbltest=cvx1109a:3715",
+     0.5
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 227,
+   "ms": 12,
+   "top": [
+    [
+     "v8.evaluateModule",
+     2
+    ],
+    [
+     "UpdateLayoutTree",
+     1.7
+    ],
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3990 ",
+     1.6
+    ],
+    [
+     "Layout",
+     0.6
+    ],
+    [
+     "FunctionCall /?dbltest=cvx1109a:4099 ",
+     0.5
+    ],
+    [
+     "RunMicrotasks < EventDispatch DOMContentLoaded",
+     0.4
+    ],
+    [
+     "EventDispatch DOMContentLoaded",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 273,
+   "ms": 13,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     8.4
+    ],
+    [
+     "Layout",
+     2.6
+    ],
+    [
+     "Paint",
+     0.5
+    ],
+    [
+     "PrePaint",
+     0.5
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     8,
+     438
+    ]
+   ],
+   "layouts": [
+    [
+     3,
+     534,
+     534
+    ]
+   ]
+  }
+ ]
+}
+]
