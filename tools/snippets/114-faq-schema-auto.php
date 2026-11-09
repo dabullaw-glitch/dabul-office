@@ -4,8 +4,23 @@
    FAQPage block with exactly the same questions and answers that the page shows. Nothing visible changes.
    A page that already has an FAQPage block (articles with ACF questions, snippet 5, or a block written in the content)
    is left as it is, so no page gets two.
-   Test copy: ?dbltest=faq... (works before going live). To undo: deactivate this snippet. */
+   Live since 9.11.2026. Checked on all 417 pages and articles of the site map: 8 got the block (home page 11 questions,
+   5 pages, 2 articles); 339 already had one; the rest show no questions. Test copy: ?dbltest=faq... To undo: deactivate this snippet. */
 if (!defined('DBL_FAQ_LIVE')) define('DBL_FAQ_LIVE', 1);
+// once, when it went live: WP Rocket's saved copies of the 8 pages that got the block are renewed (nothing else)
+add_action('init', function () {
+	if (get_option('dbl_faq_purged') === '1' || !function_exists('rocket_clean_post')) return;
+	update_option('dbl_faq_purged', '1', false);
+	if (function_exists('rocket_clean_home')) rocket_clean_home();
+	foreach (array(
+		'https://dabullaw.co.il/%d7%a6%d7%95%d7%95%d7%90%d7%95%d7%aa-%d7%95%d7%99%d7%a8%d7%95%d7%a9%d7%95%d7%aa/',
+		'https://dabullaw.co.il/comprehensive-guide-selling-apartment-israel-legal-tax-stages/',
+		'https://dabullaw.co.il/%d7%9b%d7%aa%d7%91-%d7%a2%d7%a8%d7%91%d7%95%d7%aa-%d7%9c%d7%a9%d7%9b%d7%99%d7%a8%d7%95%d7%aa/',
+		'https://dabullaw.co.il/%d7%90%d7%95%d7%93%d7%95%d7%aa-%d7%94%d7%9e%d7%a9%d7%a8%d7%93/',
+		'https://dabullaw.co.il/%d7%94%d7%95%d7%a6%d7%90%d7%94-%d7%9c%d7%a4%d7%95%d7%a2%d7%9c-%d7%95%d7%97%d7%93%d7%9c%d7%95%d7%aa-%d7%a4%d7%99%d7%a8%d7%a2%d7%95%d7%9f/',
+		'https://dabullaw.co.il/%d7%97%d7%91%d7%a8%d7%95%d7%aa-%d7%a9%d7%95%d7%aa%d7%a4%d7%95%d7%99%d7%95%d7%aa-%d7%95%d7%9e%d7%99%d7%99%d7%a1%d7%93%d7%99%d7%9d/',
+		'https://dabullaw.co.il/%d7%90%d7%97%d7%a8%d7%99-%d7%9b%d7%9e%d7%94-%d7%96%d7%9e%d7%9f-%d7%90%d7%a4%d7%a9%d7%a8-%d7%9c%d7%9e%d7%9b%d7%95%d7%a8-%d7%93%d7%99%d7%a8%d7%94/') as $u) { $id = url_to_postid(rawurldecode($u)); if ($id) rocket_clean_post($id); }
+}, 99);
 if (!function_exists('dbl_faq_text')) {
 	function dbl_faq_text($node) {
 		$t = html_entity_decode($node->textContent, ENT_QUOTES | ENT_HTML5, 'UTF-8');
