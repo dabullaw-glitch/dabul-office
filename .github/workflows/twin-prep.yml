@@ -23,6 +23,8 @@ jobs:
             id=$(basename "$f" .src.json); echo "$id" | grep -Eq '^[a-z0-9-]+$' || continue
             [ -f "media/twin/$id.mp4" ] && continue
             [ -f "media/twin/$id.mp3" ] && continue
+            grep -qxF "media/twin/$id.mp4" media/archived.txt 2>/dev/null && continue   # moved to the media-archive branch: do not make it again
+            grep -qxF "media/twin/$id.mp3" media/archived.txt 2>/dev/null && continue   # moved to the media-archive branch: do not make it again
             if python3 -c "import json,sys;sys.exit(0 if json.load(open('$f')).get('audioOnly') else 1)"; then
               # voice clone sample: clean speech from several studio videos, joined, mono mp3
               i=0; : > /tmp/list.txt

@@ -32,6 +32,7 @@ jobs:
             id=$(basename "$f" .job.json)
             echo "$id" | grep -Eq '^[a-z0-9-]+$' || continue
             [ -f "media/hgv/$id.mp4" ] && continue
+            grep -qxF "media/hgv/$id.mp4" media/archived.txt 2>/dev/null && continue   # moved to the media-archive branch: do not make it again
             # a failed job is tried again only when its job file is newer than the error
             if [ -f "media/hgv/$id.error.txt" ] && [ "$(git log -1 --format=%ct -- "$f")" -le "$(git log -1 --format=%ct -- "media/hgv/$id.error.txt")" ]; then continue; fi
             ids="$ids $id"

@@ -45,6 +45,7 @@ jobs:
             echo "$id" | grep -Eq '^[A-Za-z0-9_-]+$' || { echo "bad id $id"; continue; }
             out="media/reels-pub/$name.mp4"
             [ -f "$out" ] && continue
+            grep -qxF "$out" media/archived.txt 2>/dev/null && continue   # moved to the media-archive branch: do not make it again
             src="/tmp/rp/$name.src"
             if ! curl -fsSL --retry 3 -o "$src" "https://drive.usercontent.google.com/download?id=$id&export=download&confirm=t"; then
               echo "download failed $(date -u +%FT%TZ)" > "media/reels-pub/$name.error.txt"; echo "FAIL $name"; continue; fi

@@ -1,0 +1,37 @@
+name: media-archive
+# Keeps the GitHub Pages site small (9.11.2026, Yakir approved). Pages publishes all of main on every push, and the heavy
+# video and screenshot files made each deploy slow and the site far larger than the 1 GB Pages limit.
+# Weekly: heavy files that no open office row links to (RPC media_refs: finished rows, published, cancelled or rejected,
+# do not count) and that are older than 14 days move to the branch media-archive, same paths, nothing deleted.
+# Details: tools/media-archive/archive.py. The moved paths are listed in media/archived.txt, which heygen-edit,
+# reels-pub and twin-prep read so they never make a moved file again.
+on:
+  schedule: [{ cron: '23 1 * * 6' }]
+  workflow_dispatch:
+    inputs:
+      days: { description: 'minimum age in days', required: false, default: '14' }
+      apply: { description: 'move the files (no = only list them)', required: false, default: 'yes' }
+permissions:
+  contents: write
+concurrency: { group: media-archive, cancel-in-progress: false }
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0, filter: 'blob:none' }
+      - name: links still in use
+        run: |
+          curl -fsS -X POST 'https://mgjmnvpnovkewvqevjmz.supabase.co/rest/v1/rpc/media_refs' \
+            -H 'apikey: sb_publishable_VlbYeA-oSqVs28QSWXtwJA_VoMt8p6j' -H 'content-type: application/json' -d '{}' \
+            | python3 -c "import json,sys; print('\n'.join(json.load(sys.stdin)))" > /tmp/refs.txt
+          wc -l /tmp/refs.txt
+      - name: move
+        run: |
+          git config user.name "media-archive"; git config user.email "media-archive@users.noreply.github.com"
+          git fetch -q origin media-archive:refs/remotes/origin/media-archive || true
+          A=""; [ "${{ inputs.apply || 'yes' }}" = "yes" ] && A="--apply"
+          python3 tools/media-archive/archive.py --refs /tmp/refs.txt --days "${{ inputs.days || '14' }}" $A | tee /tmp/out.txt
+          [ -n "$A" ] && git show-ref -q refs/heads/media-archive || exit 0
+          git push -q origin media-archive
+          for i in 1 2 3 4 5; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; sleep 10; done
