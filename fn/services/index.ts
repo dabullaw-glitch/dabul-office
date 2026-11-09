@@ -194,8 +194,10 @@ async function paid(url: URL, req: Request) {
   // 9.11.2026: the database call is not a promise with .catch (that crashed this callback after every payment, so no
   // Telegram and nothing after it ran)
   if (o.clientId) { const { error: ne } = await admin().from('docs').insert({ coll: 'notes', id: 'n-' + Date.now().toString(36) + rand(4).toLowerCase(), data: { refType: 'client', refId: o.clientId, kind: 'system', date: now, text: `התקבל תשלום ${ils(o.price.total)} עבור ${o.title} (הזמנה מהאתר ${id})` } }); if (ne) console.error(ne); }
+  let zl = '';
+  try { zl = await zoomMeeting(id, o); if (zl) await zoomMail(id, o, zl); } catch (e) { console.error(e); await telegram(`⚠️ לא נוצר קישור זום להזמנה ${id} (${String((e as Error).message || e).slice(0, 120)}). צריך לשלוח ללקוח קישור ידנית.`).catch(() => false); }
   const ev = await addToCalendar(id, o).catch((e) => { console.error(e); return ''; });
-  await telegram(`💳 שולם: ${o.title} · ${ils(o.price.total)}\n👤 ${o.c.name} · 📞 ${o.c.phone}${o.slot && o.slot !== 'later' ? `\n🗓 ${o.slot.split(' ')[0].split('-').reverse().join('.')} ${o.slot.split(' ')[1] || ''}${ev ? ' (נכנס ליומן)' : ' (⚠️ לא נכנס ליומן, צריך להוסיף ידנית)'}` : ''}${o.src && o.src.chName ? `\n📣 מקור: ${o.src.chName}` : ''}\nמספר: ${id}`).catch(() => false);
+  await telegram(`${zl ? '🎥 נוצר קישור זום ונשלח ללקוח במייל.\n' : ''}💳 שולם: ${o.title} · ${ils(o.price.total)}\n👤 ${o.c.name} · 📞 ${o.c.phone}${o.slot && o.slot !== 'later' ? `\n🗓 ${o.slot.split(' ')[0].split('-').reverse().join('.')} ${o.slot.split(' ')[1] || ''}${ev ? ' (נכנס ליומן)' : ' (⚠️ לא נכנס ליומן, צריך להוסיף ידנית)'}` : ''}${o.src && o.src.chName ? `\n📣 מקור: ${o.src.chName}` : ''}\nמספר: ${id}`).catch(() => false);
   return json({ ok: true });
 }
 
@@ -301,6 +303,51 @@ async function slots(b: any) {
   try { return json({ days: await freeDays(lenOf(b.len)), cal: 'ok' }); }
   catch (e) { console.error(e); await calAlert(String((e as Error).message || e)); return json({ days: [], cal: 'error' }); }
 }
+// ---- Zoom (9.11.2026, Yakir: "תעשה את כל החיבורים... ושישלח גם קישור ללקוח לזום") ----
+// Server-to-Server OAuth app in Yakir's Zoom account (free plan: meetings are limited to 40 minutes, he accepted that).
+// Secrets in app_secrets: ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET (optional ZOOM_USER, default "me" is not
+// allowed for this app type, so the account owner's email is used). Without them nothing happens (Yakir sends the link).
+let zTok = '', zTokAt = 0;
+async function zoomToken(): Promise<string> {
+  if (zTok && Date.now() - zTokAt < 50 * 60e3) return zTok;
+  const acc = env('ZOOM_ACCOUNT_ID'), id = env('ZOOM_CLIENT_ID'), sec = env('ZOOM_CLIENT_SECRET');
+  if (!acc || !id || !sec) return '';
+  const r = await fetch(`https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${encodeURIComponent(acc)}`, { method: 'POST', headers: { authorization: 'Basic ' + btoa(id + ':' + sec) } });
+  // deno-lint-ignore no-explicit-any
+  const j: any = await r.json().catch(() => ({}));
+  if (!r.ok || !j.access_token) throw new Error('zoom token ' + r.status + ' ' + (j.reason || j.error || ''));
+  zTok = j.access_token; zTokAt = Date.now(); return zTok;
+}
+// creates the Zoom meeting for a paid order (once) and returns its join link
+// deno-lint-ignore no-explicit-any
+async function zoomMeeting(id: string, o: any): Promise<string> {
+  if (o.zoom && o.zoom.join) return o.zoom.join;
+  if (!o.slot || o.slot === 'later') return '';
+  const t = await zoomToken(); if (!t) return '';
+  const user = env('ZOOM_USER') || 'dabullaw@gmail.com';
+  const [d, hmv] = String(o.slot).split(' ');
+  const r = await fetch(`https://api.zoom.us/v2/users/${encodeURIComponent(user)}/meetings`, { method: 'POST', headers: { authorization: `Bearer ${t}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ topic: `ייעוץ עם עו״ד יקיר דבול: ${o.c.name}`, type: 2, start_time: `${d}T${hmv}:00`, timezone: 'Asia/Jerusalem', duration: +o.slotLen || 30,
+      agenda: `הזמנה ${id}`, settings: { waiting_room: true, join_before_host: false, mute_upon_entry: false, approval_type: 2 } }) });
+  // deno-lint-ignore no-explicit-any
+  const j: any = await r.json().catch(() => ({}));
+  if (!r.ok || !j.join_url) throw new Error('zoom meeting ' + r.status + ' ' + (j.message || ''));
+  await merge('svc', id, { zoom: { id: j.id, join: j.join_url, pass: j.password || '', at: new Date().toISOString() } });
+  o.zoom = { join: j.join_url, pass: j.password || '' };
+  return j.join_url;
+}
+// the client's email with the Zoom link
+// deno-lint-ignore no-explicit-any
+async function zoomMail(id: string, o: any, link: string) {
+  const [d, t] = String(o.slot).split(' '); const first = String(o.c.name || '').split(' ')[0];
+  const html = shell('הקישור לפגישה בזום', `<p style="font-size:15px;line-height:1.7">שלום ${esc(first)}, תודה על התשלום. הפגישה שלכם עם עו״ד יקיר דבול נקבעה ל־<b>${esc(d.split('-').reverse().join('.'))} בשעה ${esc(t)}</b> (${+o.slotLen || 30} דקות).</p>
+    <p><a href="${esc(link)}" style="display:inline-block;background:#1c1b19;color:#fff;text-decoration:none;border-radius:99px;padding:12px 22px;font-weight:800">כניסה לפגישה בזום</a></p>
+    <p style="font-size:13.5px;color:#6b7280;line-height:1.6;word-break:break-all">אם הכפתור לא נפתח, אפשר להעתיק את הקישור: ${esc(link)}${o.zoom && o.zoom.pass ? `<br>סיסמה: ${esc(o.zoom.pass)}` : ''}</p>
+    <p style="font-size:14.5px;line-height:1.7">כדאי להיכנס כמה דקות לפני, ממחשב או מהטלפון. אם צריך לשנות מועד, אפשר להשיב למייל הזה עד 24 שעות לפני הפגישה. מספר הזמנה: ${esc(id)}.</p>`);
+  const r = await mail(o.c.email, 'הקישור לפגישת הייעוץ בזום', html);
+  if (r.ok) await merge('svc', id, { zoomMailedAt: new Date().toISOString(), log: (o.log || []).concat([{ at: new Date().toISOString(), kind: 'mail', text: 'נשלח ללקוח מייל עם הקישור לזום' }]) });
+  return r.ok;
+}
 // after payment: the meeting goes into Yakir's calendar
 // deno-lint-ignore no-explicit-any
 async function addToCalendar(id: string, o: any): Promise<string> {
@@ -311,10 +358,10 @@ async function addToCalendar(id: string, o: any): Promise<string> {
   // deno-lint-ignore no-explicit-any
   const label = (k: string) => { const f = svc.fields.find((x: any) => x.k === k); const v = o.a?.[k]; const op = f && (f.opts || []).find((x: { v: string }) => x.v === v); return op ? op.l : (v || ''); };
   const desc = [`טלפון: ${o.c.phone}`, `מייל: ${o.c.email}`, `נושא: ${label('area')}`, o.a?.topic ? `במה נעסוק: ${o.a.topic}` : '', o.a?.other ? `הצד השני: ${o.a.other}` : '', o.c.note ? `הערה: ${o.c.note}` : '',
-    `אורך: ${len} דקות · שולם ${ils(o.price.total)}`, `מספר הזמנה: ${id}`, 'הקישור לזום עוד לא נשלח ללקוח.'].filter(Boolean).join('\n');
+    `אורך: ${len} דקות · שולם ${ils(o.price.total)}`, `מספר הזמנה: ${id}`, o.zoom && o.zoom.join ? `זום: ${o.zoom.join}` : 'הקישור לזום עוד לא נשלח ללקוח.'].filter(Boolean).join('\n');
   const tk = await gToken();
   const r = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CAL_ID())}/events`, { method: 'POST', headers: { authorization: `Bearer ${tk}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ summary: `ייעוץ בזום: ${o.c.name}`, description: desc, start: { dateTime: `${d}T${t}:00`, timeZone: 'Asia/Jerusalem' }, end: { dateTime: `${d}T${end}:00`, timeZone: 'Asia/Jerusalem' } }) });
+    body: JSON.stringify({ summary: `ייעוץ בזום: ${o.c.name}`, description: desc, location: (o.zoom && o.zoom.join) || '', start: { dateTime: `${d}T${t}:00`, timeZone: 'Asia/Jerusalem' }, end: { dateTime: `${d}T${end}:00`, timeZone: 'Asia/Jerusalem' } }) });
   // deno-lint-ignore no-explicit-any
   const j: any = await r.json().catch(() => ({}));
   if (!r.ok || !j.id) { console.error('calendar insert', r.status, JSON.stringify(j).slice(0, 300)); return ''; }
