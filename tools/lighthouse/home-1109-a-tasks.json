@@ -1,0 +1,1205 @@
+[
+{
+ "fcp": 2653,
+ "tasksOver10ms": 25,
+ "totalMs": 974,
+ "score": 71,
+ "tbt": 927.5,
+ "longTasks": [
+  [
+   "Unattributable",
+   1642,
+   357
+  ],
+  [
+   "/?dbltest=t1109a",
+   3835,
+   330
+  ],
+  [
+   "/?dbltest=t1109a",
+   2563,
+   208
+  ],
+  [
+   "/?dbltest=t1109a",
+   3628,
+   207
+  ],
+  [
+   "/?dbltest=t1109a",
+   2008,
+   190
+  ],
+  [
+   "/?dbltest=t1109a",
+   2259,
+   178
+  ],
+  [
+   "/?dbltest=t1109a",
+   2817,
+   89
+  ],
+  [
+   "Unattributable",
+   3456,
+   76
+  ],
+  [
+   "/?dbltest=t1109a",
+   3182,
+   73
+  ],
+  [
+   "/?dbltest=t1109a",
+   2989,
+   69
+  ]
+ ],
+ "tasks": [
+  {
+   "at": 2365,
+   "ms": 89,
+   "top": [
+    [
+     "DocumentLoader::CreateParserPostCommit",
+     47.6
+    ],
+    [
+     "DecodedDataDocumentParser::AppendBytes",
+     12.6
+    ],
+    [
+     "HTMLDocumentParser::MaybeFetchQueuedPreloads",
+     9.3
+    ],
+    [
+     "DocumentLoader::CommitNavigation",
+     7.9
+    ],
+    [
+     "LocalWindowProxy::Initialize",
+     6.1
+    ],
+    [
+     "DocumentLoader::BodyDataReceivedImpl",
+     1.1
+    ],
+    [
+     "V8.DeserializeContext",
+     0.8
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2460,
+   "ms": 47,
+   "top": [
+    [
+     "v8.run < EvaluateScript /?dbltest=t1109a:55",
+     18.9
+    ],
+    [
+     "ParseHTML",
+     17.9
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     5.9
+    ],
+    [
+     "v8.run < EvaluateScript /?dbltest=t1109a:3",
+     1.4
+    ],
+    [
+     "v8.compile /?dbltest=t1109a:3",
+     0.9
+    ],
+    [
+     "v8.compile /?dbltest=t1109a:1262",
+     0.5
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2525,
+   "ms": 15,
+   "top": [
+    [
+     "ParseHTML",
+     10.4
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     4.5
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2541,
+   "ms": 89,
+   "top": [
+    [
+     "Layout",
+     51.1
+    ],
+    [
+     "UpdateLayoutTree",
+     17
+    ],
+    [
+     "Paint",
+     10.2
+    ],
+    [
+     "PaintImage",
+     4.6
+    ],
+    [
+     "PrePaint",
+     0.8
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     17,
+     201
+    ]
+   ],
+   "layouts": [
+    [
+     51,
+     241,
+     241
+    ]
+   ]
+  },
+  {
+   "at": 2630,
+   "ms": 10,
+   "top": [],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2642,
+   "ms": 16,
+   "top": [
+    [
+     "ParseHTML",
+     5.7
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     4.6
+    ],
+    [
+     "RunMicrotasks",
+     1.8
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     1.8
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2660,
+   "ms": 26,
+   "top": [
+    [
+     "ParseHTML",
+     13.3
+    ],
+    [
+     "RunMicrotasks",
+     6.2
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     2.6
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2686,
+   "ms": 104,
+   "top": [
+    [
+     "Layout",
+     30.8
+    ],
+    [
+     "UpdateLayoutTree",
+     28.9
+    ],
+    [
+     "Paint",
+     17.5
+    ],
+    [
+     "PrePaint",
+     1.7
+    ],
+    [
+     "IntersectionObserverController::computeIntersections",
+     0.6
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     29,
+     1505
+    ]
+   ],
+   "layouts": [
+    [
+     31,
+     1862,
+     2077
+    ]
+   ]
+  },
+  {
+   "at": 2792,
+   "ms": 23,
+   "top": [
+    [
+     "ParseHTML",
+     12.4
+    ],
+    [
+     "V8.DeserializeContext < ParseHTML",
+     1.4
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     1.3
+    ],
+    [
+     "DocumentLoader::CommitNavigation < ParseHTML",
+     1.3
+    ],
+    [
+     "DocumentLoader::FinishedLoading < ParseHTML",
+     1
+    ],
+    [
+     "v8.compile /?dbltest=t1109a:3571",
+     0.9
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     0.8
+    ],
+    [
+     "LocalWindowProxy::Initialize < ParseHTML",
+     0.6
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2817,
+   "ms": 44,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     8.8
+    ],
+    [
+     "Layout",
+     2.9
+    ],
+    [
+     "PrePaint",
+     0.9
+    ],
+    [
+     "HitTest",
+     0.5
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     9,
+     231
+    ]
+   ],
+   "layouts": [
+    [
+     3,
+     292,
+     2366
+    ]
+   ]
+  },
+  {
+   "at": 2863,
+   "ms": 22,
+   "top": [
+    [
+     "ParseHTML",
+     18.9
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     1.1
+    ],
+    [
+     "v8.compile /?dbltest=t1109a:3713",
+     0.5
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2895,
+   "ms": 19,
+   "top": [
+    [
+     "v8.run < EvaluateScript /?dbltest=t1109a:3987",
+     11.4
+    ],
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     2.3
+    ],
+    [
+     "ParseHTML",
+     1.4
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     0.6
+    ],
+    [
+     "v8.compile /?dbltest=t1109a:3987",
+     0.5
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     0.4
+    ],
+    [
+     "v8.compile /?dbltest=t1109a:3961",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2917,
+   "ms": 17,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     16.3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2936,
+   "ms": 15,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     14.6
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2957,
+   "ms": 16,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     14.7
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2973,
+   "ms": 18,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     11.2
+    ],
+    [
+     "v8.run < EvaluateScript /?dbltest=t1109a:4100",
+     5.1
+    ],
+    [
+     "ParseHTML",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 2994,
+   "ms": 17,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     14.3
+    ],
+    [
+     "v8.compile /?dbltest=t1109a:4142",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 3013,
+   "ms": 17,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     15.2
+    ],
+    [
+     "ParseHTML",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 3040,
+   "ms": 22,
+   "top": [
+    [
+     "v8.evaluateModule",
+     9.3
+    ],
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     4.4
+    ],
+    [
+     "UpdateLayoutTree",
+     1.5
+    ],
+    [
+     "Layout",
+     0.6
+    ],
+    [
+     "RunMicrotasks < EventDispatch DOMContentLoaded",
+     0.5
+    ],
+    [
+     "EventDispatch DOMContentLoaded",
+     0.5
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 3086,
+   "ms": 11,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     4
+    ],
+    [
+     "UpdateLayoutTree < FunctionCall /?dbltest=t1109a:4097 ",
+     2.9
+    ],
+    [
+     "UpdateLayoutTree",
+     1.6
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:4097 ",
+     0.7
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     3,
+     136
+    ],
+    [
+     2,
+     51
+    ]
+   ],
+   "layouts": []
+  },
+  {
+   "at": 3186,
+   "ms": 19,
+   "top": [],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 3212,
+   "ms": 15,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     3.7
+    ],
+    [
+     "Layout",
+     1.1
+    ],
+    [
+     "PrePaint",
+     0.6
+    ],
+    [
+     "Paint",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     4,
+     96
+    ]
+   ],
+   "layouts": []
+  },
+  {
+   "at": 3245,
+   "ms": 33,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     31.2
+    ],
+    [
+     "PrePaint",
+     0.5
+    ],
+    [
+     "Layout",
+     0.5
+    ],
+    [
+     "Paint",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     31,
+     1415
+    ]
+   ],
+   "layouts": []
+  },
+  {
+   "at": 3295,
+   "ms": 103,
+   "top": [
+    [
+     "Layout",
+     65.2
+    ],
+    [
+     "UpdateLayoutTree",
+     31.9
+    ],
+    [
+     "PrePaint",
+     2.7
+    ],
+    [
+     "Paint",
+     1.4
+    ],
+    [
+     "Layerize",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     32,
+     1898
+    ]
+   ],
+   "layouts": [
+    [
+     65,
+     2466,
+     2466
+    ]
+   ]
+  },
+  {
+   "at": 3399,
+   "ms": 165,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     161.9
+    ],
+    [
+     "Layout",
+     0.9
+    ],
+    [
+     "PrePaint",
+     0.6
+    ],
+    [
+     "Paint",
+     0.4
+    ],
+    [
+     "Layerize",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     162,
+     275
+    ]
+   ],
+   "layouts": []
+  }
+ ]
+}
+,
+{
+ "fcp": 300,
+ "tasksOver10ms": 18,
+ "totalMs": 445,
+ "score": 95,
+ "tbt": 204.5,
+ "longTasks": [
+  [
+   "/?dbltest=t1109a",
+   2562,
+   213
+  ],
+  [
+   "/?dbltest=t1109a",
+   1920,
+   116
+  ],
+  [
+   "Unattributable",
+   1548,
+   99
+  ],
+  [
+   "Unattributable",
+   1647,
+   77
+  ],
+  [
+   "/?dbltest=t1109a",
+   1725,
+   77
+  ],
+  [
+   "/?dbltest=t1109a",
+   2454,
+   71
+  ],
+  [
+   "/?dbltest=t1109a",
+   2263,
+   66
+  ],
+  [
+   "/?dbltest=t1109a",
+   2390,
+   64
+  ],
+  [
+   "/?dbltest=t1109a",
+   2139,
+   62
+  ],
+  [
+   "/?dbltest=t1109a",
+   2201,
+   62
+  ]
+ ],
+ "tasks": [
+  {
+   "at": 75,
+   "ms": 25,
+   "top": [],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 100,
+   "ms": 19,
+   "top": [
+    [
+     "DecodedDataDocumentParser::AppendBytes",
+     9.1
+    ],
+    [
+     "HTMLDocumentParser::MaybeFetchQueuedPreloads",
+     1.5
+    ],
+    [
+     "DocumentLoader::BodyDataReceivedImpl",
+     1.4
+    ],
+    [
+     "V8.DeserializeContext",
+     1.2
+    ],
+    [
+     "LocalWindowProxy::Initialize",
+     1
+    ],
+    [
+     "DocumentLoader::CreateParserPostCommit",
+     0.6
+    ],
+    [
+     "DocumentLoader::CommitNavigation",
+     0.6
+    ],
+    [
+     "InstallConditionalFeatures",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 121,
+   "ms": 19,
+   "top": [
+    [
+     "ParseHTML",
+     11.6
+    ],
+    [
+     "v8.run < EvaluateScript /?dbltest=t1109a:3",
+     2.4
+    ],
+    [
+     "v8.compile /?dbltest=t1109a:3",
+     0.9
+    ],
+    [
+     "v8.run < EvaluateScript /?dbltest=t1109a:55",
+     0.9
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     0.7
+    ],
+    [
+     "v8.compile /?dbltest=t1109a:1262",
+     0.5
+    ],
+    [
+     "ScriptCompiled < EvaluateScript /?dbltest=t1109a:3",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 150,
+   "ms": 12,
+   "top": [
+    [
+     "ParseHTML",
+     5.9
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     5
+    ],
+    [
+     "RunMicrotasks",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 164,
+   "ms": 15,
+   "top": [
+    [
+     "ParseHTML",
+     5.8
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     3.6
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     1.6
+    ],
+    [
+     "RunMicrotasks",
+     1.6
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 181,
+   "ms": 20,
+   "top": [
+    [
+     "ParseHTML",
+     6.6
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     5.8
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     3.2
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 204,
+   "ms": 58,
+   "top": [
+    [
+     "Layout",
+     29
+    ],
+    [
+     "UpdateLayoutTree",
+     23.8
+    ],
+    [
+     "PrePaint",
+     2
+    ],
+    [
+     "Paint",
+     1.5
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     24,
+     1707
+    ]
+   ],
+   "layouts": [
+    [
+     29,
+     2077,
+     2077
+    ]
+   ]
+  },
+  {
+   "at": 263,
+   "ms": 11,
+   "top": [
+    [
+     "ParseHTML",
+     2.6
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     1.5
+    ],
+    [
+     "V8.DeserializeContext < ParseHTML",
+     1.2
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     0.9
+    ],
+    [
+     "LocalWindowProxy::Initialize < ParseHTML",
+     0.7
+    ],
+    [
+     "RunMicrotasks",
+     0.6
+    ],
+    [
+     "ContextCreatedNotification < ParseHTML",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 285,
+   "ms": 13,
+   "top": [
+    [
+     "ParseHTML",
+     4.3
+    ],
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     2
+    ],
+    [
+     "RunMicrotasks < ParseHTML",
+     1.3
+    ],
+    [
+     "v8.run < EvaluateScript /?dbltest=t1109a:3987",
+     0.9
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:3 MutationObserver.observe.subtree",
+     0.7
+    ],
+    [
+     "v8.compile /?dbltest=t1109a:3713",
+     0.5
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 308,
+   "ms": 13,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     12.7
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 325,
+   "ms": 15,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     14.7
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 346,
+   "ms": 15,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     14.6
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 366,
+   "ms": 16,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     14.3
+    ],
+    [
+     "ParseHTML",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 385,
+   "ms": 15,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     13
+    ],
+    [
+     "v8.compile /?dbltest=t1109a:4142",
+     0.3
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 401,
+   "ms": 16,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     14.3
+    ],
+    [
+     "ParseHTML",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 429,
+   "ms": 19,
+   "top": [
+    [
+     "FunctionCall rocket_lazyload_css-js-after:3988 c",
+     5.4
+    ],
+    [
+     "UpdateLayoutTree",
+     2.6
+    ],
+    [
+     "v8.evaluateModule",
+     2.3
+    ],
+    [
+     "Layout",
+     1
+    ],
+    [
+     "FunctionCall /?dbltest=t1109a:4097 ",
+     0.6
+    ],
+    [
+     "EventDispatch DOMContentLoaded",
+     0.5
+    ],
+    [
+     "RunMicrotasks < EventDispatch DOMContentLoaded",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [],
+   "layouts": []
+  },
+  {
+   "at": 477,
+   "ms": 36,
+   "top": [
+    [
+     "UpdateLayoutTree",
+     26.7
+    ],
+    [
+     "Layout",
+     0.9
+    ],
+    [
+     "PrePaint",
+     0.7
+    ],
+    [
+     "Paint",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     27,
+     1415
+    ]
+   ],
+   "layouts": []
+  },
+  {
+   "at": 519,
+   "ms": 106,
+   "top": [
+    [
+     "Layout",
+     66
+    ],
+    [
+     "UpdateLayoutTree",
+     33.3
+    ],
+    [
+     "PrePaint",
+     2.9
+    ],
+    [
+     "Paint",
+     1.5
+    ],
+    [
+     "Layerize",
+     0.5
+    ],
+    [
+     "RunMicrotasks",
+     0.4
+    ]
+   ],
+   "styleRecalcs": [
+    [
+     33,
+     1908
+    ]
+   ],
+   "layouts": [
+    [
+     66,
+     2462,
+     2462
+    ]
+   ]
+  }
+ ]
+}
+]
