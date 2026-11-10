@@ -115,6 +115,11 @@ Then stop the HeyGen part (sections 2 and 3 still run).
 
 For every vidreq with status 'heygen' and no hg.videoId (oldest first, at most 2 per run), NOT type 'course' (section 8),
 whose prompt row has status 'ready' (and mode not 'self'):
+0. REELS PAUSE (Yakir 11.11.2026 00:08: "סרטונים יש לנו גם ככה עד מרץ... נעשה מקום לקורס ולפודקאסט וסרטונים נייצר פחות"):
+   while settings/heygen.reelsPause.until (YYYY-MM-DD) is today or later (Israel date), do NOT create HeyGen reels: leave
+   these requests exactly as they are (status unchanged, no message to Yakir) so the credits go to the course (section 8)
+   and the weekly podcast. Scripts, approvals, editing of footage Yakir filmed himself, and the publishing calendar go on
+   as usual (they cost no HeyGen credits). After the date, continue normally, oldest first.
 1. Credits: get_current_user; note the remaining premium credits. If fewer than settings/heygen.plan.warnBelow (100):
    one Telegram line to Yakir (at most once a day, `settings/heygen.creditsWarnedAt`):
    "נשארו בהייגן <n> קרדיטים מתוך החבילה החודשית." and still continue while there are enough for this video.
@@ -445,7 +450,7 @@ B. Scripts (status 'new' or 'writing'): read lessons[n] (title, summary, html, d
 C. Avatar clips (status 'heygen', no hg.open.videoId): first the BUDGET: get_current_user premium credits R. Estimate the
    lesson: avatar = ceil(open seconds / 15) + ceil(close seconds / 15) (Avatar III bills about 1 credit per started 15 s:
    costLog 1-2.11.2026) + voice = courseRules.voice.creditsPerLesson (until measured: 13). If R - estimate < plan.warnBelow
-   + courseRules.budget.reserveForReels + courseRules.budget.reserveForPodcast (read the CURRENT numbers from settings/heygen every run; since 11.11.2026: 20 + 20 + 40 = 80, Yakir: the course must be ready end to end by 31.12.2026): do not start; at most once a day (courseRules.budgetWarnedAt, Israel
+   + courseRules.budget.reserveForReels + courseRules.budget.reserveForPodcast (read the CURRENT numbers from settings/heygen every run; since 11.11.2026 00:08: 20 + 0 + 70 = 90, reels paused, Yakir: the course must be ready end to end by 31.12.2026): do not start; at most once a day (courseRules.budgetWarnedAt, Israel
    date) Telegram: "השיעור הבא בקורס מחכה: נשארו בהייגן <R> קרדיטים, ו-<reserveForReels> שמורים לסרטונים הרגילים. השיעורים ימשיכו
    כשהקרדיטים יתחדשו ב-<plan.resetsAt as d.m>." and stop section 8.
    Else create the two clips exactly like section 4 steps 2 and 4 (the prompt rows' CURRENT text, pronunciation +
@@ -466,9 +471,9 @@ D. His voice for the slides (status 'voice'): the narration text of slide i = le
    BUDGET (Yakir 5.11.2026 chose his own voice on the slides: about 32 credits a lesson, "שיעור או שניים בחודש"): before
    EVERY piece, get_current_user premium credits R; estimate the piece at 3 credits a minute of text (about 900 characters a
    minute). If R - estimate < plan.warnBelow + courseRules.budget.reserveForReels + courseRules.budget.reserveForPodcast
-   (the current numbers from settings/heygen; since 11.11.2026: 20 + 20 + 40 = 80): do not voice it; record the pieces done so far, and at most once a day (courseRules.budgetWarnedAt)
+   (the current numbers from settings/heygen; since 11.11.2026 00:08: 20 + 0 + 70 = 90): do not voice it; record the pieces done so far, and at most once a day (courseRules.budgetWarnedAt)
    Telegram "השיעור בקורס ממשיך בחודש הבא: נשארו בהייגן <R> קרדיטים, והם שמורים לסרטונים ולפודקאסט. ההקלטה תמשיך כשהקרדיטים
-   יתחדשו ב-<plan.resetsAt as d.m>." and stop section 8. The same total reserve (warnBelow + reserveForReels + reserveForPodcast, now 80) applies in step C.
+   יתחדשו ב-<plan.resetsAt as d.m>." and stop section 8. The same total reserve (warnBelow + reserveForReels + reserveForPodcast, now 90) applies in step C.
    For each piece, oldest first: get_current_user (credits before), then ONE call
    create_speech_without_player {text, voiceId: settings/heygen.voice.id, engine: "elevenlabs", settings: {model_id:
    "eleven_v4"}, language: "he"}; then get_current_user again (cost = before - after; wait 10 s and read again if 0).
