@@ -240,6 +240,10 @@ add_filter('the_content', function ($html) {
 		if (preg_match('~<h[1-' . max(1, min(6, $faqLvl)) . '][\s>]~i', $html, $hm, PREG_OFFSET_CAPTURE, $faq + 4)) $b3 = $hm[0][1];
 		if (isset($ins[$b3])) $ins[$b3] .= dabul_cx_box3_for_post(); else $ins[$b3] = dabul_cx_box3_for_post();
 		$GLOBALS['dabul_cx3_done'] = 1;
+	} elseif (has_category(119, $id)) {
+		// case stories (סיפורי מקרה) use another page template without the legal notice: box 3 goes at the end of the text
+		if (isset($ins[$len])) $ins[$len] .= dabul_cx_box3_for_post(); else $ins[$len] = dabul_cx_box3_for_post();
+		$GLOBALS['dabul_cx3_done'] = 1;
 	}
 
 	krsort($ins);
