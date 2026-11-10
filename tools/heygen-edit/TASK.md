@@ -445,8 +445,8 @@ B. Scripts (status 'new' or 'writing'): read lessons[n] (title, summary, html, d
 C. Avatar clips (status 'heygen', no hg.open.videoId): first the BUDGET: get_current_user premium credits R. Estimate the
    lesson: avatar = ceil(open seconds / 15) + ceil(close seconds / 15) (Avatar III bills about 1 credit per started 15 s:
    costLog 1-2.11.2026) + voice = courseRules.voice.creditsPerLesson (until measured: 13). If R - estimate < plan.warnBelow
-   + courseRules.budget.reserveForReels + courseRules.budget.reserveForPodcast (100 + 40 + 70): do not start; at most once a day (courseRules.budgetWarnedAt, Israel
-   date) Telegram: "השיעור הבא בקורס מחכה: נשארו בהייגן <R> קרדיטים, ו-40 שמורים לסרטונים הרגילים. השיעורים ימשיכו
+   + courseRules.budget.reserveForReels + courseRules.budget.reserveForPodcast (read the CURRENT numbers from settings/heygen every run; since 11.11.2026: 20 + 20 + 40 = 80, Yakir: the course must be ready end to end by 31.12.2026): do not start; at most once a day (courseRules.budgetWarnedAt, Israel
+   date) Telegram: "השיעור הבא בקורס מחכה: נשארו בהייגן <R> קרדיטים, ו-<reserveForReels> שמורים לסרטונים הרגילים. השיעורים ימשיכו
    כשהקרדיטים יתחדשו ב-<plan.resetsAt as d.m>." and stop section 8.
    Else create the two clips exactly like section 4 steps 2 and 4 (the prompt rows' CURRENT text, pronunciation +
    spokenReplace + avoidWords on the HeyGen text only, no niqqud, voice settings/heygen.voice, engine avatar_iii, no
@@ -466,9 +466,9 @@ D. His voice for the slides (status 'voice'): the narration text of slide i = le
    BUDGET (Yakir 5.11.2026 chose his own voice on the slides: about 32 credits a lesson, "שיעור או שניים בחודש"): before
    EVERY piece, get_current_user premium credits R; estimate the piece at 3 credits a minute of text (about 900 characters a
    minute). If R - estimate < plan.warnBelow + courseRules.budget.reserveForReels + courseRules.budget.reserveForPodcast
-   (100 + 40 + 70): do not voice it; record the pieces done so far, and at most once a day (courseRules.budgetWarnedAt)
+   (the current numbers from settings/heygen; since 11.11.2026: 20 + 20 + 40 = 80): do not voice it; record the pieces done so far, and at most once a day (courseRules.budgetWarnedAt)
    Telegram "השיעור בקורס ממשיך בחודש הבא: נשארו בהייגן <R> קרדיטים, והם שמורים לסרטונים ולפודקאסט. ההקלטה תמשיך כשהקרדיטים
-   יתחדשו ב-<plan.resetsAt as d.m>." and stop section 8. The same total reserve (210) applies in step C.
+   יתחדשו ב-<plan.resetsAt as d.m>." and stop section 8. The same total reserve (warnBelow + reserveForReels + reserveForPodcast, now 80) applies in step C.
    For each piece, oldest first: get_current_user (credits before), then ONE call
    create_speech_without_player {text, voiceId: settings/heygen.voice.id, engine: "elevenlabs", settings: {model_id:
    "eleven_v4"}, language: "he"}; then get_current_user again (cost = before - after; wait 10 s and read again if 0).
