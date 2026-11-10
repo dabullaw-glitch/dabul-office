@@ -57,19 +57,51 @@ for w in words: w['w'] = FIX.get(w['w'], w['w'])
 
 # ---- 1. cuts: source ranges -> clips without long silences ----
 clips = []
+# The words' times come from Whisper and are not exact, so every cut is checked on the real sound of the take:
+# a pause is cut only if the take is really quiet for the whole removed part, and every cut point is moved to where the
+# sound has faded (the end of the last word, the start of the next one). 8.11.2026: e01 lost 0.18 s in the middle of
+# a word because Whisper saw a 0.36 s "pause" where Yakir was still speaking.
+import subprocess as _sp
+try:
+    import numpy as _np
+    _raw = _sp.run(['ffmpeg', '-v', 'error', '-i', f'{proj}/assets/take.mp4', '-vn', '-ac', '1', '-ar', '16000', '-f', 'f32le', '-'], capture_output=True, check=True).stdout
+    _a = _np.frombuffer(_raw, dtype=_np.float32)
+    _n = len(_a) // 160; _rms = _np.sqrt((_a[:_n * 160].reshape(_n, 160) ** 2).mean(1)) if _n else _np.zeros(1)   # 10 ms frames
+    _speech = _rms[_rms > _np.percentile(_rms, 60)]
+    _QUIET = float(_np.median(_speech)) * 0.12 if len(_speech) else 0.0
+except Exception as _e:
+    print(f'sound check off: {_e}', file=sys.stderr); _rms = None; _QUIET = 0.0
+def _quiet(t0, t1):   # True when the take is quiet from t0 to t1 (seconds)
+    if _rms is None or t1 <= t0: return _rms is None
+    seg = _rms[max(0, int(t0 * 100)):int(t1 * 100) + 1]
+    return bool(len(seg)) and float(seg.max()) <= _QUIET
+def _fade_end(t, limit):   # first quiet moment after t (the word has really ended), at most `limit`
+    if _rms is None: return min(t, limit)
+    x = t
+    while x < limit and not _quiet(x, x + 0.06): x += 0.01
+    return min(x + 0.06, limit)
+def _fade_start(t, limit):   # last quiet moment before t (just before the next word really starts), at least `limit`
+    if _rms is None: return max(t, limit)
+    x = t
+    while x > limit and not _quiet(x - 0.06, x): x -= 0.01
+    return max(x - 0.06, limit)
 def _after(w):   # the end of a word, with its fade, but never into the next spoken word
     nxt = [x['s'] for x in words if x['s'] > w['e'] + 0.01]
-    return min(w['e'] + TAIL, (min(nxt) - 0.08) if nxt else w['e'] + TAIL)
+    lim = (min(nxt) - 0.05) if nxt else w['e'] + 1.2
+    return min(max(w['e'] + TAIL, _fade_end(w['e'], lim)), lim)
 def _before(w):  # just before a word, but never inside the word before it
     prv = [x['e'] for x in words if x['e'] < w['s'] - 0.01]
-    return max(w['s'] - PRE, (max(prv) + 0.08) if prv else 0.0, 0.0)
+    lim = max((max(prv) + 0.05) if prv else 0.0, 0.0)
+    return max(min(w['s'] - PRE, _fade_start(w['s'], lim)), lim)
 for a, b in plan['keep']:
     ws = [w for w in words if w['s'] >= a - 0.05 and w['e'] <= b + 0.3]
     if not ws: continue
     cur = [_before(ws[0]), None]
     for i in range(1, len(ws)):
         if ws[i]['s'] - ws[i - 1]['e'] > GAP:
-            cur[1] = _after(ws[i - 1]); clips.append(tuple(cur)); cur = [_before(ws[i]), None]
+            e1, s1 = _after(ws[i - 1]), _before(ws[i])
+            if s1 - e1 < 0.12 or not _quiet(e1, s1): continue   # not a real pause on the sound: no cut here
+            cur[1] = e1; clips.append(tuple(cur)); cur = [s1, None]
     cur[1] = _after(ws[-1]); clips.append(tuple(cur))
 # two clips that now touch or overlap become one (no cut in the middle of speech)
 merged = []

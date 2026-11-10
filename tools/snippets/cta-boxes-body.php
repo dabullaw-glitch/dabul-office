@@ -214,6 +214,10 @@ add_filter('the_content', function ($html) {
 	if ($n >= 4) {
 		$after = array();
 		foreach ($sec as $i => $p) { if ($i >= 2 && $i <= $n - 2 && $p > $b1 + 10) $after[] = $i; }
+		// not right under a call line the article already has (many articles end a section with "התקשרו: 09-...")
+		$calm = array();
+		foreach ($after as $i) { if (strpos(substr($html, max(0, $sec[$i] - 700), min(700, $sec[$i])), 'href="tel:') === false) $calm[] = $i; }
+		if ($calm) $after = $calm;
 		if ($after) {
 			$pick = $after[0];
 			$ig = -1;
