@@ -404,7 +404,7 @@ Every run, after section 6, check the episode rows (skip rows with test true). Y
 - The 1-minute clip is the vidreq vr-pod-epNN-clip (type 'other', source 'podcast', opened by the function at the script
   approval), handled by sections 4 to 6 like any request (raw approval, edit, final approval). When it is 'approved' and has
   no pubId: INSERT a pub row `pub-<releaseDate YYYYMMDD>T1300-podcast-epNN-clip` at '<releaseDate>T13:00' for
-  podcast/show.clipSlot.channels (facebook, instagram, youtube, tiktok) with its edited video link and the clip caption,
+  podcast/show.clipSlot.channels (since 11.11.2026 YOUTUBE ONLY: Yakir "רק ליוטיוב ולאתר, בלי פייסבוק אינסטגרם וטיקטוק"; the site page comes from the daily YouTube task) with its edited video link and the clip caption,
   series 'podcast', slotRule 'podcast-clip-wednesday' (Yakir chose Wednesday 13:00 on 5.11.2026). Never a Sun/Tue/Thu slot
   and never type 'reel'. docs_merge the vidreq {pubId}.
 
