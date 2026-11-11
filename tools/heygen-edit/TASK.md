@@ -361,7 +361,8 @@ Every run, after section 6, check the episode rows (skip rows with test true). Y
   {"id": "epNN"} with the x-cron-secret header (net.http_post, read net._http_response): it sends Yakir the new version.
 - 'script-approved' (Yakir pressed the button; the function also opened the clip request vr-pod-epNN-clip): generate the
   VOICE ONLY (no avatar video), exactly as pipeline.2_voice says: mcp__heygen__create_speech_without_player per script
-  section, voice settings/heygen.voice.id, engine 'elevenlabs', settings {model_id:'eleven_v4'}, the text prepared like
+  section, voice settings/heygen.voice.id, language 'he' (since 11.11.2026 the tool takes no engine/settings/model: omit
+  them; never <break> tags, his instant clone refuses them; use "[pause]" for a pause), the text prepared like
   section 4 step 2 (no section headers, pronunciation + spokenReplace + avoidWords, never niqqud). Credits before / after
   (get_current_user) into settings/heygen.costLog as {id:'pod-epNN-voice', ...} (episode 1 cost 29 credits for 10 minutes).
   If the first section costs clearly more than that rate, stop: one Telegram line to Yakir with the measured cost, status
@@ -475,8 +476,13 @@ C. Avatar clips (status 'heygen', no hg.open.videoId): first the BUDGET: get_cur
 D. His voice for the slides (status 'voice'): the narration text of slide i = lessons[n].deck.scenes[i].say EXACTLY, with
    only settings/heygen.pronunciation (whole words) and the simple spokenReplace / avoidWords swaps applied (מועד -> תאריך,
    הפרש -> פער, להחזר -> לקבל את הכסף בחזרה, שלחו -> תשלחו; a standalone "מוכר" -> rephrase minimally), never niqqud.
-   Split the slides into consecutive PIECES of at most courseRules.voice.maxChars (4500) characters; inside a piece join the
-   slides with ` <break time="1.2s"/> ` (the assembly cuts the piece back into slides at these pauses).
+   Split the slides into consecutive PIECES of at most 2000 characters (about 2 minutes; smaller pieces keep the slides in
+   step; never a piece under about 600 characters except the last, short calls are billed a minimum). NO <break> TAGS
+   (11.11.2026: HeyGen refuses them for his instant voice clone, "break tags are not supported", and the speech tool no
+   longer takes engine/settings; Yakir approved 11.11.2026): make sure every slide's text ends with a period (or ? / !),
+   then join the slides with "\n\n[pause]\n\n" ([pause] is the audio tag HeyGen supports for instant voices) so he
+   pauses between slides (the assembly cuts the piece back into
+   slides at its longest pauses, checked against the text lengths).
    BUDGET (Yakir 5.11.2026 chose his own voice on the slides: about 32 credits a lesson, "שיעור או שניים בחודש"): before
    EVERY piece, get_current_user premium credits R; estimate the piece at 3 credits a minute of text (about 900 characters a
    minute). If R - estimate < plan.warnBelow + courseRules.budget.reserveForReels + courseRules.budget.reserveForPodcast
@@ -484,8 +490,8 @@ D. His voice for the slides (status 'voice'): the narration text of slide i = le
    Telegram "השיעור בקורס ממשיך בחודש הבא: נשארו בהייגן <R> קרדיטים, והם שמורים לסרטונים ולפודקאסט. ההקלטה תמשיך כשהקרדיטים
    יתחדשו ב-<plan.resetsAt as d.m>." and stop section 8. The same total reserve (warnBelow + reserveForReels + reserveForPodcast, now 90) applies in step C.
    For each piece, oldest first: get_current_user (credits before), then ONE call
-   create_speech_without_player {text, voiceId: settings/heygen.voice.id, engine: "elevenlabs", settings: {model_id:
-   "eleven_v4"}, language: "he"}; then get_current_user again (cost = before - after; wait 10 s and read again if 0).
+   create_speech_without_player {text, voiceId: settings/heygen.voice.id, language: "he"} (no model, no engine, no
+   settings: the tool changed on 11.11.2026; omit model so the server picks heygen-voice-1); then get_current_user again (cost = before - after; wait 10 s and read again if 0).
    Record each piece on the request: narr [{from, to, audio: audio_url, seconds: duration, cost, at}] (read, append, merge
    the whole array) and in settings/heygen.costLog ({id: "<request id>-voice-<k>", title, at, cost, remaining, seconds}).
    On an error or a timeout: record narrError and stop section 8 for this run (never retry in the same run); after a

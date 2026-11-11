@@ -13,7 +13,7 @@ Job: {
   "splitTest": false                 (test only: cut the Google files into pieces and split them again, report the error)
 }
 Narration pieces: one HeyGen speech call per piece (consecutive slides from..to, 0-based, inclusive), the slides' texts joined
-with <break time="1.2s"/>. The piece is cut back into slides at its longest pauses (checked against the text lengths).
+with "[pause]" between slides (11.11.2026: HeyGen refuses <break> tags for an instant voice clone). The piece is cut back into slides at its longest pauses (checked against the text lengths).
 Output (GitHub Pages, never Supabase storage): media/course/<course>/<file>.mp4, <file>.jpg (poster), <file>.result.json,
 check stills media/course/check/<file>-1..6.jpg. On failure the workflow writes media/course/jobs/<file>.error.txt.
 """
