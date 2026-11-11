@@ -204,7 +204,8 @@ function sumCard(p){
     <table class="stbl"><tr><th></th><th>${esc(m[0])}</th><th>${esc(m[1])}</th><th>סה״כ</th></tr>
     <tr><td class="lab">הכנסות</td><td>${money(S.inc[0])}</td><td>${money(S.inc[1])}</td><td class="t2">${money(ti)}</td></tr>
     <tr><td class="lab">הוצאות</td><td>${money(S.exp[0])}</td><td>${money(S.exp[1])}</td><td class="t2">${money(te)}</td></tr>
-    <tr><td class="lab">${nd < 0 ? 'ההוצאות גבוהות מההכנסות' : 'נשאר אחרי ההוצאות'}</td><td>${net(S.inc[0] - S.exp[0])}</td><td>${net(S.inc[1] - S.exp[1])}</td><td>${net(nd)}</td></tr></table>
+    ${ti ? `<tr><td class="lab">${nd < 0 ? 'ההוצאות גבוהות מההכנסות' : 'נשאר אחרי ההוצאות'}</td><td>${net(S.inc[0] - S.exp[0])}</td><td>${net(S.inc[1] - S.exp[1])}</td><td>${net(nd)}</td></tr>` : ''}</table>
+    ${!ti && te ? `<p class="sub" style="margin:10px 0 0">עוד לא נרשמו הכנסות. כשמצלמים תלוש שכר או אישור על קצבה עם הסכום, יופיע כאן כמה נשאר אחרי ההוצאות.</p>` : ''}
     ${ti ? `<div class="meter"><div class="r2"><span>ההוצאות הן ${pct}% מההכנסות</span><span>${nd < 0 ? money(-nd) + ' יותר מההכנסות' : money(nd) + ' נשאר'}</span></div><div class="track"><div class="fill" style="width:${Math.min(100, pct)}%"></div></div></div>` : ''}
     ${na.length && !p.locked ? `<div class="note"><span style="font-size:22px">✍️</span><span><b>${na.length === 1 ? 'קבלה אחת עדיין בלי סכום' : `${na.length} קבלות עדיין בלי סכום`}</b>מוסיפים סכום, והסיכום יהיה מלא. לא חובה.</span><button class="mini" id="addamt" style="margin-inline-start:auto">הוספה</button></div>` : ''}
     ${S.lines.inc.length + S.lines.exp.length ? `<details class="det"><summary>פירוט לפי סוג</summary>${S.lines.inc.length ? `<div class="dgrp">הכנסות</div>${lines('inc')}` : ''}${S.lines.exp.length ? `<div class="dgrp">הוצאות</div>${lines('exp')}` : ''}</details>` : ''}</div>`;
@@ -237,7 +238,7 @@ function strip(){
   if (mode !== 'report' || !R || step > 2) { if (el) el.classList.add('hidden'); document.body.style.paddingBottom = ''; return; }
   if (!el) { el = document.createElement('div'); el.id = 'strip'; el.className = 'strip'; el.setAttribute('aria-live', 'polite'); document.body.appendChild(el); }
   const T = totals(), ti = T.inc[0] + T.inc[1], te = T.exp[0] + T.exp[1], nd = ti - te;
-  el.innerHTML = `<div class="wrap"><div><small>הכנסות</small><b>${money(ti)}</b></div><div><small>הוצאות</small><b>${money(te)}</b></div><div><small>${nd < 0 ? 'חסר' : 'נשאר'}</small><b class="${nd < 0 ? 'n' : 'p'}">${money(Math.abs(nd))}</b></div></div>`;
+  el.innerHTML = `<div class="wrap"><div><small>הכנסות</small><b>${money(ti)}</b></div><div><small>הוצאות</small><b>${money(te)}</b></div><div><small>${!ti ? 'נשאר' : nd < 0 ? 'חסר' : 'נשאר'}</small><b class="${!ti ? '' : nd < 0 ? 'n' : 'p'}">${ti ? money(Math.abs(nd)) : '—'}</b></div></div>`;
   el.classList.remove('hidden'); el.style.bottom = (bar.offsetHeight || 70) + 'px';
   document.body.style.paddingBottom = ((bar.offsetHeight || 70) + el.offsetHeight + 24) + 'px';
 }
