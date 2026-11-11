@@ -176,14 +176,14 @@ if(c&&c.p)gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',a
   <div class="n-mast"><div class="n-wrap">
     <a class="n-logo" href={homeHref} aria-label={`NWS ${u.brandName}`}><span class="n-mk">NWS<i></i></span><span class="n-lt"><b>{u.brandName}</b><span>{u.tagline}</span></span></a>
     <div class="n-tools">
-      <form class="n-srch" role="search" action={`${pre}/search/`} method="get"><Icon name="search" size={18} sw={2} /><label class="sr" for="q">{u.search}</label><input id="q" name="q" type="search" placeholder={he ? 'חיפוש ידיעות, רחובות, בעלי מקצוע' : u.searchPh}></form>
+      <form class="n-srch" role="search" action="/search/" method="get"><Icon name="search" size={18} sw={2} /><label class="sr" for="q">{u.search}</label><input id="q" name="q" type="search" placeholder={he ? 'חיפוש ידיעות, רחובות, בעלי מקצוע' : u.searchPh}></form>
       {/* 29.10.2026 (Yakir): the city guide menu moved from the sections row to the header, so the sections row is not cut */}
       {he && guideCats.length > 0 && <details class="n-dd hdd" data-dd><summary aria-current={current === 'guide' ? 'page' : undefined}>שימושון עירוני<Icon name="chev" size={14} sw={2.4} /></summary>
         <div class="n-ddm"><b>שימושון עירוני</b>{guideCats.map((c) => <a href={guideHref(c)}>{c.name}</a>)}<a class="all" href="/guide/">כל השימושון ←</a></div></details>}
       <a class="n-btn ink" href={tgHref} {...tgAttr} data-tg><Icon name="telegram" size={18} color="#fff" />{L.tg}</a>
       <a class="n-btn line ico" href={`${pre}/join/#alerts`} aria-label={L.alerts}><Icon name="bell" size={19} /></a>
     </div>
-    <div class="n-mtools"><a class="n-ib" href={`${pre}/search/`} aria-label={u.search}><Icon name="search" size={22} sw={2} /></a></div>
+    <div class="n-mtools"><a class="n-ib" href="/search/" aria-label={u.search}><Icon name="search" size={22} sw={2} /></a></div>
   </div></div>
   <nav class="n-nav" aria-label={u.sectionsH}><div class="n-wrap">
     <a href={homeHref} aria-current={current === 'home' ? 'page' : undefined}>{L.home}</a>
@@ -231,7 +231,7 @@ if(c&&c.p)gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',a
 </nav>
 <div class="n-menu" id="nmenu" role="dialog" aria-modal="true" aria-label={L.menu} hidden>
   <div class="hd"><b>{L.menu}</b><button class="n-ib" type="button" data-menu-close aria-label={he ? 'סגירה' : 'Close'}><Icon name="close" size={22} /></button></div>
-  <form class="n-srch" role="search" action={`${pre}/search/`} method="get" style="width:100%"><Icon name="search" size={18} sw={2} /><label class="sr" for="q2">{u.search}</label><input id="q2" name="q" type="search" placeholder={u.searchPh}></form>
+  <form class="n-srch" role="search" action="/search/" method="get" style="width:100%"><Icon name="search" size={18} sw={2} /><label class="sr" for="q2">{u.search}</label><input id="q2" name="q" type="search" placeholder={u.searchPh}></form>
   <nav aria-label={u.sectionsH}>{liveSections().map((s) => <a href={sectionUrl(s.key, lang)} style={`--c:${s.color}`}><Icon name={s.key} size={18} />{s.name[lang]}</a>)}<a href={`${pre}/directory/`}><Icon name="wrench" size={18} />{L.pros}</a><a href={`${pre}/now/`}><Icon name="sun" size={18} />{u.now}</a>{he && <a href="/netanya/"><Icon name="pin" size={18} />מדריך העיר</a>}{he && guideCats.length > 0 && <a href="/guide/"><Icon name="list" size={18} />שימושון עירוני</a>}</nav>
   <div class="bt"><a class="n-btn tg" href={tgHref} {...tgAttr} data-tg><Icon name="telegram" size={18} color="#fff" />{he ? 'ערוץ הטלגרם' : 'Telegram'}</a><a class="n-btn line" href={`${pre}/send-news/`}>{u.sendNews}</a><a class="n-btn line" href="/advertise/">{u.advertise}</a></div>
   <div class="lgs">{LANGS.map((l) => <a href={langHref(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{l === 'he' ? 'עברית' : l === 'ru' ? 'Русский' : l === 'fr' ? 'Français' : 'English'}</a>)}</div>
