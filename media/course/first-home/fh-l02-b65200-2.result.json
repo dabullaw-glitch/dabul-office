@@ -1,0 +1,243 @@
+{
+ "id": "vr-fh-l02",
+ "file": "fh-l02-b65200-2",
+ "course": "first-home",
+ "at": "2026-11-11T09:44:01Z",
+ "warnings": [],
+ "n": 2,
+ "title": "לפני שמתאהבים בדירה",
+ "scenes": 28,
+ "narration": {
+  "mode": "pieces",
+  "pieces": [
+   {
+    "from": 0,
+    "to": 5,
+    "method": "nearest-pause",
+    "seconds": 129.9,
+    "warnings": []
+   },
+   {
+    "from": 6,
+    "to": 12,
+    "method": "nearest-pause",
+    "seconds": 143.95,
+    "warnings": []
+   },
+   {
+    "from": 13,
+    "to": 14,
+    "method": "longest-pauses",
+    "seconds": 48.91,
+    "warnings": []
+   },
+   {
+    "from": 15,
+    "to": 17,
+    "method": "nearest-pause",
+    "seconds": 61.85,
+    "warnings": []
+   },
+   {
+    "from": 18,
+    "to": 20,
+    "method": "longest-pauses",
+    "seconds": 64.11,
+    "warnings": []
+   },
+   {
+    "from": 21,
+    "to": 23,
+    "method": "longest-pauses",
+    "seconds": 54.82,
+    "warnings": []
+   },
+   {
+    "from": 24,
+    "to": 27,
+    "method": "nearest-pause",
+    "seconds": 75.22,
+    "warnings": []
+   }
+  ]
+ },
+ "duration": 677.54,
+ "parts": {
+  "open": 41.52,
+  "slides": 588.31,
+  "close": 47.68
+ },
+ "bytes": 27878437,
+ "crf": 24,
+ "slides": [
+  {
+   "slide": 1,
+   "kind": "big",
+   "start": 41.52,
+   "speech": 18.74
+  },
+  {
+   "slide": 2,
+   "kind": "cards",
+   "start": 61.16,
+   "speech": 16.65
+  },
+  {
+   "slide": 3,
+   "kind": "flow",
+   "start": 78.7,
+   "speech": 22.29
+  },
+  {
+   "slide": 4,
+   "kind": "compare",
+   "start": 101.9,
+   "speech": 23.55
+  },
+  {
+   "slide": 5,
+   "kind": "key",
+   "start": 126.34,
+   "speech": 18.13
+  },
+  {
+   "slide": 6,
+   "kind": "steps",
+   "start": 145.37,
+   "speech": 26.73
+  },
+  {
+   "slide": 7,
+   "kind": "cards",
+   "start": 173.0,
+   "speech": 22.32
+  },
+  {
+   "slide": 8,
+   "kind": "svg",
+   "start": 196.22,
+   "speech": 17.62
+  },
+  {
+   "slide": 9,
+   "kind": "doc",
+   "start": 214.75,
+   "speech": 23.5
+  },
+  {
+   "slide": 10,
+   "kind": "warn",
+   "start": 239.14,
+   "speech": 21.68
+  },
+  {
+   "slide": 11,
+   "kind": "doc",
+   "start": 261.72,
+   "speech": 18.27
+  },
+  {
+   "slide": 12,
+   "kind": "split",
+   "start": 280.9,
+   "speech": 24.78
+  },
+  {
+   "slide": 13,
+   "kind": "big",
+   "start": 306.58,
+   "speech": 11.85
+  },
+  {
+   "slide": 14,
+   "kind": "cards",
+   "start": 319.33,
+   "speech": 30.68
+  },
+  {
+   "slide": 15,
+   "kind": "flow",
+   "start": 350.91,
+   "speech": 16.9
+  },
+  {
+   "slide": 16,
+   "kind": "bullets",
+   "start": 368.7,
+   "speech": 20.93
+  },
+  {
+   "slide": 17,
+   "kind": "warn",
+   "start": 390.53,
+   "speech": 19.82
+  },
+  {
+   "slide": 18,
+   "kind": "compare",
+   "start": 411.25,
+   "speech": 19.79
+  },
+  {
+   "slide": 19,
+   "kind": "cards",
+   "start": 431.94,
+   "speech": 23.92
+  },
+  {
+   "slide": 20,
+   "kind": "tip",
+   "start": 456.76,
+   "speech": 14.51
+  },
+  {
+   "slide": 21,
+   "kind": "example",
+   "start": 472.17,
+   "speech": 23.65
+  },
+  {
+   "slide": 22,
+   "kind": "flow",
+   "start": 496.71,
+   "speech": 21.07
+  },
+  {
+   "slide": 23,
+   "kind": "bullets",
+   "start": 518.69,
+   "speech": 21.22
+  },
+  {
+   "slide": 24,
+   "kind": "tip",
+   "start": 540.8,
+   "speech": 11.2
+  },
+  {
+   "slide": 25,
+   "kind": "quote",
+   "start": 552.9,
+   "speech": 17.76
+  },
+  {
+   "slide": 26,
+   "kind": "checklist",
+   "start": 571.56,
+   "speech": 24.2
+  },
+  {
+   "slide": 27,
+   "kind": "summary",
+   "start": 596.66,
+   "speech": 18.59
+  },
+  {
+   "slide": 28,
+   "kind": "big",
+   "start": 616.15,
+   "speech": 12.78
+  }
+ ],
+ "url": "https://dabullaw-glitch.github.io/dabul-office/media/course/first-home/fh-l02-b65200-2.mp4"
+}
