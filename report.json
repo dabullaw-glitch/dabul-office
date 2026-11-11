@@ -1,0 +1,264 @@
+{
+ "at": "2026-11-11T11:52:08.102Z",
+ "hours": 26,
+ "checked": 32,
+ "mismatched": 0,
+ "rows": [
+  {
+   "u": "/events/n921/",
+   "t": "נתניה: נחנכה תערוכה לזכר ראש העיר לשעבר מרים פיירברג-איכר",
+   "topic": "culture/high",
+   "where": "netanya",
+   "img": "c30970588 [culture]",
+   "why": ""
+  },
+  {
+   "u": "/flash/n918/",
+   "t": "נתניה: פועל כבן 65 נפצע קשה מנפילת מוטות ברזל ממנוף במפעל",
+   "topic": "accident/high",
+   "where": "netanya",
+   "img": "c87455433 [ambulance]",
+   "why": ""
+  },
+  {
+   "u": "/economy/n916/",
+   "t": "דיסקונט יאפשר ללקוחותיו מסחר בביטקוין ובאת'ריום מה-26 בנובמבר",
+   "topic": "economy/high",
+   "where": "",
+   "img": "c54923490 [money]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n913/",
+   "t": "פיצוצי מבנים בכפר עיינאתא שבדרום לבנון",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "c78877047 [military]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n912/",
+   "t": "משמרות המהפכה: תקפנו מיכלית נפט במצר הורמוז",
+   "topic": "shipping/high",
+   "where": "outside",
+   "img": "c92845803 [shipping]",
+   "why": ""
+  },
+  {
+   "u": "/blog/n910/",
+   "t": "מחזור בנתניה: איזה פח למה, ומתי מפנים",
+   "topic": "military/low",
+   "where": "netanya",
+   "img": "stock:city-buildings",
+   "why": ""
+  },
+  {
+   "u": "/economy/n909/",
+   "t": "הבנק הבינלאומי: הרווח הנקי ירד ב-13% ל-508 מיליון שקל ברבעון",
+   "topic": "economy/high",
+   "where": "",
+   "img": "c93266709 [money]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n905/",
+   "t": "נשיא איראן קושר בין תוצאות הבחירות בעולם למלחמה",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sharon/n904/",
+   "t": "השרון: 156 מ\"מ גשם בקדימה, כמעט 60 מ\"מ במרכז כפר סבא",
+   "topic": "weather/high",
+   "where": "outside",
+   "img": "c65328561 [weather]",
+   "why": ""
+  },
+  {
+   "u": "/tourism/n896/",
+   "t": "מזג האוויר בנתניה, יום רביעי 11.11: בין 12 ל-22 מעלות",
+   "topic": "weather/high",
+   "where": "netanya",
+   "img": "c74849057 [weather]",
+   "why": ""
+  },
+  {
+   "u": "/israel/n895/",
+   "t": "בסנט עבר להתגורר בבסיס צבאי בגלל איומים מאיראן",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n892/",
+   "t": "פיקוד העורף מקים מפקדה לתיאום בין הצבא לגופי החירום האזרחיים",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n889/",
+   "t": "פיקוד הצפון: צה\"ל צפוי לפתוח בגל תקיפות בלבנון",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n885/",
+   "t": "אישום בארה\"ב: רשת איראנית תכננה פיגועים נגד יהודים",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/israel/n884/",
+   "t": "משרד ראש הממשלה דוחה ביקורת מועצת השלום על הסיוע לעזה בחורף",
+   "topic": "military/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sports/n882/",
+   "t": "כדורעף: הוד השרון ניצחה את אשדוד, המעפיל/עמק חפר הפסידה למכבי ת\"א",
+   "topic": "sports/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/community/n881/",
+   "t": "קריית צאנז: הרב לנדא והאדמו״ר מצאנז ניהלו דיון תורני באמצע חתונה",
+   "topic": "none",
+   "where": "netanya",
+   "img": "c84603380 [school]",
+   "why": ""
+  },
+  {
+   "u": "/economy/n880/",
+   "t": "הרווח הנקי של הבורסה בתל אביב זינק ב-37% ברבעון השלישי",
+   "topic": "economy/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sports/n877/",
+   "t": "כדורסל: אליצור נתניה הפסידה לראשונה העונה, 72:75 למכבי רעננה",
+   "topic": "sports/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/community/n876/",
+   "t": "סיכום היום בנתניה ובשרון, יום שלישי 10.11: 39 ידיעות",
+   "topic": "none",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/economy/n873/",
+   "t": "ביטקוין ירד מתחת לרמה של 74 אלף דולר אחרי נתוני אינפלציה בארה\"ב",
+   "topic": "economy/high",
+   "where": "",
+   "img": "c187689718 [money]",
+   "why": ""
+  },
+  {
+   "u": "/city/n872/",
+   "t": "נתניה: יום שירותים מרוכז למשרתי מילואים, חיילים ומשוחררים",
+   "topic": "military/high",
+   "where": "netanya",
+   "img": "c34197703 [military]",
+   "why": ""
+  },
+  {
+   "u": "/economy/n871/",
+   "t": "הביטקוין ירד לפני נתוני האינפלציה בארה\"ב",
+   "topic": "economy/high",
+   "where": "",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/blog/n869/",
+   "t": "ותיקים בנתניה: הנחה בארנונה, מועדונים וחניה חינם",
+   "topic": "economy/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sports/n868/",
+   "t": "מכבי נתניה: השוער סמואל סילבה צבר 17 נקודות פנטזי ב-0:4 על חיפה",
+   "topic": "sports/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sports/n866/",
+   "t": "עוז בילו ממכבי נתניה מועמד לשחקן המחזור אחרי ה-0:4 על מכבי חיפה",
+   "topic": "sports/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/economy/n865/",
+   "t": "מדד המחירים לצרכן בארה\"ב עלה ב-0.4% באוקטובר, מעל התחזיות",
+   "topic": "economy/high",
+   "where": "",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/economy/n861/",
+   "t": "בינאנס מזהירה מפגם ב-iOS שעלול לחשוף מפתחות פרטיים של ארנקים",
+   "topic": "economy/low",
+   "where": "",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/city/n860/",
+   "t": "נתניה: תושבי שדרות ירושלים מתלוננים על רעש מעבודות תשתית",
+   "topic": "roadworks/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/sharon/n858/",
+   "t": "תושבת מושב הדר עם קרן טרנר הושבעה לכנסת",
+   "topic": "roadworks/low",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/economy/n857/",
+   "t": "אנתרופיק מתכננת גיוס של עד 90.4 מיליארד דולר בהנפקה ובהקצאה פרטית",
+   "topic": "economy/high",
+   "where": "outside",
+   "img": "own",
+   "why": ""
+  },
+  {
+   "u": "/real-estate/n853/",
+   "t": "מרכז נתניה: 43 דירות ייהרסו ובמקומן ייבנו כ-135 דירות בפינוי-בינוי",
+   "topic": "realestate/high",
+   "where": "netanya",
+   "img": "own",
+   "why": ""
+  }
+ ]
+}
