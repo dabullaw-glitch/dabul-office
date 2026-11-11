@@ -72,7 +72,7 @@ function dabul_tsm_box() {
 	return '<div class="dtsm" role="note" aria-label="מדד תשומות הבנייה העדכני"><p class="k">מדד תשומות הבנייה למגורים, הנתון העדכני</p>'
 		. '<p class="v"><b>' . esc_html(number_format($r['v'], 1)) . '</b> נקודות <span>(' . esc_html($months[$r['m']] . ' ' . $r['y']) . ')</span></p>'
 		. ($line ? '<p class="c">' . esc_html(implode(' · ', $line)) . '</p>' : '')
-		. '<p class="s">' . ($r['base'] ? 'בסיס: ' . esc_html($r['base']) . '. ' : '') . 'מקור: <a href="https://www.cbs.gov.il/he/Pages/default.aspx" target="_blank" rel="noopener">הלשכה המרכזית לסטטיסטיקה</a>. הנתון מתעדכן כאן אוטומטית כשהמדד החדש מתפרסם, בדרך כלל באמצע כל חודש.</p></div>';
+		. '<p class="s">' . ($r['base'] ? 'בסיס: ' . esc_html(preg_replace('~^(\d{4})\s+(.+)$~u', '$2 $1', $r['base'])) . ' = 100. ' : '') . 'מקור: <a href="https://www.cbs.gov.il/he/Pages/default.aspx" target="_blank" rel="noopener">הלשכה המרכזית לסטטיסטיקה</a>. הנתון מתעדכן כאן אוטומטית כשהמדד החדש מתפרסם, בדרך כלל באמצע כל חודש.</p></div>';
 }
 
 function dabul_tsm_on() {
