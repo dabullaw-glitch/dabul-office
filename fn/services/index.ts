@@ -164,7 +164,9 @@ async function payLink(id: string, o: any): Promise<string> {
     const hook = `${env('SUPABASE_URL')}/functions/v1/services?step=paid&id=${encodeURIComponent(id)}&k=${payKey}`;
     const body = {
       description: `${o.title} (הזמנה ${id})`, type: 320, lang: 'he', currency: 'ILS', vatType: 0,
-      amount: o.price.total, maxPayments: 1, pluginId,
+      // 11.11.2026 (Yakir approved): payment in up to 3 credit card payments, on orders of 300 ILS or more.
+      // Morning accepted maxPayments 3 with the Grow clearing in a test form the same day.
+      amount: o.price.total, maxPayments: o.price.total >= 300 ? 3 : 1, pluginId,
       client: { name: o.c.name, emails: o.c.email ? [o.c.email] : [], phone: o.c.phone || '', add: true },
       successUrl: `${SITE}/online/thanks/?id=${encodeURIComponent(id)}`, failureUrl: `${SITE}/online/thanks/?id=${encodeURIComponent(id)}&failed=1`,
       notifyUrl: hook, custom: id, remarks: `הזמנה מקוונת ${id}`,
