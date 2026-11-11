@@ -117,7 +117,8 @@ For every vidreq with status 'heygen' and no hg.videoId (oldest first, at most 2
 whose prompt row has status 'ready' (and mode not 'self'):
 0. REELS PAUSE (Yakir 11.11.2026 00:08: "סרטונים יש לנו גם ככה עד מרץ... נעשה מקום לקורס ולפודקאסט וסרטונים נייצר פחות"):
    while settings/heygen.reelsPause.until (YYYY-MM-DD) is today or later (Israel date), do NOT create HeyGen reels: leave
-   these requests exactly as they are (status unchanged, no message to Yakir) so the credits go to the course (section 8)
+   these requests exactly as they are (EXCEPT the podcast's 1-minute clip, vidreq source 'podcast' / id vr-pod-epNN-clip:
+   it is part of the podcast and goes on as usual) (status unchanged, no message to Yakir) so the credits go to the course (section 8)
    and the weekly podcast. Scripts, approvals, editing of footage Yakir filmed himself, and the publishing calendar go on
    as usual (they cost no HeyGen credits). After the date, continue normally, oldest first.
 1. Credits: get_current_user; note the remaining premium credits. If fewer than settings/heygen.plan.warnBelow (100):
@@ -405,6 +406,14 @@ Every run, after section 6, check the episode rows (skip rows with test true). Y
   podcast/show.clipSlot.channels (facebook, instagram, youtube, tiktok) with its edited video link and the clip caption,
   series 'podcast', slotRule 'podcast-clip-wednesday' (Yakir chose Wednesday 13:00 on 5.11.2026). Never a Sun/Tue/Thu slot
   and never type 'reel'. docs_merge the vidreq {pubId}.
+
+CATCH-UP WEEK (Yakir approved 11.11.2026 09:33): episode 1 went to Spotify and Apple on Thursday 5.11, and no episode went
+up in the week of 8.11. So ep02 is an exception: releaseDate 2026-11-12 (THURSDAY) 19:00 for YouTube and the feed (pub row
+`pub-20261112T1900-podcast-ep02`, slotRule 'podcast-catchup'; the feed on the first run at or after 12.11 19:00), and its
+1-minute clip on FRIDAY 2026-11-13 13:00 (pub row `pub-20261113T1300-podcast-ep02-clip`, slotRule 'podcast-catchup').
+If ep02 is not final-approved in time, use the next free day at the same hours, but never a Wednesday that another episode
+has. From ep03 on, back to the fixed order: episode Wednesday 19:00, clip Wednesday 13:00 (ep03 = 18.11.2026).
+Before anything goes up, Yakir approves it (script, the finished episode, the clip): never skip an approval.
 
 Never create HeyGen media for the podcast outside these steps, never publish without the final approval, never add an
 episode to the feed twice, and never put a podcast item into the fixed Sun/Tue/Thu or Monday slots.

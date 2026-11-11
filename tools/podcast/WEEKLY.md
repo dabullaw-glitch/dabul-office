@@ -25,6 +25,10 @@ shape of every field and the spoken style of the script).
    (the daily reminder already reminds him). Otherwise the new id is epNN = the highest number + 1 (two digits: ep02).
 2. **Release date**: the first Wednesday at least 5 days from today that no other episode has as releaseDate (episode 1
    is on YouTube on 11.11.2026, so the first weekly episode, written 12.11.2026, gets 18.11.2026).
+   CATCH-UP (Yakir approved 11.11.2026 09:33): episode 1 went to Spotify and Apple on 5.11 and no episode went up in the week
+   of 8.11, so ep02 is written on 11.11.2026 by a manual run and gets releaseDate 2026-11-12 (a Thursday, the one exception;
+   its clip goes up Friday 13.11 at 13:00, see tools/heygen-edit/TASK.md 6b). The run of 12.11.2026 writes ep03 for
+   18.11.2026, and from then on the rule above as usual. In the Telegram text for ep02 say it goes up "מחר, חמישי, ב-19:00".
 3. **Topic, every week a different one**: take the first item of podcast/show.topics that no episode used (compare with
    the topic of every epNN row, by meaning, not only by words). When the list is used up, choose a new real estate topic
    that is useful to many people now: current affairs first (a new law, a tax change, a Bank of Israel decision, a court
