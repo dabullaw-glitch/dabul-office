@@ -28,6 +28,25 @@ const { lang = 'he', title, description, path, alternates = {}, ogImage = '/og/d
   crumbs = [], current = '', published, modified, section, tags = [], compact = false, progress = false, accent = '' } = Astro.props;
 const u = t(lang); const he = lang === 'he';
 const canonical = SITE_URL + path;
+// 11.11.2026 (Yakir approved, site audit: 49 titles too long): Google shows about 60 characters of a title. The brand after
+// " | " (or " – ") is dropped when the whole title would be longer than 60, and a title still longer than 65 is cut at a word.
+const seoTitle = (() => {
+  const t0 = title.replace(/\s+/g, ' ').trim();
+  if (t0.length <= 60) return t0;
+  const bar = t0.lastIndexOf(' | ');
+  let t1 = bar > 20 ? t0.slice(0, bar).trim() : t0;
+  if (t1.length > 65) { const cut = t1.lastIndexOf(' ', 64); t1 = t1.slice(0, cut > 30 ? cut : 64).replace(/[,:;\-–]+$/, '').trim(); }
+  return t1;
+})();
+// 11.11.2026 (same audit: descriptions under 110 characters): short fixed descriptions get one closing line about the site.
+const seoDesc = (() => {
+  const d0 = (description || '').replace(/\s+/g, ' ').trim();
+  if (d0.length >= 110) return d0;
+  const add = ({ he: 'מתעדכן לאורך כל היום באתר חדשות נתניה והשרון.', ru: 'Обновляется в течение дня на сайте NWS, новости Нетании и Шарона.',
+    fr: 'Mis à jour toute la journée sur NWS, l’actualité de Netanya et du Sharon.', en: 'Updated all day on NWS, the news site of Netanya and the Sharon.' } as Record<string, string>)[lang] || '';
+  const joined = `${/[.!?]$/.test(d0) ? d0 : d0 + '.'} ${add}`.trim();
+  return joined.length <= 160 ? joined : d0;
+})();
 const robots = PREVIEW || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 const alts = Object.entries(alternates) as [Lang, string][];
 const pre = LANG_PREFIX[lang];
@@ -69,16 +88,16 @@ const L = he ? { home: 'ראשי', pros: 'בעלי מקצוע', menu: 'תפרי�
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title}</title>
-<meta name="description" content={description}>
+<title>{seoTitle}</title>
+<meta name="description" content={seoDesc}>
 <link rel="canonical" href={canonical}>
 <meta name="robots" content={robots}>
 {alts.map(([l, p]) => <link rel="alternate" hreflang={l} href={SITE_URL + p}>)}
 {alts.length > 0 && alternates.he && <link rel="alternate" hreflang="x-default" href={SITE_URL + alternates.he}>}
 <meta property="og:site_name" content={BRAND.he}>
 <meta property="og:type" content={ogType}>
-<meta property="og:title" content={title}>
-<meta property="og:description" content={description}>
+<meta property="og:title" content={seoTitle}>
+<meta property="og:description" content={seoDesc}>
 <meta property="og:url" content={canonical}>
 <meta property="og:image" content={ogAbs}>
 {/* 29.10.2026: the real size of a story image (ogW/ogH); 1200x630 for the default, the hand made and the library cards; none when unknown */}

@@ -13,7 +13,7 @@ import { IMG, SITE_URL, LANG_PREFIX, LANGS, BRAND, TG_URL, type Lang } from '../
 import { SECTION_BY_KEY } from '../data/sections';
 import { CATEGORIES } from '../data/directory';
 import { t } from '../i18n/ui';
-import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, placesOf, placeUrl, linkify, related, clip, localized, picOf, picLabel, licName, COMMONS, kickerOf, readMin,
+import { ARTICLES, articlesFor, articleUrl, sectionUrl, fmtTime, placesOf, placeUrl, linkify, related, clip, plain, localized, picOf, picLabel, licName, COMMONS, kickerOf, readMin,
   FLASHES, SPORT, tableAround, isoIL, writerUrl, type Article } from '../lib/content';
 
 interface Props { lang: Lang; a: Article }
@@ -30,7 +30,18 @@ const path = articleUrl(a, lang);
 const alternates = Object.fromEntries(LANGS.filter((l) => localized(heA, l)).map((l) => [l, articleUrl(a, l)]));
 const crumbs = [{ name: u.home, href: pre + '/' }, { name: s.name[lang], href: sectionUrl(a.section, lang) }, { name: a.title, href: path }];
 const title = a.title.length > 62 ? clip(a.title, 92) : `${a.title} | ${he ? 'חדשות נתניה והשרון' : 'NWS'}`;
-const desc = clip(a.dek || a.body[0] || a.title, 158);
+// 11.11.2026 (Yakir approved, site audit: 70 descriptions too short): the dek alone is often under 110 characters, so the first
+// text paragraphs of the story are added until the description has about 120 to 158 characters.
+const desc = (() => {
+  let d = plain(a.dek || '');
+  for (const para of a.body || []) {
+    if (d.length >= 120) break;
+    const p = plain(String(para || '').replace(/^(##|>)\s*/, ''));
+    if (!p || p === d) continue;
+    d = d ? `${/[.!?]$/.test(d) ? d : d + '.'} ${p}` : p;
+  }
+  return clip(d || a.title, 158);
+})();
 // live updates of a developing story (oldest first in the data, shown newest first). On other languages only when translated.
 const ups = (lang === 'he' || a.updates !== heA.updates ? a.updates || [] : []).filter((x) => x.at && x.text);
 const isLive = !!a.live && ups.length > 0;
