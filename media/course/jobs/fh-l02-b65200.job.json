@@ -1,0 +1,40 @@
+{
+ "id": "vr-fh-l02",
+ "file": "fh-l02-b65200",
+ "course": "first-home",
+ "n": 2,
+ "deckUrl": "https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reels?a=deck&t=b65200b4560ddc0aac979036d6f56fdbccf16a09",
+ "open": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/e1daafe0b7085394cf09ee480448df52.mp4?Expires=1794983114&Signature=c00dPgUYQlrlOBGkHWybNsveH-6AlgKthrgtbILy5ddF8d3x6t-nU07gnD3D~XmaaB2bawzyumzv0zUKGXFaP9XmlAa4JovAFc60mzOAp93xBSGglRwpadmEA5P2qrPgqO6iiDfUVRoaW7e4XJsW~aeB~FQfQndGpewm98jxyQ1lWQHooVozshMHNtBGhvXuxlQC7b-VmjC~J4r65iIyBnnFesUVyEj7hApXdz50mrcxzJWwl3nSpUuYowzNHs59ttg9uOoVbaAamy5UjoV743~1tYwVJ77f6g7RFTV2QN4-36PZpn~0boPtalkS3nBnHAouDmXCEUFWYUndlvTV9g__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "close": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/1ffa3ed895bedc673a69a098280ef14f.mp4?Expires=1794983124&Signature=CrD2mQazs5G-aW~Sz-OgC8S7hVdopW7SvMIQlCwNIgCePqr9vUXX0xak7toIIK~y36DBqDbT8mE9~2dAbTftpMhP6nvEAHoL~HvKCKFt2KHaZ11MZMyADSdtWFFxlFeVyf4iWVwLU8d5laW1Ke~jCI0xiMhr5hgxZ9BwJB0DwY6cV6ZjlfJSNYTv2Xm0aLZLyicqVeB09vO6Q6HvEGWyv9cssG7teYRyMBStmyOTN2CUQ2~OPxfQTiLRPomKbcs8h15WheIp6z6r~i~hT7QL8qAQm6OVJ6Uk1JDRa55ZlZ8Npb7ynsUR~8TjDuVGEMXI9cI0R5Sm1yt9gxYA-pG2lA__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "narration": {
+  "mode": "pieces",
+  "pieces": [
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=88a3e940b86a4e0b9875b0dc490b3c8b.wav",
+    "from": 0,
+    "to": 5
+   },
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=5c5145ac2bff4008a0799fbd4bd3a574.wav",
+    "from": 6,
+    "to": 12
+   },
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=da035996489545f78e42d344615d5e0f.wav",
+    "from": 13,
+    "to": 17
+   },
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=294a47135a58493d9f4505f120988ec3.wav",
+    "from": 18,
+    "to": 23
+   },
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=3b52867aef9d4c58ba6881a1ed9c0952.wav",
+    "from": 24,
+    "to": 27
+   }
+  ]
+ },
+ "note": "from/to are 0-based in the filtered slide list (deck slide 0 'ברוכים הבאים' dropped; the last slide starts 'אבל הנסח' so it is kept); vidreq narr[] uses the deck indices (1-6, 7-13, 14-18, 19-24, 25-28). Slides joined with [pause] (no break tags, 11.11.2026)."
+}
