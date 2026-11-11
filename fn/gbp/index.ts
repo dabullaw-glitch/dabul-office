@@ -51,7 +51,7 @@ async function ids() {
 }
 async function sync() {
   const { acc, loc, api } = await ids();
-  const first = !api.syncedAt; const out = { total: 0, added: 0, fresh: 0, replied: 0 };
+  const first = !api.syncedAt; const out = { total: 0, added: 0, fresh: 0, replied: 0, edited: 0 };
   let pageToken = ''; const all: Any[] = []; let avg = 0, count = 0;
   for (let i = 0; i < 6; i++) {
     const j = await g(`https://mybusiness.googleapis.com/v4/accounts/${acc}/locations/${loc}/reviews?pageSize=50${pageToken ? '&pageToken=' + pageToken : ''}`);
@@ -66,6 +66,11 @@ async function sync() {
       await db().upsert({ coll: 'gbprev', id, data: { ...base, status: hasReply ? 'answered' : (first ? 'old' : 'new'), reply: hasReply ? r.reviewReply.comment : '', seen: new Date().toISOString() }, updated_at: new Date().toISOString() });
       out.added++; if (!hasReply && !first) out.fresh++;
     } else if (hasReply && !['answered', 'replied'].includes(prev.status)) { await merge('gbprev', id, { status: 'answered', reply: r.reviewReply.comment }); out.replied++; }
+    // 11.11.2026: a reviewer who edits the review (new text or stars) - keep the new text, and if it was not answered yet, mark it new again
+    if (prev && r.updateTime && prev.updatedOnGoogle && r.updateTime !== prev.updatedOnGoogle && (base.comment !== String(prev.comment || '') || base.stars !== prev.stars)) {
+      await merge('gbprev', id, { comment: base.comment, stars: base.stars, updatedOnGoogle: r.updateTime, edited: { at: new Date().toISOString(), oldComment: String(prev.comment || ''), oldStars: prev.stars }, ...(hasReply ? {} : { status: 'new', draft: null }) });
+      out.edited++;
+    }
   }
   await merge('settings', 'gbp', { api: { ...api, syncedAt: new Date().toISOString(), reviews: count, rating: avg } });
   return { ok: true, first, count, avg, ...out };
