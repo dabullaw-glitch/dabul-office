@@ -194,7 +194,7 @@ def build(d):
     out.append(CTA)
     pr = person(a)
     periodical = {"@type": "Periodical", "@id": PAGE + "#periodical", "name": "מגזין הנדל״ן", "inLanguage": "he", "url": PAGE, "author": pr,
-                  "publisher": {"@type": "LegalService", "name": "יקיר דבול - משרד עורכי דין", "url": "https://dabullaw.co.il/"},
+                  "publisher": {"@id": "https://dabullaw.co.il/#organization"},  # 11.11.2026: the site's business entity (with its address), audit fix
                   "description": "מגזין שבועי: החדשות החשובות בנדל״ן, במיסוי ובהתחדשות עירונית, ומה הן אומרות לקוראים."}
     parts = [{"@type": "PublicationIssue", "issueNumber": str(it["no"]), "name": f'מגזין הנדל״ן, גיליון {it["no"]}: {it["title"]}', "datePublished": it["date"],
               "url": it.get("page") or it["pdf"], "image": it["cover"], "author": pr, "isPartOf": {"@id": PAGE + "#periodical"}} for it in issues]
