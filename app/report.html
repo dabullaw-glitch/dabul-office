@@ -53,6 +53,28 @@ input[type=number]{text-align:center;direction:ltr;-moz-appearance:textfield}inp
 .spin{width:28px;height:28px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:s 1s linear infinite;margin:0 auto 10px}@keyframes s{to{transform:rotate(360deg)}}
 .hidden{display:none!important}
 @media (max-width:380px){.cols{grid-template-columns:1fr 80px 80px;gap:6px}}
+/* 11.11.2026 Yakir approved: running summary of income and expenses on the client page */
+.sum h2{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sum h2 small{font:600 12.5px Heebo,sans-serif;color:var(--muted)}
+.live{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;margin:0 0 4px}.live i{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;flex:none}
+.stbl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;margin-top:6px}
+.stbl th{font-size:12.5px;color:var(--muted);font-weight:800;text-align:center;padding:4px 2px;border-bottom:1px solid var(--line)}
+.stbl th:first-child,.stbl td:first-child{text-align:right}
+.stbl td{padding:9px 2px;border-bottom:1px solid var(--line);text-align:center;font-size:15px}
+.stbl tr:last-child td{border-bottom:0}.stbl td.t2{font-weight:800}.stbl td.lab{font-weight:700;font-size:14.5px}
+.pos{color:var(--ok);font-weight:800}.neg{color:var(--bad);font-weight:800}
+.meter{margin:12px 0 4px}.meter .r2{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);font-weight:700;margin-bottom:4px}
+.meter .track{height:12px;border-radius:99px;background:var(--bad-soft);overflow:hidden}.meter .fill{background:var(--accent);height:100%}
+.note{display:flex;gap:10px;align-items:center;background:#FFF6E0;border:1px solid #F0D58A;border-radius:12px;padding:10px 12px;margin-top:12px;font-size:14px}.note b{display:block}
+.det{margin-top:12px;border-top:1px solid var(--line);padding-top:8px}.det summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(--accent-ink)}
+.drow{display:flex;justify-content:space-between;gap:10px;font-size:14.5px;padding:5px 0;border-bottom:1px dashed var(--line)}.drow b{font-variant-numeric:tabular-nums}
+.dgrp{font-size:12.5px;font-weight:800;color:var(--muted);margin:10px 0 2px}
+.strip{position:fixed;left:0;right:0;background:#0E2226;color:#fff;z-index:11;padding:8px 16px}
+.strip .wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:0;text-align:center}
+.strip small{display:block;font-size:11.5px;opacity:.75;font-weight:700}.strip b{font-size:16px;font-variant-numeric:tabular-nums}
+.strip .p{color:#7FF0D8}.strip .n{color:#FF9C8F}
+.amtl .r3{display:grid;grid-template-columns:1fr 110px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.amtl .r3 b{display:block;font-size:14.5px}.amtl .r3 small{color:var(--muted);font-size:12.5px;word-break:break-all}
+@media (prefers-color-scheme:dark){.note{background:#2E2814;border-color:#5A4A1C}.strip{background:#000}}
 </style>
 <style>
 .cta{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;min-height:64px;border-radius:18px;background:var(--accent);color:#fff;font-weight:800;font-size:19px;box-shadow:0 10px 24px -12px var(--accent);margin-bottom:12px}
@@ -124,7 +146,7 @@ const contact = () => { const o = D.office || {}, ph = String(o.whatsapp || o.ph
 
 /* ---------- home: photograph a receipt any time ---------- */
 function home(){
-  mode = 'home'; bar.classList.add('hidden'); document.getElementById('title').textContent = 'הקבלות לדוח לממונה';
+  mode = 'home'; bar.classList.add('hidden'); strip(); document.getElementById('title').textContent = 'הקבלות לדוח לממונה';
   const cur = D.cur && D.periods[D.cur], close = D.close && D.periods[D.close], nowM = D.now;
   if (!cur && !close) return fail('אין כרגע דוח פתוח', 'המשרד יעדכן אותך כשיגיע הזמן לדוח הבא.');
   let html = '';
@@ -136,12 +158,13 @@ function home(){
     const months = cur.mkeys.slice().reverse(), exp = (D.expect || []), sel = selM;
     html += `<div class="card" id="period"><h2>הדוח לחודשים ${esc(two(cur.mkeys))}</h2><p class="sub" style="margin:4px 0 12px">את הדוח מגישים לממונה עד ${esc(longDate(cur.due))}.</p><p style="margin:0 0 6px;font-weight:700;font-size:14.5px">לאיזה חודש שייכת הקבלה?</p><div class="mtog" role="tablist" aria-label="חודש">${cur.mkeys.map(k => `<button role="tab" aria-selected="${k === sel}" data-sel="${k}" class="${k === sel ? 'on' : ''}">${esc(mName(k))}${k === nowM ? ' (החודש)' : ''}</button>`).join('')}</div></div>`;
   }
+  html += sumCard(cur || close);
   html += `<button class="cta" id="snap"><span style="font-size:26px">📷</span><span>צילום קבלה או מסמך${cur ? ` ל${esc(mName(selM))}` : ''}<small>כל קבלה, חשבון או תלוש. מצלמים, וזה נשמר אצלנו</small></span></button>`;
   if (cur) { const months = cur.mkeys.slice().reverse(), exp = (D.expect || []), sel = selM;
     html += `<div class="card"><h2>${esc(mName(sel))}: מה צריך לצלם</h2><p class="sub">הממונה מחייב קבלה לכל הכנסה והוצאה בדוח.${exp.length ? ' זו הרשימה לפי הדוח הקודם שלך.' : ' כל מה ששילמת או קיבלת החודש.'}</p>${(exp.length ? exp : ['rent', 'arnona', 'elec', 'water', 'food', 'salary']).map(k => { const n = (cur.files || []).filter(f => f.cat === k && f.month === sel).length;
       return `<div class="li2 ${n ? 'ok' : ''}"><span class="ic">${n ? '✓' : '·'}</span><div class="t"><b>${esc(catDoc(k))}</b><small>${esc(catName(k))}${n ? ` · צולמו ${n}` : ' · עוד לא צולם'}</small></div><button class="mini" data-snap="${k}">${n ? 'עוד' : 'צילום'}</button></div>`; }).join('')}</div>`;
     const list = (cur.files || []).slice().reverse();
-    html += `<div class="card"><h2>צילמת בתקופה הזו (${list.length})</h2>${list.length ? months.map(mo => { const fs = list.filter(f => f.month === mo); return fs.length ? `<div class="grp">${esc(mName(mo))}</div>` + fs.map(f => `<div class="li2 ok"><span class="ic">✓</span><div class="t"><b>${esc(catName(f.cat))}</b><small>${+f.amount ? money(f.amount) + ' · ' : ''}${esc(f.name)}</small></div>${f.path ? `<button class="mini" data-rm="${esc(f.path)}" aria-label="הסרה" style="color:var(--bad)">✕</button>` : ''}</div>`).join('') : ''; }).join('') : '<p class="sub" style="margin:0">עוד לא צילמת כלום החודש. כל קבלה שמגיעה: לוחצים על הכפתור הירוק ומצלמים.</p>'}</div>`;
+    html += `<div class="card"><h2>צילמת בתקופה הזו (${list.length})</h2>${list.length ? months.map(mo => { const fs = list.filter(f => f.month === mo); return fs.length ? `<div class="grp">${esc(mName(mo))}</div>` + fs.map(f => `<div class="li2 ok"><span class="ic">✓</span><div class="t"><b>${esc(catName(f.cat))}</b><small>${+f.amount ? money(f.amount) + ' · ' : (f.cat !== 'other' ? 'אין סכום · ' : '')}${esc(f.name)}</small></div>${f.path && !(+f.amount > 0) && f.cat !== 'other' ? `<button class="mini" data-amt="${esc(f.path)}">+ סכום</button>` : ''}${f.path ? `<button class="mini" data-rm="${esc(f.path)}" aria-label="הסרה" style="color:var(--bad)">✕</button>` : ''}</div>`).join('') : ''; }).join('') : '<p class="sub" style="margin:0">עוד לא צילמת כלום החודש. כל קבלה שמגיעה: לוחצים על הכפתור הירוק ומצלמים.</p>'}</div>`;
   }
   html += hist() + contact();
   main.innerHTML = html;
@@ -150,8 +173,74 @@ function home(){
   main.querySelectorAll('[data-sel]').forEach(b => b.onclick = () => { selM = b.dataset.sel; home(); });
   main.querySelectorAll('[data-open]').forEach(b => b.onclick = () => openReport(b.dataset.open));
   main.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => removeFile(b.dataset.rm));
+  main.querySelectorAll('[data-amt]').forEach(b => b.onclick = () => amtSheet(cur || close, b.dataset.amt));
 }
 const hist = () => (D.history || []).length ? `<div class="card"><h2 style="font-size:16px">דוחות שהוגשו</h2>${D.history.map(h => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:14.5px"><span>${esc(h.label)}</span><span style="color:var(--ok);font-weight:700">✓ ${h.at ? fmt(h.at) : 'הוגש'}</span></div>`).join('')}</div>` : '';
+
+/* ---------- 11.11.2026 Yakir approved: summary of income and expenses, updated with every receipt and every amount ---------- */
+// a report line uses the amount typed in the report; an empty line uses the amounts written on its receipts (same rule as openReport)
+function sumOf(p){
+  const rs = {}; (p.files || []).forEach(f => { if (!(+f.amount > 0)) return; const i = p.mkeys.indexOf(f.month); if (i < 0) return; (rs[f.cat] = rs[f.cat] || [0, 0])[i] += +f.amount; });
+  const val = (g, k, i) => { const x = ((p[g] || {})[k] || [])[i]; return x === '' || x == null ? ((rs[k] || [0, 0])[i] || 0) : (+x || 0); };
+  const out = { inc:[0, 0], exp:[0, 0], lines:{ inc:[], exp:[] } };
+  [['inc', INC, 'incX'], ['exp', EXP, 'expX']].forEach(([g, list, xg]) => {
+    list.forEach(([k, l]) => { const a = [val(g, k, 0), val(g, k, 1)]; out[g][0] += a[0]; out[g][1] += a[1]; if (a[0] + a[1] > 0) out.lines[g].push([l, a[0] + a[1]]); });
+    (p[xg] || []).forEach(x => { const a = [+(x.v || [])[0] || 0, +(x.v || [])[1] || 0]; out[g][0] += a[0]; out[g][1] += a[1]; if (a[0] + a[1] > 0) out.lines[g].push([x.label || (g === 'inc' ? 'הכנסה נוספת' : 'הוצאה נוספת'), a[0] + a[1]]); });
+    out.lines[g].sort((a, b) => b[1] - a[1]);
+  });
+  return out;
+}
+// receipts that still have no amount and whose line was not filled in the report
+const noAmt = p => (p.files || []).filter(f => f.path && f.cat !== 'other' && f.cat !== 'extra' && !(+f.amount > 0) && (() => { const g = INC.some(x => x[0] === f.cat) ? 'inc' : 'exp', i = p.mkeys.indexOf(f.month), x = ((p[g] || {})[f.cat] || [])[i]; return x === '' || x == null; })());
+const net = (n, cls) => `<span class="${n < 0 ? 'neg' : 'pos'}${cls ? ' ' + cls : ''}">${n < 0 ? '−' : ''}${money(Math.abs(n))}</span>`;
+function sumCard(p){
+  if (!p) return '';
+  const S = sumOf(p), ti = S.inc[0] + S.inc[1], te = S.exp[0] + S.exp[1], nd = ti - te, na = noAmt(p);
+  if (!ti && !te && !na.length) return `<div class="card sum"><h2>הסיכום שלך <small>${esc(two(p.mkeys))}</small></h2><p class="sub" style="margin:0">כשמצלמים קבלה ורושמים את הסכום שלה, כאן יופיע סיכום של ההכנסות וההוצאות שלך, ומה נשאר בכל חודש.</p></div>`;
+  const m = p.mkeys.map(mName), pct = ti ? Math.round(te / ti * 100) : 0;
+  const lines = g => S.lines[g].map(([l, a]) => `<div class="drow"><span>${esc(l)}</span><b>${money(a)}</b></div>`).join('');
+  return `<div class="card sum"><h2>הסיכום שלך עד עכשיו <small>${esc(two(p.mkeys))}</small></h2>
+    <p class="live"><i></i>מתעדכן לבד בכל קבלה שמצלמים עם סכום${p.status === 'filled' || p.locked ? ', ולפי הדוח שמילאת' : ''}</p>
+    <table class="stbl"><tr><th></th><th>${esc(m[0])}</th><th>${esc(m[1])}</th><th>סה״כ</th></tr>
+    <tr><td class="lab">הכנסות</td><td>${money(S.inc[0])}</td><td>${money(S.inc[1])}</td><td class="t2">${money(ti)}</td></tr>
+    <tr><td class="lab">הוצאות</td><td>${money(S.exp[0])}</td><td>${money(S.exp[1])}</td><td class="t2">${money(te)}</td></tr>
+    <tr><td class="lab">${nd < 0 ? 'ההוצאות גבוהות מההכנסות' : 'נשאר אחרי ההוצאות'}</td><td>${net(S.inc[0] - S.exp[0])}</td><td>${net(S.inc[1] - S.exp[1])}</td><td>${net(nd)}</td></tr></table>
+    ${ti ? `<div class="meter"><div class="r2"><span>ההוצאות הן ${pct}% מההכנסות</span><span>${nd < 0 ? money(-nd) + ' יותר מההכנסות' : money(nd) + ' נשאר'}</span></div><div class="track"><div class="fill" style="width:${Math.min(100, pct)}%"></div></div></div>` : ''}
+    ${na.length && !p.locked ? `<div class="note"><span style="font-size:22px">✍️</span><span><b>${na.length === 1 ? 'קבלה אחת עדיין בלי סכום' : `${na.length} קבלות עדיין בלי סכום`}</b>מוסיפים סכום, והסיכום יהיה מלא. לא חובה.</span><button class="mini" id="addamt" style="margin-inline-start:auto">הוספה</button></div>` : ''}
+    ${S.lines.inc.length + S.lines.exp.length ? `<details class="det"><summary>פירוט לפי סוג</summary>${S.lines.inc.length ? `<div class="dgrp">הכנסות</div>${lines('inc')}` : ''}${S.lines.exp.length ? `<div class="dgrp">הוצאות</div>${lines('exp')}` : ''}</details>` : ''}</div>`;
+}
+document.addEventListener('click', e => { if (e.target && e.target.id === 'addamt') { const D0 = D && (D.cur && D.periods[D.cur] || D.close && D.periods[D.close]); if (D0) amtSheet(D0); } });
+// typing the amounts of receipts that were saved without one
+function amtSheet(p, only){
+  const base = noAmt(p), one = only ? (p.files || []).find(f => f.path === only) : null;
+  const firstFirst = one ? [one].concat(base.filter(f => f !== one)) : base;
+  if (!firstFirst.length) return;
+  const bg = document.createElement('div'); bg.className = 'sheet-bg'; document.body.appendChild(bg);
+  const close = () => { bg.remove(); mode === 'home' ? home() : render(); };
+  bg.onclick = e => { if (e.target === bg) close(); };
+  bg.innerHTML = `<div class="sheet amtl" role="dialog" aria-label="סכומים לקבלות"><h2>כמה היה בכל קבלה? <button class="x" aria-label="סגירה">✕</button></h2><p class="sub">ממלאים רק את מה שידוע. אפשר להשאיר ריק.</p>
+    ${firstFirst.map((f, i) => `<div class="r3"><div><b>${esc(catName(f.cat))} · ${esc(mName(f.month))}</b><small>${esc(f.name)}</small></div><input type="number" inputmode="decimal" min="0" data-ap="${esc(f.path)}" placeholder="₪" aria-label="סכום"></div>`).join('')}
+    <div id="aerr" style="color:var(--bad);font-size:14px;margin-top:8px"></div><button class="btn pri" id="asave" style="width:100%;margin-top:12px">שמירה</button></div>`;
+  bg.querySelector('.x').onclick = close;
+  const ins = [...bg.querySelectorAll('[data-ap]')]; setTimeout(() => ins[0] && ins[0].focus(), 50);
+  bg.querySelector('#asave').onclick = async () => {
+    const btn = bg.querySelector('#asave'); btn.disabled = true; btn.textContent = 'שומר...'; let bad = 0;
+    for (const el of ins) { const v = el.value; if (v === '' || !(+v > 0)) continue;
+      try { await call({ op:'amount', path:el.dataset.ap, amount:+v }); Object.values(D.periods).forEach(q => (q.files || []).forEach(f => { if (f.path === el.dataset.ap) f.amount = +v; })); } catch(e) { bad++; } }
+    if (bad) { btn.disabled = false; btn.textContent = 'שמירה'; bg.querySelector('#aerr').textContent = 'חלק מהסכומים לא נשמרו. בדוק את החיבור לאינטרנט ונסה שוב.'; return; }
+    close();
+  };
+}
+// the dark line above the buttons while filling the report: income, expenses, and what is left, as you type
+function strip(){
+  let el = document.getElementById('strip');
+  if (mode !== 'report' || !R || step > 2) { if (el) el.classList.add('hidden'); document.body.style.paddingBottom = ''; return; }
+  if (!el) { el = document.createElement('div'); el.id = 'strip'; el.className = 'strip'; el.setAttribute('aria-live', 'polite'); document.body.appendChild(el); }
+  const T = totals(), ti = T.inc[0] + T.inc[1], te = T.exp[0] + T.exp[1], nd = ti - te;
+  el.innerHTML = `<div class="wrap"><div><small>הכנסות</small><b>${money(ti)}</b></div><div><small>הוצאות</small><b>${money(te)}</b></div><div><small>${nd < 0 ? 'חסר' : 'נשאר'}</small><b class="${nd < 0 ? 'n' : 'p'}">${money(Math.abs(nd))}</b></div></div>`;
+  el.classList.remove('hidden'); el.style.bottom = (bar.offsetHeight || 70) + 'px';
+  document.body.style.paddingBottom = ((bar.offsetHeight || 70) + el.offsetHeight + 24) + 'px';
+}
 const addDays = (s, n) => { const d = new Date(s + 'T12:00:00'); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
 async function removeFile(path){ if (!confirm('להסיר את הקובץ?')) return; try { await call({ op:'unfile', path }); Object.values(D.periods).forEach(p => p.files = p.files.filter(f => f.path !== path)); mode === 'home' ? home() : render(); } catch(e) { alert('ההסרה נכשלה. נסה שוב.'); } }
 
@@ -235,7 +324,7 @@ function render(){
   main.innerHTML = `<nav class="steps" aria-label="שלבים">${tabs}</nav>${body}<button class="add" id="homeb" style="margin:0 0 12px">→ חזרה לדף הקבלות</button>`;
   document.getElementById('back').style.display = step ? '' : 'none';
   const nx = document.getElementById('next'); nx.textContent = step === 3 ? 'שליחת הדוח למשרד' : 'המשך'; nx.disabled = step === 3 && miss.length > 0;
-  bind();
+  bind(); strip();
 }
 function bind(){
   main.querySelectorAll('[data-step]').forEach(b => b.onclick = () => go(+b.dataset.step));
@@ -248,7 +337,7 @@ function bind(){
   document.getElementById('homeb').onclick = async () => { await save(); load().then(home); };
   if (step === 3) pad();
 }
-function updTot(){ const T = totals(), g = step === 0 ? 'inc' : 'exp', b = main.querySelectorAll('.tot b'); if (b.length === 2) { b[0].textContent = money(T[g][0]); b[1].textContent = money(T[g][1]); } }
+function updTot(){ strip(); const T = totals(), g = step === 0 ? 'inc' : 'exp', b = main.querySelectorAll('.tot b'); if (b.length === 2) { b[0].textContent = money(T[g][0]); b[1].textContent = money(T[g][1]); } }
 function changed(){ dirty = true; savedEl.textContent = ''; clearTimeout(saveT); saveT = setTimeout(save, 1500); }
 const payload = () => ({ key:R.key, inc:R.inc, exp:R.exp, incX:R.incX, expX:R.expX, persons:R.persons, address:R.address, phone:R.phone });
 async function save(){ if (!dirty || !R) return true; clearTimeout(saveT); dirty = false;
