@@ -68,5 +68,19 @@
   "date": "2026-10-15",
   "guide": "minus",
   "lesson": ""
+ },
+ {
+  "id": "hesder-hov-bektav",
+  "title": "הסדר חוב עם נושה: איך עושים את זה נכון",
+  "description": "מה זה הסדר חוב, איך מכינים הצעה ומה חייב להיות כתוב בהסכם, בפחות מדקה.",
+  "src": "video/hesder-hov-bektav.mp4",
+  "poster": "video/hesder-hov-bektav.jpg",
+  "captions": "video/hesder-hov-bektav.vtt",
+  "w": 1080,
+  "h": 1920,
+  "duration": "PT41S",
+  "date": "2026-11-11",
+  "guide": "hesder-im-noshim",
+  "lesson": "3-hesder"
  }
 ]

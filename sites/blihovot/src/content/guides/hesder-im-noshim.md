@@ -5,6 +5,7 @@ description: "הסדר חוב הוא הסכם ישיר עם נושה על סכו
 hub: hesder-hov
 published: 2026-10-08
 updated: 2026-10-08
+video: hesder-hov-bektav
 order: 1
 tool: tashlumim
 summary:
