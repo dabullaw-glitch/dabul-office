@@ -1,0 +1,50 @@
+{
+ "ep": "ep02",
+ "n": 2,
+ "title": "פרק 2: הורים שעוזרים במשכנתא",
+ "album": "נדל״ן בגובה העיניים",
+ "artist": "עו״ד יקיר דבול",
+ "gap": 0.7,
+ "parts": [
+  {
+   "h": "פתיח",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=c2deef6f7e7d412c8e86c1d15f783d69.wav"
+  },
+  {
+   "h": "הצגת התוכנית",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=e3423b8bd24b4beeb88c5ee883ccdab5.wav"
+  },
+  {
+   "h": "חלק 1: מתנה או הלוואה",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=f190c47a465647dda055011c4cedded5.wav"
+  },
+  {
+   "h": "חלק 2: מה הבנק סופר",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=23361042307b41e882f7ee90b5d49c65.wav"
+  },
+  {
+   "h": "חלק 3: להיות ערב",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=cd189b62884840ebb07acb58738fe23e.wav"
+  },
+  {
+   "h": "תזכורת באמצע הפרק",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=e42c0096c81b4924851a5518058cdcc3.wav"
+  },
+  {
+   "h": "חלק 4: על שם מי רושמים",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=859ae1e8d59d4a1e8f9a1bee0d63515b.wav"
+  },
+  {
+   "h": "חלק 5: לשמור על הכסף",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=a1f34595f7804a45bdf3109aa6562222.wav"
+  },
+  {
+   "h": "מה עושים השבוע",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=152c5ad567fa4131b86caab5603f980a.wav"
+  },
+  {
+   "h": "סיום",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=3df9c16fcd3a4ddb94d7153591280808.wav"
+  }
+ ]
+}
