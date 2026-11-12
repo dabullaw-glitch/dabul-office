@@ -1,0 +1,19 @@
+{
+ "id": "vr-fh-l03",
+ "file": "fh-l03-316678",
+ "course": "first-home",
+ "n": 3,
+ "deckUrl": "https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reels?a=deck&t=3166784337357f2dc1e29f9aefed91bffe52774e",
+ "open": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/01f96b16f86aaa7d78ee11b3d8c053a8.mp4?Expires=1795101780&Signature=bNGT-lQI9trMuR0aAOgOmYZTu4QDOscRZ2twbrVwSkKbvDE9henenj5pNjn51RrOqWlU6x2D22TfIhAKRW0zRsh1Y7kJiZGUWB4kn2Bri87Ddj57iQr~F-WUNuDFy2uk8PvaCD0uK49eOF1Fay9~s~xKEGwjTadwLFQV0qCclXh3gNfYp7EP~q-emSSqC1bxLXcSJNlt1QP5aO9GNKpcYPiqYyg2V8aHojndQFr4wkmXt6WwqtV7x9ICdc8XW0RaK0gs-RVLKsBp6PmhldgVpGAcx7xfGJ6M4HMQnMgR7gHX8O6F8RBJPoT3UIrfh7USgQ-SYsH8Ik8PWRmMBoCo8Q__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "close": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/91dd5c06bb86a742a3c7847ed683eceb.mp4?Expires=1795101791&Signature=Hf4RiCbY7tqeXc3zYqffMQiHEShE3lbCmAQCAgXxIzQbvbgT456goMPqN6hUmdbCt4Cws0iBsOhpi3m4nOtwmgBTaUfle8IwiQ4I90tNHdU8xAtGOk2y3lgVdLInQwx-0mfCAfhlXCZClhx3WrQrBnUvTurjelgTH~2f3mxLLgOP9CrNllP34IohW1zjg78mY1VE80oQuRJ-rYiZpd3oNhxkFkQo2L6D5HLMj2gsRymp-ItAkah3-GDrD6s1s5SrrcbIdWlvdo7LB9z76I7LFCrfDHip6wB7O9hxNyfEgco8ywXPeLo3L~JFZzDoL6ihdTMWoAUx0mrGWrRU8~K9QQ__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "narration": {
+  "mode": "pieces",
+  "pieces": [
+   {"audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=61f94b42744c4f0cad058d4fbe17d5d2.wav", "from": 0, "to": 5},
+   {"audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=8ab68d186cee4e6ebdbc417b2f37b4d6.wav", "from": 6, "to": 11},
+   {"audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=868b71bb0e2f4c6d963e57cf638f4892.wav", "from": 12, "to": 17},
+   {"audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=03ba6c40cd3c43dcac11a7c64bd7f4eb.wav", "from": 18, "to": 22},
+   {"audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=7c2e066bf7c84026b2c5bea2b0705f75.wav", "from": 23, "to": 27}
+  ]
+ }
+}
