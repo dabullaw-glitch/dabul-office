@@ -1,0 +1,110 @@
+{
+ "id": "vr-pod-ep02-clip",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/248239ff7d7c8148a11efe62cbcf1008.mp4?Expires=1794993626&Signature=YB6oVIYega1p9Qv2c8K-blNgVM4p3ILeGgxcdBVAeySdVXvyjfz6WIHQaxotd7chiQ2OQdF-8AzyUFAtHkTN-5FA9rTXHCPtOA1XUZ3jdqMHdp5JYh3jWdYUJSuu~izll-54NoXXS7BrwIrnVG5Ij6KbgstTm6xFzFyHFwOJ-d6uN8HsYPsH0LZXePWPuQ0SplJQEm5f6LslOmlkAdgIBCD80idq0gKm4J52EapeE73v5jBDhBPnWK~6CG7xf2fZhVZcyQ4X4e6sjuFPif1hiPpwWmm4U~3CiXc-DGzKTSA6U3t6T9RnitJOmko4~~4OmD-TxBXjulFS4bkLIHpR3w__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "ההורים נותנים לכם כסף לדירה?\nרגע לפני שהכסף עובר, תשאלו שאלה אחת: זו מתנה, או הלוואה?\n\nהבנק רוצה הון עצמי, לא חוב.\nולכן הוא מבקש מההורים לחתום שהכסף הוא מתנה.\n\nאבל נניח שההורים בעצם רצו שהכסף יחזור אליהם יום אחד.\nהחתימה הזאת היא בדיוק המסמך שיעמוד מולם.\nלמשל, אם יום אחד הם יצטרכו את הכסף, או אם הזוגיות של הילד תיגמר.\n\nכי בין הורים לילדים, מניחים שכסף שעבר הוא מתנה.\nומי שרוצה להראות שזו הלוואה, צריך הסכם בכתב.\nוגם הסכם לא מספיק, אם אף תשלום לא שולם לפיו.\n\nאז מחליטים מראש, בכנות.\nכותבים את זה ברור.\nולא חותמים על שני מסמכים שסותרים זה את זה.\nוכשמעבירים את הכסף, כותבים בהעברה הבנקאית מה הוא: מתנה או הלוואה.\n\nאת הפרק המלא, עם עוד ארבע שאלות על הורים שעוזרים בדירה,\nתמצאו בפודקאסט נדל״ן בגובה העיניים.",
+ "history": "boxed,cinematic,v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "boxed-navy,cinematic-gold,paper",
+ "plan": {
+  "title": "הורים נותנים כסף לדירה: מתנה או הלוואה?",
+  "topic": "מקרקעין",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "v3",
+  "goldWords": [
+   "הלוואה?",
+   "חוב.",
+   "בכתב.",
+   "בכנות.",
+   "ברור.",
+   "בהעברה"
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "הורים ודירה",
+    "l1": "כסף מההורים?",
+    "l2": "מתנה או הלוואה"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "רגע לפני שהכסף עובר,",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "bank",
+    "kind": "term",
+    "say": "הבנק רוצה הון עצמי,",
+    "until": "שהכסף הוא מתנה.",
+    "kicker": "הבנק",
+    "text": "הון עצמי, לא חוב",
+    "sub": "חתימה שזו מתנה",
+    "subSay": "מבקש מההורים לחתום שהכסף"
+   },
+   {
+    "id": "sig",
+    "kind": "boom",
+    "say": "החתימה הזאת היא בדיוק",
+    "dur": 2,
+    "text": "החתימה"
+   },
+   {
+    "id": "rule",
+    "kind": "term",
+    "say": "כי בין הורים לילדים,",
+    "until": "צריך הסכם בכתב.",
+    "kicker": "בין הורים לילדים",
+    "text": "מניחים שזו מתנה",
+    "sub": "הלוואה? הסכם בכתב",
+    "subSay": "ומי שרוצה להראות שזו"
+   },
+   {
+    "id": "pay",
+    "kind": "stamp",
+    "say": "וגם הסכם לא מספיק,",
+    "until": "תשלום לא שולם לפיו.",
+    "text": "צריך גם תשלומים",
+    "stampSay": "אם אף תשלום לא"
+   },
+   {
+    "id": "do",
+    "kind": "stack",
+    "say": "אז מחליטים מראש, בכנות.",
+    "until": "מה הוא: מתנה או הלוואה.",
+    "items": [
+     {
+      "say": "אז מחליטים מראש, בכנות.",
+      "text": "מחליטים מראש"
+     },
+     {
+      "say": "כותבים את זה ברור.",
+      "text": "כותבים ברור"
+     },
+     {
+      "say": "ולא חותמים על שני",
+      "text": "בלי מסמכים סותרים"
+     },
+     {
+      "say": "כותבים בהעברה הבנקאית מה",
+      "text": "לציין בהעברה"
+     }
+    ]
+   },
+   {
+    "id": "pod",
+    "kind": "term",
+    "say": "את הפרק המלא, עם",
+    "until": "בפודקאסט נדל״ן בגובה העיניים.",
+    "kicker": "פודקאסט",
+    "text": "נדל״ן בגובה העיניים",
+    "sub": "הפרק המלא",
+    "subSay": "תמצאו בפודקאסט נדל״ן בגובה"
+   }
+  ]
+ }
+}

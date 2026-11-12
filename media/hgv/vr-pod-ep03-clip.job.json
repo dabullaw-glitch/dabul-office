@@ -1,0 +1,108 @@
+{
+ "id": "vr-pod-ep03-clip",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/5c43fce38eef0cb558dd2e05ce0594c9.mp4?Expires=1795080053&Signature=CZrZiCLbgxZrkQrTzVD8O9YOSWLmfDURw~hqmfztXJ4m6kTlHf7tpUNxKbAb1WFUCiIuN3TwPRVrCDiprphAUpm6kJR6Nofrdk-Yby0fzdbhXP0cdElNKSwlzw2egiKXhTMJKsT66MVVNULz9V0hG~MNGxf-arvmhjm8l3LX7AiZizCQpzTf3Cs4E5~MBech3jM12B2ZEsHlL4TC1drFIXLtPDhFuCnK28YCOwVQDDubitXuZTVEHfa~~yWkRv0bLhOAmTRycwA1IzAUQKDONePzTytNntKjgdAEg4yYQDdUr9a~yMulAnkpZFK0x5dZamqJT3PLtPPn4uWDi-RcRA__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "script": "קונים דירה מקבלן, ובחוזה כתוב שבחתימה משלמים עשרים אחוז?\nרגע לפני שהכסף עובר, תנו לי דקה אחת.\n\nלפי חוק המכר, החברה שבונה את הדירה לא יכולה לקבל מכם יותר משבעה אחוזים מהמחיר,\nאם היא לא נתנה לכם דרך שמגינה על הכסף.\nלמשל ערבות של בנק.\nוזה חל גם אם בחוזה כתוב משהו אחר.\n\nואם יש בנק שמלווה את הפרויקט, יש עוד כלל אחד:\nמשלמים רק דרך פנקס השוברים, ורק לחשבון של הפרויקט.\nלא לחשבון אחר. לא במזומן.\nכי על תשלום בשובר, הבנק צריך לתת לכם ערבות, בתוך ארבעה עשר ימי עסקים.\n\nאז אחרי כל תשלום, תבדקו שהערבות באמת הגיעה.\nותשמרו אותה במקום אחד, יחד עם החוזה.\nזה לוקח חמש דקות, ויכול לחסוך לכם הרבה כאב ראש.\n\nאת הפרק המלא, עם עוד ארבעה דברים שכדאי לדעת לפני שקונים מקבלן,\nתמצאו בפודקאסט נדל״ן בגובה העיניים.",
+ "history": "v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "boxed-navy,cinematic-gold,paper",
+ "plan": {
+  "title": "דירה מקבלן: הכלל של שבעה אחוזים",
+  "topic": "מקרקעין",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "cinematic",
+  "goldWords": [
+   "אחוזים",
+   "ערבות",
+   "השוברים,",
+   "במזומן.",
+   "הגיעה.",
+   "החוזה."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "דירה מקבלן",
+    "l1": "20% בחתימה?",
+    "l2": "תנו לי דקה"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "רגע לפני שהכסף עובר,",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "law",
+    "kind": "term",
+    "say": "לפי חוק המכר, החברה",
+    "until": "למשל ערבות של בנק.",
+    "kicker": "חוק המכר",
+    "text": "עד 7 אחוז",
+    "sub": "בלי ערבות של בנק",
+    "subSay": "למשל ערבות של בנק."
+   },
+   {
+    "id": "contract",
+    "kind": "stamp",
+    "say": "וזה חל גם אם",
+    "until": "בחוזה כתוב משהו אחר.",
+    "text": "גם מול החוזה",
+    "stampSay": "וזה חל גם אם"
+   },
+   {
+    "id": "more",
+    "kind": "boom",
+    "say": "יש עוד כלל אחד:",
+    "dur": 2,
+    "text": "עוד כלל"
+   },
+   {
+    "id": "vouch",
+    "kind": "stack",
+    "say": "משלמים רק דרך פנקס",
+    "until": "ארבעה עשר ימי עסקים.",
+    "items": [
+     {
+      "say": "משלמים רק דרך פנקס",
+      "text": "רק בפנקס השוברים"
+     },
+     {
+      "say": "ורק לחשבון של הפרויקט.",
+      "text": "רק לחשבון הפרויקט"
+     },
+     {
+      "say": "לא לחשבון אחר. לא במזומן.",
+      "text": "לא במזומן"
+     },
+     {
+      "say": "בתוך ארבעה עשר ימי",
+      "text": "ערבות: 14 ימי עסקים"
+     }
+    ]
+   },
+   {
+    "id": "check",
+    "kind": "stamp",
+    "say": "אז אחרי כל תשלום,",
+    "until": "יחד עם החוזה.",
+    "text": "לבדוק שהערבות הגיעה",
+    "stampSay": "תבדקו שהערבות באמת הגיעה."
+   },
+   {
+    "id": "pod",
+    "kind": "term",
+    "say": "את הפרק המלא, עם",
+    "until": "בפודקאסט נדל״ן בגובה העיניים.",
+    "kicker": "פודקאסט",
+    "text": "נדל״ן בגובה העיניים",
+    "sub": "הפרק המלא",
+    "subSay": "תמצאו בפודקאסט נדל״ן בגובה"
+   }
+  ]
+ }
+}
