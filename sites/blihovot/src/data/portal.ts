@@ -48,7 +48,8 @@ export const SCORE_PARTS = [
 ] as const;
 
 // DRAFT packages for lawyers, shown as launch prices. Payment is not connected yet: the form sends a request only.
-export const PACKAGES = [
+// 12.11.2026 (Yakir): for now only the free basic profile is offered ("בהמשך נוסיף"). The paid packages stay here, hidden.
+export const PACKAGES_ALL = [
   {
     id: 'free', name: 'בסיסי', price: 'חינם', yearly: '',
     items: ['כרטיס משרד ברשימה', 'תחום אחד ועיר אחת', 'טלפון ליצירת קשר', 'ציון וחוות דעת מאומתות כמו לכולם'],
@@ -62,6 +63,7 @@ export const PACKAGES = [
     items: ['כל מה שבמקצועי', 'ראש הרשימה (עם תווית "מקודם") ב־3 עמודי תחום או עיר', 'הצגה בעמוד הראשי של עורכי הדין, עם תווית "מקודם"', 'כתבה ממומנת אחת בשנה, מסומנת כתוכן ממומן'],
   },
 ];
+export const PACKAGES = PACKAGES_ALL.filter((p) => p.id === 'free');
 
 // Guides that show the short "find a lawyer in your area" box (only where it is natural), and which topic it opens.
 export const GUIDE_LAWYER_BOX: Record<string, TopicSlug> = {
