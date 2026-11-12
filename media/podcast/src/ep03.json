@@ -1,0 +1,50 @@
+{
+ "ep": "ep03",
+ "n": 3,
+ "title": "פרק 3: קנייה מקבלן",
+ "album": "נדל״ן בגובה העיניים",
+ "artist": "עו״ד יקיר דבול",
+ "gap": 0.7,
+ "parts": [
+  {
+   "h": "פתיח",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=f3c20220bcfa44069ec11c403d8a3464.wav"
+  },
+  {
+   "h": "הצגת התוכנית",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=35c4504acfc84ec2bca49ace4b10fc41.wav"
+  },
+  {
+   "h": "חלק 1: איך הכסף שלכם מוגן",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=84a4b93ab473476382e3e3cd5da7975f.wav"
+  },
+  {
+   "h": "חלק 2: פנקס השוברים",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=74b1923550e544f3b2a4b018b1f2ce26.wav"
+  },
+  {
+   "h": "חלק 3: ההצמדה למדד",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=4675eacb9b234a6d9fa59490f0a36c73.wav"
+  },
+  {
+   "h": "תזכורת באמצע הפרק",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=ef6a6b3933fd4b9b80a8eae43a8c2c99.wav"
+  },
+  {
+   "h": "חלק 4: כשהמפתח מתעכב",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=4b1665d97a284877a3ded19731d56d6c.wav"
+  },
+  {
+   "h": "חלק 5: יום המסירה",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=787a221c73f74759bcec0b896d25870d.wav"
+  },
+  {
+   "h": "מה עושים השבוע",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=f07c27aae833431ba9c2daf494c65bcc.wav"
+  },
+  {
+   "h": "סיום",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=6697be996f0e45e3956a51cb5a607617.wav"
+  }
+ ]
+}
