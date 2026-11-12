@@ -1,0 +1,229 @@
+{
+ "id": "vr-fh-l03",
+ "file": "fh-l03-316678",
+ "course": "first-home",
+ "at": "2026-11-12T15:31:56Z",
+ "warnings": [],
+ "n": 3,
+ "title": "העירייה והוועדה המקומית",
+ "scenes": 28,
+ "narration": {
+  "mode": "pieces",
+  "pieces": [
+   {
+    "from": 0,
+    "to": 5,
+    "method": "nearest-pause",
+    "seconds": 113.42,
+    "warnings": []
+   },
+   {
+    "from": 6,
+    "to": 11,
+    "method": "nearest-pause",
+    "seconds": 130.52,
+    "warnings": []
+   },
+   {
+    "from": 12,
+    "to": 17,
+    "method": "nearest-pause",
+    "seconds": 122.68,
+    "warnings": []
+   },
+   {
+    "from": 18,
+    "to": 22,
+    "method": "nearest-pause",
+    "seconds": 89.89,
+    "warnings": []
+   },
+   {
+    "from": 23,
+    "to": 27,
+    "method": "nearest-pause",
+    "seconds": 98.17,
+    "warnings": []
+   }
+  ]
+ },
+ "duration": 652.0,
+ "parts": {
+  "open": 42.88,
+  "slides": 566.14,
+  "close": 42.92
+ },
+ "bytes": 26720249,
+ "crf": 24,
+ "slides": [
+  {
+   "slide": 1,
+   "kind": "big",
+   "start": 42.88,
+   "speech": 16.13
+  },
+  {
+   "slide": 2,
+   "kind": "cards",
+   "start": 59.91,
+   "speech": 17.82
+  },
+  {
+   "slide": 3,
+   "kind": "svg",
+   "start": 78.62,
+   "speech": 16.38
+  },
+  {
+   "slide": 4,
+   "kind": "flow",
+   "start": 95.9,
+   "speech": 16.29
+  },
+  {
+   "slide": 5,
+   "kind": "bullets",
+   "start": 113.09,
+   "speech": 29.98
+  },
+  {
+   "slide": 6,
+   "kind": "key",
+   "start": 143.97,
+   "speech": 13.78
+  },
+  {
+   "slide": 7,
+   "kind": "steps",
+   "start": 158.65,
+   "speech": 19.6
+  },
+  {
+   "slide": 8,
+   "kind": "doc",
+   "start": 179.15,
+   "speech": 27.89
+  },
+  {
+   "slide": 9,
+   "kind": "compare",
+   "start": 207.94,
+   "speech": 26.72
+  },
+  {
+   "slide": 10,
+   "kind": "warn",
+   "start": 235.56,
+   "speech": 18.76
+  },
+  {
+   "slide": 11,
+   "kind": "cards",
+   "start": 255.22,
+   "speech": 17.13
+  },
+  {
+   "slide": 12,
+   "kind": "big",
+   "start": 273.25,
+   "speech": 16.99
+  },
+  {
+   "slide": 13,
+   "kind": "split",
+   "start": 291.14,
+   "speech": 25.01
+  },
+  {
+   "slide": 14,
+   "kind": "quote",
+   "start": 317.04,
+   "speech": 13.39
+  },
+  {
+   "slide": 15,
+   "kind": "flow",
+   "start": 331.34,
+   "speech": 21.15
+  },
+  {
+   "slide": 16,
+   "kind": "tip",
+   "start": 353.38,
+   "speech": 27.43
+  },
+  {
+   "slide": 17,
+   "kind": "big",
+   "start": 381.72,
+   "speech": 12.55
+  },
+  {
+   "slide": 18,
+   "kind": "doc",
+   "start": 395.17,
+   "speech": 20.21
+  },
+  {
+   "slide": 19,
+   "kind": "cards",
+   "start": 416.27,
+   "speech": 22.52
+  },
+  {
+   "slide": 20,
+   "kind": "key",
+   "start": 439.7,
+   "speech": 11.89
+  },
+  {
+   "slide": 21,
+   "kind": "example",
+   "start": 452.48,
+   "speech": 16.84
+  },
+  {
+   "slide": 22,
+   "kind": "flow",
+   "start": 470.23,
+   "speech": 19.59
+  },
+  {
+   "slide": 23,
+   "kind": "bullets",
+   "start": 490.72,
+   "speech": 16.83
+  },
+  {
+   "slide": 24,
+   "kind": "tip",
+   "start": 508.45,
+   "speech": 11.19
+  },
+  {
+   "slide": 25,
+   "kind": "bullets",
+   "start": 520.54,
+   "speech": 25.65
+  },
+  {
+   "slide": 26,
+   "kind": "checklist",
+   "start": 547.09,
+   "speech": 25.56
+  },
+  {
+   "slide": 27,
+   "kind": "summary",
+   "start": 573.55,
+   "speech": 21.7
+  },
+  {
+   "slide": 28,
+   "kind": "big",
+   "start": 596.15,
+   "speech": 11.97
+  }
+ ],
+ "url": "https://dabullaw-glitch.github.io/dabul-office/media/course/first-home/fh-l03-316678.mp4"
+}
