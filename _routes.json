@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "include": [
+  "/*"
+ ],
+ "exclude": [
+  "/ai/*",
+  "/img/*",
+  "/og/*",
+  "/badge/*",
+  "/favicon.svg",
+  "/logo.png",
+  "/apple-touch-icon.png",
+  "/site.webmanifest",
+  "/push-badge.png",
+  "/sw.js",
+  "/search-index.json",
+  "/home",
+  "/index.html",
+  "/news",
+  "/mivzakim",
+  "/realestate",
+  "/nadlan",
+  "/iriya",
+  "/sport",
+  "/leisure",
+  "/business",
+  "/businesses",
+  "/madrich",
+  "/shabbat",
+  "/pharmacy",
+  "/beaches",
+  "/he/*"
+ ]
+}
