@@ -1,0 +1,87 @@
+{
+ "ok": true,
+ "duration": 57.3,
+ "bytes": 62440778,
+ "style": "v3",
+ "theme": "glass",
+ "build": {
+  "fix": {
+   "r": 0.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0,
+   "b": 1.0,
+   "why": "none needed"
+  },
+  "style": "v3",
+  "theme": "glass",
+  "clips": 1,
+  "body": 54.46,
+  "total": 57.26,
+  "captions": 54,
+  "sfx": 14,
+  "layout": {
+   "hook": [
+    "band",
+    1.0,
+    0
+   ],
+   "name": [
+    "low",
+    null,
+    null
+   ],
+   "bank": [
+    "band",
+    1.0,
+    0
+   ],
+   "sig": [
+    "band",
+    1.0,
+    0
+   ],
+   "rule": [
+    "band",
+    1.0,
+    0
+   ],
+   "pay": [
+    "band",
+    1.0,
+    0
+   ],
+   "do": [
+    "band",
+    0.875,
+    0
+   ],
+   "pod": [
+    "band",
+    1.0,
+    0
+   ]
+  }
+ },
+ "align": {
+  "words": 132,
+  "mode": "aligned 129 of 132",
+  "start": 0.0,
+  "end": 54.12
+ },
+ "resolve": {
+  "beats": 8,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    54.57
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\nmodel ivrit-ai/whisper-large-v3-turbo-ct2\n20 segments",
+ "at": "2026-11-12T12:30:34Z",
+ "cover": "vr-pod-ep02-clip.cover.jpg",
+ "coverSec": 1.0
+}
