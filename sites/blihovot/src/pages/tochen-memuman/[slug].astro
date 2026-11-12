@@ -1,6 +1,8 @@
 ---
-// One sponsored article (paid content). Always labelled at the top, links to the sponsor carry rel="sponsored",
-// and this section is the only place on the site where an advertiser's website may be linked (scripts/check-portal.mjs).
+// One sponsored article (paid content). Always labelled at the top; this section is the only place on the site where an
+// advertiser's website may be linked (scripts/check-portal.mjs).
+// 12.11.2026 (Yakir, for the paid-links marketplaces): at most 2 outbound links per article, both regular (follow) links:
+// one inside the text (written in the markdown) and one button in the sponsor box. Phone and WhatsApp are plain text.
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
@@ -19,9 +21,7 @@ const url = new URL(`${B}tochen-memuman/${a.id}/`, Astro.site).href;
 const fmt = (x: Date) => x.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
 const words = (a.body || '').split(/\s+/).length;
 const minutes = Math.max(2, Math.round(words / 190));
-const rel = 'sponsored noopener';
-const tel = (p: string) => 'tel:+972' + p.replace(/\D/g, '').replace(/^0/, '');
-const wa = (p: string) => 'https://wa.me/972' + p.replace(/\D/g, '').replace(/^0/, '');
+const rel = 'noopener';
 const host = new URL(s.url).host.replace(/^www\./, '');
 const others = all.filter((x) => x.id !== a.id).sort((x, y) => +y.data.published - +x.data.published).slice(0, 3);
 const image = d.image ? B + d.image.replace(/^\//, '') : null;
@@ -105,28 +105,14 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
             <p>{s.about}</p>
             <ul class="sp-contact">
               {s.address && <li><span>כתובת</span>{s.address}</li>}
-              {s.phone && <li><span>טלפון</span><a href={tel(s.phone)} rel={rel} dir="ltr">{s.phone}</a></li>}
-              {s.whatsapp && <li><span>וואטסאפ</span><a href={wa(s.whatsapp)} rel={rel} target="_blank" dir="ltr">{s.whatsapp}</a></li>}
-              <li><span>אתר</span><a href={s.url} rel={rel} target="_blank" dir="ltr">{host}</a></li>
+              {s.phone && <li><span>טלפון</span><span dir="ltr">{s.phone}</span></li>}
+              {s.whatsapp && <li><span>וואטסאפ</span><span dir="ltr">{s.whatsapp}</span></li>}
+              <li><span>אתר</span><span dir="ltr">{host}</span></li>
             </ul>
             <a class="btn btn-teal" href={s.url} rel={rel} target="_blank">{s.cta} ←</a>
           </section>
           <p class="sp-disc"><b>גילוי נאות:</b> זו כתבה ממומנת. היא נכתבה בשיתוף {s.name} ופורסמה בתשלום. היא אינה חלק מהתוכן המערכתי של {SITE.name}, ואינה המלצה של האתר על המפרסם או על השירותים שלו. המידע בה כללי ואינו ייעוץ משפטי. <a href={`${B}tochen-memuman/#mediniyut`}>המדיניות שלנו לתוכן ממומן</a> · <a href={`${B}pirsum/`}>לפרסם כתבה ממומנת</a></p>
         </div>
-        <aside class="side" aria-label="המפרסם">
-          <div class="card sp-side">
-            <span class="sp-pill">תוכן ממומן</span>
-            <b>בשיתוף {s.name}</b>
-            {s.address && <p>{s.address}</p>}
-            {s.phone && <p><a href={tel(s.phone)} rel={rel} dir="ltr">{s.phone}</a></p>}
-            <a class="btn btn-line" href={s.url} rel={rel} target="_blank">{s.cta}</a>
-          </div>
-          <div class="card sidecta">
-            <b>רוצים להבין קודם לבד?</b>
-            <p>6 שאלות קצרות, ותדעו איזה הליך רלוונטי למצב שלכם.</p>
-            <a class="btn btn-teal" href={`${B}kli/eize-halich/`}>לבדיקה</a>
-          </div>
-        </aside>
       </div>
       {others.length > 0 && (
         <section class="rel" aria-labelledby="rel-h"><h2 id="rel-h">עוד תוכן ממומן</h2><div class="grid g3">{others.map((o) => (
@@ -154,10 +140,8 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
 .sp-cover{margin:6px 0 34px}
 .sp-cover svg,.sp-cover img{width:100%;border-radius:var(--r);display:block;object-fit:cover;aspect-ratio:1200/420}
 .sp-cover figcaption{font-size:.82rem;color:var(--muted);margin-top:8px}
-.cols{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:48px;align-items:start}
+.cols{display:grid;grid-template-columns:minmax(0,1fr);max-width:780px;margin-inline:auto}
 .main{min-width:0;max-width:var(--w-text)}
-.side{position:sticky;top:92px;display:grid;gap:16px}
-@media (max-width:1000px){.cols{grid-template-columns:1fr}.side{display:none}}
 .tldr{background:var(--teal-soft);border:1px solid color-mix(in srgb,var(--teal) 30%,transparent);border-radius:var(--r);padding:18px 22px;margin-bottom:28px}
 .tldr h2{font:700 1.05rem/1.3 var(--ff);margin:0 0 8px;color:var(--teal-2)}
 .tldr ul{margin:0;padding-inline-start:1.2em}.tldr li{margin:.3em 0}
@@ -179,8 +163,5 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
 .sp-contact span{font-size:.8rem;color:var(--muted);font-weight:700}
 .sp-contact a{font-weight:700;text-align:start;justify-self:start}
 .sp-disc{font-size:.88rem;color:var(--muted);background:var(--sand);border-radius:var(--r-s);padding:14px 16px;margin:0 0 34px}
-.sp-side{display:grid;gap:8px;justify-items:start;border-top:5px solid var(--sun)}
-.sp-side p{margin:0;font-size:.93rem;color:var(--muted)}
-.sidecta p{font-size:.93rem;color:var(--muted);margin:6px 0 12px}
 .rel{padding-block:20px 10px}
 </style>
