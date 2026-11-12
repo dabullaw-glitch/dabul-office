@@ -1,0 +1,87 @@
+{
+ "ok": true,
+ "duration": 56.9,
+ "bytes": 43371685,
+ "style": "cinematic",
+ "theme": "cinematic-gold",
+ "build": {
+  "fix": {
+   "r": 0.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0,
+   "b": 1.0,
+   "why": "none needed"
+  },
+  "style": "cinematic",
+  "theme": "cinematic-gold",
+  "clips": 2,
+  "body": 53.974,
+  "total": 56.77,
+  "captions": 41,
+  "sfx": 12,
+  "layout": {
+   "hook": [
+    "band",
+    0.9615384615384616,
+    0
+   ],
+   "name": [
+    "low",
+    null,
+    null
+   ],
+   "law": [
+    "full",
+    1.0,
+    null
+   ],
+   "contract": [
+    "full",
+    1.0,
+    null
+   ],
+   "more": [
+    "full",
+    1.0,
+    null
+   ],
+   "vouch": [
+    "full",
+    1.0,
+    null
+   ],
+   "check": [
+    "full",
+    1.0,
+    null
+   ],
+   "pod": [
+    "full",
+    1.0,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 133,
+  "mode": "aligned 124 of 133",
+  "start": 0.0,
+  "end": 53.86
+ },
+ "resolve": {
+  "beats": 8,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    54.31
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n20 segments",
+ "at": "2026-11-12T12:36:30Z",
+ "cover": "vr-pod-ep03-clip.cover.jpg",
+ "coverSec": 1.0
+}
