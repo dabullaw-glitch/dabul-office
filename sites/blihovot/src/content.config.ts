@@ -40,7 +40,8 @@ const lessons = defineCollection({
 
 // Sponsored articles (paid content, "תוכן ממומן"): one markdown file per article in src/content/sponsored/<slug>.md.
 // Shown only under tochen-memuman/, always labelled as paid content. Links to the sponsor are rendered by the page
-// (sponsor box, rel="sponsored"); do not put the sponsor's website inside the markdown body.
+// (one button in the sponsor box). The markdown body may hold ONE link to the sponsor; at most 2 outbound links per article
+// (12.11.2026, Yakir: the paid-links marketplaces allow no more than 2, as regular follow links).
 const sponsored = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/sponsored' }),
   schema: z.object({
@@ -52,7 +53,7 @@ const sponsored = defineCollection({
     summary: z.array(z.string()).min(2),     // "בקצרה" lines at the top
     sponsor: z.object({
       name: z.string(),                      // as the sponsor wants it shown
-      url: z.string().url(),                 // the sponsor's website (always rel="sponsored")
+      url: z.string().url(),                 // the sponsor's website
       about: z.string(),                     // 1-3 sentences for the sponsor box, approved by the sponsor
       phone: z.string().optional(),
       whatsapp: z.string().optional(),
