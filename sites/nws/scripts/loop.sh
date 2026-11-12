@@ -82,7 +82,18 @@ synclib() {
   rm -rf "$t"
 }
 
+# 12.11.2026 (Yakir: keep server traffic low; the full feed polled every 45 s was most of the Supabase egress): ask the engine for a
+# tiny fingerprint first and download the full feed and the directory only when it changed, or at least every 10 minutes.
+STAMP_URL="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/hns-feed?only=stamp"
+LASTSTAMP=""
+LASTFULL=-9999
 while :; do
+  STAMP=$(curl -fsS --max-time 20 "$STAMP_URL" 2>/dev/null | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{const j=JSON.parse(d);process.stdout.write(j.ok?String(j.stamp):'')}catch(e){}})" 2>/dev/null || true)
+  if [ -n "$STAMP" ] && [ "$STAMP" = "$LASTSTAMP" ] && [ $((SECONDS - LASTFULL)) -lt 600 ] && [ -n "$LAST" ]; then
+    [ "$SECONDS" -ge "$END" ] && break
+    sleep 45; continue
+  fi
+  LASTSTAMP="$STAMP"; LASTFULL=$SECONDS
   node scripts/feed.mjs >/dev/null 2>&1 || echo "feed fetch failed, keeping the last one"
   node scripts/biz.mjs >/dev/null 2>&1 || true
   synclib

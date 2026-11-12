@@ -116,6 +116,13 @@ Deno.serve(async (req) => {
     }
     return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), flashes: await flashes() }), { headers: { ...H, 'cache-control': 'public, max-age=15' } });
   }
+  // 12.11.2026 (Yakir: keep server traffic low): ?only=stamp answers a tiny fingerprint of everything below (SQL hns_feed_stamp),
+  // so the nws.co.il build loop downloads the full feed (about 1.8 MB) only when something changed.
+  if (url.searchParams.get('only') === 'stamp') {
+    const { data: st, error: se } = await sb.rpc('hns_feed_stamp');
+    if (se || !st) return new Response(JSON.stringify({ ok: false }), { status: 500, headers: { ...H, 'cache-control': 'no-store' } });
+    return new Response(JSON.stringify({ ok: true, stamp: st }), { headers: { ...H, 'cache-control': 'no-store' } });
+  }
   const limit = Math.min(1000, Math.max(1, Number(url.searchParams.get('limit')) || 300));
   const { data, error } = await sb.from('hns_stories')
     .select('id,created_at,published_at,updated_at,section,title,dek,body,key_points,faq,places,sources,image_url,image_alt,image_model,kicker,kind,author,author_role,video_url,closure,pub_note,updates,extras,context_ids,service_box,format,format_data,notes')
