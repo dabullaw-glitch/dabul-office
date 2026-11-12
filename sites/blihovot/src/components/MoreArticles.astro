@@ -1,0 +1,57 @@
+---
+// "כתבות נוספות שיעניינו אותך" (Yakir, 12.11.2026): dark image-style cards at the end of every article.
+// No stock photos: each card gets its topic's own colour and a large line drawing of the topic icon.
+import { HUBS } from '../data/site';
+interface Props { items: any[]; title?: string }
+const { items, title = 'כתבות נוספות שיעניינו אותך' } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const P: Record<string, string> = {
+  path: '<circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8 18h5a3.5 3.5 0 0 0 0-7h-2a3.5 3.5 0 0 1 0-7h5" stroke-dasharray="2 2.6"/>',
+  file: '<path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
+  hands: '<path d="M3 12l4-4 4 3 2-2a2 2 0 0 1 3 0l5 5"/><path d="M7 8l-4 4 6 6 2-1 2 1 6-5"/><path d="M11 17l2-2"/>',
+  briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>',
+  sun: '<path d="M5 17a7 7 0 0 1 14 0"/><path d="M2 20h20M12 6V3M5.6 9.6 3.5 7.5M18.4 9.6l2.1-2.1"/>',
+  leaf: '<path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15"/><path d="M5 19l8-8"/>',
+};
+const BG: Record<string, string> = {
+  'hadlut-piraon': 'linear-gradient(150deg,#0b4f49,#0a2a33 70%)',
+  'hotzaa-lapoal': 'linear-gradient(150deg,#3a2a52,#141a2e 70%)',
+  'hesder-hov': 'linear-gradient(150deg,#1d4f6e,#0f1f33 70%)',
+  atzmaim: 'linear-gradient(150deg,#5a3b18,#1f1a14 70%)',
+  kalkala: 'linear-gradient(150deg,#2f5a2a,#14211a 70%)',
+  achrei: 'linear-gradient(150deg,#7a4a12,#22180f 70%)',
+};
+const fmt = (x: Date) => x.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+{items.length > 0 && (
+  <section class="more-a" aria-labelledby="more-a-h">
+    <h2 id="more-a-h">{title}</h2>
+    <div class="more-g">
+      {items.map((g) => {
+        const hub = HUBS.find((h) => h.id === g.data.hub);
+        return (
+          <a class="more-c" href={`${B}madrich/${g.id}/`} style={`background:${BG[g.data.hub] || BG['hadlut-piraon']}`}>
+            <svg class="more-art" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={P[hub?.icon || 'path'] || P.path} />
+            <span class="more-tag">{hub?.short || 'כללי'}</span>
+            <span class="more-t">{g.data.title}</span>
+            <span class="more-d">{fmt(g.data.updated || g.data.published)}</span>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+)}
+<style>
+.more-a{padding-block:34px 24px}
+.more-a h2{font-size:clamp(1.5rem,3vw,2rem);margin-bottom:20px}
+.more-g{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.more-c{position:relative;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;min-height:250px;padding:18px 20px;border-radius:16px;overflow:hidden;text-decoration:none;color:#fff;box-shadow:0 6px 18px rgba(10,20,30,.18);transition:transform .2s ease,box-shadow .2s ease}
+.more-c::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.55));pointer-events:none}
+.more-c:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(10,20,30,.28);color:#fff}
+.more-c:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+.more-art{position:absolute;inset-inline-end:-18px;top:-10px;width:62%;height:auto;color:rgba(255,255,255,.16)}
+.more-tag{position:absolute;top:16px;inset-inline-start:16px;background:#c9a03c;color:#1b1405;font-weight:700;font-size:.82rem;padding:4px 14px;border-radius:999px;z-index:1}
+.more-t{position:relative;z-index:1;font:700 1.3rem/1.4 var(--ff-d);text-wrap:balance}
+.more-d{position:relative;z-index:1;font-size:.88rem;color:rgba(255,255,255,.8)}
+@media (prefers-reduced-motion:reduce){.more-c{transition:none}.more-c:hover{transform:none}}
+</style>

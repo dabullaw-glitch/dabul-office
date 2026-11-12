@@ -3,7 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import LeadForm from '../../components/LeadForm.astro';
-import GuideCard from '../../components/GuideCard.astro';
+import MoreArticles from '../../components/MoreArticles.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Video from '../../components/Video.astro';
 import { HUBS, SITE } from '../../data/site';
@@ -30,6 +30,8 @@ const toc = headings.filter((h) => h.depth === 2);
 const named = d.related.map((s) => all.find((x) => x.id === s)).filter(Boolean);
 const sameHub = all.filter((x) => x.data.hub === d.hub && x.id !== g.id && !d.related.includes(x.id)).sort((a, b) => a.data.order - b.data.order);
 const related = [...named, ...sameHub].slice(0, 3);
+// 12.11.2026: 4 cards at the end, the related ones first, then the newest from other topics
+const more = [...related, ...[...all].filter((x) => x.id !== g.id && !related.includes(x)).sort((a, b) => +b.data.updated - +a.data.updated)].slice(0, 4);
 const tool = d.tool ? TOOLS.find((t) => t.id === d.tool) : null;
 const video = d.video ? (videos as any[]).find((v) => v.id === d.video) : null;
 const fmt = (x: Date) => x.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -98,9 +100,7 @@ if (video) schema.push({ '@context': 'https://schema.org', '@type': 'VideoObject
         </div>
       </aside>
     </div>
-    {related.length > 0 && (
-      <section class="rel" aria-labelledby="rel-h"><h2 id="rel-h">כדאי לקרוא גם</h2><div class="grid g3">{related.map((r) => <GuideCard g={r} />)}</div></section>
-    )}
+    <MoreArticles items={more} />
   </article>
 </Base>
 <style>

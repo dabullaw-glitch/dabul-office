@@ -8,7 +8,7 @@ import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { SITE } from '../../data/site';
-import GuideCard from '../../components/GuideCard.astro';
+import MoreArticles from '../../components/MoreArticles.astro';
 import { TOOLS } from '../../data/tools';
 
 export async function getStaticPaths() {
@@ -26,7 +26,7 @@ const words = (a.body || '').split(/\s+/).length;
 const minutes = Math.max(2, Math.round(words / 190));
 const rel = 'noopener';
 const host = new URL(s.url).host.replace(/^www\./, '');
-const guides = (await getCollection('guides')).filter((g) => !g.data.draft).sort((x, y) => +y.data.updated - +x.data.updated).slice(0, 6);
+const guides = (await getCollection('guides')).filter((g) => !g.data.draft).sort((x, y) => +y.data.updated - +x.data.updated).slice(0, 4);
 const tools = TOOLS.slice(0, 3);
 const others = all.filter((x) => x.id !== a.id).sort((x, y) => +y.data.published - +x.data.published).slice(0, 3);
 const image = d.image ? B + d.image.replace(/^\//, '') : null;
@@ -104,11 +104,10 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
               {d.faq.map((f) => <details><summary>{f.q}</summary><div set:html={f.a} /></details>)}
             </section>
           )}
-          <p class="sp-disc"><b>גילוי נאות:</b> זו כתבה ממומנת. היא נכתבה בשיתוף {s.name} ופורסמה בתשלום. היא אינה חלק מהתוכן המערכתי של {SITE.name}, ואינה המלצה של האתר על המפרסם או על השירותים שלו. המידע בה כללי ואינו ייעוץ משפטי. <a href={`${B}tochen-memuman/#mediniyut`}>המדיניות שלנו לתוכן ממומן</a> · <a href={`${B}pirsum/`}>לפרסם כתבה ממומנת</a></p>
         </div>
       </div>
-      <section class="rel" aria-labelledby="g-h"><h2 id="g-h">מדריכים מהאתר</h2><div class="grid g3">{guides.map((g) => <GuideCard g={g} />)}</div>
-        <p class="more"><a href={`${B}madrich/`}>לכל המדריכים ←</a></p></section>
+      <MoreArticles items={guides} />
+      <p class="more"><a href={`${B}madrich/`}>לכל המדריכים ←</a></p>
       <section class="rel" aria-labelledby="t-h"><h2 id="t-h">כלים ומחשבונים</h2><div class="grid g3">{tools.map((t) => (
         <a class="card" href={`${B}kli/${t.id}/`}><span class="tag">כלי</span><h3>{t.title}</h3><p>{t.blurb}</p><span class="go">{t.cta} ←</span></a>
       ))}</div></section>
@@ -121,7 +120,7 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
   </article>
 </Base>
 <style>
-.rel .more{margin-top:14px;font-weight:700}.rel .go{color:var(--teal);font-weight:700}
+.more{margin-top:14px;font-weight:700}.rel .go{color:var(--teal);font-weight:700}
 .sp-bar{background:var(--sun-soft);border-bottom:1px solid color-mix(in srgb,var(--sun) 45%,transparent);font-size:.93rem}
 .sp-bar .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding-block:10px}
 .sp-bar a{margin-inline-start:auto;color:var(--ink);font-weight:700}
