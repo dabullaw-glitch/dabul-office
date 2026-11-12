@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { SITE, NAV } from '../data/site';
 import Logo from '../components/Logo.astro';
+import SiteExtras from '../components/SiteExtras.astro';
 interface Props { title: string; description: string; path?: string; type?: 'website' | 'article'; schema?: object[]; noindex?: boolean; image?: string; }
 const { title, description, type = 'website', schema = [], noindex = false } = Astro.props;
 const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
@@ -113,5 +114,6 @@ const fonts = `
 <script is:inline>
 (function(){var h=document.getElementById('hdr'),b=h&&h.querySelector('.menu-btn');if(!b)return;b.addEventListener('click',function(){var o=h.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false')});})();
 </script>
+<SiteExtras />
 </body>
 </html>

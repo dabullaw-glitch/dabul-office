@@ -1,0 +1,132 @@
+---
+// Cookie consent banner and the accessibility menu (Yakir, 12.11.2026). Both work without any outside service.
+// Choices are kept in the visitor's own browser only (localStorage). Non-essential scripts (ads, statistics) may load only
+// after consent: they listen for the 'bh-consent' event or check window.bhConsent === 'yes'.
+const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<div class="ck" id="ck" role="region" aria-label="הודעה על עוגיות" hidden>
+  <div class="ck-in">
+    <svg class="ck-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 3 3 0 0 1-3-3 3 3 0 0 1-3-3 3 3 0 0 1-3-3z"/><circle cx="8.5" cy="11" r=".9" fill="currentColor"/><circle cx="12" cy="15.5" r=".9" fill="currentColor"/><circle cx="15.5" cy="13" r=".9" fill="currentColor"/><circle cx="9" cy="16" r=".6" fill="currentColor"/></svg>
+    <p>האתר משתמש בעוגיות לצורך שיפור חוויית הגלישה וניתוח שימוש. עוגיות שאינן חיוניות ייטענו רק לאחר קבלת הסכמתך. פרטים נוספים ב<a href={`${B}mediniyut-pratiyut/`}>מדיניות הפרטיות</a> שלנו.</p>
+    <div class="ck-b">
+      <button type="button" class="ck-yes" data-ck="yes">אני מסכים/ה</button>
+      <button type="button" class="ck-no" data-ck="no">דחייה</button>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="a11y-btn" id="a11yBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11yP" aria-label="תפריט נגישות">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="2.2" r="2.1"/><path d="M19 13v-2c-1.54.02-3.09-.75-4.07-1.83l-1.29-1.43c-.17-.19-.38-.34-.61-.45h-.01c-.35-.2-.75-.3-1.19-.26C10.76 7.11 10 8.04 10 9.09V15c0 1.1.9 2 2 2h5v5h2v-5.5c0-1.1-.9-2-2-2h-3v-3.45c1.29 1.07 3.25 1.94 5 1.95zm-6.17 5c-.41 1.16-1.52 2-2.83 2-1.66 0-3-1.34-3-3 0-1.31.84-2.41 2-2.83V12.1c-2.28.46-4 2.48-4 4.9 0 2.76 2.24 5 5 5 2.42 0 4.44-1.72 4.9-4h-2.07z"/></svg>
+</button>
+<div class="a11y-p" id="a11yP" role="dialog" aria-modal="false" aria-labelledby="a11yH" hidden>
+  <div class="a11y-hd"><h2 id="a11yH">נגישות</h2><button type="button" class="a11y-x" data-a="close" aria-label="סגירת תפריט הנגישות">✕</button></div>
+  <div class="a11y-fs" role="group" aria-label="גודל טקסט">
+    <span>גודל טקסט</span>
+    <button type="button" data-a="fs-" aria-label="הקטנת טקסט">א-</button>
+    <output id="a11yFs" aria-live="polite">100%</output>
+    <button type="button" data-a="fs+" aria-label="הגדלת טקסט">א+</button>
+  </div>
+  <div class="a11y-g">
+    <button type="button" data-t="contrast" aria-pressed="false">ניגודיות גבוהה</button>
+    <button type="button" data-t="gray" aria-pressed="false">גווני אפור</button>
+    <button type="button" data-t="links" aria-pressed="false">הדגשת קישורים</button>
+    <button type="button" data-t="readable" aria-pressed="false">גופן קריא</button>
+    <button type="button" data-t="spacing" aria-pressed="false">ריווח טקסט</button>
+    <button type="button" data-t="noanim" aria-pressed="false">עצירת אנימציות</button>
+    <button type="button" data-t="cursor" aria-pressed="false">סמן גדול</button>
+    <button type="button" data-t="headings" aria-pressed="false">הדגשת כותרות</button>
+  </div>
+  <div class="a11y-ft">
+    <button type="button" data-a="reset">איפוס הגדרות</button>
+    <a href={`${B}negishut/`}>הצהרת נגישות</a>
+  </div>
+</div>
+
+<script is:inline>
+(function(){
+  var d=document,h=d.documentElement,K='bh-a11y',C='bh-consent';
+  function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  if(h.classList.contains('embed'))return;
+  /* cookies */
+  var ck=d.getElementById('ck'),c=get(C);
+  window.bhConsent=c;
+  if(!c&&ck){ck.hidden=false;h.classList.add('ck-open')}
+  if(ck)ck.addEventListener('click',function(e){var b=e.target.closest('[data-ck]');if(!b)return;var v=b.getAttribute('data-ck');set(C,v);window.bhConsent=v;ck.hidden=true;h.classList.remove('ck-open');try{window.dispatchEvent(new CustomEvent('bh-consent',{detail:v}))}catch(e){}});
+  /* accessibility */
+  var s={};try{s=JSON.parse(get(K)||'{}')||{}}catch(e){s={}}
+  var btn=d.getElementById('a11yBtn'),p=d.getElementById('a11yP'),fo=d.getElementById('a11yFs');
+  function apply(){
+    var fs=s.fs||100;h.style.fontSize=fs===100?'':fs+'%';if(fo)fo.textContent=fs+'%';
+    ['contrast','gray','links','readable','spacing','noanim','cursor','headings'].forEach(function(t){var on=!!s[t];h.classList.toggle('a11y-'+t,on);var b=p&&p.querySelector('[data-t="'+t+'"]');if(b)b.setAttribute('aria-pressed',on?'true':'false')});
+    set(K,JSON.stringify(s));
+  }
+  apply();
+  function open(o){p.hidden=!o;btn.setAttribute('aria-expanded',o?'true':'false');if(o){var f=p.querySelector('button');if(f)f.focus()}else btn.focus()}
+  if(btn)btn.addEventListener('click',function(){open(p.hidden)});
+  if(p)p.addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    var t=b.getAttribute('data-t'),a=b.getAttribute('data-a');
+    if(t){s[t]=!s[t]}
+    else if(a==='fs+'){s.fs=Math.min(160,(s.fs||100)+10)}
+    else if(a==='fs-'){s.fs=Math.max(80,(s.fs||100)-10)}
+    else if(a==='reset'){s={}}
+    else if(a==='close'){open(false);return}
+    apply();
+  });
+  d.addEventListener('keydown',function(e){if(e.key==='Escape'&&p&&!p.hidden)open(false)});
+})();
+</script>
+
+<style is:global>
+/* cookie banner */
+.ck{position:fixed;inset-inline:12px;bottom:12px;z-index:90;display:flex;justify-content:center}
+.ck[hidden]{display:none}
+.ck-in{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:start;max-width:860px;width:100%;background:#16130e;color:#f4efe6;border-radius:22px;padding:18px 22px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.ck-i{width:34px;height:34px;color:#f2d9a8;margin-top:2px}
+.ck-in p{margin:0;font-size:.98rem;line-height:1.6}
+.ck-in a{color:#f2d9a8}
+.ck-b{grid-column:2;display:flex;flex-wrap:wrap;gap:10px}
+.ck-b button{font:700 1rem var(--ff);border-radius:14px;padding:12px 26px;cursor:pointer;min-height:46px}
+.ck-yes{background:#2a251c;color:#fff;border:1px solid #2a251c}
+.ck-no{background:transparent;color:#f4efe6;border:1px solid #6b6455}
+.ck-b button:hover{filter:brightness(1.2)}
+.ck-b button:focus-visible{outline:3px solid #f2d9a8;outline-offset:2px}
+@media (max-width:560px){.ck-in{grid-template-columns:1fr;padding:16px}.ck-i{display:none}.ck-b{grid-column:1}.ck-b button{flex:1}}
+/* accessibility button and menu */
+.a11y-btn{position:fixed;inset-inline-end:18px;bottom:18px;z-index:80;width:56px;height:56px;border-radius:50%;border:0;background:#1c1a17;color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.a11y-btn svg{width:30px;height:30px}
+.a11y-btn:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+html.ck-open .a11y-btn{bottom:150px}
+@media (max-width:560px){html.ck-open .a11y-btn{bottom:250px}}
+.a11y-p{position:fixed;inset-inline-end:18px;bottom:86px;z-index:85;width:min(340px,calc(100vw - 36px));max-height:calc(100vh - 120px);overflow:auto;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 14px 34px rgba(0,0,0,.25)}
+.a11y-p[hidden]{display:none}
+.a11y-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.a11y-hd h2{font-size:1.25rem;margin:0}
+.a11y-x{background:none;border:0;font-size:1.1rem;cursor:pointer;color:var(--ink);width:36px;height:36px;border-radius:8px}
+.a11y-fs{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.a11y-fs span{flex:1;font-weight:700}
+.a11y-fs output{min-width:48px;text-align:center;font-variant-numeric:tabular-nums}
+.a11y-p button{font:600 .95rem var(--ff)}
+.a11y-fs button{width:44px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--sand);color:var(--ink);cursor:pointer}
+.a11y-g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.a11y-g button{min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--sand);color:var(--ink);cursor:pointer;padding:6px 8px;line-height:1.3}
+.a11y-g button[aria-pressed="true"]{background:var(--teal);color:#fff;border-color:var(--teal)}
+.a11y-ft{display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:10px}
+.a11y-ft button{border:0;background:none;color:var(--rose);cursor:pointer;text-decoration:underline;padding:6px 0}
+.a11y-p button:focus-visible,.a11y-ft a:focus-visible{outline:3px solid var(--focus,#2b6cb0);outline-offset:2px}
+/* the settings themselves */
+html.a11y-contrast{--paper:#000;--sand:#111;--card:#000;--ink:#fff;--ink-2:#fff;--muted:#f0f0f0;--line:#fff;--teal:#ffef5a;--teal-2:#ffef5a;--teal-soft:#222;--sun-soft:#222}
+html.a11y-contrast a{color:#ffef5a!important}
+html.a11y-contrast .a11y-btn{background:#ffef5a;color:#000;outline:2px solid #fff}
+html.a11y-gray body{filter:grayscale(1)}
+html.a11y-links a{text-decoration:underline!important;text-decoration-thickness:2px!important;font-weight:700}
+html.a11y-readable,html.a11y-readable *{font-family:Arial,Helvetica,sans-serif!important}
+html.a11y-spacing body{letter-spacing:.06em;word-spacing:.12em}
+html.a11y-spacing p,html.a11y-spacing li{line-height:2!important}
+html.a11y-noanim *,html.a11y-noanim *::before,html.a11y-noanim *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html.a11y-cursor,html.a11y-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24'%3E%3Cpath d='M4 2l16 9-7 2-3 7z' fill='%23000' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E") 4 2,auto!important}
+html.a11y-headings h1,html.a11y-headings h2,html.a11y-headings h3{outline:2px dashed var(--teal);outline-offset:4px}
+html.embed .ck,html.embed .a11y-btn,html.embed .a11y-p{display:none!important}
+@media print{.ck,.a11y-btn,.a11y-p{display:none!important}}
+</style>
