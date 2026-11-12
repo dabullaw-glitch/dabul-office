@@ -174,5 +174,11 @@ Deno.serve(async (req) => {
   // 29.10.2026: live service data for the /now/ pages (docs coll 'nwslive', e.g. id 'pharmacy' written by the municipality task)
   const { data: lv } = await sb.from('docs').select('id,data').eq('coll', 'nwslive');
   const live = Object.fromEntries((lv || []).map((r: Any) => [r.id, cleanJson(r.data)]));
-  return new Response(JSON.stringify({ ok: true, generated: new Date().toISOString(), count: stories.length, stories, event, flashes: fl, calendar: cal, merged, pin, live }), { headers: H });
+  const out = JSON.stringify({ ok: true, generated: new Date().toISOString(), count: stories.length, stories, event, flashes: fl, calendar: cal, merged, pin, live });
+  // 12.11.2026: gzip when the caller accepts it (the site build does), about 6 times less traffic out of the server
+  if (/\bgzip\b/.test(req.headers.get('accept-encoding') || '')) {
+    const gz = new Response(out).body!.pipeThrough(new CompressionStream('gzip'));
+    return new Response(gz, { headers: { ...H, 'content-encoding': 'gzip', vary: 'accept-encoding' } });
+  }
+  return new Response(out, { headers: H });
 });
