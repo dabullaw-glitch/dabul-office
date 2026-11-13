@@ -1,0 +1,211 @@
+{
+ "id": "vr-fh-l04",
+ "file": "fh-l04-a08245",
+ "course": "first-home",
+ "at": "2026-11-13T06:44:33Z",
+ "warnings": [],
+ "n": 4,
+ "title": "זיכרון דברים: מתי הוא כבר חוזה",
+ "scenes": 25,
+ "narration": {
+  "mode": "pieces",
+  "pieces": [
+   {
+    "from": 0,
+    "to": 5,
+    "method": "nearest-pause",
+    "seconds": 135.7,
+    "warnings": []
+   },
+   {
+    "from": 6,
+    "to": 11,
+    "method": "longest-pauses",
+    "seconds": 148.77,
+    "warnings": []
+   },
+   {
+    "from": 12,
+    "to": 16,
+    "method": "nearest-pause",
+    "seconds": 113.13,
+    "warnings": []
+   },
+   {
+    "from": 17,
+    "to": 22,
+    "method": "nearest-pause",
+    "seconds": 132.32,
+    "warnings": []
+   },
+   {
+    "from": 23,
+    "to": 24,
+    "method": "longest-pauses",
+    "seconds": 49.03,
+    "warnings": []
+   }
+  ]
+ },
+ "duration": 674.22,
+ "parts": {
+  "open": 40.6,
+  "slides": 587.55,
+  "close": 46.04
+ },
+ "bytes": 28062949,
+ "crf": 24,
+ "slides": [
+  {
+   "slide": 1,
+   "kind": "big",
+   "start": 40.6,
+   "speech": 23.37
+  },
+  {
+   "slide": 2,
+   "kind": "cards",
+   "start": 64.87,
+   "speech": 22.24
+  },
+  {
+   "slide": 3,
+   "kind": "quote",
+   "start": 88.01,
+   "speech": 21.44
+  },
+  {
+   "slide": 4,
+   "kind": "svg",
+   "start": 110.35,
+   "speech": 24.19
+  },
+  {
+   "slide": 5,
+   "kind": "bullets",
+   "start": 135.44,
+   "speech": 24.55
+  },
+  {
+   "slide": 6,
+   "kind": "key",
+   "start": 160.89,
+   "speech": 16.64
+  },
+  {
+   "slide": 7,
+   "kind": "compare",
+   "start": 178.43,
+   "speech": 28.9
+  },
+  {
+   "slide": 8,
+   "kind": "warn",
+   "start": 208.23,
+   "speech": 16.79
+  },
+  {
+   "slide": 9,
+   "kind": "cards",
+   "start": 225.92,
+   "speech": 20.88
+  },
+  {
+   "slide": 10,
+   "kind": "doc",
+   "start": 247.7,
+   "speech": 33.84
+  },
+  {
+   "slide": 11,
+   "kind": "split",
+   "start": 282.44,
+   "speech": 22.09
+  },
+  {
+   "slide": 12,
+   "kind": "key",
+   "start": 305.42,
+   "speech": 22.34
+  },
+  {
+   "slide": 13,
+   "kind": "steps",
+   "start": 328.66,
+   "speech": 30.06
+  },
+  {
+   "slide": 14,
+   "kind": "quote",
+   "start": 359.62,
+   "speech": 16.8
+  },
+  {
+   "slide": 15,
+   "kind": "tip",
+   "start": 377.32,
+   "speech": 24.92
+  },
+  {
+   "slide": 16,
+   "kind": "big",
+   "start": 403.14,
+   "speech": 12.6
+  },
+  {
+   "slide": 17,
+   "kind": "cards",
+   "start": 416.64,
+   "speech": 26.34
+  },
+  {
+   "slide": 18,
+   "kind": "doc",
+   "start": 443.87,
+   "speech": 27.7
+  },
+  {
+   "slide": 19,
+   "kind": "warn",
+   "start": 472.48,
+   "speech": 12.21
+  },
+  {
+   "slide": 20,
+   "kind": "cards",
+   "start": 485.59,
+   "speech": 20.11
+  },
+  {
+   "slide": 21,
+   "kind": "example",
+   "start": 506.6,
+   "speech": 21.13
+  },
+  {
+   "slide": 22,
+   "kind": "flow",
+   "start": 528.63,
+   "speech": 29.36
+  },
+  {
+   "slide": 23,
+   "kind": "bullets",
+   "start": 558.89,
+   "speech": 18.32
+  },
+  {
+   "slide": 24,
+   "kind": "checklist",
+   "start": 578.1,
+   "speech": 27.45
+  },
+  {
+   "slide": 25,
+   "kind": "summary",
+   "start": 606.45,
+   "speech": 20.8
+  }
+ ],
+ "url": "https://dabullaw-glitch.github.io/dabul-office/media/course/first-home/fh-l04-a08245.mp4"
+}
