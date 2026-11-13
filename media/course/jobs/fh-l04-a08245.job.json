@@ -1,0 +1,39 @@
+{
+ "id": "vr-fh-l04",
+ "file": "fh-l04-a08245",
+ "course": "first-home",
+ "n": 4,
+ "deckUrl": "https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reels?a=deck&t=a0824505ada923fea87f1534670ff049eee71d8c",
+ "open": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/e55bf40d0b8721ced3d9ed1ca74414ac.mp4?Expires=1795156118&Signature=cAnzws0Yj2ou1QUZig-27IieFTHvi2gU2EnKtmI7Ts0q9pmGeZAXlseYSnXnhVLMWuoloeoaG32YpRWnjdsFUehX2mYzzUaJBau8r2xLrt8ofwHSLzp9Tq2K5mzK6KhhlBHuz~DhpbKUsl6Knjh6NiMQJ0vs6H80RilHX1aMvM4qVzgFjdLMMBTxHYkLGmgozfU0LbYGvs4exgXvR3OKLakDRursNen6qbNRR~RJgGNojHeSyJjbE8rkNfZq0k2wkQ6chUP9UNBqosfQOvz4lhuIIpVsIl5qHowhGevhpN8nIJsc3skmGOOVKpYHp6Fji1e07hBMNcOWpWdtBwxthw__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "close": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/0ac7bdd97c58f8569b34feda44bb0915.mp4?Expires=1795156113&Signature=jKfoFzMibHBKBS4rBUkrQ1hM6KJbhSArw5ONrXSaU1Q34ELBMEyI1XI0122Ak0oKS2Bk4avmW82iSI4uxeu0zD8lMwCB1duybpVWY9Ybgo3KcaBXUDH~wcA0TBcz7yMDskKTh909wcG6uSKQOkYQyTcxMo2xg~UKJL0tQKwCSGc4UitHZ5C3CvH3-ShzKnxNurJooBNz~ZuBKgpG8cAL54hLxyBVvzSB0DsFA3S2cK6S2o7p4PcAJuhZ4at-228taaRSdBXkwF9g9CWbK5GPHghJsI8oviYK8Pk~QDEZ~4q535qdmrE9-dRu75zG5DpK7BCwDi4rTOZBZ0MCeOzgtw__&Key-Pair-Id=K38HBHX5LX3X2H",
+ "narration": {
+  "mode": "pieces",
+  "pieces": [
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=516a7c9e3883437192d27e9102ad257b.wav",
+    "from": 0,
+    "to": 5
+   },
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=182ea9b9da0340bab2d10b6c956580de.wav",
+    "from": 6,
+    "to": 11
+   },
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=6f7ce6ca88be4954b104fd6d6ae6393a.wav",
+    "from": 12,
+    "to": 16
+   },
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=f16a8d8fb7ee4832bbf9ac133d0b529d.wav",
+    "from": 17,
+    "to": 22
+   },
+   {
+    "audio": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=f09f91ae63d74e12926a2756fa3960d4.wav",
+    "from": 23,
+    "to": 24
+   }
+  ]
+ }
+}
