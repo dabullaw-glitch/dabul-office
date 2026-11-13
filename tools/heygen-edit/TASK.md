@@ -85,6 +85,9 @@ For every vidreq with status 'new' (oldest first, at most 3 per run):
 - Otherwise: docs_merge status 'writing'. Research the topic now (WebSearch / WebFetch; for a request from the updates
   board start from its upd.source.url and upd.summary and confirm with a second source). Choose the angle by
   settings/video.contentRule (story for illustration / current affairs / "בואו נעשה את זה פשוט") and hookRule.
+- A request with series 'ai-nadlan' (the AI series, Yakir 13.11.2026): read docs settings/aiSeries first and follow its
+  rules and the topic's angle and tie (on top of everything below). Facts about laws, rulings, Bar guidance and scams only
+  from sources you opened this run.
 - Write the script for a 35 to 55 second reel (type 'other': length by the notes, default the same):
   a hook that stops scrolling in the first 2 to 3 seconds (never "שלום, אני יקיר" or "היום נדבר על"), short lines in spoken
   Hebrew, direct to the viewer, a moment of tension in the middle, an open loop that holds to the end, one clear practical
@@ -118,7 +121,8 @@ whose prompt row has status 'ready' (and mode not 'self'):
 0. REELS PAUSE (Yakir 11.11.2026 00:08: "סרטונים יש לנו גם ככה עד מרץ... נעשה מקום לקורס ולפודקאסט וסרטונים נייצר פחות"):
    while settings/heygen.reelsPause.until (YYYY-MM-DD) is today or later (Israel date), do NOT create HeyGen reels: leave
    these requests exactly as they are (EXCEPT the podcast's 1-minute clip, vidreq source 'podcast' / id vr-pod-epNN-clip:
-   it is part of the podcast and goes on as usual) (status unchanged, no message to Yakir) so the credits go to the course (section 8)
+   it is part of the podcast and goes on as usual, AND the weekly AI series reel, vidreq series 'ai-nadlan' (Yakir 13.11.2026:
+   "סרטון אחד בשבוע" in HeyGen, also during the pause; at most one ai-nadlan reel generated per Israel week)) (status unchanged, no message to Yakir) so the credits go to the course (section 8)
    and the weekly podcast. Scripts, approvals, editing of footage Yakir filmed himself, and the publishing calendar go on
    as usual (they cost no HeyGen credits). After the date, continue normally, oldest first.
 1. Credits: get_current_user; note the remaining premium credits. If fewer than settings/heygen.plan.warnBelow (100):
@@ -271,6 +275,8 @@ For every vidreq with status 'editing': `git pull` and look for media/hgv/<id>.m
 rule below, including heygenFirst and the "no other reels inside a series" rule):** "סרטונים על דברים עדכניים שקורים עכשיו
 צריכים לעלות בזמנים הקרובים ולא רק במרץ... מה שמגיע מעדכונים של דברים חדשים חייב להקדים ומה שכללי לדחות לאחרי זה".
 An update video = its vidreq row has source 'upd' (news, a new ruling, a new directive; vidreq.upd holds the item).
+The weekly AI series (vidreq series 'ai-nadlan', Yakir 13.11.2026: one a week) is handled exactly like an update video here:
+its approved reel goes to the front the same way, so the series really goes out weekly and not in March.
 For each approved reel of an update video that has no `timelyAt` yet:
 1. Make sure it has exactly one planned main row (step 1 below).
 2. Target slot T = the first Sun 20:30 / Tue 12:30 / Thu 17:30 slot more than 48 hours from now that is not held by
