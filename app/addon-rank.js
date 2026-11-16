@@ -6,7 +6,7 @@
    - חיבור והגדרות: the DataForSEO connection (exact positions), how deep and how often to check, balance and spend.
    Data: docs coll "rankkw" + settings/rank, written only by the edge function "rank". This screen calls the function. */
 (function (s) {
-  if (!s || s.RANK) return; s.RANK = '20261115a';
+  if (!s || s.RANK) return; s.RANK = '20261116a';
   const n = v => s.esc(v == null ? '' : String(v));
   const C = 'rankkw';
   s.S.data[C] = s.S.data[C] || {};
@@ -42,16 +42,22 @@
 
   /* ---------- helpers ---------- */
   const INTENT = { info: 'מידע', commercial: 'השוואה', transactional: 'מוכן לפנות', navigational: 'חיפוש אתר' };
-  const FEAT = { ai_overview: 'סיכום בינה מלאכותית', featured_snippet: 'תשובה מודגשת', people_also_ask: 'שאלות נוספות', local_pack: 'מפה ועסקים', video: 'סרטונים', images: 'תמונות', related_searches: 'חיפושים קשורים', knowledge_graph: 'כרטיס מידע', top_stories: 'חדשות', paid: 'מודעות', perspectives: 'דעות', discussions_and_forums: 'פורומים', short_videos: 'סרטונים קצרים', carousel: 'קרוסלה', map: 'מפה', twitter: 'רשת X', recipes: 'מתכונים', find_results_on: 'תוצאות באתרים', popular_products: 'מוצרים', answer_box: 'תשובה ישירה', hotels_pack: 'מלונות', jobs: 'משרות' };
+  const FEAT = { ai_overview: 'סיכום בינה מלאכותית', featured_snippet: 'תשובה מודגשת', people_also_ask: 'שאלות נוספות', local_pack: 'מפה ועסקים', video: 'סרטונים', images: 'תמונות', related_searches: 'חיפושים קשורים', knowledge_graph: 'כרטיס מידע', top_stories: 'חדשות', paid: 'מודעות', perspectives: 'דעות', discussions_and_forums: 'פורומים', short_videos: 'סרטונים קצרים', carousel: 'קרוסלה', map: 'מפה', twitter: 'רשת X', recipes: 'מתכונים', find_results_on: 'תוצאות באתרים', popular_products: 'מוצרים', answer_box: 'תשובה ישירה', hotels_pack: 'מלונות', jobs: 'משרות', people_also_search: 'אנשים חיפשו גם', google_reviews: 'ביקורות גוגל', third_party_reviews: 'ביקורות', local_services: 'שירותים מקומיים', questions_and_answers: 'שאלות ותשובות', top_sights: 'מקומות', events: 'אירועים', scholarly_articles: 'מאמרים', mention_carousel: 'אזכורים', visual_stories: 'סיפורים', commercial_units: 'מוצרים', shopping: 'קניות', google_flights: 'טיסות', math_solver: 'מחשבון', currency_box: 'מטבע', stocks_box: 'מניות', courses: 'קורסים', podcasts: 'פודקאסטים', explore_brands: 'מותגים', ai_mode: 'מצב בינה מלאכותית' };
+  const featTxt = f => FEAT[f] || '';
   const dev = () => s.ui('rank', 'dev', 'm');
   const exact = k => !!(k.last && (k.last.m !== undefined || k.last.d !== undefined));
   const posNow = (k, d) => exact(k) ? k.last[d] : (k.g7 ? k.g7[d] : null);
   const posPrev = (k, d) => exact(k) ? (k.prev ? k.prev[d] : null) : (k.gprev ? k.gprev[d] : null);
   const posFirst = (k, d) => exact(k) ? (k.first ? k.first[d] : null) : null;
   const posBest = (k, d) => exact(k) ? (k.best ? k.best[d] : null) : null;
-  const fp = (v, ex) => v == null || v === '' ? '<span class="rk-nf">לא נמצא</span>' : `<b>${ex ? v : Math.round(v * 10) / 10}</b>`;
+  // was there an exact check of this device on an earlier day?
+  const hasPrevCheck = (k, d) => { const t = (k.last && k.last.at || '').slice(0, 10); return Array.isArray(k.hist) && k.hist.some(h => h && h.day && h.day < t && d in h); };
+  const depthOf = k => (k.last && k.last.depth) || 50;
+  const fp = (v, ex, k) => v == null || v === '' ? (ex ? `<span class="rk-nf" title="האתר לא הופיע ב-${k ? depthOf(k) : 50} התוצאות הראשונות בבדיקה">אחרי ${k ? depthOf(k) : 50}</span>` : '<span class="rk-mut">אין נתון</span>') : `<b>${ex ? v : Math.round(v * 10) / 10}</b>`;
+  const gAvg = (k, d) => k.g7 && k.g7[d] ? `<div class="rk-mut small" title="מיקום ממוצע של השבוע האחרון מכלי הניהול של גוגל. כולל גם הופעה בסיכום הבינה המלאכותית ובמפה">ממוצע בגוגל ${Math.round(k.g7[d] * 10) / 10}</div>` : '';
   const delta = (k, d) => {
     const a = posPrev(k, d), b = posNow(k, d);
+    if (exact(k) && !(k.prev && k.prev[d] !== undefined && k.prev[d] !== null) && !hasPrevCheck(k, d)) return '<span class="rk-mut">בדיקה ראשונה</span>';
     if (b && (a == null || a === undefined)) return exact(k) && k.prev && d in k.prev ? '<span class="rk-up">▲ נכנס</span>' : '<span class="rk-mut">חדש</span>';
     if (!b && a) return '<span class="rk-dn">▼ יצא</span>';
     if (!a || !b) return '<span class="rk-mut">-</span>';
@@ -61,7 +67,7 @@
   const mv = (k, d) => { const a = posPrev(k, d), b = posNow(k, d); return a && b ? a - b : (b && !a ? 0.5 : (!b && a ? -0.5 : 0)); };
   const money = v => v == null ? '-' : '₪' + (Math.round(v * 3.7 * 10) / 10).toLocaleString('he-IL');
   const num = v => v == null ? '-' : Number(v).toLocaleString('he-IL');
-  const pathOf = u => { try { const p = decodeURIComponent(new URL(u).pathname).replace(/\/$/, ''); return p ? p.split('/').pop().replace(/-/g, ' ').slice(0, 40) : 'דף הבית'; } catch { return ''; } };
+  const pathOf = u => { try { const p = decodeURIComponent(new URL(u).pathname).replace(/\/$/, ''); if (!p) return 'דף הבית'; const t = p.split('/').pop().replace(/-/g, ' '); return /[א-ת]/.test(t) ? t.slice(0, 40) : 'עמוד באתר'; } catch { return ''; } };
   const fdt = iso => { if (!iso) return 'עוד לא'; const d = new Date(iso); return d.toLocaleDateString('he-IL', { day: 'numeric', month: 'numeric' }) + ' ' + d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }); };
 
   const st = document.createElement('style');
@@ -157,7 +163,7 @@
         <div class="rk-box"><h4>נפח חיפוש ועלות</h4><div>חיפושים בחודש: <b>${num(k.vol)}</b> · מחיר לקליק במודעות: <b>${money(k.cpc)}</b> · תחרות: <b>${k.comp ? n({ LOW: 'נמוכה', MEDIUM: 'בינונית', HIGH: 'גבוהה' }[k.comp] || k.comp) : '-'}</b></div><div style="margin-top:6px">${trend}</div></div>
         <div class="rk-box"><h4>מעליך בנייד</h4>${comp('m')}</div>
         <div class="rk-box"><h4>מעליך במחשב</h4>${comp('d')}</div>
-        <div class="rk-box"><h4>מה יש בעמוד התוצאות</h4>${(L.feat || []).length ? L.feat.map(f => `<span class="rk-chip${f === 'ai_overview' ? ' on' : ''}">${n(FEAT[f] || f)}</span>`).join(' ') : '<span class="small muted">יופיע אחרי בדיקה מדויקת.</span>'}</div>
+        <div class="rk-box"><h4>מה יש בעמוד התוצאות</h4>${(L.feat || []).length ? L.feat.filter(featTxt).map(f => `<span class="rk-chip${f === 'ai_overview' ? ' on' : ''}">${n(featTxt(f))}</span>`).join(' ') : '<span class="small muted">יופיע אחרי בדיקה מדויקת.</span>'}</div>
         <div class="rk-box"><h4>בינה מלאכותית</h4>
           <div>סיכום הבינה המלאכותית של גוגל: ${L.aio ? (L.aio.on ? (L.aio.cited ? '<span class="rk-yes">מצטט את האתר שלך ✓</span>' : 'מופיע, בלי ציטוט שלך') : 'לא מופיע לחיפוש הזה') : '<span class="rk-no">עוד לא נבדק</span>'}</div>
           <div>חיפוש בצ׳אט ג׳י פי טי: ${k.gpt ? (k.gpt.cited ? '<span class="rk-yes">מצטט את האתר שלך ✓</span>' : k.gpt.named ? '<span class="rk-yes">מזכיר אותך בשם ✓</span>' : 'לא מזכיר אותך') : '<span class="rk-no">עוד לא נבדק</span>'}</div>
@@ -184,14 +190,14 @@
     const th = (k, label) => `<th data-a="rk-sort" data-k="${k}">${label}${key === k ? (rev ? ' ▲' : ' ▼') : ''}</th>`;
     const row = k => {
       const L2 = k.last || {}; const ex = exact(k);
-      const feat = (L2.feat || []).filter(x => x !== 'organic').slice(0, 4).map(x => `<span class="rk-chip${x === 'ai_overview' ? ' on' : ''}">${n(FEAT[x] || x)}</span>`).join('');
+      const feat = (L2.feat || []).filter(x => x !== 'organic' && featTxt(x)).slice(0, 4).map(x => `<span class="rk-chip${x === 'ai_overview' ? ' on' : ''}">${n(featTxt(x))}</span>`).join('');
       const url = L2[d + 'u'] || k.page || '';
       return `<tr>
         <td class="kw"><b data-a="rk-open" data-id="${n(k.id)}">${n(k.kw)}</b>${url ? `<small>${n(pathOf(url))}</small>` : ''}</td>
-        <td>${ex || posPrev(k, d) ? fp(posPrev(k, d), ex) : '<span class="rk-mut">-</span>'}</td>
-        <td>${fp(posNow(k, d), ex)}${!ex && posNow(k, d) ? ' <span class="rk-mut small">ממוצע</span>' : ''}</td>
+        <td>${ex ? (hasPrevCheck(k, d) ? fp(posPrev(k, d), true, k) : '<span class="rk-mut" title="זו הבדיקה המדויקת הראשונה. בבדיקה הבאה יופיע כאן המיקום הקודם">אין עדיין</span>') : (posPrev(k, d) ? fp(posPrev(k, d), false) : '<span class="rk-mut">-</span>')}</td>
+        <td>${fp(posNow(k, d), ex, k)}${!ex && posNow(k, d) ? ' <span class="rk-mut small">ממוצע</span>' : ''}${ex ? gAvg(k, d) : ''}</td>
         <td>${delta(k, d)}</td>
-        <td>${ex ? fp(posFirst(k, d), true) : '<span class="rk-mut">-</span>'}</td>
+        <td>${ex ? fp(posFirst(k, d), true, k) : '<span class="rk-mut">-</span>'}</td>
         <td>${ex && posBest(k, d) ? `<b>${posBest(k, d)}</b>` : '<span class="rk-mut">-</span>'}</td>
         <td>${num(k.vol)}</td><td>${money(k.cpc)}</td>
         <td>${k.intent ? `<span class="rk-chip">${n(INTENT[k.intent] || k.intent)}</span>${k.local ? '<span class="rk-chip">מקומי</span>' : ''}` : '<span class="rk-mut">-</span>'}</td>
@@ -215,12 +221,13 @@
           <div class="rk-tile"><small>מופיע בצ׳אט ג׳י פי טי</small><b>${all.some(k => k.gpt) ? gp : '-'}</b></div>
         </div>
         <div class="rk-bar">${s.segs('dev', [['m', '📱 נייד'], ['d', '🖥 מחשב']], d)}
-          ${s.segs('f', [['all', 'הכל', cnt.all], ['up', 'עלו', cnt.up], ['down', 'ירדו', cnt.down], ['top', 'עמוד ראשון', cnt.top], ['nf', 'לא נמצא', cnt.nf]], f)}
+          ${s.segs('f', [['all', 'הכל', cnt.all], ['up', 'עלו', cnt.up], ['down', 'ירדו', cnt.down], ['top', 'עמוד ראשון', cnt.top], ['nf', 'לא בתוצאות', cnt.nf]], f)}
           <input type="search" data-rk="q" placeholder="חיפוש מילה" value="${n(q)}"><span class="grow"></span>
           <button class="rk-btn pri" data-a="rk-check">🔄 בדיקה עכשיו לכל המילים</button>
           <button class="rk-btn" data-a="rk-gpt">🤖 בדיקת צ׳אט ג׳י פי טי</button>
           <button class="rk-btn" data-a="rk-kwdata">📊 עדכון נפח ומחיר</button>
           <button class="rk-btn" data-a="rk-gsc">עדכון ממוצע מגוגל</button></div>
+        ${anyExact ? `<div class="rk-note">איך לקרוא את הטבלה: <b>עכשיו</b> הוא המיקום המדויק בבדיקה של היום, בגוגל בישראל, בלי היסטוריה אישית (מתוך ${n(String(S.depth || 50))} התוצאות הראשונות). מתחתיו <b>ממוצע בגוגל</b> מכלי הניהול של גוגל לשבוע האחרון. הממוצע לפעמים טוב יותר, כי גוגל סופר בו גם הופעה בסיכום הבינה המלאכותית, במפה ובחיפושים של אנשים באזור שלך. <b>קודם</b> יתמלא אחרי הבדיקה המדויקת הבאה.</div>` : ''}
         <div class="small muted">בדיקה מדויקת אחרונה: ${fdt(S.runAt)} · עדכון ממוצע מגוגל: ${all.find(k => k.g7) ? n(all.find(k => k.g7).g7.at) : 'עוד לא'} · הבדיקה האוטומטית: ${S.freq === 'daily' ? 'כל יום' : 'כל יום ראשון'} בבוקר, וסיכום בטלגרם</div>
         ${!s.S.loaded[C] ? '<p class="small muted">טוען...</p>' : !all.length ? `<div class="card">${s.empty('עוד אין מילים במעקב', 'בלשונית "מילות מפתח" סורקים את האתר, בוחרים מילים מהרשימה או מוסיפים מילים משלך.')}<p style="text-align:center"><button class="rk-btn pri" data-a="rk-go" data-v="rankkw">לבחירת מילים ←</button></p></div>` : `
         <div class="rk-tbl-w"><table class="rk-tbl"><thead><tr>${th('kw', 'מילת מפתח')}<th>קודם</th>${th('now', 'עכשיו')}${th('mv', 'שינוי')}<th>בבדיקה הראשונה</th><th>שיא</th>${th('vol', 'חיפושים בחודש')}${th('cpc', 'מחיר לקליק')}<th>כוונת חיפוש</th><th>בעמוד התוצאות</th><th>בינה מלאכותית של גוגל</th><th>צ׳אט ג׳י פי טי</th><th></th></tr></thead>

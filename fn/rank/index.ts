@@ -110,8 +110,11 @@ function readSerp(res: Any) {
   const hostOf = (i: Any) => {
     const u = String(i.url || '');
     if (u && !/^https?:\/\/(www\.)?google\.[a-z.]+\/goto/.test(u)) { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { /* below */ } }
-    const m = String(i.breadcrumb || '').match(/https?:\/\/([^\/\s›]+)/);
-    return m ? m[1].replace(/^www\./, '') : String(i.domain || '').replace(/^www\./, '');
+    const bc = String(i.breadcrumb || '');
+    const m = bc.match(/https?:\/\/([^\/\s›]+)/) || bc.match(/^\s*((?:[a-z0-9-]+\.)+[a-z]{2,})(?:\s|›|\/|$)/i);
+    if (m) return m[1].replace(/^www\./, '').toLowerCase();
+    const dom = String(i.domain || '').replace(/^www\./, '');
+    return /^google\./.test(dom) ? '' : dom;
   };
   const realUrl = (i: Any) => { const u = String(i.url || ''); return /\/goto\?/.test(u) ? 'https://' + hostOf(i) + '/' : u; };
   const org = items.filter(i => i.type === 'organic');
@@ -244,7 +247,9 @@ async function check(ids?: string[]) {
   const depth = Math.min(100, Math.max(10, +st.depth || 50));
   const kws = (await allDocs('rankkw')).filter(k => k.tracked && !k.hidden && (!ids || ids.includes(k.id)));
   const tasks: Any[] = [];
-  for (const k of kws) for (const dev of ['mobile', 'desktop']) tasks.push(Object.assign({ keyword: k.kw, device: dev, os: dev === 'mobile' ? 'android' : 'windows', depth, load_async_ai_overview: true, tag: `${k.id}|${dev === 'mobile' ? 'm' : 'd'}` }, LOC));
+  // every run has its own id in the task tag: results of an older run are never mixed into a newer one
+  const runId = 'r' + Date.now().toString(36);
+  for (const k of kws) for (const dev of ['mobile', 'desktop']) tasks.push(Object.assign({ keyword: k.kw, device: dev, os: dev === 'mobile' ? 'android' : 'windows', depth, load_async_ai_overview: true, tag: `${k.id}|${dev === 'mobile' ? 'm' : 'd'}|${runId}` }, LOC));
   let posted = 0, cost = 0; const pending: string[] = [];
   for (let i = 0; i < tasks.length; i += 100) {
     const j = await d4s('/serp/google/organic/task_post', tasks.slice(i, i + 100));
@@ -252,13 +257,21 @@ async function check(ids?: string[]) {
     (j.tasks || []).forEach((t: Any) => { if (t.id && t.status_code < 40000) { pending.push(t.id); posted++; } });
   }
   await addSpend(cost);
-  await merge('settings', 'rank', { pending: [...new Set([...(st.pending || []), ...pending])], runAt: new Date().toISOString(), runTasks: posted, runDone: 0, depth });
+  // a new full run replaces what is still waiting from an older run; a run for a few words keeps the rest
+  const keep = ids ? (st.pending || []) : [];
+  await merge('settings', 'rank', { pending: [...new Set([...keep, ...pending])], runId: ids ? (st.runId || runId) : runId, runIds: ids ? [...(st.runIds || []), runId].slice(-10) : [], runAt: new Date().toISOString(), runTasks: posted, runDone: 0, runReported: null, depth });
   return { posted, cost };
 }
 async function collect() {
   if (!d4sOn()) return { skipped: 'not-connected' };
   const st = (await getDoc('settings', 'rank')) || {};
   let pend: string[] = st.pending || []; if (!pend.length) return { done: 0 };
+  // one collector at a time (the 15 minute cron and a button press must not write the same keyword together)
+  if (st.collectBusy && Date.now() - Date.parse(st.collectBusy) < 4 * 60e3) return { busy: true, left: pend.length };
+  await merge('settings', 'rank', { collectBusy: new Date().toISOString() });
+  try { return await collectRun(st, pend); } finally { await merge('settings', 'rank', { collectBusy: null }); }
+}
+async function collectRun(st: Any, pend: string[]) {
   const ready = await d4s('/serp/google/organic/tasks_ready');
   const ids = new Set<string>(); (ready.tasks || []).forEach((t: Any) => (t.result || []).forEach((r: Any) => ids.add(r.id)));
   let done = 0, cost = 0;
@@ -267,8 +280,10 @@ async function collect() {
       const j = await d4s(`/serp/google/organic/task_get/advanced/${id}`);
       cost += j.cost || 0;
       const t = (j.tasks || [])[0]; const res = t && t.result && t.result[0]; const tag = t && t.data && t.data.tag || '';
-      const [kwId, dev] = String(tag).split('|');
-      if (res && kwId) await storeSerp(kwId, dev === 'd' ? 'd' : 'm', readSerp(res), +(t.data.depth || 50));
+      const [kwId, dev, run] = String(tag).split('|');
+      // results without a run id, or of an older run, are dropped
+      const okRun = run && (!st.runId || run === st.runId || (st.runIds || []).includes(run));
+      if (res && kwId && okRun) await storeSerp(kwId, dev === 'd' ? 'd' : 'm', readSerp(res), +(t.data.depth || 50));
       pend = pend.filter(x => x !== id); done++;
     } catch (e) { console.error('collect', id, e); }
   }
