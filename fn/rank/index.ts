@@ -132,13 +132,16 @@ function readSerp(res: Any) {
 }
 
 // keeps the history and the before / now / first values for one keyword
-async function storeSerp(id: string, dev: 'm' | 'd', r: ReturnType<typeof readSerp>, depth: number) {
+async function storeSerp(id: string, dev: 'm' | 'd', rIn: ReturnType<typeof readSerp>, depth: number) {
+  let r = rIn;
   const k = (await getDoc('rankkw', id)) || {};
   const d = today();
   // history rows: {day, m, d, mu, du} (m = mobile position, d = desktop position)
   const hist: Any[] = Array.isArray(k.hist) ? k.hist.filter((x: Any) => x && x.day).slice() : [];
   let h = hist.find(x => x.day === d);
   if (!h) { h = { day: d }; hist.push(h); }
+  // a second check on the same day never wipes a position found earlier that day: the better one is kept
+  if (h[dev] && (!r.pos || h[dev] < r.pos)) r = Object.assign({}, r, { pos: h[dev], url: h[dev + 'u'] || r.url });
   h[dev] = r.pos; h[dev + 'u'] = r.url;
   hist.sort((a, b) => a.day.localeCompare(b.day));
   const last = Object.assign({}, k.last || {});
