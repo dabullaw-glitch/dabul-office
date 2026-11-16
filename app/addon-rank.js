@@ -6,7 +6,7 @@
    - חיבור והגדרות: the DataForSEO connection (exact positions), how deep and how often to check, balance and spend.
    Data: docs coll "rankkw" + settings/rank, written only by the edge function "rank". This screen calls the function. */
 (function (s) {
-  if (!s || s.RANK) return; s.RANK = '20261116a';
+  if (!s || s.RANK) return; s.RANK = '20261116b';
   const n = v => s.esc(v == null ? '' : String(v));
   const C = 'rankkw';
   s.S.data[C] = s.S.data[C] || {};
@@ -153,7 +153,7 @@
   function openKw(id) {
     const k = s.get(C, id); if (!k) return;
     const ex = exact(k), L = k.last || {};
-    const comp = d => (L[d + 'top'] || []).length ? `<ol>${L[d + 'top'].map(t => `<li>מקום ${n(t.p)}: <a href="${n(t.u)}" target="_blank" rel="noopener">${n(t.d)}</a></li>`).join('')}</ol>` : '<p class="small muted">יופיע אחרי בדיקה מדויקת.</p>';
+    const comp = d => (L[d + 'top'] || []).length ? `<ol>${L[d + 'top'].map(t => `<li>מקום ${n(t.p)}: ${t.u && t.u !== 'https:///' && t.d ? `<a href="${n(t.u)}" target="_blank" rel="noopener">${n(t.d)}</a>` : n(t.d || t.t || 'תוצאה בלי כתובת')}</li>`).join('')}</ol>` : '<p class="small muted">יופיע אחרי בדיקה מדויקת.</p>';
     const tr = (k.trend || []).slice().reverse();
     const trend = tr.length ? (() => { const mx = Math.max(1, ...tr.map(t => t[2] || 0)); return `<div style="display:flex;gap:3px;align-items:flex-end;height:60px">${tr.map(t => `<div title="${t[1]}/${t[0]}: ${t[2] || 0}" style="flex:1;background:#9CD3C5;border-radius:3px 3px 0 0;height:${Math.max(3, (t[2] || 0) / mx * 60)}px"></div>`).join('')}</div><div class="small muted">חיפושים בחודש, 12 חודשים אחרונים</div>`; })() : '<p class="small muted">אין עדיין נתוני נפח.</p>';
     s.modal({ title: k.kw, wide: true, body: `<div class="rk-hist">${chart(k)}</div>
