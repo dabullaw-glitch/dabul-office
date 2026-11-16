@@ -83,7 +83,7 @@ async function syncIncome(fromDate?: string) {
     if (!r.ok) throw new Error('מורנינג: ' + (j.errorMessage || r.status));
     const items: Any[] = j.items || [];
     for (const d of items) {
-      if (d.status === 2 || d.cancelled) continue; // cancelled documents
+      // a cancelled invoice stays and its credit note (330) offsets it, so every tax document is counted
       const cur = d.currency || 'ILS';
       const rate = cur === 'ILS' ? 1 : (+d.currencyRate || 1);
       let total = (+d.amountLocal || +d.amount || 0) * (d.amountLocal ? 1 : rate);
