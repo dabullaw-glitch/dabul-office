@@ -63,11 +63,13 @@ const CATS: Record<string, number> = {
 
 // ---------- Morning ----------
 const M = 'https://api.greeninvoice.co.il/api/v1';
+// Morning moved the token to its OAuth server in June 2026 (same key, as client_id / client_secret; see fn/services).
 async function morningToken() {
-  const r = await fetch(M + '/account/token', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: env('MORNING_API_ID'), secret: env('MORNING_API_SECRET') }) });
+  const r = await fetch('https://api.morning.co/idp/v1/oauth/token', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ client_id: env('MORNING_API_ID'), client_secret: env('MORNING_API_SECRET'), grant_type: 'client_credentials' }) });
   const j: Any = await r.json().catch(() => ({}));
-  if (!j.token) throw new Error('החיבור למורנינג נכשל (' + r.status + ')');
-  return j.token as string;
+  const t = j.accessToken || j.access_token || j.token;
+  if (!r.ok || !t) throw new Error('החיבור למורנינג נכשל (' + r.status + ')');
+  return t as string;
 }
 const TYPE_NAME: Record<number, string> = { 305: 'חשבונית מס', 320: 'חשבונית מס קבלה', 330: 'חשבונית זיכוי' };
 async function syncIncome(fromDate?: string) {
