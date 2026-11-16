@@ -23,6 +23,8 @@ const SITE = 'https://dabullaw.co.il';
 const HOST = 'dabullaw.co.il';
 const D4S = 'https://api.dataforseo.com/v3';
 const LOC = { location_name: 'Israel', language_name: 'Hebrew' };
+// Google Ads data (volume, CPC) does not accept language_name Hebrew: it wants the codes (Israel 2376, Hebrew 'iw')
+const KLOC = { location_code: 2376, language_code: 'iw' };
 // deno-lint-ignore no-explicit-any
 declare const EdgeRuntime: any;
 const S: Record<string, string> = {};
@@ -78,6 +80,9 @@ async function d4s(path: string, body?: unknown, login?: string, pass?: string) 
   const r = await fetch(D4S + path, body === undefined ? { headers: { authorization: auth } } : { method: 'POST', headers: { authorization: auth, 'content-type': 'application/json' }, body: JSON.stringify(body) });
   const j = await r.json().catch(() => ({}));
   if (!r.ok || (j.status_code && j.status_code >= 40000)) throw new Error(`DataForSEO ${j.status_code || r.status}: ${j.status_message || 'error'}`);
+  // one-task calls: a task error comes back inside a 200 answer, so surface it
+  const t0 = j.tasks && j.tasks.length === 1 ? j.tasks[0] : null;
+  if (t0 && t0.status_code >= 40000) throw new Error(`DataForSEO ${t0.status_code}: ${t0.status_message || 'error'}`);
   return j;
 }
 async function addSpend(cost: number) {
@@ -291,7 +296,7 @@ async function kwdata(ids?: string[]) {
     let cost = 0;
     for (let i = 0; i < kws.length; i += 900) {
       const part = kws.slice(i, i + 900);
-      const j = await d4s('/keywords_data/google_ads/search_volume/live', [Object.assign({ keywords: part.map(k => k.kw.slice(0, 80)) }, LOC)]);
+      const j = await d4s('/keywords_data/google_ads/search_volume/live', [Object.assign({ keywords: part.map(k => k.kw.slice(0, 80)) }, KLOC)]);
       cost += j.cost || 0;
       const rows: Any[] = (j.tasks && j.tasks[0] && j.tasks[0].result) || [];
       const map = new Map(rows.map(r => [norm(r.keyword), r]));
@@ -326,7 +331,8 @@ async function gpt(ids?: string[]) {
   if (!d4sOn()) return { skipped: 'not-connected' };
   const kws = (await allDocs('rankkw')).filter(k => k.tracked && !k.hidden && (!ids || ids.includes(k.id))).slice(0, 150);
   let n = 0, cost = 0; const errs: string[] = [];
-  for (const k of kws) {
+  // each answer takes about 15 seconds, so ask 6 at a time
+  const one = async (k: Any) => {
     try {
       const j = await d4s('/ai_optimization/chat_gpt/llm_scraper/live/advanced', [Object.assign({ keyword: k.kw }, LOC)]);
       cost += j.cost || 0;
@@ -334,8 +340,9 @@ async function gpt(ids?: string[]) {
       const urls = urlsIn(res); const text = JSON.stringify(res || '');
       await merge('rankkw', k.id, { gpt: { at: today(), cited: urls.some(ours), named: /דבול|dabul/i.test(text), sources: [...new Set(urls.map(u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } }).filter(Boolean))].slice(0, 8) } });
       n++;
-    } catch (e) { errs.push(String((e as Error).message || e)); if (errs.length > 3) break; }
-  }
+    } catch (e) { errs.push(String((e as Error).message || e)); }
+  };
+  for (let i = 0; i < kws.length && errs.length <= 3; i += 6) await Promise.all(kws.slice(i, i + 6).map(one));
   await addSpend(cost);
   await merge('settings', 'rank', { gptAt: new Date().toISOString(), gptErr: errs[0] || '' });
   return { n, cost, err: errs[0] || '' };
