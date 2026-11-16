@@ -436,6 +436,11 @@ Deno.serve(async (req) => {
     if (a === 'check') return json(await check(b.ids));
     if (a === 'collect') return json(await collect());
     if (a === 'now') return json(await liveOne(String(b.id || '')));
+    if (a === 'serp') { // diagnostics: one live result read the same way as the checks, nothing is stored
+      const j = await d4s('/serp/google/organic/live/advanced', [Object.assign({ keyword: String(b.kw || ''), device: b.dev === 'd' ? 'desktop' : 'mobile', os: b.dev === 'd' ? 'windows' : 'android', depth: 50, load_async_ai_overview: true }, LOC)]);
+      const res = j.tasks && j.tasks[0] && j.tasks[0].result && j.tasks[0].result[0];
+      return json({ read: res ? readSerp(res) : null, sample: ((res && res.items) || []).filter((i: Any) => i.type === 'organic').slice(0, 4).map((i: Any) => ({ u: String(i.url || '').slice(0, 60), bc: i.breadcrumb, rg: i.rank_group })) });
+    }
     if (a === 'kwdata') return json(await kwdata(b.ids));
     if (a === 'gpt') return json(await gpt(b.ids));
     if (a === 'report') { await report(); return json({ ok: true }); }
