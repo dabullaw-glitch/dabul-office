@@ -106,15 +106,23 @@ const ours = (u: string) => { try { return new URL(u).hostname.replace(/^www\./,
 // one finished SERP -> what we keep
 function readSerp(res: Any) {
   const items: Any[] = (res && res.items) || [];
+  // on mobile Google often hides the real address behind google.com/goto links: the site is then in the breadcrumb
+  const hostOf = (i: Any) => {
+    const u = String(i.url || '');
+    if (u && !/^https?:\/\/(www\.)?google\.[a-z.]+\/goto/.test(u)) { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { /* below */ } }
+    const m = String(i.breadcrumb || '').match(/https?:\/\/([^\/\s›]+)/);
+    return m ? m[1].replace(/^www\./, '') : String(i.domain || '').replace(/^www\./, '');
+  };
+  const realUrl = (i: Any) => { const u = String(i.url || ''); return /\/goto\?/.test(u) ? 'https://' + hostOf(i) + '/' : u; };
   const org = items.filter(i => i.type === 'organic');
-  const mine = org.find(i => ours(i.url || ''));
-  const top = org.filter(i => !ours(i.url || '')).slice(0, 3).map(i => ({ p: i.rank_group, d: String(i.domain || '').replace(/^www\./, ''), u: i.url, t: String(i.title || '').slice(0, 120) }));
+  const mine = org.find(i => hostOf(i) === HOST);
+  const top = org.filter(i => hostOf(i) !== HOST).slice(0, 3).map(i => ({ p: i.rank_group, d: hostOf(i), u: realUrl(i), t: String(i.title || '').slice(0, 120) }));
   const feat = [...new Set(((res && res.item_types) || items.map(i => i.type)).filter((t: string) => t !== 'organic'))];
   const aio = items.find(i => i.type === 'ai_overview');
   const aioUrls = aio ? urlsIn(aio) : [];
   const local = items.find(i => i.type === 'local_pack' && /דבול|dabul/i.test(JSON.stringify(i)));
   return {
-    pos: mine ? mine.rank_group : null, abs: mine ? mine.rank_absolute : null, url: mine ? mine.url : '',
+    pos: mine ? mine.rank_group : null, abs: mine ? mine.rank_absolute : null, url: mine ? realUrl(mine) : '',
     top, feat, aio: aio ? { on: true, cited: aioUrls.some(ours) } : { on: false, cited: false }, localPack: !!local,
     total: res && res.se_results_count || null,
   };
