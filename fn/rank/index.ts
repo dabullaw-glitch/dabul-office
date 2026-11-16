@@ -119,7 +119,7 @@ function readSerp(res: Any) {
   const realUrl = (i: Any) => { const u = String(i.url || ''); return /\/goto\?/.test(u) ? 'https://' + hostOf(i) + '/' : u; };
   const org = items.filter(i => i.type === 'organic');
   const mine = org.find(i => hostOf(i) === HOST);
-  const top = org.filter(i => hostOf(i) !== HOST).slice(0, 3).map(i => ({ p: i.rank_group, d: hostOf(i), u: realUrl(i), t: String(i.title || '').slice(0, 120) }));
+  const top = org.filter(i => hostOf(i) !== HOST).slice(0, 3).map(i => { const h = hostOf(i); return { p: i.rank_group, d: h || String(i.website_name || '').slice(0, 40), u: h ? realUrl(i) : '', t: String(i.title || '').slice(0, 120) }; });
   const feat = [...new Set(((res && res.item_types) || items.map(i => i.type)).filter((t: string) => t !== 'organic'))];
   const aio = items.find(i => i.type === 'ai_overview');
   const aioUrls = aio ? urlsIn(aio) : [];
@@ -274,23 +274,33 @@ async function collect() {
 async function collectRun(st: Any, pend: string[]) {
   const ready = await d4s('/serp/google/organic/tasks_ready');
   const ids = new Set<string>(); (ready.tasks || []).forEach((t: Any) => (t.result || []).forEach((r: Any) => ids.add(r.id)));
-  let done = 0, cost = 0;
+  let done = 0, cost = 0; const retry: string[] = [];
   for (const id of pend.filter(x => ids.has(x)).slice(0, 120)) {
     try {
       const j = await d4s(`/serp/google/organic/task_get/advanced/${id}`);
       cost += j.cost || 0;
       const t = (j.tasks || [])[0]; const res = t && t.result && t.result[0]; const tag = t && t.data && t.data.tag || '';
-      const [kwId, dev, run] = String(tag).split('|');
+      const [kwId, dev, run, again] = String(tag).split('|');
       // results without a run id, or of an older run, are dropped
       const okRun = run && (!st.runId || run === st.runId || (st.runIds || []).includes(run));
-      if (res && kwId && okRun) await storeSerp(kwId, dev === 'd' ? 'd' : 'm', readSerp(res), +(t.data.depth || 50));
+      if (res && kwId && okRun) {
+        const r = readSerp(res);
+        // Google gives different result pages from one check to the next. When the site is missing, check once more
+        // before writing "not in the results" (the second answer is kept whatever it is).
+        if (!r.pos && !again) {
+          const d2 = t.data || {};
+          const jj = await d4s('/serp/google/organic/task_post', [Object.assign({ keyword: d2.keyword, device: d2.device, os: d2.os, depth: +(d2.depth || 50), load_async_ai_overview: true, tag: `${kwId}|${dev}|${run}|2` }, LOC)]);
+          cost += jj.cost || 0; const nt = jj.tasks && jj.tasks[0]; if (nt && nt.id && nt.status_code < 40000) retry.push(nt.id);
+        } else await storeSerp(kwId, dev === 'd' ? 'd' : 'm', r, +(t.data.depth || 50));
+      }
       pend = pend.filter(x => x !== id); done++;
     } catch (e) { console.error('collect', id, e); }
   }
   // tasks older than 3 days are dropped
   if (st.runAt && Date.now() - Date.parse(st.runAt) > 3 * 864e5) pend = [];
+  pend = [...pend, ...retry];
   await addSpend(cost);
-  const runDone = (st.runDone || 0) + done;
+  const runDone = (st.runDone || 0) + done - retry.length;
   await merge('settings', 'rank', { pending: pend, runDone, collectAt: new Date().toISOString() });
   if (!pend.length && st.runTasks && !st.runReported) { await merge('settings', 'rank', { runReported: st.runAt }); await report(); }
   return { done, left: pend.length };
@@ -303,7 +313,11 @@ async function liveOne(id: string) {
   for (const dev of ['mobile', 'desktop']) {
     const j = await d4s('/serp/google/organic/live/advanced', [Object.assign({ keyword: k.kw, device: dev, os: dev === 'mobile' ? 'android' : 'windows', depth, load_async_ai_overview: true }, LOC)]);
     cost += j.cost || 0;
-    const res = j.tasks && j.tasks[0] && j.tasks[0].result && j.tasks[0].result[0];
+    let res = j.tasks && j.tasks[0] && j.tasks[0].result && j.tasks[0].result[0];
+    if (res && !readSerp(res).pos) { // one more look before "not in the results" (Google varies between checks)
+      const j2 = await d4s('/serp/google/organic/live/advanced', [Object.assign({ keyword: k.kw, device: dev, os: dev === 'mobile' ? 'android' : 'windows', depth, load_async_ai_overview: true }, LOC)]);
+      cost += j2.cost || 0; const r2 = j2.tasks && j2.tasks[0] && j2.tasks[0].result && j2.tasks[0].result[0]; if (r2) res = r2;
+    }
     if (res) await storeSerp(id, dev === 'mobile' ? 'm' : 'd', readSerp(res), depth);
   }
   await addSpend(cost);
