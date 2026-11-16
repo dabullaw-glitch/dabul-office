@@ -10,7 +10,11 @@ article (see "Sponsored content" below). That clearly labelled sponsored article
 - Static site (Astro). `npm ci && npm run build` builds to `dist/` (pages, share images, search index).
 - Every push to `main` that touches `sites/blihovot/**` runs `.github/workflows/blihovot.yml`, which publishes `dist/`
   to `bli-hovot/` (preview at https://dabullaw-glitch.github.io/dabul-office/bli-hovot/, hidden from search engines).
-- Production domain: **blihovot.co.il** (chosen 8.10.2026, to be bought by Yakir). Build: `SITE_URL=https://blihovot.co.il BASE=/ PREVIEW=0 npm run build`, hosted on Cloudflare Pages.
+- Production domain: **blihovot.co.il** (live, open to search engines). Build: `SITE_URL=https://blihovot.co.il BASE=/ PREVIEW=0 npm run build`, hosted on Cloudflare Pages.
+- Search engines (16.11.2026): Google Search Console property `https://blihovot.co.il/` verified with the file
+  `public/googlefe68bca66d4db115.html` (never delete it), owned by the office service account and dabullaw@gmail.com;
+  sitemap submitted. Status: edge function `gscsite?step=status`. IndexNow (Bing and others): key file
+  `public/a24ea7ae59741e7fe93f0342918d52bd.txt`; after publishing, POST the changed URLs to https://api.indexnow.org/indexnow.
 
 ## Writing rules (for every guide, lesson and video)
 
