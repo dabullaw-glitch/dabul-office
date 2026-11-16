@@ -315,6 +315,16 @@ Deno.serve(async (req) => {
     if (inc && src === 'telegram' && inc.caption) { const w = onText(inc).catch(e => console.error('intake', e)); await later(w); }
     return src === 'twilio' ? new Response('<Response/>', { headers: { 'content-type': 'text/xml' } }) : json({ ok: true, skipped: !inc });
   }
+  // 16.11.2026: a receipt for the office expenses ("קבלה" / "הוצאה" / "חשבונית" in the caption) goes to the finance screen, not to a client file
+  if (src === 'telegram' && /^\s*(קבלה|קבלות|הוצאה|הוצאות|חשבונית|חשבוניות)/.test(inc.caption)) {
+    const note = inc.caption.replace(/^\s*(קבלה|קבלות|הוצאה|הוצאות|חשבונית|חשבוניות)[\s:,-]*/, '').trim();
+    const w = (async () => { for (const f of inc.files) {
+      await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/fin`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-cron-secret': env('CRON_SECRET') },
+        body: JSON.stringify({ action: 'ingest', url: f.url, mime: f.mime, name: f.fileName, source: 'telegram', note }) }).catch(e => console.error('fin', e));
+    } })();
+    await later(w);
+    return json({ ok: true, fin: true });
+  }
   const work = handle(inc).catch(e => console.error('inbound', e));
   // answer the sender right away and keep working in the background
   await later(work);
