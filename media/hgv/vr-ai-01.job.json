@@ -1,0 +1,116 @@
+{
+ "id": "vr-ai-01",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/d7681a8a45d662976449a00a246a18af.mp4?Expires=1795447388&Signature=ed1Mhy0T6tV4cKzsZ1O-zUWJqA83S-EIITA4idGB7~qRCLv9V7l2I5wjDAStZYvAozFnAUKZ4ecOmmRLoq2r1KRd~LwG-r8Hc~EwZkfYm-yBuvPVd3jbXxsoI-Ush3z0HZATufCs~P~Mvn6R35RgUezYwvozOJM68cx5y8KM2IlDkL~HGvdwsfKp4GPvifVK8ongHVGEtvd2ByufaYZynoBMXcWlD0eAHfmeRcWvAWrIAdo42KaBwTm~lUBUUzXaHKYDHZ~rnUTh5YOCFZlZv-T7GZWXVOBaPeGNR7Z4eqwF09xXoNLpuc-KBGqkjOJf35BQOc1k23TFGwitqPpDBQ__&Key-Pair-Id=K3TSZ3KU01LY58",
+ "script": "הדבקתם את החוזה לצ׳אט,\nושאלתם: לחתום?\nוהתשובה נשמעה משכנעת.\nרק רגע.\nמה הוא באמת ראה?\nאת הדף ששלחתם לו.\nוזהו.\nהוא לא ראה את נסח הטאבו של היום,\nולא יודע אם נרשמה על הדירה הערת אזהרה,\nעיקול, או משכנתא שעוד לא נסגרה.\nהוא לא פתח את תיק הבניין בעירייה,\nולא יודע אם המרפסת שאהבתם נבנתה בלי היתר.\nוגם נסח טאבו מראה רק את המצב ביום שהוציאו אותו.\nאז מה כן?\nתשתמשו בצ׳אט כדי להבין מילים ומושגים,\nולהכין רשימת שאלות.\nאבל את ההחלטה מקבלים לפי מסמכים עדכניים,\nובדיקה של עורך דין, לפני שחותמים.\nכל עסקה שונה.\nמכירים מישהו שעומד לחתום על דירה?\nתשלחו לו את הסרטון הזה.",
+ "history": "cinematic,v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "cinematic-gold,glass,boxed-navy",
+ "plan": {
+  "title": "שאלתי את הצ׳אט אם לחתום על החוזה",
+  "topic": "מקרקעין",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "goldWords": [
+   "משכנעת.",
+   "וזהו.",
+   "עיקול,",
+   "היתר.",
+   "עדכניים,",
+   "שחותמים."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "בינה מלאכותית",
+    "l1": "לחתום לפי הצ׳אט?",
+    "l2": "רק רגע"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "מה הוא באמת ראה?",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "page",
+    "kind": "boom",
+    "say": "את הדף ששלחתם לו.",
+    "dur": 2,
+    "text": "רק דף אחד"
+   },
+   {
+    "id": "blind",
+    "kind": "stack",
+    "say": "הוא לא ראה את נסח",
+    "until": "שאהבתם נבנתה בלי היתר.",
+    "items": [
+     {
+      "say": "הוא לא ראה את נסח",
+      "text": "נסח טאבו עדכני"
+     },
+     {
+      "say": "ולא יודע אם נרשמה",
+      "text": "הערת אזהרה"
+     },
+     {
+      "say": "עיקול, או משכנתא שעוד",
+      "text": "עיקול או משכנתא"
+     },
+     {
+      "say": "הוא לא פתח את תיק",
+      "text": "תיק הבניין בעירייה"
+     },
+     {
+      "say": "ולא יודע אם המרפסת",
+      "text": "בנייה בלי היתר"
+     }
+    ]
+   },
+   {
+    "id": "extract",
+    "kind": "term",
+    "say": "וגם נסח טאבו מראה",
+    "until": "ביום שהוציאו אותו.",
+    "kicker": "נסח טאבו",
+    "text": "תמונה של יום אחד",
+    "sub": "המצב ביום ההפקה",
+    "subSay": "ביום שהוציאו אותו."
+   },
+   {
+    "id": "use",
+    "kind": "stack",
+    "say": "תשתמשו בצ׳אט כדי להבין",
+    "until": "ולהכין רשימת שאלות.",
+    "items": [
+     {
+      "say": "תשתמשו בצ׳אט כדי להבין",
+      "text": "להבין מושגים"
+     },
+     {
+      "say": "ולהכין רשימת שאלות.",
+      "text": "להכין שאלות"
+     }
+    ]
+   },
+   {
+    "id": "decide",
+    "kind": "stamp",
+    "say": "אבל את ההחלטה מקבלים",
+    "until": "עורך דין, לפני שחותמים.",
+    "text": "מסמכים ועורך דין",
+    "stampSay": "ובדיקה של עורך דין,"
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "מכירים מישהו שעומד לחתום",
+    "until": "את הסרטון הזה.",
+    "text": "09-8613413"
+   }
+  ]
+ }
+}
