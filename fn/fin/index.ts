@@ -157,7 +157,8 @@ async function addExpense(o: { bytes: Uint8Array | null; mime: string; name?: st
   const cur = String(ai.currency || 'ILS').toUpperCase();
   const total = Math.round((+ai.total || 0) * 100) / 100, vat = cur === 'ILS' ? Math.round((+ai.vat || 0) * 100) / 100 : 0;
   const rec = { date, period: periodOf(date), vendor: ai.vendor || o.name || 'לא זוהה', desc: ai.desc || '', total, vat, net: Math.round((total - vat) * 100) / 100, currency: cur,
-    category: cat, vatShare: CATS[cat], biz: ['yes', 'no', 'check'].includes(ai.business) ? ai.business : 'check', reason: ai.reason || '', notReceipt: ai.isExpense === false,
+    category: cat, vatShare: CATS[cat], biz: 'yes', aiBiz: ai.business || '', // 17.11.2026 (Yakir): everything that comes in is a business expense; he deletes what is not
+    reason: ai.reason || '', notReceipt: ai.isExpense === false,
     file: path ? 'sbfile:' + path : '', mime: o.mime, source: o.source, mailbox: o.mailbox || '', msgId: o.msgId || '', note: o.note || '', hash, at: new Date().toISOString(),
     needsCheck: !total || cur !== 'ILS' || ai.isExpense === false };
   const id = uid('x');
@@ -165,7 +166,7 @@ async function addExpense(o: { bytes: Uint8Array | null; mime: string; name?: st
   if (error) throw new Error(error.message);
   return Object.assign({ id }, rec);
 }
-const line = (r: Any) => `${r.vendor} · ₪${Math.round(r.total).toLocaleString('he-IL')}${r.vat ? ` (מע"מ ₪${Math.round(r.vat).toLocaleString('he-IL')})` : ''} · ${r.category}${r.biz === 'check' ? ' · לבדיקה' : r.biz === 'no' ? ' · פרטי' : ''}`;
+const line = (r: Any) => `${r.vendor} · ₪${Math.round(r.total).toLocaleString('he-IL')}${r.vat ? ` (מע"מ ₪${Math.round(r.vat).toLocaleString('he-IL')})` : ''} · ${r.category}`;
 
 // ---------- the period summary ----------
 async function all(coll: string) {
@@ -174,7 +175,7 @@ async function all(coll: string) {
 }
 export async function summary(p: string) {
   const st = (await getDoc('settings', 'fin')) || {};
-  const inc = (await all('fininc')).filter(x => x.period === p), exp = (await all('finexp')).filter(x => x.period === p && x.biz === 'yes');
+  const inc = (await all('fininc')).filter(x => x.period === p), exp = (await all('finexp')).filter(x => x.period === p && x.biz !== 'no');
   const vatOut = inc.reduce((a, x) => a + (+x.vat || 0), 0), incomeNet = inc.reduce((a, x) => a + (+x.net || 0), 0);
   const vatIn = exp.reduce((a, x) => a + (+x.vat || 0) * (x.vatShare === undefined ? 1 : +x.vatShare), 0);
   const adv = st.advPct ? incomeNet * (+st.advPct) / 100 : null;
@@ -191,8 +192,7 @@ async function daily() {
     const st = (await getDoc('settings', 'fin')) || {};
     if (st.remindedFor !== p) {
       const s = await summary(p);
-      const nCheck = (await all('finexp')).filter(x => x.period === p && x.biz === 'check').length;
-      await tg(`🧾 תשלומים לתקופה ${s.name}, עד 15 בחודש:\n• מע"מ: ₪${Math.round(s.vat).toLocaleString('he-IL')} (מע"מ עסקאות ₪${Math.round(s.vatOut).toLocaleString('he-IL')} פחות מע"מ תשומות ₪${Math.round(s.vatIn).toLocaleString('he-IL')})\n• מקדמת מס הכנסה: ${s.adv == null ? 'חסר אחוז מקדמות בהגדרות' : '₪' + Math.round(s.adv).toLocaleString('he-IL')}\n${nCheck ? `\n⚠️ ${nCheck} הוצאות מחכות לבדיקה שלך (עסקי או פרטי), הן עדיין לא נספרו.` : ''}\nהערכה בלבד. הסכום הסופי לפי רואה החשבון.${env('APP_URL') ? '\n👉 ' + env('APP_URL') + '#fin' : ''}`);
+      await tg(`🧾 תשלומים לתקופה ${s.name}, עד 15 בחודש:\n• מע"מ: ₪${Math.round(s.vat).toLocaleString('he-IL')} (מע"מ עסקאות ₪${Math.round(s.vatOut).toLocaleString('he-IL')} פחות מע"מ תשומות ₪${Math.round(s.vatIn).toLocaleString('he-IL')})\n• מקדמת מס הכנסה: ${s.adv == null ? 'חסר אחוז מקדמות בהגדרות' : '₪' + Math.round(s.adv).toLocaleString('he-IL')}\nהערכה בלבד. הסכום הסופי לפי רואה החשבון.${env('APP_URL') ? '\n👉 ' + env('APP_URL') + '#fin' : ''}`);
       await merge('settings', 'fin', { remindedFor: p });
     }
   }
