@@ -133,14 +133,22 @@ async function readDoc(bytes: Uint8Array | null, mime: string, ctx: string) {
   if (env('ANTHROPIC_WORKSPACE_ID')) h['anthropic-workspace-id'] = env('ANTHROPIC_WORKSPACE_ID');
   const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: h, body: JSON.stringify({ model: 'claude-sonnet-5', max_tokens: 600, messages: [{ role: 'user', content }] }) });
   const j: Any = await r.json().catch(() => ({}));
+  if (!r.ok) { console.error('fin ai', r.status, JSON.stringify(j).slice(0, 300)); return null; }
   const t = (j.content || []).map((c: Any) => c.text || '').join('');
-  try { return JSON.parse((t.match(/\{[\s\S]*\}/) || ['{}'])[0]); } catch { return null; }
+  const m = (t.match(/\{[\s\S]*\}/) || ['{}'])[0];
+  try { return JSON.parse(m); } catch { /* a Hebrew quote (בע"מ) inside a value */ }
+  try { return JSON.parse(m.replace(/([\u0590-\u05FF])"([\u0590-\u05FF])/g, '$1״$2')); } catch { console.error('fin ai parse', t.slice(0, 300)); return null; }
+}
+// 17.11.2026: read twice before giving up (a busy moment or a broken answer left 3 mails as "לא זוהה" with 0)
+async function readTwice(bytes: Uint8Array | null, mime: string, ctx: string) {
+  for (let i = 0; i < 2; i++) { const a = await readDoc(bytes, mime, ctx).catch(() => null); if (a && (a.isExpense === false || +a.total > 0 || a.vendor)) return a; await new Promise(res => setTimeout(res, 1500)); }
+  return null;
 }
 async function sha1(bytes: Uint8Array) { const h = new Uint8Array(await crypto.subtle.digest('SHA-1', bytes)); return Array.from(h.slice(0, 12), b => b.toString(16).padStart(2, '0')).join(''); }
 const extFor = (mime: string) => ({ 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/heic': 'heic' } as Record<string, string>)[mime] || 'bin';
 
 // store one expense; returns the saved record or {skipped}
-async function addExpense(o: { bytes: Uint8Array | null; mime: string; name?: string; path?: string; source: string; ctx: string; mailbox?: string; msgId?: string; note?: string; key?: string }) {
+async function addExpense(o: { bytes: Uint8Array | null; mime: string; name?: string; path?: string; source: string; ctx: string; mailbox?: string; msgId?: string; note?: string; key?: string; subject?: string; from?: string }) {
   const hash = o.key || (o.bytes ? await sha1(o.bytes) : '');
   if (hash) { const { data } = await sb().from('docs').select('id').eq('coll', 'finexp').eq('data->>hash', hash).limit(1); if (data && data.length) return { skipped: 'כבר קיים', id: data[0].id }; }
   let path = o.path || '';
@@ -150,13 +158,15 @@ async function addExpense(o: { bytes: Uint8Array | null; mime: string; name?: st
     const up = await sb().storage.from('files').upload(path, o.bytes, { contentType: o.mime });
     if (up.error) throw new Error('השמירה נכשלה');
   }
-  const ai: Any = await readDoc(o.bytes, o.mime, o.ctx).catch(() => null) || {};
+  const ai: Any = await readTwice(o.bytes, o.mime, o.ctx) || {};
   if (o.source === 'mail' && ai.isExpense === false) { if (path) await sb().storage.from('files').remove([path]); return { skipped: 'לא קבלה על הוצאה' }; }
   const cat = CATS[ai.category] !== undefined ? ai.category : 'אחר';
   const date = /^\d{4}-\d{2}-\d{2}$/.test(ai.date || '') ? ai.date : ilDay();
   const cur = String(ai.currency || 'ILS').toUpperCase();
   const total = Math.round((+ai.total || 0) * 100) / 100, vat = cur === 'ILS' ? Math.round((+ai.vat || 0) * 100) / 100 : 0;
-  const rec = { date, period: periodOf(date), vendor: ai.vendor || o.name || 'לא זוהה', desc: ai.desc || '', total, vat, net: Math.round((total - vat) * 100) / 100, currency: cur,
+  const fromName = String(o.from || '').replace(/<[^>]*>/g, '').replace(/"/g, '').trim();
+  const mailUrl = o.msgId && o.mailbox ? `https://mail.google.com/mail/?authuser=${encodeURIComponent(o.mailbox)}#all/${o.msgId}` : '';
+  const rec = { date, period: periodOf(date), vendor: ai.vendor || fromName || o.name || 'לא זוהה', desc: ai.desc || (o.subject ? String(o.subject).slice(0, 120) : ''), subject: o.subject || '', fromMail: o.from || '', mailUrl, unread: !ai.vendor && !(+ai.total > 0), total, vat, net: Math.round((total - vat) * 100) / 100, currency: cur,
     category: cat, vatShare: CATS[cat], biz: 'yes', aiBiz: ai.business || '', // 17.11.2026 (Yakir): everything that comes in is a business expense; he deletes what is not
     reason: ai.reason || '', notReceipt: ai.isExpense === false,
     file: path ? 'sbfile:' + path : '', mime: o.mime, source: o.source, mailbox: o.mailbox || '', msgId: o.msgId || '', note: o.note || '', hash, at: new Date().toISOString(),
@@ -231,11 +241,11 @@ Deno.serve(async (req) => {
       const files: Any[] = Array.isArray(b.files) ? b.files.slice(0, 5) : [];
       const ctx = `מייל מאת: ${String(b.from || '').slice(0, 200)}\nנושא: ${String(b.subject || '').slice(0, 300)}\nתאריך: ${String(b.date || '').slice(0, 30)}${files.length ? '' : '\nתוכן המייל:\n' + String(b.text || '').slice(0, 15000)}`;
       const out: Any[] = [];
-      if (!files.length) out.push(await addExpense({ bytes: null, mime: '', source: 'mail', ctx, mailbox: b.mailbox, msgId: b.msgId, key: 'mail:' + b.msgId }));
+      if (!files.length) out.push(await addExpense({ bytes: null, mime: '', source: 'mail', ctx, mailbox: b.mailbox, msgId: b.msgId, key: 'mail:' + b.msgId, subject: b.subject, from: b.from }));
       for (const f of files) {
         let bin: string; try { bin = atob(String(f.b64 || '')); } catch { continue; }
         const bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-        out.push(await addExpense({ bytes, mime: String(f.mime || 'application/pdf'), name: f.name, source: 'mail', ctx, mailbox: b.mailbox, msgId: b.msgId }));
+        out.push(await addExpense({ bytes, mime: String(f.mime || 'application/pdf'), name: f.name, source: 'mail', ctx, mailbox: b.mailbox, msgId: b.msgId, subject: b.subject, from: b.from }));
       }
       return json({ ok: true, n: out.filter(x => !x.skipped).length });
     }
