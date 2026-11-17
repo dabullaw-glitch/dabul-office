@@ -19,6 +19,8 @@ function dabul_cssheal($dry = false) {
 }
 add_action('dabul_cssheal_ev', function () { dabul_cssheal(false); });
 add_action('elementor/core/files/clear_cache', function () { if (!wp_next_scheduled('dabul_cssheal_ev')) wp_schedule_single_event(time() + 30, 'dabul_cssheal_ev'); });
+// 17.11.2026: WP Rocket's full clean also deletes its background-css copies that Cloudflare-cached pages still link to
+add_action('after_rocket_clean_domain', function () { if (!wp_next_scheduled('dabul_cssheal_ev')) wp_schedule_single_event(time() + 30, 'dabul_cssheal_ev'); });
 add_action('rest_api_init', function () {
 	register_rest_route('dabul/v1', '/cssheal', array('methods' => 'POST', 'permission_callback' => function () { return current_user_can('manage_options'); }, 'callback' => function ($req) {
 		return dabul_cssheal((bool) $req->get_param('dry'));
