@@ -1,0 +1,102 @@
+{
+ "id": "vr-mwkc7tlp",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/6121f2b7f3a1077e79249dbc86beb356.mp4?Expires=1795533730&Signature=oaV-ujXclbc04vLyWUnqfbOoQ-6fC4l-oDhHU-BDcKG5Yj6eTKJxowT5XMmNNIuNH4EPVWAJJmcChkzaMIWqwvqNPh~Nt5E6q80RYVpPkb3jqtUrGtZpLACE~Wxz1~rdVHGFpKHvAwAaSfiN0gwsNgTw8yQhDQUFMCp0yhPba6~x3f0uqmeOiP9UBhYBQlarRsD1SkUukC35dLMVsTZarO2kC3BKDJh1YyOVCPppFBvetbXeBlOFew1b2B3G2ma229Zta5TnTy70g9zEn3aqof3UOrfSDwMr-PibYfpusZzpwR4AJHSuUAENWb--XYR3K2eqLesFQ5GiSIqCKnHraw__&Key-Pair-Id=K3TSZ3KU01LY58",
+ "script": "קיבלתי שאלה:\n\"קיבלנו דירה חדשה מהקבלן, ויש בה המון ליקויים. נמאס לנו לחכות לו. אפשר פשוט להביא בעל מקצוע, לתקן, ולתבוע אותו?\"\nרגע. לפני שאתם מזמינים בעל מקצוע.\nבאוגוסט האחרון בית המשפט העליון פסק בדיוק בשאלה הזאת.\nקונים תבעו את החברה שבנתה, בלי לתת לה הזדמנות אמיתית לתקן.\nהחדשות הטובות: הם לא איבדו את הפיצוי.\nהחדשות הפחות טובות: הפיצוי קטן יותר.\nהם קיבלו רק כמה שהיה עולה לקבלן עצמו לתקן, ולא כמה שעולה להביא מישהו מבחוץ.\nאז מה עושים בפועל?\nאחד. שולחים לקבלן רשימה מסודרת של הליקויים, בכתב ועם תמונות.\nשתיים. נותנים לו הזדמנות סבירה לבוא ולתקן, ומתעדים כל ביקור.\nשלוש. רק אם הוא לא מגיע או לא מתקן כמו שצריך, מזמינים חוות דעת של מהנדס ובודקים תביעה.\nכל מקרה נבדק לפי הנסיבות שלו, אבל הסדר הזה בדרך כלל שומר עליכם.\nיש לכם שאלה? כתבו לי בתגובות, ואולי אענה עליה בסרטון הבא.",
+ "history": "cinematic,v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "cinematic-gold,mono,boxed-navy",
+ "plan": {
+  "title": "ליקויים בדירה חדשה: לתקן לבד?",
+  "topic": "מקרקעין",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "goldWords": [
+   "העליון",
+   "הזדמנות",
+   "הפיצוי.",
+   "בכתב",
+   "סבירה",
+   "מהנדס"
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "ליקויים בדירה",
+    "l1": "לתקן לבד",
+    "l2": "ולתבוע את הקבלן?"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "לפני שאתם מזמינים בעל",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "ruling",
+    "kind": "term",
+    "say": "באוגוסט האחרון בית המשפט העליון",
+    "until": "בלי לתת לה הזדמנות אמיתית לתקן.",
+    "kicker": "העליון, אוגוסט",
+    "text": "קודם הזדמנות לתקן",
+    "sub": "ורק אחר כך תביעה",
+    "subSay": "בלי לתת לה הזדמנות"
+   },
+   {
+    "id": "good",
+    "kind": "stamp",
+    "say": "החדשות הטובות: הם לא",
+    "dur": 3,
+    "text": "הפיצוי לא אבד",
+    "stampSay": "הם לא איבדו את הפיצוי."
+   },
+   {
+    "id": "less",
+    "kind": "boom",
+    "say": "החדשות הפחות טובות: הפיצוי",
+    "dur": 2.5,
+    "text": "פיצוי קטן יותר"
+   },
+   {
+    "id": "cost",
+    "kind": "term",
+    "say": "הם קיבלו רק כמה",
+    "until": "ולא כמה שעולה להביא מישהו מבחוץ.",
+    "kicker": "הפיצוי",
+    "text": "עלות התיקון לקבלן",
+    "sub": "לא מחיר בעל מקצוע",
+    "subSay": "ולא כמה שעולה להביא"
+   },
+   {
+    "id": "steps",
+    "kind": "stack",
+    "say": "אחד. שולחים לקבלן רשימה",
+    "until": "מזמינים חוות דעת של מהנדס ובודקים תביעה.",
+    "items": [
+     {
+      "say": "אחד. שולחים לקבלן רשימה",
+      "text": "רשימה בכתב ותמונות"
+     },
+     {
+      "say": "שתיים. נותנים לו הזדמנות",
+      "text": "הזדמנות סבירה לתקן"
+     },
+     {
+      "say": "שלוש. רק אם הוא",
+      "text": "רק אז מהנדס ותביעה"
+     }
+    ]
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "יש לכם שאלה? כתבו",
+    "dur": 3,
+    "text": "09-8613413"
+   }
+  ]
+ }
+}
