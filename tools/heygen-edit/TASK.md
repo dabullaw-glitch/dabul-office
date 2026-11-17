@@ -279,6 +279,10 @@ Yakir again on 17.11.2026: "כל הסרטונים שאני מאשר ומבקש �
 nothing else is to do) for approved update reels without timelyAt and handle them first. The reel row also carries timely:true
 (set by vr=final), and its approval message already told Yakir it jumps ahead, so the step 5 message is the one with the date.
 An update video = its vidreq row has source 'upd' (news, a new ruling, a new directive; vidreq.upd holds the item).
+FROM 17.11.2026 the same goes for EVERY video Yakir asked for himself: vidreq source 'upd', 'office' or 'script' (Yakir:
+"גם מה שסימנתי עכשיו לצלם צריך להיות בתזמונים לפני שאר הדברים שערוכים... מה שאני מבקש לצלם צריך להיות לפני"). Only
+podcast clips (source 'podcast') and course lessons are not. These are all "update videos" in this section; the reel carries
+timely:true. Among them the order is by approval time (a new one takes the first slot not held by an earlier one).
 The weekly AI series (vidreq series 'ai-nadlan', Yakir 13.11.2026: one a week) is handled exactly like an update video here:
 its approved reel goes to the front the same way, so the series really goes out weekly and not in March.
 For each approved reel of an update video that has no `timelyAt` yet:
