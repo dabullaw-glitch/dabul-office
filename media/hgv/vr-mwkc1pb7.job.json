@@ -1,0 +1,123 @@
+{
+ "id": "vr-mwkc1pb7",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/94e54ba1ab8d0db0f8ccfd7d20cfc9a5.mp4?Expires=1795522938&Signature=Efh1zas-YVSvMlWJlxz-OtrNdyrWTvvD4WnjTXYnY9DDmhrxPHVKvujI9Iwl06qUXvEYafoRhkfdHG1spgRrdJlYbCUakN700oAaF1B3u5GmLjLsF7kYgwGgdJLjqP6nLSOIw9wht0tqWeAX4vx5uZJNHUOnxo2W6Ytpwc~VVdpyE3ASZRt5UETcAYVxW6Ekd5Mgd2qtCnof0-qCE0Wrb6PEknHAK~Ia-pUtfEEoFpKaOLScknr2SyE~pERl06Ui4LUfPURwSC1U6yJYsVh-plIJ-dUosfK8As~IQe5AKaRolNdVV30mthn9iwFv8UyencL-IuRaCCK4mGxA-gBm-g__&Key-Pair-Id=K3TSZ3KU01LY58",
+ "script": "קניתם דירה מקבלן בעשרים שמונים?\nיכול להיות שביום שתקבלו מפתח, יחסר לכם רבע מיליון שקל.\nנניח שאתם מחליפים דירה,\nוקונים מקבלן בשני מיליון וחצי שקל.\nהיום משלמים עשרים אחוז.\nואת השאר, שני מיליון, ביום המסירה, עם משכנתא.\nאבל לפי הכללים של בנק ישראל,\nמי שמחליף דירה יקבל משכנתא של עד שבעים אחוז מהשווי.\nכלומר, חסר לכם רבע מיליון שקל.\nגם בדירה ראשונה, עם שבעים וחמישה אחוז,\nחסרים יותר ממאה אלף שקל.\nהבנק מחשב לפי השווי שקבע השמאי שלו.\nאם הוא נמוך מהמחיר בחוזה, החור גדל.\nוהריבית נקבעת רק ביום המסירה.\nאז מה עושים?\nלפני שחותמים, מבקשים אישור עקרוני מהבנק,\nובודקים את השווי מול שמאי.\nומחשבים כמה הון עצמי יהיה לכם ביום המסירה,\nגם אם הריבית תעלה.\nכל עסקה שונה,\nאז תנו לעורך דין לעבור על לוח התשלומים לפני החתימה.\nמכירים מישהו שעומד לקנות בעשרים שמונים? תשלחו לו את זה.",
+ "history": "boxed,cinematic,v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "boxed-navy,cinematic-gold,glass",
+ "plan": {
+  "title": "20/80: רבע מיליון שחסר ביום המסירה",
+  "topic": "מקרקעין",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "v3",
+  "goldWords": [
+   "מפתח,",
+   "שבעים",
+   "השמאי",
+   "עקרוני",
+   "שמאי.",
+   "עצמי"
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "דירה מקבלן",
+    "l1": "קניתם ב־20/80?",
+    "l2": "חסר רבע מיליון"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "נניח שאתם מחליפים דירה,",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "deal",
+    "kind": "stack",
+    "say": "וקונים מקבלן בשני מיליון",
+    "until": "ביום המסירה, עם משכנתא.",
+    "items": [
+     {
+      "say": "וקונים מקבלן בשני מיליון",
+      "text": "דירה ב־2.5 מיליון"
+     },
+     {
+      "say": "היום משלמים עשרים אחוז.",
+      "text": "היום: 20%"
+     },
+     {
+      "say": "ואת השאר, שני מיליון,",
+      "text": "במסירה: 2 מיליון"
+     }
+    ]
+   },
+   {
+    "id": "boi",
+    "kind": "term",
+    "say": "אבל לפי הכללים של",
+    "until": "של עד שבעים אחוז מהשווי.",
+    "kicker": "בנק ישראל",
+    "text": "עד 70% משכנתא",
+    "sub": "למי שמחליף דירה",
+    "subSay": "מי שמחליף דירה יקבל"
+   },
+   {
+    "id": "gap",
+    "kind": "boom",
+    "say": "כלומר, חסר לכם רבע",
+    "dur": 2.2,
+    "text": "חסר רבע מיליון"
+   },
+   {
+    "id": "first",
+    "kind": "stamp",
+    "say": "גם בדירה ראשונה, עם",
+    "until": "חסרים יותר ממאה אלף שקל.",
+    "text": "דירה ראשונה: 75%",
+    "stampSay": "שבעים וחמישה אחוז,"
+   },
+   {
+    "id": "appr",
+    "kind": "term",
+    "say": "הבנק מחשב לפי השווי",
+    "until": "והריבית נקבעת רק ביום המסירה.",
+    "kicker": "שמאי הבנק",
+    "text": "שווי נמוך, חור גדול",
+    "sub": "והריבית רק במסירה",
+    "subSay": "והריבית נקבעת רק ביום"
+   },
+   {
+    "id": "todo",
+    "kind": "stack",
+    "say": "לפני שחותמים, מבקשים אישור",
+    "until": "גם אם הריבית תעלה.",
+    "items": [
+     {
+      "say": "לפני שחותמים, מבקשים אישור",
+      "text": "אישור עקרוני מהבנק"
+     },
+     {
+      "say": "ובודקים את השווי מול",
+      "text": "בדיקת שווי מול שמאי"
+     },
+     {
+      "say": "ומחשבים כמה הון עצמי",
+      "text": "הון עצמי ביום המסירה"
+     }
+    ]
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "אז תנו לעורך דין",
+    "dur": 3,
+    "text": "09-8613413"
+   }
+  ]
+ }
+}
