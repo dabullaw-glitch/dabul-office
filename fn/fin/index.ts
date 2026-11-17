@@ -41,7 +41,7 @@ async function tg(text: string) {
 // ---------- auth ----------
 async function allowed(req: Request, b: Any) {
   if (req.headers.get('x-cron-secret') && req.headers.get('x-cron-secret') === env('CRON_SECRET')) return 'cron';
-  if (b && b.action === 'mail' && env('FIN_MAIL_KEY') && b.key === env('FIN_MAIL_KEY')) return 'mail';
+  if (b && ['mail', 'missing', 'attach'].includes(b.action) && env('FIN_MAIL_KEY') && b.key === env('FIN_MAIL_KEY')) return 'mail';
   const jwt = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, ''); if (!jwt) return '';
   const { data } = await sb().auth.getUser(jwt); const email = (data && data.user && data.user.email || '').toLowerCase(); if (!email) return '';
   const { data: u } = await sb().from('office_users').select('email').ilike('email', email).limit(1);
@@ -195,6 +195,77 @@ export async function summary(p: string) {
   return { period: p, name: periodName(p), due: periodDue(p), vatOut, vatIn, vat: vatOut - vatIn, incomeNet, adv, advPct: st.advPct || null, nInc: inc.length, nExp: exp.length };
 }
 
+const b64bytes = (v: unknown) => { if (!v) return null; try { const bin = atob(String(v)); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u.length ? u : null; } catch { return null; } };
+
+// ---------- the package for the accountant (17.11.2026, Yakir: "אחד כזה והשני עם כל המסמכים שצורפו סרוקים ומוכנים") ----------
+// Two files for one bimonthly period, both kept in storage with a link valid for 14 days:
+//   1. an Excel file: summary, income, expenses (every row numbered, the number is the document's file name in the zip);
+//   2. a zip with every document: הכנסות/I001 ..., הוצאות/E001 ... (income PDFs from Morning, expense files from storage).
+const fdate = (d: string) => d ? `${d.slice(8, 10)}.${d.slice(5, 7)}.${d.slice(0, 4)}` : '';
+const safe = (t: unknown) => String(t || '').replace(/[\\/:*?"<>|\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 40);
+const extOf = (mime: string, path: string) => extFor(mime) !== 'bin' ? extFor(mime) : ((path.match(/\.([a-z0-9]{2,5})$/i) || [])[1] || 'pdf').toLowerCase();
+async function pmap<T, R>(list: T[], n: number, f: (x: T, i: number) => Promise<R>) { const out: R[] = new Array(list.length); let i = 0; await Promise.all(Array.from({ length: Math.min(n, list.length) }, async () => { while (i < list.length) { const k = i++; out[k] = await f(list[k], k).catch(() => null as unknown as R); } })); return out; }
+async function pack(p: string) {
+  const XLSX: Any = await import('npm:xlsx@0.18.5');
+  const { zipSync } = await import('npm:fflate@0.8.2');
+  const s = await summary(p);
+  const inc = (await all('fininc')).filter(x => x.period === p).sort((a, b) => (a.date || '').localeCompare(b.date || '') || String(a.number).localeCompare(String(b.number)));
+  const exp = (await all('finexp')).filter(x => x.period === p && x.biz !== 'no').sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  const files: Record<string, [Uint8Array, { level: 0 }]> = {};
+  const num = (k: string, i: number) => k + String(i + 1).padStart(3, '0');
+  // income documents (Morning PDF links)
+  const incOk = await pmap(inc, 6, async (x, i) => {
+    if (!x.url) return false;
+    const r = await fetch(x.url); if (!r.ok) return false;
+    const bytes = new Uint8Array(await r.arrayBuffer()); if (bytes.length < 200) return false;
+    const ct = r.headers.get('content-type') || 'application/pdf';
+    files[`הכנסות/${num('I', i)} ${x.date} ${safe(x.number)} ${safe(x.client)}.${ct.includes('pdf') ? 'pdf' : extOf(ct, '')}`] = [bytes, { level: 0 }];
+    return true;
+  });
+  // expense documents (storage)
+  const expOk = await pmap(exp, 8, async (x, i) => {
+    if (!x.file) return false;
+    const path = String(x.file).replace(/^sbfile:/, '');
+    const { data, error } = await sb().storage.from('files').download(path); if (error || !data) return false;
+    files[`הוצאות/${num('E', i)} ${x.date} ${safe(x.vendor)}.${extOf(x.mime || data.type, path)}`] = [new Uint8Array(await data.arrayBuffer()), { level: 0 }];
+    return true;
+  });
+  const r2 = (v: unknown) => Math.round((+(v as number) || 0) * 100) / 100;
+  const share = (x: Any) => x.vatShare === undefined ? 1 : +x.vatShare;
+  const incRows = inc.map((x, i) => ({ 'מס׳ מסמך בתיקייה': num('I', i), 'תאריך': fdate(x.date), 'מספר חשבונית': x.number, 'סוג': x.typeName || '', 'לקוח': x.client || '', 'לפני מע״מ': r2(x.net), 'מע״מ': r2(x.vat), 'סה״כ': r2(x.total), 'מסמך': incOk[i] ? 'מצורף' : 'חסר' }));
+  const expRows = exp.map((x, i) => ({ 'מס׳ מסמך בתיקייה': num('E', i), 'תאריך': fdate(x.date), 'ספק': x.vendor || '', 'תיאור': x.desc || '', 'קטגוריה': x.category || '', 'לפני מע״מ': r2(x.net), 'מע״מ': r2(x.vat), 'מע״מ מוכר': r2((+x.vat || 0) * share(x)), 'סה״כ': r2(x.total), 'מטבע': x.currency && x.currency !== 'ILS' ? x.currency : '', 'מסמך': expOk[i] ? 'מצורף' : 'חסר' }));
+  const sumRow = (rows: Any[], keys: string[]) => { const o: Any = {}; Object.keys(rows[0] || {}).forEach(k => o[k] = ''); o['מס׳ מסמך בתיקייה'] = 'סה״כ'; keys.forEach(k => o[k] = r2(rows.reduce((a, r) => a + (+r[k] || 0), 0))); return o; };
+  if (incRows.length) incRows.push(sumRow(incRows, ['לפני מע״מ', 'מע״מ', 'סה״כ']));
+  if (expRows.length) expRows.push(sumRow(expRows, ['לפני מע״מ', 'מע״מ', 'מע״מ מוכר', 'סה״כ']));
+  const missInc = incOk.filter(v => !v).length, missExp = expOk.filter(v => !v).length;
+  const sum = [['יקיר דבול - משרד עורכי דין'], [`דוח לרואה החשבון: ${s.name}`], [],
+    ['מע״מ עסקאות (על ההכנסות)', r2(s.vatOut)], ['מע״מ תשומות מוכר (על ההוצאות)', r2(s.vatIn)], ['מע״מ לתשלום (הערכה)', r2(s.vat)], [],
+    ['הכנסות לפני מע״מ', r2(s.incomeNet)], ['אחוז מקדמות', s.advPct ? s.advPct + '%' : 'לא הוזן'], ['מקדמת מס הכנסה (הערכה)', s.adv == null ? '' : r2(s.adv)], [],
+    ['מסמכי הכנסה', inc.length, missInc ? `חסרים ${missInc}` : 'כולם מצורפים'], ['קבלות על הוצאות', exp.length, missExp ? `חסרים ${missExp}` : 'כולן מצורפות'], [],
+    ['המסמכים עצמם נמצאים בקובץ המסמכים: תיקיית הכנסות (I001...) ותיקיית הוצאות (E001...). המספר בטבלה הוא שם הקובץ.'],
+    ['מע״מ על רכב וטלפון נספר לפי שני שלישים. הסכומים הם הערכה של המערכת, הדיווח הסופי לפי רואה החשבון.'],
+    [`הופק ${fdate(ilDay())}`]];
+  const wb = XLSX.utils.book_new(); wb.Workbook = { Views: [{ RTL: true }] };
+  const w1 = XLSX.utils.aoa_to_sheet(sum); w1['!cols'] = [{ wch: 34 }, { wch: 16 }, { wch: 18 }];
+  const w2 = XLSX.utils.json_to_sheet(incRows.length ? incRows : [{ 'אין מסמכי הכנסה בתקופה': '' }]); w2['!cols'] = [{ wch: 12 }, { wch: 11 }, { wch: 12 }, { wch: 16 }, { wch: 30 }, { wch: 12 }, { wch: 10 }, { wch: 12 }, { wch: 8 }];
+  const w3 = XLSX.utils.json_to_sheet(expRows.length ? expRows : [{ 'אין הוצאות בתקופה': '' }]); w3['!cols'] = [{ wch: 12 }, { wch: 11 }, { wch: 28 }, { wch: 36 }, { wch: 18 }, { wch: 12 }, { wch: 10 }, { wch: 11 }, { wch: 12 }, { wch: 7 }, { wch: 8 }];
+  for (const w of [w2, w3]) w['!autofilter'] = { ref: w['!ref'] };
+  XLSX.utils.book_append_sheet(wb, w1, 'סיכום'); XLSX.utils.book_append_sheet(wb, w2, 'הכנסות'); XLSX.utils.book_append_sheet(wb, w3, 'הוצאות');
+  const xlsx = new Uint8Array(XLSX.write(wb, { type: 'array', bookType: 'xlsx' }));
+  files[`דוח ${s.name}.xlsx`] = [xlsx, { level: 0 }];
+  const zip = zipSync(files);
+  const stamp = Date.now().toString(36), base = `fin/acc/${p}-${stamp}`;
+  const u1 = await sb().storage.from('files').upload(base + '.xlsx', xlsx, { contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const u2 = await sb().storage.from('files').upload(base + '.zip', zip, { contentType: 'application/zip' });
+  if (u1.error || u2.error) throw new Error('השמירה נכשלה');
+  const ttl = 14 * 24 * 3600;
+  const l1 = await sb().storage.from('files').createSignedUrl(base + '.xlsx', ttl, { download: `דוח לרואה החשבון ${s.name}.xlsx` });
+  const l2 = await sb().storage.from('files').createSignedUrl(base + '.zip', ttl, { download: `מסמכים ${s.name}.zip` });
+  await merge('settings', 'fin', { lastPack: { period: p, at: new Date().toISOString(), xlsx: base + '.xlsx', zip: base + '.zip' } });
+  return { period: p, name: s.name, xlsx: l1.data && l1.data.signedUrl, zip: l2.data && l2.data.signedUrl, mb: Math.round(zip.length / 1e5) / 10, nInc: inc.length, nExp: exp.length, missInc, missExp,
+    missing: exp.filter((_, i) => !expOk[i]).map(x => ({ date: x.date, vendor: x.vendor, total: x.total })).concat(inc.filter((_, i) => !incOk[i]).map(x => ({ date: x.date, vendor: 'הכנסה ' + x.number + ' ' + (x.client || ''), total: x.total }))) };
+}
+
 async function daily() {
   let err = '';
   try { await syncIncome(); } catch (e) { err = String((e as Error).message || e); await merge('settings', 'fin', { lastErr: err, lastTry: new Date().toISOString() }); }
@@ -244,14 +315,31 @@ Deno.serve(async (req) => {
       const files: Any[] = Array.isArray(b.files) ? b.files.slice(0, 5) : [];
       const ctx = `מייל מאת: ${String(b.from || '').slice(0, 200)}\nנושא: ${String(b.subject || '').slice(0, 300)}\nתאריך: ${String(b.date || '').slice(0, 30)}${files.length ? '' : '\nתוכן המייל:\n' + String(b.text || '').slice(0, 15000)}`;
       const out: Any[] = [];
-      if (!files.length) out.push(await addExpense({ bytes: null, mime: '', source: 'mail', ctx, mailbox: b.mailbox, msgId: b.msgId, key: 'mail:' + b.msgId, subject: b.subject, from: b.from }));
+      if (!files.length) { // 17.11.2026: the mail itself as a PDF, so the accountant gets a document for it too
+        const pdf = b64bytes(b.pdf);
+        out.push(await addExpense({ bytes: pdf, mime: pdf ? 'application/pdf' : '', name: pdf ? 'mail.pdf' : '', source: 'mail', ctx, mailbox: b.mailbox, msgId: b.msgId, key: 'mail:' + b.msgId, subject: b.subject, from: b.from }));
+      }
       for (const f of files) {
-        let bin: string; try { bin = atob(String(f.b64 || '')); } catch { continue; }
-        const bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        const bytes = b64bytes(f.b64); if (!bytes) continue;
         out.push(await addExpense({ bytes, mime: String(f.mime || 'application/pdf'), name: f.name, source: 'mail', ctx, mailbox: b.mailbox, msgId: b.msgId, subject: b.subject, from: b.from }));
       }
       return json({ ok: true, n: out.filter(x => !x.skipped).length });
     }
+    if (a === 'missing') { // the Gmail script asks: which of my mails are saved without a document?
+      const rows = (await all('finexp')).filter(x => x.mailbox === b.mailbox && x.msgId && !x.file && !x.pdfTried && x.biz !== 'no');
+      return json({ ids: [...new Set(rows.map(x => x.msgId))].slice(0, 25) });
+    }
+    if (a === 'attach') { // ... and sends each one back as a PDF of the mail
+      const rows = (await all('finexp')).filter(x => x.msgId === b.msgId && x.mailbox === b.mailbox && !x.file);
+      const bytes = b64bytes(b.pdf);
+      if (!bytes || bytes.length > 12e6) { for (const r of rows) await merge('finexp', r.id, { pdfTried: true }); return json({ ok: false }); }
+      const path = `fin/${ilDay().slice(0, 7)}/${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}.pdf`;
+      const up = await sb().storage.from('files').upload(path, bytes, { contentType: 'application/pdf' });
+      if (up.error) throw new Error('השמירה נכשלה');
+      for (const r of rows) await merge('finexp', r.id, { file: 'sbfile:' + path, mime: 'application/pdf', pdfTried: true, fileFrom: 'mail-pdf' });
+      return json({ ok: true, n: rows.length });
+    }
+    if (a === 'pack') { if (who === 'cron' || who === 'mail') return json({ error: 'אין הרשאה' }, 401); return json(await pack(String(b.period || periodOf(ilDay())))); }
     return json({ error: 'פעולה לא מוכרת' }, 400);
   } catch (e) {
     return json({ error: String((e as Error).message || e) }, 500);

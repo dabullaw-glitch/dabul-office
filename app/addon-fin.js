@@ -149,15 +149,21 @@
       values: { advPct: set().advPct || '' },
       onSubmit: async v => { const p = parseFloat(String(v.advPct).replace(/[^\d.]/g, '')); if (!(p >= 0 && p <= 50)) { s.toast('צריך מספר בין 0 ל-50', 'bad'); return false; } await call({ action: 'settings', advPct: p }); s.toast('נשמר'); } });
   });
-  s.act('fin-csv', () => {
-    const p = period(), x = sum(p);
-    const q = v => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
-    const rows = [['סוג', 'תאריך', 'מספר / ספק', 'לקוח / תיאור', 'סכום כולל', 'מע״מ', 'לפני מע״מ', 'סוג', 'מע״מ מוכר', 'קובץ']];
-    x.inc.sort((a, b) => (a.date || '').localeCompare(b.date || '')).forEach(i => rows.push(['הכנסה', fd(i.date), i.number, i.client, i.total, i.vat, i.net, i.typeName, '', '']));
-    x.ex.sort((a, b) => (a.date || '').localeCompare(b.date || '')).forEach(e => rows.push(['הוצאה', fd(e.date), e.vendor, e.desc, e.total, e.vat, e.net, (e.category || ''), e.biz !== 'no' ? Math.round((+e.vat || 0) * share(e) * 100) / 100 : 0, e.file ? 'יש' : '']));
-    rows.push([], ['סיכום', pName(p)], ['מע״מ עסקאות', x.vatOut.toFixed(2)], ['מע״מ תשומות מוכר', x.vatIn.toFixed(2)], ['מע״מ לתשלום', x.vat.toFixed(2)], ['הכנסות לפני מע״מ', x.incNet.toFixed(2)], ['מקדמה', x.adv == null ? 'חסר אחוז' : x.adv.toFixed(2)]);
-    const blob = new Blob(['﻿' + rows.map(r => r.map(q).join(',')).join('\r\n')], { type: 'text/csv;charset=utf-8' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `כספים ${pName(p)}.csv`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+  // 17.11.2026 (Yakir: "אחד כזה והשני עם כל המסמכים שצורפו סרוקים ומוכנים"): two files for the accountant,
+  // an Excel report and a zip with every document, numbered the same way. Built on the server (action "pack").
+  s.act('fin-pack', async b => {
+    const p = period();
+    const r = await run(b, 'מכין את הקבצים, זה לוקח עד דקה...', { action: 'pack', period: p }); if (!r) return;
+    const miss = (r.missing || []).slice(0, 30);
+    s.modal({ title: `קבצים לרואה החשבון: ${n(r.name)}`, body: `
+      <p style="margin-top:0">שני קבצים, אפשר להוריד ולשלוח לרואה החשבון כמו שהם. הקישורים פעילים 14 יום.</p>
+      <div class="fn-box"><h3>1. דוח לרואה החשבון (אקסל)</h3><p class="small">סיכום מע״מ ומקדמות, טבלת הכנסות (${r.nInc}) וטבלת הוצאות (${r.nExp}). לכל שורה יש מספר, וזה גם שם הקובץ שלה בקובץ המסמכים.</p>
+        <a class="btn pri" href="${n(r.xlsx)}" target="_blank" rel="noopener">${s.icon('doc', 14)} הורדת הדוח</a></div>
+      <div class="fn-box"><h3>2. כל המסמכים (קובץ מכווץ, ${r.mb} מגה)</h3><p class="small">תיקיית הכנסות: כל החשבוניות ממורנינג. תיקיית הוצאות: כל הקבלות והחשבוניות. בפנים יש גם עותק של הדוח.</p>
+        <a class="btn pri" href="${n(r.zip)}" target="_blank" rel="noopener">${s.icon('doc', 14)} הורדת המסמכים</a></div>
+      ${r.missExp + r.missInc ? `<div class="fn-box"><h3>חסר מסמך ל-${r.missExp + r.missInc} שורות</h3>
+        <p class="small">רוב החסרים הם קבלות שהגיעו בתוך גוף המייל, בלי קובץ מצורף. אחרי שמעדכנים את קוד המייל (כפתור "הוראות וקוד" בהגדרות), המערכת שומרת כל מייל כזה כקובץ, וגם משלימה לבד את הישנים. אז מפיקים את הקבצים מחדש.</p>
+        <div class="small">${miss.map(m => `${n(fd(m.date))} · ${n(m.vendor)} · ${ils(m.total)}`).join('<br>')}${(r.missing || []).length > miss.length ? '<br>ועוד ' + ((r.missing || []).length - miss.length) : ''}</div></div>` : '<p class="small">לכל השורות יש מסמך.</p>'}` });
   });
 
   /* ---------- Gmail script ---------- */
@@ -181,9 +187,35 @@ function run() {
         .map(function (a) { return { name: a.getName(), mime: a.getContentType(), b64: Utilities.base64Encode(a.getBytes()) }; });
       UrlFetchApp.fetch(FIN_URL, { method: 'post', contentType: 'application/json', muteHttpExceptions: true, payload: JSON.stringify({
         action: 'mail', key: FIN_KEY, mailbox: MAILBOX, msgId: m.getId(), from: m.getFrom(), subject: m.getSubject(),
-        date: m.getDate().toISOString(), text: m.getPlainBody().slice(0, 15000), files: files }) });
+        date: m.getDate().toISOString(), text: m.getPlainBody().slice(0, 15000), files: files, pdf: files.length ? '' : mailPdf(m) }) });
     });
     t.addLabel(label);
+  }
+  backfill(start);
+}
+
+// מייל בלי קובץ מצורף נשמר כקובץ PDF של המייל עצמו, כדי שגם לו יהיה מסמך לרואה החשבון
+function mailPdf(m) {
+  try {
+    var head = '<div dir="rtl" style="font-family:Arial,sans-serif;font-size:12px;border-bottom:1px solid #999;padding-bottom:6px;margin-bottom:12px">'
+      + '<b>מאת:</b> ' + esc(m.getFrom()) + '<br><b>אל:</b> ' + esc(m.getTo())
+      + '<br><b>תאריך:</b> ' + Utilities.formatDate(m.getDate(), 'Asia/Jerusalem', 'dd.MM.yyyy HH:mm')
+      + '<br><b>נושא:</b> ' + esc(m.getSubject()) + '</div>';
+    var html = '<html><head><meta charset="utf-8"></head><body>' + head + m.getBody() + '</body></html>';
+    return Utilities.base64Encode(Utilities.newBlob(html, 'text/html', 'mail.html').getAs('application/pdf').getBytes());
+  } catch (e) { return ''; }
+}
+function esc(t) { return String(t || '').replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+
+// משלים מסמך לקבלות ישנות שנקלטו מגוף המייל
+function backfill(start) {
+  if (Date.now() - start > 280000) return;
+  var r = UrlFetchApp.fetch(FIN_URL, { method: 'post', contentType: 'application/json', muteHttpExceptions: true, payload: JSON.stringify({ action: 'missing', key: FIN_KEY, mailbox: MAILBOX }) });
+  var ids = []; try { ids = JSON.parse(r.getContentText()).ids || []; } catch (e) { return; }
+  for (var i = 0; i < ids.length; i++) {
+    if (Date.now() - start > 320000) break;
+    var m = null; try { m = GmailApp.getMessageById(ids[i]); } catch (e) { m = null; }
+    UrlFetchApp.fetch(FIN_URL, { method: 'post', contentType: 'application/json', muteHttpExceptions: true, payload: JSON.stringify({ action: 'attach', key: FIN_KEY, mailbox: MAILBOX, msgId: ids[i], pdf: m ? mailPdf(m) : '' }) });
   }
 }
 
@@ -236,7 +268,7 @@ function setup() {
         <button class="btn" data-a="go" data-v="finexp">הוצאות וקבלות (${x.ex.length})</button>
         <button class="btn" data-a="go" data-v="fininc">הכנסות (${x.inc.length})</button>
         <button class="btn" data-a="fin-add">${s.icon('edit', 13)} הוצאה בלי קבלה</button>
-        <button class="btn" data-a="fin-csv">${s.icon('doc', 13)} קובץ לרואה החשבון</button>
+        <button class="btn" data-a="fin-pack">${s.icon('doc', 13)} קבצים לרואה החשבון</button>
       </div>
       <div class="fn-box"><h3>חיבורים והגדרות</h3>
         <div class="fn-bar"><span class="grow">מורנינג: ${S.lastSync ? 'עודכן ' + new Date(S.lastSync).toLocaleString('he-IL', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'עוד לא עודכן'}${S.lastErr ? ` · <span class="t-bad">${n(S.lastErr)}</span>` : ''}. מתעדכן לבד כל בוקר.</span><button class="btn sm" data-a="fin-sync">עדכון עכשיו</button></div>
