@@ -7,7 +7,7 @@
    - הכנסות: tax documents from Morning.
    Data: docs "finexp", "fininc", settings/fin. The edge function "fin" reads receipts and syncs Morning. */
 (function (s) {
-  if (!s || s.FIN) return; s.FIN = '20261117a';
+  if (!s || s.FIN) return; s.FIN = '20261117c';
   const n = v => s.esc(v == null ? '' : String(v));
   const CX = ['finexp', 'fininc'];
   const VIEWS = ['fin', 'finexp', 'fininc'];
@@ -128,7 +128,7 @@
       values: { vendor: x.vendor, date: x.date, total: x.total, vat: x.vat, category: x.category || 'אחר', desc: x.desc || '' },
       onSubmit: async v => {
         const total = +v.total || 0, vat = +v.vat || 0;
-        await s.patch('finexp', d.id, { vendor: v.vendor, date: v.date, period: periodOf(v.date), total, vat, net: Math.round((total - vat) * 100) / 100, category: v.category, vatShare: CATS[v.category] ?? 1, biz: 'yes', desc: v.desc, needsCheck: false, currency: 'ILS', edited: true });
+        await s.patch('finexp', d.id, { unread: false, vendor: v.vendor, date: v.date, period: periodOf(v.date), total, vat, net: Math.round((total - vat) * 100) / 100, category: v.category, vatShare: CATS[v.category] ?? 1, biz: 'yes', desc: v.desc, needsCheck: false, currency: 'ILS', edited: true });
         s.toast('נשמר');
       } });
   });
@@ -168,10 +168,12 @@ const MAILBOX = '${box}';
 const LABEL = 'הוצאות-נקלט';
 
 function run() {
+  const start = Date.now();
   const label = GmailApp.getUserLabelByName(LABEL) || GmailApp.createLabel(LABEL);
-  const q = 'newer_than:60d -label:' + LABEL + ' -in:sent -in:chats (קבלה OR חשבונית OR "חשבון עסקה" OR "אישור תשלום" OR "אישור הזמנה" OR receipt OR invoice OR "payment received" OR "your order")';
-  const threads = GmailApp.search(q, 0, 25);
-  threads.forEach(function (t) {
+  const q = 'after:2026/01/01 -label:' + LABEL + ' -in:sent -in:chats (קבלה OR קבלות OR חשבונית OR חשבוניות OR "חשבון עסקה" OR "אישור תשלום" OR "אישור הזמנה" OR "פירוט חיוב" OR receipt OR invoice OR "payment received" OR "payment confirmation" OR "your order" OR billing)';
+  const threads = GmailApp.search(q, 0, 40);
+  for (const t of threads) {
+    if (Date.now() - start > 270000) break; // stop before the 6 minute limit, the next run continues
     t.getMessages().forEach(function (m) {
       const files = m.getAttachments({ includeInlineImages: false })
         .filter(function (a) { return /pdf|image\\/(jpeg|png|webp)/i.test(a.getContentType()) && a.getSize() < 8000000; })
@@ -182,12 +184,12 @@ function run() {
         date: m.getDate().toISOString(), text: m.getPlainBody().slice(0, 15000), files: files }) });
     });
     t.addLabel(label);
-  });
+  }
 }
 
 function setup() {
   ScriptApp.getProjectTriggers().forEach(function (tr) { ScriptApp.deleteTrigger(tr); });
-  ScriptApp.newTrigger('run').timeBased().everyHours(1).create();
+  ScriptApp.newTrigger('run').timeBased().everyMinutes(10).create();
   run();
 }
 `;
@@ -197,7 +199,7 @@ function setup() {
     mailInfo = r;
     const boxes = ['dabullaw@gmail.com', 'yakird44@gmail.com'];
     s.modal({ title: 'חיבור המייל: פעם אחת בכל תיבה', wide: true, body: `
-      <p style="margin-top:0">עושים את זה במחשב, פעם אחת בכל אחת משתי התיבות. לוקח בערך 3 דקות לתיבה. מהרגע הזה, כל שעה המערכת בודקת את המייל, מוצאת קבלות וחשבוניות ומכניסה אותן לכאן. כל מייל שנבדק מקבל תווית "הוצאות-נקלט", כדי שלא ייקלט פעמיים.</p>
+      <p style="margin-top:0">עושים את זה במחשב, פעם אחת בכל אחת משתי התיבות. לוקח בערך 3 דקות לתיבה. מהרגע הזה, כל עשר דקות המערכת בודקת את המייל, מוצאת קבלות וחשבוניות ומכניסה אותן לכאן. כל מייל שנבדק מקבל תווית "הוצאות-נקלט", כדי שלא ייקלט פעמיים.</p>
       <ol class="fn-steps">
         <li>נכנסים לחשבון גוגל של התיבה הראשונה ופותחים את הכתובת <b dir="ltr">script.google.com</b></li>
         <li>לוחצים "פרויקט חדש" (למעלה משמאל)</li>
@@ -208,13 +210,13 @@ function setup() {
         <li>עוברים לתיבה השנייה וחוזרים על הכל, עם הקוד של התיבה השנייה</li>
       </ol>
       ${boxes.map((x, i) => `<div class="fn-box"><h3>קוד לתיבה ${i + 1}: <span dir="ltr">${x}</span></h3><div class="fn-code" id="fn-sc${i}">${n(script(r.url, r.key, x))}</div><div><button class="btn pri" data-a="fin-copy" data-i="${i}">${s.icon('doc', 14)} העתקת הקוד</button></div></div>`).join('')}
-      <p class="small muted">בהתחלה נבדקים המיילים של החודשיים האחרונים. כל קבלה שנקלטת נספרת כהוצאה עסקית, ומה שלא שייך מוחקים.</p>` });
+      <p class="small muted">בהתחלה נבדקים כל המיילים מתחילת 2026. כל קבלה שנקלטת נספרת כהוצאה עסקית, ומה שלא שייך מוחקים.</p>` });
   });
   s.act('fin-copy', (b, d) => { if (!mailInfo) return; const boxes = ['dabullaw@gmail.com', 'yakird44@gmail.com']; s.copy(script(mailInfo.url, mailInfo.key, boxes[+d.i])); s.toast('הקוד הועתק', 'ok'); });
 
   /* ---------- screens ---------- */
   const perBar = p => `<div class="fn-per"><button class="btn sm" data-a="fin-per" data-dir="prev" title="תקופה קודמת">→</button><b>${pName(p)}</b><button class="btn sm" data-a="fin-per" data-dir="next" title="תקופה הבאה">←</button></div>`;
-  const fileLink = x => x.file ? `<a class="btn xs" href="${n(x.file)}" title="פתיחת הקובץ">${s.icon('doc', 13)}</a>` : '';
+  const fileLink = x => x.file ? `<a class="btn xs" href="${n(x.file)}" title="פתיחת הקובץ">${s.icon('doc', 13)}</a>` : x.mailUrl ? `<a class="btn xs" href="${n(x.mailUrl)}" target="_blank" rel="noopener" title="פתיחת המייל">✉</a>` : '';
 
   s.V.fin = { title: 'מע״מ ומקדמות', render(el) {
     const p = period(), x = sum(p), due = pDue(p), dd = daysTo(due), S = set();
@@ -255,7 +257,7 @@ function setup() {
       ${rows.length ? `<div class="fn-tbl-w"><table class="fn-tbl"><thead><tr><th>תאריך</th><th>ספק</th><th class="num">סכום</th><th class="num hide-m">מע״מ</th><th class="hide-m">סוג</th><th></th></tr></thead><tbody>
         ${rows.map(x => { return `<tr>
           <td class="num">${fd(x.date)}<span class="sub">${SRC[x.source] || 'ידני'}</span></td>
-          <td><b>${n(x.vendor)}</b><span class="sub">${n(x.desc || '')}${x.currency && x.currency !== 'ILS' ? ` · מטבע ${n(x.currency)}, לבדוק סכום` : ''}${x.notReceipt ? ' · ייתכן שזו לא קבלה' : ''}</span></td>
+          <td><b>${n(x.vendor)}</b>${x.unread || !(+x.total) ? `<span class="sub" style="color:#b45309">⚠️ לא הצלחתי לקרוא את הסכום. ${x.file ? 'פותחים את הקובץ' : x.mailUrl ? `<a href="${n(x.mailUrl)}" target="_blank" rel="noopener">פותחים את המייל</a>` : 'בודקים'}, ואז מזינים סכום בעיפרון, או מוחקים ב-✕ אם זו לא קבלה.</span>` : ''}<span class="sub">${n(x.desc || '')}${x.currency && x.currency !== 'ILS' ? ` · מטבע ${n(x.currency)}, לבדוק סכום` : ''}${x.notReceipt ? ' · ייתכן שזו לא קבלה' : ''}</span></td>
           <td class="num">${ils2(x.total)}</td><td class="num hide-m">${x.vat ? ils2(x.vat) : '-'}${x.vat && share(x) < 1 ? `<span class="sub">נספר ${share(x) ? '2/3' : '0'}</span>` : ''}</td>
           <td class="hide-m">${n(x.category || '')}</td>
           <td><div class="fn-acts">${fileLink(x)}<button class="btn xs" data-a="fin-edit" data-id="${x.id}" title="עריכה">${s.icon('edit', 13)}</button><button class="btn xs" data-a="fin-del" data-id="${x.id}" title="מחיקה">✕</button></div></td></tr>`; }).join('')}
