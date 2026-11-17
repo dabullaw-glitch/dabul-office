@@ -339,7 +339,7 @@ Deno.serve(async (req) => {
       for (const r of rows) await merge('finexp', r.id, { file: 'sbfile:' + path, mime: 'application/pdf', pdfTried: true, fileFrom: 'mail-pdf' });
       return json({ ok: true, n: rows.length });
     }
-    if (a === 'pack') { if (who === 'cron' || who === 'mail') return json({ error: 'אין הרשאה' }, 401); return json(await pack(String(b.period || periodOf(ilDay())))); }
+    if (a === 'pack') { if (who === 'mail') return json({ error: 'אין הרשאה' }, 401); return json(await pack(String(b.period || periodOf(ilDay())))); }
     return json({ error: 'פעולה לא מוכרת' }, 400);
   } catch (e) {
     return json({ error: String((e as Error).message || e) }, 500);
