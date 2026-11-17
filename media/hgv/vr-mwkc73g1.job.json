@@ -1,0 +1,121 @@
+{
+ "id": "vr-mwkc73g1",
+ "kind": "reel",
+ "video": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/d6803189ea764bbeb5ae7f5bf096385d.mp4?Expires=1795522942&Signature=qfqBID8F3RFC6x2aBrWCULWSV4ksCyQiJnYQ~RkxuiGpvIQkXoB7Mw3oIM9OGBW9Mgbo4JNTu~Ep8G9lTtFPVxCxxdqxIqkik3YvkJCvTJu~8uD~4aBSpFNnCB7HZMwD5~4gpaaLzmgAiAQOnZ~h3d9qH93bl~awbnSsEVT5ojBsUlPGK2HphRMi4lKOJBh4IbZj7FhHWPdh8y5kUrX5j9aDmbgFD7PCWlQQYuUw4d~iO40n4uiqrZo3V9VL2OsPuCXr5cTriqO74mv8cntKombZNbt6Ks9zainHbh8TiWU9Q4zFR-4NT-fM5gTzwwYvzCZyRJx2XEg4MEzPU5TQqQ__&Key-Pair-Id=K3TSZ3KU01LY58",
+ "script": "שמעתם שרוצים להטיל מס על שכר דירה מהשקל הראשון?\nאם אתם משכירים דירה, כדאי שתקשיבו.\nברשות המסים מקדמים הצעה לחוק ההסדרים של תקציב אלפיים עשרים ושבע.\nמס על כל הכנסה משכר דירה, בלי תקרת פטור,\nומאגר ארצי של כל הדירות המושכרות, עם חובת דיווח.\nובאוצר מדברים על פיצוי:\nהורדה של מס הרכישה למשקיעים.\nחשוב לדעת: זו עדיין הצעה. לא חוק.\nהיא נבלמה כבר כמה פעמים בעבר, ועוד לא סוכם כלום.\nמה המצב היום?\nמי שמשכיר דירת מגורים ומקבל פחות מחמשת אלפים שש מאות חמישים וארבעה שקל בחודש,\nפטור ממס וגם מדיווח.\nוהתקרה הזו מוקפאת עד אלפיים עשרים ושבע.\nאז מה עושים כבר עכשיו?\nאחת: תבדקו כמה שכר דירה אתם מקבלים, ובאיזה מסלול מס אתם.\nשתיים: תשמרו את החוזה ואת אישורי התשלום מסודרים.\nשלוש: שוקלים לקנות דירה להשקעה? אל תחליטו לפי כותרת. תחכו לראות מה באמת עובר.\nלדעתי, גם אם זה לא יעבור עכשיו, הכיוון ברור: יותר דיווח ופחות מזומן.\nכל מקרה שונה, אז כדאי לבדוק את המצב שלכם.\nעקבו אחריי, ואעדכן כשיהיה משהו סופי.",
+ "history": "v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,cinematic,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,boxed,v3,cinematic,boxed,v3,cinematic,boxed,v3,cinematic,boxed",
+ "avoid": "boxed-navy,cinematic-gold,glass",
+ "plan": {
+  "title": "מס על שכר דירה מהשקל הראשון?",
+  "topic": "מיסוי",
+  "endLine": "מקרקעין ונדל״ן · נתניה",
+  "style": "cinematic",
+  "goldWords": [
+   "מהשקל",
+   "הצעה.",
+   "חוק.",
+   "פטור",
+   "מוקפאת",
+   "מזומן."
+  ],
+  "beats": [
+   {
+    "id": "hook",
+    "kind": "hook",
+    "t": 0.05,
+    "dur": 4,
+    "kicker": "מס על שכירות",
+    "l1": "מס מהשקל הראשון?",
+    "l2": "מה באמת קורה"
+   },
+   {
+    "id": "name",
+    "kind": "name",
+    "say": "אם אתם משכירים דירה,",
+    "dur": 3,
+    "name": "עו״ד יקיר דבול",
+    "role": "מקרקעין · נתניה"
+   },
+   {
+    "id": "plan",
+    "kind": "stack",
+    "say": "ברשות המסים מקדמים הצעה",
+    "until": "הורדה של מס הרכישה למשקיעים.",
+    "items": [
+     {
+      "say": "מס על כל הכנסה",
+      "text": "מס בלי תקרת פטור"
+     },
+     {
+      "say": "ומאגר ארצי של כל",
+      "text": "מאגר דירות מושכרות"
+     },
+     {
+      "say": "הורדה של מס הרכישה",
+      "text": "פיצוי: מס רכישה נמוך"
+     }
+    ]
+   },
+   {
+    "id": "notlaw",
+    "kind": "stamp",
+    "say": "חשוב לדעת: זו עדיין",
+    "until": "ועוד לא סוכם כלום.",
+    "text": "הצעה, לא חוק",
+    "stampSay": "זו עדיין הצעה. לא חוק."
+   },
+   {
+    "id": "today",
+    "kind": "term",
+    "say": "מה המצב היום?",
+    "until": "פטור ממס וגם מדיווח.",
+    "kicker": "המצב היום",
+    "text": "פטור עד 5,654 ₪",
+    "sub": "בחודש, דירת מגורים",
+    "subSay": "פטור ממס וגם מדיווח."
+   },
+   {
+    "id": "frozen",
+    "kind": "stamp",
+    "say": "והתקרה הזו מוקפאת עד",
+    "dur": 3,
+    "text": "מוקפא עד 2027",
+    "stampSay": "והתקרה הזו מוקפאת עד"
+   },
+   {
+    "id": "todo",
+    "kind": "stack",
+    "say": "אחת: תבדקו כמה שכר",
+    "until": "תחכו לראות מה באמת עובר.",
+    "items": [
+     {
+      "say": "אחת: תבדקו כמה שכר",
+      "text": "לבדוק הכנסה ומסלול"
+     },
+     {
+      "say": "שתיים: תשמרו את החוזה",
+      "text": "לשמור חוזה ואישורים"
+     },
+     {
+      "say": "שלוש: שוקלים לקנות דירה",
+      "text": "לא להחליט לפי כותרת"
+     }
+    ]
+   },
+   {
+    "id": "dir",
+    "kind": "boom",
+    "say": "יותר דיווח ופחות מזומן.",
+    "dur": 2,
+    "text": "יותר דיווח"
+   },
+   {
+    "id": "cta",
+    "kind": "cta",
+    "say": "כל מקרה שונה, אז",
+    "dur": 3,
+    "text": "09-8613413"
+   }
+  ]
+ }
+}
