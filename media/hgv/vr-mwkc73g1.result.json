@@ -1,0 +1,92 @@
+{
+ "ok": true,
+ "duration": 70.0,
+ "bytes": 55724983,
+ "style": "cinematic",
+ "theme": "cinematic-gold",
+ "build": {
+  "fix": {
+   "r": 0.62,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0192,
+   "b": 1.0,
+   "why": "level +0.6 deg"
+  },
+  "style": "cinematic",
+  "theme": "cinematic-gold",
+  "clips": 3,
+  "body": 67.152,
+  "total": 69.95,
+  "captions": 56,
+  "sfx": 14,
+  "layout": {
+   "hook": [
+    "push",
+    0.9615384615384616,
+    110
+   ],
+   "name": [
+    "low",
+    null,
+    null
+   ],
+   "plan": [
+    "full",
+    1.0,
+    null
+   ],
+   "notlaw": [
+    "full",
+    1.0,
+    null
+   ],
+   "today": [
+    "full",
+    1.0,
+    null
+   ],
+   "frozen": [
+    "full",
+    1.0,
+    null
+   ],
+   "todo": [
+    "full",
+    1.0,
+    null
+   ],
+   "dir": [
+    "full",
+    1.0,
+    null
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 164,
+  "mode": "aligned 147 of 164",
+  "start": 0.0,
+  "end": 66.98
+ },
+ "resolve": {
+  "beats": 9,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    67.43
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n20 segments",
+ "at": "2026-11-17T15:40:09Z",
+ "cover": "vr-mwkc73g1.cover.jpg",
+ "coverSec": 1.0
+}

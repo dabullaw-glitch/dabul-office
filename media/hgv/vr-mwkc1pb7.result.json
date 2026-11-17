@@ -1,0 +1,92 @@
+{
+ "ok": true,
+ "duration": 60.8,
+ "bytes": 64293712,
+ "style": "v3",
+ "theme": "mono",
+ "build": {
+  "fix": {
+   "r": 0.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0,
+   "b": 1.0,
+   "why": "none needed"
+  },
+  "style": "v3",
+  "theme": "mono",
+  "clips": 1,
+  "body": 57.92,
+  "total": 60.72,
+  "captions": 58,
+  "sfx": 16,
+  "layout": {
+   "hook": [
+    "band",
+    1.0,
+    0
+   ],
+   "name": [
+    "low",
+    null,
+    null
+   ],
+   "deal": [
+    "band",
+    1.0,
+    0
+   ],
+   "boi": [
+    "band",
+    1.0,
+    0
+   ],
+   "gap": [
+    "band",
+    1.0,
+    0
+   ],
+   "first": [
+    "band",
+    1.0,
+    0
+   ],
+   "appr": [
+    "band",
+    1.0,
+    0
+   ],
+   "todo": [
+    "band",
+    1.0,
+    0
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 139,
+  "mode": "aligned 130 of 139",
+  "start": 0.0,
+  "end": 57.58
+ },
+ "resolve": {
+  "beats": 9,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    58.03
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n20 segments",
+ "at": "2026-11-17T15:31:22Z",
+ "cover": "vr-mwkc1pb7.cover.jpg",
+ "coverSec": 1.0
+}
