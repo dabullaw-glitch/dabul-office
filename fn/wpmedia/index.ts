@@ -13,9 +13,13 @@ Deno.serve(async (req) => {
   const out: unknown[] = [];
   for (const it of (b.items || []).slice(0, 6)) {
     const url = String(it.url || ''), fn = String(it.filename || '').replace(/[^a-z0-9._-]/gi, '');
-    if (!/^https:\/\/dabullaw-glitch\.github\.io\/[^?#]+\.(jpe?g|png|webp|pdf|mp4)$/i.test(url) || !fn) { out.push({ url, error: 'bad' }); continue; }
-    const r = await fetch(url).catch(() => null);
+    // 17.11.2026: a press item ("המשרד בתקשורת") may bring the article's own image and the outlet's logo straight from the
+    // outlet's image server (it.press): https only, image types only, at most 5 MB.
+    const press = !!it.press && /^https:\/\/[a-z0-9.-]+\/[^#\s]+$/i.test(url) && /\.(jpe?g|png|webp)$/i.test(fn);
+    if ((!press && !/^https:\/\/dabullaw-glitch\.github\.io\/[^?#]+\.(jpe?g|png|webp|pdf|mp4)$/i.test(url)) || !fn) { out.push({ url, error: 'bad' }); continue; }
+    const r = await fetch(url, press ? { headers: { 'user-agent': UA } } : undefined).catch(() => null);
     if (!r || !r.ok) { out.push({ url, error: r ? r.status : 'fetch' }); continue; }
+    if (press && (!/^image\/(jpeg|png|webp)/i.test(r.headers.get('content-type') || '') || Number(r.headers.get('content-length') || 0) > 5e6)) { out.push({ url, error: 'not an image' }); continue; }
     const bytes = new Uint8Array(await r.arrayBuffer());
     const ct = /\.mp4$/i.test(fn) ? 'video/mp4' : /\.pdf$/i.test(fn) ? 'application/pdf' : /\.png$/i.test(fn) ? 'image/png' : /\.webp$/i.test(fn) ? 'image/webp' : 'image/jpeg';
     const up = await fetch('https://dabullaw.co.il/wp-json/wp/v2/media', { method: 'POST', headers: { authorization: auth, 'user-agent': UA, 'content-type': ct, 'content-disposition': `attachment; filename="${fn}"` }, body: bytes });
