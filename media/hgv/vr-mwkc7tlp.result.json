@@ -1,0 +1,82 @@
+{
+ "ok": true,
+ "duration": 62.7,
+ "bytes": 78059768,
+ "style": "boxed",
+ "theme": "boxed-navy",
+ "build": {
+  "fix": {
+   "r": -1.1,
+   "dx": 0.0,
+   "dy": 0.0,
+   "s": 1.0339,
+   "b": 1.0,
+   "why": "level -1.1 deg"
+  },
+  "style": "boxed",
+  "theme": "boxed-navy",
+  "clips": 4,
+  "body": 59.785,
+  "total": 62.58,
+  "captions": 58,
+  "sfx": 11,
+  "layout": {
+   "hook": [
+    "chin",
+    1.0,
+    0
+   ],
+   "ruling": [
+    "band",
+    1.0,
+    0
+   ],
+   "good": [
+    "band",
+    0.884,
+    0
+   ],
+   "less": [
+    "band",
+    1.0,
+    0
+   ],
+   "cost": [
+    "band",
+    1.0,
+    0
+   ],
+   "steps": [
+    "band",
+    0.937,
+    0
+   ],
+   "cta": [
+    "low",
+    null,
+    null
+   ]
+  }
+ },
+ "align": {
+  "words": 142,
+  "mode": "aligned 138 of 142",
+  "start": 0.0,
+  "end": 59.78
+ },
+ "resolve": {
+  "beats": 8,
+  "missed": [],
+  "keep": [
+   [
+    0.0,
+    60.23
+   ]
+  ]
+ },
+ "warnings": "",
+ "whisper": "model ivrit-ai/whisper-large-v3-turbo-ct2\n25 segments",
+ "at": "2026-11-17T18:36:10Z",
+ "cover": "vr-mwkc7tlp.cover.jpg",
+ "coverSec": 1.0
+}
