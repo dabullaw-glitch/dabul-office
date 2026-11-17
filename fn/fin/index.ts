@@ -116,6 +116,7 @@ ${ctx}
 החזר JSON בלבד:
 {"isExpense":true/false,"vendor":"שם העסק שגבה","date":"YYYY-MM-DD","total":0,"vat":0,"currency":"ILS","desc":"מה נקנה, עד 8 מילים",
 "category":"אחד מ: ${Object.keys(CATS).join(', ')}","business":"yes / no / check","reason":"משפט קצר"}
+- החזר תמיד JSON בלבד, בלי שום טקסט לפני או אחרי. total ו-vat הם מספרים בלבד (למשל 89.8), בלי סימן מטבע.
 - total הוא הסכום ששולם בפועל כולל מע"מ. vat הוא המע"מ שמופיע במסמך; אם אין מע"מ (ספק מחו"ל, עוסק פטור) כתוב 0.
 - סכום במטבע זר: כתוב את הסכום והמטבע כפי שהם.
 - business: yes רק כשברור שזו הוצאה של המשרד (תוכנה, אתר, פרסום, ציוד משרדי, ביטוח מקצועי, אגרות, לשכת עורכי הדין). no כשברור שזו הוצאה פרטית (סופר, בגדים, הוצאות בית). check בכל מקרה אחר.
@@ -141,9 +142,11 @@ async function readDoc(bytes: Uint8Array | null, mime: string, ctx: string) {
 }
 // 17.11.2026: read twice before giving up (a busy moment or a broken answer left 3 mails as "לא זוהה" with 0)
 async function readTwice(bytes: Uint8Array | null, mime: string, ctx: string) {
-  for (let i = 0; i < 2; i++) { const a = await readDoc(bytes, mime, ctx).catch(() => null); if (a && (a.isExpense === false || +a.total > 0 || a.vendor)) return a; await new Promise(res => setTimeout(res, 1500)); }
+  for (let i = 0; i < 2; i++) { const a = await readDoc(bytes, mime, ctx).catch(() => null); if (a && (a.isExpense === false || amount(a.total) > 0)) return a; await new Promise(res => setTimeout(res, 1500)); }
   return null;
 }
+// 17.11.2026: the model sometimes writes the amount as text ("89.80 ₪", "1,234.50"); read the number out of it
+const amount = (v: unknown) => { if (typeof v === 'number') return isFinite(v) ? v : 0; const s = String(v ?? '').replace(/[\u200e\u200f\u202a-\u202e]/g, '').replace(/,(?=\d{3}\b)/g, ''); const m = s.match(/-?\d+(?:\.\d+)?/); return m ? +m[0] : 0; };
 async function sha1(bytes: Uint8Array) { const h = new Uint8Array(await crypto.subtle.digest('SHA-1', bytes)); return Array.from(h.slice(0, 12), b => b.toString(16).padStart(2, '0')).join(''); }
 const extFor = (mime: string) => ({ 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/heic': 'heic' } as Record<string, string>)[mime] || 'bin';
 
@@ -163,10 +166,10 @@ async function addExpense(o: { bytes: Uint8Array | null; mime: string; name?: st
   const cat = CATS[ai.category] !== undefined ? ai.category : 'אחר';
   const date = /^\d{4}-\d{2}-\d{2}$/.test(ai.date || '') ? ai.date : ilDay();
   const cur = String(ai.currency || 'ILS').toUpperCase();
-  const total = Math.round((+ai.total || 0) * 100) / 100, vat = cur === 'ILS' ? Math.round((+ai.vat || 0) * 100) / 100 : 0;
+  const total = Math.round(amount(ai.total) * 100) / 100, vat = cur === 'ILS' ? Math.round(amount(ai.vat) * 100) / 100 : 0;
   const fromName = String(o.from || '').replace(/<[^>]*>/g, '').replace(/"/g, '').trim();
   const mailUrl = o.msgId && o.mailbox ? `https://mail.google.com/mail/?authuser=${encodeURIComponent(o.mailbox)}#all/${o.msgId}` : '';
-  const rec = { date, period: periodOf(date), vendor: ai.vendor || fromName || o.name || 'לא זוהה', desc: ai.desc || (o.subject ? String(o.subject).slice(0, 120) : ''), subject: o.subject || '', fromMail: o.from || '', mailUrl, unread: !ai.vendor && !(+ai.total > 0), total, vat, net: Math.round((total - vat) * 100) / 100, currency: cur,
+  const rec = { date, period: periodOf(date), vendor: ai.vendor || fromName || o.name || 'לא זוהה', desc: ai.desc || (o.subject ? String(o.subject).slice(0, 120) : ''), subject: o.subject || '', fromMail: o.from || '', mailUrl, unread: !(total > 0), total, vat, net: Math.round((total - vat) * 100) / 100, currency: cur,
     category: cat, vatShare: CATS[cat], biz: 'yes', aiBiz: ai.business || '', // 17.11.2026 (Yakir): everything that comes in is a business expense; he deletes what is not
     reason: ai.reason || '', notReceipt: ai.isExpense === false,
     file: path ? 'sbfile:' + path : '', mime: o.mime, source: o.source, mailbox: o.mailbox || '', msgId: o.msgId || '', note: o.note || '', hash, at: new Date().toISOString(),
