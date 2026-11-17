@@ -151,6 +151,12 @@ async function act(req: Request, a: string, t: string) {
   if (a === 'no') { await merge('reel', row.id, { status: 'rejected', rejectedAt: new Date().toISOString() }); return page('לא יפורסם', `<p>${name} לא יפורסם.</p>`); }
   let at = await nextSlot();
   await merge('reel', row.id, { status: 'approved', approvedAt: new Date().toISOString(), publishAt: at });
+  // 17.11.2026: an update video (r.timely, set by vidreq final) jumps ahead of the other edited videos. The HeyGen task moves it to
+  // the nearest free slot within hours (tools/heygen-edit/TASK.md 6a) and then sends the exact date.
+  if (r.timely) {
+    await tg(`✅ אישרת את ${r.name}. זה סרטון עדכון, ולכן הוא עוקף את שאר הסרטונים הערוכים ויעלה בסלוט הפנוי הקרוב. בשעות הקרובות תקבל הודעה עם התאריך והשעה המדויקים.`);
+    return page('אושר', `<p>${name} אושר.</p><p>זה סרטון עדכון, ולכן הוא עוקף את שאר הסרטונים הערוכים ויעלה בסלוט הפנוי הקרוב. בשעות הקרובות תקבל הודעה עם התאריך והשעה המדויקים.</p>`);
+  }
   if (r.seriesKey && Number(r.ep)) at = (await seriesOrder(String(r.seriesKey)))[row.id] || at;
   await tg(`✅ אישרת את ${r.name}. הוא יפורסם ב${when(at)} בפייסבוק, ביוטיוב, באינסטגרם ובטיקטוק.`);
   return page('אושר', `<p>${name} יפורסם ב${esc(when(at))}.</p><p>מערכת המשרד מפרסמת אותו בפייסבוק, ביוטיוב, באינסטגרם ובטיקטוק. אין צורך לעשות שום דבר נוסף.</p>`);

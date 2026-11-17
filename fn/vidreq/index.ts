@@ -136,6 +136,9 @@ async function final(b: Any, dry: boolean) {
     const reelId = 'rl-' + name;
     // 1.11.2026 (Yakir: HeyGen videos go to the front of the queue): mark the reel row, also when it already existed
     if (await getDoc('reel', reelId)) await merge('reel', reelId, { priority: 'heygen' });
+    // 17.11.2026 (Yakir: update videos from the updates board are current news and go out before every other edited video):
+    // the reel knows it is an update, so its approval message promises the nearest slot and not the end of the queue.
+    if ((r.source === 'upd' || r.series === 'ai-nadlan') && await getDoc('reel', reelId)) await merge('reel', reelId, { timely: true });
     await merge('vidreq', id, { status: 'final-wait', finalUrl: url, finalAt: now(), reelId, videoUrl, bytes });
     if (r.promptId) await merge('prompt', r.promptId, { status: 'filmed', hgFinal: url, reelId });
     return { ok: true, id, reelId, videoUrl, bytes, reels: add };

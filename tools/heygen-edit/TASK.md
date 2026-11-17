@@ -274,17 +274,22 @@ For every vidreq with status 'editing': `git pull` and look for media/hgv/<id>.m
 **FIRST, update videos go to the very front (Yakir 8.11.2026, settings/social.queueRule.timelyFirst; this beats every
 rule below, including heygenFirst and the "no other reels inside a series" rule):** "סרטונים על דברים עדכניים שקורים עכשיו
 צריכים לעלות בזמנים הקרובים ולא רק במרץ... מה שמגיע מעדכונים של דברים חדשים חייב להקדים ומה שכללי לדחות לאחרי זה".
+Yakir again on 17.11.2026: "כל הסרטונים שאני מאשר ומבקש להעלות מהלוח עדכונים על הדברים שקרו ב3 ימים האחרונים, אחרי שהסרטון
+מוכן, שזה יעלה את זה לפני שאר הסרטונים הערוכים... אי אפשר לשים את זה אחרון בתוך לעוד 3 חודשים". Check EVERY run (also when
+nothing else is to do) for approved update reels without timelyAt and handle them first. The reel row also carries timely:true
+(set by vr=final), and its approval message already told Yakir it jumps ahead, so the step 5 message is the one with the date.
 An update video = its vidreq row has source 'upd' (news, a new ruling, a new directive; vidreq.upd holds the item).
 The weekly AI series (vidreq series 'ai-nadlan', Yakir 13.11.2026: one a week) is handled exactly like an update video here:
 its approved reel goes to the front the same way, so the series really goes out weekly and not in March.
 For each approved reel of an update video that has no `timelyAt` yet:
 1. Make sure it has exactly one planned main row (step 1 below).
-2. Target slot T = the first Sun 20:30 / Tue 12:30 / Thu 17:30 slot more than 48 hours from now that is not held by
-   another update video, by a row with pst or result, or by a debt row (Monday rows are not slots anyway).
+2. Target slot T = the first Sun 20:30 / Tue 12:30 / Thu 17:30 slot more than 24 hours from now (17.11.2026, was 48: news
+   must go out fast) that is not held by another update video, by a row with pst or result, or by a debt row (Monday rows
+   are not slots anyway).
 3. Move the update row to T. Every GENERAL planned main row from T up to the update row's old slot moves ONE slot later,
    in order (each takes the next slot's date and hour, so the order between them stays and an episode is never before an
    earlier episode); the update row's old slot is filled by the last shifted row, so no gap is left. Never touch rows due
-   within 48 hours, staged (pst / result) or published, and never move a debt row.
+   within 24 hours, staged (pst / result) or published, and never move a debt row.
 4. docs_merge each moved row {at, replanFrom, replannedAt, replanNote:'יקיר 8.11.2026: סרטונים על עדכונים ודברים חדשים
    מוקדמים, והכלליים נדחים אחריהם'}, each moved reel {publishAt (ISO UTC, Israel is UTC+2 in winter)}, and the update
    reel {timelyAt: now, frontAt: now}; the vidreq row {publishAt}.
