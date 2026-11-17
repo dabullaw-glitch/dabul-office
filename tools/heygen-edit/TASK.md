@@ -122,7 +122,12 @@ whose prompt row has status 'ready' (and mode not 'self'):
    while settings/heygen.reelsPause.until (YYYY-MM-DD) is today or later (Israel date), do NOT create HeyGen reels: leave
    these requests exactly as they are (EXCEPT the podcast's 1-minute clip, vidreq source 'podcast' / id vr-pod-epNN-clip:
    it is part of the podcast and goes on as usual, AND the weekly AI series reel, vidreq series 'ai-nadlan' (Yakir 13.11.2026:
-   "סרטון אחד בשבוע" in HeyGen, also during the pause; at most one ai-nadlan reel generated per Israel week)) (status unchanged, no message to Yakir) so the credits go to the course (section 8)
+   "סרטון אחד בשבוע" in HeyGen, also during the pause; at most one ai-nadlan reel generated per Israel week), AND every video
+   Yakir asked for himself, vidreq source 'upd' / 'office' / 'script' (Yakir 17.11.2026: "הסרטונים שאתה מבקש קודמים, והקורס
+   יכול לחכות שבועיים": they are made during the pause, oldest first, BEFORE any course lesson; their budget: create one only
+   if remaining credits - its estimate >= plan.warnBelow + courseRules.budget.reserveForPodcast (now 20 + 70 = 90); otherwise
+   leave it and at most once a day Telegram "הסרטון שביקשת מחכה: נשארו בהייגן <R> קרדיטים, והם שמורים לפודקאסט. הוא ייווצר
+   כשהקרדיטים יתחדשו ב-<plan.resetsAt as d.m>.")) (status unchanged, no message to Yakir) so the credits go to the course (section 8)
    and the weekly podcast. Scripts, approvals, editing of footage Yakir filmed himself, and the publishing calendar go on
    as usual (they cost no HeyGen credits). After the date, continue normally, oldest first.
 1. Credits: get_current_user; note the remaining premium credits. If fewer than settings/heygen.plan.warnBelow (100):
@@ -472,7 +477,11 @@ B. Scripts (status 'new' or 'writing'): read lessons[n] (title, summary, html, d
    prompt rows {text, title, status 'draft', rewrittenAt}, call `reels?vr=script` again.
    Approval moves the request to 'heygen' (Telegram page). The office system also does it when both rows are 'ready'.
    An older request with status 'later' + scriptApprovedAt + both rows 'ready' counts as 'heygen' (docs_merge it).
-C. Avatar clips (status 'heygen', no hg.open.videoId): first the BUDGET: get_current_user premium credits R. Estimate the
+C. COURSE PAUSE (Yakir 17.11.2026: "הסרטונים שאתה מבקש קודמים, והקורס יכול לחכות שבועיים"): while
+   settings/heygen.courseRules.pauseUntil (YYYY-MM-DD) is after today (Israel date), do NOT start avatar clips or voice
+   pieces for any lesson (steps C and D): leave the lessons exactly as they are, no Telegram about the course budget, and
+   stop section 8 after the free steps (scripts, approvals). From that date on, continue as below.
+   Avatar clips (status 'heygen', no hg.open.videoId): first the BUDGET: get_current_user premium credits R. Estimate the
    lesson: avatar = ceil(open seconds / 15) + ceil(close seconds / 15) (Avatar III bills about 1 credit per started 15 s:
    costLog 1-2.11.2026) + voice = courseRules.voice.creditsPerLesson (until measured: 13). If R - estimate < plan.warnBelow
    + courseRules.budget.reserveForReels + courseRules.budget.reserveForPodcast (read the CURRENT numbers from settings/heygen every run; since 11.11.2026 00:08: 20 + 0 + 70 = 90, reels paused, Yakir: the course must be ready end to end by 31.12.2026): do not start; at most once a day (courseRules.budgetWarnedAt, Israel
