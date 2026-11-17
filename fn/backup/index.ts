@@ -1,6 +1,6 @@
 // backup (29.10.2026, Yakir approved): a daily backup of the whole database of the project (nws.co.il and the office system).
 // Every table of the public schema, all rows, plus the list of scheduled jobs, saved as one gzip JSON file in the PRIVATE storage
-// bucket 'backups': daily/YYYY-MM-DD.json.gz, kept 14 days; on Sundays also weekly/YYYY-MM-DD.json.gz, kept 8 weeks.
+// bucket 'backups': daily/YYYY-MM-DD.json.gz, kept 7 days; on Sundays also weekly/YYYY-MM-DD.json.gz, kept 4 weeks (17.11.2026; was 14 days and 8 weeks).
 // The Supabase free plan has no automatic backups, so this is the way back after a mistaken delete or a bad change.
 // Restore: download the file from the bucket, and insert the rows of the needed table (by hand, after checking).
 // POST (x-cron-secret) {action:'run'} | {action:'list'}
@@ -17,7 +17,7 @@ type Any = any;
 const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
 const J = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { 'content-type': 'application/json; charset=utf-8' } });
 const BUCKET = 'backups';
-const KEEP_DAYS = 14, KEEP_WEEKS = 8;
+const KEEP_DAYS = 7, KEEP_WEEKS = 4; // 17.11.2026: 7 days and 4 weeks (an encrypted copy also goes to GitHub every day), to keep storage small
 const ilDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
 const ilWeekday = () => new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Jerusalem', weekday: 'short' }).format(new Date());
 
