@@ -267,6 +267,19 @@ ${isAd ? "\u05E7\u05D9\u05D1\u05DC\u05EA \u05D0\u05EA \u05D4\u05DE\u05D9\u05D9\u
   }
   const clean = (s) => String(s ?? "").replace(DASH, (m) => /\s/.test(m) ? " - " : "-").trim();
   const strip = (h) => String(h || "").replace(/<[^>]+>/g, " ").replace(/&[a-z#0-9]+;/gi, " ").replace(/\s+/g, " ").trim();
+  // the newest episode of רוני הרוכש that already went out on the networks and was not in a newsletter yet (docs roni/series)
+  async function roniOfMonth(nlId) {
+    const ser = await getDoc("roni", "series").catch(() => null);
+    if (!ser || !Array.isArray(ser.episodes)) return null;
+    const now = new Date(Date.now() + 2 * 3600e3).toISOString().slice(0, 16);
+    const ep = ser.episodes.filter((e) => ["scheduled", "published"].includes(e.status) && e.at && e.at <= now && (!e.nl || e.nl === nlId)).sort((a, b) => String(b.at).localeCompare(String(a.at)))[0];
+    if (!ep) return null;
+    const row = ep.pub ? await getDoc("pub", ep.pub) : null;
+    const img = (row?.media || [])[0] || "";
+    if (!/^https:\/\//.test(img)) return null;
+    await merge("roni", "series", { episodes: ser.episodes.map((e) => e.no === ep.no ? { ...e, nl: nlId } : e) });
+    return { no: ep.no, title: `פרק ${ep.no}: ${ep.title}`, img, text: ep.nlText || "" };
+  }
   async function notifyIssue(id) {
     const issue = await getDoc("nl", id);
     if (!issue || !issue.content) return { error: "no issue" };
@@ -292,6 +305,7 @@ ${isAd ? "\u05E7\u05D9\u05D1\u05DC\u05EA \u05D0\u05EA \u05D4\u05DE\u05D9\u05D9\u
       j.qa.q = clean(j.qa.q);
       j.qa.a = clean(j.qa.a);
     }
+    if (!j.roni) j.roni = await roniOfMonth(id);
     const flat = JSON.stringify(j);
     const flags = BANNED.test(flat) ? [`\u05E0\u05DE\u05E6\u05D0 \u05D1\u05D9\u05D8\u05D5\u05D9 \u05D0\u05E1\u05D5\u05E8: "${(flat.match(BANNED) || [""])[0]}"`] : [];
     const { count: active } = await db().select("id", { count: "exact", head: true }).eq("coll", "subs").eq("data->>status", "active");
@@ -327,9 +341,12 @@ ${isAd ? "\u05E7\u05D9\u05D1\u05DC\u05EA \u05D0\u05EA \u05D4\u05DE\u05D9\u05D9\u
     const tip = j.tip ? `<div style="margin:0 0 24px;padding:14px 18px;border:1px dashed ${C.accent};border-radius:8px"><strong style="color:${C.ink}">\u05D8\u05D9\u05E4 \u05D4\u05D7\u05D5\u05D3\u05E9:</strong> ${esc(j.tip)}</div>` : "";
     const arts = (j.articles || []).length ? `<div style="margin:0 0 20px;padding-top:18px;border-top:1px solid ${C.border}">${H("\u05DC\u05D4\u05E8\u05D7\u05D1\u05D4 \u05D1\u05D0\u05EA\u05E8")}${j.articles.map((a) => `<div style="margin:0 0 10px"><a href="${esc(utm(a.url, issue.id || "nl"))}" style="color:${C.ink};font-weight:bold">${esc(a.title)}</a>${a.blurb ? `<div style="color:${C.muted};font-size:14px">${esc(a.blurb)}</div>` : ""}</div>`).join("")}</div>` : "";
     const contact = `<div style="margin:8px 0 0;padding:16px 18px;background:${C.ink};color:#fff;border-radius:10px"><div style="color:${C.gold};font-weight:bold;margin:0 0 6px">\u05D9\u05E9 \u05DC\u05DB\u05DD \u05E9\u05D0\u05DC\u05D4 \u05E2\u05DC \u05E2\u05E1\u05E7\u05D4 \u05D0\u05D5 \u05E2\u05DC \u05E0\u05DB\u05E1?</div><div>${esc(OFFICE.lawyer)} \xB7 \u05D8\u05DC\u05E4\u05D5\u05DF <a href="tel:${OFFICE.phone}" style="color:#fff">${OFFICE.phone}</a> \xB7 \u05D5\u05D5\u05D0\u05D8\u05E1\u05D0\u05E4 <a href="https://wa.me/972${OFFICE.wa.replace(/\D/g, "").slice(1)}" style="color:#fff">${OFFICE.wa}</a></div><div style="font-size:14px;color:#cfcabe">${esc(OFFICE.address)} \xB7 <a href="${SITE}" style="color:#cfcabe">dabullaw.co.il</a></div><div style="font-size:12px;color:#a9a59c;margin-top:6px">\u05D6\u05D5 \u05DB\u05EA\u05D5\u05D1\u05EA \u05DC\u05E9\u05DC\u05D9\u05D7\u05D4 \u05D1\u05DC\u05D1\u05D3, \u05D5\u05DC\u05DB\u05DF \u05D0\u05D9\u05DF \u05DC\u05D4\u05E9\u05D9\u05D1 \u05DC\u05DE\u05D9\u05D9\u05DC \u05D4\u05D6\u05D4.</div></div>`;
-    const inner = `${j.intro ? P(j.intro) : ""}${feat}${news}${rul}${qa}${tip}${arts}${j.signoff ? P(j.signoff) : ""}${contact}`;
+    // 18.11.2026 (Yakir): every issue opens with "רוני של החודש", the newest episode of the comic רוני הרוכש
+    const rn = j.roni && /^https:\/\//.test(j.roni.img || "") ? `<div style="margin:0 0 24px">${H("רוני של החודש")}<div style="font-size:18px;font-weight:bold;color:${C.ink};margin:0 0 10px">${esc(j.roni.title)}</div><img src="${esc(j.roni.img)}" alt="${esc("רוני הרוכש, " + j.roni.title)}" width="560" style="display:block;width:100%;max-width:560px;height:auto;border:1px solid ${C.border};border-radius:8px">${j.roni.text ? `<p style="margin:10px 0 0">${esc(j.roni.text)}</p>` : ""}</div>` : "";
+    const inner = `${rn}${j.intro ? P(j.intro) : ""}${feat}${news}${rul}${qa}${tip}${arts}${j.signoff ? P(j.signoff) : ""}${contact}`;
     const html = shell(inner, t, j.preheader || "");
     const text = [
+      j.roni?.img ? `רוני של החודש: ${j.roni.title}${j.roni.text ? "\n" + j.roni.text : ""}\n${j.roni.img}` : "",
       j.intro,
       f ? `${f.title}
 

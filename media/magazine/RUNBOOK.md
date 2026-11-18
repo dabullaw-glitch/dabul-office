@@ -23,6 +23,13 @@ https://dabullaw.co.il/magazine/ (page id 7776). NOTHING goes out without Yakir'
    `cd media/magazine/template && NODE_PATH=$(npm root -g) node render.js issue-NN.html ../issue-NN/out`
    (render.js uses /opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell). Look at every slide
    (no text overflow, footer visible, nothing cut). Fix and re-render until clean.
+2b. RONI AS THE LAST SLIDE (Yakir, 18.11.2026: "רוני הוא השקף האחרון במגזין"). Read docs roni/series. Take the newest
+   episode whose pub row (docs pub/<episodes[].pub>) is 'published', or 'planned' with `at` before this issue's Friday
+   10:00, and that has no `mag` yet. If there is one, slide 10 is that comic itself: copy `media/roni/epNN.jpg` (it is
+   already 1080x1350) to `issue-NN/slides/10.jpg` instead of the closing slide, and after the issue is saved merge the
+   whole `episodes` array with `mag: <issue no>` on that episode (never the same episode in two issues). If there is no
+   new episode, slide 10 stays the normal closing slide. Keep 10 slides in all: the publisher posts at most 10 images
+   (LinkedIn: the first 8 and the last), so an 11th slide would be cut.
 3. Make: `issue-NN/slides/01.jpg..10.jpg` (quality 93), `web/real-estate-magazine-NN.pdf` (Pillow, title/author metadata),
    `web/real-estate-magazine-NN-cover.jpg` (800x1000).
 4. Add the issue at the TOP of `issues.json` (same fields as issue 1: dates, date, updated, title, blurb, heads, intro,
