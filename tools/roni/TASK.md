@@ -59,9 +59,21 @@ him for approval. You never publish anything. Read `tools/roni/README.md` first 
     out (יום שני D.M ב-10:00, פייסבוק ולינקדאין) / the caption text / "לאישור כתוב לי: מאשר את רוני פרק N. לתיקון כתוב מה לשנות.">}
     (keep the caption under 1000 characters; if longer, send the post text in a second sendMessage).
 11. Merge the episode: status 'sent', pub 'pub-roni-NN', at, sentAt. Set nextNo N+1 and nextAt = at + 14 days.
-12. Monthly: on the first run of each Israel month, record in docs roni/series `monthly.<YYYY-MM>` = the newest approved or
-    published episode number (for "רוני של החודש" in the newsletter, the last magazine slide and the monthly WhatsApp).
-13. Log: docs_merge('agents','roni-'||current_date, {episode, action, credits, ok}). Finish with one short Hebrew line.
+12. Teaser line: every episode in `episodes` has `nlText`, one short sentence for the newsletter and WhatsApp (what Roni
+    did, no legal advice in it, e.g. "רוני השאיר צ׳ק של 50 אלף, ורק בבית בדק את הנסח."). Write it with the episode.
+13. WhatsApp, once a month (Yakir: inside the weekly Sunday message, never an extra message). If docs roni/series
+    `wa.<YYYY-MM>` (this Israel month) is empty: take the coming Sunday's group row, docs coll 'community' with
+    data.week = that Sunday's date, status 'scheduled', in this same month. Only if its kind is 'tip' or 'qa' (a poll cannot
+    carry an image; then wait for the next week) and the new text stays under 1000 characters: the newest episode whose
+    pub row is 'published' (or 'planned' with `at` before that Sunday) and that has no `wa` yet. docs_merge the community
+    row {image:<the episode's public jpg URL>, textBefore:<the old text>, text:"*רוני של החודש* 😅\n<nlText>\n\n"+<old text>,
+    roniNo:N}, then merge `wa.<YYYY-MM>` = N on the series and `wa` = the community id on the episode. The function
+    `social` (step publish) sends a row with `image` as one image message with that caption. If the month ends without a
+    fitting Sunday, skip that month and log it.
+14. Newsletter and magazine need nothing from this task: the newsletter (function growth, nl-notify) puts the newest
+    episode that already went out and was not in a newsletter at the top as "רוני של החודש" by itself, and the weekly
+    magazine task puts a new episode as slide 10 (media/magazine/RUNBOOK.md step 2b). They mark the episode with `nl` / `mag`.
+15. Log: docs_merge('agents','roni-'||current_date, {episode, action, credits, ok}). Finish with one short Hebrew line.
 
 If anything fails before step 10, set the episode back to 'idea', log the error, and send Yakir one short line that this
 episode is late and why.
