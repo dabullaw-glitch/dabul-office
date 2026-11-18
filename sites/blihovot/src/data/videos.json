@@ -82,5 +82,19 @@
   "date": "2026-11-11",
   "guide": "hesder-im-noshim",
   "lesson": "3-hesder"
+ },
+ {
+  "id": "ikul-osh",
+  "title": "עיקול חשבון בנק: מה מוגן ואיך מבטלים",
+  "description": "על איזה כסף חל עיקול עו\"ש, אילו כספים מוגנים בחשבון ואיך מבקשים לבטל את העיקול, בפחות מדקה.",
+  "src": "video/ikul-osh.mp4",
+  "poster": "video/ikul-osh.jpg",
+  "captions": "video/ikul-osh.vtt",
+  "w": 1080,
+  "h": 1920,
+  "duration": "PT34S",
+  "date": "2026-11-18",
+  "guide": "ikul-osh",
+  "lesson": "4-hotzaa"
  }
 ]
