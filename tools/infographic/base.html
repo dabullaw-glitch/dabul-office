@@ -1,0 +1,48 @@
+<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><style>
+@font-face{font-family:H;src:url(FONTDIR/heebo-500.ttf);font-weight:500}
+@font-face{font-family:H;src:url(FONTDIR/heebo-700.ttf);font-weight:700}
+@font-face{font-family:H;src:url(FONTDIR/heebo-800.ttf);font-weight:800}
+@font-face{font-family:H;src:url(FONTDIR/heebo-900.ttf);font-weight:900}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1200px;font-family:H;direction:rtl;background:#F7F5F0;color:#17253F}
+#card{width:1200px;display:flex;flex-direction:column;min-height:560px}
+/* header */
+.top{background:#17253F;color:#fff;padding:32px 50px 28px}
+.k{color:#E5C46B;font-weight:800;font-size:32px}
+h1{font-size:64px;font-weight:900;line-height:1.05;margin-top:4px}
+.mid{flex:1;padding:28px 50px;display:flex;flex-direction:column;gap:22px;justify-content:center}
+/* steps / flow: 2 to 4 cards */
+.flow{display:flex;gap:16px;align-items:stretch}
+.st{flex:1;background:#fff;border:3px solid #e4dfd3;border-radius:24px;padding:18px 20px;border-top:12px solid #C6A03C;text-align:center}
+.st .n{display:inline-flex;width:62px;height:62px;border-radius:50%;background:#17253F;color:#E5C46B;font-size:36px;font-weight:900;align-items:center;justify-content:center}
+.st .w{font-size:30px;font-weight:800;color:#8a7440;margin-top:8px;line-height:1.15}
+.st h3{font-size:42px;font-weight:900;line-height:1.1;margin-top:8px}
+.ar{align-self:center;font-size:52px;color:#C6A03C;font-weight:900}
+/* compare: two columns */
+.cmp{display:flex;gap:18px}
+.col{flex:1;background:#fff;border:3px solid #e4dfd3;border-radius:24px;overflow:hidden}
+.col .hd{background:#17253F;color:#E5C46B;font-size:38px;font-weight:900;padding:14px 22px}
+.col.alt .hd{background:#C6A03C;color:#17253F}
+.col ul{list-style:none;padding:14px 22px 18px}
+.col li{font-size:34px;font-weight:700;line-height:1.25;padding:6px 0;border-bottom:2px solid #f0ebe0}
+.col li:last-child{border-bottom:0}
+/* numbers */
+.nums{display:flex;gap:16px}
+.num{flex:1;background:#fff;border:3px solid #e4dfd3;border-radius:24px;padding:18px 20px;text-align:center}
+.num b{display:block;font-size:64px;font-weight:900;color:#a8862f;line-height:1}
+.num span{display:block;font-size:32px;font-weight:800;margin-top:8px;line-height:1.15}
+/* checklist */
+.chk{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px}
+.chk div{background:#fff;border:3px solid #e4dfd3;border-radius:18px;padding:12px 18px;font-size:34px;font-weight:800;display:flex;gap:12px;align-items:center}
+.chk div:before{content:"✓";color:#fff;background:#C6A03C;border-radius:50%;width:44px;height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:center;font-size:28px}
+/* warning line */
+.warn{background:#fff;border-right:14px solid #b4442f;border-radius:18px;padding:14px 24px;font-size:34px;font-weight:800;line-height:1.25}
+.warn span{color:#b4442f}
+.note{font-size:26px;color:#5b6478;font-weight:700}
+.ft{height:80px;background:#17253F;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 50px;font-size:32px;font-weight:800}
+.ft i{font-style:normal;color:#E5C46B}
+.ft small{font-size:24px;color:#aab3c5;font-weight:500}
+</style></head><body><div id="card">
+{{BODY}}
+<div class="ft"><div>עו״ד יקיר דבול <i>·</i> dabullaw.co.il</div><small>המידע כללי ואינו ייעוץ משפטי</small></div>
+</div></body></html>
