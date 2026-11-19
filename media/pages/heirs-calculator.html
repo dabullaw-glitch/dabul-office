@@ -4,7 +4,7 @@
 .dgd *{box-sizing:border-box}
 .dgd{background:var(--bg);color:var(--fg);font-family:"Noto Sans Hebrew",Arial,sans-serif;direction:rtl;padding:24px 16px 56px;line-height:1.65;font-size:16px}
 .dgd .w{max-width:860px;margin:0 auto}
-.dgd .hero{margin-top:16px;background:var(--navy);color:#fff;border-radius:18px;padding:32px 26px}
+.dgd .hero{margin-top:0;background:var(--navy);color:#fff;border-radius:18px;padding:32px 26px}
 .dgd .crumb{font-size:13px;color:#c9cfdb}
 .dgd h1{margin:6px 0 10px;font-size:clamp(25px,5vw,34px);font-weight:800;text-wrap:balance;line-height:1.25}
 .dgd .lead{margin:0;max-width:62ch;color:#e8e3d6}
@@ -21,7 +21,12 @@
 .dgd th{background:#f1ede3;color:var(--navy)}
 .dgd tr:last-child td{border-bottom:0}
 .dgd .gen{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-@media (max-width:640px){.dgd .gen{grid-template-columns:1fr}}
+@media (max-width:640px){.dgd .gen{grid-template-columns:1fr}.dgd{padding:12px 12px 40px}.dgd .hero{padding:24px 18px;border-radius:14px}.dgd .sum ul{padding-inline-start:16px}}
+.dgd .gen>.grp:first-child{border-top:0;padding-top:0}
+.dgd .next{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.dgd .next b{color:var(--navy)}
+.dgd .next ul{margin:8px 0 0;padding-inline-start:18px}
+.dgd .next li{margin:4px 0}
 .dgd label{display:block;font-size:13px;color:var(--mut);font-weight:600;margin-bottom:4px}
 .dgd input,.dgd select{width:100%;font:inherit;padding:11px;border:1px solid #cfd5e1;border-radius:10px;background:#fff;color:var(--fg)}
 .dgd .chk{display:flex;gap:8px;align-items:flex-start;font-size:15px;color:var(--fg);font-weight:400}
@@ -83,8 +88,8 @@
 <div class="dgd"><div class="w">
 <section class="hero">
 <div class="crumb">דף הבית / מחשבונים וכלים / מחשבון יורשים</div>
-<h1>מי יורש כשאין צוואה? מחשבון יורשים לפי חוק הירושה</h1>
-<p class="lead">מסמנים מי מבני המשפחה היה בחיים ביום הפטירה, ורואים מי יורש לפי החוק וכמה מקבל כל אחד. בהמשך: סדר היורשים, מה מקבל בן הזוג, מתי נכדים ואחיינים יורשים, ואיך מקבלים צו ירושה. ההסבר על ההליך עצמו נמצא במדריך <a style="color:#E5C46B" href="https://dabullaw.co.il/%d7%a6%d7%95-%d7%99%d7%a8%d7%95%d7%a9%d7%94/">צו ירושה: איך מגישים בקשה</a>.</p>
+<h1>מחשבון יורשים: מי יורש כשאין צוואה?</h1>
+<p class="lead">מסמנים מי מבני המשפחה היה בחיים ביום הפטירה, ורואים מי יורש לפי חוק הירושה ומה החלק של כל אחד.</p>
 <div class="sum"><b>בקצרה</b>
 <ul>
 <li>כשאין צוואה, היורשים הם בן הזוג והקרובים: ילדים וצאצאיהם, הורים וצאצאיהם, ואחריהם סבים וסבתות וצאצאיהם.</li>
@@ -115,6 +120,7 @@
 <div id="res" class="res" aria-live="polite"></div>
 <div class="row"><button class="btn" id="cp" type="button">העתקת התוצאה</button><span id="cpm" class="src"></span></div>
 </div>
+<div class="next"><b>מה עושים עם התוצאה?</b><ul><li>כדי שהחלוקה תחייב, מגישים בקשה. כל השלבים במדריך <a href="https://dabullaw.co.il/%d7%a6%d7%95-%d7%99%d7%a8%d7%95%d7%a9%d7%94/">איך מגישים בקשה לצו ירושה</a>.</li><li>לא בטוחים אם כבר ניתן צו בעבר? כך עושים <a href="https://dabullaw.co.il/%d7%90%d7%99%d7%aa%d7%95%d7%a8-%d7%a6%d7%95-%d7%99%d7%a8%d7%95%d7%a9%d7%94/">איתור צו ירושה</a>.</li><li>יש דירה בעיזבון? אחרי הצו רושמים אותה על שם היורשים, כמו שמוסבר ב<a href="https://dabullaw.co.il/%d7%94%d7%9e%d7%93%d7%a8%d7%99%d7%9a-%d7%94%d7%9e%d7%9c%d7%90-%d7%9c%d7%a8%d7%99%d7%a9%d7%95%d7%9d-%d7%99%d7%a8%d7%95%d7%a9%d7%94/">מדריך לרישום ירושה בטאבו</a>.</li></ul></div>
 <div class="warn"><b>חשוב לדעת:</b> המחשבון מציג את החלוקה לפי חוק הירושה כשאין צוואה, במצבים הנפוצים. הוא לא בודק צוואה, הסתלקות מירושה, אימוץ, חובות העיזבון או מצבים משפחתיים מורכבים. החלוקה המחייבת נקבעת רק בצו ירושה.</div>
 <div class="help"><img src="https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-portrait-300x300.webp" loading="lazy" width="96" height="96" alt="עו״ד יקיר דבול">
 <div><h3>צריך צו ירושה? אנחנו מגישים</h3>
@@ -137,7 +143,7 @@
 
 <h3>מה בדיוק מקבל בן הזוג</h3>
 <p>לפני שמחלקים, בן הזוג מקבל את המיטלטלין של משק הבית המשותף, כולל מכונית נוסעים. רק משאר העיזבון הוא מקבל חצי או שני שלישים. ויש כלל נוסף שחשוב לזוגות בלי ילדים: אם בן הזוג היה נשוי למוריש שלוש שנים לפחות, וגר איתו ערב מותו בדירה ששייכת לעיזבון, והיורשים האחרים הם אחים או סבים, בן הזוג מקבל את כל החלק של המוריש בדירה, ובנוסף שני שלישים משאר העיזבון.</p>
-<p>מה שמגיע לבן הזוג מכוח הנישואין, למשל כתובה, יורד מחלקו בעיזבון. זה לא חל על מה שמגיע לו לפי חוק יחסי ממון או לפי הסכם ממון.</p>
+<p>מה שמגיע לבן הזוג מכוח הנישואין, למשל כתובה, יורד מחלקו בעיזבון. זה לא חל על מה שמגיע לו לפי חוק יחסי ממון או לפי <a href="https://dabullaw.co.il/prenuptial-agreement-apartment-guide/">הסכם ממון</a>.</p>
 
 <h3>ידועים בציבור</h3>
 <p>החוק לא משאיר את בני הזוג הידועים בציבור בחוץ. סעיף 55 לחוק הירושה קובע: כשאיש ואישה חיו חיי משפחה במשק בית משותף בלי להיות נשואים, ובשעת המוות אף אחד מהם לא היה נשוי לאדם אחר, רואים את בן הזוג שנשאר כאילו המוריש ציווה לו את מה שהיה מקבל אילו היו נשואים. זה חל כשאין בצוואה הוראה אחרת. בפועל צריך להוכיח את החיים המשותפים, ולכן כדאי להכין מסמכים מראש.</p>
@@ -145,7 +151,7 @@
 <h2>נכדים, אחים ואחיינים: מי יורש במקום מי שנפטר</h2>
 <p>ילד של המוריש שנפטר לפניו והשאיר ילדים, ילדיו יורשים במקומו, וחולקים ביניהם בשווה את החלק שהיה מגיע להורה שלהם. כך גם אצל שאר הקרובים: אח שנפטר לפני המוריש והשאיר ילדים, ילדיו נכנסים לחלק שלו.</p>
 <p>ומה עם האחים, כשההורים כבר לא בחיים? אחים יורשים כצאצאים של ההורים. החלק של כל הורה עובר לילדיו, ולכן אח מאותם אב ואם מקבל משני הצדדים, ואח מצד אחד מקבל רק מהצד שלו. יש גם חריג: כשהמוריש הניח בן זוג וגם הורה אחד או יותר, הצאצאים של הורה שנפטר לא נכנסים במקומו. במקרה כזה בן הזוג מקבל חצי, וההורה שבחיים מקבל את החצי השני.</p>
-<div class="tip"><b>טיפ מעשי:</b> גם כשכל המשפחה מסכימה על החלוקה, בלי צו ירושה אי אפשר בדרך כלל להעביר דירה, למכור אותה או לסגור את הכספים בבנק. כדאי להגיש את הבקשה מוקדם, עוד לפני שמחליטים מה עושים עם הנכסים.</div>
+<div class="tip"><b>טיפ מעשי:</b> גם כשכל המשפחה מסכימה על החלוקה, בלי צו ירושה אי אפשר בדרך כלל להעביר דירה, למכור אותה או לסגור את הכספים בבנק. כדאי להגיש את הבקשה מוקדם, עוד לפני שמחליטים מה עושים עם הנכסים. ואם אחד היורשים לא מסכים למכור, יש דרך: <a href="https://dabullaw.co.il/forced-sale-partition-co-owner-guide/">פירוק שיתוף ומכירה בכפייה</a>.</div>
 
 <h2>איך מקבלים צו ירושה</h2>
 <ol class="steps">
@@ -154,10 +160,10 @@
 <li><div><b>הבקשה מתפרסמת.</b> כך כל מי שרוצה להתנגד יכול לעשות זאת. אם יש התנגדות, התיק עובר לבית המשפט לענייני משפחה.</div></li>
 <li><div><b>הרשם נותן צו ירושה.</b> הצו קובע מי היורשים ומה חלקו של כל אחד, ואיתו מטפלים בדירה, בחשבונות ובשאר הנכסים.</div></li>
 </ol>
-<p>את הבקשה אפשר להזמין מאיתנו גם <a href="https://dabullaw.co.il/online/inheritance-order/">אונליין</a>, ואם יורשים דירה, כדאי לעבור גם על <a href="https://dabullaw.co.il/calculators/inherited-apartment-sale-checklist/">רשימת העבודה למכירת דירה שהתקבלה בירושה</a> ועל <a href="https://dabullaw.co.il/misui-mirkain-yerusha-mas-shevach/">מיסוי הדירה בירושה</a>.</p>
+<p>את הבקשה אפשר להזמין מאיתנו גם <a href="https://dabullaw.co.il/online/inheritance-order/">אונליין</a>, ואם יורשים דירה, כדאי לעבור גם על <a href="https://dabullaw.co.il/calculators/inherited-apartment-sale-checklist/">רשימת העבודה למכירת דירה שהתקבלה בירושה</a> ועל <a href="https://dabullaw.co.il/misui-mirkain-yerusha-mas-shevach/">מיסוי הדירה בירושה</a>. מה עוד חשוב לדעת לפני שמוכרים, במאמר <a href="https://dabullaw.co.il/%d7%9e%d7%9b%d7%99%d7%a8%d7%aa-%d7%93%d7%99%d7%a8%d7%94-%d7%a9%d7%94%d7%aa%d7%a7%d7%91%d7%9c%d7%94-%d7%91%d7%99%d7%a8%d7%95%d7%a9%d7%94/">מכירת דירה שהתקבלה בירושה</a>, וכל הנושאים במקום אחד בעמוד <a href="https://dabullaw.co.il/%d7%a6%d7%95%d7%95%d7%90%d7%95%d7%aa-%d7%95%d7%99%d7%a8%d7%95%d7%a9%d7%95%d7%aa/">צוואות וירושות</a>.</p>
 
 <h2>שאלות נפוצות</h2>
-<details><summary>אם יש צוואה, המחשבון רלוונטי?</summary><p>לא. כשיש צוואה תקפה, הרכוש מתחלק לפי הצוואה. החלוקה לפי החוק חלה כשאין צוואה, או על החלק שהצוואה לא מתייחסת אליו.</p></details>
+<details><summary>אם יש צוואה, המחשבון רלוונטי?</summary><p>לא. כשיש צוואה תקפה, הרכוש מתחלק לפי הצוואה. החלוקה לפי החוק חלה כשאין צוואה, או על החלק שהצוואה לא מתייחסת אליו. רוצים לקבוע בעצמכם מי יורש? כך נראים <a href="https://dabullaw.co.il/%d7%a1%d7%95%d7%92%d7%99-%d7%a6%d7%95%d7%95%d7%90%d7%95%d7%aa-%d7%94%d7%93%d7%a8%d7%9b%d7%99%d7%9d-%d7%94%d7%97%d7%95%d7%a7%d7%99%d7%95%d7%aa-%d7%9c%d7%a2%d7%a8%d7%99%d7%9b%d7%aa%d7%9f/">סוגי הצוואות שהחוק מכיר</a>.</p></details>
 <details><summary>ילד מאומץ יורש?</summary><p>כן. מי שאומץ כדין יורש את מי שאימץ אותו כאילו היה ילדו, וגם הצאצאים שלו יורשים.</p></details>
 <details><summary>אפשר לוותר על החלק בירושה?</summary><p>כן. יורש יכול להסתלק מחלקו בהודעה בכתב לרשם, כל עוד העיזבון לא חולק. אפשר להסתלק לטובת בן הזוג, הילד או האח של המוריש. הסתלקות של קטין צריכה אישור בית משפט.</p></details>
 <details><summary>מה קורה כשאין אף יורש?</summary><p>כשאין בן זוג ואין קרובים מהמעגלים שהחוק מונה, המדינה יורשת. הכסף מיועד למטרות חינוך, מדע, בריאות וסעד.</p></details>
@@ -165,7 +171,7 @@
 
 <h2>עוד מדריכים על ירושה</h2>
 <div class="rel">
-<a class="rc" href="https://dabullaw.co.il/%d7%a6%d7%95-%d7%99%d7%a8%d7%95%d7%a9%d7%94/"><small>מדריך</small><b>צו ירושה</b><span>איך מגישים בקשה וכמה זמן זה לוקח</span></a>
+<a class="rc" href="https://dabullaw.co.il/activating-lasting-power-of-attorney/"><small>מדריך</small><b>ייפוי כוח מתמשך</b><span>מה קורה כשהורה כבר לא יכול לנהל את ענייניו</span></a>
 <a class="rc" href="https://dabullaw.co.il/%d7%a6%d7%95-%d7%a7%d7%99%d7%95%d7%9d-%d7%a6%d7%95%d7%95%d7%90%d7%94/"><small>מדריך</small><b>צו קיום צוואה</b><span>מה עושים כשיש צוואה</span></a>
 <a class="rc" href="https://dabullaw.co.il/%d7%93%d7%99%d7%a0%d7%99-%d7%99%d7%a8%d7%95%d7%a9%d7%94-%d7%95%d7%a6%d7%95%d7%95%d7%90%d7%95%d7%aa-%d7%91%d7%99%d7%a9%d7%a8%d7%90%d7%9c/"><small>מדריך</small><b>דיני ירושה וצוואות</b><span>התמונה המלאה במקום אחד</span></a>
 <a class="rc" href="https://dabullaw.co.il/mutual-will-guide/"><small>מדריך</small><b>צוואה הדדית</b><span>מה קורה לדירה אחרי פטירת בן הזוג</span></a>
@@ -204,7 +210,7 @@ function drawGC(){var n=Math.min(num('dc'),6),w=$('gcw'),cur=w.querySelectorAll(
 function calc(){
  drawGC();
  var sp=$('sp').value,ch=num('ch'),dcN=Math.min(num('dc'),6),fa=$('fa').checked,mo=$('mo').checked,sb=num('sb'),sf=num('sf'),sm=num('sm'),sd=$('sd').checked;
- var gcs=[],i;for(i=0;i<dcN;i++){var e=$('gc'+i);gcs.push(Math.max(1,parseInt(e&&e.value,10)||1))}
+ var gcs=[],i;for(i=0;i<dcN;i++){var e=$('gc'+i);gcs.push(Math.max(1,parseInt(e?e.value:'',10)||1))}
  var hasSp=sp!=='0',D=(ch+gcs.length)>0,P=fa||mo,S=(sb+sf+sm)>0;
  $('aptw').hidden=!(sp==='m'&&!D&&!P&&S);
  var rows=[],notes=[],flags=[],spF=F(0),rest,one=F(1);
