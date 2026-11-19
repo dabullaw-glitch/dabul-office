@@ -58,7 +58,7 @@ def page(kind, c, photo, w, h):
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>{css(photo, w, h)}
 .ph,.fade{{width:40%}} .txt{{width:62%;padding:0 {int(w*0.045)}px {int(h*0.22) if band else 0}px 20px;box-sizing:border-box}}
 .k{{font-size:{int(h*0.05)}px;padding:{int(h*0.008)}px {int(h*0.035)}px;margin-bottom:{int(h*0.03)}px}}
-.l1{{font-size:{int(h*0.15)}px}} .l2{{font-size:{int(h*0.12)}px;margin-top:{int(h*0.015)}px}}
+.l1{{font-size:{int(h*(0.15 if len(c['line1']) < 12 else 0.11))}px}} .l2{{font-size:{int(h*(0.12 if len(c.get('line2', '')) < 12 else 0.085))}px;margin-top:{int(h*0.015)}px}}
 .bar{{width:{int(h*0.12)}px;height:{max(4, int(h*0.008))}px;margin:{int(h*0.04)}px 0 {int(h*0.03)}px}} .l3{{font-size:{int(h*0.04)}px}}
 .logo{{right:{int(w*0.045)}px;top:{int(h*0.05)}px;height:{int(h*0.08)}px}}
 </style></head><body><div class="ph"></div><div class="fade"></div>
