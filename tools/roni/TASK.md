@@ -72,7 +72,7 @@ him for approval. You never publish anything. Read `tools/roni/README.md` first 
     fitting Sunday, skip that month and log it.
 14. Newsletter and magazine need nothing from this task: the newsletter (function growth, nl-notify) puts the newest
     episode that already went out and was not in a newsletter at the top as "רוני של החודש" by itself, and the weekly
-    magazine task puts a new episode as slide 10 (media/magazine/RUNBOOK.md step 2b). They mark the episode with `nl` / `mag`.
+    magazine task puts a new episode as the last page of the PDF only, for WhatsApp and the site, never in the carousel (media/magazine/RUNBOOK.md step 2b). They mark the episode with `nl` / `mag`.
 15. Log: docs_merge('agents','roni-'||current_date, {episode, action, credits, ok}). Finish with one short Hebrew line.
 
 If anything fails before step 10, set the episode back to 'idea', log the error, and send Yakir one short line that this

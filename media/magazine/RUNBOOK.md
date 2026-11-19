@@ -23,14 +23,17 @@ https://dabullaw.co.il/magazine/ (page id 7776). NOTHING goes out without Yakir'
    `cd media/magazine/template && NODE_PATH=$(npm root -g) node render.js issue-NN.html ../issue-NN/out`
    (render.js uses /opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell). Look at every slide
    (no text overflow, footer visible, nothing cut). Fix and re-render until clean.
-2b. RONI AS THE LAST SLIDE (Yakir, 18.11.2026: "רוני הוא השקף האחרון במגזין"). Read docs roni/series. Take the newest
-   episode whose pub row (docs pub/<episodes[].pub>) is 'published', or 'planned' with `at` before this issue's Friday
-   10:00, and that has no `mag` yet. If there is one, slide 10 is that comic itself: copy `media/roni/epNN.jpg` (it is
-   already 1080x1350) to `issue-NN/slides/10.jpg` instead of the closing slide, and after the issue is saved merge the
-   whole `episodes` array with `mag: <issue no>` on that episode (never the same episode in two issues). If there is no
-   new episode, slide 10 stays the normal closing slide. Keep 10 slides in all: the publisher posts at most 10 images
-   (LinkedIn: the first 8 and the last), so an 11th slide would be cut.
-3. Make: `issue-NN/slides/01.jpg..10.jpg` (quality 93), `web/real-estate-magazine-NN.pdf` (Pillow, title/author metadata),
+2b. RONI AS THE LAST PAGE OF THE PDF ONLY (Yakir, 18.11 and 19.11.2026: Roni is the last page of the magazine, but only
+   in the issue that goes to the WhatsApp group and to the site, never in the Facebook/LinkedIn carousel, because the
+   same comic already went out there as its own post). Read docs roni/series. Take the newest episode whose pub row
+   (docs pub/<episodes[].pub>) is 'published', or 'planned' with `at` before this issue's Thursday 10:00, and that has no
+   `mag` yet. If there is one, add `media/roni/epNN.jpg` (already 1080x1350) as the LAST page of the PDF, after the
+   normal closing slide (the PDF then has 11 pages). The carousel keeps exactly the 10 normal slides: never put the
+   comic in `slides/` or in the issue's `slides` list. After the issue is saved, merge the whole `episodes` array with
+   `mag: <issue no>` on that episode (never the same episode in two issues). If there is no new episode, the PDF has
+   the 10 normal pages.
+3. Make: `issue-NN/slides/01.jpg..10.jpg` (quality 93), `web/real-estate-magazine-NN.pdf` (Pillow, title/author metadata;
+   the 10 slides, plus the Roni page of step 2b at the end when there is one),
    `web/real-estate-magazine-NN-cover.jpg` (800x1000).
 4. Add the issue at the TOP of `issues.json` (same fields as issue 1: dates, date, updated, title, blurb, heads, intro,
    slug "issue-N", page "https://dabullaw.co.il/magazine/issue-N/", seoTitle (max ~65 chars, ends "| עו״ד יקיר דבול"),
