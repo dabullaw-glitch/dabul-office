@@ -1,0 +1,258 @@
+<!-- wp:html -->
+<style>
+.dgd{--navy:#17253F;--gold:#C6A03C;--bg:#F7F5F0;--card:#fff;--fg:#1d2433;--mut:#5b6478;--line:#e4dfd3;}
+.dgd *{box-sizing:border-box}
+.dgd{background:var(--bg);color:var(--fg);font-family:"Noto Sans Hebrew",Arial,sans-serif;direction:rtl;padding:24px 16px 56px;line-height:1.65;font-size:16px}
+.dgd .w{max-width:860px;margin:0 auto}
+.dgd .hero{margin-top:16px;background:var(--navy);color:#fff;border-radius:18px;padding:32px 26px}
+.dgd .crumb{font-size:13px;color:#c9cfdb}
+.dgd h1{margin:6px 0 10px;font-size:clamp(25px,5vw,34px);font-weight:800;text-wrap:balance;line-height:1.25}
+.dgd .lead{margin:0;max-width:62ch;color:#e8e3d6}
+.dgd .sum{margin-top:18px;background:rgba(255,255,255,.07);border:1px solid rgba(198,160,60,.45);border-radius:12px;padding:14px 16px}
+.dgd .sum b{color:#E5C46B}
+.dgd .sum ul{margin:8px 0 0;padding-inline-start:20px}
+.dgd h2{font-size:23px;color:var(--navy);margin:34px 0 12px;text-wrap:balance}
+.dgd h3{font-size:18px;color:var(--navy);margin:20px 0 8px}
+.dgd p{margin:0 0 12px;max-width:70ch}
+.dgd .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.dgd .tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+.dgd table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+.dgd th,.dgd td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+.dgd th{background:#f1ede3;color:var(--navy)}
+.dgd tr:last-child td{border-bottom:0}
+.dgd .gen{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.dgd .gen{grid-template-columns:1fr}}
+.dgd label{display:block;font-size:13px;color:var(--mut);font-weight:600;margin-bottom:4px}
+.dgd input,.dgd select{width:100%;font:inherit;padding:11px;border:1px solid #cfd5e1;border-radius:10px;background:#fff;color:var(--fg)}
+.dgd .chk{display:flex;gap:8px;align-items:flex-start;font-size:15px;color:var(--fg);font-weight:400}
+.dgd .chk input{width:auto;margin-top:5px}
+.dgd .grp{grid-column:1/-1;border-top:1px solid var(--line);padding-top:12px;font-weight:800;color:var(--navy)}
+.dgd .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;align-items:center}
+.dgd .btn{font:inherit;font-weight:800;border:0;border-radius:10px;padding:11px 18px;background:var(--gold);color:var(--navy);cursor:pointer}
+.dgd .res{margin-top:16px;background:#fbfaf6;border:1px dashed #cdbf98;border-radius:12px;padding:16px}
+.dgd .res table{min-width:0}
+.dgd .res .note{margin:10px 0 0;font-size:15px;color:var(--fg)}
+.dgd .res .flag{margin:10px 0 0;background:#fff;border-right:4px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:15px}
+.dgd .tip,.dgd .warn{border-radius:12px;padding:14px 16px;margin:14px 0}
+.dgd .tip{background:#eef4ea;border-right:4px solid #6b9a52}
+.dgd .warn{background:#fff;border-right:4px solid var(--gold)}
+.dgd .steps{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.dgd .steps li{counter-increment:s;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px}
+.dgd .steps li:before{content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:800;display:flex;align-items:center;justify-content:center}
+.dgd .steps b{color:var(--navy)}
+.dgd details{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:10px}
+.dgd summary{cursor:pointer;font-weight:600;color:var(--navy)}
+.dgd details p{margin:8px 0 0}
+.dgd .ph{background:var(--gold);color:var(--navy);font-weight:800;border-radius:10px;padding:12px 20px;font-size:18px;user-select:all}
+.dgd .src{font-size:14px;color:var(--mut)}
+.dgd .src a{color:var(--navy)}
+.dgd a{color:var(--navy);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px}
+.dgd .help{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;align-items:center}
+.dgd .help img{width:96px;height:96px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px var(--gold)}
+.dgd .help h3{margin:0 0 4px}
+.dgd .help ul{margin:6px 0 10px;padding-inline-start:18px;color:var(--mut);font-size:15px}
+.dgd .help .acts{display:flex;flex-wrap:wrap;gap:10px}
+.dgd .btn2{display:inline-flex;align-items:center;font-weight:800;text-decoration:none;border-radius:10px;padding:10px 16px;background:var(--navy);color:#fff}
+.dgd .btn3{display:inline-flex;align-items:center;font-weight:800;text-decoration:none;border-radius:10px;padding:10px 16px;background:var(--gold);color:var(--navy)}
+@media (max-width:560px){.dgd .help{grid-template-columns:1fr;text-align:center}
+.dgd .help img{margin:0 auto}
+.dgd .help ul{text-align:right}
+.dgd .help .acts{justify-content:center}}
+.dgd .rel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.dgd .rel{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.dgd .rel{grid-template-columns:1fr}}
+.dgd .rc{display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;text-decoration:none;color:var(--fg)}
+.dgd .rc small{color:var(--gold);font-weight:800;font-size:12px;letter-spacing:.3px}
+.dgd .rc b{color:var(--navy);line-height:1.4}
+.dgd .rc span{color:var(--mut);font-size:14px}
+.dgd .rc:hover{border-color:var(--gold)}
+.dgd .lead-f{margin-top:30px;background:var(--navy);color:#fff;border-radius:16px;padding:22px}
+.dgd .lead-f h2{color:#fff;margin:0 0 4px}
+.dgd .lead-f p{color:#d8dce6}
+.dgd .lf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+@media (max-width:640px){.dgd .lf{grid-template-columns:1fr}}
+.dgd .lead-f label{color:#c9cfdb}
+.dgd .lead-f select{width:100%;font:inherit;padding:11px;border-radius:10px;border:0}
+.dgd .lead-f input{border:0}
+.dgd .consent{grid-column:1/-1;display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#c9cfdb}
+.dgd .consent input{width:auto;margin-top:4px}
+.dgd .lf .btn{grid-column:1/-1}
+.dgd .okmsg{margin-top:10px;color:#E5C46B;font-weight:600}
+.dgd a.ph{text-decoration:none}
+</style>
+<div class="dgd"><div class="w">
+<section class="hero">
+<div class="crumb">דף הבית / מחשבונים וכלים / מחשבון יורשים</div>
+<h1>מי יורש כשאין צוואה? מחשבון יורשים לפי חוק הירושה</h1>
+<p class="lead">מסמנים מי מבני המשפחה היה בחיים ביום הפטירה, ורואים מי יורש לפי החוק וכמה מקבל כל אחד. בהמשך: סדר היורשים, מה מקבל בן הזוג, מתי נכדים ואחיינים יורשים, ואיך מקבלים צו ירושה. ההסבר על ההליך עצמו נמצא במדריך <a style="color:#E5C46B" href="https://dabullaw.co.il/%d7%a6%d7%95-%d7%99%d7%a8%d7%95%d7%a9%d7%94/">צו ירושה: איך מגישים בקשה</a>.</p>
+<div class="sum"><b>בקצרה</b>
+<ul>
+<li>כשאין צוואה, היורשים הם בן הזוג והקרובים: ילדים וצאצאיהם, הורים וצאצאיהם, ואחריהם סבים וסבתות וצאצאיהם.</li>
+<li>בן הזוג מקבל את המיטלטלין של משק הבית ואת הרכב, ובנוסף חצי משאר העיזבון לצד ילדים או הורים, ושני שלישים לצד אחים או סבים.</li>
+<li>ילדים קודמים להורים, והורים קודמים לסבים. ילד שנפטר לפני המוריש והשאיר ילדים, ילדיו יורשים במקומו.</li>
+</ul></div>
+</section>
+
+<h2>מחשבון: מי יורש וכמה</h2>
+<div class="card">
+<div class="gen">
+<div class="grp">בן או בת זוג</div>
+<div><label for="sp">בן או בת זוג ביום הפטירה</label><select id="sp"><option value="0">אין</option><option value="m">נשואים</option><option value="c">ידועים בציבור (שניהם לא היו נשואים לאחר)</option></select></div>
+<div id="aptw" hidden><label class="chk"><input type="checkbox" id="apt"> נשואים 3 שנים לפחות, וגרו יחד בדירה ששייכת (כולה או חלקה) לעיזבון</label></div>
+<div class="grp">ילדים</div>
+<div><label for="ch">ילדים שהיו בחיים ביום הפטירה</label><input id="ch" type="number" min="0" max="20" value="0" inputmode="numeric"></div>
+<div><label for="dc">ילדים שנפטרו לפני כן והשאירו ילדים</label><input id="dc" type="number" min="0" max="6" value="0" inputmode="numeric"></div>
+<div id="gcw" class="gen" style="grid-column:1/-1"></div>
+<div class="grp">הורים</div>
+<div><label class="chk"><input type="checkbox" id="fa"> האב היה בחיים ביום הפטירה</label></div>
+<div><label class="chk"><input type="checkbox" id="mo"> האם הייתה בחיים ביום הפטירה</label></div>
+<div class="grp">אחים ואחיות</div>
+<div><label for="sb">מאותם אב ואם</label><input id="sb" type="number" min="0" max="20" value="0" inputmode="numeric"></div>
+<div><label for="sf">מצד האב בלבד</label><input id="sf" type="number" min="0" max="20" value="0" inputmode="numeric"></div>
+<div><label for="sm">מצד האם בלבד</label><input id="sm" type="number" min="0" max="20" value="0" inputmode="numeric"></div>
+<div><label class="chk"><input type="checkbox" id="sd"> יש אח או אחות שנפטרו לפני כן והשאירו ילדים</label></div>
+</div>
+<div id="res" class="res" aria-live="polite"></div>
+<div class="row"><button class="btn" id="cp" type="button">העתקת התוצאה</button><span id="cpm" class="src"></span></div>
+</div>
+<div class="warn"><b>חשוב לדעת:</b> המחשבון מציג את החלוקה לפי חוק הירושה כשאין צוואה, במצבים הנפוצים. הוא לא בודק צוואה, הסתלקות מירושה, אימוץ, חובות העיזבון או מצבים משפחתיים מורכבים. החלוקה המחייבת נקבעת רק בצו ירושה.</div>
+<div class="help"><img src="https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-portrait-300x300.webp" loading="lazy" width="96" height="96" alt="עו״ד יקיר דבול">
+<div><h3>צריך צו ירושה? אנחנו מגישים</h3>
+<p style="margin:0;color:var(--mut)">עו״ד יקיר דבול מגיש בקשות לצו ירושה ולצו קיום צוואה, ומלווה את המשפחה גם אחרי הצו.</p>
+<ul><li>בדיקה מי היורשים לפי החוק, ואילו מסמכים צריך</li><li>הגשת הבקשה לרשם לענייני ירושה ומעקב עד קבלת הצו</li><li>אחרי הצו: הסכם בין היורשים ומכירת דירה שבעיזבון</li></ul>
+<div class="acts"><a class="btn3" href="#form">השאירו פרטים</a><a class="btn2" href="tel:098613413">09-8613413</a></div></div></div>
+
+<h2>סדר היורשים לפי החוק</h2>
+<p>חוק הירושה קובע שני סוגי יורשים כשאין צוואה: בן הזוג, וקרובי המשפחה. בין הקרובים יש סדר: ילדי המוריש וצאצאיהם קודמים להוריו, וההורים וצאצאיהם קודמים לסבים ולסבתות ולצאצאיהם. כל עוד יש יורש במעגל קרוב יותר, המעגל הרחוק לא יורש. כך נראית החלוקה במצבים הנפוצים:</p>
+<div class="tbl"><table>
+<thead><tr><th>מי נשאר אחרי המוריש</th><th>בן הזוג מקבל</th><th>שאר העיזבון</th></tr></thead>
+<tbody>
+<tr><td>בן זוג וילדים</td><td>המיטלטלין והרכב, וחצי משאר העיזבון</td><td>הילדים חולקים בשווה בחצי השני</td></tr>
+<tr><td>בן זוג והורים, בלי ילדים</td><td>המיטלטלין והרכב, וחצי משאר העיזבון</td><td>ההורים מקבלים את החצי השני</td></tr>
+<tr><td>בן זוג ואחים, בלי ילדים והורים</td><td>המיטלטלין והרכב, ושני שלישים משאר העיזבון</td><td>האחים מקבלים שליש</td></tr>
+<tr><td>בן זוג בלבד, בלי קרובים מהמעגלים האלה</td><td>את כל העיזבון</td><td>אין</td></tr>
+<tr><td>ילדים בלבד</td><td>אין</td><td>הילדים חולקים בשווה בכל העיזבון</td></tr>
+<tr><td>הורים בלבד</td><td>אין</td><td>כל הורה מקבל חצי</td></tr>
+</tbody></table></div>
+
+<h3>מה בדיוק מקבל בן הזוג</h3>
+<p>לפני שמחלקים, בן הזוג מקבל את המיטלטלין של משק הבית המשותף, כולל מכונית נוסעים. רק משאר העיזבון הוא מקבל חצי או שני שלישים. ויש כלל נוסף שחשוב לזוגות בלי ילדים: אם בן הזוג היה נשוי למוריש שלוש שנים לפחות, וגר איתו ערב מותו בדירה ששייכת לעיזבון, והיורשים האחרים הם אחים או סבים, בן הזוג מקבל את כל החלק של המוריש בדירה, ובנוסף שני שלישים משאר העיזבון.</p>
+<p>מה שמגיע לבן הזוג מכוח הנישואין, למשל כתובה, יורד מחלקו בעיזבון. זה לא חל על מה שמגיע לו לפי חוק יחסי ממון או לפי הסכם ממון.</p>
+
+<h3>ידועים בציבור</h3>
+<p>החוק לא משאיר את בני הזוג הידועים בציבור בחוץ. סעיף 55 לחוק הירושה קובע: כשאיש ואישה חיו חיי משפחה במשק בית משותף בלי להיות נשואים, ובשעת המוות אף אחד מהם לא היה נשוי לאדם אחר, רואים את בן הזוג שנשאר כאילו המוריש ציווה לו את מה שהיה מקבל אילו היו נשואים. זה חל כשאין בצוואה הוראה אחרת. בפועל צריך להוכיח את החיים המשותפים, ולכן כדאי להכין מסמכים מראש.</p>
+
+<h2>נכדים, אחים ואחיינים: מי יורש במקום מי שנפטר</h2>
+<p>ילד של המוריש שנפטר לפניו והשאיר ילדים, ילדיו יורשים במקומו, וחולקים ביניהם בשווה את החלק שהיה מגיע להורה שלהם. כך גם אצל שאר הקרובים: אח שנפטר לפני המוריש והשאיר ילדים, ילדיו נכנסים לחלק שלו.</p>
+<p>ומה עם האחים, כשההורים כבר לא בחיים? אחים יורשים כצאצאים של ההורים. החלק של כל הורה עובר לילדיו, ולכן אח מאותם אב ואם מקבל משני הצדדים, ואח מצד אחד מקבל רק מהצד שלו. יש גם חריג: כשהמוריש הניח בן זוג וגם הורה אחד או יותר, הצאצאים של הורה שנפטר לא נכנסים במקומו. במקרה כזה בן הזוג מקבל חצי, וההורה שבחיים מקבל את החצי השני.</p>
+<div class="tip"><b>טיפ מעשי:</b> גם כשכל המשפחה מסכימה על החלוקה, בלי צו ירושה אי אפשר בדרך כלל להעביר דירה, למכור אותה או לסגור את הכספים בבנק. כדאי להגיש את הבקשה מוקדם, עוד לפני שמחליטים מה עושים עם הנכסים.</div>
+
+<h2>איך מקבלים צו ירושה</h2>
+<ol class="steps">
+<li><div><b>אוספים מסמכים.</b> תעודת פטירה, ופרטים על בן הזוג ועל כל היורשים.</div></li>
+<li><div><b>מגישים בקשה לרשם לענייני ירושה.</b> הבקשה מוגשת כשאין צוואה. כשיש צוואה, מבקשים צו קיום צוואה.</div></li>
+<li><div><b>הבקשה מתפרסמת.</b> כך כל מי שרוצה להתנגד יכול לעשות זאת. אם יש התנגדות, התיק עובר לבית המשפט לענייני משפחה.</div></li>
+<li><div><b>הרשם נותן צו ירושה.</b> הצו קובע מי היורשים ומה חלקו של כל אחד, ואיתו מטפלים בדירה, בחשבונות ובשאר הנכסים.</div></li>
+</ol>
+<p>את הבקשה אפשר להזמין מאיתנו גם <a href="https://dabullaw.co.il/online/inheritance-order/">אונליין</a>, ואם יורשים דירה, כדאי לעבור גם על <a href="https://dabullaw.co.il/calculators/inherited-apartment-sale-checklist/">רשימת העבודה למכירת דירה שהתקבלה בירושה</a> ועל <a href="https://dabullaw.co.il/misui-mirkain-yerusha-mas-shevach/">מיסוי הדירה בירושה</a>.</p>
+
+<h2>שאלות נפוצות</h2>
+<details><summary>אם יש צוואה, המחשבון רלוונטי?</summary><p>לא. כשיש צוואה תקפה, הרכוש מתחלק לפי הצוואה. החלוקה לפי החוק חלה כשאין צוואה, או על החלק שהצוואה לא מתייחסת אליו.</p></details>
+<details><summary>ילד מאומץ יורש?</summary><p>כן. מי שאומץ כדין יורש את מי שאימץ אותו כאילו היה ילדו, וגם הצאצאים שלו יורשים.</p></details>
+<details><summary>אפשר לוותר על החלק בירושה?</summary><p>כן. יורש יכול להסתלק מחלקו בהודעה בכתב לרשם, כל עוד העיזבון לא חולק. אפשר להסתלק לטובת בן הזוג, הילד או האח של המוריש. הסתלקות של קטין צריכה אישור בית משפט.</p></details>
+<details><summary>מה קורה כשאין אף יורש?</summary><p>כשאין בן זוג ואין קרובים מהמעגלים שהחוק מונה, המדינה יורשת. הכסף מיועד למטרות חינוך, מדע, בריאות וסעד.</p></details>
+<details><summary>בן הזוג שלנו פרוד. הוא עדיין יורש?</summary><p>מה שקובע הוא מי היה בן הזוג ביום הפטירה. בני זוג שנשואים עדיין, גם כשהם חיים בנפרד, נחשבים בדרך כלל בני זוג לעניין הירושה. במצב כזה כדאי לבדוק את המקרה לפני שמגישים בקשה.</p></details>
+
+<h2>עוד מדריכים על ירושה</h2>
+<div class="rel">
+<a class="rc" href="https://dabullaw.co.il/%d7%a6%d7%95-%d7%99%d7%a8%d7%95%d7%a9%d7%94/"><small>מדריך</small><b>צו ירושה</b><span>איך מגישים בקשה וכמה זמן זה לוקח</span></a>
+<a class="rc" href="https://dabullaw.co.il/%d7%a6%d7%95-%d7%a7%d7%99%d7%95%d7%9d-%d7%a6%d7%95%d7%95%d7%90%d7%94/"><small>מדריך</small><b>צו קיום צוואה</b><span>מה עושים כשיש צוואה</span></a>
+<a class="rc" href="https://dabullaw.co.il/%d7%93%d7%99%d7%a0%d7%99-%d7%99%d7%a8%d7%95%d7%a9%d7%94-%d7%95%d7%a6%d7%95%d7%95%d7%90%d7%95%d7%aa-%d7%91%d7%99%d7%a9%d7%a8%d7%90%d7%9c/"><small>מדריך</small><b>דיני ירושה וצוואות</b><span>התמונה המלאה במקום אחד</span></a>
+<a class="rc" href="https://dabullaw.co.il/mutual-will-guide/"><small>מדריך</small><b>צוואה הדדית</b><span>מה קורה לדירה אחרי פטירת בן הזוג</span></a>
+<a class="rc" href="https://dabullaw.co.il/%d7%a1%d7%a8%d7%98%d7%95%d7%a0%d7%99%d7%9d/inheritance-sibling-refuses-to-sell/"><small>סרטון</small><b>אח אחד מסרב למכור</b><span>פירוק שיתוף בדירה שהתקבלה בירושה</span></a>
+<a class="rc" href="https://dabullaw.co.il/buying-apartment-from-heirs-guide/"><small>מדריך</small><b>קונים דירה מיורשים</b><span>מה לבדוק לפני שחותמים</span></a>
+</div>
+<section class="lead-f" id="form"><h2>רוצים שנבדוק את המקרה שלכם?</h2>
+<p>השאירו פרטים, ונחזור אליכם בדרך כלל עוד באותו יום. אפשר להיפגש במשרד ברזיאל 1 בנתניה, בבית או בזום.</p>
+<form class="lf" id="lf" method="post" action="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/lead?source=website&redirect=https%3A%2F%2Fdabullaw.co.il%2Fcalculators%2Fheirs-calculator%2F%3Fdlb%3Dsent%23form"><input type="hidden" name="topic" value="צו ירושה"><input type="hidden" name="source" value="website"><input type="hidden" name="campaign" value="אתר · מדריך · מחשבון יורשים"><input type="hidden" name="page" value="https://dabullaw.co.il/calculators/heirs-calculator/"><input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+<div><label for="fn">שם מלא</label><input id="fn" name="name" autocomplete="name" required></div>
+<div><label for="fp">טלפון</label><input id="fp" name="phone" type="tel" inputmode="tel" minlength="9" autocomplete="tel" required></div>
+<div><label for="ft">במה מדובר?</label><select id="ft" name="message"><option>צו ירושה</option><option>צו קיום צוואה</option><option>מכירת דירה שהתקבלה בירושה</option><option>נושא אחר</option></select></div>
+<label class="consent"><input type="checkbox" name="privacy" value="yes" required> <span style="line-height:1.6">קראתי ומסכימ/ה ל<a style="color:#E5C46B" href="https://dabullaw.co.il/privacy-policy/" target="_blank" rel="noopener">מדיניות הפרטיות</a>. אני מאשר/ת כי ידוע לי ומוסכם עלי כי הפרטים שמסרתי ייאספו, יוחזקו ויעובדו במאגר מידע בהתאם להוראות חוק הגנת הפרטיות, התשמ״א-1981 (כולל תיקון 13), ולמטרות המפורטות במדיניות הפרטיות של האתר. ידוע לי כי מסירת המידע נעשית מרצוני החופשי, וכי עומדות לי הזכויות המוקנות לי לפי החוק.</span></label>
+<button class="btn" type="submit">כן, תחזרו אליי</button>
+</form><div class="okmsg" id="okm" hidden>תודה, קיבלנו את הפרטים ונחזור אליכם בהקדם.</div>
+<p style="margin:12px 0 0">או התקשרו: <a class="ph" href="tel:098613413" style="padding:6px 12px;font-size:16px">09-8613413</a></p></section>
+
+<h2>מקורות</h2>
+<p class="src">[1] <a href="https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%94%D7%99%D7%A8%D7%95%D7%A9%D7%94">חוק הירושה, התשכ"ה-1965, סעיפים 6, 10 עד 17 ו-55</a></p>
+<p class="src">המידע כאן כללי ואינו ייעוץ משפטי.</p>
+</div>
+<script id="dabul-widget-guide">/* dabul-widget */
+(function(){
+var $=function(i){return document.getElementById(i)};
+function gcd(a,b){while(b){var t=b;b=a%b;a=t}return a}
+function F(n,d){if(d===undefined)d=1;var g=gcd(Math.abs(n),Math.abs(d))||1;return {n:n/g,d:d/g}}
+function mul(a,b){return F(a.n*b.n,a.d*b.d)}
+function add(a,b){return F(a.n*b.d+b.n*a.d,a.d*b.d)}
+function sub(a,b){return F(a.n*b.d-b.n*a.d,a.d*b.d)}
+function txt(f){if(f.n===0)return '0';if(f.n===f.d)return 'הכל';return f.n+'/'+f.d}
+function pct(f){var p=f.n/f.d*100;return (Math.round(p*100)/100).toString().replace(/\.0+$/,'')+'%'}
+function num(i){var v=parseInt($(i).value,10);return isNaN(v)||v<0?0:v}
+function drawGC(){var n=Math.min(num('dc'),6),w=$('gcw'),cur=w.querySelectorAll('input').length,i;
+ if(cur===n)return;var keep=[];w.querySelectorAll('input').forEach(function(x){keep.push(x.value)});w.innerHTML='';
+ for(i=0;i<n;i++){var d=document.createElement('div');var l=document.createElement('label');l.textContent='כמה ילדים השאיר הילד שנפטר מספר '+(i+1);l.setAttribute('for','gc'+i);var inp=document.createElement('input');inp.type='number';inp.min='1';inp.max='20';inp.id='gc'+i;inp.value=keep[i]||'1';inp.setAttribute('inputmode','numeric');inp.addEventListener('input',calc);d.appendChild(l);d.appendChild(inp);w.appendChild(d)}}
+function calc(){
+ drawGC();
+ var sp=$('sp').value,ch=num('ch'),dcN=Math.min(num('dc'),6),fa=$('fa').checked,mo=$('mo').checked,sb=num('sb'),sf=num('sf'),sm=num('sm'),sd=$('sd').checked;
+ var gcs=[],i;for(i=0;i<dcN;i++){var e=$('gc'+i);gcs.push(Math.max(1,parseInt(e&&e.value,10)||1))}
+ var hasSp=sp!=='0',D=(ch+gcs.length)>0,P=fa||mo,S=(sb+sf+sm)>0;
+ $('aptw').hidden=!(sp==='m'&&!D&&!P&&S);
+ var rows=[],notes=[],flags=[],spF=F(0),rest,one=F(1);
+ if(hasSp){
+  if(D||P){spF=F(1,2)}
+  else if(S||sd){spF=F(2,3)}
+  else{spF=F(1);flags.push('לא סימנתם ילדים, הורים או אחים. אם יש סבים, סבתות, דודים או בני דודים של המוריש, בן הזוג מקבל שני שלישים בלבד והם מקבלים שליש. כדאי לבדוק את זה איתנו.')}
+ }
+ rest=sub(one,spF);
+ if(hasSp){rows.push([sp==='c'?'בן או בת הזוג (ידועים בציבור)':'בן או בת הזוג',spF]);notes.push('בנוסף, בן הזוג מקבל לפני החלוקה את המיטלטלין של משק הבית המשותף ואת הרכב.')}
+ if(sp==='c')notes.push('ידועים בציבור יורשים כמו נשואים, לפי סעיף 55, כששניהם לא היו נשואים לאדם אחר ואין צוואה שקובעת אחרת. צריך להוכיח את החיים המשותפים.');
+ if(rest.n>0){
+  if(D){var lines=ch+gcs.length,each=mul(rest,F(1,lines));
+   if(ch)rows.push([ch===1?'הילד':'כל אחד מ־'+ch+' הילדים',each]);
+   gcs.forEach(function(k,j){rows.push([(k===1?'הנכד או הנכדה':'כל אחד מ־'+k+' הנכדים')+' מהילד שנפטר מספר '+(j+1),mul(each,F(1,k))])});
+  }else if(P){
+   if(fa&&mo){rows.push(['האב',mul(rest,F(1,2))]);rows.push(['האם',mul(rest,F(1,2))])}
+   else{var who=fa?'האב':'האם',deadSide=fa?sm:sf,half=mul(rest,F(1,2));
+    if(hasSp){rows.push([who,rest]);if(sb+deadSide>0||sd)notes.push('כשיש בן זוג והורה בחיים, האחים לא נכנסים במקום ההורה שנפטר (סעיף 14(א)), וההורה שבחיים מקבל את כל החלק של ההורים.')}
+    else{var kids=sb+deadSide;
+     if(kids>0){rows.push([who,half]);rows.push([(kids===1?'האח או האחות':'כל אחד מ־'+kids+' האחים')+' מצד '+(fa?'האם':'האב')+' (כולל אחים מאותם הורים)',mul(half,F(1,kids))]);if(sd)flags.push('סימנתם אח או אחות שנפטרו והשאירו ילדים. ילדיהם נכנסים לחלק שלהם, והחלוקה למעלה משתנה. כדאי לבדוק את זה איתנו.')}
+     else{rows.push([who,rest]);if(sd)flags.push('סימנתם אח או אחות שנפטרו והשאירו ילדים. במצב כזה החלוקה צריכה בדיקה פרטנית.')}
+    }}
+  }else if(S||sd){
+   var fK=sb+sf,mK=sb+sm,hf=mul(rest,F(1,2)),fs=F(0),ms=F(0);
+   if(fK>0&&mK>0){fs=mul(hf,F(1,fK));ms=mul(hf,F(1,mK))}else if(fK>0){fs=mul(rest,F(1,fK))}else if(mK>0){ms=mul(rest,F(1,mK))}
+   if(sb)rows.push([(sb===1?'האח או האחות':'כל אחד מ־'+sb+' האחים')+' מאותם הורים',add(fs,ms)]);
+   if(sf)rows.push([(sf===1?'האח או האחות':'כל אחד מ־'+sf+' האחים')+' מצד האב בלבד',fs]);
+   if(sm)rows.push([(sm===1?'האח או האחות':'כל אחד מ־'+sm+' האחים')+' מצד האם בלבד',ms]);
+   if(sd)flags.push('סימנתם אח או אחות שנפטרו והשאירו ילדים. ילדיהם נכנסים לחלק שלהם, והחלוקה למעלה משתנה. כדאי לבדוק את זה איתנו.');
+   if(sp==='m'&&$('apt').checked)notes.push('כלל הדירה: בן הזוג מקבל את כל החלק של המוריש בדירה שגרו בה, ושני שלישים משאר העיזבון. החלוקה בטבלה חלה רק על שאר העיזבון, בלי הדירה.');
+  }else if(!hasSp){
+   flags.push('לא סימנתם בן זוג, ילדים, הורים או אחים. במצב כזה עוברים לסבים ולסבתות ולצאצאיהם (דודים ובני דודים), ואם אין גם כאלה, המדינה יורשת. כדאי לבדוק את זה איתנו.');
+  }
+ }
+ var r=$('res');r.innerHTML='';
+ if(!rows.length&&!flags.length){r.textContent='סמנו את בני המשפחה שהיו בחיים ביום הפטירה.';return}
+ if(rows.length){var t=document.createElement('table');var th=document.createElement('tr');['יורש','חלק בעיזבון','באחוזים'].forEach(function(h){var c=document.createElement('th');c.textContent=h;th.appendChild(c)});t.appendChild(th);
+  rows.forEach(function(x){var tr=document.createElement('tr');[x[0],txt(x[1]),pct(x[1])].forEach(function(v){var c=document.createElement('td');c.textContent=v;tr.appendChild(c)});t.appendChild(tr)});r.appendChild(t)}
+ notes.forEach(function(n){var p=document.createElement('p');p.className='note';p.textContent=n;r.appendChild(p)});
+ flags.forEach(function(n){var p=document.createElement('p');p.className='flag';p.textContent=n;r.appendChild(p)});
+ var p=document.createElement('p');p.className='note';p.textContent='החלוקה לפי חוק הירושה כשאין צוואה. החלוקה המחייבת נקבעת בצו ירושה.';r.appendChild(p);
+}
+['sp','ch','dc','fa','mo','sb','sf','sm','sd','apt'].forEach(function(i){$(i).addEventListener('input',calc);$(i).addEventListener('change',calc)});calc();
+$('cp').addEventListener('click',function(){var t=$('res').innerText;var done=function(){$('cpm').textContent='התוצאה הועתקה.'};
+ if(navigator.clipboard){navigator.clipboard.writeText(t).then(done,function(){sel()})}else sel();
+ function sel(){var rg=document.createRange();rg.selectNodeContents($('res'));var s=getSelection();s.removeAllRanges();s.addRange(rg);$('cpm').textContent='התוצאה מסומנת. אפשר להעתיק אותה ידנית.'}});
+})();
+if(/[?&]dlb=sent/.test(location.search)){document.getElementById("okm").hidden=false;}
+</script></div>
+<!-- /wp:html -->
