@@ -15,11 +15,14 @@ jobs:
       - uses: actions/checkout@v4
         with: { fetch-depth: 2 }
       - run: |
-          mkdir -p /tmp/e && cp tools/teamofone-iphone/iphone.mjs /tmp/e/
+          set +e
+          mkdir -p /tmp/e/out && cp tools/teamofone-iphone/iphone.mjs /tmp/e/
           if git diff --name-only HEAD~1 HEAD | grep -q '^sites/teamofone/'; then echo "$GITHUB_SHA" > /tmp/e/expect.txt; fi
-          cd /tmp/e && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null && npx playwright install --with-deps webkit >/dev/null
-          node iphone.mjs || true
+          cd /tmp/e && npm init -y >/dev/null && npm i playwright@1.52.0 > out/log.txt 2>&1
+          npx playwright install --with-deps webkit >> out/log.txt 2>&1
+          node iphone.mjs >> out/log.txt 2>&1
           ls -la out
+          exit 0
       - run: |
           git config user.name e2e; git config user.email e2e@users.noreply.github.com
           git checkout --orphan too-iphone-out
