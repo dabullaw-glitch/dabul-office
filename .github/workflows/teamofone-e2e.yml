@@ -13,7 +13,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
       - run: |
+          if git diff --name-only HEAD~1 HEAD | grep -q '^sites/teamofone/'; then echo "$GITHUB_SHA" > tools/teamofone-e2e/expect.txt; fi
           mkdir -p /tmp/e && cp tools/teamofone-e2e/e2e.mjs /tmp/e/ && (cp tools/teamofone-e2e/expect.txt /tmp/e/ 2>/dev/null || true) && cd /tmp/e && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null && npx playwright install --with-deps chromium >/dev/null
           node e2e.mjs || true
           ls -la out
