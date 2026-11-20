@@ -33,7 +33,7 @@ import Base from '../../../layouts/Base.astro';
             <div class="mods2" style="gap:6px">${course.modules.map((m) => `<details ${m.id === L.module_id ? 'open' : ''} style="border-radius:12px"><summary style="cursor:pointer;font-weight:800;padding:8px 6px;list-style:none">${String(m.n).padStart(2, '0')} · ${esc(m.title)}</summary>
               <ul class="ls" style="padding:0 0 8px">${m.lessons.map((l) => `<li><a href="${BASE}ezor-ishi/shiur/?id=${l.id}" style="${l.id === id ? 'outline:2px solid var(--ink)' : ''}"><span class="ck ${done.has(l.id) ? 'on' : ''}">${done.has(l.id) ? '✓' : ''}</span><span>${esc(l.title)}</span><span>${!me.access && !l.free_preview ? '🔒' : ''}</span></a></li>`).join('')}</ul></details>`).join('')}</div>
           </aside>
-          <section class="stack">
+          <section class="vstack">
             <div class="vid2">${vid || `<div class="soon">${open ? '<b>הסרטון בהכנה</b><span class="mut">הוא יעלה לכאן לפני פתיחת הקורס.</span>' : `<b>השיעור נעול</b><span class="mut">פותחים את כל הקורס בהצטרפות.</span><a class="btn btn-l" href="${BASE}kniya/?plan=course">להצטרפות</a>`}</div>`}</div>
             <div class="spread"><div><span class="pill">${L.m.n ? 'פרק ' + L.m.n + ' · שיעור ' + L.n : 'הרצאה במנוי'}</span>${L.free_preview && !me.access ? ' <span class="pill l">שיעור פתוח לצפייה</span>' : ''}<h1 style="font-family:var(--body);font-weight:900;font-size:clamp(26px,3vw,36px);line-height:1.2;margin:10px 0 4px">${esc(L.title)}</h1><p class="muted" style="margin:0">${esc(L.summary || '')}</p></div>
               ${open ? `<button class="btn ${done.has(id) ? 'btn-w' : 'btn-k'}" id="mark">${done.has(id) ? '✓ סימנתי שסיימתי' : 'סיימתי את השיעור'}</button>` : ''}</div>

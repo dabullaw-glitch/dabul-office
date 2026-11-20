@@ -38,16 +38,16 @@ import Base from '../../layouts/Base.astro';
           <div class="kp"><b>${(assets || []).length}</b><span>סקילים ותבניות להורדה</span></div>
           <div class="kp"><b>${course.updates.length}</b><span>הרצאות חדשות במנוי</span></div>
         </div>
-        <div class="lessonw" style="grid-template-columns:minmax(0,1fr) 340px">
-          <div class="stack">
+        <div class="memw">
+          <div class="vstack">
             <h2 style="font-size:24px;margin:0">תוכנית הקורס</h2>
             <div class="mods2">${course.modules.map((m) => { const c = m.lessons.filter((l) => done.has(l.id)).length; return `
-              <details class="m2" ${m.lessons.some((l) => l.id === nextL?.id) ? 'open' : ''}><summary><span class="nn">${String(m.n).padStart(2, '0')}</span><span><b style="font-size:18px">${esc(m.title)}</b><div class="muted" style="font-size:14px">${esc(m.sub || '')}</div><div class="bar"><i style="width:${m.lessons.length ? (c / m.lessons.length) * 100 : 0}%"></i></div></span><span class="pill">${c}/${m.lessons.length}</span></summary>
+              <details class="m2" ${m.lessons.some((l) => l.id === nextL?.id) ? 'open' : ''}><summary><span class="nn">${String(m.n).padStart(2, '0')}</span><span><b style="font-size:18px">${esc(m.title)}</b><div class="muted" style="font-size:14px">${esc(m.sub || '')}</div><div class="pbar"><i style="width:${m.lessons.length ? (c / m.lessons.length) * 100 : 0}%"></i></div></span><span class="pill">${c}/${m.lessons.length}</span></summary>
               <ul class="ls">${m.lessons.map((l) => '<li>' + lessonLink(l) + '</li>').join('')}</ul></details>`; }).join('')}</div>
             <h2 style="font-size:24px;margin:16px 0 0">חדש במנוי</h2>
             ${course.updates.length ? '<ul class="ls" style="padding:0">' + course.updates.map((l) => '<li>' + lessonLink(l) + '</li>').join('') + '</ul>' : '<div class="empty">ההרצאות הקצרות של המנוי יופיעו כאן. הראשונה תעלה עם פתיחת הקורס.</div>'}
           </div>
-          <aside class="stack" style="position:static;max-height:none">
+          <aside class="vstack">
             <div class="card"><h3>הסקילים והתבניות</h3><p class="muted" style="font-size:14px;margin:0 0 12px">המתנה שמגיעה עם הקורס.</p>
               ${(assets || []).length ? '<div style="display:grid;gap:8px">' + assets.map((a) => `<div class="spread" style="background:var(--paper);border-radius:12px;padding:10px 12px"><span><b style="font-size:15px">${esc(a.title)}</b><br><span class="muted" style="font-size:13px">${a.kind === 'skill' ? 'סקיל' : 'תבנית'}</span></span>${a.path && me.access ? `<button class="btn btn-k sm" data-dl="${esc(a.path)}">הורדה</button>` : `<span class="pill">${me.access ? 'בהכנה' : '🔒'}</span>`}</div>`).join('') + '</div>' : '<div class="empty">הקבצים יעלו כאן.</div>'}
             </div>
