@@ -1,0 +1,85 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="האזור האישי | Team of One" app>
+  <main class="wrap page">
+    <div id="app"><div class="card">טוען...</div></div>
+  </main>
+  <script>
+    import { sb, BASE, esc, fmtDate, ils, toast, errText } from '../../lib/sb.js';
+    import { requireLogin, loadCourse, logoutBtn } from '../../lib/member.js';
+    const app = document.getElementById('app');
+    (async () => {
+      if (!(await requireLogin())) return;
+      const nav = document.getElementById('anav');
+      const [{ data: me, error }, course, { data: assets }, { data: orders }] = await Promise.all([
+        sb.rpc('too_me'), loadCourse(), sb.from('too_assets').select('*').eq('published', true).order('sort'), sb.from('too_orders').select('*').order('created_at', { ascending: false })]);
+      if (error) { app.innerHTML = '<div class="card">' + esc(errText(error)) + '</div>'; return; }
+      if (me.admin) { const a = document.createElement('a'); a.href = BASE + 'nihul/'; a.textContent = 'פאנל ניהול'; a.style.color = 'var(--lime)'; nav.appendChild(a); }
+      logoutBtn(nav);
+      const p = me.profile || { full_name: 'מנהל', email: '' };
+      const done = new Set(me.done || []);
+      const total = course.flat.length, nDone = course.flat.filter((l) => done.has(l.id)).length;
+      const pct = total ? Math.round((nDone / total) * 100) : 0;
+      const nextL = course.flat.find((l) => !done.has(l.id)) || course.flat[0];
+      const welcome = new URLSearchParams(location.search).get('welcome');
+      const subTxt = me.sub_ends ? (me.sub_renew ? 'מתחדש ב־' + fmtDate(me.sub_ends) : 'פעיל עד ' + fmtDate(me.sub_ends)) : 'אין מנוי פעיל';
+      const lessonLink = (l) => `<a href="${BASE}ezor-ishi/shiur/?id=${l.id}"><span class="ck ${done.has(l.id) ? 'on' : ''}">${done.has(l.id) ? '✓' : ''}</span><span>${esc(l.title)}</span><span>${!me.access && !l.free_preview ? '🔒' : (l.free_preview && !me.access ? '<span class="pill l">חינם לצפייה</span>' : '')}</span></a>`;
+      app.innerHTML = `
+        ${welcome ? '<div class="card dk" style="margin-bottom:16px"><b style="color:var(--lime)">ברוכים הבאים לצוות.</b> הגישה שלכם פתוחה. מתחילים מהפרק הראשון.</div>' : ''}
+        <div class="spread" style="margin-bottom:24px">
+          <div><h1>שלום, ${esc((p.full_name || '').split(' ')[0])}.</h1><div class="row">
+            ${me.course ? '<span class="pill ok">הקורס המלא</span>' : ''}${me.sub_ends ? '<span class="pill k">מנוי: ' + esc(subTxt) + '</span>' : ''}${!me.access ? '<span class="pill no">אין עדיין גישה לקורס</span>' : ''}</div></div>
+          ${me.access && nextL ? `<a class="btn btn-k" href="${BASE}ezor-ishi/shiur/?id=${nextL.id}">${nDone ? 'ממשיכים מאיפה שעצרתם' : 'מתחילים לצפות'} <span class="arrow">←</span></a>` : ''}
+        </div>
+        ${!me.access ? `<div class="card dk" style="margin-bottom:22px"><h2 style="color:var(--lime)">פותחים את כל הצוות</h2><p class="mut" style="margin:0 0 16px">בחרו מסלול, וכל הקורס, הסקילים והקבוצה נפתחים מיד. השיעור הראשון פתוח לצפייה גם בלי רכישה.</p><div class="row"><a class="btn btn-l" href="${BASE}kniya/?plan=course">הקורס המלא</a><a class="btn btn-o" href="${BASE}kniya/?plan=monthly">מנוי חודשי</a></div></div>` : ''}
+        <div class="grid3" style="margin-bottom:22px">
+          <div class="kp dk"><b>${pct}%</b><span>מהקורס הושלם (${nDone} מתוך ${total} שיעורים)</span></div>
+          <div class="kp"><b>${(assets || []).length}</b><span>סקילים ותבניות להורדה</span></div>
+          <div class="kp"><b>${course.updates.length}</b><span>הרצאות חדשות במנוי</span></div>
+        </div>
+        <div class="lessonw" style="grid-template-columns:minmax(0,1fr) 340px">
+          <div class="stack">
+            <h2 style="font-size:24px;margin:0">תוכנית הקורס</h2>
+            <div class="mods2">${course.modules.map((m) => { const c = m.lessons.filter((l) => done.has(l.id)).length; return `
+              <details class="m2" ${m.lessons.some((l) => l.id === nextL?.id) ? 'open' : ''}><summary><span class="nn">${String(m.n).padStart(2, '0')}</span><span><b style="font-size:18px">${esc(m.title)}</b><div class="muted" style="font-size:14px">${esc(m.sub || '')}</div><div class="bar"><i style="width:${m.lessons.length ? (c / m.lessons.length) * 100 : 0}%"></i></div></span><span class="pill">${c}/${m.lessons.length}</span></summary>
+              <ul class="ls">${m.lessons.map((l) => '<li>' + lessonLink(l) + '</li>').join('')}</ul></details>`; }).join('')}</div>
+            <h2 style="font-size:24px;margin:16px 0 0">חדש במנוי</h2>
+            ${course.updates.length ? '<ul class="ls" style="padding:0">' + course.updates.map((l) => '<li>' + lessonLink(l) + '</li>').join('') + '</ul>' : '<div class="empty">ההרצאות הקצרות של המנוי יופיעו כאן. הראשונה תעלה עם פתיחת הקורס.</div>'}
+          </div>
+          <aside class="stack" style="position:static;max-height:none">
+            <div class="card"><h3>הסקילים והתבניות</h3><p class="muted" style="font-size:14px;margin:0 0 12px">המתנה שמגיעה עם הקורס.</p>
+              ${(assets || []).length ? '<div style="display:grid;gap:8px">' + assets.map((a) => `<div class="spread" style="background:var(--paper);border-radius:12px;padding:10px 12px"><span><b style="font-size:15px">${esc(a.title)}</b><br><span class="muted" style="font-size:13px">${a.kind === 'skill' ? 'סקיל' : 'תבנית'}</span></span>${a.path && me.access ? `<button class="btn btn-k sm" data-dl="${esc(a.path)}">הורדה</button>` : `<span class="pill">${me.access ? 'בהכנה' : '🔒'}</span>`}</div>`).join('') + '</div>' : '<div class="empty">הקבצים יעלו כאן.</div>'}
+            </div>
+            <div class="card"><h3>הקבוצה הסגורה</h3>${me.access ? (me.wa ? `<a class="btn btn-k wide" href="${esc(me.wa)}" target="_blank" rel="noopener">כניסה לקבוצת הוואטסאפ</a>` : '<p class="muted" style="margin:0">הקישור לקבוצה יופיע כאן עם הפתיחה.</p>') : '<p class="muted" style="margin:0">נפתחת אחרי הצטרפות.</p>'}</div>
+            <div class="card"><h3>המנוי שלי</h3><p style="margin:0 0 12px">${esc(subTxt)}</p>
+              ${me.sub_ends && me.sub_renew ? '<button class="btn btn-r sm" id="cancel">ביטול חידוש המנוי</button>' : (!me.sub_ends ? `<a class="btn btn-w sm" href="${BASE}kniya/?plan=monthly">להצטרפות למנוי</a>` : '<span class="muted" style="font-size:14px">החידוש בוטל. המנוי ימשיך עד התאריך.</span>')}
+            </div>
+            <div class="card"><h3>הפרטים שלי</h3>
+              <div class="f"><label for="pn">שם</label><input id="pn" value="${esc(p.full_name || '')}"></div>
+              <div class="f"><label for="pp">טלפון</label><input id="pp" dir="ltr" value="${esc(p.phone || '')}"></div>
+              <div class="f"><label>מייל</label><input value="${esc(p.email || '')}" disabled dir="ltr"></div>
+              ${me.profile ? '<button class="btn btn-w sm" id="save">שמירה</button>' : ''}
+            </div>
+            <div class="card"><h3>הרכישות שלי</h3>${(orders || []).length ? '<div style="display:grid;gap:6px">' + orders.map((o) => `<div class="spread" style="font-size:14px"><span>${fmtDate(o.created_at)} · ${o.plan_code === 'course' ? 'הקורס המלא' : 'מנוי חודשי'}</span><span>${ils(o.amount_ils)} ${o.status === 'test' ? '<span class="pill warn">בדיקה</span>' : o.status === 'refunded' ? '<span class="pill no">הוחזר</span>' : ''}</span></div>`).join('') + '</div>' : '<p class="muted" style="margin:0">עדיין אין רכישות.</p>'}</div>
+          </aside>
+        </div>`;
+      app.querySelectorAll('[data-dl]').forEach((b) => b.onclick = async () => {
+        const { data, error } = await sb.storage.from('too').createSignedUrl(b.dataset.dl, 120, { download: true });
+        if (error) return toast(errText(error), true); location.href = data.signedUrl;
+      });
+      const c = document.getElementById('cancel');
+      if (c) c.onclick = async () => {
+        if (c.dataset.sure !== '1') { c.dataset.sure = '1'; c.textContent = 'לחצו שוב לאישור הביטול'; return; }
+        const { error } = await sb.rpc('too_cancel_subscription'); if (error) return toast(errText(error), true);
+        toast('החידוש בוטל. המנוי ימשיך עד סוף התקופה.'); setTimeout(() => location.reload(), 900);
+      };
+      const s = document.getElementById('save');
+      if (s) s.onclick = async () => {
+        const { data: u } = await sb.auth.getUser();
+        const { error } = await sb.from('too_profiles').update({ full_name: document.getElementById('pn').value.trim(), phone: document.getElementById('pp').value.trim() || null }).eq('id', u.user.id);
+        toast(error ? errText(error) : 'נשמר.', !!error);
+      };
+    })();
+  </script>
+</Base>

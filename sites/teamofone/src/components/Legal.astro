@@ -1,0 +1,8 @@
+---
+const { title, updated } = Astro.props;
+---
+<main class="wrap page legal">
+  <h1>{title}</h1>
+  <p class="muted">עודכן לאחרונה: {updated}. <span class="pill warn">טיוטה לבדיקה לפני פתיחת האתר</span></p>
+  <div class="prose"><slot /></div>
+</main>

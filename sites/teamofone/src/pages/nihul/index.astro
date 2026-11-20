@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="פאנל ניהול | Team of One" app>
+  <div id="gate" class="wrap page"><div class="card">טוען...</div></div>
+  <div class="adm" id="adm" hidden>
+    <nav class="snav" id="snav" aria-label="פאנל ניהול"></nav>
+    <section class="pane2" id="pane"></section>
+  </div>
+  <div class="modal" id="modal" hidden><div class="mbox" id="mbox" role="dialog" aria-modal="true"></div></div>
+  <script>
+    import { initAdmin } from '../../lib/admin.js';
+    initAdmin();
+  </script>
+</Base>

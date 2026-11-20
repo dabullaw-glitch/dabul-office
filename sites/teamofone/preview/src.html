@@ -1,0 +1,486 @@
+<title>Team of One</title>
+<meta name="description" content="צוות שלם. אדם אחד. איך לבנות עסק שעובד עם בינה מלאכותית, צעד אחר צעד. המסלול הראשון: עורכי דין.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=Sora:wght@500;600;700;800&display=swap">
+<style>
+:root{
+  --bg:#07090F;--bg2:#0C1019;--card:#111725;--card2:#161E2F;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.14);
+  --fg:#F3F5FA;--mut:#9BA5BA;--mut2:#6F7A91;
+  --v:#8B6CFF;--c:#2DD4EE;--g:#FFB547;--ok:#3DDC97;
+  --grad:linear-gradient(100deg,#8B6CFF 0%,#4F8CFF 45%,#2DD4EE 100%);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Heebo,Arial,sans-serif;direction:rtl;line-height:1.6;font-size:17px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px}
+.en{font-family:Sora,Heebo,sans-serif;direction:ltr;unicode-bidi:isolate}
+.gt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-flex;align-items:center;gap:10px;font:inherit;font-weight:800;border:0;border-radius:14px;padding:14px 22px;text-decoration:none;cursor:pointer;transition:transform .2s, box-shadow .2s}
+.btn-p{background:var(--grad);color:#07090F;box-shadow:0 10px 30px -10px rgba(79,140,255,.7)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 16px 40px -12px rgba(79,140,255,.9)}
+.btn-g{background:rgba(255,255,255,.06);color:var(--fg);border:1px solid var(--line2)}
+.btn-g:hover{background:rgba(255,255,255,.1)}
+.kick{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--c);background:rgba(45,212,238,.08);border:1px solid rgba(45,212,238,.25);padding:6px 12px;border-radius:999px}
+.kick i{width:7px;height:7px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c)}
+h1,h2,h3{text-wrap:balance;margin:0}
+h2{font-size:clamp(28px,4.2vw,44px);font-weight:900;line-height:1.15;letter-spacing:-.3px}
+.lead{color:var(--mut);font-size:clamp(17px,2vw,19px);max-width:64ch}
+section{padding-block:96px;position:relative}
+.sh{display:grid;gap:14px;margin-bottom:44px;max-width:760px}
+.sh>.kick{justify-self:start;width:max-content;max-width:100%}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(7,9,15,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo b{font-family:Sora,sans-serif;font-weight:700;font-size:20px;letter-spacing:-.3px;direction:ltr}
+.nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0;font-size:15px;color:var(--mut)}
+.nav ul a{text-decoration:none}.nav ul a:hover{color:var(--fg)}
+.nav .btn{padding:10px 16px;font-size:15px}
+@media (max-width:860px){.nav ul{display:none}}
+
+/* hero */
+.hero{padding-top:64px;padding-bottom:80px;overflow:hidden}
+.glow{position:absolute;inset:-200px 0 auto 0;height:700px;background:radial-gradient(600px 300px at 70% 30%,rgba(139,108,255,.28),transparent 70%),radial-gradient(500px 300px at 20% 20%,rgba(45,212,238,.18),transparent 70%);pointer-events:none}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse at 50% 20%,#000 30%,transparent 75%);pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+@media (max-width:960px){.hero .wrap{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(40px,6.6vw,76px);font-weight:900;line-height:1.02;letter-spacing:-1px;margin:18px 0 18px}
+.hero .lead{margin:0 0 28px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px}
+.trust{display:flex;flex-wrap:wrap;gap:18px;margin-top:28px;color:var(--mut2);font-size:14px}
+.trust span{display:flex;align-items:center;gap:7px}
+.trust svg{width:16px;height:16px;color:var(--ok)}
+
+/* live console */
+.console{background:linear-gradient(180deg,#121A2B,#0D1320);border:1px solid var(--line2);border-radius:22px;padding:18px;box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 1px rgba(139,108,255,.08);min-width:0}
+.ctop{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:13px;color:var(--mut)}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:#2A3346}
+.live{display:flex;align-items:center;gap:7px;color:var(--ok);font-weight:700}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(61,220,151,.6)}100%{box-shadow:0 0 0 10px rgba(61,220,151,0)}}
+.feed{display:grid;gap:10px;height:372px;overflow:hidden;position:relative;mask-image:linear-gradient(#000 80%,transparent)}
+.ev{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:14px;padding:11px 12px;animation:in .6s ease both}
+@keyframes in{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+.ev .ic{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.ev b{display:block;font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev small{color:var(--mut);font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev em{font-style:normal;font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.t-ok{background:rgba(61,220,151,.12);color:var(--ok)}.t-wait{background:rgba(255,181,71,.12);color:var(--g)}.t-run{background:rgba(45,212,238,.12);color:var(--c)}
+.cfoot{margin-top:12px;display:flex;justify-content:space-between;gap:10px;color:var(--mut);font-size:13px;border-top:1px solid var(--line);padding-top:12px}
+.cfoot b{color:var(--fg)}
+
+/* stats */
+.stats{padding-block:24px 0}
+.sgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:22px;background:var(--bg2);overflow:hidden}
+.st{padding:26px 22px;border-inline-start:1px solid var(--line)}
+.st:first-child{border-inline-start:0}
+.st b{display:block;font-family:Sora,sans-serif;font-size:clamp(34px,4vw,48px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.st span{display:block;color:var(--mut);font-size:15px;margin-top:8px}
+.asof{color:var(--mut2);font-size:13px;margin-top:10px}
+@media (max-width:760px){.sgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.st:nth-child(3){border-inline-start:0}.st:nth-child(n+3){border-top:1px solid var(--line)}}
+
+/* problem */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+.pane{border:1px solid var(--line);border-radius:22px;padding:28px;background:var(--bg2)}
+.pane h3{font-size:22px;margin-bottom:14px}
+.pane ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.pane li{display:grid;grid-template-columns:24px 1fr;gap:10px;color:var(--mut)}
+.pane li::before{content:"";width:22px;height:22px;border-radius:7px;margin-top:2px}
+.pane.bad li::before{background:rgba(255,99,99,.12) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff6b6b' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7L7 17'/%3E%3C/svg%3E") center/12px no-repeat}
+.pane.good{border-color:rgba(139,108,255,.35);background:linear-gradient(180deg,rgba(139,108,255,.09),rgba(45,212,238,.04))}
+.pane.good li{color:var(--fg)}
+.pane.good li::before{background:rgba(61,220,151,.14) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233ddc97' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L19 8'/%3E%3C/svg%3E") center/12px no-repeat}
+
+/* showcase */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.tab{font:inherit;font-weight:700;font-size:15px;color:var(--mut);background:transparent;border:1px solid var(--line2);border-radius:999px;padding:9px 16px;cursor:pointer}
+.tab[aria-selected=true]{color:#07090F;background:var(--fg);border-color:var(--fg)}
+.show{display:grid;grid-template-columns:1fr 1.1fr;gap:28px;align-items:center;border:1px solid var(--line);border-radius:26px;padding:30px;background:var(--bg2)}
+@media (max-width:900px){.show{grid-template-columns:1fr;padding:20px}}
+.show h3{font-size:clamp(24px,3vw,32px);font-weight:900;margin-bottom:12px}
+.show p{color:var(--mut);margin:0 0 16px}
+.show ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.show li{display:flex;gap:10px;align-items:flex-start}
+.show li b{color:var(--c);font-family:Sora,sans-serif;font-size:13px;background:rgba(45,212,238,.1);border-radius:8px;padding:2px 8px;margin-top:3px}
+.vis{border-radius:18px;border:1px solid var(--line2);background:#0A0F19;min-height:300px;overflow:hidden;position:relative;min-width:0}
+.panel{display:none}.panel.on{display:contents}
+
+/* mini visuals */
+.mv{padding:18px;display:grid;gap:10px}
+.mv .row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
+.mv .row span{color:var(--mut)}
+.chip{font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px}
+.flowv{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:20px}
+.node{background:rgba(255,255,255,.05);border:1px solid var(--line2);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:700}
+.node.hl{border-color:rgba(139,108,255,.6);background:rgba(139,108,255,.12)}
+.arr{color:var(--mut2)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;padding:18px}
+.cal div{aspect-ratio:1;border-radius:10px;background:rgba(255,255,255,.035);border:1px solid var(--line);font-size:11px;color:var(--mut2);padding:6px;display:flex;flex-direction:column;gap:4px}
+.cal i{display:block;height:6px;border-radius:3px}
+.figwrap{padding:16px}
+.figwrap img{border-radius:12px;border:1px solid var(--line2)}
+.figcap{font-size:13px;color:var(--mut);margin-top:8px}
+
+/* outcomes */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.cards{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:20px;padding:24px;background:var(--bg2);transition:border-color .2s, transform .2s}
+.card:hover{border-color:rgba(139,108,255,.45);transform:translateY(-3px)}
+.card .ico{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(139,108,255,.12);margin-bottom:14px}
+.card h3{font-size:19px;margin-bottom:6px}
+.card p{margin:0;color:var(--mut);font-size:15.5px}
+
+/* video */
+.video{border-radius:26px;border:1px solid var(--line2);background:radial-gradient(500px 240px at 50% 40%,rgba(139,108,255,.25),transparent),#0A0F19;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;max-width:100%;text-align:center;padding:20px}
+.play{width:84px;height:84px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 12px rgba(139,108,255,.12)}
+.video small{color:var(--mut)}
+
+/* curriculum */
+.mods{display:grid;gap:12px}
+details.mod{border:1px solid var(--line);border-radius:18px;background:var(--bg2);overflow:hidden}
+details.mod[open]{border-color:rgba(139,108,255,.4)}
+details.mod summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:14px;align-items:center;padding:18px 20px}
+details.mod summary::-webkit-details-marker{display:none}
+.mn{font-family:Sora,sans-serif;font-weight:700;font-size:15px;color:var(--c);background:rgba(45,212,238,.1);border-radius:12px;height:44px;display:flex;align-items:center;justify-content:center}
+.mt b{display:block;font-size:18px}.mt span{color:var(--mut);font-size:14.5px}
+.chev{width:30px;height:30px;border-radius:50%;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;transition:transform .25s}
+details[open] .chev{transform:rotate(180deg)}
+.lessons{padding:0 20px 18px 20px;display:grid;gap:8px}
+.lesson{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:15px;color:var(--mut);padding:9px 12px;border-radius:10px;background:rgba(255,255,255,.025)}
+.lesson span:last-child{font-size:13px;color:var(--mut2);font-variant-numeric:tabular-nums}
+
+/* how */
+.how{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:s}
+@media (max-width:900px){.how{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.how{grid-template-columns:1fr}}
+.how div{border:1px solid var(--line);border-radius:18px;padding:20px;background:var(--bg2)}
+.how div::before{counter-increment:s;content:counter(s);font-family:Sora,sans-serif;font-weight:700;font-size:13px;color:#07090F;background:var(--fg);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.how b{display:block;margin-bottom:4px}.how p{margin:0;color:var(--mut);font-size:15px}
+
+/* instructor */
+.inst{display:grid;grid-template-columns:320px minmax(0,1fr);gap:40px;align-items:center}
+@media (max-width:860px){.inst{grid-template-columns:1fr}}
+.photo{aspect-ratio:4/5;border-radius:26px;border:1px solid var(--line2);background:linear-gradient(160deg,#1A2236,#0E1422);display:flex;align-items:center;justify-content:center;color:var(--mut2);font-size:14px;text-align:center;padding:20px;max-width:100%}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.facts span{border:1px solid var(--line2);border-radius:999px;padding:7px 14px;font-size:14px;color:var(--mut)}
+
+/* safety */
+.safe{border:1px solid rgba(255,181,71,.3);border-radius:26px;padding:34px;background:linear-gradient(180deg,rgba(255,181,71,.07),transparent)}
+.safe .cards .card{background:rgba(7,9,15,.5)}
+.safe .card .ico{background:rgba(255,181,71,.12)}
+
+/* articles */
+.arts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.arts{grid-template-columns:1fr}}
+.art{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--bg2);text-decoration:none;display:flex;flex-direction:column}
+.art .th{aspect-ratio:16/9;background:var(--grad);opacity:.85;display:flex;align-items:flex-end;padding:14px}
+.art .th span{background:rgba(7,9,15,.75);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700}
+.art div.b{padding:18px}
+.art h3{font-size:18px;margin-bottom:6px}.art p{margin:0;color:var(--mut);font-size:15px}
+
+/* pricing */
+.price{display:grid;grid-template-columns:1.1fr .9fr;gap:0;border:1px solid rgba(139,108,255,.45);border-radius:28px;overflow:hidden;background:var(--bg2)}
+@media (max-width:860px){.price{grid-template-columns:1fr}}
+.price .l{padding:36px}
+.price .r{padding:36px;background:linear-gradient(160deg,rgba(139,108,255,.18),rgba(45,212,238,.08));display:flex;flex-direction:column;justify-content:center;gap:12px}
+.price ul{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:11px}
+.price li{display:grid;grid-template-columns:22px 1fr;gap:10px}
+.price li::before{content:"";width:20px;height:20px;border-radius:6px;margin-top:3px;background:rgba(61,220,151,.14) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233ddc97' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L19 8'/%3E%3C/svg%3E") center/11px no-repeat}
+.amt{font-family:Sora,sans-serif;font-size:58px;font-weight:700;line-height:1}
+.amt small{font-size:20px;color:var(--mut);font-family:Heebo}
+.note{font-size:14px;color:var(--mut)}
+
+/* faq */
+.faq{display:grid;gap:10px;max-width:860px}
+.faq details{border:1px solid var(--line);border-radius:16px;background:var(--bg2);padding:4px 20px}
+.faq summary{cursor:pointer;font-weight:700;padding:14px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--c);font-family:Sora,sans-serif;font-size:22px;line-height:1}
+.faq details[open] summary::after{content:"−"}
+.faq p{margin:0 0 16px;color:var(--mut)}
+
+/* final */
+.final{text-align:center;border-radius:30px;padding:64px 24px;background:radial-gradient(600px 260px at 50% 0%,rgba(139,108,255,.35),transparent),var(--bg2);border:1px solid var(--line2)}
+.final h2{margin-bottom:14px}
+.final .lead{margin:0 auto 26px}
+footer{border-top:1px solid var(--line);padding-block:36px;color:var(--mut2);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease, transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.ev{animation:none}}
+.draft{position:fixed;bottom:14px;inset-inline-start:14px;z-index:60;background:var(--g);color:#07090F;font-weight:800;font-size:13px;padding:8px 12px;border-radius:10px}
+</style>
+
+<div class="draft">טיוטה לאישור. לא באוויר.</div>
+
+<nav class="nav"><div class="wrap">
+  <a class="logo" href="#top" aria-label="Team of One">
+    <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8B6CFF"/><stop offset="1" stop-color="#2DD4EE"/></linearGradient></defs><rect width="40" height="40" rx="11" fill="#111725" stroke="url(#lg)" stroke-width="1.5"/><circle cx="20" cy="20" r="5.2" fill="url(#lg)"/><g fill="#9BA5BA"><circle cx="20" cy="8.5" r="2.1"/><circle cx="30" cy="14.3" r="2.1"/><circle cx="30" cy="25.7" r="2.1"/><circle cx="20" cy="31.5" r="2.1"/><circle cx="10" cy="25.7" r="2.1"/><circle cx="10" cy="14.3" r="2.1"/></g></svg>
+    <b>Team of One</b>
+  </a>
+  <ul><li><a href="#built">מה בנינו</a></li><li><a href="#course">תוכנית הקורס</a></li><li><a href="#articles">מאמרים</a></li><li><a href="#faq">שאלות</a></li></ul>
+  <a class="btn btn-p" href="#price">להצטרפות</a>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="glow"></div><div class="grid-bg"></div>
+  <div class="wrap">
+    <div>
+      <span class="kick"><i></i>לעצמאים ולעסקים קטנים</span>
+      <h1>צוות שלם.<br><span class="gt">אדם אחד.</span></h1>
+      <p class="lead">אני עו״ד יקיר דבול, ואני עובד לבד. המשרד שלי כותב מאמרים, מפיק סרטונים, מפרסם ברשתות ומנהל פניות של לקוחות, כל יום, עם בינה מלאכותית. אני רק מאשר. בקורס הזה אני מראה לכם איך לבנות את זה גם אצלכם, צעד אחר צעד.</p>
+      <div class="ctas"><a class="btn btn-p" href="#course">לתוכנית הקורס</a><a class="btn btn-g" href="#video">▶ לצפייה בהדגמה</a></div>
+      <div class="trust">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L19 8"/></svg>בלי ידע טכני</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L19 8"/></svg>שיעורים מוקלטים בקצב שלכם</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L19 8"/></svg>תבניות מוכנות לכל שלב</span>
+      </div>
+    </div>
+    <div class="console" aria-label="דוגמה: מה המערכת עושה במשרד במהלך יום">
+      <div class="ctop"><div class="dots"><i></i><i></i><i></i></div><span>המשרד שלי, יום רגיל</span><span class="live"><i></i>פעיל</span></div>
+      <div class="feed" id="feed"></div>
+      <div class="cfoot"><span>הכל רץ לבד</span><span>מה שמחכה לי: <b id="wait">אישור אחד</b></span></div>
+    </div>
+  </div>
+</header>
+
+<section class="stats" aria-label="מספרים מהמשרד">
+  <div class="wrap">
+    <div class="sgrid reveal">
+      <div class="st"><b data-n="71">0</b><span>סרטונים נערכו ויצאו לרשתות</span></div>
+      <div class="st"><b data-n="76">0</b><span>פרסומים עלו לרשתות אוטומטית</span></div>
+      <div class="st"><b data-n="34">0</b><span>מאמרים נכתבו או שודרגו באתר</span></div>
+      <div class="st"><b data-n="44">0</b><span>תהליכים אוטומטיים רצים כל יום</span></div>
+    </div>
+    <div class="asof">נתונים אמיתיים מהמערכת של המשרד, נכון ל־20.11.2026.</div>
+  </div>
+</section>
+
+<section aria-labelledby="p-h">
+  <div class="wrap">
+    <div class="sh reveal"><span class="kick"><i></i>למה זה קיים</span><h2 id="p-h">מי שעובד לבד הוא גם המזכירה, גם איש השיווק וגם הצלם</h2><p class="lead">רוב היום הולך על דברים שהם לא העבודה עצמה. בינה מלאכותית יכולה לקחת את רובם, אם בונים אותה נכון.</p></div>
+    <div class="split">
+      <div class="pane bad reveal"><h3>היום</h3><ul>
+        <li>אין זמן לכתוב מאמרים, אז האתר לא מביא פניות</li>
+        <li>הרשתות מתעדכנות כשנזכרים, כלומר כמעט אף פעם</li>
+        <li>פניות נענות בסוף היום, ולפעמים נשכחות</li>
+        <li>כל הצעת מחיר, חוזה או מכתב מתחילים מדף ריק</li>
+        <li>ניסיתם צ׳אט, קיבלתם תשובה כללית, וחזרתם לעבוד כמו פעם</li>
+      </ul></div>
+      <div class="pane good reveal"><h3>אחרי הקורס</h3><ul>
+        <li>מאמרים שנכתבים ונבדקים מול מקורות, ומגיעים אליכם לאישור</li>
+        <li>לוח פרסום שמתמלא ויוצא לרשתות לבד</li>
+        <li>כל פנייה מקבלת מענה מסודר, ואתם רק מאשרים</li>
+        <li>תבניות מוכנות למסמכים, עם בדיקה שלכם לפני כל שליחה</li>
+        <li>מערכת שעובדת כל יום, גם כשאתם בפגישה</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="built" aria-labelledby="b-h" style="background:linear-gradient(180deg,transparent,rgba(139,108,255,.04),transparent)">
+  <div class="wrap">
+    <div class="sh reveal"><span class="kick"><i></i>מה בנינו במשרד</span><h2 id="b-h">לא תיאוריה. מערכת שרצה אצלי כל יום</h2><p class="lead">כל מה שתלמדו בקורס כבר עובד במשרד שלי. הנה חלק ממנו.</p></div>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="show reveal" id="show"></div>
+  </div>
+</section>
+
+<section id="video" aria-labelledby="v-h">
+  <div class="wrap">
+    <div class="sh reveal"><span class="kick"><i></i>הדגמה</span><h2 id="v-h">10 דקות בתוך המערכת</h2><p class="lead">איך נראה יום במשרד: מה רץ לבד, מה מגיע אליי לאישור, ואיך זה נבנה.</p></div>
+    <div class="video reveal"><div class="play"><svg width="30" height="30" viewBox="0 0 24 24" fill="#07090F"><path d="M8 5v14l11-7z"/></svg></div><b>סרטון ההדגמה</b><small>בהכנה. יעלה לפני הפתיחה.</small></div>
+  </div>
+</section>
+
+<section aria-labelledby="o-h">
+  <div class="wrap">
+    <div class="sh reveal"><span class="kick"><i></i>מה תצליחו לעשות בעצמכם</span><h2 id="o-h">בסוף הקורס, זה עובד אצלכם</h2></div>
+    <div class="cards">
+      <div class="card reveal"><div class="ico">✍️</div><h3>מאמרים שמביאים פניות</h3><p>מאמר שנכתב, נבדק מול מקורות רשמיים ומוכן לאתר, עם קישורים פנימיים וכל מה שגוגל צריך.</p></div>
+      <div class="card reveal"><div class="ico">🎬</div><h3>סרטונים בלי מצלמה</h3><p>דמות דיגיטלית שלכם בקול שלכם, מתסריט ועד סרטון ערוך שמוכן לרשתות.</p></div>
+      <div class="card reveal"><div class="ico">📅</div><h3>לוח פרסום שרץ לבד</h3><p>פוסטים שנכתבים מראש ויוצאים בזמן לפייסבוק, לינקדאין ואינסטגרם.</p></div>
+      <div class="card reveal"><div class="ico">💬</div><h3>מענה מסודר לכל פנייה</h3><p>טיוטת תשובה קצרה ומקצועית לכל פנייה שנכנסת, שמחכה לאישור שלכם.</p></div>
+      <div class="card reveal"><div class="ico">📄</div><h3>מסמכים בלי דף ריק</h3><p>תבניות והוראות עבודה להצעות מחיר, חוזים ומכתבים, עם רשימת בדיקה לפני שליחה.</p></div>
+      <div class="card reveal"><div class="ico">⚙️</div><h3>משימות קבועות</h3><p>תהליכים שרצים לבד כל יום וכל שבוע, ושולחים לכם רק את מה שצריך החלטה.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="course" aria-labelledby="c-h">
+  <div class="wrap">
+    <div class="sh reveal"><span class="kick"><i></i>תוכנית הקורס</span><h2 id="c-h">8 פרקים, מהבסיס ועד מערכת שלמה</h2><p class="lead">שיעורים קצרים ומוקלטים. בכל שיעור מסבירים, מראים על המסך כל פעולה, ונותנים לכם תבנית מוכנה.</p></div>
+    <div class="mods" id="mods"></div>
+  </div>
+</section>
+
+<section aria-labelledby="h-h">
+  <div class="wrap">
+    <div class="sh reveal"><span class="kick"><i></i>איך זה עובד</span><h2 id="h-h">לומדים, בונים, ומשאירים את זה לעבוד</h2></div>
+    <div class="how">
+      <div class="reveal"><b>צופים בשיעור</b><p>הסבר קצר, ואחריו הדגמה על המסך של כל צעד.</p></div>
+      <div class="reveal"><b>מעתיקים תבנית</b><p>הוראות מוכנות לכלים, שאתם רק מתאימים לעסק שלכם.</p></div>
+      <div class="reveal"><b>בונים אצלכם</b><p>כל פרק נגמר בתהליך שעובד אצלכם, לא בתרגיל.</p></div>
+      <div class="reveal"><b>שואלים בקבוצה</b><p>קבוצת וואטסאפ סגורה למשתתפים, לשאלות ולעדכונים.</p></div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="i-h">
+  <div class="wrap inst">
+    <div class="photo reveal">כאן תבוא תמונה של יקיר</div>
+    <div class="reveal">
+      <span class="kick"><i></i>מי מלמד</span>
+      <h2 id="i-h" style="margin:14px 0 14px">עו״ד יקיר דבול</h2>
+      <p class="lead">עורך דין מקרקעין מנתניה שעובד לבד, ומלווה יותר מ־100 עסקאות נדל״ן בשנה. התחלתי לבנות לעצמי מערכת עם בינה מלאכותית כי לא היה לי זמן לשיווק ולכל מה שמסביב. היום המערכת עושה את רוב העבודה הזאת, ואני מאשר. את מה שלמדתי בדרך, כולל הטעויות, ריכזתי לקורס הזה.</p>
+      <div class="facts"><span>עורך דין מאז 2021</span><span>חבר ב־5 ועדות במחוז מרכז של לשכת עורכי הדין</span><span>נבחר לדירוג LawBuzz LB10 2026</span></div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="s-h">
+  <div class="wrap">
+    <div class="safe reveal">
+      <div class="sh" style="margin-bottom:26px"><span class="kick" style="color:var(--g);background:rgba(255,181,71,.08);border-color:rgba(255,181,71,.3)"><i style="background:var(--g);box-shadow:0 0 12px var(--g)"></i>עבודה אחראית</span><h2 id="s-h">בינה מלאכותית שעובדת לפי הכללים שלכם</h2><p class="lead">הלקוחות סומכים עליכם. כל פרק בקורס בנוי כך שהאמון הזה נשמר. מסלול נפרד לעורכי דין, עם כללי האתיקה של המקצוע, נמצא בהכנה.</p></div>
+      <div class="cards">
+        <div class="card"><div class="ico">🔒</div><h3>פרטיות לקוחות</h3><p>מה מכניסים לכלים ומה אף פעם לא, ואיך עובדים בלי פרטים מזהים של לקוחות.</p></div>
+        <div class="card"><div class="ico">🔎</div><h3>בדיקת עובדות</h3><p>כל מספר, סכום וטענה נבדקים מול המקור לפני שמשהו יוצא.</p></div>
+        <div class="card"><div class="ico">✅</div><h3>אתם מאשרים</h3><p>שום דבר לא יוצא ללקוח או לאוויר בלי אישור שלכם.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="articles" aria-labelledby="a-h">
+  <div class="wrap">
+    <div class="sh reveal"><span class="kick"><i></i>מאמרים</span><h2 id="a-h">מדריכים, כלים וחדשות</h2><p class="lead">מאמרים מעשיים על בינה מלאכותית לעסקים קטנים. מתעדכן כל שבוע.</p></div>
+    <div class="arts">
+      <a class="art reveal" href="#"><div class="th"><span>מדריך</span></div><div class="b"><h3>איך לכתוב מאמר לאתר עם בינה מלאכותית, בלי טעויות בעובדות</h3><p>השיטה שאני עובד בה: מקורות קודם, טקסט אחר כך.</p></div></a>
+      <a class="art reveal" href="#"><div class="th" style="background:linear-gradient(120deg,#2DD4EE,#3DDC97)"><span>כלים</span></div><div class="b"><h3>דמות דיגיטלית לעסק: מה זה, כמה זה עולה ומה צריך לבדוק</h3><p>מה עבד אצלי, ומה לא.</p></div></a>
+      <a class="art reveal" href="#"><div class="th" style="background:linear-gradient(120deg,#FFB547,#8B6CFF)"><span>פרטיות</span></div><div class="b"><h3>פרטיות לקוחות ובינה מלאכותית: מה מכניסים לכלים ומה לא</h3><p>כללי עבודה פשוטים לכל עסק.</p></div></a>
+    </div>
+  </div>
+</section>
+
+<section id="price" aria-labelledby="pr-h">
+  <div class="wrap">
+    <div class="price reveal">
+      <div class="l">
+        <span class="kick"><i></i>הקורס המלא</span>
+        <h2 id="pr-h" style="margin-top:14px">כל הקורס, כל התבניות, והקבוצה</h2>
+        <ul>
+          <li>8 פרקים מוקלטים, גישה לכל החיים</li>
+          <li>תבניות והוראות עבודה מוכנות לכל שלב</li>
+          <li>קבוצת וואטסאפ סגורה למשתתפים</li>
+          <li>עדכונים לקורס כשהכלים משתנים, בלי תוספת תשלום</li>
+        </ul>
+      </div>
+      <div class="r">
+        <span class="note">מחיר השקה</span>
+        <div class="amt">990 ₪ <small>תשלום אחד</small></div>
+        <a class="btn btn-p" href="#" style="justify-content:center">להצטרפות לקורס</a>
+        <span class="note">14 ימים להחזר כספי מלא, אם עוד לא התחלתם לצפות.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" aria-labelledby="f-h">
+  <div class="wrap">
+    <div class="sh reveal"><span class="kick"><i></i>שאלות</span><h2 id="f-h">שאלות נפוצות</h2></div>
+    <div class="faq">
+      <details><summary>אני לא טכנולוגי. זה מתאים לי?</summary><p>כן. הקורס בנוי למי שלא כתב שורת קוד. כל פעולה מוצגת על המסך, צעד אחר צעד.</p></details>
+      <details><summary>כמה זמן לוקח הקורס?</summary><p>השיעורים קצרים. אפשר לעבור פרק בערב, ולבנות את מה שלמדתם באותו שבוע.</p></details>
+      <details><summary>אילו כלים צריך, וכמה הם עולים?</summary><p>בקורס מפורט כל כלי, מה המחיר שלו, ואיפה אפשר להתחיל בלי לשלם. אתם מחליטים במה להשתמש.</p></details>
+      <details><summary>מה עם פרטיות של לקוחות?</summary><p>זה הנושא של הפרק הראשון. לומדים מה מכניסים לכלים ומה לא, ואיך עובדים בלי פרטים מזהים.</p></details>
+      <details><summary>זה מתאים לכל תחום?</summary><p>כן. הדוגמאות מגיעות מהמשרד שלי, אבל השיטה עובדת לכל עסק קטן: יועצים, מטפלים, אנשי מקצוע ונותני שירות. מסלול נפרד לעורכי דין נמצא בהכנה.</p></details>
+      <details><summary>אפשר לבטל?</summary><p>כן. תוך 14 ימים מהרכישה, אם עוד לא התחלתם לצפות בשיעורים, מקבלים החזר מלא.</p></details>
+    </div>
+  </div>
+</section>
+
+<section aria-label="הצטרפות">
+  <div class="wrap">
+    <div class="final reveal">
+      <h2>תפסיקו לעשות הכל לבד.<br><span class="gt">תבנו צוות.</span></h2>
+      <p class="lead">צוות שעובד כל יום, ואתם רק מאשרים.</p>
+      <a class="btn btn-p" href="#price">להצטרפות לקורס</a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span class="en">Team of One</span><span>הקורס מלמד שימוש בכלים. הוא אינו ייעוץ משפטי.</span><span>תנאי שימוש · מדיניות פרטיות · הצהרת נגישות</span></div></footer>
+
+<script>
+(function(){
+  // live feed
+  var evs=[
+    ['✍️','rgba(139,108,255,.14)','מאמר חדש מוכן לאישור','מס שבח במכירת דירה בירושה','t-wait','מחכה לך'],
+    ['🎬','rgba(45,212,238,.12)','סרטון נערך','דמות דיגיטלית, 58 שניות','t-ok','מוכן'],
+    ['📣','rgba(61,220,151,.12)','פוסט עלה לפייסבוק ולינקדאין','לפי לוח הפרסום','t-ok','פורסם'],
+    ['💬','rgba(255,181,71,.12)','פנייה חדשה מהאתר','טיוטת תשובה הוכנה','t-wait','מחכה לך'],
+    ['📊','rgba(79,140,255,.14)','דוח שבועי נשלח','פניות, מאמרים ופרסומים','t-ok','נשלח'],
+    ['🖼️','rgba(139,108,255,.14)','אינפוגרפיקה נוספה למאמר','לפי עיצוב קבוע','t-ok','באוויר'],
+    ['🎙️','rgba(45,212,238,.12)','פרק פודקאסט עלה','לכל האפליקציות','t-ok','פורסם'],
+    ['🔎','rgba(255,181,71,.12)','בדיקת עובדות במאמר','6 מקורות רשמיים','t-run','רץ עכשיו'],
+    ['📰','rgba(61,220,151,.12)','גיליון מגזין שבועי','10 עמודים, מוכן לאישור','t-wait','מחכה לך']
+  ];
+  var feed=document.getElementById('feed'),i=0;
+  function add(){var e=evs[i%evs.length];i++;var d=document.createElement('div');d.className='ev';
+    d.innerHTML='<div class="ic" style="background:'+e[1]+'">'+e[0]+'</div><div style="min-width:0"><b></b><small></small></div><em class="'+e[4]+'"></em>';
+    d.querySelector('b').textContent=e[2];d.querySelector('small').textContent=e[3];d.querySelector('em').textContent=e[5];
+    feed.insertBefore(d,feed.firstChild);while(feed.children.length>6)feed.removeChild(feed.lastChild);}
+  for(var k=0;k<5;k++)add();
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)setInterval(add,2600);
+
+  // showcase tabs
+  var shows=[
+    {t:'אתר שמביא פניות',h:'אתר שכותב את עצמו',p:'מאמרים חדשים נכתבים כל שבוע ממה שאנשים מחפשים בגוגל. כל עובדה נבדקת מול מקור רשמי, ואני מקבל את המאמר לאישור לפני שהוא עולה.',l:[['1','נושא נבחר לפי חיפושים אמיתיים בגוגל'],['2','כתיבה ובדיקה מול מקורות רשמיים'],['3','אינפוגרפיקה, קישורים פנימיים ותמונה ראשית'],['4','אישור שלי, ורק אז עולה לאתר']],v:'fig'},
+    {t:'סרטונים',h:'סרטונים בלי לצלם',p:'דמות דיגיטלית שלי, בקול שלי, מתסריט שנכתב ונבדק. הסרטון נערך עם כתוביות ונכנס ללוח הפרסום.',l:[['1','תסריט לפי נושא השבוע'],['2','אישור שלי לתסריט'],['3','הפקה ועריכה'],['4','אישור סופי ופרסום ברשתות']],v:'flow'},
+    {t:'לוח פרסום',h:'רשתות שמתעדכנות לבד',p:'לוח פרסום שמתמלא מראש: סרטונים, פוסטים, קומיקס ופוסטים לגוגל עסקי. כל דבר יוצא בשעה שנקבעה, בלי שאני זוכר.',l:[['1','לוח של שלושה שבועות קדימה'],['2','בלי פרסום כפול של אותו נושא'],['3','כל רשת בשעה שלה']],v:'cal'},
+    {t:'פניות ולקוחות',h:'אף פנייה לא נשכחת',p:'פנייה מהאתר נכנסת למערכת המשרד, מקבלת טיוטת תשובה, ומגיעה אליי לטלגרם. לחיצה אחת, והתשובה יוצאת.',l:[['1','טופס באתר או פנייה מקמפיין'],['2','טיוטת תשובה קצרה'],['3','אישור בלחיצה אחת']],v:'rows'}
+  ];
+  var tabs=document.getElementById('tabs'),show=document.getElementById('show');
+  function vis(k){
+    if(k==='fig')return '<div class="figwrap"><img src="{{INFOG}}" alt="דוגמה לאינפוגרפיקה שנוצרה אוטומטית למאמר באתר" width="1200" height="698"><div class="figcap">דוגמה אמיתית: אינפוגרפיקה שהמערכת יצרה למאמר באתר המשרד.</div></div>';
+    if(k==='flow')return '<div class="flowv"><span class="node">נושא</span><span class="arr">←</span><span class="node">תסריט</span><span class="arr">←</span><span class="node hl">אישור שלי</span><span class="arr">←</span><span class="node">הפקה</span><span class="arr">←</span><span class="node">עריכה</span><span class="arr">←</span><span class="node hl">אישור סופי</span><span class="arr">←</span><span class="node">פרסום</span></div>';
+    if(k==='cal'){var c=['#8B6CFF','#2DD4EE','#3DDC97','#FFB547'],s='<div class="cal">';for(var d=1;d<=21;d++){s+='<div>'+d+(d%2?'<i style="background:'+c[d%4]+'"></i>':'')+(d%3===0?'<i style="background:'+c[(d+1)%4]+'"></i>':'')+'</div>';}return s+'</div>';}
+    return '<div class="mv"><div class="row">פנייה חדשה מהאתר<span class="chip t-wait">מחכה לאישור</span></div><div class="row">טיוטת תשובה<span>מוכנה</span></div><div class="row">נשלח ללקוח<span class="chip t-ok">אחרי אישור</span></div><div class="row">נרשם בתיק<span>אוטומטית</span></div></div>';
+  }
+  shows.forEach(function(s,n){var b=document.createElement('button');b.className='tab';b.setAttribute('role','tab');b.textContent=s.t;b.onclick=function(){sel(n)};tabs.appendChild(b);});
+  function sel(n){[].forEach.call(tabs.children,function(b,j){b.setAttribute('aria-selected',j===n)});var s=shows[n];
+    show.innerHTML='<div><h3></h3><p></p><ul></ul></div><div class="vis">'+vis(s.v)+'</div>';
+    show.querySelector('h3').textContent=s.h;show.querySelector('p').textContent=s.p;
+    var ul=show.querySelector('ul');s.l.forEach(function(x){var li=document.createElement('li');li.innerHTML='<b></b><span></span>';li.querySelector('b').textContent=x[0];li.querySelector('span').textContent=x[1];ul.appendChild(li)});}
+  sel(0);
+
+  // curriculum
+  var mods=[
+    ['הבסיס: עבודה נכונה עם בינה מלאכותית','פרטיות, בדיקת עובדות ואחריות',['מה הכלים יודעים לעשות, ומה לא','פרטיות: מה מכניסים ומה אף פעם לא','בדיקת עובדות: שיטת המקור קודם','הוראות עבודה טובות לכלים']],
+    ['פניות ולקוחות','מענה מסודר לכל פנייה',['איפה הפניות נכנסות היום, ואיך מרכזים אותן','טיוטת תשובה לכל פנייה','אישור בלחיצה אחת','מעקב ותזכורות']],
+    ['מסמכים','טיוטות בלי דף ריק',['תבניות להצעות מחיר, חוזים ומכתבים','טיוטה ראשונה מתוך הפרטים','רשימת בדיקה לפני שליחה']],
+    ['אתר שמביא פניות','מאמרים, מחשבונים וקידום',['איך בוחרים נושאים לפי חיפושים אמיתיים','כתיבה ובדיקה מול מקורות','קישורים פנימיים ומה שגוגל צריך','אינפוגרפיקה ותמונה ראשית']],
+    ['רשתות חברתיות','לוח פרסום שרץ לבד',['תוכנית תוכן לחודש','פוסטים מראש לכל רשת','פרסום אוטומטי בזמן']],
+    ['סרטונים','דמות דיגיטלית, קול ועריכה',['יצירת דמות דיגיטלית וקול','תסריט שמחזיק עד הסוף','עריכה וכתוביות']],
+    ['פרסום ממומן','קמפיין קטן שמביא פניות',['תכנון קמפיין לפני שמוציאים שקל','מודעה ודף נחיתה','מעקב אחרי פניות ולא אחרי לחיצות']],
+    ['משימות קבועות','מערכת שעובדת כל יום',['משימה שרצה לבד כל שבוע','דוח שבועי למשרד','לחבר הכל למערכת אחת']]
+  ];
+  var mb=document.getElementById('mods');
+  mods.forEach(function(m,n){var d=document.createElement('details');d.className='mod reveal';if(n===0)d.open=true;
+    d.innerHTML='<summary><span class="mn">0'+(n+1)+'</span><span class="mt"><b></b><span></span></span><span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span></summary><div class="lessons"></div>';
+    d.querySelector('.mt b').textContent=m[0];d.querySelector('.mt span').textContent=m[1];
+    var L=d.querySelector('.lessons');m[2].forEach(function(t,j){var r=document.createElement('div');r.className='lesson';r.innerHTML='<span>▶</span><span></span><span>שיעור '+(j+1)+'</span>';r.children[1].textContent=t;L.appendChild(r)});
+    mb.appendChild(d);});
+
+  // reveal + counters
+  var io=('IntersectionObserver' in window)?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);
+    e.target.querySelectorAll('[data-n]').forEach(function(el){var to=+el.dataset.n,t0=null;function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/1200,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)});}})},{threshold:.15}):null;
+  document.querySelectorAll('.reveal').forEach(function(el){if(io)io.observe(el);else{el.classList.add('in');el.querySelectorAll('[data-n]').forEach(function(x){x.textContent=x.dataset.n})}});
+})();
+</script>
