@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="מאמר | Team of One" app>
+  <div id="art"><main class="wrap page"><div class="card">טוען...</div></main></div>
+  <script>
+    import { sb, BASE, esc } from '../../lib/sb.js';
+    import { md } from '../../lib/md.js';
+    const s = new URLSearchParams(location.search).get('s');
+    (async () => {
+      const { data: a } = await sb.from('too_articles').select('*').eq('slug', s || '').maybeSingle();
+      const el = document.getElementById('art');
+      if (!a) { el.innerHTML = '<main class="wrap page"><div class="card">המאמר לא נמצא. <a href="' + BASE + 'maamarim/">לכל המאמרים</a></div></main>'; return; }
+      document.title = (a.seo_title || a.title) + ' | Team of One';
+      el.innerHTML = `<main class="wrap page" style="max-width:860px"><div class="crumbs"><a href="${BASE}">דף הבית</a> / <a href="${BASE}maamarim/">מאמרים</a> / ${esc(a.category)}</div>
+        ${a.status !== 'published' ? '<div class="card" style="margin-bottom:14px"><span class="pill warn">טיוטה</span> המאמר עדיין לא פורסם. רק מנהלים רואים אותו.</div>' : ''}
+        <span class="pill k">${esc(a.category)}</span><h1 style="font-family:var(--body);font-weight:900;font-size:clamp(30px,4.4vw,50px);line-height:1.15;margin:14px 0 10px">${esc(a.title)}</h1>
+        <p class="muted" style="font-size:18px">${esc(a.description || '')}</p>${a.cover_url ? `<div class="artcover"><img src="${esc(a.cover_url)}" alt=""></div>` : ''}
+        <p class="aff">חלק מהקישורים לכלים במאמרים שלנו הם קישורי שותפים: אם תצטרפו דרכם, ייתכן שנקבל עמלה, בלי עלות נוספת לכם.</p>
+        <article class="prose">${md(a.body_md)}</article>
+        ${(a.faq || []).length ? '<section class="faqx" style="margin-top:30px"><h2 style="font-size:26px">שאלות נפוצות</h2>' + a.faq.map((f) => `<details><summary>${esc(f.q)}</summary><p style="margin:0 0 12px">${esc(f.a)}</p></details>`).join('') + '</section>' : ''}</main>`;
+    })();
+  </script>
+</Base>

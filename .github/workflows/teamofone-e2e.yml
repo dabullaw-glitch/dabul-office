@@ -1,0 +1,25 @@
+name: teamofone e2e
+# Opens the published Team of One site in a real browser (desktop and phone), runs the student flow with a test account,
+# and saves screenshots and results to the branch too-e2e-out. Runs when tools/teamofone-e2e/ changes.
+on:
+  push:
+    branches: [main]
+    paths: ['tools/teamofone-e2e/**']
+permissions:
+  contents: write
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p /tmp/e && cp tools/teamofone-e2e/e2e.mjs /tmp/e/ && cd /tmp/e && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null && npx playwright install --with-deps chromium >/dev/null
+          node e2e.mjs || true
+          ls -la out
+      - run: |
+          git config user.name e2e; git config user.email e2e@users.noreply.github.com
+          git fetch origin too-e2e-out || true
+          git checkout -B too-e2e-out origin/too-e2e-out 2>/dev/null || git checkout --orphan too-e2e-out
+          git rm -rfq . >/dev/null 2>&1 || true
+          rm -rf out && mkdir -p out && cp /tmp/e/out/* out/ && git add out && git commit -qm "e2e $(date -u +%FT%TZ)" && git push -f origin too-e2e-out

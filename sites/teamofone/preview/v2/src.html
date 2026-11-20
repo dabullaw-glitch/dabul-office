@@ -1,0 +1,800 @@
+<title>Team of One</title>
+<meta name="description" content="צוות שלם. אדם אחד. איך בונים עסק שעובד עם צוות של בינה מלאכותית, צעד אחר צעד.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karantina:wght@400;700&family=Rubik:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+:root{
+  --ink:#0B0B0C;--ink2:#141416;--ink3:#1C1C20;--paper:#F3F0E8;--paper2:#E9E4D8;--line:rgba(255,255,255,.1);--lineD:rgba(11,11,12,.12);
+  --fg:#F6F4EE;--mut:#A3A099;--mutD:#5E5A52;
+  --lime:#D7FF3B;--lime2:#C3F01F;--hot:#FF5A1F;
+  --disp:Karantina,"Rubik",Arial,sans-serif;--body:Rubik,Heebo,Arial,sans-serif;--lat:"Space Grotesk",Rubik,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--body);direction:rtl;line-height:1.6;font-size:17px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px}
+.disp{font-family:var(--disp);font-weight:700;line-height:.86;letter-spacing:0}
+.en{font-family:var(--lat);direction:ltr;unicode-bidi:isolate}
+h1,h2,h3{margin:0;text-wrap:balance}
+.paper{background:var(--paper);color:var(--ink)}
+.paper .mut{color:var(--mutD)}
+.mut{color:var(--mut)}
+section{position:relative}
+.pad{padding-block:110px}
+@media (max-width:760px){.pad{padding-block:76px}}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;letter-spacing:.2px;border-radius:999px;padding:7px 14px;border:1px solid currentColor;width:max-content;max-width:100%}
+.tag i{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px rgba(215,255,59,.22)}
+.paper .tag{border-color:var(--lineD)}
+.paper .tag i{background:var(--ink);box-shadow:none}
+.h2{font-family:var(--disp);font-weight:700;font-size:clamp(56px,8.4vw,120px);line-height:.86}
+.lead{font-size:clamp(17px,1.8vw,20px);max-width:60ch;margin:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:inherit;font-weight:800;font-size:17px;border:0;border-radius:999px;padding:16px 26px;text-decoration:none;cursor:pointer;transition:transform .2s,background .2s,box-shadow .2s;white-space:nowrap}
+.btn-l{background:var(--lime);color:var(--ink)}
+.btn-l:hover{transform:translateY(-2px);box-shadow:0 14px 34px -12px rgba(215,255,59,.6)}
+.btn-o{border:1.5px solid rgba(255,255,255,.28);color:var(--fg);background:transparent}
+.btn-o:hover{border-color:var(--fg)}
+.btn-k{background:var(--ink);color:var(--paper)}
+.btn-k:hover{transform:translateY(-2px)}
+.arrow{display:inline-block;transition:transform .2s}.btn:hover .arrow{transform:translateX(-4px)}
+
+/* bar + nav */
+.bar{background:var(--lime);color:var(--ink);font-weight:700;font-size:14px;text-align:center;padding:9px 16px}
+.bar b{font-weight:900}
+.nav{position:sticky;top:0;z-index:50;background:rgba(11,11,12,.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:70px;gap:14px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo b{font-family:var(--lat);font-weight:700;font-size:20px;letter-spacing:-.4px;direction:ltr}
+.nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0;font-size:15px;color:var(--mut)}
+.nav ul a{text-decoration:none}.nav ul a:hover{color:var(--fg)}
+.nav .btn{padding:11px 18px;font-size:15px}
+@media (max-width:900px){.nav ul{display:none}}
+
+/* hero */
+.hero{overflow:hidden;padding-top:40px;padding-bottom:30px;background:radial-gradient(900px 500px at 25% 55%,rgba(215,255,59,.10),transparent 60%),var(--ink)}
+.hero .wrap{display:grid;grid-template-columns:1.02fr .98fr;align-items:center;gap:10px}
+@media (max-width:980px){.hero .wrap{grid-template-columns:1fr}}
+.hero h1{font-family:var(--disp);font-weight:700;font-size:clamp(104px,15vw,220px);line-height:.8;margin:22px 0 22px}
+.hero h1 span{display:block}
+.hero h1 .l{color:var(--lime)}
+.hero .lead{color:#CFCCC4;margin-bottom:30px}
+.hero .lead b{color:var(--fg)}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+.who{display:flex;align-items:center;gap:12px;margin-top:30px;color:var(--mut);font-size:15px}
+.who .dot{width:40px;height:40px;border-radius:50%;overflow:hidden;background:#222;flex:0 0 auto;border:2px solid var(--lime)}
+.who .dot img{width:100%;height:100%;object-fit:cover;object-position:50% 12%}
+.who b{color:var(--fg);display:block;font-size:16px}
+
+.stage{position:relative;aspect-ratio:1/1.02;width:100%;max-width:620px;margin-inline:auto;min-width:0}
+.ring{position:absolute;border-radius:50%;border:1px dashed rgba(255,255,255,.16);left:50%;top:50%;translate:-50% -50%}
+.ring.r1{width:96%;height:96%;animation:spin 80s linear infinite}
+.ring.r2{width:68%;height:68%;border-style:solid;border-color:rgba(215,255,59,.22)}
+.ring.r1::after{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:var(--lime);top:12%;left:14%;box-shadow:0 0 20px var(--lime)}
+@keyframes spin{to{rotate:360deg}}
+.glow{position:absolute;left:50%;top:56%;width:70%;height:70%;translate:-50% -50%;border-radius:50%;background:radial-gradient(closest-side,rgba(215,255,59,.35),transparent);filter:blur(10px)}
+.me{position:absolute;bottom:0;left:50%;translate:-50% 0;height:92%;width:auto;max-width:none;filter:drop-shadow(0 30px 40px rgba(0,0,0,.6));-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
+.chip{position:absolute;display:flex;align-items:center;gap:10px;background:rgba(20,20,22,.88);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:9px 12px 9px 14px;box-shadow:0 18px 40px -16px rgba(0,0,0,.8);animation:bob 6s ease-in-out infinite;max-width:46%;z-index:2}
+.chip .ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:var(--lime);color:var(--ink)}
+.chip .ic svg{width:18px;height:18px}
+.chip b{display:block;font-size:14px;line-height:1.2;white-space:nowrap}
+.chip small{display:flex;align-items:center;gap:5px;color:var(--mut);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip small::before{content:"";width:6px;height:6px;border-radius:50%;background:#3BE37F;flex:0 0 auto}
+.chip.c2{animation-delay:-1.2s}.chip.c3{animation-delay:-2.4s}.chip.c4{animation-delay:-3.1s}.chip.c5{animation-delay:-4.2s}.chip.c6{animation-delay:-5s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.c1{top:8%;right:0}.c2{top:26%;left:0}.c3{top:44%;right:-2%}.c4{top:58%;left:-2%}.c5{bottom:12%;right:2%}.c6{bottom:2%;left:6%}
+@media (max-width:560px){.chip{padding:7px 9px;gap:7px;border-radius:12px}.chip .ic{width:26px;height:26px;border-radius:8px}.chip .ic svg{width:14px;height:14px}.chip b{font-size:12px}.chip small{font-size:10.5px}.c3{right:0}.c4{left:0}}
+
+/* marquee */
+.wall{padding-block:34px 90px;overflow:hidden;background:var(--ink)}
+.wall .cap{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+.wall .cap p{margin:0;color:var(--mut);max-width:52ch}
+.wall .cap .disp{font-size:clamp(44px,6vw,76px)}
+.track{display:flex;gap:16px;width:max-content;animation:slide 70s linear infinite;direction:ltr}
+.track.rev{animation-direction:reverse;animation-duration:85s;margin-top:16px}
+.wall:hover .track{animation-play-state:paused}
+@keyframes slide{to{transform:translateX(-50%)}}
+.tile{flex:0 0 auto;height:300px;border-radius:18px;overflow:hidden;position:relative;background:#222;border:1px solid var(--line)}
+.tile img{height:100%;width:auto;object-fit:cover}
+.tile span{position:absolute;bottom:10px;right:10px;direction:rtl;background:rgba(11,11,12,.82);color:var(--fg);font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;border:1px solid var(--line)}
+.track.rev .tile{height:220px}
+@media (max-width:640px){.tile{height:220px}.track.rev .tile{height:170px}}
+
+/* numbers */
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.num{padding:34px 22px 30px;border-inline-start:1px solid var(--lineD)}
+.num:first-child{border-inline-start:0}
+.num b{display:block;font-family:var(--disp);font-size:clamp(96px,11vw,170px);line-height:.8;font-variant-numeric:tabular-nums}
+.num span{display:block;font-weight:600;font-size:16px;margin-top:12px;max-width:20ch}
+@media (max-width:820px){.nums{grid-template-columns:repeat(2,minmax(0,1fr))}.num:nth-child(3){border-inline-start:0}.num:nth-child(n+3){border-top:1px solid var(--lineD)}}
+.asof{font-size:14px;margin-top:14px}
+.split-h{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:54px}
+@media (max-width:860px){.split-h{grid-template-columns:1fr;gap:18px}}
+
+/* team */
+.team{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media (max-width:1000px){.team{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.team{grid-template-columns:1fr}.role.you{grid-column:span 1}}
+.role{background:#fff;border:1px solid var(--lineD);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0;transition:transform .25s,box-shadow .25s}
+.role:hover{transform:translateY(-4px);box-shadow:0 24px 40px -24px rgba(11,11,12,.35)}
+.role .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.role .badge{width:44px;height:44px;border-radius:14px;background:var(--ink);color:var(--lime);display:flex;align-items:center;justify-content:center}
+.role .badge svg{width:22px;height:22px}
+.role .st{font-size:12px;font-weight:700;color:#1C7A45;background:#E3F7EA;border-radius:999px;padding:4px 10px;display:flex;align-items:center;gap:6px}
+.role .st::before{content:"";width:6px;height:6px;border-radius:50%;background:#22A85A}
+.role h3{font-size:21px;font-weight:800}
+.role p{margin:0;color:var(--mutD);font-size:15px}
+.role .peek{margin-top:auto;border-radius:14px;overflow:hidden;height:140px;background:var(--paper2)}
+.role .peek img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.role.you{grid-column:span 2;background:var(--ink);color:var(--fg);border-color:var(--ink)}
+.role.you p{color:var(--mut)}
+.role.you .badge{background:var(--lime);color:var(--ink)}
+.role.you .peek{background:#222}
+
+/* day */
+.day{display:grid;grid-template-columns:.8fr 1.2fr;gap:60px}
+@media (max-width:900px){.day{grid-template-columns:1fr;gap:30px}}
+.day .sticky{position:sticky;top:110px;align-self:start}
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;top:8px;bottom:8px;right:63px;width:2px;background:linear-gradient(var(--lime),rgba(215,255,59,.1))}
+.tl li{display:grid;grid-template-columns:54px 20px minmax(0,1fr);gap:14px;align-items:start;padding:0 0 26px}
+.tl time{font-family:var(--lat);font-weight:700;font-size:15px;color:var(--mut);padding-top:3px;text-align:left;direction:ltr}
+.tl .nd{width:14px;height:14px;border-radius:50%;background:var(--ink);border:3px solid var(--lime);margin-top:6px;justify-self:center;position:relative;z-index:1}
+.tl .card{background:var(--ink2);border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:flex;gap:14px;align-items:center;min-width:0}
+.tl .card img{width:64px;height:64px;border-radius:12px;object-fit:cover;object-position:50% 20%;flex:0 0 auto}
+.tl .card b{display:block;font-size:17px}
+.tl .card span{color:var(--mut);font-size:14.5px}
+.tl .me-row .card{background:var(--lime);color:var(--ink);border-color:var(--lime)}
+.tl .me-row .card span{color:#3A4410}
+.tl .me-row .nd{background:var(--lime)}
+
+/* video */
+.vid{position:relative;border-radius:28px;overflow:hidden;aspect-ratio:16/9;border:1px solid var(--line);background:#111;max-width:100%}
+.vid img{width:100%;height:100%;object-fit:cover;filter:blur(7px) saturate(.8) brightness(.38);transform:scale(1.08)}
+.vid .ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:20px}
+.play{width:96px;height:96px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 14px rgba(215,255,59,.18);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(215,255,59,.45)}60%{box-shadow:0 0 0 22px rgba(215,255,59,0)}}
+.vid .ov b{font-family:var(--disp);font-size:clamp(40px,5vw,64px);line-height:.9}
+.vid .ov small{color:#D9D6CF;font-size:15px}
+
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:minmax(150px,auto);gap:14px}
+.bx{border-radius:24px;overflow:hidden;position:relative;padding:24px;display:flex;flex-direction:column;gap:8px;min-width:0;background:#fff;border:1px solid var(--lineD)}
+.bx h3{font-size:clamp(22px,2.2vw,28px);font-weight:800;line-height:1.15}
+.bx p{margin:0;color:var(--mutD);font-size:15.5px;max-width:42ch}
+.bx.dark{background:var(--ink);color:var(--fg);border-color:var(--ink)}.bx.dark p{color:var(--mut)}
+.bx.lime{background:var(--lime);border-color:var(--lime)}.bx.lime p{color:#3A4410}
+.b1{grid-column:span 4;grid-row:span 2}.b2{grid-column:span 2;grid-row:span 2}.b3{grid-column:span 2;grid-row:span 2}.b4{grid-column:span 2;grid-row:span 2}.b5{grid-column:span 2;grid-row:span 2}.b6{grid-column:span 2}.b7{grid-column:span 2}.b8{grid-column:span 2}
+@media (max-width:980px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.b1{grid-column:span 2}.b2,.b3,.b4,.b5{grid-column:span 1}.b6,.b7,.b8{grid-column:span 2}}
+@media (max-width:560px){.stack{height:300px}.stack img{height:270px}.bento{grid-template-columns:1fr}.b1,.b2,.b3,.b4,.b5,.b6,.b7,.b8{grid-column:span 1;grid-row:auto}}
+.b1 .shot{margin-top:auto;border-radius:16px;overflow:hidden;border:1px solid var(--lineD);box-shadow:0 30px 50px -30px rgba(0,0,0,.4)}
+.fan{position:relative;height:260px;margin-top:auto}
+.fan img{position:absolute;bottom:0;width:46%;border-radius:12px;box-shadow:0 18px 30px -14px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.12)}
+.fan img:nth-child(1){right:4%;rotate:8deg}.fan img:nth-child(2){right:27%;rotate:0deg;z-index:2;bottom:12px}.fan img:nth-child(3){right:50%;rotate:-8deg}
+.stack{position:relative;height:380px;margin-top:auto}
+.stack img{position:absolute;bottom:0;height:340px;width:auto;border-radius:14px;box-shadow:0 18px 30px -14px rgba(0,0,0,.6)}
+.stack img:nth-child(1){right:0;rotate:6deg}.stack img:nth-child(2){right:22%;z-index:2}.stack img:nth-child(3){right:44%;rotate:-6deg}
+.bx .pic{margin-top:auto;border-radius:16px;overflow:hidden;max-height:260px}
+.bx .pic img{width:100%;height:100%;object-fit:cover}
+.row2{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.row2 img{width:110px;height:110px;border-radius:16px;object-fit:cover}
+.msgs{display:grid;gap:8px;margin-top:6px}
+.msg{background:rgba(11,11,12,.07);border-radius:14px;padding:10px 12px;font-size:14px;display:flex;justify-content:space-between;gap:10px}
+.msg em{font-style:normal;font-weight:800;font-size:12px;background:var(--ink);color:var(--lime);border-radius:999px;padding:2px 9px;white-space:nowrap;align-self:center}
+
+/* curriculum */
+.mods{border-top:1px solid var(--line)}
+details.mod{border-bottom:1px solid var(--line)}
+details.mod summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:110px minmax(0,1fr) 46px;gap:20px;align-items:center;padding:26px 0}
+details.mod summary::-webkit-details-marker{display:none}
+.mod .n{font-family:var(--disp);font-size:88px;line-height:.8;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.4)}
+details.mod[open] .n,details.mod:hover .n{color:var(--lime);-webkit-text-stroke:0}
+.mod h3{font-size:clamp(22px,2.6vw,32px);font-weight:800}
+.mod .sub{color:var(--mut);font-size:15.5px;margin-top:2px}
+.mod .pl{width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;transition:transform .3s,background .3s}
+details.mod[open] .pl{transform:rotate(45deg);background:var(--lime);color:var(--ink);border-color:var(--lime)}
+.mod .body{display:grid;grid-template-columns:110px minmax(0,1fr) 46px;gap:20px;padding:0 0 28px}
+.mod .body>div{grid-column:2}
+.mod ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.mod li{background:var(--ink2);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:15px;color:#D6D3CB}
+.mod .out{margin-top:14px;display:inline-flex;gap:8px;align-items:center;font-weight:700;color:var(--lime);font-size:15px}
+@media (max-width:700px){details.mod summary,.mod .body{grid-template-columns:62px minmax(0,1fr) 40px;gap:12px}.mod .n{font-size:58px}.mod ul{grid-template-columns:1fr}.mod .pl{width:40px;height:40px}}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:s;border-top:2px solid var(--ink)}
+.steps div{padding:26px 22px 10px 22px;border-inline-start:1px solid var(--lineD)}
+.steps div:first-child{border-inline-start:0}
+.steps div::before{counter-increment:s;content:"0" counter(s);font-family:var(--disp);font-size:72px;line-height:.8;display:block;margin-bottom:14px}
+.steps b{display:block;font-size:19px;margin-bottom:4px}
+.steps p{margin:0;color:var(--mutD);font-size:15.5px}
+@media (max-width:860px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.steps div:nth-child(3){border-inline-start:0}}
+@media (max-width:480px){.steps{grid-template-columns:1fr}.steps div{border-inline-start:0;border-top:1px solid var(--lineD)}}
+
+/* instructor */
+.inst{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:center}
+@media (max-width:900px){.inst{grid-template-columns:1fr;gap:30px}}
+.portrait{position:relative;border-radius:30px;overflow:hidden;aspect-ratio:4/5;max-width:520px;width:100%;background:#222}
+.portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 15%}
+.portrait .stamp{position:absolute;bottom:18px;right:18px;left:18px;background:rgba(11,11,12,.85);backdrop-filter:blur(8px);color:var(--fg);border-radius:18px;padding:14px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.portrait .stamp b{font-size:16px}.portrait .stamp span{color:var(--lime);font-weight:700;font-size:14px}
+.quote{font-family:var(--disp);font-size:clamp(54px,6.4vw,92px);line-height:.88;margin:18px 0 22px}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.facts span{border:1.5px solid var(--ink);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600}
+
+/* community */
+.comm{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center}
+@media (max-width:900px){.comm{grid-template-columns:1fr}}
+.phone{width:min(330px,100%);margin-inline:auto;border-radius:44px;background:#000;padding:12px;box-shadow:0 50px 80px -40px rgba(215,255,59,.35),0 0 0 1px rgba(255,255,255,.12)}
+.scr{border-radius:34px;overflow:hidden;background:#0E1512}
+.wa-top{background:#1F2C33;padding:16px 16px 12px;display:flex;align-items:center;gap:10px}
+.wa-top .av{width:38px;height:38px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.wa-top b{display:block;font-size:15px}.wa-top small{color:#8FA3AD;font-size:12px}
+.wa{padding:14px 12px 18px;display:grid;gap:9px;min-height:380px;background:#0B141A}
+.bub{background:#1F2C33;border-radius:12px 12px 12px 4px;padding:9px 11px;font-size:13.5px;line-height:1.45;max-width:88%;justify-self:start}
+.bub .who2{color:var(--lime);font-weight:700;font-size:12px;display:block;margin-bottom:2px}
+.bub .tm{display:block;text-align:left;color:#8FA3AD;font-size:11px;margin-top:3px}
+.bub.img{padding:4px}.bub.img img{border-radius:9px;height:120px;width:100%;object-fit:cover;object-position:50% 20%}
+.bub.img p{margin:6px 6px 2px}
+.ticks{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:12px}
+.ticks li{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start}
+.ticks li::before{content:"";width:28px;height:28px;border-radius:9px;background:var(--lime) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B0B0C' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L19 8'/%3E%3C/svg%3E") center/14px no-repeat}
+
+/* safety */
+.safe{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
+.safe div{padding:28px 24px 6px;border-inline-start:1px solid var(--line)}
+.safe div:first-child{border-inline-start:0}
+.safe b{display:block;font-size:22px;margin:14px 0 6px}
+.safe p{margin:0;color:var(--mut);font-size:15.5px}
+.safe svg{width:30px;height:30px;color:var(--lime)}
+@media (max-width:820px){.safe{grid-template-columns:1fr}.safe div{border-inline-start:0;border-top:1px solid var(--line)}}
+
+/* articles */
+.arts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:900px){.arts{grid-template-columns:1fr}}
+.art{text-decoration:none;display:flex;flex-direction:column;gap:12px}
+.art .th{aspect-ratio:16/10;border-radius:20px;overflow:hidden;background:var(--paper2);position:relative}
+.art .th img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;transition:transform .5s}
+.art:hover .th img{transform:scale(1.05)}
+.art .th span{position:absolute;top:12px;right:12px;background:var(--ink);color:var(--lime);font-size:12px;font-weight:800;padding:5px 11px;border-radius:999px}
+.art h3{font-size:21px;font-weight:800;line-height:1.25}
+.art p{margin:0;color:var(--mutD);font-size:15px}
+
+/* price */
+.price{display:grid;grid-template-columns:1.15fr .85fr;border-radius:32px;overflow:hidden;border:2px solid var(--ink)}
+@media (max-width:880px){.price{grid-template-columns:1fr}}
+.price .l{padding:44px;background:#fff}
+.price .r{padding:44px;background:var(--ink);color:var(--fg);display:flex;flex-direction:column;justify-content:center;gap:14px}
+.price ul{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:14px}
+.price li{display:grid;grid-template-columns:28px 1fr;gap:12px;font-size:17px}
+.price li::before{content:"";width:28px;height:28px;border-radius:9px;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D7FF3B' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L19 8'/%3E%3C/svg%3E") center/14px no-repeat}
+.amt{font-family:var(--disp);font-size:clamp(120px,13vw,170px);line-height:.8;color:var(--lime)}
+.amt small{font-family:var(--body);font-size:20px;color:var(--mut);font-weight:500}
+.price .r .note{color:var(--mut);font-size:14px}
+.price .r .tagp{background:var(--hot);color:#fff;font-weight:800;font-size:13px;border-radius:999px;padding:5px 12px;width:max-content}
+@media (max-width:560px){.price .l,.price .r{padding:28px 22px}}
+
+/* faq */
+.faq{display:grid;gap:0;border-top:2px solid var(--ink);max-width:900px}
+.faq details{border-bottom:1px solid var(--lineD);padding:0 4px}
+.faq summary{cursor:pointer;font-weight:800;font-size:clamp(18px,2vw,21px);padding:22px 0;list-style:none;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--lat);font-size:28px;line-height:1;width:40px;height:40px;border-radius:50%;background:var(--ink);color:var(--lime);display:flex;align-items:center;justify-content:center;flex:0 0 auto;transition:transform .3s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq p{margin:0 0 22px;color:var(--mutD);max-width:70ch}
+
+/* seo */
+.seo{background:#101012;border-top:1px solid var(--line)}
+.sg{display:grid;grid-template-columns:1.35fr .65fr;gap:14px}
+@media (max-width:980px){.sg{grid-template-columns:1fr}}
+.pnl{background:var(--ink2);border:1px solid var(--line);border-radius:24px;padding:24px;min-width:0}
+.pnl h3{font-size:19px;font-weight:800;margin-bottom:4px}
+.pnl .s{color:var(--mut);font-size:14px}
+.chart{margin-top:18px;overflow-x:auto}
+.chart svg{display:block;width:100%;min-width:520px;height:auto}
+.big2{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:14px}
+.big2 b{font-family:var(--disp);font-size:clamp(70px,8vw,110px);line-height:.8;color:var(--lime)}
+.big2 span{color:#D6D3CB;font-size:16px}
+.src{color:var(--mut);font-size:13px;margin-top:12px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.kpi{background:var(--ink2);border:1px solid var(--line);border-radius:22px;padding:20px;min-width:0}
+.kpi b{display:block;font-family:var(--disp);font-size:clamp(60px,6vw,84px);line-height:.8}
+.kpi span{display:block;color:var(--mut);font-size:14.5px;margin-top:10px}
+.kpi.l{background:var(--lime);color:var(--ink);border-color:var(--lime)}.kpi.l span{color:#3A4410}
+.sg3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+@media (max-width:980px){.sg3{grid-template-columns:1fr}}
+.qt{width:100%;border-collapse:collapse;margin-top:14px;font-size:14.5px}
+.qt td{padding:9px 4px;border-top:1px solid var(--line)}
+.qt td:last-child{text-align:left;font-family:var(--lat);font-weight:700;color:var(--lime);white-space:nowrap}
+.mini{display:flex;gap:18px;margin-top:12px;flex-wrap:wrap}
+.mini div b{display:block;font-family:var(--lat);font-size:22px}.mini div span{color:var(--mut);font-size:13px}
+.hub svg{width:100%;height:auto;margin-top:8px;display:block}
+.rs{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px}
+.rs li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;font-size:15px;color:#D6D3CB}
+.rs li i{font-style:normal;width:30px;height:30px;border-radius:9px;background:rgba(215,255,59,.12);color:var(--lime);display:flex;align-items:center;justify-content:center;font-family:var(--lat);font-weight:700;font-size:13px}
+
+/* gift */
+.gift{background:var(--ink);overflow:hidden}
+.gift .ribbon{display:inline-flex;align-items:center;gap:10px;background:var(--lime);color:var(--ink);font-weight:900;border-radius:999px;padding:8px 16px;font-size:15px}
+.skills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media (max-width:1000px){.skills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.skills{grid-template-columns:1fr}}
+.sk{position:relative;background:var(--ink2);border:1px solid var(--line);border-radius:18px 4px 18px 18px;padding:18px;min-width:0;transition:border-color .2s,transform .2s}
+.sk:hover{border-color:var(--lime);transform:translateY(-3px)}
+.sk::before{content:"";position:absolute;top:0;left:0;width:22px;height:22px;background:linear-gradient(225deg,var(--ink) 50%,#2a2a30 50%);border-radius:0 0 0 6px}
+.sk .t{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sk .t em{font-style:normal;font-size:11.5px;font-weight:800;color:var(--ink);background:var(--lime);border-radius:6px;padding:2px 8px}
+.sk b{display:block;font-size:17.5px;margin-bottom:4px}
+.sk p{margin:0;color:var(--mut);font-size:14.5px}
+.gnote{margin-top:22px;color:var(--mut);font-size:15px}
+
+/* articles v2 */
+.arts2{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:start}
+@media (max-width:900px){.arts2{grid-template-columns:1fr}}
+.feat{text-decoration:none;display:flex;flex-direction:column;gap:14px}
+.feat .th{aspect-ratio:16/10;border-radius:24px;overflow:hidden;position:relative;background:var(--paper2)}
+.feat .th img{width:100%;height:100%;object-fit:cover}
+.feat .th span{position:absolute;top:14px;right:14px;background:var(--ink);color:var(--lime);font-size:12px;font-weight:800;padding:5px 11px;border-radius:999px}
+.feat h3{font-size:clamp(24px,2.6vw,32px);font-weight:800;line-height:1.2}
+.feat p{margin:0;color:var(--mutD)}
+.alist{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+.alist a{display:grid;grid-template-columns:minmax(0,1fr) 30px;gap:14px;align-items:center;padding:18px 0;border-bottom:1px solid var(--lineD);text-decoration:none}
+.alist em{font-style:normal;font-size:12px;font-weight:800;letter-spacing:.3px;color:var(--mutD);display:block;margin-bottom:4px}
+.alist b{font-size:18.5px;line-height:1.3;display:block}
+.alist .go{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--lime);display:flex;align-items:center;justify-content:center;font-size:15px}
+.cats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.cats span{border:1.5px solid var(--ink);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700}
+.cats span:first-child{background:var(--ink);color:var(--lime)}
+
+/* member area */
+.mem{display:grid;grid-template-columns:.8fr 1.2fr;gap:50px;align-items:center}
+@media (max-width:980px){.mem{grid-template-columns:1fr;gap:30px}}
+.app{background:#fff;border:1px solid var(--lineD);border-radius:22px;box-shadow:0 40px 70px -40px rgba(11,11,12,.45);overflow:hidden;min-width:0}
+.app .top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--lineD);gap:10px}
+.app .top b{font-family:var(--lat);font-size:15px;direction:ltr}
+.app .top span{font-size:13px;font-weight:700;background:var(--lime);border-radius:999px;padding:4px 10px}
+.app .bd{display:grid;grid-template-columns:200px minmax(0,1fr)}
+@media (max-width:640px){.app .bd{grid-template-columns:1fr}.app .side{display:none}}
+.app .side{border-inline-end:1px solid var(--lineD);padding:12px;display:grid;gap:4px;align-content:start;background:#FAF8F3}
+.app .side div{font-size:13px;padding:8px 10px;border-radius:10px;display:flex;justify-content:space-between;gap:6px}
+.app .side div.on{background:var(--ink);color:var(--lime);font-weight:700}
+.app .side div i{font-style:normal;color:#22A85A;font-weight:800}
+.app .main{padding:16px;display:grid;gap:12px;min-width:0}
+.player{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:16/9;background:#111}
+.player img{width:100%;height:100%;object-fit:cover;filter:brightness(.55)}
+.player .pb{position:absolute;inset:auto 12px 12px 12px;height:5px;border-radius:5px;background:rgba(255,255,255,.25)}
+.player .pb::after{content:"";position:absolute;inset:0 0 0 auto;width:62%;background:var(--lime);border-radius:5px}
+.player .pl2{position:absolute;left:50%;top:50%;translate:-50% -50%;width:56px;height:56px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center}
+.app .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.app .row b{font-size:16px}
+.prog{height:8px;border-radius:8px;background:var(--paper2);overflow:hidden}.prog i{display:block;height:100%;width:38%;background:var(--ink)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chips span{font-size:12.5px;font-weight:700;border:1px solid var(--lineD);border-radius:999px;padding:5px 10px;background:#FAF8F3}
+
+/* plans */
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
+@media (max-width:880px){.plans{grid-template-columns:1fr}}
+.plan{border:2px solid var(--ink);border-radius:30px;padding:34px;background:#fff;display:flex;flex-direction:column;gap:12px;min-width:0}
+.plan.dk{background:var(--ink);color:var(--fg)}
+.plan h3{font-size:26px;font-weight:900}
+.plan .pr{font-family:var(--disp);font-size:clamp(96px,10vw,140px);line-height:.8}
+.plan.dk .pr{color:var(--lime)}
+.plan .pr small{font-family:var(--body);font-size:18px;font-weight:500;color:var(--mutD)}
+.plan.dk .pr small{color:var(--mut)}
+.plan ul{list-style:none;padding:0;margin:8px 0 6px;display:grid;gap:11px}
+.plan li{display:grid;grid-template-columns:24px 1fr;gap:10px;font-size:16px}
+.plan li::before{content:"";width:24px;height:24px;border-radius:8px;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D7FF3B' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L19 8'/%3E%3C/svg%3E") center/12px no-repeat}
+.plan.dk li::before{background-color:var(--lime);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B0B0C' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L19 8'/%3E%3C/svg%3E")}
+.plan .btn{margin-top:auto}
+.plan .note{font-size:14px;color:var(--mutD)}.plan.dk .note{color:var(--mut)}
+.plan .tg{width:max-content;font-size:13px;font-weight:800;border-radius:999px;padding:5px 12px;background:var(--hot);color:#fff}
+
+/* final */
+.final{background:var(--lime);color:var(--ink);overflow:hidden}
+.final .big{font-family:var(--disp);font-weight:700;font-size:clamp(90px,15vw,230px);line-height:.8}
+.final .row{display:flex;justify-content:space-between;align-items:end;gap:30px;flex-wrap:wrap;margin-top:34px}
+.final p{margin:0;font-size:20px;font-weight:600;max-width:40ch}
+footer{background:var(--ink);color:var(--mut);font-size:14px;padding-block:40px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px;align-items:center}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.track,.ring.r1,.chip,.play{animation:none}}
+.draft{position:fixed;bottom:14px;left:14px;z-index:60;background:var(--hot);color:#fff;font-weight:800;font-size:13px;padding:8px 12px;border-radius:10px}
+</style>
+
+<div class="draft">טיוטה לאישור. לא באוויר.</div>
+<div class="bar">פתיחה קרובה · <b>מחיר השקה</b> לנרשמים הראשונים</div>
+
+<nav class="nav"><div class="wrap">
+  <a class="logo" href="#top" aria-label="Team of One">
+    <svg width="36" height="36" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="12" fill="#D7FF3B"/><circle cx="20" cy="20" r="5.5" fill="#0B0B0C"/><g fill="#0B0B0C" opacity=".55"><circle cx="20" cy="8" r="2.2"/><circle cx="30.4" cy="14" r="2.2"/><circle cx="30.4" cy="26" r="2.2"/><circle cx="20" cy="32" r="2.2"/><circle cx="9.6" cy="26" r="2.2"/><circle cx="9.6" cy="14" r="2.2"/></g></svg>
+    <b>Team of One</b>
+  </a>
+  <ul><li><a href="#team">הצוות</a></li><li><a href="#seo">קידום</a></li><li><a href="#course">תוכנית הקורס</a></li><li><a href="#articles">מאמרים</a></li><li><a href="#price">מסלולים</a></li></ul>
+  <a class="btn btn-l" href="#price">להצטרפות <span class="arrow">←</span></a>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="tag" style="color:var(--fg)"><i></i>קורס דיגיטלי לעצמאים ולעסקים קטנים</span>
+      <h1><span>צוות שלם.</span><span class="l">אדם אחד.</span></h1>
+      <p class="lead">אני עובד לבד. אבל כל יום יוצאים מהמשרד שלי <b>מאמרים, סרטונים, פוסטים, מגזין ופודקאסט</b>, האתר עולה בגוגל, וכל פנייה מקבלת מענה. את כל זה עושה צוות של בינה מלאכותית שבניתי, ואני רק מאשר. בקורס הזה תבנו צוות כזה לעסק שלכם, צעד אחר צעד.</p>
+      <div class="ctas"><a class="btn btn-l" href="#course">לתוכנית הקורס <span class="arrow">←</span></a><a class="btn btn-o" href="#video">לצפייה בהדגמה</a></div>
+      <div class="who"><span class="dot"><img src="{{me-port}}" alt=""></span><span><b>עו״ד יקיר דבול</b>מנהל את המשרד שלו עם צוות של בינה מלאכותית</span></div>
+    </div>
+    <div class="stage" aria-label="יקיר והצוות שלו">
+      <div class="ring r1"></div><div class="ring r2"></div><div class="glow"></div>
+      <img class="me" src="{{me-cut}}" alt="עו״ד יקיר דבול" width="452" height="900">
+      <div class="chip c1"><span class="ic">{{i-pen}}</span><span><b>כותב המאמרים</b><small>מאמר על מס שבח</small></span></div>
+      <div class="chip c2"><span class="ic">{{i-film}}</span><span><b>עורך הווידאו</b><small>עורך רילס חדש</small></span></div>
+      <div class="chip c3"><span class="ic">{{i-check}}</span><span><b>בודק העובדות</b><small>6 מקורות רשמיים</small></span></div>
+      <div class="chip c4"><span class="ic">{{i-cal}}</span><span><b>מנהל הרשתות</b><small>3 פוסטים מתוזמנים</small></span></div>
+      <div class="chip c5"><span class="ic">{{i-chat}}</span><span><b>המזכירה</b><small>טיוטת תשובה לפנייה</small></span></div>
+      <div class="chip c6"><span class="ic">{{i-trend}}</span><span><b>איש הקידום</b><small>מאמר עלה למקום 6 בגוגל</small></span></div>
+    </div>
+  </div>
+</header>
+
+<section class="wall" id="built" aria-label="דברים שנוצרו במשרד">
+  <div class="wrap">
+    <div class="cap reveal"><div class="disp">נוצר אצלי. השבוע.</div><p>סרטונים, מגזין שבועי, קומיקס, פודקאסט, פוסטים לגוגל ואינפוגרפיקות. כל מה שבפס הזה יצא מהמשרד שלי, עם הצוות שתלמדו לבנות.</p></div>
+  </div>
+  <div class="track" id="t1"></div>
+  <div class="track rev" id="t2"></div>
+</section>
+
+<section class="paper pad">
+  <div class="wrap">
+    <div class="split-h reveal">
+      <div><span class="tag"><i></i>המספרים של המשרד</span><h2 class="h2" style="margin-top:16px">לא תיאוריה.<br>מערכת שרצה.</h2></div>
+      <p class="lead mut">אלה מספרים אמיתיים מהמערכת של המשרד שלי. הם ממשיכים לעלות כל יום, גם כשאני בפגישה עם לקוח.</p>
+    </div>
+    <div class="nums reveal">
+      <div class="num"><b data-n="71">0</b><span>סרטונים נערכו ויצאו לרשתות</span></div>
+      <div class="num"><b data-n="76">0</b><span>פרסומים עלו לרשתות לבד</span></div>
+      <div class="num"><b data-n="34">0</b><span>מאמרים נכתבו או שודרגו באתר</span></div>
+      <div class="num"><b data-n="44">0</b><span>תהליכים שרצים לבד כל יום</span></div>
+    </div>
+    <div class="asof mut">נתונים מהמערכת של המשרד, נכון ל־20.11.2026.</div>
+  </div>
+</section>
+
+<section class="paper pad" id="team" style="padding-top:0">
+  <div class="wrap">
+    <div class="split-h reveal">
+      <div><span class="tag"><i></i>הצוות</span><h2 class="h2" style="margin-top:16px">תכירו את<br>הצוות שלכם.</h2></div>
+      <p class="lead mut">כל אחד מהם הוא תהליך שבונים פעם אחת, והוא עובד כל יום. בקורס בונים אותם אחד אחד, ואתם נשארים המנהלים.</p>
+    </div>
+    <div class="team">
+      <div class="role you reveal"><div class="top"><span class="badge">{{i-star}}</span><span class="st" style="background:var(--lime);color:var(--ink)">המנהל</span></div><h3>אתם</h3><p>מחליטים, מאשרים, ופוגשים לקוחות. כל השאר מגיע אליכם מוכן.</p><div class="peek"><img src="{{me-port}}" alt=""></div></div>
+      <div class="role reveal"><div class="top"><span class="badge">{{i-pen}}</span><span class="st">פעיל</span></div><h3>כותב המאמרים</h3><p>בוחר נושא לפי מה שאנשים מחפשים בגוגל, כותב, ומכין לאישור.</p><div class="peek"><img src="{{info}}" alt="" style="object-position:50% 50%"></div></div>
+      <div class="role reveal"><div class="top"><span class="badge">{{i-check}}</span><span class="st">פעיל</span></div><h3>בודק העובדות</h3><p>בודק כל מספר, סכום וטענה מול מקור רשמי לפני שמשהו יוצא.</p><div class="peek"><img src="{{gbp3}}" alt=""></div></div>
+      <div class="role reveal"><div class="top"><span class="badge">{{i-film}}</span><span class="st">פעיל</span></div><h3>עורך הווידאו</h3><p>עורך את מה שצילמתם, מוסיף כתוביות, ומפיק סרטונים עם דמות דיגיטלית שלכם.</p><div class="peek"><img src="{{reel2}}" alt="" style="object-position:50% 48%"></div></div>
+      <div class="role reveal"><div class="top"><span class="badge">{{i-cal}}</span><span class="st">פעיל</span></div><h3>מנהל הרשתות</h3><p>ממלא לוח פרסום שבועות קדימה, ומפרסם כל דבר בשעה שלו.</p><div class="peek"><img src="{{gbp1}}" alt=""></div></div>
+      <div class="role reveal"><div class="top"><span class="badge">{{i-brush}}</span><span class="st">פעיל</span></div><h3>המעצב</h3><p>אינפוגרפיקות, שערי מגזין, תמונות למאמרים וקומיקס, בעיצוב קבוע של העסק.</p><div class="peek"><img src="{{roni3}}" alt=""></div></div>
+      <div class="role reveal"><div class="top"><span class="badge">{{i-chat}}</span><span class="st">פעיל</span></div><h3>המזכירה</h3><p>כל פנייה מקבלת טיוטת תשובה קצרה ומקצועית שמחכה לאישור שלכם.</p><div class="peek" style="display:flex;align-items:center;justify-content:center;background:var(--ink);padding:14px"><div class="msgs" style="width:100%"><div class="msg" style="background:#222;color:#eee">פנייה חדשה מהאתר<em>חדש</em></div><div class="msg" style="background:#222;color:#eee">טיוטת תשובה מוכנה<em>לאישור</em></div></div></div></div>
+      <div class="role reveal"><div class="top"><span class="badge">{{i-search}}</span><span class="st">פעיל</span></div><h3>החוקר</h3><p>מוצא מה אנשים באמת מחפשים בגוגל, מה המתחרים כתבו, ומה מנועי הבינה המלאכותית עונים.</p><div class="peek" style="background:var(--ink);padding:14px;display:flex;align-items:center"><table class="qt" style="margin:0;color:#ddd"><tr><td>איתור גוש חלקה לפי כתובת</td><td>3,910</td></tr><tr><td>גוש חלקה לפי כתובת</td><td>3,200</td></tr><tr><td>איתור גוש חלקה</td><td>2,424</td></tr></table></div></div>
+      <div class="role reveal"><div class="top"><span class="badge">{{i-link}}</span><span class="st">פעיל</span></div><h3>מנהל הקישורים</h3><p>מחבר כל מאמר חדש לעמודים הקשורים באתר, כך שגוגל והקוראים מוצאים את הדרך.</p><div class="peek" style="background:var(--ink)">{{HUBMINI}}</div></div>
+      <div class="role reveal"><div class="top"><span class="badge">{{i-trend}}</span><span class="st">פעיל</span></div><h3>איש הקידום</h3><p>עוקב אחרי המקומות בגוגל, מסמן לגוגל מה יש בכל עמוד, ומתקן מה שמאט את האתר.</p><div class="peek" style="background:var(--ink);display:flex;align-items:flex-end;padding:14px 14px 0">{{SPARK}}</div></div>
+      <div class="role reveal"><div class="top"><span class="badge">{{i-mic}}</span><span class="st">פעיל</span></div><h3>מפיק התוכן</h3><p>מגזין שבועי, פרק פודקאסט וניוזלטר חודשי, מוכנים לאישור בזמן.</p><div class="peek"><img src="{{mag3}}" alt="" style="object-position:50% 0"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="pad">
+  <div class="wrap day">
+    <div class="sticky reveal">
+      <span class="tag" style="color:var(--fg)"><i></i>יום רגיל במשרד</span>
+      <h2 class="h2" style="margin:16px 0 18px">ככה נראה<br>יום שלי.</h2>
+      <p class="lead mut">הצוות עובד מהבוקר. אני נכנס לתמונה רק כשצריך החלטה.</p>
+    </div>
+    <ol class="tl">
+      <li class="reveal"><time>07:00</time><span class="nd"></span><div class="card"><img src="{{info}}" alt=""><div><b>מאמר חדש מוכן לאישור</b><span>נכתב ונבדק מול מקורות רשמיים, עם אינפוגרפיקה</span></div></div></li>
+      <li class="reveal"><time>08:30</time><span class="nd"></span><div class="card"><img src="{{reel0}}" alt=""><div><b>סרטון נערך</b><span>כתוביות, חיתוך ועמוד שער, ונכנס ללוח הפרסום</span></div></div></li>
+      <li class="reveal me-row"><time>09:00</time><span class="nd"></span><div class="card"><div><b>אני: 10 דקות של אישורים</b><span>מאשר, מתקן מילה, וחוזר ללקוחות</span></div></div></li>
+      <li class="reveal"><time>11:00</time><span class="nd"></span><div class="card"><img src="{{gbp2}}" alt=""><div><b>פוסט עלה לגוגל ולרשתות</b><span>בשעה שנקבעה, בלי לזכור</span></div></div></li>
+      <li class="reveal"><time>13:00</time><span class="nd"></span><div class="card"><img src="{{roni3}}" alt=""><div><b>פרק חדש בקומיקס</b><span>סדרה שבועית שמסבירה טעויות של קונים</span></div></div></li>
+      <li class="reveal"><time>16:00</time><span class="nd"></span><div class="card"><img src="{{mag5}}" alt=""><div><b>גיליון המגזין השבועי</b><span>10 עמודים, מחכה לאישור</span></div></div></li>
+      <li class="reveal"><time>19:00</time><span class="nd"></span><div class="card"><img src="{{pod}}" alt=""><div><b>פרק פודקאסט עלה</b><span>לכל האפליקציות</span></div></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="pad" id="video" style="padding-top:0">
+  <div class="wrap">
+    <div class="vid reveal"><img src="{{podyt}}" alt=""><div class="ov"><div class="play"><svg width="34" height="34" viewBox="0 0 24 24" fill="#0B0B0C"><path d="M8 5v14l11-7z"/></svg></div><b>10 דקות בתוך המערכת</b><small>סרטון ההדגמה בהכנה. יעלה לפני הפתיחה.</small></div></div>
+  </div>
+</section>
+
+<section class="paper pad">
+  <div class="wrap">
+    <div class="split-h reveal">
+      <div><span class="tag"><i></i>מה תבנו בעצמכם</span><h2 class="h2" style="margin-top:16px">בסוף הקורס,<br>זה עובד אצלכם.</h2></div>
+      <p class="lead mut">לא תרגילים. בכל פרק בונים תהליך אמיתי לעסק שלכם, ובסוף יש לכם צוות שעובד.</p>
+    </div>
+    <div class="bento">
+      <div class="bx b1 reveal"><h3>אתר שכותב את עצמו</h3><p>מאמרים לפי מה שאנשים מחפשים, עם בדיקת עובדות, קישורים פנימיים ואינפוגרפיקה. הכל מגיע אליכם לאישור.</p><div class="shot"><img src="{{info}}" alt="אינפוגרפיקה שנוצרה למאמר"></div></div>
+      <div class="bx b2 dark reveal"><h3>סרטונים בלי לצלם כל יום</h3><p>עריכה אוטומטית למה שצילמתם, ודמות דיגיטלית בקול שלכם.</p><div class="stack"><img src="{{reel5}}" alt=""><img src="{{reel6}}" alt=""><img src="{{reel7}}" alt=""></div></div>
+      <div class="bx b3 dark reveal"><h3>מגזין שבועי</h3><p>חדשות התחום שלכם, בעיצוב קבוע, כל שבוע.</p><div class="fan"><img src="{{mag2}}" alt=""><img src="{{mag1}}" alt=""><img src="{{mag4}}" alt=""></div></div>
+      <div class="bx b4 reveal"><h3>קומיקס ותוכן שונה</h3><p>סדרה עם דמויות קבועות שמסבירה את התחום שלכם בצורה שאנשים זוכרים.</p><div class="pic"><img src="{{roni}}" alt="קומיקס"></div></div>
+      <div class="bx b5 lime reveal"><h3>פודקאסט שבועי</h3><p>תסריט, הקלטה ועריכה, ופרק שעולה לכל האפליקציות.</p><div class="pic" style="max-height:230px"><img src="{{pod}}" alt=""></div></div>
+      <div class="bx b6 dark reveal"><h3>מענה לכל פנייה</h3><p>טיוטה קצרה ומקצועית לכל פנייה, ולחיצה אחת לאישור.</p><div class="msgs"><div class="msg" style="background:#1d1d20">פנייה מהאתר: שאלה על חוזה שכירות<em>חדש</em></div><div class="msg" style="background:#1d1d20">טיוטת תשובה קצרה מוכנה<em>לאישור</em></div></div></div>
+      <div class="bx b8 lime reveal"><h3>אתר משלכם, באוויר</h3><p>בונים אתר מלא עם בינה מלאכותית ומעלים אותו לרשת, כמו שבנינו את האתר הזה ואתרים נוספים מאפס. בלי מתכנת.</p><div class="msgs"><div class="msg">עיצוב ותוכן<em>מוכן</em></div><div class="msg">כתובת ואחסון<em>מחובר</em></div><div class="msg">האתר באוויר<em>פעיל</em></div></div></div>
+      <div class="bx b7 reveal"><h3>לוח פרסום שרץ לבד</h3><p>פוסטים לגוגל, לפייסבוק, לאינסטגרם וללינקדאין, כל אחד בשעה שלו.</p><div class="row2"><img src="{{gbp1}}" alt=""><img src="{{gbp2}}" alt=""><img src="{{gbp3}}" alt=""></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="pad seo" id="seo">
+  <div class="wrap">
+    <div class="split-h reveal">
+      <div><span class="tag" style="color:var(--fg)"><i></i>קידום בגוגל ובבינה מלאכותית</span><h2 class="h2" style="margin-top:16px">גוגל עובד<br>בשבילי.</h2></div>
+      <p class="lead mut">הצוות לא רק כותב. הוא חוקר מה אנשים מחפשים, מחבר בין העמודים, בודק איפה האתר עומד בגוגל ובמנועי הבינה המלאכותית, ומתקן. ככה זה נראה באתר של המשרד שלי.</p>
+    </div>
+    <div class="sg">
+      <div class="pnl reveal">
+        <h3>כניסות מגוגל לאתר המשרד, בכל ארבעה שבועות</h3>
+        <div class="s">הנתונים מהכלי של גוגל לבעלי אתרים</div>
+        <div class="chart" id="chart"></div>
+        <div class="big2"><b>פי 11</b><span>מ־245 כניסות בחודש הראשון בנתונים, ל־2,774 בארבעת השבועות האחרונים</span></div>
+        <div class="src">18.12.2025 עד 18.11.2026. כל עמודה היא תקופה של 28 ימים.</div>
+      </div>
+      <div class="kpis">
+        <div class="kpi l reveal"><b>271,996</b><span>הופעות בגוגל בארבעת השבועות האחרונים (פי 13 מהחודש הראשון)</span></div>
+        <div class="kpi reveal"><b>334</b><span>מאמרים באתר</span></div>
+        <div class="kpi reveal"><b>24</b><span>מחשבונים וכלים באתר</span></div>
+        <div class="kpi reveal"><b>755</b><span>ביטויי חיפוש במחקר</span></div>
+      </div>
+    </div>
+    <div class="sg3">
+      <div class="pnl reveal">
+        <h3>מאמר אחד, 28 ימים</h3>
+        <div class="s">איתור גוש וחלקה לפי כתובת</div>
+        <div class="mini"><div><b>41,652</b><span>הופעות בגוגל</span></div><div><b>283</b><span>כניסות</span></div><div><b>6.6</b><span>מקום ממוצע (קודם 8.4)</span></div></div>
+        <table class="qt"><tr><td>גוש וחלקה לפי כתובת</td><td>4.8</td></tr><tr><td>איתור כתובת לפי גוש חלקה</td><td>5.8</td></tr><tr><td>גוש חלקה לפי כתובת</td><td>5.9</td></tr><tr><td>איתור גוש חלקה לפי כתובת</td><td>6.5</td></tr></table>
+        <div class="src">מספר בצד: המקום הממוצע בגוגל לכל חיפוש. 21.10 עד 18.11.2026.</div>
+      </div>
+      <div class="pnl reveal hub">
+        <h3>קישורים פנימיים</h3>
+        <div class="s">כל עמוד חדש מתחבר לעמודים הקשורים. דוגמה אמיתית: מחשבון היורשים באתר.</div>
+        {{HUB}}
+      </div>
+      <div class="pnl reveal">
+        <h3>המחקר לפני כל מאמר</h3>
+        <div class="s">ככה הצוות מחליט מה לכתוב</div>
+        <ul class="rs"><li><i>1</i>מה אנשים מחפשים, ובכמה חיפושים בחודש</li><li><i>2</i>מה כבר כתוב בעמודים הראשונים בגוגל, ומה חסר שם</li><li><i>3</i>מה מנועי הבינה המלאכותית עונים על אותה שאלה, ואיך מופיעים שם</li><li><i>4</i>סימון לגוגל מה יש בעמוד: שאלות ותשובות, מדריך, סרטון</li><li><i>5</i>בקשה מגוגל לסרוק את העמוד, ומעקב אחרי המקום</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pad" id="course">
+  <div class="wrap">
+    <div class="split-h reveal">
+      <div><span class="tag" style="color:var(--fg)"><i></i>תוכנית הקורס</span><h2 class="h2" style="margin-top:16px">10 פרקים.<br>צוות אחד שלם.</h2></div>
+      <p class="lead mut">שיעורים קצרים ומוקלטים. בכל שיעור מסבירים, מראים על המסך כל פעולה, ונותנים תבנית מוכנה. כל פרק נגמר בחבר צוות חדש שעובד אצלכם.</p>
+    </div>
+    <div class="mods" id="mods"></div>
+  </div>
+</section>
+
+<section class="paper pad">
+  <div class="wrap">
+    <div class="split-h reveal"><div><span class="tag"><i></i>איך זה עובד</span><h2 class="h2" style="margin-top:16px">לומדים. בונים.<br>משאירים לעבוד.</h2></div></div>
+    <div class="steps reveal">
+      <div><b>צופים בשיעור</b><p>הסבר קצר, ואחריו הדגמה על המסך של כל צעד.</p></div>
+      <div><b>מעתיקים תבנית</b><p>הוראות מוכנות לכלים, שאתם רק מתאימים לעסק שלכם.</p></div>
+      <div><b>בונים אצלכם</b><p>כל פרק נגמר בתהליך שעובד אצלכם, לא בתרגיל.</p></div>
+      <div><b>שואלים בקבוצה</b><p>קבוצת וואטסאפ סגורה למשתתפים, לשאלות ולעדכונים.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="paper pad" id="members" style="padding-top:0">
+  <div class="wrap mem">
+    <div class="reveal">
+      <span class="tag"><i></i>האזור האישי</span>
+      <h2 class="h2" style="margin:16px 0 18px">הכל במקום<br>אחד.</h2>
+      <p class="lead mut">מתחברים, ממשיכים בדיוק מהשיעור שעצרתם, מורידים סקילים ותבניות, ורואים מה חדש החודש. מהמחשב או מהטלפון.</p>
+      <ul class="ticks" style="margin-top:22px"><li>צפייה בשיעורים, עם מעקב התקדמות</li><li>כל הסקילים והתבניות להורדה</li><li>ההרצאות החדשות של המנוי, מסודרות לפי חודש</li><li>כניסה לקבוצה הסגורה</li></ul>
+    </div>
+    <div class="app reveal">
+      <div class="top"><b>Team of One</b><span>מנוי פעיל</span></div>
+      <div class="bd">
+        <div class="side"><div>01 הבסיס <i>✓</i></div><div>02 המזכירה <i>✓</i></div><div>03 מסמכים <i>✓</i></div><div class="on">04 בונה האתרים</div><div>05 כותב המאמרים</div><div>06 איש הקידום</div><div>07 מנהל הרשתות</div><div>08 עורך הווידאו</div><div>09 איש הפרסום</div><div>10 מנהל התפעול</div></div>
+        <div class="main">
+          <div class="player"><img src="{{podyt}}" alt=""><span class="pl2"><svg width="22" height="22" viewBox="0 0 24 24" fill="#0B0B0C"><path d="M8 5v14l11-7z"/></svg></span><span class="pb"></span></div>
+          <div class="row"><b>שיעור 2: כתובת לאתר, אחסון והעלאה לאוויר</b><span class="mut" style="font-size:13px;color:var(--mutD)">שיעור 2 מתוך 4</span></div>
+          <div class="prog"><i></i></div>
+          <div class="chips"><span>הורדת הסקיל של הפרק</span><span>תבנית: רשימת בדיקה לפני עלייה לאוויר</span><span>חדש החודש: הרצאה קצרה</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="paper pad" style="padding-top:0">
+  <div class="wrap inst">
+    <div class="portrait reveal"><img src="{{me-port}}" alt="עו״ד יקיר דבול"><div class="stamp"><b>עו״ד יקיר דבול</b><span>מקרקעין · נתניה</span></div></div>
+    <div class="reveal">
+      <span class="tag"><i></i>מי מלמד</span>
+      <div class="quote">"לא היה לי זמן לשיווק.<br>אז בניתי צוות."</div>
+      <p class="lead mut">אני עורך דין מקרקעין מנתניה ועובד לבד. המשרד מלווה יותר מ־100 עסקאות נדל״ן בשנה. לא היה לי זמן לכתוב, לצלם ולפרסם, אז התחלתי לבנות לעצמי מערכת עם בינה מלאכותית. היום היא עושה את רוב העבודה הזאת, ואני מאשר. את מה שלמדתי בדרך, כולל הטעויות, ריכזתי לקורס הזה.</p>
+      <div class="facts"><span>עורך דין מאז 2021</span><span>חבר ב־5 ועדות במחוז מרכז של לשכת עורכי הדין</span><span>נבחר לדירוג LawBuzz LB10 2026</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="pad">
+  <div class="wrap comm">
+    <div class="reveal">
+      <span class="tag" style="color:var(--fg)"><i></i>הקהילה</span>
+      <h2 class="h2" style="margin:16px 0 18px">לא נשארים<br>לבד מול המסך.</h2>
+      <p class="lead mut">כל משתתף מצטרף לקבוצת וואטסאפ סגורה. שם עולים שיעורים חדשים, תבניות ועדכונים כשהכלים משתנים, ושם שואלים כשנתקעים.</p>
+      <ul class="ticks"><li>שאלות ותשובות לאורך כל הדרך</li><li>תבניות חדשות כשהן מוכנות</li><li>עדכון כשכלי משתנה, ואיך מתאימים את התהליך</li></ul>
+    </div>
+    <div class="phone reveal"><div class="scr">
+      <div class="wa-top"><span class="av">{{i-star}}</span><span><b>Team of One · משתתפים</b><small>קבוצה סגורה</small></span></div>
+      <div class="wa">
+        <div class="bub"><span class="who2">יקיר דבול</span>שיעור חדש עלה בפרק 4: איך בוחרים נושאים למאמרים לפי חיפושים אמיתיים.<span class="tm">09:12</span></div>
+        <div class="bub img"><img src="{{info}}" alt=""><p>תבנית האינפוגרפיקה מהשיעור נמצאת בתיקייה.</p><span class="tm" style="margin:0 6px 4px">09:14</span></div>
+        <div class="bub"><span class="who2">יקיר דבול</span>עדכון: אחד הכלים שינה את המסך. הוספתי לשיעור 2 קטע קצר עם המסך החדש.<span class="tm">17:40</span></div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:0">
+  <div class="wrap">
+    <div class="split-h reveal"><div><span class="tag" style="color:var(--fg)"><i></i>עבודה אחראית</span><h2 class="h2" style="margin-top:16px">סומכים עליכם.<br>זה נשאר ככה.</h2></div><p class="lead mut">כל פרק בנוי כך שהאמון של הלקוחות נשמר. מסלול נפרד לעורכי דין, עם כללי האתיקה של המקצוע, נמצא בהכנה.</p></div>
+    <div class="safe reveal">
+      <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><b>פרטיות לקוחות</b><p>מה מכניסים לכלים ומה אף פעם לא, ואיך עובדים בלי פרטים מזהים.</p></div>
+      <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg><b>בדיקת עובדות</b><p>כל מספר, סכום וטענה נבדקים מול המקור לפני שמשהו יוצא.</p></div>
+      <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L19 8"/></svg><b>אתם מאשרים</b><p>שום דבר לא יוצא ללקוח או לרשתות בלי אישור שלכם.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="paper pad" id="articles">
+  <div class="wrap">
+    <div class="split-h reveal"><div><span class="tag"><i></i>מאמרים</span><h2 class="h2" style="margin-top:16px">בינה מלאכותית<br>לעסקים. מהשטח.</h2></div><p class="lead mut">חדשות, מדריכים והשוואות כלים, מתוך מה שבאמת עובד אצלי. בלי הייפ, עם צילומי מסך ומספרים. מתעדכן כל שבוע.</p></div>
+    <div class="cats reveal"><span>הכל</span><span>חדשות</span><span>מדריכים</span><span>השוואות כלים</span><span>מהשטח</span><span>קידום בגוגל</span></div>
+    <div class="arts2">
+      <a class="feat reveal" href="#"><div class="th"><img src="{{info}}" alt=""><span>מהשטח</span></div><h3>מ־245 ל־2,774 כניסות מגוגל בחודש: כל מה שעשינו באתר של המשרד</h3><p>המחקר, המאמרים, הקישורים הפנימיים והמחשבונים. צעד אחר צעד, עם הנתונים.</p></a>
+      <ul class="alist reveal">
+        <li><a href="#"><span><em>השוואות כלים</em><b>צ׳אט ג׳י־פי־טי, קלוד או ג׳מיני: מה מתאים לאיזו משימה בעסק</b></span><span class="go">←</span></a></li>
+        <li><a href="#"><span><em>קידום בגוגל</em><b>איך מופיעים בתשובות של מנועי הבינה המלאכותית</b></span><span class="go">←</span></a></li>
+        <li><a href="#"><span><em>מדריכים</em><b>דמות דיגיטלית לעסק: מה זה, כמה זה עולה ומה צריך לבדוק</b></span><span class="go">←</span></a></li>
+        <li><a href="#"><span><em>חדשות</em><b>מה חדש בכלי הבינה המלאכותית החודש, ומה זה אומר לעסק קטן</b></span><span class="go">←</span></a></li>
+        <li><a href="#"><span><em>מדריכים</em><b>פרטיות לקוחות ובינה מלאכותית: מה מכניסים לכלים ומה לא</b></span><span class="go">←</span></a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="gift pad" id="gift">
+  <div class="wrap">
+    <div class="split-h reveal">
+      <div><span class="ribbon">{{i-gift}} מתנה למי שמצטרף לקורס</span><h2 class="h2" style="margin-top:18px">כל הסקילים שלנו.<br>מוכנים לשימוש.</h2></div>
+      <p class="lead mut">סקיל הוא קובץ הוראות שמלמד את קלוד לבצע משימה שלמה, בדיוק כמו שהיא נעשית אצלי: באותם שלבים, באותן בדיקות ובאותו סגנון. מעלים אותו פעם אחת, ומשם מבקשים במשפט אחד.</p>
+    </div>
+    <div class="skills">
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>מאמר לאתר</b><p>מחקר, כתיבה, בדיקת עובדות וקישורים פנימיים, במבנה שגוגל אוהב.</p></div>
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>מחקר ביטויי חיפוש</b><p>מה אנשים מחפשים בתחום שלכם, ומה כדאי לכתוב קודם.</p></div>
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>קישורים פנימיים</b><p>מוצא איפה כדאי לקשר בין העמודים באתר, ומסביר למה.</p></div>
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>נראות בבינה מלאכותית</b><p>בודק מה מנועי הבינה המלאכותית עונים, ואיך העסק שלכם נכנס לתשובה.</p></div>
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>בדיקת עובדות</b><p>כל מספר, סכום וטענה נבדקים מול מקור רשמי.</p></div>
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>אינפוגרפיקה למאמר</b><p>עיצוב קבוע של העסק, לרוחב, מוכן להכנסה למאמר.</p></div>
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>פוסט לגוגל עסקי</b><p>טקסט ותמונה בעיצוב העסק, בלי לחזור על נושא שכבר עלה.</p></div>
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>תסריט לסרטון קצר</b><p>פתיחה שתופסת בשנייה הראשונה, ומסר אחד ברור.</p></div>
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>עריכת וידאו</b><p>חיתוך טעויות בלי לקטוע משפטים, כתוביות ותמונת שער.</p></div>
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>מגזין שבועי</b><p>עשרה עמודים מחדשות התחום, בעיצוב קבוע.</p></div>
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>מענה לפנייה</b><p>טיוטה קצרה ומקצועית לכל פנייה, שמחכה לאישור שלכם.</p></div>
+      <div class="sk reveal"><div class="t"><em>סקיל</em></div><b>ניוזלטר חודשי</b><p>מה חדש בתחום שלכם, בשפה פשוטה, מוכן לשליחה.</p></div>
+    </div>
+    <div class="gnote reveal">החבילה מתעדכנת יחד עם הקורס. כל סקיל חדש שנבנה אצלי, מגיע גם אליכם.</div>
+  </div>
+</section>
+
+<section class="paper pad" id="price">
+  <div class="wrap">
+    <div class="split-h reveal"><div><span class="tag"><i></i>הצטרפות</span><h2 class="h2" style="margin-top:16px">בוחרים מסלול.<br>מתחילים לבנות.</h2></div><p class="lead mut">הקורס המלא בתשלום אחד, או מנוי חודשי שמעדכן אתכם כל הזמן במה שחדש.</p></div>
+    <div class="plans">
+      <div class="plan reveal">
+        <span class="tg">מחיר השקה</span>
+        <h3>הקורס המלא</h3>
+        <div class="pr">990 ₪ <small>תשלום אחד</small></div>
+        <ul>
+          <li>10 פרקים מוקלטים, גישה לכל החיים</li>
+          <li>מתנה: חבילת 12 הסקילים המוכנים שלנו לקלוד</li>
+          <li>תבניות והוראות עבודה לכל שלב</li>
+          <li>קבוצת וואטסאפ סגורה</li>
+          <li>3 חודשי מנוי במתנה</li>
+        </ul>
+        <a class="btn btn-k" href="#">להצטרפות לקורס <span class="arrow">←</span></a>
+        <span class="note">14 ימים להחזר כספי מלא, אם עוד לא התחלתם לצפות.</span>
+      </div>
+      <div class="plan dk reveal">
+        <span class="tg" style="background:var(--lime);color:var(--ink)">מתעדכן כל הזמן</span>
+        <h3>מנוי חודשי</h3>
+        <div class="pr">149 ₪ <small>לחודש</small></div>
+        <ul>
+          <li>כל הקורס, כל עוד המנוי פעיל</li>
+          <li>כל הסקילים והכלים, כולל כל מה שחדש</li>
+          <li>הרצאה קצרה חדשה בכל פעם שיוצא משהו חשוב</li>
+          <li>תוכן חדש כל חודש: סרטונים, תבניות ומדריכים</li>
+          <li>קבוצת וואטסאפ סגורה</li>
+        </ul>
+        <a class="btn btn-l" href="#">להצטרפות למנוי <span class="arrow">←</span></a>
+        <span class="note">מבטלים בכל חודש, בלחיצה באזור האישי.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="paper pad" id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="split-h reveal"><div><span class="tag"><i></i>שאלות</span><h2 class="h2" style="margin-top:16px">שאלות נפוצות</h2></div></div>
+    <div class="faq">
+      <details><summary>אני לא טכנולוגי. זה מתאים לי?</summary><p>כן. הקורס בנוי למי שלא כתב שורת קוד. כל פעולה מוצגת על המסך, צעד אחר צעד.</p></details>
+      <details><summary>כמה זמן לוקח הקורס?</summary><p>השיעורים קצרים. אפשר לעבור פרק בערב, ולבנות את מה שלמדתם באותו שבוע.</p></details>
+      <details><summary>אילו כלים צריך, וכמה הם עולים?</summary><p>בקורס מפורט כל כלי, מה המחיר שלו, ואיפה אפשר להתחיל בלי לשלם. אתם מחליטים במה להשתמש.</p></details>
+      <details><summary>מה עם פרטיות של לקוחות?</summary><p>זה הנושא של הפרק הראשון. לומדים מה מכניסים לכלים ומה לא, ואיך עובדים בלי פרטים מזהים.</p></details>
+      <details><summary>זה מתאים לכל תחום?</summary><p>כן. הדוגמאות מגיעות מהמשרד שלי, אבל השיטה עובדת לכל עסק קטן: יועצים, מטפלים, אנשי מקצוע ונותני שירות. מסלול נפרד לעורכי דין נמצא בהכנה.</p></details>
+      <details><summary>מה ההבדל בין הקורס למנוי?</summary><p>הקורס הוא תשלום אחד, והוא שלכם לתמיד, כולל 3 חודשי מנוי במתנה. המנוי החודשי נותן גישה לכל הקורס ולכל מה שחדש, כל עוד הוא פעיל.</p></details>
+      <details><summary>מה מקבלים במנוי כל חודש?</summary><p>הרצאות קצרות על כלים ושיטות חדשות שיוצאים, סקילים ותבניות חדשים, וסרטונים שמראים איך משתמשים בהם בעסק.</p></details>
+      <details><summary>אפשר לבטל?</summary><p>כן. את הקורס אפשר לבטל תוך 14 ימים מהרכישה, אם עוד לא התחלתם לצפות. את המנוי מבטלים בכל חודש, בלחיצה באזור האישי.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final pad">
+  <div class="wrap">
+    <div class="big reveal">תפסיקו לעשות<br>הכל לבד.</div>
+    <div class="row reveal"><p>תבנו צוות שעובד כל יום, ותחזרו לעבודה שרק אתם יודעים לעשות.</p><a class="btn btn-k" href="#price">להצטרפות לקורס <span class="arrow">←</span></a></div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span class="en" style="color:var(--fg);font-weight:700">Team of One</span><span>הקורס מלמד שימוש בכלים. הוא אינו ייעוץ משפטי.</span><span>תנאי שימוש · מדיניות פרטיות · הצהרת נגישות</span></div></footer>
+
+<script>
+(function(){
+  var W1=[['reel0','סרטון'],['mag1','מגזין שבועי'],['roni','קומיקס'],['reel1','סרטון'],['pod','פודקאסט'],['mag2','מגזין שבועי'],['reel3','סרטון'],['nl','ניוזלטר'],['mag3','מגזין שבועי'],['reel4','סרטון']];
+  var W2=[['gbp1','פוסט לגוגל'],['info','אינפוגרפיקה'],['gbp2','פוסט לגוגל'],['roni3','קומיקס'],['podyt','פודקאסט'],['gbp3','פוסט לגוגל'],['mag4','מגזין שבועי'],['mag5','מגזין שבועי']];
+  var IMG={{IMGMAP}};
+  function fill(id,arr){var t=document.getElementById(id),h='';for(var r=0;r<2;r++)arr.forEach(function(a){h+='<div class="tile"'+(r?' aria-hidden="true"':'')+'><img src="'+IMG[a[0]]+'" alt="'+(r?'':a[1])+'" loading="lazy"><span>'+a[1]+'</span></div>'});t.innerHTML=h;}
+  fill('t1',W1);fill('t2',W2);
+
+  var mods=[
+    ['הבסיס: עבודה נכונה עם בינה מלאכותית','פרטיות, בדיקת עובדות ואחריות',['מה הכלים יודעים לעשות, ומה לא','פרטיות: מה מכניסים ומה אף פעם לא','בדיקת עובדות: שיטת המקור קודם','הוראות עבודה טובות לכלים'],'הכללים שכל הצוות עובד לפיהם'],
+    ['המזכירה','מענה מסודר לכל פנייה',['איפה הפניות נכנסות היום, ואיך מרכזים אותן','טיוטת תשובה לכל פנייה','אישור בלחיצה אחת','מעקב ותזכורות'],'אף פנייה לא נשכחת'],
+    ['מסמכים בלי דף ריק','הצעות מחיר, חוזים ומכתבים',['תבניות להצעות מחיר, חוזים ומכתבים','טיוטה ראשונה מתוך הפרטים','רשימת בדיקה לפני שליחה'],'ספריית תבניות שעובדת בשבילכם'],
+    ['בונה האתרים','אתר שלם, מאפס ועד באוויר',['בונים אתר עם בינה מלאכותית, בלי לכתוב קוד','כתובת לאתר, אחסון והעלאה לאוויר','חיבור לגוגל ולכלי המדידה','טפסים, תשלום באתר ואזור אישי ללקוחות'],'אתר משלכם, באוויר'],
+    ['כותב המאמרים','אתר שמביא פניות',['מבנה של מאמר שעונה על השאלה','כתיבה ובדיקה מול מקורות','שאלות ותשובות בסוף כל מאמר','אינפוגרפיקה ותמונה ראשית'],'מאמר חדש לאישור כל שבוע'],
+    ['איש הקידום והחוקר','גוגל ומנועי הבינה המלאכותית',['מחקר ביטויי חיפוש: מה כותבים קודם','קישורים פנימיים שגוגל אוהב','סימון העמודים לגוגל ובקשת סריקה','מעקב אחרי המקומות בגוגל','איך מופיעים בתשובות של מנועי הבינה המלאכותית'],'אתר שעולה בגוגל מחודש לחודש'],
+    ['מנהל הרשתות','לוח פרסום שרץ לבד',['תוכנית תוכן לחודש','פוסטים מראש לכל רשת','פרסום בזמן, בלי לזכור'],'לוח פרסום מלא שבועות קדימה'],
+    ['עורך הווידאו','דמות דיגיטלית, קול ועריכה',['יצירת דמות דיגיטלית וקול','תסריט שמחזיק עד הסוף','עריכה וכתוביות'],'סרטונים שיוצאים כל שבוע'],
+    ['איש הפרסום','קמפיין קטן שמביא פניות',['תכנון קמפיין לפני שמוציאים שקל','מודעה ודף נחיתה','מעקב אחרי פניות ולא אחרי לחיצות'],'קמפיין ראשון שאתם מבינים'],
+    ['מנהל התפעול','מערכת שעובדת כל יום',['משימה שרצה לבד כל שבוע','דוח שבועי לעסק','לחבר הכל למערכת אחת'],'צוות שלם שעובד בלי שתזכרו']
+  ];
+  var CD=[['14.1',245],['11.2',347],['11.3',530],['8.4',630],['6.5',966],['3.6',2038],['1.7',2625],['29.7',2683],['26.8',2332],['23.9',1735],['21.10',1607],['18.11',2774]];
+  (function(){var el=document.getElementById('chart');if(!el)return;var W=640,H=250,pl=6,pb=26,pt=26,mx=3000,bw=(W-pl*2)/CD.length,g='';
+    [0,1000,2000,3000].forEach(function(v){var y=H-pb-(H-pb-pt)*v/mx;g+='<line x1="0" x2="'+W+'" y1="'+y+'" y2="'+y+'" stroke="rgba(255,255,255,.08)"/><text x="'+(W-2)+'" y="'+(y-5)+'" fill="#7c7a74" font-size="11" text-anchor="end" font-family="Space Grotesk">'+v.toLocaleString('en-US')+'</text>'});
+    CD.forEach(function(d,i){var h=(H-pb-pt)*d[1]/mx,x=W-pl-(i+1)*bw+bw*.18,w=bw*.64,y=H-pb-h,last=i===CD.length-1,first=i===0;
+      g+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="4" fill="'+(last?'#D7FF3B':'rgba(215,255,59,.38)')+'"/>';
+      if(first||last)g+='<text x="'+(x+w/2)+'" y="'+(y-7)+'" fill="'+(last?'#D7FF3B':'#cfccc4')+'" font-size="13" font-weight="700" text-anchor="middle" font-family="Space Grotesk">'+d[1].toLocaleString('en-US')+'</text>';
+      g+='<text x="'+(x+w/2)+'" y="'+(H-8)+'" fill="#8d8a83" font-size="11" text-anchor="middle" font-family="Space Grotesk">'+d[0]+'</text>'});
+    el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="כניסות מגוגל בכל 28 ימים: מ־245 ל־2,774">'+g+'</svg>'})();
+  var mb=document.getElementById('mods');
+  mods.forEach(function(m,n){var d=document.createElement('details');d.className='mod reveal';if(n===0)d.open=true;
+    d.innerHTML='<summary><span class="n">'+(n<9?'0':'')+(n+1)+'</span><span><h3></h3><div class="sub"></div></span><span class="pl"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><div class="body"><div><ul></ul><div class="out"></div></div></div>';
+    d.querySelector('h3').textContent=m[0];d.querySelector('.sub').textContent=m[1];
+    var ul=d.querySelector('ul');m[2].forEach(function(t){var li=document.createElement('li');li.textContent=t;ul.appendChild(li)});
+    d.querySelector('.out').textContent='בסוף הפרק: '+m[3];mb.appendChild(d);});
+
+  var io=('IntersectionObserver' in window)?new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;e.target.classList.add('in');io.unobserve(e.target);
+    e.target.querySelectorAll('[data-n]').forEach(function(el){var to=+el.dataset.n,t0=null;function st(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/1400,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(st)}requestAnimationFrame(st)})})},{threshold:.12}):null;
+  document.querySelectorAll('.reveal').forEach(function(el){if(io)io.observe(el);else{el.classList.add('in');el.querySelectorAll('[data-n]').forEach(function(x){x.textContent=x.dataset.n})}});
+})();
+</script>

@@ -1,0 +1,59 @@
+---
+import Base from '../../../layouts/Base.astro';
+---
+<Base title="שיעור | Team of One" app>
+  <main class="wrap page">
+    <div id="app"><div class="card">טוען...</div></div>
+  </main>
+  <script>
+    import { sb, BASE, esc, toast, errText } from '../../../lib/sb.js';
+    import { requireLogin, loadCourse, logoutBtn } from '../../../lib/member.js';
+    import { md } from '../../../lib/md.js';
+    import { player } from '../../../lib/video.js';
+    const app = document.getElementById('app');
+    const id = Number(new URLSearchParams(location.search).get('id'));
+    (async () => {
+      if (!(await requireLogin())) return;
+      logoutBtn(document.getElementById('anav'));
+      const [{ data: me }, course, { data: content }] = await Promise.all([
+        sb.rpc('too_me'), loadCourse(), sb.from('too_lesson_content').select('*').eq('lesson_id', id).maybeSingle()]);
+      const all = [...course.flat, ...course.updates.map((l) => ({ ...l, m: { n: 0, title: 'חדש במנוי' } }))];
+      const i = all.findIndex((l) => l.id === id), L = all[i];
+      if (!L) { app.innerHTML = '<div class="card">השיעור לא נמצא. <a href="' + BASE + 'ezor-ishi/">חזרה לאזור האישי</a></div>'; return; }
+      document.title = L.title + ' | Team of One';
+      const done = new Set(me.done || []);
+      const open = me.access || L.free_preview;
+      const prev = course.flat[course.flat.findIndex((l) => l.id === id) - 1], next = course.flat[course.flat.findIndex((l) => l.id === id) + 1];
+      const vid = open && content ? player(content.video_url, L.title) : '';
+      const att = (content?.attachments || []);
+      app.innerHTML = `
+        <div class="crumbs"><a href="${BASE}ezor-ishi/">האזור האישי</a> / פרק ${L.m.n}: ${esc(L.m.title)}</div>
+        <div class="lessonw">
+          <aside class="card" style="padding:14px">
+            <div class="mods2" style="gap:6px">${course.modules.map((m) => `<details ${m.id === L.module_id ? 'open' : ''} style="border-radius:12px"><summary style="cursor:pointer;font-weight:800;padding:8px 6px;list-style:none">${String(m.n).padStart(2, '0')} · ${esc(m.title)}</summary>
+              <ul class="ls" style="padding:0 0 8px">${m.lessons.map((l) => `<li><a href="${BASE}ezor-ishi/shiur/?id=${l.id}" style="${l.id === id ? 'outline:2px solid var(--ink)' : ''}"><span class="ck ${done.has(l.id) ? 'on' : ''}">${done.has(l.id) ? '✓' : ''}</span><span>${esc(l.title)}</span><span>${!me.access && !l.free_preview ? '🔒' : ''}</span></a></li>`).join('')}</ul></details>`).join('')}</div>
+          </aside>
+          <section class="stack">
+            <div class="vid2">${vid || `<div class="soon">${open ? '<b>הסרטון בהכנה</b><span class="mut">הוא יעלה לכאן לפני פתיחת הקורס.</span>' : `<b>השיעור נעול</b><span class="mut">פותחים את כל הקורס בהצטרפות.</span><a class="btn btn-l" href="${BASE}kniya/?plan=course">להצטרפות</a>`}</div>`}</div>
+            <div class="spread"><div><span class="pill">${L.m.n ? 'פרק ' + L.m.n + ' · שיעור ' + L.n : 'הרצאה במנוי'}</span>${L.free_preview && !me.access ? ' <span class="pill l">שיעור פתוח לצפייה</span>' : ''}<h1 style="font-family:var(--body);font-weight:900;font-size:clamp(26px,3vw,36px);line-height:1.2;margin:10px 0 4px">${esc(L.title)}</h1><p class="muted" style="margin:0">${esc(L.summary || '')}</p></div>
+              ${open ? `<button class="btn ${done.has(id) ? 'btn-w' : 'btn-k'}" id="mark">${done.has(id) ? '✓ סימנתי שסיימתי' : 'סיימתי את השיעור'}</button>` : ''}</div>
+            ${open && content?.body_md ? '<div class="card prose">' + md(content.body_md) + '</div>' : ''}
+            ${open && att.length ? '<div class="card"><h3>קבצים לשיעור</h3><div class="row">' + att.map((a) => `<button class="btn btn-w sm" data-dl="${esc(a.path)}">${esc(a.title)}</button>`).join('') + '</div></div>' : ''}
+            <div class="spread">${prev ? `<a class="btn btn-w sm" href="${BASE}ezor-ishi/shiur/?id=${prev.id}">→ הקודם</a>` : '<span></span>'}${next ? `<a class="btn btn-k sm" href="${BASE}ezor-ishi/shiur/?id=${next.id}">השיעור הבא ←</a>` : ''}</div>
+          </section>
+        </div>`;
+      const mk = document.getElementById('mark');
+      if (mk) mk.onclick = async () => {
+        const { data: u } = await sb.auth.getUser();
+        if (done.has(id)) { const { error } = await sb.from('too_progress').delete().eq('user_id', u.user.id).eq('lesson_id', id); if (error) return toast(errText(error), true); done.delete(id); mk.className = 'btn btn-k'; mk.textContent = 'סיימתי את השיעור'; return; }
+        const { error } = await sb.from('too_progress').upsert({ user_id: u.user.id, lesson_id: id });
+        if (error) return toast(errText(error), true);
+        done.add(id); mk.className = 'btn btn-w'; mk.textContent = '✓ סימנתי שסיימתי'; toast('כל הכבוד. ממשיכים?');
+      };
+      app.querySelectorAll('[data-dl]').forEach((b) => b.onclick = async () => {
+        const { data, error } = await sb.storage.from('too').createSignedUrl(b.dataset.dl, 120, { download: true });
+        if (error) return toast(errText(error), true); location.href = data.signedUrl;
+      });
+    })();
+  </script>
+</Base>

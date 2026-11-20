@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import Article from '../../components/Article.astro';
+import { getArticles } from '../../lib/articles.js';
+export async function getStaticPaths() {
+  const list = await getArticles();
+  return list.map((a) => ({ params: { slug: a.slug }, props: { a } }));
+}
+const { a } = Astro.props;
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const jsonld = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'Article', headline: a.title, description: a.description, datePublished: a.published_at, dateModified: a.updated_at, inLanguage: 'he', author: { '@type': 'Person', name: a.author }, mainEntityOfPage: url, ...(a.cover_url ? { image: a.cover_url } : {}) },
+  ...((a.faq || []).length ? [{ '@type': 'FAQPage', mainEntity: a.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []) ] };
+---
+<Base title={(a.seo_title || a.title) + ' | Team of One'} description={a.description} app jsonld={jsonld} ogImage={a.cover_url || undefined}>
+  <Article a={a} />
+</Base>

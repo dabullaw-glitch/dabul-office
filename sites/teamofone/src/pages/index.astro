@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import A from '../data/landing-a.html?raw';
+import B from '../data/landing-b.html?raw';
+import FALLBACK from '../data/articles-fallback.html?raw';
+import { getArticles, CATS } from '../lib/articles.js';
+const base = import.meta.env.BASE_URL;
+const fix = (s) => s.replaceAll('__BASE__', base);
+const arts = await getArticles();
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let ARTS = FALLBACK;
+if (arts.length) {
+  const f = arts[0], rest = arts.slice(1, 6);
+  ARTS = `<section class="paper pad" id="articles"><div class="wrap">
+    <div class="split-h reveal"><div><span class="tag"><i></i>מאמרים</span><h2 class="h2" style="margin-top:16px">בינה מלאכותית<br>לעסקים. מהשטח.</h2></div><p class="lead mut">חדשות, מדריכים והשוואות כלים, מתוך מה שבאמת עובד אצלי. בלי הייפ, עם צילומי מסך ומספרים. מתעדכן כל שבוע.</p></div>
+    <div class="cats reveal"><a href="${base}maamarim/" style="text-decoration:none"><span style="background:var(--ink);color:var(--lime)">לכל המאמרים</span></a>${CATS.map((c) => `<span>${c}</span>`).join('')}</div>
+    <div class="arts2">
+      <a class="feat reveal" href="${base}maamarim/${f.slug}/"><div class="th"><img src="${esc(f.cover_url || base + 'img/info.webp')}" alt="" loading="lazy"><span>${esc(f.category)}</span></div><h3>${esc(f.title)}</h3><p>${esc(f.description)}</p></a>
+      <ul class="alist reveal">${rest.map((a) => `<li><a href="${base}maamarim/${a.slug}/"><span><em>${esc(a.category)}</em><b>${esc(a.title)}</b></span><span class="go">←</span></a></li>`).join('')}</ul>
+    </div></div></section>`;
+}
+const html = fix(A) + (arts.length ? ARTS : fix(FALLBACK)) + fix(B);
+const jsonld = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'Course', name: 'Team of One: צוות שלם. אדם אחד.', description: 'קורס דיגיטלי לבניית צוות של בינה מלאכותית לעסק: מאמרים, קידום בגוגל, סרטונים, רשתות, מענה לפניות ואתר.', inLanguage: 'he', provider: { '@type': 'Person', name: 'יקיר דבול' },
+    offers: [{ '@type': 'Offer', price: 990, priceCurrency: 'ILS', category: 'Paid' }], hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: 'PT10H' } },
+  { '@type': 'Person', name: 'יקיר דבול', jobTitle: 'עורך דין', knowsAbout: ['בינה מלאכותית לעסקים', 'קידום אתרים', 'אוטומציה'] } ] };
+---
+<Base title="Team of One: צוות שלם. אדם אחד." jsonld={jsonld}>
+  <div id="testbar" class="testbar" hidden>אתר בבדיקה. הרכישות כאן הן לבדיקה בלבד, בלי חיוב.</div>
+  <Fragment set:html={html} />
+  <script>
+    import { sb, BASE } from '../lib/sb.js';
+    sb.from('too_settings').select('value').eq('key', 'test_mode').maybeSingle().then(({ data }) => { if (data && data.value === true) document.getElementById('testbar').hidden = false; });
+    sb.auth.getSession().then(({ data }) => { if (data.session) { const a = document.querySelector('.navlogin'); if (a) { a.textContent = 'האזור האישי'; a.href = BASE + 'ezor-ishi/'; } } });
+  </script>
+</Base>

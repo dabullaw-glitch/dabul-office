@@ -1,0 +1,73 @@
+---
+import Base from '../../layouts/Base.astro';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="כניסה והרשמה | Team of One" app>
+  <div class="auth">
+    <div class="main">
+      <div class="box">
+        <h1 class="disp" style="font-size:clamp(60px,7vw,92px);line-height:.85;margin:0 0 10px">ברוכים<br>הבאים.</h1>
+        <p class="muted" id="sub" style="margin:0 0 22px">נרשמים בחצי דקה, וממשיכים לרכישה ולאזור האישי.</p>
+        <div class="tabs2" role="tablist">
+          <button role="tab" id="tSign" aria-selected="true">הרשמה</button>
+          <button role="tab" id="tLog" aria-selected="false">כניסה</button>
+        </div>
+        <form id="fSign" novalidate>
+          <div class="f"><label for="n">שם מלא</label><input id="n" autocomplete="name" required></div>
+          <div class="f"><label for="e">מייל</label><input id="e" type="email" autocomplete="email" dir="ltr" required></div>
+          <div class="f"><label for="ph">טלפון <span class="muted" style="font-weight:400">(לא חובה)</span></label><input id="ph" type="tel" autocomplete="tel" dir="ltr"></div>
+          <div class="f"><label for="p">סיסמה</label><input id="p" type="password" autocomplete="new-password" dir="ltr" required><small>8 תווים לפחות.</small></div>
+          <input id="w" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+          <label class="chk"><input id="ok" type="checkbox"><span>קראתי ואני מסכים/ה ל<a href={base + 'tnaim/'} target="_blank">תנאי השימוש</a> ול<a href={base + 'pratiut/'} target="_blank">מדיניות הפרטיות</a>.</span></label>
+          <div class="err" id="err1"></div>
+          <button class="btn btn-k wide" id="bSign">יצירת חשבון <span class="arrow">←</span></button>
+        </form>
+        <form id="fLog" novalidate hidden>
+          <div class="f"><label for="le">מייל</label><input id="le" type="email" autocomplete="email" dir="ltr" required></div>
+          <div class="f"><label for="lp">סיסמה</label><input id="lp" type="password" autocomplete="current-password" dir="ltr" required></div>
+          <div class="err" id="err2"></div>
+          <button class="btn btn-k wide" id="bLog">כניסה <span class="arrow">←</span></button>
+          <p class="muted" style="font-size:14px;margin-top:14px">שכחתם סיסמה? איפוס במייל ייפתח עם השקת האתר. בינתיים כתבו לנו, ונאפס עבורכם.</p>
+        </form>
+      </div>
+    </div>
+    <div class="side">
+      <span class="tag" style="color:var(--fg)"><i></i>Team of One</span>
+      <div class="disp">צוות שלם.<br><span style="color:var(--lime)">אדם אחד.</span></div>
+      <p class="mut" style="max-width:40ch;margin:0">10 פרקים, 12 סקילים מוכנים, וקבוצה סגורה. הכל באזור האישי שלכם.</p>
+      <img src={base + 'img/me-cut.webp'} alt="">
+    </div>
+  </div>
+  <script>
+    import { sb, BASE, FN, SB_KEY, errText } from '../../lib/sb.js';
+    const q = new URLSearchParams(location.search), plan = q.get('plan');
+    const next = () => location.replace(plan ? BASE + 'kniya/?plan=' + encodeURIComponent(plan) : (q.get('next') || BASE + 'ezor-ishi/'));
+    const $ = (id) => document.getElementById(id);
+    if (plan) $('sub').textContent = 'נרשמים או נכנסים, ומשם ממשיכים לרכישה.';
+    function tab(log) { $('tSign').setAttribute('aria-selected', !log); $('tLog').setAttribute('aria-selected', log); $('fSign').hidden = log; $('fLog').hidden = !log; }
+    $('tSign').onclick = () => tab(false); $('tLog').onclick = () => tab(true);
+    if (q.get('m') === 'login') tab(true);
+    sb.auth.getSession().then(({ data }) => { if (data.session) next(); });
+    $('fSign').addEventListener('submit', async (ev) => {
+      ev.preventDefault(); const b = $('bSign'), er = $('err1'); er.textContent = '';
+      if (!$('ok').checked) { er.textContent = 'צריך לאשר את תנאי השימוש ומדיניות הפרטיות.'; return; }
+      b.disabled = true;
+      try {
+        const body = { full_name: $('n').value, email: $('e').value, phone: $('ph').value, password: $('p').value, website: $('w').value };
+        const r = await fetch(FN + '/too-signup', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SB_KEY }, body: JSON.stringify(body) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) { er.textContent = errText(j.error); if (j.error === 'exists') { $('le').value = body.email; tab(true); } return; }
+        const { error } = await sb.auth.signInWithPassword({ email: body.email.trim().toLowerCase(), password: body.password });
+        if (error) { er.textContent = errText(error); return; }
+        next();
+      } catch (e) { er.textContent = errText(e); } finally { b.disabled = false; }
+    });
+    $('fLog').addEventListener('submit', async (ev) => {
+      ev.preventDefault(); const b = $('bLog'), er = $('err2'); er.textContent = ''; b.disabled = true;
+      const { error } = await sb.auth.signInWithPassword({ email: $('le').value.trim().toLowerCase(), password: $('lp').value });
+      b.disabled = false;
+      if (error) { er.textContent = errText(error); return; }
+      next();
+    });
+  </script>
+</Base>
