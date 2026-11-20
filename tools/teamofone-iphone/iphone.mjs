@@ -9,6 +9,8 @@ const res = { want, built: null, pages: {} };
 const b = await webkit.launch();
 const c = await b.newContext({ ...devices['iPhone 13'] });
 const p = await c.newPage(); const errs = []; p.on('pageerror', (e) => errs.push(String(e)));
+res.built = null;
+if (!want) { await p.goto(BASE + '?v=' + Date.now()); res.built = await p.getAttribute('meta[name=build]', 'content'); }
 if (want) { for (let i = 0; i < 40; i++) { await p.goto(BASE + '?v=' + Date.now()); const v = await p.getAttribute('meta[name=build]', 'content'); res.built = v; if (v === want) break; await p.waitForTimeout(15000); } }
 for (const [path, name] of [['', 'home'], ['maamarim/', 'articles'], ['knisa/', 'login'], ['tnaim/', 'terms']]) {
   await p.goto(BASE + path + '?v=' + Date.now()); await p.waitForTimeout(2000);
@@ -26,4 +28,4 @@ for (const [path, name] of [['', 'home'], ['maamarim/', 'articles'], ['knisa/', 
   });
 }
 res.errs = errs; fs.writeFileSync('out/results.json', JSON.stringify(res, null, 1)); await b.close();
-// run 2
+// run 3
