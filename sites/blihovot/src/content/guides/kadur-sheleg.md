@@ -35,7 +35,7 @@ sources:
     url: "https://www.kolzchut.org.il/he/אזהרה_לחייב_בהוצאה_לפועל"
   - title: "כל זכות: בקשה לאיחוד תיקים של חייב בהוצאה לפועל"
     url: "https://www.kolzchut.org.il/he/בקשה_לאיחוד_תיקים_של_חייב_בהוצאה_לפועל"
-related: [tzaadim-rishonim, ma-ze-ribit, masa-umatan-bank]
+related: [tzaadim-rishonim, ma-ze-ribit, masa-umatan-bank, ichud-halvaot]
 ---
 
 כשיש כמה חובות והכסף מוגבל, השאלה הראשונה היא לא רק "כמה לשלם", אלא "למי קודם". יש שתי שיטות מוכרות לסדר את זה: **כדור שלג** ו**מפולת**. שתיהן עובדות, שתיהן דורשות אותו דבר בסיסי (לשלם קצת יותר מהמינימום, כל חודש), וההבדל ביניהן קטן יותר ממה שנדמה.
