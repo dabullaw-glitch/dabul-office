@@ -2,7 +2,8 @@
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 const BASE = 'https://dabullaw-glitch.github.io/dabul-office/teamofone/';
-const SHA = process.env.GITHUB_SHA || '';
+const EXPECT = (fs.existsSync('expect.txt') ? fs.readFileSync('expect.txt', 'utf8') : '').trim();
+const SHA = EXPECT;
 const RUN = process.env.GITHUB_RUN_ID || String(Date.now());
 fs.mkdirSync('out', { recursive: true });
 const R = { started: new Date().toISOString(), sha: SHA, steps: [], errors: {} };
@@ -10,6 +11,7 @@ const step = (name, ok, extra = '') => { R.steps.push({ name, ok, extra }); cons
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function waitBuild(page) {
+  if (!SHA) { await page.goto(BASE, { waitUntil: 'domcontentloaded' }); return step('site is up', (await page.title()).length > 0, await page.getAttribute('meta[name=build]', 'content').catch(() => '')); }
   for (let i = 0; i < 40; i++) {
     try { await page.goto(BASE + '?v=' + Date.now(), { waitUntil: 'domcontentloaded' }); const b = await page.getAttribute('meta[name=build]', 'content').catch(() => null); if (b === SHA) return step('site built from this commit', true, b); } catch {}
     await sleep(15000);

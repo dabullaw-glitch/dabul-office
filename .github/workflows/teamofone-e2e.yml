@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          mkdir -p /tmp/e && cp tools/teamofone-e2e/e2e.mjs /tmp/e/ && cd /tmp/e && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null && npx playwright install --with-deps chromium >/dev/null
+          mkdir -p /tmp/e && cp tools/teamofone-e2e/e2e.mjs /tmp/e/ && (cp tools/teamofone-e2e/expect.txt /tmp/e/ 2>/dev/null || true) && cd /tmp/e && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null && npx playwright install --with-deps chromium >/dev/null
           node e2e.mjs || true
           ls -la out
       - run: |
