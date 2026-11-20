@@ -90,7 +90,8 @@
   var W1=[['reel0','סרטון'],['mag1','מגזין שבועי'],['roni','קומיקס'],['reel1','סרטון'],['pod','פודקאסט'],['mag2','מגזין שבועי'],['reel3','סרטון'],['nl','ניוזלטר'],['mag3','מגזין שבועי'],['reel4','סרטון']];
   var W2=[['gbp1','פוסט לגוגל'],['info','אינפוגרפיקה'],['gbp2','פוסט לגוגל'],['roni3','קומיקס'],['podyt','פודקאסט'],['gbp3','פוסט לגוגל'],['mag4','מגזין שבועי'],['mag5','מגזין שבועי']];
   var IMG={"reel0":"__BASE__img/reel0.webp","mag1":"__BASE__img/mag1.webp","roni":"__BASE__img/roni.webp","reel1":"__BASE__img/reel1.webp","pod":"__BASE__img/pod.webp","mag2":"__BASE__img/mag2.webp","reel3":"__BASE__img/reel3.webp","nl":"__BASE__img/nl.webp","mag3":"__BASE__img/mag3.webp","reel4":"__BASE__img/reel4.webp","gbp1":"__BASE__img/gbp1.webp","info":"__BASE__img/info.webp","gbp2":"__BASE__img/gbp2.webp","roni3":"__BASE__img/roni3.webp","podyt":"__BASE__img/podyt.webp","gbp3":"__BASE__img/gbp3.webp","mag4":"__BASE__img/mag4.webp","mag5":"__BASE__img/mag5.webp"};
-  function fill(id,arr){var t=document.getElementById(id),h='';for(var r=0;r<2;r++)arr.forEach(function(a){h+='<div class="tile"'+(r?' aria-hidden="true"':'')+'><img src="'+IMG[a[0]]+'" alt="'+(r?'':a[1])+'" loading="lazy"><span>'+a[1]+'</span></div>'});t.innerHTML=h;}
+  var DIM={"gbp1":[560,420],"gbp2":[560,420],"gbp3":[560,420],"info":[900,524],"mag1":[380,475],"mag2":[380,475],"mag3":[380,475],"mag4":[380,475],"mag5":[380,475],"nl":[300,533],"pod":[420,420],"podyt":[960,540],"reel0":[300,533],"reel1":[300,533],"reel3":[300,533],"reel4":[300,533],"roni":[520,650],"roni3":[420,420]};
+  function fill(id,arr){var t=document.getElementById(id),h='';for(var r=0;r<2;r++)arr.forEach(function(a){var d=DIM[a[0]];h+='<div class="tile" style="aspect-ratio:'+d[0]+'/'+d[1]+'"'+(r?' aria-hidden="true"':'')+'><img src="'+IMG[a[0]]+'" alt="'+(r?'':a[1])+'" width="'+d[0]+'" height="'+d[1]+'"><span>'+a[1]+'</span></div>'});t.innerHTML=h;}
   fill('t1',W1);fill('t2',W2);
 
   var mods=[
