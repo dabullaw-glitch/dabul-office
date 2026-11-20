@@ -35,7 +35,7 @@ export async function initAdmin() {
   const me = await sb.rpc('too_me');
   if (!me.data?.admin) { $('gate').innerHTML = '<div class="card"><h2>אין הרשאה</h2><p class="muted">הפאנל פתוח רק למנהלי האתר.</p><a class="btn btn-k sm" href="' + BASE + 'ezor-ishi/">לאזור האישי</a></div>'; return; }
   $('gate').hidden = true; $('adm').hidden = false;
-  const nav = $('anav'); nav.innerHTML = `<a href="${BASE}">לאתר</a><a href="${BASE}ezor-ishi/">האזור האישי</a>`;
+  const nav = $('anav'); nav.innerHTML = `<a class="hide-m" href="${BASE}">לאתר</a><a href="${BASE}ezor-ishi/">האזור האישי</a>`;
   const out = document.createElement('button'); out.textContent = 'יציאה'; out.onclick = async () => { await sb.auth.signOut(); location.replace(BASE); }; nav.appendChild(out);
   $('snav').innerHTML = SECTIONS.map((s) => `<button data-k="${s[0]}">${s[1]}</button>`).join('');
   $('snav').onclick = (e) => { const b = e.target.closest('button'); if (b) go(b.dataset.k); };
@@ -306,7 +306,7 @@ async function settings() {
   const { data } = await sb.from('too_settings').select('*');
   const S = Object.fromEntries((data || []).map((r) => [r.key, r.value]));
   pane().innerHTML = `<h2 class="t">הגדרות</h2>
-    <div class="stack" style="max-width:720px">
+    <div class="vstack" style="max-width:720px">
       <div class="card"><h3>מצב בדיקה</h3><p class="muted" style="margin:0 0 12px">כשמצב בדיקה פעיל, "רכישה" פותחת גישה בלי חיוב, ובראש האתר מופיעה הודעה שהאתר בבדיקה. מכבים אותו רק אחרי שחברת הסליקה מחוברת.</p>
         <label class="chk"><input type="checkbox" id="tm" ${S.test_mode === true ? 'checked' : ''}><span>האתר במצב בדיקה</span></label><button class="btn btn-k sm" id="stm">שמירה</button></div>
       <div class="card"><h3>קבוצת הוואטסאפ</h3><p class="muted" style="margin:0 0 12px">הקישור מוצג רק לתלמידים עם גישה, באזור האישי.</p>
