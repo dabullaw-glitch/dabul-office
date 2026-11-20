@@ -1,0 +1,111 @@
+{
+  "started": "2026-11-20T07:51:35.769Z",
+  "sha": "99a85ae0277515a372252d33340a4e391d05338e",
+  "steps": [
+    {
+      "name": "site built from this commit",
+      "ok": false,
+      "extra": "timeout, testing the current version"
+    },
+    {
+      "name": "home loads",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "signup and login",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "test purchase",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "member area shows access",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "mark lesson done",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "progress counted",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "admin panel blocked for students",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "no sideways scroll on phone",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "login on phone",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "admin panel opens for an admin",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "admin section overview",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "admin section students",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "admin section orders",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "admin section articles",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "admin section content",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "admin section assets",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "admin section plans",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "admin section settings",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "admin section log",
+      "ok": true,
+      "extra": ""
+    }
+  ],
+  "errors": {
+    "desktop": [],
+    "mobile": []
+  },
+  "finished": "2026-11-20T08:04:05.749Z"
+}
