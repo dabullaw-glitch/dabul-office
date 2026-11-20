@@ -28,4 +28,4 @@ for (const [path, name] of [['', 'home'], ['maamarim/', 'articles'], ['knisa/', 
   });
 }
 res.errs = errs; fs.writeFileSync('out/results.json', JSON.stringify(res, null, 1)); await b.close();
-// run 3
+// run 4
