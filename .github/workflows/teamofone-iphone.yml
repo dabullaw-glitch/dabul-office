@@ -1,0 +1,27 @@
+name: teamofone iphone
+# Checks the public Team of One pages in Safari's engine as an iPhone and saves screenshots to the branch too-iphone-out.
+# Runs when tools/teamofone-iphone/ changes. Creates no accounts.
+on:
+  push:
+    branches: [main]
+    paths: ['tools/teamofone-iphone/**']
+permissions:
+  contents: write
+jobs:
+  iphone:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+      - run: |
+          mkdir -p /tmp/e && cp tools/teamofone-iphone/iphone.mjs /tmp/e/
+          if git diff --name-only HEAD~1 HEAD | grep -q '^sites/teamofone/'; then echo "$GITHUB_SHA" > /tmp/e/expect.txt; fi
+          cd /tmp/e && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null && npx playwright install --with-deps webkit >/dev/null
+          node iphone.mjs || true
+          ls -la out
+      - run: |
+          git config user.name e2e; git config user.email e2e@users.noreply.github.com
+          git checkout --orphan too-iphone-out
+          git rm -rfq . >/dev/null 2>&1 || true
+          rm -rf out && mkdir -p out && cp /tmp/e/out/* out/ && git add out && git commit -qm "iphone $(date -u +%FT%TZ)" && git push -f origin too-iphone-out

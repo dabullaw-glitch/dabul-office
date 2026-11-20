@@ -17,7 +17,7 @@ const base = import.meta.env.BASE_URL;
           <div class="f"><label for="e">מייל</label><input id="e" type="email" autocomplete="email" dir="ltr" required></div>
           <div class="f"><label for="ph">טלפון <span class="muted" style="font-weight:400">(לא חובה)</span></label><input id="ph" type="tel" autocomplete="tel" dir="ltr"></div>
           <div class="f"><label for="p">סיסמה</label><input id="p" type="password" autocomplete="new-password" dir="ltr" required><small>8 תווים לפחות.</small></div>
-          <input id="w" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+          <input id="w" name="website" tabindex="-1" autocomplete="off" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;clip-path:inset(50%)" aria-hidden="true">
           <label class="chk"><input id="ok" type="checkbox"><span>קראתי ואני מסכים/ה ל<a href={base + 'tnaim/'} target="_blank">תנאי השימוש</a> ול<a href={base + 'pratiut/'} target="_blank">מדיניות הפרטיות</a>.</span></label>
           <div class="err" id="err1"></div>
           <button class="btn btn-k wide" id="bSign">יצירת חשבון <span class="arrow">←</span></button>
