@@ -17,7 +17,7 @@ jobs:
       - run: |
           set +e
           mkdir -p /tmp/a && cp tools/podcast-asr/asr.py tools/podcast-asr/job.json /tmp/a/ && cd /tmp/a && mkdir -p out
-          pip install -q faster-whisper > out/log.txt 2>&1
+          (which ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)) >/dev/null 2>&1; pip install -q faster-whisper numpy > out/log.txt 2>&1
           python3 asr.py job.json >> out/log.txt 2>&1
           tail -20 out/log.txt
           exit 0
