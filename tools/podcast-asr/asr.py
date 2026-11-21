@@ -1,7 +1,8 @@
 # Transcribes podcast voice parts with a Hebrew speech recognizer, word by word, with how sure it is of each word.
 # Used to find words the HeyGen voice pronounced wrong: compare the transcript with the script (tools/podcast-asr/compare.py).
 # Input: job.json {name, parts:[{h, url}]}. Output: out/<name>.json {parts:[{h, words:[[word, start, end, prob]]}]}.
-import json, os, sys, urllib.request, time
+import json, os, sys, urllib.request, time, subprocess
+import numpy as np
 from faster_whisper import WhisperModel
 job = json.load(open(sys.argv[1]))
 os.makedirs('out', exist_ok=True)
@@ -16,7 +17,9 @@ t0 = time.time()
 for i, p in enumerate(job['parts']):
     f = f'/tmp/p{i}.wav'
     urllib.request.urlretrieve(p['url'], f)
-    segs, info = model.transcribe(f, language='he', word_timestamps=True, beam_size=5, condition_on_previous_text=False, vad_filter=False)
+    pcm = subprocess.run(['ffmpeg', '-v', 'error', '-i', f, '-ar', '16000', '-ac', '1', '-f', 'f32le', '-'], capture_output=True, check=True).stdout
+    audio = np.frombuffer(pcm, dtype=np.float32)
+    segs, info = model.transcribe(audio, language='he', word_timestamps=True, beam_size=5, condition_on_previous_text=False, vad_filter=False)
     words = []
     for s in segs:
         for w in (s.words or []):
