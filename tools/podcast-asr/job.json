@@ -1,5 +1,5 @@
 {
- "name": "ep04-orig",
+ "name": "ep04-orig-phon",
  "parts": [
   {
    "h": "פתיח",
@@ -45,5 +45,6 @@
    "h": "test1",
    "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=e39f4e1c6a564343b621ef1587183ca3.wav"
   }
- ]
+ ],
+ "phon": true
 }
