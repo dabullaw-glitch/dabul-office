@@ -1,0 +1,28 @@
+name: podcast asr
+# Hebrew speech recognition of podcast voice parts (tools/podcast-asr), to find words the voice pronounced wrong.
+# Runs when tools/podcast-asr/job.json changes. Output: branch podcast-asr-out, out/<name>.json. Publishes nothing.
+on:
+  push:
+    branches: [main]
+    paths: ['tools/podcast-asr/job.json']
+permissions:
+  contents: write
+concurrency: { group: podcast-asr, cancel-in-progress: false }
+jobs:
+  asr:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set +e
+          mkdir -p /tmp/a && cp tools/podcast-asr/asr.py tools/podcast-asr/job.json /tmp/a/ && cd /tmp/a && mkdir -p out
+          pip install -q faster-whisper > out/log.txt 2>&1
+          python3 asr.py job.json >> out/log.txt 2>&1
+          tail -20 out/log.txt
+          exit 0
+      - run: |
+          git config user.name asr; git config user.email asr@users.noreply.github.com
+          git fetch -q origin podcast-asr-out && git checkout -q -B podcast-asr-out origin/podcast-asr-out || git checkout -q --orphan podcast-asr-out
+          git rm -rfq . >/dev/null 2>&1 || true
+          mkdir -p out && cp /tmp/a/out/* out/ && git add out && git commit -qm "asr $(date -u +%FT%TZ)" && git push -q origin podcast-asr-out
