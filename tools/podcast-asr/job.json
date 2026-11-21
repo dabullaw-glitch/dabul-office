@@ -1,10 +1,14 @@
 {
- "name": "test5",
+ "name": "ep04-v4-s12",
  "phon": true,
  "parts": [
   {
-   "h": "test5",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=ee7f8ed52d024f23b47bfa713a3f2f37.wav"
+   "h": "חלק 1: מה הצ׳אט רואה, ומה לא",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=3e569a99647b4d599976a59b8d221a82.wav"
+  },
+  {
+   "h": "חלק 2: תשובה משכנעת, ושגויה",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=42d6d6f936e54a459d597ecd371145db.wav"
   }
  ]
 }
