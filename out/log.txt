@@ -1,7 +1,7 @@
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-0 חלק 1: מה הצ׳אט רואה, ומה לא 236 63
-1 חלק 2: תשובה משכנעת, ושגויה 239 127
+0 חלק 1: מה הצ׳אט רואה, ומה לא 235 25
+1 חלק 2: תשובה משכנעת, ושגויה 235 51
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/424 [00:00<?, ?it/s]Loading weights: 100%|██████████| 424/424 [00:00<00:00, 27303.90it/s]
+Loading weights:   0%|          | 0/424 [00:00<?, ?it/s]Loading weights: 100%|██████████| 424/424 [00:00<00:00, 25156.09it/s]
 חלק 1: מה הצ׳אט רואה, ומה לא done
 חלק 2: תשובה משכנעת, ושגויה done
