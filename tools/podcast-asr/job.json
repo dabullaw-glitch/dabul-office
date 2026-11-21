@@ -1,46 +1,10 @@
 {
- "name": "ep04-v2",
+ "name": "test3",
  "phon": true,
  "parts": [
   {
-   "h": "פתיח",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=eeade06b5ebd408eac9ee8e752202031.wav"
-  },
-  {
-   "h": "הצגת התוכנית",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=b13f94abc215464ba174648e2e1ef849.wav"
-  },
-  {
-   "h": "חלק 1: מה הצ׳אט רואה, ומה לא",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=50aac6dd1fbd4575b583d388f2fabb58.wav"
-  },
-  {
-   "h": "חלק 2: תשובה משכנעת, ושגויה",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=117a505e3d994c7d804cfe1944ab5a70.wav"
-  },
-  {
-   "h": "חלק 3: הפרטים שלכם",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=67fe21af6fdc4392a70381fb945d837a.wav"
-  },
-  {
-   "h": "תזכורת באמצע הפרק",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=2ff74d92c46a466fb422220a34b9c02b.wav"
-  },
-  {
-   "h": "חלק 4: ההודעה שמשנה את מספר החשבון",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=69c2ca15964c4080912669f21d882c00.wav"
-  },
-  {
-   "h": "חלק 5: ומה עם עורכי הדין",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=849b3f002afd4ba9aa74e786dfd0e4d3.wav"
-  },
-  {
-   "h": "מה עושים השבוע",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=9daae864f3d24748a544601c9d41c404.wav"
-  },
-  {
-   "h": "סיום",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=ab398de25d814c1eb8e05a6b35d00003.wav"
+   "h": "test3",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=3a3cb62f32e5467e8d81efc3b087efb0.wav"
   }
  ]
 }
