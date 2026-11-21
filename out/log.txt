@@ -1,13 +1,12 @@
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Traceback (most recent call last):
-  File "/tmp/a/asr.py", line 19, in <module>
-    segs, info = model.transcribe(f, language='he', word_timestamps=True, beam_size=5, condition_on_previous_text=False, vad_filter=False)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/.local/lib/python3.12/site-packages/faster_whisper/transcribe.py", line 876, in transcribe
-    audio = decode_audio(audio, sampling_rate=sampling_rate)
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/.local/lib/python3.12/site-packages/faster_whisper/audio.py", line 46, in decode_audio
-    with av.open(input_file, mode="r", metadata_errors="ignore") as container:
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "av/container/core.py", line 479, in av.container.core.open
-TypeError: open() got an unexpected keyword argument 'metadata_errors'
+0 פתיח 74 17
+1 הצגת התוכנית 127 36
+2 חלק 1: מה הצ׳אט רואה, ומה לא 232 73
+3 חלק 2: תשובה משכנעת, ושגויה 239 111
+4 חלק 3: הפרטים שלכם 164 139
+5 תזכורת באמצע הפרק 42 148
+6 חלק 4: ההודעה שמשנה את מספר החשבון 240 186
+7 חלק 5: ומה עם עורכי הדין 200 215
+8 מה עושים השבוע 102 233
+9 סיום 59 242
+10 test1 64 252
