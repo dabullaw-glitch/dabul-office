@@ -1,10 +1,14 @@
 {
- "name": "ipa-c0",
+ "name": "ipa-c0-both",
  "phon": true,
  "parts": [
   {
-   "h": "פתיח",
+   "h": "default",
    "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=9ee6870bb5154f8892f2546a6045335c.wav"
+  },
+  {
+   "h": "expr1",
+   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=bf9567e2585d4e3ab7e3d204ee43186e.wav"
   }
  ]
 }
