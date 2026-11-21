@@ -1,0 +1,29 @@
+name: podcast g2p
+# Hebrew vowels and IPA per word for a podcast script (tools/podcast-asr/g2p.py, phonikud). Runs when
+# tools/podcast-asr/g2p.txt changes. Output: branch podcast-g2p-out, out/g2p.json. Publishes nothing.
+on:
+  push:
+    branches: [main]
+    paths: ['tools/podcast-asr/g2p.txt']
+permissions:
+  contents: write
+jobs:
+  g2p:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set +e
+          mkdir -p /tmp/g/out && cp tools/podcast-asr/g2p.py tools/podcast-asr/g2p.txt /tmp/g/ && cd /tmp/g
+          pip install -q phonikud phonikud-onnx > out/log.txt 2>&1
+          curl -sSL -o phonikud.onnx https://huggingface.co/thewh1teagle/phonikud-onnx/resolve/main/phonikud-1.0.int8.onnx >> out/log.txt 2>&1
+          ls -la phonikud.onnx >> out/log.txt
+          python3 g2p.py >> out/log.txt 2>&1
+          tail -20 out/log.txt
+          exit 0
+      - run: |
+          git config user.name g2p; git config user.email g2p@users.noreply.github.com
+          git checkout -q --orphan podcast-g2p-out
+          git rm -rfq . >/dev/null 2>&1 || true
+          mkdir -p out && cp /tmp/g/out/* out/ && git add out && git commit -qm "g2p $(date -u +%FT%TZ)" && git push -q -f origin podcast-g2p-out
