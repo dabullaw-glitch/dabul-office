@@ -1,25 +1,5 @@
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-0 פתיח 74 27
-1 הצגת התוכנית 127 57
-2 חלק 1: מה הצ׳אט רואה, ומה לא 232 115
-3 חלק 2: תשובה משכנעת, ושגויה 239 174
-4 חלק 3: הפרטים שלכם 164 217
-5 תזכורת באמצע הפרק 42 230
-6 חלק 4: ההודעה שמשנה את מספר החשבון 240 290
-7 חלק 5: ומה עם עורכי הדין 200 335
-8 מה עושים השבוע 102 362
-9 סיום 59 377
-10 test1 64 392
+0 test2 40 32
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/424 [00:00<?, ?it/s]Loading weights: 100%|██████████| 424/424 [00:00<00:00, 11350.21it/s]
-פתיח done
-הצגת התוכנית done
-חלק 1: מה הצ׳אט רואה, ומה לא done
-חלק 2: תשובה משכנעת, ושגויה done
-חלק 3: הפרטים שלכם done
-תזכורת באמצע הפרק done
-חלק 4: ההודעה שמשנה את מספר החשבון done
-חלק 5: ומה עם עורכי הדין done
-מה עושים השבוע done
-סיום done
-test1 done
+Loading weights:   0%|          | 0/424 [00:00<?, ?it/s]Loading weights: 100%|██████████| 424/424 [00:00<00:00, 29234.85it/s]
+test2 done
