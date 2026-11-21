@@ -384,6 +384,19 @@ Every run, after section 6, check the episode rows (skip rows with test true). Y
   section, voice settings/heygen.voice.id, language 'he' (since 11.11.2026 the tool takes no engine/settings/model: omit
   them; never <break> tags, his instant clone refuses them; use "[pause]" for a pause), the text prepared like
   section 4 step 2 (no section headers, pronunciation + spokenReplace + avoidWords, never niqqud). Credits before / after
+  PRONUNCIATION CHECK (since 21.11.2026, Yakir on ep04: "יש פה בעיות בדיבור ... אי אפשר לשמוע את זה", then "להישאר
+  בהייגן ותתקן בעצמך את כל הבעיות"): since 11.11.2026 the tool speaks with HeyGen's own engine (heygen-voice-1), which
+  misreads many Hebrew words. So for every podcast voice: (1) apply settings/heygen.podcastPron to the HeyGen text only
+  (IPA tags <pron ipa="/.../">word</pron> for words without ח/כ-sound and without h, an exact single-word niqqud, a
+  spelling trick like ח for a soft כ, or a simple rewording that keeps the meaning); pass expressivenessBoost 1 (a request
+  with pronunciations otherwise speaks flatter and about 20% faster). IPA rules learned: phones x and h are accepted but
+  come out wrong (x sounds like h or drops), χ ħ and the affricate tʃ without a tie are refused (use t͡ʃ for צ׳, t.ʃ for
+  ת+ש), two equal vowels need a dot (ʃe.eˈla). (2) After voicing, check the words: put the part URLs into
+  tools/podcast-asr/job.json with "phon": true (Action podcast-asr, about 10 minutes, output branch podcast-asr-out) and run
+  tools/podcast-asr/compare.py <script> out/<name>.json 0.6; numbers heard as digits and צ׳ heard as "צ אט" are fine. Every
+  real misreading gets a fix from (1), is added to settings/heygen.podcastPron, and ONLY the sections
+  concerned are voiced again and checked again. (3) Only then mix. Tell Yakir in the final-approval message which wordings
+  were changed for the voice.
   (get_current_user) into settings/heygen.costLog as {id:'pod-epNN-voice', ...} (episode 1 cost 29 credits for 10 minutes).
   If the first section costs clearly more than that rate, stop: one Telegram line to Yakir with the measured cost, status
   'voice-cost-wait'. No automatic retry after an error. Then docs_merge epNN {voice:{parts,at,creditsBefore,creditsAfter},
