@@ -77,7 +77,7 @@ async function video(b: any) {
 }
 
 // ---------------- the content calendar ----------------
-const NET: Record<string, string> = { facebook: 'facebook', instagram: 'instagram', youtube: 'you_tube', linkedin: 'linked_in', tiktok: 'tik_tok', gbp: 'google_business_profile' };
+const NET: Record<string, string> = { facebook: 'facebook', instagram: 'instagram', youtube: 'you_tube', linkedin: 'linked_in', tiktok: 'tik_tok', gbp: 'google_business_profile', threads: 'threads' };
 function ilToMs(at: string) {
   const guess = Date.parse(at + ':00Z');
   const off = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Jerusalem', timeZoneName: 'shortOffset' }).formatToParts(new Date(guess)).find((p) => p.type === 'timeZoneName')?.value || 'GMT+2';
@@ -116,7 +116,14 @@ function postBody(row: any, ch: string, acc: number, pst: any) {
   // Google Business: its own weekly post in Yakir's template (text as written, article link at the end), plus a "Learn more" button
   if (ch === 'gbp') { const u = row.gbpLink || row.link || 'https://dabullaw.co.il/'; body.google_business_profile = { button_type: 'LEARN_MORE', button_url: u }; text = String(row.textGbp || text).trim(); }
   if (row.link && body.content_type !== 'link' && (ch === 'facebook' || ch === 'linkedin') && !text.includes(row.link)) text += `\n\n${row.link}`;
-  body.caption = text.slice(0, ch === 'instagram' ? 2150 : ch === 'tiktok' ? 2200 : ch === 'gbp' ? 1450 : 5000);
+  // Threads (connected 22.11.2026): short text like X (textThreads, else textX, else text), the link inside the text, at most 500 characters
+  if (ch === 'threads') {
+    text = String(row.textThreads || row.textX || text).trim();
+    if (row.link && !text.includes(row.link)) text += `\n${row.link}`;
+    if (text.length > 500) { const l = row.link && text.includes(row.link) ? row.link : ''; text = (l ? text.replace(l, '').trim().slice(0, 495 - l.length) + '\n' + l : text.slice(0, 500)); }
+    if (body.content_type === 'link') body.content_type = 'text';
+  }
+  body.caption = text.slice(0, ch === 'instagram' ? 2150 : ch === 'tiktok' ? 2200 : ch === 'gbp' ? 1450 : ch === 'threads' ? 500 : 5000);
   if (ch === 'tiktok') body.tiktok = { who_can_watch: 'public', allow_comments: true, allow_duet: false, allow_stitch: false, your_brand: false, branded_content: false, disclose_post_content: false, auto_add_music: false };
   if (ch === 'youtube') body.youtube = { title: ytTitle(row), tags: String(row.ytTags || '').split(',').map((t: string) => t.trim()).filter(Boolean).slice(0, 15), visibility: 'public', made_for_kids: false };
   return body;
