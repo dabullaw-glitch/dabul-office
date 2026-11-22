@@ -4,7 +4,7 @@
 // action 'status': what the board shows (settings/pub.buffer).
 // cron (x-cron-secret) {action:'channels'}: re-reads the channels with the saved key.
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { loadSecrets, env, admin, cors, json, telegram } from '../_shared/common.ts';
+import { loadSecrets, env, admin, cors, json, telegram } from './_shared/common.ts';
 
 const API = 'https://api.buffer.com';
 // deno-lint-ignore no-explicit-any
@@ -142,7 +142,18 @@ async function publishDue(key: string, dryRow?: string) {
     const failed = want.filter(c => res[c] && !res[c].ok);
     if (dryRow) { log.push(JSON.stringify(res)); continue; }
     const last = now - t > 100 * 60e3;
-    await mergeDoc('pub', r.id, { result: res, status: allOk ? 'published' : last ? 'missed' : 'planned', handledAt: new Date().toISOString() });
+    // 22.11.2026: a row that also has Postoria channels (facebook, linkedin, threads...) is marked published only when those went
+    // out too, and their latest results (written by the postoria function meanwhile) are kept, never overwritten. Before this,
+    // a row was marked published as soon as X went out, and Postoria stopped looking at it (the LinkedIn post of 17.11.2026).
+    const others = PST ? ((row.channels || []) as string[]).filter(c => !mine(c)) : [];
+    let status = allOk ? 'published' : last ? 'missed' : 'planned';
+    if (others.length) {
+      const { data: cur } = await admin().from('docs').select('data').match({ coll: 'pub', id: r.id }).maybeSingle();
+      const cres = (cur && cur.data && cur.data.result) || {};
+      for (const c of others) if (cres[c]) res[c] = cres[c];
+      if (allOk && !others.every(c => res[c] && res[c].ok)) status = (cur && cur.data && cur.data.status) || 'planned';
+    }
+    await mergeDoc('pub', r.id, { result: res, status, handledAt: new Date().toISOString() });
     if (failed.length && (last || !row.result)) await telegram(`⚠️ פרסום דרך Buffer נכשל: ${row.title || r.id}\n${failed.map(c => `${c}: ${res[c].error}`).join('\n')}${last ? '' : '\nאנסה שוב בעשר הדקות הבאות.'}`).catch(() => false);
     log.push(`${r.id}: ${JSON.stringify(res).slice(0, 200)}`);
   }
