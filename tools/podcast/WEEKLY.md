@@ -3,6 +3,9 @@
 Read by the scheduled task "פודקאסט שבועי: תסריט לאישור" (every Thursday morning) and by the HeyGen task when Yakir asks
 for a fix (status 'script-fix', tools/heygen-edit/TASK.md section 6b).
 
+PODCAST PAUSED (Yakir 22.11.2026: "תשהה את הפודקאסט"): if docs podcast/show.paused is true, do NOT write an episode, do not
+send anything to Yakir; only write the log row (docs agents podcast-weekly-YYYY-MM-DD {skipped:'paused'}) and stop.
+
 Yakir 5.11.2026: "משימה קבועה אחת לשבוע לשלוח אליי תוכן לאישור ואחרי שאני מאשר להעביר את זה לעריכה ואז לפרסום של פרק
 פודקאסט שבועי. כל פעם על נושא אחר."
 

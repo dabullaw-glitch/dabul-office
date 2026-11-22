@@ -364,6 +364,11 @@ Steps:
 
 ## 6b. פודקאסט (Yakir approved the podcast 5.11.2026; weekly cycle with Telegram buttons since 5.11.2026 12:17)
 
+PODCAST PAUSED (Yakir 22.11.2026: "תשהה את הפודקאסט"): while docs podcast/show.paused is true, SKIP this whole section
+6b: do not touch any episode row (ep04 has status 'paused'), do not create voices or clips, do not mix, do not add anything
+to the feed, do not send podcast reminders or podcast Telegram lines. Episodes already in the feed stay as they are. The
+weekly script task is disabled. Resume only when Yakir asks to restart the podcast in his own words.
+
 Weekly podcast "נדל״ן בגובה העיניים", 10 to 12 minutes in Yakir's cloned voice, on Spotify, Apple Podcasts, YouTube and the
 site videos page, plus a 1-minute avatar clip. Yakir 5.11.2026: "משימה קבועה אחת לשבוע לשלוח אליי תוכן לאישור ואחרי שאני
 מאשר להעביר את זה לעריכה ואז לפרסום של פרק פודקאסט שבועי. כל פעם על נושא אחר."
