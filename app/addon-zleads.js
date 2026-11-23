@@ -895,7 +895,7 @@
     return { total: r2(total), paid: r2(paid), real };
   };
   function reportView() {
-    const all = O.all('leads'), months = (O.get('settings', 'adspend') || {}).months || {};
+    const all = O.all('leads').filter(e => !e.spam && !e.test), months = (O.get('settings', 'adspend') || {}).months || {}; // spam and test leads are not counted in the report
     const mo = x => String(x || '').slice(0, 7);
     let ms = [...new Set(all.map(e => mo(e.created)).filter(Boolean).concat(Object.keys(months)))].sort().reverse().slice(0, 12);
     if (!ms.includes(today().slice(0, 7))) ms.unshift(today().slice(0, 7));
