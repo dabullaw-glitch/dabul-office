@@ -8,7 +8,7 @@
 
 add_action('wp_head', function () {
 	if (is_admin() || !is_front_page()) return;
-	echo '<link rel="preload" as="image" href="https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer.webp" media="(max-width:767px)" fetchpriority="high">' . "\n";
+	echo '<link rel="preload" as="image" href="https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer-514x1024.webp" imagesrcset="https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer-514x1024.webp 514w, https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer.webp 596w" imagesizes="284px" media="(max-width:767px)" fetchpriority="high">' . "\n";
 	echo <<<'CSS'
 <style id="dbl-ph2-css">
 #dbl-ph2{display:none}#dbl-pfab{display:none}
@@ -57,7 +57,7 @@ add_action('template_redirect', function () {
 		$contact = 'https://dabullaw.co.il/%d7%a6%d7%a8%d7%95-%d7%a7%d7%a9%d7%a8/';
 		$block = '<div id="dbl-ph2"><div class="n">יקיר דבול</div><div class="t">עורך דין מקרקעין</div>'
 			. '<p class="l">מלווה קונים, מוכרים ובעלי דירות בעסקאות נדל״ן ובפרויקטים של פינוי בינוי ותמ״א 38, מהבדיקה הראשונה ועד רישום הזכויות בטאבו.</p>'
-			. '<div class="ph"><img src="https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer.webp" width="596" height="1188" alt="עו״ד יקיר דבול, עורך דין מקרקעין" fetchpriority="high" class="skip-lazy" data-no-lazy="1">'
+			. '<div class="ph"><img src="https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer-514x1024.webp" srcset="https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer-514x1024.webp 514w, https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-lawyer.webp 596w" sizes="284px" width="514" height="1024" alt="עו״ד יקיר דבול, עורך דין מקרקעין" fetchpriority="high" class="skip-lazy" data-no-lazy="1">'
 			. '<div class="md" aria-label="דירוג משרדים מובילים LB10 2026 מקרקעין"><div class="a">דירוג משרדים</div><div class="a2">מובילים</div><div class="bb">LB10</div><div class="c">2026 · מקרקעין</div></div></div>'
 			. '<a class="btn g" href="' . $contact . '">לתיאום שיחת ייעוץ <span aria-hidden="true">←</span></a>'
 			. '<a class="btn o" href="tel:098613413"><svg width="18" height="18" viewBox="0 0 24 24" fill="#E7CD96" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.1.37 2.3.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg> 09-8613413</a>'
@@ -84,8 +84,8 @@ add_action('template_redirect', function () {
 
 // once: WP Rocket's saved copy of the home page is renewed so the new phone hero shows
 add_action('init', function () {
-	if (get_option('dbl_ph2_purged') === '1' || !function_exists('rocket_clean_home')) return;
-	update_option('dbl_ph2_purged', '1', false);
+	if (get_option('dbl_ph2_purged2') === '1' || !function_exists('rocket_clean_home')) return;
+	update_option('dbl_ph2_purged2', '1', false);
 	rocket_clean_home();
 	if (function_exists('rocket_clean_post')) rocket_clean_post((int) get_option('page_on_front'));
 }, 99);
