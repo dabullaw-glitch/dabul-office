@@ -36,7 +36,7 @@ add_action('wp_head', function () {
 #dbl-dsk2 .loc{margin-top:4px;font-size:14.5px;line-height:1.6;color:rgba(255,255,255,.66)}
 #dbl-dsk2 .loc a{color:#E7CD96!important;font-weight:700;text-decoration:underline;text-underline-offset:4px}
 img.wp-image-4838{transform:scale(1.06);transform-origin:50% 100%;-webkit-mask-image:linear-gradient(180deg,#000 72%,transparent 90%);mask-image:linear-gradient(180deg,#000 72%,transparent 90%)}
-.dbl-dsk2-medal{display:flex;position:absolute;z-index:9;left:calc(50% + 89px);bottom:271px;width:156px;height:156px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2a2a2a,#0d0d0d 70%);border:5px solid #C5A25A;box-shadow:0 0 0 3px #E7CD96 inset,0 18px 40px rgba(0,0,0,.55);flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;font-family:"Noto Local",Arial,sans-serif;direction:rtl;line-height:1.15;box-sizing:border-box}
+.dbl-dsk2-medal{display:flex;position:absolute;z-index:9!important;left:calc(50% + 89px);bottom:271px;width:156px;height:156px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2a2a2a,#0d0d0d 70%);border:5px solid #C5A25A;box-shadow:0 0 0 3px #E7CD96 inset,0 18px 40px rgba(0,0,0,.55);flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;font-family:"Noto Local",Arial,sans-serif;direction:rtl;line-height:1.15;box-sizing:border-box}
 .dbl-dsk2-medal .a{font-size:11.5px;color:#E7CD96;font-weight:700}
 .dbl-dsk2-medal .a2{font-size:13px;color:#E7CD96;font-weight:800}
 .dbl-dsk2-medal .bb{font-size:30px;font-weight:900;line-height:1;margin:3px 0 2px;direction:ltr}
@@ -45,7 +45,7 @@ img.wp-image-4838{transform:scale(1.06);transform-origin:50% 100%;-webkit-mask-i
 .dbl-dsk2-medal:after{content:"";position:absolute;bottom:-34px;left:50%;transform:translateX(-50%);width:44px;height:40px;background:linear-gradient(90deg,#A88A4C 0 45%,transparent 45% 55%,#A88A4C 55%);clip-path:polygon(0 0,100% 0,100% 100%,75% 80%,50% 100%,25% 80%,0 100%);z-index:-1}
 .elementor-1112 .elementor-element.elementor-element-6d16458{padding-top:60px!important}
 .elementor-element-3b0ce31{position:static!important;padding-bottom:330px!important}
-.elementor-element-94c4b61{position:absolute!important;z-index:8;left:50%;bottom:34px;transform:translateX(-50%);width:min(1400px,calc(100% - 48px))!important;max-width:none!important;margin:0!important;border-radius:22px!important;background:linear-gradient(#F8F8FD 67%,#fff 100%)!important;border:1.5px solid rgba(197,162,90,.75)!important;box-shadow:0 24px 60px rgba(0,0,0,.35)!important;padding:30px 48px 22px!important}
+.elementor-element-94c4b61{position:absolute!important;z-index:8!important;left:50%;bottom:34px;transform:translateX(-50%);width:min(1400px,calc(100% - 48px))!important;max-width:none!important;margin:0!important;border-radius:22px!important;background:linear-gradient(#F8F8FD 67%,#fff 100%)!important;border:1.5px solid rgba(197,162,90,.75)!important;box-shadow:0 24px 60px rgba(0,0,0,.35)!important;padding:30px 48px 22px!important}
 .elementor-element-94c4b61>*{width:100%;max-width:none!important}
 .elementor-element-844bd60,.elementor-element-094a351{z-index:30!important}
 }
@@ -80,8 +80,8 @@ add_action('template_redirect', function () {
 
 // once: WP Rocket's saved copy of the home page is renewed
 add_action('init', function () {
-	if (get_option('dbl_dsk2_purged') === '1' || !function_exists('rocket_clean_home')) return;
-	update_option('dbl_dsk2_purged', '1', false);
+	if (get_option('dbl_dsk2_purged3') === '1' || !function_exists('rocket_clean_home')) return;
+	update_option('dbl_dsk2_purged3', '1', false);
 	rocket_clean_home();
 	if (function_exists('rocket_clean_post')) rocket_clean_post((int) get_option('page_on_front'));
 }, 99);
