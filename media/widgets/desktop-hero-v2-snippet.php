@@ -43,7 +43,8 @@ img.wp-image-4838{transform:scale(1.06);transform-origin:50% 100%;-webkit-mask-i
 .dbl-dsk2-medal .c{font-size:12.5px;font-weight:800}
 .dbl-dsk2-medal .d{font-size:10px;color:#E7CD96;margin-top:2px}
 .dbl-dsk2-medal:after{content:"";position:absolute;bottom:-34px;left:50%;transform:translateX(-50%);width:44px;height:40px;background:linear-gradient(90deg,#A88A4C 0 45%,transparent 45% 55%,#A88A4C 55%);clip-path:polygon(0 0,100% 0,100% 100%,75% 80%,50% 100%,25% 80%,0 100%);z-index:-1}
-.elementor-element-3b0ce31{position:static!important;padding-bottom:340px!important}
+.elementor-1112 .elementor-element.elementor-element-6d16458{padding-top:60px!important}
+.elementor-element-3b0ce31{position:static!important;padding-bottom:330px!important}
 .elementor-element-94c4b61{position:absolute!important;z-index:8;left:50%;bottom:34px;transform:translateX(-50%);width:min(1400px,calc(100% - 48px))!important;max-width:none!important;margin:0!important;border-radius:22px!important;background:linear-gradient(#F8F8FD 67%,#fff 100%)!important;border:1.5px solid rgba(197,162,90,.75)!important;box-shadow:0 24px 60px rgba(0,0,0,.35)!important;padding:30px 48px 22px!important}
 .elementor-element-94c4b61>*{width:100%;max-width:none!important}
 .elementor-element-844bd60,.elementor-element-094a351{z-index:30!important}
