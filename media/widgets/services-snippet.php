@@ -1,6 +1,6 @@
 /* dabul: new "שירותי המשרד" cards on the home page (Yakir approved sketch 2 on 8.11.2026).
    Replaces the Elementor icon grid (5e80f31) with 5 cards; the Elementor data is not changed.
-   Circles version (23.11.2026, Yakir approved the sketch): shown only with ?dblsvc=2 until he approves it for everyone.
+   Circles version: Yakir approved it and asked to put it live on 23.11.2026. The old cards stay in dabul_svc_html() for undo.
    Preview: ?dblprev=1. To undo: deactivate this snippet. */
 define('DABUL_SVC_LIVE', 1);
 function dabul_svc_on() {
@@ -116,7 +116,7 @@ function dabul_svc_swap($html) {
 	if (strpos($html, 'id="dbl-svc"') !== false) return $html;
 	$g = dabul_svc_span($html, '5e80f31');
 	if (!$g) return $html;
-	$html = substr($html, 0, $g[0]) . ((isset($_GET['dblsvc']) && $_GET['dblsvc'] === '2') ? dabul_svc_circles_html() : dabul_svc_html()) . substr($html, $g[1]);
+	$html = substr($html, 0, $g[0]) . dabul_svc_circles_html() . substr($html, $g[1]);
 	return str_replace('כל אתגר משפטי הוא פרק משמעותי בחייכם, ואני כאן כדי שתעברו אותו בביטחון ובהצלחה.', 'כל אתגר משפטי הוא פרק משמעותי בחייכם, ואני כאן כדי ללוות אתכם בו.', $html);
 }
 add_action('template_redirect', function () {
@@ -126,3 +126,11 @@ add_action('template_redirect', function () {
 		return dabul_svc_swap($html);
 	});
 }, 8);
+
+// one time: clear the cached home page so visitors get the circles (23.11.2026)
+add_action('init', function () {
+	if (get_option('dabul_svc_purged') === '20261123c') return;
+	update_option('dabul_svc_purged', '20261123c', false);
+	if (function_exists('rocket_clean_home')) rocket_clean_home();
+	if (function_exists('rocket_clean_post')) rocket_clean_post(1112);
+}, 99);
