@@ -1,7 +1,8 @@
 /* dabul: new "שירותי המשרד" cards on the home page (Yakir approved sketch 2 on 8.11.2026).
    Replaces the Elementor icon grid (5e80f31) with 5 cards; the Elementor data is not changed.
+   Circles version (23.11.2026, Yakir approved the sketch): shown only with ?dblsvc=2 until he approves it for everyone.
    Preview: ?dblprev=1. To undo: deactivate this snippet. */
-define('DABUL_SVC_LIVE', 0);
+define('DABUL_SVC_LIVE', 1);
 function dabul_svc_on() {
 	if (DABUL_SVC_LIVE) return true;
 	$q = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
@@ -64,6 +65,42 @@ function dabul_svc_html() {
 </div>
 DBLSVCHTML;
 }
+function dabul_svc_circles_html() {
+	return <<<'DBLCIRHTML'
+<div class="dcir" id="dbl-svc" dir="rtl"><style>
+.dcir{--navy:#0B1330;--gold:#D4B25B;--gold2:#E7CD96;--gold3:#8A6A2B;--ink:#141414;--text:#5F5F66;font-family:"Noto Local","Noto Sans Hebrew",Arial,sans-serif;width:100%;max-width:1180px;margin:0 auto}
+.dcir *{box-sizing:border-box}
+.dcir .grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));column-gap:16px;row-gap:40px;margin-top:60px;align-items:start}
+.dcir a.cb{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;min-width:0;text-decoration:none!important;color:inherit}
+.dcir .ring{position:relative;width:164px;height:164px;display:flex;align-items:center;justify-content:center}
+.dcir .dash{position:absolute;inset:0;width:100%;height:100%;transition:transform 1.4s ease}
+.dcir .disc{width:138px;height:138px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F7F4EE;color:var(--navy);border:1px solid #EADFC6;transition:background .35s ease,color .35s ease,box-shadow .35s ease,border-color .35s ease}
+.dcir .disc svg{width:66px;height:66px}
+.dcir .disc.main{background:var(--navy);color:var(--gold2);border-color:var(--navy);box-shadow:0 14px 30px rgba(11,19,48,.22)}
+.dcir .tag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:12px;font-weight:700;color:var(--navy);background:var(--gold2);border-radius:999px;padding:3px 10px;line-height:1.5}
+.dcir .t{font-family:inherit;font-size:21px;line-height:1.3;font-weight:700;color:var(--ink);text-wrap:balance;transition:color .3s ease;margin:0}
+.dcir .d{font-size:15px;line-height:1.55;color:var(--text);text-wrap:balance;margin:0}
+.dcir .bar{display:block;width:34px;height:3px;border-radius:2px;background:#E4DCC9;transition:width .3s ease,background .3s ease}
+.dcir a.cb:hover .disc{background:var(--navy);color:var(--gold2);border-color:var(--navy);box-shadow:0 16px 34px rgba(11,19,48,.26)}
+.dcir a.cb:hover .dash{transform:rotate(120deg)}
+.dcir a.cb:hover .bar{width:60px;background:#C6A03C}
+.dcir a.cb:hover .t{color:var(--gold3)}
+.dcir a.cb:focus-visible{outline:2px solid var(--gold3);outline-offset:6px;border-radius:12px}
+@media (max-width:1024px){.dcir .grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.dcir .grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px;margin-top:34px}.dcir .ring{width:128px;height:128px}.dcir .disc{width:108px;height:108px}.dcir .disc svg{width:52px;height:52px}.dcir .t{font-size:18px}.dcir .d{font-size:14px}.dcir a.cb{gap:12px}.dcir .tag{font-size:11px}}
+@media (prefers-reduced-motion:reduce){.dcir .dash,.dcir .disc,.dcir .bar{transition:none}}
+</style>
+<div class="grid">
+<a class="cb" href="https://dabullaw.co.il/real-estate-lawyer/"><span class="ring"><svg class="dash" aria-hidden="true" viewBox="0 0 164 164"><circle cx="82" cy="82" r="80.5" fill="none" stroke="#D4B25B" stroke-width="1.3" stroke-dasharray="1.5 7" stroke-linecap="round"/></svg><span class="disc main"><svg aria-hidden="true" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 30 32 11l24 19"></path><path d="M14 25v27h34V25"></path><path d="M27 52V39h9v13"></path><rect x="18" y="31" width="6" height="6"></rect><rect x="38" y="31" width="6" height="6"></rect><path d="M41 15v-4h5v8"></path><path d="M6 52h44"></path><circle cx="56" cy="42" r="3.5"></circle><path d="M56 45.5v9M56 51h2.5M56 54.5h2"></path></svg></span><span class="tag">התחום המרכזי</span></span><h3 class="t">מקרקעין ונדל״ן</h3><p class="d">קנייה ומכירה, מהבדיקה ועד הטאבו</p><span class="bar" aria-hidden="true"></span></a>
+<a class="cb" href="https://dabullaw.co.il/התחדשות-עירונית/"><span class="ring"><svg class="dash" aria-hidden="true" viewBox="0 0 164 164"><circle cx="82" cy="82" r="80.5" fill="none" stroke="#D4B25B" stroke-width="1.3" stroke-dasharray="1.5 7" stroke-linecap="round"/></svg><span class="disc"><svg aria-hidden="true" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="34" width="15" height="20"></rect><path d="M12 39h2M17 39h2M12 45h2M17 45h2"></path><rect x="30" y="16" width="16" height="38"></rect><path d="M34 22h2M40 22h2M34 28h2M40 28h2M34 34h2M40 34h2M34 40h2M40 40h2M34 46h2M40 46h2"></path><path d="M53 54V10M45 10h15M53 15l7-5M59 10v8"></path><path d="M59 18v3"></path><path d="M26.5 31v-8M24 25.5l2.5-2.5 2.5 2.5"></path><path d="M5 54h56"></path></svg></span></span><h3 class="t">התחדשות עירונית</h3><p class="d">פינוי בינוי ותמ״א 38</p><span class="bar" aria-hidden="true"></span></a>
+<a class="cb" href="https://dabullaw.co.il/מיסוי-מקרקעין-המדריך-המלא/"><span class="ring"><svg class="dash" aria-hidden="true" viewBox="0 0 164 164"><circle cx="82" cy="82" r="80.5" fill="none" stroke="#D4B25B" stroke-width="1.3" stroke-dasharray="1.5 7" stroke-linecap="round"/></svg><span class="disc"><svg aria-hidden="true" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8h22l10 10v38H12z"></path><path d="M34 8v10h10"></path><path d="M20 44l14-16"></path><circle cx="21.5" cy="30.5" r="3"></circle><circle cx="32.5" cy="41.5" r="3"></circle><path d="M18 50h20"></path><ellipse cx="51" cy="50" rx="7" ry="2.5"></ellipse><path d="M44 50v4c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-4"></path><path d="M44 54v3.5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V54"></path></svg></span></span><h3 class="t">מיסוי מקרקעין</h3><p class="d">מס שבח, מס רכישה והיטל השבחה</p><span class="bar" aria-hidden="true"></span></a>
+<a class="cb" href="https://dabullaw.co.il/צוואות-וירושות/"><span class="ring"><svg class="dash" aria-hidden="true" viewBox="0 0 164 164"><circle cx="82" cy="82" r="80.5" fill="none" stroke="#D4B25B" stroke-width="1.3" stroke-dasharray="1.5 7" stroke-linecap="round"/></svg><span class="disc"><svg aria-hidden="true" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 8h26l8 8v22"></path><path d="M14 8v48h20"></path><path d="M40 8v8h8"></path><path d="M20 20h18M20 26h20M20 32h14"></path><circle cx="45" cy="46" r="7"></circle><circle cx="45" cy="46" r="3"></circle><path d="M41 52l-2 8 6-3 6 3-2-8"></path><path d="M19 47l8-8 3 3-8 8h-3z"></path></svg></span></span><h3 class="t">צוואות וירושות</h3><p class="d">צוואה, צו ירושה וצו קיום צוואה</p><span class="bar" aria-hidden="true"></span></a>
+<a class="cb" href="https://dabullaw.co.il/ייפוי-כח-מתמשך/"><span class="ring"><svg class="dash" aria-hidden="true" viewBox="0 0 164 164"><circle cx="82" cy="82" r="80.5" fill="none" stroke="#D4B25B" stroke-width="1.3" stroke-dasharray="1.5 7" stroke-linecap="round"/></svg><span class="disc"><svg aria-hidden="true" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 7 12 14v14c0 12 8.5 21.5 20 27 11.5-5.5 20-15 20-27V14z"></path><circle cx="32" cy="26" r="5"></circle><path d="M23 41c1.8-5 5-7.5 9-7.5s7.2 2.5 9 7.5"></path><path d="M32 12v-2M20 17l-1.5-1.5M44 17l1.5-1.5"></path></svg></span></span><h3 class="t">ייפוי כוח מתמשך</h3><p class="d">רכוש ובריאות, מסדרים מראש</p><span class="bar" aria-hidden="true"></span></a>
+<a class="cb" href="https://dabullaw.co.il/הוצאה-לפועל-וחדלות-פירעון/"><span class="ring"><svg class="dash" aria-hidden="true" viewBox="0 0 164 164"><circle cx="82" cy="82" r="80.5" fill="none" stroke="#D4B25B" stroke-width="1.3" stroke-dasharray="1.5 7" stroke-linecap="round"/></svg><span class="disc"><svg aria-hidden="true" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="10" r="2.2"></circle><path d="M32 12.2V52"></path><path d="M22 55h20"></path><path d="M26 52h12"></path><path d="M13 18h38"></path><path d="M13 18 6 34M13 18l7 16"></path><path d="M6 34a7 4 0 0 0 14 0z"></path><path d="M51 18l-7 16M51 18l7 16"></path><path d="M44 34a7 4 0 0 0 14 0z"></path></svg></span></span><h3 class="t">הוצאה לפועל וחדלות פירעון</h3><p class="d">איחוד תיקים וחדלות פירעון</p><span class="bar" aria-hidden="true"></span></a>
+</div>
+</div>
+DBLCIRHTML;
+}
 function dabul_svc_span($html, $id) {
 	$start = strpos($html, '<div class="elementor-element elementor-element-' . $id . ' ');
 	if ($start === false) return null;
@@ -79,7 +116,7 @@ function dabul_svc_swap($html) {
 	if (strpos($html, 'id="dbl-svc"') !== false) return $html;
 	$g = dabul_svc_span($html, '5e80f31');
 	if (!$g) return $html;
-	$html = substr($html, 0, $g[0]) . dabul_svc_html() . substr($html, $g[1]);
+	$html = substr($html, 0, $g[0]) . ((isset($_GET['dblsvc']) && $_GET['dblsvc'] === '2') ? dabul_svc_circles_html() : dabul_svc_html()) . substr($html, $g[1]);
 	return str_replace('כל אתגר משפטי הוא פרק משמעותי בחייכם, ואני כאן כדי שתעברו אותו בביטחון ובהצלחה.', 'כל אתגר משפטי הוא פרק משמעותי בחייכם, ואני כאן כדי ללוות אתכם בו.', $html);
 }
 add_action('template_redirect', function () {
