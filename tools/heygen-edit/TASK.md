@@ -495,7 +495,13 @@ B. Scripts (status 'new' or 'writing'): read lessons[n] (title, summary, html, d
    prompt rows {text, title, status 'draft', rewrittenAt}, call `reels?vr=script` again.
    Approval moves the request to 'heygen' (Telegram page). The office system also does it when both rows are 'ready'.
    An older request with status 'later' + scriptApprovedAt + both rows 'ready' counts as 'heygen' (docs_merge it).
-C. COURSE PAUSE (Yakir 17.11.2026: "הסרטונים שאתה מבקש קודמים, והקורס יכול לחכות שבועיים"): while
+COURSE FIRST (Yakir 23.11.2026 18:15, "האם להעביר את הקרדיטים של הייגן לקורס עכשיו? כן."; overrides the 17.11 order
+   in section 0 and the pause below): while settings/heygen.courseRules.budget.courseFirst exists and lesson 10 is not
+   approved, the course goes BEFORE every other HeyGen video (requested reels, the ai-nadlan reel, podcast clips): run this
+   section 8 first in every run, and create another HeyGen video only if R - its estimate >= plan.warnBelow + the next
+   lesson's estimate (about 39: voice 32 + avatar 7). courseRules.pauseUntil was removed; reserveForReels and
+   reserveForPodcast are 0 until the course is done.
+C. COURSE PAUSE (Yakir 17.11.2026: "הסרטונים שאתה מבקש קודמים, והקורס יכול לחכות שבועיים"; lifted 23.11.2026, see COURSE FIRST): while
    settings/heygen.courseRules.pauseUntil (YYYY-MM-DD) is after today (Israel date), do NOT start avatar clips or voice
    pieces for any lesson (steps C and D): leave the lessons exactly as they are, no Telegram about the course budget, and
    stop section 8 after the free steps (scripts, approvals). From that date on, continue as below.
