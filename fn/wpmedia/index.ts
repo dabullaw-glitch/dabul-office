@@ -25,8 +25,11 @@ Deno.serve(async (req) => {
     const up = await fetch('https://dabullaw.co.il/wp-json/wp/v2/media', { method: 'POST', headers: { authorization: auth, 'user-agent': UA, 'content-type': ct, 'content-disposition': `attachment; filename="${fn}"` }, body: bytes });
     const j = await up.json().catch(() => ({}));
     if (!up.ok) { out.push({ url, status: up.status, error: j?.message || 'upload' }); continue; }
-    if (it.alt || it.title || it.caption) {
-      await fetch(`https://dabullaw.co.il/wp-json/wp/v2/media/${j.id}`, { method: 'POST', headers: { authorization: auth, 'user-agent': UA, 'content-type': 'application/json' }, body: JSON.stringify({ alt_text: it.alt || '', title: it.title || '', caption: it.caption || '' }) }).catch(() => null);
+    // 23.11.2026: images also get a description and, when known, are attached to their post (it.description, it.post)
+    if (it.alt || it.title || it.caption || it.description || it.post) {
+      const meta: Record<string, unknown> = { alt_text: it.alt || '', title: it.title || '', caption: it.caption || '', description: it.description || '' };
+      if (Number(it.post) > 0) meta.post = Number(it.post);
+      await fetch(`https://dabullaw.co.il/wp-json/wp/v2/media/${j.id}`, { method: 'POST', headers: { authorization: auth, 'user-agent': UA, 'content-type': 'application/json' }, body: JSON.stringify(meta) }).catch(() => null);
     }
     out.push({ id: j.id, source_url: j.source_url, w: j.media_details?.width, h: j.media_details?.height });
   }

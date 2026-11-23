@@ -129,6 +129,43 @@ async function uploadCover(auth: string, job: any): Promise<number> {
   return m.id;
 }
 
+
+// 23.11.2026 (Yakir): article images carry no "click to enlarge" caption and no link to the image file, only the image.
+// Every image in an article gets full image details in the media library: alt text, title, description, attached to the post.
+const cleanFigures = (html: string) => String(html || '')
+  .replace(/<figcaption[^>]*>\s*לחצו על התמונה להגדלה\s*<\/figcaption>/g, '')
+  .replace(/(<figure class="dbl-info"[^>]*>)<a [^>]*>(<img [^>]*>)<\/a>/g, '$1$2');
+// deno-lint-ignore no-explicit-any
+async function imageSeo(auth: string, html: string, postId: number, job: any, cover = 0) {
+  const done: number[] = [];
+  const one = async (m: any, alt: string, desc: string) => {
+    if (!m?.id || done.includes(m.id)) return;
+    done.push(m.id);
+    const body: Record<string, unknown> = { post: postId, caption: '' };
+    if (!m.alt_text && alt) body.alt_text = alt;
+    if (!m.description?.raw) body.description = desc;
+    if (!m.title?.raw || /^[a-z0-9-]+$/i.test(m.title.raw)) body.title = alt || job.meta.title;
+    await fetch(`${SITE}/wp-json/wp/v2/media/${m.id}`, { method: 'POST', headers: { authorization: auth, 'content-type': 'application/json' }, body: JSON.stringify(body) }).catch(() => null);
+  };
+  if (cover) {
+    const r = await fetch(`${SITE}/wp-json/wp/v2/media/${cover}?context=edit`, { headers: { authorization: auth } }).catch(() => null);
+    const m = r && r.ok ? await r.json().catch(() => null) : null;
+    await one(m, job.meta.coverAlt || job.meta.keyword || job.meta.title, `תמונה ראשית למאמר: ${job.meta.title}`);
+  }
+  for (const t of String(html || '').match(/<img [^>]*>/g) || []) {
+    const src = (t.match(/src="([^"]+)"/) || [])[1] || '';
+    if (!src.includes('/wp-content/uploads/')) continue;
+    const alt = (t.match(/alt="([^"]*)"/) || [])[1] || '';
+    const base = src.split('/').pop()!.replace(/\.[a-z0-9]+$/i, '').replace(/-\d+x\d+$/, '');
+    const r = await fetch(`${SITE}/wp-json/wp/v2/media?context=edit&per_page=10&search=${encodeURIComponent(base)}`, { headers: { authorization: auth } }).catch(() => null);
+    // deno-lint-ignore no-explicit-any
+    const list: any[] = r && r.ok ? await r.json().catch(() => []) : [];
+    const m = list.find((x) => String(x.source_url || '').split('/').pop()!.startsWith(base));
+    const kind = /dbl-info/.test(html.slice(Math.max(0, html.indexOf(t) - 300), html.indexOf(t))) ? 'אינפוגרפיקה מתוך המאמר' : 'תמונה מתוך המאמר';
+    await one(m, alt, `${kind}: ${job.meta.title}. ${alt.replace(/^אינפוגרפיקה:\s*/, '')}`.slice(0, 500));
+  }
+}
+
 // deno-lint-ignore no-explicit-any
 async function publish(id: string, job: any) {
   const user = env('WP_USER'), pass = env('WP_APP_PASSWORD');
@@ -150,12 +187,13 @@ async function publish(id: string, job: any) {
   // an article that was stopped and fixed goes back into its existing post, never a duplicate
   const r = await fetch(`${SITE}/wp-json/wp/v2/posts${job.wpId ? '/' + job.wpId : ''}`, { method: 'POST', headers: { authorization: auth, 'content-type': 'application/json' },
     body: JSON.stringify({ title: job.meta.title, slug: job.meta.slug || undefined, status: 'future', date: when, excerpt: job.meta.excerpt || job.meta.metaDescription || '',
-      content: `${ex ? ex.style : ''}\n${job.html}`, categories: job.categories || [1, 10], featured_media: media || undefined, meta: seo }) });
+      content: `${ex ? ex.style : ''}\n${cleanFigures(job.html)}`, categories: job.categories || [1, 10], featured_media: media || undefined, meta: seo }) });
   // deno-lint-ignore no-explicit-any
   const p: any = await r.json().catch(() => ({}));
   if (!r.ok || !p.id) { await merge('artjob', id, { status: 'ready', publishError: `${r.status} ${String(p.message || '').slice(0, 160)}` }); await tg(`⚠️ המאמר "${job.meta.title}" מוכן, אבל העלאה לאתר נכשלה (${r.status}). אנסה שוב בשעה הבאה.`); return false; }
   const token = crypto.randomUUID().replace(/-/g, '');
   await merge('artjob', id, { status: 'scheduled', wpId: p.id, wpLink: p.link, publishAt: when, cancelToken: token, publishError: '' });
+  await imageSeo(auth, cleanFigures(job.html), p.id, job, media).catch((e) => console.error('imageSeo', e));
   const stop = `${env('SUPABASE_URL')}/functions/v1/articles?cancel=${token}`;
   await tg(`📰 מאמר חדש יעלה לאתר מחר ב-06:05\n\n${job.meta.title}\n${job.words ? `${job.words} מילים · ` : ''}עבר בדיקת כללי לשכה וקישורים${job.fixes?.length ? ` (${job.fixes.length} תיקונים אוטומטיים)` : ''}.\n\nאם לא מתאים, לחיצה על "עצירה" מחזירה אותו לטיוטה.`,
     [[{ text: '👁 תצוגה מקדימה', url: `${SITE}/?p=${p.id}&preview=true` }], [{ text: '⛔ עצירת הפרסום', url: stop }]]);
@@ -170,7 +208,7 @@ async function previewUpgrade(id: string, job: any) {
   const auth = basic(env('WP_USER'), env('WP_APP_PASSWORD'));
   const ex = await doc('artcfg', 'exemplar');
   const r = await fetch(`${SITE}/wp-json/wp/v2/posts${job.draftId ? '/' + job.draftId : ''}`, { method: 'POST', headers: { authorization: auth, 'content-type': 'application/json' },
-    body: JSON.stringify({ title: `[שדרוג לאישור] ${job.meta.title}`, status: 'draft', content: `${ex ? ex.style : ''}\n${job.html}`, categories: job.categories || [1, 10] }) });
+    body: JSON.stringify({ title: `[שדרוג לאישור] ${job.meta.title}`, status: 'draft', content: `${ex ? ex.style : ''}\n${cleanFigures(job.html)}`, categories: job.categories || [1, 10] }) });
   // deno-lint-ignore no-explicit-any
   const p: any = await r.json().catch(() => ({}));
   if (!r.ok || !p.id) { await merge('artjob', id, { status: 'ready', publishError: `draft ${r.status} ${String(p.message || '').slice(0, 120)}` }); return false; }
@@ -202,8 +240,9 @@ async function approveUpgrade(token: string) {
   const ex = await doc('artcfg', 'exemplar');
   const seo = { _yoast_wpseo_title: job.meta.metaTitle || '', _yoast_wpseo_metadesc: job.meta.metaDescription || '', _yoast_wpseo_focuskw: job.meta.keyword || '' };
   const r = await fetch(`${SITE}/wp-json/wp/v2/posts/${job.targetId}`, { method: 'POST', headers: { authorization: auth, 'content-type': 'application/json' },
-    body: JSON.stringify({ title: job.meta.title, content: `${ex ? ex.style : ''}\n${job.html}`, excerpt: job.meta.excerpt || job.meta.metaDescription || '', featured_media: media || undefined, meta: seo }) });
+    body: JSON.stringify({ title: job.meta.title, content: `${ex ? ex.style : ''}\n${cleanFigures(job.html)}`, excerpt: job.meta.excerpt || job.meta.metaDescription || '', featured_media: media || undefined, meta: seo }) });
   if (!r.ok) return page('העדכון נכשל. שום דבר לא השתנה. נסה שוב בעוד דקה.');
+  await imageSeo(auth, cleanFigures(job.html), Number(job.targetId), job, media).catch(() => null);
   if (job.draftId) await fetch(`${SITE}/wp-json/wp/v2/posts/${job.draftId}?force=true`, { method: 'DELETE', headers: { authorization: auth } }).catch(() => null);
   await merge('artjob', row.id, { status: 'upgraded', upgradedAt: new Date().toISOString(), wpId: job.targetId, wpLink: o.link, wpMedia: media || null });
   await tg(`✅ השדרוג עלה לאתר: ${job.meta.title}\n${o.link}`);

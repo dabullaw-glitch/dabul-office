@@ -39,14 +39,25 @@ cd <repo> && python3 tools/infographic/render.py /tmp/ig-<postid>.html media/inf
    `https://dabullaw-glitch.github.io/dabul-office/media/infographics/<postid>.webp` returns 200 (net.http_get).
 2. Upload to WordPress: `net.http_post` to `https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/wpmedia` with header
    `x-cron-secret` = (select v from app_secrets where k='CRON_SECRET'), body
-   `{"items":[{"url":"<pages url>","filename":"infographic-<slug-ascii>-<postid>.webp","title":"<H1 text>","alt":"<alt>"}]}`.
-   Read the WordPress URL from net._http_response. alt = one Hebrew sentence that says what the image shows.
+   `{"items":[{"url":"<pages url>","filename":"infographic-<slug-ascii>-<postid>.webp","title":"<H1 text>","alt":"<alt>","description":"<description>","post":<postid>}]}`
+   (for a NEW article leave out "post": the articles function attaches the image to the post when it publishes).
+   Read the WordPress URL from net._http_response.
+   IMAGE DETAILS, REQUIRED FOR EVERY IMAGE IN AN ARTICLE (Yakir 23.11.2026, "גם בכל התמונות שאתה מכניס למאמרים"):
+   - file name: ASCII, words of the topic with hyphens (infographic-<slug-ascii>-<id>.webp), never "image1" or a hash;
+   - alt: one Hebrew sentence that says what the image shows, with the article's main keyword;
+   - title: the infographic's heading in Hebrew;
+   - description: one or two Hebrew sentences: "אינפוגרפיקה מתוך המאמר על <topic>: <what it shows>";
+   - caption: EMPTY;
+   - attached to its post (media field "post").
+   The same applies to the cover image and to any other image put into an article.
 
 ## 4. Insert into the article (existing articles)
 The figure (one line, inline styles only, the marker class `dbl-info` is how we know an article already has one):
 ```
-<figure class="dbl-info" style="margin:32px 0;text-align:center"><a href="<wp url>" target="_blank" rel="noopener"><img src="<wp url>" alt="<alt>" width="1200" height="<h>" loading="lazy" decoding="async" style="width:100%;max-width:1200px;height:auto;border-radius:14px;border:1px solid #e4dfd3"></a><figcaption style="font-size:14px;color:#5b6478;margin-top:6px">לחצו על התמונה להגדלה</figcaption></figure>
+<figure class="dbl-info" style="margin:32px 0;text-align:center"><img src="<wp url>" alt="<alt>" width="1200" height="<h>" loading="lazy" decoding="async" style="width:100%;max-width:1200px;height:auto;border-radius:14px;border:1px solid #e4dfd3"></figure>
 ```
+- Only the image (Yakir 23.11.2026): NO caption under it ("לחצו על התמונה להגדלה" was removed, it did not really work)
+  and NO link around the image. width and height always set.
 - Find the exact opening tag of the closing section's heading in the RAW content
   (GET /wp-json/wp/v2/posts/<id>?context=edit, Basic auth from app_secrets WP_USER / WP_APP_PASSWORD), e.g.
   `<h2 ...>מה הצעד הבא שלכם?</h2>`, and use it as `find` (it must be unique).
