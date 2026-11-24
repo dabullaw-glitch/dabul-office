@@ -312,6 +312,8 @@ async function pack(p: string) {
 async function daily() {
   let err = '';
   try { await syncIncome(); } catch (e) { err = String((e as Error).message || e); await merge('settings', 'fin', { lastErr: err, lastTry: new Date().toISOString() }); }
+  // 24.11.2026: mails that could not be read wait hidden; try them again every day (after 4 tries they show up with a warning)
+  await reread(12).catch(() => null);
   // reminder: 5 days before the 15th, for the period that just ended
   const today = ilDay(); const d = +today.slice(8, 10), m = +today.slice(5, 7), y = +today.slice(0, 4);
   if (m % 2 === 1 && d >= 10 && d <= 14) {
