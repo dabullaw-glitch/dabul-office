@@ -46,12 +46,13 @@
   const period = () => s.ui('fin', 'p', defPeriod());
   const CATS = { 'משרד וציוד': 1, 'תוכנה ומנויים': 1, 'אתר ואחסון': 1, 'פרסום ושיווק': 1, 'טלפון ותקשורת': 2 / 3, 'רכב ודלק': 2 / 3, 'ביטוח מקצועי': 1, 'אגרות ורישום': 1, 'נסיעות וחניה': 1, 'ספרות והשתלמויות': 1, 'הנהלת חשבונות': 1, 'שכירות ואחזקת משרד': 1, 'כיבוד ואירוח': 0, 'אחר': 1 };
   const share = x => x.vatShare === undefined ? (CATS[x.category] ?? 1) : +x.vatShare;
-  const EXP = () => Object.entries(s.S.data.finexp || {}).map(([id, v]) => Object.assign({ id }, v));
+  // 24.11.2026 (Yakir: "מיילים שבכלל לא היו, המון כפולים"): hidden rows (duplicates, mails that are not receipts, mails waiting for a second read) are not shown and not counted
+  const EXP = () => Object.entries(s.S.data.finexp || {}).map(([id, v]) => Object.assign({ id }, v)).filter(x => !x.hidden);
   const INC = () => Object.entries(s.S.data.fininc || {}).map(([id, v]) => Object.assign({ id }, v));
   const set = () => s.get('settings', 'fin') || {};
   const sum = p => {
     const inc = INC().filter(x => x.period === p), ex = EXP().filter(x => x.period === p);
-    const biz = ex.filter(x => x.biz !== 'no');
+    const biz = ex.filter(x => x.biz !== 'no' && x.biz !== 'check'); // 24.11.2026: "לבדיקה" (maybe a client's money) counts only after he approves it
     const vatOut = inc.reduce((a, x) => a + (+x.vat || 0), 0), incNet = inc.reduce((a, x) => a + (+x.net || 0), 0);
     const vatIn = biz.reduce((a, x) => a + (+x.vat || 0) * share(x), 0), expNet = biz.reduce((a, x) => a + (+x.net || 0), 0);
     const pct = +set().advPct || 0;
@@ -282,18 +283,19 @@ function setup() {
     const p = period();
     const all = EXP().filter(x => x.period === p).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
     const rows = all;
-    const tot = rows.reduce((a, x) => a + (+x.total || 0), 0), tv = rows.reduce((a, x) => a + (+x.vat || 0) * share(x), 0);
+    const cnt = rows.filter(x => x.biz !== 'no' && x.biz !== 'check'), nChk = rows.filter(x => x.biz === 'check').length;
+    const tot = cnt.reduce((a, x) => a + (+x.total || 0), 0), tv = cnt.reduce((a, x) => a + (+x.vat || 0) * share(x), 0);
     el.innerHTML = s.pageHead('הוצאות וקבלות', 'כל קבלה שנקלטה מהמייל, מטלגרם או מהעלאה נספרת כהוצאה עסקית. מה שלא שייך, מוחקים ב-✕',
       `<button class="btn pri" data-a="fin-up">${s.icon('plus', 16)} הוספת קבלה</button>`) + `<div class="fn-wrap">
       <div class="fn-bar">${perBar(p)}<span class="grow"></span><button class="btn sm" data-a="fin-add">${s.icon('edit', 13)} הוצאה בלי קבלה</button><button class="btn sm" data-a="go" data-v="fin">לסיכום התקופה</button></div>
       ${rows.length ? `<div class="fn-tbl-w"><table class="fn-tbl"><thead><tr><th>תאריך</th><th>ספק</th><th class="num">סכום</th><th class="num hide-m">מע״מ</th><th class="hide-m">סוג</th><th></th></tr></thead><tbody>
         ${rows.map(x => { return `<tr>
           <td class="num">${fd(x.date)}<span class="sub">${SRC[x.source] || 'ידני'}</span></td>
-          <td><b>${n(x.vendor)}</b>${x.unread || !(+x.total) ? `<span class="sub" style="color:#b45309">⚠️ לא הצלחתי לקרוא את הסכום. ${x.file ? 'פותחים את הקובץ' : x.mailUrl ? `<a href="${n(x.mailUrl)}" target="_blank" rel="noopener">פותחים את המייל</a>` : 'בודקים'}, ואז מזינים סכום בעיפרון, או מוחקים ב-✕ אם זו לא קבלה.</span>` : ''}<span class="sub">${n(x.desc || '')}${x.currency && x.currency !== 'ILS' ? ` · מטבע ${n(x.currency)}, לבדוק סכום` : ''}${x.notReceipt ? ' · ייתכן שזו לא קבלה' : ''}</span></td>
+          <td><b>${n(x.vendor)}</b>${x.unread || !(+x.total) ? `<span class="sub" style="color:#b45309">⚠️ לא הצלחתי לקרוא את הסכום. ${x.file ? 'פותחים את הקובץ' : x.mailUrl ? `<a href="${n(x.mailUrl)}" target="_blank" rel="noopener">פותחים את המייל</a>` : 'בודקים'}, ואז מזינים סכום בעיפרון, או מוחקים ב-✕ אם זו לא קבלה.</span>` : ''}<span class="sub">${n(x.desc || '')}${x.currency && x.currency !== 'ILS' ? ` · מטבע ${n(x.currency)}, לבדוק סכום` : ''}${x.notReceipt ? ' · ייתכן שזו לא קבלה' : ''}</span>${x.biz === 'check' ? `<span class="sub" style="color:#b45309">⚠️ לבדיקה: ייתכן שזה כסף של לקוח ולא הוצאה של המשרד. לא נספר בדוח עד שמאשרים. <button class="btn xs" data-a="fin-biz" data-id="${x.id}" data-v="yes">הוצאה של המשרד</button> <button class="btn xs" data-a="fin-biz" data-id="${x.id}" data-v="no">לא של המשרד</button></span>` : x.biz === 'no' ? `<span class="sub">לא של המשרד, לא נספר בדוח. <button class="btn xs" data-a="fin-biz" data-id="${x.id}" data-v="yes">להחזיר</button></span>` : ''}</td>
           <td class="num">${ils2(x.total)}</td><td class="num hide-m">${x.vat ? ils2(x.vat) : '-'}${x.vat && share(x) < 1 ? `<span class="sub">נספר ${share(x) ? '2/3' : '0'}</span>` : ''}</td>
           <td class="hide-m">${n(x.category || '')}</td>
           <td><div class="fn-acts">${fileLink(x)}<button class="btn xs" data-a="fin-edit" data-id="${x.id}" title="עריכה">${s.icon('edit', 13)}</button><button class="btn xs" data-a="fin-del" data-id="${x.id}" title="מחיקה">✕</button></div></td></tr>`; }).join('')}
-        </tbody><tfoot><tr><td colspan="2">סה״כ (${rows.length})</td><td class="num">${ils2(tot)}</td><td class="num hide-m" title="מע״מ מוכר מהעסקיות">${ils2(tv)}</td><td class="hide-m"></td><td></td></tr></tfoot></table></div>`
+        </tbody><tfoot><tr><td colspan="2">סה״כ נספר (${cnt.length})${nChk ? ` · ${nChk} לבדיקה לא נספרו` : ''}</td><td class="num">${ils2(tot)}</td><td class="num hide-m" title="מע״מ מוכר מהעסקיות">${ils2(tv)}</td><td class="hide-m"></td><td></td></tr></tfoot></table></div>`
         : `<div class="card">${s.empty('עוד אין הוצאות בתקופה הזו', 'מצלמים קבלה בכפתור "הוספת קבלה", או שולחים אותה לבוט בטלגרם עם המילה "קבלה".')}</div>`}
     </div>`;
   } };

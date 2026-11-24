@@ -114,13 +114,15 @@ const PROMPT = (ctx: string) => `אתה מנהל חשבונות של משרד ע
 ${ctx}
 קבע אם זו קבלה או חשבונית על הוצאה ששילם המשרד או יקיר (ולא חשבונית שהמשרד הוציא ללקוח, ולא פרסומת, ולא הודעה בלי סכום).
 החזר JSON בלבד:
-{"isExpense":true/false,"vendor":"שם העסק שגבה","date":"YYYY-MM-DD","total":0,"vat":0,"currency":"ILS","desc":"מה נקנה, עד 8 מילים",
+{"isExpense":true/false,"client":true/false,"vendor":"שם העסק שגבה","date":"YYYY-MM-DD","total":0,"vat":0,"currency":"ILS","desc":"מה נקנה, עד 8 מילים",
 "category":"אחד מ: ${Object.keys(CATS).join(', ')}","business":"yes / no / check","reason":"משפט קצר"}
 - החזר תמיד JSON בלבד, בלי שום טקסט לפני או אחרי. total ו-vat הם מספרים בלבד (למשל 89.8), בלי סימן מטבע.
 - total הוא הסכום ששולם בפועל כולל מע"מ. vat הוא המע"מ שמופיע במסמך; אם אין מע"מ (ספק מחו"ל, עוסק פטור) כתוב 0.
 - סכום במטבע זר: כתוב את הסכום והמטבע כפי שהם.
 - business: yes רק כשברור שזו הוצאה של המשרד (תוכנה, אתר, פרסום, ציוד משרדי, ביטוח מקצועי, אגרות, לשכת עורכי הדין). no כשברור שזו הוצאה פרטית (סופר, בגדים, הוצאות בית). check בכל מקרה אחר.
-- אם המסמך הוא חשבונית שיקיר דבול הוציא ללקוח, isExpense=false.`;
+- אם המסמך הוא חשבונית שיקיר דבול הוציא ללקוח, isExpense=false.
+- התכתבות בתיק או בעסקה של לקוח (תגובה או העברה של מייל, טיוטת הסכם, מסמכי בית משפט, הודעה בלי קבלה מצורפת) היא לא קבלה: isExpense=false, גם אם מופיעים בה סכומים או המילה חשבונית.
+- client=true כשהתשלום הוא כסף של לקוח או בעסקה של לקוח ולא הוצאה של המשרד עצמו: אגרות או היטלים לעירייה בעסקת לקוח, העברת כספי עסקה, שכר דירה, תשלום של לקוח לצד שלישי. אחרת client=false.`;
 async function readDoc(bytes: Uint8Array | null, mime: string, ctx: string) {
   const content: Any[] = [];
   if (bytes) {
@@ -161,8 +163,15 @@ async function addExpense(o: { bytes: Uint8Array | null; mime: string; name?: st
     const up = await sb().storage.from('files').upload(path, o.bytes, { contentType: o.mime });
     if (up.error) throw new Error('השמירה נכשלה');
   }
-  const ai: Any = await readTwice(o.bytes, o.mime, o.ctx) || {};
+  const got: Any = await readTwice(o.bytes, o.mime, o.ctx);
+  const ai: Any = got || {};
   if (o.source === 'mail' && ai.isExpense === false) { if (path) await sb().storage.from('files').remove([path]); return { skipped: 'לא קבלה על הוצאה' }; }
+  // 24.11.2026: one mail = one expense (an invoice and a receipt for the same payment came as two rows)
+  if (got && o.msgId && amount(ai.total) > 0) {
+    const t2 = Math.round(amount(ai.total) * 100) / 100;
+    const { data: same } = await sb().from('docs').select('id,data').eq('coll', 'finexp').eq('data->>msgId', o.msgId).limit(20);
+    if ((same || []).some((r: Any) => !r.data.hidden && Math.abs((+r.data.total || 0) - t2) < 0.01)) { if (path) await sb().storage.from('files').remove([path]); return { skipped: 'אותה הוצאה מאותו מייל' }; }
+  }
   const cat = CATS[ai.category] !== undefined ? ai.category : 'אחר';
   const date = /^\d{4}-\d{2}-\d{2}$/.test(ai.date || '') ? ai.date : ilDay();
   const cur = String(ai.currency || 'ILS').toUpperCase();
@@ -170,14 +179,45 @@ async function addExpense(o: { bytes: Uint8Array | null; mime: string; name?: st
   const fromName = String(o.from || '').replace(/<[^>]*>/g, '').replace(/"/g, '').trim();
   const mailUrl = o.msgId && o.mailbox ? `https://mail.google.com/mail/?authuser=${encodeURIComponent(o.mailbox)}#all/${o.msgId}` : '';
   const rec = { date, period: periodOf(date), vendor: ai.vendor || fromName || o.name || 'לא זוהה', desc: ai.desc || (o.subject ? String(o.subject).slice(0, 120) : ''), subject: o.subject || '', fromMail: o.from || '', mailUrl, unread: !(total > 0), total, vat, net: Math.round((total - vat) * 100) / 100, currency: cur,
-    category: cat, vatShare: CATS[cat], biz: 'yes', aiBiz: ai.business || '', // 17.11.2026 (Yakir): everything that comes in is a business expense; he deletes what is not
+    category: cat, vatShare: CATS[cat], biz: ai.client === true ? 'check' : 'yes', aiBiz: ai.business || '', client: ai.client === true, // 17.11.2026 (Yakir): everything that comes in is a business expense; he deletes what is not. 24.11.2026: a client's money waits for his approval (check)
     reason: ai.reason || '', notReceipt: ai.isExpense === false,
     file: path ? 'sbfile:' + path : '', mime: o.mime, source: o.source, mailbox: o.mailbox || '', msgId: o.msgId || '', note: o.note || '', hash, at: new Date().toISOString(),
-    needsCheck: !total || cur !== 'ILS' || ai.isExpense === false };
+    needsCheck: !total || cur !== 'ILS' || ai.isExpense === false,
+    // 24.11.2026 (Yakir: "מיילים שבכלל לא היו"): a mail that could not be read is kept out of sight and read again by the reread job, not shown as 0
+    ...(!got && o.source === 'mail' ? { hidden: 'retry', tries: 1 } : {}) };
   const id = uid('x');
   const { error } = await sb().from('docs').insert({ coll: 'finexp', id, data: rec });
   if (error) throw new Error(error.message);
   return Object.assign({ id }, rec);
+}
+// 24.11.2026 (Yakir approved): read again the mails that were saved without being read (17.11 afternoon the reader
+// failed and 370 mails came in as 0). A receipt gets its amount, a mail that is not a receipt is hidden (file kept, nothing deleted),
+// the same payment twice from one mail is hidden as a duplicate. Rows marked hidden "retry" are taken, a few per call.
+async function reread(n: number) {
+  const rows = (await all('finexp')).filter(x => x.hidden === 'retry').slice(0, Math.max(1, Math.min(n, 20)));
+  const out: Record<string, number> = { amount: 0, notReceipt: 0, dup: 0, zero: 0, failed: 0 };
+  await pmap(rows, 4, async (x: Any) => {
+    let bytes: Uint8Array | null = null, mime = x.mime || '';
+    if (x.file) { const { data } = await sb().storage.from('files').download(String(x.file).replace(/^sbfile:/, '')); if (data) { bytes = new Uint8Array(await data.arrayBuffer()); mime = mime || data.type; } }
+    const ctx = `מייל מאת: ${String(x.fromMail || x.vendor || '').slice(0, 200)}\nנושא: ${String(x.subject || '').slice(0, 300)}${bytes ? '' : '\n(אין קובץ, רק הנושא)'}`;
+    const ai: Any = await readTwice(bytes, mime, ctx);
+    const at = new Date().toISOString();
+    if (!ai) { const tries = (+x.tries || 1) + 1; out.failed++; await merge('finexp', x.id, tries >= 4 ? { hidden: null, tries, rereadAt: at } : { tries, rereadAt: at }); return; }
+    if (ai.isExpense === false) { out.notReceipt++; await merge('finexp', x.id, { hidden: 'not-receipt', reason: ai.reason || '', rereadAt: at }); return; }
+    const cur = String(ai.currency || 'ILS').toUpperCase();
+    const total = Math.round(amount(ai.total) * 100) / 100, vat = cur === 'ILS' ? Math.round(amount(ai.vat) * 100) / 100 : 0;
+    if (total > 0 && x.msgId) {
+      const { data: same } = await sb().from('docs').select('id,data').eq('coll', 'finexp').eq('data->>msgId', x.msgId).limit(20);
+      if ((same || []).some((r: Any) => r.id !== x.id && !r.data.hidden && Math.abs((+r.data.total || 0) - total) < 0.01)) { out.dup++; await merge('finexp', x.id, { hidden: 'dup', rereadAt: at }); return; }
+    }
+    const cat = CATS[ai.category] !== undefined ? ai.category : 'אחר';
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(ai.date || '') ? ai.date : x.date;
+    if (total > 0) out.amount++; else out.zero++;
+    await merge('finexp', x.id, { hidden: null, rereadAt: at, vendor: ai.vendor || x.vendor, desc: ai.desc || x.desc || '', date, period: periodOf(date), total, vat, net: Math.round((total - vat) * 100) / 100, currency: cur,
+      category: cat, vatShare: CATS[cat], biz: ai.client === true ? 'check' : 'yes', client: ai.client === true, aiBiz: ai.business || '', reason: ai.reason || '', unread: !(total > 0), notReceipt: false, needsCheck: !total || cur !== 'ILS' });
+  });
+  const left = (await all('finexp')).filter(x => x.hidden === 'retry').length;
+  return { done: rows.length, left, ...out };
 }
 const line = (r: Any) => `${r.vendor} · ₪${Math.round(r.total).toLocaleString('he-IL')}${r.vat ? ` (מע"מ ₪${Math.round(r.vat).toLocaleString('he-IL')})` : ''} · ${r.category}`;
 
@@ -186,9 +226,11 @@ async function all(coll: string) {
   const out: Any[] = []; for (let f = 0; ; f += 1000) { const { data } = await sb().from('docs').select('id,data').eq('coll', coll).range(f, f + 999); (data || []).forEach((r: Any) => out.push(Object.assign({ id: r.id }, r.data))); if (!data || data.length < 1000) break; }
   return out;
 }
+// 24.11.2026: counted only when not hidden, not private and not waiting for his approval (maybe a client's money)
+const countable = (x: Any) => !x.hidden && x.biz !== 'no' && x.biz !== 'check';
 export async function summary(p: string) {
   const st = (await getDoc('settings', 'fin')) || {};
-  const inc = (await all('fininc')).filter(x => x.period === p), exp = (await all('finexp')).filter(x => x.period === p && x.biz !== 'no');
+  const inc = (await all('fininc')).filter(x => x.period === p), exp = (await all('finexp')).filter(x => x.period === p && countable(x));
   const vatOut = inc.reduce((a, x) => a + (+x.vat || 0), 0), incomeNet = inc.reduce((a, x) => a + (+x.net || 0), 0);
   const vatIn = exp.reduce((a, x) => a + (+x.vat || 0) * (x.vatShare === undefined ? 1 : +x.vatShare), 0);
   const adv = st.advPct ? incomeNet * (+st.advPct) / 100 : null;
@@ -210,7 +252,7 @@ async function pack(p: string) {
   const { zipSync } = await import('npm:fflate@0.8.2');
   const s = await summary(p);
   const inc = (await all('fininc')).filter(x => x.period === p).sort((a, b) => (a.date || '').localeCompare(b.date || '') || String(a.number).localeCompare(String(b.number)));
-  const exp = (await all('finexp')).filter(x => x.period === p && x.biz !== 'no').sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  const exp = (await all('finexp')).filter(x => x.period === p && countable(x)).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   const files: Record<string, [Uint8Array, { level: 0 }]> = {};
   const num = (k: string, i: number) => k + String(i + 1).padStart(3, '0');
   // income documents (Morning PDF links)
@@ -293,6 +335,7 @@ Deno.serve(async (req) => {
     if (a === 'daily') return json(await daily());
     if (a === 'sync') return json(await syncIncome(b.from));
     if (a === 'peek') return json(await peekMorning());
+    if (a === 'reread') { if (who === 'mail') return json({ error: 'אין הרשאה' }, 401); return json(await reread(+b.n || 12)); }
     if (a === 'summary') return json(await summary(b.period || periodOf(ilDay())));
     if (a === 'settings') { const p: Any = {}; if (b.advPct !== undefined) p.advPct = Math.max(0, Math.min(50, +b.advPct || 0)); await merge('settings', 'fin', p); return json({ ok: true }); }
     if (a === 'mail-key') { // creates (once) the key the Gmail script uses; returned only to a signed-in office user
@@ -326,7 +369,7 @@ Deno.serve(async (req) => {
       return json({ ok: true, n: out.filter(x => !x.skipped).length });
     }
     if (a === 'missing') { // the Gmail script asks: which of my mails are saved without a document?
-      const rows = (await all('finexp')).filter(x => x.mailbox === b.mailbox && x.msgId && !x.file && !x.pdfTried && x.biz !== 'no');
+      const rows = (await all('finexp')).filter(x => x.mailbox === b.mailbox && x.msgId && !x.file && !x.pdfTried && x.biz !== 'no' && !x.hidden);
       return json({ ids: [...new Set(rows.map(x => x.msgId))].slice(0, 25) });
     }
     if (a === 'attach') { // ... and sends each one back as a PDF of the mail
