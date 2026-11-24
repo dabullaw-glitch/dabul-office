@@ -1,0 +1,33 @@
+name: podcast voice test (free, open source)
+# Makes a short Hebrew sample in Yakir's voice with the free open source Chatterbox Multilingual model (CPU, no paid service).
+# Manual run only. The reference is cut from his existing recording in media/twin; the result is kept as a run artifact.
+on:
+  workflow_dispatch:
+    inputs:
+      text: { description: 'Hebrew text', required: false, default: '' }
+permissions:
+  contents: read
+jobs:
+  tts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with: { sparse-checkout: "media/twin/voice-pro-1.mp3\nmedia/twin/voice-pro-3.mp3\npodcast/voice", sparse-checkout-cone-mode: false }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Install
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+          pip install -q torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+          pip install -q chatterbox-tts soundfile
+      - name: Reference clips
+        run: |
+          mkdir -p out
+          ffmpeg -v error -y -ss 60 -t 14 -i media/twin/voice-pro-1.mp3 -ac 1 -ar 24000 -af loudnorm out/ref1.wav
+          ffmpeg -v error -y -ss 90 -t 14 -i media/twin/voice-pro-3.mp3 -ac 1 -ar 24000 -af loudnorm out/ref2.wav
+      - name: Generate
+        env: { TEXT: '${{ inputs.text }}' }
+        run: python podcast/voice/chatterbox_sample.py
+      - uses: actions/upload-artifact@v4
+        with: { name: voice-sample, path: out/*.mp3, retention-days: 7 }
