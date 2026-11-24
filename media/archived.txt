@@ -1001,3 +1001,5 @@ media/reels-pub/cl-v05-socher.mp4
 media/reels-pub/cl-v06-bait-meshutaf.mp4
 media/reels-pub/cl-yt-gush-chelka.mp4
 media/reels-pub/hg-vr-pod-ep01-clip.mp4
+media/twin/voice-pro.mp3
+media/twin/voice-studio.mp3
