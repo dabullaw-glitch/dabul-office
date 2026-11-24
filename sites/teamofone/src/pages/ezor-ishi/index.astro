@@ -36,7 +36,7 @@ import Base from '../../layouts/Base.astro';
         <div class="grid3" style="margin-bottom:22px">
           <div class="kp dk"><b>${pct}%</b><span>מהקורס הושלם (${nDone} מתוך ${total} שיעורים)</span></div>
           <div class="kp"><b>${(assets || []).length}</b><span>סקילים ותבניות להורדה</span></div>
-          <div class="kp"><b>${course.updates.length}</b><span>הרצאות חדשות במנוי</span></div>
+          <div class="kp"><b>${course.updates.length}</b><span>פריטים בספריית החברים</span></div>
         </div>
         <div class="memw">
           <div class="vstack">
@@ -44,8 +44,10 @@ import Base from '../../layouts/Base.astro';
             <div class="mods2">${course.modules.map((m) => { const c = m.lessons.filter((l) => done.has(l.id)).length; return `
               <details class="m2" ${m.lessons.some((l) => l.id === nextL?.id) ? 'open' : ''}><summary><span class="nn">${String(m.n).padStart(2, '0')}</span><span><b style="font-size:18px">${esc(m.title)}</b><div class="muted" style="font-size:14px">${esc(m.sub || '')}</div><div class="pbar"><i style="width:${m.lessons.length ? (c / m.lessons.length) * 100 : 0}%"></i></div></span><span class="pill">${c}/${m.lessons.length}</span></summary>
               <ul class="ls">${m.lessons.map((l) => '<li>' + lessonLink(l) + '</li>').join('')}</ul></details>`; }).join('')}</div>
-            <h2 style="font-size:24px;margin:16px 0 0">חדש במנוי</h2>
-            ${course.updates.length ? '<ul class="ls" style="padding:0">' + course.updates.map((l) => '<li>' + lessonLink(l) + '</li>').join('') + '</ul>' : '<div class="empty">ההרצאות הקצרות של המנוי יופיעו כאן. הראשונה תעלה עם פתיחת הקורס.</div>'}
+            <h2 style="font-size:24px;margin:16px 0 0">ספריית החברים</h2>
+            <p class="muted" style="margin:0">מדריכים, קורסים קצרים, רעיונות, כלים חדשים וסקירות. מתעדכן כל שבוע.</p>
+            <div class="row" id="libf" style="gap:6px">${['הכל', 'מדריך', 'קורס קצר', 'רעיון', 'כלי חדש', 'סקירה', 'חדשות'].map((t, i) => `<button class="btn ${i ? 'btn-w' : 'btn-k'} sm" data-t="${t}">${t}</button>`).join('')}</div>
+            ${course.updates.length ? '<ul class="ls" id="lib" style="padding:0">' + course.updates.map((l) => `<li data-topic="${esc(l.topic || '')}">` + lessonLink(l).replace('<span>' + esc(l.title) + '</span>', `<span>${l.topic ? '<span class="pill" style="margin-inline-end:6px">' + esc(l.topic) + '</span>' : ''}${esc(l.title)}<br><span class="muted" style="font-size:13px">${fmtDate(l.published_at)}${l.summary ? ' · ' + esc(l.summary) : ''}</span></span>`) + '</li>').join('') + '</ul>' : '<div class="empty">התוכן הראשון של ספריית החברים יעלה כאן בקרוב.</div>'}
           </div>
           <aside class="vstack">
             <div class="card"><h3>הסקילים והתבניות</h3><p class="muted" style="font-size:14px;margin:0 0 12px">המתנה שמגיעה עם הקורס.</p>
@@ -66,6 +68,8 @@ import Base from '../../layouts/Base.astro';
             <div class="card"><h3>הרכישות שלי</h3>${(orders || []).length ? '<div style="display:grid;gap:6px">' + orders.map((o) => `<div class="spread" style="font-size:14px"><span>${fmtDate(o.created_at)} · ${o.plan_code === 'course' ? 'הקורס המלא' : 'מנוי חודשי'}</span><span>${ils(o.amount_ils)} ${o.status === 'test' ? '<span class="pill warn">בדיקה</span>' : o.status === 'refunded' ? '<span class="pill no">הוחזר</span>' : ''}</span></div>`).join('') + '</div>' : '<p class="muted" style="margin:0">עדיין אין רכישות.</p>'}</div>
           </aside>
         </div>`;
+      const lf = document.getElementById('libf');
+      if (lf) lf.onclick = (e) => { const b = e.target.closest('[data-t]'); if (!b) return; lf.querySelectorAll('button').forEach((x) => x.className = 'btn sm ' + (x === b ? 'btn-k' : 'btn-w')); document.querySelectorAll('#lib li').forEach((li) => li.hidden = b.dataset.t !== 'הכל' && li.dataset.topic !== b.dataset.t); };
       app.querySelectorAll('[data-dl]').forEach((b) => b.onclick = async () => {
         const { data, error } = await sb.storage.from('too').createSignedUrl(b.dataset.dl, 120, { download: true });
         if (error) return toast(errText(error), true); location.href = data.signedUrl;

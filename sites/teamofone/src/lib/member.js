@@ -8,7 +8,7 @@ export async function requireLogin() {
 export async function loadCourse() {
   const [{ data: mods }, { data: les }] = await Promise.all([
     sb.from('too_modules').select('*').order('n'),
-    sb.from('too_lessons').select('id,module_id,n,title,summary,duration_min,kind,free_preview,published_at').order('n')]);
+    sb.from('too_lessons').select('id,module_id,n,title,summary,duration_min,kind,free_preview,published_at,topic').order('n')]);
   const modules = (mods || []).map((m) => ({ ...m, lessons: (les || []).filter((l) => l.module_id === m.id && l.kind === 'lesson') }));
   const updates = (les || []).filter((l) => l.kind === 'update').sort((a, b) => String(b.published_at).localeCompare(String(a.published_at)));
   const flat = modules.flatMap((m) => m.lessons.map((l) => ({ ...l, m })));

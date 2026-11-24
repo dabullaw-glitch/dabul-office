@@ -17,7 +17,7 @@ import Base from '../../../layouts/Base.astro';
       logoutBtn(document.getElementById('anav'));
       const [{ data: me }, course, { data: content }] = await Promise.all([
         sb.rpc('too_me'), loadCourse(), sb.from('too_lesson_content').select('*').eq('lesson_id', id).maybeSingle()]);
-      const all = [...course.flat, ...course.updates.map((l) => ({ ...l, m: { n: 0, title: 'חדש במנוי' } }))];
+      const all = [...course.flat, ...course.updates.map((l) => ({ ...l, m: { n: 0, title: 'ספריית החברים' } }))];
       const i = all.findIndex((l) => l.id === id), L = all[i];
       if (!L) { app.innerHTML = '<div class="card">השיעור לא נמצא. <a href="' + BASE + 'ezor-ishi/">חזרה לאזור האישי</a></div>'; return; }
       document.title = L.title + ' | Team of One';
@@ -27,7 +27,7 @@ import Base from '../../../layouts/Base.astro';
       const vid = open && content ? player(content.video_url, L.title) : '';
       const att = (content?.attachments || []);
       app.innerHTML = `
-        <div class="crumbs"><a href="${BASE}ezor-ishi/">האזור האישי</a> / פרק ${L.m.n}: ${esc(L.m.title)}</div>
+        <div class="crumbs"><a href="${BASE}ezor-ishi/">האזור האישי</a> / ${L.m.n ? 'פרק ' + L.m.n + ': ' + esc(L.m.title) : 'ספריית החברים'}</div>
         <div class="lessonw">
           <aside class="card" style="padding:14px">
             <div class="mods2" style="gap:6px">${course.modules.map((m) => `<details ${m.id === L.module_id ? 'open' : ''} style="border-radius:12px"><summary style="cursor:pointer;font-weight:800;padding:8px 6px;list-style:none">${String(m.n).padStart(2, '0')} · ${esc(m.title)}</summary>
@@ -35,7 +35,7 @@ import Base from '../../../layouts/Base.astro';
           </aside>
           <section class="vstack">
             <div class="vid2">${vid || `<div class="soon">${open ? '<b>הסרטון בהכנה</b><span class="mut">הוא יעלה לכאן לפני פתיחת הקורס.</span>' : `<b>השיעור נעול</b><span class="mut">פותחים את כל הקורס בהצטרפות.</span><a class="btn btn-l" href="${BASE}kniya/?plan=course">להצטרפות</a>`}</div>`}</div>
-            <div class="spread"><div><span class="pill">${L.m.n ? 'פרק ' + L.m.n + ' · שיעור ' + L.n : 'הרצאה במנוי'}</span>${L.free_preview && !me.access ? ' <span class="pill l">שיעור פתוח לצפייה</span>' : ''}<h1 style="font-family:var(--body);font-weight:900;font-size:clamp(26px,3vw,36px);line-height:1.2;margin:10px 0 4px">${esc(L.title)}</h1><p class="muted" style="margin:0">${esc(L.summary || '')}</p></div>
+            <div class="spread"><div><span class="pill">${L.m.n ? 'פרק ' + L.m.n + ' · שיעור ' + L.n : 'ספריית החברים' + (L.topic ? ' · ' + esc(L.topic) : '')}</span>${L.free_preview && !me.access ? ' <span class="pill l">שיעור פתוח לצפייה</span>' : ''}<h1 style="font-family:var(--body);font-weight:900;font-size:clamp(26px,3vw,36px);line-height:1.2;margin:10px 0 4px">${esc(L.title)}</h1><p class="muted" style="margin:0">${esc(L.summary || '')}</p></div>
               ${open ? `<button class="btn ${done.has(id) ? 'btn-w' : 'btn-k'}" id="mark">${done.has(id) ? '✓ סימנתי שסיימתי' : 'סיימתי את השיעור'}</button>` : ''}</div>
             ${open && content?.body_md ? '<div class="card prose">' + md(content.body_md) + '</div>' : ''}
             ${open && att.length ? '<div class="card"><h3>קבצים לשיעור</h3><div class="row">' + att.map((a) => `<button class="btn btn-w sm" data-dl="${esc(a.path)}">${esc(a.title)}</button>`).join('') + '</div></div>' : ''}

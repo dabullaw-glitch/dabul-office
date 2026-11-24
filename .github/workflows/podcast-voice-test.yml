@@ -1,9 +1,12 @@
 name: podcast voice test (free, open source)
 # Makes a short Hebrew sample in Yakir's voice with the free open source Chatterbox Multilingual model (CPU, no paid service).
-# Manual run only. The reference is cut from his existing recording in media/twin; the result is kept as a run artifact.
+# Manual run only. His recordings are in PRIVATE storage (since 24.11.2026); the run gets a short-lived signed link
+# (privpull GET ?sign=voice-pro.mp3) as ref_url. The samples are printed as base64 between markers so the office
+# workspace can read them from the job log; the run log is deleted right after.
 on:
   workflow_dispatch:
     inputs:
+      ref_url: { description: 'short-lived signed link to the reference recording', required: true }
       text: { description: 'Hebrew text', required: false, default: '' }
 permissions:
   contents: read
@@ -13,7 +16,7 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
-        with: { sparse-checkout: "media/twin/voice-pro-1.mp3\nmedia/twin/voice-pro-3.mp3\npodcast/voice", sparse-checkout-cone-mode: false }
+        with: { sparse-checkout: "podcast/voice", sparse-checkout-cone-mode: false }
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
       - name: Install
@@ -24,10 +27,13 @@ jobs:
       - name: Reference clips
         run: |
           mkdir -p out
-          ffmpeg -v error -y -ss 60 -t 14 -i media/twin/voice-pro-1.mp3 -ac 1 -ar 24000 -af loudnorm out/ref1.wav
-          ffmpeg -v error -y -ss 90 -t 14 -i media/twin/voice-pro-3.mp3 -ac 1 -ar 24000 -af loudnorm out/ref2.wav
+          curl -sfL "$REF" -o /tmp/ref.mp3
+          ffmpeg -v error -y -ss 60 -t 14 -i /tmp/ref.mp3 -ac 1 -ar 24000 -af loudnorm out/ref1.wav
+          ffmpeg -v error -y -ss 795 -t 14 -i /tmp/ref.mp3 -ac 1 -ar 24000 -af loudnorm out/ref2.wav
+          rm -f /tmp/ref.mp3
+        env: { REF: '${{ inputs.ref_url }}' }
       - name: Generate
         env: { TEXT: '${{ inputs.text }}' }
         run: python podcast/voice/chatterbox_sample.py
-      - uses: actions/upload-artifact@v4
-        with: { name: voice-sample, path: out/*.mp3, retention-days: 7 }
+      - name: Print samples
+        run: for f in out/sample-*.mp3; do echo "@@B64-BEGIN $(basename $f)"; base64 -w 0 "$f"; echo; echo "@@B64-END"; done
