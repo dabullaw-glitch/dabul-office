@@ -146,7 +146,7 @@ async function check(posts: Any[], source: string) {
     } catch (_e) { res.errors++; } // not remembered, so the next scan tries again
   }
   if (changed) await saveSeen(seen).catch(() => null);
-  if (res.hits) res.noted = await note(res.seek, res.question);
+  // no Telegram note for new hits: Yakir checks the "מפייסבוק" screen himself (asked 24.11.2026)
   await put('fbleads', 'lastrun', { at: new Date().toISOString(), source, ...res });
   return res;
 }
