@@ -1,3 +1,8 @@
 node_modules/
 dist/
 .astro/
+
+# paid lesson texts live only in the database (protected); never commit them to this public repo
+content/l[0-9]*.md
+!content/l1.md
+content/members/
