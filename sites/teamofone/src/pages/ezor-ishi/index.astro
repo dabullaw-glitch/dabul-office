@@ -22,11 +22,13 @@ import Base from '../../layouts/Base.astro';
       const total = course.flat.length, nDone = course.flat.filter((l) => done.has(l.id)).length;
       const pct = total ? Math.round((nDone / total) * 100) : 0;
       const nextL = course.flat.find((l) => !done.has(l.id)) || course.flat[0];
+      const start = course.updates.find((l) => String(l.title).startsWith('מתחילים כאן'));
       const welcome = new URLSearchParams(location.search).get('welcome');
       const subTxt = me.sub_ends ? (me.sub_renew ? 'מתחדש ב־' + fmtDate(me.sub_ends) : 'פעיל עד ' + fmtDate(me.sub_ends)) : 'אין מנוי פעיל';
       const lessonLink = (l) => `<a href="${BASE}ezor-ishi/shiur/?id=${l.id}"><span class="ck ${done.has(l.id) ? 'on' : ''}">${done.has(l.id) ? '✓' : ''}</span><span>${esc(l.title)}</span><span>${!me.access && !l.free_preview ? '🔒' : (l.free_preview && !me.access ? '<span class="pill l">חינם לצפייה</span>' : '')}</span></a>`;
       app.innerHTML = `
         ${welcome ? '<div class="card dk" style="margin-bottom:16px"><b style="color:var(--lime)">ברוכים הבאים לצוות.</b> הגישה שלכם פתוחה. מתחילים מהפרק הראשון.</div>' : ''}
+        ${me.access && start && !done.has(start.id) ? `<a class="card" href="${BASE}ezor-ishi/shiur/?id=${start.id}" style="display:flex;gap:14px;align-items:center;text-decoration:none;color:inherit;margin-bottom:16px;border:2px solid var(--ink)"><span style="font-size:30px" aria-hidden="true">🧭</span><span><b style="font-size:18px">${esc(start.title)}</b><br><span class="muted">${esc(start.summary || '')}</span></span><span style="margin-inline-start:auto;font-weight:800">←</span></a>` : ''}
         <div class="spread" style="margin-bottom:24px">
           <div><h1>שלום, ${esc((p.full_name || '').split(' ')[0])}.</h1><div class="row">
             ${me.course ? '<span class="pill ok">הקורס המלא</span>' : ''}${me.sub_ends ? '<span class="pill k">מנוי: ' + esc(subTxt) + '</span>' : ''}${!me.access ? '<span class="pill no">אין עדיין גישה לקורס</span>' : ''}</div></div>
