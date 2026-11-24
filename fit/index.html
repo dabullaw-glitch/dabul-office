@@ -334,6 +334,28 @@ V.login = () => `<div class="login"><div class="center"><svg width="64" height="
  <div class="card"><label class="f" for="pin">קוד אישי</label><input class="in pin" id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12" placeholder="••••">
  <p class="muted" style="font-size:13px;margin:8px 0 12px">בכניסה הראשונה בוחרים קוד (לפחות 4 ספרות). בכל טלפון או מחשב אחר נכנסים עם אותו קוד.</p>
  <button class="btn" id="go">כניסה</button><p id="err" class="center" style="color:var(--bad);min-height:20px;margin:10px 0 0"></p></div></div>`;
+// 24.11.2026 (Yakir approved): monthly progress summary on the home screen. Days 1 to 10 show the month that ended, after that the month so far.
+function monthSummary(ym) {
+  const inM = s => s.slice(0, 7) === ym, end = ym === today().slice(0, 7) ? today() : ymd(new Date(+ym.slice(0, 4), +ym.slice(5, 7), 0, 12));
+  let planned = 0; for (let s = ym + '-01'; s <= end; s = addDays(s, 1)) if (isTrainDay(s) || sessOn(s).some(x => x.status === 'done')) planned++;
+  const done = D.sessions.filter(x => x.status === 'done' && inM(x.date)).length;
+  const bodyIn = k => D.body.filter(x => inM(x.date) && x[k] != null && x[k] !== '').sort((a, b) => a.date.localeCompare(b.date));
+  const ch = k => { const b = bodyIn(k); return b.length > 1 ? +b[b.length - 1][k] - +b[0][k] : null; };
+  const days = Object.keys(D.food).filter(inM), col = k => avg(days.map(d => D.food[d][k]));
+  return { done, planned, dw: ch('weight'), dwaist: ch('waist'), kcal: col('kcal'), protein: col('protein'), steps: col('steps'), logged: days.filter(d => D.food[d].kcal || D.food[d].protein).length };
+}
+function monthCard() {
+  const t = today(), early = +t.slice(8, 10) <= 10, d = parse(t); if (early) d.setMonth(d.getMonth() - 1, 15);
+  const ym = ymd(d).slice(0, 7), m = monthSummary(ym), name = MONTHS[+ym.slice(5, 7) - 1];
+  const ch = (v, u) => v == null ? '<span class="muted">אין מספיק מדידות</span>' : `${v > 0 ? '+' : ''}${num(v)} ${u}`;
+  const row = (l, v) => `<li><span>${l}</span><span style="text-align:left">${v}</span></li>`;
+  return `<div class="card"><h2 style="margin:0 0 6px">📊 ${early ? 'סיכום חודש ' + name : 'החודש עד עכשיו (' + name + ')'}</h2><ul class="list">
+   ${row('אימונים שבוצעו', m.done + (m.planned ? ' מתוך ' + m.planned : ''))}
+   ${row('שינוי במשקל', ch(m.dw, 'ק"ג'))}${row('שינוי בהיקף בטן', ch(m.dwaist, 'ס"מ'))}
+   ${row('ממוצע קלוריות ביום', m.kcal ? Math.round(m.kcal).toLocaleString('he-IL') + ' (יעד ' + D.targets.kcal + ')' : '-')}
+   ${row('ממוצע חלבון ביום', m.protein ? Math.round(m.protein) + ' גרם (יעד ' + D.targets.protein + ')' : '-')}
+   ${row('ממוצע צעדים ביום', m.steps ? Math.round(m.steps).toLocaleString('he-IL') : '-')}</ul></div>`;
+}
 V.home = () => {
   const w = lastBody('weight'), w0 = firstBody('weight'), b = lastBody('waist'), b0 = firstBody('waist');
   const nx = upcoming(1)[0], t = today(), fd = D.food[t] || {}, wd = weekDone(), doneToday = sessOn(t).find(s => s.status === 'done');
@@ -354,6 +376,7 @@ V.home = () => {
   <div class="card"><div class="row between"><h2 style="margin:0">היום שלך בתזונה</h2><button class="btn sec small" data-go="food">לעדכן</button></div>
    ${[['kcal', 'קלוריות', D.targets.kcal, ''], ['protein', 'חלבון', D.targets.protein, 'גרם'], ['water', 'מים', D.targets.water, 'ליטר']].map(([k, l, tg, u]) => { const v = +fd[k] || 0, p = tg ? Math.min(100, v / tg * 100) : 0; return `<div class="mt12"><div class="row between" style="font-size:14px"><span>${l}</span><span class="muted">${num(v)} מתוך ${num(tg)} ${u}</span></div><div class="bar mt8 ${p < 60 ? 'o' : ''}"><i style="width:${p}%"></i></div></div>`; }).join('')}
   </div>
+  ${monthCard()}
   <div class="card"><div class="row between"><h2 style="margin:0">המלצת המאמן להיום</h2><button class="btn sec small" data-act="tip">${D.ai.tipDate === t ? 'רענון' : 'קבל המלצה'}</button></div>
    <div class="tip mt12" id="tipbox">${D.ai.tipDate === t && D.ai.tip ? esc(D.ai.tip) : '<span class="muted">לחץ על "קבל המלצה" והמאמן יעבור על הנתונים שלך.</span>'}</div></div>`;
 };
