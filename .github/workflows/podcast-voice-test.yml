@@ -1,15 +1,15 @@
 name: podcast voice test (free, open source)
 # Makes a short Hebrew sample in Yakir's voice with the free open source Chatterbox Multilingual model (CPU, no paid service).
-# Manual run only. His recordings are in PRIVATE storage (since 24.11.2026); the run gets a short-lived signed link
-# (privpull GET ?sign=voice-pro.mp3) as ref_url. The samples are printed as base64 between markers so the office
-# workspace can read them from the job log; the run log is deleted right after.
+# Manual run only. His recordings are in PRIVATE storage (since 24.11.2026). The run proves who it is with GitHub's own
+# signed token (OIDC) to the privpull function, which answers with a 10-minute link that is never printed.
+# The samples are printed as base64 between markers so the office workspace can read them from the job log.
 on:
   workflow_dispatch:
     inputs:
-      ref_url: { description: 'short-lived signed link to the reference recording', required: true }
       text: { description: 'Hebrew text', required: false, default: '' }
 permissions:
   contents: read
+  id-token: write
 jobs:
   tts:
     runs-on: ubuntu-latest
@@ -27,11 +27,14 @@ jobs:
       - name: Reference clips
         run: |
           mkdir -p out
-          curl -sfL "$REF" -o /tmp/ref.mp3
+          TOK=$(curl -sf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=dabul-privpull" | python3 -c "import sys,json;print(json.load(sys.stdin)['value'])")
+          echo "::add-mask::$TOK"
+          URL=$(curl -sf -H "Authorization: Bearer $TOK" "https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/privpull?gh=voice" | python3 -c "import sys,json;print(json.load(sys.stdin)['url'])")
+          echo "::add-mask::$URL"
+          curl -sfL "$URL" -o /tmp/ref.mp3
           ffmpeg -v error -y -ss 60 -t 14 -i /tmp/ref.mp3 -ac 1 -ar 24000 -af loudnorm out/ref1.wav
           ffmpeg -v error -y -ss 795 -t 14 -i /tmp/ref.mp3 -ac 1 -ar 24000 -af loudnorm out/ref2.wav
           rm -f /tmp/ref.mp3
-        env: { REF: '${{ inputs.ref_url }}' }
       - name: Generate
         env: { TEXT: '${{ inputs.text }}' }
         run: python podcast/voice/chatterbox_sample.py
