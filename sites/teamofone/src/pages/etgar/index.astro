@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import { CHALLENGE } from '../../data/challenge.js';
+const base = import.meta.env.BASE_URL;
+const next = encodeURIComponent(base + 'ezor-ishi/etgar/');
+const jsonld = { '@context': 'https://schema.org', '@type': 'Course', name: CHALLENGE.title, description: CHALLENGE.sub, isAccessibleForFree: true, inLanguage: 'he',
+  provider: { '@type': 'Organization', name: 'Team of One' }, hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: 'PT2H' } };
+---
+<Base title="אתגר חינמי של 5 ימים: העובד הדיגיטלי הראשון שלכם | Team of One" description={CHALLENGE.sub} app jsonld={jsonld}>
+  <main class="wrap page">
+    <section class="card dk" style="padding:clamp(22px,4vw,44px);margin-bottom:22px">
+      <span class="pill l">חינם · 5 ימים · 20 דקות ביום</span>
+      <h1 style="font-weight:900;font-size:clamp(30px,5vw,52px);line-height:1.1;margin:14px 0 10px;color:#fff">{CHALLENGE.title}</h1>
+      <p style="font-size:clamp(17px,2vw,20px);max-width:60ch;color:#CFCCC4;margin:0 0 22px">{CHALLENGE.sub}</p>
+      <div class="row"><a class="btn btn-l" href={`${base}knisa/?next=${next}`}>מתחילים את האתגר בחינם <span class="arrow">←</span></a><a class="btn btn-o" href={`${base}knisa/?m=login&next=${next}`}>כבר נרשמתי</a></div>
+      <p style="color:#9b9890;font-size:14px;margin:14px 0 0">ההרשמה בחינם. בלי כרטיס אשראי.</p>
+    </section>
+    <h2 style="font-size:26px">מה עושים בכל יום</h2>
+    <ol style="display:grid;gap:12px;padding:0;list-style:none;margin:0 0 26px">
+      {CHALLENGE.days.map((d) => (
+        <li class="card" style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:14px;align-items:start">
+          <b style="background:var(--lime);color:var(--ink);border-radius:14px;font-size:24px;text-align:center;padding:8px 0">{d.n}</b>
+          <div><h3 style="margin:0 0 4px">{d.title}</h3><p class="muted" style="margin:0">{d.goal}</p><span class="pill" style="margin-top:8px">{d.min} דקות</span></div>
+        </li>))}
+    </ol>
+    <section class="card" style="margin-bottom:26px">
+      <h2 style="margin-top:0">למי זה מתאים</h2>
+      <ul style="line-height:1.8;margin:0">
+        <li>בעלי עסקים קטנים ועצמאים שעושים הכל לבד.</li>
+        <li>מי שכבר ניסה כלי של בינה מלאכותית וקיבל תשובות כלליות.</li>
+        <li>מי שרוצה תוצאה אחת שעובדת, ולא עוד הרצאה על העתיד.</li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2 style="margin-top:0">שאלות נפוצות</h2>
+      <h3>צריך ידע טכני?</h3><p>לא. כל יום כולל הוראה מוכנה להעתקה, ואתם רק מתאימים אותה לעסק שלכם.</p>
+      <h3>באיזה כלי משתמשים?</h3><p>בכל כלי שיחה של בינה מלאכותית שיש לכם, גם בגרסה החינמית. השיטה זהה.</p>
+      <h3>מה קורה בסוף האתגר?</h3><p>יש לכם עובד דיגיטלי אחד שעובד כל שבוע, וחשבון של כמה זמן הוא מחזיר לכם. מי שרוצה ממשיך לקורס המלא ולקהילה.</p>
+      <div class="row" style="margin-top:16px"><a class="btn btn-k" href={`${base}knisa/?next=${next}`}>להרשמה לאתגר</a></div>
+    </section>
+  </main>
+</Base>

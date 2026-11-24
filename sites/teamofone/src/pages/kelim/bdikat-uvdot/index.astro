@@ -1,0 +1,35 @@
+---
+import Base from '../../../layouts/Base.astro';
+const base = import.meta.env.BASE_URL;
+const CHECKS = [
+  ['כל מספר נבדק מול מקור', 'סכומים, אחוזים, תאריכים ומועדים. מקור רשמי, לא עוד אתר שמצטט.'],
+  ['כל שם נכון', 'שם הלקוח, שם החברה, שם של חוק או של מוסד. טעות בשם פוגעת באמינות יותר מכל דבר אחר.'],
+  ['אין הבטחה שלא התכוונתם לתת', 'מילים כמו "בטוח", "מובטח", "תמיד" נכנסות לטקסט בקלות.'],
+  ['אין פרטים מזהים שלא צריכים להיות שם', 'מספרי זהות, טלפונים וכתובות של אנשים אחרים.'],
+  ['הטקסט עונה על השאלה בפסקה הראשונה', 'מי שקורא צריך להבין את העיקר בלי לגלול.'],
+  ['אין משפטים כלליים שלא אומרים כלום', '"בעולם המשתנה של היום" ודומיו. מוחקים.'],
+  ['הטון מתאים לקורא', 'ללקוח מודאג כותבים אחרת מאשר לספק.'],
+  ['קראתם את כל הטקסט עד הסוף', 'לא רק את ההתחלה. טעויות מסתתרות בפסקה האחרונה.'],
+];
+---
+<Base title="רשימת בדיקה לטקסט שנכתב בבינה מלאכותית | Team of One" description="שמונה בדיקות לפני שטקסט שנכתב בעזרת בינה מלאכותית יוצא ללקוח: מספרים, שמות, הבטחות, פרטיות וטון." app>
+  <main class="wrap page">
+    <div class="crumbs"><a href={base + 'kelim/'}>כלים</a> / רשימת בדיקה</div>
+    <h1 style="font-weight:900;font-size:clamp(28px,4vw,44px);margin:0 0 8px">רשימת בדיקה לטקסט מבינה מלאכותית</h1>
+    <p class="muted" style="max-width:62ch;margin:0 0 18px">סמנו כל בדיקה שעשיתם. טקסט שלא עובר את כל השמונה, לא יוצא ללקוח.</p>
+    <div style="display:grid;gap:10px" id="list">
+      {CHECKS.map(([t, d], i) => (
+        <label class="card" style="display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;cursor:pointer">
+          <input type="checkbox" style="width:22px;height:22px;margin-top:3px" />
+          <span><b style="font-size:18px">{i + 1}. {t}</b><br /><span class="muted">{d}</span></span>
+        </label>))}
+    </div>
+    <div class="card dk" style="margin-top:16px" aria-live="polite" id="score"></div>
+    <section class="card" style="margin-top:20px"><h2 style="margin-top:0">איך הכלי עצמו עוזר לבדוק</h2><p>בספריית ההוראות יש הוראה שמסמנת לכם בטקסט כל טענה שצריך לבדוק, וליד כל אחת איפה בודקים. <a href={base + 'kelim/sifriyat-horaot/'}>לספריית ההוראות</a>.</p></section>
+  </main>
+  <script>
+    const boxes = [...document.querySelectorAll('#list input')], s = document.getElementById('score');
+    const upd = () => { const n = boxes.filter((b) => b.checked).length; s.innerHTML = n === boxes.length ? '<b style="color:var(--lime);font-size:20px">הטקסט מוכן לצאת ✓</b>' : `<b style="font-size:20px">${n} מתוך ${boxes.length}</b> <span style="color:#CFCCC4">עוד ${boxes.length - n} בדיקות לפני שזה יוצא.</span>`; };
+    boxes.forEach((b) => (b.onchange = upd)); upd();
+  </script>
+</Base>

@@ -1,0 +1,53 @@
+---
+import Base from '../../../layouts/Base.astro';
+---
+<Base title="האתגר | Team of One" app>
+  <main class="wrap page">
+    <div class="crumbs"><a href={import.meta.env.BASE_URL + 'ezor-ishi/'}>האזור האישי</a> / אתגר 5 ימים</div>
+    <div id="app"><div class="card">טוען...</div></div>
+  </main>
+  <style>
+    .days{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+    .days button{border:1.5px solid var(--ink,#0b0b0c);background:#fff;border-radius:999px;padding:8px 16px;font:inherit;font-weight:700;cursor:pointer}
+    .days button[aria-current=true]{background:var(--ink,#0b0b0c);color:#fff}
+    .days button.done::after{content:' ✓';color:#2a9d3a}
+    .goal{background:var(--lime,#d7ff3b);border-radius:14px;padding:12px 16px;font-weight:600;margin:10px 0 16px}
+  </style>
+  <script>
+    import { sb, BASE, esc, toast } from '../../../lib/sb.js';
+    import { requireLogin, logoutBtn } from '../../../lib/member.js';
+    import { md } from '../../../lib/md.js';
+    import { CHALLENGE } from '../../../data/challenge.js';
+    const app = document.getElementById('app');
+    const KEY = 'too-challenge-done';
+    const getDone = () => { try { return new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch { return new Set(); } };
+    const setDone = (s) => { try { localStorage.setItem(KEY, JSON.stringify([...s])); } catch {} };
+    (async () => {
+      const ses = await requireLogin(); if (!ses) return;
+      logoutBtn(document.getElementById('anav'));
+      const done = getDone();
+      let cur = Number(new URLSearchParams(location.search).get('d')) || (CHALLENGE.days.find((d) => !done.has(d.n)) || CHALLENGE.days[0]).n;
+      const show = () => {
+        const d = CHALLENGE.days.find((x) => x.n === cur) || CHALLENGE.days[0];
+        history.replaceState(null, '', '?d=' + d.n);
+        const last = d.n === CHALLENGE.days.length;
+        app.innerHTML = `
+          <h1 style="margin:0 0 6px">${esc(CHALLENGE.title)}</h1>
+          <p class="muted" style="margin:0 0 16px">${done.size} מתוך ${CHALLENGE.days.length} ימים הושלמו</p>
+          <div class="days" role="tablist">${CHALLENGE.days.map((x) => `<button data-d="${x.n}" aria-current="${x.n === d.n}" class="${done.has(x.n) ? 'done' : ''}">יום ${x.n}</button>`).join('')}</div>
+          <article class="card">
+            <span class="pill">יום ${d.n} · ${d.min} דקות</span>
+            <h2 style="font-size:clamp(24px,3vw,32px);margin:10px 0 0">${esc(d.title)}</h2>
+            <div class="goal">המטרה של היום: ${esc(d.goal)}</div>
+            <div class="prose">${md(d.md)}</div>
+            <div class="spread" style="margin-top:18px"><button class="btn ${done.has(d.n) ? 'btn-w' : 'btn-k'}" id="mk">${done.has(d.n) ? '✓ סיימתי את היום הזה' : 'סיימתי את היום'}</button>
+            ${last ? `<a class="btn btn-l" href="${BASE}#price">לקורס המלא ולקהילה</a>` : `<button class="btn btn-w" id="nx">ליום ${d.n + 1} ←</button>`}</div>
+          </article>`;
+        app.querySelector('.days').onclick = (e) => { const b = e.target.closest('[data-d]'); if (b) { cur = Number(b.dataset.d); show(); scrollTo(0, 0); } };
+        document.getElementById('mk').onclick = () => { done.has(d.n) ? done.delete(d.n) : done.add(d.n); setDone(done); if (done.has(d.n)) toast(last ? 'סיימתם את האתגר. כל הכבוד!' : 'כל הכבוד. נתראה מחר ביום ' + (d.n + 1) + '.'); show(); };
+        const nx = document.getElementById('nx'); if (nx) nx.onclick = () => { cur = d.n + 1; show(); scrollTo(0, 0); };
+      };
+      show();
+    })();
+  </script>
+</Base>

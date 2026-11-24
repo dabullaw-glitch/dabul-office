@@ -19,7 +19,7 @@ async function rpc(name, args) { const { data, error } = await sb.rpc(name, args
 const SECTIONS = [
   ['overview', 'סקירה וכספים', overview], ['students', 'תלמידים והרשאות', students], ['orders', 'הזמנות ותשלומים', orders],
   ['articles', 'מאמרים', articles], ['content', 'תוכן הקורס', content], ['assets', 'סקילים ותבניות', assets],
-  ['plans', 'מסלולים ומחירים', plans], ['settings', 'הגדרות', settings], ['log', 'יומן פעולות', log],
+  ['lives', 'שידורים חיים', lives], ['community', 'קהילה', community], ['plans', 'מסלולים ומחירים', plans], ['settings', 'הגדרות', settings], ['log', 'יומן פעולות', log],
 ];
 function go(key) {
   const s = SECTIONS.find((x) => x[0] === key) || SECTIONS[0];
@@ -322,4 +322,50 @@ async function settings() {
 async function log() {
   const { data } = await sb.from('too_audit').select('*').order('at', { ascending: false }).limit(300);
   pane().innerHTML = `<h2 class="t">יומן פעולות</h2><p class="muted">כל הרשמה, רכישה ופעולת ניהול נרשמות כאן.</p>${logRows(data || [])}`;
+}
+
+/* ---------- live sessions ---------- */
+const room = () => 'https://meet.jit.si/TeamOfOne-' + Array.from(crypto.getRandomValues(new Uint8Array(9)), (b) => b.toString(36).padStart(2, '0')).join('').slice(0, 14);
+const localInput = (d) => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0, 16); };
+async function lives() {
+  const evs = await rpc('too_admin_events');
+  pane().innerHTML = `
+    <div class="spread" style="margin-bottom:16px"><div><h2 class="t">שידורים חיים</h2><p class="muted" style="margin:0">יוצרים שידור, והקישור נפתח לחברים רבע שעה לפני ההתחלה. אחרי השידור מדביקים קישור להקלטה.</p></div><button class="btn btn-k sm" id="evnew">שידור חדש</button></div>
+    <div class="tbl2"><table><thead><tr><th>מתי</th><th>נושא</th><th>למי</th><th>הקלטה</th><th></th></tr></thead><tbody>
+    ${evs.length ? evs.map((e) => `<tr><td>${esc(new Date(e.starts_at).toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }))}</td><td>${esc(e.title)}${e.published ? '' : ' ' + pill('טיוטה', 'warn')}</td><td>${e.audience === 'public' ? pill('פתוח לכולם', 'l') : pill('חברים', 'k')}</td><td>${e.recording_url ? pill('יש', 'ok') : '-'}</td><td><button class="btn btn-w sm" data-ed="${e.id}">עריכה</button></td></tr>`).join('') : '<tr><td colspan="5" class="muted">עדיין אין שידורים.</td></tr>'}
+    </tbody></table></div>`;
+  $('evnew').onclick = () => evForm({ title: '', description: '', starts_at: new Date(Date.now() + 7 * 864e5).setHours(20, 0, 0, 0), duration_min: 60, audience: 'members', room: room(), recording_url: '', published: true });
+  pane().querySelectorAll('[data-ed]').forEach((b) => b.onclick = () => evForm(evs.find((e) => e.id === Number(b.dataset.ed))));
+}
+function evForm(e) {
+  modal(`<h2 style="margin-top:0">${e.id ? 'עריכת שידור' : 'שידור חדש'}</h2>
+    <div class="f"><label for="et">נושא</label><input id="et" maxlength="160" value="${esc(e.title)}"></div>
+    <div class="f"><label for="ed">תיאור קצר</label><textarea id="ed" maxlength="3000">${esc(e.description || '')}</textarea></div>
+    <div class="row"><div class="f"><label for="es">מתי (שעון ישראל)</label><input id="es" type="datetime-local" value="${localInput(e.starts_at)}"></div><div class="f"><label for="eu">משך בדקות</label><input id="eu" type="number" min="10" max="300" value="${e.duration_min}"></div></div>
+    <div class="f"><label for="ea">למי</label><select id="ea"><option value="members" ${e.audience === 'members' ? 'selected' : ''}>חברי הקורס והמנוי</option><option value="public" ${e.audience === 'public' ? 'selected' : ''}>פתוח לכל מי שנרשם (שידור חינמי)</option></select></div>
+    <div class="f"><label for="er">קישור לחדר השידור</label><input id="er" dir="ltr" value="${esc(e.room || '')}"><span class="muted" style="font-size:13px">נוצר חדר חינמי אוטומטית. אפשר להדביק במקומו קישור של זום או של שידור ביוטיוב.</span></div>
+    <div class="f"><label for="ev">קישור להקלטה (אחרי השידור)</label><input id="ev" dir="ltr" value="${esc(e.recording_url || '')}"></div>
+    <label class="row" style="gap:8px"><input type="checkbox" id="ep" ${e.published ? 'checked' : ''}> מפורסם באתר</label>
+    <div class="spread" style="margin-top:14px">${e.id ? '<button class="btn btn-r sm" id="edel">מחיקה</button>' : '<span></span>'}<button class="btn btn-k" id="esave">שמירה</button></div>`);
+  $('esave').onclick = async () => {
+    const row = { title: $('et').value.trim(), description: $('ed').value.trim() || null, starts_at: new Date($('es').value).toISOString(), duration_min: Number($('eu').value) || 60, audience: $('ea').value, room: $('er').value.trim() || null, recording_url: $('ev').value.trim() || null, published: $('ep').checked };
+    if (!row.title) return toast('חסר נושא.', true);
+    const { error } = e.id ? await sb.from('too_events').update(row).eq('id', e.id) : await sb.from('too_events').insert(row);
+    if (error) return toast(errText(error), true);
+    closeModal(); toast('נשמר.'); lives();
+  };
+  if (e.id) twice($('edel'), async () => { const { error } = await sb.from('too_events').delete().eq('id', e.id); if (error) return toast(errText(error), true); closeModal(); lives(); });
+}
+
+/* ---------- community moderation ---------- */
+async function community() {
+  const { data: posts, error } = await sb.from('too_posts').select('id,author_name,kind,title,body,pinned,hidden,created_at').order('created_at', { ascending: false }).limit(100);
+  if (error) throw error;
+  pane().innerHTML = `
+    <div class="spread" style="margin-bottom:16px"><div><h2 class="t">קהילה</h2><p class="muted" style="margin:0">100 הפוסטים האחרונים. מסתירים פוסט בעייתי, נועצים הודעה חשובה, או כותבים הודעה מהצוות מתוך דף הקהילה.</p></div><a class="btn btn-k sm" href="${BASE}ezor-ishi/kehila/">לדף הקהילה</a></div>
+    <div class="tbl2"><table><thead><tr><th>מתי</th><th>מי</th><th>פוסט</th><th></th></tr></thead><tbody>
+    ${posts.length ? posts.map((p) => `<tr><td>${fmtDate(p.created_at)}</td><td>${esc(p.author_name || '')}</td><td>${p.pinned ? '📌 ' : ''}${p.hidden ? pill('מוסתר', 'no') + ' ' : ''}<b>${esc(p.title || '')}</b> ${esc(String(p.body).slice(0, 140))}</td><td class="row"><button class="btn btn-w sm" data-h="${p.id}">${p.hidden ? 'החזרה' : 'הסתרה'}</button><button class="btn btn-w sm" data-p="${p.id}">${p.pinned ? 'ביטול נעיצה' : 'נעיצה'}</button></td></tr>`).join('') : '<tr><td colspan="4" class="muted">עדיין אין פוסטים.</td></tr>'}
+    </tbody></table></div>`;
+  pane().querySelectorAll('[data-h]').forEach((b) => b.onclick = async () => { const p = posts.find((x) => x.id === Number(b.dataset.h)); const { error } = await sb.from('too_posts').update({ hidden: !p.hidden }).eq('id', p.id); if (error) return toast(errText(error), true); community(); });
+  pane().querySelectorAll('[data-p]').forEach((b) => b.onclick = async () => { const p = posts.find((x) => x.id === Number(b.dataset.p)); const { error } = await sb.from('too_posts').update({ pinned: !p.pinned }).eq('id', p.id); if (error) return toast(errText(error), true); community(); });
 }

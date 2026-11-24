@@ -1,0 +1,35 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { PROMPTS, PROMPT_CATS } from '../../../data/prompts.js';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="ספריית הוראות עבודה לבינה מלאכותית בעברית | Team of One" description="24 הוראות עבודה מוכנות להעתקה, בעברית: תשובות ללקוחות, הצעות מחיר, מאמרים, פוסטים, מודעות, נהלים ובדיקת עובדות." app>
+  <main class="wrap page">
+    <div class="crumbs"><a href={base + 'kelim/'}>כלים</a> / ספריית הוראות עבודה</div>
+    <h1 style="font-weight:900;font-size:clamp(28px,4vw,44px);margin:0 0 8px">ספריית הוראות עבודה</h1>
+    <p class="muted" style="max-width:62ch;margin:0 0 16px">הוראות מוכנות להעתקה לכל כלי שיחה של בינה מלאכותית. במקום כל ___ כותבים את הפרטים שלכם. טיפ: מוסיפים להוראה דוגמה אמיתית של תוצאה שאתם אוהבים, והתוצאה משתפרת מאוד.</p>
+    <div class="f" style="max-width:420px"><label for="q">חיפוש</label><input id="q" placeholder="למשל: הצעת מחיר"></div>
+    <div class="row" id="cats" style="margin:6px 0 18px"><button class="btn btn-k sm" data-c="">הכל</button>{PROMPT_CATS.map((c) => <button class="btn btn-w sm" data-c={c}>{c}</button>)}</div>
+    <div style="display:grid;gap:12px" id="list">
+      {PROMPTS.map((x) => (
+        <article class="card" data-cat={x.cat} data-txt={x.t + ' ' + x.p}>
+          <div class="spread"><div><span class="pill">{x.cat}</span><h2 style="font-size:19px;margin:8px 0 6px">{x.t}</h2></div><button class="btn btn-k sm" data-copy>העתקה</button></div>
+          <p style="margin:0;line-height:1.75;white-space:pre-wrap">{x.p}</p>
+        </article>))}
+    </div>
+    <section class="card dk" style="margin-top:22px"><h2 style="color:var(--lime);margin-top:0">הוראה טובה היא רק ההתחלה</h2><p>באתגר החינמי הופכים הוראה אחת לעובד שעובד בשבילכם כל שבוע.</p><a class="btn btn-l" href={base + 'etgar/'}>לאתגר החינמי</a></section>
+  </main>
+  <script>
+    const list = document.getElementById('list'), q = document.getElementById('q'); let cat = '';
+    const filter = () => { const v = q.value.trim(); list.querySelectorAll('article').forEach((a) => { a.hidden = (cat && a.dataset.cat !== cat) || (v && !a.dataset.txt.includes(v)); }); };
+    q.oninput = filter;
+    document.getElementById('cats').onclick = (e) => { const b = e.target.closest('[data-c]'); if (!b) return; cat = b.dataset.c; document.querySelectorAll('#cats button').forEach((x) => x.className = 'btn sm ' + (x === b ? 'btn-k' : 'btn-w')); filter(); };
+    list.onclick = async (e) => {
+      const b = e.target.closest('[data-copy]'); if (!b) return;
+      const p = b.closest('article').querySelector('p');
+      try { await navigator.clipboard.writeText(p.textContent); b.textContent = 'הועתק ✓'; }
+      catch { const r = document.createRange(); r.selectNodeContents(p); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'סומן, העתיקו'; }
+      setTimeout(() => (b.textContent = 'העתקה'), 1800);
+    };
+  </script>
+</Base>

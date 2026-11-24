@@ -1,0 +1,113 @@
+---
+import Base from '../../../layouts/Base.astro';
+---
+<Base title="הקהילה | Team of One" app>
+  <main class="wrap page">
+    <div class="crumbs"><a href={import.meta.env.BASE_URL + 'ezor-ishi/'}>האזור האישי</a> / הקהילה</div>
+    <div id="app"><div class="card">טוען...</div></div>
+  </main>
+  <style>
+    .feed{display:grid;gap:14px}
+    .post{background:var(--paper,#fff);border:1px solid var(--line,#e6e6e6);border-radius:18px;padding:18px 20px}
+    .post.pin{border-color:var(--ink,#0b0b0c);box-shadow:0 0 0 2px var(--lime,#d7ff3b) inset}
+    .post h3{margin:6px 0 6px;font-size:19px}
+    .post .meta{font-size:13px;color:var(--mut,#666);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .post .body{white-space:pre-wrap;line-height:1.7;margin:8px 0 10px;overflow-wrap:anywhere}
+    .acts{display:flex;gap:8px;flex-wrap:wrap}
+    .acts button{background:none;border:1px solid var(--line,#ddd);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+    .acts button.on{background:var(--lime,#d7ff3b);border-color:var(--ink,#0b0b0c)}
+    .cmts{display:grid;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line,#ddd)}
+    .cmt{font-size:15px;line-height:1.6;overflow-wrap:anywhere}.cmt b{margin-left:6px}
+    .cform{display:flex;gap:8px;margin-top:8px}.cform input{flex:1;min-width:0}
+    .compose textarea{width:100%;min-height:110px;resize:vertical}
+    .kinds{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+    .kinds label{border:1px solid var(--line,#ddd);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:14px}
+    .kinds input{position:absolute;opacity:0}.kinds input:checked+span{font-weight:700}
+    .kinds label:has(input:checked){background:var(--ink,#0b0b0c);color:#fff}
+    .filters{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 14px}
+    .filters button{border:1px solid var(--line,#ddd);background:none;border-radius:999px;padding:6px 14px;font:inherit;cursor:pointer}
+    .filters button[aria-pressed=true]{background:var(--ink,#0b0b0c);color:#fff}
+  </style>
+  <script>
+    import { sb, BASE, esc, fmtDate, toast, errText } from '../../../lib/sb.js';
+    import { requireLogin, logoutBtn } from '../../../lib/member.js';
+    const app = document.getElementById('app');
+    const KIND = { post: 'שיתוף', question: 'שאלה', win: 'הצלחה', announce: 'הודעה מהצוות' };
+    const ERRS = { no_access: 'הקהילה פתוחה לחברי הקורס והמנוי.', rate: 'פרסמתם הרבה בשעה האחרונה. נסו שוב מאוחר יותר.', blocked: 'החשבון חסום לפרסום.' };
+    const msg = (e) => ERRS[String(e?.message || '').replace(/^.*?: /, '')] || errText(e);
+    const ago = (d) => { const s = (Date.now() - new Date(d)) / 1000; if (s < 60) return 'עכשיו'; if (s < 3600) return 'לפני ' + Math.floor(s / 60) + ' דקות'; if (s < 86400) return 'לפני ' + Math.floor(s / 3600) + ' שעות'; return fmtDate(d); };
+    let me, uid, filter = 'all';
+    (async () => {
+      const ses = await requireLogin(); if (!ses) return;
+      uid = ses.user.id; logoutBtn(document.getElementById('anav'));
+      ({ data: me } = await sb.rpc('too_me'));
+      if (!me?.access) {
+        app.innerHTML = `<div class="card dk"><h1 style="color:var(--lime);margin-top:0">הקהילה של Team of One</h1><p>מקום אחד לשאלות, לשיתוף מה שבניתם ולהצלחות של כולם. הקהילה פתוחה לחברי הקורס ולמנויים.</p><div class="row"><a class="btn btn-l" href="${BASE}kniya/?plan=monthly">הצטרפות במנוי חודשי</a><a class="btn btn-o" href="${BASE}kniya/?plan=course">הקורס המלא</a></div></div>`;
+        return;
+      }
+      render();
+    })();
+    async function render() {
+      app.innerHTML = `
+        <div class="spread" style="margin-bottom:14px"><div><h1 style="margin:0">הקהילה</h1><p class="muted" style="margin:4px 0 0">שואלים, משתפים מה בניתם, ועוזרים אחד לשני. בלי פרטים של לקוחות.</p></div></div>
+        <div class="card compose" style="margin-bottom:16px">
+          <div class="kinds">${['question', 'post', 'win'].map((k, i) => `<label><input type="radio" name="kind" value="${k}" ${i === 0 ? 'checked' : ''}><span>${KIND[k]}</span></label>`).join('')}${me.admin ? `<label><input type="radio" name="kind" value="announce"><span>${KIND.announce}</span></label>` : ''}</div>
+          <div class="f"><label for="pt">כותרת (לא חובה)</label><input id="pt" maxlength="140"></div>
+          <div class="f"><label for="pb">מה רציתם לשתף?</label><textarea id="pb" maxlength="5000"></textarea></div>
+          <div class="spread"><span class="muted" style="font-size:13px">לא מפרסמים פרטים מזהים של לקוחות או מידע סודי.</span><button class="btn btn-k sm" id="send">פרסום</button></div>
+        </div>
+        <div class="filters" role="group" aria-label="סינון">${[['all', 'הכל'], ['question', 'שאלות'], ['win', 'הצלחות'], ['post', 'שיתופים']].map(([k, t]) => `<button data-f="${k}" aria-pressed="${filter === k}">${t}</button>`).join('')}</div>
+        <div class="feed" id="feed"><div class="card">טוען...</div></div>`;
+      document.getElementById('send').onclick = post;
+      app.querySelector('.filters').onclick = (e) => { const b = e.target.closest('[data-f]'); if (!b) return; filter = b.dataset.f; app.querySelectorAll('[data-f]').forEach((x) => x.setAttribute('aria-pressed', x === b)); load(); };
+      load();
+    }
+    async function load() {
+      const feed = document.getElementById('feed');
+      let q = sb.from('too_posts').select('id,user_id,author_name,kind,title,body,pinned,hidden,created_at').order('pinned', { ascending: false }).order('created_at', { ascending: false }).limit(60);
+      if (filter !== 'all') q = q.eq('kind', filter);
+      const { data: posts, error } = await q;
+      if (error) { feed.innerHTML = '<div class="card">' + esc(msg(error)) + '</div>'; return; }
+      if (!posts.length) { feed.innerHTML = '<div class="empty">עדיין אין כאן פוסטים. פתחו את השיחה הראשונה.</div>'; return; }
+      const ids = posts.map((p) => p.id);
+      const [{ data: cm }, { data: lk }] = await Promise.all([
+        sb.from('too_comments').select('id,post_id,user_id,author_name,body,created_at').in('post_id', ids).order('created_at'),
+        sb.from('too_likes').select('post_id,user_id').in('post_id', ids)]);
+      feed.innerHTML = posts.map((p) => {
+        const cs = (cm || []).filter((c) => c.post_id === p.id), ls = (lk || []).filter((l) => l.post_id === p.id), mine = ls.some((l) => l.user_id === uid);
+        return `<article class="post ${p.pinned ? 'pin' : ''}" data-id="${p.id}">
+          <div class="meta"><span class="pill ${p.kind === 'win' ? 'ok' : p.kind === 'question' ? 'k' : p.kind === 'announce' ? 'l' : ''}">${KIND[p.kind] || ''}</span><b>${esc(p.author_name || '')}</b><span>${ago(p.created_at)}</span>${p.pinned ? '<span>📌 נעוץ</span>' : ''}${p.hidden ? '<span class="pill no">מוסתר</span>' : ''}</div>
+          ${p.title ? `<h3>${esc(p.title)}</h3>` : ''}<div class="body">${esc(p.body)}</div>
+          <div class="acts"><button data-like class="${mine ? 'on' : ''}" aria-pressed="${mine}">👍 ${ls.length || ''}</button><button data-reply>תגובה${cs.length ? ' (' + cs.length + ')' : ''}</button>${p.user_id === uid || me.admin ? '<button data-del>מחיקה</button>' : ''}${me.admin ? `<button data-pin>${p.pinned ? 'ביטול נעיצה' : 'נעיצה'}</button><button data-hide>${p.hidden ? 'החזרה' : 'הסתרה'}</button>` : ''}</div>
+          <div class="cmts" ${cs.length ? '' : 'hidden'}>${cs.map((c) => `<div class="cmt"><b>${esc(c.author_name || '')}</b>${esc(c.body)} <span class="muted" style="font-size:12px">${ago(c.created_at)}</span>${c.user_id === uid || me.admin ? ` <button class="linkb" data-cdel="${c.id}" style="background:none;border:0;color:var(--mut);cursor:pointer;font-size:12px">מחיקה</button>` : ''}</div>`).join('')}</div>
+          <form class="cform" hidden><input maxlength="2000" placeholder="כתבו תגובה" aria-label="תגובה"><button class="btn btn-k sm">שליחה</button></form>
+        </article>`;
+      }).join('');
+      feed.querySelectorAll('.post').forEach((el) => {
+        const id = Number(el.dataset.id);
+        el.querySelector('[data-like]').onclick = async (e) => {
+          const on = e.currentTarget.classList.contains('on');
+          const { error } = on ? await sb.from('too_likes').delete().eq('post_id', id).eq('user_id', uid) : await sb.from('too_likes').insert({ post_id: id });
+          if (error) return toast(msg(error), true); load();
+        };
+        const f = el.querySelector('.cform');
+        el.querySelector('[data-reply]').onclick = () => { f.hidden = !f.hidden; el.querySelector('.cmts').hidden = false; if (!f.hidden) f.querySelector('input').focus(); };
+        f.onsubmit = async (e) => { e.preventDefault(); const v = f.querySelector('input').value.trim(); if (!v) return; const { error } = await sb.from('too_comments').insert({ post_id: id, body: v }); if (error) return toast(msg(error), true); load(); };
+        const d = el.querySelector('[data-del]'); if (d) d.onclick = async () => { if (d.dataset.sure !== '1') { d.dataset.sure = '1'; d.textContent = 'לחצו שוב למחיקה'; return; } const { error } = await sb.from('too_posts').delete().eq('id', id); if (error) return toast(msg(error), true); load(); };
+        const pn = el.querySelector('[data-pin]'); if (pn) pn.onclick = async () => { const { error } = await sb.from('too_posts').update({ pinned: !el.classList.contains('pin') }).eq('id', id); if (error) return toast(msg(error), true); load(); };
+        const hd = el.querySelector('[data-hide]'); if (hd) hd.onclick = async () => { const { error } = await sb.from('too_posts').update({ hidden: hd.textContent === 'הסתרה' }).eq('id', id); if (error) return toast(msg(error), true); load(); };
+        el.querySelectorAll('[data-cdel]').forEach((b) => b.onclick = async () => { const { error } = await sb.from('too_comments').delete().eq('id', Number(b.dataset.cdel)); if (error) return toast(msg(error), true); load(); });
+      });
+    }
+    async function post() {
+      const body = document.getElementById('pb').value.trim(), title = document.getElementById('pt').value.trim();
+      const kind = app.querySelector('input[name=kind]:checked')?.value || 'post';
+      if (body.length < 2) return toast('כתבו כמה מילים לפני הפרסום.', true);
+      const b = document.getElementById('send'); b.disabled = true;
+      const { error } = await sb.from('too_posts').insert({ kind, title: title || null, body, pinned: kind === 'announce' });
+      b.disabled = false;
+      if (error) return toast(msg(error), true);
+      document.getElementById('pb').value = ''; document.getElementById('pt').value = ''; toast('פורסם.'); load();
+    }
+  </script>
+</Base>

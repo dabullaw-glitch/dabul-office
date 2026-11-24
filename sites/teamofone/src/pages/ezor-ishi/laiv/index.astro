@@ -1,0 +1,74 @@
+---
+import Base from '../../../layouts/Base.astro';
+---
+<Base title="שידורים חיים | Team of One" app>
+  <main class="wrap page">
+    <div class="crumbs"><a href={import.meta.env.BASE_URL + 'ezor-ishi/'}>האזור האישי</a> / שידורים חיים</div>
+    <div id="app"><div class="card">טוען...</div></div>
+  </main>
+  <style>
+    .evs{display:grid;gap:12px}
+    .ev{display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:16px;align-items:center;background:var(--paper,#fff);border:1px solid var(--line,#e6e6e6);border-radius:18px;padding:16px 18px}
+    .ev .dt{background:var(--ink,#0b0b0c);color:#fff;border-radius:14px;text-align:center;padding:10px 6px;line-height:1.2}
+    .ev .dt b{display:block;font-size:26px;color:var(--lime,#d7ff3b)}
+    .ev h3{margin:0 0 4px;font-size:19px}.ev p{margin:0;color:var(--mut,#666);font-size:15px;overflow-wrap:anywhere}
+    .ev .go{display:flex;flex-direction:column;gap:6px;align-items:stretch}
+    @media (max-width:640px){.ev{grid-template-columns:72px minmax(0,1fr)}.ev .go{grid-column:1/-1}}
+  </style>
+  <script>
+    import { sb, BASE, esc, toast, errText } from '../../../lib/sb.js';
+    import { requireLogin, logoutBtn } from '../../../lib/member.js';
+    import { player } from '../../../lib/video.js';
+    const app = document.getElementById('app');
+    const tz = { timeZone: 'Asia/Jerusalem' };
+    const day = (d) => new Date(d).toLocaleDateString('he-IL', { ...tz, day: 'numeric' });
+    const mon = (d) => new Date(d).toLocaleDateString('he-IL', { ...tz, month: 'short' });
+    const when = (d) => new Date(d).toLocaleString('he-IL', { ...tz, weekday: 'long', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
+    const ics = (e) => {
+      const f = (d) => new Date(d).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+      const end = new Date(new Date(e.starts_at).getTime() + e.duration_min * 60000);
+      const body = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//TeamOfOne//HE', 'BEGIN:VEVENT', 'UID:too-' + e.id + '@teamofone', 'DTSTAMP:' + f(new Date()), 'DTSTART:' + f(e.starts_at), 'DTEND:' + f(end), 'SUMMARY:' + e.title.replace(/[,;]/g, ' '), 'DESCRIPTION:' + location.href, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+      return URL.createObjectURL(new Blob([body], { type: 'text/calendar' }));
+    };
+    (async () => {
+      const ses = await requireLogin(); if (!ses) return;
+      logoutBtn(document.getElementById('anav'));
+      const [{ data: me }, { data: evs, error }] = await Promise.all([
+        sb.rpc('too_me'),
+        sb.from('too_events').select('id,title,description,starts_at,duration_min,audience').order('starts_at', { ascending: true })]);
+      if (error) { app.innerHTML = '<div class="card">' + esc(errText(error)) + '</div>'; return; }
+      const now = Date.now();
+      const up = (evs || []).filter((e) => new Date(e.starts_at).getTime() + (e.duration_min + 30) * 60000 > now);
+      const past = (evs || []).filter((e) => !up.includes(e)).reverse();
+      const row = (e, isPast) => `<div class="ev" data-id="${e.id}">
+        <div class="dt"><b>${day(e.starts_at)}</b>${mon(e.starts_at)}</div>
+        <div><h3>${esc(e.title)}</h3><p>${esc(when(e.starts_at))} · ${e.duration_min} דקות${e.audience === 'public' ? ' · פתוח לכולם' : ''}</p>${e.description ? `<p style="margin-top:6px">${esc(e.description)}</p>` : ''}<div class="rec"></div></div>
+        <div class="go">${isPast ? '<button class="btn btn-w sm" data-rec>להקלטה</button>' : `<button class="btn btn-k sm" data-join>כניסה לשידור</button><a class="btn btn-w sm" data-ics download="live.ics">הוספה ליומן</a>`}</div></div>`;
+      app.innerHTML = `
+        <div class="spread" style="margin-bottom:16px"><div><h1 style="margin:0">שידורים חיים</h1><p class="muted" style="margin:4px 0 0">מפגשים חיים עם יקיר: בונים יחד, עונים על שאלות, ומראים מה חדש. הקישור נפתח רבע שעה לפני תחילת השידור.</p></div></div>
+        ${!me?.access ? `<div class="card dk" style="margin-bottom:16px">רוב השידורים פתוחים לחברי הקורס והמנוי. <a class="btn btn-l sm" href="${BASE}kniya/?plan=monthly" style="margin-inline-start:8px">להצטרפות</a></div>` : ''}
+        <h2 style="font-size:22px">השידורים הבאים</h2>
+        <div class="evs" style="margin-bottom:26px">${up.length ? up.map((e) => row(e, false)).join('') : '<div class="empty">השידור הבא יפורסם כאן בקרוב.</div>'}</div>
+        <h2 style="font-size:22px">הקלטות</h2>
+        <div class="evs">${past.length ? past.map((e) => row(e, true)).join('') : '<div class="empty">הקלטות של שידורים קודמים יופיעו כאן.</div>'}</div>`;
+      app.querySelectorAll('.ev').forEach((el) => {
+        const e = (evs || []).find((x) => x.id === Number(el.dataset.id));
+        const a = el.querySelector('[data-ics]'); if (a) a.href = ics(e);
+        const j = el.querySelector('[data-join]');
+        if (j) j.onclick = async () => {
+          const { data, error } = await sb.rpc('too_event_join', { p_id: e.id });
+          if (error) return toast(String(error.message).includes('no_access') ? 'השידור הזה פתוח לחברי הקורס והמנוי.' : errText(error), true);
+          if (!data.room) return toast('הקישור ייפתח ב־' + when(data.opens_at) + '.');
+          window.open(data.room, '_blank', 'noopener');
+        };
+        const r = el.querySelector('[data-rec]');
+        if (r) r.onclick = async () => {
+          const { data, error } = await sb.rpc('too_event_join', { p_id: e.id });
+          if (error) return toast(String(error.message).includes('no_access') ? 'ההקלטות פתוחות לחברי הקורס והמנוי.' : errText(error), true);
+          if (!data.recording) return toast('ההקלטה עוד לא עלתה.');
+          el.querySelector('.rec').innerHTML = '<div class="vid2" style="margin-top:10px">' + player(data.recording, e.title) + '</div>'; r.remove();
+        };
+      });
+    })();
+  </script>
+</Base>

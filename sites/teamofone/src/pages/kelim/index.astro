@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+const base = import.meta.env.BASE_URL;
+const TOOLS = [
+  ['machshevon-zman', 'מחשבון הזמן שחוזר אליכם', 'כמה שעות בחודש בינה מלאכותית יכולה להחזיר לכם, ומה השווי שלהן בשקלים.', '⏱'],
+  ['sifriyat-horaot', 'ספריית הוראות עבודה', '24 הוראות מוכנות להעתקה: פניות, מסמכים, תוכן, רשתות, שיווק ותפעול.', '📚'],
+  ['bdikat-uvdot', 'רשימת בדיקה לטקסט מבינה מלאכותית', 'שמונה בדיקות לפני שטקסט יוצא ללקוח, עם ציון סופי.', '✅'],
+];
+---
+<Base title="כלים חינמיים לעבודה עם בינה מלאכותית בעסק | Team of One" description="מחשבון זמן, ספריית הוראות עבודה מוכנות ורשימת בדיקה לטקסטים. כלים חינמיים לבעלי עסקים שעובדים עם בינה מלאכותית." app>
+  <main class="wrap page">
+    <h1 style="font-weight:900;font-size:clamp(30px,4.5vw,48px);margin:0 0 8px">כלים חינמיים לעבודה עם בינה מלאכותית</h1>
+    <p class="muted" style="font-size:18px;max-width:60ch;margin:0 0 24px">כלים קטנים שחוסכים זמן כבר היום. בלי הרשמה.</p>
+    <div class="grid3" style="margin-bottom:28px">
+      {TOOLS.map(([slug, t, d, i]) => (
+        <a class="card" href={`${base}kelim/${slug}/`} style="text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:34px" aria-hidden="true">{i}</span><h2 style="margin:0;font-size:21px">{t}</h2><p class="muted" style="margin:0">{d}</p><span style="font-weight:800;margin-top:auto">לכלי ←</span>
+        </a>))}
+    </div>
+    <section class="card dk"><h2 style="color:var(--lime);margin-top:0">רוצים עובד דיגיטלי ראשון תוך 5 ימים?</h2><p>אתגר חינמי של 20 דקות ביום. בסופו יש לכם עובד אחד שעובד בשבילכם כל שבוע.</p><a class="btn btn-l" href={`${base}etgar/`}>לאתגר החינמי</a></section>
+  </main>
+</Base>
