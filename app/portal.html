@@ -5,104 +5,154 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#13243B">
 <title>מעקב אחרי העסקה</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@500;700&display=swap">
 <style>
-:root{--bg:#F2F6F7;--panel:#fff;--ink:#0E2226;--muted:#62797A;--line:#E3E7E5;--accent:#12A096;--accent-soft:#DCF3F1;--teal:#0B7F6B;--teal-soft:#D5F0E9;--warn:#A86A06;--warn-soft:#FBEFD5;--side:#13968E;--r:18px;--shadow:0 1px 2px rgba(14,34,38,.05),0 12px 30px -16px rgba(14,34,38,.25)}
-@media (prefers-color-scheme:dark){:root{--bg:#081517;--panel:#0F2225;--ink:#E7EEEC;--muted:#8FA6A4;--line:#1E363A;--accent:#3CC7BB;--accent-soft:#123A38;--teal:#5FD8C0;--teal-soft:#0F3531;--warn:#E6B04A;--warn-soft:#382A0E;--side:#0B4F4B}}
+:root{--bg:#F6F3EC;--panel:#fff;--ink:#1C2430;--navy:#13243B;--navy2:#23395A;--muted:#5B6472;--line:#E7E1D4;--gold:#C9A15F;--gold-d:#9A7638;--gold-l:#E8D3A6;--cream:#F3EBDC;--ok:#2F8F6B;--r:20px;color-scheme:light}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Heebo","Arial Hebrew",Arial,sans-serif;-webkit-font-smoothing:antialiased}
-.top{background:linear-gradient(160deg,#1DB3A8,#0F857E);color:#E7EEEC;padding:22px 16px 70px}
-.wrap{max-width:720px;margin:0 auto;padding:0 16px}
-.brand{display:flex;align-items:center;gap:12px}
-.mark{width:42px;height:42px;border-radius:12px;background:#fff;color:#12A096!important;display:grid;place-items:center;font:900 22px "Heebo",sans-serif;color:#fff;flex:none}
-.brand b{display:block;font-size:16px}.brand small{color:rgba(255,255,255,.8);font-size:13px}
-h1{font:900 30px/1.2 "Heebo",sans-serif;margin:26px 0 4px}
-.hello{color:rgba(255,255,255,.88);margin:0}
-.main{margin-top:-50px;display:grid;gap:14px;padding-bottom:40px}
-.card{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);padding:20px;border:1px solid var(--line)}
-.row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:700;font-size:13.5px;background:var(--teal-soft);color:var(--teal)}
-.prog{flex:1;min-width:200px}
-.bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),#2BB69A);border-radius:99px;transition:width 1s}
-.pct{font:800 34px "Heebo";color:var(--teal);line-height:1}
-.next{background:var(--accent-soft);border-color:transparent}
-.next small{color:var(--muted);font-weight:700;letter-spacing:.02em}
-.next b{display:block;font-size:20px;margin-top:2px}
-.dates{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.date small{color:var(--muted);font-weight:700;font-size:13px}.date b{display:block;font-size:24px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}.date span{color:var(--muted);font-size:13.5px}
-h2{font:700 19px "Heebo";margin:0 0 14px}
-.steps{list-style:none;margin:0;padding:0;position:relative}
-.steps li{display:flex;gap:14px;padding:0 0 18px;position:relative}
-.steps li:not(:last-child)::after{content:"";position:absolute;right:15px;top:32px;bottom:2px;width:2px;background:var(--line)}
-.steps li.done:not(:last-child)::after{background:var(--teal)}
-.dot{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex:none;font-weight:800;font-size:14px;background:var(--line);color:var(--muted);position:relative;z-index:1}
-.done .dot{background:var(--teal);color:#fff}
-.cur .dot{background:var(--accent);color:#fff;box-shadow:0 0 0 5px var(--accent-soft)}
-.steps b{display:block;font-size:16px}.steps small{color:var(--muted);font-size:14px}
-.cur b{color:var(--accent)}
-table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:10px 6px;border-bottom:1px solid var(--line);text-align:right}th{color:var(--muted);font-size:13px;font-weight:700}
-td.n{font-variant-numeric:tabular-nums;white-space:nowrap}.ok{color:var(--teal);font-weight:700}.wait{color:var(--muted)}
-.contact{display:grid;gap:10px;grid-template-columns:1fr 1fr}
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:12px;font-weight:800;text-decoration:none;font-size:16px;border:1px solid var(--line);color:var(--ink);background:var(--panel)}
-.btn.wa{background:#1FA855;color:#fff;border-color:#1FA855}
-.files{display:grid;gap:10px}.file{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink);min-height:56px}.file:active{background:var(--accent-soft)}.file .fi{width:40px;height:40px;border-radius:10px;background:var(--accent-soft);color:var(--teal);display:grid;place-items:center;flex:none;font-weight:800;font-size:12px}.file b{display:block;font-size:15.5px;line-height:1.3}.file small{color:var(--muted);font-size:13px}.file .dl{margin-inline-start:auto;color:var(--teal);font-weight:800;font-size:14px;white-space:nowrap}
-.foot{text-align:center;color:var(--muted);font-size:13px;margin-top:6px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Assistant","Segoe UI","Arial Hebrew",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.serif{font-family:"Frank Ruhl Libre",Georgia,serif}
+.bar{background:#fff;border-bottom:1px solid var(--line)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.logo{height:46px;width:auto;display:block}
+.upd{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}.upd i{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+main.wrap{padding-top:26px;padding-bottom:48px;display:flex;flex-direction:column;gap:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:24px 26px}
+.hero{background:var(--navy);color:#fff;border-radius:var(--r);padding:30px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:26px}
+.hero .txt{flex:999 1 420px;min-width:0;display:flex;flex-direction:column;gap:12px}
+.kick{font-size:14px;letter-spacing:.04em;color:#D9C08F;font-weight:600}
+.hero h1{margin:0;font:700 42px/1.12 "Frank Ruhl Libre",Georgia,serif;text-wrap:balance}
+.hero p{margin:0;font-size:18px;color:#D5DCE6}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:2px}
+.chip{border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600}
+.chip.o{border:1px solid #B08A4A;color:var(--gold-l)}.chip.f{background:var(--navy2);color:#fff}
+.ring{display:flex;align-items:center;gap:18px;flex:1 0 auto}
+.ring b{display:block;font-size:30px;line-height:1}.ring span{font-size:15px;color:#D5DCE6}
+.next{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px}
+.next .l{display:flex;align-items:flex-start;gap:18px;flex:999 1 380px;min-width:0}
+.ico{width:52px;height:52px;border-radius:14px;background:var(--cream);display:flex;align-items:center;justify-content:center;flex:none}
+.lab{font-size:14px;font-weight:700;color:var(--gold-d)}
+.next h2{margin:2px 0;font:700 30px/1.2 "Frank Ruhl Libre",Georgia,serif;color:var(--navy)}
+.next .sub{color:#4A5361}
+.todo{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.todo span{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border-radius:999px;padding:6px 12px;font-size:14px;color:var(--navy)}
+.count{background:var(--navy);color:#fff;border-radius:16px;padding:14px 22px;text-align:center;flex:none}
+.count b{display:block;font-size:34px;line-height:1}.count span{font-size:14px;color:#D5DCE6}
+.dates{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.date{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:2px}
+.date small{font-size:14px;color:var(--muted);font-weight:600}.date b{font-size:24px;color:var(--navy);font-variant-numeric:tabular-nums}.date span{font-size:14px;color:var(--muted)}.date span.soon{color:var(--gold-d);font-weight:600}
+.cols{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.cols>.mainc{flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.cols>aside{flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:20px}
+h3{margin:0 0 18px;font:700 26px "Frank Ruhl Libre",Georgia,serif;color:var(--navy)}
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:flex;gap:16px}
+.rail{display:flex;flex-direction:column;align-items:center;width:34px;flex:none}
+.dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex:none;background:#fff;color:#6B7380;border:2px solid #D5D9E0}
+.done .dot{background:var(--navy);color:#fff;border-color:var(--navy)}
+.cur .dot{background:var(--gold);color:var(--navy);border-color:var(--gold);box-shadow:0 0 0 6px var(--cream)}
+.ln{width:2px;flex:1;min-height:22px;background:#D5D9E0}.done .ln{background:var(--navy)}
+.steps li:last-child .ln{display:none}
+.st{padding-bottom:20px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.st b{font-size:18px;color:var(--navy)}.cur .st b{color:var(--gold-d)}.fut .st b{color:var(--muted)}
+.st small{font-size:14px;color:var(--muted)}
+.files{display:grid;gap:10px}
+.file{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink);min-height:56px}
+.file .fi{width:42px;height:42px;border-radius:10px;background:var(--cream);color:var(--gold-d);display:flex;align-items:center;justify-content:center;flex:none;font-weight:700;font-size:12px}
+.file b{display:block;font-size:15.5px;line-height:1.3;color:var(--navy)}.file small{color:var(--muted);font-size:13px}
+.file .dl{margin-inline-start:auto;color:var(--navy);font-weight:700;font-size:14px;white-space:nowrap}
+.tbl{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:10px 6px;border-bottom:1px solid var(--line);text-align:right}th{color:var(--muted);font-size:13px;font-weight:700}td.n{font-variant-numeric:tabular-nums;white-space:nowrap}.ok{color:var(--ok);font-weight:700}.wait{color:var(--muted)}
+.law{display:flex;align-items:center;gap:14px}
+.law img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-l)}
+.law b{display:block;font-size:18px;color:var(--navy)}.law span{font-size:14px;color:var(--muted)}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:48px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px}
+.btn.p{background:var(--navy);color:#fff}.btn.s{border:1px solid #C9D3DF;color:var(--navy);background:#fff}
+.contact{display:flex;flex-direction:column;gap:12px}
+.addr{font-size:14px;color:var(--muted);text-align:center}
+.review{background:var(--cream);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:10px}
+.review h3{margin:0;font-size:22px}.review p{margin:0;color:#4A5361}
+.review a{align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:12px;background:#fff;color:var(--navy);text-decoration:none;font-weight:700;border:1px solid #D9C08F}
+.stars{display:flex;gap:6px}
+.foot{text-align:center;color:#6B7380;font-size:13px;margin:6px 0 0}
 .center{text-align:center;padding:40px 20px}
-.spin{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:s 1s linear infinite;margin:0 auto 12px}@keyframes s{to{transform:rotate(360deg)}}
-@media (max-width:480px){h1{font-size:25px}.dates{grid-template-columns:1fr}.contact{grid-template-columns:1fr}.card{padding:16px}}
+.spin{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:s 1s linear infinite;margin:0 auto 12px}@keyframes s{to{transform:rotate(360deg)}}
+@media (max-width:560px){.hero{padding:24px}.hero h1{font-size:32px}.card{padding:20px}.next h2{font-size:26px}.logo{height:40px}}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><div class="brand"><span class="mark">ד</span><div><b id="oname">משרד עו״ד יקיר דבול</b><small>מעקב אחרי העסקה שלך</small></div></div><h1 id="addr">&nbsp;</h1><p class="hello" id="hello"></p></div></header>
-<main class="wrap main" id="main"><div class="card center"><div class="spin"></div>טוען את פרטי העסקה...</div></main>
+<header class="bar"><div class="wrap"><img class="logo" alt="יקיר דבול - משרד עורכי דין" src="data:image/webp;base64,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"><div class="upd"><i></i><span id="upd">טוען...</span></div></div></header>
+<main class="wrap" id="main"><div class="card center"><div class="spin"></div>טוען את פרטי העסקה...</div></main>
 <script src="https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/app/config.js?v=f291dc1cb3"></script>
 <script>
 (function(){
 const C = window.OFFICE_CONFIG || {};
 // the insolvency report link (portal.html#r=TOKEN) opens the report page
 if (/^#r=/.test(location.hash) && C.functions) { fetch(C.functions + '/app/report.html?t=' + Date.now(), { cache:'no-store' }).then(r => r.ok ? r.text() : Promise.reject(r.status)).then(t => { document.open(); document.write(t); document.close(); }).catch(() => { document.getElementById('main').innerHTML = '<div class="card center"><b>לא הצלחנו לטעון את הדף. נסה שוב בעוד כמה דקות.</b></div>'; }); return; }
+const REVIEW = 'https://g.page/r/CUdetSQDHgW9EBM/review';
+const PHOTO = 'https://dabullaw.co.il/wp-content/uploads/2026/10/yakir-dabul-portrait-300x300.webp';
+// short "what happens in this step" hints shown under the next step (only for steps listed here)
+const HINTS = { 'מסירת חזקה': ['מסירת מפתחות', 'קריאת מוני מים, חשמל וגז', 'חתימה על פרוטוקול מסירה'] };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
 const parse = s => { if (!s) return null; const [y, m, d] = String(s).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); };
 const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
 const days = s => { const d = parse(s); return d ? Math.round((d - today()) / 864e5) : null; };
-const fmt = s => { const d = parse(s); return d ? `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}` : '-'; };
-const long = s => { const d = parse(s); return d ? d.toLocaleDateString('he-IL', { weekday:'long', day:'numeric', month:'long' }) : ''; };
+const fmt = s => { const d = parse(s); return d ? `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}` : '-'; };
+const long = s => { const d = parse(s); return d ? d.toLocaleDateString('he-IL', { weekday:'long', day:'numeric', month:'long', year:'numeric' }) : ''; };
 const rel = s => { const n = days(s); if (n == null) return ''; if (n === 0) return 'היום'; if (n === 1) return 'מחר'; if (n === -1) return 'אתמול'; return n > 0 ? `בעוד ${n} ימים` : `לפני ${-n} ימים`; };
 const money = n => '₪' + Math.round(+n || 0).toLocaleString('he-IL');
 const phoneDigits = p => { let x = String(p || '').replace(/\D/g, ''); if (x.startsWith('972')) x = '0' + x.slice(3); return x; };
+const check = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9A7638" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
+const star = '<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9z" fill="#C9A15F" stroke="#9A7638" stroke-width="1" stroke-linejoin="round"/></svg>';
 const main = document.getElementById('main');
+document.getElementById('upd').textContent = 'עודכן היום, ' + new Date().toLocaleDateString('he-IL', { day:'numeric', month:'long', year:'numeric' });
 window.addEventListener('hashchange', () => location.reload());
-const fail = t => { main.innerHTML = `<div class="card center"><b style="font-size:19px">${esc(t)}</b><p style="color:var(--muted)">אם קיבלת את הקישור מהמשרד, פנה אלינו ונשלח קישור מעודכן.</p></div>`; document.getElementById('addr').textContent = ''; };
+const fail = t => { main.innerHTML = `<div class="card center"><b style="font-size:19px">${esc(t)}</b><p style="color:var(--muted)">אם קיבלת את הקישור מהמשרד, פנה אלינו ונשלח קישור מעודכן.</p></div>`; };
 const token = (location.hash || '').slice(1).replace(/[^A-Za-z0-9]/g, '');
 if (!token || !C.functions) return fail('הקישור לא תקין');
 fetch(`${C.functions}/portal?t=${encodeURIComponent(token)}`).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(render).catch(e => fail(e === 404 ? 'הקישור לא נמצא או שבוטל' : 'לא הצלחנו לטעון את הפרטים כרגע. נסה שוב בעוד כמה דקות.'));
 function render(x){
-  const o = x.office || {}, d = x.deal || {};
-  document.getElementById('oname').textContent = o.name || '';
-  document.getElementById('addr').textContent = d.address || '';
-  document.getElementById('hello').textContent = (x.names && x.names.length ? `שלום ${x.names.join(' ו')}, ` : '') + `כאן רואים בכל רגע איפה העסקה עומדת.`;
+  const o = x.office || {}, d = x.deal || {}, steps = x.steps || [];
+  const pct = Math.max(0, Math.min(100, +x.progress || 0));
+  const doneN = steps.filter(s => s.done).length;
+  const cur = steps.findIndex(s => !s.done);
   document.title = `${d.address || 'העסקה שלך'} · מעקב`;
-  const cur = x.steps.findIndex(s => !s.done);
-  const stepHtml = x.steps.map((s, i) => { const cls = s.done ? 'done' : i === cur ? 'cur' : '';
-    const sub = s.done ? `הושלם${s.date ? ' ב-' + fmt(s.date) : ''}` : i === cur ? (s.expected && days(s.expected) >= 0 ? `בטיפול עכשיו · יעד: ${fmt(s.expected)}` : 'בטיפול עכשיו') : s.expected && days(s.expected) >= 0 ? `צפוי בערך ב-${fmt(s.expected)}` : 'בהמשך';
-    return `<li class="${cls}"><span class="dot">${s.done ? '✓' : i + 1}</span><div><b>${esc(s.label)}</b><small>${sub}</small></div></li>`; }).join('');
-  const dateCard = (label, s) => `<div class="card date"><small>${label}</small><b>${s ? fmt(s) : 'טרם נקבע'}</b><span>${s ? `${long(s)} · ${rel(s)}` : 'נעדכן ברגע שייקבע'}</span></div>`;
-  const pays = (x.payments || []);
+  const hello = (x.names && x.names.length ? `שלום ${x.names.join(' ו')}, ` : '') + 'כאן תראו בכל רגע איפה העסקה עומדת ומה השלב הבא.';
+  const C2 = 2 * Math.PI * 54, dash = Math.round(C2 * pct / 100);
+  const hero = `<section class="hero"><div class="txt"><div class="kick">מעקב אחר העסקה שלכם</div><h1>${esc(d.address || 'העסקה שלכם')}</h1><p>${esc(hello)}</p>
+    <div class="chips"><span class="chip o">${d.side === 'מוכר' ? 'ייצוג המוכר' : 'ייצוג הקונה'}</span>${d.status ? `<span class="chip f">${esc(d.status)}</span>` : ''}</div></div>
+    <div class="ring"><svg width="132" height="132" viewBox="0 0 132 132" role="img" aria-label="${pct} אחוז מהעסקה הושלמו"><circle cx="66" cy="66" r="54" fill="none" stroke="#2A4266" stroke-width="12"/><circle id="arc" cx="66" cy="66" r="54" fill="none" stroke="#C9A15F" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 ${Math.round(C2)}" transform="rotate(-90 66 66)" style="transition:stroke-dasharray 1s"/><text x="66" y="76" text-anchor="middle" font-family="Frank Ruhl Libre, Georgia, serif" font-size="30" font-weight="700" fill="#fff">${pct}%</text></svg>
+    <div><b>${doneN} מתוך ${steps.length}</b><span>שלבים הושלמו</span></div></div></section>`;
+  let next;
+  if (x.next) {
+    const n = x.next.expected != null ? days(x.next.expected) : null;
+    const hints = HINTS[String(x.next.label || '').trim()] || [];
+    next = `<section class="card next"><div class="l"><div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#9A7638" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9"/><path d="M17 6l3 3"/><path d="M15 8l2 2"/></svg></div>
+      <div style="min-width:0"><span class="lab">השלב הבא</span><h2>${esc(x.next.label)}</h2><span class="sub">${n != null && n >= 0 ? esc(long(x.next.expected)) + '. נעדכן אתכם לפני המועד.' : 'אנחנו מטפלים בזה עכשיו.'}</span>
+      ${hints.length ? `<div class="todo">${hints.map(h => `<span>${check}${esc(h)}</span>`).join('')}</div>` : ''}</div></div>
+      ${n != null && n >= 0 ? `<div class="count"><b>${n === 0 ? 'היום' : n}</b><span>${n === 0 ? '' : n === 1 ? 'יום' : 'ימים'}</span></div>` : ''}</section>`;
+  } else next = `<section class="card next"><div class="l"><div><span class="lab">סטטוס</span><h2>כל השלבים הושלמו</h2><span class="sub">תודה שבחרתם בנו.</span></div></div></section>`;
+  const last = steps.length ? steps[steps.length - 1] : null;
+  const dateCard = (label, s, done) => `<div class="date"><small>${esc(label)}</small><b>${s ? fmt(s) : 'טרם נקבע'}</b><span class="${s && days(s) >= 0 && days(s) <= 14 ? 'soon' : ''}">${s ? (done ? 'הושלם' : rel(s)) : 'נעדכן ברגע שייקבע'}</span></div>`;
+  const dates = `<section class="dates">${dateCard('חתימת החוזה', d.signDate)}${dateCard('מסירת החזקה', d.handDate)}${last && (last.expected || last.date) ? dateCard(last.label, last.done ? last.date : last.expected, last.done) : ''}</section>`;
+  const stepHtml = steps.map((s, i) => { const cls = s.done ? 'done' : i === cur ? 'cur' : 'fut';
+    const sub = s.done ? `הושלם${s.date ? ' ב-' + fmt(s.date) : ''}` : i === cur ? (s.expected && days(s.expected) >= 0 ? `בטיפול עכשיו · יעד ${fmt(s.expected)}` : 'בטיפול עכשיו') : s.expected && days(s.expected) >= 0 ? `צפוי בערך ב-${fmt(s.expected)}` : 'בהמשך';
+    return `<li class="${cls}"><div class="rail"><span class="dot">${s.done ? '✓' : i + 1}</span><span class="ln"></span></div><div class="st"><b>${esc(s.label)}</b><small>${sub}</small></div></li>`; }).join('');
+  const files = (x.files || []).length ? `<section class="card"><h3>המסמכים שלכם</h3><div class="files">${x.files.map(f => `<a class="file" href="${esc(f.url)}" target="_blank" rel="noopener" download><span class="fi">${esc((String(f.name).split('.').pop() || 'PDF').slice(0, 4).toUpperCase())}</span><div><b>${esc(f.title)}</b><small>${esc(f.kind)}${f.date ? ' · ' + fmt(f.date) : ''}</small></div><span class="dl">הורדה</span></a>`).join('')}</div></section>` : '';
+  const pays = x.payments || [];
+  const payHtml = pays.length ? `<section class="card"><h3>לוח התשלומים לפי החוזה</h3><div class="tbl"><table><thead><tr><th>מועד</th><th>סכום</th><th>תיאור</th><th></th></tr></thead><tbody>${pays.map(p => `<tr><td class="n">${fmt(p.date)}</td><td class="n">${money(p.amount)}</td><td>${esc(p.desc)}</td><td class="${p.paid ? 'ok' : 'wait'}">${p.paid ? '✓ שולם' : days(p.date) >= 0 ? rel(p.date) : 'ממתין לעדכון'}</td></tr>`).join('')}</tbody></table></div></section>` : '';
   const wa = phoneDigits(o.whatsapp), tel = phoneDigits(o.phone);
-  main.innerHTML = `
-  <div class="card"><div class="row"><span class="pill">${esc(d.status || '')}</span><span style="color:var(--muted)">${esc(d.side === 'מוכר' ? 'ייצוג המוכר' : 'ייצוג הקונה')}</span></div>
-    <div class="row" style="margin-top:14px"><span class="pct">${x.progress}%</span><div class="prog"><div class="bar"><i style="width:0"></i></div><small style="color:var(--muted)">${x.steps.filter(s => s.done).length} מתוך ${x.steps.length} שלבים הושלמו</small></div></div></div>
-  ${x.next ? `<div class="card next"><small>השלב הבא</small><b>${esc(x.next.label)}</b>${x.next.expected && days(x.next.expected) >= 0 ? `<span style="color:var(--muted)">יעד משוער: ${fmt(x.next.expected)}</span>` : '<span style="color:var(--muted)">אנחנו מטפלים בזה עכשיו</span>'}</div>` : `<div class="card next"><small>סטטוס</small><b>כל השלבים הושלמו 🎉</b></div>`}
-  <div class="dates">${dateCard('מועד החתימה', d.signDate)}${dateCard('מועד המסירה', d.handDate)}</div>
-  <div class="card"><h2>שלבי העסקה</h2><ol class="steps">${stepHtml}</ol></div>
-  ${(x.files || []).length ? `<div class="card"><h2>המסמכים שלך</h2><div class="files">${x.files.map(f => `<a class="file" href="${esc(f.url)}" target="_blank" rel="noopener" download><span class="fi">${esc((String(f.name).split('.').pop() || 'PDF').slice(0, 4).toUpperCase())}</span><div><b>${esc(f.title)}</b><small>${esc(f.kind)}${f.date ? ' · ' + fmt(f.date) : ''}</small></div><span class="dl">הורדה ↓</span></a>`).join('')}</div></div>` : ''}
-  ${pays.length ? `<div class="card"><h2>לוח התשלומים לפי החוזה</h2><table><thead><tr><th>מועד</th><th>סכום</th><th>תיאור</th><th></th></tr></thead><tbody>${pays.map(p => `<tr><td class="n">${fmt(p.date)}</td><td class="n">${money(p.amount)}</td><td>${esc(p.desc)}</td><td class="${p.paid ? 'ok' : 'wait'}">${p.paid ? '✓ שולם' : days(p.date) >= 0 ? rel(p.date) : 'ממתין לעדכון'}</td></tr>`).join('')}</tbody></table></div>` : ''}
-  <div class="card"><h2>יש שאלה? אנחנו כאן</h2><div class="contact">${wa ? `<a class="btn wa" href="https://wa.me/972${wa.slice(1)}?text=${encodeURIComponent('שלום, לגבי העסקה ב' + (d.address || '') + ':')}" target="_blank" rel="noopener">וואטסאפ</a>` : ''}${tel ? `<a class="btn" href="tel:${tel}">חיוג ${esc(o.phone)}</a>` : ''}</div><p style="color:var(--muted);font-size:14px;margin:12px 0 0">${esc(o.lawyer || '')}${o.address ? ' · ' + esc(o.address) : ''}</p></div>
-  <p class="foot">הדף מתעדכן אוטומטית מתוך תיק העסקה במשרד · נכון ל-${fmt(new Date().toISOString())}</p>`;
-  requestAnimationFrame(() => setTimeout(() => { const b = main.querySelector('.bar i'); if (b) b.style.width = x.progress + '%'; }, 60));
+  const contact = `<section class="card contact"><div class="law"><img src="${PHOTO}" alt="${esc(o.lawyer || 'עו״ד יקיר דבול')}" onerror="this.remove()"><div><b>${esc(o.lawyer || 'עו״ד יקיר דבול')}</b><span>מלווה את העסקה שלכם</span></div></div>
+    ${tel ? `<a class="btn p" href="tel:${tel}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>התקשרו למשרד ${esc(o.phone)}</a>` : ''}
+    ${wa ? `<a class="btn s" href="https://wa.me/972${wa.slice(1)}?text=${encodeURIComponent('שלום, לגבי העסקה ב' + (d.address || '') + ':')}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#13243B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 20.5l1.8-5.2A8.4 8.4 0 1 1 21 11.5z"/></svg>הודעה בוואטסאפ</a>` : ''}
+    <span class="addr">${o.address ? esc(o.address) + ' · ' : ''}פגישה במשרד, בבית שלכם או בזום</span></section>`;
+  const review = `<section class="review"><div class="stars" role="img" aria-label="5 כוכבים">${star.repeat(5)}</div><h3>הליווי שלנו עזר לכם?</h3><p>ביקורת קצרה בגוגל עוזרת לאנשים נוספים למצוא אותנו. זה לוקח דקה.</p><a href="${REVIEW}" target="_blank" rel="noopener">כתיבת ביקורת בגוגל</a></section>`;
+  main.innerHTML = `${hero}${next}${dates}<div class="cols"><div class="mainc"><section class="card"><h3>שלבי העסקה</h3><ol class="steps">${stepHtml}</ol></section>${files}${payHtml}</div><aside>${contact}${review}</aside></div>
+    <p class="foot">הדף מתעדכן אוטומטית מתוך תיק העסקה במשרד · נכון ל-${fmt(new Date().toISOString())}</p>`;
+  requestAnimationFrame(() => setTimeout(() => { const a = document.getElementById('arc'); if (a) a.setAttribute('stroke-dasharray', `${dash} ${Math.round(C2)}`); }, 60));
 }
 })();
 </script>
