@@ -27,8 +27,8 @@ const put = (coll: string, id: string, data: Any) => sb.from('docs').upsert({ co
 const clip = (s: unknown, n: number) => String(s ?? '').replace(/[\u0000-\u0008\u000b-\u001f]/g, ' ').trim().slice(0, n);
 const same = (a: string, b: string) => { if (!a || !b || a.length !== b.length) return false; let x = 0; for (let i = 0; i < a.length; i++) x |= a.charCodeAt(i) ^ b.charCodeAt(i); return x === 0; };
 
-// cheap first filter: only posts that touch property, family assets, buildings or a lawyer go to the model
-const WORDS = /עו["״']?ד|עורך דין|עורכת דין|עורכי דין|דירה|דירות|נכס|נדל["״]?ן|טאבו|נסח|רישום|חוזה|הסכם|זיכרון דברים|קבלן|יזם|פינוי|בינוי|תמ["״]?א|התחדשות|מס רכישה|מס שבח|היטל|משכנתא|ירושה|צוואה|עיזבון|ייפוי כוח|יפוי כח|אפוטרופ|שכירות|שוכר|משכיר|ועד בית|בית משותף|שכנ|גוש|חלקה|רמ["״]?י|מינהל|חכירה|הערת אזהרה|מכירה|קנייה|קניה|רוכש|מוכר|עיקול|הוצאה לפועל|פירוק שיתוף|חניה|מחסן|גג|היתר|חריג/;
+// cheap first filter: only posts that touch one of the office fields go to the model (topic words, not just "lawyer")
+const WORDS = /דירה|דירות|נכס|נדל["״]?ן|טאבו|נסח|רישום|חוזה מכר|זיכרון דברים|זכרון דברים|קבלן|יזם|פינוי|בינוי|תמ["״]?א|התחדשות|מס רכישה|מס שבח|היטל השבחה|משכנתא|ירושה|ירושות|צוואה|צוואות|עיזבון|עזבון|ייפוי כוח מתמשך|יפוי כוח מתמשך|אפוטרופ|שכירות|שוכר|משכיר|ועד בית|בית משותף|שכנ|גוש|חלקה|רמ["״]?י|מינהל|חכירה|הערת אזהרה|מכירה|קנייה|קניה|רוכש|מוכר|עיקול|הוצאה לפועל|הוצל["״]?פ|פירוק שיתוף|חניה|מחסן|היתר בנייה|ליקויי|ליקוי|הסכם ממון|חדלות|פשיטת רגל|פש["״]?ר|הסדר חוב|הפטר|נאמן|חובות|רישום חברה|הקמת חברה|בע["״]?מ/; // topic words only: a post that only says "lawyer" is not enough
 
 async function ai(model: string, system: string, user: string, max = 700) {
   const h: Record<string, string> = { 'x-api-key': S.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' };
@@ -39,17 +39,39 @@ async function ai(model: string, system: string, user: string, max = 700) {
   return (j.content || []).map((c: Any) => c.text || '').join('');
 }
 const MODEL = 'claude-haiku-4-5-20251001';
-const FIELDS = 'קנייה ומכירה של דירות ונכסים, עסקאות מקבלן, מיסוי מקרקעין (מס רכישה, מס שבח), רישום בטאבו, רמ"י וחברה משכנת, בתים משותפים וסכסוכי שכנים על רכוש משותף, התחדשות עירונית (תמ"א 38, פינוי בינוי), שכירות, ירושות וצוואות ויפוי כוח מתמשך, פירוק שיתוף במקרקעין';
-
+const FIELDS = 'קנייה ומכירה של דירות ונכסים, עסקאות מקבלן, התחדשות עירונית, מיסוי מקרקעין, רישום בטאבו ורמ"י, בתים משותפים, ליקויי בנייה, שכירות, ירושות וצוואות, ייפוי כוח מתמשך, פירוק שיתוף, הסכמי ממון, חדלות פירעון והסדרי חובות, הקמת חברה';
+// the only fields that count; the model must name one of these codes, anything else is dropped
+const CODES: Record<string, string> = {
+  deal: 'קנייה או מכירה של דירה, בית, מגרש או נכס מסחרי: ליווי עסקה, חוזה מכר, זיכרון דברים, משכנתא לרכישה, עסקה בין קרובי משפחה, הערת אזהרה',
+  contractor: 'קנייה מקבלן או מיזם: חוזה עם קבלן, איחור במסירה, ערבות חוק מכר, קבלן שקרס',
+  renewal: 'התחדשות עירונית: תמ"א 38, פינוי בינוי, הסכם עם יזם, נציגות דיירים, דייר סרבן',
+  tax: 'מיסוי מקרקעין: מס שבח, מס רכישה, היטל השבחה, פטורים במכירת דירה',
+  registry: 'רישום זכויות: טאבו, נסח, רמ"י, חכירה, חברה משכנת, רישום בית משותף, תיקון צו בית משותף',
+  condo: 'בית משותף ושכנים בעניין רכוש או מבנה: רכוש משותף, ועד בית, הצמדות, חניות, מחסנים, גג, נזילות בין דירות, בנייה בלי היתר של שכן',
+  defects: 'ליקויי בנייה בדירה, נזקי רכוש למבנה, אחריות קבלן לליקויים',
+  rental: 'שכירות דירה או נכס בין שוכר למשכיר: חוזה שכירות, פיקדון וערבויות, פינוי שוכר, ליקויים בדירה שכורה, יציאה מוקדמת',
+  estate: 'ירושות וצוואות: צו ירושה, צו קיום צוואה, עריכת צוואה, עיזבון, חלוקת דירה בירושה, התנגדות לצוואה',
+  poa: 'ייפוי כוח מתמשך, אפוטרופסות על אדם מבוגר ורכושו',
+  partition: 'פירוק שיתוף בנכס, מכירת חלק בדירה משותפת, שותפים שלא מסכימים על נכס',
+  prenup: 'הסכם ממון או הסכם רכוש בין בני זוג, דירה של בני זוג',
+  insolvency: 'חדלות פירעון, פשיטת רגל, הסדר חובות, הפטר, הוצאה לפועל ועיקולים נגד אדם עם חובות',
+  company: 'הקמת חברה בע"מ ורישומה ברשם החברות'
+};
 async function decide(text: string, group: string) {
-  const sys = `אתה עוזר למשרד עורכי הדין של עו"ד יקיר דבול בנתניה (תחומים: ${FIELDS}). המשרד עובד בעיקר בנתניה ובשרון, אבל מלווה עסקאות בכל הארץ.
-קרא פוסט מקבוצת פייסבוק והחלט. החזר JSON בלבד:
-{"type":"seek|question|none","topic":"נושא קצר","area":"עיר או אזור אם מוזכר, אחרת ריק","summary":"משפט אחד בעברית: מה האדם צריך"}
-seek = האדם מחפש עורך דין או המלצה על עורך דין בתחומים שלמעלה (או שמחפש מי ילווה עסקה, יבדוק חוזה וכדומה).
-question = האדם שואל שאלה משפטית או מעשית בתחומים שלמעלה ואינו מבקש עורך דין במפורש.
-none = כל השאר: פרסומות, מודעות של מתווכים, דירות להשכרה או למכירה בלי שאלה, עורכי דין שמפרסמים את עצמם, תחומים אחרים (גירושין, פלילי, תעבורה, עבודה, נזיקין), או פוסט לא ברור.`;
+  const sys = `אתה מסנן פוסטים מקבוצות פייסבוק עבור משרד עורכי הדין של עו"ד יקיר דבול בנתניה. המשרד מטפל רק בתחומים האלה (קוד: תיאור):
+${Object.entries(CODES).map(([k, v]) => `${k}: ${v}`).join('\n')}
+קרא את הפוסט והחלט. החזר JSON בלבד:
+{"field":"אחד הקודים למעלה או other","type":"seek|question|none","topic":"נושא קצר","area":"עיר או אזור אם מוזכר, אחרת ריק","summary":"משפט אחד בעברית: מה האדם צריך"}
+כללים מחייבים:
+- field הוא הנושא המרכזי של הפוסט. אם הנושא המרכזי לא נמצא ברשימה, field הוא other ו-type הוא none, גם אם מוזכרים בו דירה, כסף או עורך דין.
+- תמיד other: דיני עבודה ופיטורים, פלילי ומשטרה, תעבורה ודוחות, תאונות ונזקי גוף, רשלנות רפואית, צרכנות ושירות לקוחות, גירושין ומשמורת ומזונות, אלימות והטרדות, לשון הרע ופרטיות, מסחר אונליין ותקנונים, החזרי מס ומס הכנסה, ביטוח לאומי, הגירה, בעלי חיים, השקעות ובורסה, חיפוש עורך דין "לכמה נושאים" בלי נושא ברור, ותצהירים או אימות חתימה.
+- seek = האדם מחפש עורך דין או המלצה על עורך דין בתחום מהרשימה. question = שואל שאלה בתחום מהרשימה. none = כל השאר, כולל פרסומות, מודעות למכירה או להשכרה בלי שאלה, ועורכי דין שמפרסמים את עצמם.
+- אם יש ספק, החזר none.`;
   const out = await ai(MODEL, sys, `קבוצה: ${group}\nפוסט:\n${text}`, 300);
-  try { return JSON.parse((out.match(/\{[\s\S]*\}/) || ['{}'])[0]); } catch { return { type: 'none' }; }
+  let d: Any = { type: 'none' };
+  try { d = JSON.parse((out.match(/\{[\s\S]*\}/) || ['{}'])[0]); } catch { d = { type: 'none' }; }
+  if (!CODES[d.field]) d.type = 'none';
+  return d;
 }
 
 // the office's main articles (title + address), kept in docs fbleads/articles; the model picks the one that fits
@@ -118,7 +140,7 @@ async function check(posts: Any[], source: string) {
       if (d.type === 'seek' || d.type === 'question') {
         res.hits++; if (d.type === 'seek') res.seek++; else res.question++;
         const dr = await draft(d, text);
-        await put('fbleads', id, { at: new Date().toISOString(), type: d.type, state: 'new', group, url, author: clip(p.author, 80), time: clip(p.time, 40), topic: d.topic || '', area: d.area || '', summary: d.summary || '', text, reply: dr.reply, article: dr.article });
+        await put('fbleads', id, { at: new Date().toISOString(), type: d.type, state: 'new', group, url, author: clip(p.author, 80), time: clip(p.time, 40), field: d.field || '', topic: d.topic || '', area: d.area || '', summary: d.summary || '', text, reply: dr.reply, article: dr.article });
       }
       seen[id] = Date.now(); changed = true;
     } catch (_e) { res.errors++; } // not remembered, so the next scan tries again
@@ -181,6 +203,18 @@ Deno.serve(async (req) => {
     const prev = (await get('fbleads', 'groups')) || {};
     await put('fbleads', 'groups', { at: new Date().toISOString(), list: groups, on: prev.on || {} });
     return J({ ok: true, n: groups.length });
+  }
+  if (b.op === 'recheck') {
+    const { data } = await sb.from('docs').select('id,data').eq('coll', 'fbleads').eq('data->>state', 'new').limit(150);
+    const r = { checked: 0, kept: 0, dropped: 0, errors: 0 };
+    for (const row of (data || []) as Any[]) {
+      if (!row.data || !row.data.text) continue;
+      try { r.checked++; const d = await decide(clip(row.data.text, 3000), clip(row.data.group, 120));
+        if (d.type === 'seek' || d.type === 'question') { r.kept++; await put('fbleads', row.id, { ...row.data, field: d.field }); }
+        else { r.dropped++; await put('fbleads', row.id, { ...row.data, state: 'no', stateAt: new Date().toISOString(), autoNo: 'לא בתחומי המשרד (בדיקה חוזרת)' }); }
+      } catch (_e) { r.errors++; }
+    }
+    return J({ ok: true, ...r });
   }
   if (b.op === 'test') { const d = await decide(clip(b.text, 3000), clip(b.group, 120)); return J({ ok: true, d, out: d.type === 'seek' || d.type === 'question' ? await draft(d, clip(b.text, 3000)) : null }); }
   return J({ ok: true, ...(await check(b.posts || [], 'chrome')) });
