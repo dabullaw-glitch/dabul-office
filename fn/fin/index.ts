@@ -193,8 +193,9 @@ async function addExpense(o: { bytes: Uint8Array | null; mime: string; name?: st
 // 24.11.2026 (Yakir approved): read again the mails that were saved without being read (17.11 afternoon the reader
 // failed and 370 mails came in as 0). A receipt gets its amount, a mail that is not a receipt is hidden (file kept, nothing deleted),
 // the same payment twice from one mail is hidden as a duplicate. Rows marked hidden "retry" are taken, a few per call.
-async function reread(n: number) {
-  const rows = (await all('finexp')).filter(x => x.hidden === 'retry').slice(0, Math.max(1, Math.min(n, 20)));
+async function reread(n: number, ids?: string[]) { // ids: a fixed batch, so several calls can run side by side without taking the same rows
+  const want = Array.isArray(ids) && ids.length ? new Set(ids.map(String)) : null;
+  const rows = (await all('finexp')).filter(x => x.hidden === 'retry' && (!want || want.has(x.id))).slice(0, Math.max(1, Math.min(n, 20)));
   const out: Record<string, number> = { amount: 0, notReceipt: 0, dup: 0, zero: 0, failed: 0 };
   await pmap(rows, 4, async (x: Any) => {
     let bytes: Uint8Array | null = null, mime = x.mime || '';
@@ -335,7 +336,7 @@ Deno.serve(async (req) => {
     if (a === 'daily') return json(await daily());
     if (a === 'sync') return json(await syncIncome(b.from));
     if (a === 'peek') return json(await peekMorning());
-    if (a === 'reread') { if (who === 'mail') return json({ error: 'אין הרשאה' }, 401); return json(await reread(+b.n || 12)); }
+    if (a === 'reread') { if (who === 'mail') return json({ error: 'אין הרשאה' }, 401); return json(await reread(+b.n || 12, b.ids)); }
     if (a === 'summary') return json(await summary(b.period || periodOf(ilDay())));
     if (a === 'settings') { const p: Any = {}; if (b.advPct !== undefined) p.advPct = Math.max(0, Math.min(50, +b.advPct || 0)); await merge('settings', 'fin', p); return json({ ok: true }); }
     if (a === 'mail-key') { // creates (once) the key the Gmail script uses; returned only to a signed-in office user
