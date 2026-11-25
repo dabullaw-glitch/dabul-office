@@ -1,0 +1,33 @@
+---
+// Bare shell for the design-direction previews: no global stylesheet, each direction brings its own fonts and CSS.
+import { BRAND } from '../config/brand';
+import { u } from '../config/routes';
+const { title, label } = Astro.props as { title: string; label: string };
+---
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{title} | {BRAND.name}</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content={BRAND.description} />
+  <link rel="icon" href={u('favicon.svg')} type="image/svg+xml" />
+</head>
+<body>
+  <a class="skip" href="#main">דילוג לתוכן</a>
+  <div class="dz-note" role="note">כיוון עיצוב {label} לבחירה. כל המשרדים באתר הם דוגמה בלבד.</div>
+  <slot />
+  <script>
+    document.querySelectorAll<HTMLFormElement>('form[data-ask]').forEach((f) => f.addEventListener('submit', (e) => {
+      const q = (f.elements.namedItem('q') as HTMLInputElement).value.trim();
+      const c = (f.elements.namedItem('city') as HTMLSelectElement).value;
+      const list = JSON.parse(f.dataset.areas || '[]') as { value: string; label: string }[];
+      const hit = list.find((a) => a.label === q) || list.find((a) => q && (a.label.includes(q) || q.includes(a.label)));
+      if (!hit) return; // falls back to the search page
+      e.preventDefault();
+      location.href = c ? f.action + '?area=' + encodeURIComponent(hit.value) + '&city=' + encodeURIComponent(c) : (f.dataset.base || '/') + hit.value + '/';
+    }));
+  </script>
+</body>
+</html>

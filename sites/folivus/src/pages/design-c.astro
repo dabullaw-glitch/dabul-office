@@ -1,0 +1,251 @@
+---
+// Design direction C: warm and human. Suez One (headings) + Noto Sans Hebrew (text). Terracotta accent on cream.
+import '@fontsource/suez-one/400.css';
+import '@fontsource/noto-sans-hebrew/400.css';
+import '@fontsource/noto-sans-hebrew/500.css';
+import '@fontsource/noto-sans-hebrew/600.css';
+import '@fontsource/noto-sans-hebrew/700.css';
+import DesignBase from '../layouts/DesignBase.astro';
+import { BRAND } from '../config/brand';
+import { homeData, DRAW } from '../lib/design';
+const d = await homeData();
+const L = d.links;
+---
+<DesignBase title="כיוון ג" label="ג">
+<div class="C">
+  <header class="hd">
+    <div class="w hd-in">
+      <a class="brand" href={L.home}>{BRAND.name}<i aria-hidden="true"></i></a>
+      <nav class="nav" aria-label="ניווט ראשי">
+        <a href={L.areas}>תחומים</a><a href={L.cities}>ערים</a><a href={L.tools}>כלים</a><a href={L.articles}>מדריכים</a><a href={L.courts}>בתי משפט</a>
+      </nav>
+      <a class="hd-cta" href={L.join}>למשרדים</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="w hero-in">
+        <div>
+          <p class="kick">עורכי דין בכל הארץ, לפי תחום ועיר</p>
+          <h1>במה צריך עזרה?</h1>
+          <p class="sub">ספרו לנו בכמה מילים מה קרה, ונראה לכם משרדים שעוסקים בזה ומדריך שמסביר מה עושים עכשיו.</p>
+          <form class="ask" action={L.search} method="get" data-ask data-base={L.base} data-areas={JSON.stringify(d.areaOptions)}>
+            <label class="sr" for="cq">הנושא</label>
+            <input id="cq" name="q" list="c-areas" placeholder="למשל: קבלן, ירושה, פיטורים" autocomplete="off" />
+            <datalist id="c-areas">{d.areaOptions.map((o) => <option value={o.label} />)}</datalist>
+            <label class="sr" for="cc">עיר</label>
+            <select id="cc" name="city"><option value="">כל הארץ</option>{d.cityOptions.map((g) => <optgroup label={'אזור ' + g.region}>{g.items.map((c) => <option value={c.value}>{c.label}</option>)}</optgroup>)}</select>
+            <button type="submit">חיפוש</button>
+          </form>
+        </div>
+        <div class="hero-art"><div set:html={DRAW.key('#e9a27c', '#3b2a20')} /></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="w">
+        <h2>אולי זה המצב שלכם</h2>
+        <div class="sit">
+          {d.situations.map((s) => <a href={s.href}><b>{s.text}</b><span>{s.title}</span></a>)}
+        </div>
+      </div>
+    </section>
+
+    <section class="sec cream">
+      <div class="w">
+        <h2>משרדים שמופיעים באתר</h2>
+        <p class="lead">משרד ששילם על מיקום בולט מסומן "משרד מקודם". חוות הדעת אצלנו עוברות אימות, ואי אפשר לקנות דירוג.</p>
+        <div class="firms">
+          {d.firms.map((f) => (
+            <article class={f.promo ? 'promo' : ''}>
+              {f.promo && <span class="lab">משרד מקודם</span>}
+              <h3><a href={f.href}>{f.name}</a></h3>
+              <p class="fx">{f.city}</p>
+              <p class="fa">{f.areas.join(' · ')}{f.more > 0 && ` ועוד ${f.more}`}</p>
+              {f.reviews > 0 && <p class="rt"><b>{f.rating.toFixed(1)}</b> מתוך 5 · {f.reviews} חוות דעת מאומתות</p>}
+              <div class="act"><a class="b1" href={f.tel}>{f.phone}</a><a class="b2" href={f.href}>לפרופיל</a></div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="w tools">
+        <div class="th">
+          <h2>כלים שחוסכים טלפון לעורך דין</h2>
+          <p>מחשבונים ומכתבים מוכנים, ישר בדפדפן. כל כלי מציין מאיפה הנתונים ומתי עודכן.</p>
+          <a class="more" href={L.tools}>לכל {d.counts.tools} הכלים</a>
+        </div>
+        <ul class="strip">
+          {d.tools.map((t) => <li><a href={t.href}><span class="k">{t.kind}</span><b>{t.name}</b></a></li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="sec cream">
+      <div class="w">
+        <h2>לקרוא לפני הפגישה</h2>
+        <div class="mag">
+          {d.articles.map((a, i) => (
+            <a class={i === 0 ? 'big' : ''} href={a.href}>
+              <span class="ar">{a.area}</span>
+              <b>{a.title}</b>
+              {i === 0 && <p>{a.text}</p>}
+              <span class="am">{a.minutes} דקות קריאה</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="w">
+        <h2>כל התחומים</h2>
+        <div class="idx">
+          {d.groups.map((g) => <div><h3>{g.group}</h3><p>{g.items.map((a, i) => <>{i > 0 && <span aria-hidden="true"> · </span>}<a href={a.href}>{a.name}</a></>)}</p></div>)}
+        </div>
+        <p class="cities"><b>ערים:</b> {d.topCities.map((c, i) => <>{i > 0 && ' · '}<a href={c.href}>{c.name}</a></>)} · <a href={L.cities}>כל הערים</a></p>
+      </div>
+    </section>
+
+    <section class="join">
+      <div class="w join-in">
+        <div>
+          <h2>עורכי דין, הפרופיל שלכם כבר כאן</h2>
+          <p>אשרו בעלות בחינם, עדכנו פרטים, וקבלו חוות דעת אמיתיות מלקוחות. בלי עמלה על פניות.</p>
+        </div>
+        <div class="jb"><a class="b1" href={L.claim}>אישור בעלות</a><a class="b3" href={L.join}>חבילות למשרדים</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ft">
+    <div class="w ft-in">
+      <div><span class="fb">{BRAND.name}</span><p>מדריך עצמאי של משרדי עורכי דין ומידע משפטי בשפה פשוטה. לא קשור לאף משרד.</p></div>
+      <ul><li><a href={L.areas}>תחומים</a></li><li><a href={L.cities}>ערים</a></li><li><a href={L.tools}>כלים</a></li><li><a href={L.articles}>מדריכים</a></li></ul>
+      <ul><li><a href={L.join}>למשרדים</a></li><li><a href={L.claim}>אישור בעלות</a></li><li><a href={L.removal}>תיקון או הסרה</a></li><li><a href={L.contact}>צור קשר</a></li></ul>
+      <ul><li><a href={L.terms}>תנאי שימוש</a></li><li><a href={L.privacy}>פרטיות</a></li><li><a href={L.a11y}>נגישות</a></li><li><a href={L.method}>איך בנויות הרשימות</a></li></ul>
+    </div>
+    <p class="w disc">פרטי המשרדים אינם המלצה, והמידע באתר אינו ייעוץ משפטי. <a href={L.removal}>בקשה לתיקון או הסרה</a></p>
+  </footer>
+</div>
+</DesignBase>
+
+<style is:global>
+  body { margin: 0; background: #fffaf3; }
+  .skip { position: absolute; top: -60px; inset-inline-start: 10px; background: #b4441c; color: #fff; padding: 8px 14px; z-index: 9; }
+  .skip:focus { top: 10px; }
+  .dz-note { background: #3b2a20; color: #fff; font: 500 14px/1.4 'Noto Sans Hebrew', sans-serif; text-align: center; padding: 6px 12px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .C { --ink: #2e211a; --ink2: #5e4f45; --t: #b4441c; --t2: #963613; --peach: #f9e3d5; --cream: #f7efe3; --line: #e8dccb;
+    font: 400 17.5px/1.75 'Noto Sans Hebrew', Arial, sans-serif; color: var(--ink); }
+  .C * { box-sizing: border-box; }
+  .C h1, .C h2, .C h3 { font-family: 'Suez One', serif; font-weight: 400; color: var(--ink); margin: 0 0 .4em; line-height: 1.2; }
+  .C h1 { font-size: clamp(36px, 4.6vw, 56px); }
+  .C h2 { font-size: clamp(26px, 2.6vw, 34px); }
+  .C h3 { font-size: 21px; }
+  .C a { color: var(--t); text-underline-offset: 3px; }
+  .C :focus-visible { outline: 3px solid #2f6f62; outline-offset: 2px; }
+  .C .w { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+  .C .hd { background: #fffaf3; }
+  .C .hd-in { display: flex; align-items: center; gap: 28px; min-height: 72px; border-bottom: 1px solid var(--line); }
+  .C .brand { font: 400 30px/1 'Suez One', serif; color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .C .brand i { width: 10px; height: 10px; background: var(--t); border-radius: 50%; margin-top: 10px; }
+  .C .nav { display: none; gap: 22px; }
+  .C .nav a { color: var(--ink); text-decoration: none; font-weight: 600; }
+  .C .nav a:hover { color: var(--t); }
+  .C .hd-cta { margin-inline-start: auto; background: var(--ink); color: #fff; text-decoration: none; font-weight: 600; padding: 9px 18px; border-radius: 999px; }
+  @media (min-width: 900px) { .C .nav { display: flex; } }
+
+  .C .hero-in { display: grid; gap: 28px; padding: 40px 20px 56px; align-items: center; }
+  @media (min-width: 960px) { .C .hero-in { grid-template-columns: 1.25fr .75fr; gap: 56px; padding: 64px 20px 80px; } }
+  .C .kick { font-weight: 700; color: var(--t); margin: 0 0 8px; }
+  .C .sub { font-size: 19.5px; color: var(--ink2); max-width: 32em; }
+  .C .ask { display: grid; gap: 10px; margin-top: 22px; }
+  @media (min-width: 700px) { .C .ask { grid-template-columns: 1.6fr 1fr auto; gap: 0; background: #fff; border: 2px solid var(--ink); border-radius: 999px; padding: 6px; } }
+  .C .ask input, .C .ask select { height: 54px; border: 2px solid var(--ink); border-radius: 999px; padding: 0 22px; font: 500 18px 'Noto Sans Hebrew', sans-serif; color: var(--ink); background: #fff; width: 100%; }
+  @media (min-width: 700px) { .C .ask input, .C .ask select { border: 0; border-radius: 0; } .C .ask select { border-inline-start: 1px solid var(--line); } }
+  .C .ask button { height: 54px; border: 0; border-radius: 999px; background: var(--t); color: #fff; font: 700 18px 'Noto Sans Hebrew', sans-serif; padding: 0 32px; cursor: pointer; }
+  .C .ask button:hover { background: var(--t2); }
+  .C .hero-art { background: var(--peach); border-radius: 50% 50% 24px 24px; aspect-ratio: 1 / 1; max-width: 380px; width: 100%; justify-self: center; display: grid; place-items: center; padding: 40px; color: var(--ink); }
+  .C .hero-art div { width: 100%; }
+  @media (max-width: 959px) { .C .hero-art { display: none; } }
+
+  .C .sec { padding: 60px 0; }
+  .C .sec.cream { background: var(--cream); }
+  .C .lead { color: var(--ink2); max-width: 46em; margin: 0 0 24px; }
+  .C .sit { display: grid; gap: 12px; margin-top: 8px; }
+  @media (min-width: 700px) { .C .sit { grid-template-columns: 1fr 1fr; } }
+  .C .sit a { display: block; padding: 16px 20px; border: 1.5px solid var(--line); border-radius: 14px; text-decoration: none; color: var(--ink); background: #fff; }
+  .C .sit a:hover { border-color: var(--t); }
+  .C .sit b { display: block; font-size: 19px; font-weight: 700; }
+  .C .sit span { color: var(--ink2); font-size: 15px; }
+
+  .C .firms { display: grid; gap: 16px; }
+  @media (min-width: 800px) { .C .firms { grid-template-columns: 1fr 1fr; } }
+  .C .firms article { background: #fff; border: 1.5px solid var(--line); border-radius: 18px; padding: 22px 24px; position: relative; }
+  .C .firms article.promo { border-color: #e7b494; }
+  .C .lab { position: absolute; top: -12px; inset-inline-start: 18px; background: var(--t); color: #fff; font-size: 13px; font-weight: 700; padding: 2px 10px; border-radius: 999px; }
+  .C .firms h3 a { color: var(--ink); text-decoration: none; }
+  .C .firms h3 a:hover { color: var(--t); text-decoration: underline; }
+  .C .fx { margin: -6px 0 6px; font-weight: 600; color: var(--ink2); }
+  .C .fa { margin: 0 0 6px; }
+  .C .rt { margin: 0 0 6px; font-size: 15.5px; color: var(--ink2); }
+  .C .act { display: flex; gap: 8px; margin-top: 14px; }
+  .C .b1, .C .b2, .C .b3 { display: inline-flex; align-items: center; min-height: 46px; padding: 0 20px; border-radius: 999px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+  .C .b1 { background: var(--t); color: #fff; } .C .b1:hover { background: var(--t2); }
+  .C .b2 { border: 1.5px solid var(--ink); color: var(--ink); }
+  .C .b3 { border: 2px solid #fff; color: #fff; }
+
+  .C .tools { display: grid; gap: 26px; }
+  @media (min-width: 960px) { .C .tools { grid-template-columns: .8fr 1.6fr; gap: 50px; align-items: start; } }
+  .C .th p { color: var(--ink2); }
+  .C .more { font-weight: 700; }
+  .C .strip { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  @media (min-width: 640px) { .C .strip { grid-template-columns: 1fr 1fr; } }
+  .C .strip a { display: block; padding: 16px 18px; background: var(--cream); border-radius: 14px; text-decoration: none; color: var(--ink); height: 100%; }
+  .C .strip a:hover { background: var(--peach); }
+  .C .strip .k { display: block; font-size: 13.5px; font-weight: 700; color: var(--t); }
+  .C .strip b { font-weight: 600; }
+
+  .C .mag { display: grid; gap: 14px; }
+  @media (min-width: 900px) { .C .mag { grid-template-columns: 1.3fr 1fr; grid-template-rows: repeat(3, auto); } .C .mag .big { grid-row: span 3; } }
+  .C .mag a { display: block; background: #fff; border-radius: 16px; padding: 18px 22px; text-decoration: none; color: var(--ink); border: 1.5px solid var(--line); }
+  .C .mag a:hover b { color: var(--t); }
+  .C .mag .big { padding: 30px; background: var(--ink); border-color: var(--ink); color: #f3e9de; }
+  .C .mag .big b { font-family: 'Suez One', serif; font-weight: 400; font-size: 30px; line-height: 1.25; color: #fff; }
+  .C .mag .big .ar { color: #f2b796; }
+  .C .mag .big .am { color: #d7c6b8; }
+  .C .mag b { display: block; font-size: 19px; font-weight: 700; line-height: 1.4; margin: 2px 0 6px; }
+  .C .ar { font-size: 14px; font-weight: 700; color: var(--t); }
+  .C .am { font-size: 14px; color: var(--ink2); }
+
+  .C .idx { display: grid; gap: 18px 40px; }
+  @media (min-width: 800px) { .C .idx { grid-template-columns: 1fr 1fr; } }
+  .C .idx h3 { font-size: 19px; margin-bottom: 4px; }
+  .C .idx p { margin: 0; line-height: 1.9; }
+  .C .idx a { color: var(--ink); }
+  .C .idx a:hover { color: var(--t); }
+  .C .cities { margin-top: 26px; }
+  .C .cities a { color: var(--ink); }
+
+  .C .join { background: var(--t); color: #fff; padding: 50px 0; }
+  .C .join-in { display: grid; gap: 20px; }
+  @media (min-width: 900px) { .C .join-in { grid-template-columns: 1.5fr auto; align-items: center; } }
+  .C .join h2 { color: #fff; }
+  .C .join p { margin: 0; color: #fde9dd; max-width: 40em; }
+  .C .jb { display: flex; gap: 10px; flex-wrap: wrap; }
+  .C .join .b1 { background: #fff; color: var(--t2); }
+
+  .C .ft { background: var(--cream); padding: 44px 0 26px; font-size: 15.5px; }
+  .C .ft-in { display: grid; gap: 22px; }
+  @media (min-width: 860px) { .C .ft-in { grid-template-columns: 1.6fr 1fr 1fr 1fr; } }
+  .C .fb { font: 400 26px 'Suez One', serif; }
+  .C .ft p { color: var(--ink2); }
+  .C .ft ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .C .ft a { color: var(--ink); text-decoration: none; }
+  .C .ft a:hover { text-decoration: underline; }
+  .C .disc { font-size: 14px; color: var(--ink2); border-top: 1px solid var(--line); margin-top: 22px; padding-top: 16px; }
+</style>
