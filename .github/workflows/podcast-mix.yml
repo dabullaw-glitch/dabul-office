@@ -36,6 +36,9 @@ jobs:
             [ -f "$f" ] || continue
             ep=$(basename "$f" .json)
             echo "$ep" | grep -Eq '^ep[0-9]+(-[0-9]+)?$' || continue
+            # 25.11.2026: an episode held off Pages until its release (media/podcast/release/<ep>.json without "released")
+            # is not mixed again because its mp3 is missing from the tree (a fix before the release deletes the manifest first)
+            [ -f "media/podcast/release/$ep.json" ] && ! grep -q '"released"' "media/podcast/release/$ep.json" && continue
             [ -f "media/podcast/$ep.mp3" ] && [ "$(git log -1 --format=%ct -- "$f")" -le "$(git log -1 --format=%ct -- "media/podcast/$ep.mp3")" ] && continue
             if [ -f "media/podcast/$ep.error.txt" ] && [ "$(git log -1 --format=%ct -- "$f")" -le "$(git log -1 --format=%ct -- "media/podcast/$ep.error.txt")" ]; then continue; fi
             if python3 tools/podcast/mix.py "$f" > "/tmp/$ep.log" 2>&1; then rm -f "media/podcast/$ep.error.txt"; else tail -40 "/tmp/$ep.log" > "media/podcast/$ep.error.txt"; fi

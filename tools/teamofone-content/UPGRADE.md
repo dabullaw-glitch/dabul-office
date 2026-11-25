@@ -52,8 +52,9 @@ Every number / date / tool price is checked against an official source the same 
   13 "קורס: אוטומציות לעסק" (5, 230), 14 "קורס: שיווק שותפים עם בינה מלאכותית" (5, 230). 20 new files in bucket too,
   lessons/c<course>-l<lesson>-*.docx|xlsx (xlsx recalculated in LibreOffice, 0 errors); course 2 lesson 4 reuses
   lessons/m8-l31-edit-check.docx. Texts and script local only: /home/claude/too-new (md/, build_new.py).
-  Open before selling: how a separately sold course maps to access (today a module is part of the main course once published),
-  and Yakir's approval of every lesson before publishing.
+  PUBLISHED 25.11.2026 (Yakir approved 20:59): modules 11-14 and all 21 lessons published=true. Sold one by one at 249 ₪
+  each (plans module-11..module-14) and included in the monthly membership, which now covers all 5 courses (the full
+  course of 10 chapters / 37 lessons + these 4). The full course alone (one payment) is the 10 chapters only.
 
 ## Lesson videos in Yakir's voice (pilot approved 25.11.2026; every new lesson video still needs his approval)
 - Lesson 1 pilot, 25.11.2026: narration script (2,604 chars, about 3:17) written only from lesson 1 facts, voiced with the
@@ -77,8 +78,8 @@ Every number / date / tool price is checked against an official source the same 
   Attach after approval: toovid GET ?attach=<job> (x-cron-secret) copies files/too/videos/<job>/lesson.mp4 to
   too/videos/<job>/lesson.mp4 (size checked), then set too_lesson_content.video_url = 'too:videos/<job>/lesson.mp4'.
   (&drop=1 would remove the review copy; not used yet, the l01 review copy is still in files/.)
-- Lessons 2 and 3 videos made 25.11.2026 (3:01 and 3:07, 12 and 11 slides), WAITING for Yakir: docs agents/too-video-l02,
-  agents/too-video-l03 (14-day private links). Do NOT attach before he approves. Voice: 2,413 + 2,446 characters.
+- Lessons 2 and 3 videos made 25.11.2026 (3:01 and 3:07, 12 and 11 slides), APPROVED by Yakir and ATTACHED 25.11.2026
+  (too_lesson_content.video_url = too:videos/<job>/lesson.mp4 for lessons 1, 2 and 3; checked in the database). Voice: 2,413 + 2,446 characters.
   ElevenLabs budget for Team of One: 8,000 a month; used in November 7,465 (l01 2,606 + l02 2,413 + l03 2,446), logged in
   settings/voice.charLog. Lesson 4 waits for the next month's characters (about 2,450 needed).
 - Script rules used: only that lesson's text; one paragraph per slide; numbers and years spoken in words; vowel marks on
@@ -97,6 +98,7 @@ Every number / date / tool price is checked against an official source the same 
 6. Lesson attachments: [{"title":"<Hebrew name> (וורד|אקסל)","path":"lessons/<ascii-name>"}].
 
 ## Next (in order)
-- Members library items 38-50: same standard (shorter), file only where it adds real value.
-- Four new paid courses: WRITTEN (see Done, modules 11-14, unpublished). Next: Yakir reviews, then decide separate-course access.
+- Members library items 38-50: DONE 25.11.2026 (see Done).
+- Four new paid courses: DONE and PUBLISHED 25.11.2026 (see Done, modules 11-14); single-course access built (LAUNCH.md).
+- Lesson videos: 1-3 approved and attached; lesson 4 next, when the next month's voice characters are available.
 - The automatic content task (trig_01Mc8EeZ9nQsnwTisL9wwgSQ) stays paused until Yakir says otherwise; when re-enabled, every item goes to him for approval first.

@@ -18,6 +18,7 @@ export const SEG = {
   terms: 'תנאי-שימוש',
   privacy: 'מדיניות-פרטיות',
   a11y: 'הצהרת-נגישות',
+  cookies: 'מדיניות-עוגיות',
   contact: 'צור-קשר',
   about: 'אודות',
   // commerce and operations (noindex; the server function fol-api builds links to these same paths)

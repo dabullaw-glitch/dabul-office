@@ -10,7 +10,7 @@ export async function sitemapGroups(): Promise<Record<string, Entry[]>> {
   return {
     pages: [
       { path: '', lastmod: now, title: 'דף הבית' },
-      ...(['areas', 'cities', 'tools', 'articles', 'courts', 'join', 'claim', 'removal', 'contact', 'about', 'editorial', 'method', 'terms', 'privacy', 'a11y'] as const).map((k) => ({ path: P.page(k) })),
+      ...(['areas', 'cities', 'tools', 'articles', 'courts', 'join', 'claim', 'removal', 'contact', 'about', 'editorial', 'method', 'terms', 'privacy', 'a11y', 'cookies'] as const).map((k) => ({ path: P.page(k) })),
     ],
     areas: areas().map((a) => ({ path: P.area(a.he), lastmod: isoDate(a.guide?.updated || null), title: a.title })),
     'area-cities': ac,

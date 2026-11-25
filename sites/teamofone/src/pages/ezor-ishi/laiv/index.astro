@@ -17,7 +17,7 @@ import Base from '../../../layouts/Base.astro';
   </style>
   <script>
     import { sb, BASE, esc, toast, errText } from '../../../lib/sb.js';
-    import { requireLogin, logoutBtn } from '../../../lib/member.js';
+    import { requireLogin, logoutBtn, loadMe } from '../../../lib/member.js';
     import { player } from '../../../lib/video.js';
     const app = document.getElementById('app');
     const tz = { timeZone: 'Asia/Jerusalem' };
@@ -34,7 +34,7 @@ import Base from '../../../layouts/Base.astro';
       const ses = await requireLogin(); if (!ses) return;
       logoutBtn(document.getElementById('anav'));
       const [{ data: me }, { data: evs, error }] = await Promise.all([
-        sb.rpc('too_me'),
+        loadMe(),
         sb.from('too_events').select('id,title,description,starts_at,duration_min,audience').order('starts_at', { ascending: true })]);
       if (error) { app.innerHTML = '<div class="card">' + esc(errText(error)) + '</div>'; return; }
       const now = Date.now();

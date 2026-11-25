@@ -3,7 +3,7 @@
 import type { APIRoute } from 'astro';
 import { getArticles } from '../lib/articles.js';
 import { getCatalog } from '../lib/catalog.js';
-const PUBLIC = ['', 'kursim/', 'maamarim/', 'kelim/', 'kelim/sifriyat-horaot/', 'kelim/machshevon-zman/', 'kelim/bdikat-uvdot/', 'etgar/', 'tnaim/', 'pratiut/', 'negishut/'];
+const PUBLIC = ['', 'kursim/', 'maamarim/', 'kelim/', 'kelim/sifriyat-horaot/', 'kelim/machshevon-zman/', 'kelim/bdikat-uvdot/', 'etgar/', 'tnaim/', 'pratiut/', 'negishut/', 'ugiyot/'];
 export const GET: APIRoute = async ({ site }) => {
   const live = process.env.PREVIEW === '0';
   const base = import.meta.env.BASE_URL;

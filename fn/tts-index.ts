@@ -1,8 +1,11 @@
 // tts: narration of the online course slides and the services explainers. Cron secret only.
 //  POST {lesson:n}            -> the online course (docs course/first-home), Google mode (voice he-IL-Chirp3-HD-Charon):
-//                                every scene of lesson n's deck that has text ("say") and no audio yet gets an mp3 in the
-//                                public "pv" bucket (course/first-home/lNN-sNN-<hash>.mp3), saved back into the deck as it
-//                                goes. Stops before the time limit and continues on the next call.
+//                                every scene of lesson n's deck that has text ("say") and no audio yet gets an mp3
+//                                (course/first-home/lNN-sNN-<hash>.mp3), saved back into the deck as it goes: the FREE
+//                                lesson in the public "pv" bucket, PAID lessons (not lesson.free) only in the PRIVATE
+//                                bucket "files" as "sb:files/<path>" (25.11.2026, Yakir approved: paid narration is never
+//                                public; the 262 older paid files were moved from pv to files the same day, same paths).
+//                                Stops before the time limit and continues on the next call.
 //                                Returns {ok, lesson, scenes, voiced, left}.
 //  POST {lesson:n, engine:'eleven', skipEnds?:true, only?:[sceneNo..]}
 //                             -> (25.11.2026) ELEVENLABS MODE: the same scenes read in Yakir's own professional voice clone
@@ -137,6 +140,10 @@ async function lesson(n: number, b: any = {}) {
     return json({ ok: voiced === idx.length, lesson: n, engine, scenes: deck.scenes.length, wanted: idx.length, voiced, left: idx.length - voiced, now: done, chars });
   }
 
+  // 25.11.2026 (Yakir approved 21:32 "כן"): the Google mode follows the same privacy rule as the ElevenLabs mode: a PAID
+  // lesson's narration goes ONLY to the private bucket 'files' (scene.audio = "sb:files/<path>"); only the free lesson
+  // (lesson.free) is written to the public bucket 'pv'.
+  const privG = !lessons[li].free;
   for (let i = 0; i < deck.scenes.length; i++) {
     const sc = deck.scenes[i]; if (!sc.say) continue;
     const h = await hash10(`${voice}|${sc.say}`);
@@ -144,9 +151,9 @@ async function lesson(n: number, b: any = {}) {
     if (Date.now() - t0 > 110_000) break;
     const bytes = await synth(sc.say, voice);
     const path = `course/first-home/l${nn}-s${String(i + 1).padStart(2, '0')}-${h}.mp3`;
-    const up = await sb().storage.from('pv').upload(path, bytes, { upsert: true, contentType: 'audio/mpeg' });
+    const up = await sb().storage.from(privG ? 'files' : 'pv').upload(path, bytes, { upsert: true, contentType: 'audio/mpeg' });
     if (up.error) throw new Error(up.error.message);
-    sc.audio = sb().storage.from('pv').getPublicUrl(path).data.publicUrl; sc.ah = h; done++; dirty = true;
+    sc.audio = privG ? `sb:files/${path}` : sb().storage.from('pv').getPublicUrl(path).data.publicUrl; sc.ah = h; done++; dirty = true;
     if (done % 5 === 0) await save();
   }
   if (dirty) await save();

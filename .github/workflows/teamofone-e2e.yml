@@ -1,27 +1,28 @@
 name: teamofone e2e
-# Opens the published Team of One site in a real browser (desktop and phone), runs the student flow with a test account,
-# and saves screenshots and results to the branch too-e2e-out. Runs when tools/teamofone-e2e/ changes.
+# Opens the published Team of One site in a real browser (desktop and phone) and runs the student flow with a test account.
+# Saves ONLY results.json (pass/fail per step and counts) to the branch too-e2e-out: no screenshots, no page text, no
+# account details, no error text (25.11.2026: the branch is public; same rule as the teamofone-qa workflow).
+# Manual run only, so editing the script does not create a test account by itself.
 on:
-  push:
-    branches: [main]
-    paths: ['tools/teamofone-e2e/**']
+  workflow_dispatch:
 permissions:
   contents: write
+concurrency: { group: teamofone-e2e, cancel-in-progress: false }
 jobs:
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 2 }
-      - run: |
-          if git diff --name-only HEAD~1 HEAD | grep -q '^sites/teamofone/'; then echo "$GITHUB_SHA" > tools/teamofone-e2e/expect.txt; fi
-          mkdir -p /tmp/e && cp tools/teamofone-e2e/e2e.mjs /tmp/e/ && (cp tools/teamofone-e2e/expect.txt /tmp/e/ 2>/dev/null || true) && cd /tmp/e && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null && npx playwright install --with-deps chromium >/dev/null
-          node e2e.mjs || true
-          ls -la out
-      - run: |
+      - name: Run
+        run: |
+          mkdir -p /tmp/e && cp tools/teamofone-e2e/e2e.mjs /tmp/e/ && cd /tmp/e && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null && npx playwright install --with-deps chromium >/dev/null
+          node e2e.mjs > log.txt 2>&1 || true
+          grep -c '^OK' log.txt || true; grep -c '^FAIL' log.txt || true
+      - name: Save results (results.json only)
+        run: |
           git config user.name e2e; git config user.email e2e@users.noreply.github.com
-          git fetch origin too-e2e-out || true
-          git checkout -B too-e2e-out origin/too-e2e-out 2>/dev/null || git checkout --orphan too-e2e-out
-          git rm -rfq . >/dev/null 2>&1 || true
-          rm -rf out && mkdir -p out && cp /tmp/e/out/* out/ && git add out && git commit -qm "e2e $(date -u +%FT%TZ)" && git push -f origin too-e2e-out
+          git checkout --orphan too-e2e-out && git rm -rfq . >/dev/null 2>&1 || true
+          rm -rf out && mkdir -p out
+          cp /tmp/e/out/results.json out/ 2>/dev/null || echo '{"crash":true}' > out/results.json
+          git add out/results.json && git commit -qm "e2e $(date -u +%FT%TZ)" && git push -f origin too-e2e-out
