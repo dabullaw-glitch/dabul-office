@@ -23,8 +23,8 @@ def duration(f):
     return float(sh(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'default=nw=1:nk=1', f]).stdout)
 
 
-def silences(f):
-    err = subprocess.run(['ffmpeg', '-hide_banner', '-i', str(f), '-af', 'silencedetect=noise=-38dB:d=0.28', '-f', 'null', '-'],
+def silences(f, d=0.28):
+    err = subprocess.run(['ffmpeg', '-hide_banner', '-i', str(f), '-af', f'silencedetect=noise=-38dB:d={d}', '-f', 'null', '-'],
                          capture_output=True, text=True).stderr
     st = [float(x) for x in re.findall(r'silence_start: ([\d.]+)', err)]
     en = [float(x) for x in re.findall(r'silence_end: ([\d.]+)', err)]
@@ -42,7 +42,11 @@ def main(deck_f, txt_f, mp3, out):
     L = [len(p) for p in paras]; bounds = [0.0]
     print(json.dumps({'pauses': [[round(t, 2), round(d, 2)] for t, d in sil if d >= 0.3]}))
     if deck.get('bounds'):
-        bounds += [float(x) for x in deck['bounds']][:len(paras) - 1]
+        fine = silences(mp3, 0.15)   # snap each given time to the longest short pause within 1.2 s
+        for x in [float(x) for x in deck['bounds']][:len(paras) - 1]:
+            near = [s for s in fine if abs(s[0] - x) <= 1.2]
+            bounds.append(max(near, key=lambda s: s[1])[0] if near else x)
+        print(json.dumps({'bounds': [round(x, 2) for x in bounds]}))
     else:
         for i in range(len(paras) - 1):
             exp = bounds[-1] + (total - bounds[-1]) * L[i] / sum(L[i:])
