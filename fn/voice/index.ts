@@ -1,6 +1,8 @@
 // voice (25.11.2026): Yakir's own voice (ElevenLabs professional voice clone "יקיר דבול", model Eleven v4) for the
 // podcast, the HeyGen videos and the courses. Cron secret only (header x-cron-secret).
 //  POST {action:'voices'}                          -> [{id,name,category}] of the account (no secrets returned)
+//  POST {action:'usage'}                           -> (25.11.2026) {used, limit, left, resetAt, tier} of the ElevenLabs plan
+//      (characters / credits this billing period; read only, no secrets), so tasks can keep the floor Yakir set.
 //  POST {action:'say', text, path, bucket?:'files'} -> fixes the known Hebrew pronunciations (vowel marks Yakir approved
 //      25.11.2026: דַּבּוּל, נֶסַח), splits the text into parts at paragraph/sentence ends, voices each part with request
 //      stitching for an even sound, joins the MP3 parts, stores <bucket>/<path> (private) and returns a signed link (24h).
@@ -127,6 +129,12 @@ Deno.serve(async (req) => {
       if (!r.ok) return json({ ok: false, status: r.status, error: j?.detail?.status || 'error' }, 502);
       // deno-lint-ignore no-explicit-any
       return json({ ok: true, voices: (j.voices || []).filter((v: any) => v.category !== 'premade').map((v: any) => ({ id: v.voice_id, name: v.name, category: v.category })) });
+    }
+    if (b.action === 'usage') {
+      const r = await fetch(`${API}/user/subscription`, { headers: H() }); const j = await r.json().catch(() => ({}));
+      if (!r.ok) return json({ ok: false, status: r.status, error: j?.detail?.status || 'error' }, 502);
+      const used = Number(j.character_count) || 0, limit = Number(j.character_limit) || 0;
+      return json({ ok: true, used, limit, left: limit - used, tier: j.tier || '', resetAt: j.next_character_count_reset_unix ? new Date(j.next_character_count_reset_unix * 1000).toISOString() : null });
     }
     if (b.action === 'say') {
       const text = String(b.text || ''), path = String(b.path || '');

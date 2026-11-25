@@ -11,7 +11,7 @@
 //   GET  ?a=rv&t=<vtok>              -> (25.11.2026) Yakir's review link for a private course lesson video sent with
 //                                       reels?vr=final {id, ref}: redirects to a 3-hour signed link, only while the request
 //                                       waits for his approval (or was approved)
-// Cron (x-cron-secret): ?step=sign {ref, sec}  -> a signed link to a private course file (max 7 days), for the office
+// Cron (x-cron-secret): ?step=sign {ref, sec}  -> a signed link to a private course file (max 14 days: review copies for Yakir), for the office
 // GitHub Actions (OIDC, audience 'dabul-course', only .github/workflows/course-lesson.yml or course-move.yml on main):
 //   GET  ?gh=job&id=<file>   -> the job in docs coursejob/<file> (status 'queued'): deck (narration links signed for 2 hours),
 //                               the avatar links, signed UPLOAD links into the private bucket 'course', and the review key
@@ -264,7 +264,7 @@ Deno.serve(async (req) => {
       if (!env('CRON_SECRET') || req.headers.get('x-cron-secret') !== env('CRON_SECRET')) return json({ error: 'unauthorized' }, 401);
       const b = await req.json().catch(() => ({})); const ref = String(b.ref || '');
       if (!isRef(ref)) return json({ ok: false, error: 'bad ref' }, 400);
-      const sec = Math.min(7 * 86400, Math.max(60, Number(b.sec) || 3600)); const s = await signMany([ref], sec);
+      const sec = Math.min(14 * 86400, Math.max(60, Number(b.sec) || 3600)); const s = await signMany([ref], sec);
       return s[ref] ? json({ ok: true, url: s[ref], sec }) : json({ ok: false, error: 'not found' }, 404);
     }
     if (step === 'grant' || step === 'resetdev') {
