@@ -10,14 +10,14 @@ const arts = await getArticles();
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 let ARTS = FALLBACK;
 if (arts.length) {
-  const f = arts[0], rest = arts.slice(1, 6);
+  const f = arts[0], rest = arts.slice(1, 4);
   ARTS = `<section class="paper pad" id="articles"><div class="wrap">
     <div class="split-h reveal"><div><span class="tag"><i></i>מאמרים</span><h2 class="h2" style="margin-top:16px">בינה מלאכותית<br>לעסקים. מהשטח.</h2></div><p class="lead mut">חדשות, מדריכים והשוואות כלים, מתוך מה שבאמת עובד אצלי. בלי הייפ, עם צילומי מסך ומספרים. מתעדכן כל שבוע.</p></div>
     <div class="cats reveal"><a href="${base}maamarim/" style="text-decoration:none"><span style="background:var(--ink);color:var(--lime)">לכל המאמרים</span></a>${CATS.map((c) => `<span>${c}</span>`).join('')}</div>
     <div class="arts2">
-      <a class="feat reveal" href="${base}maamarim/${f.slug}/"><div class="th"><img src="${esc(f.cover_url || base + 'img/info.webp')}" alt="" loading="lazy"><span>${esc(f.category)}</span></div><h3>${esc(f.title)}</h3><p>${esc(f.description)}</p></a>
+      <a class="feat reveal" href="${base}maamarim/${f.slug}/"><div class="th"><img src="${esc(f.cover_url || base + 'img/covers/default.webp')}" alt="" loading="lazy"><span>${esc(f.category)}</span></div><h3>${esc(f.title)}</h3><p>${esc(f.description)}</p></a>
       <ul class="alist reveal">${rest.map((a) => `<li><a href="${base}maamarim/${a.slug}/"><span><em>${esc(a.category)}</em><b>${esc(a.title)}</b></span><span class="go">←</span></a></li>`).join('')}</ul>
-    </div></div></section>`;
+    </div><div style="margin-top:28px;text-align:center"><a class="btn btn-k" href="${base}maamarim/">לכל המאמרים <span class="arrow">←</span></a></div></div></section>`;
 }
 const html = fix(A) + (arts.length ? ARTS : fix(FALLBACK)) + fix(B);
 const jsonld = { '@context': 'https://schema.org', '@graph': [
