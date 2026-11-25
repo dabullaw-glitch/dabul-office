@@ -1,0 +1,80 @@
+PASS public | no dashes/הכי/מומחה /kniya/?plan=module-14
+PASS public | images have alt /kniya/?plan=module-14
+PASS public | images load /kniya/?plan=module-14
+PASS public | loads /kelim/machshevon-zman/
+PASS public | no console/network errors /kelim/machshevon-zman/
+PASS public | noindex /kelim/machshevon-zman/
+PASS public | no dashes/הכי/מומחה /kelim/machshevon-zman/
+PASS public | images have alt /kelim/machshevon-zman/
+PASS public | images load /kelim/machshevon-zman/
+PASS public | loads /kelim/sifriyat-horaot/
+PASS public | no console/network errors /kelim/sifriyat-horaot/
+PASS public | noindex /kelim/sifriyat-horaot/
+PASS public | no dashes/הכי/מומחה /kelim/sifriyat-horaot/
+PASS public | images have alt /kelim/sifriyat-horaot/
+PASS public | images load /kelim/sifriyat-horaot/
+PASS public | loads /kelim/bdikat-uvdot/
+PASS public | no console/network errors /kelim/bdikat-uvdot/
+PASS public | noindex /kelim/bdikat-uvdot/
+PASS public | no dashes/הכי/מומחה /kelim/bdikat-uvdot/
+PASS public | images have alt /kelim/bdikat-uvdot/
+PASS public | images load /kelim/bdikat-uvdot/
+PASS public | loads /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | no console/network errors /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | noindex /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | no dashes/הכי/מומחה /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | images have alt /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | images load /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | loads /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | no console/network errors /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | noindex /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | no dashes/הכי/מומחה /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | images have alt /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | images load /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | home has the courses section (קורסים נוספים / #more-courses)
+PASS public | course catalog pages crawled (kursim)
+PASS public | article pages found and crawled
+PASS public | robots.txt closes the preview
+PASS layout | phone no sideways scroll /
+PASS layout | phone no sideways scroll /kursim/
+PASS layout | phone no sideways scroll /maamarim/
+PASS layout | phone no sideways scroll /knisa/
+PASS layout | phone no sideways scroll /tnaim/
+PASS layout | phone no sideways scroll /pratiut/
+PASS layout | phone no sideways scroll /negishut/
+PASS layout | phone no sideways scroll /kelim/
+PASS layout | phone no sideways scroll /etgar/
+PASS layout | phone no sideways scroll /kursim/hakurs-hamale/
+PASS layout | phone no sideways scroll /kursim/pniyot-mgoogle/
+PASS layout | phone no sideways scroll /kursim/sratonim/
+PASS layout | phone no sideways scroll /kursim/otomatziot/
+PASS layout | phone no sideways scroll /kursim/shivuk-shutafim/
+PASS layout | phone no sideways scroll /maamarim/ai-fact-checking-source-first/
+PASS layout | phone no sideways scroll /maamarim/what-is-a-claude-skill/
+PASS layout | phone no sideways scroll /maamarim/google-traffic-x11-case-study/
+PASS layout | phone no sideways scroll /knisa/?plan=course
+PASS layout | phone no sideways scroll /knisa/?plan=monthly
+PASS layout | phone no sideways scroll /kniya/?plan=course
+PASS layout | phone no sideways scroll /kniya/?plan=monthly
+PASS layout | phone no sideways scroll /kniya/?plan=module-11
+PASS layout | phone no sideways scroll /kniya/?plan=module-12
+PASS layout | phone no sideways scroll /kniya/?plan=module-13
+PASS layout | phone no sideways scroll /kniya/?plan=module-14
+PASS layout | phone no sideways scroll /kelim/machshevon-zman/
+PASS layout | phone no sideways scroll /kelim/sifriyat-horaot/
+PASS layout | phone no sideways scroll /kelim/bdikat-uvdot/
+PASS layout | phone no sideways scroll /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS layout | phone no sideways scroll /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F
+PASS public | maamar/?s= renders an article
+PASS access | anon cannot read paid lesson text
+PASS access | anon reads no lesson text rows at all
+PASS access | anon cannot sign a lesson file
+PASS access | anon cannot sign a lesson video
+PASS access | bucket too is not public
+PASS access | anon refused too_admin_users
+PASS access | anon refused too_admin_orders
+PASS access | anon refused too_admin_stats
+PASS purchase | anon real checkout refused
+PASS access | anon lesson page sends to login
+PASS access | anon admin panel closed
+{"total":314,"failed":2}

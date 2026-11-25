@@ -1,0 +1,2311 @@
+{
+ "started": "2026-11-25T19:43:26.869Z",
+ "run": "45687685704",
+ "checks": [
+  {
+   "area": "crawl",
+   "name": "link /",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /maamarim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kelim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /etgar/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /ezor-ishi/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kursim/hakurs-hamale/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kursim/pniyot-mgoogle/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kursim/sratonim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kursim/otomatziot/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kursim/shivuk-shutafim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kursim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /maamarim/ai-fact-checking-source-first/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /maamarim/what-is-a-claude-skill/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /maamarim/google-traffic-x11-case-study/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /knisa/?plan=course",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /knisa/?plan=monthly",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /tnaim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /pratiut/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /negishut/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kniya/?plan=course",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kniya/?plan=monthly",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kniya/?plan=module-11",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kniya/?plan=module-12",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kniya/?plan=module-13",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kniya/?plan=module-14",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kelim/machshevon-zman/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kelim/sifriyat-horaot/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /kelim/bdikat-uvdot/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "link /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "crawl",
+   "name": "no links to the same host outside the site",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#top",
+   "ok": true,
+   "extra": "from /"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#team",
+   "ok": true,
+   "extra": "from /"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#seo",
+   "ok": true,
+   "extra": "from /"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#course",
+   "ok": true,
+   "extra": "from /"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#course",
+   "ok": true,
+   "extra": "from /"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#more-courses",
+   "ok": true,
+   "extra": "from /"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kursim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/#hakurs-hamale",
+   "ok": true,
+   "extra": "from /kursim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/#pniyot-mgoogle",
+   "ok": true,
+   "extra": "from /kursim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/#sratonim",
+   "ok": true,
+   "extra": "from /kursim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/#otomatziot",
+   "ok": true,
+   "extra": "from /kursim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/#shivuk-shutafim",
+   "ok": true,
+   "extra": "from /kursim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/#list",
+   "ok": true,
+   "extra": "from /kursim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /maamarim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /knisa/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /tnaim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /pratiut/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /negishut/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kelim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /etgar/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kursim/hakurs-hamale/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/hakurs-hamale/#order",
+   "ok": true,
+   "extra": "from /kursim/hakurs-hamale/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/hakurs-hamale/#lessons",
+   "ok": true,
+   "extra": "from /kursim/hakurs-hamale/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kursim/pniyot-mgoogle/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/pniyot-mgoogle/#order",
+   "ok": true,
+   "extra": "from /kursim/pniyot-mgoogle/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/pniyot-mgoogle/#lessons",
+   "ok": true,
+   "extra": "from /kursim/pniyot-mgoogle/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kursim/sratonim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/sratonim/#order",
+   "ok": true,
+   "extra": "from /kursim/sratonim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/sratonim/#lessons",
+   "ok": true,
+   "extra": "from /kursim/sratonim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kursim/otomatziot/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/otomatziot/#order",
+   "ok": true,
+   "extra": "from /kursim/otomatziot/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/otomatziot/#lessons",
+   "ok": true,
+   "extra": "from /kursim/otomatziot/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kursim/shivuk-shutafim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/shivuk-shutafim/#order",
+   "ok": true,
+   "extra": "from /kursim/shivuk-shutafim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /kursim/shivuk-shutafim/#lessons",
+   "ok": true,
+   "extra": "from /kursim/shivuk-shutafim/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /maamarim/ai-fact-checking-source-first/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /maamarim/what-is-a-claude-skill/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /maamarim/google-traffic-x11-case-study/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /knisa/?plan=course"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /knisa/?plan=monthly"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kniya/?plan=course"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kniya/?plan=monthly"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kniya/?plan=module-11"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kniya/?plan=module-12"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kniya/?plan=module-13"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kniya/?plan=module-14"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kelim/machshevon-zman/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kelim/sifriyat-horaot/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /kelim/bdikat-uvdot/"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F"
+  },
+  {
+   "area": "crawl",
+   "name": "anchor /#price",
+   "ok": true,
+   "extra": "from /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F"
+  },
+  {
+   "area": "public",
+   "name": "loads /",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kursim/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kursim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kursim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kursim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kursim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kursim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /maamarim/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /maamarim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /maamarim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /maamarim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /maamarim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /maamarim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /knisa/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /knisa/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /knisa/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /knisa/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /knisa/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /knisa/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /tnaim/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /tnaim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /tnaim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /tnaim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /tnaim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /tnaim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /pratiut/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /pratiut/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /pratiut/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /pratiut/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /pratiut/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /pratiut/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /negishut/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /negishut/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /negishut/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /negishut/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /negishut/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /negishut/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kelim/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kelim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kelim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kelim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kelim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kelim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /etgar/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /etgar/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /etgar/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /etgar/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /etgar/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /etgar/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /robots.txt",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "loads /sitemap.xml",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "loads /kursim/hakurs-hamale/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kursim/hakurs-hamale/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kursim/hakurs-hamale/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kursim/hakurs-hamale/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kursim/hakurs-hamale/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kursim/hakurs-hamale/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kursim/pniyot-mgoogle/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kursim/pniyot-mgoogle/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kursim/pniyot-mgoogle/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kursim/pniyot-mgoogle/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kursim/pniyot-mgoogle/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kursim/pniyot-mgoogle/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kursim/sratonim/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kursim/sratonim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kursim/sratonim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kursim/sratonim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kursim/sratonim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kursim/sratonim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kursim/otomatziot/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kursim/otomatziot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kursim/otomatziot/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kursim/otomatziot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kursim/otomatziot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kursim/otomatziot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kursim/shivuk-shutafim/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kursim/shivuk-shutafim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kursim/shivuk-shutafim/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kursim/shivuk-shutafim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kursim/shivuk-shutafim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kursim/shivuk-shutafim/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /maamarim/ai-fact-checking-source-first/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /maamarim/ai-fact-checking-source-first/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /maamarim/ai-fact-checking-source-first/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /maamarim/ai-fact-checking-source-first/",
+   "ok": false,
+   "extra": "[\"הכי: דק שוב מול המקור. זה השלב שהכי מפתה לדלג עליו, וזה\"]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /maamarim/ai-fact-checking-source-first/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /maamarim/ai-fact-checking-source-first/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /maamarim/what-is-a-claude-skill/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /maamarim/what-is-a-claude-skill/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /maamarim/what-is-a-claude-skill/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /maamarim/what-is-a-claude-skill/",
+   "ok": false,
+   "extra": "[\"הכי: התחילו מהמשימה שאתם עושים הכי הרבה פעמים בשבוע. כת\"]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /maamarim/what-is-a-claude-skill/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /maamarim/what-is-a-claude-skill/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /maamarim/google-traffic-x11-case-study/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /maamarim/google-traffic-x11-case-study/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /maamarim/google-traffic-x11-case-study/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /maamarim/google-traffic-x11-case-study/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /maamarim/google-traffic-x11-case-study/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /maamarim/google-traffic-x11-case-study/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /knisa/?plan=course",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /knisa/?plan=course",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /knisa/?plan=course",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /knisa/?plan=course",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /knisa/?plan=course",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /knisa/?plan=course",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /knisa/?plan=monthly",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /knisa/?plan=monthly",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /knisa/?plan=monthly",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /knisa/?plan=monthly",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /knisa/?plan=monthly",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /knisa/?plan=monthly",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kniya/?plan=course",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kniya/?plan=course",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kniya/?plan=course",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kniya/?plan=course",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kniya/?plan=course",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kniya/?plan=course",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kniya/?plan=monthly",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kniya/?plan=monthly",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kniya/?plan=monthly",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kniya/?plan=monthly",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kniya/?plan=monthly",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kniya/?plan=monthly",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kniya/?plan=module-11",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kniya/?plan=module-11",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kniya/?plan=module-11",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kniya/?plan=module-11",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kniya/?plan=module-11",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kniya/?plan=module-11",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kniya/?plan=module-12",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kniya/?plan=module-12",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kniya/?plan=module-12",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kniya/?plan=module-12",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kniya/?plan=module-12",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kniya/?plan=module-12",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kniya/?plan=module-13",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kniya/?plan=module-13",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kniya/?plan=module-13",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kniya/?plan=module-13",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kniya/?plan=module-13",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kniya/?plan=module-13",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kniya/?plan=module-14",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kniya/?plan=module-14",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kniya/?plan=module-14",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kniya/?plan=module-14",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kniya/?plan=module-14",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kniya/?plan=module-14",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kelim/machshevon-zman/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kelim/machshevon-zman/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kelim/machshevon-zman/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kelim/machshevon-zman/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kelim/machshevon-zman/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kelim/machshevon-zman/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kelim/sifriyat-horaot/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kelim/sifriyat-horaot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kelim/sifriyat-horaot/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kelim/sifriyat-horaot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kelim/sifriyat-horaot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kelim/sifriyat-horaot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /kelim/bdikat-uvdot/",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /kelim/bdikat-uvdot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /kelim/bdikat-uvdot/",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /kelim/bdikat-uvdot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /kelim/bdikat-uvdot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /kelim/bdikat-uvdot/",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "loads /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "200"
+  },
+  {
+   "area": "public",
+   "name": "no console/network errors /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "noindex /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "no dashes/הכי/מומחה /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images have alt /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "images load /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "public",
+   "name": "home has the courses section (קורסים נוספים / #more-courses)",
+   "ok": true,
+   "extra": ""
+  },
+  {
+   "area": "public",
+   "name": "course catalog pages crawled (kursim)",
+   "ok": true,
+   "extra": "[\"/kursim/\",\"/kursim/hakurs-hamale/\",\"/kursim/pniyot-mgoogle/\",\"/kursim/sratonim/\",\"/kursim/otomatziot/\",\"/kursim/shivuk-shutafim/\"]"
+  },
+  {
+   "area": "public",
+   "name": "article pages found and crawled",
+   "ok": true,
+   "extra": "[\"/maamarim/ai-fact-checking-source-first/\",\"/maamarim/what-is-a-claude-skill/\",\"/maamarim/google-traffic-x11-case-study/\"]"
+  },
+  {
+   "area": "public",
+   "name": "robots.txt closes the preview",
+   "ok": true,
+   "extra": "User-agent: *\nDisallow: /\n"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kursim/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /maamarim/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /knisa/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /tnaim/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /pratiut/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /negishut/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kelim/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /etgar/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kursim/hakurs-hamale/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kursim/pniyot-mgoogle/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kursim/sratonim/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kursim/otomatziot/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kursim/shivuk-shutafim/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /maamarim/ai-fact-checking-source-first/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /maamarim/what-is-a-claude-skill/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /maamarim/google-traffic-x11-case-study/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /knisa/?plan=course",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /knisa/?plan=monthly",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kniya/?plan=course",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kniya/?plan=monthly",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kniya/?plan=module-11",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kniya/?plan=module-12",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kniya/?plan=module-13",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kniya/?plan=module-14",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kelim/machshevon-zman/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kelim/sifriyat-horaot/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /kelim/bdikat-uvdot/",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "layout",
+   "name": "phone no sideways scroll /knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "ok": true,
+   "extra": "[390,390]"
+  },
+  {
+   "area": "public",
+   "name": "maamar/?s= renders an article",
+   "ok": true,
+   "extra": "[]"
+  },
+  {
+   "area": "access",
+   "name": "anon cannot read paid lesson text",
+   "ok": true,
+   "extra": "401"
+  },
+  {
+   "area": "access",
+   "name": "anon reads no lesson text rows at all",
+   "ok": true,
+   "extra": "{\"status\":401,\"n\":null}"
+  },
+  {
+   "area": "access",
+   "name": "anon cannot sign a lesson file",
+   "ok": true,
+   "extra": "400"
+  },
+  {
+   "area": "access",
+   "name": "anon cannot sign a lesson video",
+   "ok": true,
+   "extra": "400"
+  },
+  {
+   "area": "access",
+   "name": "bucket too is not public",
+   "ok": true,
+   "extra": "400"
+  },
+  {
+   "area": "access",
+   "name": "anon refused too_admin_users",
+   "ok": true,
+   "extra": "401"
+  },
+  {
+   "area": "access",
+   "name": "anon refused too_admin_orders",
+   "ok": true,
+   "extra": "401"
+  },
+  {
+   "area": "access",
+   "name": "anon refused too_admin_stats",
+   "ok": true,
+   "extra": "401"
+  },
+  {
+   "area": "purchase",
+   "name": "anon real checkout refused",
+   "ok": true,
+   "extra": "{\"s\":409,\"e\":\"test_mode_on\"}"
+  },
+  {
+   "area": "access",
+   "name": "anon lesson page sends to login",
+   "ok": true,
+   "extra": "/knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fshiur%2F%3Fid%3D2"
+  },
+  {
+   "area": "access",
+   "name": "anon admin panel closed",
+   "ok": true,
+   "extra": "/knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fnihul%2F"
+  }
+ ],
+ "pages": [
+  {
+   "url": "/",
+   "status": 200,
+   "final": "/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 18,
+   "h1": "צוות שלם.\nאדם אחד.",
+   "moreCourses": true
+  },
+  {
+   "url": "/kursim/",
+   "status": 200,
+   "final": "/kursim/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 16,
+   "h1": "בוחרים קורס.\nמתחילים לבנות.",
+   "moreCourses": false
+  },
+  {
+   "url": "/maamarim/",
+   "status": 200,
+   "final": "/maamarim/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 3,
+   "h1": "מאמרים.",
+   "moreCourses": false
+  },
+  {
+   "url": "/knisa/",
+   "status": 200,
+   "final": "/knisa/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 32,
+   "h1": "ברוכים\nהבאים.",
+   "moreCourses": false
+  },
+  {
+   "url": "/tnaim/",
+   "status": 200,
+   "final": "/tnaim/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 1,
+   "h1": "תנאי שימוש",
+   "moreCourses": false
+  },
+  {
+   "url": "/pratiut/",
+   "status": 200,
+   "final": "/pratiut/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 1,
+   "h1": "מדיניות פרטיות",
+   "moreCourses": false
+  },
+  {
+   "url": "/negishut/",
+   "status": 200,
+   "final": "/negishut/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 1,
+   "h1": "הצהרת נגישות",
+   "moreCourses": false
+  },
+  {
+   "url": "/kelim/",
+   "status": 200,
+   "final": "/kelim/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 1,
+   "h1": "כלים חינמיים לעבודה עם בינה מלאכותית",
+   "moreCourses": false
+  },
+  {
+   "url": "/etgar/",
+   "status": 200,
+   "final": "/etgar/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 1,
+   "h1": "אתגר 5 ימים: העובד הראשון שלכם",
+   "moreCourses": false
+  },
+  {
+   "url": "/robots.txt",
+   "status": 200,
+   "final": "/robots.txt",
+   "errors": [
+    "console: Failed to load resource: the server responded with a status of 404 ()"
+   ],
+   "body": "User-agent: *\nDisallow: /\n"
+  },
+  {
+   "url": "/sitemap.xml",
+   "status": 200,
+   "final": "/sitemap.xml",
+   "errors": [],
+   "body": "This XML file does not appear to have any style information associated with it. The document tree is shown below.\n\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"> </urlset>"
+  },
+  {
+   "url": "/kursim/hakurs-hamale/",
+   "status": 200,
+   "final": "/kursim/hakurs-hamale/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 10,
+   "h1": "הקורס המלא: צוות שלם, 10 פרקים",
+   "moreCourses": false
+  },
+  {
+   "url": "/kursim/pniyot-mgoogle/",
+   "status": 200,
+   "final": "/kursim/pniyot-mgoogle/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 10,
+   "h1": "אתר שמביא פניות מגוגל",
+   "moreCourses": false
+  },
+  {
+   "url": "/kursim/sratonim/",
+   "status": 200,
+   "final": "/kursim/sratonim/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 10,
+   "h1": "סרטונים בלי מצלמה",
+   "moreCourses": false
+  },
+  {
+   "url": "/kursim/otomatziot/",
+   "status": 200,
+   "final": "/kursim/otomatziot/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 10,
+   "h1": "אוטומציות לעסק",
+   "moreCourses": false
+  },
+  {
+   "url": "/kursim/shivuk-shutafim/",
+   "status": 200,
+   "final": "/kursim/shivuk-shutafim/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 10,
+   "h1": "שיווק שותפים עם בינה מלאכותית",
+   "moreCourses": false
+  },
+  {
+   "url": "/maamarim/ai-fact-checking-source-first/",
+   "status": 200,
+   "final": "/maamarim/ai-fact-checking-source-first/",
+   "errors": [],
+   "noindex": true,
+   "bad": [
+    "הכי: דק שוב מול המקור. זה השלב שהכי מפתה לדלג עליו, וזה"
+   ],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 1,
+   "h1": "בדיקת עובדות בתוכן שנכתב עם בינה מלאכותית: שיטת המקור קודם",
+   "moreCourses": false
+  },
+  {
+   "url": "/maamarim/what-is-a-claude-skill/",
+   "status": 200,
+   "final": "/maamarim/what-is-a-claude-skill/",
+   "errors": [],
+   "noindex": true,
+   "bad": [
+    "הכי: התחילו מהמשימה שאתם עושים הכי הרבה פעמים בשבוע. כת"
+   ],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 1,
+   "h1": "סקיל לקלוד: מה זה, ואיך זה חוסך שעות לעסק קטן",
+   "moreCourses": false
+  },
+  {
+   "url": "/maamarim/google-traffic-x11-case-study/",
+   "status": 200,
+   "final": "/maamarim/google-traffic-x11-case-study/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 1,
+   "h1": "מ־245 ל־2,774 כניסות מגוגל בחודש: כל מה שעשינו באתר של המשרד",
+   "moreCourses": false
+  },
+  {
+   "url": "/knisa/?plan=course",
+   "status": 200,
+   "final": "/knisa/?plan=course",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 32,
+   "h1": "ברוכים\nהבאים.",
+   "moreCourses": false
+  },
+  {
+   "url": "/knisa/?plan=monthly",
+   "status": 200,
+   "final": "/knisa/?plan=monthly",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 32,
+   "h1": "ברוכים\nהבאים.",
+   "moreCourses": false
+  },
+  {
+   "url": "/kniya/?plan=course",
+   "status": 200,
+   "final": "/knisa/?plan=course",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 32,
+   "h1": "ברוכים\nהבאים.",
+   "moreCourses": false
+  },
+  {
+   "url": "/kniya/?plan=monthly",
+   "status": 200,
+   "final": "/knisa/?plan=monthly",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 32,
+   "h1": "ברוכים\nהבאים.",
+   "moreCourses": false
+  },
+  {
+   "url": "/kniya/?plan=module-11",
+   "status": 200,
+   "final": "/knisa/?plan=module-11",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 32,
+   "h1": "ברוכים\nהבאים.",
+   "moreCourses": false
+  },
+  {
+   "url": "/kniya/?plan=module-12",
+   "status": 200,
+   "final": "/knisa/?plan=module-12",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 32,
+   "h1": "ברוכים\nהבאים.",
+   "moreCourses": false
+  },
+  {
+   "url": "/kniya/?plan=module-13",
+   "status": 200,
+   "final": "/knisa/?plan=module-13",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 32,
+   "h1": "ברוכים\nהבאים.",
+   "moreCourses": false
+  },
+  {
+   "url": "/kniya/?plan=module-14",
+   "status": 200,
+   "final": "/knisa/?plan=module-14",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 32,
+   "h1": "ברוכים\nהבאים.",
+   "moreCourses": false
+  },
+  {
+   "url": "/kelim/machshevon-zman/",
+   "status": 200,
+   "final": "/kelim/machshevon-zman/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 20,
+   "h1": "מחשבון הזמן שחוזר אליכם",
+   "moreCourses": false
+  },
+  {
+   "url": "/kelim/sifriyat-horaot/",
+   "status": 200,
+   "final": "/kelim/sifriyat-horaot/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 4,
+   "h1": "ספריית הוראות עבודה",
+   "moreCourses": false
+  },
+  {
+   "url": "/kelim/bdikat-uvdot/",
+   "status": 200,
+   "final": "/kelim/bdikat-uvdot/",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 3,
+   "h1": "רשימת בדיקה לטקסט מבינה מלאכותית",
+   "moreCourses": false
+  },
+  {
+   "url": "/knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "status": 200,
+   "final": "/knisa/?next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 32,
+   "h1": "ברוכים\nהבאים.",
+   "moreCourses": false
+  },
+  {
+   "url": "/knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "status": 200,
+   "final": "/knisa/?m=login&next=%2Fdabul-office%2Fteamofone%2Fezor-ishi%2Fetgar%2F",
+   "errors": [],
+   "noindex": true,
+   "bad": [],
+   "noalt": [],
+   "brokenImg": [],
+   "ids": 32,
+   "h1": "ברוכים\nהבאים.",
+   "moreCourses": false
+  }
+ ],
+ "accounts": [],
+ "notes": [],
+ "build": "6a01bec18da3baaf5da336e11087416b735d3cf9",
+ "publicOnly": true,
+ "finished": "2026-11-25T19:45:40.329Z",
+ "summary": {
+  "total": 314,
+  "failed": 2
+ }
+}
