@@ -19,3 +19,14 @@ export function logoutBtn(nav) {
   b.onclick = async () => { await sb.auth.signOut(); location.replace(BASE); };
   nav.appendChild(b);
 }
+// Single courses (too_plans kind 'module'): a buyer owns one course (module) for life; members (course or monthly) have all.
+// me = too_me(). Library items (no module) stay members only. The database rules decide; this only shapes the page.
+export const ownsModule = (me, moduleId) => !!me && (me.access || (moduleId != null && (me.modules || []).includes(moduleId)));
+export const canOpen = (me, l) => !!l && (l.free_preview || (l.module_id == null ? !!(me && me.access) : ownsModule(me, l.module_id)));
+// The single-course plans (only active ones are readable), keyed by module id.
+export async function modulePlans() {
+  const { data } = await sb.from('too_plans').select('code,name,kind,price_ils,module_id,perks').eq('kind', 'module');
+  const by = {}; (data || []).forEach((p) => { by[p.module_id] = p; }); return by;
+}
+export const planLabel = (code, plans) => code === 'course' ? 'הקורס המלא' : code === 'monthly' ? 'מנוי חודשי'
+  : /^module-/.test(code || '') ? 'קורס בודד: ' + ((Object.values(plans || {}).find((p) => p.code === code) || {}).name || code.replace('module-', 'מספר ')) : code;

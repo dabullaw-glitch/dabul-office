@@ -12,7 +12,12 @@
 //  POST ?step=status  (x-cron-secret)  -> what is ready for launch (true/false only, no secret values).
 //  POST ?step=selftest (x-cron-secret) -> only while test_mode is on: a throwaway test student runs the whole server path
 //        (checkout refused in test mode, wrong key refused, right key opens access, second callback changes nothing,
-//        lower amount goes to review) and everything it made is removed again.
+//        lower amount goes to review, and the same for a single course) and everything it made is removed again.
+//
+// Single courses (too_plans kind 'module', one plan per course, Yakir 25.11.2026): checkout refuses while the price is
+// empty or 0, while the course (too_modules.published) is not open, and when the student already has it (member or owner).
+// The price is the plan's price on the server. The return links carry the plan code (?plan=module-11), so the site knows
+// which course to wait for. Payment opens lifetime access to that course only (too_pay_grant).
 import { loadSecrets, env, admin, settings, siteBase, corsFor, clip, sha256, randKey, sameText, ils, heDate, telegram, sendMail, mailReady } from './common.ts';
 import { tpl } from './mail.ts';
 
@@ -49,12 +54,12 @@ async function payPage(order: Any, plan: Any, who: Any, key: string, site: strin
     const plug = await pluginId();
     if (!plug) { await telegram('⚠️ צוות של אחד: אין סליקה פעילה במורנינג, ולכן לא נוצר דף תשלום.'); return ''; }
     const hook = `${env('SUPABASE_URL') || Deno.env.get('SUPABASE_URL')}/functions/v1/too-pay?step=paid&o=${order.id}&k=${key}`;
-    const back = plan.kind === 'monthly' ? 'monthly' : 'course';
+    const L = returnLinks(order, plan, site);
     const body = {
       description: `${plan.name}, Team of One`, type: 320, lang: 'he', currency: 'ILS', vatType: 0,
       amount: order.amount_ils, maxPayments: 1, pluginId: plug,
       client: { name: who.full_name || who.email, emails: [who.email], add: true },
-      successUrl: `${site}ezor-ishi/?paid=${order.id}`, failureUrl: `${site}kniya/?plan=${back}&failed=1`,
+      successUrl: L.successUrl, failureUrl: L.failureUrl,
       notifyUrl: hook, custom: order.id, remarks: `Team of One, הזמנה ${order.id}`,
     };
     const { status, j } = await morning('/payments/form', 'POST', body);
@@ -62,6 +67,34 @@ async function payPage(order: Any, plan: Any, who: Any, key: string, site: strin
     if (!url || j.errorCode) { await telegram(`⚠️ צוות של אחד: מורנינג לא יצר דף תשלום (${status} ${j.errorCode || ''}).`); return ''; }
     return url;
   } catch (e) { console.error(e); return ''; }
+}
+
+// Where Morning sends the student back. Both links carry the plan code (course, monthly, module-11 ...).
+function returnLinks(order: Any, plan: Any, site: string) {
+  const code = encodeURIComponent(String(plan.code || 'course'));
+  return { successUrl: `${site}ezor-ishi/?paid=${order.id}&plan=${code}`, failureUrl: `${site}kniya/?plan=${code}&failed=1` };
+}
+
+// ---- single courses ----
+// Why a single course cannot be bought now ('' = it can). mod: the too_modules row (or null), owns: too_has_module.
+function moduleRefusal(plan: Any, mod: Any, owns: boolean): string {
+  if (!plan || plan.kind !== 'module') return '';
+  if (!(Number(plan.price_ils) > 0)) return 'no_price';
+  if (!mod || mod.id !== plan.module_id || mod.published !== true) return 'not_open';
+  if (owns) return 'has_access';
+  return '';
+}
+async function moduleCheck(uid: string, plan: Any): Promise<string> {
+  if (plan.kind !== 'module') return '';
+  const { data: mod } = await admin().from('too_modules').select('id,published').eq('id', plan.module_id).maybeSingle();
+  const { data: owns } = await admin().rpc('too_has_module', { uid, p_module: plan.module_id });
+  return moduleRefusal(plan, mod, owns === true);
+}
+// The amount to charge, always from the database (launch offer only where it is set for this exact plan).
+async function priceFor(uid: string, plan: Any): Promise<{ amount: number; intro: boolean }> {
+  const { data: intro } = await admin().rpc('too_intro_price', { p_uid: uid, p_plan: plan.code });
+  const has = intro !== null && intro !== undefined;
+  return { amount: has ? Number(intro) : Number(plan.price_ils), intro: has };
 }
 
 // ---- helpers ----
@@ -91,13 +124,14 @@ async function checkout(req: Request, b: Any, S: Any): Promise<Any[]> {
     const { data: has } = await admin().from('too_access').select('id').eq('user_id', u.id).eq('kind', 'course').eq('revoked', false).is('ends_at', null).limit(1);
     if (has && has.length) return [409, { error: 'has_access' }];
   }
+  const why = await moduleCheck(u.id, plan);
+  if (why) return [why === 'has_access' ? 409 : 400, { error: why }];
   const since = new Date(Date.now() - 3600e3).toISOString();
   const { count } = await admin().from('too_orders').select('id', { count: 'exact', head: true }).eq('user_id', u.id).eq('status', 'pending').gte('created_at', since);
   if ((count || 0) >= 8) return [429, { error: 'rate' }];
-  const { data: intro } = await admin().rpc('too_intro_price', { p_uid: u.id, p_plan: plan.code });
-  const amount = intro !== null && intro !== undefined ? Number(intro) : Number(plan.price_ils);
-  if (!(amount > 0)) return [400, { error: 'no_plan' }];
-  const { order, key } = await newOrder(u.id, plan, amount, intro !== null && intro !== undefined ? 'תשלום, מבצע חודש ראשון' : 'תשלום');
+  const { amount, intro } = await priceFor(u.id, plan);
+  if (!(amount > 0)) return [400, { error: plan.kind === 'module' ? 'no_price' : 'no_plan' }];
+  const { order, key } = await newOrder(u.id, plan, amount, intro ? 'תשלום, מבצע חודש ראשון' : plan.kind === 'module' ? 'תשלום, קורס בודד' : 'תשלום');
   const url = await payPage(order, plan, { email: prof.email || u.email, full_name: prof.full_name }, key, siteBase(S.launch));
   if (!url) { await admin().from('too_orders').update({ status: 'failed', note: 'לא נוצר דף תשלום' }).eq('id', order.id); return [502, { error: 'pay_unavailable' }]; }
   return [200, { url }];
@@ -196,6 +230,43 @@ async function selftest(req: Request, S: Any): Promise<Any[]> {
     const [r3] = await paid(new URL(`https://x/?step=paid&o=${o2.order.id}&k=${o2.key}`), new Request('https://x', { method: 'POST', body: JSON.stringify({ amount: 1 }) }), { ...S, mail: {}, quiet: true });
     const { data: st } = await admin().from('too_orders').select('status').eq('id', o2.order.id).single();
     ok('lower amount goes to review, no access', r3 === 200 && st.status === 'review');
+
+    // ---- single course (module-11) ----
+    const { data: mp11 } = await admin().from('too_plans').select('*').eq('code', 'module-11').single();
+    const { data: m11 } = await admin().from('too_modules').select('id,published').eq('id', mp11.module_id).single();
+    const [c3, b3] = await checkout(req, { plan: 'module-11' }, S);
+    ok('module: checkout refused while test_mode is on', c3 === 409 && b3.error === 'test_mode_on', b3);
+    ok('module: empty price refused', moduleRefusal({ ...mp11, price_ils: null }, { ...m11, published: true }, false) === 'no_price');
+    ok('module: price 0 refused', moduleRefusal({ ...mp11, price_ils: 0 }, { ...m11, published: true }, false) === 'no_price');
+    ok('module: unpublished course refused', moduleRefusal(mp11, { ...m11, published: false }, false) === 'not_open');
+    ok('module: owner cannot buy again', moduleRefusal(mp11, { ...m11, published: true }, true) === 'has_access');
+    ok('module: published course with a price can be bought', moduleRefusal(mp11, { ...m11, published: true }, false) === '');
+    const live = await moduleCheck(uid, mp11);
+    ok('module: real check matches the database today', live === (m11.published ? 'has_access' : 'not_open'), { published: m11.published, live }); // the student is a member here
+    const pf = await priceFor(uid, mp11);
+    ok('module: price computed on the server', pf.amount === Number(mp11.price_ils) && pf.amount > 0, pf);
+    const L = returnLinks({ id: 'x' }, mp11, 'https://site/');
+    ok('module: return links carry the plan code', L.successUrl.endsWith('&plan=module-11') && L.failureUrl.includes('kniya/?plan=module-11&failed=1'), L);
+    const amt11 = pf.amount > 0 ? pf.amount : 1;
+    const o3 = await newOrder(uid, mp11, amt11, 'בדיקה אוטומטית, קורס בודד');
+    const call3 = (k: string, body: Any = {}) => paid(new URL(`https://x/?step=paid&o=${o3.order.id}&k=${k}`), new Request('https://x', { method: 'POST', body: JSON.stringify(body) }), { ...S, mail: {}, quiet: true });
+    // the test student is a member from the steps above: take that away first, so only the single course counts
+    await admin().from('too_access').update({ revoked: true }).eq('user_id', uid).in('kind', ['course', 'subscription']);
+    const { data: hm0 } = await admin().rpc('too_has_module', { uid, p_module: mp11.module_id });
+    ok('module: no access before payment', hm0 === false);
+    const [w3] = await call3(randKey(24)); ok('module: callback with a wrong key refused', w3 === 404);
+    const [r5, j5] = await call3(o3.key, { amount: amt11, transactionId: 'selftest' });
+    const { data: hm1 } = await admin().rpc('too_has_module', { uid, p_module: mp11.module_id });
+    const { data: hm2 } = await admin().rpc('too_has_module', { uid, p_module: mp11.module_id + 1 });
+    const { data: ha1 } = await admin().rpc('too_has_access', { uid });
+    ok('module: right key opens this course only', r5 === 200 && hm1 === true && hm2 === false && ha1 === false, { j5, hm1, hm2, ha1 });
+    const { count: n1 } = await admin().from('too_access').select('id', { count: 'exact', head: true }).eq('user_id', uid);
+    const [r6, j6] = await call3(o3.key, { amount: amt11 }); const { count: n2 } = await admin().from('too_access').select('id', { count: 'exact', head: true }).eq('user_id', uid);
+    ok('module: second callback changes nothing', r6 === 200 && j6.again === true && n1 === n2, { n1, n2 });
+    const o4 = await newOrder(uid, mp11, Math.max(amt11, 2), 'בדיקה אוטומטית, קורס בודד');
+    const [r7] = await paid(new URL(`https://x/?step=paid&o=${o4.order.id}&k=${o4.key}`), new Request('https://x', { method: 'POST', body: JSON.stringify({ amount: 1 }) }), { ...S, mail: {}, quiet: true });
+    const { data: st4 } = await admin().from('too_orders').select('status').eq('id', o4.order.id).single();
+    ok('module: lower amount goes to review', r7 === 200 && st4.status === 'review');
   } finally {
     await admin().from('too_access').delete().eq('user_id', uid);
     await admin().from('too_orders').delete().eq('user_id', uid);

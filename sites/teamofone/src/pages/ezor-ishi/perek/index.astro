@@ -1,0 +1,55 @@
+---
+import Base from '../../../layouts/Base.astro';
+---
+<Base title="קורס | Team of One" app noindex>
+  <main class="wrap page" style="max-width:900px">
+    <div id="app"><div class="card">טוען...</div></div>
+  </main>
+  <script>
+    // One course (module) page: its lessons, what is open to this student, and for a single course that can be bought
+    // separately, a buy button. The button shows only when real payments are on (test_mode off), the price is set, the
+    // course is open and the student does not have it yet (members and owners already have it).
+    import { sb, BASE, esc, ils } from '../../../lib/sb.js';
+    import { requireLogin, loadCourse, logoutBtn, ownsModule, canOpen, modulePlans } from '../../../lib/member.js';
+    const app = document.getElementById('app');
+    const q = new URLSearchParams(location.search), id = Number(q.get('id'));
+    (async () => {
+      if (!(await requireLogin())) return;
+      logoutBtn(document.getElementById('anav'));
+      const [{ data: me }, course, plans, { data: tm }] = await Promise.all([
+        sb.rpc('too_me'), loadCourse(), modulePlans(), sb.from('too_settings').select('value').eq('key', 'test_mode').maybeSingle()]);
+      const m = course.modules.find((x) => x.id === id);
+      if (!m || !me) { app.innerHTML = '<div class="card">הקורס לא נמצא. <a href="' + BASE + 'ezor-ishi/">חזרה לאזור האישי</a></div>'; return; }
+      const title = String(m.title || '').replace(/^קורס:\s*/, '');
+      document.title = title + ' | Team of One';
+      const plan = plans[m.id];
+      const test = !tm || tm.value !== false;
+      const mine = ownsModule(me, m.id), bought = !me.access && mine;
+      const canBuy = !test && !!plan && Number(plan.price_ils) > 0 && m.published && !mine;
+      const done = new Set(me.done || []);
+      const c = m.lessons.filter((l) => done.has(l.id)).length;
+      const first = m.lessons.find((l) => canOpen(me, l) && !done.has(l.id)) || m.lessons.find((l) => canOpen(me, l));
+      app.innerHTML = `
+        <div class="crumbs"><a href="${BASE}ezor-ishi/">האזור האישי</a> / ${plan ? 'קורס' : 'פרק ' + m.n}</div>
+        ${q.get('welcome') && mine ? '<div class="card dk" style="margin-bottom:16px"><b style="color:var(--lime)">הקורס פתוח לכם.</b> הגישה לקורס הזה היא לכל החיים. מתחילים מהשיעור הראשון.</div>' : ''}
+        <div class="spread" style="margin-bottom:18px">
+          <div><div class="row">${plan ? '<span class="pill k">קורס</span>' : '<span class="pill">פרק ' + m.n + '</span>'}${bought ? '<span class="pill ok">הקורס שלכם, לכל החיים</span>' : me.access ? '<span class="pill ok">כלול בגישה שלכם</span>' : ''}${!m.published ? '<span class="pill warn">עוד לא פורסם (רק המנהל רואה)</span>' : ''}</div>
+            <h1 style="margin:10px 0 4px">${esc(title)}</h1>${m.sub ? '<p class="muted" style="margin:0">' + esc(m.sub) + '</p>' : ''}</div>
+          ${mine && first ? `<a class="btn btn-k" href="${BASE}ezor-ishi/shiur/?id=${first.id}">${c ? 'ממשיכים' : 'מתחילים'} <span class="arrow">←</span></a>` : ''}
+        </div>
+        ${m.outcome ? '<div class="card" style="margin-bottom:16px"><b>מה יוצאים איתו:</b> ' + esc(m.outcome) + '</div>' : ''}
+        <div class="card" style="margin-bottom:16px">
+          <div class="spread"><h2 style="font-size:22px;margin:0">השיעורים</h2><span class="pill">${c}/${m.lessons.length}</span></div>
+          ${m.lessons.length ? '<ul class="ls" style="padding:0;margin-top:10px">' + m.lessons.map((l) => `<li><a href="${BASE}ezor-ishi/shiur/?id=${l.id}"><span class="ck ${done.has(l.id) ? 'on' : ''}">${done.has(l.id) ? '✓' : ''}</span><span>${esc(l.title)}</span><span>${canOpen(me, l) ? (l.free_preview && !mine ? '<span class="pill l">חינם לצפייה</span>' : '') : '🔒'}</span></a></li>`).join('') + '</ul>' : '<div class="empty">השיעורים יעלו כאן בקרוב.</div>'}
+        </div>
+        ${canBuy ? `<div class="card dk">
+            <span class="pill l">קורס בודד</span>
+            <h2 style="color:var(--lime);margin:10px 0 4px">קורס בודד: גישה לכל החיים לקורס הזה</h2>
+            <div style="font-family:var(--disp);font-size:64px;line-height:.9;margin:8px 0">${ils(plan.price_ils)}</div>
+            <p class="mut" style="margin:0 0 16px">תשלום אחד. כל השיעורים, הסרטונים והקבצים של הקורס הזה.</p>
+            <div class="row"><a class="btn btn-l" href="${BASE}kniya/?plan=${encodeURIComponent(plan.code)}">לקנייה של הקורס הזה <span class="arrow">←</span></a><a class="btn btn-o" href="${BASE}kniya/?plan=course">או כל הצוות: הקורס המלא</a></div>
+          </div>` : ''}
+        ${!mine && !canBuy ? `<div class="card dk"><h2 style="color:var(--lime)">פותחים את כל הצוות</h2><p class="mut" style="margin:0 0 16px">${plan ? 'הקורס הזה כלול בקורס המלא ובמנוי החודשי.' : 'הפרק הזה נפתח עם הקורס המלא או עם המנוי החודשי.'}</p><div class="row"><a class="btn btn-l" href="${BASE}kniya/?plan=course">הקורס המלא</a><a class="btn btn-o" href="${BASE}kniya/?plan=monthly">מנוי חודשי</a></div></div>` : ''}`;
+    })();
+  </script>
+</Base>

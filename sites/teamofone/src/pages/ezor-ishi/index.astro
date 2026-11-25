@@ -7,43 +7,52 @@ import Base from '../../layouts/Base.astro';
   </main>
   <script>
     import { sb, BASE, esc, fmtDate, ils, toast, errText } from '../../lib/sb.js';
-    import { requireLogin, loadCourse, logoutBtn } from '../../lib/member.js';
+    import { requireLogin, loadCourse, logoutBtn, ownsModule, canOpen, modulePlans, planLabel } from '../../lib/member.js';
     const app = document.getElementById('app');
     (async () => {
       if (!(await requireLogin())) return;
       // Back from the payment page (?paid=<order>): the payment company tells our server in the background, so we wait
       // a little for the access to open, then show the welcome message.
+      // The return link carries the plan code: for a single course (module-11 ...) we wait for that course, not for membership.
       if (new URLSearchParams(location.search).get('paid')) {
         app.innerHTML = '<div class="card">התשלום מתעדכן, זה לוקח כמה שניות...</div>';
+        const pc = new URLSearchParams(location.search).get('plan') || '';
+        const { data: pl } = /^module-/.test(pc) ? await sb.from('too_plans').select('module_id').eq('code', pc).maybeSingle() : { data: null };
+        const mid = pl ? pl.module_id : null;
         for (let i = 0; i < 20; i++) {
           const { data: m } = await sb.rpc('too_me');
-          if (m && m.access) { location.replace(BASE + 'ezor-ishi/?welcome=1'); return; }
+          if (m && mid && (m.modules || []).includes(mid)) { location.replace(BASE + 'ezor-ishi/perek/?id=' + mid + '&welcome=1'); return; }
+          if (m && !mid && m.access) { location.replace(BASE + 'ezor-ishi/?welcome=1'); return; }
           await new Promise((r) => setTimeout(r, 3000));
         }
         toast('התשלום עוד לא עודכן אצלנו. אם שילמתם, הגישה תיפתח בדקות הקרובות. אפשר לרענן את הדף.', true);
       }
       const nav = document.getElementById('anav');
-      const [{ data: me, error }, course, { data: assets }, { data: orders }] = await Promise.all([
-        sb.rpc('too_me'), loadCourse(), sb.from('too_assets').select('*').eq('published', true).order('sort'), sb.from('too_orders').select('*').order('created_at', { ascending: false })]);
+      const [{ data: me, error }, course, { data: assets }, { data: orders }, plans] = await Promise.all([
+        sb.rpc('too_me'), loadCourse(), sb.from('too_assets').select('*').eq('published', true).order('sort'), sb.from('too_orders').select('*').order('created_at', { ascending: false }), modulePlans()]);
       if (error) { app.innerHTML = '<div class="card">' + esc(errText(error)) + '</div>'; return; }
       if (me.admin) { const a = document.createElement('a'); a.href = BASE + 'nihul/'; a.textContent = 'פאנל ניהול'; a.style.color = 'var(--lime)'; nav.appendChild(a); }
       logoutBtn(nav);
       const p = me.profile || { full_name: 'מנהל', email: '' };
       const done = new Set(me.done || []);
-      const total = course.flat.length, nDone = course.flat.filter((l) => done.has(l.id)).length;
+      // Single courses this student owns (members have everything). Progress and "continue" count what is open to them.
+      const ownMods = me.access ? [] : course.modules.filter((m) => ownsModule(me, m.id));
+      const mine = me.access ? course.flat : ownMods.length ? course.flat.filter((l) => ownsModule(me, l.module_id)) : course.flat;
+      const total = mine.length, nDone = mine.filter((l) => done.has(l.id)).length;
       const pct = total ? Math.round((nDone / total) * 100) : 0;
-      const nextL = course.flat.find((l) => !done.has(l.id)) || course.flat[0];
+      const nextL = mine.find((l) => !done.has(l.id)) || mine[0];
+      const goOn = me.access || ownMods.length > 0;
       const start = course.updates.find((l) => String(l.title).startsWith('מתחילים כאן'));
       const welcome = new URLSearchParams(location.search).get('welcome');
       const subTxt = me.sub_ends ? (me.sub_renew ? 'מתחדש ב־' + fmtDate(me.sub_ends) : 'פעיל עד ' + fmtDate(me.sub_ends)) : 'אין מנוי פעיל';
-      const lessonLink = (l) => `<a href="${BASE}ezor-ishi/shiur/?id=${l.id}"><span class="ck ${done.has(l.id) ? 'on' : ''}">${done.has(l.id) ? '✓' : ''}</span><span>${esc(l.title)}</span><span>${!me.access && !l.free_preview ? '🔒' : (l.free_preview && !me.access ? '<span class="pill l">חינם לצפייה</span>' : '')}</span></a>`;
+      const lessonLink = (l) => `<a href="${BASE}ezor-ishi/shiur/?id=${l.id}"><span class="ck ${done.has(l.id) ? 'on' : ''}">${done.has(l.id) ? '✓' : ''}</span><span>${esc(l.title)}</span><span>${!canOpen(me, l) ? '🔒' : (l.free_preview && !ownsModule(me, l.module_id) ? '<span class="pill l">חינם לצפייה</span>' : '')}</span></a>`;
       app.innerHTML = `
         ${welcome ? '<div class="card dk" style="margin-bottom:16px"><b style="color:var(--lime)">ברוכים הבאים לצוות.</b> הגישה שלכם פתוחה. מתחילים מהפרק הראשון.</div>' : ''}
         ${me.access && start && !done.has(start.id) ? `<a class="card" href="${BASE}ezor-ishi/shiur/?id=${start.id}" style="display:flex;gap:14px;align-items:center;text-decoration:none;color:inherit;margin-bottom:16px;border:2px solid var(--ink)"><span style="font-size:30px" aria-hidden="true">🧭</span><span><b style="font-size:18px">${esc(start.title)}</b><br><span class="muted">${esc(start.summary || '')}</span></span><span style="margin-inline-start:auto;font-weight:800">←</span></a>` : ''}
         <div class="spread" style="margin-bottom:24px">
           <div><h1>שלום, ${esc((p.full_name || '').split(' ')[0])}.</h1><div class="row">
-            ${me.course ? '<span class="pill ok">הקורס המלא</span>' : ''}${me.sub_ends ? '<span class="pill k">מנוי: ' + esc(subTxt) + '</span>' : ''}${!me.access ? '<span class="pill no">אין עדיין גישה לקורס</span>' : ''}</div></div>
-          ${me.access && nextL ? `<a class="btn btn-k" href="${BASE}ezor-ishi/shiur/?id=${nextL.id}">${nDone ? 'ממשיכים מאיפה שעצרתם' : 'מתחילים לצפות'} <span class="arrow">←</span></a>` : ''}
+            ${me.course ? '<span class="pill ok">הקורס המלא</span>' : ''}${me.sub_ends ? '<span class="pill k">מנוי: ' + esc(subTxt) + '</span>' : ''}${ownMods.map((m) => '<span class="pill ok">קורס בודד: ' + esc(String(m.title).replace(/^קורס:\s*/, '')) + '</span>').join('')}${!goOn ? '<span class="pill no">אין עדיין גישה לקורס</span>' : ''}</div></div>
+          ${goOn && nextL ? `<a class="btn btn-k" href="${BASE}ezor-ishi/shiur/?id=${nextL.id}">${nDone ? 'ממשיכים מאיפה שעצרתם' : 'מתחילים לצפות'} <span class="arrow">←</span></a>` : ''}
         </div>
         ${!me.access ? `<div class="card dk" style="margin-bottom:22px"><h2 style="color:var(--lime)">פותחים את כל הצוות</h2><p class="mut" style="margin:0 0 16px">בחרו מסלול, וכל הקורס, הסקילים והקבוצה נפתחים מיד. השיעור הראשון פתוח לצפייה גם בלי רכישה.</p><div class="row"><a class="btn btn-l" href="${BASE}kniya/?plan=course">הקורס המלא</a><a class="btn btn-o" href="${BASE}kniya/?plan=monthly">מנוי חודשי</a></div></div>` : ''}
         <div class="grid3" style="margin-bottom:22px">
@@ -56,7 +65,8 @@ import Base from '../../layouts/Base.astro';
             <h2 style="font-size:24px;margin:0">תוכנית הקורס</h2>
             <div class="mods2">${course.modules.map((m) => { const c = m.lessons.filter((l) => done.has(l.id)).length; return `
               <details class="m2" ${m.lessons.some((l) => l.id === nextL?.id) ? 'open' : ''}><summary><span class="nn">${String(m.n).padStart(2, '0')}</span><span><b style="font-size:18px">${esc(m.title)}</b><div class="muted" style="font-size:14px">${esc(m.sub || '')}</div><div class="pbar"><i style="width:${m.lessons.length ? (c / m.lessons.length) * 100 : 0}%"></i></div></span><span class="pill">${c}/${m.lessons.length}</span></summary>
-              <ul class="ls">${m.lessons.map((l) => '<li>' + lessonLink(l) + '</li>').join('')}</ul></details>`; }).join('')}</div>
+              <ul class="ls">${m.lessons.map((l) => '<li>' + lessonLink(l) + '</li>').join('')}</ul>
+              <p style="margin:6px 0 4px"><a href="${BASE}ezor-ishi/perek/?id=${m.id}">${plans[m.id] ? (ownsModule(me, m.id) ? 'לדף הקורס' : 'לדף הקורס (אפשר לקנות רק אותו)') : 'לדף הפרק'}</a></p></details>`; }).join('')}</div>
             <h2 style="font-size:24px;margin:16px 0 0">ספריית החברים</h2>
             <p class="muted" style="margin:0">מדריכים, קורסים קצרים, רעיונות, כלים חדשים וסקירות. מתעדכן כל שבוע.</p>
             <div class="row" id="libf" style="gap:6px">${['הכל', 'מדריך', 'קורס קצר', 'רעיון', 'כלי חדש', 'סקירה', 'חדשות'].map((t, i) => `<button class="btn ${i ? 'btn-w' : 'btn-k'} sm" data-t="${t}">${t}</button>`).join('')}</div>
@@ -78,7 +88,7 @@ import Base from '../../layouts/Base.astro';
               <div class="f"><label>מייל</label><input value="${esc(p.email || '')}" disabled dir="ltr"></div>
               ${me.profile ? '<button class="btn btn-w sm" id="save">שמירה</button>' : ''}
             </div>
-            <div class="card"><h3>הרכישות שלי</h3>${(orders || []).length ? '<div style="display:grid;gap:6px">' + orders.map((o) => `<div class="spread" style="font-size:14px"><span>${fmtDate(o.created_at)} · ${o.plan_code === 'course' ? 'הקורס המלא' : 'מנוי חודשי'}</span><span>${ils(o.amount_ils)} ${o.status === 'test' ? '<span class="pill warn">בדיקה</span>' : o.status === 'refunded' ? '<span class="pill no">הוחזר</span>' : ''}</span></div>`).join('') + '</div>' : '<p class="muted" style="margin:0">עדיין אין רכישות.</p>'}</div>
+            <div class="card"><h3>הרכישות שלי</h3>${(orders || []).length ? '<div style="display:grid;gap:6px">' + orders.map((o) => `<div class="spread" style="font-size:14px"><span>${fmtDate(o.created_at)} · ${esc(planLabel(o.plan_code, plans))}</span><span>${ils(o.amount_ils)} ${o.status === 'test' ? '<span class="pill warn">בדיקה</span>' : o.status === 'refunded' ? '<span class="pill no">הוחזר</span>' : ['pending', 'failed', 'cancelled'].includes(o.status) ? '<span class="pill">לא הושלם</span>' : o.status === 'review' ? '<span class="pill warn">בבדיקה</span>' : ''}</span></div>`).join('') + '</div>' : '<p class="muted" style="margin:0">עדיין אין רכישות.</p>'}</div>
           </aside>
         </div>`;
       const lf = document.getElementById('libf');

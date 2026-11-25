@@ -19,5 +19,6 @@ export const ERR = {
   'Invalid login credentials': 'המייל או הסיסמה לא נכונים.', not_admin: 'אין הרשאה לפעולה הזאת.', test_mode_off: 'התשלום באתר ייפתח בקרוב.',
   mail: 'לא הצלחנו לשלוח את מייל האישור. נסו שוב בעוד כמה דקות.', pay_unavailable: 'דף התשלום לא נפתח כרגע. נסו שוב בעוד כמה דקות.',
   has_access: 'כבר יש לכם גישה לקורס. אפשר להיכנס לאזור האישי.', test_mode_on: 'האתר עדיין במצב בדיקה.', not_logged_in: 'צריך להיכנס לחשבון קודם.',
+  no_price: 'המחיר של הקורס הזה עוד לא נקבע.', not_open: 'הקורס הזה עוד לא נפתח.', no_plan: 'המסלול לא נמצא.',
 };
 export const errText = (e) => ERR[e?.message || e] || ERR[String(e?.message || '').replace(/^.*?: /, '')] || 'משהו השתבש. נסו שוב.';

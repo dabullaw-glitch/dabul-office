@@ -5,8 +5,15 @@ import { CATS } from './articles.js';
 
 const $ = (id) => document.getElementById(id);
 const pane = () => $('pane');
-const STATUS = { test: ['בדיקה', 'warn'], paid: ['שולם', 'ok'], refunded: ['הוחזר', 'no'], failed: ['נכשל', 'no'], cancelled: ['בוטל', 'no'] };
+const STATUS = { test: ['בדיקה', 'warn'], paid: ['שולם', 'ok'], refunded: ['הוחזר', 'no'], failed: ['נכשל', 'no'], cancelled: ['בוטל', 'no'], pending: ['לא הושלם', ''], review: ['לבדיקה', 'warn'] };
 const PLAN = { course: 'הקורס המלא', monthly: 'מנוי חודשי' };
+// single courses: 'module-11' -> 'קורס בודד: <name>' (filled from too_plans when the panel opens)
+const MODNAME = {};
+async function loadPlanNames() {
+  const { data } = await sb.from('too_plans').select('code,name,kind,module_id').eq('kind', 'module').order('sort');
+  (data || []).forEach((p) => { PLAN[p.code] = 'קורס בודד: ' + p.name; MODNAME[p.module_id] = p.name; });
+  return data || [];
+}
 const ACTIONS = { signup: 'הרשמה', checkout_test: 'רכישת בדיקה', cancel_subscription: 'ביטול חידוש מנוי', admin_grant: 'מתן גישה', admin_revoke: 'ביטול גישה', admin_block: 'חסימה', admin_unblock: 'ביטול חסימה', admin_set_role: 'שינוי הרשאה', admin_refund: 'החזר כספי', admin_record_payment: 'רישום תשלום', article_publish: 'פרסום מאמר', article_save: 'שמירת מאמר', settings: 'שינוי הגדרות' };
 let users = [];
 
@@ -77,7 +84,7 @@ function logRows(rows) {
 
 /* ---------- students ---------- */
 async function students() {
-  users = await rpc('too_admin_users');
+  [users] = await Promise.all([rpc('too_admin_users'), loadPlanNames()]);
   pane().innerHTML = `
     <div class="spread" style="margin-bottom:16px"><div><h2 class="t">תלמידים</h2><p class="muted" style="margin:0">${users.length} נרשמים. לחיצה על "ניהול" פותחת גישות, תשלומים, חסימה והרשאות.</p></div>
     <div class="f" style="margin:0;min-width:240px"><input id="q" placeholder="חיפוש לפי שם, מייל או טלפון"></div></div>
@@ -87,10 +94,10 @@ async function students() {
   const draw = () => {
     const q = $('q').value.trim().toLowerCase();
     const rows = users.filter((u) => (!q || [u.email, u.full_name, u.phone].join(' ').toLowerCase().includes(q))
-      && (f === 'all' || (f === 'course' && u.course) || (f === 'sub' && u.sub_ends) || (f === 'none' && !u.course && !u.sub_ends) || (f === 'blocked' && u.blocked)));
+      && (f === 'all' || (f === 'course' && u.course) || (f === 'sub' && u.sub_ends) || (f === 'none' && !u.course && !u.sub_ends && !(u.modules || []).length) || (f === 'blocked' && u.blocked)));
     $('ut').innerHTML = rows.length ? '<div class="tbl2"><table><thead><tr><th>שם</th><th>מייל</th><th>טלפון</th><th>גישה</th><th>שילם</th><th>שיעורים</th><th>הצטרף</th><th>ביקר לאחרונה</th><th></th></tr></thead><tbody>' + rows.map((u) => `<tr>
       <td><b>${esc(u.full_name || '')}</b> ${u.role === 'admin' ? pill('מנהל', 'k') : ''} ${u.blocked ? pill('חסום', 'no') : ''}</td><td dir="ltr" style="text-align:right">${esc(u.email)}</td><td dir="ltr" style="text-align:right">${esc(u.phone || '')}</td>
-      <td>${u.course ? pill('קורס', 'ok') : ''} ${u.sub_ends ? pill('מנוי עד ' + fmtDate(u.sub_ends), u.sub_renew ? 'k' : '') : ''} ${!u.course && !u.sub_ends ? pill('אין', 'no') : ''}</td>
+      <td>${u.course ? pill('קורס', 'ok') : ''} ${u.sub_ends ? pill('מנוי עד ' + fmtDate(u.sub_ends), u.sub_renew ? 'k' : '') : ''} ${(u.modules || []).map((mid) => pill('קורס בודד: ' + (MODNAME[mid] || mid), 'ok')).join(' ')} ${!u.course && !u.sub_ends && !(u.modules || []).length ? pill('אין', 'no') : ''}</td>
       <td>${ils(u.paid)}</td><td>${u.done}</td><td>${fmtDate(u.created_at)}</td><td>${fmtDate(u.last_seen)}</td><td><button class="btn btn-k sm" data-u="${u.id}">ניהול</button></td></tr>`).join('') + '</tbody></table></div>' : '<div class="empty">אין תלמידים שמתאימים לחיפוש.</div>';
   };
   $('q').oninput = draw;
@@ -100,19 +107,19 @@ async function students() {
 }
 async function userModal(id) {
   const u = users.find((x) => x.id === id); if (!u) return;
-  const { data: ords } = await sb.from('too_orders').select('*').eq('user_id', id).order('created_at', { ascending: false });
+  const [{ data: ords }, mplans] = await Promise.all([sb.from('too_orders').select('*').eq('user_id', id).order('created_at', { ascending: false }), loadPlanNames()]);
   modal(`<div class="spread"><h2 style="margin:0">${esc(u.full_name || u.email)}</h2><button class="btn btn-w sm" id="mx">סגירה</button></div>
     <p class="muted" dir="ltr" style="text-align:right;margin:4px 0 16px">${esc(u.email)} ${u.phone ? ' · ' + esc(u.phone) : ''}</p>
     <div class="grid2">
-      <div class="card"><h3>גישות</h3>${u.access.length ? '<div style="display:grid;gap:8px">' + u.access.map((a) => `<div class="spread" style="background:var(--paper);border-radius:12px;padding:9px 12px;font-size:14px"><span>${a.kind === 'course' ? 'קורס' : 'מנוי'} · ${fmtDate(a.starts_at)} ${a.ends_at ? 'עד ' + fmtDate(a.ends_at) : 'לתמיד'} ${a.revoked ? pill('בוטל', 'no') : ''}<br><span class="muted" style="font-size:12.5px">${esc(a.note || '')}</span></span>${a.revoked ? '' : `<button class="btn btn-r sm" data-rv="${a.id}">ביטול</button>`}</div>`).join('') + '</div>' : '<p class="muted">אין גישות.</p>'}
+      <div class="card"><h3>גישות</h3>${u.access.length ? '<div style="display:grid;gap:8px">' + u.access.map((a) => `<div class="spread" style="background:var(--paper);border-radius:12px;padding:9px 12px;font-size:14px"><span>${a.kind === 'course' ? 'קורס' : a.kind === 'module' ? 'קורס בודד: ' + esc(MODNAME[a.module_id] || a.module_id) : 'מנוי'} · ${fmtDate(a.starts_at)} ${a.ends_at ? 'עד ' + fmtDate(a.ends_at) : 'לתמיד'} ${a.revoked ? pill('בוטל', 'no') : ''}<br><span class="muted" style="font-size:12.5px">${esc(a.note || '')}</span></span>${a.revoked ? '' : `<button class="btn btn-r sm" data-rv="${a.id}">ביטול</button>`}</div>`).join('') + '</div>' : '<p class="muted">אין גישות.</p>'}
         <div class="row" style="margin-top:14px"><button class="btn btn-k sm" id="gc">מתן גישה לקורס</button><select id="gm" style="font:inherit;padding:8px;border-radius:10px"><option value="1">חודש</option><option value="3">3 חודשים</option><option value="6">6 חודשים</option><option value="12">שנה</option></select><button class="btn btn-w sm" id="gs">מתן מנוי</button></div></div>
       <div class="card"><h3>רישום תשלום ידני</h3><p class="muted" style="font-size:13.5px;margin:0 0 10px">למשל אם הלקוח שילם בהעברה או בביט. נרשם כתשלום אמיתי ופותח גישה.</p>
-        <div class="f"><label for="pp">מסלול</label><select id="pp"><option value="course">הקורס המלא</option><option value="monthly">מנוי חודשי</option></select></div>
+        <div class="f"><label for="pp">מסלול</label><select id="pp"><option value="course">הקורס המלא</option><option value="monthly">מנוי חודשי</option>${mplans.map((p) => `<option value="${esc(p.code)}">קורס בודד: ${esc(p.name)}</option>`).join('')}</select></div>
         <div class="f"><label for="pa">סכום בשקלים</label><input id="pa" type="number" min="0" placeholder="ברירת מחדל: מחיר המסלול"></div>
         <div class="f"><label for="pn">הערה</label><input id="pn" placeholder="לדוגמה: שולם בביט"></div>
         <button class="btn btn-k sm" id="rp">רישום התשלום</button></div>
     </div>
-    <div class="card" style="margin-top:14px"><h3>הזמנות</h3>${(ords || []).length ? '<div style="display:grid;gap:6px">' + ords.map((o) => `<div class="spread" style="font-size:14px"><span>${fmtDate(o.created_at)} · ${PLAN[o.plan_code] || o.plan_code} · ${ils(o.amount_ils)} ${pill(STATUS[o.status][0], STATUS[o.status][1])}</span>${['paid', 'test'].includes(o.status) ? `<button class="btn btn-r sm" data-rf="${o.id}">החזר וביטול גישה</button>` : ''}</div>`).join('') + '</div>' : '<p class="muted">אין הזמנות.</p>'}</div>
+    <div class="card" style="margin-top:14px"><h3>הזמנות</h3>${(ords || []).length ? '<div style="display:grid;gap:6px">' + ords.map((o) => `<div class="spread" style="font-size:14px"><span>${fmtDate(o.created_at)} · ${PLAN[o.plan_code] || o.plan_code} · ${ils(o.amount_ils)} ${pill((STATUS[o.status] || [o.status])[0], (STATUS[o.status] || [])[1])}</span>${['paid', 'test'].includes(o.status) ? `<button class="btn btn-r sm" data-rf="${o.id}">החזר וביטול גישה</button>` : ''}</div>`).join('') + '</div>' : '<p class="muted">אין הזמנות.</p>'}</div>
     <div class="row" style="margin-top:14px"><button class="btn ${u.blocked ? 'btn-k' : 'btn-r'} sm" id="bl">${u.blocked ? 'ביטול חסימה' : 'חסימת התלמיד'}</button><button class="btn btn-w sm" id="ro">${u.role === 'admin' ? 'הסרת הרשאת מנהל' : 'הפיכה למנהל'}</button></div>`);
   const reload = async () => { closeModal(); await students(); userModal(id); };
   $('mx').onclick = closeModal;
@@ -127,7 +134,7 @@ async function userModal(id) {
 
 /* ---------- orders ---------- */
 async function orders() {
-  const list = await rpc('too_admin_orders');
+  const [list] = await Promise.all([rpc('too_admin_orders'), loadPlanNames()]);
   pane().innerHTML = `<div class="spread" style="margin-bottom:16px"><div><h2 class="t">הזמנות</h2><p class="muted" style="margin:0">כל ההזמנות, כולל רכישות בדיקה. החזר כספי בפועל מבצעים בחברת הסליקה, וכאן מסמנים אותו.</p></div><button class="btn btn-w sm" id="csv">הורדה לאקסל</button></div>
     <div class="row" style="margin-bottom:12px" id="of">${[['all', 'הכל'], ['paid', 'שולם'], ['test', 'בדיקה'], ['refunded', 'הוחזר']].map(([k, t], i) => `<button class="btn ${i ? 'btn-w' : 'btn-k'} sm" data-f="${k}">${t}</button>`).join('')}</div><div id="ot"></div>`;
   let f = 'all';
@@ -289,14 +296,17 @@ async function plans() {
   pane().innerHTML = `<h2 class="t">מסלולים ומחירים</h2><p class="muted">שינוי מחיר כאן משפיע על הרכישות החדשות. המחיר בדף המכירה מתעדכן בבנייה הבאה של האתר.</p>
     <div class="grid2">${(data || []).map((p) => `<div class="card"><div class="spread"><h3>${esc(p.name)}</h3>${p.active ? pill('פעיל', 'ok') : pill('כבוי', 'no')}</div>
       <div class="f"><label>שם</label><input data-k="name" data-p="${p.code}" value="${esc(p.name)}"></div>
-      <div class="f"><label>מחיר בשקלים ${p.kind === 'monthly' ? '(לחודש)' : '(תשלום אחד)'}</label><input type="number" min="0" data-k="price_ils" data-p="${p.code}" value="${p.price_ils}"></div>
+      <div class="f"><label>מחיר בשקלים ${p.kind === 'monthly' ? '(לחודש)' : p.kind === 'module' ? '(קורס בודד, תשלום אחד. ריק = עוד לא נמכר)' : '(תשלום אחד)'}</label><input type="number" min="0" data-k="price_ils" data-p="${p.code}" value="${p.price_ils === null || p.price_ils === undefined ? '' : p.price_ils}"></div>
       ${p.kind === 'one_time' ? `<div class="f"><label>חודשי מנוי במתנה</label><input type="number" min="0" data-k="bonus_sub_months" data-p="${p.code}" value="${p.bonus_sub_months}"></div>` : ''}
       <div class="f"><label>מה כלול (שורה לכל סעיף)</label><textarea data-k="perks" data-p="${p.code}">${esc((p.perks || []).join('\n'))}</textarea></div>
       <label class="chk"><input type="checkbox" data-k="active" data-p="${p.code}" ${p.active ? 'checked' : ''}><span>פתוח לרכישה</span></label>
       <button class="btn btn-k sm" data-s="${p.code}">שמירה</button></div>`).join('')}</div>`;
   pane().querySelectorAll('[data-s]').forEach((b) => (b.onclick = async () => {
     const code = b.dataset.s, row = { updated_at: new Date().toISOString() };
-    pane().querySelectorAll(`[data-p="${code}"]`).forEach((el) => { const k = el.dataset.k; row[k] = k === 'active' ? el.checked : k === 'perks' ? el.value.split('\n').map((s) => s.trim()).filter(Boolean) : ['price_ils', 'bonus_sub_months'].includes(k) ? Number(el.value) : el.value.trim(); });
+    pane().querySelectorAll(`[data-p="${code}"]`).forEach((el) => { const k = el.dataset.k; row[k] = k === 'active' ? el.checked : k === 'perks' ? el.value.split('\n').map((s) => s.trim()).filter(Boolean) : k === 'price_ils' ? (el.value.trim() === '' ? null : Number(el.value)) : k === 'bonus_sub_months' ? Number(el.value) : el.value.trim(); });
+    // an empty price is saved as empty (a single course is then not sold); the full course and the monthly plan need a price
+    const pl = (data || []).find((x) => x.code === code);
+    if (row.price_ils === null && pl && pl.kind !== 'module') return toast('למסלול הזה צריך מחיר.', true);
     const { error } = await sb.from('too_plans').update(row).eq('code', code); toast(error ? errText(error) : 'המסלול עודכן.', !!error);
   }));
 }

@@ -1,13 +1,14 @@
 ---
 import Base from '../../layouts/Base.astro';
 ---
-<Base title="השלמת הצטרפות | Team of One" description="השלמת ההצטרפות לקורס Team of One: בחירת מסלול, קורס מלא או מנוי חודשי." app noindex>
+<Base title="השלמת הצטרפות | Team of One" description="השלמת ההצטרפות לקורס Team of One: בחירת מסלול, קורס מלא, מנוי חודשי או קורס בודד." app noindex>
   <main class="wrap page" style="max-width:760px">
     <h1>כמעט<br>בפנים.</h1>
     <div id="box" class="vstack"><div class="card">טוען...</div></div>
   </main>
   <script>
     import { sb, BASE, FN, SB_KEY, esc, ils, errText, toast } from '../../lib/sb.js';
+    import { ownsModule } from '../../lib/member.js';
     const code = new URLSearchParams(location.search).get('plan') || 'course';
     const failed = new URLSearchParams(location.search).get('failed') === '1';
     const box = document.getElementById('box');
@@ -20,13 +21,29 @@ import Base from '../../layouts/Base.astro';
         sb.rpc('too_me'), sb.rpc('too_my_price', { p_plan: code })]);
       if (!plan) { box.innerHTML = '<div class="card">המסלול לא נמצא. <a href="' + BASE + '#price">חזרה למסלולים</a></div>'; return; }
       const test = tm && tm.value === true;
+      // Single course (plan kind 'module'): lifetime access to one course. No buttons while its price is empty, while the
+      // course is not open, or when the student already has it (the server refuses these cases too).
+      const single = plan.kind === 'module';
+      if (single) {
+        const { data: mod } = await sb.from('too_modules').select('id,published').eq('id', plan.module_id).maybeSingle();
+        const stop = !mod || !mod.published ? 'הקורס הזה עוד לא נפתח. אפשר לחזור לכאן בקרוב.'
+          : !(Number(plan.price_ils) > 0) ? 'המחיר של הקורס הזה עוד לא נקבע. אפשר לחזור לכאן בקרוב.'
+          : ownsModule(me, plan.module_id) ? 'כבר יש לכם גישה לקורס הזה.' : '';
+        if (stop) {
+          box.innerHTML = `<div class="card"><div class="spread"><h2>${esc(plan.name)}</h2><span class="pill k">קורס בודד</span></div><p style="margin:10px 0 0">${stop}</p>
+            <div class="row" style="margin-top:14px">${mod && ownsModule(me, plan.module_id) ? `<a class="btn btn-k" href="${BASE}ezor-ishi/perek/?id=${plan.module_id}">לקורס</a>` : ''}<a class="btn btn-w" href="${BASE}ezor-ishi/">לאזור האישי</a></div></div>`;
+          return;
+        }
+      }
       const intro = mp && mp.intro !== null && mp.intro !== undefined ? Number(mp.intro) : null;
       const perks = (plan.perks || []).map((p) => '<li style="display:flex;gap:10px"><span class="pill ok">✓</span>' + esc(p) + '</li>').join('');
       box.innerHTML = `
         <div class="card">
-          <div class="spread"><h2>${esc(plan.name)}</h2><span class="pill k">${plan.kind === 'monthly' ? 'מנוי חודשי' : 'תשלום אחד'}</span></div>
+          <div class="spread"><h2>${esc(plan.name)}</h2><span class="pill k">${plan.kind === 'monthly' ? 'מנוי חודשי' : single ? 'קורס בודד' : 'תשלום אחד'}</span></div>
+          ${single ? '<p style="margin:8px 0 0;font-weight:700">קורס בודד: גישה לכל החיים לקורס הזה</p>' : ''}
           ${intro !== null ? `<span class="pill l" style="margin-top:8px">מבצע השקה</span><div style="font-family:var(--disp);font-size:90px;line-height:.85;margin:10px 0">${ils(intro)}<small style="font-family:var(--body);font-size:18px;color:var(--mutD)"> לחודש הראשון</small></div><p style="margin:0 0 4px;font-weight:700">אחר כך ${ils(plan.price_ils)} לחודש. מבטלים מתי שרוצים.</p>` : `<div style="font-family:var(--disp);font-size:90px;line-height:.85;margin:10px 0">${ils(plan.price_ils)}${plan.kind === 'monthly' ? '<small style="font-family:var(--body);font-size:18px;color:var(--mutD)"> לחודש</small>' : ''}</div>`}
           <ul style="list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px">${perks}</ul>
+          ${single ? `<p class="muted" style="font-size:14px;margin:14px 0 0">הקורס הזה כלול גם <a href="${BASE}kniya/?plan=course">בקורס המלא</a> ובמנוי החודשי, יחד עם כל שאר הצוות.</p>` : ''}
         </div>
         <div class="card ${test ? '' : 'dk'}">
           ${test ? `<div class="row" style="margin-bottom:10px"><span class="pill warn">מצב בדיקה</span><b>לא יבוצע חיוב.</b></div>
@@ -37,7 +54,7 @@ import Base from '../../layouts/Base.astro';
             <button class="btn btn-l wide" id="pay">למעבר לתשלום <span class="arrow">←</span></button>`}
           <p class="muted" style="font-size:14px;margin:14px 0 0">${plan.kind === 'monthly' ? 'מבטלים בכל חודש, בלחיצה באזור האישי.' : '14 ימים להחזר כספי מלא, אם עוד לא התחלתם לצפות.'} <a href="${BASE}tnaim/" target="_blank">תנאי השימוש</a></p>
         </div>
-        ${me && me.access ? '<div class="card"><b>כבר יש לכם גישה פעילה.</b> <a href="' + BASE + 'ezor-ishi/">לאזור האישי</a></div>' : ''}`;
+        ${me && me.access && !single ? '<div class="card"><b>כבר יש לכם גישה פעילה.</b> <a href="' + BASE + 'ezor-ishi/">לאזור האישי</a></div>' : ''}`;
       // Real payment (only when test mode is off): the server makes a payment page for this plan and sends us there.
       const pay = document.getElementById('pay');
       if (pay) pay.onclick = async () => {
@@ -55,7 +72,7 @@ import Base from '../../layouts/Base.astro';
         go.disabled = true;
         const { error } = await sb.rpc('too_checkout_test', { p_plan: code });
         if (error) { toast(errText(error), true); go.disabled = false; return; }
-        location.replace(BASE + 'ezor-ishi/?welcome=1');
+        location.replace(single ? BASE + 'ezor-ishi/perek/?id=' + plan.module_id + '&welcome=1' : BASE + 'ezor-ishi/?welcome=1');
       };
     })();
   </script>

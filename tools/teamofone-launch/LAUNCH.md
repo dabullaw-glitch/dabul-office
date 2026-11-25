@@ -15,6 +15,8 @@ Yakir's own steps (domain, Cloudflare, Resend, Supabase, Google, Morning) are in
 | "Forgot password" link on the login page | `too_settings` key `mail_ready` (public) | `false` | `true` | Claude, after a test email arrived |
 | Real payments | `too_settings` key `test_mode` | `true` | `false` | Claude, only after Yakir says to open |
 | Renewal emails (daily) | pg_cron job `too-renew-mail` | not scheduled | scheduled (SQL below) | Claude at launch |
+| Single courses 11 to 14 on sale | `too_modules.published` (and their lessons' `published`) | `false` | `true`, one course at a time | Claude, only after Yakir approves each course's videos |
+| Single course price | `too_plans.price_ils` (`module-11` .. `module-14`) | 249 each | Yakir's price; empty = not sold | Yakir in the admin panel (מסלולים ומחירים) |
 
 `launch.domain` (DB) and `launch.json domain` (repo) must always be the same domain.
 
@@ -41,7 +43,22 @@ Yakir's own steps (domain, Cloudflare, Resend, Supabase, Google, Morning) are in
   Monthly plan: each payment adds one month. Renewal is by emailed payment link 3 days before the month ends
   (`?step=renew`). Automatic card charging (Morning standing orders, "הוראת קבע") needs Morning's Best plan or higher and
   an API we could not verify; decide with Yakir before launch. The purchase page (`kniya`) shows the real button only when
-  `test_mode` is off; `ezor-ishi/?paid=<order>` waits for the access to open.
+  `test_mode` is off; `ezor-ishi/?paid=<order>&plan=<code>` waits for the access to open.
+- **Single courses** (`sql/teamofone_single_courses.sql`, applied 25.11.2026): courses 11 to 14 are in the membership AND
+  sold one by one (plans `module-11`..`module-14`, kind `module`). A buyer gets lifetime access to that course only
+  (`too_access` kind `module`); members keep everything; the community, live events and the library stay members only.
+  - `too-pay` checkout for a single course refuses: empty or 0 price (`no_price`), course not published (`not_open`), the
+    student already has it (`has_access`, members included). Price always from `too_plans`. Return links carry the plan:
+    `ezor-ishi/?paid=<order>&plan=module-11` (waits for `too_me.modules`, then opens the course page) and
+    `kniya/?plan=module-11&failed=1`.
+  - Site: `ezor-ishi/perek/?id=<module id>` is the course page (lessons, progress). Its buy button shows only when
+    `test_mode` is off AND the price is set AND the course is published AND the student does not have it. `kniya/?plan=module-11`
+    shows the single-course view ("קורס בודד: גישה לכל החיים לקורס הזה"; no buttons while the course is closed, the price is
+    empty or the student has it; in test mode the no-charge test purchase works there too, it also refuses while closed).
+    Personal area and lesson page open a course's lessons to its owners (`too_me.modules`); purchases list says
+    "קורס בודד: <name>". Admin: an empty price is saved as empty (only for single courses; the full course and monthly
+    need a price); students list, access and orders show single courses; manual payment can be recorded for one.
+  - To open a course for sale: publish the module and its lessons in the admin panel (תוכן הקורס), check the price.
 
 ## Checks (run any time, all in test mode)
 
@@ -54,9 +71,18 @@ Yakir's own steps (domain, Cloudflare, Resend, Supabase, Google, Morning) are in
      body:='{}'::jsonb, timeout_milliseconds:=60000);
    -- then: select status_code, content from net._http_response where id = <returned id>;
    ```
-   Last run 25.11.2026: 8 of 8 steps passed (checkout refused in test mode, no sign-in refused, wrong key refused,
-   right key opens access, repeat changes nothing, lower amount to review, test student removed).
+   Last run 25.11.2026 (too-pay v2): 22 of 22 steps passed. Membership: checkout refused in test mode, no sign-in refused,
+   wrong key refused, right key opens access, repeat changes nothing, lower amount to review. Single course (module-11):
+   checkout refused in test mode, empty/0 price refused, unpublished refused, owner refused, published+priced allowed,
+   real check matches the database, price from the server (249), return links carry `plan=module-11`, wrong key refused,
+   right key opens course 11 only (not 12, not membership), repeat changes nothing, lower amount to review. Test student removed.
 3. Readiness (true/false only): same call with `?step=status`.
+4. Who reads which lesson: run `tools/teamofone-launch/test-single-courses.sql` with execute_sql. It always ends in an error
+   (`TOO_TEST {...}`) so everything is rolled back; it simulates module 11 published (5 of 6 lessons) and module 12 closed.
+   Last run 25.11.2026: 47 of 47 checks passed. Buyer of 11: the 5 published lessons of 11 + the free preview, not the
+   library, not 12, not the hidden lesson; member: all 55 published texts; signed in without access: the free preview only;
+   not signed in: no read grant on lesson texts at all; only the admin reads unpublished lessons and module 12.
+   `too_me.modules` = [11] for the buyer only. Private video of 11 signs for buyer and member; of 12 for nobody via too_file_ok.
 
 ## Before launch (domain bought, site still hidden)
 
@@ -73,6 +99,7 @@ Yakir's own steps (domain, Cloudflare, Resend, Supabase, Google, Morning) are in
 ## Launch day (only after Yakir says to open)
 
 1. `launch.json` `live: true` (commit, push) and `too_settings.launch.live = true`.
+   (Single courses stay closed until each one is published; see "Single courses" above.)
 2. `update too_settings set value='false' where key='test_mode'` (the purchase page switches to the real button).
 3. Schedule renewals:
    ```sql
@@ -85,6 +112,9 @@ Yakir's own steps (domain, Cloudflare, Resend, Supabase, Google, Morning) are in
 ## Security notes (review 25.11.2026)
 
 - `too_pay_grant` and `too_sub_extend` are not executable by anon or signed-in users; only the service role.
+- Known gap (not changed, needs Yakir's OK): the storage rule `too_files_read` lets any member sign ANY file in bucket
+  `too`, including videos of unpublished lessons, if they know the exact path (paths are not shown to them, since lesson
+  texts of unpublished lessons are admin only). Single-course buyers are limited to their course's published lessons.
 - The callback trusts nothing from the browser: price is computed on the server; the key is per order, compared in
   constant time against its hash; non-pending orders are never granted twice.
 - `?step=renew|status|selftest` require `CRON_SECRET` (constant-time compare); `selftest` refuses outside test mode.
