@@ -4,7 +4,7 @@
 // since 25.11.2026: all files are kept until docs ops/backup-settings has prune=true (see pruneEnabled).
 // The Supabase free plan has no automatic backups, so this is the way back after a mistaken delete or a bad change.
 // Restore: download the file from the bucket, and insert the rows of the needed table (by hand, after checking).
-// POST (x-cron-secret) {action:'run'} | {action:'list'}
+// POST (x-cron-secret) {action:'run'} | {action:'list'} | {action:'verify', file?} (reads a file back and counts rows)
 // Off-site copy (29.10.2026, Yakir chose an encrypted copy in a private repository): POST {action:'offsite'} with the header
 // x-gh-oidc = a GitHub Actions identity token of the private repository dabullaw-glitch/dabul-backups (audience 'dabul-backup').
 // No secret is stored on GitHub: GitHub proves which repository and branch is asking. The answer is the newest daily file,
@@ -134,6 +134,86 @@ async function run() {
   return res;
 }
 
+// verify (25.11.2026): reads a backup file back and checks it without loading it whole: gunzip as a stream, walk the JSON
+// byte by byte (strings, brackets), JSON.parse every row on its own, count rows per table. Returns counts only, never data.
+// POST (x-cron-secret) {action:'verify', file?:'daily/YYYY-MM-DD.json.gz', parse?:false}; default file = newest daily.
+async function verify(file?: string, parseRows = true) {
+  const t0 = Date.now();
+  if (!file) {
+    const { data: files } = await sb.storage.from(BUCKET).list('daily', { limit: 1000 });
+    const name = (files || []).map((f: Any) => f.name).filter((n: string) => /\.json\.gz$/.test(n)).sort().pop();
+    if (!name) return { ok: false, error: 'no backup' };
+    file = `daily/${name}`;
+  }
+  const { data: blob, error } = await sb.storage.from(BUCKET).download(file);
+  if (error || !blob) return { ok: false, error: 'download' };
+  const gzBytes = blob.size;
+  const dec = new TextDecoder();
+  const stack: number[] = []; // 123 '{' or 91 '['
+  const expectKey: boolean[] = [];
+  let inStr = false, esc = false, keyCap: number[] | null = null, curKey1 = '', curKey2 = '';
+  let rowParts: Uint8Array[] | null = null, rowStart = -1, rows = 0, bad = 0, cron = 0, raw = 0;
+  const counts: Record<string, number> = {};
+  let head = '';
+  const stream = blob.stream().pipeThrough(new DecompressionStream('gzip') as Any) as Any;
+  for await (const c0 of stream) {
+    const c = c0 as Uint8Array;
+    if (head.length < 120) head += dec.decode(c.subarray(0, 120));
+    raw += c.length;
+    if (rowParts && rowStart < 0) rowStart = 0;
+    for (let i = 0; i < c.length; i++) {
+      const b = c[i];
+      if (inStr) {
+        if (esc) { esc = false; if (keyCap) keyCap.push(b); continue; }
+        if (b === 92) { esc = true; if (keyCap) keyCap.push(b); continue; }
+        if (b === 34) {
+          inStr = false;
+          if (keyCap) {
+            const k = JSON.parse('"' + dec.decode(new Uint8Array(keyCap)) + '"');
+            if (stack.length === 1) curKey1 = k; else curKey2 = k;
+            keyCap = null;
+          }
+          continue;
+        }
+        if (keyCap) keyCap.push(b);
+        continue;
+      }
+      if (b === 34) {
+        inStr = true;
+        const d = stack.length;
+        if (d && stack[d - 1] === 123 && expectKey[d - 1]) { expectKey[d - 1] = false; if (d <= 2) keyCap = []; }
+        continue;
+      }
+      if (b === 123 || b === 91) {
+        if (b === 123 && stack.length === 3 && curKey1 === 'tables' && stack[2] === 91) { rowParts = []; rowStart = i; }
+        if (b === 123 && stack.length === 2 && curKey1 === 'cron' && stack[1] === 91) cron++;
+        if (stack.length === 2 && curKey1 === 'tables' && b === 91) counts[curKey2] = 0;
+        stack.push(b); expectKey.push(b === 123);
+        continue;
+      }
+      if (b === 125 || b === 93) {
+        const top = stack.pop(); expectKey.pop();
+        if ((b === 125 && top !== 123) || (b === 93 && top !== 91)) throw new Error('bracket mismatch at ' + (raw - c.length + i));
+        if (b === 125 && rowParts && stack.length === 3) {
+          rowParts.push(c.subarray(rowStart, i + 1));
+          counts[curKey2]++; rows++;
+          if (parseRows) {
+            const n = rowParts.reduce((a, p) => a + p.length, 0); const all = new Uint8Array(n); let o = 0;
+            for (const p of rowParts) { all.set(p, o); o += p.length; }
+            try { const v = JSON.parse(dec.decode(all)); if (!v || typeof v !== 'object') bad++; } catch (_e) { bad++; }
+          }
+          rowParts = null; rowStart = -1;
+        }
+        continue;
+      }
+      if (b === 44) { const d = stack.length; if (d && stack[d - 1] === 123) expectKey[d - 1] = true; }
+    }
+    if (rowParts && rowStart >= 0) { rowParts.push(c.slice(rowStart)); rowStart = -1; }
+  }
+  const created = (/"created":"([^"]+)"/.exec(head) || [])[1] || null;
+  return { ok: stack.length === 0 && !inStr && bad === 0, file, gzBytes, rawBytes: raw, created, tables: Object.keys(counts).length, rows, counts, badRows: bad, parsedRows: parseRows, cronJobs: cron, ms: Date.now() - t0 };
+}
+
 const GH_JWKS = createRemoteJWKSet(new URL('https://token.actions.githubusercontent.com/.well-known/jwks'));
 const OFFSITE_REPO = 'dabullaw-glitch/dabul-backups';
 async function offsite(tok: string) {
@@ -164,6 +244,7 @@ Deno.serve(async (req) => {
   const b: Any = await req.json().catch(() => ({}));
   try {
     if (b.action === 'run') return J(await run());
+    if (b.action === 'verify') return J(await verify(b.file, b.parse !== false));
     if (b.action === 'list') {
       const d = await sb.storage.from(BUCKET).list('daily', { limit: 100 }); const w = await sb.storage.from(BUCKET).list('weekly', { limit: 100 });
       return J({ ok: true, daily: (d.data || []).map((f: Any) => f.name), weekly: (w.data || []).map((f: Any) => f.name) });
