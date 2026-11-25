@@ -10,7 +10,7 @@ const date = a.published_at ? new Date(a.published_at).toLocaleDateString('he-IL
   <h1 style="font-family:var(--body);font-weight:900;font-size:clamp(30px,4.4vw,50px);line-height:1.15;margin:14px 0 10px">{a.title}</h1>
   <p class="muted" style="font-size:18px;margin:0 0 6px">{a.description}</p>
   <p class="muted" style="font-size:14px">{a.author} · {date}</p>
-  {a.cover_url && <div class="artcover"><img src={a.cover_url} alt="" loading="eager"></div>}
+  {a.cover_url && <div class="artcover"><img src={a.cover_url} alt={a.title} loading="eager"></div>}
   <p class="aff">חלק מהקישורים לכלים במאמרים שלנו הם קישורי שותפים: אם תצטרפו דרכם, ייתכן שנקבל עמלה, בלי עלות נוספת לכם. אנחנו ממליצים רק על כלים שאנחנו עובדים איתם.</p>
   <article class="prose" set:html={md(a.body_md)} />
   {(a.faq || []).length > 0 && (

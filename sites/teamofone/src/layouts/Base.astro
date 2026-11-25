@@ -36,8 +36,38 @@ const og = new URL(ogImage || base + 'img/podyt.webp', Astro.site).href;
     ) : (
       <nav id="anav"><a class="hide-m" href={base}>דף הבית</a><a class="hide-m" href={base + '#course'}>תוכנית הקורס</a><a class="hide-m" href={base + 'maamarim/'}>מאמרים</a><a class="hide-m" href={base + 'kelim/'}>כלים</a><a class="hide-m" href={base + 'etgar/'}>אתגר חינמי</a><a class="hide-m" href={base + '#price'}>מסלולים</a><a href={base + 'ezor-ishi/'}>האזור האישי</a></nav>
     )}
+    <button class="mbtn" type="button" aria-label="פתיחת התפריט" aria-expanded="false" aria-controls="mpanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div></header>
 )}
 <slot />
+<script is:inline>
+(function () {
+  // One phone menu for both headers: the member/app header (#anav) and the home page header (nav.nav).
+  var btn = document.querySelector('.ahead .mbtn, nav.nav .mbtn'); if (!btn) return;
+  var head = btn.closest('header, nav'), panel = null;
+  function links() {
+    var app = document.getElementById('anav');
+    if (app && head.classList.contains('ahead')) return Array.prototype.slice.call(app.querySelectorAll('a, button'));
+    return Array.prototype.slice.call(head.querySelectorAll('ul a, .navlogin'));
+  }
+  function close() { if (!panel) return; panel.remove(); panel = null; btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'פתיחת התפריט'); }
+  function open() {
+    panel = document.createElement('div'); panel.className = 'mpanel'; panel.id = 'mpanel';
+    panel.style.top = head.getBoundingClientRect().bottom + 'px';
+    links().forEach(function (el) {
+      var item;
+      if (el.tagName === 'A') { item = document.createElement('a'); item.href = el.getAttribute('href'); }
+      else { item = document.createElement('button'); item.type = 'button'; item.onclick = function () { el.click(); }; }
+      item.textContent = el.textContent.trim(); item.addEventListener('click', close); panel.appendChild(item);
+    });
+    document.body.appendChild(panel); btn.setAttribute('aria-expanded', 'true'); btn.setAttribute('aria-label', 'סגירת התפריט');
+    var first = panel.querySelector('a, button'); if (first) first.focus();
+  }
+  btn.addEventListener('click', function (e) { e.stopPropagation(); panel ? close() : open(); });
+  document.addEventListener('click', function (e) { if (panel && !panel.contains(e.target)) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel) { close(); btn.focus(); } });
+  window.addEventListener('resize', close);
+})();
+</script>
 </body>
 </html>

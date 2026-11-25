@@ -541,3 +541,34 @@ body.appb{background:var(--paper);color:var(--ink)}
 @media (max-width:900px){.day .sticky{position:static}}
 @media (max-width:960px){.lessonw aside{position:static;max-height:none;overflow:visible}}
 @media (max-width:560px){.bars small{font-size:9px;white-space:nowrap}.bars div:nth-child(even) small{visibility:hidden}}
+
+/* mobile menu (25.11.2026) */
+.mbtn{display:none;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--fg);cursor:pointer;padding:0;flex:none}
+.mbtn svg{width:22px;height:22px}
+.mpanel{position:fixed;inset-inline:0;z-index:60;background:var(--ink);border-bottom:1px solid var(--line);box-shadow:0 30px 40px -20px rgba(0,0,0,.6);padding:8px 16px 18px;display:flex;flex-direction:column;max-height:calc(100vh - 70px);overflow-y:auto}
+.mpanel a,.mpanel button{display:block;text-align:right;color:var(--fg);text-decoration:none;font:inherit;font-size:18px;font-weight:700;padding:14px 6px;border:0;border-bottom:1px solid var(--line);background:none;cursor:pointer;width:100%}
+.mpanel a:last-child,.mpanel button:last-child{border-bottom:0}
+.mpanel a:hover,.mpanel button:hover{color:var(--lime)}
+@media (max-width:560px){.ahead .mbtn{display:inline-flex}}
+@media (max-width:900px){.nav .mbtn{display:inline-flex}}
+@media (max-width:560px){.nav .navlogin{display:none}.navr{gap:10px}.nav .btn{padding:10px 14px;font-size:14px}}
+
+/* sticky join bar on phones, home page */
+.mjoin{position:fixed;inset-inline:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:45;display:none;align-items:center;justify-content:space-between;gap:10px;background:var(--ink);color:var(--fg);border:1px solid var(--line);border-radius:18px;padding:10px 12px 10px 10px;box-shadow:0 18px 40px -12px rgba(0,0,0,.55);transform:translateY(140%);transition:transform .3s ease}
+.mjoin.on{transform:none}
+.mjoin span{font-size:14px;font-weight:700}
+.mjoin .btn{padding:10px 14px;font-size:14px;white-space:nowrap}
+@media (max-width:760px){.mjoin{display:flex}}
+
+/* team cards: side-scroll on phones instead of a 5-screen column */
+@media (max-width:520px){.team{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding-bottom:10px;margin-inline:-16px;padding-inline:16px;scrollbar-width:none}.team::-webkit-scrollbar{display:none}.team>.role{flex:0 0 84%;scroll-snap-align:center}.team .reveal{opacity:1;transform:none}.teamhint{display:block}}
+.teamhint{display:none;font-size:13px;color:var(--mutD);margin:10px 0 0}
+
+/* time calculator rows */
+.crow{display:grid;grid-template-columns:minmax(0,1fr) 110px 100px 44px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #EEE9DD}
+.crow:last-child{border-bottom:0}
+.crow input,.crow select{font:inherit;font-size:16px;padding:10px 12px;border-radius:12px;border:1.5px solid #D9D3C4;background:#fff;color:var(--ink);width:100%;min-width:0}
+.crow .x{width:44px;height:44px;border-radius:12px;border:1.5px solid #D9D3C4;background:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);align-self:end}
+.chead{display:grid;grid-template-columns:minmax(0,1fr) 110px 100px 44px;gap:8px;font-weight:700;font-size:14px;padding-bottom:6px}
+@media (max-width:560px){.chead{display:none}.crow{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px;padding:12px 0}.crow .t{grid-column:1 / -1}.crow label{display:block;font-size:12px;font-weight:700;margin-bottom:4px}}
+@media (min-width:561px){.crow label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}

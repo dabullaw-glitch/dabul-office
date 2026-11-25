@@ -15,7 +15,7 @@ if (arts.length) {
     <div class="split-h reveal"><div><span class="tag"><i></i>מאמרים</span><h2 class="h2" style="margin-top:16px">בינה מלאכותית<br>לעסקים. מהשטח.</h2></div><p class="lead mut">חדשות, מדריכים והשוואות כלים, מתוך מה שבאמת עובד אצלי. בלי הייפ, עם צילומי מסך ומספרים. מתעדכן כל שבוע.</p></div>
     <div class="cats reveal"><a href="${base}maamarim/" style="text-decoration:none"><span style="background:var(--ink);color:var(--lime)">לכל המאמרים</span></a>${CATS.map((c) => `<span>${c}</span>`).join('')}</div>
     <div class="arts2">
-      <a class="feat reveal" href="${base}maamarim/${f.slug}/"><div class="th"><img src="${esc(f.cover_url || base + 'img/covers/default.webp')}" alt="" loading="lazy"><span>${esc(f.category)}</span></div><h3>${esc(f.title)}</h3><p>${esc(f.description)}</p></a>
+      <a class="feat reveal" href="${base}maamarim/${f.slug}/"><div class="th"><img src="${esc(f.cover_url || base + 'img/covers/default.webp')}" alt="${esc(f.title)}" loading="lazy"><span>${esc(f.category)}</span></div><h3>${esc(f.title)}</h3><p>${esc(f.description)}</p></a>
       <ul class="alist reveal">${rest.map((a) => `<li><a href="${base}maamarim/${a.slug}/"><span><em>${esc(a.category)}</em><b>${esc(a.title)}</b></span><span class="go">←</span></a></li>`).join('')}</ul>
     </div><div style="margin-top:28px;text-align:center"><a class="btn btn-k" href="${base}maamarim/">לכל המאמרים <span class="arrow">←</span></a></div></div></section>`;
 }
@@ -28,8 +28,17 @@ const jsonld = { '@context': 'https://schema.org', '@graph': [
 <Base title="Team of One: צוות שלם. אדם אחד." jsonld={jsonld}>
   <div id="testbar" class="testbar" hidden>אתר בבדיקה. הרכישות כאן הן לבדיקה בלבד, בלי חיוב.</div>
   <Fragment set:html={html} />
+  <div class="mjoin" id="mjoin" aria-hidden="true"><span>חודש ראשון ב-1 ₪</span><a class="btn btn-l" href="#price" tabindex="-1">למסלולים <span class="arrow">←</span></a></div>
   <script>
     import { sb, BASE } from '../lib/sb.js';
+    // phones: a small join bar once the visitor has scrolled past the first screen, hidden while the prices are on screen
+    (() => {
+      const bar = document.getElementById('mjoin'), price = document.getElementById('price'); if (!bar) return;
+      let priceIn = false;
+      if (price && 'IntersectionObserver' in window) new IntersectionObserver((es) => { priceIn = es[0].isIntersecting; tick(); }).observe(price);
+      function tick() { const on = window.scrollY > window.innerHeight * 0.9 && !priceIn; bar.classList.toggle('on', on); bar.setAttribute('aria-hidden', on ? 'false' : 'true'); bar.querySelector('a').tabIndex = on ? 0 : -1; }
+      window.addEventListener('scroll', tick, { passive: true }); tick();
+    })();
     sb.from('too_settings').select('value').eq('key', 'test_mode').maybeSingle().then(({ data }) => { if (data && data.value === true) document.getElementById('testbar').hidden = false; });
     sb.auth.getSession().then(({ data }) => { if (data.session) { const a = document.querySelector('.navlogin'); if (a) { a.textContent = 'האזור האישי'; a.href = BASE + 'ezor-ishi/'; } } });
   </script>
