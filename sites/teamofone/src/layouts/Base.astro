@@ -40,7 +40,7 @@ const og = new URL(ogImage || base + 'img/podyt.webp', Astro.site).href;
       <b>Team of One</b>
     </a>
     {Astro.url.pathname.includes('/ezor-ishi') || Astro.url.pathname.includes('/nihul') ? (
-      <nav id="anav"><a class="hide-m" href={base + 'ezor-ishi/'}>הקורס והספרייה</a><a class="hide-m" href={base + 'ezor-ishi/kehila/'}>קהילה</a><a class="hide-m" href={base + 'ezor-ishi/laiv/'}>שידורים</a><a class="hide-m" href={base + 'ezor-ishi/etgar/'}>האתגר שלי</a><a class="hide-m" href={base}>לאתר</a></nav>
+      <nav id="anav"><a class="hide-m" href={base + 'ezor-ishi/'}>הקורס והספרייה</a><a class="hide-m rt-nav" href={base + 'ezor-ishi/30/'}>30 הימים</a><a class="hide-m rt-nav" href={base + 'ezor-ishi/hashavua/'}>השבוע בצוות</a><a class="hide-m rt-nav" href={base + 'ezor-ishi/hitkadmut/'}>ההתקדמות שלי</a><a class="hide-m" href={base + 'ezor-ishi/kehila/'}>קהילה</a><a class="hide-m" href={base + 'ezor-ishi/laiv/'}>שידורים</a><a class="hide-m" href={base + 'ezor-ishi/etgar/'}>האתגר שלי</a><a class="hide-m" href={base}>לאתר</a></nav>
     ) : (
       <nav id="anav"><a class="hide-m" href={base}>דף הבית</a><a class="hide-m" href={base + 'kursim/'}>קורסים</a><a class="hide-m" href={base + 'maamarim/'}>מאמרים</a><a class="hide-m" href={base + 'kelim/'}>כלים</a><a class="hide-m" href={base + 'etgar/'}>אתגר חינמי</a><a class="hide-m" href={base + '#price'}>מסלולים</a><a href={base + 'ezor-ishi/'}>האזור האישי</a></nav>
     )}

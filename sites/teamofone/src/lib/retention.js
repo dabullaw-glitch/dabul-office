@@ -54,7 +54,9 @@ export const hoursOf = (min) => (Math.round((Number(min) || 0) / 6) / 10).toLoca
 export const ilDate = (d, o = {}) => d ? new Date(d).toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric', ...o }) : '';
 
 export async function retMe() {
-  const { data, error } = await sb.rpc('too_ret_me');
+  let { data, error } = await sb.rpc('too_ret_me');
+  // no profile row yet (first visit): create the caller's own row, then ask again
+  if (!error && data && data.profile === false && !(await sb.rpc('too_ensure_profile')).error) ({ data, error } = await sb.rpc('too_ret_me'));
   if (error) throw error;
   return data;
 }
@@ -112,7 +114,7 @@ export async function mountStrip(el) {
       const tasks = pickTasks(rows, x.onboarding.goal, x.onboarding.pace), done = new Set(x.path_done || []);
       const t = tasks.find((k) => k.day <= x.path_day && !done.has(k.day)) || tasks.find((k) => !done.has(k.day));
       const n = tasks.filter((k) => done.has(k.day)).length;
-      today = t ? `<a class="rt-tile dk" href="${BASE}ezor-ishi/30/"><span class="rt-k">המשימה של היום · יום ${t.day > x.path_day ? x.path_day : t.day}</span><b>${esc(t.title)}</b><span class="rt-go">${t.minutes} דקות · ${n} מתוך ${tasks.length} ←</span></a>`
+      today = t ? `<a class="rt-tile dk" href="${BASE}ezor-ishi/30/"><span class="rt-k">${t.day < x.path_day ? 'משימה להשלים · יום ' + t.day : t.day > x.path_day ? 'המשימה הבאה · יום ' + t.day : 'המשימה של היום · יום ' + t.day}</span><b>${esc(t.title)}</b><span class="rt-go">${t.minutes} דקות · ${n} מתוך ${tasks.length} ←</span></a>`
         : `<a class="rt-tile dk" href="${BASE}ezor-ishi/30/"><span class="rt-k">30 הימים הראשונים</span><b>סיימתם את המסלול. כל הכבוד!</b><span class="rt-go">לסיכום ←</span></a>`;
     }
     const week = drop ? `<a class="rt-tile" href="${BASE}ezor-ishi/hashavua/"><span class="rt-k">השבוע בצוות · ${esc(KIND[drop.kind] || '')}</span><b>${esc(drop.title)}</b><span class="rt-go">${(x.drops_done || []).includes(drop.id) ? '✓ השתמשתם' : 'לפריט של השבוע ←'}</span></a>` : '';

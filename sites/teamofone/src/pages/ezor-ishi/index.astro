@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import '../../styles/ret.css';
 ---
 <Base title="האזור האישי | Team of One" app noindex>
   <main class="wrap page">
@@ -7,6 +8,7 @@ import Base from '../../layouts/Base.astro';
   </main>
   <script>
     import { sb, BASE, esc, fmtDate, ils, toast, errText } from '../../lib/sb.js';
+    import { mountStrip } from '../../lib/retention.js';
     import { requireLogin, loadCourse, logoutBtn, ownsModule, canOpen, modulePlans, planLabel, loadMe, ensureProfile, courseGroups, ownsGroup } from '../../lib/member.js';
     const app = document.getElementById('app');
     (async () => {
@@ -78,6 +80,7 @@ import Base from '../../layouts/Base.astro';
           ${hero ? `<a class="ez-next" href="${BASE}ezor-ishi/shiur/?id=${hero.next.id}"><span class="muted">${hero.c ? 'ממשיכים מאיפה שעצרתם' : 'מתחילים לצפות'} · ${esc(hero.title)}</span><b>${esc(hero.next.title)}</b><span class="ez-go" aria-hidden="true">←</span></a>` : ''}
         </div>
         ${me.access && start && !done.has(start.id) ? `<a class="card ez-start" href="${BASE}ezor-ishi/shiur/?id=${start.id}"><span style="font-size:28px" aria-hidden="true">🧭</span><span><b style="font-size:17px">${esc(start.title)}</b><br><span class="muted">${esc(start.summary || '')}</span></span><span aria-hidden="true" style="margin-inline-start:auto;font-weight:800">←</span></a>` : ''}
+        ${me.access ? '<div id="ret-strip" hidden></div>' : ''}
         <div class="grid3 ez-kp">
           <div class="kp dk"><b>${owned.length}</b><span>קורסים פתוחים לכם, מתוך ${groups.length}</span></div>
           <div class="kp"><b>${nDoneAll}</b><span>שיעורים שסיימתם</span></div>
@@ -100,7 +103,7 @@ import Base from '../../layouts/Base.astro';
             <div class="card"><h3>אתגר 5 ימים</h3><p class="muted" style="font-size:14px;margin:0 0 10px">העובד הדיגיטלי הראשון שלכם, 20 דקות ביום.</p><a class="btn btn-w sm" href="${BASE}ezor-ishi/etgar/">לאתגר</a></div>
             <div class="card"><h3>הקבוצה הסגורה</h3>${me.access ? (me.wa ? `<a class="btn btn-k wide" href="${esc(me.wa)}" target="_blank" rel="noopener">כניסה לקבוצת הוואטסאפ</a>` : '<p class="muted" style="margin:0">הקישור לקבוצה יופיע כאן עם הפתיחה.</p>') : '<p class="muted" style="margin:0">נפתחת אחרי הצטרפות.</p>'}</div>
             <div class="card"><h3>המנוי שלי</h3><p style="margin:0 0 12px">${esc(subTxt)}</p>
-              ${me.sub_ends && me.sub_renew ? '<button class="btn btn-r sm" id="cancel">ביטול חידוש המנוי</button>' : (!me.sub_ends ? `<a class="btn btn-w sm" href="${BASE}kniya/?plan=monthly">להצטרפות למנוי</a>` : '<span class="muted" style="font-size:14px">החידוש בוטל. המנוי ימשיך עד התאריך.</span>')}
+              ${me.sub_ends && me.sub_renew ? `<a class="btn btn-r sm" href="${BASE}ezor-ishi/bitul/">ביטול חידוש המנוי</a>` : (!me.sub_ends ? `<a class="btn btn-w sm" href="${BASE}kniya/?plan=monthly">להצטרפות למנוי</a>` : `<span class="muted" style="font-size:14px">החידוש בוטל. המנוי ימשיך עד התאריך.</span> <a href="${BASE}ezor-ishi/bitul/" style="font-size:14px">ניהול המנוי</a>`)}
             </div>
             <div class="card"><h3>הפרטים שלי</h3>
               <div class="f"><label for="pn">שם</label><input id="pn" autocomplete="name" value="${esc(p.full_name || '')}"></div>
@@ -111,6 +114,7 @@ import Base from '../../layouts/Base.astro';
             <div class="card"><h3>הרכישות שלי</h3>${(orders || []).length ? '<div style="display:grid;gap:6px">' + orders.map((o) => `<div class="spread" style="font-size:14px"><span>${fmtDate(o.created_at)} · ${esc(planLabel(o.plan_code, plans))}</span><span>${ils(o.amount_ils)} ${o.status === 'test' ? '<span class="pill warn">בדיקה</span>' : o.status === 'refunded' ? '<span class="pill no">הוחזר</span>' : ['pending', 'failed', 'cancelled'].includes(o.status) ? '<span class="pill">לא הושלם</span>' : o.status === 'review' ? '<span class="pill warn">בבדיקה</span>' : ''}</span></div>`).join('') + '</div>' : '<p class="muted" style="margin:0">עדיין אין רכישות.</p>'}</div>
           </aside>
         </div>`;
+      mountStrip(document.getElementById('ret-strip'));
       const want = location.hash.match(/^#c-(\w+)$/);
       if (want) { const d = document.querySelector('#c-' + want[1] + ' details'); if (d) { d.open = true; d.parentElement.scrollIntoView(); } }
       const lf = document.getElementById('libf');

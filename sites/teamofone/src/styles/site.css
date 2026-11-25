@@ -551,6 +551,8 @@ body.appb{background:var(--paper);color:var(--ink)}
 .memw{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:26px;align-items:start}
 @media (max-width:960px){.memw{grid-template-columns:1fr}}
 .logo b{white-space:nowrap}
+/* the member header: the 30-days and weekly links show only on wide screens (they stay in the phone menu and on the pages) */
+@media (max-width:1180px){.ahead nav a.rt-nav{display:none}}
 @media (max-width:560px){.ahead .wrap{height:58px}.ahead .logo b{font-size:17px}.ahead nav{gap:0;flex-wrap:nowrap}.ahead nav a,.ahead nav button{font-size:14px;padding:7px 8px}.ahead nav a.hide-m{display:none}.page h1{font-size:clamp(50px,14vw,70px)}.card{padding:18px}.kp{padding:14px}}
 @media (max-width:900px){.adm .snav{display:flex;position:sticky;top:58px;z-index:30;overflow-x:auto;gap:4px;padding:8px 10px;border-inline-end:0;border-bottom:1px solid var(--lineD);height:auto}.adm .snav button{white-space:nowrap;padding:9px 12px;font-size:14px}.adm .pane2{padding:20px 14px 70px}}
 @media (max-width:900px){.adm .snav{align-items:center}.adm .snav button{flex:0 0 auto;height:auto;align-self:center}}
