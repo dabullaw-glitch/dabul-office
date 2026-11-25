@@ -5,6 +5,7 @@ description: "תקציב הוא הבסיס לכל יציאה מחובות: לה�
 hub: kalkala
 published: 2026-10-08
 updated: 2026-10-08
+video: taktziv-5-shlavim
 order: 2
 tool: taktziv
 summary:

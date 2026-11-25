@@ -96,5 +96,19 @@
   "date": "2026-11-18",
   "guide": "ikul-osh",
   "lesson": "4-hotzaa"
+ },
+ {
+  "id": "taktziv-5-shlavim",
+  "title": "תקציב משפחתי ב-5 שלבים",
+  "description": "איך בונים תקציב אמיתי, גם כשיש חובות, ומוצאים כמה כסף פנוי נשאר כל חודש.",
+  "src": "video/taktziv-5-shlavim.mp4",
+  "poster": "video/taktziv-5-shlavim.jpg",
+  "captions": "video/taktziv-5-shlavim.vtt",
+  "w": 1080,
+  "h": 1920,
+  "duration": "PT39S",
+  "date": "2026-11-25",
+  "guide": "taktziv",
+  "lesson": "2-taktziv"
  }
 ]
