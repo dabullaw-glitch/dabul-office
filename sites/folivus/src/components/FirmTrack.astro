@@ -1,0 +1,7 @@
+---
+// Privacy-safe counters for a firm page: page views and clicks on phone, website and WhatsApp, as daily totals only.
+// Nothing about the visitor is sent or stored (no IP, no id, no cookie).
+const { slug } = Astro.props as { slug: string };
+---
+<span data-fol-track={slug} hidden></span>
+<script>import '../scripts/commerce/track';</script>

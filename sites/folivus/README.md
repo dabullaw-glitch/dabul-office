@@ -30,6 +30,13 @@ scripts/check.mjs        post-build guard: no em/en dash, no "הכי"/"הטוב 
 scripts/sync-content.mjs copies + validates writers' content (YAML/JSON parse, forbidden words, pure tool modules)
 hold/                    the 2.11.2026 list of real offices from public sources: NOT used by the build until the
                          legal/data review approves collecting real data
+../../sql/folivus_commerce.sql  commerce layer: placements, owners, codes, reviews, removals, sponsored articles, mail log, audit,
+                         fol_fulfill (automatic activation after payment), fol_expire, fol_public_slots, fol_track. APPLIED.
+../../fn/fol-api/        the server function (Supabase Edge Function fol-api): checkout + Morning callback, test purchase, sign-in,
+                         claims, profile + uploads, reviews, removals, sponsored articles, admin, daily job, self test
+LAUNCH.md                what the owner must do before real sales + the decisions taken without the owner
+src/views/OrderPage|PortalPage|ReviewPage|AdminPage|SponsoredPage.astro + src/scripts/commerce/*  the commerce pages (noindex)
+src/components/PaidSlots.astro  live paid slots (court, provider, tool), always labelled; FirmTrack.astro = privacy-safe counters
 ../../sql/folivus_v2.sql the fol_* data model (RLS on every table, column-level read grants, one write function
                          fol_submit with validation + rate limit). NOT APPLIED YET (waits for approval).
 ```
@@ -39,7 +46,7 @@ hold/                    the 2.11.2026 list of real offices from public sources:
 firms) · `/ערים/` · `/עורכי-דין/<city>/` · `/משרד/<slug>/` · `/חיפוש/` · `/מאמרים/` + `/מאמרים/<he_slug>/` ·
 `/כותבים/<slug>/` · `/כלים/` + `/כלים/<he_slug>/` · `/בתי-משפט/` + `/בתי-משפט/<he_slug>/` · `/הצטרפות-משרדים/` ·
 `/ניהול-פרופיל/` · `/בקשת-הסרה/` · `/מדיניות-עריכה/` · `/שיטת-הדירוג/` · `/תנאי-שימוש/` · `/מדיניות-פרטיות/` ·
-`/הצהרת-נגישות/` · `/צור-קשר/` · `/אודות/`. Canonical, sitemaps and JSON-LD use percent-encoded absolute URLs.
+`/הצהרת-נגישות/` · `/צור-קשר/` · `/אודות/` · commerce (noindex): `/הזמנה/` · `/אזור-משרדים/` · `/כתיבת-חוות-דעת/` · `/ניהול-האתר/` · `/תוכן-ממומן/`. Canonical, sitemaps and JSON-LD use percent-encoded absolute URLs.
 
 ## Rules built into the code (from the owner and the legal research, 25.11.2026)
 - Directory, not a referral service: no lead routing to firms, no per-lead fees; visitors contact firms directly.

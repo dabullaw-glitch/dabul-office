@@ -1,0 +1,33 @@
+---
+// Verified review: the writer confirms with a one-time code sent by email. Moderation rules run on the server.
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { P, u } from '../config/routes';
+import '../styles/commerce.css';
+const { path } = Astro.props as any;
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'כתיבת חוות דעת', path }];
+---
+<Base title="כתיבת חוות דעת על משרד" description="חוות דעת מאומתת על שירות של משרד עורכי דין." path={path} noindex>
+  <section class="phead tint"><div class="wrap"><Crumbs items={crumbs} /><h1>חוות דעת על <span data-firm-name>משרד</span></h1>
+    <p class="lead">כותבים על השירות שקיבלתם. כדי שהחוות דעת תתפרסם, נשלח אליכם קוד אימות במייל. המייל לא מתפרסם.</p></div></section>
+  <div class="wrap" style="padding-block:24px 64px;max-width:760px" id="review" data-method={u(P.page('method'))} data-terms={u(P.page('terms'))}>
+    <div class="msg" data-top role="status"></div>
+    <section data-form class="cm-panel">
+      <fieldset class="field" style="border:0;padding:0"><legend>הציון שלכם</legend>
+        <div class="cm-stars">{[5, 4, 3, 2, 1].map((n) => <><input type="radio" name="rating" id={'r' + n} value={n} /><label for={'r' + n} title={n + ' מתוך 5'}>★</label></>)}</div></fieldset>
+      <div class="field"><label for="r-title">כותרת (לא חובה)</label><input id="r-title" maxlength="80" /></div>
+      <div class="field"><label for="r-body">מה היה בשירות (לפחות 30 תווים, בלי פרטים מזהים של התיק)</label><textarea id="r-body" maxlength="2000" rows="6"></textarea></div>
+      <div class="row2"><div class="field"><label for="r-name">שם (יוצג שם פרטי ואות ראשונה של שם המשפחה)</label><input id="r-name" maxlength="40" autocomplete="name" /></div>
+      <div class="field"><label for="r-mail">מייל (לא מתפרסם)</label><input id="r-mail" type="email" dir="ltr" autocomplete="email" /></div></div>
+      <div class="hp" aria-hidden="true"><label>אתר<input id="r-hp" tabindex="-1" autocomplete="off" /></label></div>
+      <label class="check"><input type="checkbox" id="r-ok" /><span>קיבלתי שירות מהמשרד, הדברים נכונים, וקראתי את <a data-terms-link target="_blank">תנאי השימוש</a>. חוות הדעת תיבדק לפני פרסום לפי <a data-method-link target="_blank">הכללים</a>.</span></label>
+      <button type="button" class="btn btn-pine" data-send>שליחה</button>
+    </section>
+    <section data-verify class="cm-panel cm-hidden">
+      <p>שלחנו קוד בן 6 ספרות למייל שכתבתם.</p>
+      <div class="field"><label for="r-code">קוד</label><input id="r-code" inputmode="numeric" maxlength="6" dir="ltr" /></div>
+      <button type="button" class="btn btn-pine" data-check>אישור</button>
+    </section>
+  </div>
+  <script>import '../scripts/commerce/review';</script>
+</Base>

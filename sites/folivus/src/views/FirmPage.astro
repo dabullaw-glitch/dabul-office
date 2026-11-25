@@ -10,6 +10,7 @@ import { P, u } from '../config/routes';
 import { firms, areaBySlug, cityBySlug, hasExtended, isPaid, avg, fmtDate, DAYS } from '../lib/data';
 import { breadcrumbs, firm as firmLd } from '../lib/schema';
 import { SETTINGS } from '../config/brand';
+import FirmTrack from '../components/FirmTrack.astro';
 const { path, firm } = Astro.props as any;
 const f = (await firms()).find((x) => x.slug === firm)!;
 const c = cityBySlug(f.city);
@@ -51,7 +52,7 @@ const faq = [
           </div>
           <div class="flex mt2 no-print">
             {f.phone && <a class="btn btn-pine" href={'tel:' + tel}><Icon name="phone" />{f.phone}</a>}
-            {f.website && <a class="btn btn-line" href={f.website} target="_blank" rel="noopener nofollow"><Icon name="globe" />לאתר המשרד</a>}
+            {f.website && <a class="btn btn-line" href={f.website} data-firm-site target="_blank" rel="noopener nofollow"><Icon name="globe" />לאתר המשרד</a>}
             {wa && <a class="btn btn-line" href={wa} target="_blank" rel="noopener nofollow"><Icon name="chat" />וואטסאפ</a>}
             {f.google.placeId && <a class="btn btn-line" href={'https://www.google.com/maps/place/?q=place_id:' + f.google.placeId} target="_blank" rel="noopener nofollow"><Icon name="link" />לביקורות בגוגל</a>}
           </div>
@@ -107,6 +108,7 @@ const faq = [
         <div class="sec-head" style="margin-bottom:14px">
           <h2 id="rv-h">חוות דעת מאומתות</h2>
           <a class="btn btn-line btn-sm" href={u(P.page('method')) + '#reviews'}>איך מאמתים חוות דעת</a>
+          <a class="btn btn-pine btn-sm" href={u(P.page('review')) + '?firm=' + f.slug} rel="nofollow">כתיבת חוות דעת</a>
         </div>
         {f.reviews.length ? (
           <div class="box">
@@ -136,7 +138,7 @@ const faq = [
         <dl class="dl">
           {f.address && <div><dt>כתובת</dt><dd>{f.address}</dd></div>}
           {f.phone && <div><dt>טלפון</dt><dd><a href={'tel:' + tel}>{f.phone}</a></dd></div>}
-          {f.website && <div><dt>אתר</dt><dd><a href={f.website} target="_blank" rel="noopener nofollow">{f.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a></dd></div>}
+          {f.website && <div><dt>אתר</dt><dd><a href={f.website} data-firm-site target="_blank" rel="noopener nofollow">{f.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a></dd></div>}
           {wa && <div><dt>וואטסאפ</dt><dd><a href={wa} target="_blank" rel="noopener nofollow">{ext.whatsapp}</a></dd></div>}
         </dl>
         {f.hours && (
@@ -163,6 +165,7 @@ const faq = [
   </div>
   <div class="sticky-cta no-print">
     {f.phone && <a class="btn btn-pine" href={'tel:' + tel}><Icon name="phone" />התקשרו</a>}
-    {f.website ? <a class="btn btn-line" href={f.website} target="_blank" rel="noopener nofollow"><Icon name="globe" />לאתר</a> : wa && <a class="btn btn-line" href={wa} target="_blank" rel="noopener nofollow"><Icon name="chat" />וואטסאפ</a>}
+    {f.website ? <a class="btn btn-line" href={f.website} data-firm-site target="_blank" rel="noopener nofollow"><Icon name="globe" />לאתר</a> : wa && <a class="btn btn-line" href={wa} target="_blank" rel="noopener nofollow"><Icon name="chat" />וואטסאפ</a>}
   </div>
+  <FirmTrack slug={f.slug} />
 </Base>

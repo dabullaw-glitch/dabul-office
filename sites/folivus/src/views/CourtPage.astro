@@ -6,6 +6,7 @@ import Faq from '../components/Faq.astro';
 import Sources from '../components/Sources.astro';
 import Toc from '../components/Toc.astro';
 import Disclaimer from '../components/Disclaimer.astro';
+import PaidSlots from '../components/PaidSlots.astro';
 import { P, u } from '../config/routes';
 import { courts, cities, firms, fmtDate } from '../lib/data';
 import { render } from '../lib/md';
@@ -14,7 +15,6 @@ const { path, court } = Astro.props as any;
 const c = courts().find((x) => x.slug === court)!;
 const city = cities().find((x) => x.name === c.city || x.slug === c.city || c.city.includes(x.name));
 const { html, toc } = render(c.body);
-const sponsored = city ? (await firms()).filter((f) => f.city === city.slug && f.plan !== 'free').slice(0, 3) : [];
 const map = c.lat && c.lng ? `https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}` : c.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.name + ' ' + c.address)}` : '';
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'בתי משפט', path: P.page('courts') }, { name: c.name, path }];
 const updated = fmtDate(c.updated);
@@ -54,11 +54,8 @@ const updated = fmtDate(c.updated);
         <p class="xs muted mt1 mb0">לפני הגעה כדאי לבדוק באתר הרשמי של הרשות השופטת שאין שינוי בשעות.</p>
       </div>
       <div class="sticky">
-        {sponsored.length > 0 ? (
-          <div class="box"><p class="promo-note mt0"><Icon name="megaphone" />מודעה</p><h2>משרדים ב{city!.name}</h2><ul class="links">{sponsored.map((f) => <li><a href={u(P.firm(f.slug))}>{f.name}</a></li>)}</ul></div>
-        ) : (
-          <div class="box brass"><h2>מקום למודעה</h2><p class="small mb0">משרדים ונותני שירות יכולים להופיע כאן, עם סימון מודעה. <a href={u(P.page('join'))}>פרטים</a></p></div>
-        )}
+        <PaidSlots kind="court" target={c.slug} title="משרדים בעמוד הזה" />
+        <PaidSlots kind="provider" target={c.slug} title="נותני שירות" />
       </div>
     </aside>
   </div>

@@ -89,6 +89,9 @@ export type Firm = {
   id: string; slug: string; name: string; city: string; address: string; phone: string; website: string; areas: string[];
   hours: Record<string, string> | null; plan: string; claimed: boolean; isSample: boolean; source: string; sourceUrl: string;
   collectedAt: string; featuredAreas: string[]; featuredCities: string[]; extended: any;
+  // from the commerce layer (fol_firms): exact paid slots, card upgrade, verified-review score (never affected by payment)
+  featuredSlots?: { area: string; city: string | null; home?: boolean }[] | null; extendedEnabled?: boolean;
+  reviewAvg?: number | null; reviewCount?: number; rankScore?: number | null; hideOthers?: boolean;
   google: { rating: number | null; count: number | null; placeId: string; checkedAt: string }; // shown only if SETTINGS.show_google_ratings
   reviews: Review[];
 };
@@ -109,7 +112,7 @@ export async function firms(): Promise<Firm[]> {
   if (_firms) return _firms;
   if (process.env.FOL_DB === '1') {
     try {
-      const cols = 'id,slug,name,city_slug,address,phone,website,areas,hours,source,source_url,collected_at,is_sample,claimed,plan,featured_areas,featured_cities,extended,google_rating,google_reviews_count,google_place_id,google_checked_at';
+      const cols = 'id,slug,name,city_slug,address,phone,website,areas,hours,source,source_url,collected_at,is_sample,claimed,plan,featured_areas,featured_cities,extended,google_rating,google_reviews_count,google_place_id,google_checked_at,extended_enabled,featured_slots,review_avg,review_count,rank_score,hide_others';
       const r = await fetch(`${DB.url}/rest/v1/fol_firms?select=${cols}&order=name`, { headers: { apikey: DB.key, Authorization: `Bearer ${DB.key}` } });
       if (r.ok) {
         const rows: any[] = await r.json();
@@ -117,7 +120,8 @@ export async function firms(): Promise<Firm[]> {
           id: f.id, slug: f.slug, name: f.name, city: f.city_slug, address: f.address || '', phone: f.phone || '', website: f.website || '',
           areas: f.areas || [], hours: f.hours, plan: f.plan, claimed: f.claimed, isSample: f.is_sample, source: f.source,
           sourceUrl: f.source_url || '', collectedAt: f.collected_at || '', featuredAreas: f.featured_areas || [],
-          featuredCities: f.featured_cities || [], extended: f.extended || {},
+          featuredCities: f.featured_cities || [], extended: f.extended || {}, featuredSlots: f.featured_slots || null, extendedEnabled: !!f.extended_enabled,
+          reviewAvg: f.review_avg === null ? null : Number(f.review_avg), reviewCount: f.review_count || 0, rankScore: f.rank_score === null ? null : Number(f.rank_score), hideOthers: !!f.hide_others,
           google: { rating: f.google_rating, count: f.google_reviews_count, placeId: f.google_place_id || '', checkedAt: f.google_checked_at || '' }, reviews: [],
         }));
         return _firms;
@@ -134,16 +138,26 @@ export async function firms(): Promise<Firm[]> {
   return _firms;
 }
 export const isPaid = (f: Firm) => f.plan !== 'free';
-export const hasExtended = (f: Firm) => ['pro', 'senior', 'extended'].includes(f.plan) || (f.claimed && !!f.extended?.description);
-/** featured (paid, labelled) firms first for this area/city, then the rest by name. Paid plans never change scores. */
+export const hasExtended = (f: Firm) => !!f.extendedEnabled || ['local', 'regional', 'national', 'basic', 'pro', 'senior', 'extended'].includes(f.plan) || (f.claimed && !!f.extended?.description);
+// fair daily rotation among paid firms in the same slot (same order all day, a new order every day; nobody buys first place)
+const rotDay = new Date().toISOString().slice(0, 10);
+const rot = (s: string) => { let h = 2166136261; for (const ch of s + rotDay) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+const featuredHere = (f: Firm, area?: string, city?: string) => {
+  if (!isPaid(f)) return false;
+  if (f.featuredSlots && f.featuredSlots.length) return f.featuredSlots.some((s) => s.area === area && (s.city || undefined) === (city || undefined));
+  return !!((area && f.featuredAreas.includes(area)) || (city && f.featuredCities.includes(city)) || f.plan === 'senior');
+};
+/** paid (labelled) firms for this area/city first, in daily rotation; then the rest by the published review score, then by name.
+ *  The score uses verified reviews only (shiitat ha-dirug page); paying never changes it. */
 export function rankFor(list: Firm[], area?: string, city?: string) {
-  const feat = (f: Firm) => isPaid(f) && ((area && f.featuredAreas.includes(area)) || (city && f.featuredCities.includes(city)) || f.plan === 'senior');
+  const feat = (f: Firm) => featuredHere(f, area, city);
   return {
-    featured: list.filter(feat).sort((a, b) => tier(b) - tier(a)),
-    rest: list.filter((f) => !feat(f)).sort((a, b) => a.name.localeCompare(b.name, 'he')),
+    featured: list.filter(feat).sort((a, b) => rot(a.slug) - rot(b.slug)),
+    rest: list.filter((f) => !feat(f)).sort((a, b) => (b.rankScore ?? 0) - (a.rankScore ?? 0) || a.name.localeCompare(b.name, 'he')),
   };
 }
-const tier = (f: Firm) => ({ senior: 3, pro: 2, basic: 1 } as Record<string, number>)[f.plan] || 0;
+/** the home page block: national packages (plus the legacy sample plan), in daily rotation */
+export const homeFeatured = (list: Firm[]) => list.filter((f) => (f.featuredSlots || []).some((s) => s.home) || f.plan === 'national' || f.plan === 'senior').sort((a, b) => rot(a.slug) - rot(b.slug));
 export const avg = (r: Review[]) => (r.length ? Math.round((r.reduce((s, x) => s + x.rating, 0) / r.length) * 10) / 10 : 0);
 
 // ---------- authors ----------

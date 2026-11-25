@@ -1,0 +1,33 @@
+---
+// Firm area: sign-in by email link or code, profile editing with automatic checks, renewals, reviews, invites, sponsored drafts.
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { P, u } from '../config/routes';
+import '../styles/commerce.css';
+const { path } = Astro.props as any;
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'אזור המשרדים', path }];
+---
+<Base title="אזור המשרדים" description="כניסה למשרדים: עדכון הפרופיל, חידושים, חוות דעת ונתונים." path={path} noindex>
+  <section class="phead tint"><div class="wrap"><Crumbs items={crumbs} /><h1>אזור המשרדים</h1>
+    <p class="lead">עדכון הפרופיל, חידוש חבילות, תגובה לחוות דעת והזמנת לקוחות לכתוב חוות דעת.</p></div></section>
+  <div class="wrap" style="padding-block:24px 64px" id="portal" data-order={u(P.page('order'))} data-claim={u(P.page('claim'))} data-admin={u(P.page('admin'))} data-firm-base={u(P.firm('__slug__'))}>
+    <div class="msg" data-top role="status"></div>
+    <section data-approve class="cm-panel cm-hidden"></section>
+    <section data-login class="cm-panel cm-hidden" style="max-width:560px">
+      <h2>כניסה</h2>
+      <p class="small muted">כותבים את המייל של המשרד. אם הוא רשום אצלנו, יישלח אליו קישור כניסה וקוד בן 6 ספרות.</p>
+      <div class="field"><label for="l-mail">מייל</label><input id="l-mail" type="email" autocomplete="email" dir="ltr" /></div>
+      <button type="button" class="btn btn-pine btn-sm" data-send>שליחת קישור כניסה</button>
+      <div class="field mt2"><label for="l-code">קיבלתם קוד? הקלידו אותו כאן</label><input id="l-code" inputmode="numeric" maxlength="6" dir="ltr" /></div>
+      <button type="button" class="btn btn-line btn-sm" data-code>כניסה עם קוד</button>
+      <div class="msg" data-lmsg role="status"></div>
+      <p class="small mt2 mb0">המשרד מופיע באתר ועוד לא אישרתם בעלות? <a data-claim-link>לאישור בעלות</a>. משרד חדש? <a data-order-link>להצטרפות</a>.</p>
+    </section>
+    <section data-app class="cm-hidden">
+      <div class="flex" style="justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><p class="mb0" data-who></p>
+        <div class="flex"><a class="btn btn-line btn-sm cm-hidden" data-admin-link>ניהול האתר</a><button type="button" class="btn btn-line btn-sm" data-logout>יציאה</button></div></div>
+      <div data-firms></div>
+    </section>
+  </div>
+  <script>import '../scripts/commerce/portal';</script>
+</Base>

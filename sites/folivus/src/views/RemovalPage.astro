@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
-import FormShell from '../components/FormShell.astro';
+import '../styles/commerce.css';
 import { P, u } from '../config/routes';
 import { firms, cityBySlug } from '../lib/data';
 import { breadcrumbs } from '../lib/schema';
@@ -19,7 +19,7 @@ const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'בקשת תיקו�
   </section>
   <div class="wrap layout">
     <div>
-      <FormShell kind="removal" ok="תודה. הבקשה התקבלה ותטופל." submit="שליחת בקשה">
+      <form class="form" data-cm-form="removal" novalidate>
         <fieldset class="field" style="border:0;padding:0;margin:0">
           <legend style="font-weight:600;font-size:.93rem;margin-bottom:8px">מה לעשות?</legend>
           <div class="radio-cards"><label><input type="radio" name="type" value="fix" checked />לתקן פרטים</label><label><input type="radio" name="type" value="remove" />להסיר את הפרופיל</label></div>
@@ -30,11 +30,22 @@ const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'בקשת תיקו�
           <div class="field"><label for="r-role">הקשר שלכם למשרד</label><select id="r-role" name="role"><option>בעל המשרד או שותף</option><option>עובד במשרד</option><option>אחר</option></select></div>
         </div>
         <div class="row2">
-          <div class="field"><label for="r-mail">מייל</label><input id="r-mail" name="email" type="email" autocomplete="email" /></div>
+          <div class="field"><label for="r-mail">מייל</label><input id="r-mail" name="email" type="email" required autocomplete="email" dir="ltr" /></div>
           <div class="field"><label for="r-ph">טלפון</label><input id="r-ph" name="phone" type="tel" autocomplete="tel" /></div>
         </div>
-        <div class="field"><label for="r-det">מה צריך לתקן או למה להסיר</label><textarea id="r-det" name="details"></textarea><div class="help">צריך להשאיר מייל או טלפון כדי שנוכל לאמת את הבקשה.</div></div>
-      </FormShell>
+        <div class="field"><label for="r-det">מה צריך לתקן או למה להסיר</label><textarea id="r-det" name="details"></textarea><div class="help">נשלח למייל אישור קבלה וקוד אימות. בקשת הסרה ממייל בדומיין של אתר המשרד מבוצעת מיד אחרי האימות. כל בקשה אחרת מטופלת תוך 48 שעות.</div></div>
+        <div class="hp" aria-hidden="true"><label>אתר<input name="website_hp" tabindex="-1" autocomplete="off" /></label></div>
+        <label class="check"><input type="checkbox" name="consent" required /><span>קראתי את <a href={u(P.page('privacy'))} target="_blank">מדיניות הפרטיות</a> ומסכים/ה שהפרטים ישמשו לטיפול בבקשה. לא נשלח דיוור שיווקי.</span></label>
+        <div class="msg" data-msg role="status" tabindex="-1"></div>
+        <div><button class="btn btn-pine" type="submit">שליחה</button></div>
+      </form>
+      <div class="cm-panel cm-hidden" data-cm-code="removal">
+        <p>שלחנו קוד בן 6 ספרות למייל שכתבתם. הקלידו אותו כדי לאמת את הבקשה.</p>
+        <div class="field"><label for="v-code-removal">קוד</label><input id="v-code-removal" inputmode="numeric" maxlength="6" dir="ltr" /></div>
+        <button type="button" class="btn btn-pine" data-cm-check>אישור</button>
+        <div class="msg" data-msg2 role="status"></div>
+      </div>
+      <script>import '../scripts/commerce/verify-forms';</script>
     </div>
     <aside class="aside">
       <div class="box"><h2>מה קורה אחרי הבקשה</h2><p class="small">אנחנו מאמתים שהבקשה הגיעה מהמשרד, ואז מתקנים או מסירים. בקשת הסרה של פרופיל שנאסף ממקורות ציבוריים מכובדת. חוות דעת מאומתות נשמרות לפי <a href={u(P.page('terms'))}>תנאי השימוש</a>.</p></div>

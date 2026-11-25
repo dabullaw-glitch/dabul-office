@@ -4,6 +4,7 @@
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
 import Icon from '../components/Icon.astro';
+import PaidSlots from '../components/PaidSlots.astro';
 import Faq from '../components/Faq.astro';
 import Sources from '../components/Sources.astro';
 import FirmCard from '../components/FirmCard.astro';
@@ -13,7 +14,6 @@ import { breadcrumbs, howTo, webApp, faqPage } from '../lib/schema';
 const { path, tool } = Astro.props as any;
 const t = tools().find((x) => x.slug === tool)!;
 const area = t.area ? areaBySlug(t.area) : null;
-const sponsors = area ? rankFor((await firms()).filter((f) => f.areas.includes(area.slug)), area.slug).featured.slice(0, 2) : [];
 const others = tools().filter((x) => x.slug !== t.slug && (x.category === t.category || x.area === t.area)).slice(0, 4);
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'כלים', path: P.page('tools') }, { name: t.name, path }];
 const opt = (o: any) => (typeof o === 'object' && o ? { value: String(o.value ?? o.id ?? o.label), label: String(o.label ?? o.value) } : { value: String(o), label: String(o) });
@@ -100,8 +100,7 @@ const updated = fmtDate(t.updated);
       </div>
     </aside>
   </div>
-  {sponsors.length > 0 && (
-    <section class="sec tight white"><div class="wrap"><p class="promo-note"><Icon name="info" />תוכן ממומן: משרדים מקודמים בתחום</p><div class="firms">{sponsors.map((f) => <FirmCard f={f} promo area={area!.slug} />)}</div></div></section>
+  <section class="sec tight white"><div class="wrap"><PaidSlots kind="tool" target={t.slug} title="בחסות" /></div></section></div></div></section>
   )}
   <script>
     const esc = (s: any) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));

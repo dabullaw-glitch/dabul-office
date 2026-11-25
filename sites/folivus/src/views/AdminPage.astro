@@ -1,0 +1,16 @@
+---
+// Admin dashboard. Opens only for users in fol_admins (checked by the server on every call). Same sign-in as the firm area.
+import Base from '../layouts/Base.astro';
+import { P, u } from '../config/routes';
+import '../styles/commerce.css';
+const { path } = Astro.props as any;
+---
+<Base title="ניהול האתר" description="ניהול הזמנות, משרדים, חוות דעת ובקשות." path={path} noindex>
+  <div class="wrap" style="padding-block:28px 64px" id="admin" data-portal={u(P.page('portal'))}>
+    <h1>ניהול האתר</h1>
+    <div class="msg" data-top role="status"></div>
+    <div class="cm-tabs" data-tabs role="tablist"></div>
+    <div data-view></div>
+  </div>
+  <script>import '../scripts/commerce/admin';</script>
+</Base>

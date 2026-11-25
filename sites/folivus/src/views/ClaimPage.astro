@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
 import Icon from '../components/Icon.astro';
-import FormShell from '../components/FormShell.astro';
+import '../styles/commerce.css';
 import { P, u } from '../config/routes';
 import { firms, cityBySlug } from '../lib/data';
 import { breadcrumbs } from '../lib/schema';
@@ -22,22 +22,15 @@ const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'ניהול פרו�
     <div>
       <ol class="grid g3 steps" style="list-style:none;padding:0;margin:0 0 34px">
         <li class="step"><h3>מאתרים את המשרד</h3><p class="muted small">בוחרים את המשרד מהרשימה. לא מוצאים? אפשר <a href={u(P.page('join'))}>להצטרף</a>.</p></li>
-        <li class="step"><h3>מאמתים</h3><p class="muted small">במייל בדומיין של המשרד, בשיחה למספר שמופיע בפרופיל, או במסמך שמראה שאתם מורשים.</p></li>
-        <li class="step"><h3>מעדכנים</h3><p class="muted small">אחרי האישור נשלח אליכם קישור כניסה במייל לעריכת הפרופיל.</p></li>
+        <li class="step"><h3>מאמתים</h3><p class="muted small">בקוד במייל. מייל בדומיין של אתר המשרד מאושר מיד, ומייל אחר נבדק ידנית.</p></li>
+        <li class="step"><h3>מעדכנים</h3><p class="muted small">אחרי האישור נכנסים לאזור המשרדים ומעדכנים את הפרופיל.</p></li>
       </ol>
       <h2>בקשה לאישור בעלות</h2>
-      <FormShell kind="claim" ok="תודה. הבקשה התקבלה, ונחזור אליכם לאימות." submit="שליחת בקשה">
+      <form class="form" data-cm-form="claim" data-portal={u(P.page('portal'))} novalidate>
         <div class="field"><label for="c-firm">המשרד</label>
           <select id="c-firm" name="firm" required><option value="">בחרו משרד</option>{fs.map((f) => <option value={f.slug}>{f.name}{cityBySlug(f.city) ? ', ' + cityBySlug(f.city)!.name : ''}</option>)}</select>
         </div>
-        <fieldset class="field" style="border:0;padding:0;margin:0">
-          <legend style="font-weight:600;font-size:.93rem;margin-bottom:8px">דרך האימות</legend>
-          <div class="radio-cards">
-            <label><input type="radio" name="method" value="email_domain" checked />מייל בדומיין של אתר המשרד</label>
-            <label><input type="radio" name="method" value="phone_call" />שיחה למספר הטלפון שבפרופיל</label>
-            <label><input type="radio" name="method" value="document" />מסמך שמראה שאני מורשה לפעול בשם המשרד</label>
-          </div>
-        </fieldset>
+        <p class="small muted">נשלח קוד אימות למייל שתכתבו. מייל בדומיין של אתר המשרד (למשל office@שם-המשרד.co.il) מאושר מיד. ממייל אחר, הבקשה עוברת אימות ידני קצר (מספר רישיון או טלפון המשרד).</p>
         <div class="row2">
           <div class="field"><label for="c-name">שם מלא</label><input id="c-name" name="name" required autocomplete="name" /></div>
           <div class="field"><label for="c-lic">מספר רישיון בלשכת עורכי הדין (לא חובה)</label><input id="c-lic" name="license" inputmode="numeric" /></div>
@@ -46,7 +39,18 @@ const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'ניהול פרו�
           <div class="field"><label for="c-mail">מייל</label><input id="c-mail" name="email" type="email" required autocomplete="email" /></div>
           <div class="field"><label for="c-ph">טלפון</label><input id="c-ph" name="phone" type="tel" autocomplete="tel" /></div>
         </div>
-      </FormShell>
+        <div class="hp" aria-hidden="true"><label>אתר<input name="website_hp" tabindex="-1" autocomplete="off" /></label></div>
+        <label class="check"><input type="checkbox" name="consent" required /><span>קראתי את <a href={u(P.page('privacy'))} target="_blank">מדיניות הפרטיות</a> ומסכים/ה שהפרטים ישמשו לטיפול בבקשה. לא נשלח דיוור שיווקי.</span></label>
+        <div class="msg" data-msg role="status" tabindex="-1"></div>
+        <div><button class="btn btn-pine" type="submit">שליחה</button></div>
+      </form>
+      <div class="cm-panel cm-hidden" data-cm-code="claim">
+        <p>שלחנו קוד בן 6 ספרות למייל שכתבתם. הקלידו אותו כדי לאמת את הבקשה.</p>
+        <div class="field"><label for="v-code-claim">קוד</label><input id="v-code-claim" inputmode="numeric" maxlength="6" dir="ltr" /></div>
+        <button type="button" class="btn btn-pine" data-cm-check>אישור</button>
+        <div class="msg" data-msg2 role="status"></div>
+      </div>
+      <script>import '../scripts/commerce/verify-forms';</script>
     </div>
     <aside class="aside">
       <div class="box"><h2>מה אפשר לעדכן</h2><ul class="small" style="margin:0 0 8px"><li>כתובת, טלפון ואתר</li><li>תחומי עיסוק וערים</li><li>שעות פעילות</li><li>תגובה לחוות דעת</li></ul><p class="xs muted mt1 mb0">חוות דעת שעברה אימות לא נמחקת לבקשת המשרד. אפשר להגיב עליה או לדווח עליה אם היא מפרה את הכללים.</p></div>

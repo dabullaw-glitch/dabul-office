@@ -7,11 +7,11 @@ import FirmCard from '../components/FirmCard.astro';
 import JoinBand from '../components/JoinBand.astro';
 import { BRAND } from '../config/brand';
 import { P, u } from '../config/routes';
-import { areas, areaGroups, cities, REGIONS, firms, tools, articles, courts, fmtDate } from '../lib/data';
+import { areas, areaGroups, cities, REGIONS, firms, tools, articles, courts, fmtDate, homeFeatured } from '../lib/data';
 import { itemList } from '../lib/schema';
 
 const fs = await firms();
-const featured = fs.filter((f) => f.plan === 'senior').slice(0, 3);
+const featured = homeFeatured(fs).slice(0, 6);
 const popular = ['real-estate', 'divorce', 'labor-law', 'criminal', 'inheritance-wills', 'car-accidents', 'insolvency'].map((s) => areas().find((a) => a.slug === s)!).filter(Boolean);
 const ts = tools().slice(0, 6);
 const as = articles().slice(0, 3);

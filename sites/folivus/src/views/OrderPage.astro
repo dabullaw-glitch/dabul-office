@@ -1,0 +1,83 @@
+---
+// Checkout: product -> places -> firm details -> summary and payment. Prices and limits are checked again on the server.
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { P, u } from '../config/routes';
+import '../styles/commerce.css';
+const { path } = Astro.props as any;
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'הצטרפות משרדים', path: P.page('join') }, { name: 'הזמנה', path }];
+---
+<Base title="הזמנת חבילה או מודעה" description="בחירת חבילה, מקומות ופרטי משרד, ותשלום מאובטח. כל מיקום בתשלום מסומן באתר." path={path} noindex>
+  <section class="phead tint"><div class="wrap"><Crumbs items={crumbs} /><h1>הזמנה</h1>
+    <p class="lead">בוחרים מה לקנות, איפה להופיע וממלאים פרטים. אחרי התשלום הכול מופעל לבד, ונשלח אליכם מייל עם הקבלה והכניסה לאזור המשרדים.</p></div></section>
+  <div class="wrap" style="padding-block:24px 64px" id="order" data-targets={u('commerce-targets.json')} data-portal={u(P.page('portal'))} data-claim={u(P.page('claim'))} data-terms={u(P.page('terms'))} data-method={u(P.page('method'))}>
+    <div class="cm-test cm-hidden" data-test>מצב בדיקה: התשלום לא אמיתי. הכפתור בסוף מבצע רכישת בדיקה בלי חיוב, וכל השאר עובד כמו באמת.</div>
+    <div class="msg" data-top role="status"></div>
+    <ol class="cm-steps" data-steps><li data-s="1" class="on">1. מוצר</li><li data-s="2">2. מקומות</li><li data-s="3">3. פרטים</li><li data-s="4">4. סיכום ותשלום</li></ol>
+
+    <section data-step="1">
+      <div class="cm-products" data-products><p class="muted">טוען את המוצרים...</p></div>
+      <p class="xs muted mt2">המחירים לשנה ולפני מע"מ, חוץ מנותני שירות (לחודש). תשלום לא משפיע על הדירוג ועל חוות הדעת. <a data-method-link>איך בנוי הדירוג</a></p>
+    </section>
+
+    <section data-step="2" class="cm-panel cm-hidden">
+      <h2 data-step2-title>איפה להופיע</h2>
+      <div data-slots></div>
+      <div class="flex mt2"><button type="button" class="btn btn-line btn-sm" data-back>חזרה</button><button type="button" class="btn btn-pine btn-sm" data-next="3">המשך</button></div>
+      <div class="msg" data-msg2 role="status"></div>
+    </section>
+
+    <section data-step="3" class="cm-panel cm-hidden">
+      <h2>פרטים</h2>
+      <div data-firm-choice></div>
+      <div data-firm-new>
+        <div class="row2">
+          <div class="field"><label for="f-name">שם המשרד</label><input id="f-name" autocomplete="organization" /></div>
+          <div class="field"><label for="f-city">עיר המשרד</label><select id="f-city"></select></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="f-addr">כתובת (לא חובה)</label><input id="f-addr" /></div>
+          <div class="field"><label for="f-web">אתר המשרד (לא חובה)</label><input id="f-web" type="url" placeholder="https://" dir="ltr" /></div>
+        </div>
+        <div class="field"><label for="f-phone">טלפון המשרד</label><input id="f-phone" type="tel" autocomplete="tel" /></div>
+        <div class="field"><label for="f-areas">תחומי עיסוק (עד 10, אפשר לבחור כמה עם Ctrl)</label><select id="f-areas" multiple size="6"></select></div>
+      </div>
+      <div data-ad class="cm-hidden">
+        <div class="row2">
+          <div class="field"><label for="a-name">שם העסק</label><input id="a-name" /></div>
+          <div class="field"><label for="a-cat">תחום השירות</label><select id="a-cat"></select></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="a-phone">טלפון</label><input id="a-phone" type="tel" /></div>
+          <div class="field"><label for="a-web">אתר (לא חובה)</label><input id="a-web" type="url" placeholder="https://" dir="ltr" /></div>
+        </div>
+        <div class="field"><label for="a-text">שורה קצרה על השירות (עד 160 תווים)</label><input id="a-text" maxlength="160" /></div>
+      </div>
+      <h3 class="mt2" style="font-size:1.05rem">איש קשר להזמנה</h3>
+      <div class="row2">
+        <div class="field"><label for="c-name">שם מלא</label><input id="c-name" autocomplete="name" /></div>
+        <div class="field"><label for="c-mail">מייל (לשם תישלח הקבלה)</label><input id="c-mail" type="email" autocomplete="email" dir="ltr" /></div>
+      </div>
+      <div class="field"><label for="c-phone">טלפון</label><input id="c-phone" type="tel" autocomplete="tel" /></div>
+      <div class="flex mt2"><button type="button" class="btn btn-line btn-sm" data-back>חזרה</button><button type="button" class="btn btn-pine btn-sm" data-next="4">לסיכום</button></div>
+      <div class="msg" data-msg3 role="status"></div>
+    </section>
+
+    <section data-step="4" class="cm-panel cm-hidden">
+      <h2>סיכום</h2>
+      <div data-summary></div>
+      <div class="field" data-inst-wrap><label for="o-inst">מספר תשלומים בכרטיס אשראי</label><select id="o-inst"></select></div>
+      <div data-auto class="cm-hidden">
+        <label class="check"><input type="checkbox" id="o-auto" /><span>חידוש שנתי אוטומטי של התוספת הזו.</span></label>
+        <label class="check"><input type="checkbox" id="o-auto-ok" /><span>אני מאשר/ת חידוש אוטומטי לפי המחיר שיהיה אז, ויודע/ת שאפשר לבטל אותו בכל רגע באזור המשרדים. בלי הסימון הזה אין חידוש אוטומטי.</span></label>
+      </div>
+      <label class="check"><input type="checkbox" id="o-terms" /><span>קראתי את <a data-terms-link target="_blank">תנאי השימוש</a>. ידוע לי שכל מיקום בתשלום מסומן "משרד מקודם" או "מודעה", ושהתשלום לא משפיע על הדירוג.</span></label>
+      <div class="flex mt2"><button type="button" class="btn btn-line btn-sm" data-back>חזרה</button><button type="button" class="btn btn-brass" data-pay>למעבר לתשלום</button></div>
+      <div class="msg" data-msg4 role="status"></div>
+    </section>
+
+    <section data-done class="cm-panel cm-hidden"></section>
+    <p class="xs muted mt2" data-wa></p>
+  </div>
+  <script>import '../scripts/commerce/order';</script>
+</Base>

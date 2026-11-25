@@ -20,6 +20,12 @@ export const SEG = {
   a11y: 'הצהרת-נגישות',
   contact: 'צור-קשר',
   about: 'אודות',
+  // commerce and operations (noindex; the server function fol-api builds links to these same paths)
+  order: 'הזמנה',               // checkout: package, places, firm details, payment
+  portal: 'אזור-משרדים',        // firm sign-in, profile editing, renewals, reviews
+  review: 'כתיבת-חוות-דעת',     // verified review form
+  admin: 'ניהול-האתר',          // admin dashboard (admin role only)
+  sponsored: 'תוכן-ממומן',      // sponsored articles (always labelled)
 } as const;
 
 const BASE = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
