@@ -9,7 +9,7 @@ import Base from '../../../layouts/Base.astro';
     import { sb, BASE, esc, toast, errText } from '../../../lib/sb.js';
     import { requireLogin, loadCourse, logoutBtn } from '../../../lib/member.js';
     import { md } from '../../../lib/md.js';
-    import { player } from '../../../lib/video.js';
+    import { player, videoSrc, isPrivateVideo, keepSigned } from '../../../lib/video.js';
     const app = document.getElementById('app');
     const id = Number(new URLSearchParams(location.search).get('id'));
     (async () => {
@@ -24,7 +24,9 @@ import Base from '../../../layouts/Base.astro';
       const done = new Set(me.done || []);
       const open = me.access || L.free_preview;
       const prev = course.flat[course.flat.findIndex((l) => l.id === id) - 1], next = course.flat[course.flat.findIndex((l) => l.id === id) + 1];
-      const vid = open && content ? player(content.video_url, L.title) : '';
+      // a private lesson video ("too:<path>") is signed only for members with access; free-preview visitors see the join message
+      const priv = isPrivateVideo(content?.video_url);
+      const vid = open && content ? player(await videoSrc(content.video_url), L.title) : '';
       const att = (content?.attachments || []);
       app.innerHTML = `
         <div class="crumbs"><a href="${BASE}ezor-ishi/">האזור האישי</a> / ${L.m.n ? 'פרק ' + L.m.n + ': ' + esc(L.m.title) : 'ספריית החברים'}</div>
@@ -34,7 +36,7 @@ import Base from '../../../layouts/Base.astro';
               <ul class="ls" style="padding:0 0 8px">${m.lessons.map((l) => `<li><a href="${BASE}ezor-ishi/shiur/?id=${l.id}" style="${l.id === id ? 'outline:2px solid var(--ink)' : ''}"><span class="ck ${done.has(l.id) ? 'on' : ''}">${done.has(l.id) ? '✓' : ''}</span><span>${esc(l.title)}</span><span>${!me.access && !l.free_preview ? '🔒' : ''}</span></a></li>`).join('')}</ul></details>`).join('')}</div>
           </aside>
           <section class="vstack">
-            <div class="vid2">${vid || `<div class="soon">${open ? '<b>הסרטון בהכנה</b><span class="mut">הוא יעלה לכאן לפני פתיחת הקורס.</span>' : `<b>השיעור נעול</b><span class="mut">פותחים את כל הקורס בהצטרפות.</span><a class="btn btn-l" href="${BASE}kniya/?plan=course">להצטרפות</a>`}</div>`}</div>
+            <div class="vid2">${vid || `<div class="soon">${open && priv ? `<b>הסרטון של השיעור פתוח לחברי הקהילה</b><span class="mut">הטקסט והקבצים של השיעור פתוחים כאן למטה.</span>${me.access ? '' : `<a class="btn btn-l" href="${BASE}kniya/?plan=course">להצטרפות</a>`}` : open ? '<b>הסרטון בהכנה</b><span class="mut">הוא יעלה לכאן לפני פתיחת הקורס.</span>' : `<b>השיעור נעול</b><span class="mut">פותחים את כל הקורס בהצטרפות.</span><a class="btn btn-l" href="${BASE}kniya/?plan=course">להצטרפות</a>`}</div>`}</div>
             <div class="spread"><div><span class="pill">${L.m.n ? 'פרק ' + L.m.n + ' · שיעור ' + L.n : 'ספריית החברים' + (L.topic ? ' · ' + esc(L.topic) : '')}</span>${L.free_preview && !me.access ? ' <span class="pill l">שיעור פתוח לצפייה</span>' : ''}<h1 style="font-family:var(--body);font-weight:900;font-size:clamp(26px,3vw,36px);line-height:1.2;margin:10px 0 4px">${esc(L.title)}</h1><p class="muted" style="margin:0">${esc(L.summary || '')}</p></div>
               ${open ? `<button class="btn ${done.has(id) ? 'btn-w' : 'btn-k'}" id="mark">${done.has(id) ? '✓ סימנתי שסיימתי' : 'סיימתי את השיעור'}</button>` : ''}</div>
             ${open && content?.body_md ? '<div class="card prose">' + md(content.body_md) + '</div>' : ''}
@@ -42,6 +44,7 @@ import Base from '../../../layouts/Base.astro';
             <div class="spread">${prev ? `<a class="btn btn-w sm" href="${BASE}ezor-ishi/shiur/?id=${prev.id}">→ הקודם</a>` : '<span></span>'}${next ? `<a class="btn btn-k sm" href="${BASE}ezor-ishi/shiur/?id=${next.id}">השיעור הבא ←</a>` : ''}</div>
           </section>
         </div>`;
+      if (vid && priv) keepSigned(app, content.video_url);
       const mk = document.getElementById('mark');
       if (mk) mk.onclick = async () => {
         const { data: u } = await sb.auth.getUser();

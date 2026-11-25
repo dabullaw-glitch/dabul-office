@@ -5,7 +5,7 @@
 //  GET  ?gh=job&id=<job>   -> {deck, narration, audio: 15-min signed link, upload: signed upload link for lesson.mp4}
 //  POST ?gh=done {id, sec, bytes, bounds} -> docs toovideo/<job> gets status 'rendered' (docs_merge)
 // With x-cron-secret:  GET ?sign=<job>&days=<1..30> -> signed link to the finished mp4 for Yakir's review.
-// Nothing is published to members here; the lesson's video_url is set only after Yakir approves.
+// Nothing is published to members before Yakir approves; then ?attach=<job> (below) copies the mp4 to the members bucket.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.4';
 import { createRemoteJWKSet, jwtVerify } from 'https://esm.sh/jose@5.9.6';
 const GH_JWKS = createRemoteJWKSet(new URL('https://token.actions.githubusercontent.com/.well-known/jwks'));
@@ -48,6 +48,27 @@ Deno.serve(async (req) => {
   }
   const { data: s } = await db.from('app_secrets').select('v').eq('k', 'CRON_SECRET').maybeSingle();
   if (!s?.v || req.headers.get('x-cron-secret') !== s.v) return json({ error: 'unauthorized' }, 401);
+  // After Yakir approves a lesson video: GET ?attach=<job>[&drop=1] copies files/too/videos/<job>/lesson.mp4 to the private
+  // members bucket 'too' (videos/<job>/lesson.mp4), where the storage rule too_files_read lets only logged-in members with
+  // access (or the admin) sign it. The lesson page signs it for 2 hours (src/lib/video.js, video_url "too:<path>").
+  // drop=1 removes the review copy from 'files' once the members copy is checked. The lesson's video_url is set separately.
+  const att = u.searchParams.get('attach');
+  if (att !== null) {
+    if (!okId(att)) return json({ error: 'bad id' }, 400);
+    const src = `too/videos/${att}/lesson.mp4`, dst = `videos/${att}/lesson.mp4`;
+    const { data: blob, error: e1 } = await db.storage.from('files').download(src);
+    if (e1 || !blob) return json({ error: 'download: ' + (e1?.message || 'empty') }, 404);
+    const bytes = blob.size;
+    const { error: e2 } = await db.storage.from('too').upload(dst, blob, { upsert: true, contentType: 'video/mp4', cacheControl: '3600' });
+    if (e2) return json({ error: 'upload: ' + e2.message }, 500);
+    const { data: ls } = await db.storage.from('too').list(`videos/${att}`);
+    const got = Number(ls?.find((f: { name: string }) => f.name === 'lesson.mp4')?.metadata?.size || 0);
+    if (got !== bytes) return json({ error: `size check ${got} != ${bytes}` }, 500);
+    let dropped = false;
+    if (u.searchParams.get('drop') === '1') dropped = !(await db.storage.from('files').remove([src])).error;
+    await db.rpc('docs_merge', { p_coll: 'toovideo', p_id: att, p_patch: { member: 'too:' + dst, attachedAt: new Date().toISOString(), reviewCopyDropped: dropped } });
+    return json({ ok: true, video_url: 'too:' + dst, bytes, dropped });
+  }
   const id = String(u.searchParams.get('sign') || '');
   if (!okId(id)) return json({ error: 'bad id' }, 400);
   const days = Math.min(30, Math.max(1, Number(u.searchParams.get('days')) || 7));
