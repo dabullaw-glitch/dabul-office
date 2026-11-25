@@ -31,6 +31,9 @@ Every number / date / tool price is checked against an official source the same 
 - Lessons 29-31 (module 8), 25.11.2026: files m8-l29-avatar-voice-check.docx, m8-l30-script-bank.xlsx,
   m8-l31-edit-check.docx. Durations 45/40/40. Script: /home/claude/too-files/build_p8.py. Facts only from Yakir's own HeyGen,
   voice and editing decisions; every avatar video goes to him for approval before publishing.
+- Lessons 32-37 (modules 9-10), 25.11.2026: files m9-l32-campaign-plan.xlsx, m9-l33-ad-landing-check.docx,
+  m9-l34-campaign-results.xlsx, m10-l35-weekly-task.docx, m10-l36-weekly-report.xlsx, m10-l37-team-map.xlsx.
+  Durations 40/45/35/40/35/45. Script: /home/claude/too-files/build_p9.py. ALL 37 COURSE LESSONS ARE NOW UPGRADED.
 - Google sign-in on: provider enabled in Supabase (client "Team of One site login"), too_settings google_login=true, public=true.
 - Live event placeholder: 3.12.2026 20:30 (too_events id 1). Yakir may change the day later.
 
@@ -43,7 +46,6 @@ Every number / date / tool price is checked against an official source the same 
 6. Lesson attachments: [{"title":"<Hebrew name> (וורד|אקסל)","path":"lessons/<ascii-name>"}].
 
 ## Next (in order)
-- Modules 9-10 (lessons 32-37), same standard, module by module.
 - Members library items 38-50: same standard (shorter), file only where it adds real value.
 - Four new paid courses: chapter outlines for Yakir's approval (site from Google, videos without camera, automations, affiliate marketing with AI).
 - The automatic content task (trig_01Mc8EeZ9nQsnwTisL9wwgSQ) stays paused until Yakir says otherwise; when re-enabled, every item goes to him for approval first.
