@@ -55,7 +55,7 @@ Every number / date / tool price is checked against an official source the same 
   Open before selling: how a separately sold course maps to access (today a module is part of the main course once published),
   and Yakir's approval of every lesson before publishing.
 
-## Lesson videos in Yakir's voice (PILOT, waiting for his approval; do not make more until he approves)
+## Lesson videos in Yakir's voice (pilot approved 25.11.2026; every new lesson video still needs his approval)
 - Lesson 1 pilot, 25.11.2026: narration script (2,604 chars, about 3:17) written only from lesson 1 facts, voiced with the
   function `voice` (ElevenLabs professional clone) to files/too/videos/l01/narration.mp3. Credits used: 2,606 characters.
 - Pipeline: tools/too-video (slides.html in the site's brand, render.py, job.py) + workflow too-video.yml (manual, input job)
@@ -69,6 +69,24 @@ Every number / date / tool price is checked against an official source the same 
   (14-day private link, Hebrew description, status "ממתין לאישור של יקיר").
 - After approval only: set too_lesson_content.video_url for the lesson (the player in src/lib/video.js must support a
   private signed link first; check before publishing), then the next lessons one by one.
+- 25.11.2026: lesson 1 APPROVED (Yakir 15:32 "מאשר") and ATTACHED. Members player: video_url "too:<path>" in the private
+  bucket `too` is signed for 2 hours in the browser (src/lib/video.js videoSrc); storage rule too_files_read signs it only for
+  logged-in members with access or the admin. Checked: member with access sees the object, logged in without access and
+  anonymous do not (rolled-back test), anonymous sign / public / direct requests all refused. Free-preview visitors of
+  lesson 1 without access see the text and a join message instead of the video.
+  Attach after approval: toovid GET ?attach=<job> (x-cron-secret) copies files/too/videos/<job>/lesson.mp4 to
+  too/videos/<job>/lesson.mp4 (size checked), then set too_lesson_content.video_url = 'too:videos/<job>/lesson.mp4'.
+  (&drop=1 would remove the review copy; not used yet, the l01 review copy is still in files/.)
+- Lessons 2 and 3 videos made 25.11.2026 (3:01 and 3:07, 12 and 11 slides), WAITING for Yakir: docs agents/too-video-l02,
+  agents/too-video-l03 (14-day private links). Do NOT attach before he approves. Voice: 2,413 + 2,446 characters.
+  ElevenLabs budget for Team of One: 8,000 a month; used in November 7,465 (l01 2,606 + l02 2,413 + l03 2,446), logged in
+  settings/voice.charLog. Lesson 4 waits for the next month's characters (about 2,450 needed).
+- Script rules used: only that lesson's text; one paragraph per slide; numbers and years spoken in words; vowel marks on
+  words the voice may misread (הוּסַר, הוּקְפָּא); no "ת.ז." style abbreviations in the narration.
+- Render fix 25.11.2026: render.py now measures the narration from decoded audio (WAV). A narration joined from two parts
+  was reported 8 s too short and the end of the video was cut (lesson 2 first run). Slide starts: after a first run, put
+  deck.bounds (pauses from the run log, close to the text-length estimate) and render again; re-runs cost no voice.
+- Slide types added in tools/too-video/slides.html: levels (green/yellow/red), ba (before/after), prompt text from the deck.
 
 ## How files reach private storage (paid material never stays in this public repo)
 1. Build the file locally. 2. Encrypt with AES-GCM (12-byte nonce + ciphertext), key = app_secrets.TOO_FILEKEY (hex; never print it).
