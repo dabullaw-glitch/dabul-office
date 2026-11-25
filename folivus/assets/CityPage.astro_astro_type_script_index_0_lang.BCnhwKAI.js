@@ -1,0 +1,1 @@
+document.querySelectorAll("form[data-refine]").forEach(e=>e.addEventListener("submit",a=>{a.preventDefault();const t=e.elements.namedItem("area").value;t&&(location.href=e.dataset.base+t+"/"+e.dataset.city+"/")}));
