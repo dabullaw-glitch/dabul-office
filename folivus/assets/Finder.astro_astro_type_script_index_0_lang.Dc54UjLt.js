@@ -1,0 +1,1 @@
+document.querySelectorAll("form[data-finder]").forEach(e=>{e.addEventListener("submit",n=>{const t=e.elements.namedItem("area").value,a=e.elements.namedItem("city").value;t&&(n.preventDefault(),location.href=e.dataset.base+t+"/"+(a?a+"/":""))})});

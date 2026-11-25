@@ -1,0 +1,1 @@
+document.querySelectorAll("[data-plan]").forEach(e=>e.addEventListener("click",()=>{const t=document.getElementById("o-plan");t&&[...t.options].some(a=>a.value===e.dataset.plan)&&(t.value=e.dataset.plan)}));
