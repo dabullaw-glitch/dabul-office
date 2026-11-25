@@ -3,16 +3,35 @@ name: Team of One lesson video (private)
 # function `voice`). Manual run only. The lesson content is paid material: the job comes from the office-only docs table
 # through the function toovid (the run proves who it is with GitHub's own signed token, OIDC), the finished mp4 goes
 # straight to the private bucket, and nothing from the lesson is printed here or kept in the repo.
+# 25.11.2026 (Yakir approved in chat "מאשר להפעיל את בניית הסרטונים בגיטהאב"): a push that changes
+# tools/too-video/queue.txt also runs it, one render per job id listed there (one id per line), two at a time.
 on:
   workflow_dispatch:
     inputs:
       job: { description: 'job id (docs toovideo/<id>)', required: true, default: 'l01' }
+  push:
+    branches: [main]
+    paths: ['tools/too-video/queue.txt']
 permissions:
   contents: read
   id-token: write
 concurrency: { group: too-video, cancel-in-progress: false }
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs: { jobs: '${{ steps.q.outputs.jobs }}' }
+    steps:
+      - uses: actions/checkout@v4
+        with: { sparse-checkout: "tools/too-video", sparse-checkout-cone-mode: false }
+      - id: q
+        env: { JOB: '${{ inputs.job }}', EV: '${{ github.event_name }}' }
+        run: |
+          if [ "$EV" = workflow_dispatch ]; then printf '%s\n' "$JOB" > /tmp/q; else cp tools/too-video/queue.txt /tmp/q; fi
+          echo "jobs=$(grep -E '^[a-z0-9-]{1,40}$' /tmp/q | head -40 | python3 -c 'import sys,json;print(json.dumps([l.strip() for l in sys.stdin if l.strip()]))')" >> "$GITHUB_OUTPUT"
   render:
+    needs: plan
+    if: needs.plan.outputs.jobs != '[]'
+    strategy: { fail-fast: false, max-parallel: 2, matrix: { job: '${{ fromJson(needs.plan.outputs.jobs) }}' } }
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -31,7 +50,7 @@ jobs:
           curl -sfL -o SpaceGrotesk.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/spacegrotesk/SpaceGrotesk%5Bwght%5D.ttf"
           fc-cache -f >/dev/null && fc-list | grep -c -E "Rubik|Karantina|Space Grotesk"
       - name: Render and store privately
-        env: { JOB: '${{ inputs.job }}' }
+        env: { JOB: '${{ matrix.job }}' }
         run: |
           set -euo pipefail
           [[ "$JOB" =~ ^[a-z0-9-]{1,40}$ ]]
