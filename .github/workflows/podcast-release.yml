@@ -1,0 +1,38 @@
+name: podcast release
+# 25.11.2026 (Yakir approved 21:32 "כן"): a final-approved podcast episode is held OFF GitHub Pages until its release
+# (TASK.md 6b, tools/podcast/release.py). This puts the held mp3/mp4 back on main (from the git blobs listed in
+# media/podcast/release/<ep>.json, sha256 checked) once the manifest's restoreFrom time has passed: by default 90 minutes
+# before the release, so the YouTube upload at 19:00 (the publishing calendar reads the Pages link) finds the file.
+# Two runs a day: 17:35 and 18:05 Israel time in winter (18:35 and 19:05 in summer). Nothing secret and no links in the log.
+on:
+  schedule:
+    - cron: '35 15 * * *'
+    - cron: '5 16 * * *'
+  push:
+    branches: [main]
+    paths: ['media/podcast/release/*.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: podcast-release, cancel-in-progress: false }
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        # blobless: the full commit history without file contents; the held blobs are fetched on demand by their id
+        with: { fetch-depth: 0, filter: 'blob:none' }
+      - name: restore due episodes
+        id: r
+        run: |
+          out=$(python3 tools/podcast/release.py restore | tail -1)
+          echo "restored: $out"
+          echo "eps=$out" >> "$GITHUB_OUTPUT"
+      - name: commit
+        if: steps.r.outputs.eps != ''
+        run: |
+          git config user.name "podcast-release"; git config user.email "podcast-release@users.noreply.github.com"
+          git add media/podcast
+          git commit -qm "podcast release: ${{ steps.r.outputs.eps }}" || { echo nothing; exit 0; }
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done

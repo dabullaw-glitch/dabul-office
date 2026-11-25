@@ -505,16 +505,39 @@ Every run, after section 6, check the episode rows (skip rows with test true). Y
   'published-feed' (or 'published' if YouTube is out too), replaceInFeed false, replacedAt}. Telegram one line:
   "🎙 התיקון של פרק <n> עלה. ספוטיפיי ואפל יקראו את הקובץ החדש בשעות הקרובות."
 - 'final-approved': publish ONCE, on the release day, never twice:
+  0. HOLD UNTIL RELEASE (25.11.2026, Yakir approved 21:32 "כן"; ep04 was reachable on GitHub Pages a week early): if
+     releaseDate is still ahead and media/podcast/release/epNN.json does not exist on origin/main, take the episode's
+     mp3/mp4 off the public tree right away. In a FRESH temporary clone (never the shared /home/claude/dabul-office:
+     `git clone --filter=blob:none --no-checkout https://github.com/dabullaw-glitch/dabul-office.git /tmp/podhold && cd
+     /tmp/podhold && git sparse-checkout set --no-cone /tools/podcast/ /media/podcast/release/ /media/podcast/epNN.mp3
+     /media/podcast/epNN.mp4 && git checkout -q main`), run `python3 tools/podcast/release.py hold --ep epNN --release
+     "<releaseDate>T19:00:00+02:00"` (+03:00 in summer time), commit ONLY media/podcast/release/epNN.json and the two
+     removals ("podcast: hold epNN off Pages until release"), push fast-forward only (never force). After 2 to 5 minutes
+     check with net.http_get that https://dabullaw-glitch.github.io/dabul-office/media/podcast/epNN.mp3 and .mp4 answer
+     404. docs_merge epNN {hold:{at, manifest:'media/podcast/release/epNN.json'}}. Nothing else changes: the pub row keeps
+     its videoUrl (the Pages link), the covers stay. The files come back by themselves: .github/workflows/podcast-release.yml
+     runs every day at 15:35 and 16:05 UTC and restores every held episode whose restoreFrom (release minus 90 minutes)
+     has passed, from the git blobs listed in the manifest (sha256 checked), commit "podcast release: epNN". A private
+     copy of the mp3 is in storage files/podcast/epNN/epNN.mp3 when it fits (the mp4 is over the free plan's 50 MB upload
+     limit; its git blob is its copy). A 'final-fix' while held: delete media/podcast/release/epNN.json in the same commit
+     as the new mix job file (otherwise podcast-mix.yml skips the episode), and hold again after the new final approval.
   a. YouTube (right away, it is only scheduled): if docs pub `pub-<releaseDate as YYYYMMDD>T1900-podcast-epNN` does not exist,
      INSERT it in the exact shape of `pub-20261111T1900-podcast-ep01` (at '<releaseDate>T19:00', kind 'video', series
      'podcast', slotRule 'podcast-wednesday', channels ['youtube'], owner 'system', status 'planned', title, ytTitle =
      epNN.youtubeTitle, ytDesc with the chapter times of epNN.mix.chapters, ytTags, videoUrl
      https://dabullaw-glitch.github.io/dabul-office/<epNN.mix.mp4>). If releaseDate already passed, use the next Wednesday
      that has no podcast row. docs_merge epNN {youtubePub}.
-  b. Spotify and Apple (the feed): only on the first run at or after releaseDate 19:00 Israel time. Call
+  b. Spotify and Apple (the feed): only on the first run at or after releaseDate 19:00 Israel time. FIRST make sure the
+     held files are back (step 0): media/podcast/release/epNN.json on origin/main has "released" and the Pages links of
+     epNN.mp3 and epNN.mp4 answer 200. If not (the release Action did not run), restore them now yourself in a fresh
+     temporary clone as in step 0 (`python3 tools/podcast/release.py restore --ep epNN --now`, commit ONLY
+     media/podcast/epNN.mp3, epNN.mp4 and release/epNN.json, "podcast release: epNN", push fast-forward only), wait until
+     both links answer 200, and if the pub row of YouTube failed meanwhile it retries by itself for 4 hours (postoria).
+     Then call
      mcp__claude-code-remote__add_repo {owner 'dabullaw-glitch', repo 'nadlan-podcast', access 'push'}, clone it to
      /home/claude/nadlan-podcast (or git pull), write epNN's {n, title, description, mix} to /tmp/epNN.json and run
-     `python3 tools/podcast/feed_add.py --repo /home/claude/nadlan-podcast --office /home/claude/dabul-office --ep epNN
+     `python3 tools/podcast/feed_add.py --repo /home/claude/nadlan-podcast --office <a checkout of origin/main that has
+     media/podcast/epNN.mp3 and epNN.jpg, e.g. the temporary clone above> --ep epNN
      --meta /tmp/epNN.json --pubdate "<releaseDate 19:00 in RFC 2822 with the Israel offset>"` (it refuses an episode that is
      already in the feed), commit and push only the repo nadlan-podcast. Check after 1 to 3 minutes that the feed URL answers
      200 and has the episode. docs_merge epNN {feed:{at, url, mp3, guid}, status 'published', publishedAt} and append epNN to
