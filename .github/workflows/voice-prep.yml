@@ -6,7 +6,7 @@ name: voice prep
 on:
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   prep:
     runs-on: ubuntu-latest
@@ -24,8 +24,7 @@ jobs:
             dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/src.bin | cut -d. -f1)
             if [ -z "$dur" ]; then echo "$name FAIL not-public-or-not-media"; echo "$name fail" >> out/stats.txt; rm -f /tmp/src.bin; continue; fi
             info=$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name,channels,sample_rate,bit_rate -of csv=p=0 /tmp/src.bin)
-            ffmpeg -y -v error -i /tmp/src.bin -vn -map 0:a:0 -c:a flac out/$name-st.flac
-            ffmpeg -y -v error -i out/$name-st.flac -ac 1 -c:a flac out/$name.flac
+            ffmpeg -y -v error -i /tmp/src.bin -vn -map 0:a:0 -ac 1 -c:a flac out/$name.flac
             vol=$(ffmpeg -i out/$name.flac -af volumedetect -f null - 2>&1 | grep -E "mean_volume|max_volume" | awk '{print $5}' | tr '\n' ' ')
             echo "$name $dur s | $info | mean/max dB: $vol" | tee -a out/stats.txt
             rm -f /tmp/src.bin
@@ -39,11 +38,9 @@ jobs:
           openssl pkeyutl -encrypt -pubin -inkey tools/voice-pub.pem -in /tmp/k.txt -out voice.key.enc
           rm -f /tmp/k.txt /tmp/voice.tar; rm -rf out/*.flac
           ls -l voice.tar.enc voice.key.enc
-      - uses: actions/upload-artifact@v4
-        with:
-          name: voice-enc
-          path: |
-            voice.tar.enc
-            voice.key.enc
-          retention-days: 2
-          compression-level: 0
+      - name: Push encrypted parts to branch voice-enc (encrypted, unreadable without the private key)
+        run: |
+          mkdir -p /tmp/enc && split -b 90m -d voice.tar.enc /tmp/enc/part- && cp voice.key.enc /tmp/enc/
+          git config user.name "voice-prep"; git config user.email "actions@github.com"
+          git checkout -q --orphan voice-enc && git rm -rfq . >/dev/null
+          cp /tmp/enc/* . && git add part-* voice.key.enc && git commit -qm "voice prep (encrypted)" && git push -qf origin voice-enc
