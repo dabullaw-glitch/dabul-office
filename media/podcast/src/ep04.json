@@ -5,47 +5,47 @@
  "album": "נדל״ן בגובה העיניים",
  "artist": "עו״ד יקיר דבול",
  "gap": 0.7,
+ "voice": "Yakir's own ElevenLabs voice clone via functions/v1/voice, 25.11.2026 (private storage paths; the runner signs them with OIDC)",
  "parts": [
   {
    "h": "פתיח",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=eeade06b5ebd408eac9ee8e752202031.wav"
+   "path": "podcast/ep04/s01.mp3"
   },
   {
    "h": "הצגת התוכנית",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=b13f94abc215464ba174648e2e1ef849.wav"
+   "path": "podcast/ep04/s02.mp3"
   },
   {
    "h": "חלק 1: מה הצ׳אט רואה, ומה לא",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=a847d0ec62074c039dfc424e7e4bccbd.wav"
+   "path": "podcast/ep04/s03.mp3"
   },
   {
    "h": "חלק 2: תשובה משכנעת, ושגויה",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=526849072a4649d188b26b8b741b0ab0.wav"
+   "path": "podcast/ep04/s04.mp3"
   },
   {
    "h": "חלק 3: הפרטים שלכם",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=67fe21af6fdc4392a70381fb945d837a.wav"
+   "path": "podcast/ep04/s05.mp3"
   },
   {
    "h": "תזכורת באמצע הפרק",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=2ff74d92c46a466fb422220a34b9c02b.wav"
+   "path": "podcast/ep04/s06.mp3"
   },
   {
    "h": "חלק 4: ההודעה שמשנה את מספר החשבון",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=e4bf18b4d2c4448b87fe607463227a76.wav"
+   "path": "podcast/ep04/s07.mp3"
   },
   {
    "h": "חלק 5: ומה עם עורכי הדין",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=2ca2d7f8ecf7474ead22dc7a6b25de60.wav"
+   "path": "podcast/ep04/s08.mp3"
   },
   {
    "h": "מה עושים השבוע",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=9daae864f3d24748a544601c9d41c404.wav"
+   "path": "podcast/ep04/s09.mp3"
   },
   {
    "h": "סיום",
-   "url": "https://resource2.heygen.ai/text_to_speech/ec0ca1dfd4e041acb0ddb327ccb34cce/013a42e6afdb4c22aa39a7f84f74ed0a/id=1babc59a1a824583957bc88ce228076c.wav"
+   "path": "podcast/ep04/s10.mp3"
   }
- ],
- "voiceFix": "21.11.2026: re-voiced after Yakir reported pronunciation problems (settings/heygen.podcastPron); checked with tools/podcast-asr"
+ ]
 }

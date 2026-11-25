@@ -3,15 +3,20 @@
 Read by the scheduled task "פודקאסט שבועי: תסריט לאישור" (every Thursday morning) and by the HeyGen task when Yakir asks
 for a fix (status 'script-fix', tools/heygen-edit/TASK.md section 6b).
 
-PODCAST PAUSED (Yakir 22.11.2026: "תשהה את הפודקאסט"): if docs podcast/show.paused is true, do NOT write an episode, do not
-send anything to Yakir; only write the log row (docs agents podcast-weekly-YYYY-MM-DD {skipped:'paused'}) and stop.
+PAUSE LIFTED 25.11.2026 by Yakir ("אחרי שנאשר את הקול אז נעשה את הפודקאסט באופן קבוע"): his own ElevenLabs voice
+clone was approved that day, docs podcast/show.paused is false again and the weekly cycle runs as usual (ep04 goes out
+2.12.2026, so this task's next run writes ep05 for the next free Wednesday). History: paused 22.11.2026 ("תשהה את
+הפודקאסט") because the HeyGen voice read Hebrew badly. The guard stays: if show.paused is ever true again, do NOT write
+an episode, do not send anything to Yakir; only write the log row (docs agents podcast-weekly-YYYY-MM-DD
+{skipped:'paused'}) and stop.
 
 Yakir 5.11.2026: "משימה קבועה אחת לשבוע לשלוח אליי תוכן לאישור ואחרי שאני מאשר להעביר את זה לעריכה ואז לפרסום של פרק
 פודקאסט שבועי. כל פעם על נושא אחר."
 
-This task only WRITES the episode and sends it to Yakir for approval. It never creates HeyGen media, never mixes, never
-publishes. After Yakir presses the approve button, the scheduled task "סרטוני הייגן" does the voice, the edit, the final
-approval and the publishing (TASK.md section 6b).
+This task only WRITES the episode and sends it to Yakir for approval. It never creates HeyGen media, never voices, never
+mixes, never publishes. After Yakir presses the approve button, the scheduled task "סרטוני הייגן" does the voice (since
+25.11.2026 his own ElevenLabs clone through the edge function `voice`, not HeyGen), the edit, the final approval and the
+publishing (TASK.md section 6b).
 
 ## Infrastructure
 
@@ -39,11 +44,24 @@ shape of every field and the spoken style of the script).
    pinui binui, mas shevach, warning notes, mortgages, splitting property in a divorce, neighbors and the shared house).
    Never the same topic as an earlier episode. Append a new topic to show.topics (read, append, merge the whole array).
    Real estate only, never insolvency or debts.
+   TOPIC LIST RULE (Yakir 25.11.2026, saved in podcast/show.topicRule; it overrides the "choose a new topic" fallback
+   above): show.topics holds only topics Yakir approved (19 on 25.11.2026: ep05 to ep07 take the 3 remaining older ones,
+   then the 12 approved on 25.11.2026 in order, from the episode of 30.12.2026). Every run, after choosing this week's
+   topic, count the unused topics left in show.topics. When 3 or fewer remain, propose to Yakir 12 NEW real estate topics
+   never discussed before (compare by meaning with every epNN topic and every item of show.topics), in ONE Telegram message
+   in simple Hebrew only (numbered list, one short line each; the Telegram line of step 7's fallback shows how to send),
+   and save them as show.topicProposal {at, items, status 'wait'} (do not send again while a proposal waits). Only topics
+   Yakir approves enter show.topics; never write an unapproved topic into the list and never use one for an episode.
+   HOT CHANGE: if this week brings a real change in law or tax in real estate (a new law, a tax change, a Bank of Israel
+   decision, a key ruling), that topic jumps to the front of the queue this week (it still needs Yakir's script approval
+   like every episode); the rest of the list moves back by one. If no approved unused topic is left (and no hot change),
+   do not write an episode this week: log {skipped:'no-approved-topic'} and make sure the proposal above was sent.
 4. **Research**: open at least 3 reliable sources this run (WebSearch, WebFetch: Kol Zchut, gov.il, the Tax Authority,
    Bank of Israel, court rulings, Bizportal, Nadlancenter, Globes, TheMarker). Every number and fact in the episode comes
    from a page you opened this run; keep {url, what} for each. A fact you cannot verify is left out.
 5. **Write the episode** in Yakir's spoken style, exactly like ep01:
-   - script: 1,450 to 1,650 words (10 to 12 minutes; his voice speaks about 2.4 words a second), in sections, each starting
+   - script: 1,450 to 1,650 words (10 to 12 minutes; his voice speaks about 2.4 words a second; the ElevenLabs voice of
+     25.11.2026 read ep04's 1,481 words in about 10 minutes), in sections, each starting
      with a header line in square brackets: [פתיח] (a hook from a concrete moment, 30 to 40 s), [הצגת התוכנית] (the show,
      "אני יקיר דבול, עורך דין" once, what this episode covers), 4 to 5 parts [חלק 1: ...], a short [תזכורת באמצע הפרק]
      (share, follow), [מה עושים השבוע] (3 to 4 concrete steps for this week), [סיום] (a bridge to next week without

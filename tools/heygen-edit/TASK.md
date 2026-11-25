@@ -441,10 +441,10 @@ Steps:
 
 ## 6b. פודקאסט (Yakir approved the podcast 5.11.2026; weekly cycle with Telegram buttons since 5.11.2026 12:17)
 
-PODCAST PAUSED (Yakir 22.11.2026: "תשהה את הפודקאסט"): while docs podcast/show.paused is true, SKIP this whole section
-6b: do not touch any episode row (ep04 has status 'paused'), do not create voices or clips, do not mix, do not add anything
-to the feed, do not send podcast reminders or podcast Telegram lines. Episodes already in the feed stay as they are. The
-weekly script task is disabled. Resume only when Yakir asks to restart the podcast in his own words.
+PAUSE LIFTED 25.11.2026 (Yakir: "אחרי שנאשר את הקול אז נעשה את הפודקאסט באופן קבוע"): his own ElevenLabs voice clone was
+approved that day, docs podcast/show.paused is false and the weekly script task runs again. This section runs every run as
+usual. (Paused 22.11.2026, "תשהה את הפודקאסט", because the HeyGen voice read Hebrew badly.) Guard: if show.paused is ever
+true again, skip this whole section 6b (no voice, no mix, no feed, no podcast Telegram lines) until Yakir restarts it.
 
 Weekly podcast "נדל״ן בגובה העיניים", 10 to 12 minutes in Yakir's cloned voice, on Spotify, Apple Podcasts, YouTube and the
 site videos page, plus a 1-minute avatar clip. Yakir 5.11.2026: "משימה קבועה אחת לשבוע לשלוח אליי תוכן לאישור ואחרי שאני
@@ -461,37 +461,41 @@ Every run, after section 6, check the episode rows (skip rows with test true). Y
   (a different topic if he asked for one: new research, sources you open this run). docs_merge {script, clip (keep clip.req
   unset), description, cover, youtubeTitle, sources, words, sec, status 'draft', rewrittenAt}, then POST reels?vr=podscript
   {"id": "epNN"} with the x-cron-secret header (net.http_post, read net._http_response): it sends Yakir the new version.
-- 'script-approved' (Yakir pressed the button; the function also opened the clip request vr-pod-epNN-clip): generate the
-  VOICE ONLY (no avatar video), exactly as pipeline.2_voice says: mcp__heygen__create_speech_without_player per script
-  section, voice settings/heygen.voice.id, language 'he' (since 11.11.2026 the tool takes no engine/settings/model: omit
-  them; never <break> tags, his instant clone refuses them; use "[pause]" for a pause), the text prepared like
-  section 4 step 2 (no section headers, pronunciation + spokenReplace + avoidWords, never niqqud). Credits before / after
-  PRONUNCIATION CHECK (since 21.11.2026, Yakir on ep04: "יש פה בעיות בדיבור ... אי אפשר לשמוע את זה", then "להישאר
-  בהייגן ותתקן בעצמך את כל הבעיות"): since 11.11.2026 the tool speaks with HeyGen's own engine (heygen-voice-1), which
-  misreads many Hebrew words. So for every podcast voice: (1) apply settings/heygen.podcastPron to the HeyGen text only
-  (IPA tags <pron ipa="/.../">word</pron> for words without ח/כ-sound and without h, an exact single-word niqqud, a
-  spelling trick like ח for a soft כ, or a simple rewording that keeps the meaning); pass expressivenessBoost 1 (a request
-  with pronunciations otherwise speaks flatter and about 20% faster). IPA rules learned: phones x and h are accepted but
-  come out wrong (x sounds like h or drops), χ ħ and the affricate tʃ without a tie are refused (use t͡ʃ for צ׳, t.ʃ for
-  ת+ש), two equal vowels need a dot (ʃe.eˈla). (2) After voicing, check the words: put the part URLs into
-  tools/podcast-asr/job.json with "phon": true (Action podcast-asr, about 10 minutes, output branch podcast-asr-out) and run
-  tools/podcast-asr/compare.py <script> out/<name>.json 0.6; numbers heard as digits and צ׳ heard as "צ אט" are fine. Every
-  real misreading gets a fix from (1), is added to settings/heygen.podcastPron, and ONLY the sections
-  concerned are voiced again and checked again. (3) Only then mix. Tell Yakir in the final-approval message which wordings
-  were changed for the voice.
-  (get_current_user) into settings/heygen.costLog as {id:'pod-epNN-voice', ...} (episode 1 cost 29 credits for 10 minutes).
-  If the first section costs clearly more than that rate, stop: one Telegram line to Yakir with the measured cost, status
-  'voice-cost-wait'. No automatic retry after an error. Then docs_merge epNN {voice:{parts,at,creditsBefore,creditsAfter},
-  status:'voiced'}.
+- 'script-approved' (Yakir pressed the button; the function also opened the clip request vr-pod-epNN-clip): make the
+  VOICE ONLY (no avatar video). CHANGED 25.11.2026: the episode voice is Yakir's own ElevenLabs voice clone through the
+  edge function `voice` (docs settings/voice, section 0b), NOT HeyGen: never mcp__heygen__create_speech_without_player for
+  the podcast again, no settings/heygen.voice / pronunciation / spokenReplace / avoidWords / podcastPron, no IPA tags, no
+  "[pause]", never add vowel marks yourself (the function fixes דבול and נסח and applies settings/voice.pron). The text is
+  the approved epNN.script exactly as written, one call per section, the "[...]" header lines dropped (never spoken):
+  `with s as (select data->>'script' t from docs where coll='podcast' and id='epNN'),
+   b as (select btrim(x, E'\n ') body, row_number() over () - 1 i from s, unnest(regexp_split_to_array(s.t, '\n*\[[^\]\n]+\]\n')) x)
+   select i, net.http_post(url := 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/voice',
+     body := jsonb_build_object('action','say','text',b.body,'path','podcast/epNN/s'||lpad(i::text,2,'0')||'.mp3'),
+     headers := jsonb_build_object('content-type','application/json','x-cron-secret',(select v from app_secrets where k='CRON_SECRET')),
+     timeout_milliseconds := 150000) as req from b where i in (1,2,3) order by i;`
+  (the section headers in order come from regexp_matches(t, '\[([^\]\n]+)\]', 'g')). Three sections per statement, then
+  pg_sleep(35) and read net._http_response for those ids: {ok, path, chars, bytes, url}. Take path, chars, bytes; the url
+  is a temporary private link: never write it to a doc, a file or a message. A section that failed: once more; a second
+  failure: one Telegram line to Yakir and stop (status stays 'script-approved'). Budget as in section 0b (charLog vs
+  settings/voice.budget.monthChars): a 10-minute episode is about 8,000 characters (ep04: 8,038 for 10 sections).
+  Append {id:'pod-epNN-voice', chars, at} to settings/voice.charLog (one statement, as in section 8). Then docs_merge
+  epNN {voice:{engine:'elevenlabs', voiceId: settings/voice.voiceId, model 'eleven_v4', parts:[{h, path, chars, bytes}],
+  chars, at}, status:'voiced'}. (Before 25.11.2026: HeyGen speech with IPA pronunciation fixes and an ASR check; ep04 was
+  rejected by Yakir twice in that voice, so that recipe is retired.)
 - 'voiced': write the mix job media/podcast/src/epNN.json and run the podcast mix Action (.github/workflows/podcast-mix.yml,
-  tools/podcast/mix.py and covers.py, exactly as episode 1: docs podcast/ep01.mix is the model). Check the result (duration
+  tools/podcast/mix.py and covers.py, exactly as episode 1: docs podcast/ep01.mix is the model). Since 25.11.2026 the
+  parts are {"h": "<section>", "path": "podcast/epNN/sNN.mp3"} (storage paths, NO url: the runner gets 10-minute links
+  from functions/v1/voice?gh=podcast with GitHub's OIDC token; media/podcast/src/ep04.json is the model). Pushing the job
+  file starts the Action; the mix commit "podcast mix: epNN" lands on main after about 3 to 6 minutes. Check the result (duration
   10 to 12 minutes, loudness about -16 LUFS, Read the cover images with your own eyes: Hebrew right to left, nothing cut).
   docs_merge epNN {mix:{mp3, mp4, duration, bytes, lufs, chapters, covers}}, then POST reels?vr=podfinal {"id": "epNN"}:
   Telegram to Yakir with "listen and approve" / "fix" buttons; status 'final-wait'.
 - 'final-fix': Yakir wrote what to fix (finalFixNote). Words: fix only the sections concerned in epNN.script (if
-  fixedSections is set, the chat session already fixed the text: re-voice exactly those sections), re-voice only those
-  sections (the others keep their audio: replace only those entries of epNN.voice.parts), mix again under the same file
-  names. Music or sound: change the mix only. Then reels?vr=podfinal again.
+  fixedSections is set, the chat session already fixed the text: re-voice exactly those sections); a word read wrong goes
+  to settings/voice.pron (section 0b) or the sentence is reworded. Re-voice only those sections with the voice function
+  under a NEW path (podcast/epNN/s03-2.mp3, then -3 ...; the others keep their audio: replace only those entries of
+  epNN.voice.parts and of the job file), mix again under the same output file names. Music or sound: change the mix
+  only. Then reels?vr=podfinal again.
 - 'final-approved' with replaceInFeed true (a fix of an episode that is ALREADY in the feed, e.g. ep01 on 5.11.2026: Yakir
   heard "ונשמע" instead of "ונשתמע"): do not wait for a release day and never add a second item. Right away: add_repo +
   clone nadlan-podcast as in b below, run feed_add.py with `--replace` (same item, same guid and date; new audio, length and
@@ -516,7 +520,8 @@ Every run, after section 6, check the episode rows (skip rows with test true). Y
      200 and has the episode. docs_merge epNN {feed:{at, url, mp3, guid}, status 'published', publishedAt} and append epNN to
      podcast/show.episodes. One short Telegram line: "🎙 פרק <n> של נדל״ן בגובה העיניים עלה לספוטיפיי ולאפל. ביוטיוב
      הערב ב-19:00." If the push is refused: Telegram once "לא הצלחתי להעלות את פרק <n> לפיד, אני בודק." and leave the status.
-- (25.11.2026) The 1-minute clip is made in his own ElevenLabs voice (section 0b), after the pilot is approved.
+- (25.11.2026) The 1-minute clip is made in his own ElevenLabs voice (section 0b), after the pilot is approved: its voice
+  comes from the same `voice` function (path reels/vr-pod-epNN-clip/voice.mp3), never from HeyGen's voices.
 - The 1-minute clip is the vidreq vr-pod-epNN-clip (type 'other', source 'podcast', opened by the function at the script
   approval), handled by sections 4 to 6 like any request (raw approval, edit, final approval). When it is 'approved' and has
   no pubId: INSERT a pub row `pub-<releaseDate YYYYMMDD>T1300-podcast-epNN-clip` at '<releaseDate>T13:00' for
