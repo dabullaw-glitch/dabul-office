@@ -37,6 +37,25 @@ Every number / date / tool price is checked against an official source the same 
 - Google sign-in on: provider enabled in Supabase (client "Team of One site login"), too_settings google_login=true, public=true.
 - Live event placeholder: 3.12.2026 20:30 (too_events id 1). Yakir may change the day later.
 
+- Members library items 38-50 ("ספריית החברים"), 25.11.2026: shorter standard. Every item: "מה תצאו איתו" box, existing
+  body (fixed: three "הכי" in 38, 41, 46; 38 no longer promises "twice a week" updates, since the content task is paused),
+  concrete additions (a true "מהשטח" from Yakir's own lessons where one fits, a worked "לפני ואחרי" example), "הצלחתם כש",
+  signature line. Work files only where they add value: lib-40-meeting-summary.docx, lib-42-intake-form.docx,
+  lib-43-email-tracker.xlsx (TODAY-based follow-up flags, recalculated, 0 errors), lib-45-procedure.docx, lib-46-quote.docx
+  (bucket too, lessons/). Items 41, 47, 48, 49, 50 point to the matching course lesson file instead (26, 25, 3, 18, 2).
+  Durations 38-50: 15/30/15/40/20/30/15/60/15/60/15/30/15. Script: /home/claude/too-files/build_lib.py.
+
+## Lesson videos in Yakir's voice (PILOT, waiting for his approval; do not make more until he approves)
+- Lesson 1 pilot, 25.11.2026: narration script (2,604 chars, about 3:17) written only from lesson 1 facts, voiced with the
+  function `voice` (ElevenLabs professional clone) to files/too/videos/l01/narration.mp3. Credits used: 2,606 characters.
+- Pipeline: tools/too-video (slides.html in the site's brand, render.py, job.py) + workflow too-video.yml (manual, input job)
+  + function toovid (GitHub OIDC; reads the job from docs toovideo/<job>, gives a signed audio link and a signed upload
+  link). The finished mp4 goes straight to the private bucket: files/too/videos/<job>/lesson.mp4. Nothing from the lesson is
+  in the repo or the public run log. This workspace cannot reach Supabase storage directly, so the render runs in CI.
+- Review link for Yakir: toovid ?sign=<job>&days=N with x-cron-secret. Approval doc: docs agents/too-video-pilot.
+- After approval only: set too_lesson_content.video_url for the lesson (the player in src/lib/video.js must support a
+  private signed link first; check before publishing), then the next lessons one by one.
+
 ## How files reach private storage (paid material never stays in this public repo)
 1. Build the file locally. 2. Encrypt with AES-GCM (12-byte nonce + ciphertext), key = app_secrets.TOO_FILEKEY (hex; never print it).
 3. Commit to tmp/too-enc/<ascii-name>.bin, push, note the commit sha.

@@ -37,13 +37,18 @@ def main(deck_f, txt_f, mp3, out):
     if len(paras) != len(deck['slides']): raise SystemExit(f'{len(paras)} paragraphs, {len(deck["slides"])} slides')
     total = duration(mp3)
     sil = silences(mp3)
-    # boundaries: expected by text length, snapped to the longest nearby pause
-    L = [len(p) for p in paras]; cum = 0; bounds = [0.0]
-    for i in range(len(paras) - 1):
-        cum += L[i]; exp = total * cum / sum(L)
-        near = [s for s in sil if abs(s[0] - exp) < 6 and s[0] > bounds[-1] + 2]
-        pick = max(near, key=lambda s: s[1] - abs(s[0] - exp) / 20)[0] if near else exp
-        bounds.append(pick)
+    # boundaries: deck["bounds"] when given (seconds, one per paragraph start after the first), otherwise the pause
+    # nearest to where the remaining text says the paragraph ends, longer pauses preferred
+    L = [len(p) for p in paras]; bounds = [0.0]
+    print(json.dumps({'pauses': [[round(t, 2), round(d, 2)] for t, d in sil if d >= 0.3]}))
+    if deck.get('bounds'):
+        bounds += [float(x) for x in deck['bounds']][:len(paras) - 1]
+    else:
+        for i in range(len(paras) - 1):
+            exp = bounds[-1] + (total - bounds[-1]) * L[i] / sum(L[i:])
+            near = [s for s in sil if abs(s[0] - exp) < 5 and s[0] > bounds[-1] + 2]
+            pick = max(near, key=lambda s: s[1] - abs(s[0] - exp) / 8)[0] if near else exp
+            bounds.append(pick)
     bounds.append(total)
     # reveal times inside each slide
     shots = []  # (slide, step, start)
@@ -54,6 +59,8 @@ def main(deck_f, txt_f, mp3, out):
             pos = p.find(cue)
             if pos < 0: raise SystemExit(f'cue {k} not found in paragraph {i + 1}')
             t = a + LEAD + (b - a - LEAD) * pos / len(p)
+            ends = [m + d / 2 for m, d in sil if a < m and m + d / 2 < b and -1.5 <= m + d / 2 - t <= 0.8]
+            if ends: t = min(ends, key=lambda e: abs(e - t)) - 0.1   # the item appears as the sentence starts
             shots.append((i, k, max(t, shots[-1][2] + 0.6)))
     tmp = pathlib.Path(tempfile.mkdtemp())
     from playwright.sync_api import sync_playwright
