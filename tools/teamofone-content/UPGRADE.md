@@ -45,6 +45,16 @@ Every number / date / tool price is checked against an official source the same 
   (bucket too, lessons/). Items 41, 47, 48, 49, 50 point to the matching course lesson file instead (26, 25, 3, 18, 2).
   Durations 38-50: 15/30/15/40/20/30/15/60/15/60/15/30/15. Script: /home/claude/too-files/build_lib.py.
 
+- Four new courses (outlines from the plan doc https://claude.ai/artifact/Vwnp5Xzpsx6QDK9FqbH7PS, section "ראשי פרקים
+  לאישורך"; Yakir told Claude to do all the launch-plan work, and on 25.11.2026 "תטפל בזה"), written 25.11.2026 at the
+  full lesson standard. Stored as UNPUBLISHED modules (published=false, lessons published=false), so members do not see them:
+  module 11 "קורס: אתר שמביא פניות מגוגל" (6 lessons, 265 min), 12 "קורס: סרטונים בלי מצלמה" (5, 190),
+  13 "קורס: אוטומציות לעסק" (5, 230), 14 "קורס: שיווק שותפים עם בינה מלאכותית" (5, 230). 20 new files in bucket too,
+  lessons/c<course>-l<lesson>-*.docx|xlsx (xlsx recalculated in LibreOffice, 0 errors); course 2 lesson 4 reuses
+  lessons/m8-l31-edit-check.docx. Texts and script local only: /home/claude/too-new (md/, build_new.py).
+  Open before selling: how a separately sold course maps to access (today a module is part of the main course once published),
+  and Yakir's approval of every lesson before publishing.
+
 ## Lesson videos in Yakir's voice (PILOT, waiting for his approval; do not make more until he approves)
 - Lesson 1 pilot, 25.11.2026: narration script (2,604 chars, about 3:17) written only from lesson 1 facts, voiced with the
   function `voice` (ElevenLabs professional clone) to files/too/videos/l01/narration.mp3. Credits used: 2,606 characters.
@@ -70,5 +80,5 @@ Every number / date / tool price is checked against an official source the same 
 
 ## Next (in order)
 - Members library items 38-50: same standard (shorter), file only where it adds real value.
-- Four new paid courses: chapter outlines for Yakir's approval (site from Google, videos without camera, automations, affiliate marketing with AI).
+- Four new paid courses: WRITTEN (see Done, modules 11-14, unpublished). Next: Yakir reviews, then decide separate-course access.
 - The automatic content task (trig_01Mc8EeZ9nQsnwTisL9wwgSQ) stays paused until Yakir says otherwise; when re-enabled, every item goes to him for approval first.
