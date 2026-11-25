@@ -542,6 +542,41 @@ episode to the feed twice, and never put a podcast item into the fixed Sun/Tue/T
 
 ## 8. Course lessons (built 5.11.2026; runs every run, before section 7)
 
+PAID LESSONS ARE PRIVATE (25.11.2026, Yakir approved; overrides every "GitHub Pages" / "media/course/first-home" step below
+for lessons 2 to 10, every lesson whose lessons[n].free is not true). A paid lesson video, its poster, check stills,
+result and its slide narration NEVER go into this public repo or to GitHub Pages. They live in private storage:
+bucket 'course' (course/<course>/<file>.mp4, .jpg, .result.json, check/<file>-1..6.jpg) and, for the narration, bucket
+'files' (course/<course>/lNN-sNN-<hash>.mp3, written by fn/tts for paid lessons). The course row keeps REFERENCES, never
+links: lessons[n].video = 'sb:course/first-home/<file>.mp4', lessons[n].poster = 'sb:course/first-home/<file>.jpg'. The
+academy function turns them into 4-hour signed links only for a verified buyer (personal link + approved device).
+Lesson 1 (free) stays public exactly as before.
+- Build (step D/E for a paid lesson): INSERT docs `coursejob` id <file> {kind 'build', status 'queued', course, n,
+  req: '<request id>', open: '<fresh HeyGen opening url>', close: '<fresh closing url>', narration {mode 'eleven'},
+  rkey: md5(random()::text)||md5(random()::text), created} (the HeyGen links go ONLY into this office-only row). Then push
+  ONLY `media/course/jobs/<file>.job.json` = {"file": "<file>", "private": true} (nothing else in it). The workflow reads
+  the job through academy ?gh=job (GitHub OIDC), builds, uploads to private storage and sets coursejob status 'built'
+  (or 'failed' with error). In the repo it writes only media/course/jobs/<file>.done.txt or .error.txt (no content).
+  A retry: docs_merge coursejob {status 'queued'} and push the job file again with a new field "try": <n>.
+- Check (step E): read docs coursejob/<file> (result: duration, parts, slides, warnings, bytes). The stills: `git fetch
+  origin course-review` and `git show FETCH_HEAD:<file>.bin > /tmp/<file>.bin`; key = coursejob.rkey (read it with SQL,
+  never write it anywhere); `RKEY=<key> openssl enc -d -aes-256-cbc -pbkdf2 -in /tmp/<file>.bin -pass env:RKEY | tar -x
+  -C /tmp/<file>/` gives <file>.jpg, <file>-1..6.jpg and <file>.result.json. Look at them with your own eyes as below, then
+  delete the /tmp files.
+- Send for approval: `reels?vr=final` {"id": "<request id>", "ref": "sb:course/first-home/<file>.mp4"} (NOT a url). Yakir's
+  view button is academy?a=rv&t=<vtok>: it opens a 3-hour signed link on every click, only while the lesson waits for him.
+- Attach (step F) with the refs: `l || jsonb_build_object('video','sb:course/first-home/<file>.mp4','poster',
+  'sb:course/first-home/<file>.jpg','videoAt',now(),'videoOld',l->>'video')`.
+- A signed link for the main session (max 7 days): academy ?step=sign {ref, sec} with x-cron-secret.
+- Storage is the free plan (1 GB): before each build sum storage.objects sizes (SQL); stop and tell the main session if
+  the total would pass 900 MB. A lesson is about 19 MB. When a re-do is approved and attached, its videoOld file can be
+  removed only with the main session's approval.
+- SLIDES RE-VOICE ROWS (25.11.2026, Job of the main session): vidreq `vr-slides-l02` ... `vr-slides-l07` {type 'course',
+  pilot 'slides-redo', lesson n}: lessons 2 to 7 with the slides in his ElevenLabs voice and the OLD avatar opening /
+  closing (no HeyGen credits). They were built and sent to Yakir by the main session. This section does not build them,
+  but step F DOES attach them after his approval ('approved' + courseReady, no attachedAt), with the refs statement above
+  (videoOld kept), and then docs_merge the row {attachedAt}. 'rejected': docs_merge status 'hold' and leave it to the main
+  session. The later avatar re-dos of section 0b reuse the same voiced slides at no cost.
+
 SLIDES NARRATION IN HIS OWN VOICE (25.11.2026; replaces the HeyGen "pieces" of step D below). The lesson slides are now
 read by Yakir's own ElevenLabs voice clone (docs settings/voice) through fn/tts-index.ts (edge function `tts`), which calls
 the `voice` function scene by scene and writes the files into the deck exactly like the Google narration did:
@@ -670,6 +705,8 @@ D. His voice for the slides (status 'voice'): the narration text of slide i = le
    "deckUrl": "https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reels?a=deck&t=<ctok>",
    "open": "<hg.open url>", "close": "<hg.close url>" (fresh from get_video: the HeyGen links expire),
    "narration": {"mode": "pieces", "pieces": [{"audio", "from", "to"}, ...]}   (or {"mode": "google"})}.
+   PAID LESSON (not lessons[n].free): do NOT write this job file; use the private coursejob row + the two-field job file
+   of the block "PAID LESSONS ARE PRIVATE" at the top of this section.
    docs_merge the request {status 'assembling', jobFile, jobAt}.
 E. Assembly (status 'assembling'): the workflow .github/workflows/course-lesson.yml (tools/course-lesson/lesson.py) builds
    media/course/first-home/<file>.mp4 (opening: Yakir on the left, lesson number + title beside him; the slides exactly as
@@ -685,13 +722,15 @@ E. Assembly (status 'assembling'): the workflow .github/workflows/course-lesson.
    pieces around it) and build again under a new file id. When it passes: `reels?vr=final` {"id": "<request id>", "url":
    "https://dabullaw-glitch.github.io/dabul-office/media/course/first-home/<file>.mp4"} (wait 1 to 3 minutes for GitHub
    Pages if the answer says it is not there). The function sends Yakir the lesson with view / approve / not approve
-   (status 'final-wait'). Never upload anything to storage.
+   (status 'final-wait'). Never upload anything to storage yourself. PAID LESSON: everything in this step follows the
+   block "PAID LESSONS ARE PRIVATE" (coursejob row, course-review bundle, vr=final with "ref").
 F. After his answer: 'approved' with courseReady and no attachedAt: attach the video to the lesson, server side (never copy
    the lessons array by hand):
    `select docs_merge('course','first-home', jsonb_build_object('lessons', (select jsonb_agg(case when (l->>'n')::int = <n>
     then l || jsonb_build_object('video', '<url>', 'videoAt', now()) else l end order by o) from docs d,
     jsonb_array_elements(d.data->'lessons') with ordinality as x(l, o) where d.coll = 'course' and d.id = 'first-home')));`
-   check lessons[n].video, docs_merge the request {attachedAt}, and go to A for the next lesson. The academy plays the mp4
+   check lessons[n].video, docs_merge the request {attachedAt}, and go to A for the next lesson. PAID LESSON: attach the
+   refs (video + poster), never a link (block "PAID LESSONS ARE PRIVATE"). The academy plays the mp4
    instead of the slides player (academy/academy.js). The course stays closed for sale until Yakir opens it (sale.open).
    'rejected': docs_merge status 'hold', Telegram once "שיעור <n> לא אושר. כתוב לי בצ'אט מה לתקן, ואתקן." and stop the
    course path until a fix note arrives (fixNote on the request, written by the main session).
