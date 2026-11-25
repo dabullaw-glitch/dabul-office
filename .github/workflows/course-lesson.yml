@@ -67,6 +67,7 @@ jobs:
               W=$(mktemp -d)
               T=$(tok); echo "::add-mask::$T"
               code=$(curl -s -o "$W/job.json" -w '%{http_code}' -H "Authorization: Bearer $T" "$F?gh=job&id=$id")
+              if [ "$code" = "404" ]; then echo "skip $id: not queued (already built by an earlier run, or waiting)"; rm -rf "$W"; continue; fi
               if [ "$code" != "200" ]; then echo "FAILED $id: job answer $code"; echo "failed $(date -u +%FT%TZ): the job was not ready (answer $code); see docs coursejob/$id" > media/course/jobs/$id.error.txt; rm -rf "$W"; continue; fi
               if python tools/course-lesson/lesson.py --private "$W" > /tmp/cl/$id.log 2>&1; then ok=1; else ok=0; fi
               grep -E '^(lesson|final|private lesson|FAILED|upload failed|fetch failed)' /tmp/cl/$id.log | tail -20
