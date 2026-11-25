@@ -24,6 +24,8 @@ Every number / date / tool price is checked against an official source the same 
   Build scripts (local, not in repo): /home/claude/too-files/build_p3.py, build_p4.py; texts in too-files/md/.
 - Lessons 16-19 (module 5), 25.11.2026: files m5-l16-question-bank.xlsx, m5-l17-article-writer.docx, m5-l18-faq-template.docx,
   m5-l19-image-spec.docx. Durations 40/50/30/40. Script: /home/claude/too-files/build_p5.py.
+- Lessons 20-24 (module 6), 25.11.2026: files m6-l20-keywords.xlsx, m6-l21-link-map.xlsx, m6-l22-index-check.docx,
+  m6-l23-monthly-report.xlsx, m6-l24-ai-mentions.xlsx. Durations 45/40/35/30/40. Script: /home/claude/too-files/build_p6.py.
 - Google sign-in on: provider enabled in Supabase (client "Team of One site login"), too_settings google_login=true, public=true.
 - Live event placeholder: 3.12.2026 20:30 (too_events id 1). Yakir may change the day later.
 
@@ -36,7 +38,7 @@ Every number / date / tool price is checked against an official source the same 
 6. Lesson attachments: [{"title":"<Hebrew name> (וורד|אקסל)","path":"lessons/<ascii-name>"}].
 
 ## Next (in order)
-- Modules 6-10 (lessons 20-37), same standard, module by module.
+- Modules 7-10 (lessons 25-37), same standard, module by module.
 - Members library items 38-50: same standard (shorter), file only where it adds real value.
 - Four new paid courses: chapter outlines for Yakir's approval (site from Google, videos without camera, automations, affiliate marketing with AI).
 - The automatic content task (trig_01Mc8EeZ9nQsnwTisL9wwgSQ) stays paused until Yakir says otherwise; when re-enabled, every item goes to him for approval first.
