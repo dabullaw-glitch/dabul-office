@@ -123,7 +123,7 @@ p{margin:0 0 1em}
 /* sales page */
 .buybox{background:var(--paper);color:var(--text);border-radius:14px;padding:34px;box-shadow:0 30px 70px -30px rgba(0,0,0,.6)}
 .buybox .price{font-family:var(--serif);font-size:54px;font-weight:700;line-height:1}
-.buybox .price small{font-family:var(--sans);font-size:15px;color:var(--muted);font-weight:400}
+.buybox .price small{font-family:var(--sans);font-size:15px;color:var(--muted);font-weight:400;white-space:nowrap;display:inline-block}
 .buybox ul{list-style:none;padding:0;margin:20px 0 24px}
 .buybox li{padding:7px 0 7px 0;display:flex;gap:10px}
 .buybox li:before{content:"";flex:0 0 18px;height:18px;margin-top:5px;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--gold-deep) 0 3px,transparent 4px),#f3ead2}

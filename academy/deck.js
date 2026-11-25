@@ -29,7 +29,7 @@
     big: s => `<div class="dk-big"><p class="rv">${rich(s.text)}</p>${s.sub ? `<small class="rv">${rich(s.sub)}</small>` : ''}</div>`,
     bullets: s => `<div class="dk-pad"><h3>${rich(s.title)}</h3><ul class="dk-bul">${list(s.items)}</ul></div>`,
     steps: s => `<div class="dk-pad"><h3>${rich(s.title)}</h3><ol class="dk-steps">${list(s.items)}</ol></div>`,
-    key: s => `<div class="dk-call key"><span class="lab rv">${esc(s.label || 'הכי חשוב לזכור')}</span><p class="rv">${rich(s.text)}</p></div>`,
+    key: s => `<div class="dk-call key"><span class="lab rv">${esc(s.label || 'חשוב לזכור')}</span><p class="rv">${rich(s.text)}</p></div>`,
     warn: s => `<div class="dk-call warn"><span class="lab rv">${esc(s.label || 'טעות נפוצה')}</span><p class="rv">${rich(s.text)}</p></div>`,
     tip: s => `<div class="dk-call tip"><span class="lab rv">${esc(s.label || 'טיפ')}</span><p class="rv">${rich(s.text)}</p></div>`,
     example: s => `<div class="dk-pad dk-ex"><span class="lab">${esc(s.label || 'דוגמה מהחיים')}</span><h3>${rich(s.title || '')}</h3><ol class="dk-story">${list(s.items)}</ol></div>`,
