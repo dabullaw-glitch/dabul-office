@@ -46,6 +46,13 @@ html,body{overflow-x:clip}
 .dmag .btn.pri{background:var(--ink);color:var(--g1)}
 .dmag .btn.sec{color:var(--ink);background:#fff}
 .dmag .btn.sm{padding:8px 14px;font-size:14.5px}
+.dmag #archive{scroll-margin-top:120px}
+.dmag .pager{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin:28px 0 0}
+.dmag .pager button{font:inherit;font-weight:700;font-size:16px;min-width:44px;height:44px;padding:0 14px;border-radius:8px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+.dmag .pager button:hover{border-color:var(--g2)}
+.dmag .pager button[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--g1)}
+.dmag .pager button:disabled{opacity:.35;cursor:default}
+.dmag .pager .cnt{width:100%;text-align:center;font-size:14px;color:var(--mut);margin-top:2px}
 .dmag .inside{margin-top:36px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px 32px}
 .dmag .inside h2{font-size:26px;margin-bottom:4px}
 .dmag .inside .sub{color:var(--mut);font-size:15px;margin:0 0 14px}
@@ -126,6 +133,21 @@ html,body{overflow-x:clip}
 """
 
 
+PAGER = """<nav class="pager" id="dmag-pager" aria-label="עמודי הגיליונות" hidden></nav>
+<script>(function(){var g=document.querySelector('.dmag .grid'),nav=document.getElementById('dmag-pager');if(!g||!nav)return;
+var c=[].slice.call(g.children),cur=0;function per(){return window.matchMedia('(max-width:767px)').matches?8:9}
+function pages(){return Math.ceil(c.length/per())}
+function b(t,lab,fn,dis,on){var x=document.createElement('button');x.type='button';x.textContent=t;if(lab)x.setAttribute('aria-label',lab);if(dis)x.disabled=true;if(on)x.setAttribute('aria-current','page');x.onclick=fn;return x}
+function show(p,scroll){var n=pages(),k=per();if(p<0)p=0;if(p>n-1)p=n-1;cur=p;
+c.forEach(function(el,i){el.hidden=!(i>=p*k&&i<(p+1)*k)});nav.innerHTML='';if(n<2){nav.hidden=true;return}nav.hidden=false;
+nav.appendChild(b('→ הקודם','לעמוד הקודם',function(){show(cur-1,1)},p===0));
+for(var i=0;i<n;i++)(function(i){nav.appendChild(b(String(i+1),'עמוד '+(i+1),function(){show(i,1)},false,i===p))})(i);
+nav.appendChild(b('הבא ←','לעמוד הבא',function(){show(cur+1,1)},p===n-1));
+var s=document.createElement('div');s.className='cnt';s.textContent='עמוד '+(p+1)+' מתוך '+n+' · '+c.length+' גיליונות';nav.appendChild(s);
+if(scroll){var a=document.getElementById('archive');if(a)a.scrollIntoView({behavior:'smooth',block:'start'})}}
+show(0);var w=per();window.addEventListener('resize',function(){if(per()!==w){w=per();show(0)}})})();</script>"""
+
+
 import re
 LINK = re.compile(r'\[([^\]]+)\]\((https://dabullaw\.co\.il/[^)\s]*)\)')
 
@@ -191,6 +213,9 @@ def build(d):
         cards.append(f'''<article class="card"><a href="{e(ip)}"><img src="{e(it["cover"])}" alt="שער מגזין הנדל״ן, גיליון {it["no"]}" width="800" height="1000" loading="lazy"></a><div class="b"><span class="no">גיליון #{it["no"]}</span><span class="dt" dir="ltr">{e(it["dates"])}</span><h3><a href="{e(ip)}" style="color:inherit">{e(it["title"])}</a></h3><p>{e(it["blurb"])}</p>
 <div class="btns"><a class="btn pri sm" href="{e(ip)}">לקריאה</a><a class="btn sec sm" href="{e(it["pdf"])}" download>הורדה</a></div></div></article>''')
     out.append(f'<div class="st" id="archive">כל הגיליונות</div><section class="grid">{"".join(cards)}</section>')
+    # 25.11.2026 (Yakir): the archive shows 9 issues a page (3 rows of 3), with page buttons, not an endless page.
+    # Every card stays in the HTML, so search engines see links to all the issues; the script only hides the other pages.
+    out.append(PAGER)
     out.append(CTA)
     pr = person(a)
     periodical = {"@type": "Periodical", "@id": PAGE + "#periodical", "name": "מגזין הנדל״ן", "inLanguage": "he", "url": PAGE, "author": pr,
