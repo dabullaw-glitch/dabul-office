@@ -1,15 +1,19 @@
 """Podcast mix (TASK.md 6b, pipeline.3_mix and 5_youtube_video). Runs in the podcast-mix GitHub Action (the runner can
-download the HeyGen audio links; the task's sandbox cannot).
+download the audio; the task's sandbox cannot).
 Usage: python3 tools/podcast/mix.py media/podcast/src/<epNN>.json
 Job: {"ep": "ep01", "n": 1, "title": "...", "album": "<show name>", "artist": "עו״ד יקיר דבול", "gap": 0.7,
-      "parts": [{"h": "<section>", "url": "<wav/mp3 url>"}, ...]}
+      "parts": [{"h": "<section>", "path": "podcast/<epNN>/sNN.mp3"}, ...]}
+Since 25.11.2026 the voice is Yakir's own ElevenLabs clone (edge function `voice`, private bucket 'files'): a part gives
+its storage "path" and the runner gets a 10-minute signed link from functions/v1/voice?gh=podcast with GitHub's OIDC
+token (the workflow has id-token: write), so no link is ever written in the public repo and none is printed.
+Old jobs (episodes 1 to 3, HeyGen voice) give a direct "url" instead; both work.
 Output (media/podcast/): <ep>.mp3 (44.1 kHz mono 128 kbps CBR, ID3 tags + the episode cover), <ep>.mp4 (1920x1080: the
 episode background <ep>-ytbg.png + a gold sound wave; regular YouTube video), <ep>.json {duration, bytes, lufs, truePeak,
 chapters [{h, t}]}. On failure: <ep>.error.txt.
 Music: a calm pad made here from sine tones (our own sound, no license needed), about 6 s alone at the start, then under
 the voice at about -18 dB and fading out; a short bed again at the end. Yakir hears it in the first edit and can change it.
 """
-import json, math, subprocess, sys, urllib.request
+import json, math, os, subprocess, sys, urllib.parse, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -17,10 +21,23 @@ OUT = ROOT / 'media/podcast'
 SR = 44100
 INTRO = 5.0       # music alone before the first word
 OUTRO = 7.0       # music after the last word
+VOICE_FN = 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/voice'
 
 
 def sh(*a):
     subprocess.run(list(a), check=True)
+
+
+def part_url(p):
+    """Direct url (old HeyGen jobs) or a short signed link for a private voice part (path), asked with the OIDC token."""
+    if p.get('url'):
+        return p['url']
+    req = urllib.request.Request(os.environ['ACTIONS_ID_TOKEN_REQUEST_URL'] + '&audience=dabul-voice',
+                                 headers={'Authorization': 'bearer ' + os.environ['ACTIONS_ID_TOKEN_REQUEST_TOKEN']})
+    tok = json.load(urllib.request.urlopen(req, timeout=30))['value']
+    q = urllib.parse.urlencode({'gh': 'podcast', 'path': p['path']})
+    req = urllib.request.Request(VOICE_FN + '?' + q, headers={'Authorization': 'Bearer ' + tok})
+    return json.load(urllib.request.urlopen(req, timeout=60))['url']
 
 
 def dur(p):
@@ -41,7 +58,7 @@ def main(job_path):
         raw = w / f'p{i:02d}.src'
         for k in range(3):
             try:
-                urllib.request.urlretrieve(p['url'], raw); break
+                urllib.request.urlretrieve(part_url(p), raw); break
             except Exception:
                 if k == 2: raise
         out = w / f'p{i:02d}.wav'

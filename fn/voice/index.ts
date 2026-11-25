@@ -5,7 +5,12 @@
 //      25.11.2026: דַּבּוּל, נֶסַח), splits the text into parts at paragraph/sentence ends, voices each part with request
 //      stitching for an even sound, joins the MP3 parts, stores <bucket>/<path> (private) and returns a signed link (24h).
 // The API key is the edge function secret ELEVENLABS_API_KEY, saved by Yakir himself; it is never returned or logged.
+//  GET ?gh=podcast&path=podcast/epNN/<name>.mp3 with Authorization: Bearer <GitHub Actions OIDC token, audience
+//      'dabul-voice'> (25.11.2026) -> a 10-minute signed link to a podcast voice part, only for the podcast-mix workflow
+//      of this repo on main. So the mix job file in the public repo holds only storage paths, never a link.
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createRemoteJWKSet, jwtVerify } from 'https://esm.sh/jose@5.9.6';
+const GH_JWKS = createRemoteJWKSet(new URL('https://token.actions.githubusercontent.com/.well-known/jwks'));
 
 const SECRETS: Record<string, string> = {};
 const env = (k: string) => Deno.env.get(k) || SECRETS[k] || '';
@@ -96,6 +101,20 @@ async function say(text: string, path: string, bucket = 'files') {
 
 Deno.serve(async (req) => {
   try {
+    const u = new URL(req.url);
+    if (req.method === 'GET' && u.searchParams.get('gh') === 'podcast') {
+      const path = String(u.searchParams.get('path') || '');
+      if (!/^podcast\/ep\d{2,3}\/[a-z0-9_-]+\.mp3$/.test(path)) return json({ ok: false, error: 'bad path' }, 400);
+      try {
+        const tok = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
+        const { payload } = await jwtVerify(tok, GH_JWKS, { issuer: 'https://token.actions.githubusercontent.com', audience: 'dabul-voice' });
+        const ok = payload.repository === 'dabullaw-glitch/dabul-office' && payload.ref === 'refs/heads/main'
+          && String(payload.job_workflow_ref || '').startsWith('dabullaw-glitch/dabul-office/.github/workflows/podcast-mix.yml@refs/heads/main');
+        if (!ok) return json({ ok: false, error: 'forbidden' }, 403);
+      } catch (_e) { return json({ ok: false, error: 'unauthorized' }, 401); }
+      const { data: s, error } = await sb().storage.from('files').createSignedUrl(path, 600);
+      return error ? json({ ok: false, error: error.message }, 404) : json({ ok: true, url: s?.signedUrl });
+    }
     await loadSecrets();
     if (!env('CRON_SECRET') || req.headers.get('x-cron-secret') !== env('CRON_SECRET')) return json({ ok: false, error: 'forbidden' }, 403);
     if (!key()) return json({ ok: false, error: 'ELEVENLABS_API_KEY missing' }, 500);
