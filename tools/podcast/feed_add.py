@@ -36,6 +36,10 @@ def main():
     if re.search('[–—]', desc + m['title']): sys.exit('no em or en dashes')
     os.makedirs(os.path.join(a.repo, 'episodes'), exist_ok=True)
     mp3_src = os.path.join(a.office, mix['mp3']); jpg_src = os.path.join(a.office, mix['covers']['episode'])
+    if not os.path.isfile(mp3_src):   # 25.11.2026: held off Pages until the release (tools/podcast/release.py)
+        sys.exit(f'{mix["mp3"]} is not in {a.office}: the episode is still held (media/podcast/release/{a.ep}.json). '
+                 'Use a checkout of origin/main after the "podcast release" commit, or run tools/podcast/release.py restore '
+                 f'--ep {a.ep} --now there first (TASK.md 6b).')
     mp3 = os.path.join(a.repo, 'episodes', f'{a.ep}.mp3'); jpg = os.path.join(a.repo, 'episodes', f'{a.ep}.jpg')
     shutil.copyfile(mp3_src, mp3); shutil.copyfile(jpg_src, jpg)
     size = os.path.getsize(mp3)

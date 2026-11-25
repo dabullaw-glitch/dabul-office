@@ -34,7 +34,10 @@ const COURSES = `<section class="pad kts" id="course" aria-labelledby="kch">
     <div class="kt-cta reveal"><a class="btn btn-l" href="${base}kursim/">לכל הקורסים <span class="arrow" aria-hidden="true">←</span></a>${cat.monthly ? `<span>מנוי חודשי${cat.monthly.intro ? `: החודש הראשון ב-${cat.monthly.intro}, ואחר כך ${cat.monthly.price} לחודש` : `: ${cat.monthly.price} לחודש`}. כולל את כל הקורסים.</span>` : ''}</div>
   </div>
 </section>`;
-const html = fix(A).replace(/<!--COURSES:[^>]*-->/, () => COURSES) + (arts.length ? ARTS : fix(FALLBACK)) + fix(B);
+// landing-b counts: every course on the site (the full course + the single courses), from the database
+const nCourses = cat.courses && cat.courses.length ? cat.courses.length : 5;
+const fixB = (s) => fix(s).replaceAll('__NCOURSES__', String(nCourses)).replaceAll('__NSINGLES__', String(nCourses - 1));
+const html = fix(A).replace(/<!--COURSES:[^>]*-->/, () => COURSES) + (arts.length ? ARTS : fix(FALLBACK)) + fixB(B);
 const jsonld = { '@context': 'https://schema.org', '@graph': [
   { '@type': 'Course', name: 'Team of One: צוות שלם. אדם אחד.', description: 'קורס דיגיטלי לבניית צוות של בינה מלאכותית לעסק: מאמרים, קידום בגוגל, סרטונים, רשתות, מענה לפניות ואתר.', inLanguage: 'he', provider: { '@type': 'Person', name: 'יקיר דבול' },
     offers: [{ '@type': 'Offer', price: cat.course ? cat.course.raw : 990, priceCurrency: 'ILS', category: 'Paid' }], hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: 'PT10H' } },
