@@ -52,7 +52,11 @@ Every number / date / tool price is checked against an official source the same 
   + function toovid (GitHub OIDC; reads the job from docs toovideo/<job>, gives a signed audio link and a signed upload
   link). The finished mp4 goes straight to the private bucket: files/too/videos/<job>/lesson.mp4. Nothing from the lesson is
   in the repo or the public run log. This workspace cannot reach Supabase storage directly, so the render runs in CI.
-- Review link for Yakir: toovid ?sign=<job>&days=N with x-cron-secret. Approval doc: docs agents/too-video-pilot.
+- Slide timing: the run log prints pause times (numbers only). Paragraph breaks do not always leave a clear pause, so for
+  l01 the slide start times are fixed in docs toovideo/l01 deck.bounds (snapped to the nearest short pause). Result:
+  3:18, 11 slides, 6.5 MB, rendered 25.11.2026 (third run; re-running costs no voice credits).
+- Review link for Yakir: toovid ?sign=<job>&days=N with x-cron-secret. Approval doc: docs agents/too-video-pilot
+  (14-day private link, Hebrew description, status "ממתין לאישור של יקיר").
 - After approval only: set too_lesson_content.video_url for the lesson (the player in src/lib/video.js must support a
   private signed link first; check before publishing), then the next lessons one by one.
 
