@@ -1,1 +1,0 @@
-import{s,B as n}from"./sb.D831sfnA.js";s.from("too_settings").select("value").eq("key","test_mode").maybeSingle().then(({data:e})=>{e&&e.value===!0&&(document.getElementById("testbar").hidden=!1)});s.auth.getSession().then(({data:e})=>{if(e.session){const t=document.querySelector(".navlogin");t&&(t.textContent="האזור האישי",t.href=n+"ezor-ishi/")}});
