@@ -197,6 +197,28 @@ details.mod[open] .pl{transform:rotate(45deg);background:var(--lime);color:var(-
 .mod .out{margin-top:14px;display:inline-flex;gap:8px;align-items:center;font-weight:700;color:var(--lime);font-size:15px}
 @media (max-width:700px){details.mod summary,.mod .body{grid-template-columns:62px minmax(0,1fr) 40px;gap:12px}.mod .n{font-size:58px}.mod ul{grid-template-columns:1fr}.mod .pl{width:40px;height:40px}}
 
+/* more courses (single courses 11-14) */
+.xcs{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:880px){.xcs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.xc{background:var(--ink2);border:1px solid var(--line);border-radius:24px 6px 24px 24px;padding:24px;display:flex;flex-direction:column;gap:10px;min-width:0;transition:border-color .2s}
+.xc:hover{border-color:rgba(215,255,59,.45)}
+.xc .t{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;color:var(--mut);font-size:14px;font-weight:700}
+.xc .t em{font-style:normal;font-size:11.5px;font-weight:800;color:var(--ink);background:var(--lime);border-radius:6px;padding:2px 8px}
+.xc h3{margin:0;font-family:var(--disp);font-weight:700;font-size:clamp(44px,5vw,60px);line-height:.9}
+.xc p{margin:0;color:#D6D3CB;font-size:15.5px}
+.xc .sub{color:var(--mut);font-size:15.5px;margin-top:-4px}
+.xc .out{color:var(--lime);font-weight:700;font-size:15px}
+.xc .ls{border-top:1px solid var(--line);padding-top:10px}
+.xc .ls summary{cursor:pointer;font-weight:700;font-size:15px;color:var(--fg);width:max-content;max-width:100%;padding:4px 0}
+.xc .ls ol{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:6px;counter-reset:x}
+.xc .ls li{display:flex;justify-content:space-between;gap:12px;font-size:14.5px;color:#D6D3CB;counter-increment:x}
+.xc .ls li span:first-child::before{content:counter(x) ". ";color:var(--mut)}
+.xc .ls .d{color:var(--mut);white-space:nowrap;flex:0 0 auto}
+.xc .bt{margin-top:auto;padding-top:8px;display:flex;flex-wrap:wrap;gap:10px}
+.xc .bt .btn{white-space:normal;text-align:center;padding:13px 20px;font-size:16px}
+@media (max-width:520px){.xc{padding:20px}.xc .bt .btn{flex:1 1 100%}}
+.xc a:focus-visible,.xc summary:focus-visible,.plan.dk li a:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+
 /* steps */
 .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:s;border-top:2px solid var(--ink)}
 .steps div{padding:26px 22px 10px 22px;border-inline-start:1px solid var(--lineD)}
