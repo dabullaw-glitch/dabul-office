@@ -1,4 +1,4 @@
-# Cache rules for Cloudflare Pages (folivus.com)
+# Cache rules for Cloudflare Pages (production domain, set later in launch.json)
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 /assets/*

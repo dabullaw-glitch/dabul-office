@@ -1,1 +1,94 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>פוליבוס</title><link>https://dabullaw-glitch.github.io/dabul-office/folivus/</link><description>מאגר עורכי דין לפי תחום ועיר, עם ציון שקוף, חוות דעת מאומתות של לקוחות ומדריכים בשפה פשוטה.</description><language>he-IL</language><item><title>איך בוחרים עורך דין: מדריך מעשי בשפה פשוטה</title><link>https://dabullaw-glitch.github.io/dabul-office/folivus/maamarim/eich-bocharim-orech-din/</link><guid>https://dabullaw-glitch.github.io/dabul-office/folivus/maamarim/eich-bocharim-orech-din/</guid><pubDate>Mon, 02 Nov 2026 00:00:00 GMT</pubDate><description>איך בוחרים עורך דין בלי להתבלבל: להבין איזה תחום צריך, לבדוק רישום וניסיון, להשוות הצעות שכר טרחה ולשים לב לסימני אזהרה. מדריך כללי בשפה פשוטה.</description></item><item><title>כמה עולה עורך דין? ממה המחיר מורכב</title><link>https://dabullaw-glitch.github.io/dabul-office/folivus/maamarim/kama-ole-orech-din/</link><guid>https://dabullaw-glitch.github.io/dabul-office/folivus/maamarim/kama-ole-orech-din/</guid><pubDate>Sun, 01 Nov 2026 00:00:00 GMT</pubDate><description>ממה מורכב שכר הטרחה של עורך דין: שיטות תשלום, מה משפיע על המחיר, הוצאות נוספות ששוכחים, ואיך משווים בין הצעות. בלי מחירונים, עם שאלות שכדאי לשאול.</description></item><item><title>מה שואלים בפגישה הראשונה עם עורך דין</title><link>https://dabullaw-glitch.github.io/dabul-office/folivus/maamarim/ma-shoalim-bapgisha-harishona/</link><guid>https://dabullaw-glitch.github.io/dabul-office/folivus/maamarim/ma-shoalim-bapgisha-harishona/</guid><pubDate>Sat, 31 Oct 2026 00:00:00 GMT</pubDate><description>רשימת שאלות מסודרת לפגישה הראשונה עם עורך דין: על העניין עצמו, על הניסיון, על שכר הטרחה ועל דרך העבודה. וגם מה להכין ומה לעשות אחרי הפגישה.</description></item></channel></rss>
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>פוליבוס: מדריכים ומאמרים</title>
+    <link>https://dabullaw-glitch.github.io/dabul-office/folivus/</link>
+    <description>מאגר משרדי עורכי דין לפי תחום ועיר, חוות דעת מאומתות של לקוחות, מדריכים משפטיים עם מקורות ותאריך עדכון, מחשבונים ומחוללי מסמכים חינמיים.</description>
+    <language>he-IL</language>
+    <atom:link href="https://dabullaw-glitch.github.io/dabul-office/folivus/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>חובות כבדים? חדלות פירעון ליחיד: הצעדים הראשונים</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%97%D7%93%D7%9C%D7%95%D7%AA-%D7%A4%D7%99%D7%A8%D7%A2%D7%95%D7%9F-%D7%9C%D7%99%D7%97%D7%99%D7%93-%D7%A6%D7%A2%D7%93%D7%99%D7%9D-%D7%A8%D7%90%D7%A9%D7%95%D7%A0%D7%99%D7%9D/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%97%D7%93%D7%9C%D7%95%D7%AA-%D7%A4%D7%99%D7%A8%D7%A2%D7%95%D7%9F-%D7%9C%D7%99%D7%97%D7%99%D7%93-%D7%A6%D7%A2%D7%93%D7%99%D7%9D-%D7%A8%D7%90%D7%A9%D7%95%D7%A0%D7%99%D7%9D/</guid>
+      <description>מה זה הליך חדלות פירעון ליחיד לפי החוק מ-2018, מתי הוא מתאים, מהם השלבים מצו פתיחת הליכים ועד הפטר, ואילו צעדים לעשות לפני שמגישים בקשה.</description>
+      <pubDate>Thu, 24 Dec 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>קניתם באינטרנט והתחרטתם? זכות הביטול לפי חוק הגנת הצרכן</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%91%D7%99%D7%98%D7%95%D7%9C-%D7%A2%D7%A1%D7%A7%D7%94-%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94-%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%91%D7%99%D7%98%D7%95%D7%9C-%D7%A2%D7%A1%D7%A7%D7%94-%D7%A9%D7%A0%D7%A2%D7%A9%D7%AA%D7%94-%D7%91%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%A0%D7%98/</guid>
+      <description>כמה ימים יש לבטל קנייה באתר או בטלפון, כמה דמי ביטול מותר לגבות, מתי מקבלים 4 חודשים, אילו מוצרים אי אפשר להחזיר ותוך כמה זמן חייבים להחזיר את הכסף.</description>
+      <pubDate>Wed, 23 Dec 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>ייפוי כוח מתמשך או אפוטרופוס: מה ההבדל ומה מתאים לכם</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%99%D7%99%D7%A4%D7%95%D7%99-%D7%9B%D7%95%D7%97-%D7%9E%D7%AA%D7%9E%D7%A9%D7%9A-%D7%90%D7%95-%D7%90%D7%A4%D7%95%D7%98%D7%A8%D7%95%D7%A4%D7%A1%D7%95%D7%AA-%D7%9E%D7%94-%D7%94%D7%94%D7%91%D7%93%D7%9C/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%99%D7%99%D7%A4%D7%95%D7%99-%D7%9B%D7%95%D7%97-%D7%9E%D7%AA%D7%9E%D7%A9%D7%9A-%D7%90%D7%95-%D7%90%D7%A4%D7%95%D7%98%D7%A8%D7%95%D7%A4%D7%A1%D7%95%D7%AA-%D7%9E%D7%94-%D7%94%D7%94%D7%91%D7%93%D7%9C/</guid>
+      <description>ייפוי כוח מתמשך מאפשר לבחור מראש מי ינהל את ענייניכם אם לא תוכלו, בלי הליך בבית משפט. השוואה מלאה לאפוטרופסות: מי ממנה, מתי נכנס לתוקף, פיקוח ועלויות.</description>
+      <pubDate>Mon, 21 Dec 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>נפגעתם בתאונת דרכים? שלבי התביעה לפיצוי, צעד אחר צעד</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%AA%D7%91%D7%99%D7%A2%D7%AA-%D7%A0%D7%96%D7%A7%D7%99-%D7%92%D7%95%D7%A3-%D7%91%D7%AA%D7%90%D7%95%D7%A0%D7%AA-%D7%93%D7%A8%D7%9B%D7%99%D7%9D-%D7%A9%D7%9C%D7%91-%D7%90%D7%97%D7%A8-%D7%A9%D7%9C%D7%91/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%AA%D7%91%D7%99%D7%A2%D7%AA-%D7%A0%D7%96%D7%A7%D7%99-%D7%92%D7%95%D7%A3-%D7%91%D7%AA%D7%90%D7%95%D7%A0%D7%AA-%D7%93%D7%A8%D7%9B%D7%99%D7%9D-%D7%A9%D7%9C%D7%91-%D7%90%D7%97%D7%A8-%D7%A9%D7%9C%D7%91/</guid>
+      <description>מי מפצה נפגע בתאונת דרכים בישראל, את מי תובעים, מה עושים בימים הראשונים, כמה זמן יש להגיש תביעה ומה התקרה לשכר טרחת עורך דין. מדריך מעשי.</description>
+      <pubDate>Thu, 17 Dec 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>פיקדון בשכירות: כמה מותר לדרוש ומתי מחזירים, לפי החוק</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%A4%D7%99%D7%A7%D7%93%D7%95%D7%9F-%D7%91%D7%A9%D7%9B%D7%99%D7%A8%D7%95%D7%AA-%D7%95%D7%97%D7%95%D7%A7-%D7%A9%D7%9B%D7%99%D7%A8%D7%95%D7%AA-%D7%94%D7%95%D7%92%D7%A0%D7%AA/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%A4%D7%99%D7%A7%D7%93%D7%95%D7%9F-%D7%91%D7%A9%D7%9B%D7%99%D7%A8%D7%95%D7%AA-%D7%95%D7%97%D7%95%D7%A7-%D7%A9%D7%9B%D7%99%D7%A8%D7%95%D7%AA-%D7%94%D7%95%D7%92%D7%A0%D7%AA/</guid>
+      <description>חוק שכירות הוגנת מגביל את גובה הערובה בשכירות ומחייב להחזיר אותה בתוך 60 יום. כך בודקים אם הסכום חוקי, מה מותר לקזז, ומה עושים כשהכסף לא חוזר.</description>
+      <pubDate>Wed, 16 Dec 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>צוואה בלי עורך דין: האם היא תקפה ומה חייב להופיע בה</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%A6%D7%95%D7%95%D7%90%D7%94-%D7%91%D7%9C%D7%99-%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%94%D7%90%D7%9D-%D7%94%D7%99%D7%90-%D7%AA%D7%A7%D7%A4%D7%94/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%A6%D7%95%D7%95%D7%90%D7%94-%D7%91%D7%9C%D7%99-%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%94%D7%90%D7%9D-%D7%94%D7%99%D7%90-%D7%AA%D7%A7%D7%A4%D7%94/</guid>
+      <description>החוק בישראל מכיר בארבע צורות של צוואה, וחלקן אפשר לעשות לבד. מה הופך צוואה בכתב יד או בעדים לתקפה, מה הטעויות שפוסלות אותה, ומתי כדאי להיעזר בעורך דין.</description>
+      <pubDate>Mon, 14 Dec 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>קונים דירה? מה עורך הדין בודק לפני שחותמים</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%9E%D7%94-%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%91%D7%95%D7%93%D7%A7-%D7%91%D7%A7%D7%A0%D7%99%D7%99%D7%AA-%D7%93%D7%99%D7%A8%D7%94/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%9E%D7%94-%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%91%D7%95%D7%93%D7%A7-%D7%91%D7%A7%D7%A0%D7%99%D7%99%D7%AA-%D7%93%D7%99%D7%A8%D7%94/</guid>
+      <description>רשימת הבדיקות שעורך דין עושה בקניית דירה: נסח רישום, משכנתאות ועיקולים, חריגות בנייה, מיסים, מנגנון תשלום והערת אזהרה. כולל הבדלים בדירה חדשה מקבלן.</description>
+      <pubDate>Thu, 10 Dec 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>פוטרתם? הזכויות שלכם: שימוע, הודעה מוקדמת ופיצויים</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA-%D7%A2%D7%95%D7%91%D7%93-%D7%91%D7%A4%D7%99%D7%98%D7%95%D7%A8%D7%99%D7%9D/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA-%D7%A2%D7%95%D7%91%D7%93-%D7%91%D7%A4%D7%99%D7%98%D7%95%D7%A8%D7%99%D7%9D/</guid>
+      <description>מה מגיע לעובד שמפוטר בישראל: שימוע כדין, הודעה מוקדמת לפי ותק, פיצויי פיטורים, טופס 161, הגנות מיוחדות ודמי אבטלה. מדריך מעשי נכון ל-2026.</description>
+      <pubDate>Wed, 09 Dec 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>איך מגישים תביעה קטנה: מדריך שלב אחר שלב, נכון ל-2026</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%90%D7%99%D7%9A-%D7%9E%D7%92%D7%99%D7%A9%D7%99%D7%9D-%D7%AA%D7%91%D7%99%D7%A2%D7%94-%D7%A7%D7%98%D7%A0%D7%94-%D7%A9%D7%9C%D7%91-%D7%90%D7%97%D7%A8-%D7%A9%D7%9C%D7%91/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%90%D7%99%D7%9A-%D7%9E%D7%92%D7%99%D7%A9%D7%99%D7%9D-%D7%AA%D7%91%D7%99%D7%A2%D7%94-%D7%A7%D7%98%D7%A0%D7%94-%D7%A9%D7%9C%D7%91-%D7%90%D7%97%D7%A8-%D7%A9%D7%9C%D7%91/</guid>
+      <description>תקרת התביעות הקטנות עלתה ל-39,900 ש"ח מינואר 2026. כך מגישים תביעה, כמה עולה האגרה, מה קורה בדיון, ומה עושים אם הנתבע לא משלם.</description>
+      <pubDate>Mon, 07 Dec 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>זומנתם לחקירה במשטרה? הזכויות שלכם ואיך בוחרים עורך דין</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%96%D7%95%D7%9E%D7%A0%D7%AA%D7%99-%D7%9C%D7%97%D7%A7%D7%99%D7%A8%D7%94-%D7%91%D7%9E%D7%A9%D7%98%D7%A8%D7%94-%D7%90%D7%99%D7%9A-%D7%91%D7%95%D7%97%D7%A8%D7%99%D7%9D-%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%A4%D7%9C%D7%99%D7%9C%D7%99/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%96%D7%95%D7%9E%D7%A0%D7%AA%D7%99-%D7%9C%D7%97%D7%A7%D7%99%D7%A8%D7%94-%D7%91%D7%9E%D7%A9%D7%98%D7%A8%D7%94-%D7%90%D7%99%D7%9A-%D7%91%D7%95%D7%97%D7%A8%D7%99%D7%9D-%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%A4%D7%9C%D7%99%D7%9C%D7%99/</guid>
+      <description>מה ההבדל בין עדות לחקירה באזהרה, מתי מותר לדחות פגישה עם עורך דין, מה מגיע לקטינים, ואיך בוחרים עורך דין פלילי בזמן קצר ובלחץ.</description>
+      <pubDate>Thu, 03 Dec 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>שכר טרחת עורך דין בישראל: איך נקבע ומה בודקים בהסכם</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%A9%D7%9B%D7%A8-%D7%98%D7%A8%D7%97%D7%AA-%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%95%D7%94%D7%A1%D7%9B%D7%9D-%D7%A9%D7%9B%D7%A8-%D7%98%D7%A8%D7%97%D7%94/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%A9%D7%9B%D7%A8-%D7%98%D7%A8%D7%97%D7%AA-%D7%A2%D7%95%D7%A8%D7%9A-%D7%93%D7%99%D7%9F-%D7%95%D7%94%D7%A1%D7%9B%D7%9D-%D7%A9%D7%9B%D7%A8-%D7%98%D7%A8%D7%97%D7%94/</guid>
+      <description>איך נקבע שכר טרחה של עורך דין, מה ההבדל בין שעתי, גלובלי ואחוזים, מתי יש תקרה בחוק, ומה חייב להופיע בהסכם שכר טרחה לפני שחותמים.</description>
+      <pubDate>Wed, 02 Dec 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>כמה עולים גירושין בישראל ואיך נראה התהליך, שלב אחר שלב</title>
+      <link>https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%9B%D7%9E%D7%94-%D7%A2%D7%95%D7%9C%D7%99%D7%9D-%D7%92%D7%99%D7%A8%D7%95%D7%A9%D7%99%D7%9F-%D7%95%D7%9E%D7%94-%D7%94%D7%AA%D7%94%D7%9C%D7%99%D7%9A/</link>
+      <guid isPermaLink="true">https://dabullaw-glitch.github.io/dabul-office/folivus/%D7%9E%D7%90%D7%9E%D7%A8%D7%99%D7%9D/%D7%9B%D7%9E%D7%94-%D7%A2%D7%95%D7%9C%D7%99%D7%9D-%D7%92%D7%99%D7%A8%D7%95%D7%A9%D7%99%D7%9F-%D7%95%D7%9E%D7%94-%D7%94%D7%AA%D7%94%D7%9C%D7%99%D7%9A/</guid>
+      <description>מדריך לגירושין בישראל: בקשה ליישוב סכסוך, בית הדין הרבני או בית המשפט לענייני משפחה, אגרות נכון ל-2026, ממה מורכבת העלות ואיך אפשר לחסוך.</description>
+      <pubDate>Mon, 30 Nov 2026 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
