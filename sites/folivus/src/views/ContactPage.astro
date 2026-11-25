@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Icon from '../components/Icon.astro';
+import FormShell from '../components/FormShell.astro';
+import { P, u } from '../config/routes';
+import { breadcrumbs } from '../lib/schema';
+const { path } = Astro.props as any;
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'צור קשר', path }];
+---
+<Base title="צור קשר עם האתר" description="פנייה לצוות האתר: שאלות, תיקונים, שיתופי פעולה ונגישות. לפנייה למשרד עורכי דין, השתמשו בפרטי הקשר בעמוד המשרד." path={path} schema={[breadcrumbs(crumbs)]}>
+  <section class="phead tint"><div class="wrap"><Crumbs items={crumbs} /><h1>צור קשר</h1><p class="lead">שאלות על האתר, תיקונים, נגישות או שיתופי פעולה.</p></div></section>
+  <div class="wrap layout">
+    <div>
+      <p class="note warn"><Icon name="info" /><span>הטופס מגיע לצוות האתר בלבד. האתר לא מעביר פניות למשרדים ולא נותן ייעוץ משפטי. כדי לפנות למשרד, השתמשו בטלפון או באתר שמופיעים בעמוד שלו.</span></p>
+      <div class="mt2"><FormShell kind="lead" ok="תודה. ההודעה התקבלה." submit="שליחה">
+        <div class="field"><label for="k-topic">נושא</label><select id="k-topic" name="topic"><option>שאלה על האתר</option><option>תיקון במידע</option><option>נגישות</option><option>פרסום ושיתופי פעולה</option><option>אחר</option></select></div>
+        <div class="row2">
+          <div class="field"><label for="k-name">שם מלא</label><input id="k-name" name="name" required autocomplete="name" /></div>
+          <div class="field"><label for="k-ph">טלפון</label><input id="k-ph" name="phone" type="tel" required autocomplete="tel" /></div>
+        </div>
+        <div class="field"><label for="k-mail">מייל (לא חובה)</label><input id="k-mail" name="email" type="email" autocomplete="email" /></div>
+        <div class="field"><label for="k-msg">ההודעה</label><textarea id="k-msg" name="message" required></textarea></div>
+      </FormShell></div>
+    </div>
+    <aside class="aside">
+      <div class="box"><h2>קישורים שימושיים</h2><ul class="links">
+        <li><a href={u(P.page('removal'))}>תיקון או הסרת פרטי משרד</a></li>
+        <li><a href={u(P.page('claim'))}>אישור בעלות על פרופיל</a></li>
+        <li><a href={u(P.page('a11y'))}>הצהרת נגישות</a></li>
+        <li><a href={u(P.page('privacy'))}>מדיניות פרטיות</a></li>
+      </ul></div>
+    </aside>
+  </div>
+</Base>

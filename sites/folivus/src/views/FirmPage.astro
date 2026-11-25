@@ -1,0 +1,168 @@
+---
+// Firm profile. Basic profile: public business details only. Extended profile (paid or claimed): what the firm itself
+// submitted. No Google ratings or Google data (Maps terms); only an outbound link when a place_id exists.
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Icon from '../components/Icon.astro';
+import Stars from '../components/Stars.astro';
+import Faq from '../components/Faq.astro';
+import { P, u } from '../config/routes';
+import { firms, areaBySlug, cityBySlug, hasExtended, isPaid, avg, fmtDate, DAYS } from '../lib/data';
+import { breadcrumbs, firm as firmLd } from '../lib/schema';
+import { SETTINGS } from '../config/brand';
+const { path, firm } = Astro.props as any;
+const f = (await firms()).find((x) => x.slug === firm)!;
+const c = cityBySlug(f.city);
+const ars = f.areas.map((s) => areaBySlug(s)).filter(Boolean) as NonNullable<ReturnType<typeof areaBySlug>>[];
+const ext = hasExtended(f) ? f.extended : null;
+const r = avg(f.reviews);
+const ini = f.name.replace(/[("'].*$/, '').trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join('');
+const tel = f.phone.replace(/[^0-9+]/g, '');
+const wa = ext?.whatsapp ? 'https://wa.me/972' + String(ext.whatsapp).replace(/\D/g, '').replace(/^0/, '') : '';
+const main = ars[0];
+const crumbs = [{ name: 'דף הבית', path: '' }, ...(main ? [{ name: main.title, path: P.area(main.he) }] : []), ...(main && c ? [{ name: c.name, path: P.areaCity(main.he, c.he) }] : []), { name: f.name, path }];
+const title = `${f.name}${c ? ', ' + c.name : ''}: פרטי קשר ותחומי עיסוק`;
+const description = `${f.name}${c ? ' ב' + c.name : ''}. תחומים: ${ars.slice(0, 4).map((a) => a.name).join(', ')}. כתובת, טלפון, שעות${f.reviews.length ? ' וחוות דעת מאומתות' : ''}.`.slice(0, 158);
+const faq = [
+  ...(c ? [{ q: `איפה נמצא המשרד?`, a: `${f.address || c.name}.` }] : []),
+  { q: 'באילו תחומים המשרד עוסק?', a: ars.map((a) => a.name).join(', ') + '.' },
+  ...(f.phone ? [{ q: 'איך יוצרים קשר עם המשרד?', a: `בטלפון ${f.phone}${f.website ? ' או דרך אתר המשרד' : ''}. האתר לא מעביר פניות; פונים ישירות למשרד.` }] : []),
+];
+---
+<Base title={title} description={description} path={path} bodyClass="has-sticky" schema={[breadcrumbs(crumbs), firmLd(f, path, c?.name || '', ars.map((a) => a.name))]}>
+  <section class="phead tint">
+    <div class="wrap">
+      <Crumbs items={crumbs} />
+      <div class="profile-head mt2">
+        <div class="mono" aria-hidden="true">{ini}</div>
+        <div>
+          <h1>{f.name}</h1>
+          <div class="flex">
+            {isPaid(f) && <span class="badge b-promo"><Icon name="megaphone" />משרד מקודם</span>}
+            {f.claimed ? <span class="badge b-ok"><Icon name="check" />המשרד אישר את הפרטים</span> : <span class="badge b-sample" style="border-style:solid">פרופיל שלא אושר בידי המשרד</span>}
+            {f.isSample && <span class="badge b-sample">נתוני דוגמה</span>}
+          </div>
+          <div class="meta-line">
+            {c && <span><Icon name="pin" />{c.name}</span>}
+            <span><Icon name="scale" />{ars.length} תחומי עיסוק</span>
+            {f.reviews.length > 0 && <span class="rating"><Stars value={r} /><b>{r.toFixed(1)}</b>({f.reviews.length} חוות דעת מאומתות)</span>}
+            {SETTINGS.show_google_ratings && f.google.rating != null && <span class="rating gr"><span class="muted">דירוג מגוגל</span><b>{Number(f.google.rating).toFixed(1)}</b>({(f.google.count || 0).toLocaleString('he-IL')} ביקורות)<span class="gattr" lang="en">Google</span></span>}
+            {ext?.founded && <span><Icon name="calendar" />פועל משנת {ext.founded}</span>}
+          </div>
+          <div class="flex mt2 no-print">
+            {f.phone && <a class="btn btn-pine" href={'tel:' + tel}><Icon name="phone" />{f.phone}</a>}
+            {f.website && <a class="btn btn-line" href={f.website} target="_blank" rel="noopener nofollow"><Icon name="globe" />לאתר המשרד</a>}
+            {wa && <a class="btn btn-line" href={wa} target="_blank" rel="noopener nofollow"><Icon name="chat" />וואטסאפ</a>}
+            {f.google.placeId && <a class="btn btn-line" href={'https://www.google.com/maps/place/?q=place_id:' + f.google.placeId} target="_blank" rel="noopener nofollow"><Icon name="link" />לביקורות בגוגל</a>}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap layout">
+    <div>
+      {ext?.description ? (
+        <section aria-labelledby="about-h">
+          <h2 id="about-h">על המשרד</h2>
+          <div class="prose"><p>{ext.description}</p></div>
+          <p class="xs muted">התיאור נכתב בידי המשרד.</p>
+          {ext.services?.length > 0 && (<><h3 class="mt2">שירותים עיקריים</h3><ul class="prose">{ext.services.map((s: string) => <li>{s}</li>)}</ul></>)}
+          {ext.languages?.length > 0 && <p><b>שפות שירות:</b> {ext.languages.join(', ')}</p>}
+          {ext.lawyers && <p><b>עורכי דין במשרד:</b> {ext.lawyers}</p>}
+        </section>
+      ) : (
+        <section class="empty" style="text-align:start">
+          <h2 style="font-size:1.2rem">פרופיל בסיסי</h2>
+          <p class="mb0">בעמוד הזה מופיעים רק פרטים עסקיים: שם המשרד, כתובת, טלפון, אתר ותחומי עיסוק. המשרד עדיין לא הוסיף תיאור. <a href={u(P.page('claim')) + '?firm=' + f.slug}>זה המשרד שלכם? אפשר לאשר בעלות ולעדכן.</a></p>
+        </section>
+      )}
+
+      {ext?.photos > 0 && (
+        <section class="mt3" aria-labelledby="ph-h">
+          <h2 id="ph-h">תמונות מהמשרד</h2>
+          <div class="gallery">{Array.from({ length: Math.min(6, ext.photos) }).map((_, i) => <div class="ph">תמונה {i + 1} (דוגמה)</div>)}</div>
+        </section>
+      )}
+      {ext?.video && (
+        <section class="mt3" aria-labelledby="vd-h">
+          <h2 id="vd-h">סרטון היכרות</h2>
+          <div class="video" role="img" aria-label="מקום לסרטון של המשרד (דוגמה)"><Icon name="play" /></div>
+        </section>
+      )}
+      {ext?.cases?.length > 0 && (
+        <section class="mt3" aria-labelledby="cs-h">
+          <h2 id="cs-h">תיקים ועסקאות בולטים</h2>
+          <div class="grid g2">{ext.cases.map((x: any) => <div class="card"><h3>{x.title}</h3><p class="small">{x.text}</p></div>)}</div>
+          <p class="xs muted mt1">התיאורים נמסרו בידי המשרד, בלי פרטים מזהים של לקוחות.</p>
+        </section>
+      )}
+
+      <section class="mt3" aria-labelledby="ar-h">
+        <h2 id="ar-h">תחומי עיסוק</h2>
+        <div class="chips">{ars.map((a) => <a class="chip" href={u(c && main ? P.areaCity(a.he, c.he) : P.area(a.he))}>{a.title}{c ? ' ב' + c.name : ''}</a>)}</div>
+      </section>
+
+      <section class="mt3" aria-labelledby="rv-h" id="reviews">
+        <div class="sec-head" style="margin-bottom:14px">
+          <h2 id="rv-h">חוות דעת מאומתות</h2>
+          <a class="btn btn-line btn-sm" href={u(P.page('method')) + '#reviews'}>איך מאמתים חוות דעת</a>
+        </div>
+        {f.reviews.length ? (
+          <div class="box">
+            <div class="scorebar"><span class="big">{r.toFixed(1)}</span><span><Stars value={r} /><br /><span class="small muted">{f.reviews.length} חוות דעת של לקוחות שעברו אימות</span></span></div>
+            <div class="mt2">
+              {f.reviews.map((x) => (
+                <article class="review">
+                  <Stars value={x.rating} />
+                  <h3>{x.title}</h3>
+                  <p class="mb0">{x.body}</p>
+                  <div class="by mt1"><span>{x.author}</span><span>{fmtDate(x.date)}</span><span class="badge b-ok"><Icon name="shield" />{x.method === 'invite' ? 'אומת בקישור מהמשרד' : 'אומת בקוד לטלפון'}</span>{x.isSample && <span class="badge b-sample">דוגמה</span>}</div>
+                  {x.reply && <div class="reply"><b>תגובת המשרד:</b> {x.reply}</div>}
+                </article>
+              ))}
+            </div>
+          </div>
+        ) : <div class="empty">עדיין אין חוות דעת מאומתות על המשרד.</div>}
+        <p class="small muted mt1">כתיבת חוות דעת תיפתח בהשקה: הלקוח מאמת את מספר הטלפון שלו בקוד חד פעמי, וחוות הדעת עוברת בדיקה לפני פרסום. מוצגות גם ביקורות שליליות.</p>
+      </section>
+
+      <Faq items={faq} title="שאלות על המשרד" />
+    </div>
+
+    <aside class="aside">
+      <div class="box">
+        <h2>פרטי קשר</h2>
+        <dl class="dl">
+          {f.address && <div><dt>כתובת</dt><dd>{f.address}</dd></div>}
+          {f.phone && <div><dt>טלפון</dt><dd><a href={'tel:' + tel}>{f.phone}</a></dd></div>}
+          {f.website && <div><dt>אתר</dt><dd><a href={f.website} target="_blank" rel="noopener nofollow">{f.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a></dd></div>}
+          {wa && <div><dt>וואטסאפ</dt><dd><a href={wa} target="_blank" rel="noopener nofollow">{ext.whatsapp}</a></dd></div>}
+        </dl>
+        {f.hours && (
+          <>
+            <h3 class="mt2" style="font-size:1rem">שעות פעילות</h3>
+            <table class="hours"><tbody>{DAYS.map(([k, he]) => <tr><td>יום {he}</td><td>{f.hours![k] || 'סגור'}</td></tr>)}</tbody></table>
+          </>
+        )}
+      </div>
+      <div class="box">
+        <h2>מקור הפרטים</h2>
+        <p class="small mb0">{f.isSample ? 'זה פרופיל לדוגמה בגרסת התצוגה.' : f.claimed ? 'הפרטים עודכנו ואושרו בידי המשרד.' : 'הפרטים נאספו ממקורות ציבוריים.'} {f.collectedAt && <>עודכן {fmtDate(f.collectedAt)}.</>} הפרטים אינם המלצה.</p>
+        {f.sourceUrl && <p class="small mb0 mt1"><a href={f.sourceUrl} target="_blank" rel="noopener nofollow">למקור</a></p>}
+      </div>
+      <div class="box brass sticky">
+        <h2>זה המשרד שלכם?</h2>
+        <p class="small">אשרו בעלות בחינם, עדכנו פרטים או בקשו להסיר את הפרופיל.</p>
+        <div class="grid">
+          <a class="btn btn-pine btn-sm btn-block" href={u(P.page('claim')) + '?firm=' + f.slug}>אישור בעלות ועדכון</a>
+          <a class="btn btn-line btn-sm btn-block" href={u(P.page('removal')) + '?firm=' + f.slug}>תיקון או הסרה</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <div class="sticky-cta no-print">
+    {f.phone && <a class="btn btn-pine" href={'tel:' + tel}><Icon name="phone" />התקשרו</a>}
+    {f.website ? <a class="btn btn-line" href={f.website} target="_blank" rel="noopener nofollow"><Icon name="globe" />לאתר</a> : wa && <a class="btn btn-line" href={wa} target="_blank" rel="noopener nofollow"><Icon name="chat" />וואטסאפ</a>}
+  </div>
+</Base>

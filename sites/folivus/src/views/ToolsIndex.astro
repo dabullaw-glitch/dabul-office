@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Icon from '../components/Icon.astro';
+import { P, u } from '../config/routes';
+import { tools, toolCategories } from '../lib/data';
+import { breadcrumbs, itemList, collection } from '../lib/schema';
+const { path } = Astro.props as any;
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'כלים חינמיים', path }];
+const title = 'כלים משפטיים חינמיים: מחשבונים ומחוללי מסמכים';
+const description = 'מחשבונים ומחוללי מסמכים משפטיים חינמיים, שעובדים בדפדפן בלי הרשמה, עם מקורות ותאריך עדכון לכל כלי.';
+---
+<Base title={title} description={description} path={path} nav="tools" schema={[breadcrumbs(crumbs), collection(title, path, description), itemList(title, tools().map((t) => ({ name: t.name, path: P.tool(t.he) })))]}>
+  <section class="phead tint">
+    <div class="wrap">
+      <Crumbs items={crumbs} />
+      <h1>כלים חינמיים</h1>
+      <p class="lead">חישוב ראשוני ומסמכים פשוטים, ישר בדפדפן. הנתונים שאתם מקלידים לא נשלחים לשום מקום.</p>
+      <div class="chips"><span class="chip"><Icon name="calc" />{tools().filter((t) => t.type === 'calculator').length} מחשבונים</span><span class="chip"><Icon name="doc" />{tools().filter((t) => t.type === 'generator').length} מחוללי מסמכים</span><span class="chip"><Icon name="lock" />בלי הרשמה ובלי שמירת נתונים</span></div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="wrap">
+      {toolCategories().map((g) => (
+        <section class="mb2" aria-label={g.category}>
+          <h2 style="font-size:1.4rem">{g.category}</h2>
+          <div class="grid g3">{g.items.map((t) => (
+            <a class="card tcard" href={u(P.tool(t.he))}><span class="gicon"><Icon name={t.type === 'generator' ? 'doc' : 'calc'} /></span><span><h3>{t.name}{t.draft && <span class="soon">טיוטה</span>}</h3><p>{t.description}</p></span></a>
+          ))}</div>
+        </section>
+      ))}
+      {tools().length === 0 && <div class="empty">הכלים בהכנה.</div>}
+    </div>
+  </section>
+</Base>

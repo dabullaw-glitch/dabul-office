@@ -1,14 +1,18 @@
-// Post-build guard: fails the build if the output has em/en dashes, our own superlatives, the word "expert",
-// or mentions of an unrelated brand. Hebrew has no \b, so word edges are checked by hand.
+// Post-build guard. Fails the build if the output has: em/en dashes, our own superlatives, the word "expert",
+// any mention of a specific law office or its owner, a hardcoded domain, or wording that presents paid slots as
+// recommendations. Hebrew has no \b, so word edges are checked by hand.
 import fs from 'node:fs';
 import path from 'node:path';
 const dist = path.resolve('dist');
+const H = '[\\u0590-\\u05FF]';
 const rules = [
   [/[–—]/, 'en/em dash'],
-  [/(^|[^֐-׿])הכי(?=[^֐-׿]|$)/, '"הכי"'],
+  [new RegExp(`(^|[^\\u0590-\\u05FF])הכי(?=[^\\u0590-\\u05FF]|$)`), '"הכי"'],
   [/הטוב ביותר|הטובים ביותר/, '"הטוב ביותר"'],
   [/מומח/, '"מומחה"'],
-  [/דבול|dabul/i, 'brand mention'],
+  [/עורכי דין מומלצים|עורך דין מומלץ/, 'paid slots called recommended'],
+  [/דבול|dabul|יקיר|yakir/i, 'law office / owner mention'],
+  [/folivus\.com/i, 'hardcoded domain (domain comes from launch.json / SITE_URL)'],
 ];
 let bad = 0;
 function walk(d) {
@@ -17,14 +21,14 @@ function walk(d) {
     if (f.isDirectory()) walk(p);
     else if (/\.(html|xml|txt|js|css|json)$/.test(f.name)) {
       // the preview copy lives under the repo's GitHub Pages address; that is hosting, not content
-      const t = fs.readFileSync(p, 'utf8').replace(/dabullaw-glitch\.github\.io/g, '').replace(/\/dabul-office\//g, '/');
+      const t = fs.readFileSync(p, 'utf8').replace(/https?:\/\/dabullaw-glitch\.github\.io/g, '').replace(/\/dabul-office\//g, '/');
       for (const [re, name] of rules) {
         const m = t.match(re);
-        if (m) { bad++; if (bad < 30) console.error(`[check] ${name} in ${path.relative(dist, p)}: ...${t.slice(Math.max(0, m.index - 40), m.index + 40).replace(/\s+/g, ' ')}...`); }
+        if (m) { bad++; if (bad < 40) console.error(`[check] ${name} in ${path.relative(dist, p)}: ...${t.slice(Math.max(0, m.index - 50), m.index + 50).replace(/\s+/g, ' ')}...`); }
       }
     }
   }
 }
 walk(dist);
 if (bad) { console.error(`[check] ${bad} problem(s)`); process.exit(1); }
-console.log('[check] ok: no dashes, superlatives or forbidden words');
+console.log('[check] ok: no dashes, superlatives, forbidden words, office mentions or hardcoded domain');

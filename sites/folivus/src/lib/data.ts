@@ -1,172 +1,253 @@
-// Build-time data layer. Reads the directory engine export once per build; if it is not reachable,
-// falls back to src/data/lawyers.seed.json, and if that is missing too, to an empty list.
+// Build-time data. Content (guides, articles, courts, tools) comes from the content/ folder, which
+// scripts/sync-content.mjs fills from the writers' folder. Firms come from Supabase (fol_firms) when FOL_DB=1 and the
+// tables exist; otherwise from the sample file. Everything is read once per build and cached.
 import fs from 'node:fs';
 import path from 'node:path';
-import areasRaw from '../data/areas.json';
+import YAML from 'yaml';
+import { DB, BRAND, PREVIEW } from '../config/brand';
+import intros from '../data/area-intros.json';
 import citiesRaw from '../data/cities.json';
-import { REGIONS, SITE } from '../data/site';
+import firmsSample from '../data/firms.sample.json';
+import plansRaw from '../data/plans.json';
+import authorsRaw from '../data/authors.json';
 
-export type Area = { slug: string; he: string; group: string };
-export type City = { slug: string; he: string; region: string; regionSlug: string };
-export type Review = { stars: number; text: string; name: string; area?: string; created?: string };
-export type ScoreParts = { reviews: number; years: number; profile: number; response: number; recognition: number };
-export type Lawyer = {
-  id: string; name: string; firm?: string; title: string;
-  cities: string[]; regions: string[]; areas: string[];
-  phone?: string; whatsapp?: string; email?: string; site?: string; address?: string; about?: string;
-  licenseYear?: number; languages: string[]; photo?: string;
-  source: 'public' | 'self' | 'claimed'; sourceUrl?: string; verified: boolean;
-  plan: 'free' | 'pro' | 'premium'; planUntil?: string; featured: { areas: string[]; cities: string[] };
-  score: number; parts: ScoreParts; reviewCount: number; avg: number; reviews: Review[];
-  responseRate?: number; recognitions: string[]; paid: boolean;
-  updated?: string;
-};
-export type Rank = { year: number; area: string; list: { lawyerId: string; place?: number; tier?: string }[]; method?: string };
+const ROOT = path.resolve('content');
+// writers use the working name; swap it for the configured brand so a rename needs no content edits
+const read = (p: string) => fs.readFileSync(p, 'utf8').replace(/פוליבוס/g, BRAND.name).replace(/Folivus/g, BRAND.nameLatin);
+const exists = (p: string) => fs.existsSync(p);
+const list = (dir: string, ext: string) =>
+  exists(path.join(ROOT, dir)) ? fs.readdirSync(path.join(ROOT, dir)).filter((f) => f.endsWith(ext) && !f.startsWith('_')).sort() : [];
 
-export const AREAS: Area[] = areasRaw as Area[];
-const regionSlug = (he: string) => REGIONS.find((r) => r.he === he)?.slug || 'merkaz';
-export const CITIES: City[] = (citiesRaw as { slug: string; he: string; region: string }[]).map((c) => ({ ...c, regionSlug: regionSlug(c.region) }));
-export const GROUPS: string[] = [...new Set(AREAS.map((a) => a.group))];
-export const areaBySlug = (s: string) => AREAS.find((a) => a.slug === s);
-export const cityBySlug = (s: string) => CITIES.find((c) => c.slug === s);
-const areaSet = new Set(AREAS.map((a) => a.slug));
-const citySet = new Set(CITIES.map((c) => c.slug));
+export type Src = { title: string; url: string };
+export type Faq = { q: string; a: string };
 
-const arr = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x) => typeof x === 'string') : []);
-const str = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
-const NOW = new Date();
-const THIS_YEAR = NOW.getFullYear();
-
-/** The public score method (also explained on /shita/). Paid plans never change it. */
-export function computeParts(l: { reviewCount: number; avg: number; licenseYear?: number; responseRate?: number; recognitions: string[] } & Record<string, any>): ScoreParts {
-  const reviews = l.reviewCount > 0 ? (l.avg / 5) * 35 + (Math.min(l.reviewCount, 10) / 10) * 15 : 0;
-  const yrs = l.licenseYear ? Math.max(0, THIS_YEAR - l.licenseYear) : 0;
-  const years = Math.min(yrs, 15);
-  const fields = ['phone', 'email', 'site', 'address', 'about', 'licenseYear', 'photo'];
-  const filled = fields.filter((f) => !!l[f]).length + (l.languages?.length ? 1 : 0) + (l.areas?.length ? 1 : 0) + (l.cities?.length ? 1 : 0);
-  const profile = (filled / (fields.length + 3)) * 15;
-  const response = typeof l.responseRate === 'number' ? Math.max(0, Math.min(1, l.responseRate)) * 10 : 0;
-  const recognition = Math.min(10, (l.recognitions?.length || 0) * 5);
-  const r = (n: number) => Math.round(n * 10) / 10;
-  return { reviews: r(reviews), years: r(years), profile: r(profile), response: r(response), recognition: r(recognition) };
+function parseMd(file: string): { fm: any; body: string } | null {
+  try {
+    const t = read(file).replace(/^﻿/, '');
+    const m = t.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+    if (!m) return { fm: {}, body: t };
+    return { fm: YAML.parse(m[1]) || {}, body: m[2] };
+  } catch (e) {
+    console.warn('[data] skipped (bad frontmatter):', file, String(e).slice(0, 120));
+    return null;
+  }
 }
+const arr = <T = any>(x: any): T[] => (Array.isArray(x) ? x : x ? [x] : []);
+const srcs = (x: any): Src[] => arr(x).filter((s: any) => s && s.url).map((s: any) => ({ title: String(s.title || s.url), url: String(s.url) }));
+const faqs = (x: any): Faq[] => arr(x).filter((f: any) => f && f.q && f.a).map((f: any) => ({ q: String(f.q), a: String(f.a) }));
+const day = (x: any) => (x ? new Date(x instanceof Date ? x : String(x)) : null);
+const validDay = (d: Date | null) => (d && !isNaN(+d) ? d : null);
+/** publish gate: draft: true, or a non-empty todo_verify list = not ready. Hidden in production, badged in the preview. */
+const isDraft = (fm: any) => fm?.draft === true || fm?.status === 'draft' || (Array.isArray(fm?.todo_verify) ? fm.todo_verify.length > 0 : !!fm?.todo_verify);
 
-function normalize(raw: any, rankedIds: Set<string>): Lawyer | null {
-  const id = str(raw?.id);
-  const name = str(raw?.name);
-  if (!id || !name || !/^[a-z0-9-]+$/.test(id)) return null;
-  if (raw.status && raw.status !== 'live') return null;
-  const sites = arr(raw.sites);
-  if (sites.length && !sites.includes('folivus')) return null;
-  const areas = arr(raw.areas).filter((a) => areaSet.has(a));
-  const cities = arr(raw.cities).filter((c) => citySet.has(c));
-  const regions = [...new Set(cities.map((c) => cityBySlug(c)!.regionSlug))];
-  const reviews: Review[] = Array.isArray(raw.reviews)
-    ? raw.reviews.filter((r: any) => r && (!r.status || r.status === 'live') && r.stars >= 1 && r.stars <= 5).map((r: any) => ({ stars: Number(r.stars), text: String(r.text || ''), name: String(r.name || ''), area: str(r.area), created: str(r.created) }))
-    : [];
-  const reviewCount = Number(raw.reviewCount ?? reviews.length) || 0;
-  const avg = Number(raw.avg ?? (reviews.length ? reviews.reduce((s, r) => s + r.stars, 0) / reviews.length : 0)) || 0;
-  const plan = (['pro', 'premium'].includes(raw.plan) ? raw.plan : 'free') as Lawyer['plan'];
-  const planUntil = str(raw.planUntil);
-  const paid = plan !== 'free' && (!planUntil || new Date(planUntil) >= NOW);
-  const recognitions = [...arr(raw.recognitions), ...(rankedIds.has(id) ? ['נבחרת פוליבוס'] : [])];
-  const licenseYear = Number(raw.licenseYear) > 1940 && Number(raw.licenseYear) <= THIS_YEAR ? Number(raw.licenseYear) : undefined;
-  const base = {
-    id, name, firm: str(raw.firm), title: str(raw.title) || 'עו"ד', cities, regions, areas,
-    phone: str(raw.phone), whatsapp: str(raw.whatsapp), email: str(raw.email), site: str(raw.site), address: str(raw.address),
-    about: str(raw.about), licenseYear, languages: arr(raw.languages), photo: str(raw.photo),
-    source: (['self', 'claimed'].includes(raw.source) ? raw.source : 'public') as Lawyer['source'], sourceUrl: str(raw.sourceUrl),
-    verified: !!raw.verified, plan, planUntil, featured: { areas: arr(raw.featured?.areas), cities: arr(raw.featured?.cities) },
-    reviewCount, avg, reviews, responseRate: typeof raw.responseRate === 'number' ? raw.responseRate : undefined, recognitions, paid,
-    updated: str(raw.updated),
+// ---------- areas ----------
+export type Area = {
+  slug: string; he: string; name: string; group: string; title: string; intro: string; description: string;
+  guide?: { body: string; faq: Faq[]; sources: Src[]; updated: Date | null; reviewedBy: string; seoTitle: string; draft: boolean };
+};
+let _areas: Area[] | null = null;
+export function areas(): Area[] {
+  if (_areas) return _areas;
+  const file = exists(path.join(ROOT, 'AREAS.json')) ? path.join(ROOT, 'AREAS.json') : path.resolve('src/data/AREAS.json');
+  const raw: any[] = JSON.parse(read(file));
+  _areas = raw.map((a) => {
+    const g = exists(path.join(ROOT, 'areas', a.slug + '.md')) ? parseMd(path.join(ROOT, 'areas', a.slug + '.md')) : null;
+    const name = String(a.name);
+    const title = a.he_slug === 'נוטריון' ? 'נוטריון' : 'עורך דין ' + name;
+    const intro = (intros as Record<string, string>)[a.slug] || '';
+    return {
+      slug: a.slug, he: g?.fm?.he_slug && g.fm.he_slug === a.he_slug ? g.fm.he_slug : a.he_slug, name, group: a.group, title,
+      intro, description: String(g?.fm?.description || intro),
+      guide: g && g.body.trim().length > 200 && (PREVIEW || !isDraft(g.fm)) ? {
+        body: g.body, faq: faqs(g.fm.faq), sources: srcs(g.fm.sources), updated: validDay(day(g.fm.updated)),
+        reviewedBy: String(g.fm.reviewed_by || ''), seoTitle: String(g.fm.title || ''), draft: isDraft(g.fm),
+      } : undefined,
+    };
+  });
+  return _areas;
+}
+export const areaBySlug = (s: string) => areas().find((a) => a.slug === s);
+export const areaGroups = () => {
+  const m = new Map<string, Area[]>();
+  for (const a of areas()) m.set(a.group, [...(m.get(a.group) || []), a]);
+  return [...m.entries()].map(([group, items]) => ({ group, items }));
+};
+
+// ---------- cities ----------
+export type City = { slug: string; he: string; name: string; region: string };
+export const cities = (): City[] => (citiesRaw as any[]).map((c) => ({ slug: c.slug, he: c.he_slug, name: c.he, region: c.region }));
+export const cityBySlug = (s: string) => cities().find((c) => c.slug === s);
+export const REGIONS = ['מרכז', 'שרון', 'ירושלים', 'צפון', 'דרום'];
+
+// ---------- plans ----------
+export type Plan = { id: string; name: string; tier: number; price_year: number | null; price_note: string; is_final: boolean; pitch: string; features: string[]; highlight?: boolean };
+export const plans = (): Plan[] => plansRaw.plans as Plan[];
+export const addons = () => plansRaw.addons as { id: string; name: string; text: string; price_note: string }[];
+
+// ---------- firms ----------
+export type Firm = {
+  id: string; slug: string; name: string; city: string; address: string; phone: string; website: string; areas: string[];
+  hours: Record<string, string> | null; plan: string; claimed: boolean; isSample: boolean; source: string; sourceUrl: string;
+  collectedAt: string; featuredAreas: string[]; featuredCities: string[]; extended: any;
+  google: { rating: number | null; count: number | null; placeId: string; checkedAt: string }; // shown only if SETTINGS.show_google_ratings
+  reviews: Review[];
+};
+export type Review = { rating: number; title: string; body: string; author: string; area: string; method: string; date: string; reply: string; isSample: boolean };
+
+const SAMPLE_REVIEWS: Record<string, Review[]> = {
+  'dugma-aleph-mekarkein': [
+    { rating: 5, title: 'ליווי מסודר בקניית דירה', body: 'זו חוות דעת לדוגמה. כך תיראה חוות דעת מאומתת: לקוח שקיבל שירות מהמשרד מספר בכמה משפטים איך היה התהליך.', author: 'מיכל ש.', area: 'real-estate', method: 'phone_otp', date: '2026-10-02', reply: 'תודה רבה. (תגובת משרד לדוגמה)', isSample: true },
+    { rating: 4, title: 'זמינות טובה, היה עיכוב קטן', body: 'גם חוות דעת לדוגמה. באתר מוצגות גם חוות דעת שאינן מושלמות, כדי שהתמונה תהיה אמינה.', author: 'יוסי ק.', area: 'urban-renewal', method: 'invite', date: '2026-09-14', reply: '', isSample: true },
+  ],
+  'dugma-bet-mishpacha': [
+    { rating: 5, title: 'יחס אישי', body: 'חוות דעת לדוגמה לצורך הצגת העיצוב בלבד.', author: 'רונית א.', area: 'family-law', method: 'phone_otp', date: '2026-08-21', reply: '', isSample: true },
+  ],
+};
+
+let _firms: Firm[] | null = null;
+export async function firms(): Promise<Firm[]> {
+  if (_firms) return _firms;
+  if (process.env.FOL_DB === '1') {
+    try {
+      const cols = 'id,slug,name,city_slug,address,phone,website,areas,hours,source,source_url,collected_at,is_sample,claimed,plan,featured_areas,featured_cities,extended,google_rating,google_reviews_count,google_place_id,google_checked_at';
+      const r = await fetch(`${DB.url}/rest/v1/fol_firms?select=${cols}&order=name`, { headers: { apikey: DB.key, Authorization: `Bearer ${DB.key}` } });
+      if (r.ok) {
+        const rows: any[] = await r.json();
+        _firms = rows.map((f) => ({
+          id: f.id, slug: f.slug, name: f.name, city: f.city_slug, address: f.address || '', phone: f.phone || '', website: f.website || '',
+          areas: f.areas || [], hours: f.hours, plan: f.plan, claimed: f.claimed, isSample: f.is_sample, source: f.source,
+          sourceUrl: f.source_url || '', collectedAt: f.collected_at || '', featuredAreas: f.featured_areas || [],
+          featuredCities: f.featured_cities || [], extended: f.extended || {},
+          google: { rating: f.google_rating, count: f.google_reviews_count, placeId: f.google_place_id || '', checkedAt: f.google_checked_at || '' }, reviews: [],
+        }));
+        return _firms;
+      }
+      console.warn('[data] fol_firms not readable, using the sample list:', r.status);
+    } catch (e) { console.warn('[data] database not reachable, using the sample list'); }
+  }
+  _firms = (firmsSample as any[]).map((f) => ({
+    id: f.slug, slug: f.slug, name: f.name, city: f.city, address: f.address, phone: f.phone, website: f.website, areas: f.areas,
+    hours: f.hours, plan: f.plan, claimed: f.claimed, isSample: true, source: 'sample', sourceUrl: '', collectedAt: '2026-11-25',
+    featuredAreas: f.featured_areas, featuredCities: f.featured_cities, extended: f.extended || {},
+    google: { rating: f.google_rating ?? null, count: f.google_reviews_count ?? null, placeId: '', checkedAt: '' }, reviews: SAMPLE_REVIEWS[f.slug] || [],
+  }));
+  return _firms;
+}
+export const isPaid = (f: Firm) => f.plan !== 'free';
+export const hasExtended = (f: Firm) => ['pro', 'senior', 'extended'].includes(f.plan) || (f.claimed && !!f.extended?.description);
+/** featured (paid, labelled) firms first for this area/city, then the rest by name. Paid plans never change scores. */
+export function rankFor(list: Firm[], area?: string, city?: string) {
+  const feat = (f: Firm) => isPaid(f) && ((area && f.featuredAreas.includes(area)) || (city && f.featuredCities.includes(city)) || f.plan === 'senior');
+  return {
+    featured: list.filter(feat).sort((a, b) => tier(b) - tier(a)),
+    rest: list.filter((f) => !feat(f)).sort((a, b) => a.name.localeCompare(b.name, 'he')),
   };
-  const computed = computeParts(base);
-  const parts: ScoreParts = raw.scoreParts && typeof raw.score === 'number' ? raw.scoreParts : computed;
-  const score = raw.scoreParts && typeof raw.score === 'number' ? Math.round(raw.score) : Math.round(Object.values(computed).reduce((s, n) => s + n, 0));
-  return { ...base, parts, score };
 }
+const tier = (f: Firm) => ({ senior: 3, pro: 2, basic: 1 } as Record<string, number>)[f.plan] || 0;
+export const avg = (r: Review[]) => (r.length ? Math.round((r.reduce((s, x) => s + x.rating, 0) / r.length) * 10) / 10 : 0);
 
-type Data = { lawyers: Lawyer[]; ranks: Rank[]; origin: 'engine' | 'seed' | 'empty'; at: string };
-let cache: Promise<Data> | null = null;
-
-async function fromEngine(): Promise<any | null> {
-  if (process.env.DIR_OFFLINE === '1') return null;
-  try {
-    const r = await fetch(SITE.dir, { method: 'POST', headers: { apikey: SITE.dirKey, 'content-type': 'application/json' }, body: JSON.stringify({ a: 'export', p: { site: 'folivus' } }), signal: AbortSignal.timeout(30000) });
-    if (!r.ok) return null;
-    const j = await r.json();
-    return Array.isArray(j?.lawyers) && j.lawyers.length ? j : null;
-  } catch {
-    return null;
-  }
-}
-function fromSeed(): any | null {
-  try {
-    const p = path.resolve(process.cwd(), 'src/data/lawyers.seed.json');
-    if (!fs.existsSync(p)) return null;
-    const j = JSON.parse(fs.readFileSync(p, 'utf8'));
-    return Array.isArray(j) ? { lawyers: j } : Array.isArray(j?.lawyers) ? j : null;
-  } catch {
-    return null;
-  }
-}
-
-export function loadData(): Promise<Data> {
-  if (!cache) {
-    cache = (async () => {
-      const eng = await fromEngine();
-      const src = eng || fromSeed();
-      const origin: Data['origin'] = eng ? 'engine' : src ? 'seed' : 'empty';
-      const ranks: Rank[] = Array.isArray(src?.ranks) ? src.ranks.filter((r: any) => r && r.year && areaSet.has(r.area) && Array.isArray(r.list)) : [];
-      const rankedIds = new Set(ranks.flatMap((r) => r.list.map((x) => x.lawyerId)));
-      const seen = new Set<string>();
-      const lawyers = ((src?.lawyers || []) as any[]).map((x) => normalize(x, rankedIds)).filter((l): l is Lawyer => !!l && !seen.has(l.id) && !!seen.add(l.id));
-      lawyers.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, 'he'));
-      console.log(`[folivus] lawyers: ${lawyers.length} (from ${origin}), ranks: ${ranks.length}`);
-      return { lawyers, ranks, origin, at: src?.at || NOW.toISOString() };
-    })();
-  }
-  return cache;
-}
-
-export const key = (a: string, c: string) => `${a}|${c}`;
-export async function counts() {
-  const { lawyers } = await loadData();
-  const area: Record<string, number> = {}, city: Record<string, number> = {}, region: Record<string, number> = {}, areaCity: Record<string, number> = {}, areaRegion: Record<string, number> = {};
-  for (const l of lawyers) {
-    for (const a of l.areas) area[a] = (area[a] || 0) + 1;
-    for (const c of l.cities) city[c] = (city[c] || 0) + 1;
-    for (const r of l.regions) region[r] = (region[r] || 0) + 1;
-    for (const a of l.areas) for (const c of l.cities) areaCity[key(a, c)] = (areaCity[key(a, c)] || 0) + 1;
-    for (const a of l.areas) for (const r of l.regions) areaRegion[key(a, r)] = (areaRegion[key(a, r)] || 0) + 1;
-  }
-  return { area, city, region, areaCity, areaRegion, total: lawyers.length };
-}
-/** An area+city page is built when the city has lawyers in that area, or at least the city's region does
- *  (then it is noindex and shows the nearby lawyers). Other combinations fall to the 404 page, which explains and links. */
-export function hasCombo(c: { areaCity: Record<string, number>; areaRegion: Record<string, number> }, area: string, city: string) {
-  const reg = cityBySlug(city)?.regionSlug || '';
-  return !!(c.areaCity[key(area, city)] || c.areaRegion[key(area, reg)]);
-}
-
-/** Is this lawyer promoted on the page of `area` (and optionally `city`)? Always shown with a "מקודם" label. */
-export function promotedOn(l: Lawyer, area: string, city?: string) {
-  if (!l.paid || !l.featured.areas.includes(area)) return false;
-  return !city || !l.featured.cities.length || l.featured.cities.includes(city);
-}
-/** Promoted first (labelled), then by score. */
-export function orderFor(list: Lawyer[], area: string, city?: string) {
-  const p = list.filter((l) => promotedOn(l, area, city)).slice(0, 3);
-  const ids = new Set(p.map((l) => l.id));
-  return { promoted: p, rest: list.filter((l) => !ids.has(l.id)) };
-}
-
-export const yearsOf = (l: Lawyer) => (l.licenseYear ? THIS_YEAR - l.licenseYear : undefined);
-export const telHref = (p?: string) => (p ? 'tel:' + p.replace(/[^\d+]/g, '') : undefined);
-export const waHref = (p?: string) => {
-  if (!p) return undefined;
-  let d = p.replace(/\D/g, '');
-  if (d.startsWith('0')) d = '972' + d.slice(1);
-  return `https://wa.me/${d}`;
+// ---------- authors ----------
+export type Author = { slug: string; name: string; type: 'Person' | 'Organization'; role: string; bio: string; isSample: boolean; sameAs: string[] };
+export const authors = (): Author[] => authorsRaw as Author[];
+export const authorFor = (x: any): Author => {
+  const s = String(x || '').trim();
+  return authors().find((a) => a.slug === s || a.name === s) || authors().find((a) => a.slug === 'editorial')!;
 };
-export const plural = (n: number, one: string, many: string) => (n === 1 ? one : `${n} ${many}`);
+
+// ---------- articles ----------
+export type Article = {
+  slug: string; he: string; title: string; description: string; areas: string[]; author: Author; reviewer: Author | null;
+  published: Date | null; updated: Date | null; sources: Src[]; faq: Faq[]; body: string; words: number; isSample: boolean;
+  scheduled: boolean; // published date is in the future: shown only in the preview, goes live on that day's build
+  draft: boolean;
+};
+let _articles: Article[] | null = null;
+export function articles(): Article[] {
+  if (_articles) return _articles;
+  _articles = list('articles', '.md').map((f) => {
+    const d = parseMd(path.join(ROOT, 'articles', f));
+    if (!d || !d.fm.title) return null;
+    const fm = d.fm;
+    const slug = String(fm.slug || f.replace(/\.md$/, ''));
+    if (isDraft(fm) && !PREVIEW) return null;
+    const pub = validDay(day(fm.published));
+    const scheduled = !!pub && +pub > Date.now();
+    if (scheduled && !PREVIEW) return null;
+    return {
+      slug, he: String(fm.he_slug || slug), title: String(fm.title), description: String(fm.description || ''),
+      areas: arr<string>(fm.area_slugs || fm.areas), author: authorFor(fm.author), reviewer: fm.reviewed_by ? authorFor(fm.reviewed_by) : null,
+      published: validDay(day(fm.published)), updated: validDay(day(fm.updated || fm.published)), sources: srcs(fm.sources),
+      faq: faqs(fm.faq), body: d.body, words: d.body.split(/\s+/).filter(Boolean).length, isSample: !!fm.sample, scheduled, draft: isDraft(fm),
+    } as Article;
+  }).filter(Boolean) as Article[];
+  _articles.sort((a, b) => +(b.published || 0) - +(a.published || 0));
+  return _articles;
+}
+
+// ---------- tools ----------
+export type ToolInput = { id: string; label: string; type: string; options?: any[]; required?: boolean; help?: string; default?: any; min?: number; max?: number; step?: number; placeholder?: string };
+export type Tool = {
+  slug: string; he: string; name: string; category: string; type: 'calculator' | 'generator'; description: string; inputs: ToolInput[];
+  outputs: any[]; sources: Src[]; disclaimer: string; updated: Date | null; area: string; module: string | null; intro: string; faq: Faq[];
+  draft: boolean;
+};
+let _tools: Tool[] | null = null;
+export function tools(): Tool[] {
+  if (_tools) return _tools;
+  _tools = list('tools', '.json').map((f) => {
+    try {
+      const t = JSON.parse(read(path.join(ROOT, 'tools', f)));
+      const slug = String(t.slug || f.replace(/\.json$/, ''));
+      if (isDraft(t) && !PREVIEW) return null;
+      const js = path.join(ROOT, 'tools', slug + '.js');
+      return {
+        slug, he: String(t.he_slug || slug), name: String(t.name), category: String(t.category || 'כללי'),
+        type: t.type === 'generator' ? 'generator' : 'calculator', description: String(t.description || ''),
+        inputs: arr(t.inputs), outputs: arr(t.outputs), sources: srcs(t.sources), disclaimer: String(t.disclaimer || ''),
+        updated: validDay(day(t.updated)), area: String(t.area_slug || arr(t.area_slugs)[0] || ''), module: exists(js) ? slug : null,
+        intro: String(t.intro || t.explanation || ''), faq: faqs(t.faq), draft: isDraft(t),
+      } as Tool;
+    } catch (e) { console.warn('[data] skipped tool', f, String(e).slice(0, 100)); return null; }
+  }).filter(Boolean) as Tool[];
+  return _tools;
+}
+export const toolCategories = () => {
+  const m = new Map<string, Tool[]>();
+  for (const t of tools()) m.set(t.category, [...(m.get(t.category) || []), t]);
+  return [...m.entries()].map(([category, items]) => ({ category, items }));
+};
+
+// ---------- courts ----------
+export type Court = {
+  slug: string; he: string; name: string; type: string; city: string; address: string; phone: string; hours: string;
+  lat: number | null; lng: number | null; sources: Src[]; updated: Date | null; body: string; faq: Faq[];
+  district: string; phoneNote: string; officialPage: string; draft: boolean;
+};
+let _courts: Court[] | null = null;
+export function courts(): Court[] {
+  if (_courts) return _courts;
+  _courts = list('courts', '.md').map((f) => {
+    const d = parseMd(path.join(ROOT, 'courts', f));
+    if (!d || !d.fm.name) return null;
+    const fm = d.fm;
+    if (isDraft(fm) && !PREVIEW) return null;
+    const hours = Array.isArray(fm.hours) ? fm.hours.join(' | ') : typeof fm.hours === 'object' && fm.hours ? Object.entries(fm.hours).map(([k, v]) => `${k}: ${v}`).join(' | ') : String(fm.hours || '');
+    return {
+      slug: String(fm.slug || f.replace(/\.md$/, '')), he: String(fm.he_slug || fm.slug), name: String(fm.name), type: String(fm.type || ''),
+      city: String(fm.city || ''), address: String(fm.address || ''), phone: String(fm.phone || ''), hours,
+      lat: typeof fm.lat === 'number' ? fm.lat : null, lng: typeof fm.lng === 'number' ? fm.lng : null, sources: srcs(fm.sources),
+      updated: validDay(day(fm.updated)), body: d.body, faq: faqs(fm.faq),
+      district: String(fm.district || ''), phoneNote: String(fm.phone_note || ''), officialPage: String(fm.official_page || ''), draft: isDraft(fm),
+    } as Court;
+  }).filter(Boolean) as Court[];
+  _courts.sort((a, b) => a.name.localeCompare(b.name, 'he'));
+  return _courts;
+}
+
+// ---------- helpers ----------
+export const fmtDate = (d: Date | null | string) => {
+  const x = typeof d === 'string' ? new Date(d) : d;
+  return x && !isNaN(+x) ? x.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+};
+export const isoDate = (d: Date | null) => (d ? d.toISOString().slice(0, 10) : undefined);
+export const DAYS: [string, string][] = [['sun', 'ראשון'], ['mon', 'שני'], ['tue', 'שלישי'], ['wed', 'רביעי'], ['thu', 'חמישי'], ['fri', 'שישי'], ['sat', 'שבת']];

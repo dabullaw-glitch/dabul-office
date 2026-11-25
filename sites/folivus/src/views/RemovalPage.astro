@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import FormShell from '../components/FormShell.astro';
+import { P, u } from '../config/routes';
+import { firms, cityBySlug } from '../lib/data';
+import { breadcrumbs } from '../lib/schema';
+const { path } = Astro.props as any;
+const fs = (await firms()).slice().sort((a, b) => a.name.localeCompare(b.name, 'he'));
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'בקשת תיקון או הסרה', path }];
+---
+<Base title="בקשה לתיקון או הסרת פרטים" description="משרד או עורך דין שרוצים לתקן או להסיר פרטים מהאתר יכולים להגיש בקשה כאן. כל בקשה נבדקת ומטופלת." path={path} schema={[breadcrumbs(crumbs)]}>
+  <section class="phead tint">
+    <div class="wrap">
+      <Crumbs items={crumbs} />
+      <h1>תיקון או הסרת פרטים</h1>
+      <p class="lead">הפרטים באתר הם פרטים עסקיים ממקורות ציבוריים. אם משהו לא נכון, או שאתם לא רוצים להופיע, ספרו לנו. כל בקשה נבדקת, ונעדכן אתכם במייל או בטלפון.</p>
+    </div>
+  </section>
+  <div class="wrap layout">
+    <div>
+      <FormShell kind="removal" ok="תודה. הבקשה התקבלה ותטופל." submit="שליחת בקשה">
+        <fieldset class="field" style="border:0;padding:0;margin:0">
+          <legend style="font-weight:600;font-size:.93rem;margin-bottom:8px">מה לעשות?</legend>
+          <div class="radio-cards"><label><input type="radio" name="type" value="fix" checked />לתקן פרטים</label><label><input type="radio" name="type" value="remove" />להסיר את הפרופיל</label></div>
+        </fieldset>
+        <div class="field"><label for="r-firm">המשרד</label><select id="r-firm" name="firm"><option value="">בחרו משרד (או כתבו בפרטים)</option>{fs.map((f) => <option value={f.slug}>{f.name}{cityBySlug(f.city) ? ', ' + cityBySlug(f.city)!.name : ''}</option>)}</select></div>
+        <div class="row2">
+          <div class="field"><label for="r-name">שם מלא</label><input id="r-name" name="name" required autocomplete="name" /></div>
+          <div class="field"><label for="r-role">הקשר שלכם למשרד</label><select id="r-role" name="role"><option>בעל המשרד או שותף</option><option>עובד במשרד</option><option>אחר</option></select></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="r-mail">מייל</label><input id="r-mail" name="email" type="email" autocomplete="email" /></div>
+          <div class="field"><label for="r-ph">טלפון</label><input id="r-ph" name="phone" type="tel" autocomplete="tel" /></div>
+        </div>
+        <div class="field"><label for="r-det">מה צריך לתקן או למה להסיר</label><textarea id="r-det" name="details"></textarea><div class="help">צריך להשאיר מייל או טלפון כדי שנוכל לאמת את הבקשה.</div></div>
+      </FormShell>
+    </div>
+    <aside class="aside">
+      <div class="box"><h2>מה קורה אחרי הבקשה</h2><p class="small">אנחנו מאמתים שהבקשה הגיעה מהמשרד, ואז מתקנים או מסירים. בקשת הסרה של פרופיל שנאסף ממקורות ציבוריים מכובדת. חוות דעת מאומתות נשמרות לפי <a href={u(P.page('terms'))}>תנאי השימוש</a>.</p></div>
+      <div class="box brass"><h2>רוצים לעדכן בעצמכם?</h2><p class="small">אשרו בעלות על הפרופיל ועדכנו אותו ישירות.</p><a class="btn btn-pine btn-sm btn-block" href={u(P.page('claim'))}>אישור בעלות</a></div>
+    </aside>
+  </div>
+  <script>
+    const q = new URLSearchParams(location.search).get('firm');
+    const s = document.getElementById('r-firm') as HTMLSelectElement | null;
+    if (q && s && [...s.options].some((o) => o.value === q)) s.value = q;
+  </script>
+</Base>

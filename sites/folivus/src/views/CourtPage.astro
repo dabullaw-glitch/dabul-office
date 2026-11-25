@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import Sources from '../components/Sources.astro';
+import Toc from '../components/Toc.astro';
+import Disclaimer from '../components/Disclaimer.astro';
+import { P, u } from '../config/routes';
+import { courts, cities, firms, fmtDate } from '../lib/data';
+import { render } from '../lib/md';
+import { breadcrumbs, courthouse, faqPage } from '../lib/schema';
+const { path, court } = Astro.props as any;
+const c = courts().find((x) => x.slug === court)!;
+const city = cities().find((x) => x.name === c.city || x.slug === c.city || c.city.includes(x.name));
+const { html, toc } = render(c.body);
+const sponsored = city ? (await firms()).filter((f) => f.city === city.slug && f.plan !== 'free').slice(0, 3) : [];
+const map = c.lat && c.lng ? `https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}` : c.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.name + ' ' + c.address)}` : '';
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'בתי משפט', path: P.page('courts') }, { name: c.name, path }];
+const updated = fmtDate(c.updated);
+---
+<Base title={`${c.name}: כתובת, שעות ומידע לפני דיון`} description={`${c.name}${c.address ? ', ' + c.address : ''}. שעות קבלת קהל, דרכי הגעה, טלפון ומה כדאי לדעת לפני דיון.`.slice(0, 158)} path={path} nav="courts" schema={[breadcrumbs(crumbs), courthouse(c, path), faqPage(c.faq)]}>
+  <section class="phead tint">
+    <div class="wrap">
+      <Crumbs items={crumbs} />
+      <h1>{c.name}</h1>
+      <div class="chips">
+        {c.address && <span class="chip"><Icon name="pin" />{c.address}</span>}
+        {c.phone && <a class="chip" href={'tel:' + c.phone.replace(/[^0-9+*]/g, '')}><Icon name="phone" />{c.phone}</a>}
+        {updated && <span class="chip"><Icon name="calendar" />נבדק {updated}</span>}
+        {c.draft && <span class="badge b-draft">טיוטה</span>}
+      </div>
+    </div>
+  </section>
+  <div class="wrap layout">
+    <div>
+      <Toc items={toc} mobile />
+      <div class="prose" set:html={html} />
+      <Disclaimer kind="info" />
+      <Faq items={c.faq} />
+      <Sources items={c.sources} updated={updated} />
+    </div>
+    <aside class="aside">
+      <div class="box">
+        <h2>פרטים</h2>
+        <dl class="dl">
+          {c.address && <div><dt>כתובת</dt><dd>{c.address}</dd></div>}
+          {c.phone && <div><dt>טלפון</dt><dd><a href={'tel:' + c.phone.replace(/[^0-9+*]/g, '')}>{c.phone}</a>{c.phoneNote && <div class="xs muted">{c.phoneNote}</div>}</dd></div>}
+          {c.district && <div><dt>מחוז</dt><dd>{c.district}</dd></div>}
+          {c.hours && <div><dt>שעות</dt><dd>{c.hours}</dd></div>}
+        </dl>
+        {c.officialPage && <a class="btn btn-line btn-sm btn-block mt1" href={c.officialPage} target="_blank" rel="noopener"><Icon name="link" />לעמוד הרשמי</a>}
+        {map && <a class="btn btn-line btn-sm btn-block mt1" href={map} target="_blank" rel="noopener"><Icon name="pin" />ניווט במפה</a>}
+        <p class="xs muted mt1 mb0">לפני הגעה כדאי לבדוק באתר הרשמי של הרשות השופטת שאין שינוי בשעות.</p>
+      </div>
+      <div class="sticky">
+        {sponsored.length > 0 ? (
+          <div class="box"><p class="promo-note mt0"><Icon name="megaphone" />מודעה</p><h2>משרדים ב{city!.name}</h2><ul class="links">{sponsored.map((f) => <li><a href={u(P.firm(f.slug))}>{f.name}</a></li>)}</ul></div>
+        ) : (
+          <div class="box brass"><h2>מקום למודעה</h2><p class="small mb0">משרדים ונותני שירות יכולים להופיע כאן, עם סימון מודעה. <a href={u(P.page('join'))}>פרטים</a></p></div>
+        )}
+      </div>
+    </aside>
+  </div>
+</Base>

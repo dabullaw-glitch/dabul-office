@@ -1,0 +1,14 @@
+---
+// Wrapper for site forms: honeypot, consent line, message area, and the connection to fol_submit.
+import { DB } from '../config/brand';
+import { P, u } from '../config/routes';
+const { kind, ok, submit = 'שליחה', consent = true } = Astro.props as { kind: string; ok?: string; submit?: string; consent?: boolean };
+---
+<form class="form" data-kind={kind} data-ok={ok} data-live={DB.formsLive ? '1' : '0'} data-endpoint={DB.url + '/rest/v1/rpc/fol_submit'} data-key={DB.key} novalidate={false}>
+  <slot />
+  <div class="hp" aria-hidden="true"><label>אתר<input name="website_hp" tabindex="-1" autocomplete="off" /></label></div>
+  {consent && <label class="check"><input type="checkbox" name="consent" required /><span>קראתי את <a href={u(P.page('privacy'))} target="_blank">מדיניות הפרטיות</a> ומסכים/ה שהפרטים ישמשו לטיפול בבקשה. לא נשלח דיוור שיווקי.</span></label>}
+  <div class="msg" data-msg role="status" tabindex="-1"></div>
+  <div><button class="btn btn-pine" type="submit">{submit}</button></div>
+</form>
+<script>import '../scripts/forms';</script>

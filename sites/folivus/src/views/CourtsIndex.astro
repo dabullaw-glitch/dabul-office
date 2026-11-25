@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Icon from '../components/Icon.astro';
+import { P, u } from '../config/routes';
+import { courts } from '../lib/data';
+import { breadcrumbs, itemList, collection } from '../lib/schema';
+const { path } = Astro.props as any;
+const cs = courts();
+const ORDER = ['supreme', 'district', 'magistrate', 'magistrates', 'family', 'labor', 'rabbinical'];
+const typeName = (t: string) => ({ supreme: 'בית המשפט העליון', magistrate: 'בתי משפט השלום', magistrates: 'בתי משפט השלום', district: 'בתי המשפט המחוזיים', family: 'בתי משפט לענייני משפחה', labor: 'בתי הדין לעבודה', rabbinical: 'בתי הדין הרבניים' } as Record<string, string>)[t] || t;
+const groups = [...new Set(cs.map((c) => c.type || 'other'))].sort((a, b) => (ORDER.indexOf(a) + 99) % 99 - (ORDER.indexOf(b) + 99) % 99).map((t) => ({ t, items: cs.filter((c) => (c.type || 'other') === t) }));
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'בתי משפט', path }];
+const title = 'בתי משפט בישראל: כתובות, שעות ומידע שימושי';
+const description = 'מידע על בתי משפט בישראל: כתובת, טלפון, שעות קבלת קהל, איך מגיעים ומה כדאי לדעת לפני דיון. כל פרט עם מקור רשמי.';
+---
+<Base title={title} description={description} path={path} nav="courts" schema={[breadcrumbs(crumbs), collection(title, path, description), itemList(title, cs.map((c) => ({ name: c.name, path: P.court(c.he) })))]}>
+  <section class="phead tint"><div class="wrap"><Crumbs items={crumbs} /><h1>בתי משפט</h1><p class="lead">כתובת, דרכי הגעה, שעות ומה כדאי לדעת לפני דיון. הפרטים נבדקים מול האתרים הרשמיים של מערכת בתי המשפט.</p></div></section>
+  <section class="sec">
+    <div class="wrap">
+      {groups.map((g) => (
+        <section class="mb2" aria-label={typeName(g.t)}>
+          <h2 style="font-size:1.4rem">{typeName(g.t)}</h2>
+          <div class="grid g3">{g.items.map((c) => (
+            <a class="card tcard" href={u(P.court(c.he))}><span class="gicon"><Icon name="landmark" /></span><span><h3>{c.name}{c.draft && <span class="soon">טיוטה</span>}</h3><p>{c.address || c.city || c.district}</p></span></a>
+          ))}</div>
+        </section>
+      ))}
+      {cs.length === 0 && <div class="empty">עמודי בתי המשפט בהכנה.</div>}
+    </div>
+  </section>
+</Base>

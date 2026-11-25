@@ -1,20 +1,35 @@
-import { getCollection } from 'astro:content';
-import { SITE, REGIONS } from '../data/site';
-import { AREAS, GROUPS, counts } from '../lib/data';
-import { AREA_INFO } from '../data/areaInfo';
-// llms.txt: a plain map of the site for AI assistants (GEO)
-export async function GET(ctx: { site: URL }) {
-  const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-  const u = (p: string) => new URL(B + p, ctx.site).href;
-  const c = await counts();
-  const arts = (await getCollection('maamarim')).filter((a) => !a.data.draft);
-  let t = `# ${SITE.name} (Folivus)\n\n> ${SITE.description}\n\n`;
-  t += `מאגר עורכי דין בישראל לפי תחום עיסוק, עיר ואזור. לכל עורך דין יש ציון בין 0 ל-100 שמחושב בשיטה פומבית (חוות דעת מאומתות 50, שנות רישיון 15, שלמות פרופיל 15, מענה לפניות 10, הכרה מקצועית 10). תשלום לא משנה את הציון, ומיקום מקודם מסומן תמיד. חלק מהפרופילים נבנו ממקורות ציבוריים ומסומנים כך. האתר אינו משרד עורכי דין ואינו נותן ייעוץ משפטי.\n\n`;
-  t += `- [איך מחושב הציון](${u('shita/')})\n- [נבחרת פוליבוס, דירוג שנתי](${u('nivcheret/')})\n- [כל התחומים](${u('orchei-din/')})\n- [כל הערים](${u('ir/')})\n\n`;
-  for (const g of GROUPS) {
-    t += `## ${g}\n\n` + AREAS.filter((a) => a.group === g).map((a) => `- [עורכי דין ל${a.he}](${u('orchei-din/' + a.slug + '/')}): ${AREA_INFO[a.slug]?.blurb || ''}${c.area[a.slug] ? ` (${c.area[a.slug]} עורכי דין)` : ''}`).join('\n') + '\n\n';
-  }
-  t += `## אזורים\n\n` + REGIONS.map((r) => `- [אזור ${r.he}](${u('ezor/' + r.slug + '/')}): ${r.blurb}`).join('\n') + '\n\n';
-  t += `## מדריכים\n\n` + arts.map((a) => `- [${a.data.title}](${u('maamarim/' + a.id + '/')}): ${a.data.description}`).join('\n') + '\n';
-  return new Response(t, { headers: { 'content-type': 'text/plain; charset=utf-8' } });
+// llms.txt: a short map of the site for AI assistants (GEO). Brand from config.
+import { BRAND } from '../config/brand';
+import { abs, P } from '../config/routes';
+import { areas, articles, tools, courts } from '../lib/data';
+export function GET() {
+  const L = (t: string, p: string, d = '') => `- [${t}](${abs(p)})${d ? ': ' + d : ''}`;
+  const body = `# ${BRAND.name} (${BRAND.nameLatin})
+
+> ${BRAND.description}
+
+האתר הוא מדריך עצמאי. הוא אינו משרד עורכי דין, אינו נותן ייעוץ משפטי, אינו מתווך ואינו מעביר פניות. פרטי המשרדים הם פרטים עסקיים ממקורות ציבוריים ומהמשרדים עצמם ואינם המלצה. משרד ששילם על מיקום בולט מסומן "משרד מקודם"; הדירוג אינו ניתן לרכישה. בכל מדריך יש מקורות רשמיים ותאריך עדכון.
+
+## עמודים מרכזיים
+${L('כל תחומי המשפט', P.page('areas'))}
+${L('עורכי דין לפי עיר', P.page('cities'))}
+${L('מדריכים ומאמרים', P.page('articles'))}
+${L('כלים חינמיים', P.page('tools'))}
+${L('בתי משפט', P.page('courts'))}
+${L('איך בנויות הרשימות והדירוג', P.page('method'))}
+${L('מדיניות עריכה', P.page('editorial'))}
+
+## תחומי משפט
+${areas().map((a) => L(a.title, P.area(a.he), a.intro)).join('\n')}
+
+## כלים
+${tools().map((t) => L(t.name, P.tool(t.he), t.description)).join('\n')}
+
+## מאמרים
+${articles().slice(0, 60).map((a) => L(a.title, P.article(a.he), a.description)).join('\n')}
+
+## בתי משפט
+${courts().map((c) => L(c.name, P.court(c.he))).join('\n')}
+`;
+  return new Response(body, { headers: { 'content-type': 'text/plain; charset=utf-8' } });
 }

@@ -1,0 +1,61 @@
+---
+// Router: every page except home, 404 and feeds. Paths come from src/config/routes.ts, so sections can be renamed there.
+import { SEG, P } from '../config/routes';
+import { areas, cities, firms, articles, authors, tools, courts } from '../lib/data';
+import AreasIndex from '../views/AreasIndex.astro';
+import CitiesIndex from '../views/CitiesIndex.astro';
+import AreaPage from '../views/AreaPage.astro';
+import CityPage from '../views/CityPage.astro';
+import FirmPage from '../views/FirmPage.astro';
+import SearchPage from '../views/SearchPage.astro';
+import ArticlesIndex from '../views/ArticlesIndex.astro';
+import ArticlePage from '../views/ArticlePage.astro';
+import AuthorPage from '../views/AuthorPage.astro';
+import ToolsIndex from '../views/ToolsIndex.astro';
+import ToolPage from '../views/ToolPage.astro';
+import CourtsIndex from '../views/CourtsIndex.astro';
+import CourtPage from '../views/CourtPage.astro';
+import JoinPage from '../views/JoinPage.astro';
+import ClaimPage from '../views/ClaimPage.astro';
+import RemovalPage from '../views/RemovalPage.astro';
+import ContactPage from '../views/ContactPage.astro';
+import StaticPage from '../views/StaticPage.astro';
+
+export async function getStaticPaths() {
+  const out: { params: { path: string }; props: any }[] = [];
+  const add = (path: string, view: string, data: any = {}) => out.push({ params: { path: path.replace(/\/$/, '') }, props: { view, path, ...data } });
+  const fs = await firms();
+  add(P.page('areas'), 'areas');
+  add(P.page('cities'), 'cities');
+  for (const a of areas()) {
+    add(P.area(a.he), 'area', { area: a.slug });
+    for (const c of cities()) {
+      if (fs.some((f) => f.city === c.slug && f.areas.includes(a.slug))) add(P.areaCity(a.he, c.he), 'area', { area: a.slug, city: c.slug });
+    }
+  }
+  for (const c of cities()) add(P.city(c.he), 'city', { city: c.slug });
+  for (const f of fs) add(P.firm(f.slug), 'firm', { firm: f.slug });
+  add(P.page('search'), 'search');
+  add(P.page('articles'), 'articles');
+  for (const a of articles()) add(P.article(a.he), 'article', { article: a.slug });
+  for (const a of authors().filter((x) => x.type === 'Person')) add(P.author(a.slug), 'author', { author: a.slug });
+  add(P.page('tools'), 'tools');
+  for (const t of tools()) add(P.tool(t.he), 'tool', { tool: t.slug });
+  add(P.page('courts'), 'courts');
+  for (const c of courts()) add(P.court(c.he), 'court', { court: c.slug });
+  add(P.page('join'), 'join');
+  add(P.page('claim'), 'claim');
+  add(P.page('removal'), 'removal');
+  add(P.page('contact'), 'contact');
+  for (const k of ['editorial', 'method', 'terms', 'privacy', 'a11y', 'about'] as const) add(P.page(k), 'static', { page: k });
+  return out;
+}
+const props = Astro.props as any;
+const V: Record<string, any> = {
+  areas: AreasIndex, cities: CitiesIndex, area: AreaPage, city: CityPage, firm: FirmPage, search: SearchPage,
+  articles: ArticlesIndex, article: ArticlePage, author: AuthorPage, tools: ToolsIndex, tool: ToolPage,
+  courts: CourtsIndex, court: CourtPage, join: JoinPage, claim: ClaimPage, removal: RemovalPage, contact: ContactPage, static: StaticPage,
+};
+const View = V[props.view];
+---
+<View {...props} />

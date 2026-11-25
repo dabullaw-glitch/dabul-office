@@ -1,0 +1,234 @@
+[
+ {
+  "slug": "dugma-aleph-mekarkein",
+  "name": "אלון ושות' (משרד לדוגמה)",
+  "city": "tel-aviv",
+  "address": "רחוב לדוגמה 1, תל אביב-יפו",
+  "phone": "03-0000101",
+  "website": "https://example.com/",
+  "areas": [
+   "real-estate",
+   "urban-renewal",
+   "tax",
+   "condominium"
+  ],
+  "hours": {
+   "sun": "09:00-18:00",
+   "mon": "09:00-18:00",
+   "tue": "09:00-18:00",
+   "wed": "09:00-18:00",
+   "thu": "09:00-17:00"
+  },
+  "plan": "senior",
+  "claimed": true,
+  "featured_areas": [
+   "real-estate",
+   "urban-renewal"
+  ],
+  "featured_cities": [
+   "tel-aviv",
+   "ramat-gan",
+   "givatayim"
+  ],
+  "extended": {
+   "description": "משרד לדוגמה שמתמקד בעסקאות מקרקעין ובפרויקטים של התחדשות עירונית. הטקסט הזה מדגים איך נראה תיאור שהמשרד כותב בעצמו בפרופיל מורחב: מי אנחנו, איך אנחנו עובדים ומה הלקוח יכול לצפות לקבל.",
+   "founded": 2009,
+   "lawyers": 6,
+   "languages": [
+    "עברית",
+    "אנגלית",
+    "רוסית"
+   ],
+   "whatsapp": "050-0000101",
+   "services": [
+    "ליווי קונים ומוכרים בעסקת דירה",
+    "ייצוג בעלי דירות בפינוי בינוי",
+    "בדיקת זכויות ורישום בטאבו",
+    "תכנון מס רכישה ומס שבח"
+   ],
+   "cases": [
+    {
+     "title": "ייצוג נציגות בעלי דירות בפרויקט פינוי בינוי (דוגמה)",
+     "text": "תיאור קצר של תיק לדוגמה, כפי שמשרד יכול להציג בפרופיל מורחב, בלי פרטים מזהים של לקוחות."
+    },
+    {
+     "title": "עסקת קומבינציה בקרקע פרטית (דוגמה)",
+     "text": "דוגמה לתיאור עסקה מורכבת: מה היה האתגר ואיך המשרד ליווה את הלקוחות לאורך הדרך."
+    }
+   ],
+   "photos": 3,
+   "video": true
+  }
+ },
+ {
+  "slug": "dugma-bet-mishpacha",
+  "name": "משרד עורכי דין בר (לדוגמה)",
+  "city": "tel-aviv",
+  "address": "שדרה לדוגמה 20, תל אביב-יפו",
+  "phone": "03-0000202",
+  "website": "https://example.com/",
+  "areas": [
+   "family-law",
+   "divorce",
+   "prenup",
+   "inheritance-wills"
+  ],
+  "hours": {
+   "sun": "08:30-17:00",
+   "mon": "08:30-17:00",
+   "tue": "08:30-17:00",
+   "wed": "08:30-17:00",
+   "thu": "08:30-14:00"
+  },
+  "plan": "pro",
+  "claimed": true,
+  "featured_areas": [
+   "family-law"
+  ],
+  "featured_cities": [
+   "tel-aviv"
+  ],
+  "extended": {
+   "description": "משרד לדוגמה בתחום דיני המשפחה. בפרופיל מקצועי המשרד מציג תיאור, שפות שירות ודרכי קשר נוספות.",
+   "founded": 2015,
+   "lawyers": 3,
+   "languages": [
+    "עברית",
+    "אנגלית"
+   ],
+   "whatsapp": "050-0000202"
+  }
+ },
+ {
+  "slug": "dugma-gimel-plili",
+  "name": "גל ושות' (משרד לדוגמה)",
+  "city": "tel-aviv",
+  "address": "רחוב לדוגמה 7, תל אביב-יפו",
+  "phone": "03-0000303",
+  "website": "",
+  "areas": [
+   "criminal",
+   "traffic",
+   "white-collar"
+  ],
+  "hours": null,
+  "plan": "free",
+  "claimed": false,
+  "featured_areas": [],
+  "featured_cities": [],
+  "extended": {}
+ },
+ {
+  "slug": "dugma-dalet-haifa",
+  "name": "דור משרד עורכי דין (לדוגמה)",
+  "city": "haifa",
+  "address": "שדרות לדוגמה 3, חיפה",
+  "phone": "04-0000404",
+  "website": "https://example.com/",
+  "areas": [
+   "real-estate",
+   "inheritance-wills",
+   "enduring-poa",
+   "notary"
+  ],
+  "hours": {
+   "sun": "09:00-17:00",
+   "mon": "09:00-17:00",
+   "tue": "09:00-17:00",
+   "wed": "09:00-17:00",
+   "thu": "09:00-13:00"
+  },
+  "plan": "free",
+  "claimed": false,
+  "featured_areas": [],
+  "featured_cities": [],
+  "extended": {}
+ },
+ {
+  "slug": "dugma-hei-jerusalem",
+  "name": "הדר ושות' (משרד לדוגמה)",
+  "city": "jerusalem",
+  "address": "רחוב לדוגמה 12, ירושלים",
+  "phone": "02-0000505",
+  "website": "https://example.com/",
+  "areas": [
+   "real-estate",
+   "planning-building",
+   "administrative"
+  ],
+  "hours": null,
+  "plan": "basic",
+  "claimed": true,
+  "featured_areas": [
+   "real-estate"
+  ],
+  "featured_cities": [
+   "jerusalem"
+  ],
+  "extended": {
+   "description": "משרד לדוגמה בירושלים. פרופיל בסיסי בתשלום כולל הצגה בראש עמוד תחום ועיר אחד, עם תווית מקודם."
+  }
+ },
+ {
+  "slug": "dugma-vav-avoda",
+  "name": "ורד דיני עבודה (משרד לדוגמה)",
+  "city": "rishon-lezion",
+  "address": "רחוב לדוגמה 40, ראשון לציון",
+  "phone": "03-0000606",
+  "website": "",
+  "areas": [
+   "labor-law",
+   "national-insurance"
+  ],
+  "hours": {
+   "sun": "09:00-18:00",
+   "mon": "09:00-18:00",
+   "tue": "09:00-18:00",
+   "wed": "09:00-18:00",
+   "thu": "09:00-18:00"
+  },
+  "plan": "free",
+  "claimed": false,
+  "featured_areas": [],
+  "featured_cities": [],
+  "extended": {}
+ },
+ {
+  "slug": "dugma-zayin-sharon",
+  "name": "זיו ושות' (משרד לדוגמה)",
+  "city": "kfar-saba",
+  "address": "רחוב לדוגמה 5, כפר סבא",
+  "phone": "09-0000707",
+  "website": "https://example.com/",
+  "areas": [
+   "real-estate",
+   "construction-defects",
+   "leases"
+  ],
+  "hours": null,
+  "plan": "free",
+  "claimed": false,
+  "featured_areas": [],
+  "featured_cities": [],
+  "extended": {}
+ },
+ {
+  "slug": "dugma-chet-negev",
+  "name": "חן משרד עורכי דין (לדוגמה)",
+  "city": "beer-sheva",
+  "address": "רחוב לדוגמה 9, באר שבע",
+  "phone": "08-0000808",
+  "website": "",
+  "areas": [
+   "insolvency",
+   "enforcement",
+   "banking"
+  ],
+  "hours": null,
+  "plan": "free",
+  "claimed": false,
+  "featured_areas": [],
+  "featured_cities": [],
+  "extended": {}
+ }
+]

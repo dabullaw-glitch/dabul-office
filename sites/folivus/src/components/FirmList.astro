@@ -1,0 +1,20 @@
+---
+import FirmCard from './FirmCard.astro';
+import Icon from './Icon.astro';
+import { P, u } from '../config/routes';
+import type { Firm } from '../lib/data';
+const { featured, rest, area, emptyText } = Astro.props as { featured: Firm[]; rest: Firm[]; area?: string; emptyText?: string };
+---
+{featured.length > 0 && (
+  <>
+    <p class="promo-note"><Icon name="info" />משרדים ששילמו על מיקום בולט מופיעים ראשונים ומסומנים "משרד מקודם". תשלום לא משפיע על הדירוג. <a href={u(P.page('method'))}>איך בנויה הרשימה</a></p>
+    <div class="firms">{featured.map((f) => <FirmCard f={f} promo area={area} />)}</div>
+  </>
+)}
+{rest.length > 0 && <div class="firms" style={featured.length ? 'margin-top:14px' : undefined}>{rest.map((f) => <FirmCard f={f} area={area} />)}</div>}
+{featured.length + rest.length === 0 && (
+  <div class="empty">
+    <p class="mb0">{emptyText || 'עדיין אין משרדים ברשימה הזו.'}</p>
+    <p class="small mt1 mb0">עורכי דין שעובדים בתחום ובאזור יכולים <a href={u(P.page('join'))}>להצטרף לאתר</a>.</p>
+  </div>
+)}

@@ -1,0 +1,16 @@
+---
+import type { Toc } from '../lib/md';
+const { items, mobile = false } = Astro.props as { items: Toc; mobile?: boolean };
+const all = items.filter((t) => t.level <= 3);
+const list = (!mobile && all.length > 14 ? all.filter((t) => t.level === 2) : all).slice(0, 24);
+---
+{list.length > 2 && (mobile ? (
+  <details class="toc-m toc"><summary>תוכן העניינים</summary>
+    <ol>{list.map((t) => <li class={'l' + t.level}><a href={'#' + t.id}>{t.text}</a></li>)}</ol>
+  </details>
+) : (
+  <nav class="box toc" aria-label="תוכן העניינים">
+    <h2>תוכן העניינים</h2>
+    <ol>{list.map((t) => <li class={'l' + t.level}><a href={'#' + t.id}>{t.text}</a></li>)}</ol>
+  </nav>
+))}

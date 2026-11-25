@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { P, u, abs } from '../config/routes';
+import { authors, articles, fmtDate } from '../lib/data';
+import { breadcrumbs } from '../lib/schema';
+const { path, author } = Astro.props as any;
+const a = authors().find((x) => x.slug === author)!;
+const list = articles().filter((x) => x.author.slug === a.slug || x.reviewer?.slug === a.slug);
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'מדריכים', path: P.page('articles') }, { name: a.name, path }];
+const person = { '@type': 'ProfilePage', mainEntity: { '@type': 'Person', name: a.name, jobTitle: a.role, description: a.bio, url: abs(path), ...(a.sameAs.length ? { sameAs: a.sameAs } : {}) } };
+---
+<Base title={a.name + ': כותבים באתר'} description={a.bio.slice(0, 158)} path={path} noindex={a.isSample} schema={[breadcrumbs(crumbs), person]}>
+  <section class="phead tint"><div class="wrap"><Crumbs items={crumbs} /><h1>{a.name}</h1><p class="lead">{a.role}</p></div></section>
+  <div class="wrap" style="padding-block:36px 70px">
+    <div class="prose"><p>{a.bio}</p></div>
+    <h2 class="mt3">מאמרים</h2>
+    {list.length ? <div class="grid g3">{list.map((x) => <a class="card acard" href={u(P.article(x.he))}><h3>{x.title}</h3><p>{x.description}</p><span class="foot">{fmtDate(x.updated)}</span></a>)}</div> : <div class="empty">עדיין אין מאמרים.</div>}
+  </div>
+</Base>

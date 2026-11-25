@@ -1,101 +1,145 @@
 ---
 import Base from '../layouts/Base.astro';
-import SearchBox from '../components/SearchBox.astro';
-import AreaGroups from '../components/AreaGroups.astro';
-import LawyerCard from '../components/LawyerCard.astro';
-import Seal from '../components/Seal.astro';
+import Finder from '../components/Finder.astro';
 import Icon from '../components/Icon.astro';
-import { getCollection } from 'astro:content';
-import { CITIES, loadData, counts } from '../lib/data';
-import { REGIONS, SITE } from '../data/site';
-const B = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-const { lawyers } = await loadData();
-const c = await counts();
-const featured = lawyers.filter((l) => l.paid && l.plan === 'premium').slice(0, 3);
-const arts = (await getCollection('maamarim')).sort((a, b) => +b.data.published - +a.data.published).slice(0, 3);
+import GroupIcon from '../components/GroupIcon.astro';
+import FirmCard from '../components/FirmCard.astro';
+import JoinBand from '../components/JoinBand.astro';
+import { BRAND } from '../config/brand';
+import { P, u } from '../config/routes';
+import { areas, areaGroups, cities, REGIONS, firms, tools, articles, courts, fmtDate } from '../lib/data';
+import { itemList } from '../lib/schema';
+
+const fs = await firms();
+const featured = fs.filter((f) => f.plan === 'senior').slice(0, 3);
+const popular = ['real-estate', 'divorce', 'labor-law', 'criminal', 'inheritance-wills', 'car-accidents', 'insolvency'].map((s) => areas().find((a) => a.slug === s)!).filter(Boolean);
+const ts = tools().slice(0, 6);
+const as = articles().slice(0, 3);
+const cs = cities();
+const title = `${BRAND.name}: מדריך עורכי הדין בישראל לפי תחום ועיר`;
+const description = 'מוצאים עורך דין לפי תחום ועיר, קוראים מדריכים משפטיים בשפה פשוטה עם מקורות ותאריך עדכון, ומשתמשים במחשבונים ובמחוללי מסמכים חינמיים.';
 ---
-<Base title={`${SITE.name}: מוצאים עורך דין לפי תחום ועיר`} description="מחפשים עורך דין? חיפוש לפי תחום ועיר, ציון שקוף לכל עורך דין, חוות דעת מאומתות של לקוחות ומדריכים שעוזרים לבחור. בלי עלות לפונים.">
-  <section class="hero">
-    <div class="wrap grid">
+<Base title={title} fullTitle description={description} path="" schema={[itemList('תחומי משפט', areas().map((a) => ({ name: a.title, path: P.area(a.he) })))]}>
+  <section class="hero on-dark">
+    <div class="wrap hero-in">
       <div>
-        <h1>מוצאים עורך דין לפי הבעיה, לא לפי המזל</h1>
-        <p class="lede">כתבו במה מדובר, בחרו עיר, וקבלו רשימה של עורכי דין בתחום. לכל אחד יש ציון שמחושב בשיטה פומבית, ותשלום לא משנה אותו.</p>
+        <span class="eyebrow">{BRAND.tagline}</span>
+        <h1>מוצאים עורך דין <em>לפי תחום ועיר.</em></h1>
+        <p class="lead">רשימות מסודרות של משרדים בכל הארץ, חוות דעת של לקוחות שעברו אימות, ומדריכים משפטיים שנכתבים ונבדקים עם מקורות רשמיים.</p>
+        <Finder id="hero" />
+        <div class="quick">
+          <span>חיפושים נפוצים:</span>
+          {popular.slice(0, 6).map((a) => <a href={u(P.area(a.he))}>{a.title}</a>)}
+        </div>
       </div>
-      <ul class="hero-note">
-        <li><Icon name="check" />בלי עלות לפונים</li>
-        <li><Icon name="check" />מיקום מקודם תמיד מסומן</li>
-        <li><Icon name="check" />רק חוות דעת מאומתות</li>
-      </ul>
+      <aside class="promise" aria-labelledby="pr-h">
+        <h2 id="pr-h">מה תמצאו כאן</h2>
+        <ul>
+          <li><span class="ic"><Icon name="shield" /></span><span><b>חוות דעת מאומתות בלבד</b>כל חוות דעת עוברת אימות של הלקוח לפני פרסום, ומוצגות גם ביקורות שאינן מושלמות.</span></li>
+          <li><span class="ic"><Icon name="megaphone" /></span><span><b>קידום תמיד מסומן</b>משרד ששילם על מיקום בולט מסומן "משרד מקודם". הדירוג אינו ניתן לרכישה.</span></li>
+          <li><span class="ic"><Icon name="book" /></span><span><b>מידע עם מקורות</b>בכל מדריך יש כותב, תאריך עדכון ורשימת מקורות רשמיים.</span></li>
+          <li><span class="ic"><Icon name="calc" /></span><span><b>כלים חינמיים</b>מחשבונים ומחוללי מסמכים שעובדים בדפדפן, בלי הרשמה.</span></li>
+        </ul>
+      </aside>
     </div>
   </section>
-  <div class="wrap"><SearchBox /></div>
-
-  {featured.length > 0 && (
-    <section class="sec">
-      <div class="wrap">
-        <div class="sec-head"><h2>עורכי דין מקודמים</h2><p>מודעות של עורכי דין שבחרו בחבילת פרימיום. המיקום כאן ממומן ואינו חלק מהציון.</p></div>
-        <div class="list">{featured.map((l) => <LawyerCard l={l} promo />)}</div>
-      </div>
-    </section>
-  )}
-
-  <section class="sec">
+  <div class="stats on-dark" aria-label="האתר במספרים">
     <div class="wrap">
-      <div class="sec-head"><h2>תחומי עיסוק</h2><a class="link-more" href={`${B}orchei-din/`}>כל התחומים בעמוד אחד</a></div>
-      <AreaGroups counts={c.area} />
+      <div class="stat"><b>{areas().length}</b><span>תחומי משפט</span></div>
+      <div class="stat"><b>{cs.length}</b><span>ערים ויישובים</span></div>
+      <div class="stat"><b>{tools().length}</b><span>כלים חינמיים</span></div>
+      <div class="stat"><b>{articles().length + areas().filter((a) => a.guide).length}</b><span>מדריכים ומאמרים</span></div>
     </div>
-  </section>
+  </div>
 
-  <section class="sec" style="padding-top:0">
+  <section class="sec" aria-labelledby="areas-h">
     <div class="wrap">
-      <div class="sec-head"><h2>עורכי דין לפי עיר ואזור</h2><a class="link-more" href={`${B}ir/`}>כל הערים</a></div>
-      <div class="regions">
-        {REGIONS.map((r) => (
-          <div class="region">
-            <h3><a href={`${B}ezor/${r.slug}/`}>אזור {r.he}</a>{c.region[r.slug] ? <span class="count">{c.region[r.slug]} עורכי דין</span> : null}</h3>
-            <ul class="chips">
-              {CITIES.filter((x) => x.regionSlug === r.slug).map((x) => <li><a class="chip chip-s" href={`${B}ir/${x.slug}/`}>{x.he}</a></li>)}
-            </ul>
+      <div class="sec-head">
+        <div><span class="eyebrow">תחומי משפט</span><h2 id="areas-h">באיזה נושא אתם צריכים עורך דין?</h2><p>בחרו תחום כדי לראות משרדים בכל הארץ או בעיר שלכם, ומדריך שמסביר את התחום בשפה פשוטה.</p></div>
+        <a class="more" href={u(P.page('areas'))}>כל התחומים<Icon name="arrow" /></a>
+      </div>
+      <div class="grid g4">
+        {areaGroups().map((g) => (
+          <div class="card group-card">
+            <header><GroupIcon group={g.group} /><h3>{g.group}</h3></header>
+            <ul class="links">{g.items.slice(0, 6).map((a) => <li><a href={u(P.area(a.he))}>{a.name}</a></li>)}</ul>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="sec band">
-    <div class="wrap grid">
-      <Seal />
-      <div>
-        <h2>נבחרת פוליבוס: דירוג שנתי בשיטה גלויה</h2>
-        <p>פעם בשנה נפרסם בכל תחום רשימה של משרדים שנבחרו לפי שיטה כתובה ופומבית: חוות דעת מאומתות של לקוחות, ותק, שלמות הפרופיל וזמינות לפניות. אפשר לקרוא בדיוק איך זה נעשה.</p>
-        <p class="note">ההגשה לנבחרת כרוכה בתשלום, והתשלום לא מבטיח מקום ברשימה. ההרשמה לדירוג הראשון פתוחה עכשיו.</p>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px">
-          <a class="btn btn-or" href={`${B}nivcheret/`}>על הנבחרת</a>
-          <a class="btn btn-ghost" href={`${B}shita/`}>איך מחושב הציון</a>
-        </div>
+  <section class="sec white" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="sec-head"><div><span class="eyebrow">איך זה עובד</span><h2 id="how-h">שלושה צעדים לבחירה רגועה</h2></div></div>
+      <div class="grid g3 steps">
+        <div class="step"><h3>מבינים את התחום</h3><p class="muted">בכל עמוד תחום יש מדריך קצר שמסביר מה עורך הדין עושה, מה שואלים בפגישה הראשונה ואילו מסמכים להכין.</p></div>
+        <div class="step"><h3>משווים משרדים</h3><p class="muted">רואים תחומי עיסוק, כתובת, שעות, חוות דעת מאומתות ופרטים שהמשרד עדכן בעצמו.</p></div>
+        <div class="step"><h3>פונים ישירות</h3><p class="muted">יוצרים קשר ישירות עם המשרד בטלפון או באתר שלו. האתר לא מתווך, לא מעביר פניות ולא גובה מכם תשלום.</p></div>
       </div>
     </div>
   </section>
 
-  {arts.length > 0 && (
-    <section class="sec">
+  {featured.length > 0 && (
+    <section class="sec" aria-labelledby="ft-h">
       <div class="wrap">
-        <div class="sec-head"><h2>לפני שבוחרים עורך דין</h2><a class="link-more" href={`${B}maamarim/`}>כל המדריכים</a></div>
-        <div class="arts">{arts.map((a) => <a class="art" href={`${B}maamarim/${a.id}/`}><Icon name="doc" class="muted" /><h3>{a.data.title}</h3><p>{a.data.description}</p></a>)}</div>
+        <div class="sec-head"><div><span class="eyebrow">משרדים מקודמים</span><h2 id="ft-h">משרדים בפרופיל ארצי</h2><p>מודעה: משרדים ששילמו על הצגה בעמוד הבית. התשלום לא משפיע על הדירוג או על חוות הדעת.</p></div></div>
+        <div class="firms">{featured.map((f) => <FirmCard f={f} promo />)}</div>
       </div>
     </section>
   )}
 
-  <section class="sec" style="padding-top:0">
+  <section class={'sec' + (featured.length ? ' white' : '')} aria-labelledby="tools-h">
     <div class="wrap">
-      <div class="panel panel-ink fold" style="--fold:28px;border-radius:0 16px 16px 16px;padding:28px 24px">
-        <h2>עורכי דין? הפרופיל שלכם כבר כאן, או שאפשר להוסיף אותו</h2>
-        <p style="max-width:62ch">פרופיל בסיסי הוא בחינם. אם מצאתם את המשרד שלכם, אפשר לאשר שהוא שלכם, לעדכן את הפרטים או לבקש הסרה. חבילות בתשלום מוסיפות תמונה, תיאור, וואטסאפ ומיקום מקודם שמסומן ככזה.</p>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
-          <a class="btn btn-or" href={`${B}lehitztaref/`}>הצטרפות וחבילות</a>
-          <a class="btn btn-ghost" href={`${B}lehitztaref/#claim`}>זה המשרד שלי</a>
-        </div>
+      <div class="sec-head">
+        <div><span class="eyebrow">כלים חינמיים</span><h2 id="tools-h">מחשבונים ומחוללי מסמכים</h2><p>חישוב ראשוני ומסמכים פשוטים, ישר בדפדפן. כל כלי מציין את המקורות ואת תאריך העדכון.</p></div>
+        <a class="more" href={u(P.page('tools'))}>כל הכלים<Icon name="arrow" /></a>
+      </div>
+      {ts.length ? (
+        <div class="grid g3">{ts.map((t) => (
+          <a class="card tcard" href={u(P.tool(t.he))}><span class="gicon"><Icon name={t.type === 'generator' ? 'doc' : 'calc'} /></span><span><h3>{t.name}</h3><p>{t.description}</p></span></a>
+        ))}</div>
+      ) : <div class="empty">הכלים בהכנה.</div>}
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="art-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">מדריכים</span><h2 id="art-h">מידע משפטי בשפה פשוטה</h2><p>מאמרים חדשים שלוש פעמים בשבוע, עם כותב, מקורות ותאריך עדכון.</p></div>
+        <a class="more" href={u(P.page('articles'))}>לכל המדריכים<Icon name="arrow" /></a>
+      </div>
+      {as.length ? (
+        <div class="grid g3">{as.map((a) => (
+          <a class="card acard" href={u(P.article(a.he))}>
+            <span class="kicker">{a.areas.map((s) => areas().find((x) => x.slug === s)?.name).filter(Boolean)[0] || 'מדריך'}</span>
+            <h3>{a.title}</h3><p>{a.description}</p>
+            <span class="foot"><span>{fmtDate(a.updated)}</span><span>{Math.max(1, Math.round(a.words / 200))} דקות קריאה</span></span>
+          </a>
+        ))}</div>
+      ) : (
+        <div class="grid g3">{areas().filter((a) => a.guide).slice(0, 3).map((a) => (
+          <a class="card acard" href={u(P.area(a.he))}><span class="kicker">מדריך תחום</span><h3>{a.title}: מה חשוב לדעת</h3><p>{a.description}</p></a>
+        ))}</div>
+      )}
+    </div>
+  </section>
+
+  <section class="sec white" aria-labelledby="city-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">לפי מקום</span><h2 id="city-h">עורכי דין לפי עיר</h2></div>
+        <a class="more" href={u(P.page('cities'))}>כל הערים<Icon name="arrow" /></a>
+      </div>
+      <div class="regions">
+        {REGIONS.map((r) => (
+          <div><h3>{r}</h3><ul>{cs.filter((c) => c.region === r).slice(0, 10).map((c) => <li><a href={u(P.city(c.he))}>{c.name}</a></li>)}</ul></div>
+        ))}
       </div>
     </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap"><JoinBand /></div>
   </section>
 </Base>

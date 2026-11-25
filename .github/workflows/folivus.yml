@@ -1,8 +1,10 @@
 name: folivus site
-# Builds the Folivus lawyers directory (sites/folivus) and publishes:
-# - a preview to the folivus/ folder, which GitHub Pages serves at https://dabullaw-glitch.github.io/dabul-office/folivus/ (hidden from search engines),
-# - a production build for https://folivus.com to the folivus-site branch, which Cloudflare Pages serves as is (no build there).
-# Runs nightly too, so new lawyers, reviews and rankings from the directory engine get their pages.
+# Lawyers directory (working name; the brand lives in sites/folivus/src/config/brand.ts).
+# - Preview: built on every push to sites/folivus/** and nightly, published to folivus/, which GitHub Pages serves at
+#   https://dabullaw-glitch.github.io/dabul-office/folivus/ (noindex on every page, robots.txt closed).
+# - Production: controlled ONLY by sites/folivus/launch.json. domain "" -> nothing is built for a domain (now).
+#   domain set + live false -> a noindex copy for checking the domain; live true -> the open site.
+#   Served by Cloudflare Pages from the branch folivus-site (Cloudflare builds nothing).
 on:
   schedule: [{ cron: '41 1 * * *' }]
   push:
@@ -25,7 +27,7 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Build preview
         working-directory: sites/folivus
-        env: { SITE_URL: 'https://dabullaw-glitch.github.io/dabul-office/folivus', BASE: '/dabul-office/folivus/', PREVIEW: '1' }
+        env: { SITE_URL: 'https://dabullaw-glitch.github.io', BASE: '/dabul-office/folivus/', PREVIEW: '1' }
         run: npm run build
       - name: Publish to folivus/
         run: |
@@ -34,14 +36,28 @@ jobs:
           git add -A folivus
           git commit -qm "folivus: publish preview $(date -u +%FT%TZ)" || echo "preview unchanged"
           for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
-      - name: Production build (folivus.com)
+      - name: Read launch.json
+        id: cfg
+        run: |
+          D=$(jq -r '.domain // ""' sites/folivus/launch.json); L=$(jq -r '.live // false' sites/folivus/launch.json)
+          if [ -n "$D" ] && ! echo "$D" | grep -Eq '^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$'; then echo "bad domain in launch.json"; exit 1; fi
+          echo "domain=$D" >> "$GITHUB_OUTPUT"; echo "live=$L" >> "$GITHUB_OUTPUT"
+      - name: Production build
+        if: steps.cfg.outputs.domain != ''
         working-directory: sites/folivus
-        env: { SITE_URL: 'https://folivus.com', BASE: '/', PREVIEW: '0' }
-        run: rm -rf dist && npm run build
+        env:
+          SITE_URL: https://${{ steps.cfg.outputs.domain }}
+          BASE: /
+          PREVIEW: ${{ steps.cfg.outputs.live == 'true' && '0' || '1' }}
+        run: |
+          rm -rf dist && npm run build
+          if [ "$PREVIEW" != "0" ]; then printf '/*\n  X-Robots-Tag: noindex\n' >> dist/_headers; fi
+          printf 'https://:project.pages.dev/*\n  X-Robots-Tag: noindex\n' >> dist/_headers
       - name: Publish to folivus-site branch
+        if: steps.cfg.outputs.domain != ''
         run: |
           D=$(mktemp -d); cp -r sites/folivus/dist/. "$D"/
           cd "$D"; git init -q; git checkout -qb folivus-site
           git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
-          git add -A; git commit -qm "folivus.com $(date -u +%FT%TZ)"
+          git add -A; git commit -qm "folivus prod $(date -u +%FT%TZ)"
           git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" folivus-site

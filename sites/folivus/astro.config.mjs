@@ -1,6 +1,6 @@
-// Folivus: a static lawyers directory. Two modes:
-// preview (default): served from GitHub Pages under /dabul-office/folivus/, hidden from search engines (PREVIEW=1).
-// production: SITE_URL=https://folivus.com BASE=/ PREVIEW=0 npm run build
+// Lawyers directory (working name in src/config/brand.ts). Static Astro site.
+// preview (default): GitHub Pages under /dabul-office/folivus/, hidden from search engines (PREVIEW=1).
+// production later: SITE_URL=https://<domain> BASE=/ PREVIEW=0 npm run build (the domain comes from launch.json in CI).
 import { defineConfig } from 'astro/config';
 
 const SITE = process.env.SITE_URL || 'https://dabullaw-glitch.github.io';
@@ -10,11 +10,8 @@ export default defineConfig({
   site: SITE,
   base: BASE,
   trailingSlash: 'always',
-  // one shared stylesheet (cached) instead of inlining it into thousands of area+city pages
   build: { assets: 'assets', inlineStylesheets: 'never', format: 'directory' },
   compressHTML: true,
-  markdown: { smartypants: false },
   devToolbar: { enabled: false },
-  // keep the page script in one cached file instead of inlining it into every page
   vite: { build: { assetsInlineLimit: 0 } },
 });

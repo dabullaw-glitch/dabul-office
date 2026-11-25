@@ -1,13 +1,17 @@
 ---
-// FAQ block + FAQPage JSON-LD
-interface Props { items: { q: string; a: string }[]; title?: string }
-const { items, title = 'שאלות נפוצות' } = Astro.props;
-const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items.map((x) => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a } })) };
+import type { Faq } from '../lib/data';
+const { items, title = 'שאלות נפוצות', id = 'faq' } = Astro.props as { items: Faq[]; title?: string; id?: string };
 ---
 {items.length > 0 && (
-  <section class="faq" aria-labelledby="faq-h">
-    <h2 id="faq-h">{title}</h2>
-    {items.map((x) => <details><summary>{x.q}</summary><div class="a">{x.a}</div></details>)}
-    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <section aria-labelledby={id} class="mt3">
+    <h2 id={id}>{title}</h2>
+    <div class="faq">
+      {items.map((f, i) => (
+        <details open={i === 0}>
+          <summary>{f.q}</summary>
+          <div class="a">{f.a}</div>
+        </details>
+      ))}
+    </div>
   </section>
 )}

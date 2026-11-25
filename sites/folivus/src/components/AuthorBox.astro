@@ -1,0 +1,18 @@
+---
+import { BRAND } from '../config/brand';
+import { P, u } from '../config/routes';
+import type { Author } from '../lib/data';
+const { a, reviewer } = Astro.props as { a: Author; reviewer?: Author | null };
+const name = a.slug === 'editorial' ? 'מערכת ' + BRAND.name : a.name;
+const ini = name.replace(/[("'].*$/, '').trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join('');
+---
+<aside class="author" aria-label="על הכותב">
+  <div class="mono" aria-hidden="true">{ini}</div>
+  <div>
+    <p class="xs muted mt0" style="margin:0">נכתב על ידי</p>
+    <h3>{a.type === 'Person' ? <a href={u(P.author(a.slug))}>{name}</a> : name}</h3>
+    <div class="small muted">{a.role}</div>
+    <p>{a.bio}</p>
+    {reviewer && <p class="small"><b>נבדק משפטית:</b> {reviewer.name}</p>}
+  </div>
+</aside>

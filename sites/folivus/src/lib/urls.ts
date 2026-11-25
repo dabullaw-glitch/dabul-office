@@ -1,23 +1,23 @@
-// Every indexable URL (used by sitemap.xml). Pages with no lawyers are noindex and left out.
-import { getCollection } from 'astro:content';
-import { AREAS, CITIES, loadData, counts, key } from './data';
-import { REGIONS } from '../data/site';
-export async function indexable() {
-  const { lawyers, ranks, at } = await loadData();
-  const c = await counts();
-  const arts = (await getCollection('maamarim')).filter((a) => !a.data.draft);
-  const today = new Date().toISOString().slice(0, 10);
-  const d = (s?: string | Date) => (s ? new Date(s).toISOString().slice(0, 10) : today);
-  const rows: [string, string][] = [
-    ['', today], ['orchei-din/', today], ['ir/', today], ['nivcheret/', today], ['shita/', today], ['maamarim/', today],
-    ['lehitztaref/', today], ['hasara/', today], ['odot/', today], ['tzor-kesher/', today], ['tnaei-shimush/', today], ['mediniyut-pratiyut/', today], ['negishut/', today],
-    ...AREAS.filter((a) => c.area[a.slug]).map((a) => [`orchei-din/${a.slug}/`, d(at)] as [string, string]),
-    ...AREAS.flatMap((a) => CITIES.filter((x) => c.areaCity[key(a.slug, x.slug)]).map((x) => [`orchei-din/${a.slug}/${x.slug}/`, d(at)] as [string, string])),
-    ...CITIES.filter((x) => c.city[x.slug]).map((x) => [`ir/${x.slug}/`, d(at)] as [string, string]),
-    ...REGIONS.filter((r) => c.region[r.slug]).map((r) => [`ezor/${r.slug}/`, d(at)] as [string, string]),
-    ...lawyers.map((l) => [`orech-din/${l.id}/`, d(l.updated)] as [string, string]),
-    ...ranks.map((r) => [`nivcheret/${r.year}/${r.area}/`, today] as [string, string]),
-    ...arts.map((a) => [`maamarim/${a.id}/`, d(a.data.updated)] as [string, string]),
-  ];
-  return rows;
+// Indexable URLs per type, for the sitemaps and llms.txt. Pages that carry noindex are left out.
+import { P } from '../config/routes';
+import { areas, cities, firms, articles, tools, courts, isoDate } from './data';
+export type Entry = { path: string; lastmod?: string; title?: string };
+export async function sitemapGroups(): Promise<Record<string, Entry[]>> {
+  const fs = await firms();
+  const now = new Date().toISOString().slice(0, 10);
+  const ac: Entry[] = [];
+  for (const a of areas()) for (const c of cities()) if (fs.some((f) => f.city === c.slug && f.areas.includes(a.slug))) ac.push({ path: P.areaCity(a.he, c.he), title: `${a.title} ב${c.name}` });
+  return {
+    pages: [
+      { path: '', lastmod: now, title: 'דף הבית' },
+      ...(['areas', 'cities', 'tools', 'articles', 'courts', 'join', 'claim', 'removal', 'contact', 'about', 'editorial', 'method', 'terms', 'privacy', 'a11y'] as const).map((k) => ({ path: P.page(k) })),
+    ],
+    areas: areas().map((a) => ({ path: P.area(a.he), lastmod: isoDate(a.guide?.updated || null), title: a.title })),
+    'area-cities': ac,
+    cities: cities().filter((c) => fs.some((f) => f.city === c.slug)).map((c) => ({ path: P.city(c.he), title: 'עורכי דין ב' + c.name })),
+    firms: fs.map((f) => ({ path: P.firm(f.slug), title: f.name })),
+    articles: articles().map((a) => ({ path: P.article(a.he), lastmod: isoDate(a.updated), title: a.title })),
+    tools: tools().map((t) => ({ path: P.tool(t.he), lastmod: isoDate(t.updated), title: t.name })),
+    courts: courts().map((c) => ({ path: P.court(c.he), lastmod: isoDate(c.updated), title: c.name })),
+  };
 }

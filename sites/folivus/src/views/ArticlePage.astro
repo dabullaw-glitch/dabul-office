@@ -1,0 +1,73 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Icon from '../components/Icon.astro';
+import Toc from '../components/Toc.astro';
+import Faq from '../components/Faq.astro';
+import Sources from '../components/Sources.astro';
+import AuthorBox from '../components/AuthorBox.astro';
+import Disclaimer from '../components/Disclaimer.astro';
+import FirmCard from '../components/FirmCard.astro';
+import { P, u } from '../config/routes';
+import { articles, areas, tools, firms, rankFor, fmtDate } from '../lib/data';
+import { render, readMinutes } from '../lib/md';
+import { breadcrumbs, article as articleLd, faqPage } from '../lib/schema';
+const { path, article } = Astro.props as any;
+const a = articles().find((x) => x.slug === article)!;
+const { html, toc } = render(a.body);
+const ars = a.areas.map((s) => areas().find((x) => x.slug === s)).filter(Boolean) as any[];
+const main = ars[0];
+const ts = tools().filter((t) => a.areas.includes(t.area)).slice(0, 3);
+const more = articles().filter((x) => x.slug !== a.slug && x.areas.some((s) => a.areas.includes(s))).slice(0, 3);
+const fs = main ? rankFor((await firms()).filter((f) => f.areas.includes(main.slug)), main.slug).featured.slice(0, 2) : [];
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'מדריכים', path: P.page('articles') }, { name: a.title, path }];
+const authorName = a.author.slug === 'editorial' ? 'מערכת האתר' : a.author.name;
+---
+<Base title={a.title} description={a.description.slice(0, 158)} path={path} nav="articles" ogType="article" schema={[breadcrumbs(crumbs), articleLd(a, path), faqPage(a.faq)]}>
+  <section class="phead tint">
+    <div class="wrap">
+      <Crumbs items={crumbs} />
+      {main && <a class="eyebrow" style="text-decoration:none" href={u(P.area(main.he))}>{main.name}</a>}
+      <h1 style="max-width:24ch">{a.title}</h1>
+      <p class="lead">{a.description}</p>
+      <div class="meta-line">
+        <span><Icon name="user" />{a.author.type === 'Person' ? <a href={u(P.author(a.author.slug))}>{authorName}</a> : authorName}</span>
+        {a.published && <span><Icon name="calendar" />פורסם {fmtDate(a.published)}</span>}
+        {a.updated && a.published && +a.updated !== +a.published && <span><Icon name="clock" />עודכן {fmtDate(a.updated)}</span>}
+        <span><Icon name="book" />{readMinutes(a.body)} דקות קריאה</span>
+        {a.isSample && <span class="badge b-sample">מאמר לדוגמה</span>}
+        {a.draft && <span class="badge b-draft">טיוטה</span>}
+        {a.scheduled && <span class="badge b-promo">מתוזמן לפרסום (מוצג רק בגרסת התצוגה)</span>}
+      </div>
+    </div>
+  </section>
+  <div class="wrap layout">
+    <article>
+      <Toc items={toc} mobile />
+      <div class="prose" set:html={html} />
+      <Disclaimer kind="info" />
+      <Faq items={a.faq} />
+      <Sources items={a.sources} updated={fmtDate(a.updated)} />
+      <AuthorBox a={a.author} reviewer={a.reviewer} />
+      {more.length > 0 && (
+        <section class="mt3"><h2>עוד בנושא</h2><div class="grid g3">{more.map((x) => <a class="card acard" href={u(P.article(x.he))}><h3>{x.title}</h3><p>{x.description}</p></a>)}</div></section>
+      )}
+    </article>
+    <aside class="aside">
+      <div class="sticky">
+        <Toc items={toc} />
+        {main && (
+          <div class="box dark mt1 on-dark">
+            <h2>מחפשים {main.title}?</h2>
+            <p class="small">רשימת משרדים לפי עיר, עם פרטי קשר וחוות דעת מאומתות.</p>
+            <a class="btn btn-brass btn-sm btn-block" href={u(P.area(main.he))}>לרשימת המשרדים</a>
+          </div>
+        )}
+        {ts.length > 0 && <div class="box mt1"><h2>כלים קשורים</h2><ul class="links">{ts.map((t) => <li><a href={u(P.tool(t.he))}>{t.name}</a></li>)}</ul></div>}
+      </div>
+    </aside>
+  </div>
+  {fs.length > 0 && (
+    <section class="sec tight white"><div class="wrap"><p class="promo-note"><Icon name="info" />מודעה: משרדים מקודמים בתחום</p><div class="firms">{fs.map((f) => <FirmCard f={f} promo area={main.slug} />)}</div></div></section>
+  )}
+</Base>

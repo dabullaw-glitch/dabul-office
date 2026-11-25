@@ -1,0 +1,11 @@
+---
+import type { Src } from '../lib/data';
+const { items, updated } = Astro.props as { items: Src[]; updated?: string };
+---
+{items.length > 0 && (
+  <section class="sources" aria-labelledby="src-h">
+    <h2 id="src-h">מקורות</h2>
+    <ol>{items.map((s) => <li><a href={s.url} target="_blank" rel="noopener">{s.title}</a></li>)}</ol>
+    {updated && <p class="small muted">המקורות נבדקו לאחרונה: {updated}</p>}
+  </section>
+)}

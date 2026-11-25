@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Icon from '../components/Icon.astro';
+import { P, u } from '../config/routes';
+import { articles, areas, fmtDate } from '../lib/data';
+import { breadcrumbs, itemList, collection } from '../lib/schema';
+const { path } = Astro.props as any;
+const as = articles();
+const guides = areas().filter((a) => a.guide);
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'מדריכים ומאמרים', path }];
+const title = 'מדריכים ומאמרים משפטיים בשפה פשוטה';
+const description = 'מאמרים ומדריכים משפטיים עם כותב, מקורות רשמיים ותאריך עדכון: נדל"ן, משפחה, עבודה, פלילי, נזיקין ועוד.';
+const an = (s: string) => areas().find((a) => a.slug === s)?.name;
+---
+<Base title={title} description={description} path={path} nav="articles" schema={[breadcrumbs(crumbs), collection(title, path, description), itemList(title, [...as.map((a) => ({ name: a.title, path: P.article(a.he) })), ...guides.map((g) => ({ name: g.title + ': מדריך', path: P.area(g.he) }))])]}>
+  <section class="phead tint">
+    <div class="wrap">
+      <Crumbs items={crumbs} />
+      <h1>מדריכים ומאמרים</h1>
+      <p class="lead">כל מאמר נכתב לפי <a href={u(P.page('editorial'))}>מדיניות העריכה</a>: מקורות רשמיים, תאריך עדכון גלוי ובדיקה של עורך דין לפני פרסום.</p>
+      <div class="chips"><span class="chip"><Icon name="calendar" />מאמר חדש שלוש פעמים בשבוע</span><a class="chip" href={u('rss.xml')}><Icon name="link" />עדכונים ב־RSS</a></div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="wrap">
+      <h2>מאמרים אחרונים</h2>
+      {as.length ? (
+        <div class="grid g3">{as.map((a) => (
+          <a class="card acard" href={u(P.article(a.he))}>
+            <span class="kicker">{an(a.areas[0]) || 'מדריך'}{a.isSample && ' · דוגמה'}{a.scheduled && ' · מתוזמן לפרסום'}{a.draft && ' · טיוטה'}</span>
+            <h3>{a.title}</h3><p>{a.description}</p>
+            <span class="foot"><span>{a.author.slug === 'editorial' ? 'מערכת האתר' : a.author.name}</span><span>{fmtDate(a.updated)}</span><span>{Math.max(1, Math.round(a.words / 200))} דקות קריאה</span></span>
+          </a>
+        ))}</div>
+      ) : <div class="empty">המאמרים הראשונים בכתיבה.</div>}
+      {guides.length > 0 && (
+        <>
+          <h2 class="mt3">מדריכים לפי תחום</h2>
+          <div class="grid g3">{guides.map((g) => (
+            <a class="card acard" href={u(P.area(g.he)) + '#guide'}><span class="kicker">{g.group}</span><h3>{g.title}: מה חשוב לדעת</h3><p>{g.description}</p>{g.guide?.updated && <span class="foot">עודכן {fmtDate(g.guide.updated)}</span>}</a>
+          ))}</div>
+        </>
+      )}
+    </div>
+  </section>
+</Base>

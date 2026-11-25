@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { P, u } from '../config/routes';
+import { cities, REGIONS, firms } from '../lib/data';
+import { breadcrumbs, itemList, collection } from '../lib/schema';
+const { path } = Astro.props as any;
+const fs = await firms();
+const cs = cities();
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'ערים', path }];
+const title = 'עורכי דין לפי עיר';
+const description = `משרדי עורכי דין ב${cs.length} ערים ויישובים בכל הארץ, מחולקים לפי אזור. בחרו עיר כדי לראות את כל התחומים בה.`;
+---
+<Base title={title} description={description} path={path} nav="cities" schema={[breadcrumbs(crumbs), collection(title, path, description), itemList(title, cs.map((c) => ({ name: 'עורכי דין ב' + c.name, path: P.city(c.he) })))]}>
+  <section class="phead tint">
+    <div class="wrap">
+      <Crumbs items={crumbs} />
+      <h1>עורכי דין לפי עיר</h1>
+      <p class="lead">בחרו עיר כדי לראות משרדים בכל תחומי המשפט שפועלים בה.</p>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="wrap">
+      <div class="grid g3">
+        {REGIONS.map((r) => (
+          <section class="card" aria-label={'אזור ' + r}>
+            <h2 style="font-size:1.3rem">אזור {r}</h2>
+            <ul class="citylist">{cs.filter((c) => c.region === r).map((c) => {
+              const n = fs.filter((f) => f.city === c.slug).length;
+              return <li><a href={u(P.city(c.he))}>{c.name}{n > 0 && <span class="n">{n}</span>}</a></li>;
+            })}</ul>
+          </section>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

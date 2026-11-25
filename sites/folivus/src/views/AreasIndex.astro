@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import GroupIcon from '../components/GroupIcon.astro';
+import JoinBand from '../components/JoinBand.astro';
+import Finder from '../components/Finder.astro';
+import { P, u } from '../config/routes';
+import { areas, areaGroups, firms } from '../lib/data';
+import { breadcrumbs, itemList, collection } from '../lib/schema';
+const { path } = Astro.props as any;
+const fs = await firms();
+const count = (s: string) => fs.filter((f) => f.areas.includes(s)).length;
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'תחומי משפט', path }];
+const title = 'כל תחומי המשפט: עורכי דין לפי תחום';
+const description = `${areas().length} תחומי משפט, מדיני משפחה ועד מקרקעין ופלילי. בחרו תחום כדי לראות משרדים לפי עיר ומדריך שמסביר את התחום.`;
+---
+<Base title={title} description={description} path={path} nav="areas" schema={[breadcrumbs(crumbs), collection(title, path, description), itemList('תחומי משפט', areas().map((a) => ({ name: a.title, path: P.area(a.he) })))]}>
+  <section class="phead tint">
+    <div class="wrap">
+      <Crumbs items={crumbs} />
+      <h1>תחומי משפט</h1>
+      <p class="lead">בחרו את הנושא שלכם. בכל תחום יש רשימת משרדים לפי עיר, מדריך בשפה פשוטה ושאלות נפוצות.</p>
+      <div style="max-width:880px"><Finder id="ai" /></div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="wrap">
+      <div class="grid g3">
+        {areaGroups().map((g) => (
+          <section class="card group-card" aria-label={g.group}>
+            <header><GroupIcon group={g.group} /><h2 style="font-size:1.25rem;margin:0">{g.group}</h2></header>
+            <ul class="links">{g.items.map((a) => <li><a href={u(P.area(a.he))}>{a.title}{count(a.slug) > 0 && <span class="n">{count(a.slug)} משרדים</span>}</a></li>)}</ul>
+          </section>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="sec tight"><div class="wrap"><JoinBand /></div></section>
+</Base>

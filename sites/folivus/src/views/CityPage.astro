@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Icon from '../components/Icon.astro';
+import FirmList from '../components/FirmList.astro';
+import Disclaimer from '../components/Disclaimer.astro';
+import JoinBand from '../components/JoinBand.astro';
+import Finder from '../components/Finder.astro';
+import { P, u } from '../config/routes';
+import { areas, cities, cityBySlug, firms, rankFor, courts } from '../lib/data';
+import { breadcrumbs, itemList, collection } from '../lib/schema';
+const { path, city } = Astro.props as any;
+const c = cityBySlug(city)!;
+const list = (await firms()).filter((f) => f.city === c.slug);
+const { featured, rest } = rankFor(list, undefined, c.slug);
+const counts = areas().map((a) => ({ a, n: list.filter((f) => f.areas.includes(a.slug)).length })).filter((x) => x.n > 0);
+const near = cities().filter((x) => x.region === c.region && x.slug !== c.slug).slice(0, 12);
+const cts = courts().filter((x) => x.city === c.name || x.city === c.slug);
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'ערים', path: P.page('cities') }, { name: 'עורכי דין ב' + c.name, path }];
+const title = `עורכי דין ב${c.name}: משרדים לפי תחום`;
+const description = `משרדי עורכי דין ב${c.name} בכל תחומי המשפט: כתובת, טלפון, שעות וחוות דעת מאומתות של לקוחות.`;
+---
+<Base title={title} description={description} path={path} nav="cities" noindex={list.length === 0} schema={[breadcrumbs(crumbs), collection(title, path, description), list.length ? itemList(title, list.map((f) => ({ name: f.name, path: P.firm(f.slug) }))) : null]}>
+  <section class="phead tint">
+    <div class="wrap">
+      <Crumbs items={crumbs} />
+      <h1>עורכי דין ב{c.name}</h1>
+      <p class="lead">משרדים שפועלים ב{c.name}, לפי תחום. בחרו תחום כדי לצמצם את הרשימה.</p>
+      <div class="chips"><span class="chip"><Icon name="building" />{list.length} משרדים</span><span class="chip"><Icon name="pin" />אזור {c.region}</span></div>
+      <div style="max-width:880px"><Finder id="ci" city={c.slug} /></div>
+    </div>
+  </section>
+  <div class="wrap layout">
+    <div>
+      <h2>כל המשרדים ב{c.name}</h2>
+      <FirmList featured={featured} rest={rest} emptyText={`עדיין אין ברשימה משרדים ב${c.name}.`} />
+      <Disclaimer kind="list" />
+      {cts.length > 0 && <section class="mt3"><h2>בתי משפט ב{c.name}</h2><ul class="links">{cts.map((x) => <li><a href={u(P.court(x.he))}>{x.name}</a></li>)}</ul></section>}
+    </div>
+    <aside class="aside">
+      {counts.length > 0 && (
+        <nav class="box" aria-labelledby="ar-h"><h2 id="ar-h">תחומים ב{c.name}</h2>
+          <ul class="citylist" style="grid-template-columns:1fr">{counts.map((x) => <li><a href={u(P.areaCity(x.a.he, c.he))}>{x.a.title}<span class="n">{x.n}</span></a></li>)}</ul>
+        </nav>
+      )}
+      <nav class="box" aria-labelledby="nr-h"><h2 id="nr-h">ערים נוספות באזור {c.region}</h2>
+        <ul class="citylist">{near.map((x) => <li><a href={u(P.city(x.he))}>{x.name}</a></li>)}</ul>
+      </nav>
+    </aside>
+  </div>
+  <section class="sec tight"><div class="wrap"><JoinBand /></div></section>
+</Base>

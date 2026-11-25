@@ -1,302 +1,362 @@
 [
-{
-"slug": "tel-aviv",
-"he": "תל אביב-יפו",
-"region": "מרכז"
-},
-{
-"slug": "jerusalem",
-"he": "ירושלים",
-"region": "ירושלים"
-},
-{
-"slug": "haifa",
-"he": "חיפה",
-"region": "צפון"
-},
-{
-"slug": "rishon-lezion",
-"he": "ראשון לציון",
-"region": "מרכז"
-},
-{
-"slug": "petah-tikva",
-"he": "פתח תקווה",
-"region": "מרכז"
-},
-{
-"slug": "ashdod",
-"he": "אשדוד",
-"region": "דרום"
-},
-{
-"slug": "netanya",
-"he": "נתניה",
-"region": "שרון"
-},
-{
-"slug": "beer-sheva",
-"he": "באר שבע",
-"region": "דרום"
-},
-{
-"slug": "holon",
-"he": "חולון",
-"region": "מרכז"
-},
-{
-"slug": "bnei-brak",
-"he": "בני ברק",
-"region": "מרכז"
-},
-{
-"slug": "ramat-gan",
-"he": "רמת גן",
-"region": "מרכז"
-},
-{
-"slug": "rehovot",
-"he": "רחובות",
-"region": "מרכז"
-},
-{
-"slug": "bat-yam",
-"he": "בת ים",
-"region": "מרכז"
-},
-{
-"slug": "ashkelon",
-"he": "אשקלון",
-"region": "דרום"
-},
-{
-"slug": "herzliya",
-"he": "הרצליה",
-"region": "שרון"
-},
-{
-"slug": "kfar-saba",
-"he": "כפר סבא",
-"region": "שרון"
-},
-{
-"slug": "raanana",
-"he": "רעננה",
-"region": "שרון"
-},
-{
-"slug": "hadera",
-"he": "חדרה",
-"region": "שרון"
-},
-{
-"slug": "modiin",
-"he": "מודיעין",
-"region": "מרכז"
-},
-{
-"slug": "hod-hasharon",
-"he": "הוד השרון",
-"region": "שרון"
-},
-{
-"slug": "ramat-hasharon",
-"he": "רמת השרון",
-"region": "שרון"
-},
-{
-"slug": "lod",
-"he": "לוד",
-"region": "מרכז"
-},
-{
-"slug": "ramla",
-"he": "רמלה",
-"region": "מרכז"
-},
-{
-"slug": "nazareth",
-"he": "נצרת",
-"region": "צפון"
-},
-{
-"slug": "rosh-haayin",
-"he": "ראש העין",
-"region": "מרכז"
-},
-{
-"slug": "givatayim",
-"he": "גבעתיים",
-"region": "מרכז"
-},
-{
-"slug": "kiryat-gat",
-"he": "קריית גת",
-"region": "דרום"
-},
-{
-"slug": "nahariya",
-"he": "נהריה",
-"region": "צפון"
-},
-{
-"slug": "afula",
-"he": "עפולה",
-"region": "צפון"
-},
-{
-"slug": "eilat",
-"he": "אילת",
-"region": "דרום"
-},
-{
-"slug": "yavne",
-"he": "יבנה",
-"region": "מרכז"
-},
-{
-"slug": "ness-ziona",
-"he": "נס ציונה",
-"region": "מרכז"
-},
-{
-"slug": "or-yehuda",
-"he": "אור יהודה",
-"region": "מרכז"
-},
-{
-"slug": "kiryat-ono",
-"he": "קריית אונו",
-"region": "מרכז"
-},
-{
-"slug": "even-yehuda",
-"he": "אבן יהודה",
-"region": "שרון"
-},
-{
-"slug": "kadima-zoran",
-"he": "קדימה צורן",
-"region": "שרון"
-},
-{
-"slug": "tel-mond",
-"he": "תל מונד",
-"region": "שרון"
-},
-{
-"slug": "pardes-hanna",
-"he": "פרדס חנה כרכור",
-"region": "שרון"
-},
-{
-"slug": "zichron-yaakov",
-"he": "זכרון יעקב",
-"region": "צפון"
-},
-{
-"slug": "karmiel",
-"he": "כרמיאל",
-"region": "צפון"
-},
-{
-"slug": "tiberias",
-"he": "טבריה",
-"region": "צפון"
-},
-{
-"slug": "kiryat-shmona",
-"he": "קריית שמונה",
-"region": "צפון"
-},
-{
-"slug": "beit-shemesh",
-"he": "בית שמש",
-"region": "ירושלים"
-},
-{
-"slug": "maale-adumim",
-"he": "מעלה אדומים",
-"region": "ירושלים"
-},
-{
-"slug": "ariel",
-"he": "אריאל",
-"region": "מרכז"
-},
-{
-"slug": "dimona",
-"he": "דימונה",
-"region": "דרום"
-},
-{
-"slug": "sderot",
-"he": "שדרות",
-"region": "דרום"
-},
-{
-"slug": "netivot",
-"he": "נתיבות",
-"region": "דרום"
-},
-{
-"slug": "kiryat-ata",
-"he": "קריית אתא",
-"region": "צפון"
-},
-{
-"slug": "kiryat-bialik",
-"he": "קריית ביאליק",
-"region": "צפון"
-},
-{
-"slug": "kiryat-motzkin",
-"he": "קריית מוצקין",
-"region": "צפון"
-},
-{
-"slug": "nesher",
-"he": "נשר",
-"region": "צפון"
-},
-{
-"slug": "umm-al-fahm",
-"he": "אום אל פחם",
-"region": "צפון"
-},
-{
-"slug": "rahat",
-"he": "רהט",
-"region": "דרום"
-},
-{
-"slug": "taibe",
-"he": "טייבה",
-"region": "שרון"
-},
-{
-"slug": "tira",
-"he": "טירה",
-"region": "שרון"
-},
-{
-"slug": "yokneam",
-"he": "יקנעם",
-"region": "צפון"
-},
-{
-"slug": "gedera",
-"he": "גדרה",
-"region": "מרכז"
-},
-{
-"slug": "shoham",
-"he": "שוהם",
-"region": "מרכז"
-},
-{
-"slug": "elad",
-"he": "אלעד",
-"region": "מרכז"
-}
+ {
+  "slug": "tel-aviv",
+  "he": "תל אביב-יפו",
+  "region": "מרכז",
+  "he_slug": "תל-אביב-יפו"
+ },
+ {
+  "slug": "jerusalem",
+  "he": "ירושלים",
+  "region": "ירושלים",
+  "he_slug": "ירושלים"
+ },
+ {
+  "slug": "haifa",
+  "he": "חיפה",
+  "region": "צפון",
+  "he_slug": "חיפה"
+ },
+ {
+  "slug": "rishon-lezion",
+  "he": "ראשון לציון",
+  "region": "מרכז",
+  "he_slug": "ראשון-לציון"
+ },
+ {
+  "slug": "petah-tikva",
+  "he": "פתח תקווה",
+  "region": "מרכז",
+  "he_slug": "פתח-תקווה"
+ },
+ {
+  "slug": "ashdod",
+  "he": "אשדוד",
+  "region": "דרום",
+  "he_slug": "אשדוד"
+ },
+ {
+  "slug": "netanya",
+  "he": "נתניה",
+  "region": "שרון",
+  "he_slug": "נתניה"
+ },
+ {
+  "slug": "beer-sheva",
+  "he": "באר שבע",
+  "region": "דרום",
+  "he_slug": "באר-שבע"
+ },
+ {
+  "slug": "holon",
+  "he": "חולון",
+  "region": "מרכז",
+  "he_slug": "חולון"
+ },
+ {
+  "slug": "bnei-brak",
+  "he": "בני ברק",
+  "region": "מרכז",
+  "he_slug": "בני-ברק"
+ },
+ {
+  "slug": "ramat-gan",
+  "he": "רמת גן",
+  "region": "מרכז",
+  "he_slug": "רמת-גן"
+ },
+ {
+  "slug": "rehovot",
+  "he": "רחובות",
+  "region": "מרכז",
+  "he_slug": "רחובות"
+ },
+ {
+  "slug": "bat-yam",
+  "he": "בת ים",
+  "region": "מרכז",
+  "he_slug": "בת-ים"
+ },
+ {
+  "slug": "ashkelon",
+  "he": "אשקלון",
+  "region": "דרום",
+  "he_slug": "אשקלון"
+ },
+ {
+  "slug": "herzliya",
+  "he": "הרצליה",
+  "region": "שרון",
+  "he_slug": "הרצליה"
+ },
+ {
+  "slug": "kfar-saba",
+  "he": "כפר סבא",
+  "region": "שרון",
+  "he_slug": "כפר-סבא"
+ },
+ {
+  "slug": "raanana",
+  "he": "רעננה",
+  "region": "שרון",
+  "he_slug": "רעננה"
+ },
+ {
+  "slug": "hadera",
+  "he": "חדרה",
+  "region": "שרון",
+  "he_slug": "חדרה"
+ },
+ {
+  "slug": "modiin",
+  "he": "מודיעין",
+  "region": "מרכז",
+  "he_slug": "מודיעין"
+ },
+ {
+  "slug": "hod-hasharon",
+  "he": "הוד השרון",
+  "region": "שרון",
+  "he_slug": "הוד-השרון"
+ },
+ {
+  "slug": "ramat-hasharon",
+  "he": "רמת השרון",
+  "region": "שרון",
+  "he_slug": "רמת-השרון"
+ },
+ {
+  "slug": "lod",
+  "he": "לוד",
+  "region": "מרכז",
+  "he_slug": "לוד"
+ },
+ {
+  "slug": "ramla",
+  "he": "רמלה",
+  "region": "מרכז",
+  "he_slug": "רמלה"
+ },
+ {
+  "slug": "nazareth",
+  "he": "נצרת",
+  "region": "צפון",
+  "he_slug": "נצרת"
+ },
+ {
+  "slug": "rosh-haayin",
+  "he": "ראש העין",
+  "region": "מרכז",
+  "he_slug": "ראש-העין"
+ },
+ {
+  "slug": "givatayim",
+  "he": "גבעתיים",
+  "region": "מרכז",
+  "he_slug": "גבעתיים"
+ },
+ {
+  "slug": "kiryat-gat",
+  "he": "קריית גת",
+  "region": "דרום",
+  "he_slug": "קריית-גת"
+ },
+ {
+  "slug": "nahariya",
+  "he": "נהריה",
+  "region": "צפון",
+  "he_slug": "נהריה"
+ },
+ {
+  "slug": "afula",
+  "he": "עפולה",
+  "region": "צפון",
+  "he_slug": "עפולה"
+ },
+ {
+  "slug": "eilat",
+  "he": "אילת",
+  "region": "דרום",
+  "he_slug": "אילת"
+ },
+ {
+  "slug": "yavne",
+  "he": "יבנה",
+  "region": "מרכז",
+  "he_slug": "יבנה"
+ },
+ {
+  "slug": "ness-ziona",
+  "he": "נס ציונה",
+  "region": "מרכז",
+  "he_slug": "נס-ציונה"
+ },
+ {
+  "slug": "or-yehuda",
+  "he": "אור יהודה",
+  "region": "מרכז",
+  "he_slug": "אור-יהודה"
+ },
+ {
+  "slug": "kiryat-ono",
+  "he": "קריית אונו",
+  "region": "מרכז",
+  "he_slug": "קריית-אונו"
+ },
+ {
+  "slug": "even-yehuda",
+  "he": "אבן יהודה",
+  "region": "שרון",
+  "he_slug": "אבן-יהודה"
+ },
+ {
+  "slug": "kadima-zoran",
+  "he": "קדימה צורן",
+  "region": "שרון",
+  "he_slug": "קדימה-צורן"
+ },
+ {
+  "slug": "tel-mond",
+  "he": "תל מונד",
+  "region": "שרון",
+  "he_slug": "תל-מונד"
+ },
+ {
+  "slug": "pardes-hanna",
+  "he": "פרדס חנה כרכור",
+  "region": "שרון",
+  "he_slug": "פרדס-חנה-כרכור"
+ },
+ {
+  "slug": "zichron-yaakov",
+  "he": "זכרון יעקב",
+  "region": "צפון",
+  "he_slug": "זכרון-יעקב"
+ },
+ {
+  "slug": "karmiel",
+  "he": "כרמיאל",
+  "region": "צפון",
+  "he_slug": "כרמיאל"
+ },
+ {
+  "slug": "tiberias",
+  "he": "טבריה",
+  "region": "צפון",
+  "he_slug": "טבריה"
+ },
+ {
+  "slug": "kiryat-shmona",
+  "he": "קריית שמונה",
+  "region": "צפון",
+  "he_slug": "קריית-שמונה"
+ },
+ {
+  "slug": "beit-shemesh",
+  "he": "בית שמש",
+  "region": "ירושלים",
+  "he_slug": "בית-שמש"
+ },
+ {
+  "slug": "maale-adumim",
+  "he": "מעלה אדומים",
+  "region": "ירושלים",
+  "he_slug": "מעלה-אדומים"
+ },
+ {
+  "slug": "ariel",
+  "he": "אריאל",
+  "region": "מרכז",
+  "he_slug": "אריאל"
+ },
+ {
+  "slug": "dimona",
+  "he": "דימונה",
+  "region": "דרום",
+  "he_slug": "דימונה"
+ },
+ {
+  "slug": "sderot",
+  "he": "שדרות",
+  "region": "דרום",
+  "he_slug": "שדרות"
+ },
+ {
+  "slug": "netivot",
+  "he": "נתיבות",
+  "region": "דרום",
+  "he_slug": "נתיבות"
+ },
+ {
+  "slug": "kiryat-ata",
+  "he": "קריית אתא",
+  "region": "צפון",
+  "he_slug": "קריית-אתא"
+ },
+ {
+  "slug": "kiryat-bialik",
+  "he": "קריית ביאליק",
+  "region": "צפון",
+  "he_slug": "קריית-ביאליק"
+ },
+ {
+  "slug": "kiryat-motzkin",
+  "he": "קריית מוצקין",
+  "region": "צפון",
+  "he_slug": "קריית-מוצקין"
+ },
+ {
+  "slug": "nesher",
+  "he": "נשר",
+  "region": "צפון",
+  "he_slug": "נשר"
+ },
+ {
+  "slug": "umm-al-fahm",
+  "he": "אום אל פחם",
+  "region": "צפון",
+  "he_slug": "אום-אל-פחם"
+ },
+ {
+  "slug": "rahat",
+  "he": "רהט",
+  "region": "דרום",
+  "he_slug": "רהט"
+ },
+ {
+  "slug": "taibe",
+  "he": "טייבה",
+  "region": "שרון",
+  "he_slug": "טייבה"
+ },
+ {
+  "slug": "tira",
+  "he": "טירה",
+  "region": "שרון",
+  "he_slug": "טירה"
+ },
+ {
+  "slug": "yokneam",
+  "he": "יקנעם",
+  "region": "צפון",
+  "he_slug": "יקנעם"
+ },
+ {
+  "slug": "gedera",
+  "he": "גדרה",
+  "region": "מרכז",
+  "he_slug": "גדרה"
+ },
+ {
+  "slug": "shoham",
+  "he": "שוהם",
+  "region": "מרכז",
+  "he_slug": "שוהם"
+ },
+ {
+  "slug": "elad",
+  "he": "אלעד",
+  "region": "מרכז",
+  "he_slug": "אלעד"
+ }
 ]
