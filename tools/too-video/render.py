@@ -35,6 +35,12 @@ def main(deck_f, txt_f, mp3, out):
     deck = json.loads(pathlib.Path(deck_f).read_text())
     paras = [p.strip() for p in re.split(r'\n\s*\n', pathlib.Path(txt_f).read_text()) if p.strip()]
     if len(paras) != len(deck['slides']): raise SystemExit(f'{len(paras)} paragraphs, {len(deck["slides"])} slides')
+    # decode the narration once to WAV: a narration joined from several MP3 parts can carry a header that makes ffprobe
+    # under-report its length (lesson 2: 173.2 s reported, 181 s real), which cut the end of the video. WAV length is exact.
+    tmp = pathlib.Path(tempfile.mkdtemp())
+    wav = tmp / 'narration.wav'
+    sh(['ffmpeg', '-y', '-hide_banner', '-i', mp3, '-c:a', 'pcm_s16le', wav])
+    mp3 = wav
     total = duration(mp3)
     sil = silences(mp3)
     # boundaries: deck["bounds"] when given (seconds, one per paragraph start after the first), otherwise the pause
@@ -66,7 +72,6 @@ def main(deck_f, txt_f, mp3, out):
             ends = [m + d / 2 for m, d in sil if a < m and m + d / 2 < b and -1.5 <= m + d / 2 - t <= 0.8]
             if ends: t = min(ends, key=lambda e: abs(e - t)) - 0.1   # the item appears as the sentence starts
             shots.append((i, k, max(t, shots[-1][2] + 0.6)))
-    tmp = pathlib.Path(tempfile.mkdtemp())
     from playwright.sync_api import sync_playwright
     with sync_playwright() as pw:
         chrome = os.environ.get('CHROME') or ('/usr/bin/google-chrome' if os.path.exists('/usr/bin/google-chrome') else None)
