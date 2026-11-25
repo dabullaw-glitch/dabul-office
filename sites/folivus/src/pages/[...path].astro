@@ -47,7 +47,7 @@ export async function getStaticPaths() {
   add(P.page('claim'), 'claim');
   add(P.page('removal'), 'removal');
   add(P.page('contact'), 'contact');
-  for (const k of ['editorial', 'method', 'terms', 'privacy', 'a11y', 'about'] as const) add(P.page(k), 'static', { page: k });
+  for (const k of ['editorial', 'method', 'terms', 'privacy', 'a11y', 'cookies', 'about'] as const) add(P.page(k), 'static', { page: k });
   return out;
 }
 const props = Astro.props as any;

@@ -1,6 +1,6 @@
 
 
-<div class="bar">פתיחה קרובה · <b>מחיר השקה</b> לנרשמים הראשונים</div>
+<aside class="bar" aria-label="הודעה">פתיחה קרובה · <b>מחיר השקה</b> לנרשמים הראשונים</aside>
 
 <nav class="nav"><div class="wrap">
   <a class="logo" href="#top" aria-label="Team of One">
@@ -10,6 +10,8 @@
   <ul><li><a href="#team">הצוות</a></li><li><a href="#seo">קידום</a></li><li><a href="#course">קורסים</a></li><li><a href="__BASE__maamarim/">מאמרים</a></li><li><a href="__BASE__kelim/">כלים</a></li><li><a href="__BASE__etgar/">אתגר חינמי</a></li><li><a href="#price">מסלולים</a></li></ul>
   <span class="navr"><a class="navlogin" href="__BASE__ezor-ishi/">כניסה</a><a class="btn btn-l" href="#price">להצטרפות <span class="arrow">←</span></a><button class="mbtn" type="button" aria-label="פתיחת התפריט" aria-expanded="false" aria-controls="mpanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></span>
 </div></nav>
+
+<main id="main" tabindex="-1">
 
 <header class="hero" id="top">
   <div class="wrap">
@@ -63,7 +65,7 @@
       <div><span class="tag"><i></i>הצוות</span><h2 class="h2" style="margin-top:16px">תכירו את<br>הצוות שלכם.</h2></div>
       <p class="lead mut">כל אחד מהם הוא תהליך שבונים פעם אחת, והוא עובד כל יום. בקורס בונים אותם אחד אחד, ואתם נשארים המנהלים.</p>
     </div>
-    <div class="team">
+    <div class="team" tabindex="0" role="region" aria-label="חברי הצוות">
       <div class="role you reveal"><div class="top"><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span><span class="st" style="background:var(--lime);color:var(--ink)">המנהל</span></div><h3>אתם</h3><p>מחליטים, מאשרים, ופוגשים לקוחות. כל השאר מגיע אליכם מוכן.</p><div class="peek"><img src="__BASE__img/me-port.webp" alt=""></div></div>
       <div class="role reveal"><div class="top"><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></span><span class="st">פעיל</span></div><h3>כותב המאמרים</h3><p>בוחר נושא לפי מה שאנשים מחפשים בגוגל, כותב, ומכין לאישור.</p><div class="peek"><img src="__BASE__img/info.webp" alt="" style="object-position:50% 50%"></div></div>
       <div class="role reveal"><div class="top"><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/><path d="M8 11l2 2 4-4"/></svg></span><span class="st">פעיל</span></div><h3>בודק העובדות</h3><p>בודק כל מספר, סכום וטענה מול מקור רשמי לפני שמשהו יוצא.</p><div class="peek"><img src="__BASE__img/gbp3.webp" alt=""></div></div>
@@ -134,7 +136,7 @@
       <div class="pnl reveal">
         <h3>כניסות מגוגל לאתר המשרד, בכל ארבעה שבועות</h3>
         <div class="s">הנתונים מהכלי של גוגל לבעלי אתרים</div>
-        <div class="chart" id="chart"></div>
+        <div class="chart" id="chart" tabindex="0" role="region" aria-label="גרף הכניסות מגוגל"></div>
         <div class="big2"><b>פי 11</b><span>מ־245 כניסות בחודש הראשון בנתונים, ל־2,774 בארבעת השבועות האחרונים</span></div>
         <div class="src">18.12.2025 עד 18.11.2026. כל עמודה היא תקופה של 28 ימים.</div>
       </div>

@@ -3,6 +3,7 @@
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
 import Icon from '../components/Icon.astro';
+import SiteTools from '../components/SiteTools.astro';
 import { BRAND, PREVIEW } from '../config/brand';
 import { P, u, abs } from '../config/routes';
 import { areas, cities } from '../lib/data';
@@ -53,11 +54,13 @@ const year = new Date().getFullYear();
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <script is:inline>try{var a=JSON.parse(localStorage.getItem('fol-a11y')||'null'),h=document.documentElement;if(a){if(a.size===1)h.classList.add('a11y-t1');if(a.size===2)h.classList.add('a11y-t2');['hc','ul','rf','nm'].forEach(function(k){if(a[k])h.classList.add('a11y-'+k)})}}catch(e){}</script>
 </head>
 <body class={bodyClass}>
   <a class="skip" href="#main">דילוג לתוכן</a>
+  <SiteTools />
   {PREVIEW && (
-    <div class="ribbon" role="note"><div class="wrap"><span><b>גרסת תצוגה לאישור.</b> כל המשרדים, חוות הדעת והכותבים באתר הם דוגמה בלבד. השם {BRAND.name} זמני.</span></div></div>
+    <aside class="ribbon" aria-label="הודעה על גרסת התצוגה"><div class="wrap"><span><b>גרסת תצוגה לאישור.</b> כל המשרדים, חוות הדעת והכותבים באתר הם דוגמה בלבד. השם {BRAND.name} זמני.</span></div></aside>
   )}
   <header class="hdr">
     <div class="wrap">
@@ -116,6 +119,8 @@ const year = new Date().getFullYear();
           <span>© {year} {BRAND.name}</span>
           <a href={u(P.page('terms'))}>תנאי שימוש</a>
           <a href={u(P.page('privacy'))}>מדיניות פרטיות</a>
+          <a href={u(P.page('cookies'))}>מדיניות עוגיות</a>
+          <a href={u(P.page('cookies'))} data-ck-open>הגדרות עוגיות</a>
           <a href={u(P.page('a11y'))}>הצהרת נגישות</a>
           <a href={u(P.page('removal'))}>בקשת הסרה</a>
         </div>
@@ -132,7 +137,16 @@ const year = new Date().getFullYear();
     };
     openBtn?.addEventListener('click', () => setOpen(true));
     menu.querySelectorAll('[data-menu-close]').forEach((b) => b.addEventListener('click', () => setOpen(false)));
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.classList.contains('open')) setOpen(false); });
+    document.addEventListener('keydown', (e) => {
+      if (!menu.classList.contains('open')) return;
+      if (e.key === 'Escape') { setOpen(false); return; }
+      if (e.key !== 'Tab') return;
+      // keep keyboard focus inside the open menu (it is a modal dialog)
+      const f = Array.from(menu.querySelectorAll<HTMLElement>('a[href], button')); if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
   </script>
 </body>
 </html>

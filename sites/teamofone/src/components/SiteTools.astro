@@ -1,0 +1,124 @@
+---
+// Accessibility menu + cookie consent banner (self built, no outside services). Logic: ./site-tools.js (same file on
+// the Folivus site). Settings are kept in localStorage: too-a11y (accessibility choices), too-consent (cookie choice
+// with date and version). Non essential tags must be added as <script type="text/plain" data-consent="stats|marketing">
+// so they run only after consent. Bump data-ver when the cookie list changes in a way that needs a new consent.
+import SX from './site-tools.js?raw';
+const base = import.meta.env.BASE_URL;
+---
+<aside id="sx" class="sx" data-key="too" data-ver="1" aria-label="נגישות והגדרות עוגיות">
+  <button type="button" class="sx-btn" id="sx-a11y-btn" aria-expanded="false" aria-controls="sx-a11y" aria-label="תפריט נגישות">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><circle cx="12" cy="4.2" r="2.2"/><path d="M4.5 7.6c-.5-.1-1 .2-1.1.7s.2 1 .7 1.1l4.9 1.2v3.3l-1.9 6.4c-.2.5.1 1.1.7 1.2.5.2 1.1-.1 1.2-.6L10.7 15h2.6l1.8 5.9c.2.5.7.8 1.2.6.5-.1.9-.7.7-1.2l-1.9-6.4v-3.3l4.9-1.2c.5-.1.9-.6.7-1.1-.1-.5-.6-.8-1.1-.7-2.4.6-4.7 1-7.1 1s-4.7-.4-7.1-1z"/></svg>
+  </button>
+  <div class="sx-panel" id="sx-a11y" role="dialog" aria-labelledby="sx-a11y-h" hidden>
+    <div class="sx-top"><h2 id="sx-a11y-h">התאמות נגישות</h2><button type="button" class="sx-x" data-sx-close aria-label="סגירת תפריט הנגישות"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="sx-grp" role="group" aria-labelledby="sx-size-l">
+      <span id="sx-size-l" class="sx-lbl">גודל הטקסט</span>
+      <div class="sx-seg"><button type="button" data-a11y-size="0" aria-pressed="true">רגיל</button><button type="button" data-a11y-size="1" aria-pressed="false">גדול</button><button type="button" data-a11y-size="2" aria-pressed="false">גדול מאוד</button></div>
+    </div>
+    <button type="button" class="sx-tog" data-a11y="hc" aria-pressed="false">ניגודיות גבוהה</button>
+    <button type="button" class="sx-tog" data-a11y="ul" aria-pressed="false">קו תחתון לקישורים</button>
+    <button type="button" class="sx-tog" data-a11y="rf" aria-pressed="false">גופן קריא</button>
+    <button type="button" class="sx-tog" data-a11y="nm" aria-pressed="false">עצירת אנימציות</button>
+    <button type="button" class="sx-reset" data-a11y-reset>איפוס ההגדרות</button>
+    <a class="sx-link" href={base + 'negishut/'}>הצהרת נגישות</a>
+  </div>
+
+  <section class="sx-ck" id="sx-ck" aria-labelledby="sx-ck-h" hidden>
+    <h2 id="sx-ck-h" tabindex="-1">עוגיות באתר</h2>
+    <p>אנחנו משתמשים בעוגיות ובאחסון בדפדפן. ההכרחיות פועלות תמיד, כי בלעדיהן האתר לא עובד. עוגיות סטטיסטיקה ושיווק יופעלו רק אם תאשרו. <a href={base + 'ugiyot/'}>מדיניות עוגיות</a></p>
+    <div class="sx-set" id="sx-ck-set" hidden>
+      <fieldset>
+        <legend>בחרו אילו עוגיות לאשר</legend>
+        <label class="sx-opt"><input type="checkbox" checked disabled><span><b>הכרחיות</b> תמיד פעילות. כניסה לחשבון, שמירת הבחירות שלכם ואבטחת האתר.</span></label>
+        <label class="sx-opt"><input type="checkbox" name="stats"><span><b>סטטיסטיקה</b> עוזרות לנו להבין איך משתמשים באתר. כרגע לא פועל באתר כלי כזה.</span></label>
+        <label class="sx-opt"><input type="checkbox" name="marketing"><span><b>שיווק</b> מדידת פרסום והצגת מודעות מותאמות. כרגע לא פועל באתר כלי כזה.</span></label>
+      </fieldset>
+      <button type="button" class="sx-b sx-b1" data-ck="save">שמירת הבחירה</button>
+    </div>
+    <div class="sx-row">
+      <button type="button" class="sx-b sx-b1" data-ck="all">אישור הכל</button>
+      <button type="button" class="sx-b sx-b1" data-ck="necessary">רק הכרחיות</button>
+      <button type="button" class="sx-b sx-b2" data-ck="settings" aria-expanded="false" aria-controls="sx-ck-set">הגדרות</button>
+    </div>
+  </section>
+  <p class="sx-sr" id="sx-ck-msg" role="status"></p>
+</aside>
+<script is:inline set:html={SX}></script>
+
+<style is:global>
+/* theme */
+.sx{--sx-bg:#141416;--sx-fg:#F6F4EE;--sx-mut:#CFCCC4;--sx-line:rgba(255,255,255,.18);--sx-acc:#D7FF3B;--sx-acc-fg:#0B0B0C;--sx-r:22px;--sx-font:Rubik,Heebo,Arial,sans-serif}
+/* shared parts (same structure on Folivus) */
+.sx-skip{position:fixed;top:-120px;inset-inline-start:12px;z-index:1003;padding:12px 18px;border-radius:12px;background:#D7FF3B;color:#0B0B0C;font-weight:800;text-decoration:none}
+.sx-skip:focus{top:12px;outline:3px solid #fff;outline-offset:2px}
+.sx{font-family:var(--sx-font);font-size:16px;line-height:1.5}
+.sx-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
+.sx-btn{position:fixed;z-index:1000;inset-inline-end:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:50px;height:50px;border-radius:50%;display:grid;place-items:center;padding:0;background:var(--sx-acc);color:var(--sx-acc-fg);border:2px solid var(--sx-acc-fg);box-shadow:0 10px 26px -8px rgba(0,0,0,.55);cursor:pointer}
+.sx-btn:focus-visible,.sx-panel :focus-visible,.sx-ck :focus-visible{outline:3px solid var(--sx-acc);outline-offset:3px}
+.sx-btn:focus-visible{outline-color:var(--sx-fg)}
+.sx-panel{position:fixed;z-index:1002;inset-inline-end:16px;bottom:calc(78px + env(safe-area-inset-bottom,0px));width:min(340px,calc(100vw - 32px));max-height:calc(100vh - 110px);overflow:auto;background:var(--sx-bg);color:var(--sx-fg);border:1px solid var(--sx-line);border-radius:var(--sx-r);padding:16px;box-shadow:0 24px 60px -20px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:8px}
+.sx-panel[hidden],.sx-ck[hidden],.sx-set[hidden]{display:none}
+.sx-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.sx-top h2{font:inherit;font-size:18px;font-weight:800;margin:0;line-height:1.3;color:inherit}
+.sx-x{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:transparent;color:inherit;border:1px solid var(--sx-line);cursor:pointer;padding:0}
+.sx-lbl{display:block;font-weight:700;font-size:14px;margin-bottom:6px;color:var(--sx-mut)}
+.sx-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.sx-seg button,.sx-tog,.sx-reset{font:inherit;font-size:15px;font-weight:600;min-height:44px;border-radius:12px;border:1.5px solid var(--sx-line);background:transparent;color:inherit;cursor:pointer;padding:8px 12px;text-align:start}
+.sx-seg button{text-align:center;padding:8px 4px}
+.sx-tog{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sx-tog::after{content:'';width:18px;height:18px;border-radius:5px;border:2px solid currentColor;flex:none}
+.sx-seg button[aria-pressed=true],.sx-tog[aria-pressed=true]{background:var(--sx-acc);color:var(--sx-acc-fg);border-color:var(--sx-acc)}
+.sx-tog[aria-pressed=true]::after{background:currentColor;box-shadow:inset 0 0 0 3px var(--sx-acc)}
+.sx-reset{text-align:center;margin-top:4px}
+.sx-link{color:inherit;font-weight:700;text-align:center;padding:6px;text-underline-offset:3px}
+.sx-ck{position:fixed;z-index:999;inset-inline-start:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:min(600px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;background:var(--sx-bg);color:var(--sx-fg);border:1px solid var(--sx-line);border-radius:var(--sx-r);padding:18px 20px;box-shadow:0 24px 60px -20px rgba(0,0,0,.65)}
+.sx-ck h2{font:inherit;font-size:18px;font-weight:800;margin:0 0 6px;color:inherit;line-height:1.3}
+.sx-ck h2:focus{outline:none}
+.sx-ck p{margin:0 0 12px;font-size:15px;color:var(--sx-mut)}
+.sx-ck a{color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.sx-ck fieldset{border:1px solid var(--sx-line);border-radius:14px;margin:0 0 10px;padding:8px 12px 10px}
+.sx-ck legend{font-weight:700;font-size:14px;padding:0 6px}
+.sx-opt{display:flex;gap:10px;align-items:flex-start;padding:8px 0;font-size:14px;color:var(--sx-mut);cursor:pointer}
+.sx-opt b{color:var(--sx-fg);margin-inline-end:4px}
+.sx-opt input{width:20px;height:20px;margin:2px 0 0;flex:none;accent-color:var(--sx-acc)}
+.sx-row{display:flex;flex-wrap:wrap;gap:8px}
+.sx-b{font:inherit;font-size:15px;font-weight:800;min-height:44px;padding:10px 18px;border-radius:999px;cursor:pointer;border:1.5px solid transparent}
+.sx-b1{background:var(--sx-acc);color:var(--sx-acc-fg);border-color:var(--sx-acc)}
+.sx-b2{background:transparent;color:var(--sx-fg);border-color:var(--sx-line)}
+.sx-set .sx-b{margin-bottom:12px}
+@media (max-width:760px){
+  .sx-btn{bottom:calc(max(86px,var(--sx-ck-h,0px) + 24px) + env(safe-area-inset-bottom,0px))}
+  .sx-panel{bottom:calc(max(148px,var(--sx-ck-h,0px) + 86px) + env(safe-area-inset-bottom,0px));max-height:calc(100vh - 170px)}
+  .sx-ck{inset-inline:8px;width:auto;bottom:calc(8px + env(safe-area-inset-bottom,0px));padding:14px 16px}
+  .sx-row .sx-b{flex:1 1 auto}
+}
+@media print{.sx{display:none}}
+
+/* site wide: visible focus and the accessibility choices */
+:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+:where(.paper,.kx-paper,.kx-w:not(.dk)) :where(a,button,input,select,textarea,summary,[tabindex]):focus-visible{outline-color:var(--ink)}
+html.a11y-t1 body{zoom:1.15}
+html.a11y-t2 body{zoom:1.3}
+@media (max-width:760px){
+  html.a11y-t1 body{zoom:1.12} html.a11y-t2 body{zoom:1.25}
+  html.a11y-t1 .nav .logo b,html.a11y-t2 .nav .logo b{display:none}
+  html.a11y-t1 .wrap>*,html.a11y-t2 .wrap>*{min-width:0}
+  html.a11y-t1 .tag,html.a11y-t2 .tag{width:auto}
+  html.a11y-t1 .btn,html.a11y-t2 .btn{white-space:normal;text-align:center}
+  html.a11y-t1 .tl li>*,html.a11y-t2 .tl li>*,html.a11y-t1 .tl .card>div,html.a11y-t2 .tl .card>div{min-width:0;overflow-wrap:anywhere}
+}
+html.a11y-hc{--mut:#ECEAE4;--mutD:#111;--line:rgba(255,255,255,.5);--lineD:rgba(0,0,0,.6);--ink:#000;--ink2:#000;--ink3:#0a0a0a;--paper:#fff;--paper2:#fff}
+html.a11y-hc body{background:#000}
+html.a11y-hc .hero .lead,html.a11y-hc .muted,html.a11y-hc .mut{color:#ECEAE4}
+html.a11y-hc .paper .muted,html.a11y-hc .paper .mut{color:#111}
+html.a11y-hc .nav,html.a11y-hc .ahead{background:#000}
+html.a11y-hc .sx{--sx-bg:#000;--sx-mut:#fff;--sx-line:#fff}
+html.a11y-ul a{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important}
+html.a11y-rf{--body:Arial,"Helvetica Neue",Helvetica,sans-serif}
+html.a11y-rf body{letter-spacing:.012em;word-spacing:.06em}
+html.a11y-rf .sx{--sx-font:Arial,"Helvetica Neue",Helvetica,sans-serif}
+html.a11y-nm *,html.a11y-nm *::before,html.a11y-nm *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html.a11y-nm .reveal{opacity:1!important;transform:none!important}
+html.a11y-nm{scroll-behavior:auto}
+</style>

@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 const base = import.meta.env.BASE_URL;
 ---
 <Base title="כניסה והרשמה | Team of One" description="כניסה והרשמה לקורס Team of One: אזור אישי עם השיעורים, הספרייה, הקהילה והשידורים החיים." app noindex>
-  <div class="auth">
+  <main class="auth" id="main">
     <div class="main">
       <div class="box">
         <h1 class="disp" style="font-size:clamp(60px,7vw,92px);line-height:.85;margin:0 0 10px">ברוכים<br>הבאים.</h1>
@@ -56,7 +56,7 @@ const base = import.meta.env.BASE_URL;
       <p class="mut" style="max-width:40ch;margin:0">10 פרקים, 12 סקילים מוכנים, וקבוצה סגורה. הכל באזור האישי שלכם.</p>
       <img src={base + 'img/me-cut.webp'} alt="">
     </div>
-  </div>
+  </main>
   <script>
     import { sb, BASE, FN, SB_KEY, errText } from '../../lib/sb.js';
     const q = new URLSearchParams(location.search), plan = q.get('plan');
