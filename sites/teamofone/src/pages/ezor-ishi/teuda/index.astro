@@ -1,0 +1,51 @@
+---
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/ret.css';
+---
+<Base title="תעודת סיום | Team of One" app noindex>
+  <main class="wrap page" id="main">
+    <div class="crumbs rt-noprint"><a href={import.meta.env.BASE_URL + 'ezor-ishi/'}>האזור האישי</a> / <a href={import.meta.env.BASE_URL + 'ezor-ishi/hitkadmut/'}>ההתקדמות שלי</a> / תעודת סיום</div>
+    <div id="app"><div class="card">טוען...</div></div>
+  </main>
+  <script>
+    import { sb, BASE, esc } from '../../../lib/sb.js';
+    import { requireLogin, logoutBtn } from '../../../lib/member.js';
+    import { retMe, rErr } from '../../../lib/retention.js';
+    const app = document.getElementById('app');
+    const q = new URLSearchParams(location.search);
+    const full = q.get('c') === 'course', mid = Number(q.get('m'));
+    (async () => {
+      if (!(await requireLogin())) return;
+      logoutBtn(document.getElementById('anav'));
+      let x;
+      try { x = await retMe(); } catch (e) { app.innerHTML = '<div class="card">' + esc(rErr(e)) + '</div>'; return; }
+      const certs = (x && x.certs) || [];
+      let title = '', when = null;
+      if (full) {
+        const main = certs.filter((c) => c.n >= 1 && c.n <= 10);
+        if (main.length === 10) { title = 'הקורס המלא של Team of One'; when = main.map((c) => c.done_at).sort().pop(); }
+      } else {
+        const c = certs.find((k) => k.module_id === mid);
+        if (c) { title = String(c.title).replace(/^קורס:\s*/, ''); when = c.done_at; if (c.n <= 10) title = 'פרק ' + c.n + ': ' + title; }
+      }
+      if (!title) {
+        app.innerHTML = `<div class="card"><h1 style="font-size:48px">התעודה עוד לא מוכנה</h1><p>התעודה נפתחת כשמסיימים את כל השיעורים ${full ? 'בעשרת הפרקים של הקורס' : 'בפרק או בקורס הזה'}. כל שיעור שמסמנים כ"סיימתי" נספר.</p><a class="btn btn-k sm" href="${BASE}ezor-ishi/hitkadmut/">להתקדמות שלי</a></div>`;
+        return;
+      }
+      const name = (x.name || '').trim();
+      document.title = 'תעודת סיום: ' + title + ' | Team of One';
+      app.innerHTML = `
+        ${name ? '' : `<div class="card rt-noprint" style="margin-bottom:14px" role="status">כדי שהשם שלכם יופיע על התעודה, עדכנו אותו ב<a href="${BASE}ezor-ishi/">אזור האישי</a> בכרטיס "הפרטים שלי".</div>`}
+        <p class="muted rt-noprint" style="margin:0 0 14px">אפשר להדפיס את העמוד או לשמור אותו כקובץ PDF דרך ההדפסה של הדפדפן.</p>
+        <section class="rt-cert" aria-label="תעודת סיום">
+          <span class="rt-ck en">Team of One</span>
+          <h1>תעודת סיום</h1>
+          <p class="rt-to">התעודה מוענקת ל</p>
+          <p class="rt-name">${esc(name || 'חבר הצוות')}</p>
+          <p class="rt-to">על השלמת כל השיעורים ב</p>
+          <p class="rt-for">${esc(title)}</p>
+          <div class="rt-foot"><div>תאריך<br><b>${new Date(when).toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'long', year: 'numeric' })}</b></div><div>מטעם<br><b>צוות Team of One</b></div></div>
+        </section>`;
+    })();
+  </script>
+</Base>

@@ -1,0 +1,119 @@
+---
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/ret.css';
+---
+<Base title="30 הימים הראשונים | Team of One" app noindex>
+  <main class="wrap page" id="main">
+    <div class="crumbs"><a href={import.meta.env.BASE_URL + 'ezor-ishi/'}>האזור האישי</a> / 30 הימים הראשונים</div>
+    <div id="app"><div class="card">טוען...</div></div>
+  </main>
+  <script>
+    import { sb, BASE, esc, toast } from '../../../lib/sb.js';
+    import { requireLogin, logoutBtn } from '../../../lib/member.js';
+    import { retMe, loadTasks, pickTasks, subnav, noAccess, GOALS, BIZ, BIZ_EXAMPLE, HOURS, rErr, md } from '../../../lib/retention.js';
+    const app = document.getElementById('app');
+    let x, rows, mods;
+    const edit = () => new URLSearchParams(location.search).get('edit') === '1';
+
+    (async () => {
+      if (!(await requireLogin())) return;
+      logoutBtn(document.getElementById('anav'));
+      try {
+        [x, { data: mods }] = await Promise.all([retMe(), sb.from('too_modules').select('id,n,title,sub').order('n')]);
+      } catch (e) { app.innerHTML = '<div class="card">' + esc(rErr(e)) + '</div>'; return; }
+      if (!x || !x.access) { app.innerHTML = subnav('30') + noAccess(); return; }
+      if (!x.onboarding || edit()) return form();
+      rows = await loadTasks().catch(() => []);
+      plan();
+    })();
+
+    // ---------- welcome questionnaire ----------
+    function form() {
+      const o = x.onboarding || {};
+      const first = !x.onboarding;
+      app.innerHTML = `${subnav('30')}
+        <h1>${first ? 'ברוכים הבאים לצוות' : 'עדכון התוכנית'}</h1>
+        <p class="rt-sub">שלוש שאלות קצרות, ותקבלו תוכנית אישית ל־30 הימים הראשונים: עם אילו עובדים דיגיטליים להתחיל, ומשימה קטנה לכל יום. בסוף החודש יהיו לכם עובדים שעובדים בשבילכם באמת.</p>
+        <form class="card rt-q" id="qf" novalidate>
+          <fieldset><legend>1. איזה עסק יש לכם?</legend><div class="rt-opts">${Object.entries(BIZ).map(([k, t]) => `<label><input type="radio" name="biz" value="${k}" ${o.biz === k ? 'checked' : ''} required><span>${esc(t)}</span></label>`).join('')}</div>
+            <div class="f" style="margin:12px 0 0"><label for="bn">במשפט אחד, מה אתם עושים? <small>(לא חובה)</small></label><input id="bn" maxlength="200" value="${esc(o.biz_note || '')}" placeholder="לדוגמה: קבלן שיפוצים באזור השרון"></div></fieldset>
+          <fieldset><legend>2. מה המטרה העיקרית שלכם בחודש הקרוב?</legend><div class="rt-opts">${Object.entries(GOALS).map(([k, g]) => `<label><input type="radio" name="goal" value="${k}" ${o.goal === k ? 'checked' : ''} required><span><b>${esc(g.t)}</b><small>${esc(g.s)}</small></span></label>`).join('')}</div></fieldset>
+          <fieldset><legend>3. כמה זמן בשבוע תוכלו להקדיש?</legend><div class="rt-opts">${HOURS.map(([h, t]) => `<label><input type="radio" name="hours" value="${h}" ${Number(o.hours) === h || (!o.hours && h === 4) ? 'checked' : ''}><span>${t}${h === 2 ? '<small>קצב רגוע: משימה בערך כל יומיים</small>' : '<small>משימה קטנה כל יום</small>'}</span></label>`).join('')}</div></fieldset>
+          <p class="err" id="qerr" role="alert" style="color:#B42318;font-weight:700;margin:0 0 10px"></p>
+          <div class="row"><button class="btn btn-k" type="submit">${first ? 'לתוכנית האישית שלי' : 'שמירה'}</button>${first ? '' : `<a class="btn btn-w" href="${BASE}ezor-ishi/30/">ביטול</a>`}</div>
+        </form>`;
+      document.getElementById('qf').onsubmit = async (e) => {
+        e.preventDefault();
+        const f = new FormData(e.target);
+        if (!f.get('biz') || !f.get('goal')) { document.getElementById('qerr').textContent = 'בחרו סוג עסק ומטרה כדי שנוכל לבנות את התוכנית.'; return; }
+        const b = e.target.querySelector('button[type=submit]'); b.disabled = true;
+        const { error } = await sb.rpc('too_onboarding_save', { p_biz: f.get('biz'), p_goal: f.get('goal'), p_hours: Number(f.get('hours') || 4), p_note: document.getElementById('bn').value, p_restart: false });
+        b.disabled = false;
+        if (error) { document.getElementById('qerr').textContent = rErr(error); return; }
+        location.replace(BASE + 'ezor-ishi/30/' + (first ? '?new=1' : ''));
+      };
+    }
+
+    // ---------- the plan ----------
+    function plan() {
+      const o = x.onboarding, g = GOALS[o.goal] || GOALS.leads;
+      const tasks = pickTasks(rows, o.goal, o.pace);
+      const done = new Set(x.path_done || []);
+      const nDone = tasks.filter((t) => done.has(t.day)).length;
+      const open = (t) => t.day <= x.path_day;
+      const cur = tasks.find((t) => open(t) && !done.has(t.day)) || null;
+      const nextLocked = tasks.find((t) => !open(t));
+      const allDone = nDone === tasks.length && tasks.length > 0;
+      const empl = g.mods.map((n) => (mods || []).find((m) => m.n === n)).filter(Boolean);
+      const isNew = new URLSearchParams(location.search).get('new') === '1';
+      const extra = (t) => `${t.lesson_id ? `<a class="btn btn-k sm" href="${BASE}ezor-ishi/shiur/?id=${t.lesson_id}">לשיעור</a>` : ''}${t.link ? `<a class="btn btn-w sm" href="${BASE}${esc(t.link)}">לעמוד</a>` : ''}`;
+      const dayRow = (t) => {
+        const st = done.has(t.day) ? 'done' : !open(t) ? 'rt-lk' : t === cur ? 'now' : '';
+        return `<details class="${st}" ${t === cur ? 'open' : ''}><summary><span class="rt-dn" aria-hidden="true">${done.has(t.day) ? '✓' : t.day}</span><span class="rt-dt"><b>יום ${t.day}: ${esc(t.title)}</b><br><span class="muted" style="font-size:14px">${t.minutes} דקות${st === 'done' ? ' · בוצע' : st === 'rt-lk' ? ' · ייפתח ביום ' + t.day : st === 'now' ? ' · המשימה הבאה' : ''}</span></span></summary>
+          <div class="rt-dbody">${open(t) ? `<div class="prose">${md(t.body_md)}</div><div class="row" style="margin-top:10px">${extra(t)}<button class="btn ${done.has(t.day) ? 'btn-w' : 'btn-k'} sm" data-mark="${t.day}" aria-pressed="${done.has(t.day)}">${done.has(t.day) ? '✓ סומן כבוצע (לביטול)' : 'סיימתי את המשימה'}</button></div>` : '<p class="muted" style="margin:0">המשימה הזאת תיפתח ביום ' + t.day + '. אין צורך לרוץ קדימה, כל יום בנוי על הקודם.</p>'}</div></details>`;
+      };
+      const weeks = [[1, 7], [8, 14], [15, 21], [22, 30]];
+      app.innerHTML = `${subnav('30')}
+        ${isNew ? '<div class="card dk" style="margin-bottom:16px" role="status"><b style="color:var(--lime)">התוכנית שלכם מוכנה.</b> <span class="rt-mut">מתחילים מהמשימה של היום. כל יום נפתחת משימה חדשה.</span></div>' : ''}
+        <div class="spread" style="margin-bottom:6px"><h1>30 הימים הראשונים</h1><span class="pill k">יום ${x.path_day} מתוך 30</span></div>
+        <p class="rt-sub">המטרה שלכם: <b>${esc(g.t)}</b>. ${o.pace === 'light' ? 'בחרתם קצב רגוע, אז יש משימה בערך כל יומיים.' : 'משימה קטנה כל יום, בדרך כלל 10 עד 25 דקות.'}</p>
+        <div class="rt-bar" role="img" aria-label="${nDone} מתוך ${tasks.length} משימות בוצעו"><i style="width:${tasks.length ? (nDone / tasks.length) * 100 : 0}%"></i></div>
+        <p class="muted" style="margin:0 0 20px;font-size:14px">${nDone} מתוך ${tasks.length} משימות בוצעו</p>
+        <div class="rt-grid">
+          <div class="vstack">
+            ${allDone ? `<div class="card dk"><h2 style="color:var(--lime)">סיימתם את 30 הימים 🏁</h2><p class="rt-mut" style="margin:0 0 12px">זה הזמן לשתף בקהילה מה בניתם, ולבחור את הפרק הבא. כל יום ראשון עולה פריט חדש בעמוד "השבוע בצוות".</p><div class="row"><a class="btn btn-l sm" href="${BASE}ezor-ishi/hitkadmut/">לתגים ולסיכום</a><a class="btn btn-o sm" href="${BASE}ezor-ishi/hashavua/">לשבוע בצוות</a></div></div>`
+              : cur ? `<section class="card dk rt-today" aria-labelledby="td-h"><span class="pill l">${cur.day < x.path_day ? 'להשלים · יום ' + cur.day : 'המשימה של היום · יום ' + cur.day} · ${cur.minutes} דקות</span>
+                <h2 id="td-h" style="font-size:26px;margin:12px 0 6px">${esc(cur.title)}</h2><div class="prose rt-mut">${md(cur.body_md)}</div>
+                <div class="row" style="margin-top:14px">${cur.lesson_id ? `<a class="btn btn-o sm" href="${BASE}ezor-ishi/shiur/?id=${cur.lesson_id}">לשיעור</a>` : ''}${cur.link ? `<a class="btn btn-o sm" href="${BASE}${esc(cur.link)}">לעמוד</a>` : ''}<button class="btn btn-l sm" data-mark="${cur.day}" aria-pressed="false">סיימתי את המשימה</button></div></section>`
+              : `<div class="card"><h2>סיימתם את כל המשימות שנפתחו עד היום</h2><p class="muted" style="margin:0">${nextLocked ? 'המשימה הבאה תיפתח ביום ' + nextLocked.day + '. בינתיים אפשר להמשיך בשיעורים או לעבור על הפריט של השבוע.' : ''}</p></div>`}
+            <h2 style="font-size:24px;margin:8px 0 0">כל המשימות</h2>
+            ${weeks.map(([a, b], i) => { const w = tasks.filter((t) => t.day >= a && t.day <= b); return w.length ? `<div class="rt-week">שבוע ${i + 1}</div><div class="rt-days">${w.map(dayRow).join('')}</div>` : ''; }).join('')}
+          </div>
+          <aside class="vstack">
+            <div class="card"><h3>התוכנית שלכם</h3><p class="muted" style="font-size:14.5px;margin:0">${esc(BIZ[o.biz] || '')}${o.biz_note ? ' · ' + esc(o.biz_note) : ''}</p>
+              <p style="margin:12px 0 0;font-weight:700">העובדים שכדאי להתחיל איתם, לפי הסדר:</p>
+              <ol class="rt-emp">${empl.map((m) => `<li><a href="${BASE}ezor-ishi/perek/?id=${m.id}">${esc(m.title)}</a></li>`).join('')}</ol>
+              <p style="margin:12px 0 0;font-size:15px"><b>רעיון למשימה ראשונה:</b> ${esc(BIZ_EXAMPLE[o.biz] || BIZ_EXAMPLE.other)}</p>
+              <p style="margin:10px 0 0;font-size:15px">לפני הכל: הפרק <a href="${BASE}ezor-ishi/perek/?id=1">"הבסיס"</a>, על פרטיות, בדיקת עובדות והוראות עבודה טובות.</p></div>
+            <div class="card"><h3>שינוי התשובות</h3><p class="muted" style="font-size:14px;margin:0 0 10px">אפשר לעדכן את סוג העסק, המטרה והזמן. המשימות שסיימתם נשמרות.</p>
+              <div class="row"><a class="btn btn-w sm" href="${BASE}ezor-ishi/30/?edit=1">עדכון התשובות</a><button class="btn btn-r sm" id="restart">להתחיל מחדש מיום 1</button></div></div>
+          </aside>
+        </div>`;
+      app.querySelectorAll('[data-mark]').forEach((b) => b.onclick = async () => {
+        const day = Number(b.dataset.mark), on = !done.has(day);
+        b.disabled = true;
+        const { error } = await sb.rpc('too_path_mark', { p_day: day, p_done: on });
+        if (error) { b.disabled = false; return toast(rErr(error), true); }
+        if (on) toast(day === 30 ? 'סיימתם את 30 הימים. כל הכבוד!' : 'כל הכבוד. המשימה סומנה.');
+        x = await retMe(); plan();
+      });
+      const r = document.getElementById('restart');
+      if (r) r.onclick = async () => {
+        if (r.dataset.sure !== '1') { r.dataset.sure = '1'; r.textContent = 'לחצו שוב: כל הסימונים יימחקו'; return; }
+        const { error } = await sb.rpc('too_onboarding_save', { p_biz: o.biz, p_goal: o.goal, p_hours: o.hours, p_note: o.biz_note, p_restart: true });
+        if (error) return toast(rErr(error), true);
+        x = await retMe(); plan(); toast('המסלול התחיל מחדש מיום 1.');
+      };
+    }
+  </script>
+</Base>

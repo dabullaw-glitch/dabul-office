@@ -2,6 +2,8 @@
 import { sb, BASE, esc, fmtDate, ils, toast, errText } from './sb.js';
 import { md, words } from './md.js';
 import { CATS } from './articles.js';
+import { renderMail, SAMPLE } from './mailtpl.js';
+import { KIND as DKIND, REASONS } from './retention.js';
 
 const $ = (id) => document.getElementById(id);
 const pane = () => $('pane');
@@ -14,7 +16,7 @@ async function loadPlanNames() {
   (data || []).forEach((p) => { PLAN[p.code] = 'קורס בודד: ' + p.name; MODNAME[p.module_id] = p.name; });
   return data || [];
 }
-const ACTIONS = { signup: 'הרשמה', checkout_test: 'רכישת בדיקה', cancel_subscription: 'ביטול חידוש מנוי', admin_grant: 'מתן גישה', admin_revoke: 'ביטול גישה', admin_block: 'חסימה', admin_unblock: 'ביטול חסימה', admin_set_role: 'שינוי הרשאה', admin_refund: 'החזר כספי', admin_record_payment: 'רישום תשלום', article_publish: 'פרסום מאמר', article_save: 'שמירת מאמר', settings: 'שינוי הגדרות' };
+const ACTIONS = { signup: 'הרשמה', checkout_test: 'רכישת בדיקה', cancel_subscription: 'ביטול חידוש מנוי', admin_grant: 'מתן גישה', admin_revoke: 'ביטול גישה', admin_block: 'חסימה', admin_unblock: 'ביטול חסימה', admin_set_role: 'שינוי הרשאה', admin_refund: 'החזר כספי', admin_record_payment: 'רישום תשלום', pause_subscription: 'עצירת מנוי לחודש', resume_subscription: 'חזרה מעצירה', renew_on: 'החזרת חידוש מנוי', article_publish: 'פרסום מאמר', article_save: 'שמירת מאמר', settings: 'שינוי הגדרות' };
 let users = [];
 
 function modal(html) { $('mbox').innerHTML = html; $('modal').hidden = false; }
@@ -24,9 +26,9 @@ const pill = (t, c = '') => `<span class="pill ${c}">${esc(t)}</span>`;
 async function rpc(name, args) { const { data, error } = await sb.rpc(name, args); if (error) { toast(errText(error), true); throw error; } return data; }
 
 const SECTIONS = [
-  ['overview', 'סקירה וכספים', overview], ['students', 'תלמידים והרשאות', students], ['orders', 'הזמנות ותשלומים', orders],
-  ['articles', 'מאמרים', articles], ['content', 'תוכן הקורס', content], ['assets', 'סקילים ותבניות', assets],
-  ['lives', 'שידורים חיים', lives], ['community', 'קהילה', community], ['plans', 'מסלולים ומחירים', plans], ['settings', 'הגדרות', settings], ['log', 'יומן פעולות', log],
+  ['overview', 'סקירה וכספים', overview], ['retention', 'שימור מנויים', retention], ['students', 'תלמידים והרשאות', students], ['orders', 'הזמנות ותשלומים', orders],
+  ['articles', 'מאמרים', articles], ['content', 'תוכן הקורס', content], ['drops', 'השבוע בצוות', drops], ['assets', 'סקילים ותבניות', assets],
+  ['lives', 'שידורים חיים', lives], ['community', 'קהילה', community], ['mails', 'מיילים אוטומטיים', mails], ['plans', 'מסלולים ומחירים', plans], ['settings', 'הגדרות', settings], ['log', 'יומן פעולות', log],
 ];
 function go(key) {
   const s = SECTIONS.find((x) => x[0] === key) || SECTIONS[0];
@@ -340,7 +342,7 @@ const localInput = (d) => { const x = new Date(d); x.setMinutes(x.getMinutes() -
 async function lives() {
   const evs = await rpc('too_admin_events');
   pane().innerHTML = `
-    <div class="spread" style="margin-bottom:16px"><div><h2 class="t">שידורים חיים</h2><p class="muted" style="margin:0">יוצרים שידור, והקישור נפתח לחברים רבע שעה לפני ההתחלה. אחרי השידור מדביקים קישור להקלטה.</p></div><button class="btn btn-k sm" id="evnew">שידור חדש</button></div>
+    <div class="spread" style="margin-bottom:16px"><div><h2 class="t">שידורים חיים</h2><p class="muted" style="margin:0">יוצרים שידור, והקישור נפתח לחברים רבע שעה לפני ההתחלה. אחרי השידור מדביקים קישור להקלטה, וההקלטה נכנסת אוטומטית לספריית החברים.</p></div><button class="btn btn-k sm" id="evnew">שידור חדש</button></div>
     <div class="tbl2"><table><thead><tr><th>מתי</th><th>נושא</th><th>למי</th><th>הקלטה</th><th></th></tr></thead><tbody>
     ${evs.length ? evs.map((e) => `<tr><td>${esc(new Date(e.starts_at).toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }))}</td><td>${esc(e.title)}${e.published ? '' : ' ' + pill('טיוטה', 'warn')}</td><td>${e.audience === 'public' ? pill('פתוח לכולם', 'l') : pill('חברים', 'k')}</td><td>${e.recording_url ? pill('יש', 'ok') : '-'}</td><td><button class="btn btn-w sm" data-ed="${e.id}">עריכה</button></td></tr>`).join('') : '<tr><td colspan="5" class="muted">עדיין אין שידורים.</td></tr>'}
     </tbody></table></div>`;
@@ -373,7 +375,7 @@ function evForm(e) {
 let commTab = 'posts';
 async function community() {
   const [{ data: posts, error }, { data: cms, error: e2 }] = await Promise.all([
-    sb.from('too_posts').select('id,author_name,kind,title,body,pinned,hidden,created_at').order('created_at', { ascending: false }).limit(150),
+    sb.from('too_posts').select('id,user_id,author_name,kind,title,body,pinned,hidden,created_at').order('created_at', { ascending: false }).limit(150),
     sb.from('too_comments').select('id,post_id,author_name,body,hidden,created_at').order('created_at', { ascending: false }).limit(200)]);
   if (error || e2) throw error || e2;
   const KIND = { post: 'שיתוף', question: 'שאלה', win: 'הצלחה', announce: 'הודעה מהצוות' };
@@ -386,10 +388,11 @@ async function community() {
       <div class="kp"><b>${posts.length}</b><span>פוסטים</span></div><div class="kp"><b>${(cms || []).length}</b><span>תגובות</span></div>
       <div class="kp"><b>${posts.filter((p) => p.hidden).length + (cms || []).filter((c) => c.hidden).length}</b><span>מוסתרים</span></div><div class="kp"><b>${posts.filter((p) => p.pinned).length}</b><span>נעוצים</span></div>
     </div>
+    <div class="card" style="margin-bottom:14px" id="spotc"></div>
     <div class="tabs2" role="tablist" aria-label="פוסטים או תגובות" style="margin-bottom:12px"><button role="tab" data-ct="posts" aria-selected="${commTab === 'posts'}">פוסטים (${posts.length})</button><button role="tab" data-ct="comments" aria-selected="${commTab === 'comments'}">תגובות (${(cms || []).length})</button></div>
     ${commTab === 'posts' ? `<div class="tbl2"><table><thead><tr><th>מתי</th><th>מי</th><th>סוג</th><th>פוסט</th><th>תגובות</th><th>פעולות</th></tr></thead><tbody>
       ${posts.length ? posts.map((p) => `<tr><td>${fmtDate(p.created_at)}</td><td>${esc(p.author_name || '')}</td><td>${pill(KIND[p.kind] || p.kind)}</td><td style="min-width:220px">${p.pinned ? '📌 ' : ''}${p.hidden ? pill('מוסתר', 'no') + ' ' : ''}<b>${esc(p.title || '')}</b> ${esc(cut(p.body, 140))}</td><td>${byPost[p.id] || 0}</td>
-        <td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="btn btn-w sm" data-h="${p.id}">${p.hidden ? 'החזרה' : 'הסתרה'}</button><button class="btn btn-w sm" data-p="${p.id}">${p.pinned ? 'ביטול נעיצה' : 'נעיצה'}</button><button class="btn btn-r sm" data-d="${p.id}">מחיקה</button></div></td></tr>`).join('') : '<tr><td colspan="6" class="muted">עדיין אין פוסטים.</td></tr>'}
+        <td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="btn btn-w sm" data-h="${p.id}">${p.hidden ? 'החזרה' : 'הסתרה'}</button><button class="btn btn-w sm" data-p="${p.id}">${p.pinned ? 'ביטול נעיצה' : 'נעיצה'}</button>${p.user_id ? `<button class="btn btn-k sm" data-sp="${p.id}">לזרקור</button>` : ''}<button class="btn btn-r sm" data-d="${p.id}">מחיקה</button></div></td></tr>`).join('') : '<tr><td colspan="6" class="muted">עדיין אין פוסטים.</td></tr>'}
       </tbody></table></div>`
     : `<div class="tbl2"><table><thead><tr><th>מתי</th><th>מי</th><th>תגובה</th><th>על הפוסט</th><th>פעולות</th></tr></thead><tbody>
       ${(cms || []).length ? cms.map((c) => `<tr><td>${fmtDate(c.created_at)}</td><td>${esc(c.author_name || '')}</td><td style="min-width:200px">${c.hidden ? pill('מוסתר', 'no') + ' ' : ''}${esc(cut(c.body, 160))}</td><td class="muted">${esc(cut(pt(c.post_id), 60))}</td>
@@ -403,4 +406,154 @@ async function community() {
   q('[data-d]').forEach((b) => twice(b, () => act(sb.from('too_posts').delete().eq('id', Number(b.dataset.d)).select('id'), 'הפוסט נמחק.'), 'בטוח? לחצו שוב'));
   q('[data-ch]').forEach((b) => b.onclick = () => { const c = cms.find((x) => x.id === Number(b.dataset.ch)); act(sb.from('too_comments').update({ hidden: !c.hidden }).eq('id', c.id).select('id'), c.hidden ? 'התגובה חזרה.' : 'התגובה הוסתרה.'); });
   q('[data-cd]').forEach((b) => twice(b, () => act(sb.from('too_comments').delete().eq('id', Number(b.dataset.cd)).select('id'), 'התגובה נמחקה.'), 'בטוח? לחצו שוב'));
+  q('[data-sp]').forEach((b) => b.onclick = () => { const p = posts.find((x) => x.id === Number(b.dataset.sp)); spotForm({ name: p.author_name || '', body: (p.title ? p.title + '. ' : '') + String(p.body).slice(0, 600), post_id: p.id }); });
+  spotlights();
+}
+
+/* ---------- member spotlight (community) ---------- */
+async function spotlights() {
+  const el = $('spotc'); if (!el) return;
+  const { data } = await sb.from('too_spotlight').select('*').order('week_start', { ascending: false }).order('id', { ascending: false }).limit(6);
+  el.innerHTML = `<div class="spread"><div><h3>חבר בזרקור</h3><p class="muted" style="margin:0;font-size:14px">החבר האחרון שמסומן כאן מופיע לכל החברים בעמוד "השבוע בצוות". לחצו "לזרקור" ליד פוסט הצלחה, או כתבו בעצמכם.</p></div><button class="btn btn-k sm" id="spnew">כתיבה חדשה</button></div>
+    ${(data || []).length ? '<div class="tbl2" style="margin-top:10px"><table><thead><tr><th>שבוע</th><th>שם</th><th>טקסט</th><th></th></tr></thead><tbody>' + data.map((s) => `<tr><td>${fmtDate(s.week_start)}</td><td>${esc(s.name)} ${s.published ? '' : pill('מוסתר', 'no')}</td><td style="font-size:14px">${esc(String(s.body).slice(0, 160))}</td><td class="row"><button class="btn btn-w sm" data-sph="${s.id}">${s.published ? 'הסתרה' : 'החזרה'}</button><button class="btn btn-r sm" data-spd="${s.id}">מחיקה</button></td></tr>`).join('') + '</tbody></table></div>' : '<p class="muted" style="margin:10px 0 0">עוד אין.</p>'}`;
+  $('spnew').onclick = () => spotForm({ name: '', body: '' });
+  el.querySelectorAll('[data-sph]').forEach((b) => b.onclick = async () => { const s = data.find((x) => x.id === Number(b.dataset.sph)); const { error } = await sb.from('too_spotlight').update({ published: !s.published }).eq('id', s.id); if (error) return toast(errText(error), true); spotlights(); });
+  el.querySelectorAll('[data-spd]').forEach((b) => twice(b, async () => { const { error } = await sb.from('too_spotlight').delete().eq('id', Number(b.dataset.spd)); if (error) return toast(errText(error), true); spotlights(); }));
+}
+function spotForm(s) {
+  modal(`<h2 style="margin-top:0">חבר בזרקור</h2><p class="muted" style="margin:0 0 12px;font-size:14px">כדאי לבקש מהחבר אישור לפני שמבליטים אותו. בלי פרטים של לקוחות.</p>
+    <div class="f"><label for="spn">שם שיוצג</label><input id="spn" maxlength="80" value="${esc(s.name)}"></div>
+    <div class="f"><label for="spb">מה הוא בנה או השיג</label><textarea id="spb" maxlength="1200">${esc(s.body)}</textarea></div>
+    <div class="row"><button class="btn btn-k" id="sps">פרסום בזרקור</button><button class="btn btn-w" id="spx">ביטול</button></div>`);
+  $('spx').onclick = closeModal;
+  $('sps').onclick = async () => {
+    const row = { name: $('spn').value.trim(), body: $('spb').value.trim(), post_id: s.post_id || null, published: true };
+    if (!row.name || row.body.length < 2) return toast('חסרים שם וטקסט.', true);
+    const { error } = await sb.from('too_spotlight').insert(row);
+    if (error) return toast(errText(error), true);
+    closeModal(); toast('פורסם בזרקור.'); spotlights();
+  };
+}
+
+/* ---------- retention dashboard ---------- */
+const RACT = { cancel: 'ביטול', pause: 'עצירה לחודש', resume: 'חזרה' };
+const MAILK = { inactive7: 'שבוע בלי כניסה', recap25: 'סיכום החודש', renew_value: 'לפני חידוש', weekly_digest: 'מה חדש השבוע', pause_resume: 'סוף העצירה' };
+const MAILS = { logged: ['נרשם, לא נשלח', 'warn'], queued: ['ממתין לשליחה', 'k'], sent: ['נשלח', 'ok'], failed: ['נכשל', 'no'], skipped: ['דולג', ''] };
+async function retention() {
+  const r = await rpc('too_ret_admin');
+  const days = (d) => d ? Math.floor((Date.now() - new Date(d)) / 864e5) : null;
+  pane().innerHTML = `
+    <div class="spread" style="margin-bottom:16px"><div><h2 class="t">שימור מנויים</h2><p class="muted" style="margin:0">מי פעיל, מי בסיכון לעזוב, ולמה אנשים מבטלים. "בסיכון": יש גישה, ולא עשו כלום 7 ימים או יותר.</p></div><button class="btn btn-w sm" id="rrun">הרצת הבדיקה היומית עכשיו</button></div>
+    <div class="grid4" style="margin-bottom:14px">
+      <div class="kp dk"><b>${r.active}</b><span>חברים עם גישה</span></div>
+      <div class="kp"><b>${r.active7}</b><span>פעילים ב־7 הימים האחרונים</span></div>
+      <div class="kp"><b>${r.at_risk}</b><span>בסיכון (7 ימים בלי פעילות)</span></div>
+      <div class="kp"><b>${r.renewing}</b><span>מנויים שמתחדשים</span></div>
+      <div class="kp"><b>${r.ending}</b><span>מנויים שלא יתחדשו (ביטלו או בהפסקה)</span></div>
+      <div class="kp"><b>${r.churned30}</b><span>עזבו ב־30 הימים האחרונים (${r.churn_rate}%)</span></div>
+      <div class="kp"><b>${r.paused}</b><span>בהפסקה של חודש</span></div>
+      <div class="kp"><b>${r.onboarded}</b><span>מילאו את שאלון 30 הימים · ${r.hours_total} שעות נחסכו בסך הכל</span></div>
+    </div>
+    <div class="grid2" style="margin-bottom:14px">
+      <div class="card"><h3>למה מבטלים ועוצרים (90 יום)</h3>${r.reasons.length ? '<div style="display:grid;gap:6px;margin-top:8px">' + r.reasons.map((x) => `<div class="spread" style="font-size:14.5px"><span>${RACT[x.action] || x.action} · ${esc(REASONS[x.reason] || (x.reason === 'none' ? 'בלי סיבה' : x.reason))}</span><b>${x.n}</b></div>`).join('') + '</div>' : '<p class="muted" style="margin:0">עוד אין ביטולים.</p>'}</div>
+      <div class="card"><h3>מה כתבו בביטול</h3>${r.notes.length ? '<div style="display:grid;gap:8px;margin-top:8px;max-height:260px;overflow:auto">' + r.notes.map((n) => `<div style="background:var(--paper);border-radius:10px;padding:8px 10px;font-size:14px"><span class="muted">${fmtDate(n.at)} · ${RACT[n.action] || ''}${n.reason ? ' · ' + esc(REASONS[n.reason] || n.reason) : ''}</span><br>${esc(n.note)}</div>`).join('') + '</div>' : '<p class="muted" style="margin:0">עוד אין הערות.</p>'}</div>
+    </div>
+    <div class="card" style="margin-bottom:14px"><div class="spread"><h3>מיילים אוטומטיים ב־30 הימים האחרונים</h3>${r.mail_ready ? pill('השליחה פעילה', 'ok') : pill('השליחה כבויה: רק נרשם מה היה נשלח', 'warn')}</div>
+      ${r.mail.length ? '<div class="row" style="margin-top:8px">' + r.mail.map((m) => pill(`${MAILK[m.kind] || m.kind}: ${m.n} (${(MAILS[m.status] || [m.status])[0]})`, (MAILS[m.status] || [])[1])).join(' ') + '</div>' : '<p class="muted" style="margin:6px 0 0">עוד לא נרשם אף מייל.</p>'}</div>
+    <div class="row" style="margin-bottom:12px" id="rf">${[['risk', 'בסיכון'], ['all', 'כולם'], ['paused', 'בהפסקה'], ['ending', 'לא יתחדשו'], ['new', 'לא מילאו שאלון']].map(([k, t], i) => `<button class="btn ${i ? 'btn-w' : 'btn-k'} sm" data-f="${k}">${t}</button>`).join('')}</div>
+    <div id="rt"></div>`;
+  let f = 'risk';
+  const draw = () => {
+    const rows = r.members.filter((m) => f === 'all' || (f === 'risk' && m.access && (days(m.last_act) === null || days(m.last_act) >= 7)) || (f === 'paused' && m.paused) || (f === 'ending' && m.sub_ends && !m.sub_renew) || (f === 'new' && m.access && !m.onboarded));
+    $('rt').innerHTML = rows.length ? '<div class="tbl2" tabindex="0" role="region" aria-label="רשימת החברים"><table><thead><tr><th>שם</th><th>מייל</th><th>פעילות אחרונה</th><th>מנוי</th><th>שיעורים</th><th>מסלול</th><th>שעות שנחסכו</th><th>רצף</th><th>תגים</th></tr></thead><tbody>' + rows.map((m) => `<tr>
+      <td><b>${esc(m.name || '')}</b></td><td dir="ltr" style="text-align:right">${esc(m.email || '')}</td>
+      <td>${m.last_act ? fmtDate(m.last_act) + ' ' + (days(m.last_act) >= 7 ? pill('לפני ' + days(m.last_act) + ' ימים', 'no') : '') : pill('אף פעם', 'no')}</td>
+      <td>${m.course ? pill('קורס', 'ok') + ' ' : ''}${m.paused ? pill('בהפסקה', 'warn') : m.sub_ends ? pill((m.sub_renew ? 'מתחדש ' : 'נגמר ') + fmtDate(m.sub_ends), m.sub_renew ? 'k' : 'warn') : ''}${!m.access && !m.paused ? pill('אין גישה', 'no') : ''}</td>
+      <td>${m.lessons}</td><td>${m.onboarded ? m.path + '/30' : '-'}</td><td>${Math.round(m.minutes / 6) / 10}</td><td>${m.streak}</td><td>${m.badges}</td></tr>`).join('') + '</tbody></table></div>' : '<div class="empty">אין חברים ברשימה הזאת.</div>';
+  };
+  $('rf').onclick = (e) => { const b = e.target.closest('[data-f]'); if (!b) return; f = b.dataset.f; $('rf').querySelectorAll('button').forEach((x) => (x.className = 'btn sm ' + (x === b ? 'btn-k' : 'btn-w'))); draw(); };
+  $('rrun').onclick = async () => { const x = await rpc('too_ret_admin_run'); toast(`הבדיקה רצה: ${x.mails} מיילים נרשמו, ${x.threads} שרשורי אתגר נפתחו.`); retention(); };
+  draw();
+}
+
+/* ---------- weekly drops ("השבוע בצוות") ---------- */
+async function drops() {
+  const { data, error } = await sb.from('too_drops').select('*').order('publish_at', { ascending: false });
+  if (error) throw error;
+  const now = Date.now();
+  const ahead = (data || []).filter((d) => d.published && new Date(d.publish_at) > now);
+  const in30 = ahead.filter((d) => new Date(d.publish_at) <= now + 30 * 864e5).length;
+  pane().innerHTML = `
+    <div class="spread" style="margin-bottom:16px"><div><h2 class="t">השבוע בצוות</h2><p class="muted" style="margin:0">פריט חדש לחברים כל שבוע. פריט עם תאריך עתידי מופיע לחברים רק בתאריך הזה, ועד אז הם רואים רק את הכותרת והתקציר ברשימת "בחודש הבא". פריט עם אתגר פותח לבד שרשור נעוץ בקהילה.</p></div><button class="btn btn-k" id="dnew">פריט חדש</button></div>
+    ${in30 < 4 ? `<div class="card" style="margin-bottom:14px;border-color:#F2B8B5" role="status"><b>שימו לב:</b> מתוזמנים רק ${in30} פריטים ל־30 הימים הקרובים. כדי שתמיד יהיה מה לחכות לו, כדאי שיהיו לפחות 4.</div>` : ''}
+    <div class="tbl2"><table><thead><tr><th>עולה ב</th><th>סוג</th><th>כותרת</th><th>מצב</th><th></th></tr></thead><tbody>
+    ${(data || []).map((d) => { const fut = new Date(d.publish_at) > now; return `<tr><td>${new Date(d.publish_at).toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'short', day: 'numeric', month: 'numeric', year: '2-digit', hour: '2-digit', minute: '2-digit' })}</td><td>${esc(DKIND[d.kind] || d.kind)}</td><td><b>${esc(d.title)}</b><br><span class="muted" style="font-size:13px">${esc(d.teaser)}</span></td><td>${!d.published ? pill('טיוטה', 'warn') : fut ? pill('מתוזמן', 'k') : pill('באוויר', 'ok')} ${d.thread_id ? pill('שרשור בקהילה', 'l') : ''}</td><td><button class="btn btn-k sm" data-e="${d.id}">עריכה</button></td></tr>`; }).join('') || '<tr><td colspan="5" class="muted">עוד אין פריטים.</td></tr>'}
+    </tbody></table></div>`;
+  const last = (data || [])[0];
+  $('dnew').onclick = () => { const d = new Date(last ? new Date(last.publish_at).getTime() + 7 * 864e5 : Date.now()); if (!last) { d.setDate(d.getDate() + ((7 - d.getDay()) % 7)); d.setHours(7, 0, 0, 0); } editDrop({ publish_at: d.toISOString(), kind: 'guide', title: '', teaser: '', body_md: '', challenge: '', minutes: 15, published: true }); };
+  pane().querySelectorAll('[data-e]').forEach((b) => (b.onclick = () => editDrop(data.find((x) => x.id === Number(b.dataset.e)))));
+}
+function editDrop(d) {
+  modal(`<div class="spread"><h2 style="margin:0">${d.id ? 'עריכת פריט' : 'פריט חדש'}</h2><button class="btn btn-w sm" id="mx">סגירה</button></div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="f"><label for="dp">מתי עולה (שעון ישראל)</label><input id="dp" type="datetime-local" value="${localInput(d.publish_at)}"></div>
+      <div class="f"><label for="dk">סוג</label><select id="dk">${Object.entries(DKIND).map(([k, t]) => `<option value="${k}" ${k === d.kind ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+    </div>
+    <div class="f"><label for="dt">כותרת</label><input id="dt" maxlength="140" value="${esc(d.title)}"></div>
+    <div class="f"><label for="ds">תקציר קצר <small>(מופיע גם ברשימת "בחודש הבא" ובמייל השבועי)</small></label><textarea id="ds" maxlength="300" style="min-height:70px">${esc(d.teaser)}</textarea></div>
+    <div class="edgrid"><div class="f"><label for="db">התוכן <small>(## כותרת, - רשימה, **מודגש**, > שורה להעתקה)</small></label><textarea id="db" style="min-height:360px">${esc(d.body_md)}</textarea></div>
+      <div class="f"><label>תצוגה מקדימה</label><div class="preview prose" id="dpv"></div></div></div>
+    <div class="f"><label for="dc">האתגר של השבוע <small>(לא חובה. אם יש, נפתח לבד שרשור נעוץ בקהילה ביום שהפריט עולה)</small></label><textarea id="dc" maxlength="1500" style="min-height:70px">${esc(d.challenge || '')}</textarea></div>
+    <div class="row"><div class="f" style="margin:0"><label for="dm">דקות עבודה</label><input id="dm" type="number" min="1" max="240" value="${d.minutes || ''}" style="width:120px"></div>
+      <label class="row" style="gap:8px"><input type="checkbox" id="dpub" ${d.published ? 'checked' : ''}> מוכן לפרסום (בלי סימון זה נשאר טיוטה)</label></div>
+    <div class="err" id="derr"></div>
+    <div class="spread" style="margin-top:14px">${d.id ? '<button class="btn btn-r sm" id="ddel">מחיקה</button>' : '<span></span>'}<button class="btn btn-k" id="dsave">שמירה</button></div>`);
+  $('mx').onclick = closeModal;
+  const upd = () => { $('dpv').innerHTML = md($('db').value); }; $('db').oninput = upd; upd();
+  $('dsave').onclick = async () => {
+    const row = { publish_at: new Date($('dp').value).toISOString(), kind: $('dk').value, title: $('dt').value.trim(), teaser: $('ds').value.trim(), body_md: $('db').value, challenge: $('dc').value.trim() || null, minutes: Number($('dm').value) || null, published: $('dpub').checked, updated_at: new Date().toISOString() };
+    if (row.title.length < 2 || row.teaser.length < 2) { $('derr').textContent = 'חסרים כותרת ותקציר.'; return; }
+    if (/[\u2013\u2014]/.test(row.title + row.teaser + row.body_md + (row.challenge || ''))) { $('derr').textContent = 'יש בטקסט קו מפריד ארוך. החליפו אותו במקף רגיל או בפסיק.'; return; }
+    const { error } = d.id ? await sb.from('too_drops').update(row).eq('id', d.id) : await sb.from('too_drops').insert(row);
+    if (error) { $('derr').textContent = errText(error); return; }
+    closeModal(); toast('נשמר.'); drops();
+  };
+  if (d.id) twice($('ddel'), async () => { const { error } = await sb.from('too_drops').delete().eq('id', d.id); if (error) return toast(errText(error), true); closeModal(); drops(); }, 'לחצו שוב למחיקה סופית');
+}
+
+/* ---------- automatic emails ---------- */
+async function mails() {
+  const [{ data: tpls, error }, log, { data: mr }] = await Promise.all([sb.from('too_mail_templates').select('*').order('kind'), rpc('too_ret_admin_mail_log'), sb.from('too_settings').select('value').eq('key', 'mail_ready').maybeSingle()]);
+  if (error) throw error;
+  const ready = mr?.value === true;
+  pane().innerHTML = `
+    <div class="spread" style="margin-bottom:12px"><div><h2 class="t">מיילים אוטומטיים</h2><p class="muted" style="margin:0">כל בוקר בודקים מי צריך מייל: שבוע בלי כניסה, סיכום החודש (יום 25), לפני חידוש, מה חדש השבוע (ימי ראשון), וסוף עצירה. כל מייל נשלח פעם אחת לכל אחד.</p></div></div>
+    <div class="card ${ready ? '' : 'dk'}" style="margin-bottom:14px" role="status">${ready ? '<b>השליחה פעילה.</b> מיילים חדשים נשלחים בכל שעה.' : '<b style="color:var(--lime)">השליחה כבויה עד ההשקה.</b> <span style="color:#CFCCC4">שום מייל לא נשלח. ברשימה למטה רואים מה היה נשלח. השליחה תתחיל כשההגדרה "מיילים מוכנים" (mail_ready) תופעל ויוגדרו כתובת השולח ומפתח השליחה. מיילים שנרשמו לפני ההפעלה לא יישלחו בדיעבד.</span>'}</div>
+    <div class="card" style="margin-bottom:14px"><h3>התבניות</h3><p class="muted" style="font-size:14px;margin:0 0 10px">אפשר לערוך את הנוסח. מילים בסוגריים כפולים, כמו {{first}}, מתמלאות לבד. שורה שהערך שלה ריק לא מופיעה במייל.</p>
+      <div class="tbl2"><table><thead><tr><th>מייל</th><th>נושא</th><th>מצב</th><th></th></tr></thead><tbody>${(tpls || []).map((t) => `<tr><td><b>${esc(t.label)}</b></td><td>${esc(t.subject)}</td><td>${t.active ? pill('פעיל', 'ok') : pill('כבוי', 'no')}</td><td class="row"><button class="btn btn-w sm" data-pv="${t.kind}">תצוגה</button><button class="btn btn-k sm" data-et="${t.kind}">עריכה</button></td></tr>`).join('')}</tbody></table></div></div>
+    <div class="card"><h3>מה נרשם (150 אחרונים)</h3>${log.length ? `<div class="tbl2" style="margin-top:8px"><table><thead><tr><th>מתי</th><th>למי</th><th>מייל</th><th>מצב</th><th></th></tr></thead><tbody>${log.map((l) => `<tr><td>${new Date(l.at).toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' })}</td><td>${esc(l.name || '')}<br><span class="muted" dir="ltr" style="font-size:12.5px">${esc(l.email || '')}</span></td><td>${esc(MAILK[l.kind] || l.kind)}</td><td>${pill((MAILS[l.status] || [l.status])[0], (MAILS[l.status] || [])[1])}</td><td><button class="btn btn-w sm" data-lv="${l.id}">איך זה נראה</button></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty" style="margin-top:8px">עוד לא נרשם אף מייל.</div>'}</div>`;
+  const T = Object.fromEntries((tpls || []).map((t) => [t.kind, t]));
+  const site = location.origin + BASE;
+  const show = (t, vars) => { const m = renderMail(t, vars, site); modal(`<div class="spread"><h2 style="margin:0">נושא: ${esc(m.subject)}</h2><button class="btn btn-w sm" id="mx">סגירה</button></div><iframe title="תצוגה מקדימה של המייל" sandbox="" style="width:100%;height:520px;border:1px solid var(--lineD);border-radius:12px;margin-top:12px;background:#fff" srcdoc="${esc(m.html)}"></iframe>`); $('mx').onclick = closeModal; };
+  pane().querySelectorAll('[data-pv]').forEach((b) => (b.onclick = () => show(T[b.dataset.pv], SAMPLE)));
+  pane().querySelectorAll('[data-lv]').forEach((b) => (b.onclick = () => { const l = log.find((x) => x.id === Number(b.dataset.lv)); if (T[l.kind]) show(T[l.kind], l.vars || {}); }));
+  pane().querySelectorAll('[data-et]').forEach((b) => (b.onclick = () => editTpl(T[b.dataset.et])));
+}
+function editTpl(t) {
+  modal(`<div class="spread"><h2 style="margin:0">עריכת מייל: ${esc(t.label)}</h2><button class="btn btn-w sm" id="mx">סגירה</button></div>
+    <div class="f" style="margin-top:14px"><label for="ts">נושא</label><input id="ts" maxlength="160" value="${esc(t.subject)}"></div>
+    <div class="f"><label for="tb">הטקסט <small>(שורה שמתחילה ב"- " היא רשימה, **מודגש**)</small></label><textarea id="tb" style="min-height:300px">${esc(t.body_md)}</textarea></div>
+    <div class="grid2"><div class="f"><label for="tc">טקסט הכפתור</label><input id="tc" value="${esc(t.cta_text || '')}"></div><div class="f"><label for="tp">לאן הכפתור מוביל (כתובת בתוך האתר)</label><input id="tp" dir="ltr" value="${esc(t.cta_path || '')}"></div></div>
+    <label class="row" style="gap:8px"><input type="checkbox" id="ta" ${t.active ? 'checked' : ''}> המייל הזה פעיל</label>
+    <div class="err" id="terr"></div>
+    <div class="row" style="margin-top:14px"><button class="btn btn-k" id="tsave">שמירה</button></div>`);
+  $('mx').onclick = closeModal;
+  $('tsave').onclick = async () => {
+    const row = { subject: $('ts').value.trim(), body_md: $('tb').value, cta_text: $('tc').value.trim() || null, cta_path: $('tp').value.trim().replace(/^\/+/, '') || null, active: $('ta').checked, updated_at: new Date().toISOString() };
+    if (/[\u2013\u2014]/.test(row.subject + row.body_md)) { $('terr').textContent = 'יש בטקסט קו מפריד ארוך. החליפו אותו במקף רגיל או בפסיק.'; return; }
+    if (row.cta_path && !/^[a-z0-9/_?=&.-]*$/.test(row.cta_path)) { $('terr').textContent = 'הכתובת יכולה לכלול רק אותיות באנגלית, מספרים ו־/ ? = & . -'; return; }
+    const { error } = await sb.from('too_mail_templates').update(row).eq('kind', t.kind);
+    if (error) { $('terr').textContent = errText(error); return; }
+    closeModal(); toast('נשמר.'); mails();
+  };
 }

@@ -1,0 +1,106 @@
+---
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/ret.css';
+---
+<Base title="ניהול המנוי וביטול | Team of One" app noindex>
+  <main class="wrap page" id="main">
+    <div class="crumbs"><a href={import.meta.env.BASE_URL + 'ezor-ishi/'}>האזור האישי</a> / ניהול המנוי וביטול</div>
+    <div id="app"><div class="card">טוען...</div></div>
+  </main>
+  <script>
+    // Fair cancel (Israeli consumer protection): the cancel button is the first thing on the page, works in one click,
+    // and takes effect immediately (no further renewal, no further charge). The reason is optional. The pause is only an
+    // optional alternative shown next to it. Nothing here blocks or hides the cancel.
+    import { sb, BASE, esc, toast } from '../../../lib/sb.js';
+    import { requireLogin, logoutBtn, loadCourse } from '../../../lib/member.js';
+    import { retMe, REASONS, rErr, ilDate, hoursOf } from '../../../lib/retention.js';
+    const app = document.getElementById('app');
+    let x, course;
+    (async () => {
+      if (!(await requireLogin())) return;
+      logoutBtn(document.getElementById('anav'));
+      try { [x, course] = await Promise.all([retMe(), loadCourse()]); } catch (e) { app.innerHTML = '<div class="card">' + esc(rErr(e)) + '</div>'; return; }
+      render();
+    })();
+    const D = (d) => ilDate(d, { year: 'numeric' });
+    function reasonFields(id) {
+      return `<div class="f"><label for="${id}r">מה הסיבה? <small>(לא חובה, עוזר לנו להשתפר)</small></label><select id="${id}r"><option value="">מעדיפים לא לציין</option>${Object.entries(REASONS).map(([k, t]) => `<option value="${k}">${esc(t)}</option>`).join('')}</select></div>
+        <div class="f"><label for="${id}n">משהו שתרצו להוסיף? <small>(לא חובה)</small></label><textarea id="${id}n" maxlength="500" style="min-height:70px"></textarea></div>`;
+    }
+    function lossList() {
+      const total = course.flat.length;
+      const nx = (x.next_drops || []).slice(0, 3);
+      return `<ul class="rt-loss">
+        <li>הגישה לכל ${total} השיעורים, לספריית החברים ולסקילים להורדה.</li>
+        <li>הפריטים השבועיים החדשים${nx.length ? ': ' + nx.map((n) => esc(n.title)).join(', ') : ''}.</li>
+        <li>הקהילה והאתגר השבועי${x.next_event ? ', והמפגש החי הבא (' + esc(x.next_event.title) + ')' : ', והמפגשים החיים'}.</li>
+        ${x.onboarding && (x.path_done || []).length < 30 ? `<li>ההמשך של מסלול 30 הימים (סיימתם ${(x.path_done || []).length} משימות).</li>` : ''}
+      </ul>
+      <p class="muted" style="margin:10px 0 0;font-size:14.5px">ההתקדמות שלכם נשמרת: ${(x.badges || []).length} תגים, ${hoursOf(x.minutes_total)} שעות שדיווחתם שנחסכו, וכל השיעורים שסיימתם. אם תחזרו, הכל יחכה לכם.</p>`;
+    }
+    function render() {
+      const renewing = !!(x.sub_ends && x.sub_renew && !x.pause);
+      let main = '';
+      if (x.pause) {
+        main = `<section class="card" aria-labelledby="ps-h"><h2 id="ps-h">המנוי בהפסקה</h2>
+          <p>החודש ששילמתם עליו ${new Date(x.pause.paid_until) > new Date() ? 'פעיל עד ' + D(x.pause.paid_until) : 'הסתיים ב־' + D(x.pause.paid_until)}. לא נשלח קישור לתשלום לחודש הבא. ב־${D(x.pause.resume_at)} נזכיר לכם שאפשר לחזור. אין שום חיוב אוטומטי.</p>
+          <div class="row"><button class="btn btn-k" id="resume">חזרה מההפסקה עכשיו</button><button class="btn btn-r" id="cancel2">ביטול מלא, בלי תזכורת</button></div></section>`;
+      } else if (renewing) {
+        main = `<section class="card" aria-labelledby="cn-h"><h2 id="cn-h">ביטול חידוש המנוי</h2>
+          <p style="margin:0 0 6px">הביטול נכנס לתוקף מיד: לא יישלח קישור לתשלום על החודש הבא, ולא יהיה חיוב נוסף. המנוי ימשיך לעבוד עד <b>${D(x.sub_ends)}</b>.</p>
+          ${reasonFields('c')}
+          <button class="btn btn-r" id="cancel">ביטול חידוש המנוי</button>
+          <h3 style="margin:22px 0 0">מה ייסגר אחרי ${D(x.sub_ends)}</h3>${lossList()}</section>`;
+      } else if (x.sub_ends) {
+        main = `<section class="card" aria-labelledby="dn-h"><h2 id="dn-h">החידוש כבר בוטל</h2><p>המנוי פעיל עד <b>${D(x.sub_ends)}</b> ולא יתחדש. לא יהיה חיוב נוסף.</p>
+          <p class="muted" style="font-size:15px">שיניתם את דעתכם? אפשר להחזיר את החידוש. כמה ימים לפני סוף החודש יישלח קישור לתשלום, ורק אם תשלמו המנוי ימשיך.</p><button class="btn btn-k sm" id="again">להחזיר את החידוש</button></section>`;
+      } else {
+        main = `<section class="card"><h2>אין מנוי חודשי פעיל</h2><p style="margin:0 0 12px">${x.course ? 'יש לכם גישה לקורס המלא. אין מנוי חודשי לבטל.' : 'אין כרגע מנוי שמתחדש, ולכן אין מה לבטל.'}</p><a class="btn btn-w sm" href="${BASE}ezor-ishi/">לאזור האישי</a></section>`;
+      }
+      const pause = renewing ? `<aside class="card rt-pause" aria-labelledby="pz-h"><h2 id="pz-h">רוצים רק הפסקה? אפשר לעצור לחודש</h2>
+          <p style="margin:0 0 10px">במקום לבטל, אפשר לדלג על החודש הבא. המנוי ימשיך עד ${D(x.sub_ends)}, אחר כך לא יישלח קישור לתשלום, ואחרי חודש נזכיר לכם שאפשר לחזור. ההתקדמות שלכם נשמרת. אין חיוב בזמן ההפסקה.</p>
+          ${reasonFields('p')}
+          <button class="btn btn-k" id="pause">עצירה לחודש</button>
+          <p class="muted" style="margin:12px 0 0;font-size:14px">לא בטוחים? אפשר גם לכתוב לנו בקהילה או להשיב לכל מייל מאיתנו.</p></aside>` : '';
+      app.innerHTML = `<h1>ניהול המנוי</h1><div class="${pause ? 'grid2' : ''}" style="align-items:start">${main}${pause}</div>`;
+      const val = (id) => ({ r: document.getElementById(id + 'r')?.value || null, n: document.getElementById(id + 'n')?.value || null });
+      const c = document.getElementById('cancel');
+      if (c) c.onclick = async () => {
+        c.disabled = true; const v = val('c');
+        const { error } = await sb.rpc('too_cancel_reasoned', { p_reason: v.r, p_note: v.n });
+        if (error) { c.disabled = false; return toast(rErr(error), true); }
+        x = await retMe(); render();
+        app.insertAdjacentHTML('afterbegin', `<div class="card dk" role="status" style="margin-bottom:16px"><b style="color:var(--lime)">החידוש בוטל.</b> <span class="rt-mut">המנוי ימשיך עד ${D(x.sub_ends)}, בלי חיוב נוסף. תודה שהייתם איתנו.</span></div>`);
+      };
+      const c2 = document.getElementById('cancel2');
+      if (c2) c2.onclick = async () => {
+        c2.disabled = true;
+        const { error } = await sb.rpc('too_cancel_reasoned', { p_reason: null, p_note: null });
+        if (error) { c2.disabled = false; return toast(rErr(error), true); }
+        toast('בוטל. לא נשלח תזכורת.'); x = await retMe(); render();
+      };
+      const p = document.getElementById('pause');
+      if (p) p.onclick = async () => {
+        p.disabled = true; const v = val('p');
+        const { data, error } = await sb.rpc('too_pause', { p_reason: v.r, p_note: v.n });
+        if (error) { p.disabled = false; return toast(rErr(error), true); }
+        toast('המנוי בהפסקה. נזכיר לכם ב־' + D(data.resume_at) + '.'); x = await retMe(); render();
+      };
+      const rs = document.getElementById('resume');
+      if (rs) rs.onclick = async () => {
+        rs.disabled = true;
+        const { data, error } = await sb.rpc('too_resume');
+        if (error) { rs.disabled = false; return toast(rErr(error), true); }
+        if (!data.renewing) { location.href = BASE + 'kniya/?plan=monthly'; return; }
+        toast('ברוכים השבים. החידוש חזר לפעול.'); x = await retMe(); render();
+      };
+      const ag = document.getElementById('again');
+      if (ag) ag.onclick = async () => {
+        ag.disabled = true;
+        const { error } = await sb.rpc('too_renew_again');
+        if (error) { ag.disabled = false; return toast(rErr(error), true); }
+        toast('החידוש חזר לפעול.'); x = await retMe(); render();
+      };
+    }
+  </script>
+</Base>

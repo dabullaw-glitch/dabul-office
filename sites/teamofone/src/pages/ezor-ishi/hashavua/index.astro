@@ -1,0 +1,74 @@
+---
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/ret.css';
+---
+<Base title="השבוע בצוות | Team of One" app noindex>
+  <main class="wrap page" id="main">
+    <div class="crumbs"><a href={import.meta.env.BASE_URL + 'ezor-ishi/'}>האזור האישי</a> / השבוע בצוות</div>
+    <div id="app"><div class="card">טוען...</div></div>
+  </main>
+  <script>
+    import { sb, BASE, esc, toast } from '../../../lib/sb.js';
+    import { requireLogin, logoutBtn } from '../../../lib/member.js';
+    import { retMe, subnav, noAccess, KIND, rErr, ilDate, md } from '../../../lib/retention.js';
+    const app = document.getElementById('app');
+    let x, drops = [];
+    (async () => {
+      if (!(await requireLogin())) return;
+      logoutBtn(document.getElementById('anav'));
+      try { x = await retMe(); } catch (e) { app.innerHTML = '<div class="card">' + esc(rErr(e)) + '</div>'; return; }
+      if (!x || !x.access) { app.innerHTML = subnav('week') + noAccess(); return; }
+      const since = new Date(Date.now() - 7 * 864e5).toISOString();
+      const [{ data: d }, { data: wins }, { data: spot }] = await Promise.all([
+        sb.from('too_drops').select('id,publish_at,kind,title,teaser,body_md,challenge,minutes,thread_id').order('publish_at', { ascending: false }).limit(60),
+        sb.from('too_posts').select('id,author_name,title,body,created_at').eq('kind', 'win').eq('hidden', false).gte('created_at', since).order('created_at', { ascending: false }).limit(5),
+        sb.from('too_spotlight').select('name,body,week_start').order('week_start', { ascending: false }).order('id', { ascending: false }).limit(1)]);
+      drops = d || [];
+      render(wins || [], (spot || [])[0]);
+    })();
+
+    function render(wins, spot) {
+      const [cur, ...past] = drops;
+      const used = new Set(x.drops_done || []);
+      const next = x.next_drops || [];
+      app.innerHTML = `${subnav('week')}
+        <h1>השבוע בצוות</h1>
+        <p class="rt-sub">כל יום ראשון עולה כאן פריט חדש: סקיל או תבנית מוכנים, מדריך קצר, עדכון על כלים, או אתגר לשבוע. משתמשים בו על משימה אמיתית, ומסמנים "השתמשתי".</p>
+        <div class="rt-grid">
+          <div class="vstack">
+            ${cur ? `<article class="card rt-drop" aria-labelledby="dr-h">
+              <div class="row"><span class="pill k">${esc(KIND[cur.kind] || '')}</span><span class="pill">פורסם ${ilDate(cur.publish_at, { year: 'numeric' })}</span>${cur.minutes ? `<span class="pill">${cur.minutes} דקות</span>` : ''}</div>
+              <h2 id="dr-h" style="font-size:clamp(24px,3vw,32px);margin:12px 0 6px">${esc(cur.title)}</h2>
+              <p class="muted" style="margin:0 0 6px;font-size:17px">${esc(cur.teaser)}</p>
+              <div class="prose">${md(cur.body_md)}</div>
+              ${cur.challenge ? `<div class="rt-chal"><b>האתגר של השבוע</b>${esc(cur.challenge)}${cur.thread_id ? `<div style="margin-top:10px"><a class="btn btn-k sm" href="${BASE}ezor-ishi/kehila/">לשרשור האתגר בקהילה</a></div>` : ''}</div>` : ''}
+              <div class="row" style="margin-top:16px">${markBtn(cur, used)}</div>
+            </article>` : '<div class="empty">הפריט הראשון יעלה כאן ביום ראשון הקרוב.</div>'}
+            ${past.length ? `<section class="card rt-arch" aria-labelledby="ar-h"><h2 id="ar-h">פריטים קודמים</h2>${past.map((p) => `<details><summary>${esc(p.title)} <span class="muted" style="font-weight:400;font-size:14px">· ${esc(KIND[p.kind] || '')} · ${ilDate(p.publish_at)}${used.has(p.id) ? ' · ✓ השתמשתם' : ''}</span></summary>
+              <div class="prose rt-drop" style="margin-top:10px">${md(p.body_md)}</div>${p.challenge ? `<div class="rt-chal"><b>האתגר של אותו שבוע</b>${esc(p.challenge)}</div>` : ''}<div class="row" style="margin-top:10px">${markBtn(p, used)}</div></details>`).join('')}</section>` : ''}
+          </div>
+          <aside class="vstack">
+            <section class="card dk" aria-labelledby="nx-h"><h2 id="nx-h" style="color:var(--lime);font-size:20px">בחודש הבא</h2>
+              ${next.length ? `<ul class="rt-list">${next.map((n) => `<li><span class="pill l">${esc(KIND[n.kind] || '')}</span> <b>${esc(n.title)}</b><br><span class="rt-mut" style="font-size:14px">${esc(n.teaser)}</span><br><span class="rt-mut" style="font-size:13px">עולה ב־${ilDate(n.at)}</span></li>`).join('')}</ul>` : '<p class="rt-mut" style="margin:0">הפריטים של החודש הבא בהכנה. כל יום ראשון עולה פריט חדש.</p>'}</section>
+            ${spot ? `<section class="card" aria-labelledby="sp-h"><h2 id="sp-h" style="font-size:20px">⭐ בזרקור השבוע: ${esc(spot.name)}</h2><p style="margin:0;white-space:pre-wrap;overflow-wrap:anywhere">${esc(spot.body)}</p></section>` : ''}
+            <section class="card" aria-labelledby="wn-h"><h2 id="wn-h" style="font-size:20px">ההצלחות של השבוע</h2>
+              ${wins.length ? `<div class="vstack" style="gap:8px;margin-top:8px">${wins.map((w) => `<div class="rt-win"><b>${esc(w.author_name || '')}</b>: ${esc(w.title ? w.title + '. ' : '')}${esc(String(w.body).slice(0, 180))}${String(w.body).length > 180 ? '...' : ''}</div>`).join('')}</div>` : '<p class="muted" style="margin:0">עוד אין השבוע. בניתם משהו? שתפו בקהילה כפוסט "הצלחה", גם אם זה קטן.</p>'}
+              <a class="btn btn-w sm" style="margin-top:12px" href="${BASE}ezor-ishi/kehila/">לשתף בקהילה</a></section>
+          </aside>
+        </div>`;
+      app.querySelectorAll('[data-used]').forEach((b) => b.onclick = async () => {
+        const id = Number(b.dataset.used), on = !used.has(id);
+        b.disabled = true;
+        const { error } = await sb.rpc('too_drop_mark', { p_drop: id, p_done: on });
+        if (error) { b.disabled = false; return toast(rErr(error), true); }
+        on ? used.add(id) : used.delete(id); x.drops_done = [...used];
+        if (on) toast('מעולה. נספר לרצף השבועי שלכם.');
+        render(wins, spot);
+      });
+    }
+    function markBtn(p, used) {
+      const on = used.has(p.id);
+      return `<button class="btn ${on ? 'btn-w' : 'btn-k'} sm" data-used="${p.id}" aria-pressed="${on}">${on ? '✓ השתמשתי (לביטול)' : 'השתמשתי בזה'}</button>`;
+    }
+  </script>
+</Base>

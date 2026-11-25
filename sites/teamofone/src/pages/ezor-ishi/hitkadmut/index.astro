@@ -1,0 +1,96 @@
+---
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/ret.css';
+---
+<Base title="ההתקדמות שלי | Team of One" app noindex>
+  <main class="wrap page" id="main">
+    <div class="crumbs"><a href={import.meta.env.BASE_URL + 'ezor-ishi/'}>האזור האישי</a> / ההתקדמות שלי</div>
+    <div id="app"><div class="card">טוען...</div></div>
+  </main>
+  <script>
+    import { sb, BASE, esc, toast } from '../../../lib/sb.js';
+    import { requireLogin, logoutBtn } from '../../../lib/member.js';
+    import { retMe, subnav, noAccess, BADGES, rErr, hoursOf, ilDate, recapCard } from '../../../lib/retention.js';
+    const app = document.getElementById('app');
+    const IDEAS = ['תשובות לפניות', 'הצעות מחיר', 'פוסטים לרשתות', 'סיכומי פגישות', 'מיילים ללקוחות', 'מאמר לאתר', 'דוח שבועי', 'מעקב אחרי לקוחות'];
+    let x, log = [];
+    (async () => {
+      if (!(await requireLogin())) return;
+      logoutBtn(document.getElementById('anav'));
+      await load();
+    })();
+    async function load() {
+      try { x = await retMe(); } catch (e) { app.innerHTML = '<div class="card">' + esc(rErr(e)) + '</div>'; return; }
+      if (!x || !x.access) { app.innerHTML = subnav('me') + noAccess(); return; }
+      const { data } = await sb.from('too_time_saved').select('id,task,minutes,created_at').order('created_at', { ascending: false }).limit(100);
+      log = data || [];
+      render();
+    }
+    function weeksRow() {
+      // the last 10 weeks, Sunday to Saturday, oldest first
+      const on = new Set((x.weeks || []).map(String));
+      const d = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
+      d.setDate(d.getDate() - d.getDay());
+      const out = [];
+      for (let i = 9; i >= 0; i--) { const w = new Date(d); w.setDate(d.getDate() - i * 7); const k = w.getFullYear() + '-' + String(w.getMonth() + 1).padStart(2, '0') + '-' + String(w.getDate()).padStart(2, '0'); out.push([k, on.has(k)]); }
+      return `<div class="rt-weeks" role="img" aria-label="${out.filter((w) => w[1]).length} שבועות פעילים מתוך 10 האחרונים">${out.map(([k, a]) => `<span class="${a ? 'on' : ''}" title="שבוע שמתחיל ב־${k.split('-').reverse().join('.')}"></span>`).join('')}</div>`;
+    }
+    function render() {
+      const earned = Object.fromEntries((x.badges || []).map((b) => [b.code, b.at]));
+      const certs = x.certs || [];
+      const mainDone = certs.filter((c) => c.n >= 1 && c.n <= 10).length === 10;
+      const day = x.cycle && x.cycle.day;
+      app.innerHTML = `${subnav('me')}
+        <h1>ההתקדמות שלי</h1>
+        <p class="rt-sub">כל מה שעשיתם בצוות במקום אחד: הרצף השבועי, התגים, הזמן שהעובדים שלכם חוסכים, והתעודות.</p>
+        <div class="grid4" style="margin-bottom:18px">
+          <div class="kp dk"><b>${x.streak || 0}</b><span>${x.streak === 1 ? 'שבוע פעיל ברצף' : 'שבועות פעילים ברצף'}</span></div>
+          <div class="kp"><b>${hoursOf(x.minutes_total)}</b><span>שעות שנחסכו לפי הדיווחים שלכם</span></div>
+          <div class="kp"><b>${(x.badges || []).length}</b><span>תגים מתוך ${BADGES.length}</span></div>
+          <div class="kp"><b>${(x.path_done || []).length}</b><span>משימות במסלול 30 הימים</span></div>
+        </div>
+        ${day >= 20 && day <= 25 ? '<p class="pill l" style="margin:0 0 10px">הסיכום של החודש שלכם מוכן</p>' : ''}
+        <div class="rt-grid">
+          <div class="vstack">
+            ${recapCard(x, true)}
+            <section class="card" aria-labelledby="hr-h"><h2 id="hr-h">כמה זמן העובדים שלכם חסכו</h2>
+              <p class="muted" style="margin:0 0 12px;font-size:15px">אחרי שעובד דיגיטלי עשה משימה בשבילכם, כתבו איזו משימה ובערך כמה דקות זה חסך לעומת איך שעשיתם אותה קודם. הערכה מספיקה. הסכום מצטבר כאן.</p>
+              <form class="rt-hrs" id="hf">
+                <div class="f"><label for="ht">איזו משימה</label><input id="ht" list="hideas" maxlength="120" required placeholder="לדוגמה: תשובות לפניות"><datalist id="hideas">${IDEAS.map((i) => `<option value="${i}">`).join('')}</datalist></div>
+                <div class="f"><label for="hm">כמה דקות נחסכו</label><select id="hm"><option value="15">15 דקות</option><option value="30" selected>30 דקות</option><option value="60">שעה</option><option value="90">שעה וחצי</option><option value="120">שעתיים</option><option value="180">3 שעות</option><option value="300">5 שעות</option></select></div>
+                <button class="btn btn-k sm" type="submit">הוספה</button>
+              </form>
+              ${log.length ? `<div class="rt-log">${log.map((l) => `<div><span>${esc(l.task)} · ${l.minutes >= 60 ? hoursOf(l.minutes) + ' שעות' : l.minutes + ' דקות'} <span class="muted">· ${ilDate(l.created_at)}</span></span><button data-del="${l.id}" aria-label="מחיקה: ${esc(l.task)}">מחיקה</button></div>`).join('')}</div>` : '<p class="muted" style="margin:12px 0 0">עוד אין דיווחים. הדיווח הראשון שלכם יופיע כאן.</p>'}
+            </section>
+            <section class="card" aria-labelledby="bd-h"><h2 id="bd-h">התגים שלכם</h2>
+              <div class="rt-badges">${BADGES.map((b) => `<div class="rt-bd ${earned[b.code] ? 'on' : 'off'}"><i aria-hidden="true">${b.i}</i><b>${esc(b.t)}</b><span>${earned[b.code] ? 'התקבל ב־' + ilDate(earned[b.code], { year: 'numeric' }) : esc(b.d)}</span></div>`).join('')}</div>
+            </section>
+          </div>
+          <aside class="vstack">
+            <section class="card" aria-labelledby="st-h"><h2 id="st-h" style="font-size:20px">הרצף השבועי</h2>
+              <p class="muted" style="margin:0;font-size:14.5px">שבוע נספר כשעשיתם בו משהו: שיעור, משימה במסלול, פריט שבועי, דיווח על זמן, או פוסט בקהילה. 10 השבועות האחרונים:</p>${weeksRow()}</section>
+            <section class="card" aria-labelledby="ce-h"><h2 id="ce-h" style="font-size:20px">התעודות שלי</h2>
+              ${certs.length || mainDone ? `<ul class="rt-list">${mainDone ? `<li><a href="${BASE}ezor-ishi/teuda/?c=course"><b>🏆 הקורס המלא</b></a></li>` : ''}${certs.map((c) => `<li><a href="${BASE}ezor-ishi/teuda/?m=${c.module_id}">${esc(c.title)}</a> <span class="muted" style="font-size:13px">· ${ilDate(c.done_at, { year: 'numeric' })}</span></li>`).join('')}</ul>` : '<p class="muted" style="margin:0">כשתסיימו את כל השיעורים בפרק או בקורס, התעודה תופיע כאן.</p>'}</section>
+            ${x.next_event ? `<section class="card dk" aria-labelledby="ev-h"><h2 id="ev-h" style="color:var(--lime);font-size:20px">המפגש החי הבא</h2><p style="margin:0 0 10px"><b>${esc(x.next_event.title)}</b><br><span class="rt-mut">${new Date(x.next_event.starts_at).toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem', weekday: 'long', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' })}</span></p><a class="btn btn-l sm" href="${BASE}ezor-ishi/laiv/">לפרטים ולהוספה ליומן</a></section>` : ''}
+            ${x.sub_ends || x.pause ? `<section class="card" aria-labelledby="sb-h"><h2 id="sb-h" style="font-size:20px">המנוי שלי</h2><p style="margin:0 0 10px">${x.pause ? 'בהפסקה עד ' + ilDate(x.pause.resume_at, { year: 'numeric' }) : x.sub_renew ? 'מתחדש ב־' + ilDate(x.sub_ends, { year: 'numeric' }) : 'פעיל עד ' + ilDate(x.sub_ends, { year: 'numeric' }) + ', בלי חידוש'}</p><a class="btn btn-w sm" href="${BASE}ezor-ishi/bitul/">ניהול המנוי וביטול</a></section>` : ''}
+          </aside>
+        </div>`;
+      document.getElementById('hf').onsubmit = async (e) => {
+        e.preventDefault();
+        const t = document.getElementById('ht').value.trim();
+        if (t.length < 2) return toast('כתבו איזו משימה העובד עשה.', true);
+        const b = e.target.querySelector('button'); b.disabled = true;
+        const { error } = await sb.rpc('too_time_add', { p_task: t, p_minutes: Number(document.getElementById('hm').value) });
+        b.disabled = false;
+        if (error) return toast(rErr(error), true);
+        toast('נוסף. כל הכבוד לצוות שלכם.'); load();
+      };
+      app.querySelectorAll('[data-del]').forEach((b) => b.onclick = async () => {
+        if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = 'לחצו שוב'; return; }
+        const { error } = await sb.from('too_time_saved').delete().eq('id', Number(b.dataset.del));
+        if (error) return toast(rErr(error), true);
+        load();
+      });
+    }
+  </script>
+</Base>
