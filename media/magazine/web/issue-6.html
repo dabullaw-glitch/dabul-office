@@ -1,0 +1,124 @@
+<style>
+.dmag{--ink:#141414;--g1:#E7CD96;--g2:#C5A25A;--g3:#A88A4C;--bg:#F8F8FD;--mut:#54595F;--line:#E7E7F1;
+ color:var(--ink);font-family:inherit;font-size:17px;line-height:1.7;max-width:1192px;margin:0 auto;padding:24px 16px 64px}
+.dmag *{box-sizing:border-box}
+.dmag h1,.dmag h2,.dmag h3{margin:0;font-weight:800;color:inherit;text-wrap:balance}
+.dmag a{text-decoration:none}
+html,body{overflow-x:clip}
+.dmag .hero{position:relative;overflow:hidden;border-radius:0;background:radial-gradient(120% 140% at 85% 0%,#2a2620 0%,#141414 50%,#0B0B0B 100%);color:#fff;width:100vw;max-width:100vw;margin:-24px calc(50% - 50vw) 0;padding:64px max(24px,calc(50vw - 564px)) 68px}
+.dmag .hero:before{content:"";position:absolute;inset:0;background:var(--heroimg) center 62%/cover no-repeat;opacity:.34;filter:grayscale(.2)}
+.dmag .hero>*{position:relative}
+.dmag .kick{color:var(--g2);font-weight:700;letter-spacing:.06em;font-size:15px;display:flex;align-items:center;gap:12px}
+.dmag .kick:after{content:"";width:110px;height:2px;background:linear-gradient(to left,var(--g2),transparent)}
+.dmag .hero h1{font-size:clamp(40px,6vw,72px);line-height:1.1;margin:12px 0 14px;color:var(--g1)}
+.dmag .hero p{font-size:clamp(17px,2vw,21px);line-height:1.6;max-width:720px;color:#DCE2EC;margin:0}
+.dmag .badges{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.dmag .badge{border:1.5px solid rgba(231,205,150,.6);color:#fff;border-radius:40px;padding:7px 16px;font-size:15px;font-weight:500}
+.dmag .badge:hover{background:rgba(231,205,150,.12)}
+.dmag .st{display:flex;align-items:center;gap:14px;font-size:15px;font-weight:800;color:var(--g3);letter-spacing:.06em;margin:52px 0 18px}
+.dmag .st:after{content:"";flex:1;height:1px;background:var(--line)}
+.dmag .latest{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:48px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:32px;box-shadow:0 10px 30px rgba(20,20,20,.06)}
+.dmag .cover{position:relative;display:block}
+.dmag .cover img{width:100%;height:auto;border-radius:8px;display:block;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.dmag .new{position:absolute;top:-12px;right:-12px;background:var(--g1);color:var(--ink);font-weight:800;font-size:14px;border-radius:30px;padding:5px 14px}
+.dmag .meta{font-size:15px;color:var(--mut);font-weight:500}
+.dmag .latest h2{font-size:clamp(26px,3.2vw,40px);line-height:1.2;margin:8px 0 16px}
+.dmag ul.heads{list-style:none;display:grid;gap:10px;margin:0 0 26px;padding:0}
+.dmag ul.heads li{font-size:18px;display:flex;gap:12px;align-items:baseline}
+.dmag ul.heads li:before{content:"";width:9px;height:9px;background:var(--g2);transform:rotate(45deg);flex:none;margin-top:8px}
+.dmag .btns{display:flex;gap:10px;flex-wrap:wrap}
+.dmag .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:8px;padding:12px 22px;font-weight:700;font-size:16px;border:1.5px solid var(--ink)}
+.dmag .btn.pri{background:var(--ink);color:var(--g1)}
+.dmag .btn.sec{color:var(--ink);background:#fff}
+.dmag .btn.sm{padding:8px 14px;font-size:14.5px}
+.dmag .inside{margin-top:36px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px 32px}
+.dmag .inside h2{font-size:26px;margin-bottom:4px}
+.dmag .inside .sub{color:var(--mut);font-size:15px;margin:0 0 14px}
+.dmag .story{display:grid;grid-template-columns:44px minmax(0,1fr);gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.dmag .story .n{width:40px;height:40px;border-radius:50%;background:var(--ink);color:var(--g1);display:flex;align-items:center;justify-content:center;font-weight:800}
+.dmag .story h3{font-size:19px;margin-bottom:4px;line-height:1.4}
+.dmag .story p{font-size:16px;line-height:1.65;color:#3a3f45;margin:0}
+.dmag .story p b{color:var(--ink)}
+.dmag .author{margin-top:36px;display:flex;gap:22px;align-items:center;background:#fff;border:1px solid var(--line);border-right:4px solid var(--g2);border-radius:16px;padding:24px 28px}
+.dmag .author img{width:96px!important;height:96px!important;border-radius:50%;object-fit:cover;flex:none}
+.dmag .author b{font-size:20px;display:block}
+.dmag .author .role{color:var(--g3);font-weight:700;font-size:15px;margin:2px 0 6px}
+.dmag .author p{font-size:15.5px;color:#3a3f45;line-height:1.6;margin:0}
+.dmag .author .upd{font-size:13.5px;color:var(--mut);margin-top:6px}
+.dmag .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.dmag .card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.dmag .card img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;display:block}
+.dmag .card .b{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.dmag .card .no{font-size:14px;color:var(--g3);font-weight:800}
+.dmag .card .dt{align-self:flex-start;margin-top:-4px;font-size:13.5px;color:var(--mut);font-weight:500;white-space:nowrap;unicode-bidi:isolate}
+.dmag .meta .dt{white-space:nowrap;unicode-bidi:isolate}
+.dmag .card h3{font-size:19px;line-height:1.35}
+.dmag .card p{font-size:15px;color:var(--mut);line-height:1.55;flex:1;margin:0 0 8px}
+.dmag .cta{margin-top:52px;background:var(--ink);color:#fff;border-radius:16px;padding:30px 36px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.dmag .cta b{font-size:23px;display:block}
+.dmag .cta span{display:block;color:#C9D1DD;font-size:16.5px;margin-top:4px}
+.dmag .cta .btn{background:var(--g1);color:var(--ink);border-color:var(--g1)}
+.dmag .disc{font-size:14px;color:var(--mut);margin-top:18px}
+.dmag .story h3 a{color:inherit}
+.dmag .srcname{font-size:14px;color:var(--mut);margin-top:6px}
+.dmag .more{display:inline-block;margin-top:8px;font-weight:700;color:var(--g3);font-size:15px}
+.dmag .toc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 28px;margin-top:28px}
+.dmag .toc b{display:block;font-size:17px;margin-bottom:8px}
+.dmag .toc ol{margin:0;padding:0 22px 0 0;display:grid;gap:6px}
+.dmag .toc a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--g2);text-underline-offset:3px}
+.dmag .art{margin-top:28px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px 32px 28px}
+.dmag .art section{padding-top:26px;scroll-margin-top:110px}
+.dmag .art section+section{border-top:1px solid var(--line);margin-top:22px}
+.dmag .art h2{font-size:clamp(22px,2.6vw,28px);line-height:1.3;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
+.dmag .art h2 .n{flex:none;width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--g1);display:inline-flex;align-items:center;justify-content:center;font-size:16px;margin-top:2px}
+.dmag .art p{margin:0 0 12px;font-size:17px;line-height:1.8;color:#2b2f34}
+.dmag .art p a{color:var(--g3);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.dmag .means{background:var(--bg);border-right:4px solid var(--g2);border-radius:10px;padding:14px 18px;font-size:16.5px;line-height:1.7}
+.dmag .means b{color:var(--g3)}
+.dmag .faq{margin-top:28px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px 32px}
+.dmag .faq h2{font-size:24px;margin-bottom:8px}
+.dmag .faq h3{font-size:18px;margin:16px 0 4px}
+.dmag .faq p{margin:0;font-size:16.5px;color:#3a3f45}
+.dmag .pn{display:flex;justify-content:space-between;gap:12px;margin-top:28px;flex-wrap:wrap}
+.dmag .crumbs{font-size:14px;color:#C9D1DD;margin-bottom:6px}
+.dmag .crumbs a{color:var(--g1)}
+.dmag .hero.small h1{font-size:clamp(30px,4.4vw,52px)}
+@media (max-width:767px){
+ .dmag .art{padding:4px 18px 20px}
+ .dmag .art p{font-size:16px}
+ .dmag .toc,.dmag .faq{padding:18px}
+}
+@media (max-width:767px){
+ .dmag{padding:12px 12px 48px}
+ .dmag .hero{padding:40px 20px 44px;border-radius:0;width:100vw;max-width:100vw;margin:-12px calc(50% - 50vw) 0}
+ .dmag .latest{grid-template-columns:1fr;gap:24px;padding:20px}
+ .dmag .cover{width:78%;margin:0 auto}
+ .dmag ul.heads li{font-size:16.5px}
+ .dmag .latest .btn{flex:1}
+ .dmag .inside{padding:20px}
+ .dmag .story{grid-template-columns:34px minmax(0,1fr);gap:10px}
+ .dmag .story .n{width:32px;height:32px;font-size:14px}
+ .dmag .story p{font-size:15px}
+ .dmag .author{flex-direction:column;text-align:center;padding:20px}
+ .dmag .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .dmag .card .b{padding:12px}
+ .dmag .card h3{font-size:15.5px}
+ .dmag .card p{display:none}
+ .dmag .card .btns{flex-direction:column}
+ .dmag .cta{padding:22px}
+ .dmag .cta .btn{width:100%}
+}
+</style>
+<div class="dmag" style="--heroimg:url(https://dabullaw.co.il/wp-content/uploads/2026/10/magazine-hero-buildings.jpg)">
+<header class="hero small"><div class="crumbs"><a href="https://dabullaw.co.il/magazine/">מגזין הנדל״ן</a> · גיליון #6 · <span dir="ltr" style="unicode-bidi:isolate">19-25.11.2026</span></div><h1>מגזין הנדל״ן, גיליון 6: הריבית נשארה 3.25%: ההקלה במשכנתא תחכה</h1>
+<p>בנק ישראל השאיר את הריבית על 3.25%, בית משפט בכפר סבא חייב יזמית לשלם לקונים 30 אלף ש״ח בכל חודש עד שתמסור את הדירה, במתחם שנפגע מטיל ברחובות הסתיים המועד לחתום עם יזם, פרויקטים של פינוי בינוי בהרצליה ובכפר סבא התקדמו, ורעננה אישרה תקן חניה חדש. אלה החדשות של השבוע 19 עד 25 בנובמבר 2026, ומה הן אומרות לכם.</p>
+<div class="badges"><a class="badge" href="https://dabullaw.co.il/wp-content/uploads/2026/11/real-estate-magazine-6.pdf" target="_blank" rel="noopener">צפייה במגזין המלא</a><a class="badge" href="https://dabullaw.co.il/wp-content/uploads/2026/11/real-estate-magazine-6.pdf" download>הורדה כקובץ PDF</a><a class="badge" href="https://dabullaw.co.il/magazine/#archive">כל הגיליונות</a></div></header>
+<nav class="toc" aria-label="תוכן הגיליון"><b>בגיליון הזה</b><ol><li><a href="#s1">הריבית נשארה 3.25%: ההקלה במשכנתא תחכה</a></li><li><a href="#s2">הדירה לא נמסרה: 30 אלף ש״ח בכל חודש</a></li><li><a href="#s3">נפגעו מטיל: 95 ימי עבודה להחליט</a></li><li><a href="#s4">הרצליה וכפר סבא: פינוי בינוי מתקדם</a></li><li><a href="#s5">רעננה: חניה אחת לדירה ליד המטרו</a></li></ol></nav>
+<article class="art"><section id="s1"><h2><span class="n">1</span><span>הריבית נשארה 3.25%: ההקלה במשכנתא תחכה</span></h2><p>בנק ישראל השאיר ביום שני, 23 בנובמבר 2026, את הריבית ללא שינוי, על 3.25%. זו הפעם השנייה ברצף שהריבית לא זזה, אחרי שלוש הורדות במאי, ביולי ובספטמבר. הפריים, שהוא הריבית של בנק ישראל ועוד 1.5%, נשאר 4.75%. מדד המחירים לצרכן ירד באוקטובר ב־0.1%, ובשנה האחרונה עלה ב־1.1% בלבד, מתחת לטווח היעד של 1% עד 3%. ההחלטה הבאה תהיה ב־4 בינואר 2027.</p><p>ההחלטה התקבלה בזמן שהדולר מתחזק. לפי פואנטה, אנליסט שצוטט שם אמר שהורדה עכשיו עלולה להחליש את השקל ולייקר את היבוא, והוא מצפה להורדה במהלך 2027. אנשי נדל״ן שצוטטו באותה כתבה ביקשו דווקא להוריד את הריבית, ואחד מהם ביקש גם להפחית את מס הרכישה של 8% על דירה שנייה.</p><p>למי שיש משכנתא במסלול פריים, ההחזר החודשי לא משתנה הפעם, וההקלה מההורדות הקודמות נשארת. לפי חישוב של התאחדות יועצי המשכנתאות שהובא במעריב, על 450 אלף ש״ח במסלול פריים ל־25 שנה משלמים היום כ־334 ש״ח פחות בחודש מאשר כשהפריים היה 6%. מי ששוקל מחזור צריך לבדוק קודם את עמלת הפירעון המוקדם, שלפי פואנטה יכולה להגיע לעשרות אלפי שקלים. על הקשר בין הריבית לשוק הדירות כתבנו במדריך <a href="https://dabullaw.co.il/%d7%94%d7%a9%d7%a4%d7%a2%d7%aa-%d7%94%d7%a8%d7%99%d7%91%d7%99%d7%aa-%d7%a2%d7%9c-%d7%a9%d7%95%d7%a7-%d7%94%d7%a0%d7%93%d7%9c%d7%9f/">איך הריבית משפיעה על הכיס שלכם</a>.</p><div class="means"><b>מה זה אומר לכם:</b> במסלול פריים ההחזר החודשי לא משתנה הפעם, ומסלול בריבית קבועה לא מושפע. מי ששוקל מחזור צריך לבדוק קודם את עמלת הפירעון המוקדם.</div><div class="srcname">מקור: מעריב 23.11.2026 · פואנטה 23.11.2026</div></section><section id="s2"><h2><span class="n">2</span><span>הדירה לא נמסרה: 30 אלף ש״ח בכל חודש</span></h2><p>השופטת חגית בולמש מבית משפט השלום בכפר סבא חייבה את חברת בראשית השחר השקעות ונכסים ואת בעל השליטה בה, שהוא גם ערב אישי, לשלם לזוג קונים פיצוי זמני של 30 אלף ש״ח בכל חודש. הזוג קנה ביוני 2024 דופלקס ברחוב דיזנגוף 27 בתל אביב, בפרויקט תמ״א 38/2, ב־9 מיליון ש״ח, ושילם כ־8.1 מיליון. מועד המסירה בחוזה היה 18 בפברואר 2025.</p><p>לבניין אין עדיין טופס 4. לפי מרכז הנדל״ן, העירייה התנתה אותו בהשלמת 12 מתקני חניה או בערבות של 70 אלף ש״ח לכל חניה, ועוד חסרים אישור כבאות ופתרון לחדר השנאים. החברה טענה שמסרה מפתח, שהקונים לא שילמו את היתרה ושהטופס יתקבל בקרוב. השופטת קבעה שהחברה לא הציגה מסמך מקצועי שמראה מתי יתקבל הטופס, ושהפיצוי לפי חוק המכר משולם בלי להוכיח נזק.</p><p>הקונים ביקשו פי 1.5 משכר דירה של 20 אלף ש״ח שקבע שמאי, ובית המשפט פסק 30 אלף ש״ח בחודש, מ־20 באוקטובר 2026 ועד שיתקבל טופס 4 והדירה תימסר בפועל. הסכומים הם מקדמה על הפיצוי הסופי, ואם התביעה תידחה יוחזרו עם הצמדה וריבית. בעל השליטה אמר שיבקש לערער. מה מגיע כשהקבלן מאחר מוסבר בעמוד <a href="https://dabullaw.co.il/%d7%90%d7%99%d7%97%d7%95%d7%a8-%d7%91%d7%9e%d7%a1%d7%99%d7%a8%d7%aa-%d7%93%d7%99%d7%a8%d7%94-%d7%9e%d7%a7%d7%91%d7%9c%d7%9f/">איחור במסירת דירה מקבלן</a>, ואפשר לחשב סכום משוער עם <a href="https://dabullaw.co.il/calculators/late-delivery/">מחשבון הפיצוי על איחור</a>.</p><div class="means"><b>מה זה אומר לכם:</b> חוק המכר נותן פיצוי על איחור במסירה בלי צורך להוכיח נזק. כדאי לשמור את החוזה וכל התכתבות, ולא לוותר על הפיצוי לפני שבודקים.</div><div class="srcname">מקור: מרכז הנדל״ן 23.11.2026</div></section><section id="s3"><h2><span class="n">3</span><span>נפגעו מטיל: 95 ימי עבודה להחליט</span></h2><p>ביוני 2025 נפגע מרכז רחובות מטיל, וכ־21 בניינים של עד חמש קומות נפגעו. מתחם טלר, ביל״ו וחרל״פ הוכרז כאזור שיקום לפי חוק שיקום נזקי מלחמה בדרך של התחדשות עירונית, ומועד ההכרזה נקבע ל־30 ביוני 2026. במתחם כ־65 בעלי זכויות, מהם כ־20 בעלי חנויות, ומתוכננות בו כ־240 דירות חדשות ושטחי מסחר. המועד האחרון להציג חוזים עם יזם היה 23 בנובמבר 2026, אחרי 95 ימי עבודה.</p><p>השבוע כתבו במרכז הנדל״ן עורכות דין שמייצגות חלק מהבעלים, שהחוק דורש מכירה של כל הזכויות ליזם. בעסקאות עם בעלי חנויות ומגרשים מקובל למכור רק חלק מהזכויות תמורת דירות או שטחים חדשים, ומבנה כזה עלול לחייב מס שבח, מס רכישה ומע״מ. לדבריהן יזמים גדולים הביעו עניין, אבל לא נחתמה עסקה, והן ביקשו לקבוע דרך להאריך מועדים ופתרון מס לעסקאות כאלה.</p><p>לפי הרשות הממשלתית להתחדשות עירונית, החוק לא מאפשר להאריך את המועדים, ואם לא יוצגו חוזים בזמן ההכרזה תבוטל, ולא יהיה אפשר להשתמש בכלים של החוק במתחם. מי שהבניין שלו מוכרז צריך לרשום את כל המועדים, להעביר מסמכים לשמאי בזמן, ולבדוק את המס לפני החתימה. על הפטורים ממס לדיירים אפשר לקרוא בעמוד <a href="https://dabullaw.co.il/%d7%94%d7%90%d7%9d-%d7%93%d7%99%d7%99%d7%a8%d7%99%d7%9d-%d7%9e%d7%a9%d7%9c%d7%9e%d7%99%d7%9d-%d7%9e%d7%a1-%d7%91%d7%a4%d7%99%d7%a0%d7%95%d7%99-%d7%91%d7%99%d7%a0%d7%95%d7%99-%d7%94%d7%a4%d7%98%d7%95/">האם דיירים משלמים מס בפינוי בינוי</a>.</p><div class="means"><b>מה זה אומר לכם:</b> בבניין שהוכרז כמתחם שיקום צריך לרשום את כל המועדים מיום ההכרזה, להעביר מסמכים לשמאי בזמן, ולבדוק מראש את המס בעסקה, בעיקר בנכס מסחרי.</div><div class="srcname">מקור: מרכז הנדל״ן 23.11.2026 · מרכז הנדל״ן 9.11.2026</div></section><section id="s4"><h2><span class="n">4</span><span>הרצליה וכפר סבא: פינוי בינוי מתקדם</span></h2><p>מתחם הכוזרי בהרצליה משתרע על כ־8 דונם בין הרחובות הכוזרי, מזא״ה, העצמאות וקהילת ציון. לפי מיקומי, יוקמו בו שישה בנייני מגורים עם 204 דירות במקום 66 הדירות שיש היום, וגם רחבה עירונית, מסחר וחניה תת קרקעית. היזמיות הן אפריקה התחדשות עירונית ומצלאוי.</p><p>הדרך הייתה ארוכה. מפגש השיתוף הראשון היה בנובמבר 2016, התוכנית קיבלה תוקף בספטמבר 2021, והפרסום ברשומות היה במאי 2023. במרץ 2026 ניתן היתר להריסה, חפירה ודיפון, ובחודש יולי התחילו המכירות. לפי מצגת למשקיעים, הסיום צפוי באפריל 2030, ועכשיו נשלחו לבעלי הדירות הודעות פינוי.</p><p>בכפר סבא בחרו בעלי הזכויות בכנס חתימות בחברת תדהר לקדם פינוי בינוי במתחם של כ־250 תתי חלקות, ובהן דירות, חנויות ומשרדים, ברחובות ויצמן, רוטשילד, עמרמי, שרת והבנים, לאורך ציר המטרו המתוכנן. במתחם גם בית כנסת שמיועד לשימור. מי שמקבל הודעת פינוי או מתבקש לחתום צריך לבדוק מה ההסכם קובע, ומה <a href="https://dabullaw.co.il/developer-guarantees-tenant-urban-renewal/">הערבויות שדייר צריך לקבל מהיזם</a>.</p><div class="means"><b>מה זה אומר לכם:</b> מי שמקבל הודעת פינוי צריך לבדוק בהסכם מתי צריך לפנות, מי משלם שכר דירה בזמן הבנייה ואילו ערבויות יקבל.</div><div class="srcname">מקור: מיקומי 23.11.2026 · מיקומי 23.11.2026</div></section><section id="s5"><h2><span class="n">5</span><span>רעננה: חניה אחת לדירה ליד המטרו</span></h2><p>ועדת המשנה לתכנון ובנייה של רעננה אישרה פה אחד, בישיבה ב־16 בנובמבר 2026, מדיניות חניה חדשה שמחליפה את המדיניות של 2016. ליד שתי הטבעות הראשונות של תחנות המטרו, בשלב הביניים, התקן יהיה חניה אחת לדירה בלי קשר לגודל הדירה, בכפוף לתוכנית המטרו.</p><p>בשאר העיר, בבנייה חדשה רגילה, התקן הוא 1.3 חניות לדירה עד 80 מ״ר, 1.7 לדירה של 81 עד 120 מ״ר, ו־2 לדירה גדולה יותר. במתחמים החדשים, כמו משולש גבעת חן ורעננה מערב, התקן הוא 2 חניות לדירה מעל 80 מ״ר, ובבתים צמודי קרקע לפחות 2. בפרויקטים של הריסה ובנייה מחדש התקן הוא חניה אחת עד 80 מ״ר, 1.5 עד 120 מ״ר ו־2 מעל זה.</p><p>בערים השכנות המצב שונה. בהרצליה התקן הוא 1.33 חניות לדירה עד 120 מ״ר עד 300 מטר מציר ראשי, ו־1.5 רחוק יותר. בכפר סבא, בהריסה ובנייה לפי תמ״א 38, התקן הוא חניה אחת לכל דירה קיימת. מי שקונה דירה חדשה צריך לבדוק בחוזה ובהיתר כמה חניות יש ולמי הן מוצמדות. על מה בודקים לפני עסקה בעיר אפשר לקרוא בעמוד <a href="https://dabullaw.co.il/%d7%a2%d7%95%d7%a8%d7%9a-%d7%93%d7%99%d7%9f-%d7%9e%d7%a7%d7%a8%d7%a7%d7%a2%d7%99%d7%9f-%d7%91%d7%a8%d7%a2%d7%a0%d7%a0%d7%94/">עסקאות נדל״ן ברעננה</a>.</p><div class="means"><b>מה זה אומר לכם:</b> מי שקונה דירה חדשה ליד המטרו צריך לבדוק בחוזה ובהיתר כמה חניות יש ולמי הן מוצמדות. חניה לא תמיד כלולה.</div><div class="srcname">מקור: מיקומי 24.11.2026</div></section></article>
+<section class="faq"><h2>שאלות קצרות על הגיליון</h2><h3>האם החלטת הריבית של נובמבר משנה את ההחזר החודשי שלי?</h3><p>לא. בנק ישראל השאיר את הריבית על 3.25% והפריים נשאר 4.75%, ולכן ההחזר במסלול פריים לא משתנה. ההחלטה הבאה תהיה ב־4 בינואר 2027.</p><h3>מה מגיע לי כשהקבלן מאחר במסירה?</h3><p>חוק המכר נותן פיצוי על איחור במסירה בלי צורך להוכיח נזק. השבוע חייב בית משפט בכפר סבא יזמית לשלם 30 אלף ש״ח בחודש כמקדמה, עד שתקבל טופס 4 ותמסור את הדירה.</p><h3>מה זה חוק שיקום נזקי מלחמה?</h3><p>חוק שמאפשר להכריז על מתחם שנפגע במלחמה כאזור שיקום ולבנות אותו מחדש בדרך של התחדשות עירונית. יש בו מועדים קצרים, וברחובות הרשות אמרה שאי אפשר להאריך אותם.</p></section>
+<aside class="author"><img src="https://dabullaw.co.il/wp-content/uploads/2026/10/magazine-author-yakir.jpg" alt="עו״ד יקיר דבול" width="96" height="96" loading="lazy"><div><b>עו״ד יקיר דבול</b><div class="role">יקיר דבול - משרד עורכי דין</div>
+<p>מלווה יותר מ־100 עסקאות נדל״ן בשנה בשרון. חבר בחמש ועדות של לשכת עורכי הדין, מחוז מרכז, ובהן ועדת התחדשות עירונית וועדת מקרקעין. התראיין בחדשות 13, ישראל היום, וואלה נדל״ן וביזפורטל.</p><div class="upd">עודכן לאחרונה: 27.11.2026</div></div></aside>
+<div class="pn"><a class="btn sec" href="https://dabullaw.co.il/magazine/issue-5/">→ גיליון #5</a><a class="btn pri" href="https://dabullaw.co.il/magazine/#archive">כל הגיליונות</a></div>
+<div class="cta"><div><b>יש לכם שאלה על עסקה שראיתם במגזין?</b><span>השאירו פרטים ונחזור אליכם.</span></div><a class="btn" href="https://dabullaw.co.il/%d7%a6%d7%a8%d7%95-%d7%a7%d7%a9%d7%a8/">השארת פרטים</a></div>
+<p class="disc">המידע במגזין כללי ואינו ייעוץ משפטי. לפני החלטה בעסקה, כדאי להתייעץ עם עורך דין.</p></div>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "NewsArticle", "@id": "https://dabullaw.co.il/magazine/issue-6/#article", "headline": "מגזין הנדל״ן, גיליון 6: הריבית נשארה 3.25%: ההקלה במשכנתא תחכה", "description": "החדשות של 19-25.11.2026 בשפה פשוטה: החלטת הריבית, פיצוי על איחור במסירה, חוק השיקום ברחובות, פינוי בינוי בשרון ותקן החניה ברעננה.", "inLanguage": "he", "datePublished": "2026-11-27", "dateModified": "2026-11-27", "image": "https://dabullaw.co.il/wp-content/uploads/2026/11/real-estate-magazine-6-cover.jpg", "url": "https://dabullaw.co.il/magazine/issue-6/", "mainEntityOfPage": "https://dabullaw.co.il/magazine/issue-6/", "author": {"@type": "Person", "@id": "https://dabullaw.co.il/#yakir", "name": "עו״ד יקיר דבול", "jobTitle": "עורך דין", "url": "https://dabullaw.co.il/%d7%90%d7%95%d7%93%d7%95%d7%aa-%d7%94%d7%9e%d7%a9%d7%a8%d7%93/", "image": "https://dabullaw.co.il/wp-content/uploads/2026/10/magazine-author-yakir.jpg"}, "publisher": {"@type": "Organization", "name": "יקיר דבול - משרד עורכי דין", "url": "https://dabullaw.co.il/"}, "isPartOf": {"@type": "PublicationIssue", "issueNumber": "6", "isPartOf": {"@type": "Periodical", "@id": "https://dabullaw.co.il/magazine/#periodical", "name": "מגזין הנדל״ן", "url": "https://dabullaw.co.il/magazine/"}}, "articleSection": ["הריבית נשארה 3.25%: ההקלה במשכנתא תחכה", "הדירה לא נמסרה: 30 אלף ש״ח בכל חודש", "נפגעו מטיל: 95 ימי עבודה להחליט", "הרצליה וכפר סבא: פינוי בינוי מתקדם", "רעננה: חניה אחת לדירה ליד המטרו"]}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "דף הבית", "item": "https://dabullaw.co.il/"}, {"@type": "ListItem", "position": 2, "name": "מגזין הנדל״ן", "item": "https://dabullaw.co.il/magazine/"}, {"@type": "ListItem", "position": 3, "name": "גיליון 6", "item": "https://dabullaw.co.il/magazine/issue-6/"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "האם החלטת הריבית של נובמבר משנה את ההחזר החודשי שלי?", "acceptedAnswer": {"@type": "Answer", "text": "לא. בנק ישראל השאיר את הריבית על 3.25% והפריים נשאר 4.75%, ולכן ההחזר במסלול פריים לא משתנה. ההחלטה הבאה תהיה ב־4 בינואר 2027."}}, {"@type": "Question", "name": "מה מגיע לי כשהקבלן מאחר במסירה?", "acceptedAnswer": {"@type": "Answer", "text": "חוק המכר נותן פיצוי על איחור במסירה בלי צורך להוכיח נזק. השבוע חייב בית משפט בכפר סבא יזמית לשלם 30 אלף ש״ח בחודש כמקדמה, עד שתקבל טופס 4 ותמסור את הדירה."}}, {"@type": "Question", "name": "מה זה חוק שיקום נזקי מלחמה?", "acceptedAnswer": {"@type": "Answer", "text": "חוק שמאפשר להכריז על מתחם שנפגע במלחמה כאזור שיקום ולבנות אותו מחדש בדרך של התחדשות עירונית. יש בו מועדים קצרים, וברחובות הרשות אמרה שאי אפשר להאריך אותם."}}]}]}</script>
