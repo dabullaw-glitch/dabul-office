@@ -1,15 +1,11 @@
 ---
+import Icon from './Icon.astro';
 import { P, u } from '../config/routes';
-const { title = 'עורכי דין? הפרופיל שלכם כבר מחכה', text = 'אשרו בעלות על הפרופיל בחינם, עדכנו תחומים, שעות ופרטי קשר, וקבלו חוות דעת מאומתות מלקוחות.' } = Astro.props as { title?: string; text?: string };
+const { title = 'הלקוחות כבר מחפשים. תנו להם למצוא אתכם.', text = 'פרופיל חינמי לכל משרד. חבילות קידום מסומנות תמיד ״משרד מקודם״ ולא משנות את הדירוג. מחירים לשנה, לפני מע״מ.' } = Astro.props as { title?: string; text?: string };
 ---
-<div class="band on-dark">
-  <div>
-    <span class="eyebrow">למשרדי עורכי דין</span>
-    <h2>{title}</h2>
-    <p>{text}</p>
+<section class="sec sec-ink on-dark" aria-labelledby="jb-h">
+  <div class="wrap joinbar">
+    <div class="sec-head-t" style="max-width:720px"><p class="eyebrow">למשרדי עורכי דין</p><h2 class="h2" id="jb-h">{title}</h2><p class="small" style="color:var(--on-ink-muted)">{text}</p></div>
+    <div class="flex"><a class="btn btn-w btn-lg" href={u(P.page('join'))}><span>להשוואת החבילות</span><Icon name="arrow" size={18} /></a><a class="btn btn-o btn-lg" href={u(P.page('claim'))}>אישור בעלות בחינם</a></div>
   </div>
-  <div class="acts">
-    <a class="btn btn-brass" href={u(P.page('claim'))}>אישור בעלות על פרופיל</a>
-    <a class="btn btn-ghost" href={u(P.page('join'))}>חבילות קידום</a>
-  </div>
-</div>
+</section>

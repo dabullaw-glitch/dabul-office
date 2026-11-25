@@ -1,0 +1,10 @@
+---
+// Booking style numeric badge. Only verified reviews count; nothing here can be bought.
+import { ratingWord, fmtScore } from '../lib/ui';
+const { score, count, short = false } = Astro.props as { score: number; count: number; short?: boolean };
+---
+{count > 0 ? (
+  <span class="rating"><span class="score" aria-hidden="true">{fmtScore(score)}</span><span class="sr">ציון {fmtScore(score)} מתוך 5, </span><b>{ratingWord(score)}</b><span aria-hidden="true">·</span><span class="num">{count === 1 ? (short ? 'ביקורת אחת' : 'ביקורת מאומתת אחת') : `${count} ${short ? 'ביקורות' : 'ביקורות מאומתות'}`}</span></span>
+) : (
+  <span class="rating"><span class="rnone">עוד אין ביקורות מאומתות</span></span>
+)}

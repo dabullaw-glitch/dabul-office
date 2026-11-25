@@ -15,6 +15,9 @@ content/                 build input, filled by scripts/sync-content.mjs from th
   articles/<slug>.md     articles (he_slug, title, description, area_slugs, author, published, updated, sources, faq)
   courts/<slug>.md       court pages (he_slug, name, type, city, address, phone, hours, lat, lng, sources, updated)
   tools/<slug>.json+.js  tool spec + pure ES module: compute(inputs) -> {outputs, steps, errors} | generate(inputs) -> {title, html|text, warnings}
+src/styles/tokens.css    DESIGN TOKENS: every colour, font (+ @font-face of the self hosted files in public/fonts), radius,
+                         type size and space. Swap the identity here; global.css, commerce.css and components use only these.
+                         legacy-home.css = the pre round 4 home page (scoped .lh), kept until the new home concept.
 src/config/brand.ts      brand, preview flag, Supabase public key, FORMS_LIVE flag
 src/config/routes.ts     every URL (Hebrew slugs); rename a section here
 src/lib/data.ts          loaders (content/, sample firms, optional Supabase fol_firms when FOL_DB=1)

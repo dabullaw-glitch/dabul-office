@@ -10,32 +10,44 @@ const { path } = Astro.props as any;
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'חיפוש', path }];
 ---
 <Base title="חיפוש עורך דין, מדריך או כלי" description="חיפוש משרדי עורכי דין לפי שם, תחום ועיר, וחיפוש במדריכים, בכלים ובעמודי בתי המשפט." path={path} noindex schema={[breadcrumbs(crumbs)]}>
-  <section class="phead tint">
+  <section class="phead on-dark">
     <div class="wrap">
       <Crumbs items={crumbs} />
-      <h1>חיפוש</h1>
-      <form class="search-bar mt2" role="search" id="sform" action="" method="get">
-        <div class="field"><label for="q">מה מחפשים?</label><input id="q" name="q" type="search" placeholder="שם משרד, נושא או שאלה" autocomplete="off" /></div>
-        <div class="field"><label for="sa">תחום</label><select id="sa" name="area"><option value="">כל התחומים</option>{areaGroups().map((g) => <optgroup label={g.group}>{g.items.map((a) => <option value={a.he}>{a.name}</option>)}</optgroup>)}</select></div>
-        <div class="field"><label for="sc">עיר</label><select id="sc" name="city"><option value="">כל הארץ</option>{REGIONS.map((r) => <optgroup label={'אזור ' + r}>{cities().filter((c) => c.region === r).map((c) => <option value={c.he}>{c.name}</option>)}</optgroup>)}</select></div>
-      </form>
+      <div class="phead-in">
+        <h1 class="h1">חיפוש</h1>
+        <form class="sform" role="search" id="sform" action="" method="get">
+          <div class="field"><label class="lbl" for="q">מה מחפשים?</label><input class="inp" id="q" name="q" type="search" placeholder="שם משרד, נושא או שאלה" autocomplete="off" /></div>
+          <div class="field"><label class="lbl" for="sa">תחום</label><span class="selw"><select class="inp" id="sa" name="area"><option value="">כל התחומים</option>{areaGroups().map((g) => <optgroup label={g.group}>{g.items.map((a) => <option value={a.he}>{a.name}</option>)}</optgroup>)}</select><Icon name="chevd" size={16} /></span></div>
+          <div class="field"><label class="lbl" for="sc">עיר</label><span class="selw"><select class="inp" id="sc" name="city"><option value="">כל הארץ</option>{REGIONS.map((r) => <optgroup label={'אזור ' + r}>{cities().filter((c) => c.region === r).map((c) => <option value={c.he}>{c.name}</option>)}</optgroup>)}</select><Icon name="chevd" size={16} /></span></div>
+        </form>
+      </div>
     </div>
   </section>
-  <div class="wrap" style="padding-bottom:60px">
-    <p class="result-count" id="count" aria-live="polite">הקלידו או בחרו תחום ועיר.</p>
-    <div id="pages" class="grid g3"></div>
-    <div id="firms" class="firms mt2"></div>
+  <div class="wrap stack" style="gap:var(--sp-28);padding-top:var(--sp-24);padding-bottom:var(--sp-56)">
+    <p class="cap num" id="count" aria-live="polite">הקלידו או בחרו תחום ועיר.</p>
+    <section aria-label="עמודים באתר" id="pages-wrap" hidden class="stack gp12"><h2 class="h3" style="font:600 var(--fs-22)/1.3 var(--serif)">עמודים באתר</h2><div class="linkgrid" id="pages"></div></section>
+    <section aria-label="משרדים" id="firms-wrap" hidden class="stack gp12"><h2 class="h3" style="font:600 var(--fs-22)/1.3 var(--serif)">משרדים</h2><div class="list" id="firms"></div></section>
     <noscript><p>החיפוש דורש JavaScript. אפשר לעבור ל<a href={u(P.page('areas'))}>רשימת התחומים</a> או ל<a href={u(P.page('cities'))}>רשימת הערים</a>.</p></noscript>
     <Disclaimer kind="list" />
   </div>
   <script define:vars={{ idx: u('search-index.json') }}>
     const $ = (s) => document.querySelector(s);
     const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    const norm = (s) => String(s || '').replace(/["'׳״\-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+    const norm = (s) => String(s || '').replace(/["'׳״-]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+    const word = (r) => (r >= 4.8 ? 'מצוין' : r >= 4.5 ? 'טוב מאוד' : r >= 4 ? 'טוב' : r >= 3 ? 'סביר' : 'נמוך');
+    const DIA = '<svg width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 20.5 12 12 20.5 3.5 12z" fill="currentColor"/></svg>';
+    const CHEV = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg>';
     let D = null;
     const qs = new URLSearchParams(location.search);
     $('#q').value = qs.get('q') || ''; $('#sa').value = qs.get('area') || ''; $('#sc').value = qs.get('city') || '';
     fetch(idx).then((r) => r.json()).then((d) => { D = d; run(); });
+    const tile = (f) => `<span class="lt lt-${f.m.length ? f.ts : 'x'}" aria-hidden="true">${f.m.length === 2 ? `<span>${esc(f.m[0])}</span><i></i><span>${esc(f.m[1])}</span>` : `<span>${esc(f.m[0] || '')}</span>`}</span>`;
+    function row(f) {
+      const an = f.a.slice(0, 3).map((s) => (D.areas.find((a) => a.s === s) || {}).n).filter(Boolean).join(', ');
+      const rating = f.rc > 0 ? `<span class="rating"><span class="score" aria-hidden="true">${f.r.toFixed(1)}</span><span class="sr">ציון ${f.r.toFixed(1)} מתוך 5, </span><b>${word(f.r)}</b><span aria-hidden="true">·</span><span class="num">${f.rc === 1 ? 'ביקורת מאומתת אחת' : f.rc + ' ביקורות מאומתות'}</span></span>` : '<span class="rating"><span class="rnone">עוד אין ביקורות מאומתות</span></span>';
+      const top = (f.promo || f.sample) ? `<div class="row-top">${f.promo ? `<span class="plbl">${DIA}<span>משרד מקודם</span></span>` : ''}${f.sample ? '<span class="sample-b">דוגמה</span>' : ''}</div>` : '';
+      return `<article class="row">${tile(f)}<div class="row-b">${top}<h3 class="row-n"><a class="row-link" href="${esc(f.h)}">${esc(f.n)}</a></h3><p class="row-m">${esc(f.cn)}${an ? ' · ' + esc(an) : ''}</p>${rating}</div><span class="row-chev">${CHEV}</span></article>`;
+    }
     function run() {
       if (!D) return;
       const q = norm($('#q').value), ah = $('#sa').value, ch = $('#sc').value;
@@ -44,13 +56,14 @@ const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'חיפוש', path 
       const hit = (txt) => words.every((w) => norm(txt).includes(w));
       let fs = D.firms.filter((f) => (!area || f.a.includes(area.s)) && (!city || f.c === city.s));
       if (words.length) fs = fs.filter((f) => hit(f.n + ' ' + f.cn + ' ' + f.a.map((s) => (D.areas.find((a) => a.s === s) || {}).n).join(' ')));
-      fs.sort((a, b) => (b.promo - a.promo) || a.n.localeCompare(b.n, 'he'));
-      const ps = words.length ? [...D.areas.filter((a) => hit(a.t)).map((a) => ({ k: 'תחום', n: a.t, d: '', h: a.h })), ...D.pages.filter((p) => hit(p.n + ' ' + p.d))].slice(0, 9) : [];
-      $('#pages').innerHTML = ps.map((p) => `<a class="card acard" href="${esc(p.h)}"><span class="kicker">${esc(p.k)}</span><h3>${esc(p.n)}</h3>${p.d ? `<p>${esc(p.d)}</p>` : ''}</a>`).join('');
-      $('#firms').innerHTML = fs.map((f) => `<article class="firm${f.promo ? ' promo' : ''}"><div class="firm-top"><div class="mono" aria-hidden="true">${esc(f.n.trim()[0])}</div><div><h3 style="display:inline"><a href="${esc(f.h)}">${esc(f.n)}</a></h3> <span class="badges">${f.promo ? '<span class="badge b-promo">משרד מקודם</span>' : ''}${f.sample ? '<span class="badge b-sample">דוגמה</span>' : ''}</span><div class="meta mt1"><span>${esc(f.cn)}</span></div><div class="tags">${f.a.slice(0, 3).map((s) => `<span class="tag">${esc((D.areas.find((a) => a.s === s) || {}).n)}</span>`).join('')}</div></div></div><div class="acts"><a class="btn btn-pine btn-sm" href="${esc(f.h)}">לפרופיל המשרד</a></div></article>`).join('');
+      fs.sort((a, b) => (b.r - a.r) || (b.rc - a.rc) || a.n.localeCompare(b.n, 'he'));
+      const ps = words.length ? [...D.areas.filter((a) => hit(a.t)).map((a) => ({ k: 'תחום', n: a.t, h: a.h })), ...D.pages.filter((p) => hit(p.n + ' ' + p.d))].slice(0, 10) : [];
+      $('#pages').innerHTML = ps.map((p) => `<a href="${esc(p.h)}"><span>${esc(p.n)}</span><span class="c">${esc(p.k)}</span></a>`).join('');
+      $('#firms').innerHTML = fs.map(row).join('');
       const any = q || area || city;
-      $('#count').textContent = any ? `נמצאו ${fs.length} משרדים${ps.length ? ' ו־' + ps.length + ' עמודים' : ''}` : 'הקלידו או בחרו תחום ועיר.';
-      if (any && area && fs.length === 0) $('#count').innerHTML += ` · <a href="${esc(area.h)}">לעמוד ${esc(area.t)}</a>`;
+      $('#pages-wrap').hidden = !ps.length; $('#firms-wrap').hidden = !(any && fs.length);
+      $('#count').textContent = any ? `נמצאו ${fs.length === 1 ? 'משרד אחד' : fs.length + ' משרדים'}${ps.length ? ' ו־' + ps.length + ' עמודים' : ''}. המשרדים מסודרים לפי הדירוג השקוף.` : 'הקלידו או בחרו תחום ועיר.';
+      if (any && area && fs.length === 0) $('#count').innerHTML += ` <a class="lnk" href="${esc(area.h)}">לעמוד ${esc(area.t)}</a>`;
     }
     let t; $('#q').addEventListener('input', () => { clearTimeout(t); t = setTimeout(run, 150); });
     $('#sa').addEventListener('change', run); $('#sc').addEventListener('change', run);

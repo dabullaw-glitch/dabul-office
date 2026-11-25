@@ -49,7 +49,7 @@ import { P, u } from '../config/routes';
 
 <style is:global>
 /* theme */
-.sx{--sx-bg:#fff;--sx-fg:#1b2523;--sx-mut:#3a4543;--sx-line:#d5cdbc;--sx-acc:#153d36;--sx-acc-fg:#fff;--sx-r:16px;--sx-font:'Plex Hebrew','IBM Plex Sans Hebrew','Assistant',Arial,sans-serif}
+.sx{--sx-bg:var(--card);--sx-fg:var(--text);--sx-mut:var(--muted);--sx-line:var(--line);--sx-acc:var(--ink);--sx-acc-fg:var(--white);--sx-r:var(--r-lg);--sx-font:var(--sans)}
 /* shared parts (same structure on Folivus) */
 .sx{font-family:var(--sx-font);font-size:16px;line-height:1.5}
 .sx-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
@@ -93,8 +93,8 @@ import { P, u } from '../config/routes';
 }
 @media print{.sx{display:none}}
 
-.sx-btn:focus-visible,.sx-panel :focus-visible,.sx-ck :focus-visible{outline-color:#c4974a}
-.sx-btn{border-color:#fff}
+.sx-btn:focus-visible,.sx-panel :focus-visible,.sx-ck :focus-visible{outline-color:var(--focus)}
+.sx-btn{border-color:var(--white)}
 /* site wide: the accessibility choices */
 html.a11y-t1 body{zoom:1.15}
 html.a11y-t2 body{zoom:1.3}
@@ -102,10 +102,9 @@ html.a11y-t2 body{zoom:1.3}
   html.a11y-t1 body{zoom:1.12} html.a11y-t2 body{zoom:1.25}
   html.a11y-t1 .wrap>*,html.a11y-t2 .wrap>*{min-width:0}
   html.a11y-t1 .btn,html.a11y-t2 .btn{white-space:normal;text-align:center}
-  html.a11y-t1 :is(.firms,.gallery,.sticky-cta)>*,html.a11y-t2 :is(.firms,.gallery,.sticky-cta)>*{min-width:0}
-  html.a11y-t2 .firm{padding-inline:14px}
+  html.a11y-t1 :is(.list,.gallery,.sbar)>*,html.a11y-t2 :is(.list,.gallery,.sbar)>*{min-width:0}
 }
-html.a11y-hc{--text:#000;--muted:#1d2624;--ink:#000;--line:#7d7462;--line-2:#9a917f;--brass-ink:#4a330c;--pine-2:#0b2a24;--paper:#fff;--paper-2:#f4f4f4}
+html.a11y-hc{--text:#000;--muted:#1F1D1A;--ink:#000;--ink-2:#111;--line:#6E6656;--line-2:#4A453C;--brass:#4A330C;--paper:#fff;--paper-2:#F2F2F2;--card:#fff;--on-ink-muted:#fff}
 html.a11y-hc .lead,html.a11y-hc .prose{color:#000}
 html.a11y-hc .on-dark,html.a11y-hc .hero{color:#fff}
 html.a11y-hc .hero .lead,html.a11y-hc .on-dark p,html.a11y-hc .on-dark a{color:#fff}

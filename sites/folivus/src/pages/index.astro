@@ -1,14 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
-import Finder from '../components/Finder.astro';
+import Finder from '../components/legacy/Finder.astro';
 import Icon from '../components/Icon.astro';
-import GroupIcon from '../components/GroupIcon.astro';
-import FirmCard from '../components/FirmCard.astro';
-import JoinBand from '../components/JoinBand.astro';
+import GroupIcon from '../components/legacy/GroupIcon.astro';
+import FirmCard from '../components/legacy/FirmCard.astro';
+import JoinBand from '../components/legacy/JoinBand.astro';
 import { BRAND } from '../config/brand';
 import { P, u } from '../config/routes';
 import { areas, areaGroups, cities, REGIONS, firms, tools, articles, courts, fmtDate, homeFeatured } from '../lib/data';
 import { itemList } from '../lib/schema';
+import '../styles/legacy-home.css';
 
 const fs = await firms();
 const featured = homeFeatured(fs).slice(0, 6);
@@ -20,6 +21,7 @@ const title = `${BRAND.name}: מדריך עורכי הדין בישראל לפי
 const description = 'מוצאים עורך דין לפי תחום ועיר, קוראים מדריכים משפטיים בשפה פשוטה עם מקורות ותאריך עדכון, ומשתמשים במחשבונים ובמחוללי מסמכים חינמיים.';
 ---
 <Base title={title} fullTitle description={description} path="" schema={[itemList('תחומי משפט', areas().map((a) => ({ name: a.title, path: P.area(a.he) })))]}>
+  <div class="lh">
   <section class="hero on-dark">
     <div class="wrap hero-in">
       <div>
@@ -114,7 +116,7 @@ const description = 'מוצאים עורך דין לפי תחום ועיר, קו
           <a class="card acard" href={u(P.article(a.he))}>
             <span class="kicker">{a.areas.map((s) => areas().find((x) => x.slug === s)?.name).filter(Boolean)[0] || 'מדריך'}</span>
             <h3>{a.title}</h3><p>{a.description}</p>
-            <span class="foot"><span>{fmtDate(a.updated)}</span><span>{Math.max(1, Math.round(a.words / 200))} דקות קריאה</span></span>
+            <span class="afoot"><span>{fmtDate(a.updated)}</span><span>{Math.max(1, Math.round(a.words / 200))} דקות קריאה</span></span>
           </a>
         ))}</div>
       ) : (
@@ -142,4 +144,5 @@ const description = 'מוצאים עורך דין לפי תחום ועיר, קו
   <section class="sec">
     <div class="wrap"><JoinBand /></div>
   </section>
+  </div>
 </Base>

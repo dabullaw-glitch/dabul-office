@@ -11,10 +11,11 @@ const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'מדריכים', p
 const person = { '@type': 'ProfilePage', mainEntity: { '@type': 'Person', name: a.name, jobTitle: a.role, description: a.bio, url: abs(path), ...(a.sameAs.length ? { sameAs: a.sameAs } : {}) } };
 ---
 <Base title={a.name + ': כותבים באתר'} description={a.bio.slice(0, 158)} path={path} noindex={a.isSample} schema={[breadcrumbs(crumbs), person]}>
-  <section class="phead tint"><div class="wrap"><Crumbs items={crumbs} /><h1>{a.name}</h1><p class="lead">{a.role}</p></div></section>
-  <div class="wrap" style="padding-block:36px 70px">
+  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} /><div class="phead-in"><p class="eyebrow">כותבים</p><h1 class="h1">{a.name}</h1><p class="lead">{a.role}</p></div></div></section>
+  <div class="wrap stack" style="gap:var(--sp-32);padding-top:var(--sp-32);padding-bottom:var(--sp-56)">
     <div class="prose"><p>{a.bio}</p></div>
-    <h2 class="mt3">מאמרים</h2>
-    {list.length ? <div class="grid g3">{list.map((x) => <a class="card acard" href={u(P.article(x.he))}><h3>{x.title}</h3><p>{x.description}</p><span class="foot">{fmtDate(x.updated)}</span></a>)}</div> : <div class="empty">עדיין אין מאמרים.</div>}
+    <section class="stack gp12" aria-labelledby="am-h"><h2 id="am-h" class="h3" style="font:600 var(--fs-22)/1.3 var(--serif)">מאמרים</h2>
+      {list.length ? <div class="linkgrid">{list.map((x) => <a href={u(P.article(x.he))}><span>{x.title}</span><span class="c">{fmtDate(x.updated)}</span></a>)}</div> : <div class="empty">עדיין אין מאמרים.</div>}
+    </section>
   </div>
 </Base>

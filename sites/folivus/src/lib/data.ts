@@ -10,6 +10,7 @@ import citiesRaw from '../data/cities.json';
 import firmsSample from '../data/firms.sample.json';
 import plansRaw from '../data/plans.json';
 import authorsRaw from '../data/authors.json';
+import { catName, CAT_ORDER } from './ui';
 
 const ROOT = path.resolve('content');
 // writers use the working name; swap it for the configured brand so a rename needs no content edits
@@ -215,7 +216,7 @@ export function tools(): Tool[] {
       if (isDraft(t) && !PREVIEW) return null;
       const js = path.join(ROOT, 'tools', slug + '.js');
       return {
-        slug, he: String(t.he_slug || slug), name: String(t.name), category: String(t.category || 'כללי'),
+        slug, he: String(t.he_slug || slug), name: String(t.name), category: catName(String(t.category || '')),
         type: t.type === 'generator' ? 'generator' : 'calculator', description: String(t.description || ''),
         inputs: arr(t.inputs), outputs: arr(t.outputs), sources: srcs(t.sources), disclaimer: String(t.disclaimer || ''),
         updated: validDay(day(t.updated)), area: String(t.area_slug || arr(t.area_slugs)[0] || ''), module: exists(js) ? slug : null,
@@ -228,7 +229,8 @@ export function tools(): Tool[] {
 export const toolCategories = () => {
   const m = new Map<string, Tool[]>();
   for (const t of tools()) m.set(t.category, [...(m.get(t.category) || []), t]);
-  return [...m.entries()].map(([category, items]) => ({ category, items }));
+  const rank = (c: string) => (CAT_ORDER.indexOf(c) + 1 || 99);
+  return [...m.entries()].sort((a, b) => rank(a[0]) - rank(b[0])).map(([category, items]) => ({ category, items: items.sort((x, y) => x.name.localeCompare(y.name, 'he')) }));
 };
 
 // ---------- courts ----------

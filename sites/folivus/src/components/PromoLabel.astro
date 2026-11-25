@@ -1,0 +1,6 @@
+---
+// The one label for a paid listing. Brass is used only for paid placements.
+import Icon from './Icon.astro';
+const { text = 'משרד מקודם' } = Astro.props as { text?: string };
+---
+<span class="plbl"><Icon name="diamond" size={10} /><span>{text}</span></span>

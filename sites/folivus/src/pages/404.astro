@@ -1,14 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import Finder from '../components/Finder.astro';
 import { P, u } from '../config/routes';
 ---
 <Base title="העמוד לא נמצא" description="העמוד שחיפשתם לא נמצא." path="404/" noindex>
-  <section class="wrap err404">
-    <div class="code">404</div>
-    <h1>העמוד לא נמצא</h1>
-    <p class="lead" style="margin-inline:auto">אולי הכתובת השתנתה. אפשר לחפש עורך דין לפי תחום ועיר, או לחזור ל<a href={u('')}>דף הבית</a>.</p>
-    <div style="max-width:860px;margin:0 auto;text-align:start"><Finder id="nf" /></div>
-    <p class="mt2"><a href={u(P.page('areas'))}>כל התחומים</a> · <a href={u(P.page('articles'))}>מדריכים</a> · <a href={u(P.page('tools'))}>כלים</a></p>
+  <section class="wrap err404 stack gp16" style="align-items:center">
+    <div class="code" aria-hidden="true">404</div>
+    <h1 class="h2">העמוד לא נמצא</h1>
+    <p class="lead" style="max-width:560px">אולי הכתובת השתנתה. אפשר לחפש עורך דין לפי תחום ועיר, או לחזור לדף הבית.</p>
+    <div class="flex" style="justify-content:center"><a class="btn btn-p btn-lg" href={u(P.page('search'))}>לחיפוש</a><a class="btn btn-s btn-lg" href={u('')}>לדף הבית</a></div>
+    <p><a class="more" href={u(P.page('areas'))}>כל התחומים</a> · <a class="more" href={u(P.page('articles'))}>מדריכים</a> · <a class="more" href={u(P.page('tools'))}>כלים</a></p>
   </section>
 </Base>

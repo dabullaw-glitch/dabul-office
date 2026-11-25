@@ -1,5 +1,6 @@
 // Admin dashboard: lists and one-click actions. Every call is checked on the server (admin role only).
 import { api, session, esc, ils, heDate, $, $$, say, errText } from './api';
+import { autoLink } from './api';
 
 const root = $('#admin'); const top = $('[data-top]', root); const view = $('[data-view]', root);
 type Col = [string, string, ((v: any, r: any) => string)?];
@@ -66,3 +67,5 @@ view.addEventListener('click', async (e) => {
   $$('[data-tabs] button', root).forEach((b) => b.addEventListener('click', () => load(b.dataset.t!)));
   load('overview');
 })();
+
+autoLink(document.querySelector('#admin'));

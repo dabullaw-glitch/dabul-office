@@ -8,8 +8,8 @@ const { path } = Astro.props as any;
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'תוכן ממומן', path }];
 ---
 <Base title="תוכן ממומן" description="מאמרים בחסות משרדים, מסומנים תוכן ממומן." path={path} noindex>
-  <section class="phead tint"><div class="wrap"><Crumbs items={crumbs} /><h1 data-title>תוכן ממומן</h1></div></section>
-  <div class="wrap" style="padding-block:24px 64px;max-width:820px" id="sponsored" data-firm-base={u(P.firm('__slug__'))} data-self={u(P.page('sponsored'))} data-editorial={u(P.page('editorial'))}>
+  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} /><h1 data-title>תוכן ממומן</h1></div></section>
+  <div class="wrap" style="padding-block:var(--sp-24) var(--sp-64);max-width:820px" id="sponsored" data-firm-base={u(P.firm('__slug__'))} data-self={u(P.page('sponsored'))} data-editorial={u(P.page('editorial'))}>
     <div data-out><p class="muted">טוען...</p></div>
   </div>
   <script>import '../scripts/commerce/sponsored';</script>

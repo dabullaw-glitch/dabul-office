@@ -1,15 +1,8 @@
 ---
-// Wordmark + leaf mark. The name comes from src/config/brand.ts only.
+// Wordmark: a quiet pillar mark and the name in Frank Ruhl Libre. The name comes from src/config/brand.ts only.
+import Icon from './Icon.astro';
 import { BRAND } from '../config/brand';
 import { u } from '../config/routes';
-const { dark = false } = Astro.props as { dark?: boolean };
+const { tagline = false } = Astro.props as { tagline?: boolean };
 ---
-<a class="logo" href={u('')}>
-  <svg viewBox="0 0 40 40" aria-hidden="true">
-    <rect width="40" height="40" rx="11" fill={dark ? '#f7f5f0' : '#153d36'} />
-    <path d="M10.5 29.5C10.5 18.2 17 11.2 29.5 10.5 29.5 22 23 29 10.5 29.5Z" fill="#c4974a" />
-    <path d="M10.5 29.5 23.5 16.5" stroke={dark ? '#f7f5f0' : '#153d36'} stroke-width="2" stroke-linecap="round" />
-    <path d="M15.5 24.5h5M18.5 21.5v-4" stroke={dark ? '#f7f5f0' : '#153d36'} stroke-width="1.6" stroke-linecap="round" />
-  </svg>
-  <span class="wm"><span class="he">{BRAND.name}</span><span class="la">{BRAND.nameLatin.toUpperCase()}</span></span><span class="sr">, לעמוד הבית</span>
-</a>
+<a class="logo" href={u('')}><span aria-hidden="true" style="display:inline-flex;color:var(--brass-on-ink)"><Icon name="pillar" size={24} /></span><span class="logo-w">{BRAND.name}</span><span class="sr">, לדף הבית</span>{tagline && <span class="logo-d show-lg">האינדקס הארצי של עורכי הדין</span>}</a>

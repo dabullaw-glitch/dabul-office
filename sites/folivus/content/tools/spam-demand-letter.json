@@ -1,0 +1,52 @@
+{
+  "slug": "spam-demand-letter",
+  "he_slug": "מכתב-דרישה-ספאם",
+  "name": "מחולל מכתב דרישה בגין הודעות ספאם (סעיף 30א)",
+  "category": "letters",
+  "type": "generator",
+  "area_slugs": ["consumer", "tech"],
+  "description": "מחולל מכתב דרישה למפרסם ששלח הודעות פרסומת בלי הסכמה: הפסקת המשלוח ופיצוי של עד 1,000 ₪ לכל הודעה לפי סעיף 30א לחוק התקשורת.",
+  "intro": "סעיף 30א לחוק התקשורת (בזק ושידורים), המכונה \"חוק הספאם\", אוסר לשלוח דברי פרסומת במסרון, בדואר אלקטרוני, בפקס או בחיוג אוטומטי בלי הסכמה מפורשת מראש ובכתב של הנמען. מי שקיבל הודעות כאלה יכול לדרוש פיצוי שאינו תלוי בנזק, עד 1,000 ₪ לכל הודעה. הכלי מפיק מכתב דרישה ומחשב את סכום התקרה.",
+  "inputs": [
+    {"id": "my_name", "label": "השם שלכם", "type": "text", "required": true},
+    {"id": "my_address", "label": "כתובת", "type": "text", "required": false},
+    {"id": "my_phone", "label": "טלפון", "type": "text", "required": false},
+    {"id": "sender_company", "label": "שם המפרסם", "type": "text", "required": true},
+    {"id": "sender_company_address", "label": "כתובת המפרסם", "type": "text", "required": false},
+    {"id": "channel", "label": "איך הגיעו ההודעות?", "type": "select", "required": true, "default": "sms", "options": [{"value": "sms", "label": "מסרון (SMS)"}, {"value": "email", "label": "דואר אלקטרוני"}, {"value": "call", "label": "חיוג אוטומטי"}, {"value": "fax", "label": "פקס"}]},
+    {"id": "recipient_contact", "label": "המספר או הכתובת שאליהם נשלחו", "type": "text", "required": false},
+    {"id": "message_count", "label": "מספר ההודעות", "type": "number", "required": true, "min": 1},
+    {"id": "first_message_date", "label": "תאריך ההודעה הראשונה", "type": "date", "required": false},
+    {"id": "last_message_date", "label": "תאריך ההודעה האחרונה", "type": "date", "required": false},
+    {"id": "refusal_sent", "label": "שלחתי הודעת סירוב והמשיכו לשלוח", "type": "boolean", "required": false, "default": false},
+    {"id": "refusal_date", "label": "תאריך הודעת הסירוב", "type": "date", "required": false},
+    {"id": "missing_label", "label": "ההודעות לא סומנו במילה \"פרסומת\"", "type": "boolean", "required": false, "default": false},
+    {"id": "amount_per_message", "label": "סכום לכל הודעה (₪, עד 1,000)", "type": "number", "required": false, "min": 1, "default": 1000},
+    {"id": "deadline_days", "label": "ימים לתשובה", "type": "number", "required": false, "min": 1, "default": 14},
+    {"id": "letter_date", "label": "תאריך", "type": "date", "required": false}
+  ],
+  "outputs": [
+    {"id": "title", "label": "כותרת המסמך", "format": "text"},
+    {"id": "html", "label": "המכתב", "format": "html"},
+    {"id": "total_claimed", "label": "סכום הדרישה", "format": "currency"},
+    {"id": "warnings", "label": "הערות לבדיקה", "format": "list"}
+  ],
+  "how_it_works": "הכלי מכפיל את מספר ההודעות בסכום לכל הודעה (עד 1,000 ₪, התקרה שבסעיף 30א(י)), ומנסח מכתב שמפרט את ההודעות, את היעדר ההסכמה, הודעת סירוב שנשלחה וסימון חסר של המילה \"פרסומת\" אם סימנתם, ודורש להפסיק ולפצות. ראו גם [[tool:demand-letter]], [[tool:small-claim-letter]] ו-[[area:consumer]].",
+  "faq": [
+    {"q": "מה נחשב ספאם לפי החוק?", "a": "דבר פרסומת שנשלח במסרון, בדואר אלקטרוני, בפקס או במערכת חיוג אוטומטי, בלי הסכמה מפורשת מראש ובכתב של הנמען."},
+    {"q": "קניתי פעם אצל העסק. מותר לו לשלוח לי?", "a": "יש חריג: אם מסרתם את פרטיכם בקנייה או במשא ומתן, העסק הודיע שישתמש בהם לפרסום, נתן לכם אפשרות לסרב ולא סירבתם, והפרסום הוא על מוצר או שירות דומה. גם אז אפשר לשלוח הודעת סירוב בכל עת."},
+    {"q": "כמה פיצוי אפשר לקבל?", "a": "החוק מאפשר לבית המשפט לפסוק עד 1,000 ₪ לכל הודעה בלי הוכחת נזק, כשההפרה נעשתה ביודעין (וחזקה שכך נעשתה, אלא אם המפרסם יוכיח אחרת). הסכום בפועל נקבע לפי הנסיבות."},
+    {"q": "איך שולחים הודעת סירוב?", "a": "בכתב, או באותה דרך שבה נשלחה הפרסומת, לבחירתכם, למשל בהשבה למסרון. המשלוח צריך להיות בחינם, למעט עלות השליחה עצמה."},
+    {"q": "איפה תובעים?", "a": "בדרך כלל בבית המשפט לתביעות קטנות, עד התקרה שבו (39,900 ₪ ב-2026). ראו [[tool:small-claim-letter]]."}
+  ],
+  "sources": [
+    {"title": "חוק התקשורת (בזק ושידורים) (תיקון מס' 40), התשס\"ח-2008: סעיף 30א (הסכמה מראש, חריג לקוח, סימון פרסומת, סירוב, פיצוי עד 1,000 ₪)", "url": "https://fs.knesset.gov.il//17/law/17_lsr_299991.pdf"},
+    {"title": "הנהלת בתי המשפט: תקרת תביעה קטנה 39,900 ₪ מ-1.1.2026", "url": "https://www.gov.il/BlobFolder/guide/fee_guide/he/8869-11-19_fees_scf1126.pdf"}
+  ],
+  "disclaimer": "המסמך הוא טיוטה כללית לדוגמה ואינו ייעוץ משפטי. הסכום שבמכתב הוא התקרה שבחוק ולא סכום שמובטח שייפסק.",
+  "updated": "2026-11-25",
+  "todo_verify": [
+    "הסעיף נבדק מול נוסח התיקון ברשומות (2008); לאמת שאין תיקון מאוחר לתקרת 1,000 ₪.",
+    "תקופת ההתיישנות לתביעת ספאם לא מצוינת בסעיף ולא אומתה."
+  ]
+}

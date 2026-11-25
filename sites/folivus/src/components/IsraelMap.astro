@@ -1,0 +1,54 @@
+---
+// Map of Israel (25 cities, two views: the whole country and the center) with an accessible city list.
+// Counts are real: the firms of the index in each city. Top areas link to the area + city page when it exists.
+import Icon from './Icon.astro';
+import { P, u } from '../config/routes';
+import { firms, areas, cityBySlug, rankFor } from '../lib/data';
+import { POINTS, PATHS, layer, panel, countText, type MapCity } from '../scripts/israel-map';
+const { sel = 'tel-aviv', headingLevel = 2 } = Astro.props as { sel?: string; headingLevel?: 2 | 3 };
+const fs = await firms();
+const data: MapCity[] = POINTS.map(([slug]) => {
+  const c = cityBySlug(slug)!;
+  const here = fs.filter((f) => f.city === slug);
+  const top = areas().map((a) => ({ a, n: here.filter((f) => f.areas.includes(a.slug)).length })).filter((x) => x.n > 0).sort((x, y) => y.n - x.n).slice(0, 4)
+    .map((x) => ({ label: `${x.a.title} ב${c.name}`, n: x.n, href: u(P.areaCity(x.a.he, c.he)) }));
+  const paid = here.length ? rankFor(here, undefined, slug).featured[0] : undefined;
+  return { slug, name: c.name, count: here.length, href: u(P.city(c.he)), top,
+    promo: paid ? { name: paid.name, href: u(P.firm(paid.slug)), area: paid.areas.map((s) => areas().find((a) => a.slug === s)?.name).filter(Boolean).slice(0, 2).join(', ') } : null };
+});
+const first = data.find((c) => c.slug === sel) || data[0];
+const L = layer(data, 'all', first.slug, null);
+const H = headingLevel === 2 ? 'h2' : 'h3';
+---
+<div class="mapgrid" data-map data-sel={first.slug} data-cities={JSON.stringify(data)}>
+  <div data-mapwrap>
+    <div class="seg" role="group" aria-label="תצוגת המפה" style="margin:0 auto var(--sp-16);display:flex;width:max-content">
+      <button type="button" data-view="all" aria-pressed="true">כל הארץ</button>
+      <button type="button" data-view="center" aria-pressed="false">מרכז הארץ</button>
+    </div>
+    <div class="mapbox">
+      <svg viewBox={L.vb} preserveAspectRatio="xMidYMid meet" role="img" aria-label="מפת ישראל עם הערים שבאינדקס">
+        <path d={PATHS.land} style="fill:var(--map-land);stroke:var(--map-stroke)" stroke-width={L.sw} stroke-linejoin="round"></path>
+        <path d={PATHS.kin} style="fill:var(--map-water);stroke:var(--map-stroke)" stroke-width={L.sw}></path>
+        <path d={PATHS.dead} style="fill:var(--map-water);stroke:var(--map-stroke)" stroke-width={L.sw}></path>
+      </svg>
+      <span class="mlabel" data-sea aria-hidden="true" style="left:2%;top:6%;color:var(--map-sea);font-weight:400;font-family:var(--serif);font-size:var(--fs-14);text-shadow:none">הים התיכון</span>
+      <div data-layer set:html={L.html}></div>
+    </div>
+    <p class="cap" style="text-align:center;margin-top:var(--sp-12)" data-hint>{L.hint}</p>
+  </div>
+  <div class="stack gp20">
+    <div class="cityp" aria-live="polite" data-panel set:html={panel(first)}></div>
+    <div class="show-lg stack gp12"><H class="h4">רשימת הערים</H><ul class="clist" aria-label="רשימת הערים">
+      {data.map((c) => <li><button type="button" class="cbtn" data-city={c.slug} aria-pressed={String(c.slug === first.slug)} ><span>{c.name}</span><span class="c">{c.count}<span class="sr"> משרדים</span></span></button></li>)}
+    </ul></div>
+    <details class="dd-cities hide-lg"><summary><span>כל {data.length} הערים</span><Icon name="chevd" size={18} /></summary><ul class="clist" aria-label="רשימת הערים">
+      {data.map((c) => <li><button type="button" class="cbtn" data-city={c.slug} aria-pressed={String(c.slug === first.slug)} ><span>{c.name}</span><span class="c">{c.count}<span class="sr"> משרדים</span></span></button></li>)}
+    </ul></details>
+    <p class="cap">גודל הנקודה מראה כמה משרדים מהעיר יש באינדקס. <a class="lnk" href={u(P.page('cities'))}>לכל {`הערים`}</a></p>
+  </div>
+</div>
+<script>
+  import { mount } from '../scripts/israel-map';
+  document.querySelectorAll<HTMLElement>('[data-map]').forEach(mount);
+</script>

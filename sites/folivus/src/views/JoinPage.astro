@@ -1,69 +1,145 @@
 ---
+// Pricing for lawyers (canvas round 4): preview of a promoted row, 4 plans, comparison table (desktop) and a plan
+// picker (phones), add-ons with their own labels, how to join, FAQ. Every button opens the real checkout (fol-api).
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
 import Icon from '../components/Icon.astro';
 import Faq from '../components/Faq.astro';
-import { BRAND } from '../config/brand';
+import PromoLabel from '../components/PromoLabel.astro';
 import { P, u } from '../config/routes';
-import { plans, addons } from '../lib/data';
 import { breadcrumbs, faqPage } from '../lib/schema';
 const { path } = Astro.props as any;
-const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'הצטרפות משרדים', path }];
-const faq = [
-  { q: 'האם הפרופיל הבסיסי באמת בחינם?', a: 'כן. כל משרד יכול לאשר בעלות על הפרופיל, לעדכן פרטים ולקבל חוות דעת מאומתות בלי תשלום.' },
-  { q: 'האם תשלום משפיע על הדירוג או על חוות הדעת?', a: 'לא. תשלום קונה רק מיקום בולט שמסומן "משרד מקודם". הדירוג וחוות הדעת לא ניתנים לרכישה, ומשרד לא יכול להסיר חוות דעת שלילית שעברה אימות.' },
-  { q: 'האם האתר מעביר אליי פניות או גובה עמלה על לקוח?', a: 'לא. האתר הוא מדריך. לקוחות פונים אליכם ישירות בטלפון, באתר או בוואטסאפ שלכם, ואין עמלה על פנייה או על תיק.' },
-  { q: 'מה צריך כדי להתחיל?', a: 'בוחרים חבילה, בוחרים תחום ועיר וממלאים את פרטי המשרד. אחרי התשלום הכול מופעל אוטומטית, ומקבלים במייל קבלה וכניסה לאזור המשרדים.' },
-  { q: 'איך מחדשים?', a: 'שולחים אליכם קישור לחידוש 30 יום, 7 ימים ויום אחד לפני הסוף. החידוש ממשיך מתאריך הסיום. בתוספות אפשר לבחור חידוש אוטומטי ולבטל אותו בכל רגע.' },
-  { q: 'אילו פרטים מופיעים בפרופיל?', a: 'בפרופיל החינמי: שם המשרד, כתובת, טלפון, אתר, שעות ותחומי עיסוק. בפרופיל מורחב: גם מה שהמשרד מוסיף בעצמו, כמו תיאור, לוגו, תמונות, סרטון ותיקים בולטים.' },
+const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'פרסום לעורכי דין', path }];
+const order = (id: string) => u(P.page('order')) + '?plan=' + id;
+const PLANS = [
+  { id: 'card-upgrade', n: 'שדרוג כרטיס', d: 'כרטיס משרד מורחב, בלי מקום מקודם בתוצאות.', p: '790', cta: 'שדרוג הכרטיס', f: ['פרופיל מורחב: לוגו, תמונות ותיאור', 'קישור לאתר, טלפון ווואטסאפ', 'בלי הבלוק ״משרדים נוספים״ בכרטיס שלכם', 'פניות ישירות למשרד, בלי עמלה'] },
+  { id: 'local', n: 'מקומית', d: 'תחום אחד בעיר אחת. מתאים למשרד שעובד בעיר שלו.', p: '990', cta: 'בחירה במקומית', f: ['פרופיל מורחב', 'מקום מקודם בראש דף התחום בעיר שבחרתם', 'צירוף אחד: תחום אחד בעיר אחת', 'תווית ״משרד מקודם״'] },
+  { id: 'regional', n: 'אזורית', d: 'עד 3 צירופים של תחום ועיר, למשל מקרקעין בנתניה ובהרצליה.', p: '1,990', cta: 'בחירה באזורית', f: ['פרופיל מורחב', 'עד 3 צירופים של תחום ועיר', 'מקום מקודם בראש כל דף שבחרתם', 'תווית ״משרד מקודם״'] },
+  { id: 'national', n: 'ארצית', d: 'תחום אחד בדף התחום הארצי, ומקום בדף הבית.', p: '3,290', cta: 'בחירה בארצית', top: true, f: ['פרופיל מורחב', 'מקום מקודם בדף התחום הארצי, בתחום אחד', 'מקום ב״משרדים מקודמים״ בדף הבית', 'תווית ״משרד מקודם״'] },
 ];
+const ROWS: [string, string, string, string, string][] = [
+  ['פרופיל מורחב: לוגו, תמונות ותיאור', 'y', 'y', 'y', 'y'],
+  ['קישור לאתר, טלפון ווואטסאפ', 'y', 'y', 'y', 'y'],
+  ['בלי הבלוק ״משרדים נוספים״ בכרטיס שלכם', 'y', 'y', 'y', 'y'],
+  ['פניות ישירות למשרד, בלי עמלה', 'y', 'y', 'y', 'y'],
+  ['תווית ״משרד מקודם״', 'n', 'y', 'y', 'y'],
+  ['מקום מקודם בדף של תחום בעיר', 'n', 'תחום אחד בעיר אחת', 'עד 3 צירופים', 'n'],
+  ['מקום מקודם בדף התחום הארצי', 'n', 'n', 'n', 'תחום אחד'],
+  ['מקום ב״משרדים מקודמים״ בדף הבית', 'n', 'n', 'n', 'y'],
+];
+const ADDONS = [
+  { id: 'court-page', t: 'מודעה', n: 'דף בית משפט', d: '3 מקומות למשרדים בכל דף בית משפט, ליד המידע שאנשים מחפשים לפני דיון.', p: '1,900', unit: 'לשנה, לכל דף, לפני מע״מ' },
+  { id: 'tool-sponsor', t: 'בחסות', n: 'חסות על כלי', d: 'נותן חסות אחד לכל כלי חינמי, כמו מחשבון מס רכישה. החישוב לא משתנה.', p: '1,500', unit: 'לשנה, לכל כלי, לפני מע״מ' },
+  { id: 'sponsored-article', t: 'תוכן ממומן', n: 'מאמר ממומן', d: 'מאמר מקצועי בשם המשרד. אתם מאשרים את הטיוטה לפני הפרסום, והוא מסומן ״תוכן ממומן״.', p: '1,500', unit: 'למאמר, תשלום אחד, לפני מע״מ' },
+  { id: 'service-provider', t: 'מודעה', n: 'נותני שירות', d: 'לשמאים, מגשרים, מתורגמנים וחוקרים: 4 מקומות בכל דף בית משפט.', p: '350', unit: 'לחודש, לפני מע״מ' },
+];
+const faq = [
+  { q: 'האם תשלום משפר את המקום שלי בדירוג?', a: 'לא. הדירוג נקבע לפי ביקורות מאומתות, התאמה לתחום ולעיר, ותק וזמינות. משרד מקודם מופיע מעל הרשימה, תמיד עם התווית ״משרד מקודם״.' },
+  { q: 'מה ההבדל בין שדרוג כרטיס לחבילת קידום?', a: 'שדרוג כרטיס משפר את הכרטיס של המשרד ומוריד ממנו את הבלוק ״משרדים נוספים״, בלי מקום מקודם. חבילת קידום מוסיפה מקום מקודם בראש הדפים שבחבילה.' },
+  { q: 'האם הפרופיל הבסיסי באמת בחינם?', a: 'כן. כל משרד יכול לאשר בעלות על הפרופיל, לעדכן פרטים ולקבל ביקורות מאומתות בלי תשלום.' },
+  { q: 'האם האתר מעביר אליי פניות או גובה עמלה על לקוח?', a: 'לא. האתר הוא אינדקס. לקוחות פונים אליכם ישירות בטלפון, באתר או בוואטסאפ שלכם, ואין עמלה על פנייה או על תיק.' },
+  { q: 'אפשר לשלם בתשלומים?', a: 'כן. בדף התשלום בוחרים את מספר התשלומים בכרטיס האשראי.' },
+  { q: 'מה קורה בסוף השנה?', a: 'שולחים אליכם קישור לחידוש לפני סוף התקופה. חידוש אוטומטי קיים רק בתוספות, ורק אם סימנתם אותו במפורש; אפשר לבטל אותו בכל רגע באזור המשרדים.' },
+];
+const cell = (v: string) => v === 'y' ? 'y' : v === 'n' ? 'n' : v;
 ---
-<Base title="הצטרפות משרדי עורכי דין: פרופיל וחבילות קידום" description="פרופיל חינמי לכל משרד, וחבילות קידום שמסומנות בבירור. בלי עמלה על פניות, והדירוג לא ניתן לרכישה." path={path} schema={[breadcrumbs(crumbs), faqPage(faq)]}>
-  <section class="hero on-dark">
-    <div class="wrap" style="padding-block:48px 56px">
+<Base title="פרסום לעורכי דין: פרופיל, חבילות קידום ותוספות" description="פרופיל חינמי לכל משרד, וחבילות קידום שמסומנות בבירור. בלי עמלה על פניות, והדירוג לא ניתן לרכישה. מחירים לשנה, לפני מע״מ." path={path} nav="join" schema={[breadcrumbs(crumbs), faqPage(faq)]}>
+  <section class="phead on-dark">
+    <div class="wrap">
       <Crumbs items={crumbs} />
-      <span class="eyebrow mt2">למשרדי עורכי דין</span>
-      <h1 style="max-width:20ch">לקוחות מחפשים עורך דין לפי תחום ועיר. שיהיו לכם פרטים נכונים מול העיניים שלהם.</h1>
-      <p class="lead">פרופיל חינמי לכל משרד, חוות דעת מאומתות, וקידום בתשלום שמסומן תמיד. אין עמלה על פניות ואין תיווך.</p>
-      <div class="flex mt2"><a class="btn btn-brass" href={u(P.page('order'))}>להזמנה</a><a class="btn btn-ghost" href={u(P.page('claim'))}>אישור בעלות על פרופיל קיים</a></div>
+      <div class="phead-in">
+        <p class="eyebrow">פרסום לעורכי דין</p>
+        <h1 class="h1" style="max-width:760px">הלקוחות כבר מחפשים. תנו להם למצוא אתכם.</h1>
+        <p class="lead" style="max-width:640px">כרטיס משרד מורחב, מקום מקודם בראש דף התחום והעיר שלכם, ופניות ישירות למשרד. מחיר שנתי קבוע, ואפשר לשלם בתשלומים.</p>
+        <ul class="facts" style="gap:var(--sp-6) var(--sp-20)"><li style="display:inline-flex;gap:var(--sp-6);align-items:center"><Icon name="check" size={16} />כל קידום מסומן</li><li style="display:inline-flex;gap:var(--sp-6);align-items:center"><Icon name="check" size={16} />הדירוג לא נקנה</li><li style="display:inline-flex;gap:var(--sp-6);align-items:center"><Icon name="check" size={16} />בלי עמלה על פניות</li></ul>
+        <div class="flex" style="margin-top:var(--sp-4)"><a class="btn btn-w btn-lg" href="#plans">בחירת חבילה</a><a class="btn btn-o btn-lg" href="#compare">השוואת החבילות</a></div>
+      </div>
     </div>
   </section>
-  <section class="sec">
+
+  <section class="sec" aria-labelledby="pv-h" style="padding-bottom:0">
+    <div class="wrap cols" style="align-items:center">
+      <div class="stack gp8"><p class="eyebrow">תצוגה מקדימה</p><h2 class="h2" id="pv-h">כך תופיעו בדף ״עורך דין מקרקעין בנתניה״</h2><p class="small muted">מקום מקודם בראש הרשימה, עם התווית ״משרד מקודם״. מתחתיו: כל המשרדים, לפי הדירוג השקוף.</p></div>
+      <div class="list" aria-label="תצוגה מקדימה">
+        <div class="row promo"><span class="lt lt-b" aria-hidden="true"><span>המשרד</span><i></i><span>שלכם</span></span><div class="row-b"><div class="row-top"><PromoLabel /></div><p class="row-n">המשרד שלכם</p><p class="row-m">נתניה · מקרקעין, התחדשות עירונית</p></div><div class="row-a" aria-hidden="true"><span class="btn btn-p">לפרופיל המשרד</span><span class="btn btn-s"><Icon name="phone" size={16} /><span>התקשרות</span></span></div></div>
+        <div class="row"><span class="lt lt-x" aria-hidden="true"><Icon name="building" size={22} /></span><div class="row-b"><p class="row-n">1. משרדים לפי הדירוג השקוף</p><p class="row-m">מתחת למשרדים המקודמים</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="plans" aria-labelledby="pl-h">
     <div class="wrap">
-      <div class="sec-head"><div><span class="eyebrow">חבילות</span><h2>בוחרים כמה לבלוט</h2><p>כל החבילות שנתיות. המחירים לפני מע"מ, ואפשר לשלם בתשלומים.</p></div></div>
-      <div class="plans">
-        {plans().map((p) => (
-          <div class={'plan' + (p.highlight ? ' hl' : '')}>
-            {p.highlight && <span class="flag">מתאים לרוב המשרדים</span>}
-            <h3>{p.name}</h3>
-            <p class="small muted mb0">{p.pitch}</p>
-            <div class="price">{p.is_final && p.price_year !== null ? (p.price_year === 0 ? 'ללא עלות' : p.price_year.toLocaleString('he-IL') + ' ₪ לשנה + מע"מ') : p.price_note}<small>{p.tier > 0 ? 'אפשר לשלם בתשלומים' : 'לכל משרד שמופיע במאגר'}</small></div>
-            <ul>{p.features.map((x) => <li><Icon name="check" /><span>{x}</span></li>)}</ul>
-            <a class={'btn ' + (p.highlight ? 'btn-pine' : 'btn-line')} href={p.tier === 0 ? u(P.page('claim')) : u(P.page('order')) + '?plan=' + p.id}>{p.tier === 0 ? 'לאישור בעלות' : 'להזמנה'}</a>
+      <div class="sec-head"><div class="sec-head-t"><p class="eyebrow">4 דרכים להופיע</p><h2 class="h2" id="pl-h">בחרו כמה רחוק תגיעו</h2><p class="small muted">המחירים לשנה, לפני מע״מ. התשלום בכרטיס אשראי, בתשלום אחד או בתשלומים. חידוש אוטומטי רק בהסכמה מפורשת.</p></div></div>
+      <div class="plans" style="padding-top:var(--sp-12)">
+        {PLANS.map((p) => (
+          <article class={'plan' + (p.top ? ' plan-top' : '')} aria-labelledby={'pl-' + p.id}>
+            {p.top && <span class="plan-flag">כולל מקום בדף הבית</span>}
+            <div class="stack gp4"><h3 class="plan-n" id={'pl-' + p.id}>{p.n}</h3><p class="small muted">{p.d}</p></div>
+            <div class="stack gp4"><p class="plan-p"><b>{p.p} ₪</b><span class="cap">לשנה, לפני מע״מ</span></p></div>
+            <a class={'btn btn-lg btn-block ' + (p.top ? 'btn-p' : 'btn-s')} href={order(p.id)}>{p.cta}</a>
+            <ul>{p.f.map((x) => <li><Icon name="check" size={16} /><span>{x}</span></li>)}</ul>
+          </article>
+        ))}
+      </div>
+      <p class="small muted" style="margin-top:var(--sp-16)">כבר מופיעים באתר? אישור בעלות על הפרופיל ועדכון הפרטים הם בחינם. <a class="lnk" href={u(P.page('claim'))}>לאישור בעלות</a></p>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" id="compare" aria-labelledby="cmp-h">
+    <div class="wrap">
+      <div class="sec-head"><div class="sec-head-t"><p class="eyebrow">טבלת השוואה</p><h2 class="h2" id="cmp-h">מה כלול בכל חבילה</h2></div></div>
+      <div class="panel show-lg" style="overflow:hidden">
+        <table class="ctable"><caption class="sr">השוואת החבילות</caption>
+          <thead><tr><th scope="col" style="text-align:right">מה מקבלים</th>{PLANS.map((p, i) => <th scope="col" class={i === 3 ? 'hl' : undefined}>{p.n}</th>)}</tr></thead>
+          <tbody>
+            {ROWS.map((r) => <tr><th scope="row">{r[0]}</th>{r.slice(1).map((v, i) => <td class={i === 3 ? 'hl' : undefined}>{cell(v) === 'y' ? <><span style="color:var(--ok);display:inline-flex"><Icon name="check" size={18} /></span><span class="sr">כלול</span></> : cell(v) === 'n' ? <><span aria-hidden="true" style="color:var(--muted)">·</span><span class="sr">לא כלול</span></> : <span class="small" style="font-weight:600">{v}</span>}</td>)}</tr>)}
+            <tr><th scope="row" style="font-weight:600">מחיר לשנה, לפני מע״מ</th>{PLANS.map((p, i) => <td class={i === 3 ? 'hl' : undefined}><b class="num" style="font:600 var(--fs-18)/1 var(--serif);white-space:nowrap">{p.p} ₪</b></td>)}</tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel pad hide-lg stack gp12" data-cmp>
+        <div class="field"><label class="lbl" for="cmp-p">הצגת חבילה</label><span class="selw"><select class="inp" id="cmp-p">{PLANS.map((p, i) => <option value={String(i)} selected={i === 3}>{p.n}</option>)}</select><Icon name="chevd" size={16} /></span></div>
+        {PLANS.map((p, i) => (
+          <div data-cmp-p={String(i)} hidden={i !== 3}>
+            {ROWS.map((r) => <div style="display:flex;justify-content:space-between;gap:var(--sp-16);padding:var(--sp-12) 0;border-top:1px solid var(--line);font-size:var(--fs-14)"><span>{r[0]}</span><b style={'white-space:nowrap;color:' + (r[i + 1] === 'n' ? 'var(--muted)' : r[i + 1] === 'y' ? 'var(--ok)' : 'var(--text)')}>{r[i + 1] === 'y' ? 'כלול' : r[i + 1] === 'n' ? 'לא כלול' : r[i + 1]}</b></div>)}
+            <div style="display:flex;justify-content:space-between;gap:var(--sp-16);padding:var(--sp-12) 0;border-top:1px solid var(--text);font-size:var(--fs-15)"><span>מחיר לשנה, לפני מע״מ</span><b class="num">{p.p} ₪</b></div>
+            <a class={'btn btn-lg btn-block ' + (p.top ? 'btn-p' : 'btn-s')} href={order(p.id)}>{p.cta}</a>
           </div>
         ))}
       </div>
-      <h2 class="mt3" style="font-size:1.5rem">תוספות</h2>
-      <div class="grid g4">{addons().map((x) => <div class="card"><h3 style="font-size:1.08rem">{x.name}</h3><p class="small">{x.text}</p><p class="xs muted">{x.price_note}</p><a class="btn btn-line btn-sm" href={u(P.page('order')) + '?plan=' + x.id}>להזמנה</a></div>)}</div>
+      <p class="note" style="margin-top:var(--sp-16)"><Icon name="info" size={18} /><span>הקידום לא משנה את הציון או את המקום בדירוג. משרד מקודם מופיע מעל הרשימה, תמיד עם התווית ״משרד מקודם״.</span></p>
     </div>
   </section>
-  <section class="sec white">
-    <div class="wrap grid g3">
-      <div><span class="gicon"><Icon name="shield" /></span><h3 class="mt1">שקיפות מלאה</h3><p class="muted">כל מיקום בתשלום מסומן "משרד מקודם" או "מודעה". הגולשים יודעים מה פרסום ומה מידע.</p></div>
-      <div><span class="gicon"><Icon name="scale" /></span><h3 class="mt1">דירוג שלא נקנה בכסף</h3><p class="muted">הדירוג נבנה לפי <a href={u(P.page('method'))}>שיטה גלויה</a>. תשלום לא משנה אותו.</p></div>
-      <div><span class="gicon"><Icon name="phone" /></span><h3 class="mt1">פנייה ישירה אליכם</h3><p class="muted">אין תיווך ואין עמלה. הלקוח רואה את הטלפון והאתר שלכם ופונה ישירות.</p></div>
-    </div>
-  </section>
-  <section class="sec" id="order">
-    <div class="wrap layout" style="padding-top:0">
-      <div>
-        <h2>הזמנה אונליין</h2>
-        <p class="muted">בוחרים חבילה או תוספת, תחום ועיר, ממלאים פרטים ומשלמים בדף תשלום מאובטח (אפשר בתשלומים). הכול מופעל אוטומטית אחרי התשלום, והקבלה נשלחת במייל.</p>
-        <a class="btn btn-brass" href={u(P.page('order'))}>להזמנה</a>
-        <p class="small mt2">כבר יש לכם פרופיל? <a href={u(P.page('portal'))}>כניסה לאזור המשרדים</a></p>
+
+  <section class="sec" id="addons" aria-labelledby="ad-h">
+    <div class="wrap">
+      <div class="sec-head"><div class="sec-head-t"><p class="eyebrow">תוספות</p><h2 class="h2" id="ad-h">עוד מקומות להיראות בהם</h2><p class="small muted">כל תוספת נקנית בנפרד ומסומנת בתווית משלה.</p></div></div>
+      <div class="addons">
+        {ADDONS.map((a) => (
+          <article class="addon" aria-labelledby={'ad-' + a.id}>
+            <div class="stack gp8"><div class="row-top"><span class="tag">{a.t}</span></div><h3 class="h3" id={'ad-' + a.id}>{a.n}</h3><p class="small muted">{a.d}</p><a class="lnk small tap" href={order(a.id)} style="align-self:flex-start">להזמנה</a></div>
+            <div class="addon-p"><b>{a.p} ₪</b><span class="cap">{a.unit}</span></div>
+          </article>
+        ))}
       </div>
-      <aside class="aside"><div class="box brass"><h2>כבר מופיעים באתר?</h2><p class="small">אפשר לאשר בעלות על הפרופיל ולעדכן אותו בחינם, בלי לבחור חבילה.</p><a class="btn btn-pine btn-sm btn-block" href={u(P.page('claim'))}>אישור בעלות</a></div></aside>
     </div>
-    <div class="wrap"><Faq items={faq} /></div>
   </section>
+
+  <section class="sec sec-alt" aria-labelledby="st-h">
+    <div class="wrap">
+      <div class="sec-head"><div class="sec-head-t"><p class="eyebrow">איך מצטרפים</p><h2 class="h2" id="st-h">4 שלבים, ואתם באוויר</h2></div><a class="more show-md" href={u(P.page('order'))}><span>להתחלה</span><Icon name="arrow" size={18} /></a></div>
+      <ol class="howsteps">
+        <li><b class="num">1</b><p class="h4">בוחרים חבילה</p><p class="small muted">שדרוג כרטיס, מקומית, אזורית או ארצית. או תוספת בנפרד.</p></li>
+        <li><b class="num">2</b><p class="h4">בוחרים תחום ועיר</p><p class="small muted">לפי החבילה: תחום בעיר אחת, עד 3 צירופים, או תחום בדף הארצי.</p></li>
+        <li><b class="num">3</b><p class="h4">פרטי המשרד</p><p class="small muted">שם המשרד, עיר, טלפון ואיש קשר. משרד שכבר באתר קונה מאזור המשרדים.</p></li>
+        <li><b class="num">4</b><p class="h4">תשלום והפעלה</p><p class="small muted">תשלום מאובטח. אחרי התשלום הכול מופעל אוטומטית, והקבלה נשלחת במייל.</p></li>
+      </ol>
+      <a class="btn btn-s btn-lg btn-block hide-md" href={u(P.page('order'))} style="margin-top:var(--sp-16)"><span>להתחלה</span><Icon name="arrow" size={18} /></a>
+    </div>
+  </section>
+  <section class="sec" aria-label="שאלות נפוצות"><div class="wrap" style="max-width:860px"><Faq items={faq} /></div></section>
+  <script>
+    const s = document.getElementById('cmp-p') as HTMLSelectElement | null;
+    s?.addEventListener('change', () => document.querySelectorAll<HTMLElement>('[data-cmp-p]').forEach((d) => (d.hidden = d.dataset.cmpP !== s.value)));
+  </script>
 </Base>

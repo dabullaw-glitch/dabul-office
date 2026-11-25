@@ -1,8 +1,0 @@
----
-import Icon from './Icon.astro';
-const { value } = Astro.props as { value: number };
-const full = Math.round(value);
----
-<span class="stars" role="img" aria-label={`דירוג ${value} מתוך 5`}>
-  {[1, 2, 3, 4, 5].map((n) => <span style={n > full ? 'opacity:.25' : undefined}><Icon name="star" /></span>)}
-</span>

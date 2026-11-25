@@ -1,9 +1,10 @@
 ---
-// Area page (/עורך-דין-<area>/) and area + city page (/עורך-דין-<area>/<city>/).
+// Area page (/עורך-דין-<area>/) and area + city page (/עורך-דין-<area>/<city>/), canvas round 4.
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
 import Icon from '../components/Icon.astro';
 import FirmList from '../components/FirmList.astro';
+import ListTools from '../components/ListTools.astro';
 import Disclaimer from '../components/Disclaimer.astro';
 import Faq from '../components/Faq.astro';
 import Toc from '../components/Toc.astro';
@@ -11,8 +12,9 @@ import Sources from '../components/Sources.astro';
 import JoinBand from '../components/JoinBand.astro';
 import { P, u } from '../config/routes';
 import { areaBySlug, areas, cities, cityBySlug, firms, rankFor, articles, tools, courts, fmtDate } from '../lib/data';
-import { render } from '../lib/md';
+import { render, readMinutes } from '../lib/md';
 import { breadcrumbs, itemList, faqPage, guide, collection } from '../lib/schema';
+import { scoreOf } from '../lib/ui';
 
 const { path, area: aslug, city: cslug } = Astro.props as any;
 const a = areaBySlug(aslug)!;
@@ -21,121 +23,120 @@ const all = await firms();
 const inArea = all.filter((f) => f.areas.includes(a.slug));
 const list = c ? inArea.filter((f) => f.city === c.slug) : inArea;
 const { featured, rest } = rankFor(list, a.slug, c?.slug);
+const reviews = list.reduce((s, f) => s + scoreOf(f).count, 0);
 const cityCounts = cities().map((x) => ({ c: x, n: inArea.filter((f) => f.city === x.slug).length })).filter((x) => x.n > 0).sort((x, y) => y.n - x.n);
 const g = !c && a.guide ? render(a.guide.body) : null;
 const faq = !c && a.guide ? a.guide.faq : [];
 const related = areas().filter((x) => x.group === a.group && x.slug !== a.slug);
-const arts = articles().filter((x) => x.areas.includes(a.slug)).slice(0, 4);
-const ts = tools().filter((t) => t.area === a.slug).slice(0, 4);
-const cts = c ? courts().filter((x) => x.city === c.name || x.city === c.slug) : [];
+const arts = articles().filter((x) => x.areas.includes(a.slug)).slice(0, 3);
+const ts = tools().filter((t) => t.area === a.slug).slice(0, 5);
+const cts = c ? courts().filter((x) => x.city === c.name || x.city === c.slug || x.city.includes(c.name)) : [];
+const near = c ? cityCounts.filter((x) => x.c.slug !== c.slug && x.c.region === c.region).slice(0, 6) : [];
 const h1 = c ? `${a.title} ב${c.name}` : a.title;
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'תחומים', path: P.page('areas') }, { name: a.title, path: P.area(a.he) }, ...(c ? [{ name: c.name, path }] : [])];
-const title = c ? `${a.title} ב${c.name}: משרדים, פרטי קשר וחוות דעת` : (a.guide?.seoTitle || `${a.title}: משרדים לפי עיר ומדריך מלא`);
+const title = c ? `${a.title} ב${c.name}: משרדים, פרטי קשר וביקורות` : (a.guide?.seoTitle || `${a.title}: משרדים לפי עיר ומדריך מלא`);
 const description = c
-  ? `${list.length ? list.length + ' משרדים' : 'משרדים'} בתחום ${a.name} ב${c.name}: כתובת, טלפון, שעות וחוות דעת מאומתות. ${a.intro}`.slice(0, 158)
+  ? `${list.length ? list.length + ' משרדים' : 'משרדים'} בתחום ${a.name} ב${c.name}: כתובת, טלפון, שעות וביקורות מאומתות. ${a.intro}`.slice(0, 158)
   : (a.description || a.intro).slice(0, 158);
 const updated = a.guide?.updated ? fmtDate(a.guide.updated) : '';
 const schema = [breadcrumbs(crumbs), collection(h1, path, description),
   list.length ? itemList(h1, [...featured, ...rest].map((f) => ({ name: f.name, path: P.firm(f.slug) }))) : null,
   faqPage(faq), !c ? guide(a, path) : null];
+const n = (k: number, one: string, many: string) => (k === 1 ? one : `${k} ${many}`);
 ---
 <Base title={title} description={description} path={path} nav="areas" schema={schema} noindex={!!c && list.length === 0}>
-  <section class="phead tint">
+  <section class="phead on-dark">
     <div class="wrap">
       <Crumbs items={crumbs} />
-      <h1>{h1}</h1>
-      <p class="lead">{a.intro}</p>
-      <div class="chips">
-        <span class="chip"><Icon name="building" />{list.length} משרדים ברשימה</span>
-        {!c && cityCounts.length > 0 && <span class="chip"><Icon name="pin" />ב־{cityCounts.length} ערים</span>}
-        {g && <a class="chip" href="#guide"><Icon name="book" />מדריך מלא לתחום</a>}
-        {updated && <span class="chip"><Icon name="calendar" />עודכן {updated}</span>}
-        {c && <a class="chip" href={u(P.area(a.he))}><Icon name="globe" />{a.title} בכל הארץ</a>}
+      <div class="phead-in">
+        <p class="eyebrow">{a.group}</p>
+        <h1 class="h1">{h1}</h1>
+        <p class="lead" style="max-width:640px">{a.intro}</p>
+        <p class="facts"><span><b class="num">{list.length}</b> משרדים</span><span aria-hidden="true">·</span><span><b class="num">{reviews}</b> ביקורות מאומתות</span>{!c && <><span aria-hidden="true">·</span><span><b class="num">{cityCounts.length}</b> ערים</span></>}{updated && <><span aria-hidden="true">·</span><span>המדריך עודכן {updated}</span></>}</p>
+        {cityCounts.length > 0 && (
+          <form class="refine" action={u(P.area(a.he))} data-refine data-base={u(P.area(a.he))}>
+            <label class="sr" for="acity">עיר</label>
+            <span class="selw"><select class="inp" id="acity" name="city"><option value="">כל הארץ</option>{cityCounts.map((x) => <option value={x.c.he} selected={c?.slug === x.c.slug}>{x.c.name} ({x.n})</option>)}</select><Icon name="chevd" size={16} /></span>
+            <button class="btn btn-w btn-lg" type="submit"><Icon name="search" size={18} /><span>הצגת משרדים</span></button>
+          </form>
+        )}
       </div>
     </div>
   </section>
+  {rest.length > 1 && <ListTools target="fl-rank" total={rest.length} />}
+  {related.length > 0 && (
+    <div class="wrap" style="padding-top:var(--sp-20)">
+      <nav aria-label={`תחומים קרובים ל${a.name}`} class="stack gp8"><p class="cap">תחומים קרובים:</p><div class="chips">{related.map((x) => <a class="chip" href={u(P.area(x.he))}>{x.name}</a>)}</div></nav>
+    </div>
+  )}
+  <div class="wrap cols" style="padding-top:var(--sp-28);padding-bottom:var(--sp-56)">
+    <div class="stack" style="gap:var(--sp-40);min-width:0">
+      <FirmList featured={featured} rest={rest} area={a.slug} city={c?.slug} id="fl"
+        promoTitle={c ? `משרדים מקודמים ב${c.name}` : `משרדים מקודמים בתחום`}
+        restTitle={c ? `כל המשרדים ב${c.name}, לפי הדירוג` : `כל משרדי ${a.name}, לפי הדירוג`}
+        emptyText={c ? `עדיין אין ברשימה משרדים בתחום ${a.name} ב${c.name}.` : `עדיין אין ברשימה משרדים בתחום ${a.name}.`} />
+      <Disclaimer kind="list" />
 
-  <div class="wrap layout">
-    <div>
-      <section aria-labelledby="list-h">
-        <h2 id="list-h">{c ? `משרדים ב${c.name}` : `משרדים בתחום ${a.name}`}</h2>
-        <FirmList featured={featured} rest={rest} area={a.slug} emptyText={c ? `עדיין אין ברשימה משרדים בתחום ${a.name} ב${c.name}.` : undefined} />
-        <Disclaimer kind="list" />
-      </section>
+      {!c && cityCounts.length > 0 && (
+        <section aria-labelledby="ac-h" class="stack gp12">
+          <h2 class="h3" id="ac-h" style="font:600 var(--fs-22)/1.3 var(--serif)">{a.title} בעיר שלכם</h2>
+          <div class="linkgrid">{cityCounts.map((x) => <a href={u(P.areaCity(a.he, x.c.he))}><span>{a.title} ב{x.c.name}</span><span class="c">{n(x.n, 'משרד אחד', 'משרדים')}</span></a>)}</div>
+        </section>
+      )}
 
       {c && (
-        <section class="mt3" aria-labelledby="cityinfo-h">
-          <h2 id="cityinfo-h">לפני שפונים למשרד ב{c.name}</h2>
+        <section aria-labelledby="ci-h" class="stack gp12">
+          <h2 class="h3" id="ci-h" style="font:600 var(--fs-22)/1.3 var(--serif)">לפני שפונים למשרד ב{c.name}</h2>
           <div class="prose">
-            <p>{a.intro} כדאי להכין מראש את המסמכים הרלוונטיים, לכתוב בכמה שורות מה קרה ומה אתם רוצים להשיג, ולשאול בפגישה הראשונה על דרך העבודה, לוחות הזמנים ושכר הטרחה.</p>
-            <p>הסבר מלא על התחום, מה עורך הדין עושה ומה שואלים בפגישה הראשונה נמצא <a href={u(P.area(a.he)) + '#guide'}>במדריך לתחום {a.name}</a>.</p>
+            <p>{a.intro} כדאי להכין מראש את המסמכים, לכתוב בכמה שורות מה קרה ומה אתם רוצים להשיג, ולשאול בפגישה הראשונה על דרך העבודה, לוחות הזמנים ושכר הטרחה.</p>
+            <p>הסבר מלא על התחום נמצא <a href={u(P.area(a.he)) + '#guide'}>במדריך לתחום {a.name}</a>.</p>
           </div>
-          {cts.length > 0 && <p>בתי משפט ב{c.name}: {cts.map((x, i) => <>{i > 0 && ', '}<a href={u(P.court(x.he))}>{x.name}</a></>)}</p>}
+          {cts.length > 0 && <div class="linkgrid">{cts.map((x) => <a href={u(P.court(x.he))}><span>{x.name}</span><Icon name="chev" size={16} /></a>)}</div>}
         </section>
       )}
 
       {g ? (
-        <section id="guide" class="mt3" aria-labelledby="guide-h">
-          <span class="eyebrow">מדריך</span>
-          <h2 id="guide-h" style="margin-top:0">{a.title}: מה חשוב לדעת</h2>
-          <div class="meta-line mb2">
-            <span><Icon name="user" />מערכת האתר{a.guide!.reviewedBy && <> · נבדק בידי {a.guide!.reviewedBy}</>}</span>
-            {updated && <span><Icon name="calendar" />עודכן {updated}</span>}
-            {a.guide!.draft && <span class="badge b-draft">טיוטה</span>}
-          </div>
+        <article id="guide" class="stack gp16" aria-labelledby="ag-h" style="border-top:1px solid var(--line);padding-top:var(--sp-32)">
+          <p class="cap">מדריך · {updated ? `עודכן ${updated} · ` : ''}{readMinutes(a.guide!.body)} דק׳ קריאה{a.guide!.reviewedBy ? ` · נבדק בידי ${a.guide!.reviewedBy}` : ''} {a.guide!.draft && <span class="draft-b">טיוטה</span>}</p>
+          <h2 id="ag-h" class="h2">{a.title}: המדריך לפני שבוחרים</h2>
           <Toc items={g.toc} mobile />
           <div class="prose" set:html={g.html} />
           <Disclaimer kind="info" />
           <Sources items={a.guide!.sources} updated={updated} />
-        </section>
+        </article>
       ) : !c && (
-        <section id="guide" class="mt3" aria-labelledby="guide-h">
-          <h2 id="guide-h">מה עושה {a.title}</h2>
+        <section id="guide" class="stack gp12" aria-labelledby="ag-h" style="border-top:1px solid var(--line);padding-top:var(--sp-32)">
+          <h2 id="ag-h" class="h3" style="font:600 var(--fs-22)/1.3 var(--serif)">מה עושה {a.title}</h2>
           <div class="prose"><p>{a.intro}</p><p>מדריך מלא לתחום, עם מקורות ותאריך עדכון, נמצא בכתיבה ויתפרסם כאן.</p></div>
         </section>
       )}
-
       <Faq items={faq} />
-
-      {arts.length > 0 && (
-        <section class="mt3" aria-labelledby="ra-h">
-          <h2 id="ra-h">מאמרים בתחום</h2>
-          <div class="grid g2">{arts.map((x) => <a class="card acard" href={u(P.article(x.he))}><h3>{x.title}</h3><p>{x.description}</p></a>)}</div>
-        </section>
-      )}
-
-      {related.length > 0 && (
-        <section class="mt3" aria-labelledby="rel-h">
-          <h2 id="rel-h">תחומים קרובים</h2>
-          <div class="chips">{related.map((x) => <a class="chip" href={u(c ? P.area(x.he) : P.area(x.he))}>{x.title}</a>)}</div>
-        </section>
-      )}
     </div>
 
-    <aside class="aside">
-      {cityCounts.length > 0 && (
-        <nav class="box" aria-labelledby="cities-h">
-          <h2 id="cities-h">{a.title} לפי עיר</h2>
-          <ul class="citylist">
-            {cityCounts.map((x) => <li><a href={u(P.areaCity(a.he, x.c.he))} aria-current={c?.slug === x.c.slug ? 'page' : undefined}>{x.c.name}<span class="n">{x.n}</span></a></li>)}
-          </ul>
-        </nav>
-      )}
+    <aside class="stack gp16" aria-label="כלים ותוכן בתחום">
+      {g && <div class="sticky-aside show-lg"><Toc items={g.toc} /></div>}
       {ts.length > 0 && (
-        <div class="box">
-          <h2>כלים חינמיים בתחום</h2>
-          <ul class="links">{ts.map((t) => <li><a href={u(P.tool(t.he))}>{t.name}</a></li>)}</ul>
-        </div>
+        <div class="aside-box"><h3>כלים שקשורים לתחום</h3><div class="stack">
+          {ts.map((t, i) => <a class="titem" style={'padding:var(--sp-8) 0;' + (i === 0 ? 'border-top:0' : '')} href={u(P.tool(t.he))}><span class="ac-ic"><Icon name={t.type === 'generator' ? 'doc' : 'calc'} size={18} /></span><span class="tn">{t.name}</span></a>)}
+        </div></div>
       )}
-      <div class="sticky">
-        {g && <Toc items={g.toc} />}
-        <div class="box brass mt1">
-          <h2>עורכי דין בתחום {a.name}?</h2>
-          <p class="small">אשרו בעלות על הפרופיל בחינם ועדכנו את הפרטים.</p>
-          <a class="btn btn-pine btn-sm btn-block" href={u(P.page('claim'))}>לניהול הפרופיל</a>
-        </div>
+      {arts.length > 0 && (
+        <div class="aside-box"><h3>מדריכים בתחום</h3><div class="stack">
+          {arts.map((x, i) => <a class="titem" style={'padding:var(--sp-8) 0;' + (i === 0 ? 'border-top:0' : '')} href={u(P.article(x.he))}><span class="ac-ic"><Icon name="book" size={18} /></span><span class="tn">{x.title}</span></a>)}
+        </div></div>
+      )}
+      {near.length > 0 && <div class="aside-box"><h3>בערים סמוכות</h3><div class="linkgrid one">{near.map((x) => <a href={u(P.areaCity(a.he, x.c.he))}><span>{a.title} ב{x.c.name}</span><span class="c">{x.n}</span></a>)}</div></div>}
+      {c && <div class="aside-box"><h3>{a.title} בכל הארץ</h3><a class="more" href={u(P.area(a.he))}><span>לכל משרדי {a.name}</span><Icon name="arrow" size={18} /></a></div>}
+      <div class="aside-box on-dark" style="background:var(--ink);color:var(--on-ink);border-color:var(--ink)">
+        <h3>המשרד שלכם {c ? `ב${c.name}` : `בתחום ${a.name}`}?</h3>
+        <p class="small" style="color:var(--on-ink-muted)">{c ? 'מקום מקודם בראש הדף הזה: חבילה מקומית, תחום אחד בעיר אחת. 990 ₪ לשנה, לפני מע״מ.' : 'מקום מקודם בראש דף התחום הארצי ובדף הבית: חבילה ארצית. 3,290 ₪ לשנה, לפני מע״מ.'}</p>
+        <a class="btn btn-w" href={u(P.page('join'))}>פרסום לעורכי דין</a>
       </div>
     </aside>
   </div>
-  <section class="sec tight"><div class="wrap"><JoinBand /></div></section>
+  <script>
+    document.querySelectorAll<HTMLFormElement>('form[data-refine]').forEach((f) => f.addEventListener('submit', (e) => {
+      e.preventDefault(); const v = (f.elements.namedItem('city') as HTMLSelectElement).value; location.href = f.dataset.base + (v ? v + '/' : '');
+    }));
+  </script>
 </Base>

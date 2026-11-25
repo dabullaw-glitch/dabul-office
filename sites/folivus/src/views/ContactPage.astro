@@ -9,7 +9,7 @@ const { path } = Astro.props as any;
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'צור קשר', path }];
 ---
 <Base title="צור קשר עם האתר" description="פנייה לצוות האתר: שאלות, תיקונים, שיתופי פעולה ונגישות. לפנייה למשרד עורכי דין, השתמשו בפרטי הקשר בעמוד המשרד." path={path} schema={[breadcrumbs(crumbs)]}>
-  <section class="phead tint"><div class="wrap"><Crumbs items={crumbs} /><h1>צור קשר</h1><p class="lead">שאלות על האתר, תיקונים, נגישות או שיתופי פעולה.</p></div></section>
+  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} /><h1>צור קשר</h1><p class="lead">שאלות על האתר, תיקונים, נגישות או שיתופי פעולה.</p></div></section>
   <div class="wrap layout">
     <div>
       <p class="note warn"><Icon name="info" /><span>הטופס מגיע לצוות האתר בלבד. האתר לא מעביר פניות למשרדים ולא נותן ייעוץ משפטי. כדי לפנות למשרד, השתמשו בטלפון או באתר שמופיעים בעמוד שלו.</span></p>

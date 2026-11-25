@@ -6,7 +6,7 @@ import '../styles/commerce.css';
 const { path } = Astro.props as any;
 ---
 <Base title="ניהול האתר" description="ניהול הזמנות, משרדים, חוות דעת ובקשות." path={path} noindex>
-  <div class="wrap" style="padding-block:28px 64px" id="admin" data-portal={u(P.page('portal'))}>
+  <div class="wrap" style="padding-block:var(--sp-28) var(--sp-64)" id="admin" data-portal={u(P.page('portal'))}>
     <h1>ניהול האתר</h1>
     <div class="msg" data-top role="status"></div>
     <div class="cm-tabs" data-tabs role="tablist"></div>

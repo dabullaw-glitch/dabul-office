@@ -1,8 +1,7 @@
 ---
 // Paid slots on a page, read live from the database (fol_public_slots), so a purchase shows up right after payment.
-// Always labelled ("מודעה" / "משרד מקודם"). Fair daily rotation among equals is done by the database. Empty = small join note.
+// Always labelled ("מודעה" / "בחסות" / "משרד מקודם"). Fair daily rotation among equals is done by the database.
 import { P, u } from '../config/routes';
-import '../styles/commerce.css';
 const { kind, target = '', area = '', city = '', title = '', cta = true } = Astro.props as { kind: string; target?: string; area?: string; city?: string; title?: string; cta?: boolean };
 ---
 <div class="cm-slots" data-slots-kind={kind} data-target={target} data-area={area} data-city={city} data-title={title} data-firm-base={u(P.firm('__slug__'))} data-order={u(P.page('order'))} data-cta={cta ? '1' : ''} hidden></div>

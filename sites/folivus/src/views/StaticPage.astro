@@ -46,7 +46,7 @@ const PAGES: Record<string, { title: string; h1: string; description: string; dr
 <h2>הדירוג השנתי</h2>
 <p>פעם בשנה יתפרסם דירוג לפי תחום. <strong>הדירוג אינו ניתן לרכישה</strong>: תשלום על חבילה או על קידום לא משפיע עליו.</p>
 <p>הקריטריונים שייבחנו (טיוטה, תפורסם בגרסה סופית לפני הדירוג הראשון):</p>
-<div class="tbl"><table><thead><tr><th>קריטריון</th><th>מה בודקים</th><th>משקל</th></tr></thead><tbody>
+<div class="tbl" tabindex="0" role="region" aria-label="טבלה"><table><thead><tr><th>קריטריון</th><th>מה בודקים</th><th>משקל</th></tr></thead><tbody>
 <tr><td>חוות דעת מאומתות</td><td>ממוצע ומספר חוות הדעת בשנה האחרונה</td><td>40%</td></tr>
 <tr><td>ותק וניסיון בתחום</td><td>שנות פעילות בתחום, לפי פרטים שהמשרד מסר ואימתנו</td><td>20%</td></tr>
 <tr><td>הכרה מקצועית</td><td>פרסומים מקצועיים, הוראה ותפקידים בלשכה, לפי מסמכים</td><td>20%</td></tr>
@@ -143,7 +143,7 @@ const PAGES: Record<string, { title: string; h1: string; description: string; dr
 <li><strong>שיווק:</strong> מדידת פרסום והצגת מודעות מותאמות. כבויות עד שתאשרו. <strong>כרגע לא פועל באתר כלי שיווק.</strong></li>
 </ul>
 <h2>מה נשמר בדפדפן שלכם</h2>
-<div class="tbl" role="region" aria-label="טבלת העוגיות" tabindex="0"><table>
+<div class="tbl" tabindex="0" role="region" aria-label="טבלת העוגיות"><table>
 <caption class="sr">המידע שהאתר שומר בדפדפן</caption>
 <thead><tr><th scope="col">שם</th><th scope="col">סוג</th><th scope="col">למה</th><th scope="col">לכמה זמן</th></tr></thead><tbody>
 <tr><td dir="ltr">fol-consent</td><td>הכרחי</td><td>שומר את הבחירה שלכם לגבי עוגיות, עם התאריך ומספר הגרסה של המדיניות.</td><td>12 חודשים. אחר כך נשאל שוב.</td></tr>
@@ -176,8 +176,8 @@ const d = PAGES[page];
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: d.title, path }];
 ---
 <Base title={d.title} description={d.description} path={path} schema={[breadcrumbs(crumbs)]}>
-  <section class="phead tint"><div class="wrap"><Crumbs items={crumbs} /><h1>{d.h1}</h1></div></section>
-  <div class="wrap" style="padding-block:34px 70px">
+  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} /><h1>{d.h1}</h1></div></section>
+  <div class="wrap" style="padding-block:var(--sp-34) var(--sp-70)">
     {PREVIEW && d.draft && <p class="note warn" style="max-width:74ch"><Icon name="info" /><span>טיוטה לבדיקה משפטית לפני ההשקה.</span></p>}
     <div class="prose mt2" set:html={d.html} />
   </div>

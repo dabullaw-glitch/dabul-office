@@ -1,0 +1,14 @@
+---
+// Typographic firm mark (like a law firm letterhead). A real logo, when the firm uploaded one, replaces it.
+import Icon from './Icon.astro';
+import { mono, tileStyle } from '../lib/ui';
+import type { Firm } from '../lib/data';
+const { f, lg = false } = Astro.props as { f: Firm; lg?: boolean };
+const m = mono(f.name);
+const logo = f.extendedEnabled && typeof f.extended?.logo === 'string' && /^https:\/\//.test(f.extended.logo) ? f.extended.logo : '';
+const cls = `lt lt-${m.length ? tileStyle(f.slug) : 'x'}${lg ? ' lt-lg' : ''}`;
+---
+<span class={cls} aria-hidden="true" style={logo ? 'background:var(--white);padding:var(--sp-4)' : undefined}>
+  {logo ? <img src={logo} alt="" width={lg ? 88 : 44} height={lg ? 88 : 44} style="object-fit:contain;width:100%;height:100%" loading="lazy" /> :
+   m.length === 0 ? <Icon name="building" size={lg ? 30 : 22} /> : m.length === 1 ? <span>{m[0]}</span> : <><span>{m[0]}</span><i></i><span>{m[1]}</span></>}
+</span>

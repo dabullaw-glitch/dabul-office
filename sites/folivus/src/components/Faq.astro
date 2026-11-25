@@ -1,15 +1,16 @@
 ---
+import Icon from './Icon.astro';
 import type { Faq } from '../lib/data';
 const { items, title = 'שאלות נפוצות', id = 'faq' } = Astro.props as { items: Faq[]; title?: string; id?: string };
 ---
 {items.length > 0 && (
-  <section aria-labelledby={id} class="mt3">
-    <h2 id={id}>{title}</h2>
+  <section aria-labelledby={id} class="stack gp8">
+    <h2 id={id} class="h3" style="font:600 var(--fs-22)/1.3 var(--serif)">{title}</h2>
     <div class="faq">
-      {items.map((f, i) => (
-        <details open={i === 0}>
-          <summary>{f.q}</summary>
-          <div class="a">{f.a}</div>
+      {items.map((f) => (
+        <details>
+          <summary><span>{f.q}</span><Icon name="chevd" size={18} /></summary>
+          <p>{f.a}</p>
         </details>
       ))}
     </div>

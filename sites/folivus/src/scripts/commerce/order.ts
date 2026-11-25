@@ -19,10 +19,35 @@ const kindOf = (p: Plan) => (p.limits && p.limits.card ? 'card' : p.kind);
 let plans: Plan[] = [], T: any = { areas: [], cities: [], courts: [], tools: [] }, test = true, plan: Plan | null = null, renew = '', myFirms: any[] = [], quote: any = null;
 const opt = (list: any[], ph = 'בחרו') => `<option value="">${ph}</option>` + list.map((x) => `<option value="${esc(x.slug)}">${esc(x.name)}</option>`).join('');
 
+const STEP_NAMES = ['מוצר', 'מקומות', 'פרטים', 'סיכום ותשלום'];
+let cur = 1;
 function go(n: number) {
+  cur = n;
   $$('[data-step]', root).forEach((s) => s.classList.toggle('cm-hidden', Number(s.dataset.step) !== n));
-  $$('[data-steps] li', root).forEach((li) => li.classList.toggle('on', Number(li.dataset.s) <= n));
-  root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  $$('[data-steps] li').forEach((li) => { const k = Number(li.dataset.s); li.dataset.on = String(k <= n); if (k === n) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current'); });
+  const lbl = $('[data-step-label]'); if (lbl) lbl.textContent = `שלב ${n} מתוך 4 · ${STEP_NAMES[n - 1]}`;
+  const nb = $('[data-sbar-next]'); if (nb) nb.textContent = n === 4 ? ($('[data-pay]', root) as HTMLButtonElement).textContent || 'לתשלום' : n === 3 ? 'לסיכום' : 'המשך';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+// live summary (aside on desktop, folded box and bottom bar on phones). Numbers only from the server quote.
+function summary(q: any) {
+  const c = plan ? (COPY[plan.id] || { title: plan.name }) : null;
+  const html = !plan ? '<div><span class="cap">בחרו מוצר כדי לראות מחיר.</span></div>'
+    : !q ? `<div><span class="stack"><span style="font-weight:600">${esc(c!.title)}</span><span class="cap">${esc(priceText(plan))}</span></span></div><div><span class="cap">הסכום הסופי יחושב אחרי בחירת המקומות.</span></div>`
+    : `<div><span class="stack"><span style="font-weight:600">${esc(c!.title)}</span><span class="cap">${q.months ? q.months + ' חודשים' : 'שנה מיום התשלום'}</span></span><b>${ils(q.net)}</b></div><div><span>סכום לפני מע״מ</span><b>${ils(q.net)}</b></div><div><span>מע״מ</span><b>${ils(q.vat)}</b></div><div class="tot"><span>סך הכול</span><b data-qtotal>${ils(q.total)}</b></div>${Number(q.max_installments) > 1 ? `<div style="border-top:0;padding-top:0"><span class="cap">אפשר לשלם עד ${q.max_installments} תשלומים</span></div>` : ''}`;
+  $$('[data-sum]').forEach((el) => (el.innerHTML = html));
+  $$('[data-total]').forEach((el) => (el.textContent = q ? ils(q.total) : plan ? 'לפי הבחירה' : 'אין עדיין'));
+  const sc = $('[data-scope]'); if (sc) sc.textContent = plan ? (COPY[plan.id]?.text || '') : '';
+}
+let qt: number | undefined;
+function requote() {
+  clearTimeout(qt);
+  qt = window.setTimeout(async () => {
+    if (!plan || renew) return;
+    const k = kindOf(plan); if (k !== 'card' && k !== 'article' && step2()) { quote = null; summary(null); return; }
+    const q = await api('quote', body(), true);
+    quote = q.status === 200 ? q : null; summary(quote);
+  }, 250);
 }
 
 async function load() {
@@ -54,43 +79,50 @@ function priceText(p: Plan) {
 }
 function renderProducts() {
   const box = $('[data-products]', root);
-  box.innerHTML = plans.map((p) => {
+  const card = (p: Plan) => {
     const c = COPY[p.id] || { title: p.name, text: '' };
     const off = !(Number(p.unit_price) > 0);
-    return `<button type="button" class="cm-product" data-plan="${esc(p.id)}" ${off ? 'disabled' : ''}><strong>${esc(c.title)}</strong><span class="small muted">${esc(c.text)}</span><span class="cm-price">${esc(priceText(p))}</span></button>`;
-  }).join('') || '<p class="muted">המוצרים לא זמינים כרגע.</p>';
-  $$('[data-plan]', box).forEach((b) => b.addEventListener('click', () => pick(plans.find((x) => x.id === b.dataset.plan)!)));
+    const unit = p.unit === 'month' ? 'לחודש' : p.unit === 'item' ? 'למאמר' : 'לשנה';
+    return `<button type="button" class="cm-product" role="radio" aria-checked="false" data-plan="${esc(p.id)}" ${off ? 'disabled' : ''}><span class="rdot" aria-hidden="true"></span><strong>${esc(c.title)}</strong><span class="cm-d">${esc(c.text)}</span><span class="cm-price">${off ? '<small>המחיר ייקבע בקרוב</small>' : `<span>${esc(ils(p.unit_price))}</span><small>${unit}, לפני מע״מ</small>`}</span></button>`;
+  };
+  const pk = plans.filter((p) => p.kind === 'listing' || kindOf(p) === 'card'), ad = plans.filter((p) => !pk.includes(p));
+  box.innerHTML = plans.length ? `<p class="cm-group">חבילות</p>${pk.map(card).join('')}${ad.length ? `<p class="cm-group">תוספות ומודעות</p>${ad.map(card).join('')}` : ''}` : '<p class="muted">המוצרים לא זמינים כרגע.</p>';
+  $$('[data-plan]', box).forEach((b) => b.addEventListener('click', () => select(plans.find((x) => x.id === b.dataset.plan)!)));
 }
 
-async function pick(p: Plan, target = '') {
+async function pick(p: Plan, target = '') { await select(p, target); go(2); }
+async function select(p: Plan, target = '') {
   plan = p; renew = ''; quote = null;
-  $$('[data-plan]', root).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.plan === p.id)));
+  $$('[data-plan]', root).forEach((b) => b.setAttribute('aria-checked', String(b.dataset.plan === p.id)));
+  summary(null);
   const k = kindOf(p); const slots = $('[data-slots]', root);
   $('[data-step2-title]', root).textContent = k === 'listing' ? 'באיזה תחום ועיר להופיע' : k === 'article' ? 'על מה המאמר' : k === 'card' ? 'שדרוג כרטיס' : 'באיזה עמוד להופיע';
   if (k === 'listing') {
     const max = Number(p.limits?.slots) || 1, nat = p.limits?.scope === 'nationwide';
-    slots.innerHTML = `<p class="small muted">${nat ? 'בוחרים תחום אחד. המשרד יוצג בראש העמוד הארצי של התחום ובבלוק המשרדים בעמוד הבית.' : max > 1 ? `אפשר לבחור עד ${max} צירופים של תחום ועיר.` : 'בוחרים תחום אחד ועיר אחת.'}</p><div data-rows></div>${max > 1 ? '<button type="button" class="btn btn-line btn-sm" data-add>הוספת צירוף</button>' : ''}`;
+    slots.innerHTML = `<p class="small muted">${nat ? 'בוחרים תחום אחד. המשרד יוצג בראש העמוד הארצי של התחום ובבלוק המשרדים בעמוד הבית.' : max > 1 ? `אפשר לבחור עד ${max} צירופים של תחום ועיר.` : 'בוחרים תחום אחד ועיר אחת.'}</p><div data-rows></div>${max > 1 ? '<button type="button" class="btn btn-s" data-add style="align-self:flex-start">הוספת צירוף</button>' : ''}`;
     const rows = $('[data-rows]', slots);
     const addRow = () => {
       if ($$('.cm-row', rows).length >= max) return;
-      const d = document.createElement('div'); d.className = 'cm-row';
-      d.innerHTML = `<div class="field"><label>תחום</label><select data-area>${opt(T.areas, 'בחרו תחום')}</select></div>${nat ? '<div></div>' : `<div class="field"><label>עיר</label><select data-city>${opt(T.cities, 'בחרו עיר')}</select></div>`}${max > 1 ? '<button type="button" class="btn btn-line btn-sm" data-del>הסרה</button>' : '<div></div>'}`;
-      rows.appendChild(d); d.querySelector('[data-del]')?.addEventListener('click', () => { if ($$('.cm-row', rows).length > 1) d.remove(); });
+      const d = document.createElement('fieldset'); d.className = 'cm-row'; const n = $$('.cm-row', rows).length + 1; const id = 'sl' + n + '-' + Date.now();
+      d.innerHTML = `<legend class="sr">צירוף ${n}</legend><div class="field"><label for="${id}a">תחום</label><select id="${id}a" data-area>${opt(T.areas, 'בחרו תחום')}</select></div>${nat ? '' : `<div class="field"><label for="${id}c">עיר</label><select id="${id}c" data-city>${opt(T.cities, 'בחרו עיר')}</select></div>`}${max > 1 ? `<button type="button" class="btn btn-s" data-del aria-label="הסרת צירוף ${n}">הסרה</button>` : ''}`;
+      rows.appendChild(d); d.querySelector('[data-del]')?.addEventListener('click', () => { if ($$('.cm-row', rows).length > 1) { d.remove(); requote(); } });
+      d.querySelectorAll('select').forEach((el) => el.addEventListener('change', requote));
     };
     addRow(); slots.querySelector('[data-add]')?.addEventListener('click', addRow);
   } else if (k === 'court' || k === 'provider' || k === 'tool') {
     const list = k === 'tool' ? T.tools : T.courts; const cap = k === 'court' ? 3 : k === 'provider' ? 4 : 1;
     const inv = (await rpc('fol_inventory', { p_kind: k })) || {};
-    slots.innerHTML = `<div class="field"><label>${k === 'tool' ? 'הכלי' : 'בית המשפט'}</label><select data-target><option value="">בחרו</option>${list.map((x: any) => { const used = Number(inv[x.slug] || 0), free = cap - used; return `<option value="${esc(x.slug)}" ${free <= 0 ? 'disabled' : ''}>${esc(x.name)} (${free <= 0 ? 'תפוס' : `פנוי: ${free} מתוך ${cap}`})</option>`; }).join('')}</select></div>`
-      + (k === 'provider' ? `<div class="field"><label>לכמה חודשים</label><select data-months>${(p.limits?.months || [1, 3, 6, 12]).map((m: number) => `<option value="${m}">${m === 1 ? 'חודש אחד' : m + ' חודשים'} (${ils(Number(p.unit_price) * m)} + מע"מ)</option>`).join('')}</select></div>` : '')
+    slots.innerHTML = `<div class="field"><label for="o-target">${k === 'tool' ? 'הכלי' : 'בית המשפט'}</label><select id="o-target" data-target><option value="">בחרו</option>${list.map((x: any) => { const used = Number(inv[x.slug] || 0), free = cap - used; return `<option value="${esc(x.slug)}" ${free <= 0 ? 'disabled' : ''}>${esc(x.name)} (${free <= 0 ? 'תפוס' : `פנוי: ${free} מתוך ${cap}`})</option>`; }).join('')}</select></div>`
+      + (k === 'provider' ? `<div class="field"><label for="o-months">לכמה חודשים</label><select id="o-months" data-months>${(p.limits?.months || [1, 3, 6, 12]).map((m: number) => `<option value="${m}">${m === 1 ? 'חודש אחד' : m + ' חודשים'} (${ils(Number(p.unit_price) * m)} + מע"מ)</option>`).join('')}</select></div>` : '')
       + `<p class="cm-avail">המקומות מתעדכנים בזמן אמת. מקום נשמר רק אחרי התשלום.</p>`;
     if (target) (slots.querySelector('[data-target]') as HTMLSelectElement).value = target;
   } else if (k === 'article') {
-    slots.innerHTML = `<div class="field"><label>נושא המאמר</label><input data-topic maxlength="120" /></div><div class="field"><label>תחום</label><select data-barea>${opt(T.areas, 'בחרו תחום')}</select></div><div class="field"><label>נקודות שחשוב לכם שיופיעו (לא חובה)</label><textarea data-points maxlength="1500"></textarea></div><div class="field"><label>למי המאמר מיועד (לא חובה)</label><input data-aud maxlength="200" /></div><p class="small muted">צוות התוכן כותב טיוטה, אתם מקבלים קישור לאישור, ורק אחרי האישור המאמר עולה עם התווית "תוכן ממומן".</p>`;
+    slots.innerHTML = `<div class="field"><label for="o-topic">נושא המאמר</label><input id="o-topic" data-topic maxlength="120" /></div><div class="field"><label for="o-barea">תחום</label><select id="o-barea" data-barea>${opt(T.areas, 'בחרו תחום')}</select></div><div class="field"><label for="o-points">נקודות שחשוב לכם שיופיעו (לא חובה)</label><textarea id="o-points" data-points maxlength="1500"></textarea></div><div class="field"><label for="o-aud">למי המאמר מיועד (לא חובה)</label><input id="o-aud" data-aud maxlength="200" /></div><p class="small muted">צוות התוכן כותב טיוטה, אתם מקבלים קישור לאישור, ורק אחרי האישור המאמר עולה עם התווית "תוכן ממומן".</p>`;
   } else {
-    slots.innerHTML = `<p>השדרוג פותח את הפרופיל המורחב של המשרד לשנה. אחרי התשלום נכנסים לאזור המשרדים ומעדכנים תיאור, לוגו, תמונות וסרטון. הפרופיל עובר בדיקה אוטומטית לפני הפרסום.</p>`;
+    slots.innerHTML = `<p>השדרוג פותח את הפרופיל המורחב של המשרד לשנה. אחרי התשלום נכנסים לאזור המשרדים ומעדכנים תיאור, לוגו, תמונות וסרטון. בכרטיס המורחב לא מוצגים משרדים אחרים. הפרופיל עובר בדיקה אוטומטית לפני הפרסום.</p>`;
   }
-  go(2);
+  slots.querySelectorAll('select,input,textarea').forEach((el) => el.addEventListener('change', requote));
+  requote();
 }
 
 function step2(): string {
@@ -138,7 +170,8 @@ async function toSummary() {
   if (q.status !== 200) return say(m, errText(q), 'bad');
   quote = q; m.className = 'msg';
   const k = kindOf(plan!), c = COPY[plan!.id] || { title: plan!.name };
-  $('[data-summary]', root).innerHTML = `<table class="cm-sum"><tr><td>מוצר</td><td>${esc(c.title)}</td></tr>${q.months ? `<tr><td>תקופה</td><td>${q.months} חודשים</td></tr>` : `<tr><td>תקופה</td><td>שנה מיום התשלום</td></tr>`}<tr><td>לפני מע"מ</td><td>${ils(q.net)}</td></tr><tr><td>מע"מ</td><td>${ils(q.vat)}</td></tr><tr class="total"><td>סך הכול</td><td>${ils(q.total)}</td></tr></table>`;
+  summary(q);
+  $('[data-summary]', root).innerHTML = `<table class="cm-sum"><caption class="sr">סיכום ההזמנה</caption><tr><td>מוצר</td><td>${esc(c.title)}</td></tr>${q.months ? `<tr><td>תקופה</td><td>${q.months} חודשים</td></tr>` : `<tr><td>תקופה</td><td>שנה מיום התשלום</td></tr>`}<tr><td>לפני מע״מ</td><td>${ils(q.net)}</td></tr><tr><td>מע״מ</td><td>${ils(q.vat)}</td></tr><tr class="total"><td>סך הכול</td><td>${ils(q.total)}</td></tr></table>`;
   const inst = $('#o-inst') as HTMLSelectElement; const max = Math.max(1, Number(q.max_installments) || 1);
   inst.innerHTML = Array.from({ length: max }, (_, i) => `<option value="${i + 1}">${i === 0 ? 'תשלום אחד' : `${i + 1} תשלומים (${ils(q.total / (i + 1))} לחודש)`}</option>`).join('');
   $('[data-auto]', root).classList.toggle('cm-hidden', !['court', 'tool', 'provider', 'card'].includes(k));
@@ -156,9 +189,10 @@ async function pay() {
   done(r.result?.ends_at, true);
 }
 function done(endsAt: string | null, isTest: boolean) {
-  $$('[data-step]', root).forEach((s) => s.classList.add('cm-hidden')); $('[data-steps]', root).classList.add('cm-hidden');
+  $$('[data-step]', root).forEach((s) => s.classList.add('cm-hidden')); $$('[data-steps] li').forEach((li) => (li.dataset.on = 'true'));
+  const sb = $('[data-sbar]'); if (sb) sb.hidden = true;
   const d = $('[data-done]', root); d.classList.remove('cm-hidden');
-  d.innerHTML = `<h2>ההזמנה הופעלה</h2><p>${isTest ? 'זו הייתה רכישת בדיקה, בלי חיוב. ' : 'התשלום התקבל. '}הכול הופעל אוטומטית${endsAt ? ` עד ${esc(heDate(endsAt))}` : ''}. שלחנו מייל עם הפרטים${isTest ? ' (במצב בדיקה המייל נשמר בתיבת היוצא של מנהל האתר)' : ' והקבלה'}.</p><p><a class="btn btn-pine" href="${esc(root.dataset.portal!)}">לאזור המשרדים</a></p>`;
+  d.innerHTML = `<h2 class="h3" style="font:600 var(--fs-24)/1.3 var(--serif)">ההזמנה הופעלה</h2><p>${isTest ? 'זו הייתה רכישת בדיקה, בלי חיוב. ' : 'התשלום התקבל. '}הכול הופעל אוטומטית${endsAt ? ` עד ${esc(heDate(endsAt))}` : ''}. שלחנו מייל עם הפרטים${isTest ? ' (במצב בדיקה המייל נשמר בתיבת היוצא של מנהל האתר)' : ' והקבלה'}.</p><p><a class="btn btn-p btn-lg" href="${esc(root.dataset.portal!)}">לאזור המשרדים</a></p>`;
 }
 async function poll(order: string) {
   $$('[data-step]', root).forEach((s) => s.classList.add('cm-hidden'));
@@ -184,9 +218,14 @@ async function startRenew(raw: string) {
 
 root.addEventListener('click', (e) => {
   const t = e.target as HTMLElement;
+  if (t.closest('[data-next="2"]')) { if (!plan) return say($('[data-msg1]', root), 'נא לבחור מוצר.', 'bad'); go(2); return; }
   if (t.matches('[data-back]')) { const cur = Number(t.closest('[data-step]')!.getAttribute('data-step')); go(renew && cur <= 3 ? 3 : Math.max(1, cur - 1)); }
   if (t.matches('[data-next="3"]')) { const err = step2(); if (err) return say($('[data-msg2]', root), err, 'bad'); prepareStep3(); go(3); }
   if (t.matches('[data-next="4"]')) toSummary();
   if (t.matches('[data-pay]')) pay();
+});
+$('[data-sbar-next]')?.addEventListener('click', () => {
+  const b = $(cur === 1 ? '[data-next="2"]' : cur === 2 ? '[data-next="3"]' : cur === 3 ? '[data-next="4"]' : '[data-pay]', root) as HTMLButtonElement;
+  b?.click();
 });
 load();

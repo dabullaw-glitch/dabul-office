@@ -1,11 +1,10 @@
 ---
+// Breadcrumbs (the JSON-LD BreadcrumbList is built separately by each view).
 import { u } from '../config/routes';
 const { items } = Astro.props as { items: { name: string; path: string }[] };
 ---
 <nav class="crumbs" aria-label="מיקום באתר">
-  <ol>
-    {items.map((it, i) => (
-      <li>{i < items.length - 1 ? <a href={u(it.path)}>{it.name}</a> : <span aria-current="page">{it.name}</span>}</li>
-    ))}
-  </ol>
+  {items.map((it, i) => (
+    <>{i > 0 && <span aria-hidden="true">/</span>}{i < items.length - 1 ? <a href={u(it.path)}>{it.name}</a> : <span aria-current="page">{it.name}</span>}</>
+  ))}
 </nav>

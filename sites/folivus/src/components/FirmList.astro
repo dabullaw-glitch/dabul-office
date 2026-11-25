@@ -1,20 +1,27 @@
 ---
-import FirmCard from './FirmCard.astro';
+// Paid rows first (labelled, in daily rotation), then everyone by the published review score. Two lists, two headings.
+import FirmRow from './FirmRow.astro';
 import Icon from './Icon.astro';
 import { P, u } from '../config/routes';
 import type { Firm } from '../lib/data';
-const { featured, rest, area, emptyText } = Astro.props as { featured: Firm[]; rest: Firm[]; area?: string; emptyText?: string };
+const { featured, rest, area, city, emptyText, promoTitle = 'משרדים מקודמים', restTitle = 'כל המשרדים, לפי הדירוג השקוף', id = 'fl' } = Astro.props as { featured: Firm[]; rest: Firm[]; area?: string; city?: string; emptyText?: string; promoTitle?: string; restTitle?: string; id?: string };
 ---
 {featured.length > 0 && (
-  <>
-    <p class="promo-note"><Icon name="info" />משרדים ששילמו על מיקום בולט מופיעים ראשונים ומסומנים "משרד מקודם". תשלום לא משפיע על הדירוג. <a href={u(P.page('method'))}>איך בנויה הרשימה</a></p>
-    <div class="firms">{featured.map((f) => <FirmCard f={f} promo area={area} />)}</div>
-  </>
+  <section aria-labelledby={id + '-p'} class="stack gp12">
+    <div class="sec-head" style="margin:0"><div class="sec-head-t"><p class="eyebrow">מקומות בתשלום</p><h2 class="h3" id={id + '-p'} style="font:600 var(--fs-22)/1.3 var(--serif)">{promoTitle}</h2><p class="small muted">מופיעים לפני הרשימה ומסומנים ״משרד מקודם״. הקידום לא משנה את הדירוג.</p></div><a class="more" href={u(P.page('method'))}><span>מה זה משרד מקודם?</span></a></div>
+    <div class="list">{featured.map((f) => <FirmRow f={f} promo area={area} city={city} />)}</div>
+  </section>
 )}
-{rest.length > 0 && <div class="firms" style={featured.length ? 'margin-top:14px' : undefined}>{rest.map((f) => <FirmCard f={f} area={area} />)}</div>}
+{rest.length > 0 && (
+  <section aria-labelledby={id + '-r'} class="stack gp12">
+    <div class="sec-head" style="margin:0"><div class="sec-head-t"><p class="eyebrow">דירוג שקוף</p><h2 class="h3" id={id + '-r'} style="font:600 var(--fs-22)/1.3 var(--serif)">{restTitle}</h2><p class="small muted">לפי ביקורות מאומתות, התאמה לתחום ולעיר, ותק וזמינות. תשלום לא משנה את הסדר.</p></div><a class="more" href={u(P.page('method'))}><span>איך נקבע הדירוג</span><Icon name="arrow" size={18} /></a></div>
+    <p class="cap num" aria-live="polite" data-lt-count={id + '-rank'}></p>
+    <div class="list" id={id + '-rank'}>{rest.map((f, i) => <FirmRow f={f} rank={i + 1} area={area} city={city} />)}</div>
+  </section>
+)}
 {featured.length + rest.length === 0 && (
   <div class="empty">
-    <p class="mb0">{emptyText || 'עדיין אין משרדים ברשימה הזו.'}</p>
-    <p class="small mt1 mb0">עורכי דין שעובדים בתחום ובאזור יכולים <a href={u(P.page('join'))}>להצטרף לאתר</a>.</p>
+    <p>{emptyText || 'עדיין אין משרדים ברשימה הזו.'}</p>
+    <p class="small">עורכי דין שעובדים בתחום ובאזור יכולים <a class="lnk" href={u(P.page('join'))}>להצטרף לאתר</a>.</p>
   </div>
 )}

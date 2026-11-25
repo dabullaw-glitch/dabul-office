@@ -87,3 +87,16 @@ export function mdLite(src: string): string {
 }
 export const LANGS = ['עברית', 'אנגלית', 'ערבית', 'רוסית', 'צרפתית', 'ספרדית', 'אמהרית', 'יידיש', 'גרמנית', 'איטלקית', 'פורטוגזית', 'רומנית', 'אוקראינית', 'הונגרית', 'פרסית', 'טורקית'];
 export const DAYS: [string, string][] = [['sun', 'ראשון'], ['mon', 'שני'], ['tue', 'שלישי'], ['wed', 'רביעי'], ['thu', 'חמישי'], ['fri', 'שישי'], ['sat', 'שבת']];
+
+// gives every label in generated forms a working "for" (screen readers and tap on the label)
+let lid = 0;
+export function linkLabels(root: ParentNode) {
+  root.querySelectorAll<HTMLLabelElement>('.field > label:not([for])').forEach((l) => {
+    if (l.querySelector('input,select,textarea')) return;
+    const c = l.nextElementSibling as HTMLElement | null;
+    if (!c || !/^(INPUT|SELECT|TEXTAREA)$/.test(c.tagName)) return;
+    if (!c.id) c.id = 'fx' + ++lid;
+    l.htmlFor = c.id;
+  });
+}
+export function autoLink(root: HTMLElement | null) { if (!root) return; linkLabels(root); new MutationObserver(() => linkLabels(root)).observe(root, { childList: true, subtree: true }); }

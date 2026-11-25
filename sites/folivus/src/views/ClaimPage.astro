@@ -11,7 +11,7 @@ const fs = (await firms()).slice().sort((a, b) => a.name.localeCompare(b.name, '
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'ניהול פרופיל', path }];
 ---
 <Base title="אישור בעלות על פרופיל משרד ועדכון פרטים" description="משרד עורכי דין שמופיע באתר יכול לאשר בעלות על הפרופיל בחינם, לעדכן פרטים ולהגיב לחוות דעת." path={path} schema={[breadcrumbs(crumbs)]}>
-  <section class="phead tint">
+  <section class="phead on-dark">
     <div class="wrap">
       <Crumbs items={crumbs} />
       <h1>זה המשרד שלכם?</h1>
@@ -20,10 +20,10 @@ const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'ניהול פרו�
   </section>
   <div class="wrap layout">
     <div>
-      <ol class="grid g3 steps" style="list-style:none;padding:0;margin:0 0 34px">
-        <li class="step"><h3>מאתרים את המשרד</h3><p class="muted small">בוחרים את המשרד מהרשימה. לא מוצאים? אפשר <a href={u(P.page('join'))}>להצטרף</a>.</p></li>
-        <li class="step"><h3>מאמתים</h3><p class="muted small">בקוד במייל. מייל בדומיין של אתר המשרד מאושר מיד, ומייל אחר נבדק ידנית.</p></li>
-        <li class="step"><h3>מעדכנים</h3><p class="muted small">אחרי האישור נכנסים לאזור המשרדים ומעדכנים את הפרופיל.</p></li>
+      <ol class="howsteps h3c" style="margin-bottom:var(--sp-32)">
+        <li><b class="num">1</b><p class="h4">מאתרים את המשרד</p><p class="muted small">בוחרים את המשרד מהרשימה. לא מוצאים? אפשר <a href={u(P.page('join'))}>להצטרף</a>.</p></li>
+        <li><b class="num">2</b><p class="h4">מאמתים</p><p class="muted small">בקוד במייל. מייל בדומיין של אתר המשרד מאושר מיד, ומייל אחר נבדק ידנית.</p></li>
+        <li><b class="num">3</b><p class="h4">מעדכנים</p><p class="muted small">אחרי האישור נכנסים לאזור המשרדים ומעדכנים את הפרופיל.</p></li>
       </ol>
       <h2>בקשה לאישור בעלות</h2>
       <form class="form" data-cm-form="claim" data-portal={u(P.page('portal'))} novalidate>
@@ -53,7 +53,7 @@ const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'ניהול פרו�
       <script>import '../scripts/commerce/verify-forms';</script>
     </div>
     <aside class="aside">
-      <div class="box"><h2>מה אפשר לעדכן</h2><ul class="small" style="margin:0 0 8px"><li>כתובת, טלפון ואתר</li><li>תחומי עיסוק וערים</li><li>שעות פעילות</li><li>תגובה לחוות דעת</li></ul><p class="xs muted mt1 mb0">חוות דעת שעברה אימות לא נמחקת לבקשת המשרד. אפשר להגיב עליה או לדווח עליה אם היא מפרה את הכללים.</p></div>
+      <div class="box"><h2>מה אפשר לעדכן</h2><ul class="small" style="margin:0 0 var(--sp-8)"><li>כתובת, טלפון ואתר</li><li>תחומי עיסוק וערים</li><li>שעות פעילות</li><li>תגובה לחוות דעת</li></ul><p class="xs muted mt1 mb0">חוות דעת שעברה אימות לא נמחקת לבקשת המשרד. אפשר להגיב עליה או לדווח עליה אם היא מפרה את הכללים.</p></div>
       <div class="box brass"><h2>רוצים להסיר את הפרופיל?</h2><p class="small">אפשר לבקש הסרה או תיקון.</p><a class="btn btn-line btn-sm btn-block" href={u(P.page('removal'))}>בקשת תיקון או הסרה</a></div>
     </aside>
   </div>

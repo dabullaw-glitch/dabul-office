@@ -1,0 +1,45 @@
+---
+// One firm as a full-width list row (canvas round 4). Paid rows carry "משרד מקודם" and a thin brass top line;
+// ranked rows show the place, which payment never changes. Sample data carries "דוגמה".
+import Icon from './Icon.astro';
+import FirmTile from './FirmTile.astro';
+import Rating from './Rating.astro';
+import PromoLabel from './PromoLabel.astro';
+import { P, u } from '../config/routes';
+import { areaBySlug, cityBySlug, type Firm } from '../lib/data';
+import { scoreOf } from '../lib/ui';
+const { f, promo = false, rank, area, city, level = 3, promoLabel } = Astro.props as { f: Firm; promo?: boolean; rank?: number; area?: string; city?: string; level?: 2 | 3; promoLabel?: string };
+const c = cityBySlug(f.city);
+const shown = [...(area && f.areas.includes(area) ? [area] : []), ...f.areas.filter((a) => a !== area)].slice(0, 3).map((s) => areaBySlug(s)?.name).filter(Boolean);
+const { score, count } = scoreOf(f);
+const href = u(P.firm(f.slug));
+const tel = f.phone ? 'tel:' + f.phone.replace(/[^0-9+]/g, '') : '';
+const H = level === 2 ? 'h2' : 'h3';
+const paidInRank = !promo && rank && f.plan !== 'free';
+---
+<article class={'row' + (promo ? ' promo' : '')} data-name={f.name} data-score={String(score)} data-reviews={String(count)} data-claimed={f.claimed ? '1' : ''} data-ext={f.extendedEnabled || (f.extended && f.extended.description) ? '1' : ''} data-rank={rank ? String(rank) : ''}>
+  <FirmTile f={f} />
+  <div class="row-b">
+    {(promo || paidInRank || f.isSample) && (
+      <div class="row-top">
+        {(promo || paidInRank) && <PromoLabel text={promoLabel} />}
+        {paidInRank && <span class="cap">המקום בדירוג לא תלוי בתשלום</span>}
+        {f.isSample && <span class="sample-b">דוגמה</span>}
+      </div>
+    )}
+    <H class="row-n">{rank && <span class="rank">{rank}.</span>} <a class="row-link" href={href}>{f.name}</a></H>
+    <p class="row-m">{c?.name}{c && shown.length > 0 && ' · '}{shown.join(', ')}</p>
+    <Rating score={score} count={count} />
+  </div>
+  {promo ? (
+    <div class="row-a">
+      <a class="btn btn-p" href={href}>לפרופיל המשרד</a>
+      {tel && <a class="btn btn-s" href={tel} aria-label={`התקשרות אל ${f.name}`}><Icon name="phone" size={16} /><span>התקשרות</span></a>}
+    </div>
+  ) : (
+    <>
+      <span class="row-chev hide-lg"><Icon name="chev" size={18} /></span>
+      <div class="show-lg" style="position:relative;z-index:1"><a class="btn btn-s" href={href} tabindex="-1" aria-hidden="true">לפרופיל</a></div>
+    </>
+  )}
+</article>

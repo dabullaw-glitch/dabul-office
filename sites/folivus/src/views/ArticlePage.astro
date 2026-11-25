@@ -1,4 +1,6 @@
 ---
+// Article (canvas round 4, light layout): labels, title, author strip, cover, text, FAQ, sources, author box,
+// a call to the area's firm list, and related guides and tools on the side.
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
 import Icon from '../components/Icon.astro';
@@ -7,9 +9,9 @@ import Faq from '../components/Faq.astro';
 import Sources from '../components/Sources.astro';
 import AuthorBox from '../components/AuthorBox.astro';
 import Disclaimer from '../components/Disclaimer.astro';
-import FirmCard from '../components/FirmCard.astro';
+import { BRAND } from '../config/brand';
 import { P, u } from '../config/routes';
-import { articles, areas, tools, firms, rankFor, fmtDate } from '../lib/data';
+import { articles, areas, tools, fmtDate } from '../lib/data';
 import { render, readMinutes } from '../lib/md';
 import { breadcrumbs, article as articleLd, faqPage } from '../lib/schema';
 const { path, article } = Astro.props as any;
@@ -18,56 +20,50 @@ const { html, toc } = render(a.body);
 const ars = a.areas.map((s) => areas().find((x) => x.slug === s)).filter(Boolean) as any[];
 const main = ars[0];
 const ts = tools().filter((t) => a.areas.includes(t.area)).slice(0, 3);
-const more = articles().filter((x) => x.slug !== a.slug && x.areas.some((s) => a.areas.includes(s))).slice(0, 3);
-const fs = main ? rankFor((await firms()).filter((f) => f.areas.includes(main.slug)), main.slug).featured.slice(0, 2) : [];
+const more = articles().filter((x) => x.slug !== a.slug && x.areas.some((s) => a.areas.includes(s))).concat(articles().filter((x) => x.slug !== a.slug)).filter((x, i, arr) => arr.indexOf(x) === i).slice(0, 3);
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'מדריכים', path: P.page('articles') }, { name: a.title, path }];
-const authorName = a.author.slug === 'editorial' ? 'מערכת האתר' : a.author.name;
+const authorName = a.author.slug === 'editorial' ? 'מערכת ' + BRAND.name : a.author.name;
+const authorIni = authorName.replace(/[("'].*$/, '').trim().split(/\s+/).slice(0, 2).map((w: string) => w[0]).join('');
+const cover = (main?.name || 'מדריך').split(' ').slice(0, 2);
 ---
 <Base title={a.title} description={a.description.slice(0, 158)} path={path} nav="articles" ogType="article" schema={[breadcrumbs(crumbs), articleLd(a, path), faqPage(a.faq)]}>
-  <section class="phead tint">
-    <div class="wrap">
-      <Crumbs items={crumbs} />
-      {main && <a class="eyebrow" style="text-decoration:none" href={u(P.area(main.he))}>{main.name}</a>}
-      <h1 style="max-width:24ch">{a.title}</h1>
-      <p class="lead">{a.description}</p>
-      <div class="meta-line">
-        <span><Icon name="user" />{a.author.type === 'Person' ? <a href={u(P.author(a.author.slug))}>{authorName}</a> : authorName}</span>
-        {a.published && <span><Icon name="calendar" />פורסם {fmtDate(a.published)}</span>}
-        {a.updated && a.published && +a.updated !== +a.published && <span><Icon name="clock" />עודכן {fmtDate(a.updated)}</span>}
-        <span><Icon name="book" />{readMinutes(a.body)} דקות קריאה</span>
-        {a.isSample && <span class="badge b-sample">מאמר לדוגמה</span>}
-        {a.draft && <span class="badge b-draft">טיוטה</span>}
-        {a.scheduled && <span class="badge b-promo">מתוזמן לפרסום (מוצג רק בגרסת התצוגה)</span>}
+  <div class="wrap"><Crumbs items={crumbs} /></div>
+  <div class="wrap cols" style="padding-bottom:var(--sp-56)">
+    <article class="stack" style="gap:var(--sp-20);min-width:0" aria-labelledby="art-h">
+      <div class="row-top">
+        <span class="cap">{main ? main.name + ' · ' : ''}{readMinutes(a.body)} דק׳ קריאה{a.published ? ' · פורסם ' + fmtDate(a.published) : ''}{a.updated && a.published && +a.updated !== +a.published ? ' · עודכן ' + fmtDate(a.updated) : ''}</span>
+        {a.isSample && <span class="sample-b">מאמר לדוגמה</span>}
+        {a.draft && <span class="draft-b">טיוטה</span>}
+        {a.scheduled && <span class="draft-b">מתוזמן לפרסום, מוצג רק בגרסת התצוגה</span>}
       </div>
-    </div>
-  </section>
-  <div class="wrap layout">
-    <article>
+      <h1 class="h1" id="art-h" style="max-width:760px">{a.title}</h1>
+      <p class="lead" style="max-width:680px">{a.description}</p>
+      <div style="display:flex;gap:var(--sp-12);align-items:center;padding:var(--sp-14) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+        <span class="lt lt-a" aria-hidden="true"><span>{authorIni}</span></span>
+        <span class="stack"><span class="cap">נכתב על ידי</span>{a.author.type === 'Person' ? <a href={u(P.author(a.author.slug))} class="h4 tap" style="text-decoration:none;color:var(--text)">{authorName}</a> : <span class="h4">{authorName}</span>}{a.reviewer && <span class="cap">נבדק משפטית: {a.reviewer.name}</span>}</span>
+      </div>
+      <span class="cover" aria-hidden="true"><span class="cover-k">מדריך · {main?.group || 'מידע משפטי'}</span><span class="cover-t">{cover[0]}{cover[1] && <><br />{cover[1]}</>}</span><span class="cover-l"></span><span class="cover-s">{BRAND.name} · מדריכים</span></span>
       <Toc items={toc} mobile />
       <div class="prose" set:html={html} />
       <Disclaimer kind="info" />
       <Faq items={a.faq} />
       <Sources items={a.sources} updated={fmtDate(a.updated)} />
       <AuthorBox a={a.author} reviewer={a.reviewer} />
-      {more.length > 0 && (
-        <section class="mt3"><h2>עוד בנושא</h2><div class="grid g3">{more.map((x) => <a class="card acard" href={u(P.article(x.he))}><h3>{x.title}</h3><p>{x.description}</p></a>)}</div></section>
+      {main && (
+        <div class="panel pad stack gp12 on-dark" style="background:var(--ink);color:var(--on-ink);border-color:var(--ink)">
+          <h2 class="h3">רוצים שעורך דין יבדוק את המקרה שלכם?</h2>
+          <p class="small" style="color:var(--on-ink-muted)">כל משרדי {main.name}, לפי הדירוג השקוף. פונים ישירות למשרד.</p>
+          <a class="btn btn-w" href={u(P.area(main.he))} style="align-self:flex-start"><span>ל{main.title.replace('עורך דין', 'משרדי')}</span><Icon name="arrow" size={18} /></a>
+        </div>
       )}
     </article>
-    <aside class="aside">
-      <div class="sticky">
+    <aside class="stack gp16">
+      <div class="sticky-aside stack gp16">
         <Toc items={toc} />
-        {main && (
-          <div class="box dark mt1 on-dark">
-            <h2>מחפשים {main.title}?</h2>
-            <p class="small">רשימת משרדים לפי עיר, עם פרטי קשר וחוות דעת מאומתות.</p>
-            <a class="btn btn-brass btn-sm btn-block" href={u(P.area(main.he))}>לרשימת המשרדים</a>
-          </div>
-        )}
-        {ts.length > 0 && <div class="box mt1"><h2>כלים קשורים</h2><ul class="links">{ts.map((t) => <li><a href={u(P.tool(t.he))}>{t.name}</a></li>)}</ul></div>}
+        {more.length > 0 && <div class="aside-box"><h3>מדריכים נוספים</h3><div class="glist">{more.map((x, i) => <a class="gitem" href={u(P.article(x.he))}><span class="gn num">{i + 1}</span><h4>{x.title}</h4><span class="cap">מדריך · {readMinutes(x.body)} דק׳</span></a>)}</div></div>}
+        {ts.length > 0 && <div class="aside-box"><h3>כלים קשורים</h3><div class="stack">{ts.map((t, i) => <a class="titem" style={'padding:var(--sp-8) 0;' + (i === 0 ? 'border-top:0' : '')} href={u(P.tool(t.he))}><span class="ac-ic"><Icon name={t.type === 'generator' ? 'doc' : 'calc'} size={18} /></span><span class="tn">{t.name}</span></a>)}</div></div>}
+        <div class="aside-box"><h3>רוצים לפרסם מאמר?</h3><p class="small muted">מאמר ממומן, 1,500 ₪ לפני מע״מ. המאמר עובר עריכה ומסומן ״תוכן ממומן״.</p><a class="more" href={u(P.page('join')) + '#addons'}><span>פרטים</span><Icon name="arrow" size={18} /></a></div>
       </div>
     </aside>
   </div>
-  {fs.length > 0 && (
-    <section class="sec tight white"><div class="wrap"><p class="promo-note"><Icon name="info" />מודעה: משרדים מקודמים בתחום</p><div class="firms">{fs.map((f) => <FirmCard f={f} promo area={main.slug} />)}</div></div></section>
-  )}
 </Base>

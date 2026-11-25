@@ -9,7 +9,7 @@ const list = (!mobile && all.length > 14 ? all.filter((t) => t.level === 2) : al
     <ol>{list.map((t) => <li class={'l' + t.level}><a href={'#' + t.id}>{t.text}</a></li>)}</ol>
   </details>
 ) : (
-  <nav class="box toc" aria-label="תוכן העניינים">
+  <nav class="aside-box toc show-lg" aria-label="תוכן העניינים">
     <h2>תוכן העניינים</h2>
     <ol>{list.map((t) => <li class={'l' + t.level}><a href={'#' + t.id}>{t.text}</a></li>)}</ol>
   </nav>

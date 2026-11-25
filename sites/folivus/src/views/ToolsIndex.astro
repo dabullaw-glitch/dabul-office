@@ -1,35 +1,57 @@
 ---
+// All free tools: search box, category chips and one list per category (canvas round 4 list rows).
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
 import Icon from '../components/Icon.astro';
 import { P, u } from '../config/routes';
 import { tools, toolCategories } from '../lib/data';
 import { breadcrumbs, itemList, collection } from '../lib/schema';
+import { catSlug } from '../lib/ui';
 const { path } = Astro.props as any;
+const all = tools();
+const cats = toolCategories();
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'כלים חינמיים', path }];
 const title = 'כלים משפטיים חינמיים: מחשבונים ומחוללי מסמכים';
-const description = 'מחשבונים ומחוללי מסמכים משפטיים חינמיים, שעובדים בדפדפן בלי הרשמה, עם מקורות ותאריך עדכון לכל כלי.';
+const description = `${all.length} מחשבונים ומחוללי מסמכים משפטיים חינמיים, שעובדים בדפדפן בלי הרשמה, עם מקורות ותאריך עדכון לכל כלי.`;
+const calcs = all.filter((t) => t.type === 'calculator').length;
 ---
-<Base title={title} description={description} path={path} nav="tools" schema={[breadcrumbs(crumbs), collection(title, path, description), itemList(title, tools().map((t) => ({ name: t.name, path: P.tool(t.he) })))]}>
-  <section class="phead tint">
-    <div class="wrap">
-      <Crumbs items={crumbs} />
-      <h1>כלים חינמיים</h1>
-      <p class="lead">חישוב ראשוני ומסמכים פשוטים, ישר בדפדפן. הנתונים שאתם מקלידים לא נשלחים לשום מקום.</p>
-      <div class="chips"><span class="chip"><Icon name="calc" />{tools().filter((t) => t.type === 'calculator').length} מחשבונים</span><span class="chip"><Icon name="doc" />{tools().filter((t) => t.type === 'generator').length} מחוללי מסמכים</span><span class="chip"><Icon name="lock" />בלי הרשמה ובלי שמירת נתונים</span></div>
-    </div>
-  </section>
-  <section class="sec">
-    <div class="wrap">
-      {toolCategories().map((g) => (
-        <section class="mb2" aria-label={g.category}>
-          <h2 style="font-size:1.4rem">{g.category}</h2>
-          <div class="grid g3">{g.items.map((t) => (
-            <a class="card tcard" href={u(P.tool(t.he))}><span class="gicon"><Icon name={t.type === 'generator' ? 'doc' : 'calc'} /></span><span><h3>{t.name}{t.draft && <span class="soon">טיוטה</span>}</h3><p>{t.description}</p></span></a>
-          ))}</div>
-        </section>
-      ))}
-      {tools().length === 0 && <div class="empty">הכלים בהכנה.</div>}
-    </div>
-  </section>
+<Base title={title} description={description} path={path} nav="tools" schema={[breadcrumbs(crumbs), collection(title, path, description), itemList(title, all.map((t) => ({ name: t.name, path: P.tool(t.he) })))]}>
+  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} /><div class="phead-in">
+    <p class="eyebrow">כלים חינמיים · בלי הרשמה</p>
+    <h1 class="h1">מחשבונים ומחוללי מסמכים</h1>
+    <p class="lead" style="max-width:640px">חישוב ראשוני ומסמכים פשוטים, ישר בדפדפן. הנתונים שאתם מקלידים לא נשלחים לשום מקום.</p>
+    <p class="facts"><span><b class="num">{calcs}</b> מחשבונים</span><span aria-hidden="true">·</span><span><b class="num">{all.length - calcs}</b> מחוללי מסמכים</span><span aria-hidden="true">·</span><span><b class="num">{cats.length}</b> נושאים</span></p>
+    <div class="tsearch" role="search"><label class="sr" for="tq">חיפוש כלי</label><input class="inp" id="tq" type="search" placeholder="לדוגמה: פיצויים, שכירות, צוואה" autocomplete="off" /><Icon name="search" size={18} /></div>
+  </div></div></section>
+  <div class="wrap" style="padding-top:var(--sp-20)">
+    <nav aria-label="נושאים" class="stack gp8"><p class="cap">נושאים:</p><div class="chips">{cats.map((g) => <a class="chip" href={'#' + catSlug(g.category)}><span>{g.category}</span><span class="c">{g.items.length}</span></a>)}</div></nav>
+  </div>
+  <div class="wrap stack" style="gap:var(--sp-36);padding-top:var(--sp-28);padding-bottom:var(--sp-56)">
+    <p class="cap num" id="tcount" aria-live="polite"></p>
+    {cats.map((g) => (
+      <section class="tcat stack gp12" id={catSlug(g.category)} aria-labelledby={catSlug(g.category) + '-h'} data-tcat>
+        <h2 class="h3" id={catSlug(g.category) + '-h'} style="font:600 var(--fs-22)/1.3 var(--serif)">{g.category} <span class="tcount">({g.items.length})</span></h2>
+        <div class="tlist">{g.items.map((t) => (
+          <a class="titem" href={u(P.tool(t.he))} data-t={(t.name + ' ' + t.description + ' ' + g.category).toLowerCase()}>
+            <span class="ac-ic"><Icon name={t.type === 'generator' ? 'doc' : 'calc'} size={18} /></span>
+            <span class="stack" style="min-width:0"><span class="tn">{t.name}{t.draft && <span class="draft-b">טיוטה</span>}</span><span class="cap">{t.type === 'generator' ? 'מחולל מסמך' : 'מחשבון'}</span></span>
+          </a>
+        ))}</div>
+      </section>
+    ))}
+    {all.length === 0 && <div class="empty">הכלים בהכנה.</div>}
+    <p class="empty" id="tnone" hidden>לא מצאנו כלי כזה. נסו מילה אחרת, או עברו על הנושאים למעלה.</p>
+  </div>
+  <script>
+    const q = document.getElementById('tq') as HTMLInputElement; const cnt = document.getElementById('tcount')!; const none = document.getElementById('tnone')!;
+    const norm = (s: string) => s.replace(/["'׳״]/g, '').trim().toLowerCase();
+    q.addEventListener('input', () => {
+      const w = norm(q.value).split(/\s+/).filter(Boolean); let n = 0;
+      document.querySelectorAll<HTMLElement>('[data-tcat]').forEach((sec) => {
+        let k = 0; sec.querySelectorAll<HTMLElement>('[data-t]').forEach((a) => { const ok = w.every((x) => norm(a.dataset.t!).includes(x)); a.hidden = !ok; if (ok) k++; });
+        sec.hidden = k === 0; n += k;
+      });
+      cnt.textContent = w.length ? (n === 1 ? 'נמצא כלי אחד' : `נמצאו ${n} כלים`) : ''; none.hidden = n > 0 || !w.length;
+    });
+  </script>
 </Base>

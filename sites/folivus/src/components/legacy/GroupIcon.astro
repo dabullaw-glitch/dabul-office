@@ -1,0 +1,9 @@
+---
+import Icon from '../Icon.astro';
+const { group } = Astro.props as { group: string };
+const map: Record<string, string> = {
+  'משפחה וירושה': 'family', 'עבודה וביטוח לאומי': 'briefcase', 'נזיקין וביטוח': 'heart', 'פלילי ותעבורה': 'gavel',
+  'אזרחי ומסחרי': 'scale', 'נדל"ן ובנייה': 'home', 'עסקים ומיסים': 'building', 'מנהלי והגירה': 'landmark',
+};
+---
+<span class="gicon"><Icon name={map[group] || 'scale'} /></span>

@@ -1,0 +1,32 @@
+---
+// Filter and sort for a list of firms: a sticky bar with two buttons on phones (opens a bottom sheet) and chips with a
+// sort menu on desktop. It works on the rows already in the page; payment never changes the order of the ranked list.
+import Icon from './Icon.astro';
+const { target = 'fl-rank', total = 0 } = Astro.props as { target?: string; total?: number };
+const FILTERS = [['claimed', 'המשרד אישר את הפרטים'], ['reviews', 'יש ביקורות מאומתות'], ['ext', 'פרופיל מורחב']];
+const SORTS = [['rank', 'לפי הדירוג השקוף'], ['reviews', 'מספר ביקורות'], ['name', 'שם המשרד']];
+---
+<div class="fbar hide-lg" data-lt={target}>
+  <div class="wrap fbar-in">
+    <button type="button" class="btn btn-s" data-lt-open aria-haspopup="dialog"><Icon name="filter" size={18} /><span>סינון</span><span class="cnt" data-lt-n hidden>0</span></button>
+    <button type="button" class="btn btn-s" data-lt-open aria-haspopup="dialog"><Icon name="sort" size={18} /><span data-lt-sortshort>מיון: דירוג</span></button>
+  </div>
+</div>
+<div class="toolbar show-lg" data-lt={target}>
+  <div class="chips" role="group" aria-label="סינון">{FILTERS.map(([k, n]) => <button type="button" class="chip" aria-pressed="false" data-lt-f={k}>{n}</button>)}</div>
+  <div class="field" style="flex-direction:row;align-items:center;gap:var(--sp-8)"><label class="small muted" for={target + '-sort'} style="white-space:nowrap">מיון</label><span class="selw" style="min-width:220px"><select class="inp" id={target + '-sort'} data-lt-sort>{SORTS.map(([k, n]) => <option value={k}>{n}</option>)}</select><Icon name="chevd" size={16} /></span></div>
+</div>
+<div class="sheet-bg" data-lt-bg={target} hidden></div>
+<div class="sheet" role="dialog" aria-modal="true" aria-labelledby={target + '-sh'} data-lt-sheet={target} hidden>
+  <div class="sheet-h"><h2 id={target + '-sh'} class="h4">סינון ומיון</h2><button type="button" class="ibtn" aria-label="סגירה" data-lt-close><Icon name="x" size={22} /></button></div>
+  <div class="sheet-b">
+    <fieldset style="border:0;padding:0;margin:0" class="stack gp8"><legend class="lbl" style="margin-bottom:var(--sp-8)">מיון</legend>
+      <div role="radiogroup" aria-label="מיון" class="stack gp8">{SORTS.map(([k, n], i) => <button type="button" class="radio-card" role="radio" aria-checked={i === 0 ? 'true' : 'false'} data-lt-s={k}><span class="rdot"></span><span class="rc-n">{n}</span></button>)}</div>
+    </fieldset>
+    <fieldset style="border:0;padding:0;margin:0" class="stack gp8"><legend class="lbl" style="margin-bottom:var(--sp-8)">סינון</legend>
+      {FILTERS.map(([k, n]) => <button type="button" class="radio-card" aria-pressed="false" data-lt-f={k}><span class="cbox"><Icon name="check" size={14} /></span><span class="rc-n">{n}</span></button>)}
+    </fieldset>
+  </div>
+  <div class="sheet-f"><button type="button" class="btn btn-s" data-lt-clear>ניקוי</button><button type="button" class="btn btn-p" style="flex:1 1 auto" data-lt-close><span data-lt-show>הצגת {total} משרדים</span></button></div>
+</div>
+<script>import '../scripts/list-tools';</script>

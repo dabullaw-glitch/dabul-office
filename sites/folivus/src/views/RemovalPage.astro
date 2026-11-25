@@ -10,7 +10,7 @@ const fs = (await firms()).slice().sort((a, b) => a.name.localeCompare(b.name, '
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'בקשת תיקון או הסרה', path }];
 ---
 <Base title="בקשה לתיקון או הסרת פרטים" description="משרד או עורך דין שרוצים לתקן או להסיר פרטים מהאתר יכולים להגיש בקשה כאן. כל בקשה נבדקת ומטופלת." path={path} schema={[breadcrumbs(crumbs)]}>
-  <section class="phead tint">
+  <section class="phead on-dark">
     <div class="wrap">
       <Crumbs items={crumbs} />
       <h1>תיקון או הסרת פרטים</h1>
@@ -21,7 +21,7 @@ const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'בקשת תיקו�
     <div>
       <form class="form" data-cm-form="removal" novalidate>
         <fieldset class="field" style="border:0;padding:0;margin:0">
-          <legend style="font-weight:600;font-size:.93rem;margin-bottom:8px">מה לעשות?</legend>
+          <legend style="font-weight:600;font-size:.93rem;margin-bottom:var(--sp-8)">מה לעשות?</legend>
           <div class="radio-cards"><label><input type="radio" name="type" value="fix" checked />לתקן פרטים</label><label><input type="radio" name="type" value="remove" />להסיר את הפרופיל</label></div>
         </fieldset>
         <div class="field"><label for="r-firm">המשרד</label><select id="r-firm" name="firm"><option value="">בחרו משרד (או כתבו בפרטים)</option>{fs.map((f) => <option value={f.slug}>{f.name}{cityBySlug(f.city) ? ', ' + cityBySlug(f.city)!.name : ''}</option>)}</select></div>

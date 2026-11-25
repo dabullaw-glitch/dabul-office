@@ -1,5 +1,6 @@
 // Firm area logic. Every change goes through fol-api with the signed-in session; the server checks ownership and rules.
 import { api, session, setSession, esc, ils, heDate, $, $$, say, errText, mdLite, LANGS, DAYS } from './api';
+import { autoLink } from './api';
 
 const root = $('#portal');
 const top = $('[data-top]', root);
@@ -108,7 +109,7 @@ function firmPanel(x: any): HTMLElement {
     }));
     $('[data-prev]', pane).addEventListener('click', () => {
       const p = collect(); const box = $('[data-preview]', pane); box.classList.remove('cm-hidden');
-      box.innerHTML = `${f.plan !== 'free' ? '<span class="badge">משרד מקודם</span>' : ''}${p.logo ? `<img class="logo" src="${esc(p.logo)}" alt="" />` : ''}<h3>${esc(f.name)}</h3>${p.tagline ? `<p><strong>${esc(p.tagline)}</strong></p>` : ''}<p>${esc(p.description).replace(/\n/g, '<br>')}</p>${p.languages.length ? `<p class="small">שפות: ${p.languages.map(esc).join(', ')}</p>` : ''}<div class="cm-photos">${p.photos.map((x) => `<img src="${esc(x)}" alt="" />`).join('')}</div>`;
+      box.innerHTML = `${f.plan !== 'free' ? '<span class="plbl">משרד מקודם</span>' : ''}${p.logo ? `<img class="logo" src="${esc(p.logo)}" alt="" />` : ''}<h3>${esc(f.name)}</h3>${p.tagline ? `<p><strong>${esc(p.tagline)}</strong></p>` : ''}<p>${esc(p.description).replace(/\n/g, '<br>')}</p>${p.languages.length ? `<p class="small">שפות: ${p.languages.map(esc).join(', ')}</p>` : ''}<div class="cm-photos">${p.photos.map((x) => `<img src="${esc(x)}" alt="" />`).join('')}</div>`;
     });
     $('[data-save]', pane).addEventListener('click', async () => {
       const r = await api('profile_save', { firm: f.id, data: collect() }, true);
@@ -146,3 +147,5 @@ function firmPanel(x: any): HTMLElement {
   return el;
 }
 start();
+
+autoLink(document.querySelector('#portal'));
