@@ -368,14 +368,39 @@ function evForm(e) {
 }
 
 /* ---------- community moderation ---------- */
+// Community moderation: posts and comments, newest first. Hide/unhide, pin and delete (a delete asks for a second tap).
+// Deleting a post removes its comments and likes too (the database does it). RLS lets only admins do this to others.
+let commTab = 'posts';
 async function community() {
-  const { data: posts, error } = await sb.from('too_posts').select('id,author_name,kind,title,body,pinned,hidden,created_at').order('created_at', { ascending: false }).limit(100);
-  if (error) throw error;
+  const [{ data: posts, error }, { data: cms, error: e2 }] = await Promise.all([
+    sb.from('too_posts').select('id,author_name,kind,title,body,pinned,hidden,created_at').order('created_at', { ascending: false }).limit(150),
+    sb.from('too_comments').select('id,post_id,author_name,body,hidden,created_at').order('created_at', { ascending: false }).limit(200)]);
+  if (error || e2) throw error || e2;
+  const KIND = { post: 'שיתוף', question: 'שאלה', win: 'הצלחה', announce: 'הודעה מהצוות' };
+  const byPost = {}; (cms || []).forEach((c) => { byPost[c.post_id] = (byPost[c.post_id] || 0) + 1; });
+  const pt = (id) => { const p = posts.find((x) => x.id === id); return p ? (p.title || String(p.body).slice(0, 50)) : 'פוסט #' + id; };
+  const cut = (t, n) => { t = String(t || ''); return t.length > n ? t.slice(0, n) + '...' : t; };
   pane().innerHTML = `
-    <div class="spread" style="margin-bottom:16px"><div><h2 class="t">קהילה</h2><p class="muted" style="margin:0">100 הפוסטים האחרונים. מסתירים פוסט בעייתי, נועצים הודעה חשובה, או כותבים הודעה מהצוות מתוך דף הקהילה.</p></div><a class="btn btn-k sm" href="${BASE}ezor-ishi/kehila/">לדף הקהילה</a></div>
-    <div class="tbl2"><table><thead><tr><th>מתי</th><th>מי</th><th>פוסט</th><th></th></tr></thead><tbody>
-    ${posts.length ? posts.map((p) => `<tr><td>${fmtDate(p.created_at)}</td><td>${esc(p.author_name || '')}</td><td>${p.pinned ? '📌 ' : ''}${p.hidden ? pill('מוסתר', 'no') + ' ' : ''}<b>${esc(p.title || '')}</b> ${esc(String(p.body).slice(0, 140))}</td><td class="row"><button class="btn btn-w sm" data-h="${p.id}">${p.hidden ? 'החזרה' : 'הסתרה'}</button><button class="btn btn-w sm" data-p="${p.id}">${p.pinned ? 'ביטול נעיצה' : 'נעיצה'}</button></td></tr>`).join('') : '<tr><td colspan="4" class="muted">עדיין אין פוסטים.</td></tr>'}
-    </tbody></table></div>`;
-  pane().querySelectorAll('[data-h]').forEach((b) => b.onclick = async () => { const p = posts.find((x) => x.id === Number(b.dataset.h)); const { error } = await sb.from('too_posts').update({ hidden: !p.hidden }).eq('id', p.id); if (error) return toast(errText(error), true); community(); });
-  pane().querySelectorAll('[data-p]').forEach((b) => b.onclick = async () => { const p = posts.find((x) => x.id === Number(b.dataset.p)); const { error } = await sb.from('too_posts').update({ pinned: !p.pinned }).eq('id', p.id); if (error) return toast(errText(error), true); community(); });
+    <div class="spread" style="margin-bottom:16px"><div><h2 class="t">קהילה</h2><p class="muted" style="margin:0">ניהול הפוסטים והתגובות: הסתרה, החזרה, נעיצה ומחיקה. מחיקה של פוסט מוחקת גם את התגובות והלייקים שלו.</p></div><a class="btn btn-k sm" href="${BASE}ezor-ishi/kehila/">לדף הקהילה</a></div>
+    <div class="grid4" style="margin-bottom:14px">
+      <div class="kp"><b>${posts.length}</b><span>פוסטים</span></div><div class="kp"><b>${(cms || []).length}</b><span>תגובות</span></div>
+      <div class="kp"><b>${posts.filter((p) => p.hidden).length + (cms || []).filter((c) => c.hidden).length}</b><span>מוסתרים</span></div><div class="kp"><b>${posts.filter((p) => p.pinned).length}</b><span>נעוצים</span></div>
+    </div>
+    <div class="tabs2" role="tablist" aria-label="פוסטים או תגובות" style="margin-bottom:12px"><button role="tab" data-ct="posts" aria-selected="${commTab === 'posts'}">פוסטים (${posts.length})</button><button role="tab" data-ct="comments" aria-selected="${commTab === 'comments'}">תגובות (${(cms || []).length})</button></div>
+    ${commTab === 'posts' ? `<div class="tbl2"><table><thead><tr><th>מתי</th><th>מי</th><th>סוג</th><th>פוסט</th><th>תגובות</th><th>פעולות</th></tr></thead><tbody>
+      ${posts.length ? posts.map((p) => `<tr><td>${fmtDate(p.created_at)}</td><td>${esc(p.author_name || '')}</td><td>${pill(KIND[p.kind] || p.kind)}</td><td style="min-width:220px">${p.pinned ? '📌 ' : ''}${p.hidden ? pill('מוסתר', 'no') + ' ' : ''}<b>${esc(p.title || '')}</b> ${esc(cut(p.body, 140))}</td><td>${byPost[p.id] || 0}</td>
+        <td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="btn btn-w sm" data-h="${p.id}">${p.hidden ? 'החזרה' : 'הסתרה'}</button><button class="btn btn-w sm" data-p="${p.id}">${p.pinned ? 'ביטול נעיצה' : 'נעיצה'}</button><button class="btn btn-r sm" data-d="${p.id}">מחיקה</button></div></td></tr>`).join('') : '<tr><td colspan="6" class="muted">עדיין אין פוסטים.</td></tr>'}
+      </tbody></table></div>`
+    : `<div class="tbl2"><table><thead><tr><th>מתי</th><th>מי</th><th>תגובה</th><th>על הפוסט</th><th>פעולות</th></tr></thead><tbody>
+      ${(cms || []).length ? cms.map((c) => `<tr><td>${fmtDate(c.created_at)}</td><td>${esc(c.author_name || '')}</td><td style="min-width:200px">${c.hidden ? pill('מוסתר', 'no') + ' ' : ''}${esc(cut(c.body, 160))}</td><td class="muted">${esc(cut(pt(c.post_id), 60))}</td>
+        <td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="btn btn-w sm" data-ch="${c.id}">${c.hidden ? 'החזרה' : 'הסתרה'}</button><button class="btn btn-r sm" data-cd="${c.id}">מחיקה</button></div></td></tr>`).join('') : '<tr><td colspan="5" class="muted">עדיין אין תגובות.</td></tr>'}
+      </tbody></table></div>`}`;
+  const q = (sel) => pane().querySelectorAll(sel);
+  q('[data-ct]').forEach((b) => b.onclick = () => { commTab = b.dataset.ct; community(); });
+  const act = async (pr, ok) => { const { data, error } = await pr; if (error || (Array.isArray(data) && !data.length)) return toast(error ? errText(error) : 'הפעולה לא בוצעה. רעננו ונסו שוב.', true); if (ok) toast(ok); community(); };
+  q('[data-h]').forEach((b) => b.onclick = () => { const p = posts.find((x) => x.id === Number(b.dataset.h)); act(sb.from('too_posts').update({ hidden: !p.hidden }).eq('id', p.id).select('id'), p.hidden ? 'הפוסט חזר לפיד.' : 'הפוסט הוסתר.'); });
+  q('[data-p]').forEach((b) => b.onclick = () => { const p = posts.find((x) => x.id === Number(b.dataset.p)); act(sb.from('too_posts').update({ pinned: !p.pinned }).eq('id', p.id).select('id')); });
+  q('[data-d]').forEach((b) => twice(b, () => act(sb.from('too_posts').delete().eq('id', Number(b.dataset.d)).select('id'), 'הפוסט נמחק.'), 'בטוח? לחצו שוב'));
+  q('[data-ch]').forEach((b) => b.onclick = () => { const c = cms.find((x) => x.id === Number(b.dataset.ch)); act(sb.from('too_comments').update({ hidden: !c.hidden }).eq('id', c.id).select('id'), c.hidden ? 'התגובה חזרה.' : 'התגובה הוסתרה.'); });
+  q('[data-cd]').forEach((b) => twice(b, () => act(sb.from('too_comments').delete().eq('id', Number(b.dataset.cd)).select('id'), 'התגובה נמחקה.'), 'בטוח? לחצו שוב'));
 }

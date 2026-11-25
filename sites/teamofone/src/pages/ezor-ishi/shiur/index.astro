@@ -7,7 +7,7 @@ import Base from '../../../layouts/Base.astro';
   </main>
   <script>
     import { sb, BASE, esc, toast, errText } from '../../../lib/sb.js';
-    import { requireLogin, loadCourse, logoutBtn, ownsModule, canOpen, modulePlans } from '../../../lib/member.js';
+    import { requireLogin, loadCourse, logoutBtn, ownsModule, canOpen, modulePlans, loadMe, ensureProfile, courseGroups, groupOf } from '../../../lib/member.js';
     import { md } from '../../../lib/md.js';
     import { player, videoSrc, isPrivateVideo, keepSigned } from '../../../lib/video.js';
     const app = document.getElementById('app');
@@ -16,7 +16,7 @@ import Base from '../../../layouts/Base.astro';
       if (!(await requireLogin())) return;
       logoutBtn(document.getElementById('anav'));
       const [{ data: me }, course, { data: content }, plans] = await Promise.all([
-        sb.rpc('too_me'), loadCourse(), sb.from('too_lesson_content').select('*').eq('lesson_id', id).maybeSingle(), modulePlans()]);
+        loadMe(), loadCourse(), sb.from('too_lesson_content').select('*').eq('lesson_id', id).maybeSingle(), modulePlans()]);
       const all = [...course.flat, ...course.updates.map((l) => ({ ...l, m: { n: 0, title: 'ספריית החברים' } }))];
       const i = all.findIndex((l) => l.id === id), L = all[i];
       if (!L) { app.innerHTML = '<div class="card">השיעור לא נמצא. <a href="' + BASE + 'ezor-ishi/">חזרה לאזור האישי</a></div>'; return; }
@@ -26,21 +26,28 @@ import Base from '../../../layouts/Base.astro';
       const has = L.module_id == null ? !!me.access : ownsModule(me, L.module_id);
       const open = canOpen(me, L);
       const plan = L.module_id != null ? plans[L.module_id] : null;
-      const prev = course.flat[course.flat.findIndex((l) => l.id === id) - 1], next = course.flat[course.flat.findIndex((l) => l.id === id) + 1];
+      // Only this lesson's course: the full course (its chapters) or the one single course. Library items list the library.
+      const G = groupOf(courseGroups(course, plans), L.module_id);
+      const seq = G ? G.lessons : course.updates;
+      const k = seq.findIndex((l) => l.id === id), prev = seq[k - 1], next = seq[k + 1];
+      const row = (l) => `<li><a href="${BASE}ezor-ishi/shiur/?id=${l.id}" ${l.id === id ? 'aria-current="page" style="outline:2px solid var(--ink)"' : ''}><span class="ck ${done.has(l.id) ? 'on' : ''}" aria-hidden="true">${done.has(l.id) ? '✓' : ''}</span><span>${esc(l.title)}</span><span>${!canOpen(me, l) ? '<span aria-label="נעול">🔒</span>' : ''}</span></a></li>`;
+      const side = !G ? `<div class="lw-head">ספריית החברים</div><ul class="ls" style="padding:0">${course.updates.map(row).join('')}</ul>`
+        : G.single ? `<div class="lw-head">${esc(G.title)}<small>${G.lessons.filter((l) => done.has(l.id)).length} מתוך ${G.lessons.length} שיעורים</small></div><ul class="ls" style="padding:0">${G.lessons.map(row).join('')}</ul>`
+        : `<div class="lw-head">הקורס המלא<small>${G.lessons.filter((l) => done.has(l.id)).length} מתוך ${G.lessons.length} שיעורים</small></div><div class="mods2" style="gap:6px">${G.chapters.map((m) => `<details ${m.id === L.module_id ? 'open' : ''} style="border-radius:12px"><summary style="cursor:pointer;font-weight:800;padding:8px 6px;list-style:none">${String(m.n).padStart(2, '0')} · ${esc(m.title)}</summary>
+              <ul class="ls" style="padding:0 0 8px">${m.lessons.map(row).join('')}</ul></details>`).join('')}</div>`;
       // a private lesson video ("too:<path>") is signed only for members with access; free-preview visitors see the join message
       const priv = isPrivateVideo(content?.video_url);
       const vid = open && content ? player(await videoSrc(content.video_url), L.title) : '';
       const att = (content?.attachments || []);
       app.innerHTML = `
-        <div class="crumbs"><a href="${BASE}ezor-ishi/">האזור האישי</a> / ${L.m.n ? `<a href="${BASE}ezor-ishi/perek/?id=${L.module_id}">${plan ? '' : 'פרק ' + L.m.n + ': '}${esc(L.m.title)}</a>` : 'ספריית החברים'}</div>
+        <div class="crumbs"><a href="${BASE}ezor-ishi/">האזור האישי</a> / ${!G ? 'ספריית החברים' : G.single ? `<a href="${BASE}ezor-ishi/perek/?id=${L.module_id}">${esc(G.title)}</a>` : `<a href="${BASE}ezor-ishi/#c-full">הקורס המלא</a> / <a href="${BASE}ezor-ishi/perek/?id=${L.module_id}">פרק ${L.m.n}: ${esc(L.m.title)}</a>`}</div>
         <div class="lessonw">
           <aside class="card" style="padding:14px">
-            <div class="mods2" style="gap:6px">${course.modules.map((m) => `<details ${m.id === L.module_id ? 'open' : ''} style="border-radius:12px"><summary style="cursor:pointer;font-weight:800;padding:8px 6px;list-style:none">${String(m.n).padStart(2, '0')} · ${esc(m.title)}</summary>
-              <ul class="ls" style="padding:0 0 8px">${m.lessons.map((l) => `<li><a href="${BASE}ezor-ishi/shiur/?id=${l.id}" style="${l.id === id ? 'outline:2px solid var(--ink)' : ''}"><span class="ck ${done.has(l.id) ? 'on' : ''}">${done.has(l.id) ? '✓' : ''}</span><span>${esc(l.title)}</span><span>${!canOpen(me, l) ? '🔒' : ''}</span></a></li>`).join('')}</ul></details>`).join('')}</div>
+            ${side}
           </aside>
           <section class="vstack">
             <div class="vid2">${vid || `<div class="soon">${open && priv ? `<b>הסרטון של השיעור פתוח לחברי הקהילה</b><span class="mut">${has ? 'נסו לרענן את העמוד.' : 'הטקסט של השיעור פתוח כאן למטה.'}</span>${has ? '' : `<a class="btn btn-l" href="${BASE}kniya/?plan=course">להצטרפות</a>`}` : open ? '<b>הסרטון בהכנה</b><span class="mut">הוא יעלה לכאן לפני פתיחת הקורס.</span>' : `<b>השיעור נעול</b><span class="mut">${plan ? 'הוא נפתח עם הקורס המלא, או עם קנייה של הקורס הזה בלבד.' : 'פותחים את כל הקורס בהצטרפות.'}</span><a class="btn btn-l" href="${BASE}kniya/?plan=course">להצטרפות</a>${plan ? `<a class="btn btn-o" href="${BASE}ezor-ishi/perek/?id=${L.module_id}">לדף הקורס</a>` : ''}`}</div>`}</div>
-            <div class="spread"><div><span class="pill">${L.m.n ? 'פרק ' + L.m.n + ' · שיעור ' + L.n : 'ספריית החברים' + (L.topic ? ' · ' + esc(L.topic) : '')}</span>${L.free_preview && !has ? ' <span class="pill l">שיעור פתוח לצפייה</span>' : ''}<h1 style="font-family:var(--body);font-weight:900;font-size:clamp(26px,3vw,36px);line-height:1.2;margin:10px 0 4px">${esc(L.title)}</h1><p class="muted" style="margin:0">${esc(L.summary || '')}</p></div>
+            <div class="spread"><div><span class="pill">${!G ? 'ספריית החברים' + (L.topic ? ' · ' + esc(L.topic) : '') : G.single ? esc(G.title) + ' · שיעור ' + (k + 1) + ' מתוך ' + seq.length : 'פרק ' + L.m.n + ' · שיעור ' + L.n}</span>${L.free_preview && !has ? ' <span class="pill l">שיעור פתוח לצפייה</span>' : ''}<h1 style="font-family:var(--body);font-weight:900;font-size:clamp(26px,3vw,36px);line-height:1.2;margin:10px 0 4px">${esc(L.title)}</h1><p class="muted" style="margin:0">${esc(L.summary || '')}</p></div>
               ${open ? `<button class="btn ${done.has(id) ? 'btn-w' : 'btn-k'}" id="mark">${done.has(id) ? '✓ סימנתי שסיימתי' : 'סיימתי את השיעור'}</button>` : ''}</div>
             ${open && content?.body_md ? '<div class="card prose">' + md(content.body_md) + '</div>' : ''}
             ${open && att.length ? '<div class="card"><h3>קבצים לשיעור</h3><div class="row">' + att.map((a) => `<button class="btn btn-w sm" data-dl="${esc(a.path)}">${esc(a.title)}</button>`).join('') + '</div></div>' : ''}
@@ -52,7 +59,11 @@ import Base from '../../../layouts/Base.astro';
       if (mk) mk.onclick = async () => {
         const { data: u } = await sb.auth.getUser();
         if (done.has(id)) { const { error } = await sb.from('too_progress').delete().eq('user_id', u.user.id).eq('lesson_id', id); if (error) return toast(errText(error), true); done.delete(id); mk.className = 'btn btn-k'; mk.textContent = 'סיימתי את השיעור'; return; }
-        const { error } = await sb.from('too_progress').upsert({ user_id: u.user.id, lesson_id: id });
+        mk.disabled = true;
+        let { error } = await sb.from('too_progress').upsert({ user_id: u.user.id, lesson_id: id });
+        // 23503: the account has no profile row yet. Create it (own row only) and try once more.
+        if (error && error.code === '23503' && await ensureProfile()) ({ error } = await sb.from('too_progress').upsert({ user_id: u.user.id, lesson_id: id }));
+        mk.disabled = false;
         if (error) return toast(errText(error), true);
         done.add(id); mk.className = 'btn btn-w'; mk.textContent = '✓ סימנתי שסיימתי'; toast('כל הכבוד. ממשיכים?');
       };
