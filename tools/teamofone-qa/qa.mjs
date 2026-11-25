@@ -58,14 +58,14 @@ async function sign(path, token) {
 async function rangeGet(url) { const r = await fetch(url, { headers: { Range: 'bytes=0-1023' } }); const b = await r.arrayBuffer(); return { status: r.status, len: b.byteLength, type: r.headers.get('content-type') || '' }; }
 
 // =============== 1. public pages crawl ===============
-const START = ['', 'maamarim/', 'knisa/', 'tnaim/', 'pratiut/', 'negishut/', 'kelim/', 'etgar/', 'robots.txt', 'sitemap.xml'];
+const START = ['', 'kursim/', 'maamarim/', 'knisa/', 'tnaim/', 'pratiut/', 'negishut/', 'kelim/', 'etgar/', 'robots.txt', 'sitemap.xml'];
 const seen = new Set(), queue = START.map((p) => BASE + p), linkMap = {};
 const norm = (u) => { const x = new URL(u); x.hash = ''; return x.href; };
 const ctxA = await browser.newContext(desk);
 const pA = await ctxA.newPage();
 const errsA = watch(pA);
 let buildSha = '';
-while (queue.length && seen.size < 80) {
+while (queue.length && seen.size < 120) {
   const url = norm(queue.shift()); if (seen.has(url)) continue; seen.add(url);
   errsA.length = 0;
   const res = await pA.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 }).catch((e) => ({ status: () => 0, e }));
@@ -88,7 +88,7 @@ while (queue.length && seen.size < 80) {
     if (info) {
       buildSha = buildSha || info.build;
       P.noindex = /noindex/.test(info.robots); P.bad = badWords(info.text); P.noalt = info.noalt; P.brokenImg = info.broken; P.ids = info.ids.length; P.h1 = info.h1.slice(0, 60);
-      P.moreCourses = info.text.includes('קורסים נוספים');
+      P.moreCourses = info.text.includes('קורסים נוספים') || info.ids.includes('more-courses');
       for (const l of info.links) {
         if (!l.startsWith(ORIGIN)) continue;
         (linkMap[norm(l)] ||= new Set()).add(P.url);
@@ -129,7 +129,9 @@ for (const P of R.pages) {
   delete P._ids;
 }
 const home = R.pages.find((p) => p.url === '/');
-check('public', 'home has "קורסים נוספים" section', home && home.moreCourses);
+check('public', 'home has the courses section (קורסים נוספים / #more-courses)', home && home.moreCourses);
+const kurs = R.pages.filter((p) => /^\/kursim\//.test(p.url));
+check('public', 'course catalog pages crawled (kursim)', kurs.length >= 1, kurs.map((k) => k.url));
 const arts = R.pages.filter((p) => /^\/maamarim\/[^/]+\/$/.test(p.url));
 check('public', 'article pages found and crawled', arts.length >= 3, arts.map((a) => a.url));
 const robots = R.pages.find((p) => p.url === '/robots.txt');
@@ -182,6 +184,9 @@ await ctxA.close();
 save();
 
 // =============== 3. students ===============
+// The file "public-only" next to this script skips the student part (no accounts are created). Remove it for a full run;
+// the throwaway accounts then have to be removed from the database afterwards.
+if (fs.existsSync('public-only')) { R.publicOnly = true; R.finished = new Date().toISOString(); R.summary = { total: R.checks.length, failed: R.checks.filter((c) => !c.ok).length }; save(); await browser.close(); console.log(JSON.stringify(R.summary)); process.exit(0); }
 async function newStudent(tag) {
   const ctx = await browser.newContext(desk); const page = await ctx.newPage(); const errs = watch(page);
   const email = `qa-${tag}-${RUN}@example.invalid`, pass = 'Qa-' + Math.random().toString(36).slice(2, 12) + '9!';

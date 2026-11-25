@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run
         run: |
-          mkdir -p /tmp/q && cp tools/teamofone-qa/qa.mjs /tmp/q/ && cd /tmp/q && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null
+          mkdir -p /tmp/q && cp tools/teamofone-qa/* /tmp/q/ && cd /tmp/q && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null
           if command -v google-chrome >/dev/null; then export PW_CHANNEL=chrome; else npx playwright install --with-deps chromium >/dev/null; fi
           node qa.mjs > log.txt 2>&1 || true
           grep -c PASS log.txt || true; grep -c FAIL log.txt || true
