@@ -5,7 +5,10 @@
 
 איך זה עובד:
 1. המשימה השבועית "לוח פרסום שבועי" כותבת תסריט לכל משבצת (Supabase, docs coll `ytscript`).
-2. הפונקציה `ytvideo?a=next` מכינה את הקריינות (Google Text-to-Speech, הקול he-IL-Chirp3-HD-Charon) ומחזירה את התסריט.
+2. הפונקציה `ytvideo?a=next` מכינה את הקריינות ומחזירה את התסריט.
+   מ-25.11.2026 הקריינות בקול של יקיר עצמו (שיבוט הקול ב-ElevenLabs שיקיר אישר), דרך הפונקציה `voice`, שמתקנת לבד את ההגייה של "דבול" ו"נסח".
+   הקבצים נשמרים כמו קודם ב-`pv/ytvo/<id>/` לפי הטקסט, כך ש-`render.mjs` לא השתנה. אם הקול של יקיר לא זמין, כל הסרטון מוקרא בקול של Google (he-IL-Chirp3-HD-Charon), וההודעה בטלגרם אומרת את זה.
+   חזרה לקול של Google לכל הסרטונים: `settings/voice.ytEngine = 'google'`. סרטון אחד בקול אחר: שדה `voice` בתסריט.
 3. ה-GitHub Action "office videos" רץ כל שעה, מרנדר עם `render.mjs` ושומר ב-`media/yt/<id>.mp4`.
 4. `ytvideo?step=attach` (pg_cron, כל רבע שעה) מצרף את הקובץ לשורה בלוח ושולח ליקיר בטלגרם צפייה וכפתור "לא לפרסם".
 5. מי מעלה ליוטיוב: גרוק, לפי הלוח. כש-`settings/pub.ytDirect` = true, המערכת מעלה בעצמה דרך הפונקציה `ytup` (YouTube Data API).

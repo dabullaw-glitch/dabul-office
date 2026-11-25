@@ -1,5 +1,5 @@
 // ytvideo: the office's own short answer videos for the YouTube slots in the publishing calendar ("own-video" rows).
-// Free end to end: narration with Google Text-to-Speech (office service account, free tier), the picture is rendered by the
+// Narration: Yakir's own voice (ElevenLabs, since 25.11.2026, see ?a=next) with Google Text-to-Speech as the fallback; the picture is rendered by the
 // GitHub Action .github/workflows/office-video.yml (tools/office-video/render.mjs), and the file is served from GitHub Pages.
 //
 // Scripts: docs coll 'ytscript', id = short ascii slug:
@@ -8,6 +8,13 @@
 //
 // GET  ?a=next&have=a,b public (used by the GitHub Action): the earliest script without a video (ids in 'have' are skipped), with narration links
 //                       (made here and cached by text in the public "pv" bucket). Only our own scripts are ever returned.
+//                       25.11.2026: the office videos ('ytscript') are read in Yakir's own voice (ElevenLabs professional voice clone,
+//                       approved by Yakir 25.11.2026) through the edge function `voice` ({action:'say', bucket:'pv'}; it fixes דבול / נסח).
+//                       Same files and fields as before (scene.audio, scene.ah = hash of "yakir|say", pv/ytvo/<id>/NN-<hash>.mp3), plus
+//                       scene.av ('yakir' | 'google') and on the script vo ('yakir' | 'google-fallback') and voChars. If the voice call fails
+//                       for any scene, the whole script falls back to Google (he-IL-Chirp3-HD-Charon, never a mix of two voices in one video)
+//                       and the Telegram preview says so. A script with its own 'voice' field, or docs settings/voice.ytEngine = 'google',
+//                       keeps the Google voice. The news videos ('nwsvideo') keep the Google voice.
 // POST ?step=attach     cron: when media/yt/<id>.mp4 is live on GitHub Pages, the video goes into its calendar row (media,
 //                       description) and Yakir gets a Telegram message with the video and a stop link.
 // GET  ?stop=<token>    stops that video (the calendar row becomes "skipped").
@@ -56,10 +63,51 @@ async function synth(say: string, voice: string) {
   const j = await r.json(); if (!r.ok) throw new Error(j.error?.message || String(r.status));
   return Uint8Array.from(atob(j.audioContent), (c) => c.charCodeAt(0));
 }
+// Yakir's own voice: the edge function `voice` writes pv/<path> itself and returns {ok, chars}
+async function yakirSay(say: string, path: string) {
+  const r = await fetch(`${env('SUPABASE_URL')}/functions/v1/voice`, { method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-cron-secret': env('CRON_SECRET') },
+    body: JSON.stringify({ action: 'say', text: say, path, bucket: 'pv' }) });
+  // deno-lint-ignore no-explicit-any
+  const j: any = await r.json().catch(() => ({}));
+  if (!r.ok || !j.ok) throw new Error('voice: ' + String(j.error || r.status).slice(0, 300));
+  return Number(j.chars || say.length);
+}
+const pub = (path: string) => sb().storage.from('pv').getPublicUrl(path).data.publicUrl;
+// deno-lint-ignore no-explicit-any
+async function voiceGoogle(coll: string, id: string, scenes: any[], voice: string) {
+  let changed = false;
+  for (let i = 0; i < scenes.length; i++) {
+    const sc = scenes[i]; if (!sc.say) continue;
+    const h = await hash(`${voice}|${sc.say}`);
+    if (sc.audio && sc.ah === h) continue;
+    const bytes = await synth(sc.say, voice);
+    const path = `${KINDS[coll].vo}/${id}/${String(i + 1).padStart(2, '0')}-${h}.mp3`;
+    const up = await sb().storage.from('pv').upload(path, bytes, { upsert: true, contentType: 'audio/mpeg' });
+    if (up.error) throw new Error(up.error.message);
+    sc.audio = pub(path); sc.ah = h; sc.av = 'google'; changed = true;
+  }
+  return changed;
+}
+// deno-lint-ignore no-explicit-any
+async function voiceYakir(id: string, scenes: any[]) {
+  let changed = false, chars = 0;
+  for (let i = 0; i < scenes.length; i++) {
+    const sc = scenes[i]; if (!sc.say) continue;
+    const h = await hash(`yakir|${sc.say}`);
+    if (sc.audio && sc.ah === h) continue;
+    const path = `ytvo/${id}/${String(i + 1).padStart(2, '0')}-${h}.mp3`;
+    chars += await yakirSay(sc.say, path);
+    sc.audio = pub(path); sc.ah = h; sc.av = 'yakir'; changed = true;
+  }
+  return { changed, chars };
+}
 
 // deno-lint-ignore no-explicit-any
 async function next(skip: string[], coll = 'ytscript'): Promise<any> {
   const { data } = await sb().from('docs').select('id,data').eq('coll', coll).in('data->>status', ['new', 'voiced']);
+  const { data: vs } = await sb().from('docs').select('data').match({ coll: 'settings', id: 'voice' }).maybeSingle();
+  const ytEngine = String(vs?.data?.ytEngine || 'yakir');
   // deno-lint-ignore no-explicit-any
   const rows = (data || []).sort((a: any, b: any) => String(a.data.at).localeCompare(String(b.data.at)));
   for (const row of rows) {
@@ -67,17 +115,20 @@ async function next(skip: string[], coll = 'ytscript'): Promise<any> {
     // a script whose video is already in the repo is skipped (the attach step picks it up once GitHub Pages serves it)
     if (skip.includes(row.id)) continue;
     const scenes = s.scenes || []; let changed = false;
-    for (let i = 0; i < scenes.length; i++) {
-      const sc = scenes[i]; if (!sc.say) continue;
-      const h = await hash(`${voice}|${sc.say}`);
-      if (sc.audio && sc.ah === h) continue;
-      const bytes = await synth(sc.say, voice);
-      const path = `${KINDS[coll].vo}/${row.id}/${String(i + 1).padStart(2, '0')}-${h}.mp3`;
-      const up = await sb().storage.from('pv').upload(path, bytes, { upsert: true, contentType: 'audio/mpeg' });
-      if (up.error) throw new Error(up.error.message);
-      sc.audio = sb().storage.from('pv').getPublicUrl(path).data.publicUrl; sc.ah = h; changed = true;
-    }
-    if (changed || s.status !== 'voiced') await merge(coll, row.id, { scenes, status: 'voiced', voicedAt: new Date().toISOString() });
+    // deno-lint-ignore no-explicit-any
+    const extra: any = {};
+    if (coll === 'ytscript' && !s.voice && ytEngine !== 'google' && s.vo !== 'google-fallback' && /^[a-z0-9-]+$/.test(row.id)) {
+      try {
+        const r = await voiceYakir(row.id, scenes); changed = r.changed;
+        if (r.changed) { extra.vo = 'yakir'; extra.voChars = Number(s.voChars || 0) + r.chars; }
+      } catch (e) {
+        // one voice for the whole video: everything is read again by Google, and Yakir is told in the preview
+        console.error('ytvideo yakir voice', row.id, e);
+        changed = await voiceGoogle(coll, row.id, scenes, VOICE) || changed;
+        extra.vo = 'google-fallback'; extra.voError = String((e as Error).message || e).slice(0, 300);
+      }
+    } else changed = await voiceGoogle(coll, row.id, scenes, voice);
+    if (changed || s.status !== 'voiced') await merge(coll, row.id, { scenes, status: 'voiced', voicedAt: new Date().toISOString(), ...extra });
     if (coll === 'nwsvideo') return { id: row.id, coll, title: s.title, week: s.week || null, description: s.description || '', tags: s.tags || [], storyIds: s.storyIds || [], scenes };
     return { id: row.id, title: s.title, link: s.link || '', scenes };
   }
@@ -110,7 +161,8 @@ async function attach() {
     }
     await merge('ytscript', row.id, { status: 'ready', file, readyAt: new Date().toISOString(), stopToken: token });
     const m = String(s.at || '').match(/^\d{4}-(\d\d)-(\d\d)T(\d\d:\d\d)/); const when = m ? `${+m[2]}.${+m[1]} בשעה ${m[3]}` : String(s.at || '');
-    await tg(`🎬 סרטון יוטיוב מוכן: ${s.title}\nיעלה ב-${when}, לפי לוח הפרסום.\n\nאפשר לצפות עכשיו. אם משהו לא מתאים, לוחצים "לא לפרסם".`,
+    const vo = s.vo === 'yakir' ? '\nהקריינות בקול שלך.' : s.vo === 'google-fallback' ? '\nשים לב: הקול שלך לא היה זמין, ולכן הקריינות בסרטון הזה בקול הממוחשב הרגיל.' : '';
+    await tg(`🎬 סרטון יוטיוב מוכן: ${s.title}\nיעלה ב-${when}, לפי לוח הפרסום.${vo}\n\nאפשר לצפות עכשיו. אם משהו לא מתאים, לוחצים "לא לפרסם".`,
       [[{ text: '▶️ צפייה בסרטון', url: media + file }], [{ text: '⛔ לא לפרסם', url: `${env('SUPABASE_URL')}/functions/v1/ytvideo?stop=${token}` }]]);
     done.push(row.id);
   }
