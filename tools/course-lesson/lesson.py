@@ -10,6 +10,8 @@ Job: {
   "open": "<HeyGen mp4 url of the opening>", "close": "<HeyGen mp4 url of the closing>",
   "narration": {"mode": "pieces", "pieces": [{"audio": "<HeyGen speech url>", "from": 0, "to": 9}, ...]}
              | {"mode": "google"}    (the existing Google narration files of the slides, deck scene.audio)
+             | {"mode": "eleven"}    (25.11.2026: the same deck scene.audio files, made in Yakir's own ElevenLabs voice by
+                                      fn/tts-index.ts {lesson:n, engine:'eleven'}; built exactly like 'google')
   "splitTest": false                 (test only: cut the Google files into pieces and split them again, report the error)
 }
 Narration pieces: one HeyGen speech call per piece (consecutive slides from..to, 0-based, inclusive), the slides' texts joined
@@ -176,7 +178,7 @@ def main(job_path):
     mode = nar.get('mode', 'google')
     res['narration'] = {'mode': mode, 'pieces': []}
     scene_wav = [None] * len(scenes)
-    if mode == 'google' or job.get('splitTest'):
+    if mode in ('google', 'eleven') or job.get('splitTest'):   # both read the deck's scene.audio files
         for i, s in enumerate(scenes):
             if not s.get('audio'):
                 raise SystemExit(f'slide {i + 1} has no narration file')

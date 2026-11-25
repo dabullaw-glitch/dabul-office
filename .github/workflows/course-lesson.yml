@@ -5,6 +5,8 @@ name: course lesson
 # section 8, settings/heygen.courseRules). Assembly: tools/course-lesson/lesson.py (Playwright stills + ffmpeg).
 # Output (main, GitHub Pages, never Supabase storage): media/course/<course>/<file>.mp4, .jpg, .result.json and check stills
 # media/course/check/<file>-1..6.jpg. On failure: media/course/jobs/<file>.error.txt.
+# Narration (25.11.2026): job narration {"mode":"eleven"} = the slides' deck audio made in Yakir's own ElevenLabs voice
+# (fn/tts-index.ts engine 'eleven'); 'pieces' (HeyGen) and 'google' still work.
 # Nothing is published from here: the task checks the stills and sends the lesson to Yakir for approval (reels?vr=final).
 on:
   push:

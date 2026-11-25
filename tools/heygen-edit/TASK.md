@@ -49,6 +49,78 @@ NOTHING is published without his approval of the finished video. You never publi
   stories are allowed only when presented as an example ("תחשבו על זוג ש...", "נניח ש..."), never as a real client.
   Never invent facts about Yakir's own life.
 
+## 0b. HIS OWN VOICE FOR EVERY AVATAR VIDEO (25.11.2026, Yakir; overrides every "voice" step below)
+
+Yakir approved his professional voice clone on ElevenLabs on 25.11.2026 ("יקיר דבול", model eleven_v4, docs
+settings/voice). It REPLACES the HeyGen voice 013a42e6 ("קול סטודיו") that he disliked, for every HeyGen avatar video:
+reels, the weekly ai-nadlan reel, the podcast 1-minute clips, 'other' videos and the course openings / closings.
+Never again pass a script + voiceId to HeyGen and never use create_speech_without_player for an avatar video.
+(The course SLIDES narration is switched separately by the course narration task, fn/tts: do not touch it here; section
+8 D follows whatever that task wrote.)
+
+THE TWO STEPS for every avatar video (replace section 4 step 4 and section 8 C "create the two clips"):
+1. VOICE. Text = the prompt row's CURRENT text, lines joined into sentences (section 4 step 2, first bullet only).
+   Do NOT apply settings/heygen.pronunciation (no Latin "Dabul" / "mashkanta"), spokenReplace, avoidWords or podcastPron:
+   those were tricks for HeyGen's voices. The function itself fixes דבול and נסח. Never add vowel marks yourself.
+   Spoken text rules stay: "עורך דין" not "עו״ד", short numbers in words.
+   `select net.http_post(url := 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/voice',
+      body := jsonb_build_object('action','say','text',<text>,'path','reels/<vidreq id>/voice.mp3'),
+      headers := jsonb_build_object('content-type','application/json','x-cron-secret',(select v from app_secrets where k='CRON_SECRET')),
+      timeout_milliseconds := 120000) as req;`
+   then `select pg_sleep(15)` and read net._http_response (content: {ok, path, chars, bytes, url}; url = signed link,
+   24 hours). Path ^[a-z0-9/_.-]+\.mp3$: course clips `reels/<vidreq id>/open.mp3` / `close.mp3`; a new voice after a fix
+   `voice-2.mp3`, `open-2.mp3` ... (never overwrite the audio of a video Yakir is still checking).
+   Read the url only inside your run (never write it to a doc, a file or a message; it is a temporary private link).
+2. VIDEO. create_video_from_avatar {avatarId: the look (section 4 step 3 / courseRules.lookId), audioUrl: the signed
+   url, engine {"type":"avatar_iii"}, resolution "1080p", aspectRatio "9:16", title "<vidreq id> <title>"} with NO
+   script, NO voiceId, NO voiceSettings, no motionPrompt. If HeyGen fails on the audio and the link is still valid,
+   create once more with the same link; after 24 hours voice again (it costs characters again).
+3. RECORD on the request: hg {videoId, lookId, at, creditsBefore, text: the exact text voiced, audio: the storage path,
+   voiceChars} (course: hg.open / hg.close the same way), and append {id, chars, at} to settings/voice.charLog (read,
+   append, merge the whole array). ElevenLabs is a paid monthly plan with a character limit: before voicing, sum
+   charLog for the current month; if it plus this text is over settings/voice.budget.monthChars (when set), do not voice:
+   one Telegram line a day "נגמרו התווים של הקול החדש לחודש הזה. הסרטונים ימשיכו כשהחבילה תתחדש." and stop the voice part.
+   Words Yakir reports as read wrong (raw-fix): add them to docs settings/voice.pron {word: fixed spelling} (read the
+   object, add, merge the whole object; the function applies it to every later text; a vowel-marked single word is
+   allowed THERE, Yakir approved that for this voice 25.11.2026) or reword that sentence, then voice again (new path)
+   and create the video again with the same look.
+
+PILOT GATE (25.11.2026): the first video in the new voice is the pilot `vidreq vr-voice-pilot` (type 'other', pilot
+'voice', script = the approved opening of lesson 8, c261124-fh-l08-open; forReq vr-fh-l08, forPart 'open'). Its raw
+version was sent to Yakir with reels?vr=raw (status 'raw-wait'). While docs settings/voice.pilot.status is not
+'approved': create NO HeyGen avatar video of any kind (reels, ai-nadlan, podcast clips, course clips, re-dos) and make no
+voice calls, except the pilot's own fix below. Scripts, approvals, reminders and the publishing calendar go on as usual.
+- vr-voice-pilot 'raw-wait': nothing (reels?vr=remind reminds Yakir once a day).
+- vr-voice-pilot 'raw-fix': handle it like section 5 raw-fix, but words go to settings/voice.pron or a rewording (steps
+  above), the voice is made again (`reels/vr-voice-pilot/voice-2.mp3`, then -3 ...), the video again with look
+  2de82931..., then reels?vr=raw again. If Yakir writes that the new voice itself is not good (not one word): docs_merge
+  settings/voice.pilot {status 'rejected', note} and stop the HeyGen part until the main session changes it.
+- vr-voice-pilot 'raw-ok' (Yakir approved): it is NOT sent to the cloud editor (section 5 skips rows with pilot).
+  Get a fresh hg.url (get_video), then: read vr-fh-l08.hg and docs_merge vr-fh-l08 {hg: <old hg> + {open: {videoId, lookId,
+  at, text, audio, url, fromPilot: 'vr-voice-pilot'}}}; docs_merge vr-voice-pilot {status 'approved', approvedAt,
+  usedAs: 'vr-fh-l08 open'}; docs_merge settings/voice {pilot: <pilot> + {status 'approved', approvedAt}}. From now on
+  every avatar video uses the two steps above.
+
+AFTER THE PILOT IS APPROVED, the waiting list (in this order; one course request in progress at a time):
+1. Lesson 8 (vr-fh-l08, status 'heygen'): section 8 C makes only the CLOSING clip (the opening is the pilot), new voice.
+2. Course re-dos (Yakir 25.11.2026 13:34: every course lesson video that is not yet published must have his new voice;
+   the course is not open for sale, so lessons 1 to 7 are not published): after lesson 8 is approved and attached, and
+   BEFORE lesson 9 is opened in section 8 A, redo lessons 1 to 7 in order, one at a time. For lesson n: read the request
+   vr-fh-l0n (status 'approved', attachedAt set), docs_merge {hgOld: <its hg>, hg: {}, redo: {reason: 'הקול החדש של יקיר
+   25.11.2026', at: now}, status: 'heygen'}. The scripts are already approved (prompt rows c...-fh-l0n-open / -close,
+   status 'ready'): no new script approval. Then section 8 C (both clips, two steps above), D (slides narration as the
+   course narration task set it), E (a NEW file id: `fh-l0n-<first 6 of ctok>-v2`; never overwrite the old mp4), vr=final
+   (Yakir approves the whole lesson again), F (the same server-side statement replaces lessons[n].video; keep the old link
+   as videoOld in that statement: `l || jsonb_build_object('video','<new url>','videoAt',now(),'videoOld',l->>'video')`).
+   A rejected re-do: status 'hold' as in F; the old lesson video stays in the course.
+3. Then lessons 9 and 10 (section 8 A), new voice from the start.
+4. Reels, the weekly ai-nadlan reel, podcast clips and 'other' videos: every new HeyGen generation uses the two steps.
+   HeyGen reels that Yakir already approved as final and that wait in the calendar (made in the old voice) stay as they
+   are unless Yakir asks to remake them (the main session asked him on 25.11.2026).
+Credits after the switch: the avatar clip still costs HeyGen credits by its length (Avatar III about 1 credit per
+started 15 s: a 40 s clip about 3); HeyGen voice credits are gone. Course budget estimate for one lesson's avatar clips:
+about 7 credits (no more "voice 32"). ElevenLabs characters: a lesson's opening + closing about 1,100.
+
 ## 1. Read first (every run)
 
 - `docs settings/video`: rules, hookRule, contentRule, qaRule, qaRule2, newsRule, newsRule2, scriptsRule, deliveryRule,
@@ -161,7 +233,10 @@ whose prompt row has status 'ready' (and mode not 'self'):
    twins are only a motion reference, not looks. The office looks (27d5880a..., 5891a74d...) are Yakir in his own office.
    The podcast look fdb960dc... is landscape: for 9:16 pass fit "cover", and on its first use check the stills that his head
    and the microphone are kept; if not, note it in settings/heygen.lookByType.podcastNote and use the next look next time.
-4. create_video_from_avatar with: avatarId = the look id, voiceId = settings/heygen.voice.id (013a42e6afdb4c22aa39a7f84f74ed0a,
+   SINCE 25.11.2026 steps 2 (pronunciation / spokenReplace / avoidWords part) and 4 are REPLACED by section 0b (his own
+   ElevenLabs voice: voice function -> mp3 -> create_video_from_avatar with audioUrl, no voiceId). The old recipe below is
+   kept only as history. The pilot gate of section 0b applies.
+4. (old, before 25.11.2026) create_video_from_avatar with: avatarId = the look id, voiceId = settings/heygen.voice.id (013a42e6afdb4c22aa39a7f84f74ed0a,
    "יקיר דבול - קול סטודיו", approved by Yakir 1.11.2026; never 1a97..., the English or the "-- 2" voices),
    voiceSettings = settings/heygen.voice.voiceSettings (ElevenLabs engine, model eleven_v4: it reads Hebrew correctly and
    sounds like him), script = the prepared text, engine = settings/heygen.engine ({"type": "avatar_iii"}: Yakir chose it
@@ -178,7 +253,9 @@ For every vidreq (NOT type 'course': section 8) with status 'heygen' and hg.vide
 the raw video; go straight to the edit job below with a fresh hg.url from get_video): get_video (wait 30 seconds between polls; up to
 about 10 minutes in this run, otherwise continue next run). Always read the request row again right before writing to it
 (someone may have replaced hg with a new video meanwhile; then work on the new hg.videoId and never write the old one back).
-Requests with status 'hold' are never touched (Yakir stopped them).
+Requests with status 'hold' are never touched (Yakir stopped them). A request with `pilot` (vr-voice-pilot, 25.11.2026)
+is never sent to the cloud editor: its raw-ok / raw-fix steps are in section 0b. In raw-fix of any request, "words read
+wrong" now means settings/voice.pron or a rewording and a new voice (section 0b), not spokenReplace.
 - failed: docs_merge hg.error and hg.failures + 1. After the first failure create it again once (step 4). After the second,
   status stays 'heygen' with error, and send Yakir one short Telegram line: "לא הצלחתי להכין בהייגן את הסרטון <title>. אבדוק שוב."
 - completed: credits after (get_current_user): store hg.url (video_url), hg.duration, hg.creditsAfter, hg.cost
@@ -439,6 +516,7 @@ Every run, after section 6, check the episode rows (skip rows with test true). Y
      200 and has the episode. docs_merge epNN {feed:{at, url, mp3, guid}, status 'published', publishedAt} and append epNN to
      podcast/show.episodes. One short Telegram line: "🎙 פרק <n> של נדל״ן בגובה העיניים עלה לספוטיפיי ולאפל. ביוטיוב
      הערב ב-19:00." If the push is refused: Telegram once "לא הצלחתי להעלות את פרק <n> לפיד, אני בודק." and leave the status.
+- (25.11.2026) The 1-minute clip is made in his own ElevenLabs voice (section 0b), after the pilot is approved.
 - The 1-minute clip is the vidreq vr-pod-epNN-clip (type 'other', source 'podcast', opened by the function at the script
   approval), handled by sections 4 to 6 like any request (raw approval, edit, final approval). When it is 'approved' and has
   no pubId: INSERT a pub row `pub-<releaseDate YYYYMMDD>T1300-podcast-epNN-clip` at '<releaseDate>T13:00' for
@@ -459,6 +537,28 @@ episode to the feed twice, and never put a podcast item into the fixed Sun/Tue/T
 
 ## 8. Course lessons (built 5.11.2026; runs every run, before section 7)
 
+SLIDES NARRATION IN HIS OWN VOICE (25.11.2026; replaces the HeyGen "pieces" of step D below). The lesson slides are now
+read by Yakir's own ElevenLabs voice clone (docs settings/voice) through fn/tts-index.ts (edge function `tts`), which calls
+the `voice` function scene by scene and writes the files into the deck exactly like the Google narration did:
+`select net.http_post(url := 'https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/tts', body := jsonb_build_object('lesson',<n>,'engine','eleven'),
+ headers := jsonb_build_object('content-type','application/json','x-cron-secret',(select v from app_secrets where k='CRON_SECRET')),
+ timeout_milliseconds := 150000);` then `select pg_sleep(100)` and read net._http_response {ok, voiced, left, chars}.
+Repeat until left = 0 (each call stops before the time limit; a scene already voiced with the same text is never paid for
+again). It skips the dropped welcome / goodbye slides itself (skipEnds). Append {id: "<request id>-slides", chars, at} to
+settings/voice.charLog in ONE statement (`docs_merge('settings','voice', jsonb_build_object('charLog', coalesce((select
+data->'charLog' from docs where coll='settings' and id='voice'),'[]'::jsonb) || jsonb_build_array(<entry>)))`). The job then
+gets `"narration": {"mode": "eleven"}` (lesson.py reads the deck's scene.audio files, the same as 'google'); no HeyGen
+speech calls and no HeyGen voice credits for the slides any more. Fallback (only if the main session says so):
+tts {lesson, engine:'google', restore:true} puts the old Google files back.
+PILOT GATE: the first lesson in this voice is the pilot request `vidreq vr-slides-pilot` (type 'course', lesson 1,
+pilot 'slides', file media/course/first-home/fh-l01-<ctok6>-el.mp4: lesson 1's slides in his new voice, the OLD avatar
+opening / closing; sent to Yakir with reels?vr=final on 25.11.2026). Section 8 never handles that row itself (skip every
+row with `pilot`; it is not an open course request for step A; F never attaches it: lesson 1 is re-done later with new avatar
+clips (section 0b) and that re-do reuses the same slide files at no cost). While vr-slides-pilot.status is not 'approved':
+do NOT voice slides of ANY lesson (no tts eleven, no HeyGen pieces) and do not write a new job file; every other lesson
+waits at step D. 'approved': step D uses the block above for every lesson (8, 9, 10 and the re-dos of 1 to 7).
+'rejected' / 'hold': stop step D for all lessons and leave it to the main session (it asks Yakir what to change).
+
 SKIP ENDS (Yakir 5.11.2026, "אוקיי"): his avatar already opens and closes each lesson, so the slides' own welcome and goodbye are left out: drop the FIRST deck scene (kind 'title' / "ברוכים הבאים..."), and drop the LAST scene only when its say starts with "בשיעור הבא" or "תודה שהייתם". Use exactly this filtered list both for the voice pieces (do not pay to voice the dropped slides) and for the build job (tools/course-lesson/lesson.py applies the same rule; settings/heygen.courseRules.skipEnds = true).
 
 Yakir approved 5.11.2026 10:59 (option A) for his first course "קונים דירה ראשונה, בלי הפתעות" (docs `course/first-home`,
@@ -474,7 +574,8 @@ ONE lesson in progress at a time, in order 1 to 10. Statuses: new -> script-wait
 assembling -> final-wait -> approved (then attached) | rejected -> hold. Skip rows with test true.
 
 A. New lesson request (status 'new', or create it): when the previous lesson is approved and attached (lesson 1: already
-   created) and no other course request is open, INSERT `vr-fh-l<NN>` for the next lesson n (none after 10) with status
+   created) and no other course request is open (25.11.2026: and, before lesson 9, the re-dos of lessons 1 to 7 in the
+   new voice are all approved and attached again, or on 'hold'; section 0b), INSERT `vr-fh-l<NN>` for the next lesson n (none after 10) with status
    'writing' and ctok = 40 random hex (`md5(random()::text)||substr(md5(random()::text),1,8)` in SQL).
 B. Scripts (status 'new' or 'writing'): read lessons[n] (title, summary, html, deck.scenes[].say) and write TWO scripts in
    Yakir's spoken style (same rules as section 3: Hebrew only, simple words, short lines, no "—"/"–", no English, Israel Bar
@@ -511,6 +612,10 @@ C. COURSE PAUSE (Yakir 17.11.2026: "הסרטונים שאתה מבקש קודמ�
    + courseRules.budget.reserveForReels + courseRules.budget.reserveForPodcast (read the CURRENT numbers from settings/heygen every run; since 11.11.2026 00:08: 20 + 0 + 70 = 90, reels paused, Yakir: the course must be ready end to end by 31.12.2026): do not start; at most once a day (courseRules.budgetWarnedAt, Israel
    date) Telegram: "השיעור הבא בקורס מחכה: נשארו בהייגן <R> קרדיטים, ו-<reserveForReels> שמורים לסרטונים הרגילים. השיעורים ימשיכו
    כשהקרדיטים יתחדשו ב-<plan.resetsAt as d.m>." and stop section 8.
+   SINCE 25.11.2026: the clips are made with his own voice by section 0b (voice function -> open.mp3 / close.mp3 ->
+   create_video_from_avatar with audioUrl), the pilot gate applies, a clip that already exists (lesson 8 opening = the
+   pilot) is not made again, and the estimate is the avatar part only (about 7 credits a lesson). Course re-dos of
+   lessons 1 to 7: section 0b "AFTER THE PILOT IS APPROVED". The old recipe (history):
    Else create the two clips exactly like section 4 steps 2 and 4 (the prompt rows' CURRENT text, pronunciation +
    spokenReplace + avoidWords on the HeyGen text only, no niqqud, voice settings/heygen.voice, engine avatar_iii, no
    motionPrompt, resolution 1080p) with: avatarId = courseRules.lookId (the same look for the whole course),
