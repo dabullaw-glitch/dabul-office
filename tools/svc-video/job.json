@@ -1,6 +1,79 @@
 {
  "note": "25.11.2026: service explainer videos in Yakir's voice. One item per service; an item is built once (skipped when media/hgv/<out>.mp4 exists).",
  "items": [
-  {"sid": "tabu", "out": "svc-tabu-yakir-3", "audio": "svcvo/yakir/tabu", "n": 6}
+  {
+   "sid": "tabu",
+   "out": "svc-tabu-yakir-3",
+   "audio": "svcvo/yakir/tabu",
+   "n": 6
+  },
+  {
+   "sid": "zoom",
+   "out": "svc-zoom-yakir",
+   "audio": "svcvo/yakir/zoom",
+   "n": 6
+  },
+  {
+   "sid": "company",
+   "out": "svc-company-yakir",
+   "audio": "svcvo/yakir/company",
+   "n": 6
+  },
+  {
+   "sid": "registrar",
+   "out": "svc-registrar-yakir",
+   "audio": "svcvo/yakir/registrar",
+   "n": 6
+  },
+  {
+   "sid": "inherit",
+   "out": "svc-inherit-yakir",
+   "audio": "svcvo/yakir/inherit",
+   "n": 6
+  },
+  {
+   "sid": "poa",
+   "out": "svc-poa-yakir",
+   "audio": "svcvo/yakir/poa",
+   "n": 6
+  },
+  {
+   "sid": "ichud",
+   "out": "svc-ichud-yakir",
+   "audio": "svcvo/yakir/ichud",
+   "n": 6
+  },
+  {
+   "sid": "tashlumim",
+   "out": "svc-tashlumim-yakir",
+   "audio": "svcvo/yakir/tashlumim",
+   "n": 6
+  },
+  {
+   "sid": "hub",
+   "out": "svc-hub-yakir",
+   "audio": "svcvo/yakir/hub",
+   "n": 7
+  },
+  {
+   "sid": "precheck",
+   "out": "svc-precheck-yakir",
+   "audio": "svcvo/yakir/precheck",
+   "n": 7,
+   "mode": "retime",
+   "live": "media/video/precheck-video.mp4",
+   "old": [
+    "tts/precheck-video/s1",
+    "tts/precheck-video/s2",
+    "tts/precheck-video/s3",
+    "tts/precheck-video/s4",
+    "tts/precheck-video/s5",
+    "svcvo/precheck-s6-990",
+    "tts/precheck-video/s7"
+   ],
+   "fps": 30,
+   "posterScene": 2,
+   "posterSec": 5.43
+  }
  ]
 }
