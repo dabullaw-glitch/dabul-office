@@ -1,0 +1,19 @@
+name: delete temporary rewrite branches (one-off)
+# 25.11.2026: the history cleanup of the paid course videos (Yakir approved) used temporary branches rwtmp/* that point at
+# the OLD commits. This run deletes them so the old commits are unreachable. Manual run only; this file is removed after.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { sparse-checkout: "README.md", sparse-checkout-cone-mode: false }
+      - name: Delete rwtmp/* and rewrite-tmp-*
+        run: |
+          refs=$(git ls-remote origin 'refs/heads/rwtmp/*' 'refs/heads/rewrite-tmp-*' | awk '{print $2}')
+          echo "$(echo "$refs" | grep -c .) branches"
+          echo "$refs" | grep . | xargs -r -n 50 git push -q origin --delete
+          echo "left: $(git ls-remote origin 'refs/heads/rwtmp/*' | wc -l)"
