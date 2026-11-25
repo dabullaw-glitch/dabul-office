@@ -1,0 +1,86 @@
+---
+// One course page: what it is, who it is for, what you build, all lessons with their length, what is included, and ordering.
+import Base from '../../layouts/Base.astro';
+import KursOrder from '../../components/KursOrder.astro';
+import { getCatalog, teaserHtml } from '../../lib/catalog.js';
+export async function getStaticPaths() {
+  const cat = await getCatalog();
+  return cat.courses.map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+const { c } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const cat = await getCatalog();
+const others = cat.courses.filter((x) => x.slug !== c.slug);
+const main = c.kind === 'main';
+const included = c.perks;
+const jsonld = { '@context': 'https://schema.org', '@type': 'Course', name: c.title, description: c.desc, inLanguage: 'he', provider: { '@type': 'Person', name: 'יקיר דבול' },
+  hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: `PT${Math.floor(c.min / 60)}H${c.min % 60}M` } };
+---
+<Base title={`${c.title} | Team of One`} description={`${c.title}: ${c.sub}. ${c.lessonCount} שיעורים, ${c.time}.`} app jsonld={jsonld}>
+  <main class="kx">
+    <section class="kx-hero sm" aria-labelledby="kdh">
+      <div class="wrap">
+        <nav class="crumbs" aria-label="מיקום בדף"><a href={base}>דף הבית</a> / <a href={base + 'kursim/'}>קורסים</a> / <span aria-current="page">{c.short}</span></nav>
+        <span class="tag" style="color:var(--fg)"><i></i>{main ? 'הקורס המלא' : 'קורס ממוקד'}</span>
+        <h1 id="kdh">{c.title}</h1>
+        <p class="lead">{c.desc}</p>
+        <ul class="kx-stats">
+          <li><b>{c.lessonCount}</b><span>שיעורים מוקלטים</span></li>
+          <li><b>{Math.floor(c.min / 60)}</b><span>{c.min % 60 ? `שעות ו-${c.min % 60} דקות` : 'שעות'}</span></li>
+          {main && <li><b>{c.chapters.length}</b><span>פרקים</span></li>}
+        </ul>
+        <div class="ctas"><a class="btn btn-l" href="#order">לבחירת מסלול <span class="arrow" aria-hidden="true">←</span></a><a class="btn btn-o" href="#lessons">לרשימת השיעורים</a></div>
+      </div>
+    </section>
+
+    <div class="wrap kd">
+      <div class="kd-main">
+        {c.forWho && <section aria-labelledby="kd1"><h2 id="kd1">למי זה מתאים</h2><p>{c.forWho}</p></section>}
+        <section aria-labelledby="kd2">
+          <h2 id="kd2">{main ? 'מה בונים' : 'מה יש לכם בסוף'}</h2>
+          {main && <p class="muted">כל פרק נגמר בחבר צוות חדש שעובד אצלכם:</p>}
+          <ul class="kd-out">{c.outcomes.map((o) => <li>{o}</li>)}</ul>
+        </section>
+        <section id="lessons" aria-labelledby="kd3" style="scroll-margin-top:80px">
+          <h2 id="kd3">השיעורים</h2>
+          <div class="kd-sum"><span class="pill k">{c.lessonCount} שיעורים</span><span class="pill">{c.time}</span>{main && <span class="pill">{c.chapters.length} פרקים</span>}</div>
+          {main ? c.chapters.map((ch) => (
+            <div class="kd-ch">
+              <h3><span aria-hidden="true">{String(ch.n).padStart(2, '0')}</span>פרק {ch.n}: {ch.title}</h3>
+              <p class="s">{ch.sub} · {ch.lessons.length} שיעורים</p>
+              <ol class="kd-ls">{ch.lessons.map((l, i) => <li><span class="i">{i + 1}</span><span>{l.title}</span><span class="d">{l.min} דק׳</span></li>)}</ol>
+              <p class="o">בסוף הפרק: {ch.outcome}</p>
+            </div>
+          )) : (
+            <div class="kd-ch"><ol class="kd-ls">{c.lessons.map((l, i) => <li><span class="i">{i + 1}</span><span>{l.title}</span><span class="d">{l.min} דק׳</span></li>)}</ol></div>
+          )}
+        </section>
+        <section aria-labelledby="kd4">
+          <h2 id="kd4">מה כלול</h2>
+          <ul class="kd-out">{included.map((p) => <li>{p}</li>)}</ul>
+          {!main && <p class="muted" style="margin-top:12px;font-size:15.5px">הקורס הזה כלול גם במנוי החודשי, יחד עם כל שאר הקורסים באתר.</p>}
+        </section>
+        <section aria-labelledby="kd5">
+          <h2 id="kd5">שאלות על הגישה</h2>
+          <div class="kx-faq">
+            <details><summary>איך מקבלים גישה?</summary><p>נרשמים לאתר ומשלמים. הקורס נפתח מיד באזור האישי, וצופים בו מהמחשב או מהטלפון, בקצב שלכם.</p></details>
+            {main
+              ? <details><summary>מה ההבדל בין הקורס המלא למנוי?</summary><p>הקורס המלא הוא תשלום אחד, והוא שלכם לתמיד{cat.course && cat.course.bonus ? `, כולל ${cat.course.bonus} חודשי מנוי במתנה` : ''}. המנוי החודשי נותן גישה לכל הקורסים באתר ולכל מה שחדש, כל עוד הוא פעיל.</p></details>
+              : <details><summary>מה ההבדל בין קורס בודד למנוי?</summary><p>קורס בודד הוא תשלום אחד, והקורס הזה נשאר שלכם לתמיד. המנוי החודשי נותן גישה לכל הקורסים באתר ולכל מה שחדש, כל עוד הוא פעיל.</p></details>}
+            <details><summary>כמה זמן יש לי לצפות?</summary><p>{main ? 'בקורס המלא הגישה היא לכל החיים.' : 'בקורס בודד הגישה היא לכל החיים.'} במנוי, הגישה פתוחה כל עוד המנוי פעיל.</p></details>
+            <details><summary>אני לא טכנולוגי. זה מתאים לי?</summary><p>כן. הקורס בנוי למי שלא כתב שורת קוד. כל פעולה מוצגת על המסך, צעד אחר צעד.</p></details>
+            <details><summary>אפשר לבטל?</summary><p>אפשר לבטל תוך 14 ימים מהרכישה, אם עוד לא התחלתם לצפות. את המנוי מבטלים בכל חודש, בלחיצה באזור האישי.</p></details>
+          </div>
+        </section>
+      </div>
+      <aside class="kd-aside" aria-label="הזמנת הקורס"><KursOrder c={c} id="order" /></aside>
+    </div>
+
+    <section class="kd-more" aria-labelledby="kdm">
+      <div class="wrap">
+        <div class="kx-sec-h"><h2 id="kdm">עוד<br>קורסים.</h2><p><a class="kx-more" href={base + 'kursim/'}>לכל הקורסים, זה לצד זה <span aria-hidden="true">←</span></a></p></div>
+        <div class="kt-grid"><Fragment set:html={others.map((o) => teaserHtml(o, base, '')).join('')} /></div>
+      </div>
+    </section>
+  </main>
+</Base>

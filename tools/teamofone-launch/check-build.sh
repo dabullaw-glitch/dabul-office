@@ -9,7 +9,7 @@ set -u
 D="$1"; P="$2"; DOM="${3:-}"; fail=0
 ok() { echo "OK   $1"; }; bad() { echo "FAIL $1"; fail=1; }
 PRIVATE="knisa kniya ezor-ishi nihul maamar"
-PUBLIC_PAGES="index.html maamarim/index.html kelim/index.html etgar/index.html tnaim/index.html"
+PUBLIC_PAGES="index.html kursim/index.html maamarim/index.html kelim/index.html etgar/index.html tnaim/index.html"
 [ -f "$D/index.html" ] || { echo "FAIL no build in $D"; exit 1; }
 for p in $PRIVATE; do
   for f in $(find "$D/$p" -name index.html 2>/dev/null); do grep -q 'name="robots" content="noindex' "$f" || bad "private page without noindex: $f"; done

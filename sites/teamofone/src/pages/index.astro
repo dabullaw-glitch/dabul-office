@@ -4,9 +4,11 @@ import A from '../data/landing-a.html?raw';
 import B from '../data/landing-b.html?raw';
 import FALLBACK from '../data/articles-fallback.html?raw';
 import { getArticles, CATS } from '../lib/articles.js';
+import { getCatalog, teaserHtml } from '../lib/catalog.js';
 const base = import.meta.env.BASE_URL;
 const fix = (s) => s.replaceAll('__BASE__', base);
 const arts = await getArticles();
+const cat = await getCatalog();
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 let ARTS = FALLBACK;
 if (arts.length) {
@@ -19,10 +21,23 @@ if (arts.length) {
       <ul class="alist reveal">${rest.map((a) => `<li><a href="${base}maamarim/${a.slug}/"><span><em>${esc(a.category)}</em><b>${esc(a.title)}</b></span><span class="go">←</span></a></li>`).join('')}</ul>
     </div><div style="margin-top:28px;text-align:center"><a class="btn btn-k" href="${base}maamarim/">לכל המאמרים <span class="arrow">←</span></a></div></div></section>`;
 }
-const html = fix(A) + (arts.length ? ARTS : fix(FALLBACK)) + fix(B);
+// "קורסים": every course on the site as an equal card (the full course and the single courses), prices from too_plans.
+// #course (old "תוכנית הקורס") and #more-courses (old "קורסים נוספים") both land here.
+const COURSES = `<section class="pad kts" id="course" aria-labelledby="kch">
+  <div class="wrap">
+    <div class="split-h reveal"><div><span class="tag" style="color:var(--fg)"><i></i>קורסים</span><h2 class="h2" id="kch" style="margin-top:16px">${cat.courses.length} קורסים.<br>בוחרים מה לבנות.</h2></div>
+      <p class="lead mut">קורס מלא שבונה צוות שלם, וקורסים ממוקדים שכל אחד מהם בונה דבר אחד. שיעורים מוקלטים, עם הדגמה על המסך ותבניות מוכנות. קונים קורס אחד, או מצטרפים למנוי שכולל את כולם.</p></div>
+    <div class="kt-grid" id="more-courses">
+      ${cat.courses.map((c) => teaserHtml(c, base)).join('')}
+      <a class="kt kt-all reveal" href="${base}kursim/"><span class="kt-top"><em>כל הקורסים</em></span><h3>משווים<br>ובוחרים.</h3><span class="kt-sub">כל השיעורים של כל קורס, כמה זמן הוא לוקח, ומה המסלולים להצטרפות.</span><span class="kt-foot"><span class="kt-go">לכל הקורסים <span aria-hidden="true">←</span></span></span></a>
+    </div>
+    <div class="kt-cta reveal"><a class="btn btn-l" href="${base}kursim/">לכל הקורסים <span class="arrow" aria-hidden="true">←</span></a>${cat.monthly ? `<span>מנוי חודשי${cat.monthly.intro ? `: החודש הראשון ב-${cat.monthly.intro}, ואחר כך ${cat.monthly.price} לחודש` : `: ${cat.monthly.price} לחודש`}. כולל את כל הקורסים.</span>` : ''}</div>
+  </div>
+</section>`;
+const html = fix(A).replace(/<!--COURSES:[^>]*-->/, () => COURSES) + (arts.length ? ARTS : fix(FALLBACK)) + fix(B);
 const jsonld = { '@context': 'https://schema.org', '@graph': [
   { '@type': 'Course', name: 'Team of One: צוות שלם. אדם אחד.', description: 'קורס דיגיטלי לבניית צוות של בינה מלאכותית לעסק: מאמרים, קידום בגוגל, סרטונים, רשתות, מענה לפניות ואתר.', inLanguage: 'he', provider: { '@type': 'Person', name: 'יקיר דבול' },
-    offers: [{ '@type': 'Offer', price: 990, priceCurrency: 'ILS', category: 'Paid' }], hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: 'PT10H' } },
+    offers: [{ '@type': 'Offer', price: cat.course ? cat.course.raw : 990, priceCurrency: 'ILS', category: 'Paid' }], hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: 'PT10H' } },
   { '@type': 'Person', name: 'יקיר דבול', jobTitle: 'עורך דין', knowsAbout: ['בינה מלאכותית לעסקים', 'קידום אתרים', 'אוטומציה'] } ] };
 ---
 <Base title="Team of One: צוות שלם. אדם אחד." jsonld={jsonld}>

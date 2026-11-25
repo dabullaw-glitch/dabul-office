@@ -1,0 +1,111 @@
+---
+// Course catalog: every course on the site, who it is for, what you build, its lessons, and the ways to order it.
+// Data and prices: src/lib/catalog.js (too_plans, too_modules, too_lessons at build time).
+import Base from '../../layouts/Base.astro';
+import KursOrder from '../../components/KursOrder.astro';
+import KursLessons from '../../components/KursLessons.astro';
+import { getCatalog } from '../../lib/catalog.js';
+const base = import.meta.env.BASE_URL;
+const cat = await getCatalog();
+const main = cat.courses.find((c) => c.kind === 'main');
+const singles = cat.courses.filter((c) => c.kind === 'single');
+const jsonld = { '@context': 'https://schema.org', '@type': 'ItemList', name: 'הקורסים של Team of One', itemListElement: cat.courses.map((c, i) => ({
+  '@type': 'ListItem', position: i + 1, item: { '@type': 'Course', name: c.title, description: c.desc, inLanguage: 'he', url: new URL(base + 'kursim/' + c.slug + '/', Astro.site).href,
+    provider: { '@type': 'Person', name: 'יקיר דבול' } } })) };
+---
+<Base title="כל הקורסים | Team of One" description="כל הקורסים של Team of One: הקורס המלא לבניית צוות של בינה מלאכותית לעסק, וקורסים ממוקדים על קידום בגוגל, סרטונים, אוטומציות ושיווק שותפים." app jsonld={jsonld}>
+  <main class="kx">
+    <section class="kx-hero" aria-labelledby="kxh">
+      <div class="wrap">
+        <span class="tag" style="color:var(--fg)"><i></i>קורסים</span>
+        <h1 id="kxh">בוחרים קורס.<span class="l">מתחילים לבנות.</span></h1>
+        <p class="lead">קורס מלא שבונה צוות שלם של בינה מלאכותית לעסק, וקורסים ממוקדים שכל אחד מהם בונה דבר אחד. כל השיעורים מוקלטים, עם הדגמה על המסך ותבניות מוכנות.</p>
+        <ul class="kx-stats">
+          <li><b>{cat.courses.length}</b><span>קורסים</span></li>
+          <li><b>{cat.totalLessons}</b><span>שיעורים מוקלטים</span></li>
+          <li><b>{cat.totalHours}</b><span>שעות של שיעורים</span></li>
+        </ul>
+        <nav class="kx-jump" aria-label="מעבר לקורס">{cat.courses.map((c) => <a href={'#' + c.slug}>{c.short}</a>)}</nav>
+      </div>
+    </section>
+
+    <section class="kx-paper" aria-labelledby="kxw">
+      <div class="wrap">
+        <div class="kx-sec-h"><h2 id="kxw">שלוש דרכים<br>להצטרף.</h2><p>קונים את הקורס המלא, קורס בודד אחד, או מצטרפים למנוי שכולל את כל הקורסים באתר.</p></div>
+        <div class="kx-w3">
+          {cat.course && (
+            <div class="kx-w">
+              <span class="tg">מחיר השקה</span>
+              <h3>הקורס המלא</h3>
+              <span class="pr">{cat.course.price} <small>תשלום אחד</small></span>
+              <p>{main ? main.chapters.length : 10} פרקים, גישה לכל החיים{cat.course.bonus ? `, ו-${cat.course.bonus} חודשי מנוי במתנה` : ''}.</p>
+              <a class="btn btn-k" href={base + 'kniya/?plan=course'} aria-label={`הקורס המלא, ${cat.course.price} בתשלום אחד. לרכישה`}>לרכישת הקורס המלא <span class="arrow" aria-hidden="true">←</span></a>
+            </div>
+          )}
+          {cat.monthly && (
+            <div class="kx-w dk">
+              <span class="tg">{cat.monthly.intro ? 'מבצע השקה' : 'מנוי'}</span>
+              <h3>מנוי חודשי</h3>
+              {cat.monthly.intro ? <span class="pr">{cat.monthly.intro} <small>לחודש הראשון</small></span> : <span class="pr">{cat.monthly.price} <small>לחודש</small></span>}
+              <p>{cat.monthly.intro ? `אחר כך ${cat.monthly.price} לחודש. ` : ''}כולל את כל {cat.courses.length} הקורסים, ספריית החברים והקהילה. מבטלים בכל חודש.</p>
+              <a class="btn btn-l" href={base + 'kniya/?plan=monthly'} aria-label="מנוי חודשי, כולל את כל הקורסים. להצטרפות">{cat.monthly.intro ? `מצטרפים ב-${cat.monthly.intro}` : 'להצטרפות למנוי'} <span class="arrow" aria-hidden="true">←</span></a>
+            </div>
+          )}
+          {cat.single && (
+            <div class="kx-w">
+              <span class="tg" style="background:var(--ink);color:var(--lime)">קורס אחד</span>
+              <h3>קורס בודד</h3>
+              <span class="pr">{cat.single.price} <small>{cat.single.same ? 'לקורס' : 'לקורס, החל מ'}</small></span>
+              <p>תשלום אחד וגישה לכל החיים לקורס אחד מתוך {singles.length} הקורסים הממוקדים.</p>
+              <a class="btn btn-w" href="#list">לבחירת קורס <span class="arrow" aria-hidden="true">←</span></a>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <section class="kx-list" id="list" aria-labelledby="kxl">
+      <div class="wrap">
+        <div class="kx-sec-h"><h2 id="kxl">כל<br>הקורסים.</h2><p>לכל קורס: למי הוא מתאים, מה בונים בו, כל השיעורים, ואיך מצטרפים.</p></div>
+        <div class="kx-cs">
+          {cat.courses.map((c) => (
+            <article class={'kx-c' + (c.kind === 'main' ? ' main' : '')} id={c.slug} aria-labelledby={'t-' + c.slug}>
+              <div class="kx-info">
+                <div class="kx-head">
+                  <span class="kt-n" aria-hidden="true">{String(c.idx).padStart(2, '0')}</span>
+                  <em class="kx-tag">{c.kind === 'main' ? 'הקורס המלא' : 'קורס ממוקד'}</em>
+                  <span class="kx-meta"><span>{c.lessonCount} שיעורים</span><span>{c.time}</span>{c.kind === 'main' && <span>{c.chapters.length} פרקים</span>}</span>
+                </div>
+                <h3 id={'t-' + c.slug}>{c.title}</h3>
+                <p class="kx-sub">{c.desc}</p>
+                {c.forWho && <p class="kx-for"><b>למי זה מתאים</b>{c.forWho}</p>}
+                <p class="kx-lb">{c.kind === 'main' ? 'מה בונים, פרק אחרי פרק' : 'מה יש לכם בסוף הקורס'}</p>
+                <ul class="kx-out">{c.outcomes.map((o) => <li>{o}</li>)}</ul>
+                <KursLessons c={c} />
+                <a class="kx-more" href={`${base}kursim/${c.slug}/`}>לעמוד הקורס <span aria-hidden="true">←</span></a>
+              </div>
+              <KursOrder c={c} />
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="kx-paper" aria-labelledby="kxf">
+      <div class="wrap" style="max-width:900px">
+        <div class="kx-sec-h"><h2 id="kxf">שאלות על<br>הגישה.</h2></div>
+        <div class="kx-faq">
+          <details><summary>איך מקבלים גישה לקורס?</summary><p>נרשמים לאתר ומשלמים. הקורס נפתח מיד באזור האישי, וצופים בו מהמחשב או מהטלפון.</p></details>
+          <details><summary>מה ההבדל בין קורס בודד למנוי?</summary><p>קורס בודד הוא תשלום אחד, והקורס נשאר שלכם לתמיד. המנוי החודשי נותן גישה לכל הקורסים באתר ולכל מה שחדש, כל עוד המנוי פעיל.</p></details>
+          <details><summary>מה כלול בקורס המלא?</summary><p>כל {main ? main.chapters.length : 10} הפרקים, עם גישה לכל החיים, תבניות וקבצי עבודה, קבוצת וואטסאפ סגורה{cat.course && cat.course.bonus ? `, ו-${cat.course.bonus} חודשי מנוי במתנה` : ''}.</p></details>
+          <details><summary>אני לא טכנולוגי. זה מתאים לי?</summary><p>כן. הקורסים בנויים למי שלא כתב שורת קוד. כל פעולה מוצגת על המסך, צעד אחר צעד.</p></details>
+          <details><summary>אפשר לבטל?</summary><p>קורס, מלא או בודד, אפשר לבטל תוך 14 ימים מהרכישה, אם עוד לא התחלתם לצפות. את המנוי מבטלים בכל חודש, בלחיצה באזור האישי.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="kx-final">
+      <div class="wrap"><b>לא בטוחים<br>מאיפה להתחיל?</b><div class="row"><a class="btn btn-k" href={base + 'etgar/'}>אתגר חינמי של 5 ימים <span class="arrow" aria-hidden="true">←</span></a><a class="btn btn-w" href={base}>לדף הבית</a></div></div>
+    </section>
+  </main>
+</Base>

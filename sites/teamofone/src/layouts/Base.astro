@@ -36,7 +36,7 @@ const og = new URL(ogImage || base + 'img/podyt.webp', Astro.site).href;
     {Astro.url.pathname.includes('/ezor-ishi') || Astro.url.pathname.includes('/nihul') ? (
       <nav id="anav"><a class="hide-m" href={base + 'ezor-ishi/'}>הקורס והספרייה</a><a class="hide-m" href={base + 'ezor-ishi/kehila/'}>קהילה</a><a class="hide-m" href={base + 'ezor-ishi/laiv/'}>שידורים</a><a class="hide-m" href={base + 'ezor-ishi/etgar/'}>האתגר שלי</a><a class="hide-m" href={base}>לאתר</a></nav>
     ) : (
-      <nav id="anav"><a class="hide-m" href={base}>דף הבית</a><a class="hide-m" href={base + '#course'}>תוכנית הקורס</a><a class="hide-m" href={base + 'maamarim/'}>מאמרים</a><a class="hide-m" href={base + 'kelim/'}>כלים</a><a class="hide-m" href={base + 'etgar/'}>אתגר חינמי</a><a class="hide-m" href={base + '#price'}>מסלולים</a><a href={base + 'ezor-ishi/'}>האזור האישי</a></nav>
+      <nav id="anav"><a class="hide-m" href={base}>דף הבית</a><a class="hide-m" href={base + 'kursim/'}>קורסים</a><a class="hide-m" href={base + 'maamarim/'}>מאמרים</a><a class="hide-m" href={base + 'kelim/'}>כלים</a><a class="hide-m" href={base + 'etgar/'}>אתגר חינמי</a><a class="hide-m" href={base + '#price'}>מסלולים</a><a href={base + 'ezor-ishi/'}>האזור האישי</a></nav>
     )}
     <button class="mbtn" type="button" aria-label="פתיחת התפריט" aria-expanded="false" aria-controls="mpanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div></header>

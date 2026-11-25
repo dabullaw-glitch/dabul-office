@@ -1,0 +1,15 @@
+---
+// Fold-out lesson list of a course (dark card on /kursim/). The full course is grouped by chapter.
+const { c } = Astro.props;
+---
+<details class="kx-ls">
+  <summary><span class="pl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>רשימת השיעורים ({c.lessonCount})</summary>
+  {c.kind === 'main' ? c.chapters.map((ch) => (
+    <div class="kx-ch">
+      <h4><span>פרק {ch.n}</span>{ch.title}</h4>
+      <ol>{ch.lessons.map((l, i) => <li><span class="i">{i + 1}</span><span>{l.title}</span><span class="d">{l.min} דק׳</span></li>)}</ol>
+    </div>
+  )) : (
+    <ol>{c.lessons.map((l, i) => <li><span class="i">{i + 1}</span><span>{l.title}</span><span class="d">{l.min} דק׳</span></li>)}</ol>
+  )}
+</details>

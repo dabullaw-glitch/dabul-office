@@ -2,7 +2,8 @@
 // Before launch it is an empty list, so nothing points search engines at the site.
 import type { APIRoute } from 'astro';
 import { getArticles } from '../lib/articles.js';
-const PUBLIC = ['', 'maamarim/', 'kelim/', 'kelim/sifriyat-horaot/', 'kelim/machshevon-zman/', 'kelim/bdikat-uvdot/', 'etgar/', 'tnaim/', 'pratiut/', 'negishut/'];
+import { getCatalog } from '../lib/catalog.js';
+const PUBLIC = ['', 'kursim/', 'maamarim/', 'kelim/', 'kelim/sifriyat-horaot/', 'kelim/machshevon-zman/', 'kelim/bdikat-uvdot/', 'etgar/', 'tnaim/', 'pratiut/', 'negishut/'];
 export const GET: APIRoute = async ({ site }) => {
   const live = process.env.PREVIEW === '0';
   const base = import.meta.env.BASE_URL;
@@ -11,8 +12,10 @@ export const GET: APIRoute = async ({ site }) => {
   let rows: string[] = [];
   if (live) {
     const arts = await getArticles();
+    const cat = await getCatalog();
     rows = [
       ...PUBLIC.map((p) => `<url><loc>${esc(u(p))}</loc></url>`),
+      ...cat.courses.map((c: any) => `<url><loc>${esc(u('kursim/' + c.slug + '/'))}</loc></url>`),
       ...arts.map((a: any) => `<url><loc>${esc(u('maamarim/' + a.slug + '/'))}</loc>${a.updated_at || a.published_at ? `<lastmod>${new Date(a.updated_at || a.published_at).toISOString().slice(0, 10)}</lastmod>` : ''}</url>`),
     ];
   }

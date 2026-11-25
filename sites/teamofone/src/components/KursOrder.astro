@@ -1,0 +1,17 @@
+---
+// Order box for one course: the ways to buy it, each going to the purchase page (kniya/?plan=...), which handles test mode.
+const { c, id } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<div class="kx-order" id={id} aria-label={'הזמנה: ' + c.title} role="group">
+  <p class="kx-lb">איך מצטרפים</p>
+  {c.offers.map((o) => (
+    <div class={'kx-of' + (o.primary ? ' pri' : '')}>
+      <span class="t">{o.title}</span>
+      <span class="p">{o.price} <small>{o.unit}</small></span>
+      <p class="nt">{o.note}</p>
+      <a class={'btn ' + (o.primary ? 'btn-k' : 'btn-o')} href={`${base}kniya/?plan=${o.code}`} aria-label={o.aria}>{o.btn} <span class="arrow" aria-hidden="true">←</span></a>
+    </div>
+  ))}
+  <p class="kx-onote">{c.kind === 'main' ? '14 ימים להחזר כספי מלא על הקורס, אם עוד לא התחלתם לצפות.' : '14 ימים להחזר כספי מלא על קורס בודד, אם עוד לא התחלתם לצפות.'} את המנוי מבטלים בכל חודש. <a href={base + 'tnaim/'}>תנאי השימוש</a></p>
+</div>
