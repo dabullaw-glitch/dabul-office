@@ -1,0 +1,11 @@
+{
+ "id": "vr-slides-pilot",
+ "file": "fh-l01-6fa4ce-el",
+ "course": "first-home",
+ "n": 1,
+ "deckUrl": "https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/reels?a=deck&t=6fa4cee58d209b75984c82a544b9b74eb961a436",
+ "open": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/555dac2798e0bec2df82c81f879d16b1.mp4?Expires=1796211304&Signature=EkoRVwdbuf5Ag0K1G-HYGPq3-~XDS~ZOh3vEqcIkS0DCHDA3srnU7GwvM-EmW6NS0hzHwDbdV0c2HMkdee64cPvEHJTBJBCxMpllzT2jEYZZllJYAJolNFUVrf0lg1dy8b7kfm7EUvOvdY2J6q6hi6-Trb888bc1JSqKn4oJLiNVJ2FqS7~v4yFzMb0O6FkKuR~qC0aulsAmw0Ac4E~ezIIBgvYpRoLhPSs4efCU0MCtrXr3sOP2l3gCcahQ~0FTRT2UYzXSJ4Bib65-0ZiIDmlDCIuHVgkZecIwbaqJ890NKMDI1pwsFzCMCJlNCObAnbVSI7MnCcStxcp3YM6vNQ__&Key-Pair-Id=K3H8X2ML80PLF9",
+ "close": "https://files2.heygen.ai/aws_pacific/avatar_tmp/ec0ca1dfd4e041acb0ddb327ccb34cce/d2096e2d9a1bbb932fd096b2030b7e1e.mp4?Expires=1796211304&Signature=DxtASFqRYOKCJJU5J1azTPsHx0Bn-0ETmsSskUydWfAIeIarHoiJRT-327qbT0wjRao2Eq3PgcRu7ChH1KZu8mXkFLaCThTEzSAONVF4Jmr9wvchnZo00s5wXpNtGjW8hLUsvy4v0Qz3yblvAQJ5Wc4l4tWR-iIiEwmMg3HPSUd371EM8lB7nbhu3qFYW4a06stO-51OiahkkngeiXFP9g2tyz4X9ONAXOYUFvCbaSYZG94IK5G3YjotXNnl~JWYxLUShdFBfMuo9KCOTUbsXa6jtSuYNx5Frchi04ogj1ctFPaUIrMI1BCD1YMNH9badMOCQWY6UV2i~wmgxpyW0A__&Key-Pair-Id=K3H8X2ML80PLF9",
+ "narration": {"mode": "eleven"},
+ "note": "25.11.2026 pilot: lesson 1 slides in Yakir's own ElevenLabs voice (tts engine 'eleven'), the existing HeyGen opening/closing of vr-fh-l01 (fresh links from get_video, no new HeyGen credits)."
+}
