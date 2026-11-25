@@ -22,7 +22,7 @@ jobs:
           sudo apt-get update -q >/dev/null && sudo apt-get install -yq ffmpeg fonts-liberation fontconfig >/dev/null
           fc-cache -f >/dev/null; echo "Arial -> $(fc-match Arial)"   # the live videos' digits are Liberation Sans (the Arial fallback)
           mkdir -p /tmp/nm && cd /tmp/nm && npm init -y >/dev/null
-          npm i -s playwright@1.47.2 @fontsource/karantina @fontsource/ibm-plex-sans-hebrew > /tmp/npm.log 2>&1 || tail -20 /tmp/npm.log
+          npm i -s playwright@1.63.0 @fontsource/karantina@5.3.0 @fontsource/ibm-plex-sans-hebrew@5.3.0 > /tmp/npm.log 2>&1 || tail -20 /tmp/npm.log
           npx playwright install --with-deps chromium > /tmp/pw.log 2>&1 || tail -20 /tmp/pw.log
       - name: Build
         run: NODE_PATH=/tmp/nm/node_modules python3 tools/svc-video/build.py /tmp/nm/node_modules
