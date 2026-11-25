@@ -1,0 +1,31 @@
+name: teamofone qa
+# Full QA of the published Team of One preview in a real browser (Chrome) with throwaway @example.invalid students, test mode
+# only. Writes only pass/fail, counts and short notes (no lesson text, no screenshots, no signed links) to the branch
+# too-qa-out. The throwaway accounts are removed from the database afterwards by the agent that started the run.
+on:
+  push:
+    branches: [main]
+    paths: ['tools/teamofone-qa/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: teamofone-qa, cancel-in-progress: false }
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run
+        run: |
+          mkdir -p /tmp/q && cp tools/teamofone-qa/qa.mjs /tmp/q/ && cd /tmp/q && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null
+          if command -v google-chrome >/dev/null; then export PW_CHANNEL=chrome; else npx playwright install --with-deps chromium >/dev/null; fi
+          node qa.mjs > log.txt 2>&1 || true
+          grep -c PASS log.txt || true; grep -c FAIL log.txt || true
+          ls -la out || true
+      - name: Save results
+        run: |
+          git config user.name qa; git config user.email qa@users.noreply.github.com
+          git checkout --orphan too-qa-out && git rm -rfq . >/dev/null 2>&1 || true
+          mkdir -p out && cp /tmp/q/out/results.json out/ 2>/dev/null || echo "{\"crash\":true}" > out/results.json; tail -n 80 /tmp/q/log.txt > out/log.txt || true
+          git add out && git commit -qm "qa $(date -u +%FT%TZ)" && git push -f origin too-qa-out
