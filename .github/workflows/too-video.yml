@@ -1,0 +1,48 @@
+name: Team of One lesson video (private)
+# Pilot 25.11.2026: one lesson video = branded slides (tools/too-video) + Yakir's own voice (narration made by the
+# function `voice`). Manual run only. The lesson content is paid material: the job comes from the office-only docs table
+# through the function toovid (the run proves who it is with GitHub's own signed token, OIDC), the finished mp4 goes
+# straight to the private bucket, and nothing from the lesson is printed here or kept in the repo.
+on:
+  workflow_dispatch:
+    inputs:
+      job: { description: 'job id (docs toovideo/<id>)', required: true, default: 'l01' }
+permissions:
+  contents: read
+  id-token: write
+concurrency: { group: too-video, cancel-in-progress: false }
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with: { sparse-checkout: "tools/too-video", sparse-checkout-cone-mode: false }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Install
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fontconfig >/dev/null
+          pip install -q playwright
+          mkdir -p ~/.fonts && cd ~/.fonts
+          curl -sfL -o Rubik.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/rubik/Rubik%5Bwght%5D.ttf"
+          curl -sfL -o Karantina-Bold.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/karantina/Karantina-Bold.ttf"
+          curl -sfL -o Karantina-Regular.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/karantina/Karantina-Regular.ttf"
+          curl -sfL -o SpaceGrotesk.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/spacegrotesk/SpaceGrotesk%5Bwght%5D.ttf"
+          fc-cache -f >/dev/null && fc-list | grep -c -E "Rubik|Karantina|Space Grotesk"
+      - name: Render and store privately
+        env: { JOB: '${{ inputs.job }}' }
+        run: |
+          set -euo pipefail
+          [[ "$JOB" =~ ^[a-z0-9-]{1,40}$ ]]
+          F=https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/toovid
+          tok() { curl -sf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=dabul-toovid" | python3 -c "import sys,json;print(json.load(sys.stdin)['value'])"; }
+          W=$(mktemp -d)
+          T=$(tok); echo "::add-mask::$T"
+          curl -sf -H "Authorization: Bearer $T" "$F?gh=job&id=$JOB" -o "$W/job.json"
+          python3 tools/too-video/job.py "$W"
+          python3 tools/too-video/render.py "$W/deck.json" "$W/narration.txt" "$W/narration.mp3" "$W/lesson.mp4"
+          python3 tools/too-video/job.py "$W" upload
+          T=$(tok); echo "::add-mask::$T"
+          curl -sf -X POST -H "Authorization: Bearer $T" -H 'content-type: application/json' --data @"$W/done.json" "$F?gh=done"
+          echo; rm -rf "$W"
