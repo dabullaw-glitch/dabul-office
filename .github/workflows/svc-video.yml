@@ -1,0 +1,34 @@
+name: service videos (new voice)
+# 25.11.2026 (Yakir approved in chat: "מאשר"): the explainer videos of the online services pages (/online/<slug>/) again,
+# narrated in Yakir's own voice (fn voice, files in the public bucket pv/svcvo/yakir/). Input: tools/svc-video/job.json.
+# Output (main, GitHub Pages): NEW files media/hgv/svc-<sid>-yakir.mp4 / .jpg / .json and check stills in media/hgv/check/.
+# The live videos media/video/<sid>-video.mp4 are not touched here: each one is replaced only after Yakir approves it.
+on:
+  push:
+    branches: [main]
+    paths: ['tools/svc-video/job.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: svc-video, cancel-in-progress: false }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools
+        run: |
+          command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
+          mkdir -p /tmp/nm && cd /tmp/nm && npm init -y >/dev/null
+          npm i -s playwright@1.47.2 @fontsource/karantina @fontsource/ibm-plex-sans-hebrew > /tmp/npm.log 2>&1 || tail -20 /tmp/npm.log
+          npx playwright install --with-deps chromium > /tmp/pw.log 2>&1 || tail -20 /tmp/pw.log
+      - name: Build
+        run: NODE_PATH=/tmp/nm/node_modules python3 tools/svc-video/build.py /tmp/nm/node_modules
+      - name: Publish to the repo (GitHub Pages only)
+        if: always()
+        run: |
+          git config user.name "site-bot"; git config user.email "site-bot@users.noreply.github.com"
+          git add media/hgv/svc-* media/hgv/check/svc-* 2>/dev/null || true
+          git commit -qm "service videos in Yakir's voice: $(date -u +%FT%TZ)" || { echo nothing; exit 0; }
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done

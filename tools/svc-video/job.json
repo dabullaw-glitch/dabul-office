@@ -1,0 +1,6 @@
+{
+ "note": "25.11.2026: service explainer videos in Yakir's voice. One item per service; an item is built once (skipped when media/hgv/<out>.mp4 exists).",
+ "items": [
+  {"sid": "tabu", "out": "svc-tabu-yakir", "audio": "svcvo/yakir/tabu", "n": 6}
+ ]
+}
