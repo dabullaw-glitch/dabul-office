@@ -29,7 +29,9 @@
 // Course lessons (5.11.2026, Yakir approved option A: his avatar opens and closes every lesson, in the middle the lesson
 // slides with his voice): a request of type 'course' has {course, lesson, promptIds: [opening, closing]} (two scripts,
 // shown and approved together); after approval it goes to 'heygen' (the scheduled task follows settings/heygen.courseRules).
-//   GET ?a=deck&t=<ctok>  the lesson slides for the course-lesson workflow (only while the lesson is being assembled)
+//   GET ?a=deck&t=<ctok>  the lesson slides for the course-lesson workflow (only while the lesson is being assembled;
+//                         25.11.2026: free lessons only, paid lessons go through academy ?gh=job)
+//   POST ?vr=final {id, ref} (25.11.2026) a PAID course lesson in private storage: Yakir's view button is academy?a=rv
 import { loadSecrets, json, cors, admin, env } from '../_shared/common.ts';
 import { POD_ACTIONS, podPage, askPodScript, askPodFinal, remindPod } from './podcast.ts';
 // Podcast (5.11.2026): POST ?vr=podscript {id} / ?vr=podfinal {id}, pages ?a=pok|pfix (script) and ?a=pfok|pffix (finished episode): ./podcast.ts
@@ -111,8 +113,22 @@ async function askRaw(id: string, dry: boolean, reminder = false) {
 // ---- finished video ----
 async function final(b: Any, dry: boolean) {
   const id = String(b.id || ''); const r = await getDoc('vidreq', id); if (!r) return { ok: false, error: 'no request' };
-  const url = String(b.url || '');
+  let url = String(b.url || '');
   const course = r.type === 'course';
+  // 25.11.2026 (Yakir approved): a PAID course lesson is never on GitHub Pages. It is sent as a private storage reference
+  // {ref: "sb:course/<course>/<file>.mp4"} and Yakir watches it through academy?a=rv&t=<vtok> (a 3-hour signed link made
+  // on every click, only while the lesson waits for his approval).
+  if (course && b.ref !== undefined) {
+    const ref = String(b.ref || '');
+    if (!/^sb:course\/[a-z0-9-]+\/[a-z0-9-]+\.mp4$/.test(ref)) return { ok: false, error: 'ref must be sb:course/<course>/<file>.mp4' };
+    const t = r.vtok || tok();
+    url = `${env('SUPABASE_URL')}/functions/v1/academy?a=rv&t=${t}`;
+    if (dry) return { ok: true, dry: true, would: { finalRef: ref, finalUrl: url } };
+    await merge('vidreq', id, { status: 'final-wait', finalRef: ref, finalUrl: url, finalAt: now(), vtok: t });
+    const out = await tg(`🎬 ${TYPE.course} מוכן לאישור סופי: ${r.topic || ''}\n\nלוחצים "צפייה בסרטון", ואז "מאשר" או "לא מאשר". השיעור נכנס לקורס רק אחרי האישור שלך. הסרטון שמור במקום פרטי, והקישור לצפייה עובד רק בשבילך.`,
+      [[{ text: '👁 צפייה בסרטון', url }], [{ text: '✅ מאשר', url: pub('vok', t) }, { text: '✗ לא מאשר', url: pub('vno', t) }]], dry);
+    return { ok: true, id, status: 'final-wait', private: true, telegram: out };
+  }
   const okUrl = /^https:\/\/dabullaw-glitch\.github\.io\/dabul-office\/media\/hgv\/[a-z0-9-]+\.mp4$/.test(url)
     || (course && /^https:\/\/dabullaw-glitch\.github\.io\/dabul-office\/media\/course\/[a-z0-9-]+\/[a-z0-9-]+\.mp4$/.test(url));
   if (!okUrl) return { ok: false, error: 'url must be media/hgv/<id>.mp4 (course lessons: media/course/<course>/<file>.mp4) on the office GitHub Pages site' };
@@ -262,6 +278,8 @@ async function deckJson(t: string) {
   if (r.type !== 'course' || !(['voice', 'assembling', 'final-wait'].includes(r.status) || (r.test && r.status !== 'test-done'))) return json({ ok: false, error: 'closed' }, 403);
   const c = await getDoc('course', String(r.course || 'first-home')); const ls: Any[] = (c && c.lessons) || [];
   const l = ls.find(x => Number(x.n) === Number(r.lesson)); if (!l) return json({ ok: false, error: 'no lesson' }, 404);
+  // 25.11.2026: a paid lesson's slides are paid material: the course-lesson workflow reads them through academy ?gh=job (OIDC)
+  if (!l.free) return json({ ok: false, error: 'private lesson: academy ?gh=job' }, 403);
   const nx = ls.find(x => Number(x.n) === Number(r.lesson) + 1);
   return json({ ok: true, course: r.course || 'first-home', n: l.n, of: ls.length, title: l.title, nextTitle: nx ? nx.title : '', scenes: (l.deck && l.deck.scenes) || [] });
 }

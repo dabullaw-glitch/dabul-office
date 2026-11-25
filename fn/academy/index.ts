@@ -8,10 +8,25 @@
 //   POST ?a=paid&k=<ACADEMY_HOOK_KEY>&c=<course>  -> payment provider notice: opens access and emails the personal link
 // Cron (x-cron-secret): ?step=grant {email,name,c} -> gives access by hand (tests, gifts, a payment the provider missed)
 //                       ?step=resetdev {email,c}   -> clears the buyer's devices (a buyer who changed phone and computer)
+//   GET  ?a=rv&t=<vtok>              -> (25.11.2026) Yakir's review link for a private course lesson video sent with
+//                                       reels?vr=final {id, ref}: redirects to a 3-hour signed link, only while the request
+//                                       waits for his approval (or was approved)
+// Cron (x-cron-secret): ?step=sign {ref, sec}  -> a signed link to a private course file (max 7 days), for the office
+// GitHub Actions (OIDC, audience 'dabul-course', only .github/workflows/course-lesson.yml or course-move.yml on main):
+//   GET  ?gh=job&id=<file>   -> the job in docs coursejob/<file> (status 'queued'): deck (narration links signed for 2 hours),
+//                               the avatar links, signed UPLOAD links into the private bucket 'course', and the review key
+//   POST ?gh=done {id, ok, result | error} -> docs coursejob/<file> status 'built' (checked in storage) or 'failed'
+// PAID LESSONS ARE PRIVATE (Yakir approved 25.11.2026): lesson video / poster / slide narration of a paid lesson are stored
+//   as references "sb:<bucket>/<path>" (bucket 'course' for video, poster, result and check stills; bucket 'files' under
+//   course/<course>/ for the slide narration) and are turned into short-lived signed links ONLY inside ?a=course for a
+//   verified buyer (personal link + approved device) or for a free lesson. Nothing paid is ever on GitHub Pages.
 // Anti-sharing (Yakir, 10.10.2026: "שיהיה לו כניסה רק אליו אבל שלא יוכל להעביר את זה לכולם"):
 //   the personal link alone is not enough. The first device that opens it is remembered; any other device needs a code
 //   that is sent to the buyer's own email, and a buyer can have at most MAXDEV devices. The course shows the buyer's name.
 import { loadSecrets, json, cors, admin, env } from './common.ts';
+import { createRemoteJWKSet, jwtVerify } from 'npm:jose@5.9.6';
+const GH_JWKS = createRemoteJWKSet(new URL('https://token.actions.githubusercontent.com/.well-known/jwks'));
+const GH_FLOWS = ['course-lesson.yml', 'course-move.yml'];
 
 // deno-lint-ignore no-explicit-any
 type Any = any;
@@ -26,6 +41,76 @@ const course = (c: string) => String(c || 'first-home').replace(/[^a-z0-9-]/g, '
 const clean = (t: unknown) => String(t || '').replace(/[^a-f0-9]/g, '').slice(0, 80);
 const mask = (e: string) => { const [u, d] = String(e).split('@'); return u && d ? u.slice(0, 2) + '***@' + d : ''; };
 const newKey = () => crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
+
+// ---- private course files (25.11.2026) ----
+const VIDEO_TTL = 4 * 3600;   // a buyer's signed links last 4 hours; the player asks again on every visit
+const REF_OK = [/^sb:course\/[a-z0-9-]+\/(check\/)?[a-z0-9-]+\.(mp4|jpg|json)$/, /^sb:files\/course\/[a-z0-9-]+\/[a-z0-9-]+\.mp3$/];
+const isRef = (r: unknown): r is string => typeof r === 'string' && REF_OK.some((re) => re.test(r));
+const splitRef = (r: string) => { const s = r.slice(3), i = s.indexOf('/'); return { bucket: s.slice(0, i), path: s.slice(i + 1) }; };
+async function signMany(refs: string[], sec: number): Promise<Record<string, string>> {
+  const out: Record<string, string> = {}; const by: Record<string, string[]> = {};
+  for (const r of new Set(refs.filter(isRef))) { const { bucket, path } = splitRef(r); (by[bucket] = by[bucket] || []).push(path); }
+  for (const [bucket, paths] of Object.entries(by)) {
+    const { data } = await admin().storage.from(bucket).createSignedUrls(paths, sec);
+    (data || []).forEach((x: Any) => { if (x && x.signedUrl && !x.error) out[`sb:${bucket}/${x.path}`] = x.signedUrl; });
+  }
+  return out;
+}
+async function ghOk(req: Request) {
+  const tok = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
+  const { payload } = await jwtVerify(tok, GH_JWKS, { issuer: 'https://token.actions.githubusercontent.com', audience: 'dabul-course' });
+  const wf = String(payload.job_workflow_ref || '');
+  return payload.repository === 'dabullaw-glitch/dabul-office' && payload.ref === 'refs/heads/main'
+    && GH_FLOWS.some((f) => wf.startsWith(`dabullaw-glitch/dabul-office/.github/workflows/${f}@refs/heads/main`));
+}
+const okId = (s: string) => /^[a-z0-9-]{3,60}$/.test(s);
+async function ghJob(id: string) {
+  const job = await doc('coursejob', id);
+  if (!job || job.status !== 'queued') return json({ ok: false, error: 'no queued job' }, 404);
+  const c = course(job.course), kind = job.kind === 'move' ? 'move' : 'build';
+  const names: Record<string, string> = { mp4: `${c}/${id}.mp4`, jpg: `${c}/${id}.jpg` };
+  if (kind === 'build') { names.result = `${c}/${id}.result.json`; for (let k = 1; k <= 6; k++) names['check' + k] = `${c}/check/${id}-${k}.jpg`; }
+  const up: Record<string, string> = {};
+  for (const [k, path] of Object.entries(names)) {
+    const { data, error } = await admin().storage.from('course').createSignedUploadUrl(path, { upsert: true });
+    if (error) return json({ ok: false, error: 'upload link: ' + error.message }, 500);
+    up[k] = data.signedUrl;
+  }
+  let deck: Any = null;
+  if (kind === 'build') {
+    const cd = await doc('course', c); const ls: Any[] = (cd && cd.lessons) || [];
+    const l = ls.find((x) => Number(x.n) === Number(job.n)); if (!l || !l.deck) return json({ ok: false, error: 'no lesson deck' }, 404);
+    const nx = ls.find((x) => Number(x.n) === Number(job.n) + 1);
+    const scenes: Any[] = JSON.parse(JSON.stringify(l.deck.scenes || []));
+    const signed = await signMany(scenes.map((s) => s.audio), 2 * 3600);
+    for (const s of scenes) { if (isRef(s.audio)) s.audio = signed[s.audio] || ''; delete s.gaudio; delete s.gah; }
+    deck = { ok: true, course: c, n: l.n, of: ls.length, title: l.title, nextTitle: nx ? nx.title : '', scenes };
+  }
+  await merge('coursejob', id, { status: 'building', startedAt: new Date().toISOString(), tries: (Number(job.tries) || 0) + 1 });
+  return json({ ok: true, kind, job: { id: job.req || id, file: id, course: c, n: job.n, open: job.open || '', close: job.close || '', narration: job.narration || { mode: 'eleven' } }, deck, up, rkey: job.rkey || '' });
+}
+async function ghDone(b: Any) {
+  const id = String(b.id || ''); if (!okId(id)) return json({ ok: false, error: 'bad id' }, 400);
+  const job = await doc('coursejob', id); if (!job || job.status !== 'building') return json({ ok: false, error: 'not building' }, 409);
+  const c = course(job.course);
+  if (!b.ok) { await merge('coursejob', id, { status: 'failed', failedAt: new Date().toISOString(), error: String(b.error || '').slice(0, 3000) }); return json({ ok: true }); }
+  const { data: list } = await admin().storage.from('course').list(c, { search: id, limit: 20 });
+  const f = (list || []).find((x: Any) => x.name === `${id}.mp4`);
+  if (!f) { await merge('coursejob', id, { status: 'failed', failedAt: new Date().toISOString(), error: 'the mp4 is not in storage' }); return json({ ok: false, error: 'mp4 missing' }, 400); }
+  const res = b.result && typeof b.result === 'object' ? b.result : {};
+  await merge('coursejob', id, { status: 'built', builtAt: new Date().toISOString(), bytes: Number(f.metadata?.size) || null,
+    video: `sb:course/${c}/${id}.mp4`, poster: `sb:course/${c}/${id}.jpg`, result: JSON.stringify(res).length <= 60000 ? res : { truncated: true, duration: res.duration, warnings: (res.warnings || []).slice(0, 50) } });
+  return json({ ok: true });
+}
+async function review(t: string) {
+  const notFound = new Response('הקישור לא תקף.', { status: 404, headers: { ...cors, 'content-type': 'text/plain; charset=utf-8' } });
+  if (!/^[a-f0-9]{40}$/.test(t)) return notFound;
+  const { data } = await admin().from('docs').select('id,data').eq('coll', 'vidreq').eq('data->>vtok', t).limit(1);
+  const r = data && data[0] && data[0].data;
+  if (!r || r.type !== 'course' || !['final-wait', 'approved'].includes(r.status) || !isRef(r.finalRef)) return notFound;
+  const s = await signMany([r.finalRef], 3 * 3600); const u = s[r.finalRef];
+  return u ? new Response(null, { status: 302, headers: { ...cors, location: u, 'cache-control': 'no-store' } }) : notFound;
+}
 
 async function tg(text: string) {
   const token = env('TELEGRAM_BOT_TOKEN'), chat = env('TELEGRAM_CHAT_ID'); if (!token || !chat) return;
@@ -95,8 +180,15 @@ async function courseView(req: Request, c: string, t: string, d: string, preview
   const buyer = !!en;
   const lessons = (cd.lessons || []).map((l: Any) => {
     const open = buyer || l.free;
-    return { n: l.n, title: l.title, minutes: l.minutes || 0, summary: l.summary || '', locked: !open, html: open ? l.html : '', video: open ? (l.video || '') : '', deck: open && l.deck ? { scenes: l.deck.scenes || [] } : null };
+    const scenes = open && l.deck ? (l.deck.scenes || []).map((s: Any) => { const x = { ...s }; delete x.gaudio; delete x.gah; return x; }) : [];
+    return { n: l.n, title: l.title, minutes: l.minutes || 0, summary: l.summary || '', locked: !open, html: open ? l.html : '', video: open ? (l.video || '') : '', poster: open ? (l.poster || '') : '', deck: open && l.deck ? { scenes } : null };
   });
+  // private files of the open lessons become short-lived signed links (25.11.2026); a ref that cannot be signed is dropped
+  const refs: string[] = [];
+  for (const l of lessons) { if (l.locked) continue; refs.push(l.video, l.poster); for (const s of (l.deck?.scenes || [])) refs.push(s.audio); }
+  const signed = refs.some(isRef) ? await signMany(refs, VIDEO_TTL) : {};
+  const fix = (v: unknown) => (isRef(v) ? (signed[v] || '') : (typeof v === 'string' && v.startsWith('sb:') ? '' : v));
+  for (const l of lessons) { if (l.locked) continue; l.video = fix(l.video); l.poster = fix(l.poster); for (const s of (l.deck?.scenes || [])) s.audio = fix(s.audio); }
   if (en) await merge('enroll', en.id, { lastSeen: new Date().toISOString(), visits: (Number(en.data.visits) || 0) + 1, firstSeen: en.data.firstSeen || new Date().toISOString() });
   return { ok: true, title: cd.title, lessons, done: en?.data?.done || [], buyer, owner: en ? (en.data.name || mask(en.data.email)) : '', newDevice: newDevice || undefined };
 }
@@ -106,6 +198,14 @@ Deno.serve(async (req) => {
   await loadSecrets().catch(() => {});
   const url = new URL(req.url); const a = url.searchParams.get('a'); const c = course(url.searchParams.get('c') || '');
   try {
+    const gh = url.searchParams.get('gh');
+    if (gh) {
+      try { if (!(await ghOk(req))) return json({ ok: false, error: 'forbidden' }, 403); } catch (_e) { return json({ ok: false, error: 'unauthorized' }, 401); }
+      if (gh === 'job') { const id = String(url.searchParams.get('id') || ''); return okId(id) ? await ghJob(id) : json({ ok: false, error: 'bad id' }, 400); }
+      if (gh === 'done' && req.method === 'POST') return await ghDone(await req.json().catch(() => ({})));
+      return json({ ok: false, error: 'gh?' }, 400);
+    }
+    if (a === 'rv') return await review(String(url.searchParams.get('t') || ''));
     if (a === 'buy') { const cfg = (await doc('course', c))?.sale || {}; return json({ url: cfg.open && cfg.payUrl ? cfg.payUrl : '', price: cfg.price || null }); }
     if (a === 'course') return json(await courseView(req, c, clean(url.searchParams.get('t')), clean(url.searchParams.get('d')), url.searchParams.get('preview') === '1'));
     if (a === 'code' && req.method === 'POST') {
@@ -160,6 +260,13 @@ Deno.serve(async (req) => {
       return json({ ok: true });
     }
     const step = url.searchParams.get('step');
+    if (step === 'sign') {
+      if (!env('CRON_SECRET') || req.headers.get('x-cron-secret') !== env('CRON_SECRET')) return json({ error: 'unauthorized' }, 401);
+      const b = await req.json().catch(() => ({})); const ref = String(b.ref || '');
+      if (!isRef(ref)) return json({ ok: false, error: 'bad ref' }, 400);
+      const sec = Math.min(7 * 86400, Math.max(60, Number(b.sec) || 3600)); const s = await signMany([ref], sec);
+      return s[ref] ? json({ ok: true, url: s[ref], sec }) : json({ ok: false, error: 'not found' }, 404);
+    }
     if (step === 'grant' || step === 'resetdev') {
       if (!env('CRON_SECRET') || req.headers.get('x-cron-secret') !== env('CRON_SECRET')) return json({ error: 'unauthorized' }, 401);
       const b = await req.json().catch(() => ({}));

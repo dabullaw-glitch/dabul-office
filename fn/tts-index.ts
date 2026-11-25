@@ -7,7 +7,9 @@
 //  POST {lesson:n, engine:'eleven', skipEnds?:true, only?:[sceneNo..]}
 //                             -> (25.11.2026) ELEVENLABS MODE: the same scenes read in Yakir's own professional voice clone
 //                                (ElevenLabs, approved by Yakir 25.11.2026) through the edge function `voice`
-//                                ({action:'say', bucket:'pv'}; it fixes דבול / נסח itself). Same bucket, same path pattern
+//                                ({action:'say', bucket:'pv'}; it fixes דבול / נסח itself). 25.11.2026: PAID lessons (not
+//                                lesson.free) go to the PRIVATE bucket 'files' and scene.audio = "sb:files/<path>" (signed by
+//                                the academy function for buyers and for the course-lesson workflow). Same path pattern
 //                                (lNN-sNN-<hash of "eleven|say">.mp3) and the same deck fields (scene.audio, scene.ah), so
 //                                the course-lesson build (narration mode 'google' / 'eleven' = the deck's scene.audio files)
 //                                works unchanged. Extra fields: scene.av = 'eleven'; the previous Google file is kept in
@@ -53,10 +55,10 @@ async function synth(text: string, voice: string) {
 
 const hash10 = async (s: string) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-1', new TextEncoder().encode(s)))).slice(0, 5).map((x) => x.toString(16).padStart(2, '0')).join('');
 // ElevenLabs: Yakir's own voice through the edge function `voice` (25.11.2026)
-async function elevenSay(text: string, path: string) {
+async function elevenSay(text: string, path: string, bucket: 'pv' | 'files' = 'pv') {
   const r = await fetch(`${env('SUPABASE_URL')}/functions/v1/voice`, { method: 'POST',
     headers: { 'content-type': 'application/json', 'x-cron-secret': env('CRON_SECRET') },
-    body: JSON.stringify({ action: 'say', text, path, bucket: 'pv' }) });
+    body: JSON.stringify({ action: 'say', text, path, bucket }) });
   // deno-lint-ignore no-explicit-any
   const j: any = await r.json().catch(() => ({}));
   if (!r.ok || !j.ok) throw new Error('voice: ' + String(j.error || r.status).slice(0, 300));
@@ -116,9 +118,13 @@ async function lesson(n: number, b: any = {}) {
         if (sc.av === 'eleven' && sc.ah === h && sc.audio) continue;   // already in his voice, same text
         if (Date.now() - t0 > 95_000) break;
         const path = `course/first-home/l${nn}-s${String(i + 1).padStart(2, '0')}-${h}.mp3`;
-        const r = await elevenSay(sc.say, path);
+        // 25.11.2026 (Yakir approved: paid lessons are private): a paid lesson's narration goes to the PRIVATE bucket 'files'
+        // and the deck keeps a reference "sb:files/<path>" (the academy signs it for buyers, the course-lesson workflow
+        // gets a signed link through academy ?gh=job). Free lessons stay in the public bucket 'pv'.
+        const priv = !lessons[li].free;
+        const r = await elevenSay(sc.say, path, priv ? 'files' : 'pv');
         if (sc.audio && sc.av !== 'eleven') { sc.gaudio = sc.audio; sc.gah = sc.ah; }
-        sc.audio = sb().storage.from('pv').getPublicUrl(path).data.publicUrl; sc.ah = h; sc.av = 'eleven';
+        sc.audio = priv ? `sb:files/${path}` : sb().storage.from('pv').getPublicUrl(path).data.publicUrl; sc.ah = h; sc.av = 'eleven';
         chars += r.chars || sc.say.length; done++; dirty = true;
         if (done % 3 === 0) await save();
       }

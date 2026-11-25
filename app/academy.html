@@ -765,8 +765,14 @@ p{margin:0 0 1em}
       $('#lmeta').textContent = `שיעור ${l.n} מתוך ${r.lessons.length}${l.minutes ? ` · כ-${l.minutes} דקות קריאה` : ''}`;
       const v = $('#lvideo'); if (window.__deckStop) { window.__deckStop(); window.__deckStop = null; }
       // the finished lesson video (5.11.2026: his avatar opens and closes, the slides with his voice in the middle) plays
-      // instead of the slides player when the lesson has one (an mp4 on the office GitHub Pages site)
-      if (!l.locked && /^https:\/\/[^"'<>\s]+\.mp4$/i.test(l.video || '')) { v.className = 'video'; v.hidden = false; v.innerHTML = `<video controls playsinline preload="metadata" poster="${l.video.replace(/\.mp4$/i, '.jpg')}" src="${l.video}"></video>`; }
+      // instead of the slides player when the lesson has one. 25.11.2026: a paid lesson's video is private; the server sends
+      // a short-lived signed link (…/object/sign/…mp4?token=…) and its poster in l.poster, only to a verified buyer.
+      const mp4 = /^https:\/\/[^"'<>\s]+\.mp4(\?[^"'<>\s]*)?$/i;
+      if (!l.locked && mp4.test(l.video || '')) {
+        const poster = /^https:\/\/[^"'<>\s]+$/i.test(l.poster || '') ? l.poster : (/\.mp4$/i.test(l.video) ? l.video.replace(/\.mp4$/i, '.jpg') : '');
+        v.className = 'video'; v.hidden = false;
+        v.innerHTML = `<video controls playsinline preload="metadata" controlsList="nodownload" oncontextmenu="return false"${poster ? ` poster="${poster}"` : ''} src="${l.video}"></video>`;
+      }
       else if (!l.locked && l.deck && window.DabulDeck) { window.__deckStop = window.DabulDeck.mount(v, l); }
       else { v.className = 'video'; v.hidden = !l.video; v.innerHTML = l.video ? `<iframe src="${l.video}" allow="fullscreen; picture-in-picture" title="${l.title}"></iframe>` : ''; }
       $('#lbody').innerHTML = l.locked ? `<div class="box gold"><p><b>השיעור הזה פתוח למי שנרשם לקורס.</b></p><p>${l.summary || ''}</p><p><a class="btn btn-ink" href="#academy/first-home/buy">להרשמה לקורס</a></p></div>` : l.html;

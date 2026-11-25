@@ -3,11 +3,18 @@ name: course lesson
 # closes every lesson, in the middle the lesson slides (academy/deck.js, the same look as the academy player) with his voice.
 # Input: media/course/jobs/<file>.job.json pushed to main by the scheduled task "סרטוני הייגן" (tools/heygen-edit/TASK.md
 # section 8, settings/heygen.courseRules). Assembly: tools/course-lesson/lesson.py (Playwright stills + ffmpeg).
-# Output (main, GitHub Pages, never Supabase storage): media/course/<course>/<file>.mp4, .jpg, .result.json and check stills
-# media/course/check/<file>-1..6.jpg. On failure: media/course/jobs/<file>.error.txt.
+# Output for a FREE lesson (main, GitHub Pages): media/course/<course>/<file>.mp4, .jpg, .result.json and check stills
+# media/course/check/<file>-1..6.jpg. On failure: media/course/jobs/<file>.error.txt. Paid lessons: see PRIVATE below.
 # Narration (25.11.2026): job narration {"mode":"eleven"} = the slides' deck audio made in Yakir's own ElevenLabs voice
 # (fn/tts-index.ts engine 'eleven'); 'pieces' (HeyGen) and 'google' still work.
 # Nothing is published from here: the task checks the stills and sends the lesson to Yakir for approval (reels?vr=final).
+# PAID LESSONS ARE PRIVATE (25.11.2026, Yakir approved): a job file {"file": "<id>", "private": true} holds nothing else.
+# The run proves who it is with GitHub's own signed token (OIDC, audience 'dabul-course') to the academy function, which
+# answers from docs coursejob/<id> (status 'queued'): the slides with signed narration links, the avatar links and signed
+# UPLOAD links into the private bucket 'course'. lesson.py --private builds under /tmp and uploads; nothing from the lesson
+# is printed here (public log) or written to the repo except the marker media/course/jobs/<id>.done.txt (no content). The
+# poster + check stills + result go, encrypted with the job's own key (docs coursejob/<id>.rkey), to the branch
+# course-review (one commit, replaced every run) so the task can check them. Errors go to docs coursejob/<id>.error.
 on:
   push:
     branches: [main]
@@ -15,6 +22,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  id-token: write
 concurrency: { group: course-lesson, cancel-in-progress: false }
 jobs:
   lesson:
@@ -32,6 +40,7 @@ jobs:
             echo "$id" | grep -Eq '^[a-z0-9-]+$' || continue
             course=$(jq -r '.course // "first-home"' "$f" | tr -cd 'a-z0-9-')
             [ -f "media/course/$course/$id.mp4" ] && continue
+            [ -f "media/course/jobs/$id.done.txt" ] && continue
             # a failed job runs again only when its job file is newer than the error
             if [ -f "media/course/jobs/$id.error.txt" ] && [ "$(git log -1 --format=%ct -- "$f")" -le "$(git log -1 --format=%ct -- "media/course/jobs/$id.error.txt")" ]; then continue; fi
             ids="$ids $id"
@@ -50,7 +59,47 @@ jobs:
         if: steps.todo.outputs.ids != ''
         run: |
           mkdir -p /tmp/cl
+          F=https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/academy
+          tok() { curl -sf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=dabul-course" | python3 -c "import sys,json;print(json.load(sys.stdin)['value'])"; }
           for id in ${{ steps.todo.outputs.ids }}; do
+            if [ "$(jq -r '.private // false' "media/course/jobs/$id.job.json")" = "true" ]; then
+              # paid lesson: everything private, nothing from the lesson in this log or in the repo
+              W=$(mktemp -d)
+              T=$(tok); echo "::add-mask::$T"
+              code=$(curl -s -o "$W/job.json" -w '%{http_code}' -H "Authorization: Bearer $T" "$F?gh=job&id=$id")
+              if [ "$code" != "200" ]; then echo "FAILED $id: job answer $code"; echo "failed $(date -u +%FT%TZ): the job was not ready (answer $code); see docs coursejob/$id" > media/course/jobs/$id.error.txt; rm -rf "$W"; continue; fi
+              if python tools/course-lesson/lesson.py --private "$W" > /tmp/cl/$id.log 2>&1; then ok=1; else ok=0; fi
+              grep -E '^(lesson|final|private lesson|FAILED|upload failed|fetch failed)' /tmp/cl/$id.log | tail -20
+              if [ -f "$W/done.json" ]; then
+                if [ "$ok" = 0 ]; then python3 - "$W/done.json" /tmp/cl/$id.log <<'PY'
+          import json, sys, re
+          d = json.load(open(sys.argv[1])); tail = open(sys.argv[2], errors='replace').read()[-2500:]
+          d['error'] = (d.get('error') or '') + '\n--- log ---\n' + re.sub(r'https?://\S+', '<link>', tail)
+          json.dump(d, open(sys.argv[1], 'w'))
+          PY
+                fi
+                T=$(tok); echo "::add-mask::$T"
+                curl -s -o /dev/null -w "done answer %{http_code}\n" -X POST -H "Authorization: Bearer $T" -H 'content-type: application/json' --data @"$W/done.json" "$F?gh=done"
+              fi
+              if [ "$ok" = 1 ]; then
+                echo "done $id"; rm -f media/course/jobs/$id.error.txt; echo "built $(date -u +%FT%TZ) (private, docs coursejob/$id)" > media/course/jobs/$id.done.txt
+                if [ -f "$W/review.bin" ]; then
+                  # the encrypted review bundle on the branch course-review: one fresh commit, the earlier bundles kept
+                  RV=$(mktemp -d)
+                  if git fetch -q origin course-review 2>/dev/null; then git archive FETCH_HEAD | tar -x -C "$RV"; fi
+                  cp "$W/review.bin" "$RV/$id.bin"
+                  IDX=$(mktemp -u); GIT_INDEX_FILE=$IDX git --work-tree="$RV" add -A .
+                  tree=$(GIT_INDEX_FILE=$IDX git write-tree); rm -f "$IDX"
+                  c=$(git -c user.name=site-bot -c user.email=site-bot@users.noreply.github.com commit-tree "$tree" -m "course review bundles (encrypted; key in docs coursejob/<id>.rkey)")
+                  git push -q -f origin "$c:refs/heads/course-review" && echo "review bundle pushed"
+                  rm -rf "$RV"
+                fi
+              else
+                echo "FAILED $id"; echo "failed $(date -u +%FT%TZ) (private lesson: the details are in docs coursejob/$id.error)" > media/course/jobs/$id.error.txt
+              fi
+              rm -rf "$W"
+              continue
+            fi
             if python tools/course-lesson/lesson.py "media/course/jobs/$id.job.json" > /tmp/cl/$id.log 2>&1; then echo "done $id"; rm -f media/course/jobs/$id.error.txt
             else echo "FAILED $id"; { echo "failed $(date -u +%FT%TZ)"; tail -60 /tmp/cl/$id.log; } > media/course/jobs/$id.error.txt; fi
             tail -30 /tmp/cl/$id.log

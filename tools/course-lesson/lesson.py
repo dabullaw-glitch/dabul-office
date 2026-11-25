@@ -16,16 +16,26 @@ Job: {
 }
 Narration pieces: one HeyGen speech call per piece (consecutive slides from..to, 0-based, inclusive), the slides' texts joined
 with "[pause]" between slides (11.11.2026: HeyGen refuses <break> tags for an instant voice clone). The piece is cut back into slides at its longest pauses (checked against the text lengths).
-Output (GitHub Pages, never Supabase storage): media/course/<course>/<file>.mp4, <file>.jpg (poster), <file>.result.json,
+Output (FREE lessons only, GitHub Pages): media/course/<course>/<file>.mp4, <file>.jpg (poster), <file>.result.json,
 check stills media/course/check/<file>-1..6.jpg. On failure the workflow writes media/course/jobs/<file>.error.txt.
+
+PRIVATE MODE (25.11.2026, Yakir approved: paid lessons never go to the public repo or GitHub Pages):
+  lesson.py --private <dir>   <dir>/job.json = the answer of academy ?gh=job (the workflow proves who it is with GitHub's
+  OIDC token): {job, deck (narration links signed for 2 hours), up (signed upload links into the private bucket 'course'),
+  rkey}. Everything is built under /tmp and uploaded with the signed links: <file>.mp4, .jpg, .result.json and the six check
+  stills (course/<course>/check/<file>-1..6.jpg). <dir>/review.bin = poster + stills + result.json (tar) encrypted with
+  rkey (openssl aes-256-cbc -pbkdf2), which the workflow puts on the branch course-review for the task to check.
+  <dir>/done.json = {id, ok, result | error} for academy ?gh=done. Nothing from the lesson (text, links) is printed: the
+  Actions log of this public repo is public. Smaller files for the free storage plan: crf 28, mono speech audio 64 kbps.
 """
-import json, math, os, pathlib, re, shutil, subprocess, sys, time, urllib.request
+import json, math, os, pathlib, re, shutil, subprocess, sys, tarfile, time, urllib.parse, urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 W, H, FPS = 1920, 1080, 25
 LEAD, TAIL = 0.35, 0.55          # silence before / after each slide's narration
 T_SCENE, T_STEP = 0.5, 0.3       # crossfade between slides / between reveal steps of one slide
 AVATAR_W = 608                   # a 9:16 avatar at full height (the panel leaves this strip on the left)
+PRIVATE = False                  # set by --private: no lesson text or links in the log, outputs to private storage
 
 
 def log(*a):
@@ -33,7 +43,8 @@ def log(*a):
 
 
 def run(cmd, **kw):
-    log('$', ' '.join(str(c) for c in cmd)[:400])
+    if not PRIVATE:
+        log('$', ' '.join(str(c) for c in cmd)[:400])
     return subprocess.run([str(c) for c in cmd], check=True, **kw)
 
 
@@ -59,9 +70,9 @@ def fetch(url, out, tries=4):
             if os.path.getsize(out) > 0:
                 return out
         except Exception as e:  # noqa: BLE001
-            log('fetch failed', i + 1, url[:120], e)
+            log('fetch failed', i + 1, urllib.parse.urlsplit(url).netloc, type(e).__name__)   # never the link itself
             time.sleep(3 * (i + 1))
-    raise SystemExit(f'cannot download {url[:160]}')
+    raise SystemExit(f'cannot download a file from {urllib.parse.urlsplit(url).netloc}')
 
 
 def to_wav(src, out):
@@ -144,8 +155,10 @@ def strip_md(s):
     return re.sub(r'<[^>]+>', '', re.sub(r'\*\*(.+?)\*\*', r'\1', str(s or ''))).strip()
 
 
-def main(job_path):
-    job = json.loads(pathlib.Path(job_path).read_text())
+def main(job_path, priv=None):
+    job = priv['job'] if priv else json.loads(pathlib.Path(job_path).read_text())
+    if priv:
+        job['deck'] = priv['deck']
     fid = job['file']
     assert re.fullmatch(r'[a-z0-9-]+', fid), 'bad file id'
     course = re.sub(r'[^a-z0-9-]', '', job.get('course') or 'first-home')
@@ -171,7 +184,7 @@ def main(job_path):
             scenes = scenes[:-1]
     n, of = deck.get('n') or job.get('n'), deck.get('of') or 10
     res.update(n=n, title=deck.get('title'), scenes=len(scenes))
-    log('lesson', n, deck.get('title'), len(scenes), 'slides')
+    log('lesson', n, '' if PRIVATE else deck.get('title'), len(scenes), 'slides')
 
     # ---- narration: one trimmed wav per slide ----
     nar = job.get('narration') or {'mode': 'google'}
@@ -339,24 +352,29 @@ def main(job_path):
     closing, l_close = avatar_part(job['close'], work / 'img' / 'panel-close.png', 'close', 0.4, 0.8)
 
     # ---- the lesson: opening + slides + closing ----
-    outdir = ROOT / 'media' / 'course' / course
+    # private (paid) lessons are built under /tmp only and uploaded to the private bucket; free lessons go to the repo
+    outdir = (work / 'out') if PRIVATE else (ROOT / 'media' / 'course' / course)
+    chkdir = (work / 'out' / 'check') if PRIVATE else (ROOT / 'media' / 'course' / 'check')
     outdir.mkdir(parents=True, exist_ok=True)
-    (ROOT / 'media' / 'course' / 'check').mkdir(parents=True, exist_ok=True)
+    chkdir.mkdir(parents=True, exist_ok=True)
     final = outdir / f'{fid}.mp4'
     tmp = work / 'final.mp4'
-    crf = 24
+    # 25.11.2026 (free storage plan): crf 28, speech audio mono 64 kbps (checked on still frames: same look, about 30% smaller)
+    crf, limit = (28, 45e6) if PRIVATE else (24, 90e6)
+    aud = ['-c:a', 'aac', '-b:a', '64k', '-ac', '1', '-ar', '44100'] if PRIVATE else ['-c:a', 'aac', '-b:a', '128k', '-ar', '48000']
+    tune = ['-tune', 'stillimage'] if PRIVATE else []
     while True:
         run(['ffmpeg', '-nostdin', '-y', '-v', 'error', '-i', opening, '-i', middle, '-i', closing, '-filter_complex',
              '[0:v][0:a][1:v][1:a][2:v][2:a]concat=n=3:v=1:a=1[v][a]', '-map', '[v]', '-map', '[a]',
-             '-c:v', 'libx264', '-preset', 'medium', '-crf', str(crf), '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-r', str(FPS),
-             '-c:a', 'aac', '-b:a', '128k', '-ar', '48000', '-movflags', '+faststart', tmp])
+             '-c:v', 'libx264', '-preset', 'medium' if not PRIVATE else 'slow', *tune, '-crf', str(crf), '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-r', str(FPS),
+             *aud, '-movflags', '+faststart', tmp])
         size = os.path.getsize(tmp)
         log('final', crf, size)
-        if size < 90e6 or crf >= 34:
+        if size < limit or crf >= 34:
             break
         crf += 3
-    if size >= 95e6:
-        raise SystemExit(f'the lesson video is too big for GitHub ({size} bytes)')
+    if size >= limit * 1.05:
+        raise SystemExit(f'the lesson video is too big ({size} bytes)')
     shutil.move(str(tmp), str(final))   # /tmp and the checkout can be on different disks (5.11.2026)
     total = dur(final)
     # poster and check stills (opening, four points in the slides, closing)
@@ -364,17 +382,76 @@ def main(job_path):
     pts = [l_open / 2] + [l_open + mid_len * q for q in (0.1, 0.35, 0.6, 0.85)] + [l_open + mid_len + l_close / 2]
     for j, t in enumerate(pts, 1):
         run(['ffmpeg', '-nostdin', '-y', '-v', 'error', '-ss', f'{t:.2f}', '-i', final, '-frames:v', '1', '-vf', 'scale=960:-2', '-q:v', '4',
-             ROOT / 'media' / 'course' / 'check' / f'{fid}-{j}.jpg'])
+             chkdir / f'{fid}-{j}.jpg'])
     starts, t = [], l_open
     for i in range(len(scenes)):
         starts.append({'slide': i + 1, 'kind': scenes[i].get('kind'), 'start': round(t, 2), 'speech': round(a_dur[i], 2)})
         t += d_scene[i]
     res.update(duration=round(total, 2), parts={'open': round(l_open, 2), 'slides': round(mid_len, 2), 'close': round(l_close, 2)},
-               bytes=os.path.getsize(final), crf=crf, slides=starts,
-               url=f'https://dabullaw-glitch.github.io/dabul-office/media/course/{course}/{fid}.mp4')
+               bytes=os.path.getsize(final), crf=crf, slides=starts)
+    if PRIVATE:
+        res['ref'] = f'sb:course/{course}/{fid}.mp4'
+    else:
+        res['url'] = f'https://dabullaw-glitch.github.io/dabul-office/media/course/{course}/{fid}.mp4'
     (outdir / f'{fid}.result.json').write_text(json.dumps(res, ensure_ascii=False, indent=1))
-    log(json.dumps({k: res[k] for k in ('duration', 'parts', 'bytes', 'crf', 'url')}, ensure_ascii=False))
+    log(json.dumps({k: res[k] for k in ('duration', 'parts', 'bytes', 'crf')}, ensure_ascii=False))
+    return res, outdir, chkdir
+
+
+def put(url, path, ctype):
+    body = pathlib.Path(path).read_bytes()
+    req = urllib.request.Request(url, data=body, method='PUT', headers={'content-type': ctype, 'x-upsert': 'true'})
+    for i in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=600) as r:
+                if r.status in (200, 201):
+                    return len(body)
+        except Exception as e:  # noqa: BLE001
+            log('upload failed', i + 1, type(e).__name__, getattr(e, 'code', ''))
+            time.sleep(5 * (i + 1))
+    raise SystemExit('upload failed: ' + pathlib.Path(path).suffix)
+
+
+def private(d):
+    """paid lesson: build under /tmp, upload with the signed links, encrypted review bundle, done.json (see the top)"""
+    global PRIVATE
+    PRIVATE = True
+    d = pathlib.Path(d)
+    pj = json.loads((d / 'job.json').read_text())
+    fid = pj['job']['file']
+    try:
+        if not pj.get('ok') or not pj.get('deck'):
+            raise SystemExit('the job answer has no deck')
+        res, outdir, chkdir = main(None, pj)
+        up = pj['up']
+        put(up['mp4'], outdir / f'{fid}.mp4', 'video/mp4')
+        put(up['jpg'], outdir / f'{fid}.jpg', 'image/jpeg')
+        put(up['result'], outdir / f'{fid}.result.json', 'application/json')
+        for j in range(1, 7):
+            put(up[f'check{j}'], chkdir / f'{fid}-{j}.jpg', 'image/jpeg')
+        if pj.get('rkey'):
+            tarp = d / 'review.tar'
+            with tarfile.open(tarp, 'w') as t:
+                t.add(outdir / f'{fid}.jpg', arcname=f'{fid}.jpg')
+                t.add(outdir / f'{fid}.result.json', arcname=f'{fid}.result.json')
+                for j in range(1, 7):
+                    t.add(chkdir / f'{fid}-{j}.jpg', arcname=f'{fid}-{j}.jpg')
+            subprocess.run(['openssl', 'enc', '-aes-256-cbc', '-pbkdf2', '-salt', '-in', str(tarp), '-out', str(d / 'review.bin'), '-pass', 'env:RKEY'],
+                           check=True, env={**os.environ, 'RKEY': pj['rkey']})
+            tarp.unlink()
+        (d / 'done.json').write_text(json.dumps({'id': fid, 'ok': True, 'result': res}, ensure_ascii=False))
+        log('private lesson built and uploaded:', fid, res['bytes'], 'bytes')
+    except BaseException as e:  # noqa: BLE001
+        msg = str(e) if isinstance(e, SystemExit) else f'{type(e).__name__}: {e}'
+        (d / 'done.json').write_text(json.dumps({'id': fid, 'ok': False, 'error': msg[-2500:]}, ensure_ascii=False))
+        log('FAILED (details in docs coursejob)')
+        sys.exit(1)
+    finally:
+        shutil.rmtree(pathlib.Path('/tmp/cl') / fid, ignore_errors=True)
 
 
 if __name__ == '__main__':
-    main(sys.argv[1])
+    if sys.argv[1] == '--private':
+        private(sys.argv[2])
+    else:
+        main(sys.argv[1])
