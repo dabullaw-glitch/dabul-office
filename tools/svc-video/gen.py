@@ -70,14 +70,23 @@ if __name__ == '__main__':
     os.makedirs(os.path.join(out, 'scenes'), exist_ok=True)
     nar = {}
     for sid in only:
-        if sid == 'hub':  # the hub video (/online/): its scene page is concrete; the narration is its caption list
+        if sid in ('hub', 'hub2'):  # the hub video (/online/): its scene page is concrete; the narration is its caption list
             h = open(os.path.join(ROOT, 'media/video/hub-scene.html'), encoding='utf8').read()
             h = h.replace('file:///tmp/claude-0/node_modules/', 'file://' + os.path.abspath(fonts) + '/').replace('src="yakir.webp"', 'src="file://%s"' % photo)
             # the live hub video (re-rendered 11.10.2026) shows the apartment check at 990; the repo page still says 490
             for a, b in (('<span>490 ₪</span>', '<span>990 ₪</span>'), ('<span>88.20 ₪</span>', '<span>178.20 ₪</span>'), ('>578.20 ₪</b>', '>1,168.20 ₪</b>')):
                 assert h.count(a) == 1, a; h = h.replace(a, b)
+            if sid == 'hub2':
+                # Yakir 25.11.2026: the refund scene (6) comes out, words and picture. The page keeps its 7 slots; scene 6
+                # gets 0 seconds (the renderer passes 6 durations, a zero is put in place 6), so it is never shown.
+                for a, b in (('ואם מבטלים לפני שהטיפול התחיל, מקבלים את הכסף בחזרה.', ''), ('<div class="k" id="reft">החזר מלא</div>', '<div class="k" id="reft"></div>'),
+                             ('<p id="refp">אם מבטלים לפני שהטיפול התחיל</p>', '<p id="refp"></p>'),
+                             ('const D=window.DUR||', 'if(window.DUR&&window.DUR.length===6){const x=window.DUR.slice();x.splice(5,0,0);window.DUR=x;}\nconst D=window.DUR||')):
+                    assert h.count(a) == 1, a; h = h.replace(a, b)
+                assert 'מבטלים' not in h and 'החזר' not in h
             n = json.loads(h.split('const CAP=', 1)[1].split(';\n', 1)[0].replace("'", '"'))
-            open(os.path.join(out, 'scenes', 'hub.html'), 'w', encoding='utf8').write(h)
+            if sid == 'hub2': n = [x for x in n if x]
+            open(os.path.join(out, 'scenes', sid + '.html'), 'w', encoding='utf8').write(h)
             nar[sid] = n
             continue
         h, n = scene(sid, tpl)

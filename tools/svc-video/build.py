@@ -30,7 +30,7 @@ for it in job['items']:
     if os.path.exists(base + '.mp4'):
         print('exists', out); continue
     try:
-        new = [get('%s-s%d.mp3' % (it['audio'], k + 1)) for k in range(it['n'])]
+        new = [get('%s-s%d.mp3' % (it['audio'], k)) for k in it.get('files', range(1, it['n'] + 1))]
         tmp = os.path.join(WORK, out)
         if it.get('mode') == 'retime':
             old = [get(p + '.mp3') for p in it['old']]
@@ -38,7 +38,7 @@ for it in job['items']:
                             str(it.get('fps', 30)), str(it.get('posterScene', 1)), str(it.get('posterSec', 4.6))], check=True)
         else:
             subprocess.run(['python3', os.path.join(HERE, 'gen.py'), WORK + '/g', FONTS, PHOTO, sid], check=True)
-            hub = sid == 'hub'
+            hub = sid in ('hub', 'hub2')
             subprocess.run(['node', os.path.join(HERE, 'render.mjs'), '%s/g/scenes/%s.html' % (WORK, sid), ','.join(new), tmp,
                             '30' if hub else '25', '20' if hub else '21', '92' if hub else '90', '3.2' if hub else '4.6'], check=True)
         os.replace(tmp + '.mp4', base + '.mp4'); os.replace(tmp + '-poster.jpg', base + '.jpg'); os.replace(tmp + '.json', base + '.json')

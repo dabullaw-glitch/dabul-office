@@ -74,6 +74,21 @@
    "fps": 30,
    "posterScene": 2,
    "posterSec": 5.43
+  },
+  {
+   "sid": "hub2",
+   "out": "svc-hub-yakir-2",
+   "audio": "svcvo/yakir/hub",
+   "n": 6,
+   "files": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7
+   ],
+   "note": "Yakir 25.11.2026: without the refund scene (6); the same voice files, no new narration"
   }
  ]
 }
