@@ -1,0 +1,49 @@
+name: voice prep
+# Prepares Yakir's own studio recordings for his ElevenLabs professional voice clone (25.11.2026).
+# Input: tools/voice-list.txt ("name driveId" per line, studio footage shared by link).
+# Output: one encrypted workflow artifact (never committed): the audio is encrypted with tools/voice-pub.pem,
+# only the private key in Claude's workspace can open it. Nothing of his voice is published.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract audio
+        run: |
+          command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
+          mkdir -p out
+          while read -r name id; do
+            [ -z "$name" ] && continue
+            echo "$name" | grep -Eq '^[a-z0-9-]+$' || continue
+            curl -sSL --retry 3 -o /tmp/src.bin "https://drive.usercontent.google.com/download?id=$id&export=download&confirm=t"
+            dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/src.bin | cut -d. -f1)
+            if [ -z "$dur" ]; then echo "$name FAIL not-public-or-not-media"; echo "$name fail" >> out/stats.txt; rm -f /tmp/src.bin; continue; fi
+            info=$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name,channels,sample_rate,bit_rate -of csv=p=0 /tmp/src.bin)
+            ffmpeg -y -v error -i /tmp/src.bin -vn -map 0:a:0 -c:a flac out/$name-st.flac
+            ffmpeg -y -v error -i out/$name-st.flac -ac 1 -c:a flac out/$name.flac
+            vol=$(ffmpeg -i out/$name.flac -af volumedetect -f null - 2>&1 | grep -E "mean_volume|max_volume" | awk '{print $5}' | tr '\n' ' ')
+            echo "$name $dur s | $info | mean/max dB: $vol" | tee -a out/stats.txt
+            rm -f /tmp/src.bin
+          done < tools/voice-list.txt
+          du -sh out
+      - name: Encrypt
+        run: |
+          tar -C out -cf /tmp/voice.tar .
+          openssl rand -hex 32 > /tmp/k.txt
+          openssl enc -aes-256-cbc -pbkdf2 -salt -in /tmp/voice.tar -out voice.tar.enc -pass file:/tmp/k.txt
+          openssl pkeyutl -encrypt -pubin -inkey tools/voice-pub.pem -in /tmp/k.txt -out voice.key.enc
+          rm -f /tmp/k.txt /tmp/voice.tar; rm -rf out/*.flac
+          ls -l voice.tar.enc voice.key.enc
+      - uses: actions/upload-artifact@v4
+        with:
+          name: voice-enc
+          path: |
+            voice.tar.enc
+            voice.key.enc
+          retention-days: 2
+          compression-level: 0
