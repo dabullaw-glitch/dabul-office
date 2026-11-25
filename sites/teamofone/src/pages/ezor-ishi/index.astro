@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 ---
-<Base title="האזור האישי | Team of One" app>
+<Base title="האזור האישי | Team of One" app noindex>
   <main class="wrap page">
     <div id="app"><div class="card">טוען...</div></div>
   </main>
@@ -11,6 +11,17 @@ import Base from '../../layouts/Base.astro';
     const app = document.getElementById('app');
     (async () => {
       if (!(await requireLogin())) return;
+      // Back from the payment page (?paid=<order>): the payment company tells our server in the background, so we wait
+      // a little for the access to open, then show the welcome message.
+      if (new URLSearchParams(location.search).get('paid')) {
+        app.innerHTML = '<div class="card">התשלום מתעדכן, זה לוקח כמה שניות...</div>';
+        for (let i = 0; i < 20; i++) {
+          const { data: m } = await sb.rpc('too_me');
+          if (m && m.access) { location.replace(BASE + 'ezor-ishi/?welcome=1'); return; }
+          await new Promise((r) => setTimeout(r, 3000));
+        }
+        toast('התשלום עוד לא עודכן אצלנו. אם שילמתם, הגישה תיפתח בדקות הקרובות. אפשר לרענן את הדף.', true);
+      }
       const nav = document.getElementById('anav');
       const [{ data: me, error }, course, { data: assets }, { data: orders }] = await Promise.all([
         sb.rpc('too_me'), loadCourse(), sb.from('too_assets').select('*').eq('published', true).order('sort'), sb.from('too_orders').select('*').order('created_at', { ascending: false })]);

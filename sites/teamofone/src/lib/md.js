@@ -1,9 +1,13 @@
 // Small, safe markdown to HTML (escapes all HTML first). Used for articles and lessons, on the server and in the browser.
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+// Links written with the preview folder (/dabul-office/teamofone/...) are pointed at the site's real base, so the same
+// article text works on the preview and on the launch domain.
+const BASE = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL) || '/';
+const fix = (h) => (h.startsWith('/dabul-office/teamofone/') ? BASE + h.slice('/dabul-office/teamofone/'.length) : h);
 function inline(t) {
   return t
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*|\.{1,2}\/[^\s)]*|#[^\s)]*)\)/g, (m, a, h) => `<a href="${h}"${/^https?:/.test(h) ? ' target="_blank" rel="noopener"' : ''}>${a}</a>`);
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*|\.{1,2}\/[^\s)]*|#[^\s)]*)\)/g, (m, a, h) => `<a href="${fix(h)}"${/^https?:/.test(h) ? ' target="_blank" rel="noopener"' : ''}>${a}</a>`);
 }
 export function md(src) {
   const lines = esc(src || '').replace(/\r/g, '').split('\n');

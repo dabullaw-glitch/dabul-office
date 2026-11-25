@@ -7,6 +7,7 @@ on:
   push:
     branches: [main]
     paths: ['sites/teamofone/**', '.github/workflows/teamofone.yml']
+  workflow_dispatch:
 permissions:
   contents: write
 concurrency: { group: teamofone, cancel-in-progress: false }
@@ -28,3 +29,58 @@ jobs:
           git add -A teamofone
           git commit -qm "teamofone: publish $(date -u +%FT%TZ)" || { echo nothing; exit 0; }
           for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 6; done
+
+  # Launch prep (25.11.2026). The production copy of the site for the real domain, served by Cloudflare Pages from the
+  # branch teamofone-prod (Cloudflare builds nothing; it serves these files as they are). Controlled ONLY by
+  # sites/teamofone/launch.json:
+  #   domain ""            -> this job does nothing (now).
+  #   domain set, live false -> a copy for the domain that search engines are still told to ignore (noindex on every page,
+  #                           robots.txt closed, X-Robots-Tag header). For checking the domain before launch.
+  #   live true            -> the open site: indexable public pages, robots.txt open, sitemap.xml filled.
+  # Personal, login, purchase and admin pages carry noindex in every build. The preview on GitHub Pages stays noindex.
+  prod:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read launch.json
+        id: cfg
+        run: |
+          D=$(jq -r '.domain // ""' sites/teamofone/launch.json); L=$(jq -r '.live // false' sites/teamofone/launch.json)
+          if [ -n "$D" ] && ! echo "$D" | grep -Eq '^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$'; then echo "bad domain in launch.json"; exit 1; fi
+          echo "domain=$D" >> "$GITHUB_OUTPUT"; echo "live=$L" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v4
+        if: steps.cfg.outputs.domain != ''
+        with: { node-version: '22' }
+      - name: Build for the domain
+        if: steps.cfg.outputs.domain != ''
+        working-directory: sites/teamofone
+        env:
+          SITE_URL: https://${{ steps.cfg.outputs.domain }}
+          BASE: /
+          PREVIEW: ${{ steps.cfg.outputs.live == 'true' && '0' || '1' }}
+        run: |
+          npm ci --no-audit --no-fund && npm run build
+          {
+            echo '/*'
+            echo '  X-Content-Type-Options: nosniff'
+            echo '  Referrer-Policy: strict-origin-when-cross-origin'
+            echo '  X-Frame-Options: SAMEORIGIN'
+            echo '  Permissions-Policy: camera=(), microphone=(), geolocation=()'
+            echo '  Strict-Transport-Security: max-age=31536000'
+            if [ "$PREVIEW" != "0" ]; then echo '  X-Robots-Tag: noindex'; fi
+            echo ''
+            echo 'https://:project.pages.dev/*'
+            echo '  X-Robots-Tag: noindex'
+            echo ''
+            echo 'https://:version.:project.pages.dev/*'
+            echo '  X-Robots-Tag: noindex'
+          } > dist/_headers
+          bash ../../tools/teamofone-launch/check-build.sh dist "$PREVIEW" "${{ steps.cfg.outputs.domain }}"
+      - name: Publish to the branch teamofone-prod
+        if: steps.cfg.outputs.domain != ''
+        run: |
+          cd sites/teamofone/dist
+          git init -q -b teamofone-prod && git add -A
+          git -c user.name=site-bot -c user.email=site-bot@users.noreply.github.com commit -qm "teamofone prod: $(date -u +%FT%TZ)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" teamofone-prod

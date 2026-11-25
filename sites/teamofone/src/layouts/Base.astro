@@ -1,8 +1,10 @@
 ---
 import '../styles/site.css';
-interface Props { title: string; description?: string; app?: boolean; canonical?: string; ogImage?: string; jsonld?: any }
-const { title, description = 'צוות שלם. אדם אחד. קורס דיגיטלי לבניית צוות של בינה מלאכותית לעסק שלכם, צעד אחר צעד.', app = false, canonical, ogImage, jsonld } = Astro.props;
+interface Props { title: string; description?: string; app?: boolean; canonical?: string; ogImage?: string; jsonld?: any; noindex?: boolean }
+const { title, description = 'צוות שלם. אדם אחד. קורס דיגיטלי לבניית צוות של בינה מלאכותית לעסק שלכם, צעד אחר צעד.', app = false, canonical, ogImage, jsonld, noindex = false } = Astro.props;
 const base = import.meta.env.BASE_URL;
+// PREVIEW is on unless the build was made with PREVIEW=0 (only the production build, when sites/teamofone/launch.json has live:true).
+// Personal, login, purchase and admin pages pass noindex and stay out of search engines even after launch.
 const preview = process.env.PREVIEW !== '0';
 const url = canonical || new URL(Astro.url.pathname, Astro.site).href;
 const og = new URL(ogImage || base + 'img/podyt.webp', Astro.site).href;
@@ -14,7 +16,7 @@ const og = new URL(ogImage || base + 'img/podyt.webp', Astro.site).href;
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title}</title>
 <meta name="description" content={description}>
-{preview && <meta name="robots" content="noindex, nofollow">}
+{(preview || noindex) && <meta name="robots" content="noindex, nofollow">}
 <link rel="canonical" href={url}>
 <meta property="og:type" content="website"><meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:image" content={og}><meta property="og:locale" content="he_IL">
 <link rel="icon" href={base + 'favicon.svg'} type="image/svg+xml">

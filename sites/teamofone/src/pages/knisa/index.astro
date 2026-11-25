@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 const base = import.meta.env.BASE_URL;
 ---
-<Base title="כניסה והרשמה | Team of One" description="כניסה והרשמה לקורס Team of One: אזור אישי עם השיעורים, הספרייה, הקהילה והשידורים החיים." app>
+<Base title="כניסה והרשמה | Team of One" description="כניסה והרשמה לקורס Team of One: אזור אישי עם השיעורים, הספרייה, הקהילה והשידורים החיים." app noindex>
   <div class="auth">
     <div class="main">
       <div class="box">
@@ -31,8 +31,23 @@ const base = import.meta.env.BASE_URL;
           <div class="f"><label for="lp">סיסמה</label><input id="lp" type="password" autocomplete="current-password" dir="ltr" required></div>
           <div class="err" id="err2"></div>
           <button class="btn btn-k wide" id="bLog">כניסה <span class="arrow">←</span></button>
-          <p class="muted" style="font-size:14px;margin-top:14px">שכחתם סיסמה? איפוס במייל ייפתח עם השקת האתר. בינתיים כתבו לנו, ונאפס עבורכם.</p>
+          <p class="muted" id="fgNote" style="font-size:14px;margin-top:14px">שכחתם סיסמה? איפוס במייל ייפתח עם השקת האתר. בינתיים כתבו לנו, ונאפס עבורכם.</p>
+          <button type="button" class="linkbtn" id="fgOpen" hidden style="margin-top:14px;background:none;border:0;padding:0;font:inherit;font-size:14px;text-decoration:underline;cursor:pointer;color:inherit">שכחתי את הסיסמה</button>
         </form>
+        <form id="fForgot" novalidate hidden>
+          <p class="muted" style="margin:0 0 14px">כותבים את המייל שנרשמתם איתו, ונשלח אליו קישור לבחירת סיסמה חדשה.</p>
+          <div class="f"><label for="fe">מייל</label><input id="fe" type="email" autocomplete="email" dir="ltr" required></div>
+          <div class="err" id="err3"></div>
+          <button class="btn btn-k wide" id="bForgot">שליחת קישור <span class="arrow">←</span></button>
+          <p class="muted" id="fgDone" hidden style="margin-top:14px">אם המייל רשום אצלנו, נשלח אליו עכשיו קישור. כדאי לבדוק גם בתיקיית הספאם.</p>
+        </form>
+        <form id="fReset" novalidate hidden>
+          <p class="muted" style="margin:0 0 14px">בוחרים סיסמה חדשה, ומשם ממשיכים לאזור האישי.</p>
+          <div class="f"><label for="np">סיסמה חדשה</label><input id="np" type="password" autocomplete="new-password" dir="ltr" required><small>8 תווים לפחות.</small></div>
+          <div class="err" id="err4"></div>
+          <button class="btn btn-k wide" id="bReset">שמירת הסיסמה <span class="arrow">←</span></button>
+        </form>
+        <div id="verifyBox" class="card" hidden style="margin-top:6px"><b>כמעט סיימנו.</b> שלחנו מייל לכתובת שלכם. לוחצים על הקישור שבמייל, וההרשמה מסתיימת. כדאי לבדוק גם בתיקיית הספאם.</div>
       </div>
     </div>
     <div class="side">
@@ -45,13 +60,42 @@ const base = import.meta.env.BASE_URL;
   <script>
     import { sb, BASE, FN, SB_KEY, errText } from '../../lib/sb.js';
     const q = new URLSearchParams(location.search), plan = q.get('plan');
-    const next = () => location.replace(plan ? BASE + 'kniya/?plan=' + encodeURIComponent(plan) : (q.get('next') || BASE + 'ezor-ishi/'));
+    // "next" may only point inside this site (an outside address or a script link would be a hole).
+    const safeNext = (n) => (n && n.startsWith(BASE) && !n.startsWith('//') && !/[\\\s]/.test(n) ? n : BASE + 'ezor-ishi/');
+    const next = () => location.replace(plan ? BASE + 'kniya/?plan=' + encodeURIComponent(plan) : safeNext(q.get('next')));
     const $ = (id) => document.getElementById(id);
+    const forms = ['fSign', 'fLog', 'fForgot', 'fReset'];
+    const show = (id) => forms.forEach((f) => { $(f).hidden = f !== id; });
+    const resetting = q.get('reset') === '1';
     if (plan) $('sub').textContent = 'נרשמים או נכנסים, ומשם ממשיכים לרכישה.';
-    function tab(log) { $('tSign').setAttribute('aria-selected', !log); $('tLog').setAttribute('aria-selected', log); $('fSign').hidden = log; $('fLog').hidden = !log; }
+    function tab(log) { $('tSign').setAttribute('aria-selected', !log); $('tLog').setAttribute('aria-selected', log); show(log ? 'fLog' : 'fSign'); }
     $('tSign').onclick = () => tab(false); $('tLog').onclick = () => tab(true);
     if (q.get('m') === 'login') tab(true);
-    sb.auth.getSession().then(async ({ data }) => { if (data.session) { await sb.rpc('too_ensure_profile').catch(() => {}); next(); } });
+    if (resetting) { tab(true); show('fReset'); $('sub').textContent = 'בחירת סיסמה חדשה.'; }
+    sb.auth.getSession().then(async ({ data }) => { if (data.session && !resetting) { await sb.rpc('too_ensure_profile').catch(() => {}); next(); } });
+    // "Forgot password" opens only after the Team of One email address is ready (setting mail_ready, part of the launch steps).
+    sb.from('too_settings').select('value').eq('key', 'mail_ready').maybeSingle().then(({ data }) => { if (data && data.value === true) { $('fgNote').hidden = true; $('fgOpen').hidden = false; } });
+    $('fgOpen').onclick = () => { $('fe').value = $('le').value; show('fForgot'); };
+    $('fForgot').addEventListener('submit', async (ev) => {
+      ev.preventDefault(); const b = $('bForgot'), er = $('err3'); er.textContent = ''; b.disabled = true;
+      try {
+        const r = await fetch(FN + '/too-signup', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SB_KEY }, body: JSON.stringify({ action: 'forgot', email: $('fe').value.trim().toLowerCase() }) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) { er.textContent = j.error === 'mail_off' ? 'איפוס במייל עוד לא פתוח. כתבו לנו, ונאפס עבורכם.' : errText(j.error); return; }
+        $('fgDone').hidden = false;
+      } catch (e) { er.textContent = errText(e); } finally { b.disabled = false; }
+    });
+    $('fReset').addEventListener('submit', async (ev) => {
+      ev.preventDefault(); const b = $('bReset'), er = $('err4'); er.textContent = '';
+      const pw = $('np').value; if (pw.length < 8) { er.textContent = errText('password'); return; }
+      b.disabled = true;
+      const { data } = await sb.auth.getSession();
+      if (!data.session) { er.textContent = 'הקישור כבר לא תקף. בקשו קישור חדש.'; b.disabled = false; return; }
+      const { error } = await sb.auth.updateUser({ password: pw });
+      b.disabled = false;
+      if (error) { er.textContent = errText(error); return; }
+      location.replace(BASE + 'ezor-ishi/');
+    });
     sb.from('too_settings').select('value').eq('key', 'google_login').maybeSingle().then(({ data }) => { if (data && data.value === true) $('gwrap').hidden = false; });
     $('bGoogle').onclick = async () => {
       const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname + location.search } });
@@ -66,6 +110,7 @@ const base = import.meta.env.BASE_URL;
         const r = await fetch(FN + '/too-signup', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SB_KEY }, body: JSON.stringify(body) });
         const j = await r.json().catch(() => ({}));
         if (!r.ok) { er.textContent = errText(j.error); if (j.error === 'exists') { $('le').value = body.email; tab(true); } return; }
+        if (j.verify) { $('fSign').hidden = true; $('verifyBox').hidden = false; return; }
         const { error } = await sb.auth.signInWithPassword({ email: body.email.trim().toLowerCase(), password: body.password });
         if (error) { er.textContent = errText(error); return; }
         next();

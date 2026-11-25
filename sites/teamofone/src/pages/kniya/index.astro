@@ -1,14 +1,15 @@
 ---
 import Base from '../../layouts/Base.astro';
 ---
-<Base title="השלמת הצטרפות | Team of One" description="השלמת ההצטרפות לקורס Team of One: בחירת מסלול, קורס מלא או מנוי חודשי." app>
+<Base title="השלמת הצטרפות | Team of One" description="השלמת ההצטרפות לקורס Team of One: בחירת מסלול, קורס מלא או מנוי חודשי." app noindex>
   <main class="wrap page" style="max-width:760px">
     <h1>כמעט<br>בפנים.</h1>
     <div id="box" class="vstack"><div class="card">טוען...</div></div>
   </main>
   <script>
-    import { sb, BASE, esc, ils, errText, toast } from '../../lib/sb.js';
+    import { sb, BASE, FN, SB_KEY, esc, ils, errText, toast } from '../../lib/sb.js';
     const code = new URLSearchParams(location.search).get('plan') || 'course';
+    const failed = new URLSearchParams(location.search).get('failed') === '1';
     const box = document.getElementById('box');
     (async () => {
       const { data: s } = await sb.auth.getSession();
@@ -31,10 +32,24 @@ import Base from '../../layouts/Base.astro';
           ${test ? `<div class="row" style="margin-bottom:10px"><span class="pill warn">מצב בדיקה</span><b>לא יבוצע חיוב.</b></div>
             <p class="muted" style="margin:0 0 16px">האתר עדיין בבדיקה, והתשלום האמיתי עוד לא מחובר. הלחיצה פותחת גישה כאילו שילמתם, כדי לבדוק שהכל עובד.</p>
             <button class="btn btn-k wide" id="go">השלמת רכישת בדיקה <span class="arrow">←</span></button>`
-          : `<h3>התשלום באתר ייפתח בקרוב</h3><p class="mut" style="margin:0">נעדכן אתכם במייל ברגע שאפשר להצטרף.</p>`}
+          : `${failed ? '<p class="err" style="margin:0 0 12px">התשלום לא הושלם ולא בוצע חיוב. אפשר לנסות שוב.</p>' : ''}
+            <h3 style="margin-top:0">תשלום מאובטח</h3><p class="mut" style="margin:0 0 16px">הלחיצה פותחת את דף התשלום של חברת הסליקה. פרטי הכרטיס לא עוברים דרך האתר שלנו. מיד אחרי התשלום הגישה נפתחת באזור האישי.</p>
+            <button class="btn btn-l wide" id="pay">למעבר לתשלום <span class="arrow">←</span></button>`}
           <p class="muted" style="font-size:14px;margin:14px 0 0">${plan.kind === 'monthly' ? 'מבטלים בכל חודש, בלחיצה באזור האישי.' : '14 ימים להחזר כספי מלא, אם עוד לא התחלתם לצפות.'} <a href="${BASE}tnaim/" target="_blank">תנאי השימוש</a></p>
         </div>
         ${me && me.access ? '<div class="card"><b>כבר יש לכם גישה פעילה.</b> <a href="' + BASE + 'ezor-ishi/">לאזור האישי</a></div>' : ''}`;
+      // Real payment (only when test mode is off): the server makes a payment page for this plan and sends us there.
+      const pay = document.getElementById('pay');
+      if (pay) pay.onclick = async () => {
+        pay.disabled = true;
+        try {
+          const { data: ss } = await sb.auth.getSession();
+          const r = await fetch(FN + '/too-pay', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Authorization: 'Bearer ' + (ss.session ? ss.session.access_token : '') }, body: JSON.stringify({ action: 'checkout', plan: code }) });
+          const j = await r.json().catch(() => ({}));
+          if (!r.ok || !j.url || !/^https:\/\//.test(j.url)) { toast(errText(j.error), true); pay.disabled = false; return; }
+          location.assign(j.url);
+        } catch (e) { toast(errText(e), true); pay.disabled = false; }
+      };
       const go = document.getElementById('go');
       if (go) go.onclick = async () => {
         go.disabled = true;
