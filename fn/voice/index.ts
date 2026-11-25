@@ -22,6 +22,9 @@ const json = (d: unknown, s = 200) => new Response(JSON.stringify(d), { status: 
 
 const API = 'https://api.elevenlabs.io/v1';
 const MODEL = 'eleven_v4';
+// 25.11.2026 (Yakir approved the storage cleanup 20:02): speech is stored as MP3 44.1 kHz 96 kbps (ElevenLabs output is
+// mono); was mp3_44100_192, about half the size with no audible difference for speech.
+const FORMAT = 'mp3_44100_96';
 const VOICE_NAME = 'יקיר דבול';
 // approved by Yakir 25.11.2026 (version 2 of the test): only these settings
 const SETTINGS = { stability: 0.5, similarity_boost: 0.75 };
@@ -83,7 +86,7 @@ async function say(text: string, path: string, bucket = 'files') {
     if (ids.length) body.previous_request_ids = ids.slice(-3);
     let r: Response | null = null;
     for (let a = 0; a < 3; a++) {
-      r = await fetch(`${API}/text-to-speech/${vid}?output_format=mp3_44100_192`, { method: 'POST', headers: H(), body: JSON.stringify(body) });
+      r = await fetch(`${API}/text-to-speech/${vid}?output_format=${FORMAT}`, { method: 'POST', headers: H(), body: JSON.stringify(body) });
       if (r.ok || (r.status !== 429 && r.status < 500)) break;
       await new Promise((ok) => setTimeout(ok, 3000 * (a + 1)));
     }

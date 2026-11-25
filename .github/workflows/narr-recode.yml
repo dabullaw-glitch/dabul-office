@@ -1,0 +1,100 @@
+name: narration recode
+# One-off storage cleanup (Yakir approved 25.11.2026 20:02, "כן"; free plan 1 GB): narration MP3 files that were stored at
+# 192 kbps are written again IN PLACE as MP3 96 kbps mono (the voice function now writes new narration that way).
+# Narration files are found by their text hash (scene.ah = hash of the words), never by a hash of the file bytes, so the
+# same path keeps working. A file is replaced only if it was above 100 kbps, the new copy is at least 15% smaller and its
+# length is the same (within 0.12 s). The run proves who it is with GitHub's own signed token (OIDC, audience
+# 'dabul-storage') to functions/v1/storeclean, which gives short-lived download/upload links. Nothing but counts is printed
+# here (public log); the per-file record goes to docs agents/storage-cleanup-2026-11-25.narration. Running it again changes
+# nothing (files already at 96 kbps are skipped).
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/narr-recode.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency: { group: narr-recode, cancel-in-progress: false }
+jobs:
+  recode:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Tools
+        run: command -v ffmpeg || { sudo apt-get update -q && sudo apt-get install -yq ffmpeg; }
+      - name: Recode
+        env:
+          F: https://mgjmnvpnovkewvqevjmz.supabase.co/functions/v1/storeclean
+          RUN: ${{ github.run_id }}
+        run: |
+          set -u
+          T=$(curl -sf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=dabul-storage" | python3 -c "import sys,json;print(json.load(sys.stdin)['value'])")
+          echo "::add-mask::$T"
+          export T
+          python3 - <<'PY'
+          import json, os, subprocess, tempfile, urllib.request, concurrent.futures as cf
+          F, T, RUN = os.environ['F'], os.environ['T'], os.environ['RUN']
+          def call(q, body=None):
+              req = urllib.request.Request(F + q, data=None if body is None else json.dumps(body).encode(),
+                                           method='GET' if body is None else 'POST',
+                                           headers={'authorization': 'Bearer ' + T, 'content-type': 'application/json'})
+              with urllib.request.urlopen(req, timeout=300) as r:
+                  return json.load(r)
+          lst = call('?gh=list')['files']
+          print('files listed:', len(lst))
+          W = tempfile.mkdtemp()
+          def probe(p):
+              o = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'a:0', '-show_entries', 'format=duration,bit_rate:stream=channels,sample_rate',
+                                  '-of', 'json', p], capture_output=True, text=True)
+              j = json.loads(o.stdout or '{}'); f = j.get('format', {}); s = (j.get('streams') or [{}])[0]
+              return float(f.get('duration') or 0), int(f.get('bit_rate') or 0), int(s.get('channels') or 0), int(s.get('sample_rate') or 0)
+          def work(i_f):
+              i, f = i_f
+              r = {'bucket': f['bucket'], 'path': f['path'], 'before': f['size']}
+              try:
+                  src, dst = f'{W}/{i}.src.mp3', f'{W}/{i}.mp3'
+                  if not f.get('dl'): r['action'] = 'skip: no download link'; return r
+                  urllib.request.urlretrieve(f['dl'], src)
+                  r['before'] = os.path.getsize(src)
+                  d0, br, ch, sr = probe(src); r.update(kbps=round(br / 1000), ch=ch, hz=sr, dur=round(d0, 3))
+                  if br <= 100000: r['action'] = 'skip: already small'; return r
+                  subprocess.run(['ffmpeg', '-nostdin', '-y', '-v', 'error', '-i', src, '-map', '0:a:0', '-ac', '1', '-c:a', 'libmp3lame',
+                                  '-b:a', '96k', '-map_metadata', '-1', dst], check=True)
+                  d1, br1, ch1, _ = probe(dst); a = os.path.getsize(dst); r.update(after=a, dur2=round(d1, 3))
+                  if abs(d1 - d0) > 0.12: r['action'] = 'skip: length changed'; return r
+                  if a > r['before'] * 0.85: r['action'] = 'skip: not smaller'; return r
+                  r['action'] = 'recode'; r['_file'] = dst; return r
+              except Exception as e:  # noqa: BLE001
+                  r['action'] = 'skip: error ' + type(e).__name__; return r
+          with cf.ThreadPoolExecutor(8) as ex:
+              res = list(ex.map(work, enumerate(lst)))
+          todo = [r for r in res if r['action'] == 'recode']
+          ups = {}
+          for k in range(0, len(todo), 200):
+              for u in call('?gh=up', {'files': [{'bucket': r['bucket'], 'path': r['path']} for r in todo[k:k + 200]]})['files']:
+                  ups[(u['bucket'], u['path'])] = u['up']
+          def put(r):
+              u = ups.get((r['bucket'], r['path']))
+              if not u: r['action'] = 'skip: no upload link'; return
+              body = open(r['_file'], 'rb').read()
+              for _ in range(3):
+                  try:
+                      req = urllib.request.Request(u, data=body, method='PUT', headers={'content-type': 'audio/mpeg', 'x-upsert': 'true'})
+                      with urllib.request.urlopen(req, timeout=300) as x:
+                          if x.status in (200, 201): r['action'] = 'replaced'; return
+                  except Exception as e:  # noqa: BLE001
+                      r['err'] = type(e).__name__
+              r['action'] = 'failed upload'
+          with cf.ThreadPoolExecutor(6) as ex:
+              list(ex.map(put, todo))
+          for r in res: r.pop('_file', None)
+          done = [r for r in res if r['action'] == 'replaced']
+          summ = {'listed': len(res), 'replaced': len(done), 'before': sum(r['before'] for r in done), 'after': sum(r.get('after', 0) for r in done),
+                  'skipped': {}}
+          for r in res:
+              if r['action'] != 'replaced': summ['skipped'][r['action']] = summ['skipped'].get(r['action'], 0) + 1
+          summ['savedMB'] = round((summ['before'] - summ['after']) / 1048576, 2)
+          print(json.dumps(summ))
+          print(call('?gh=done', {'run': RUN, 'summary': summ, 'results': res}))
+          PY
