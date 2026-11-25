@@ -1,4 +1,4 @@
-import{B as g,e as o,t as p}from"./sb.C1aYJU_f.js";import{r as y,l as h}from"./member.DVvw0PSY.js";import{m as u}from"./md.raPn-TSp.js";const a={title:"אתגר 5 ימים: העובד הראשון שלכם",days:[{n:1,title:"מה מעבירים קודם",min:20,goal:"למצוא את המשימה הראשונה שתעבור לבינה מלאכותית, ולדעת כמה זמן היא לוקחת לכם היום.",md:`## למה מתחילים דווקא מכאן
+import{B as g,e as o,t as p}from"./sb.CFTcUrcC.js";import{r as y,l as h}from"./member.Do-sFmg_.js";import{m as u}from"./md.raPn-TSp.js";const a={title:"אתגר 5 ימים: העובד הראשון שלכם",days:[{n:1,title:"מה מעבירים קודם",min:20,goal:"למצוא את המשימה הראשונה שתעבור לבינה מלאכותית, ולדעת כמה זמן היא לוקחת לכם היום.",md:`## למה מתחילים דווקא מכאן
 
 רוב האנשים פותחים כלי של בינה מלאכותית, שואלים שאלה אחת, מקבלים תשובה כללית, וסוגרים. הבעיה היא לא הכלי. הבעיה היא שלא החליטו מראש **איזו עבודה** הכלי לוקח מהם.
 
