@@ -80,3 +80,8 @@ row with status 'published' becomes its own page within 12 hours. Member tutoria
   still verified against official docs.
 - On any blocking error: log docs_merge('agents','too-content-last', {at, ok:false, error}) and send Yakir one short
   Telegram line that this time the article did not go up and why.
+
+## Cover image rule (Yakir, 25.11.2026)
+Every article gets its own cover that matches the article (its title, its topic, a real chart or diagram of its content), in the site style
+(black background, cream text, lime accent; see /home/claude/too-files/covers.py pattern: 1600x900 webp in sites/teamofone/public/img/covers/<slug>.webp).
+Never use a photo or graphic from the law office that is not about the article.
