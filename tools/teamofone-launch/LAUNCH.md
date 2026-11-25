@@ -1,10 +1,11 @@
 # Team of One: launch checklist (prepared 25.11.2026, Yakir: "תטפל בזה")
 
-The site stays in test mode until Yakir approves opening. Everything below is ready behind switches that are OFF.
+The site stays in test mode until Yakir approves opening. Everything below is ready behind switches that are OFF
+(except the single courses: published 25.11.2026, see the table).
 Yakir's own steps (domain, Cloudflare, Resend, Supabase, Google, Morning) are in Hebrew in
 `docs agents/too-launch-prep` (field `forYakir` and `steps`). Never type a password, key or code for him.
 
-## The switches (all OFF today)
+## The switches (all OFF today, except single courses 11 to 14)
 
 | Switch | Where | Today | At launch | Who |
 |---|---|---|---|---|
@@ -15,8 +16,8 @@ Yakir's own steps (domain, Cloudflare, Resend, Supabase, Google, Morning) are in
 | "Forgot password" link on the login page | `too_settings` key `mail_ready` (public) | `false` | `true` | Claude, after a test email arrived |
 | Real payments | `too_settings` key `test_mode` | `true` | `false` | Claude, only after Yakir says to open |
 | Renewal emails (daily) | pg_cron job `too-renew-mail` | not scheduled | scheduled (SQL below) | Claude at launch |
-| Single courses 11 to 14 on sale | `too_modules.published` (and their lessons' `published`) | `false` | `true`, one course at a time | Claude, only after Yakir approves each course's videos |
-| Single course price | `too_plans.price_ils` (`module-11` .. `module-14`) | 249 each | Yakir's price; empty = not sold | Yakir in the admin panel (מסלולים ומחירים) |
+| Single courses 11 to 14 published | `too_modules.published` (and their lessons' `published`) | `true` (all 4 courses, all 21 lessons; Yakir approved 25.11.2026 20:59) | stays `true` | done |
+| Single course price | `too_plans.price_ils` (`module-11` .. `module-14`) | 249 ₪ each (checked 25.11.2026) | 249 unless Yakir changes it; empty = not sold | Yakir in the admin panel (מסלולים ומחירים) |
 
 `launch.domain` (DB) and `launch.json domain` (repo) must always be the same domain.
 
@@ -44,7 +45,9 @@ Yakir's own steps (domain, Cloudflare, Resend, Supabase, Google, Morning) are in
   (`?step=renew`). Automatic card charging (Morning standing orders, "הוראת קבע") needs Morning's Best plan or higher and
   an API we could not verify; decide with Yakir before launch. The purchase page (`kniya`) shows the real button only when
   `test_mode` is off; `ezor-ishi/?paid=<order>&plan=<code>` waits for the access to open.
-- **Single courses** (`sql/teamofone_single_courses.sql`, applied 25.11.2026): courses 11 to 14 are in the membership AND
+- **Single courses** (`sql/teamofone_single_courses.sql`, applied 25.11.2026; all 4 published 25.11.2026 20:59 with Yakir's
+  approval, 249 ₪ each): the site has 5 courses (the full course, 10 chapters / 37 lessons, + courses 11 to 14). The monthly
+  membership includes all 5; the full course (one payment) is the 10 chapters only. Courses 11 to 14 are in the membership AND
   sold one by one (plans `module-11`..`module-14`, kind `module`). A buyer gets lifetime access to that course only
   (`too_access` kind `module`); members keep everything; the community, live events and the library stay members only.
   - `too-pay` checkout for a single course refuses: empty or 0 price (`no_price`), course not published (`not_open`), the
@@ -99,7 +102,7 @@ Yakir's own steps (domain, Cloudflare, Resend, Supabase, Google, Morning) are in
 ## Launch day (only after Yakir says to open)
 
 1. `launch.json` `live: true` (commit, push) and `too_settings.launch.live = true`.
-   (Single courses stay closed until each one is published; see "Single courses" above.)
+   (Single courses 11 to 14 are already published; with test_mode off their buy buttons become real at 249 ₪ each.)
 2. `update too_settings set value='false' where key='test_mode'` (the purchase page switches to the real button).
 3. Schedule renewals:
    ```sql

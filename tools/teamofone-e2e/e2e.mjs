@@ -1,4 +1,5 @@
-// Team of One end-to-end check on the published preview. Saves screenshots + results.json to ./out
+// Team of One end-to-end check on the published preview. Saves ONLY results.json to ./out: pass/fail per step and counts.
+// No screenshots, no page text, no account details, no error text (25.11.2026: the output branch is public).
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 const BASE = 'https://dabullaw-glitch.github.io/dabul-office/teamofone/';
@@ -7,21 +8,22 @@ const SHA = EXPECT;
 const RUN = process.env.GITHUB_RUN_ID || String(Date.now());
 fs.mkdirSync('out', { recursive: true });
 const R = { started: new Date().toISOString(), sha: SHA, steps: [], errors: {} };
-const step = (name, ok, extra = '') => { R.steps.push({ name, ok, extra }); console.log(ok ? 'OK ' : 'FAIL', name, extra); };
+const step = (name, ok) => { R.steps.push({ name, ok: !!ok }); console.log(ok ? 'OK ' : 'FAIL', name); };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function waitBuild(page) {
-  if (!SHA) { await page.goto(BASE, { waitUntil: 'domcontentloaded' }); return step('site is up', (await page.title()).length > 0, await page.getAttribute('meta[name=build]', 'content').catch(() => '')); }
+  if (!SHA) { await page.goto(BASE, { waitUntil: 'domcontentloaded' }); return step('site is up', (await page.title()).length > 0); }
   for (let i = 0; i < 40; i++) {
-    try { await page.goto(BASE + '?v=' + Date.now(), { waitUntil: 'domcontentloaded' }); const b = await page.getAttribute('meta[name=build]', 'content').catch(() => null); if (b === SHA) return step('site built from this commit', true, b); } catch {}
+    try { await page.goto(BASE + '?v=' + Date.now(), { waitUntil: 'domcontentloaded' }); const b = await page.getAttribute('meta[name=build]', 'content').catch(() => null); if (b === SHA) return step('site built from this commit', true); } catch {}
     await sleep(15000);
   }
-  step('site built from this commit', false, 'timeout, testing the current version');
+  step('site built from this commit', false);
 }
 const browser = await chromium.launch();
 async function ctx(mobile) { return browser.newContext(mobile ? { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'he-IL' } : { viewport: { width: 1440, height: 900 }, locale: 'he-IL' }); }
-function watch(page, key) { R.errors[key] = []; page.on('pageerror', (e) => R.errors[key].push(String(e))); page.on('console', (m) => { if (m.type() === 'error') R.errors[key].push(m.text()); }); }
-async function shot(page, name, full = true) { await page.evaluate(() => { document.querySelectorAll('.reveal').forEach((e) => e.classList.add('in')); document.querySelectorAll('[data-n]').forEach((e) => (e.textContent = e.dataset.n)); }).catch(() => {}); await sleep(600); await page.screenshot({ path: `out/${name}.png`, fullPage: full }); }
+function watch(page, key) { R.errors[key] = 0; page.on('pageerror', () => R.errors[key]++); page.on('console', (m) => { if (m.type() === 'error') R.errors[key]++; }); }
+// shot() is kept as a no-op so the flow stays the same; nothing is captured or saved.
+async function shot() {}
 
 try {
   const d = await ctx(false); const p = await d.newPage(); watch(p, 'desktop');
@@ -32,11 +34,10 @@ try {
 
   // student flow
   const email = `e2e-${RUN}@example.com`, pass = 'E2e-' + Math.random().toString(36).slice(2, 12) + '9!';
-  fs.writeFileSync('out/account.txt', email + '\n');
   await p.goto(BASE + 'knisa/?plan=course', { waitUntil: 'networkidle' });
   await p.fill('#n', 'בדיקה אוטומטית'); await p.fill('#e', email); await p.fill('#ph', '0500000000'); await p.fill('#p', pass); await p.check('#ok');
   await p.click('#bSign');
-  await p.waitForURL(/kniya/, { timeout: 25000 }).then(() => step('signup and login', true)).catch(async () => { step('signup and login', false, await p.locator('#err1').textContent().catch(() => '')); });
+  await p.waitForURL(/kniya/, { timeout: 25000 }).then(() => step('signup and login', true)).catch(async () => { step('signup and login', false); });
   await p.waitForSelector('#go', { timeout: 15000 }).catch(() => {});
   await shot(p, '05-checkout', false);
   await p.click('#go').catch(() => {});
@@ -77,7 +78,8 @@ try {
     await p.click('#snav button[data-k=articles]'); await sleep(1500); await p.click('#na').catch(() => {}); await sleep(1000);
     await p.fill('#ab', '## בדיקה\nטקסט **מודגש** ורשימה:\n- אחת\n- שתיים').catch(() => {}); await sleep(500); await shot(p, '13-admin-article-editor', false);
   }
-} catch (e) { step('crash', false, String(e)); }
+} catch { step('crash', false); }
 R.finished = new Date().toISOString();
+R.passed = R.steps.filter((x) => x.ok).length; R.failed = R.steps.length - R.passed;
 fs.writeFileSync('out/results.json', JSON.stringify(R, null, 2));
 await browser.close();
