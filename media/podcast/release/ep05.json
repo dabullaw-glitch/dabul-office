@@ -1,0 +1,23 @@
+{
+ "ep": "ep05",
+ "release": "2026-12-09T19:00:00+02:00",
+ "restoreFrom": "2026-12-09T17:30:00+02:00",
+ "heldAt": "2026-11-26T12:19:27+00:00",
+ "files": [
+  {
+   "path": "media/podcast/ep05.mp3",
+   "blob": "dc780598b047b00950a38872e927190a2c7b4d9f",
+   "bytes": 9862870,
+   "sha256": "1fd763d548140831bde208382bbf64f471a465f35a15fc87eb3d5bc891adb95d",
+   "commit": "a6f71c3a48674bedd66dd9b2d94714dd8ca205ec"
+  },
+  {
+   "path": "media/podcast/ep05.mp4",
+   "blob": "cff9f69aa1d2b965a1728d37058471c570fc942f",
+   "bytes": 57423432,
+   "sha256": "0c2d44bd26c6f34d1b4b7468150490db38c2ed3869e41fbe654860c584a5ffb6",
+   "commit": "a6f71c3a48674bedd66dd9b2d94714dd8ca205ec"
+  }
+ ],
+ "note": "held off GitHub Pages until release (tools/podcast/release.py); restored by .github/workflows/podcast-release.yml"
+}
