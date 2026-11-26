@@ -1,0 +1,18 @@
+---
+// "ממשיכים מהבדיקה": when the visitor came from a rights check about this area, the page keeps it in view.
+// The check lives only in this browser tab (sessionStorage); nothing is sent or stored on a server.
+import Icon from './Icon.astro';
+const { area } = Astro.props as { area?: string };
+---
+<div class="carry" data-carry={area || ''} hidden><Icon name="calc" size={20} /><span>ממשיכים מהבדיקה: <b data-carry-t></b></span><a data-carry-a href="#">לחישוב</a></div>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carry]').forEach((el) => {
+    try {
+      const c = JSON.parse(sessionStorage.getItem('fol-check') || 'null'); if (!c || !c.t) return;
+      if (el.dataset.carry && c.area && c.area !== el.dataset.carry) return;
+      el.querySelector('[data-carry-t]')!.textContent = c.t; (el.querySelector('[data-carry-a]') as HTMLAnchorElement).href = c.href || '#';
+      if (!c.href) el.querySelector('[data-carry-a]')!.remove();
+      el.hidden = false;
+    } catch {}
+  });
+</script>

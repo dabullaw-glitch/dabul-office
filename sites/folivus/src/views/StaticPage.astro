@@ -176,7 +176,7 @@ const d = PAGES[page];
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: d.title, path }];
 ---
 <Base title={d.title} description={d.description} path={path} schema={[breadcrumbs(crumbs)]}>
-  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} /><h1>{d.h1}</h1></div></section>
+  <section class="phead"><div class="wrap"><Crumbs items={crumbs} /><h1>{d.h1}</h1></div></section>
   <div class="wrap" style="padding-block:var(--sp-34) var(--sp-70)">
     {PREVIEW && d.draft && <p class="note warn" style="max-width:74ch"><Icon name="info" /><span>טיוטה לבדיקה משפטית לפני ההשקה.</span></p>}
     <div class="prose mt2" set:html={d.html} />

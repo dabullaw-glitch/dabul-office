@@ -18,11 +18,11 @@ const robots = PREVIEW || noindex ? 'noindex, nofollow' : 'index, follow, max-im
 const ld = graph(organization(), website(), ...schema);
 const topCities = ['tel-aviv', 'jerusalem', 'haifa', 'netanya', 'petah-tikva', 'beer-sheva'].map((s) => cities().find((c) => c.slug === s)).filter(Boolean);
 const NAV = [
+  { k: 'tools', href: u(P.page('tools')), label: 'בדיקות וכלים' },
   { k: 'areas', href: u(P.page('areas')), label: 'תחומים' },
   { k: 'cities', href: u(P.page('cities')), label: 'ערים' },
   { k: 'courts', href: u(P.page('courts')), label: 'בתי משפט' },
   { k: 'articles', href: u(P.page('articles')), label: 'מדריכים' },
-  { k: 'tools', href: u(P.page('tools')), label: 'כלים' },
 ];
 const groups = areaGroups().slice(0, 4);
 const seoAreas = ['real-estate', 'divorce', 'labor-law', 'car-accidents', 'criminal', 'inheritance-wills'].map((s) => areas().find((a) => a.slug === s)).filter(Boolean);
@@ -49,11 +49,11 @@ const year = new Date().getFullYear();
   <link rel="canonical" href={canonical} />
   <link rel="alternate" hreflang="he-IL" href={canonical} />
   <link rel="alternate" hreflang="x-default" href={canonical} />
-  <meta name="theme-color" content="#0F2236" />
+  <meta name="theme-color" content="#FBF9F6" />
   <link rel="icon" href={u('favicon.svg')} type="image/svg+xml" />
   <link rel="apple-touch-icon" href={u('icon-512.png')} />
-  <link rel="preload" href={u('fonts/noto-he-400.woff2')} as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href={u('fonts/frl-he-600.woff2')} as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href={u('fonts/assistant-he-400.woff2')} as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href={u('fonts/bellefair-he-400.woff2')} as="font" type="font/woff2" crossorigin />
   <link rel="alternate" type="application/rss+xml" title={`${BRAND.name}: מדריכים ומאמרים`} href={u('rss.xml')} />
   <meta property="og:type" content={ogType} />
   <meta property="og:locale" content="he_IL" />
@@ -74,7 +74,7 @@ const year = new Date().getFullYear();
   {PREVIEW && (
     <aside class="ribbon" aria-label="הודעה על גרסת התצוגה"><div class="wrap"><b>גרסת תצוגה לאישור.</b> המשרדים, הביקורות והכותבים באתר הם דוגמה בלבד. השם {BRAND.name} זמני.</div></aside>
   )}
-  <header class="top on-dark">
+  <header class="top">
     <div class="wrap top-in">
       <Logo tagline />
       <nav class="nav show-lg" aria-label="ניווט ראשי">
@@ -84,6 +84,7 @@ const year = new Date().getFullYear();
         <a class="toplink show-lg" href={u(P.page('method'))}>איך מדרגים</a>
         <a class="toplink show-lg" href={u(P.page('portal'))}>כניסה למשרדים</a>
         <a class="btn btn-o show-lg" href={u(P.page('join'))} aria-current={nav === 'join' ? 'page' : undefined}>פרסום לעורכי דין</a>
+        <a class="hl hide-lg" href={u(P.page('tools'))}><Icon name="calc" size={18} /><span>כלים</span></a>
         <details class="dd hide-lg" data-dd>
           <summary aria-label="חיפוש"><Icon name="search" size={22} /></summary>
           <div class="dd-panel">

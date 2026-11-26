@@ -18,7 +18,7 @@ const lead = as[0];
 const cover = (an(lead?.areas[0] || '')?.name || 'מדריך').split(' ').slice(0, 2);
 ---
 <Base title={title} description={description} path={path} nav="articles" schema={[breadcrumbs(crumbs), collection(title, path, description), itemList(title, [...as.map((a) => ({ name: a.title, path: P.article(a.he) })), ...guides.map((g) => ({ name: g.title + ': מדריך', path: P.area(g.he) }))])]}>
-  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} /><div class="phead-in">
+  <section class="phead"><div class="wrap"><Crumbs items={crumbs} /><div class="phead-in">
     <p class="eyebrow">מדריכים עם מקורות ותאריך עדכון</p>
     <h1 class="h1">מדריכים ומאמרים</h1>
     <p class="lead" style="max-width:640px">כל מאמר נכתב לפי <a href={u(P.page('editorial'))}>מדיניות העריכה</a>: מקורות רשמיים, תאריך עדכון גלוי ובדיקה לפני פרסום.</p>
@@ -27,7 +27,7 @@ const cover = (an(lead?.areas[0] || '')?.name || 'מדריך').split(' ').slice(
   <div class="wrap stack" style="gap:var(--sp-48);padding-top:var(--sp-32);padding-bottom:var(--sp-56)">
     {lead ? (
       <section aria-labelledby="la-h" class="stack gp16">
-        <h2 class="h3" id="la-h" style="font:600 var(--fs-22)/1.3 var(--serif)">מאמרים אחרונים</h2>
+        <h2 class="h3" id="la-h" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">מאמרים אחרונים</h2>
         <div class="guides">
           <a class="lead-story" href={u(P.article(lead.he))}>
             <span class="cover" aria-hidden="true"><span class="cover-k">מדריך · {an(lead.areas[0])?.group || 'מידע משפטי'}</span><span class="cover-t">{cover[0]}{cover[1] && <><br />{cover[1]}</>}</span><span class="cover-l"></span><span class="cover-s">{BRAND.name} · מדריכים</span></span>
@@ -42,7 +42,7 @@ const cover = (an(lead?.areas[0] || '')?.name || 'מדריך').split(' ').slice(
     ) : <div class="empty">המאמרים הראשונים בכתיבה.</div>}
     {guides.length > 0 && (
       <section aria-labelledby="gg-h" class="stack gp12">
-        <h2 class="h3" id="gg-h" style="font:600 var(--fs-22)/1.3 var(--serif)">מדריכים לפי תחום</h2>
+        <h2 class="h3" id="gg-h" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">מדריכים לפי תחום</h2>
         <div class="linkgrid">{guides.map((g) => <a href={u(P.area(g.he)) + '#guide'}><span>{g.title}: המדריך</span><span class="c">{g.guide?.draft ? 'טיוטה' : g.guide?.updated ? fmtDate(g.guide.updated) : ''}</span></a>)}</div>
       </section>
     )}

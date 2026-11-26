@@ -1,8 +1,7 @@
 ---
-// Wordmark: a quiet pillar mark and the name in Frank Ruhl Libre. The name comes from src/config/brand.ts only.
-import Icon from './Icon.astro';
+// Wordmark: the leaf mark (accent colour from tokens) and the name in the heading font. The name comes from src/config/brand.ts only.
 import { BRAND } from '../config/brand';
 import { u } from '../config/routes';
 const { tagline = false } = Astro.props as { tagline?: boolean };
 ---
-<a class="logo" href={u('')}><span aria-hidden="true" style="display:inline-flex;color:var(--brass-on-ink)"><Icon name="pillar" size={24} /></span><span class="logo-w">{BRAND.name}</span><span class="sr">, לדף הבית</span>{tagline && <span class="logo-d show-lg">האינדקס הארצי של עורכי הדין</span>}</a>
+<a class="logo" href={u('')}><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" focusable="false"><path d="M4 26C4 13 13 4 26 4c0 13-9 22-22 22z" style="fill:var(--accent)"></path><path d="M4 26 18.5 11.5M10.5 19.5h5.5M14.5 15.5V10" style="stroke:var(--paper)" stroke-width="1.9" stroke-linecap="round" fill="none"></path></svg><span class="logo-w">{BRAND.name}</span><span class="sr">, לדף הבית</span>{tagline && <span class="logo-d show-lg">זכויות, חישובים ועורכי דין</span>}</a>

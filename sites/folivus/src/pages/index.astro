@@ -1,148 +1,133 @@
 ---
+// Home (direction ג "מה מגיע לי"): the page opens with a rights check written as one sentence the visitor completes,
+// by life event. Then the questions people check (each one leads to a free tool), then topics that lead to firms,
+// the national package slot (always "מודעה"), guides, and a short line for lawyers.
 import Base from '../layouts/Base.astro';
-import Finder from '../components/legacy/Finder.astro';
 import Icon from '../components/Icon.astro';
-import GroupIcon from '../components/legacy/GroupIcon.astro';
-import FirmCard from '../components/legacy/FirmCard.astro';
-import JoinBand from '../components/legacy/JoinBand.astro';
+import FirmRow from '../components/FirmRow.astro';
 import { BRAND } from '../config/brand';
 import { P, u } from '../config/routes';
-import { areas, areaGroups, cities, REGIONS, firms, tools, articles, courts, fmtDate, homeFeatured } from '../lib/data';
+import { areas, firms, tools, articles, homeFeatured, areaBySlug } from '../lib/data';
 import { itemList } from '../lib/schema';
-import '../styles/legacy-home.css';
+import { readMinutes } from '../lib/md';
 
 const fs = await firms();
-const featured = homeFeatured(fs).slice(0, 6);
-const popular = ['real-estate', 'divorce', 'labor-law', 'criminal', 'inheritance-wills', 'car-accidents', 'insolvency'].map((s) => areas().find((a) => a.slug === s)!).filter(Boolean);
-const ts = tools().slice(0, 6);
-const as = articles().slice(0, 3);
-const cs = cities();
-const title = `${BRAND.name}: מדריך עורכי הדין בישראל לפי תחום ועיר`;
-const description = 'מוצאים עורך דין לפי תחום ועיר, קוראים מדריכים משפטיים בשפה פשוטה עם מקורות ותאריך עדכון, ומשתמשים במחשבונים ובמחוללי מסמכים חינמיים.';
+const featured = homeFeatured(fs).slice(0, 3);
+const T = (s: string) => tools().find((t) => t.slug === s);
+const tu = (s: string) => (T(s) ? u(P.tool(T(s)!.he)) : u(P.page('tools')));
+const au = (s: string) => (areaBySlug(s) ? u(P.area(areaBySlug(s)!.he)) : u(P.page('areas')));
+const count = (s: string) => fs.filter((f) => f.areas.includes(s)).length;
+const opts = (list: [string, string][], sel = 0) => list.map(([v, l], i) => ({ v, l, s: i === sel }));
+// the life events (direction א) as the tabs of the check (direction ג)
+const EVENTS = [
+  { k: 'fired', t: 'פוטרתי', area: 'labor-law', tool: tu('severance-pay'), cta: 'מה מגיע לי?' },
+  { k: 'home', t: 'קונים דירה', area: 'real-estate', tool: tu('purchase-tax'), cta: 'כמה מס נשלם?' },
+  { k: 'divorce', t: 'מתגרשים', area: 'divorce', tool: tu('child-support-estimate'), cta: 'מה בודקים קודם?' },
+  { k: 'accident', t: 'תאונה', area: 'work-accidents', tool: tu('work-injury-allowance'), cta: 'מה מגיע לי?' },
+  { k: 'debt', t: 'הוצאה לפועל', area: 'enforcement', tool: tu('debt-rescheduling-agreement'), cta: 'מה אפשר לעשות?' },
+  { k: 'estate', t: 'ירושה', area: 'inheritance-wills', tool: tu('statutory-inheritance'), cta: 'מי יורש?' },
+  { k: 'other', t: 'משהו אחר', area: '', tool: '', cta: 'למי לפנות?' },
+];
+const years = opts([['1', 'שנה'], ['2', 'שנתיים'], ['3', '3 שנים'], ['4', '4 שנים'], ['5', '5 שנים'], ['7', '7 שנים'], ['10', '10 שנים'], ['15', '15 שנים'], ['20', '20 שנים']], 3);
+const QS = [
+  ['כמה פיצויי פיטורים מגיעים לי?', 'severance-pay'], ['בעל הבית לא מחזיר את הפיקדון. מה כותבים לו?', 'deposit-return-letter'],
+  ['אין צוואה. מי יורש ובאיזה חלק?', 'statutory-inheritance'], ['כמה מס רכישה נשלם על הדירה?', 'purchase-tax'],
+  ['נפגעתי בעבודה. כמה דמי פגיעה מגיעים לי?', 'work-injury-allowance'], ['כמה דמי הבראה מגיעים לי השנה?', 'recuperation-pay'],
+  ['הטיסה התעכבה. מגיע לי פיצוי?', 'flight-delay-compensation'], ['האם התביעה שלי כבר התיישנה?', 'limitation-period'],
+].map(([q, s]) => ({ q, t: T(s) })).filter((x) => x.t);
+const TOPICS = [
+  ['פוטרתי או לא קיבלתי שכר', 'labor-law'], ['קונים או מוכרים דירה', 'real-estate'], ['ליקויים בדירה חדשה', 'construction-defects'], ['מתגרשים או נפרדים', 'divorce'],
+  ['צוואה וירושה', 'inheritance-wills'], ['תאונת דרכים', 'car-accidents'], ['חובות והוצאה לפועל', 'enforcement'], ['זימון לחקירה', 'criminal'], ['שכירות ופיקדון', 'leases'],
+].map(([t, s]) => ({ t, a: areaBySlug(s) })).filter((x) => x.a);
+const arts = articles().slice(0, 4);
+const title = `${BRAND.name}: מה מגיע לי? בדיקת זכויות, מחשבונים ועורכי דין`;
+const description = 'בודקים זכויות בכמה דקות, בחינם ובלי הרשמה: פיטורים, דירה, גירושין, תאונה, חובות וירושה. אם צריך עזרה, ממשיכים למשרד שעוסק בדיוק בזה.';
 ---
-<Base title={title} fullTitle description={description} path="" schema={[itemList('תחומי משפט', areas().map((a) => ({ name: a.title, path: P.area(a.he) })))]}>
-  <div class="lh">
-  <section class="hero on-dark">
-    <div class="wrap hero-in">
+<Base title={title} fullTitle description={description} path="" schema={[itemList('בדיקות וכלים', QS.map((x) => ({ name: x.q, path: P.tool(x.t!.he) })))]}>
+  <section class="chk-hero" aria-labelledby="hero-h">
+    <div class="wrap chk-grid">
       <div>
-        <span class="eyebrow">{BRAND.tagline}</span>
-        <h1>מוצאים עורך דין <em>לפי תחום ועיר.</em></h1>
-        <p class="lead">רשימות מסודרות של משרדים בכל הארץ, חוות דעת של לקוחות שעברו אימות, ומדריכים משפטיים שנכתבים ונבדקים עם מקורות רשמיים.</p>
-        <Finder id="hero" />
-        <div class="quick">
-          <span>חיפושים נפוצים:</span>
-          {popular.slice(0, 6).map((a) => <a href={u(P.area(a.he))}>{a.title}</a>)}
+        <p class="kick">זכויות, חישובים, ועורכי דין כשצריך</p>
+        <h1 id="hero-h">מה מגיע לי<span class="q">?</span></h1>
+        <p class="lede">בודקים זכויות בכמה דקות, בחינם ובלי הרשמה. אם צריך עזרה, ממשיכים למשרד שעוסק בדיוק בזה.</p>
+        <ul class="tstrip show-lg"><li><b>בחינם</b>כל הבדיקות</li><li><b>בלי הרשמה</b>ובלי טלפון</li><li><b>שקוף</b>איך מדרגים</li></ul>
+      </div>
+      <div class="ccard" data-check data-areas={JSON.stringify(Object.fromEntries(EVENTS.map((e) => [e.k, { area: e.area, tool: e.tool, au: e.area ? au(e.area) : '' }])))} data-area-urls={JSON.stringify(Object.fromEntries(areas().map((a) => [a.slug, { h: u(P.area(a.he)), t: a.title, g: a.group }])))}>
+        <div class="ctabs" role="tablist" aria-label="מה קרה?">
+          {EVENTS.map((e, i) => <button type="button" role="tab" id={'tab-' + e.k} aria-controls={'pane-' + e.k} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={e.k}>{e.t}</button>)}
         </div>
+        <form class="cpane" role="tabpanel" id="pane-fired" aria-labelledby="tab-fired" data-pane="fired">
+          <p class="sent"><span class="fill"><label class="sr" for="c1">מה קרה</label><select id="c1" name="reason"><option value="dismissal">פוטרתי</option><option value="resignation_entitled">התפטרתי בנסיבות מזכות</option></select><Icon name="chevd" size={16} /></span> אחרי <span class="fill"><label class="sr" for="c2">כמה זמן עבדתם</label><select id="c2" name="years">{years.map((o) => <option value={o.v} selected={o.s}>{o.l}</option>)}</select><Icon name="chevd" size={16} /></span> בעבודה, בשכר של <span class="fill"><label class="sr" for="c3">שכר חודשי ברוטו בשקלים</label><input id="c3" name="salary" inputmode="numeric" value="12,000" dir="ltr" /></span> ₪ לחודש.</p>
+        </form>
+        <form class="cpane" role="tabpanel" id="pane-home" aria-labelledby="tab-home" data-pane="home" hidden>
+          <p class="sent">אנחנו קונים <span class="fill"><label class="sr" for="h1">איזו דירה</label><select id="h1" name="type"><option value="single">דירה יחידה</option><option value="replacement">דירה במקום הקיימת</option><option value="additional">דירה נוספת</option></select><Icon name="chevd" size={16} /></span> במחיר <span class="fill"><label class="sr" for="h2">מחיר הדירה בשקלים</label><input id="h2" name="price" inputmode="numeric" value="2,400,000" dir="ltr" /></span> ₪.</p>
+        </form>
+        <form class="cpane" role="tabpanel" id="pane-divorce" aria-labelledby="tab-divorce" data-pane="divorce" hidden>
+          <p class="sent">אנחנו <span class="fill"><label class="sr" for="d1">מצב</label><select id="d1" name="kind"><option>מתגרשים</option><option>נפרדים בלי נישואים</option></select><Icon name="chevd" size={16} /></span> ויש לנו ילדים בגילים <span class="fill"><label class="sr" for="d2">גילי הילדים, מופרדים בפסיק</label><input id="d2" name="ages" value="5, 9" dir="ltr" /></span>.</p>
+        </form>
+        <form class="cpane" role="tabpanel" id="pane-accident" aria-labelledby="tab-accident" data-pane="accident" hidden>
+          <p class="sent">נפגעתי ב<span class="fill"><label class="sr" for="a1">סוג התאונה</label><select id="a1" name="kind"><option value="work">תאונת עבודה</option><option value="road">תאונת דרכים</option></select><Icon name="chevd" size={16} /></span> ולא עבדתי <span class="fill"><label class="sr" for="a2">ימים בלי עבודה</label><select id="a2" name="days"><option value="14">שבועיים</option><option value="30" selected>חודש</option><option value="60">חודשיים</option><option value="91">3 חודשים</option></select><Icon name="chevd" size={16} /></span>, בשכר של <span class="fill"><label class="sr" for="a3">שכר חודשי בשקלים</label><input id="a3" name="salary" inputmode="numeric" value="10,000" dir="ltr" /></span> ₪.</p>
+        </form>
+        <form class="cpane" role="tabpanel" id="pane-debt" aria-labelledby="tab-debt" data-pane="debt" hidden>
+          <p class="sent">קיבלתי <span class="fill"><label class="sr" for="b1">מה קיבלתם</label><select id="b1" name="kind"><option>אזהרה</option><option>הודעה על עיקול</option><option>הודעה על פתיחת תיק</option></select><Icon name="chevd" size={16} /></span> מההוצאה לפועל על חוב של <span class="fill"><label class="sr" for="b2">סכום החוב בשקלים</label><input id="b2" name="sum" inputmode="numeric" value="20,000" dir="ltr" /></span> ₪.</p>
+        </form>
+        <form class="cpane" role="tabpanel" id="pane-estate" aria-labelledby="tab-estate" data-pane="estate" hidden>
+          <p class="sent">הורה שלי נפטר בלי צוואה. נשארו <span class="fill"><label class="sr" for="e1">בן או בת זוג</label><select id="e1" name="spouse"><option value="married">בן או בת זוג</option><option value="none">בלי בן או בת זוג</option></select><Icon name="chevd" size={16} /></span> ו־<span class="fill"><label class="sr" for="e2">מספר הילדים</label><select id="e2" name="kids"><option value="1">ילד אחד</option><option value="2" selected>2 ילדים</option><option value="3">3 ילדים</option><option value="4">4 ילדים</option><option value="5">5 ילדים</option></select><Icon name="chevd" size={16} /></span>.</p>
+        </form>
+        <form class="cpane" role="tabpanel" id="pane-other" aria-labelledby="tab-other" data-pane="other" hidden>
+          <div class="field"><label class="lbl" for="o1">ספרו במשפט אחד מה קרה</label><textarea id="o1" class="inp" rows="3" placeholder="לדוגמה: השכן בנה מחסן על השטח המשותף"></textarea></div>
+          <div class="stack gp8" aria-live="polite" data-story-out style="margin-top:var(--sp-10)"></div>
+        </form>
+        <div class="cact"><button class="btn btn-v btn-block" type="button" data-go>מה מגיע לי?</button></div>
+        <p class="disc">הבדיקה כללית ואינה ייעוץ משפטי. הנתונים נשארים בדפדפן שלכם.</p>
       </div>
-      <aside class="promise" aria-labelledby="pr-h">
-        <h2 id="pr-h">מה תמצאו כאן</h2>
-        <ul>
-          <li><span class="ic"><Icon name="shield" /></span><span><b>חוות דעת מאומתות בלבד</b>כל חוות דעת עוברת אימות של הלקוח לפני פרסום, ומוצגות גם ביקורות שאינן מושלמות.</span></li>
-          <li><span class="ic"><Icon name="megaphone" /></span><span><b>קידום תמיד מסומן</b>משרד ששילם על מיקום בולט מסומן "משרד מקודם". הדירוג אינו ניתן לרכישה.</span></li>
-          <li><span class="ic"><Icon name="book" /></span><span><b>מידע עם מקורות</b>בכל מדריך יש כותב, תאריך עדכון ורשימת מקורות רשמיים.</span></li>
-          <li><span class="ic"><Icon name="calc" /></span><span><b>כלים חינמיים</b>מחשבונים ומחוללי מסמכים שעובדים בדפדפן, בלי הרשמה.</span></li>
-        </ul>
-      </aside>
-    </div>
-  </section>
-  <div class="stats on-dark" aria-label="האתר במספרים">
-    <div class="wrap">
-      <div class="stat"><b>{areas().length}</b><span>תחומי משפט</span></div>
-      <div class="stat"><b>{cs.length}</b><span>ערים ויישובים</span></div>
-      <div class="stat"><b>{tools().length}</b><span>כלים חינמיים</span></div>
-      <div class="stat"><b>{articles().length + areas().filter((a) => a.guide).length}</b><span>מדריכים ומאמרים</span></div>
-    </div>
-  </div>
-
-  <section class="sec" aria-labelledby="areas-h">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><span class="eyebrow">תחומי משפט</span><h2 id="areas-h">באיזה נושא אתם צריכים עורך דין?</h2><p>בחרו תחום כדי לראות משרדים בכל הארץ או בעיר שלכם, ומדריך שמסביר את התחום בשפה פשוטה.</p></div>
-        <a class="more" href={u(P.page('areas'))}>כל התחומים<Icon name="arrow" /></a>
-      </div>
-      <div class="grid g4">
-        {areaGroups().map((g) => (
-          <div class="card group-card">
-            <header><GroupIcon group={g.group} /><h3>{g.group}</h3></header>
-            <ul class="links">{g.items.slice(0, 6).map((a) => <li><a href={u(P.area(a.he))}>{a.name}</a></li>)}</ul>
-          </div>
-        ))}
-      </div>
+      <ul class="tstrip hide-lg"><li><b>בחינם</b>כל הבדיקות</li><li><b>בלי הרשמה</b>ובלי טלפון</li><li><b>שקוף</b>איך מדרגים</li></ul>
     </div>
   </section>
 
-  <section class="sec white" aria-labelledby="how-h">
+  <section class="sec qhub" aria-labelledby="q-h" style="padding-top:var(--sp-32)">
     <div class="wrap">
-      <div class="sec-head"><div><span class="eyebrow">איך זה עובד</span><h2 id="how-h">שלושה צעדים לבחירה רגועה</h2></div></div>
-      <div class="grid g3 steps">
-        <div class="step"><h3>מבינים את התחום</h3><p class="muted">בכל עמוד תחום יש מדריך קצר שמסביר מה עורך הדין עושה, מה שואלים בפגישה הראשונה ואילו מסמכים להכין.</p></div>
-        <div class="step"><h3>משווים משרדים</h3><p class="muted">רואים תחומי עיסוק, כתובת, שעות, חוות דעת מאומתות ופרטים שהמשרד עדכן בעצמו.</p></div>
-        <div class="step"><h3>פונים ישירות</h3><p class="muted">יוצרים קשר ישירות עם המשרד בטלפון או באתר שלו. האתר לא מתווך, לא מעביר פניות ולא גובה מכם תשלום.</p></div>
-      </div>
+      <h2 id="q-h">שאלות שאנשים בודקים</h2>
+      <p class="muted" style="margin-top:var(--sp-6)">כל שאלה מובילה לבדיקה קצרה, ואחריה למשרדים שעוסקים בנושא.</p>
+      <ul class="qlist">{QS.map((x) => <li><a class="qi" href={u(P.tool(x.t!.he))}><span class="tx"><span class="tt">{x.q}</span><span class="ty"><Icon name={x.t!.type === 'generator' ? 'doc' : 'calc'} size={15} />{x.t!.type === 'generator' ? 'מכתב מוכן' : 'מחשבון'}</span></span><Icon name="chev" size={20} /></a></li>)}</ul>
+      <a class="more" href={u(P.page('tools'))} style="margin-top:var(--sp-10)"><span>לכל {tools().length} הבדיקות והמחשבונים</span><Icon name="chev" size={18} /></a>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="t-h" style="background:var(--card);border-block:1px solid var(--line)">
+    <div class="wrap">
+      <h2 class="h2" id="t-h">כשצריך עורך דין</h2>
+      <p class="muted" style="margin-top:var(--sp-6);max-width:60ch">כל נושא מוביל לרשימת משרדים שעוסקים בו, עם מפה. הרשימה מסודרת לפי קשר לתחום, ביקורות מאומתות ומרחק, ותשלום לא משנה את הסדר.</p>
+      <div class="topics" style="margin-top:var(--sp-16)">{TOPICS.map((x) => <a href={u(P.area(x.a!.he))}><span class="stack"><b>{x.t}</b><span>{x.a!.title}{count(x.a!.slug) > 0 ? ` · ${count(x.a!.slug) === 1 ? 'משרד אחד' : count(x.a!.slug) + ' משרדים'}` : ''}</span></span><Icon name="chev" size={18} /></a>)}</div>
+      <div class="flex" style="margin-top:var(--sp-16)"><a class="more" href={u(P.page('areas'))}><span>כל {areas().length} התחומים</span><Icon name="chev" size={18} /></a><a class="more" href={u(P.page('cities'))}><span>לפי עיר, במפה</span><Icon name="chev" size={18} /></a></div>
     </div>
   </section>
 
   {featured.length > 0 && (
-    <section class="sec" aria-labelledby="ft-h">
-      <div class="wrap">
-        <div class="sec-head"><div><span class="eyebrow">משרדים מקודמים</span><h2 id="ft-h">משרדים בפרופיל ארצי</h2><p>מודעה: משרדים ששילמו על הצגה בעמוד הבית. התשלום לא משפיע על הדירוג או על חוות הדעת.</p></div></div>
-        <div class="firms">{featured.map((f) => <FirmCard f={f} promo />)}</div>
+    <section class="sec" aria-labelledby="ad-h" style="padding-bottom:0">
+      <div class="wrap stack gp8">
+        <h2 class="sr" id="ad-h">מודעות</h2>
+        <p class="adlbl"><b>מודעה</b>משרדים בפרסום ארצי. מוצגים בתשלום, מחוץ לכל דירוג.</p>
+        <div class="frs">{featured.map((f) => <FirmRow f={f} promo tile />)}</div>
       </div>
     </section>
   )}
 
-  <section class={'sec' + (featured.length ? ' white' : '')} aria-labelledby="tools-h">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><span class="eyebrow">כלים חינמיים</span><h2 id="tools-h">מחשבונים ומחוללי מסמכים</h2><p>חישוב ראשוני ומסמכים פשוטים, ישר בדפדפן. כל כלי מציין את המקורות ואת תאריך העדכון.</p></div>
-        <a class="more" href={u(P.page('tools'))}>כל הכלים<Icon name="arrow" /></a>
+  {arts.length > 0 && (
+    <section class="sec" aria-labelledby="g-h">
+      <div class="wrap">
+        <h2 class="h2" id="g-h">לקרוא לפני שמחליטים</h2>
+        <div class="glist" style="margin-top:var(--sp-16)">{arts.map((a, i) => <a class="gitem" href={u(P.article(a.he))}><span class="gn num">{i + 1}</span><h3 class="h4" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">{a.title}</h3><span class="cap">{areaBySlug(a.areas[0])?.name || 'מדריך'} · {readMinutes(a.body)} דק׳ קריאה{a.draft ? ' · טיוטה' : ''}</span></a>)}</div>
+        <a class="more" href={u(P.page('articles'))} style="margin-top:var(--sp-10)"><span>לכל המדריכים</span><Icon name="chev" size={18} /></a>
       </div>
-      {ts.length ? (
-        <div class="grid g3">{ts.map((t) => (
-          <a class="card tcard" href={u(P.tool(t.he))}><span class="gicon"><Icon name={t.type === 'generator' ? 'doc' : 'calc'} /></span><span><h3>{t.name}</h3><p>{t.description}</p></span></a>
-        ))}</div>
-      ) : <div class="empty">הכלים בהכנה.</div>}
-    </div>
-  </section>
+    </section>
+  )}
 
-  <section class="sec" aria-labelledby="art-h">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><span class="eyebrow">מדריכים</span><h2 id="art-h">מידע משפטי בשפה פשוטה</h2><p>מאמרים חדשים שלוש פעמים בשבוע, עם כותב, מקורות ותאריך עדכון.</p></div>
-        <a class="more" href={u(P.page('articles'))}>לכל המדריכים<Icon name="arrow" /></a>
-      </div>
-      {as.length ? (
-        <div class="grid g3">{as.map((a) => (
-          <a class="card acard" href={u(P.article(a.he))}>
-            <span class="kicker">{a.areas.map((s) => areas().find((x) => x.slug === s)?.name).filter(Boolean)[0] || 'מדריך'}</span>
-            <h3>{a.title}</h3><p>{a.description}</p>
-            <span class="afoot"><span>{fmtDate(a.updated)}</span><span>{Math.max(1, Math.round(a.words / 200))} דקות קריאה</span></span>
-          </a>
-        ))}</div>
-      ) : (
-        <div class="grid g3">{areas().filter((a) => a.guide).slice(0, 3).map((a) => (
-          <a class="card acard" href={u(P.area(a.he))}><span class="kicker">מדריך תחום</span><h3>{a.title}: מה חשוב לדעת</h3><p>{a.description}</p></a>
-        ))}</div>
-      )}
-    </div>
+  <section class="sec" aria-label="לעורכי דין" style="padding-top:0">
+    <div class="wrap"><div class="how" style="display:flex;flex-wrap:wrap;gap:var(--sp-12);align-items:center;justify-content:space-between">
+      <p style="margin:0;color:var(--text)"><b>עורכי דין?</b> הפרופיל במדריך בחינם. מודעות מסומנות תמיד, ולא משנות את הסדר.</p>
+      <a class="btn btn-s" href={u(P.page('join'))}>פרסום לעורכי דין</a>
+    </div></div>
   </section>
-
-  <section class="sec white" aria-labelledby="city-h">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><span class="eyebrow">לפי מקום</span><h2 id="city-h">עורכי דין לפי עיר</h2></div>
-        <a class="more" href={u(P.page('cities'))}>כל הערים<Icon name="arrow" /></a>
-      </div>
-      <div class="regions">
-        {REGIONS.map((r) => (
-          <div><h3>{r}</h3><ul>{cs.filter((c) => c.region === r).slice(0, 10).map((c) => <li><a href={u(P.city(c.he))}>{c.name}</a></li>)}</ul></div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="wrap"><JoinBand /></div>
-  </section>
-  </div>
+  <script>import '../scripts/home-check';</script>
 </Base>

@@ -4,7 +4,7 @@ const done = new Set<string>();
 document.querySelectorAll<HTMLElement>('[data-lt]').forEach((el) => {
   const id = el.dataset.lt!; if (done.has(id)) return; done.add(id);
   const list = document.getElementById(id); if (!list) return;
-  const rows = Array.from(list.querySelectorAll<HTMLElement>('.row'));
+  const rows = Array.from(list.querySelectorAll<HTMLElement>('.fr'));
   const sheet = document.querySelector<HTMLElement>(`[data-lt-sheet="${id}"]`)!; const bg = document.querySelector<HTMLElement>(`[data-lt-bg="${id}"]`)!;
   const all = (sel: string) => Array.from(document.querySelectorAll<HTMLElement>(`[data-lt="${id}"] ${sel}, [data-lt-sheet="${id}"] ${sel}`));
   const f = new Set<string>(); let sort = 'rank'; let opener: HTMLElement | null = null;

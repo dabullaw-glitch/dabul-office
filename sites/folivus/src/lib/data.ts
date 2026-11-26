@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import YAML from 'yaml';
-import { DB, BRAND, PREVIEW } from '../config/brand';
+import { DB, BRAND, PREVIEW, SETTINGS } from '../config/brand';
 import intros from '../data/area-intros.json';
 import citiesRaw from '../data/cities.json';
 import firmsSample from '../data/firms.sample.json';
@@ -75,8 +75,15 @@ export const areaGroups = () => {
 };
 
 // ---------- cities ----------
-export type City = { slug: string; he: string; name: string; region: string };
-export const cities = (): City[] => (citiesRaw as any[]).map((c) => ({ slug: c.slug, he: c.he_slug, name: c.he, region: c.region }));
+export type City = { slug: string; he: string; name: string; region: string; lat: number | null; lng: number | null };
+export const cities = (): City[] => (citiesRaw as any[]).map((c) => ({ slug: c.slug, he: c.he_slug, name: c.he, region: c.region, lat: c.lat ?? null, lng: c.lng ?? null }));
+/** straight line distance in km between two city centres (the index knows cities, not exact office addresses) */
+export function cityKm(a?: City | null, b?: City | null): number | null {
+  if (!a || !b || a.lat == null || b.lat == null || a.lng == null || b.lng == null) return null;
+  const R = 6371, r = Math.PI / 180, dLat = (b.lat - a.lat) * r, dLng = (b.lng - a.lng) * r;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLng / 2) ** 2;
+  return Math.round(2 * R * Math.asin(Math.sqrt(h)));
+}
 export const cityBySlug = (s: string) => cities().find((c) => c.slug === s);
 export const REGIONS = ['מרכז', 'שרון', 'ירושלים', 'צפון', 'דרום'];
 
@@ -148,13 +155,21 @@ const featuredHere = (f: Firm, area?: string, city?: string) => {
   if (f.featuredSlots && f.featuredSlots.length) return f.featuredSlots.some((s) => s.area === area && (s.city || undefined) === (city || undefined));
   return !!((area && f.featuredAreas.includes(area)) || (city && f.featuredCities.includes(city)) || f.plan === 'senior');
 };
+// the published order (shiitat ha-dirug): 1. fit to the area (main area first), 2. rating from verified reviews
+// (plus the Google rating only when SETTINGS.show_google_ratings is on), 3. distance from the chosen city. Payment is not an input.
+const fit = (f: Firm, area?: string) => (!area ? 0 : f.areas[0] === area ? 2 : f.areas.includes(area) ? 1 : 0);
+const score = (f: Firm) => {
+  const own = f.rankScore ?? (f.reviewAvg ?? (f.reviews.length ? f.reviews.reduce((s, r) => s + r.rating, 0) / f.reviews.length : 0));
+  return SETTINGS.show_google_ratings && f.google.rating != null ? Math.max(own, 0) * 0.7 + Number(f.google.rating) * 0.3 : own;
+};
+const dist = (f: Firm, city?: string) => { if (!city) return 0; const k = cityKm(cityBySlug(f.city), cityBySlug(city)); return k == null ? 999 : k; };
 /** paid (labelled) firms for this area/city first, in daily rotation; then the rest by the published review score, then by name.
  *  The score uses verified reviews only (shiitat ha-dirug page); paying never changes it. */
 export function rankFor(list: Firm[], area?: string, city?: string) {
   const feat = (f: Firm) => featuredHere(f, area, city);
   return {
     featured: list.filter(feat).sort((a, b) => rot(a.slug) - rot(b.slug)),
-    rest: list.filter((f) => !feat(f)).sort((a, b) => (b.rankScore ?? 0) - (a.rankScore ?? 0) || a.name.localeCompare(b.name, 'he')),
+    rest: list.filter((f) => !feat(f)).sort((a, b) => fit(b, area) - fit(a, area) || score(b) - score(a) || dist(a, city) - dist(b, city) || a.name.localeCompare(b.name, 'he')),
   };
 }
 /** the home page block: national packages (plus the legacy sample plan), in daily rotation */

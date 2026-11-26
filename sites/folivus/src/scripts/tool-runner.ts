@@ -113,3 +113,19 @@ document.querySelectorAll<HTMLElement>('[data-tool]').forEach((root) => {
     wire(out, res);
   });
 });
+// prefill from the home check: ?f_<input id>=value ... &run=1 (values stay in the address bar of this browser only)
+{
+  const qs = new URLSearchParams(location.search);
+  const form = document.querySelector<HTMLFormElement>('[data-tool] form');
+  let any = false;
+  if (form) qs.forEach((v, k) => {
+    if (!k.startsWith('f_')) return; const id = k.slice(2);
+    const els = Array.from(form.querySelectorAll<HTMLInputElement>(`[name="${CSS.escape(id)}"]`)); if (!els.length) return; any = true;
+    const el = els[0];
+    if (el.type === 'radio') els.forEach((r) => (r.checked = r.value === v));
+    else if (el.type === 'checkbox') el.checked = v === 'true' || v === '1';
+    else if (el.dataset.num && v !== '' && !isNaN(Number(v))) el.value = Number(v).toLocaleString('he-IL', { maximumFractionDigits: 4 });
+    else el.value = v;
+  });
+  if (form && any && qs.get('run') === '1') form.requestSubmit();
+}

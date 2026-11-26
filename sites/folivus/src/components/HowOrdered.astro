@@ -1,0 +1,10 @@
+---
+import Icon from './Icon.astro';
+import { P, u } from '../config/routes';
+import { SETTINGS } from '../config/brand';
+---
+<section class="how" aria-labelledby="how-h">
+  <h2 id="how-h"><Icon name="info" size={20} />איך מסדרים את הרשימה</h2>
+  <ol><li><b>1</b>קשר לתחום</li><li><b>2</b>{SETTINGS.show_google_ratings ? 'דירוג בגוגל וביקורות מאומתות' : 'ביקורות מאומתות'}</li><li><b>3</b>מרחק מהעיר שבחרתם</li></ol>
+  <p>תשלום לא משנה את הסדר. משרד שמשלם מוצג בנפרד ומסומן ״מודעה״. <a class="lnk" href={u(P.page('method'))}>השיטה המלאה</a></p>
+</section>

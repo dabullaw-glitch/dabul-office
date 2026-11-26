@@ -1,0 +1,44 @@
+---
+// Compare up to 3 firms side by side (direction ב). Works on the cards in the page; nothing is sent anywhere.
+import Icon from './Icon.astro';
+---
+<div class="dock" data-dock hidden role="region" aria-label="השוואת משרדים">
+  <span><b data-dock-n>0</b> <span data-dock-t>משרדים נבחרו</span></span>
+  <button type="button" class="btn" data-dock-open aria-haspopup="dialog"><Icon name="scale" size={18} /><span>השוואה</span></button>
+</div>
+<div class="sheet-bg" data-cmp-bg hidden></div>
+<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cmp-h" data-cmp-sheet hidden>
+  <div class="sheet-h"><h2 id="cmp-h" class="h4">השוואת משרדים</h2><button type="button" class="ibtn" aria-label="סגירה" data-cmp-close><Icon name="x" size={22} /></button></div>
+  <div class="sheet-b"><div style="overflow-x:auto" tabindex="0" role="region" aria-label="טבלת ההשוואה" data-cmp-out></div><p class="cap">ההשוואה מציגה פרטים שבאינדקס. הסדר בדירוג לא משתנה בגלל תשלום.</p></div>
+  <div class="sheet-f"><button type="button" class="btn btn-s" data-cmp-clear>ניקוי הבחירה</button><button type="button" class="btn btn-p" style="flex:1 1 auto" data-cmp-close>סגירה</button></div>
+</div>
+<script>
+  const boxes = () => Array.from(document.querySelectorAll<HTMLInputElement>('[data-cmp-box]'));
+  const dock = document.querySelector<HTMLElement>('[data-dock]')!; const sheet = document.querySelector<HTMLElement>('[data-cmp-sheet]')!; const bg = document.querySelector<HTMLElement>('[data-cmp-bg]')!;
+  const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+  const MAX = 3;
+  const sync = () => {
+    const on = boxes().filter((b) => b.checked);
+    dock.hidden = on.length === 0;
+    dock.querySelector('[data-dock-n]')!.textContent = String(on.length);
+    dock.querySelector('[data-dock-t]')!.textContent = on.length === 1 ? 'משרד נבחר. בחרו עוד אחד' : 'משרדים נבחרו';
+    (dock.querySelector('[data-dock-open]') as HTMLButtonElement).disabled = on.length < 2;
+    boxes().forEach((b) => (b.disabled = !b.checked && on.length >= MAX));
+  };
+  const show = (o: boolean) => {
+    if (o) {
+      const rows = boxes().filter((b) => b.checked).map((b) => JSON.parse(b.closest<HTMLElement>('[data-cmp]')!.dataset.cmp!));
+      const R = [['עיר', 'c'], ['תחומים', 'a'], ['ביקורות מאומתות', 's'], ['המשרד אישר את הפרטים', 'ok'], ['טלפון', 'p']];
+      document.querySelector('[data-cmp-out]')!.innerHTML = `<table class="ctab"><thead><tr><th scope="col"><span class="sr">פרט</span></th>${rows.map((r) => `<th scope="col"><a class="lnk" href="${esc(r.h)}">${esc(r.n)}</a></th>`).join('')}</tr></thead><tbody>${R.map(([l, k]) => `<tr><th scope="row">${l}</th>${rows.map((r) => `<td>${esc(r[k] || '')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    }
+    sheet.hidden = !o; bg.hidden = !o; document.body.style.overflow = o ? 'hidden' : '';
+    (o ? sheet.querySelector<HTMLElement>('[data-cmp-close]') : dock.querySelector<HTMLElement>('[data-dock-open]'))?.focus();
+  };
+  document.addEventListener('change', (e) => { if ((e.target as HTMLElement).matches('[data-cmp-box]')) sync(); });
+  dock.querySelector('[data-dock-open]')!.addEventListener('click', () => show(true));
+  document.querySelectorAll('[data-cmp-close]').forEach((b) => b.addEventListener('click', () => show(false)));
+  bg.addEventListener('click', () => show(false));
+  sheet.addEventListener('keydown', (e) => { if (e.key === 'Escape') show(false); });
+  document.querySelector('[data-cmp-clear]')!.addEventListener('click', () => { boxes().forEach((b) => (b.checked = false)); sync(); show(false); });
+  sync();
+</script>

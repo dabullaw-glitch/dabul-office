@@ -192,7 +192,7 @@ function done(endsAt: string | null, isTest: boolean) {
   $$('[data-step]', root).forEach((s) => s.classList.add('cm-hidden')); $$('[data-steps] li').forEach((li) => (li.dataset.on = 'true'));
   const sb = $('[data-sbar]'); if (sb) sb.hidden = true;
   const d = $('[data-done]', root); d.classList.remove('cm-hidden');
-  d.innerHTML = `<h2 class="h3" style="font:600 var(--fs-24)/1.3 var(--serif)">ההזמנה הופעלה</h2><p>${isTest ? 'זו הייתה רכישת בדיקה, בלי חיוב. ' : 'התשלום התקבל. '}הכול הופעל אוטומטית${endsAt ? ` עד ${esc(heDate(endsAt))}` : ''}. שלחנו מייל עם הפרטים${isTest ? ' (במצב בדיקה המייל נשמר בתיבת היוצא של מנהל האתר)' : ' והקבלה'}.</p><p><a class="btn btn-p btn-lg" href="${esc(root.dataset.portal!)}">לאזור המשרדים</a></p>`;
+  d.innerHTML = `<h2 class="h3" style="font:var(--serif-w) var(--fs-24)/1.3 var(--serif)">ההזמנה הופעלה</h2><p>${isTest ? 'זו הייתה רכישת בדיקה, בלי חיוב. ' : 'התשלום התקבל. '}הכול הופעל אוטומטית${endsAt ? ` עד ${esc(heDate(endsAt))}` : ''}. שלחנו מייל עם הפרטים${isTest ? ' (במצב בדיקה המייל נשמר בתיבת היוצא של מנהל האתר)' : ' והקבלה'}.</p><p><a class="btn btn-p btn-lg" href="${esc(root.dataset.portal!)}">לאזור המשרדים</a></p>`;
 }
 async function poll(order: string) {
   $$('[data-step]', root).forEach((s) => s.classList.add('cm-hidden'));

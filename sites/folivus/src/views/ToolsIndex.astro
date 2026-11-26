@@ -16,7 +16,7 @@ const description = `${all.length} מחשבונים ומחוללי מסמכים 
 const calcs = all.filter((t) => t.type === 'calculator').length;
 ---
 <Base title={title} description={description} path={path} nav="tools" schema={[breadcrumbs(crumbs), collection(title, path, description), itemList(title, all.map((t) => ({ name: t.name, path: P.tool(t.he) })))]}>
-  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} /><div class="phead-in">
+  <section class="phead"><div class="wrap"><Crumbs items={crumbs} /><div class="phead-in">
     <p class="eyebrow">כלים חינמיים · בלי הרשמה</p>
     <h1 class="h1">מחשבונים ומחוללי מסמכים</h1>
     <p class="lead" style="max-width:640px">חישוב ראשוני ומסמכים פשוטים, ישר בדפדפן. הנתונים שאתם מקלידים לא נשלחים לשום מקום.</p>
@@ -30,7 +30,7 @@ const calcs = all.filter((t) => t.type === 'calculator').length;
     <p class="cap num" id="tcount" aria-live="polite"></p>
     {cats.map((g) => (
       <section class="tcat stack gp12" id={catSlug(g.category)} aria-labelledby={catSlug(g.category) + '-h'} data-tcat>
-        <h2 class="h3" id={catSlug(g.category) + '-h'} style="font:600 var(--fs-22)/1.3 var(--serif)">{g.category} <span class="tcount">({g.items.length})</span></h2>
+        <h2 class="h3" id={catSlug(g.category) + '-h'} style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">{g.category} <span class="tcount">({g.items.length})</span></h2>
         <div class="tlist">{g.items.map((t) => (
           <a class="titem" href={u(P.tool(t.he))} data-t={(t.name + ' ' + t.description + ' ' + g.category).toLowerCase()}>
             <span class="ac-ic"><Icon name={t.type === 'generator' ? 'doc' : 'calc'} size={18} /></span>

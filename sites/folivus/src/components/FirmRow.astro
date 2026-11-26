@@ -1,45 +1,44 @@
 ---
-// One firm as a full-width list row (canvas round 4). Paid rows carry "משרד מקודם" and a thin brass top line;
-// ranked rows show the place, which payment never changes. Sample data carries "דוגמה".
+// One firm as a numbered card (direction ג). The number is the place in the published order; a paid card is shown
+// apart, numbered "מ" and labelled "מודעה". The three facts behind the order are on the card: fit to the area,
+// verified reviews, distance (city level). Visitors contact the firm directly; the site does not pass on inquiries.
 import Icon from './Icon.astro';
 import FirmTile from './FirmTile.astro';
-import Rating from './Rating.astro';
-import PromoLabel from './PromoLabel.astro';
 import { P, u } from '../config/routes';
-import { areaBySlug, cityBySlug, type Firm } from '../lib/data';
-import { scoreOf } from '../lib/ui';
-const { f, promo = false, rank, area, city, level = 3, promoLabel } = Astro.props as { f: Firm; promo?: boolean; rank?: number; area?: string; city?: string; level?: 2 | 3; promoLabel?: string };
+import { areaBySlug, cityBySlug, cityKm, type Firm } from '../lib/data';
+import { scoreOf, fmtScore } from '../lib/ui';
+import { SETTINGS } from '../config/brand';
+const { f, promo = false, rank, area, city, level = 3, compare = false, tile = false } = Astro.props as { f: Firm; promo?: boolean; rank?: number; area?: string; city?: string; level?: 2 | 3; compare?: boolean; tile?: boolean; promoLabel?: string };
 const c = cityBySlug(f.city);
-const shown = [...(area && f.areas.includes(area) ? [area] : []), ...f.areas.filter((a) => a !== area)].slice(0, 3).map((s) => areaBySlug(s)?.name).filter(Boolean);
+const here = city ? cityBySlug(city) : null;
+const fitArea = area && f.areas.includes(area) ? areaBySlug(area) : areaBySlug(f.areas[0]);
+const others = f.areas.filter((a) => a !== fitArea?.slug).slice(0, 2).map((s) => areaBySlug(s)?.name).filter(Boolean);
 const { score, count } = scoreOf(f);
 const href = u(P.firm(f.slug));
 const tel = f.phone ? 'tel:' + f.phone.replace(/[^0-9+]/g, '') : '';
 const H = level === 2 ? 'h2' : 'h3';
-const paidInRank = !promo && rank && f.plan !== 'free';
+const km = here && c ? (here.slug === c.slug ? 0 : cityKm(here, c)) : null;
+const g = SETTINGS.show_google_ratings && f.google.rating != null ? Number(f.google.rating).toFixed(1) : '';
+const id = 'fr-' + f.slug + (promo ? '-ad' : '');
 ---
-<article class={'row' + (promo ? ' promo' : '')} data-name={f.name} data-score={String(score)} data-reviews={String(count)} data-claimed={f.claimed ? '1' : ''} data-ext={f.extendedEnabled || (f.extended && f.extended.description) ? '1' : ''} data-rank={rank ? String(rank) : ''}>
-  <FirmTile f={f} />
-  <div class="row-b">
-    {(promo || paidInRank || f.isSample) && (
-      <div class="row-top">
-        {(promo || paidInRank) && <PromoLabel text={promoLabel} />}
-        {paidInRank && <span class="cap">המקום בדירוג לא תלוי בתשלום</span>}
-        {f.isSample && <span class="sample-b">דוגמה</span>}
-      </div>
-    )}
-    <H class="row-n">{rank && <span class="rank">{rank}.</span>} <a class="row-link" href={href}>{f.name}</a></H>
-    <p class="row-m">{c?.name}{c && shown.length > 0 && ' · '}{shown.join(', ')}</p>
-    <Rating score={score} count={count} />
-  </div>
-  {promo ? (
-    <div class="row-a">
-      <a class="btn btn-p" href={href}>לפרופיל המשרד</a>
-      {tel && <a class="btn btn-s" href={tel} aria-label={`התקשרות אל ${f.name}`}><Icon name="phone" size={16} /><span>התקשרות</span></a>}
+<article class={'fr' + (promo ? ' ad' : '')} id={id} data-name={f.name} data-score={String(score)} data-reviews={String(count)} data-claimed={f.claimed ? '1' : ''} data-ext={f.extendedEnabled || (f.extended && f.extended.description) ? '1' : ''} data-rank={rank ? String(rank) : ''} data-km={km == null ? '' : String(km)} data-slug={f.slug}
+  data-cmp={JSON.stringify({ n: f.name, h: href, c: c?.name || '', a: f.areas.slice(0, 4).map((s) => areaBySlug(s)?.name).filter(Boolean).join(', '), s: count ? fmtScore(score) + ' (' + count + ')' : 'אין עדיין', p: f.phone, ok: f.claimed ? 'כן' : 'לא' })}>
+  <div class="frt">
+    {tile ? <FirmTile f={f} /> : <span class="no" aria-hidden="true">{promo ? 'מ' : rank ?? ''}</span>}
+    <div class="fb">
+      <H><a href={href}>{promo ? <span class="sr">מודעה: </span> : rank ? <span class="sr">מקום {rank}: </span> : ''}{f.name}</a></H>
+      <p class="m">{c?.name}{others.length > 0 && ' · ' + [fitArea?.name, ...others].filter(Boolean).join(', ')}</p>
+      {(f.isSample || f.claimed) && <span class="badges">{f.isSample && <span class="smp">משרד לדוגמה</span>}{f.claimed && <span class="smp">המשרד אישר את הפרטים</span>}</span>}
     </div>
-  ) : (
-    <>
-      <span class="row-chev hide-lg"><Icon name="chev" size={18} /></span>
-      <div class="show-lg" style="position:relative;z-index:1"><a class="btn btn-s" href={href} tabindex="-1" aria-hidden="true">לפרופיל</a></div>
-    </>
-  )}
+  </div>
+  <div class="whyb">
+    <div>תחום<b>{fitArea?.name || 'כללי'}</b></div>
+    <div>{g ? 'גוגל' : 'ביקורות'}<b class="num">{g || (count ? `${fmtScore(score)} (${count})` : 'אין עדיין')}</b></div>
+    <div>{km == null ? 'עיר' : 'מרחק'}<b class="num">{km == null ? c?.name || '' : km === 0 ? 'באותה עיר' : `כ־${km} ק״מ`}</b></div>
+  </div>
+  <div class="fra">
+    <a class="btn btn-p" href={href}>לפרופיל המשרד</a>
+    {tel && <a class="btn btn-s btn-ic" href={tel} aria-label={`התקשרות אל ${f.name}`}><Icon name="phone" size={20} /></a>}
+    {compare && <label class="cmpb"><input type="checkbox" data-cmp-box value={f.slug} /><span>להשוואה</span></label>}
+  </div>
 </article>

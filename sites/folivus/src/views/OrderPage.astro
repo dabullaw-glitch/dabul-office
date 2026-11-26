@@ -13,7 +13,7 @@ const STEPS = ['מוצר', 'מקומות', 'פרטים', 'סיכום ותשלו�
 const sum = `<div class="sum" data-sum><div><span class="cap">בחרו מוצר כדי לראות מחיר.</span></div></div>`;
 ---
 <Base title="הזמנת חבילה או מודעה" description="בחירת חבילה, מקומות ופרטי משרד, ותשלום מאובטח. כל מיקום בתשלום מסומן באתר." path={path} noindex nav="join">
-  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} />
+  <section class="phead"><div class="wrap"><Crumbs items={crumbs} />
     <div class="phead-in" style="padding-bottom:var(--sp-24)">
       <h1 class="h2">הזמנה</h1>
       <ol class="co-steps" aria-label="שלבי ההזמנה" data-steps>
@@ -28,21 +28,21 @@ const sum = `<div class="sum" data-sum><div><span class="cap">בחרו מוצר 
       <div class="msg" data-top role="status"></div>
 
       <section data-step="1" class="co-panel" aria-labelledby="s1-h">
-        <div class="stack gp4"><h2 class="h3" id="s1-h" style="font:600 var(--fs-22)/1.3 var(--serif)">מה מתאים לכם?</h2><p class="small muted">המחירים לפני מע״מ. תשלום לא משפיע על הדירוג ועל הביקורות. <a class="lnk" data-method-link>איך בנוי הדירוג</a></p></div>
+        <div class="stack gp4"><h2 class="h3" id="s1-h" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">מה מתאים לכם?</h2><p class="small muted">המחירים לפני מע״מ. תשלום לא משפיע על הדירוג ועל הביקורות. <a class="lnk" data-method-link>איך בנוי הדירוג</a></p></div>
         <div class="cm-products" data-products role="radiogroup" aria-labelledby="s1-h"><p class="muted">טוען את המוצרים...</p></div>
         <div class="co-nav"><span></span><button type="button" class="btn btn-p btn-lg show-lg" data-next="2">המשך</button></div>
         <div class="msg" data-msg1 role="status"></div>
       </section>
 
       <section data-step="2" class="co-panel cm-hidden" aria-labelledby="s2-h">
-        <h2 class="h3" id="s2-h" style="font:600 var(--fs-22)/1.3 var(--serif)" data-step2-title>איפה להופיע</h2>
+        <h2 class="h3" id="s2-h" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)" data-step2-title>איפה להופיע</h2>
         <div data-slots class="stack gp12"></div>
         <div class="co-nav"><button type="button" class="btn btn-s btn-lg" data-back>חזרה</button><button type="button" class="btn btn-p btn-lg show-lg" data-next="3">המשך</button></div>
         <div class="msg" data-msg2 role="status"></div>
       </section>
 
       <section data-step="3" class="co-panel cm-hidden" aria-labelledby="s3-h">
-        <h2 class="h3" id="s3-h" style="font:600 var(--fs-22)/1.3 var(--serif)">פרטים</h2>
+        <h2 class="h3" id="s3-h" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">פרטים</h2>
         <div data-firm-choice></div>
         <div data-firm-new class="stack gp12">
           <div class="fgrid">
@@ -72,7 +72,7 @@ const sum = `<div class="sum" data-sum><div><span class="cap">בחרו מוצר 
       </section>
 
       <section data-step="4" class="co-panel cm-hidden" aria-labelledby="s4-h">
-        <div class="stack gp4"><h2 class="h3" id="s4-h" style="font:600 var(--fs-22)/1.3 var(--serif)">סיכום ותשלום</h2><p class="small muted">תשלום מאובטח בדף התשלום. הקבלה נשלחת למייל שכתבתם.</p></div>
+        <div class="stack gp4"><h2 class="h3" id="s4-h" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">סיכום ותשלום</h2><p class="small muted">תשלום מאובטח בדף התשלום. הקבלה נשלחת למייל שכתבתם.</p></div>
         <div data-summary></div>
         <div class="field" data-inst-wrap><label for="o-inst">מספר תשלומים בכרטיס אשראי</label><select id="o-inst"></select></div>
         <div data-auto class="cm-hidden">

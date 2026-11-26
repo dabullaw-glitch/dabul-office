@@ -8,7 +8,7 @@ const { path } = Astro.props as any;
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'כתיבת חוות דעת', path }];
 ---
 <Base title="כתיבת חוות דעת על משרד" description="חוות דעת מאומתת על שירות של משרד עורכי דין." path={path} noindex>
-  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} /><h1>חוות דעת על <span data-firm-name>משרד</span></h1>
+  <section class="phead"><div class="wrap"><Crumbs items={crumbs} /><h1>חוות דעת על <span data-firm-name>משרד</span></h1>
     <p class="lead">כותבים על השירות שקיבלתם. כדי שהחוות דעת תתפרסם, נשלח אליכם קוד אימות במייל. המייל לא מתפרסם.</p></div></section>
   <div class="wrap" style="padding-block:var(--sp-24) var(--sp-64);max-width:760px" id="review" data-method={u(P.page('method'))} data-terms={u(P.page('terms'))}>
     <div class="msg" data-top role="status"></div>

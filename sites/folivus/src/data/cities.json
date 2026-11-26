@@ -3,360 +3,480 @@
   "slug": "tel-aviv",
   "he": "תל אביב-יפו",
   "region": "מרכז",
-  "he_slug": "תל-אביב-יפו"
+  "he_slug": "תל-אביב-יפו",
+  "lat": 32.08,
+  "lng": 34.78
  },
  {
   "slug": "jerusalem",
   "he": "ירושלים",
   "region": "ירושלים",
-  "he_slug": "ירושלים"
+  "he_slug": "ירושלים",
+  "lat": 31.77,
+  "lng": 35.21
  },
  {
   "slug": "haifa",
   "he": "חיפה",
   "region": "צפון",
-  "he_slug": "חיפה"
+  "he_slug": "חיפה",
+  "lat": 32.79,
+  "lng": 34.99
  },
  {
   "slug": "rishon-lezion",
   "he": "ראשון לציון",
   "region": "מרכז",
-  "he_slug": "ראשון-לציון"
+  "he_slug": "ראשון-לציון",
+  "lat": 31.96,
+  "lng": 34.8
  },
  {
   "slug": "petah-tikva",
   "he": "פתח תקווה",
   "region": "מרכז",
-  "he_slug": "פתח-תקווה"
+  "he_slug": "פתח-תקווה",
+  "lat": 32.09,
+  "lng": 34.89
  },
  {
   "slug": "ashdod",
   "he": "אשדוד",
   "region": "דרום",
-  "he_slug": "אשדוד"
+  "he_slug": "אשדוד",
+  "lat": 31.8,
+  "lng": 34.65
  },
  {
   "slug": "netanya",
   "he": "נתניה",
   "region": "שרון",
-  "he_slug": "נתניה"
+  "he_slug": "נתניה",
+  "lat": 32.32,
+  "lng": 34.86
  },
  {
   "slug": "beer-sheva",
   "he": "באר שבע",
   "region": "דרום",
-  "he_slug": "באר-שבע"
+  "he_slug": "באר-שבע",
+  "lat": 31.25,
+  "lng": 34.79
  },
  {
   "slug": "holon",
   "he": "חולון",
   "region": "מרכז",
-  "he_slug": "חולון"
+  "he_slug": "חולון",
+  "lat": 32.01,
+  "lng": 34.78
  },
  {
   "slug": "bnei-brak",
   "he": "בני ברק",
   "region": "מרכז",
-  "he_slug": "בני-ברק"
+  "he_slug": "בני-ברק",
+  "lat": 32.08,
+  "lng": 34.83
  },
  {
   "slug": "ramat-gan",
   "he": "רמת גן",
   "region": "מרכז",
-  "he_slug": "רמת-גן"
+  "he_slug": "רמת-גן",
+  "lat": 32.07,
+  "lng": 34.82
  },
  {
   "slug": "rehovot",
   "he": "רחובות",
   "region": "מרכז",
-  "he_slug": "רחובות"
+  "he_slug": "רחובות",
+  "lat": 31.89,
+  "lng": 34.81
  },
  {
   "slug": "bat-yam",
   "he": "בת ים",
   "region": "מרכז",
-  "he_slug": "בת-ים"
+  "he_slug": "בת-ים",
+  "lat": 32.02,
+  "lng": 34.75
  },
  {
   "slug": "ashkelon",
   "he": "אשקלון",
   "region": "דרום",
-  "he_slug": "אשקלון"
+  "he_slug": "אשקלון",
+  "lat": 31.67,
+  "lng": 34.57
  },
  {
   "slug": "herzliya",
   "he": "הרצליה",
   "region": "שרון",
-  "he_slug": "הרצליה"
+  "he_slug": "הרצליה",
+  "lat": 32.16,
+  "lng": 34.84
  },
  {
   "slug": "kfar-saba",
   "he": "כפר סבא",
   "region": "שרון",
-  "he_slug": "כפר-סבא"
+  "he_slug": "כפר-סבא",
+  "lat": 32.18,
+  "lng": 34.91
  },
  {
   "slug": "raanana",
   "he": "רעננה",
   "region": "שרון",
-  "he_slug": "רעננה"
+  "he_slug": "רעננה",
+  "lat": 32.18,
+  "lng": 34.87
  },
  {
   "slug": "hadera",
   "he": "חדרה",
   "region": "שרון",
-  "he_slug": "חדרה"
+  "he_slug": "חדרה",
+  "lat": 32.44,
+  "lng": 34.92
  },
  {
   "slug": "modiin",
   "he": "מודיעין",
   "region": "מרכז",
-  "he_slug": "מודיעין"
+  "he_slug": "מודיעין",
+  "lat": 31.9,
+  "lng": 35.01
  },
  {
   "slug": "hod-hasharon",
   "he": "הוד השרון",
   "region": "שרון",
-  "he_slug": "הוד-השרון"
+  "he_slug": "הוד-השרון",
+  "lat": 32.15,
+  "lng": 34.89
  },
  {
   "slug": "ramat-hasharon",
   "he": "רמת השרון",
   "region": "שרון",
-  "he_slug": "רמת-השרון"
+  "he_slug": "רמת-השרון",
+  "lat": 32.15,
+  "lng": 34.84
  },
  {
   "slug": "lod",
   "he": "לוד",
   "region": "מרכז",
-  "he_slug": "לוד"
+  "he_slug": "לוד",
+  "lat": 31.95,
+  "lng": 34.9
  },
  {
   "slug": "ramla",
   "he": "רמלה",
   "region": "מרכז",
-  "he_slug": "רמלה"
+  "he_slug": "רמלה",
+  "lat": 31.93,
+  "lng": 34.87
  },
  {
   "slug": "nazareth",
   "he": "נצרת",
   "region": "צפון",
-  "he_slug": "נצרת"
+  "he_slug": "נצרת",
+  "lat": 32.7,
+  "lng": 35.3
  },
  {
   "slug": "rosh-haayin",
   "he": "ראש העין",
   "region": "מרכז",
-  "he_slug": "ראש-העין"
+  "he_slug": "ראש-העין",
+  "lat": 32.1,
+  "lng": 34.96
  },
  {
   "slug": "givatayim",
   "he": "גבעתיים",
   "region": "מרכז",
-  "he_slug": "גבעתיים"
+  "he_slug": "גבעתיים",
+  "lat": 32.07,
+  "lng": 34.81
  },
  {
   "slug": "kiryat-gat",
   "he": "קריית גת",
   "region": "דרום",
-  "he_slug": "קריית-גת"
+  "he_slug": "קריית-גת",
+  "lat": 31.61,
+  "lng": 34.77
  },
  {
   "slug": "nahariya",
   "he": "נהריה",
   "region": "צפון",
-  "he_slug": "נהריה"
+  "he_slug": "נהריה",
+  "lat": 33.01,
+  "lng": 35.1
  },
  {
   "slug": "afula",
   "he": "עפולה",
   "region": "צפון",
-  "he_slug": "עפולה"
+  "he_slug": "עפולה",
+  "lat": 32.61,
+  "lng": 35.29
  },
  {
   "slug": "eilat",
   "he": "אילת",
   "region": "דרום",
-  "he_slug": "אילת"
+  "he_slug": "אילת",
+  "lat": 29.56,
+  "lng": 34.95
  },
  {
   "slug": "yavne",
   "he": "יבנה",
   "region": "מרכז",
-  "he_slug": "יבנה"
+  "he_slug": "יבנה",
+  "lat": 31.88,
+  "lng": 34.74
  },
  {
   "slug": "ness-ziona",
   "he": "נס ציונה",
   "region": "מרכז",
-  "he_slug": "נס-ציונה"
+  "he_slug": "נס-ציונה",
+  "lat": 31.93,
+  "lng": 34.8
  },
  {
   "slug": "or-yehuda",
   "he": "אור יהודה",
   "region": "מרכז",
-  "he_slug": "אור-יהודה"
+  "he_slug": "אור-יהודה",
+  "lat": 32.03,
+  "lng": 34.85
  },
  {
   "slug": "kiryat-ono",
   "he": "קריית אונו",
   "region": "מרכז",
-  "he_slug": "קריית-אונו"
+  "he_slug": "קריית-אונו",
+  "lat": 32.06,
+  "lng": 34.86
  },
  {
   "slug": "even-yehuda",
   "he": "אבן יהודה",
   "region": "שרון",
-  "he_slug": "אבן-יהודה"
+  "he_slug": "אבן-יהודה",
+  "lat": 32.27,
+  "lng": 34.89
  },
  {
   "slug": "kadima-zoran",
   "he": "קדימה צורן",
   "region": "שרון",
-  "he_slug": "קדימה-צורן"
+  "he_slug": "קדימה-צורן",
+  "lat": 32.28,
+  "lng": 34.92
  },
  {
   "slug": "tel-mond",
   "he": "תל מונד",
   "region": "שרון",
-  "he_slug": "תל-מונד"
+  "he_slug": "תל-מונד",
+  "lat": 32.25,
+  "lng": 34.92
  },
  {
   "slug": "pardes-hanna",
   "he": "פרדס חנה כרכור",
   "region": "שרון",
-  "he_slug": "פרדס-חנה-כרכור"
+  "he_slug": "פרדס-חנה-כרכור",
+  "lat": 32.47,
+  "lng": 34.97
  },
  {
   "slug": "zichron-yaakov",
   "he": "זכרון יעקב",
   "region": "צפון",
-  "he_slug": "זכרון-יעקב"
+  "he_slug": "זכרון-יעקב",
+  "lat": 32.57,
+  "lng": 34.95
  },
  {
   "slug": "karmiel",
   "he": "כרמיאל",
   "region": "צפון",
-  "he_slug": "כרמיאל"
+  "he_slug": "כרמיאל",
+  "lat": 32.92,
+  "lng": 35.3
  },
  {
   "slug": "tiberias",
   "he": "טבריה",
   "region": "צפון",
-  "he_slug": "טבריה"
+  "he_slug": "טבריה",
+  "lat": 32.79,
+  "lng": 35.53
  },
  {
   "slug": "kiryat-shmona",
   "he": "קריית שמונה",
   "region": "צפון",
-  "he_slug": "קריית-שמונה"
+  "he_slug": "קריית-שמונה",
+  "lat": 33.21,
+  "lng": 35.57
  },
  {
   "slug": "beit-shemesh",
   "he": "בית שמש",
   "region": "ירושלים",
-  "he_slug": "בית-שמש"
+  "he_slug": "בית-שמש",
+  "lat": 31.75,
+  "lng": 34.99
  },
  {
   "slug": "maale-adumim",
   "he": "מעלה אדומים",
   "region": "ירושלים",
-  "he_slug": "מעלה-אדומים"
+  "he_slug": "מעלה-אדומים",
+  "lat": 31.78,
+  "lng": 35.3
  },
  {
   "slug": "ariel",
   "he": "אריאל",
   "region": "מרכז",
-  "he_slug": "אריאל"
+  "he_slug": "אריאל",
+  "lat": 32.1,
+  "lng": 35.17
  },
  {
   "slug": "dimona",
   "he": "דימונה",
   "region": "דרום",
-  "he_slug": "דימונה"
+  "he_slug": "דימונה",
+  "lat": 31.07,
+  "lng": 35.03
  },
  {
   "slug": "sderot",
   "he": "שדרות",
   "region": "דרום",
-  "he_slug": "שדרות"
+  "he_slug": "שדרות",
+  "lat": 31.52,
+  "lng": 34.6
  },
  {
   "slug": "netivot",
   "he": "נתיבות",
   "region": "דרום",
-  "he_slug": "נתיבות"
+  "he_slug": "נתיבות",
+  "lat": 31.42,
+  "lng": 34.59
  },
  {
   "slug": "kiryat-ata",
   "he": "קריית אתא",
   "region": "צפון",
-  "he_slug": "קריית-אתא"
+  "he_slug": "קריית-אתא",
+  "lat": 32.81,
+  "lng": 35.11
  },
  {
   "slug": "kiryat-bialik",
   "he": "קריית ביאליק",
   "region": "צפון",
-  "he_slug": "קריית-ביאליק"
+  "he_slug": "קריית-ביאליק",
+  "lat": 32.83,
+  "lng": 35.09
  },
  {
   "slug": "kiryat-motzkin",
   "he": "קריית מוצקין",
   "region": "צפון",
-  "he_slug": "קריית-מוצקין"
+  "he_slug": "קריית-מוצקין",
+  "lat": 32.84,
+  "lng": 35.08
  },
  {
   "slug": "nesher",
   "he": "נשר",
   "region": "צפון",
-  "he_slug": "נשר"
+  "he_slug": "נשר",
+  "lat": 32.77,
+  "lng": 35.04
  },
  {
   "slug": "umm-al-fahm",
   "he": "אום אל פחם",
   "region": "צפון",
-  "he_slug": "אום-אל-פחם"
+  "he_slug": "אום-אל-פחם",
+  "lat": 32.52,
+  "lng": 35.15
  },
  {
   "slug": "rahat",
   "he": "רהט",
   "region": "דרום",
-  "he_slug": "רהט"
+  "he_slug": "רהט",
+  "lat": 31.39,
+  "lng": 34.75
  },
  {
   "slug": "taibe",
   "he": "טייבה",
   "region": "שרון",
-  "he_slug": "טייבה"
+  "he_slug": "טייבה",
+  "lat": 32.27,
+  "lng": 35.01
  },
  {
   "slug": "tira",
   "he": "טירה",
   "region": "שרון",
-  "he_slug": "טירה"
+  "he_slug": "טירה",
+  "lat": 32.23,
+  "lng": 34.95
  },
  {
   "slug": "yokneam",
   "he": "יקנעם",
   "region": "צפון",
-  "he_slug": "יקנעם"
+  "he_slug": "יקנעם",
+  "lat": 32.66,
+  "lng": 35.11
  },
  {
   "slug": "gedera",
   "he": "גדרה",
   "region": "מרכז",
-  "he_slug": "גדרה"
+  "he_slug": "גדרה",
+  "lat": 31.81,
+  "lng": 34.78
  },
  {
   "slug": "shoham",
   "he": "שוהם",
   "region": "מרכז",
-  "he_slug": "שוהם"
+  "he_slug": "שוהם",
+  "lat": 31.99,
+  "lng": 34.95
  },
  {
   "slug": "elad",
   "he": "אלעד",
   "region": "מרכז",
-  "he_slug": "אלעד"
+  "he_slug": "אלעד",
+  "lat": 32.05,
+  "lng": 34.95
  }
 ]

@@ -44,7 +44,7 @@ const faq = [
 const cell = (v: string) => v === 'y' ? 'y' : v === 'n' ? 'n' : v;
 ---
 <Base title="פרסום לעורכי דין: פרופיל, חבילות קידום ותוספות" description="פרופיל חינמי לכל משרד, וחבילות קידום שמסומנות בבירור. בלי עמלה על פניות, והדירוג לא ניתן לרכישה. מחירים לשנה, לפני מע״מ." path={path} nav="join" schema={[breadcrumbs(crumbs), faqPage(faq)]}>
-  <section class="phead on-dark">
+  <section class="phead">
     <div class="wrap">
       <Crumbs items={crumbs} />
       <div class="phead-in">
@@ -93,7 +93,7 @@ const cell = (v: string) => v === 'y' ? 'y' : v === 'n' ? 'n' : v;
           <thead><tr><th scope="col" style="text-align:right">מה מקבלים</th>{PLANS.map((p, i) => <th scope="col" class={i === 3 ? 'hl' : undefined}>{p.n}</th>)}</tr></thead>
           <tbody>
             {ROWS.map((r) => <tr><th scope="row">{r[0]}</th>{r.slice(1).map((v, i) => <td class={i === 3 ? 'hl' : undefined}>{cell(v) === 'y' ? <><span style="color:var(--ok);display:inline-flex"><Icon name="check" size={18} /></span><span class="sr">כלול</span></> : cell(v) === 'n' ? <><span aria-hidden="true" style="color:var(--muted)">·</span><span class="sr">לא כלול</span></> : <span class="small" style="font-weight:600">{v}</span>}</td>)}</tr>)}
-            <tr><th scope="row" style="font-weight:600">מחיר לשנה, לפני מע״מ</th>{PLANS.map((p, i) => <td class={i === 3 ? 'hl' : undefined}><b class="num" style="font:600 var(--fs-18)/1 var(--serif);white-space:nowrap">{p.p} ₪</b></td>)}</tr>
+            <tr><th scope="row" style="font-weight:600">מחיר לשנה, לפני מע״מ</th>{PLANS.map((p, i) => <td class={i === 3 ? 'hl' : undefined}><b class="num" style="font:var(--serif-w) var(--fs-18)/1 var(--serif);white-space:nowrap">{p.p} ₪</b></td>)}</tr>
           </tbody>
         </table>
       </div>

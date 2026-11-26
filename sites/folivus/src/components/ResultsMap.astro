@@ -1,0 +1,41 @@
+---
+// Map with numbered pins (direction ג): one pin per card, at the firm's city (city level: the index does not hold exact
+// office addresses). Pins link to the cards; the list next to it is the accessible way through the results.
+import { cityBySlug, type Firm } from '../lib/data';
+import { PATHS, KX, LON0, LAT0 } from '../scripts/israel-map';
+const { items, city } = Astro.props as { items: { f: Firm; label: string; ad: boolean; id: string }[]; city?: string };
+const P2 = (lon: number, lat: number) => [(lon - LON0) * KX, (LAT0 - lat) * 100];
+const pts = items.map((x) => ({ ...x, c: cityBySlug(x.f.city) })).filter((x) => x.c && x.c.lat != null && x.c.lng != null);
+const focus = city ? cityBySlug(city) : null;
+const all = [...pts.map((x) => P2(x.c!.lng!, x.c!.lat!)), ...(focus && focus.lat != null ? [P2(focus.lng!, focus.lat!)] : [])];
+const ok = all.length > 0;
+let x0 = 0, y0 = 0, w = 1, h = 1;
+if (ok) {
+  const xs = all.map((p) => p[0]), ys = all.map((p) => p[1]);
+  const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+  w = Math.max(28, (Math.max(...xs) - Math.min(...xs)) * 1.5 + 14); h = w * 9 / 16;
+  const hh = Math.max(...ys) - Math.min(...ys) + 12; if (hh > h) { h = hh; w = h * 16 / 9; }
+  x0 = cx - w / 2; y0 = cy - h / 2;
+}
+const at = new Map<string, number>();
+const pins = pts.map((x) => {
+  const [px, py] = P2(x.c!.lng!, x.c!.lat!); const k = at.get(x.c!.slug) || 0; at.set(x.c!.slug, k + 1);
+  const ang = k * 2.2, r = k === 0 ? 0 : 3 + k * 1.4; // spread pins of the same city in a small spiral
+  return { ...x, l: ((px - x0) / w) * 100 + Math.cos(ang) * r, t: ((py - y0) / h) * 100 + Math.sin(ang) * r * 1.6 };
+});
+const names = [...new Map(pts.map((x) => [x.c!.slug, x.c!])).values()].map((c) => { const [px, py] = P2(c.lng!, c.lat!); return { n: c.name, l: ((px - x0) / w) * 100, t: ((py - y0) / h) * 100 }; });
+---
+{ok && (
+  <figure class="rmap-wrap stack gp8">
+    <div class="rmap" style="height:auto;aspect-ratio:16/9">
+      <svg viewBox={`${x0.toFixed(2)} ${y0.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)}`} preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+        <path d={PATHS.land} style="fill:var(--map-land);stroke:var(--map-stroke)" stroke-width="0.25" stroke-linejoin="round"></path>
+        <path d={PATHS.kin} style="fill:var(--map-water);stroke:var(--map-stroke)" stroke-width="0.25"></path>
+        <path d={PATHS.dead} style="fill:var(--map-water);stroke:var(--map-stroke)" stroke-width="0.25"></path>
+      </svg>
+      {names.map((c) => <span class="cityname" aria-hidden="true" style={`left:${c.l.toFixed(2)}%;top:${c.t.toFixed(2)}%`}>{c.n}</span>)}
+      {pins.map((p) => <a class={'pin' + (p.ad ? ' ad' : '')} href={'#' + p.id} tabindex="-1" aria-hidden="true" style={`left:${p.l.toFixed(2)}%;top:${p.t.toFixed(2)}%`}><span>{p.label}</span></a>)}
+    </div>
+    <figcaption class="cap">הסיכות מראות את עיר המשרד, לא כתובת מדויקת. המספר על הסיכה הוא המספר בכרטיס.</figcaption>
+  </figure>
+)}

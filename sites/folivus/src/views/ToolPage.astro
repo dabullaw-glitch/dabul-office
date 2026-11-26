@@ -22,7 +22,7 @@ const isGen = t.type === 'generator';
 const dv = (i: any) => (i.default !== undefined && i.default !== null && typeof i.default !== 'boolean' ? String(i.default) : undefined);
 ---
 <Base title={t.name} description={t.description.slice(0, 158)} path={path} nav="tools" schema={[breadcrumbs(crumbs), webApp(t, path), howTo(t, path), faqPage(t.faq)]}>
-  <section class="phead on-dark">
+  <section class="phead">
     <div class="wrap">
       <Crumbs items={crumbs} />
       <div class="phead-in">
@@ -77,9 +77,9 @@ const dv = (i: any) => (i.default !== undefined && i.default !== null && typeof 
       </div>
       <p class="note"><Icon name="info" size={18} /><span>{t.disclaimer || 'התוצאה היא הערכה כללית ואינה ייעוץ משפטי. יש מקרים שהכלי לא מכיר, ולכן הוא לא מחליף בדיקה של עורך דין.'}</span></p>
 
-      {t.intro && <section class="stack gp12" aria-labelledby="in-h"><h2 id="in-h" class="h3" style="font:600 var(--fs-22)/1.3 var(--serif)">{isGen ? 'מתי משתמשים במסמך' : 'איך מחושב'}</h2><div class="prose"><p>{t.intro}</p></div></section>}
+      {t.intro && <section class="stack gp12" aria-labelledby="in-h"><h2 id="in-h" class="h3" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">{isGen ? 'מתי משתמשים במסמך' : 'איך מחושב'}</h2><div class="prose"><p>{t.intro}</p></div></section>}
       <section class="stack gp12" aria-labelledby="how-h">
-        <h2 id="how-h" class="h3" style="font:600 var(--fs-22)/1.3 var(--serif)">איך משתמשים בכלי</h2>
+        <h2 id="how-h" class="h3" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">איך משתמשים בכלי</h2>
         <ol class="howsteps h3c" style="grid-template-columns:minmax(0,1fr)">
           <li><b class="num">01</b><p class="small">ממלאים את השדות. שדה עם כוכבית הוא חובה.</p></li>
           <li><b class="num">02</b><p class="small">{isGen ? 'לוחצים על הפקת המסמך וקוראים את הנוסח.' : 'לוחצים על חישוב ורואים את הפירוט שלב אחרי שלב.'}</p></li>

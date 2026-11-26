@@ -5,6 +5,10 @@ import Crumbs from '../components/Crumbs.astro';
 import Icon from '../components/Icon.astro';
 import FirmList from '../components/FirmList.astro';
 import ListTools from '../components/ListTools.astro';
+import ResultsMap from '../components/ResultsMap.astro';
+import HowOrdered from '../components/HowOrdered.astro';
+import CarryCheck from '../components/CarryCheck.astro';
+import CompareDock from '../components/CompareDock.astro';
 import Disclaimer from '../components/Disclaimer.astro';
 import Faq from '../components/Faq.astro';
 import Toc from '../components/Toc.astro';
@@ -42,17 +46,19 @@ const updated = a.guide?.updated ? fmtDate(a.guide.updated) : '';
 const schema = [breadcrumbs(crumbs), collection(h1, path, description),
   list.length ? itemList(h1, [...featured, ...rest].map((f) => ({ name: f.name, path: P.firm(f.slug) }))) : null,
   faqPage(faq), !c ? guide(a, path) : null];
+const pins = [...featured.map((f) => ({ f, label: 'מ', ad: true, id: 'fr-' + f.slug + '-ad' })), ...rest.map((f, i) => ({ f, label: String(i + 1), ad: false, id: 'fr-' + f.slug }))];
 const n = (k: number, one: string, many: string) => (k === 1 ? one : `${k} ${many}`);
 ---
 <Base title={title} description={description} path={path} nav="areas" schema={schema} noindex={!!c && list.length === 0}>
-  <section class="phead on-dark">
+  <section class="phead">
     <div class="wrap">
       <Crumbs items={crumbs} />
       <div class="phead-in">
+        <CarryCheck area={a.slug} />
         <p class="eyebrow">{a.group}</p>
-        <h1 class="h1">{h1}</h1>
+        <h1 class="h1">{c ? `עורכי דין ל${a.name} ב${c.name}` : h1}</h1>
         <p class="lead" style="max-width:640px">{a.intro}</p>
-        <p class="facts"><span><b class="num">{list.length}</b> משרדים</span><span aria-hidden="true">·</span><span><b class="num">{reviews}</b> ביקורות מאומתות</span>{!c && <><span aria-hidden="true">·</span><span><b class="num">{cityCounts.length}</b> ערים</span></>}{updated && <><span aria-hidden="true">·</span><span>המדריך עודכן {updated}</span></>}</p>
+        <p class="facts"><span>{list.length === 1 ? <><b class="num">1</b> משרד</> : <><b class="num">{list.length}</b> משרדים</>}</span><span aria-hidden="true">·</span><span>{reviews === 1 ? <>ביקורת מאומתת אחת</> : <><b class="num">{reviews}</b> ביקורות מאומתות</>}</span>{!c && <><span aria-hidden="true">·</span><span><b class="num">{cityCounts.length}</b> ערים</span></>}{updated && <><span aria-hidden="true">·</span><span>המדריך עודכן {updated}</span></>}</p>
         {cityCounts.length > 0 && (
           <form class="refine" action={u(P.area(a.he))} data-refine data-base={u(P.area(a.he))}>
             <label class="sr" for="acity">עיר</label>
@@ -71,22 +77,27 @@ const n = (k: number, one: string, many: string) => (k === 1 ? one : `${k} ${man
   )}
   <div class="wrap cols" style="padding-top:var(--sp-28);padding-bottom:var(--sp-56)">
     <div class="stack" style="gap:var(--sp-40);min-width:0">
-      <FirmList featured={featured} rest={rest} area={a.slug} city={c?.slug} id="fl"
-        promoTitle={c ? `משרדים מקודמים ב${c.name}` : `משרדים מקודמים בתחום`}
-        restTitle={c ? `כל המשרדים ב${c.name}, לפי הדירוג` : `כל משרדי ${a.name}, לפי הדירוג`}
-        emptyText={c ? `עדיין אין ברשימה משרדים בתחום ${a.name} ב${c.name}.` : `עדיין אין ברשימה משרדים בתחום ${a.name}.`} />
+      {list.length > 0 && <nav class="seg" aria-label="תצוגת התוצאות" data-view-seg><button type="button" aria-pressed="true" data-view-mode="map"><Icon name="pin" size={18} />מפה ורשימה</button><button type="button" aria-pressed="false" data-view-mode="list"><Icon name="menu" size={18} />רשימה בלבד</button></nav>}
+      <div class={'res-cols' + (list.length ? ' withmap' : '')}>
+        {list.length > 0 && <div data-map-pane><ResultsMap items={pins} city={c?.slug} /></div>}
+        <div class="stack" style="gap:var(--sp-24);min-width:0">
+          <HowOrdered />
+          <FirmList featured={featured} rest={rest} area={a.slug} city={c?.slug} id="fl"
+            emptyText={c ? `עדיין אין ברשימה משרדים בתחום ${a.name} ב${c.name}.` : `עדיין אין ברשימה משרדים בתחום ${a.name}.`} />
+        </div>
+      </div>
       <Disclaimer kind="list" />
 
       {!c && cityCounts.length > 0 && (
         <section aria-labelledby="ac-h" class="stack gp12">
-          <h2 class="h3" id="ac-h" style="font:600 var(--fs-22)/1.3 var(--serif)">{a.title} בעיר שלכם</h2>
+          <h2 class="h3" id="ac-h" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">{a.title} בעיר שלכם</h2>
           <div class="linkgrid">{cityCounts.map((x) => <a href={u(P.areaCity(a.he, x.c.he))}><span>{a.title} ב{x.c.name}</span><span class="c">{n(x.n, 'משרד אחד', 'משרדים')}</span></a>)}</div>
         </section>
       )}
 
       {c && (
         <section aria-labelledby="ci-h" class="stack gp12">
-          <h2 class="h3" id="ci-h" style="font:600 var(--fs-22)/1.3 var(--serif)">לפני שפונים למשרד ב{c.name}</h2>
+          <h2 class="h3" id="ci-h" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">לפני שפונים למשרד ב{c.name}</h2>
           <div class="prose">
             <p>{a.intro} כדאי להכין מראש את המסמכים, לכתוב בכמה שורות מה קרה ומה אתם רוצים להשיג, ולשאול בפגישה הראשונה על דרך העבודה, לוחות הזמנים ושכר הטרחה.</p>
             <p>הסבר מלא על התחום נמצא <a href={u(P.area(a.he)) + '#guide'}>במדריך לתחום {a.name}</a>.</p>
@@ -106,7 +117,7 @@ const n = (k: number, one: string, many: string) => (k === 1 ? one : `${k} ${man
         </article>
       ) : !c && (
         <section id="guide" class="stack gp12" aria-labelledby="ag-h" style="border-top:1px solid var(--line);padding-top:var(--sp-32)">
-          <h2 id="ag-h" class="h3" style="font:600 var(--fs-22)/1.3 var(--serif)">מה עושה {a.title}</h2>
+          <h2 id="ag-h" class="h3" style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">מה עושה {a.title}</h2>
           <div class="prose"><p>{a.intro}</p><p>מדריך מלא לתחום, עם מקורות ותאריך עדכון, נמצא בכתיבה ויתפרסם כאן.</p></div>
         </section>
       )}
@@ -134,7 +145,14 @@ const n = (k: number, one: string, many: string) => (k === 1 ? one : `${k} ${man
       </div>
     </aside>
   </div>
+  <CompareDock />
   <script>
+    document.querySelectorAll<HTMLElement>('[data-view-seg]').forEach((seg) => seg.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-view-mode]'); if (!b) return;
+      seg.querySelectorAll('[data-view-mode]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      const pane = document.querySelector<HTMLElement>('[data-map-pane]'); if (pane) pane.hidden = b.dataset.viewMode === 'list';
+      document.querySelector('.res-cols')?.classList.toggle('withmap', b.dataset.viewMode !== 'list');
+    }));
     document.querySelectorAll<HTMLFormElement>('form[data-refine]').forEach((f) => f.addEventListener('submit', (e) => {
       e.preventDefault(); const v = (f.elements.namedItem('city') as HTMLSelectElement).value; location.href = f.dataset.base + (v ? v + '/' : '');
     }));

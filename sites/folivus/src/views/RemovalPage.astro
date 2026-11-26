@@ -10,7 +10,7 @@ const fs = (await firms()).slice().sort((a, b) => a.name.localeCompare(b.name, '
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'בקשת תיקון או הסרה', path }];
 ---
 <Base title="בקשה לתיקון או הסרת פרטים" description="משרד או עורך דין שרוצים לתקן או להסיר פרטים מהאתר יכולים להגיש בקשה כאן. כל בקשה נבדקת ומטופלת." path={path} schema={[breadcrumbs(crumbs)]}>
-  <section class="phead on-dark">
+  <section class="phead">
     <div class="wrap">
       <Crumbs items={crumbs} />
       <h1>תיקון או הסרת פרטים</h1>

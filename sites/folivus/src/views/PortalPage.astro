@@ -8,7 +8,7 @@ const { path } = Astro.props as any;
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'אזור המשרדים', path }];
 ---
 <Base title="אזור המשרדים" description="כניסה למשרדים: עדכון הפרופיל, חידושים, חוות דעת ונתונים." path={path} noindex>
-  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} /><h1>אזור המשרדים</h1>
+  <section class="phead"><div class="wrap"><Crumbs items={crumbs} /><h1>אזור המשרדים</h1>
     <p class="lead">עדכון הפרופיל, חידוש חבילות, תגובה לחוות דעת והזמנת לקוחות לכתוב חוות דעת.</p></div></section>
   <div class="wrap" style="padding-block:var(--sp-24) var(--sp-64)" id="portal" data-order={u(P.page('order'))} data-claim={u(P.page('claim'))} data-admin={u(P.page('admin'))} data-firm-base={u(P.firm('__slug__'))}>
     <div class="msg" data-top role="status"></div>

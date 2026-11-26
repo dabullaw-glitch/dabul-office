@@ -15,7 +15,7 @@ const title = 'בתי משפט בישראל: כתובות, שעות ומידע �
 const description = 'מידע על בתי משפט בישראל: כתובת, טלפון, שעות קבלת קהל, איך מגיעים ומה כדאי לדעת לפני דיון. כל פרט עם מקור רשמי.';
 ---
 <Base title={title} description={description} path={path} nav="courts" schema={[breadcrumbs(crumbs), collection(title, path, description), itemList(title, cs.map((c) => ({ name: c.name, path: P.court(c.he) })))]}>
-  <section class="phead on-dark"><div class="wrap"><Crumbs items={crumbs} /><div class="phead-in">
+  <section class="phead"><div class="wrap"><Crumbs items={crumbs} /><div class="phead-in">
     <p class="eyebrow">{cs.length} בתי משפט ובתי דין</p>
     <h1 class="h1">בתי משפט</h1>
     <p class="lead" style="max-width:640px">כתובת, דרכי הגעה, שעות ומה כדאי לדעת לפני דיון. הפרטים נבדקים מול האתרים הרשמיים של מערכת בתי המשפט.</p>
@@ -24,7 +24,7 @@ const description = 'מידע על בתי משפט בישראל: כתובת, ט�
   <div class="wrap stack" style="gap:var(--sp-36);padding-top:var(--sp-32);padding-bottom:var(--sp-56)">
     {groups.map((g, i) => (
       <section id={'ct-' + i} aria-labelledby={'cth-' + i} class="stack gp12" style="scroll-margin-top:80px">
-        <h2 class="h3" id={'cth-' + i} style="font:600 var(--fs-22)/1.3 var(--serif)">{typeName(g.t)}</h2>
+        <h2 class="h3" id={'cth-' + i} style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">{typeName(g.t)}</h2>
         <div class="tlist">{g.items.map((c) => (
           <a class="titem" href={u(P.court(c.he))}><span class="ac-ic"><Icon name="landmark" size={18} /></span><span class="stack" style="min-width:0"><span class="tn">{c.name}{c.draft && <span class="draft-b">טיוטה</span>}</span><span class="cap">{c.address || c.city || c.district}</span></span></a>
         ))}</div>

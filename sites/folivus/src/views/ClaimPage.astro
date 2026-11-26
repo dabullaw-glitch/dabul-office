@@ -11,7 +11,7 @@ const fs = (await firms()).slice().sort((a, b) => a.name.localeCompare(b.name, '
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'ניהול פרופיל', path }];
 ---
 <Base title="אישור בעלות על פרופיל משרד ועדכון פרטים" description="משרד עורכי דין שמופיע באתר יכול לאשר בעלות על הפרופיל בחינם, לעדכן פרטים ולהגיב לחוות דעת." path={path} schema={[breadcrumbs(crumbs)]}>
-  <section class="phead on-dark">
+  <section class="phead">
     <div class="wrap">
       <Crumbs items={crumbs} />
       <h1>זה המשרד שלכם?</h1>
