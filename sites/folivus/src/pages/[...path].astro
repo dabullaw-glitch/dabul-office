@@ -1,7 +1,7 @@
 ---
 // Router: every page except home, 404 and feeds. Paths come from src/config/routes.ts, so sections can be renamed there.
 import { SEG, P } from '../config/routes';
-import { areas, cities, firms, articles, authors, tools, courts } from '../lib/data';
+import { areas, cities, firms, articles, authors, tools, courts, courtsAll } from '../lib/data';
 import AreasIndex from '../views/AreasIndex.astro';
 import CitiesIndex from '../views/CitiesIndex.astro';
 import AreaPage from '../views/AreaPage.astro';
@@ -47,7 +47,7 @@ export async function getStaticPaths() {
   add(P.page('tools'), 'tools');
   for (const t of tools()) add(P.tool(t.he), 'tool', { tool: t.slug });
   add(P.page('courts'), 'courts');
-  for (const c of courts()) add(P.court(c.he), 'court', { court: c.slug });
+  for (const c of courtsAll()) add(P.court(c.he), 'court', { court: c.slug });
   add(P.page('join'), 'join');
   add(P.page('claim'), 'claim');
   add(P.page('removal'), 'removal');

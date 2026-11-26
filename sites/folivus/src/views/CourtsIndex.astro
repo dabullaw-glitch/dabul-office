@@ -1,35 +1,68 @@
 ---
+// Courts: type filter chips, search, a map of every court with coordinates, and the list by type.
+// Courts held back by the writers ("לא לפרסם לפני בירור") are not in this list, the map or the sitemap.
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
 import Icon from '../components/Icon.astro';
+import PointsMap from '../components/PointsMap.astro';
 import { P, u } from '../config/routes';
-import { courts } from '../lib/data';
+import { courts, COURT_TYPES } from '../lib/data';
 import { breadcrumbs, itemList, collection } from '../lib/schema';
 const { path } = Astro.props as any;
 const cs = courts();
-const ORDER = ['supreme', 'district', 'magistrate', 'magistrates', 'family', 'labor', 'rabbinical'];
-const typeName = (t: string) => ({ supreme: 'בית המשפט העליון', magistrate: 'בתי משפט השלום', magistrates: 'בתי משפט השלום', district: 'בתי המשפט המחוזיים', family: 'בתי משפט לענייני משפחה', labor: 'בתי הדין לעבודה', rabbinical: 'בתי הדין הרבניים' } as Record<string, string>)[t] || 'בתי משפט נוספים';
-const groups = [...new Set(cs.map((c) => c.type || 'other'))].sort((a, b) => (ORDER.indexOf(a) + 99) % 99 - (ORDER.indexOf(b) + 99) % 99).map((t) => ({ t, items: cs.filter((c) => (c.type || 'other') === t) }));
+const norm = (t: string) => (t === 'magistrates' ? 'magistrate' : t);
+const groups = COURT_TYPES.map(([t, plural]) => ({ t, plural, items: cs.filter((c) => norm(c.type) === t) })).filter((g) => g.items.length)
+  .concat([{ t: 'other', plural: 'בתי משפט נוספים', items: cs.filter((c) => !COURT_TYPES.some((x) => x[0] === norm(c.type))) }].filter((g) => g.items.length));
+const pts = cs.filter((c) => c.lat != null && c.lng != null).map((c) => ({ lat: c.lat!, lng: c.lng!, href: u(P.court(c.he)), type: norm(c.type), name: c.name }));
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'בתי משפט', path }];
 const title = 'בתי משפט בישראל: כתובות, שעות ומידע שימושי';
-const description = 'מידע על בתי משפט בישראל: כתובת, טלפון, שעות קבלת קהל, איך מגיעים ומה כדאי לדעת לפני דיון. כל פרט עם מקור רשמי.';
+const description = 'בתי משפט ובתי דין בישראל, כולל בתי משפט לעניינים מקומיים ולנוער: כתובת, שעות קבלת קהל, טלפון ומה כדאי לדעת לפני דיון. כל פרט עם מקור רשמי.';
 ---
 <Base title={title} description={description} path={path} nav="courts" schema={[breadcrumbs(crumbs), collection(title, path, description), itemList(title, cs.map((c) => ({ name: c.name, path: P.court(c.he) })))]}>
   <section class="phead"><div class="wrap"><Crumbs items={crumbs} /><div class="phead-in">
     <p class="eyebrow">{cs.length} בתי משפט ובתי דין</p>
     <h1 class="h1">בתי משפט</h1>
-    <p class="lead" style="max-width:640px">כתובת, דרכי הגעה, שעות ומה כדאי לדעת לפני דיון. הפרטים נבדקים מול האתרים הרשמיים של מערכת בתי המשפט.</p>
-    <nav class="chips" aria-label="סוגי בתי משפט" style="margin-top:var(--sp-6)">{groups.map((g, i) => <a class="chip" href={'#ct-' + i} style="background:transparent;color:var(--on-ink);border-color:var(--ink-line)">{typeName(g.t)} <span class="c" style="color:var(--on-ink-muted)">{g.items.length}</span></a>)}</nav>
+    <p class="lead" style="max-width:640px">כתובת, שעות ומה כדאי לדעת לפני דיון. הפרטים נבדקים מול האתרים הרשמיים של הרשות השופטת.</p>
+    <div class="tsearch" role="search"><label class="sr" for="cq">חיפוש בית משפט לפי שם או עיר</label><input class="inp" id="cq" type="search" placeholder="לדוגמה: נתניה, נוער, עבודה" autocomplete="off" /><Icon name="search" size={18} /></div>
   </div></div></section>
-  <div class="wrap stack" style="gap:var(--sp-36);padding-top:var(--sp-32);padding-bottom:var(--sp-56)">
-    {groups.map((g, i) => (
-      <section id={'ct-' + i} aria-labelledby={'cth-' + i} class="stack gp12" style="scroll-margin-top:80px">
-        <h2 class="h3" id={'cth-' + i} style="font:var(--serif-w) var(--fs-22)/1.3 var(--serif)">{typeName(g.t)}</h2>
-        <div class="tlist">{g.items.map((c) => (
-          <a class="titem" href={u(P.court(c.he))}><span class="ac-ic"><Icon name="landmark" size={18} /></span><span class="stack" style="min-width:0"><span class="tn">{c.name}{c.draft && <span class="draft-b">טיוטה</span>}</span><span class="cap">{c.address || c.city || c.district}</span></span></a>
-        ))}</div>
-      </section>
-    ))}
-    {cs.length === 0 && <div class="empty">עמודי בתי המשפט בהכנה.</div>}
+  <div class="wrap" style="padding-top:var(--sp-20)">
+    <div class="chips" role="group" aria-label="סינון לפי סוג">
+      <button type="button" class="chip" aria-pressed="true" data-ct="all">הכול <span class="c">{cs.length}</span></button>
+      {groups.map((g) => <button type="button" class="chip" aria-pressed="false" data-ct={g.t}>{g.plural} <span class="c">{g.items.length}</span></button>)}
+    </div>
   </div>
+  <div class="wrap cgrid" style="padding-top:var(--sp-24);padding-bottom:var(--sp-56)">
+    <div class="cmap"><PointsMap points={pts} caption="כל נקודה היא בית משפט. הסינון למעלה משנה גם את המפה." /></div>
+    <div class="stack" style="gap:var(--sp-36);min-width:0">
+      <p class="cap num" id="ccount" aria-live="polite"></p>
+      {groups.map((g, i) => (
+        <section id={'ct-' + g.t} aria-labelledby={'cth-' + i} class="stack gp12" data-cgroup={g.t} style="scroll-margin-top:var(--sp-80)">
+          <h2 class="h3" id={'cth-' + i} style="font:var(--serif-w) var(--fs-24)/1.3 var(--serif)">{g.plural} <span class="tcount">({g.items.length})</span></h2>
+          <div class="tlist">{g.items.map((c) => (
+            <a class="titem" href={u(P.court(c.he))} data-c={(c.name + ' ' + c.city + ' ' + c.address + ' ' + g.plural).toLowerCase()}><span class="ac-ic"><Icon name="landmark" size={18} /></span><span class="stack" style="min-width:0"><span class="tn">{c.name}{c.draft && <span class="draft-b">טיוטה</span>}</span><span class="cap">{c.address || c.city || c.district}</span></span></a>
+          ))}</div>
+        </section>
+      ))}
+      <p class="empty" id="cnone" hidden>לא מצאנו בית משפט כזה. נסו שם של עיר.</p>
+    </div>
+  </div>
+  <script>
+    let type = 'all';
+    const q = document.getElementById('cq') as HTMLInputElement;
+    const norm = (s: string) => s.replace(/["'׳״]/g, '').trim().toLowerCase();
+    const run = () => {
+      const w = norm(q.value).split(/\s+/).filter(Boolean); let n = 0;
+      document.querySelectorAll<HTMLElement>('[data-cgroup]').forEach((g) => {
+        const okType = type === 'all' || g.dataset.cgroup === type; let k = 0;
+        g.querySelectorAll<HTMLElement>('[data-c]').forEach((a) => { const ok = okType && w.every((x) => norm(a.dataset.c!).includes(x)); a.hidden = !ok; if (ok) k++; });
+        g.hidden = k === 0; n += k;
+      });
+      document.querySelectorAll<HTMLElement>('.cdot').forEach((d) => (d.dataset.on = String(type === 'all' || d.dataset.type === type)));
+      document.querySelectorAll<HTMLElement>('[data-ct]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ct === type)));
+      document.getElementById('ccount')!.textContent = n === 1 ? 'בית משפט אחד' : `${n} בתי משפט`;
+      document.getElementById('cnone')!.hidden = n > 0;
+    };
+    document.querySelectorAll<HTMLElement>('[data-ct]').forEach((b) => b.addEventListener('click', () => { type = b.dataset.ct!; run(); }));
+    q.addEventListener('input', run); run();
+  </script>
 </Base>

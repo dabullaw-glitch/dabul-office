@@ -10,31 +10,34 @@ import Toc from '../components/Toc.astro';
 import Disclaimer from '../components/Disclaimer.astro';
 import PaidSlots from '../components/PaidSlots.astro';
 import FirmTile from '../components/FirmTile.astro';
+import PointsMap from '../components/PointsMap.astro';
 import { P, u } from '../config/routes';
-import { courts, cities, firms, fmtDate, areaBySlug, rankFor } from '../lib/data';
+import { courts, courtsAll, courtType, cities, firms, fmtDate, areaBySlug, rankFor } from '../lib/data';
 import { render } from '../lib/md';
 import { breadcrumbs, courthouse, faqPage } from '../lib/schema';
 import { scoreOf } from '../lib/ui';
 const { path, court } = Astro.props as any;
-const c = courts().find((x) => x.slug === court)!;
+const c = courtsAll().find((x) => x.slug === court)!;
+const related = c.related.map((s) => courts().find((x) => x.slug === s)).filter(Boolean) as ReturnType<typeof courts>;
 const city = cities().find((x) => x.name === c.city || x.slug === c.city || (c.city && c.city.includes(x.name)));
 const { html, toc } = render(c.body);
 const map = c.lat && c.lng ? `https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}` : c.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.name + ' ' + c.address)}` : '';
 const crumbs = [{ name: 'דף הבית', path: '' }, { name: 'בתי משפט', path: P.page('courts') }, { name: c.name, path }];
 const updated = fmtDate(c.updated);
-const TYPE: Record<string, string> = { supreme: 'בית המשפט העליון', magistrate: 'בית משפט השלום', magistrates: 'בית משפט השלום', district: 'בית משפט מחוזי', family: 'בית משפט לענייני משפחה', labor: 'בית הדין לעבודה', rabbinical: 'בית דין רבני' };
+
 const all = await firms();
 const local = city ? all.filter((f) => f.city === city.slug) : [];
 const r = rankFor(local);
 const ranked = [...r.featured, ...r.rest].sort((a, b) => scoreOf(b).score - scoreOf(a).score || a.name.localeCompare(b.name, 'he')).slice(0, 4);
 ---
-<Base title={`${c.name}: כתובת, שעות ומידע לפני דיון`} description={`${c.name}${c.address ? ', ' + c.address : ''}. שעות קבלת קהל, דרכי הגעה, טלפון ומה כדאי לדעת לפני דיון.`.slice(0, 158)} path={path} nav="courts" schema={[breadcrumbs(crumbs), courthouse(c, path), faqPage(c.faq)]}>
+<Base title={`${c.name}: כתובת, שעות ומידע לפני דיון`} description={`${c.name}${c.address ? ', ' + c.address : ''}. שעות קבלת קהל, דרכי הגעה, טלפון ומה כדאי לדעת לפני דיון.`.slice(0, 158)} path={path} nav="courts" noindex={c.hold} schema={[breadcrumbs(crumbs), courthouse(c, path), faqPage(c.faq)]}>
   <section class="phead">
     <div class="wrap">
       <Crumbs items={crumbs} />
       <div class="phead-in">
-        <p class="eyebrow">{TYPE[c.type] || 'בית משפט'}{c.district ? ' · מחוז ' + c.district.replace(/^מחוז\s*/, '') : ''} {c.draft && <span class="draft-b">טיוטה</span>}</p>
+        <p class="eyebrow">{courtType(c.type)?.[2] || 'בית משפט'}{c.district ? ' · מחוז ' + c.district.replace(/^מחוז\s*/, '') : ''} {c.draft && <span class="draft-b">טיוטה</span>}</p>
         <h1 class="h1">{c.name}</h1>
+        {c.hold && <p class="note warn"><Icon name="info" size={18} /><span>עמוד בבדיקה: הפרטים עוד לא אושרו מול הרשימה הרשמית. הוא מוצג רק בגרסת התצוגה ולא מופיע ברשימות, במפה או במפת האתר.</span></p>}
         <p class="lead" style="max-width:620px">כתובת, שעות ומה להביא לדיון. ומשרדים ונותני שירות שעובדים מול בית המשפט, מסומנים ״מודעה״.</p>
         <div class="flex">
           {map && <a class="btn btn-w btn-lg" href={map} target="_blank" rel="noopener"><Icon name="pin" size={18} /><span>ניווט לבית המשפט</span></a>}
@@ -52,8 +55,12 @@ const ranked = [...r.featured, ...r.rest].sort((a, b) => scoreOf(b).score - scor
           {c.hours && <div><dt>שעות</dt><dd>{c.hours}</dd></div>}
           {c.phone && <div><dt>טלפון</dt><dd class="num"><a class="lnk" href={'tel:' + c.phone.replace(/[^0-9+*]/g, '')}>{c.phone}</a>{c.phoneNote && <span class="cap" style="display:block;font-weight:400">{c.phoneNote}</span>}</dd></div>}
           {c.district && <div><dt>מחוז</dt><dd>{c.district}</dd></div>}
+          {c.access.notes && <div><dt>נגישות</dt><dd>{c.access.notes}</dd></div>}
+          {c.access.parking && <div><dt>חניה</dt><dd>{c.access.parking}</dd></div>}
+          {c.access.transport && <div><dt>תחבורה ציבורית</dt><dd>{c.access.transport}</dd></div>}
           {updated && <div><dt>נבדק</dt><dd>{updated}</dd></div>}
         </dl>
+        {c.lat != null && c.lng != null && <div style="margin-top:var(--sp-12)"><PointsMap local points={[{ lat: c.lat, lng: c.lng, href: '', type: c.type, name: c.name }]} caption="מיקום לפי הדף הרשמי של הרשות השופטת." /></div>}
         <p class="cap" style="margin-top:var(--sp-8)">לפני הגעה כדאי לבדוק באתר הרשמי של הרשות השופטת שאין שינוי בשעות.</p>
       </section>
       <section aria-labelledby="ca-h" class="stack gp12">
@@ -85,6 +92,7 @@ const ranked = [...r.featured, ...r.rest].sort((a, b) => scoreOf(b).score - scor
           <a class="btn btn-s" href={u(P.city(city.he))}><span>לכל המשרדים ב{city.name}</span><Icon name="arrow" size={18} /></a>
         </div>
       )}
+      {related.length > 0 && <div class="aside-box"><h3>בתי משפט קשורים</h3><div class="linkgrid one">{related.map((x) => <a href={u(P.court(x.he))}><span>{x.name}</span><Icon name="chev" size={16} /></a>)}</div></div>}
       <div class="sticky-aside show-lg"><Toc items={toc} /></div>
       <div class="aside-box on-dark" style="background:var(--ink);color:var(--on-ink);border-color:var(--ink)"><h3>מופיעים מול בית המשפט הזה?</h3><p class="small" style="color:var(--on-ink-muted)">דף בית משפט: 1,900 ₪ לשנה, עד 3 משרדים. נותני שירות: 350 ₪ לחודש, עד 4. לפני מע״מ.</p>
         <a class="btn btn-w" href={u(P.page('order')) + '?plan=court-page&target=' + encodeURIComponent(c.slug)}>משרד: להזמנת מקום</a>

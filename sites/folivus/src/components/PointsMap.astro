@@ -1,0 +1,27 @@
+---
+// Map of places with known coordinates (courts). Country view: small dots that link to each page, filtered with the
+// type chips; local view: one pin. Decorative for screen readers: the list next to it is the accessible way.
+import { PATHS, KX, LON0, LAT0 } from '../scripts/israel-map';
+type Pt = { lat: number; lng: number; href: string; type: string; name: string; label?: string };
+const { points, local = false, caption = '' } = Astro.props as { points: Pt[]; local?: boolean; caption?: string };
+const P2 = (lon: number, lat: number) => [(lon - LON0) * KX, (LAT0 - lat) * 100];
+const xy = points.map((p) => P2(p.lng, p.lat));
+let x0 = 0, y0 = 0, w = 200, h = 410, ratio = '200/410';
+if (local && xy.length) { w = 24; h = w * 9 / 16; x0 = xy[0][0] - w / 2; y0 = xy[0][1] - h / 2; ratio = '16/9'; }
+const pos = (p: number[]) => [((p[0] - x0) / w) * 100, ((p[1] - y0) / h) * 100];
+---
+{points.length > 0 && (
+  <figure class="stack gp8" style="margin:0">
+    <div class="rmap" style={`height:auto;aspect-ratio:${ratio};${local ? '' : 'max-width:360px;margin-inline:auto;width:100%'}`} data-pmap>
+      <svg viewBox={`${x0.toFixed(2)} ${y0.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)}`} preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+        <path d={PATHS.land} style="fill:var(--map-land);stroke:var(--map-stroke)" stroke-width={local ? '0.2' : '0.8'} stroke-linejoin="round"></path>
+        <path d={PATHS.kin} style="fill:var(--map-water);stroke:var(--map-stroke)" stroke-width={local ? '0.2' : '0.8'}></path>
+        <path d={PATHS.dead} style="fill:var(--map-water);stroke:var(--map-stroke)" stroke-width={local ? '0.2' : '0.8'}></path>
+      </svg>
+      {points.map((p, i) => { const [l, t] = pos(xy[i]); return local
+        ? <span class="pin" aria-hidden="true" style={`left:${l.toFixed(2)}%;top:${t.toFixed(2)}%`}><span>{p.label || '1'}</span></span>
+        : <a class="cdot" href={p.href} tabindex="-1" aria-hidden="true" title={p.name} data-type={p.type} style={`left:${l.toFixed(2)}%;top:${t.toFixed(2)}%`}></a>; })}
+    </div>
+    {caption && <figcaption class="cap">{caption}</figcaption>}
+  </figure>
+)}

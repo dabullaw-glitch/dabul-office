@@ -253,15 +253,19 @@ export type Court = {
   slug: string; he: string; name: string; type: string; city: string; address: string; phone: string; hours: string;
   lat: number | null; lng: number | null; sources: Src[]; updated: Date | null; body: string; faq: Faq[];
   district: string; phoneNote: string; officialPage: string; draft: boolean;
+  hold: boolean; // the writers flagged it 'לא לפרסם לפני בירור': never in lists, maps, sitemap or search; page only in the preview
+  access: { parking: string; transport: string; notes: string }; related: string[];
 };
 let _courts: Court[] | null = null;
 export function courts(): Court[] {
-  if (_courts) return _courts;
+  if (_courts) return _courts.filter((c) => !c.hold);
   _courts = list('courts', '.md').map((f) => {
     const d = parseMd(path.join(ROOT, 'courts', f));
     if (!d || !d.fm.name) return null;
     const fm = d.fm;
     if (isDraft(fm) && !PREVIEW) return null;
+    const hold = arr<string>(fm.todo_verify).some((t) => /^\s*לא לפרסם/.test(String(t)));
+    const ac = fm.accessibility || {};
     const hours = Array.isArray(fm.hours) ? fm.hours.join(' | ') : typeof fm.hours === 'object' && fm.hours ? Object.entries(fm.hours).map(([k, v]) => `${k}: ${v}`).join(' | ') : String(fm.hours || '');
     return {
       slug: String(fm.slug || f.replace(/\.md$/, '')), he: String(fm.he_slug || fm.slug), name: String(fm.name), type: String(fm.type || ''),
@@ -269,11 +273,20 @@ export function courts(): Court[] {
       lat: typeof fm.lat === 'number' ? fm.lat : null, lng: typeof fm.lng === 'number' ? fm.lng : null, sources: srcs(fm.sources),
       updated: validDay(day(fm.updated)), body: d.body, faq: faqs(fm.faq),
       district: String(fm.district || ''), phoneNote: String(fm.phone_note || ''), officialPage: String(fm.official_page || ''), draft: isDraft(fm),
+      hold, access: { parking: String(ac.parking || ''), transport: String(ac.public_transport || ''), notes: String(ac.notes || '') }, related: arr<string>(fm.related_courts),
     } as Court;
   }).filter(Boolean) as Court[];
   _courts.sort((a, b) => a.name.localeCompare(b.name, 'he'));
-  return _courts;
+  return _courts.filter((c) => !c.hold);
 }
+/** every court page to build: held pages only in the preview (noindex, never listed) */
+export const courtsAll = (): Court[] => { courts(); return (_courts || []).filter((c) => !c.hold || PREVIEW); };
+export const COURT_TYPES: [string, string, string][] = [
+  ['supreme', 'בית המשפט העליון', 'בית המשפט העליון'], ['district', 'בתי המשפט המחוזיים', 'בית משפט מחוזי'], ['magistrate', 'בתי משפט השלום', 'בית משפט השלום'],
+  ['family', 'בתי משפט לענייני משפחה', 'בית משפט לענייני משפחה'], ['youth', 'בתי משפט לנוער', 'בית משפט לנוער'], ['labor', 'בתי הדין לעבודה', 'בית הדין לעבודה'],
+  ['local-affairs', 'בתי משפט לעניינים מקומיים', 'בית משפט לעניינים מקומיים'], ['rabbinical', 'בתי הדין הרבניים', 'בית דין רבני'],
+];
+export const courtType = (t: string) => COURT_TYPES.find((x) => x[0] === (t === 'magistrates' ? 'magistrate' : t));
 
 // ---------- helpers ----------
 export const fmtDate = (d: Date | null | string) => {
