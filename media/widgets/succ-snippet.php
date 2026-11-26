@@ -2,6 +2,8 @@
    Instead of the slider: a photo wall on the computer (one big photo + 4, the last one opens all of them),
    a swipe strip on the phone, and a photo viewer on click. The photo of another brokerage office was left out.
    The old Elementor section (e9818ea) is not deleted in Elementor; this code shows the new one in its place.
+   26.11.2026 (Yakir asked): the signing day photo of 26.11.2026 is first (big tile on the computer, first card on the phone);
+   the "נמכר" photo moved to the first small tile with its tag. Backup before: sitebak/snippet-43-code-20261126-new-photo.
    Preview before going live: add ?dblprev=1 to the address. To undo: deactivate this snippet. */
 define('DABUL_SUCC_LIVE', 1);
 
@@ -29,6 +31,7 @@ function dabul_succ_html() {
 .dsc .t:hover img{transform:scale(1.04)}
 .dsc .t::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);pointer-events:none}
 .dsc .t.big{grid-column:span 2;grid-row:span 2}
+.dsc .t img.pt{object-position:50% 45%}
 .dsc .t.big .cap{position:absolute;inset:auto 0 0 0;padding:60px 22px 18px;background:linear-gradient(to top,rgba(20,19,17,.85),transparent);color:#fff;text-align:right}
 .dsc .cap b{display:block;font-size:22px}.dsc .cap span{font-size:15px;color:#e9e3d6}
 .dsc .tag{position:absolute;top:14px;right:14px;background:var(--g);color:#1c1b19;font-weight:800;font-size:13px;border-radius:99px;padding:4px 12px}
@@ -67,23 +70,24 @@ function dabul_succ_html() {
   <a class="more" href="https://dabullaw.co.il/%d7%94%d7%9e%d7%9c%d7%a6%d7%95%d7%aa/">לכל ההצלחות ←</a>
  </div>
  <div class="grid">
-  <button type="button" class="t big" data-i="0"><img src="https://dabullaw.co.il/wp-content/uploads/2025/12/4.jpg.webp" alt="קונים ומוכרים עם שלט נמכר במשרד יקיר דבול" loading="lazy" decoding="async"><span class="tag">נמכר</span><span class="cap"><b>עוד עסקה נחתמה</b><span>יום חתימה במשרד</span></span></button>
-  <button type="button" class="t" data-i="1"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-1-20A63BE0-A957-492B-A856-D9A2B4A8395C-768x576.webp" alt="הרמת כוסית אחרי חתימה על עסקת דירה" loading="lazy" decoding="async"></button>
-  <button type="button" class="t" data-i="2"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-768x576.webp" alt="חתימה על עסקת מקרקעין בחדר הישיבות של המשרד" loading="lazy" decoding="async"></button>
-  <button type="button" class="t" data-i="3"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-2-648D13FE-A64F-4051-8FAF-1F0B3BFDB894-768x576.webp" alt="צדדים לעסקה בחדר הישיבות" loading="lazy" decoding="async"></button>
-  <button type="button" class="t last" data-i="4"><img src="https://dabullaw.co.il/wp-content/uploads/2025/12/552303613_10166058948674838_2022410626647330012_n-768x576.jpg.webp" alt="" loading="lazy" decoding="async"><span class="ov"><b><bdi dir="ltr">+6</bdi></b><span>תמונות נוספות</span></span></button>
+  <button type="button" class="t big" data-i="0"><img class="pt" src="https://dabullaw.co.il/wp-content/uploads/2026/11/office-signing-day-20261126-768x1024.jpg" alt="יום חתימה על עסקה במשרד בנתניה" loading="lazy" decoding="async"><span class="cap"><b>עוד עסקה נחתמה</b><span>יום חתימה במשרד</span></span></button>
+  <button type="button" class="t" data-i="1"><img src="https://dabullaw.co.il/wp-content/uploads/2025/12/4.jpg.webp" alt="קונים ומוכרים עם שלט נמכר במשרד יקיר דבול" loading="lazy" decoding="async"><span class="tag">נמכר</span></button>
+  <button type="button" class="t" data-i="2"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-1-20A63BE0-A957-492B-A856-D9A2B4A8395C-768x576.webp" alt="הרמת כוסית אחרי חתימה על עסקת דירה" loading="lazy" decoding="async"></button>
+  <button type="button" class="t" data-i="3"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-768x576.webp" alt="חתימה על עסקת מקרקעין בחדר הישיבות של המשרד" loading="lazy" decoding="async"></button>
+  <button type="button" class="t last" data-i="4"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-2-648D13FE-A64F-4051-8FAF-1F0B3BFDB894-768x576.webp" alt="" loading="lazy" decoding="async"><span class="ov"><b><bdi dir="ltr">+7</bdi></b><span>תמונות נוספות</span></span></button>
  </div>
  <div class="rail" aria-label="תמונות מהמשרד">
-  <button type="button" class="t" data-i="0"><img src="https://dabullaw.co.il/wp-content/uploads/2025/12/4.jpg.webp" alt="קונים ומוכרים עם שלט נמכר במשרד יקיר דבול" loading="lazy" decoding="async"><span class="tag">נמכר</span></button>
-  <button type="button" class="t" data-i="1"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-1-20A63BE0-A957-492B-A856-D9A2B4A8395C-768x576.webp" alt="הרמת כוסית אחרי חתימה על עסקת דירה" loading="lazy" decoding="async"></button>
-  <button type="button" class="t" data-i="2"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-768x576.webp" alt="חתימה על עסקת מקרקעין בחדר הישיבות של המשרד" loading="lazy" decoding="async"></button>
-  <button type="button" class="t" data-i="3"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-2-648D13FE-A64F-4051-8FAF-1F0B3BFDB894-768x576.webp" alt="צדדים לעסקה בחדר הישיבות" loading="lazy" decoding="async"></button>
-  <button type="button" class="t" data-i="4"><img src="https://dabullaw.co.il/wp-content/uploads/2025/12/552303613_10166058948674838_2022410626647330012_n-768x576.jpg.webp" alt="חתימה על עסקה במשרד" loading="lazy" decoding="async"></button>
-  <button type="button" class="t" data-i="5"><img src="https://dabullaw.co.il/wp-content/uploads/2025/12/582970595_693738957140887_6466542977824114968_n-768x485.jpg.webp" alt="עסקה שנחתמה במשרד" loading="lazy" decoding="async"></button>
-  <button type="button" class="t" data-i="6"><img src="https://dabullaw.co.il/wp-content/uploads/2026/04/10.webp" alt="צדדים לעסקה במשרד" loading="lazy" decoding="async"></button>
-  <button type="button" class="t" data-i="7"><img src="https://dabullaw.co.il/wp-content/uploads/2025/12/574482520_10166278890599838_1653346198526951860_n-768x1024.jpg.webp" alt="יום חתימה במשרד" loading="lazy" decoding="async"></button>
-  <button type="button" class="t" data-i="8"><img src="https://dabullaw.co.il/wp-content/uploads/2026/03/496224849_2272487996499866_580159593228069400_n-3-768x576.jpg.webp" alt="עסקה שנחתמה במשרד" loading="lazy" decoding="async"></button>
-  <button type="button" class="t" data-i="9"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/7-1.webp" alt="חגיגה אחרי חתימה" loading="lazy" decoding="async"></button>
+  <button type="button" class="t" data-i="0"><img class="pt" src="https://dabullaw.co.il/wp-content/uploads/2026/11/office-signing-day-20261126-768x1024.jpg" alt="יום חתימה על עסקה במשרד בנתניה" loading="lazy" decoding="async"></button>
+  <button type="button" class="t" data-i="1"><img src="https://dabullaw.co.il/wp-content/uploads/2025/12/4.jpg.webp" alt="קונים ומוכרים עם שלט נמכר במשרד יקיר דבול" loading="lazy" decoding="async"><span class="tag">נמכר</span></button>
+  <button type="button" class="t" data-i="2"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-1-20A63BE0-A957-492B-A856-D9A2B4A8395C-768x576.webp" alt="הרמת כוסית אחרי חתימה על עסקת דירה" loading="lazy" decoding="async"></button>
+  <button type="button" class="t" data-i="3"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-4-7E4F3D49-B72A-4698-964E-C1427CE22EF7-768x576.webp" alt="חתימה על עסקת מקרקעין בחדר הישיבות של המשרד" loading="lazy" decoding="async"></button>
+  <button type="button" class="t" data-i="4"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/Media-2-648D13FE-A64F-4051-8FAF-1F0B3BFDB894-768x576.webp" alt="צדדים לעסקה בחדר הישיבות" loading="lazy" decoding="async"></button>
+  <button type="button" class="t" data-i="5"><img src="https://dabullaw.co.il/wp-content/uploads/2025/12/552303613_10166058948674838_2022410626647330012_n-768x576.jpg.webp" alt="חתימה על עסקה במשרד" loading="lazy" decoding="async"></button>
+  <button type="button" class="t" data-i="6"><img src="https://dabullaw.co.il/wp-content/uploads/2025/12/582970595_693738957140887_6466542977824114968_n-768x485.jpg.webp" alt="עסקה שנחתמה במשרד" loading="lazy" decoding="async"></button>
+  <button type="button" class="t" data-i="7"><img src="https://dabullaw.co.il/wp-content/uploads/2026/04/10.webp" alt="צדדים לעסקה במשרד" loading="lazy" decoding="async"></button>
+  <button type="button" class="t" data-i="8"><img src="https://dabullaw.co.il/wp-content/uploads/2025/12/574482520_10166278890599838_1653346198526951860_n-768x1024.jpg.webp" alt="יום חתימה במשרד" loading="lazy" decoding="async"></button>
+  <button type="button" class="t" data-i="9"><img src="https://dabullaw.co.il/wp-content/uploads/2026/03/496224849_2272487996499866_580159593228069400_n-3-768x576.jpg.webp" alt="עסקה שנחתמה במשרד" loading="lazy" decoding="async"></button>
+  <button type="button" class="t" data-i="10"><img src="https://dabullaw.co.il/wp-content/uploads/2026/05/7-1.webp" alt="חגיגה אחרי חתימה" loading="lazy" decoding="async"></button>
  </div>
  <div class="bar"><span class="ar"><button type="button" data-d="-1" aria-label="התמונה הקודמת" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button><button type="button" data-d="1" aria-label="התמונה הבאה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button></span><a class="more" href="https://dabullaw.co.il/%d7%94%d7%9e%d7%9c%d7%a6%d7%95%d7%aa/">לכל ההצלחות ←</a></div>
 </div>
