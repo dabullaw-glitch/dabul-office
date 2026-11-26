@@ -1,0 +1,51 @@
+{
+ "ep": "ep05",
+ "n": 5,
+ "title": "פרק 5: מס שבח במילים פשוטות",
+ "album": "נדל״ן בגובה העיניים",
+ "artist": "עו״ד יקיר דבול",
+ "gap": 0.7,
+ "voice": "Yakir's own ElevenLabs voice clone via functions/v1/voice, 26.11.2026 (private storage paths; the runner signs them with OIDC)",
+ "parts": [
+  {
+   "h": "פתיח",
+   "path": "podcast/ep05/s01.mp3"
+  },
+  {
+   "h": "הצגת התוכנית",
+   "path": "podcast/ep05/s02.mp3"
+  },
+  {
+   "h": "חלק 1: מה זה מס שבח, ועל מה משלמים",
+   "path": "podcast/ep05/s03.mp3"
+  },
+  {
+   "h": "חלק 2: הפטור לדירה יחידה",
+   "path": "podcast/ep05/s04.mp3"
+  },
+  {
+   "h": "חלק 3: כשיש עוד דירה, או דירה ישנה",
+   "path": "podcast/ep05/s05.mp3"
+  },
+  {
+   "h": "תזכורת באמצע הפרק",
+   "path": "podcast/ep05/s06.mp3"
+  },
+  {
+   "h": "חלק 4: ההוצאות שמקטינות את המס",
+   "path": "podcast/ep05/s07.mp3"
+  },
+  {
+   "h": "חלק 5: ירושה, והדיווח",
+   "path": "podcast/ep05/s08.mp3"
+  },
+  {
+   "h": "מה עושים השבוע",
+   "path": "podcast/ep05/s09.mp3"
+  },
+  {
+   "h": "סיום",
+   "path": "podcast/ep05/s10.mp3"
+  }
+ ]
+}
