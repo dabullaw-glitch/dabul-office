@@ -1,0 +1,1 @@
+document.querySelectorAll("[data-carry]").forEach(a=>{try{const r=JSON.parse(sessionStorage.getItem("fol-check")||"null");if(!r||!r.t||a.dataset.carry&&r.area&&r.area!==a.dataset.carry)return;a.querySelector("[data-carry-t]").textContent=r.t,a.querySelector("[data-carry-a]").href=r.href||"#",r.href||a.querySelector("[data-carry-a]").remove(),a.hidden=!1}catch{}});
